@@ -20,7 +20,9 @@ import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionExcep
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -30,6 +32,7 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Action class to create new Generic project.
@@ -71,7 +74,7 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 			WsdlProject project = null;
 			try
 			{
-				String projectName = createProjectName( dialog.getFormField( Form.INITIALWADL ).getValue() );
+				String projectName = createProjectName( dialog.getFormField( Form.INITIALWADL ).getValue(), workspace.getProjectList() );
 
 				if( projectName.length() == 0 )
 				{
@@ -139,7 +142,7 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 		return findLeafItem( item.getChildren().get( 0 ) );
 	}
 
-	public String createProjectName( String filePath )
+	public String createProjectName( String filePath, List<? extends Project> projectList )
 	{
 		if( StringUtils.hasContent( filePath ) )
 		{
@@ -162,16 +165,12 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				projectName = projectName.substring( ix + 1 );
 			}
 
-			if( StringUtils.isNullOrEmpty( projectName ) )
-			{
-				return DEFAULT_PROJECT_NAME;
-			}
-			else
+			if( !StringUtils.isNullOrEmpty( projectName ) )
 			{
 				return projectName;
 			}
 		}
-		return DEFAULT_PROJECT_NAME;
+		return ModelItemNamer.createName( DEFAULT_PROJECT_NAME, projectList );
 	}
 
 	private void importWadl( WsdlProject project, String url )

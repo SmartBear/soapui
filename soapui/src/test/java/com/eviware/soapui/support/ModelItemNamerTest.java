@@ -1,4 +1,4 @@
-package com.eviware.soapui.impl.actions;
+package com.eviware.soapui.support;
 
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.workspace.Workspace;
@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.eviware.soapui.impl.actions.NewRestProjectAction.DEFAULT_PROJECT_NAME;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,16 +23,15 @@ import static org.mockito.Mockito.when;
  * Time: 11:01
  * To change this template use File | Settings | File Templates.
  */
-public class NewRESTProjectActionTest
+public class ModelItemNamerTest
 {
+	private static final String DEFAULT_PROJECT_NAME = "";
 	private Workspace workspace;
-	private NewRestProjectAction newRESTProjectAction;
 
 	@Before
 	public void setUp() throws IOException, XmlException
 	{
 		workspace = mock( Workspace.class );
-		newRESTProjectAction = new NewRestProjectAction();
 	}
 
 	@Test
@@ -41,7 +39,7 @@ public class NewRESTProjectActionTest
 	{
 		mockWorkspaceProjects(  );
 		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 1";
-		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
+		assertThat( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), Is.is( expectedFirstProjectName ) );
 	}
 
 	@Test
@@ -49,7 +47,7 @@ public class NewRESTProjectActionTest
 	{
 		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + " 1" );
 		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 2";
-		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
+		assertThat( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), Is.is( expectedFirstProjectName ) );
 	}
 
 	@Test
@@ -58,7 +56,7 @@ public class NewRESTProjectActionTest
 	{
 		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + " 1", DEFAULT_PROJECT_NAME + " 2" );
 		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 3";
-		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
+		assertThat( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), Is.is( expectedFirstProjectName ) );
 	}
 
 	@Test
@@ -66,7 +64,7 @@ public class NewRESTProjectActionTest
 	{
 		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + "1", DEFAULT_PROJECT_NAME + "3" );  //REST Project1, REST Project3
 		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 4";
-		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
+		assertThat( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ),Is.is( expectedFirstProjectName ) );
 	}
 
 	@Test
@@ -74,7 +72,7 @@ public class NewRESTProjectActionTest
 	{
 		mockWorkspaceProjects( DEFAULT_PROJECT_NAME + " 3x" );
 		String expectedFirstProjectName = DEFAULT_PROJECT_NAME + " 1";
-		assertThat( newRESTProjectAction.createDefaultProjectName( workspace ), Is.is( expectedFirstProjectName ) );
+		assertThat( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), Is.is( expectedFirstProjectName ) );
 	}
 
 	private void mockWorkspaceProjects( String... projectNames )
