@@ -101,7 +101,9 @@ public class RestRequestDesktopPanel extends
 			JComponent endpointCombo = buildEndpointComponent();
 			super.setEndpointComponent( endpointCombo );
 
-			JLabel endPointLabel = new JLabel( "Endpoint" );String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
+			JLabel endPointLabel = new JLabel( "Endpoint" );
+
+			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
 			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
 
 			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
