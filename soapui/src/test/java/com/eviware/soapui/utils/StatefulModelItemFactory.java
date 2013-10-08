@@ -52,7 +52,26 @@ public class StatefulModelItemFactory
 
 	public RestMethod makeRestMethod() throws SoapUIException
 	{
-		return new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance());
+		RestMethodConfig methodConfig = RestMethodConfig.Factory.newInstance();
+		methodConfig.setName( "Get" );
+		methodConfig.setMethod( "GET" );
+		final RestResource restResource = makeRestResource();
+		RestMethod restMethod = new RestMethod( restResource, methodConfig )
+		{
+			@Override
+			public RestRequestInterface.RequestMethod getMethod()
+			{
+				return RestRequestInterface.RequestMethod.GET;
+			}
+
+			@Override
+			public RestResource getOperation()
+			{
+				return restResource;
+			}
+		};
+		restResource.getConfig().setMethodArray( new RestMethodConfig[]{ restMethod.getConfig()} );
+		return restMethod;
 	}
 
 	public RestResource makeRestResource() throws SoapUIException
