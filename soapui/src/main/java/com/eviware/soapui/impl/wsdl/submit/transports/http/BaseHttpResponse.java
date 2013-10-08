@@ -54,6 +54,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private StringToStringMap properties;
 	private byte[] rawRequestData;
 	private byte[] rawResponseData;
+	private byte[] rawResponseBody;
 	private int requestContentPos = -1;
 	private String xmlContent;
 	private boolean downloadIncludedResources;
@@ -86,7 +87,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			try
 			{
-				httpMethod.getResponseBody();
+				rawResponseBody = httpMethod.getResponseBody();
 			}
 			catch( IOException e )
 			{
@@ -385,6 +386,11 @@ public abstract class BaseHttpResponse implements HttpResponse
 	public byte[] getRawResponseData()
 	{
 		return rawResponseData;
+	}
+
+	public byte[] getRawResponseBody()
+	{
+		return rawResponseBody;
 	}
 
 	public String getMethod()
