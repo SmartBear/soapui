@@ -113,7 +113,7 @@ public class StubbedDialogs implements XDialogs
 	public Object prompt( String question, String title, Object[] objects )
 	{
 		prompts.add( new Prompt( question, title, objects ) );
-		return mockingPromptValue ? (String)valueToReturnFromPrompt : objects;
+		return mockingPromptValue ? valueToReturnFromPrompt : objects[0];
 	}
 
 	@Override
