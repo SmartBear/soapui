@@ -158,7 +158,7 @@ public class RestRequestDesktopPanel extends
 
 	}
 
-	private class TextPanelWithTopLabel extends JPanel
+	protected class TextPanelWithTopLabel extends JPanel
 	{
 		private final Color MAC_DISABLED_BGCOLOR = new Color( 232, 232, 232 );
 
@@ -228,20 +228,4 @@ public class RestRequestDesktopPanel extends
 		}
 	}
 
-	//TODO: Temporary fix resource panel should be moved to appropriate subclass
-	private String getResourcePanelText()
-	{
-		if( resourcePanel == null )
-			return "";
-		else
-			return resourcePanel.getText();
-	}
-
-	private void setResourcePanelText( String text )
-	{
-		if( resourcePanel != null )
-		{
-			resourcePanel.setText( text );
-		}
-	}
 }

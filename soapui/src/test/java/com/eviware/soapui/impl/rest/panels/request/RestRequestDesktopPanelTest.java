@@ -143,6 +143,13 @@ public class RestRequestDesktopPanelTest
 		assertThat( getComboTextFieldValue(), is( otherValue ) );
 	}
 
+	@Test
+	public void reactsToPathChanges() {
+		String anotherPath = "/changed/path";
+		restRequest.getResource().setPath( anotherPath );
+		assertThat( requestDesktopPanel.resourcePanel.getText(), is( anotherPath ) );
+	}
+
 	@After
 	public void resetDialogs()
 	{
