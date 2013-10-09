@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
@@ -21,6 +22,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -43,7 +45,14 @@ public class RestRequestDesktopPanel extends
 	protected void initializeFields()
 	{
 		String path = getRequest().getResource().getFullPath();
-		resourcePanel = new TextPanelWithTopLabel( "Resource", path);
+		resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
+		{
+			@Override
+			public void update( Document document )
+			{
+				getRequest().getResource().setPath( resourcePanel.getText() );
+			}
+		} );
 
 		String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
 		queryPanel = new TextPanelWithTopLabel( "Query", query, false );
@@ -88,6 +97,7 @@ public class RestRequestDesktopPanel extends
 		resetQueryPanelText();
 
 	}
+	
 
 	@Override
 	protected void insertButtons( JXToolBar toolbar )
