@@ -70,69 +70,15 @@ public class RestRequestDesktopPanel extends
 	}
 
 	@Override
-	protected JComponent buildToolbar()
+	protected void addTopToolbarComponents( JXToolBar toolBar )
 	{
-		if( getRequest().getResource() != null )
-		{
-			JPanel panel = new JPanel( new BorderLayout() );
+		addResourceAndQueryField( toolBar );
+	}
 
-			JXToolBar baseToolBar = UISupport.createToolbar();
-
-			JComponent submitButton = super.getSubmitButton();
-			baseToolBar.add( submitButton );
-			baseToolBar.add( cancelButton );
-
-			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
-			insertButtons( baseToolBar );
-			JPanel methodPanel = new JPanel( new BorderLayout() );
-			JComboBox<RestRequestInterface.RequestMethod> methodComboBox = new JComboBox<RestRequestInterface.RequestMethod>( new RestRequestMethodModel( getRequest() ) );
-			methodComboBox.setSelectedItem( getRequest().getMethod() );
-
-			JLabel methodLabel = new JLabel( "Method" );
-			methodPanel.add( methodLabel, BorderLayout.NORTH );
-			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
-			methodPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
-			//TODO: remove hard coded height adjustment
-			methodPanel.setMaximumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT + 10 ) );
-
-			JPanel endpointPanel = new JPanel( new BorderLayout() );
-			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
-
-			JComponent endpointCombo = buildEndpointComponent();
-			super.setEndpointComponent( endpointCombo );
-
-			JLabel endPointLabel = new JLabel( "Endpoint" );
-
-			String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
-			queryPanel = new TextPanelWithTopLabel( "Query", query, false );
-
-			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
-			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
-
-
-			baseToolBar.addWithOnlyMinimumHeight( methodPanel );
-			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-			baseToolBar.addWithOnlyMinimumHeight( endpointPanel );
-			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-
-			addResourceAndQueryField( baseToolBar );
-
-			baseToolBar.add( Box.createHorizontalGlue() );
-			baseToolBar.add( tabsButton );
-			baseToolBar.add( splitButton );
-			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
-			int maximumPreferredHeight = findMaximumPreferredHeight( baseToolBar ) + 6;
-			baseToolBar.setPreferredSize( new Dimension( 600, Math.max( maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
-
-			panel.add( baseToolBar, BorderLayout.NORTH );
-
-			return panel;
-		}
-		else
-		{
-			//TODO: If we don't need special clause for empty resources then remove it
-			return super.buildToolbar();
-		}
+	@Override
+	protected void addBottomToolbar( JPanel panel )
+	{
+		//RestRequestDesktopPanel does not need a bottom tool bar
 	}
 
 	@Override
@@ -142,8 +88,6 @@ public class RestRequestDesktopPanel extends
 		resetQueryPanelText();
 
 	}
-
-
 
 	@Override
 	protected void insertButtons( JXToolBar toolbar )

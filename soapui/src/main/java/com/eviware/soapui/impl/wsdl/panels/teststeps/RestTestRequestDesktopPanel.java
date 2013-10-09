@@ -57,7 +57,6 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
 	private JButton addAssertionButton;
 	protected JComboBox methodResourceCombo;
-	protected boolean updatingRequest;
 	private AssertionsPanel assertionsPanel;
 	private JInspectorPanel inspectorPanel;
 	private JComponentInspector<?> assertionInspector;
@@ -167,11 +166,10 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		}
 	}
 
-	protected JComponent buildToolbar()
+	@Override
+	protected void addTopToolbarComponents( JXToolBar toolBar )
 	{
-
-		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
-		return super.buildToolbar();
+		//RestTestRequestDesktopPanel does not need any extra top toolbar component
 	}
 
 	@Override
@@ -217,12 +215,13 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	@Override
 	protected void insertButtons( JXToolBar toolbar )
 	{
+		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
 		toolbar.add( addAssertionButton );
 	}
 
 	public void setEnabled( boolean enabled )
 	{
-		if( enabled == true )
+		if( enabled )
 			enabled = !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem().getTestCase() )
 					&& !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() );
 
@@ -392,7 +391,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 
 		public void setSelectedItem( Object anItem )
 		{
-			( ( RestTestRequestInterface )getRequest() ).getTestStep().setRestMethod( ( RestMethod )anItem );
+			getRequest().getTestStep().setRestMethod( ( RestMethod )anItem );
 		}
 
 		public Object getSelectedItem()

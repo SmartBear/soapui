@@ -113,14 +113,14 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			JPanel panel = new JPanel( new BorderLayout() );
 
-			JXToolBar baseToolBar = UISupport.createToolbar();
+			JXToolBar topToolBar = UISupport.createToolbar();
 
 			JComponent submitButton = super.getSubmitButton();
-			baseToolBar.add( submitButton );
-			baseToolBar.add( cancelButton );
+			topToolBar.add( submitButton );
+			topToolBar.add( cancelButton );
 
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
-			insertButtons( baseToolBar );
+			insertButtons( topToolBar );
 			JPanel methodPanel = new JPanel( new BorderLayout() );
 			JComboBox<RequestMethod> methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
 			methodComboBox.setSelectedItem( getRequest().getMethod() );
@@ -144,20 +144,24 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
 
 
-			baseToolBar.addWithOnlyMinimumHeight( methodPanel );
-			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
-			baseToolBar.addWithOnlyMinimumHeight( endpointPanel );
-			baseToolBar.add( Box.createHorizontalStrut( 4 ) );
+			topToolBar.addWithOnlyMinimumHeight( methodPanel );
+			topToolBar.add( Box.createHorizontalStrut( 4 ) );
+			topToolBar.addWithOnlyMinimumHeight( endpointPanel );
+			topToolBar.add( Box.createHorizontalStrut( 4 ) );
 
-			baseToolBar.add( Box.createHorizontalGlue() );
-			baseToolBar.add( tabsButton );
-			baseToolBar.add( splitButton );
-			baseToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
-			int maximumPreferredHeight = findMaximumPreferredHeight( baseToolBar ) + 6;
-			baseToolBar.setPreferredSize( new Dimension( 600, Math.max( maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
+			//Hook for subclasses
+			addTopToolbarComponents( topToolBar );
 
-			panel.add( baseToolBar, BorderLayout.NORTH );
+			topToolBar.add( Box.createHorizontalGlue() );
+			topToolBar.add( tabsButton );
+			topToolBar.add( splitButton );
+			topToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
+			int maximumPreferredHeight = findMaximumPreferredHeight( topToolBar ) + 6;
+			topToolBar.setPreferredSize( new Dimension( 600, Math.max( maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
 
+			panel.add( topToolBar, BorderLayout.NORTH );
+
+			//Hook for subclasses
 			addBottomToolbar( panel );
 
 			return panel;
@@ -182,10 +186,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	}
 
 
-	protected void addBottomToolbar( JPanel panel )
-	{
-		// Hook for sub classes
-	}
+	//Hooks for subclasses
+	protected abstract void addTopToolbarComponents( JXToolBar toolBar );
+	protected abstract void addBottomToolbar( JPanel panel );
+
 
 	protected abstract void updateUiValues();
 

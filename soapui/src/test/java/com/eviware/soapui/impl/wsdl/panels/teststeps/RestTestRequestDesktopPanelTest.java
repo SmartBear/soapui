@@ -69,6 +69,13 @@ public class RestTestRequestDesktopPanelTest
 	}
 
 	@Test
+	public void reactsToEndpointChanges() {
+		String anotherEndpoint = "http://google.com/search";
+		restService().changeEndpoint( ENDPOINT, anotherEndpoint );
+		assertThat( restTestDesktopPanel.getEndpointsModel().getSelectedItem(), is( ( Object )anotherEndpoint ) );
+	}
+
+	@Test
 	public void displaysFullResourcePathInPathLabel()
 	{
 		String expectedPath = "[" + restRequest.getResource().getFullPath() + "]";
@@ -76,9 +83,17 @@ public class RestTestRequestDesktopPanelTest
 	}
 
 	@Test
+	public void displaysChangedPath()
+	{
+		restRequest.getResource().setPath( "/newPath" );
+		String expectedPath = "[" + restRequest.getResource().getFullPath() + "]";
+		assertThat( restTestDesktopPanel.pathLabel.getText(), is( expectedPath ) );
+	}
+
+	@Test
 	public void displaysResourceMethodCombo()
 	{
-		Object expectedMethodResourceCombo = restRequest.getResource().getRestMethodByName( "Get" ); //TODO: remove hardcoded value
+		Object expectedMethodResourceCombo = restRequest.getResource().getRestMethodByName( "Get" );
 		assertThat( restTestDesktopPanel.methodResourceCombo.getSelectedItem(), is( expectedMethodResourceCombo ) );
 	}
 
