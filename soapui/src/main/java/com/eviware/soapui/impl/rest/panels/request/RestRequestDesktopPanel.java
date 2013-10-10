@@ -19,7 +19,6 @@ import javax.swing.text.Document;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.support.RestUtils;
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -34,7 +33,7 @@ public class RestRequestDesktopPanel extends
 {
 	private JButton addToTestCaseButton;
 	protected TextPanelWithTopLabel resourcePanel;
-	protected TextPanelWithTopLabel queryPanel;
+	protected ParametersField queryPanel;
 
 	public RestRequestDesktopPanel( RestRequestInterface modelItem )
 	{
@@ -55,7 +54,7 @@ public class RestRequestDesktopPanel extends
 		} );
 
 		String query = RestUtils.getQueryParamsString( getRequest() );
-		queryPanel = new TextPanelWithTopLabel( "Query", query, false );
+		queryPanel = new ParametersField( getRequest() );
 	}
 
 	@Override
@@ -94,7 +93,7 @@ public class RestRequestDesktopPanel extends
 	protected void updateUiValues()
 	{
 		resourcePanel.setText( getRequest().getResource().getFullPath() );
-		resetQueryPanelText();
+		queryPanel.setText( RestUtils.getQueryParamsString(getRequest() ) );
 
 	}
 	
@@ -103,13 +102,6 @@ public class RestRequestDesktopPanel extends
 	protected void insertButtons( JXToolBar toolbar )
 	{
 		toolbar.add( addToTestCaseButton );
-	}
-
-
-	private void resetQueryPanelText()
-	{
-			queryPanel.setText( RestUtils.getQueryParamsString(getRequest() ) );
-
 	}
 
 	protected class TextPanelWithTopLabel extends JPanel

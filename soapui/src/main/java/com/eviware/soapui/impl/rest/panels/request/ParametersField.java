@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
@@ -22,13 +23,13 @@ import java.awt.BorderLayout;
 class ParametersField extends JPanel
 {
 
-	private final RestRequest request;
+	private final RestRequestInterface request;
 	private final JLabel textLabel;
 	private final JTextField textField;
 	private RestParamsTable paramsTable;
 	private JPopupMenu popup;
 
-	ParametersField( RestRequest request )
+	ParametersField( RestRequestInterface request )
 	{
 		this.request = request;
 		textLabel = new JLabel( "Parameters" );
