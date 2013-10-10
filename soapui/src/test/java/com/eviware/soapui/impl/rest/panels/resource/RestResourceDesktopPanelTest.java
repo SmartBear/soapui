@@ -59,6 +59,27 @@ public class RestResourceDesktopPanelTest
 		assertThat( parentResource.getPath(), is(originalParentPath) );
 	}
 
+	@Test
+	public void handlesMultipleElementChildPathWhenUpdatingPathField() throws Exception
+	{
+		childResource.setPath("multiple/element/path");
+		String newChildPath = "new/cool/path";
+		resourceDesktopPanel.pathTextField.setText( parentResource.getFullPath() + "/" + newChildPath);
+
+		assertThat(childResource.getPath(), is(newChildPath));
+	}
+
+	@Test
+	public void changesWholePathInNonChildWhenUpdatingPathField() throws Exception
+	{
+		parentResource.setPath( "/path/with/several/elements" );
+		resourceDesktopPanel = new RestResourceDesktopPanel( parentResource );
+		String newPath = "/another/complex/path";
+		resourceDesktopPanel.pathTextField.setText( newPath );
+
+		assertThat( parentResource.getPath(), is(newPath) );
+	}
+
 
 	@Test
 	public void allowsToDeleteParameterAfterParameterLevelChange() throws SoapUIException

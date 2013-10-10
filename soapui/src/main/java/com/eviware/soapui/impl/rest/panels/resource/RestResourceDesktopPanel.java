@@ -103,7 +103,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 				if( !updating )
 				{
 					updating = true;
-					getModelItem().setPath( extractLastPathElementFrom( getText(document ) ) );
+					getModelItem().setPath( extractCurrentResourcePathFrom( getText( document ) ) );
 					updating = false;
 				}
 			}
@@ -144,9 +144,19 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 		return toolbar;
 	}
 
-	private String extractLastPathElementFrom( String fullPath )
+	private String extractCurrentResourcePathFrom( String fullPath )
 	{
-		return fullPath.contains("/") ? fullPath.substring(fullPath.lastIndexOf( '/' ) + 1) : "";
+		RestResource parentResource = getModelItem().getParentResource();
+		if ( parentResource == null)
+		{
+			return fullPath;
+		}
+		String parentPath = parentResource.getFullPath();
+		if (fullPath.startsWith( parentPath + "/" ))
+		{
+			return fullPath.substring(parentPath.length() + 1);
+		}
+		return fullPath.contains("/") ? fullPath.substring(fullPath.lastIndexOf( '/' ) + 1) : fullPath;
 	}
 
 	@Override
