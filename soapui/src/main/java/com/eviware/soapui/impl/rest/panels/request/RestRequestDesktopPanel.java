@@ -54,7 +54,7 @@ public class RestRequestDesktopPanel extends
 			}
 		} );
 
-		String query = RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() );
+		String query = RestUtils.getQueryParamsString( getRequest() );
 		queryPanel = new TextPanelWithTopLabel( "Query", query, false );
 	}
 
@@ -108,7 +108,7 @@ public class RestRequestDesktopPanel extends
 
 	private void resetQueryPanelText()
 	{
-			queryPanel.setText( RestUtils.getQueryParamsString( getRequest().getParams(), getRequest() ) );
+			queryPanel.setText( RestUtils.getQueryParamsString(getRequest() ) );
 
 	}
 
