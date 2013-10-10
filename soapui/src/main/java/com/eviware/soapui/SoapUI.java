@@ -400,11 +400,11 @@ public class SoapUI
 
 		if( StringUtils.hasContent( text ) )
 		{
-			Tools.openURL( "http://www.eviware.com/forums/search.php?keywords=" + URLEncoder.encode( text.trim() ) );
+			Tools.openURL( "http://forum.soapui.org/search.php?keywords=" + URLEncoder.encode( text.trim() ) );
 		}
 		else
 		{
-			Tools.openURL( "http://www.eviware.com/forums" );
+			Tools.openURL( "http://forum.soapui.org/" );
 		}
 	}
 
