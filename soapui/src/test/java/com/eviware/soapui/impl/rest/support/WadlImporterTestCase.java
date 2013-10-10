@@ -13,6 +13,11 @@
 package com.eviware.soapui.impl.rest.support;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
@@ -39,5 +44,28 @@ public class WadlImporterTestCase
 		assertEquals( 1, service.getResourceList().size() );
 		assertEquals( 0, service.getResourceList().get( 0 ).getChildResourceCount() );
 		assertEquals( 1, service.getResourceList().get( 0 ).getRestMethodCount() );
+	}
+
+	@Test
+	public void importsWadl() throws Exception
+	{
+		WsdlProject project = new WsdlProject();
+		RestService service = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
+
+		new WadlImporter( service ).initFromWadl( RestUtilsTestCase.class.getResource(  "/wadl/YahooSearch.wadl" ).toURI().toString());
+
+		assertEquals( 1, service.getOperationCount() );
+		assertEquals( "/NewsSearchService/V1/", service.getBasePath() );
+
+		RestResource resource = service.getOperationAt( 0 );
+
+		assertEquals( 1, resource.getPropertyCount() );
+		assertEquals( "appid", resource.getPropertyAt( 0 ).getName() );
+		assertNotNull( resource.getProperty( "appid" ) );
+		assertEquals( 1, resource.getRequestCount() );
+
+		RestRequest request = resource.getRequestAt( 0 );
+		assertEquals( RestRequestInterface.RequestMethod.GET, request.getMethod() );
+		assertEquals( 9, request.getPropertyCount() );
 	}
 }

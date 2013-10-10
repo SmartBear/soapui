@@ -12,8 +12,11 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 
@@ -37,7 +40,7 @@ public class RestUtilsTestCase
 	}
 
 	@Test
-	public void shouldExtractTemplateParams() throws Exception
+	public void extractsTemplateParams() throws Exception
 	{
 		String path = "/{id}/test/{test}/test";
 
@@ -47,26 +50,40 @@ public class RestUtilsTestCase
 		assertEquals( "test", params[1] );
 	}
 
+
 	@Test
-	public void shouldImportWadl() throws Exception
+	public void expandsRestRequestPathsWithoutTemplateParameters() throws Exception
 	{
-		WsdlProject project = new WsdlProject();
-		RestService service = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
+		RestRequest restRequest = makeRestRequest();
+		restRequest.getResource().setPath( "/the/path" );
+		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.QUERY, "queryName", "queryValue" );
+		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.MATRIX, "matrixName", "theMatrixValue" );
+		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.TEMPLATE, "templateName", "templateValue" );
+		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.MATRIX, "matrixName2", "theMatrixValue2" );
+		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.QUERY, "queryName2", "queryValue2");
 
-		new WadlImporter( service ).initFromWadl( RestUtilsTestCase.class.getResource(  "/wadl/YahooSearch.wadl" ).toURI().toString());
+		assertThat(RestUtils.expandPath( restRequest.getResource().getFullPath(), restRequest.getParams(), restRequest ),
+				is("/the/path;matrixName=theMatrixValue;matrixName2=theMatrixValue2?queryName=queryValue&queryName2=queryValue2"));
+	}
 
-		assertEquals( 1, service.getOperationCount() );
-		assertEquals( "/NewsSearchService/V1/", service.getBasePath() );
+	@Test
+	public void expandsRestRequestPathsWithTemplateParameter() throws Exception
+	{
+		RestRequest restRequest = makeRestRequest();
+		String templateParameterName = "templateName";
+		String templateParameterValue = "templateValue";
+		restRequest.getResource().setPath( "/the/{" + templateParameterName + "}/path" );
+		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.TEMPLATE, templateParameterName, templateParameterValue );
 
-		RestResource resource = service.getOperationAt( 0 );
+		assertThat(RestUtils.expandPath( restRequest.getResource().getFullPath(), restRequest.getParams(), restRequest ),
+				is( "/the/" + templateParameterValue + "/path" ));
+	}
 
-		assertEquals( 1, resource.getPropertyCount() );
-		assertEquals( "appid", resource.getPropertyAt( 0 ).getName() );
-		assertNotNull( resource.getProperty( "appid" ) );
-		assertEquals( 1, resource.getRequestCount() );
-
-		RestRequest request = resource.getRequestAt( 0 );
-		assertEquals( RestRequestInterface.RequestMethod.GET, request.getMethod() );
-		assertEquals( 9, request.getPropertyCount() );
+	private void addParameter( RestRequest restRequest, RestParamsPropertyHolder.ParameterStyle style, String name, String value )
+	{
+		RestParamsPropertyHolder params = restRequest.getParams();
+		RestParamProperty restParamProperty = params.addProperty( name );
+		restParamProperty.setStyle( style );
+		restParamProperty.setValue( value );
 	}
 }

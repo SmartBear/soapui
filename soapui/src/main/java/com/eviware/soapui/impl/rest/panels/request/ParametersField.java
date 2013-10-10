@@ -17,11 +17,7 @@ import javax.swing.event.CaretListener;
 import java.awt.BorderLayout;
 
 /**
- * Created with IntelliJ IDEA.
- * User: manne
- * Date: 10/9/13
- * Time: 9:46 AM
- * To change this template use File | Settings | File Templates.
+ * A component that displays matrix and query string parameters for a REST request and provides a popup to edit them.
  */
 class ParametersField extends JPanel
 {
@@ -36,9 +32,9 @@ class ParametersField extends JPanel
 	{
 		this.request = request;
 		textLabel = new JLabel( "Parameters" );
-		String queryParamsString = RestUtils.getQueryParamsString( request.getParams(), request );
-		textField = new JTextField( queryParamsString );
-		setToolTipText( queryParamsString );
+		String paramsString = RestUtils.makeSuffixParameterString( request );
+		textField = new JTextField( paramsString);
+		setToolTipText( paramsString );
 		super.setLayout( new BorderLayout() );
 		super.add( textLabel, BorderLayout.NORTH );
 		super.add( textField, BorderLayout.SOUTH );
@@ -48,7 +44,6 @@ class ParametersField extends JPanel
 
 	private void addListeners()
 	{
-		//TODO: probably change to CaretListener, to select correct parameter
 		textField.addCaretListener( new CaretListener()
 		{
 
