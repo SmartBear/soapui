@@ -103,6 +103,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 				if( !updating )
 				{
 					updating = true;
+					//TODO: This is a temporary fix. It should be fixed properly according to SOAP-752
 					getModelItem().setPath( extractCurrentResourcePathFrom( getText( document ) ) );
 					updating = false;
 				}
