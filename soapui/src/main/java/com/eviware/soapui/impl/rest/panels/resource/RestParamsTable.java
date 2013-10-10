@@ -263,6 +263,19 @@ public class RestParamsTable extends JPanel
 			}
 		}
 	}
+
+	public void focusParameter(String parameterName)
+	{
+		for (int i = 0; i < paramsTable.getRowCount(); i++)
+		{
+			 if (paramsTable.getValueAt(i, 0).equals(parameterName))
+			 {
+				 paramsTable.editCellAt( i, 1 );
+				 paramsTable.getEditorComponent().requestFocusInWindow();
+			 }
+		}
+	}
+
 	private class AddParamAction extends AbstractAction
 	{
 		public AddParamAction()
