@@ -117,23 +117,7 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -375,7 +359,14 @@ public class SoapUI
 			}
 		} );
 
-		mainToolbar.addLabeledFixed( "Search Forum", searchField );
+		JLabel searchLabel = new JLabel( "Search Forum" );
+		// Extra width to avoid label to be truncated
+		searchLabel.setPreferredSize( new Dimension(
+				( int )( searchLabel.getPreferredSize().getWidth() * 1.1 ),
+				( int )searchLabel.getPreferredSize().getHeight() ) );
+		mainToolbar.addFixed( searchLabel );
+		mainToolbar.addSeparator( new Dimension( 3, 3 ) );
+		mainToolbar.addFixed( searchField );
 		mainToolbar.add( new ToolbarForumSearchAction() );
 		mainToolbar.add( new ShowOnlineHelpAction( HelpUrls.USERGUIDE_HELP_URL ) );
 
