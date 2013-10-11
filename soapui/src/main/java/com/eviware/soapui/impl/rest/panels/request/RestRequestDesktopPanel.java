@@ -52,8 +52,6 @@ public class RestRequestDesktopPanel extends
 				getRequest().getResource().setPath( resourcePanel.getText() );
 			}
 		} );
-
-		String query = RestUtils.getQueryParamsString( getRequest() );
 		queryPanel = new ParametersField( getRequest() );
 	}
 

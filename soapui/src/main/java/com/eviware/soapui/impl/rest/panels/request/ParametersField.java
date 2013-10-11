@@ -15,7 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import java.awt.BorderLayout;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * A component that displays matrix and query string parameters for a REST request and provides a popup to edit them.
@@ -88,6 +90,7 @@ class ParametersField extends JPanel
 		popup.setLayout( new BorderLayout() );
 		popup.add( paramsTable, BorderLayout.CENTER );
 		popup.setInvoker( textField );
+		//TODO: We have to choose the parent component as destination to get the setLocation work properly
 		popup.setLocation( SwingUtilities.convertPoint( textField, 3, getHeight() + 2, SoapUI.getFrame() ) );
 		popup.setVisible( true );
 	}
