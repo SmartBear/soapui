@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -46,6 +47,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +73,14 @@ public class RestParamsTable extends JPanel
 	private final ParamLocation defaultParamLocation;
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
+	private FocusAdapter focusAdapter = new FocusAdapter()
+	{
+		@Override
+		public void focusGained( FocusEvent e )
+		{
+			System.out.println( "Gained focus" );
+		}
+	};
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation ,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
@@ -158,6 +170,13 @@ public class RestParamsTable extends JPanel
 		{
 			add( new JScrollPane( paramsTable ), BorderLayout.CENTER );
 		}
+	}
+
+	@Override
+	public synchronized void addKeyListener( KeyListener l )
+	{
+		super.addKeyListener( l );
+		paramsTable.addKeyListener( l );
 	}
 
 	private void initEditableButtons()
@@ -266,14 +285,23 @@ public class RestParamsTable extends JPanel
 
 	public void focusParameter(String parameterName)
 	{
+//		paramsTable.getEditorComponent().addFocusListener( focusAdapter );
+		paramsTable.grabFocus();
 		for (int i = 0; i < paramsTable.getRowCount(); i++)
 		{
 			 if (paramsTable.getValueAt(i, 0).equals(parameterName))
 			 {
 				 paramsTable.editCellAt( i, 1 );
 				 paramsTable.getEditorComponent().requestFocusInWindow();
+				 return;
 			 }
 		}
+		paramsTable.editCellAt(0, 1);
+		JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
+		editorComponent.select(0, editorComponent.getText().length() -1);
+		editorComponent.grabFocus();
+		System.out.println("Focused: " + paramsTable.getEditorComponent().hasFocus());
+
 	}
 
 	private class AddParamAction extends AbstractAction

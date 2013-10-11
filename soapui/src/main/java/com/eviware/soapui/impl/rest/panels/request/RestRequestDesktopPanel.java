@@ -44,14 +44,7 @@ public class RestRequestDesktopPanel extends
 	protected void initializeFields()
 	{
 		String path = getRequest().getResource().getFullPath();
-		resourcePanel = new TextPanelWithTopLabel( "Resource", path, new DocumentListenerAdapter()
-		{
-			@Override
-			public void update( Document document )
-			{
-				getRequest().getResource().setPath( resourcePanel.getText() );
-			}
-		} );
+		resourcePanel = new TextPanelWithTopLabel( "Resource", path);
 		queryPanel = new ParametersField( getRequest() );
 	}
 
