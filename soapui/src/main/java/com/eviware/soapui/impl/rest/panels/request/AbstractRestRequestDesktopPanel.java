@@ -70,6 +70,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			( ( RestParamProperty )param ).addPropertyChangeListener( restParamPropertyChangeListener );
 		}
+
 	}
 
 	private void addPropertyChangeListenerToResource( T2 requestItem )
@@ -193,6 +194,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	//Hooks for subclasses
 	protected abstract void addTopToolbarComponents( JXToolBar toolBar );
+
 	protected abstract void addBottomToolbar( JPanel panel );
 
 
@@ -343,5 +345,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 		}
 	}
+
 
 }

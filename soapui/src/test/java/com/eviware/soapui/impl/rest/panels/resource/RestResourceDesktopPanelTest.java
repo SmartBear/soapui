@@ -3,7 +3,6 @@ package com.eviware.soapui.impl.rest.panels.resource;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.support.SoapUIException;
@@ -49,46 +48,12 @@ public class RestResourceDesktopPanelTest
 	}
 
 	@Test
-	public void changesOnlyChildPathWhenUpdatingPathField() throws Exception
-	{
-		String originalParentPath = parentResource.getFullPath();
-		String newChildPath = "new_cool_path";
-		resourceDesktopPanel.pathTextField.setText( "/new_parent/" + newChildPath);
-
-		assertThat(childResource.getPath(), is(newChildPath));
-		assertThat( parentResource.getPath(), is(originalParentPath) );
-	}
-
-	@Test
-	public void handlesMultipleElementChildPathWhenUpdatingPathField() throws Exception
-	{
-		childResource.setPath("multiple/element/path");
-		String newChildPath = "new/cool/path";
-		resourceDesktopPanel.pathTextField.setText( parentResource.getFullPath() + "/" + newChildPath);
-
-		assertThat(childResource.getPath(), is(newChildPath));
-	}
-
-	@Test
-	public void changesWholePathInNonChildWhenUpdatingPathField() throws Exception
-	{
-		parentResource.setPath( "/path/with/several/elements" );
-		resourceDesktopPanel = new RestResourceDesktopPanel( parentResource );
-		String newPath = "/another/complex/path";
-		resourceDesktopPanel.pathTextField.setText( newPath );
-
-		assertThat( parentResource.getPath(), is(newPath) );
-	}
-
-
-	@Test
 	public void allowsToDeleteParameterAfterParameterLevelChange() throws SoapUIException
 	{
 		RestParamsPropertyHolder params = addParamsToChildResource();
 
 		JTable parameterTable = getRestParameterTable();
-		RestRequestDesktopPanel requestDesktopPanel =
-				openRestRequestDesktopPanelToAttachTheEventListenersForParameterlevelChange();
+		openRestRequestDesktopPanelToAttachTheEventListenersForParameterlevelChange();
 
 		//Param1 to Method, and hence it should be removed
 		parameterTable.setValueAt( METHOD, 0, RestParamsTableModel.PARAM_LOCATION_COLUMN_INDEX );
