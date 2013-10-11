@@ -91,7 +91,7 @@ public class RestRequestDesktopPanel extends
 	protected void updateUiValues()
 	{
 		resourcePanel.setText( getRequest().getResource().getFullPath() );
-		queryPanel.setText( RestUtils.getQueryParamsString(getRequest() ) );
+		queryPanel.setText( RestUtils.makeSuffixParameterString( getRequest() ) );
 
 	}
 	
