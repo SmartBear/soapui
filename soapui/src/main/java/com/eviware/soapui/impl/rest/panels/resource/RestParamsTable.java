@@ -285,7 +285,6 @@ public class RestParamsTable extends JPanel
 
 	public void focusParameter(String parameterName)
 	{
-//		paramsTable.getEditorComponent().addFocusListener( focusAdapter );
 		paramsTable.grabFocus();
 		for (int i = 0; i < paramsTable.getRowCount(); i++)
 		{
@@ -298,8 +297,8 @@ public class RestParamsTable extends JPanel
 		}
 		paramsTable.editCellAt(0, 1);
 		JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
-		editorComponent.select(0, editorComponent.getText().length() -1);
 		editorComponent.grabFocus();
+		editorComponent.selectAll();
 		System.out.println("Focused: " + paramsTable.getEditorComponent().hasFocus());
 
 	}

@@ -8,20 +8,16 @@ import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.JWindow;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
-import javax.swing.event.CaretEvent;
-import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -36,7 +32,7 @@ class ParametersField extends JPanel
 	private final RestRequestInterface request;
 	private final JLabel textLabel;
 	private final JTextField textField;
-	private PopupComponent popupComponent;
+	private Component popupComponent;
 	private Popup popup;
 
 	ParametersField( RestRequestInterface request )
@@ -116,28 +112,29 @@ class ParametersField extends JPanel
 				}
 			}
 		} );
+		showParametersTableInWindow( restParamsTable, selectedParameter );
+	}
+
+	private void showParametersTableInWindow( RestParamsTable restParamsTable, String selectedParameter )
+	{
+		popupComponent = new PopupWindow(restParamsTable);
+		PopupWindow popupWindow = new PopupWindow( restParamsTable );
+		popupWindow.pack();
+		restParamsTable.focusParameter( selectedParameter );
+		Point textFieldLocation = textField.getLocationOnScreen();
+		popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + textField.getHeight() );
+		popupWindow.setModal( true );
+		popupWindow.setVisible( true );
+	}
+
+	private void showParametersTable( RestParamsTable restParamsTable, String selectedParameter )
+	{
 		popupComponent = new PopupComponent(restParamsTable);
 		Point displayPoint = SwingUtilities.convertPoint( textField, 3, getHeight() + 2, SoapUI.getFrame() );
 		popup = PopupFactory.getSharedInstance().getPopup( null, popupComponent, (int)displayPoint.getX(), (int)displayPoint.getY() );
+		restParamsTable.focusParameter( selectedParameter );
 		//TODO: We have to choose the parent component as destination to get the setLocation work properly
 		popup.show();
-		SwingUtilities.windowForComponent( restParamsTable.getParamsTable() ).setFocusableWindowState( true );
-		SwingUtilities.invokeLater( new Runnable()
-		{
-			public void run()
-			{
-				restParamsTable.focusParameter( selectedParameter );
-				System.out.println( textField.hasFocus() + " - " + restParamsTable.hasFocus() + " - " + restParamsTable.getParamsTable().hasFocus() + "-" + SwingUtilities.windowForComponent( restParamsTable ).hasFocus());
-			}
-		} );
-		restParamsTable.addFocusListener( new FocusAdapter()
-		{
-			@Override
-			public void focusLost( FocusEvent e )
-			{
-				System.out.println("Focus lost");
-			}
-		} );
 	}
 
 	public void closePopup()
@@ -147,6 +144,29 @@ class ParametersField extends JPanel
 			popup.hide();
 			popup = null;
 		popupComponent = null;
+		}
+	}
+
+	private class PopupWindow extends JDialog
+	{
+
+		private PopupWindow( RestParamsTable restParamsTable )
+		{
+			getContentPane().setLayout( new BorderLayout() );
+			JPanel buttonPanel = new JPanel(new FlowLayout( FlowLayout.CENTER ));
+			JButton closeButton = new JButton( "Close" );
+			closeButton.addActionListener( new ActionListener()
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					setVisible( false );
+					dispose();
+				}
+			} );
+			buttonPanel.add( closeButton );
+			getContentPane().add( restParamsTable, BorderLayout.CENTER );
+			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
 		}
 	}
 
