@@ -291,15 +291,12 @@ public class RestParamsTable extends JPanel
 			 if (paramsTable.getValueAt(i, 0).equals(parameterName))
 			 {
 				 paramsTable.editCellAt( i, 1 );
-				 paramsTable.getEditorComponent().requestFocusInWindow();
+				 JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
+				 editorComponent.grabFocus();
+				 editorComponent.selectAll();
 				 return;
 			 }
 		}
-		paramsTable.editCellAt(0, 1);
-		JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
-		editorComponent.grabFocus();
-		editorComponent.selectAll();
-		System.out.println("Focused: " + paramsTable.getEditorComponent().hasFocus());
 
 	}
 

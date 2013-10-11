@@ -15,6 +15,8 @@ import javax.swing.JTextField;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,13 +36,14 @@ class ParametersField extends JPanel
 	private final JTextField textField;
 	private Component popupComponent;
 	private Popup popup;
+	private boolean textFieldClicked;
 
 	ParametersField( RestRequestInterface request )
 	{
 		this.request = request;
 		textLabel = new JLabel( "Parameters" );
 		String paramsString = RestUtils.makeSuffixParameterString( request );
-		textField = new JTextField( paramsString);
+		textField = new JTextField( paramsString );
 		//textField.setEditable( false );
 		setToolTipText( paramsString );
 		super.setLayout( new BorderLayout() );
@@ -56,24 +59,33 @@ class ParametersField extends JPanel
 		{
 
 			@Override
-			public void mouseReleased(MouseEvent e)
+			public void mouseReleased( MouseEvent e )
 			{
-				if (popup != null)
-				{
-					return;
-				}
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						ParameterFinder finder = new ParameterFinder( textField.getText() );
-						//TODO: determine which letter has been clicked, preferably using CaretListener if possible
-						openPopup( finder.findParameterAt( 0 ));
-					}
-				} );
+				textFieldClicked = true;
 			}
 
 
+		} );
+		textField.addCaretListener( new CaretListener()
+		{
+			@Override
+			public void caretUpdate( CaretEvent e )
+			{
+				System.out.println(e);
+				//TODO: add logic to avoid showing popup twice when you click at the beginning or end of the field
+				if( textFieldClicked || caretIsInMiddleOfTextField( e ))
+				{
+					ParameterFinder finder = new ParameterFinder( textField.getText() );
+					openPopup( finder.findParameterAt( e.getDot() ) );
+					textFieldClicked = false;
+				}
+			}
+
+			private boolean caretIsInMiddleOfTextField( CaretEvent e )
+			{
+				int textEndLocation = textField.getText().length();
+				return e.getDot() > 0 && e.getDot() < textEndLocation;
+			}
 		} );
 
 	}
@@ -117,21 +129,32 @@ class ParametersField extends JPanel
 
 	private void showParametersTableInWindow( RestParamsTable restParamsTable, String selectedParameter )
 	{
-		popupComponent = new PopupWindow(restParamsTable);
+		popupComponent = new PopupWindow( restParamsTable );
 		PopupWindow popupWindow = new PopupWindow( restParamsTable );
 		popupWindow.pack();
 		restParamsTable.focusParameter( selectedParameter );
-		Point textFieldLocation = textField.getLocationOnScreen();
-		popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + textField.getHeight() );
+		moveWindowBelowTextField( popupWindow );
 		popupWindow.setModal( true );
 		popupWindow.setVisible( true );
 	}
 
+	private void moveWindowBelowTextField( PopupWindow popupWindow )
+	{
+		try
+		{
+			Point textFieldLocation = textField.getLocationOnScreen();
+			popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + textField.getHeight() );
+		} catch (IllegalComponentStateException ignore)
+		{
+			 // this will happen when the desktop panel is being closed
+		}
+	}
+
 	private void showParametersTable( RestParamsTable restParamsTable, String selectedParameter )
 	{
-		popupComponent = new PopupComponent(restParamsTable);
+		popupComponent = new PopupComponent( restParamsTable );
 		Point displayPoint = SwingUtilities.convertPoint( textField, 3, getHeight() + 2, SoapUI.getFrame() );
-		popup = PopupFactory.getSharedInstance().getPopup( null, popupComponent, (int)displayPoint.getX(), (int)displayPoint.getY() );
+		popup = PopupFactory.getSharedInstance().getPopup( null, popupComponent, ( int )displayPoint.getX(), ( int )displayPoint.getY() );
 		restParamsTable.focusParameter( selectedParameter );
 		//TODO: We have to choose the parent component as destination to get the setLocation work properly
 		popup.show();
@@ -143,7 +166,7 @@ class ParametersField extends JPanel
 		{
 			popup.hide();
 			popup = null;
-		popupComponent = null;
+			popupComponent = null;
 		}
 	}
 
@@ -153,7 +176,7 @@ class ParametersField extends JPanel
 		private PopupWindow( RestParamsTable restParamsTable )
 		{
 			getContentPane().setLayout( new BorderLayout() );
-			JPanel buttonPanel = new JPanel(new FlowLayout( FlowLayout.CENTER ));
+			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 			JButton closeButton = new JButton( "Close" );
 			closeButton.addActionListener( new ActionListener()
 			{
@@ -176,7 +199,7 @@ class ParametersField extends JPanel
 		private PopupComponent( RestParamsTable restParamsTable )
 		{
 			super( new BorderLayout() );
-			JPanel buttonPanel = new JPanel(new FlowLayout( FlowLayout.CENTER ));
+			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 			JButton closeButton = new JButton( "Close" );
 			closeButton.addActionListener( new ActionListener()
 			{
