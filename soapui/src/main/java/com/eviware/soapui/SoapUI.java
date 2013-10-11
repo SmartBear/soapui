@@ -758,15 +758,7 @@ public class SoapUI
 		mainArgs = args;
 
 		SoapUIRunner soapuiRunner = new SoapUIRunner();
-		if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
-		{
-			SwingUtilities.invokeLater( soapuiRunner );
-		}
-		else
-		{
-			soapuiRunner.run();
-		}
-
+		SwingUtilities.invokeLater( soapuiRunner );
 	}
 
 	public static String[] getMainArgs()
