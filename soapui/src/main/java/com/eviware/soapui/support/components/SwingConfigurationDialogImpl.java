@@ -168,7 +168,7 @@ public class SwingConfigurationDialogImpl implements ConfigurationDialog
 	{
 		public OkAction()
 		{
-			super( "Ok" );
+			super( "OK" );
 		}
 
 		public void actionPerformed( ActionEvent e )

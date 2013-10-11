@@ -89,7 +89,7 @@ public class SetCredentialsAction extends AbstractAction
 	{
 		public OkAction()
 		{
-			super( "Ok" );
+			super( "OK" );
 		}
 
 		public void actionPerformed( ActionEvent e )
