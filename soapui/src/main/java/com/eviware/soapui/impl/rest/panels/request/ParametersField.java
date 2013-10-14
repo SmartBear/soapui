@@ -35,7 +35,6 @@ class ParametersField extends JPanel
 	private final JLabel textLabel;
 	private final JTextField textField;
 	private Component popupComponent;
-	private Popup popup;
 	private boolean textFieldClicked;
 
 	ParametersField( RestRequestInterface request )
@@ -77,6 +76,8 @@ class ParametersField extends JPanel
 				{
 					ParameterFinder finder = new ParameterFinder( textField.getText() );
 					openPopup( finder.findParameterAt( e.getDot() ) );
+					// this is to prevent direct edits of the text field
+					textLabel.requestFocus();
 					textFieldClicked = false;
 				}
 			}
@@ -111,7 +112,8 @@ class ParametersField extends JPanel
 
 	private void openPopup( final String selectedParameter )
 	{
-		final RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel( request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
+		final RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
+				request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
 				NewRestResourceActionBase.ParamLocation.METHOD, true, true );
 		restParamsTable.addKeyListener( new KeyAdapter()
 		{
@@ -150,22 +152,11 @@ class ParametersField extends JPanel
 		}
 	}
 
-	private void showParametersTable( RestParamsTable restParamsTable, String selectedParameter )
-	{
-		popupComponent = new PopupComponent( restParamsTable );
-		Point displayPoint = SwingUtilities.convertPoint( textField, 3, getHeight() + 2, SoapUI.getFrame() );
-		popup = PopupFactory.getSharedInstance().getPopup( null, popupComponent, ( int )displayPoint.getX(), ( int )displayPoint.getY() );
-		restParamsTable.focusParameter( selectedParameter );
-		//TODO: We have to choose the parent component as destination to get the setLocation work properly
-		popup.show();
-	}
-
 	public void closePopup()
 	{
-		if( popup != null )
+		if( popupComponent != null )
 		{
-			popup.hide();
-			popup = null;
+			popupComponent.setVisible( false );
 			popupComponent = null;
 		}
 	}
@@ -175,6 +166,7 @@ class ParametersField extends JPanel
 
 		private PopupWindow( RestParamsTable restParamsTable )
 		{
+			super( SoapUI.getFrame() );
 			getContentPane().setLayout( new BorderLayout() );
 			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
 			JButton closeButton = new JButton( "Close" );
@@ -192,28 +184,5 @@ class ParametersField extends JPanel
 			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
 		}
 	}
-
-	private class PopupComponent extends JPanel
-	{
-
-		private PopupComponent( RestParamsTable restParamsTable )
-		{
-			super( new BorderLayout() );
-			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
-			JButton closeButton = new JButton( "Close" );
-			closeButton.addActionListener( new ActionListener()
-			{
-				@Override
-				public void actionPerformed( ActionEvent e )
-				{
-					closePopup();
-				}
-			} );
-			buttonPanel.add( closeButton );
-			add( restParamsTable, BorderLayout.CENTER );
-			add( buttonPanel, BorderLayout.SOUTH );
-		}
-	}
-
 
 }
