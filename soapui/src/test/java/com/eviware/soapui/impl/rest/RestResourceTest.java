@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.rest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -27,13 +28,8 @@ import org.junit.Test;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
-public class RestResourceTestCase
+public class RestResourceTest
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( RestResourceTestCase.class );
-	}
-
 	@Test
 	public void shouldGetTemplateParams() throws Exception
 	{
@@ -49,6 +45,26 @@ public class RestResourceTestCase
 
 		RestResource subResource = resource.addNewChildResource( "Child", "{test}/test" );
 		assertEquals( "/{id}/test/{test}/test", subResource.getFullPath() );
+	}
+
+	@Test
+	public void shouldIgnoreMatrixParamsOnPath() throws Exception
+	{
+		WsdlProject project = new WsdlProject();
+		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
+		RestResource resource = restService.addNewResource( "Resource", "/test" );
+		resource.setPath( "/maps/api/geocode/xml;Param2=matrixValue2;address=16" );
+
+		// asserts full path does not have the matrix params
+		assertEquals( "/maps/api/geocode/xml", resource.getFullPath() );
+
+		RestResource subResource = resource.addNewChildResource( "Child", "{test}/test/version;ver=2" );
+
+		// asserts child resources's path does not have the matrix params
+		assertEquals( "{test}/test/version", subResource.getPath() );
+
+		// asserts child resources's full path does not have the matrix params
+		assertEquals( "/maps/api/geocode/xml/{test}/test/version", subResource.getFullPath() );
 	}
 
 	@Ignore("Not consistent with current model, but this is how it should work!")

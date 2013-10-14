@@ -247,7 +247,10 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public String getPath()
 	{
-		return getConfig().getPath();
+		String path = getConfig().getPath();
+		// A bug introduced in 4.6.0 appended matrix param in the resource path, so projects created with 4.6.0 will save
+		// matrix param in the path. Following line takes away matrix param from the path.
+		return removeMatrixParams( path );
 	}
 
 	public void setPath( String path )
@@ -553,6 +556,13 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	public List<TestProperty> getPropertyList()
 	{
 		return params.getPropertyList();
+	}
+
+	//Helper methods
+	private String removeMatrixParams(String path)
+	{
+		String pathWithOutMatrixParam = path.replaceAll( "(\\;).+(\\=).+(?!\\/)", "" );
+		return pathWithOutMatrixParam;
 	}
 
 }
