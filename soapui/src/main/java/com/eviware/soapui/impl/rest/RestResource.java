@@ -561,6 +561,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	//Helper methods
 	private String removeMatrixParams(String path)
 	{
+		if ( path == null || path.isEmpty() )
+		{
+			return path;
+		}
+
 		String pathWithOutMatrixParam = path.replaceAll( "(\\;).+(\\=).+(?!\\/)", "" );
 		return pathWithOutMatrixParam;
 	}
