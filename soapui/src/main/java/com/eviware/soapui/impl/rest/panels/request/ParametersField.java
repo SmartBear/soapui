@@ -11,13 +11,16 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.Popup;
-import javax.swing.PopupFactory;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.FlowLayout;
+import java.awt.IllegalComponentStateException;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -43,7 +46,6 @@ class ParametersField extends JPanel
 		textLabel = new JLabel( "Parameters" );
 		String paramsString = RestUtils.makeSuffixParameterString( request );
 		textField = new JTextField( paramsString );
-		//textField.setEditable( false );
 		setToolTipText( paramsString );
 		super.setLayout( new BorderLayout() );
 		super.add( textLabel, BorderLayout.NORTH );
@@ -68,18 +70,22 @@ class ParametersField extends JPanel
 		textField.addCaretListener( new CaretListener()
 		{
 			@Override
-			public void caretUpdate( CaretEvent e )
+			public void caretUpdate( final CaretEvent e )
 			{
-				System.out.println(e);
-				//TODO: add logic to avoid showing popup twice when you click at the beginning or end of the field
-				if( textFieldClicked || caretIsInMiddleOfTextField( e ))
+				if( caretIsInMiddleOfTextField( e ) || (textFieldClicked && e.getDot() == textField.getText().length() -1))
 				{
-					ParameterFinder finder = new ParameterFinder( textField.getText() );
-					openPopup( finder.findParameterAt( e.getDot() ) );
-					// this is to prevent direct edits of the text field
-					textLabel.requestFocus();
-					textFieldClicked = false;
+					final ParameterFinder finder = new ParameterFinder( textField.getText() );
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							openPopup( finder.findParameterAt( e.getDot() ) );
+						}
+					} );
 				}
+				// this is to prevent direct edits of the text field
+				textLabel.requestFocus();
+				textFieldClicked = false;
 			}
 
 			private boolean caretIsInMiddleOfTextField( CaretEvent e )
@@ -164,7 +170,7 @@ class ParametersField extends JPanel
 	private class PopupWindow extends JDialog
 	{
 
-		private PopupWindow( RestParamsTable restParamsTable )
+		private PopupWindow( final RestParamsTable restParamsTable )
 		{
 			super( SoapUI.getFrame() );
 			getContentPane().setLayout( new BorderLayout() );
@@ -175,6 +181,11 @@ class ParametersField extends JPanel
 				@Override
 				public void actionPerformed( ActionEvent e )
 				{
+					JTable actualTable = restParamsTable.getParamsTable();
+					if (actualTable.isEditing())
+					{
+						actualTable.getCellEditor().stopCellEditing();
+					}
 					setVisible( false );
 					dispose();
 				}
