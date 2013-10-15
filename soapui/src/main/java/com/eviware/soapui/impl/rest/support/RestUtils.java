@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.xmlbeans.XmlBoolean;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
@@ -31,6 +20,16 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.xmlbeans.XmlBoolean;
+
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class RestUtils
 {
@@ -93,11 +92,10 @@ public class RestUtils
 		String[] items = path.split( "/" );
 
 		int templateParamCount = 0;
-		StringBuffer resultPath = new StringBuffer();
+		StringBuilder resultPath = new StringBuilder();
 
-		for( int i = 0; i < items.length; i++ )
+		for( String item : items )
 		{
-			String item = items[i];
 			try
 			{
 				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
@@ -167,7 +165,7 @@ public class RestUtils
 					}
 				}
 			}
-			catch( Throwable e )
+			catch( Exception ignore )
 			{
 			}
 
@@ -230,57 +228,7 @@ public class RestUtils
 		}
 	}
 
-	/*
-					List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
-	   			for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ), encoding ) );
-					for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
-					for( int i = 0; i < valueParts.size(); i++ )
-						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
-					if( query != null && valueParts != null )
-				{
-					for( String valuePart : valueParts )
-					{
-						if( query.length() > 0 )
-							query.append( '&' );
-
-						query.append( URLEncoder.encode( param.getName() ) );
-						query.append( '=' );
-
-						if( StringUtils.hasContent( valuePart ) )
-							query.append( valuePart );
-					}
-				}
-
-	 */
-
-	/*
-					List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
-	   			for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ), encoding ) );
-					for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
-					for( int i = 0; i < valueParts.size(); i++ )
-						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
-					if( query != null && valueParts != null )
-				{
-					for( String valuePart : valueParts )
-					{
-						if( query.length() > 0 )
-							query.append( '&' );
-
-						query.append( URLEncoder.encode( param.getName() ) );
-						query.append( '=' );
-
-						if( StringUtils.hasContent( valuePart ) )
-							query.append( valuePart );
-					}
-				}
-
-	 */
-
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public static String expandPath( String path, RestParamsPropertyHolder params, RestRequestInterface request )
 	{
 		DefaultPropertyExpansionContext context = new DefaultPropertyExpansionContext( request );
@@ -304,7 +252,7 @@ public class RestUtils
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
-					value = URLEncoder.encode( value);
+					value = URLEncoder.encode( value );
 				}
 			}
 
@@ -349,7 +297,7 @@ public class RestUtils
 					buffer.append( ";" ).append( param.getName() );
 					if( StringUtils.hasContent( value ) )
 					{
-						buffer.append( "=" ).append( URLEncoder.encode( value ) );
+						buffer.append( "=" ).append( value );
 					}
 				}
 
@@ -359,45 +307,46 @@ public class RestUtils
 	}
 
 
-	// TODO: make it cleaner
 	public static String getQueryParamsString( RestRequestInterface request )
 	{
+		if( isRequestWithoutQueryString( request ) )
+		{
+			return "";
+		}
 		RestParamsPropertyHolder params = request.getParams();
-		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
-				: new StringBuffer();
+		StringBuilder query = new StringBuilder();
 
 		for( int c = 0; c < params.getPropertyCount(); c++ )
 		{
 			RestParamProperty param = params.getPropertyAt( c );
-
 			String value = param.getValue();
 			List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
 
-			if( ( !StringUtils.hasContent( value ) && !param.getRequired() ) || param.getStyle() != ParameterStyle.QUERY )
-				continue;
-
-			if( query != null && valueParts != null )
+			if( param.getStyle() != ParameterStyle.QUERY || ( valueParts.isEmpty() && !param.getRequired() ) )
 			{
-				for( String valuePart : valueParts )
-				{
-					if( query.length() > 0 )
-						query.append( '&' );
-
-					query.append( param.getName() );
-					query.append( '=' );
-
-					if( StringUtils.hasContent( valuePart ) )
-						query.append( valuePart );
-				}
+				continue;
 			}
 
+			for( String valuePart : valueParts )
+			{
+				if( query.length() > 0 )
+				{
+					query.append( '&' );
+				}
+				query.append( param.getName() ).append( '=' );
+				if( StringUtils.hasContent( valuePart ) )
+				{
+					query.append( valuePart );
+				}
+			}
 		}
 
-		String queryString = "";
-		if( query != null && query.length() > 0 )
-			queryString += "?" + query.toString();
+		return ( query.length() > 0 ? "?" : "" ) + query.toString();
+	}
 
-		return queryString;
+	private static boolean isRequestWithoutQueryString( RestRequestInterface request )
+	{
+		return request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() );
 	}
 
 
