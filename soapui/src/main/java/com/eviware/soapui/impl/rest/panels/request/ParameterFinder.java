@@ -66,7 +66,7 @@ class ParameterFinder
 			currentIndex += token.length();
 			tokenIndex++;
 		}
-		return -1;
+		return tokens.size() - 1;
 	}
 
 }

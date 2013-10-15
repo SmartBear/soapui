@@ -82,6 +82,14 @@ public class ParameterFinderTest
 	}
 
 	@Test
+	public void handlesClickAtVeryEnd() throws Exception
+	{
+		String parametersString = ";new=${#Project#site};jsessionid=abc?item=http://www.svd.se/?service=mobile&amp;articleId=8492260&amp;new=true&rssId=123&cid=25968641";
+		ParameterFinder finder = new ParameterFinder( parametersString );
+		assertThat(finder.findParameterAt( parametersString.length() ), is("cid"));
+	}
+
+	@Test
 	public void returnsFirstParameterWhenLeadingCharIsClicked() throws Exception
 	{
 		String parametersString = "?name=Johan&reallyLongOne=value&";

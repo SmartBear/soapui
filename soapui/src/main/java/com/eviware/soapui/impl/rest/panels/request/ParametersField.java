@@ -38,7 +38,7 @@ class ParametersField extends JPanel
 	private final JLabel textLabel;
 	private final JTextField textField;
 	private Component popupComponent;
-	private boolean textFieldClicked;
+	private int lastSelectedPosition;
 
 	ParametersField( RestRequestInterface request )
 	{
@@ -46,6 +46,7 @@ class ParametersField extends JPanel
 		textLabel = new JLabel( "Parameters" );
 		String paramsString = RestUtils.makeSuffixParameterString( request );
 		textField = new JTextField( paramsString );
+		textField.setEditable( false );
 		setToolTipText( paramsString );
 		super.setLayout( new BorderLayout() );
 		super.add( textLabel, BorderLayout.NORTH );
@@ -60,9 +61,18 @@ class ParametersField extends JPanel
 		{
 
 			@Override
-			public void mouseReleased( MouseEvent e )
+			public void mouseClicked( MouseEvent e )
 			{
-				textFieldClicked = true;
+					final ParameterFinder finder = new ParameterFinder( textField.getText() );
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							openPopup( finder.findParameterAt( lastSelectedPosition ) );
+						}
+					} );
+				// this is to prevent direct edits of the text field
+				textLabel.requestFocus();
 			}
 
 
@@ -72,27 +82,9 @@ class ParametersField extends JPanel
 			@Override
 			public void caretUpdate( final CaretEvent e )
 			{
-				if( caretIsInMiddleOfTextField( e ) || (textFieldClicked && e.getDot() == textField.getText().length() -1))
-				{
-					final ParameterFinder finder = new ParameterFinder( textField.getText() );
-					SwingUtilities.invokeLater( new Runnable()
-					{
-						public void run()
-						{
-							openPopup( finder.findParameterAt( e.getDot() ) );
-						}
-					} );
-				}
-				// this is to prevent direct edits of the text field
-				textLabel.requestFocus();
-				textFieldClicked = false;
+				lastSelectedPosition = e.getDot();
 			}
 
-			private boolean caretIsInMiddleOfTextField( CaretEvent e )
-			{
-				int textEndLocation = textField.getText().length();
-				return e.getDot() > 0 && e.getDot() < textEndLocation;
-			}
 		} );
 
 	}
