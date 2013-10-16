@@ -45,6 +45,7 @@ public class RestResourceEditor extends JTextField
 		super( editingRestResource.getFullPath() );
 		this.editingRestResource = editingRestResource;
 		this.updating = updating;
+
 		if( isResourceLonely( editingRestResource ) )
 		{
 			getDocument().addDocumentListener( new LonelyDocumentListener() );
@@ -63,6 +64,9 @@ public class RestResourceEditor extends JTextField
 		}
 		else
 		{
+			setEnabled( false );
+			setDisabledTextColor( Color.BLACK );
+			setBackground( Color.WHITE );
 			//TODO: Do some better listening
 			addMouseListener( new MouseAdapter()
 			{
@@ -204,7 +208,7 @@ public class RestResourceEditor extends JTextField
 		panel.add( changeWarningLabel, BorderLayout.CENTER );
 
 		panel.setBorder( BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder( Color.black ),
+				BorderFactory.createLineBorder( Color.BLACK ),
 				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
 
 		return panel;
@@ -275,7 +279,7 @@ public class RestResourceEditor extends JTextField
 
 		private PopupWindow( final JPanel panel )
 		{
-			super( SoapUI.getFrame() );
+			super( SoapUI.getFrame());
 
 			getContentPane().setLayout( new BorderLayout() );
 
@@ -289,8 +293,9 @@ public class RestResourceEditor extends JTextField
 					{
 						restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText() );
 					}
-					dispose();
+					setVisible( false );
 					scanForTemplateParameters();
+					dispose();
 				}
 			} );
 
