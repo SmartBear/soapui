@@ -6,6 +6,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
@@ -19,14 +20,17 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.StringContains.containsString;
 
 /**
  * Unit tests for RestRequestDesktopPanel.
@@ -48,7 +52,7 @@ public class RestRequestDesktopPanelTest
 	public void setUp() throws Exception
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setMethod( RestRequestInterface.RequestMethod.GET);
+		restRequest.setMethod( RestRequestInterface.RequestMethod.GET );
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
 		restService().addEndpoint( ENDPOINT );
 		restRequest.setEndpoint( ENDPOINT );
@@ -69,7 +73,7 @@ public class RestRequestDesktopPanelTest
 		paramsTable.setValueAt( NewRestResourceActionBase.ParamLocation.RESOURCE, 0, 3 );
 
 		RestParamProperty returnedParameter = restRequest.getParams().getProperty( PARAMETER_NAME );
-		assertThat(returnedParameter.getValue(), is(PARAMETER_VALUE));
+		assertThat( returnedParameter.getValue(), is( PARAMETER_VALUE ) );
 	}
 
 	@Test
@@ -78,7 +82,7 @@ public class RestRequestDesktopPanelTest
 		restRequest.getParams().addProperty( "Param2" );
 		getRestParameterTable().setValueAt( NewRestResourceActionBase.ParamLocation.METHOD, 0, 3 );
 
-		assertThat( (String) getRestParameterTable().getValueAt( 0, 0 ), is(PARAMETER_NAME));
+		assertThat( ( String )getRestParameterTable().getValueAt( 0, 0 ), is( PARAMETER_NAME ) );
 	}
 
 	@Test
@@ -89,19 +93,21 @@ public class RestRequestDesktopPanelTest
 
 		String paramNameAtRow0;
 		restRequest.getParams().removeProperty( PARAMETER_NAME );
-		paramNameAtRow0 = (String) getRestParameterTable().getValueAt( 0, 0 );
-		assertThat(paramNameAtRow0, is("Param2"));
+		paramNameAtRow0 = ( String )getRestParameterTable().getValueAt( 0, 0 );
+		assertThat( paramNameAtRow0, is( "Param2" ) );
 
 	}
 
 
 	@Test
-	public void displaysEndpoint() {
-		assertThat(requestDesktopPanel.getEndpointsModel().getSelectedItem(), is((Object)ENDPOINT));
+	public void displaysEndpoint()
+	{
+		assertThat( requestDesktopPanel.getEndpointsModel().getSelectedItem(), is( ( Object )ENDPOINT ) );
 	}
 
 	@Test
-	public void reactsToEndpointChanges() {
+	public void reactsToEndpointChanges()
+	{
 		String anotherEndpoint = "http://mafia.ru/search";
 		restService().changeEndpoint( ENDPOINT, anotherEndpoint );
 		assertThat( requestDesktopPanel.getEndpointsModel().getSelectedItem(), is( ( Object )anotherEndpoint ) );
@@ -116,7 +122,7 @@ public class RestRequestDesktopPanelTest
 		endpointsCombo.setSelectedItem( EndpointsComboBoxModel.EDIT_ENDPOINT );
 
 		waitForSwingThread();
-		assertThat(dialogs.getPrompts(), hasPromptWithValue(otherValue));
+		assertThat( dialogs.getPrompts(), hasPromptWithValue( otherValue ) );
 	}
 
 	@Test
@@ -130,7 +136,7 @@ public class RestRequestDesktopPanelTest
 		assertThat( dialogs.getPrompts(), hasPromptWithValue( otherValue ) );
 	}
 
-	@Ignore("For some reason this test fails, although it works fine in the GUI")
+	@Ignore( "For some reason this test fails, although it works fine in the GUI" )
 	@Test
 	public void resetsToEnteredValueWhenCancelingAdd() throws Exception
 	{
@@ -144,10 +150,24 @@ public class RestRequestDesktopPanelTest
 	}
 
 	@Test
-	public void reactsToPathChanges() {
+	public void reactsToPathChanges()
+	{
 		String anotherPath = "/changed/path";
 		restRequest.getResource().setPath( anotherPath );
 		assertThat( requestDesktopPanel.resourcePanel.getText(), is( anotherPath ) );
+	}
+
+	@Ignore("Fails intermittently, but works in GUI")
+	@Test
+	public void parameterAdditionUpdatesParametersField() throws InterruptedException, InvocationTargetException
+	{
+		final String parameterName = "the_new_param";
+		RestParamProperty newParameter = restRequest.getParams().addProperty( parameterName );
+		newParameter.setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+		final String value = "the_new_value";
+		newParameter.setValue( value );
+
+		assertThat( requestDesktopPanel.queryPanel.getText(), containsString( parameterName + "=" + value ) );
 	}
 
 	@After
@@ -172,7 +192,7 @@ public class RestRequestDesktopPanelTest
 
 	private void setComboTextFieldValue( JComboBox<String> endpointsCombo, String otherValue )
 	{
-		(( JTextComponent ) endpointsCombo.getEditor().getEditorComponent()).setText(otherValue);
+		( ( JTextComponent )endpointsCombo.getEditor().getEditorComponent() ).setText( otherValue );
 	}
 
 	private void waitForSwingThread() throws InterruptedException

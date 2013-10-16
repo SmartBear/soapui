@@ -16,7 +16,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.IllegalComponentStateException;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -50,7 +56,6 @@ class ParametersField extends JPanel
 		super.add( textLabel, BorderLayout.NORTH );
 		super.add( textField, BorderLayout.SOUTH );
 		addListeners();
-
 	}
 
 	private void addListeners()
@@ -84,7 +89,6 @@ class ParametersField extends JPanel
 			}
 
 		} );
-
 	}
 
 	public String getText()
@@ -157,9 +161,13 @@ class ParametersField extends JPanel
 		}
 	}
 
+	public void updateTextField()
+	{
+		textField.setText(RestUtils.makeSuffixParameterString( request ));
+	}
+
 	private class PopupWindow extends JDialog
 	{
-
 		private PopupWindow( final RestParamsTable restParamsTable )
 		{
 			super( SoapUI.getFrame() );
@@ -184,6 +192,6 @@ class ParametersField extends JPanel
 			getContentPane().add( restParamsTable, BorderLayout.CENTER );
 			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
 		}
-	}
 
+	}
 }

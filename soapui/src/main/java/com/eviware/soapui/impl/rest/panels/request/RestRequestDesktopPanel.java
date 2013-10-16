@@ -12,21 +12,19 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
-import javax.swing.*;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
 
 public class RestRequestDesktopPanel extends
 		AbstractRestRequestDesktopPanel<RestRequestInterface, RestRequestInterface>
@@ -84,7 +82,7 @@ public class RestRequestDesktopPanel extends
 	protected void updateUiValues()
 	{
 		resourcePanel.setText( getRequest().getResource().getFullPath() );
-		queryPanel.setText( RestUtils.makeSuffixParameterString( getRequest() ) );
+		queryPanel.updateTextField();
 
 	}
 	
@@ -97,12 +95,9 @@ public class RestRequestDesktopPanel extends
 
 	protected class TextPanelWithTopLabel extends JPanel
 	{
-		private final Color MAC_DISABLED_BGCOLOR = new Color( 232, 232, 232 );
 
 		JLabel textLabel;
 		JTextField textField;
-
-
 
 		TextPanelWithTopLabel( String label, String text )
 		{
@@ -112,22 +107,6 @@ public class RestRequestDesktopPanel extends
 			super.setLayout( new BorderLayout() );
 			super.add( textLabel, BorderLayout.NORTH );
 			super.add( textField, BorderLayout.SOUTH );
-		}
-
-		public TextPanelWithTopLabel( String label, String text, boolean isEditable )
-		{
-			this( label, text );
-			textField.setEditable( isEditable );
-			if( !isEditable && UISupport.isMac() )
-			{
-				textField.setBackground( MAC_DISABLED_BGCOLOR );
-			}
-		}
-
-		public TextPanelWithTopLabel( String label, String text, DocumentListener documentListener )
-		{
-			this( label, text );
-			textField.getDocument().addDocumentListener( documentListener );
 		}
 
 
