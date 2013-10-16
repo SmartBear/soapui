@@ -43,6 +43,7 @@ class ParametersField extends JPanel
 		String paramsString = RestUtils.makeSuffixParameterString( request );
 		textField = new JTextField( paramsString );
 		textField.setEditable( false );
+		textField.setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
 		textField.setBackground( Color.WHITE );
 		setToolTipText( paramsString );
 		super.setLayout( new BorderLayout() );
