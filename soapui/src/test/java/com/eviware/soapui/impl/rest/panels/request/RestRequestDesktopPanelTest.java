@@ -6,6 +6,7 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
@@ -25,8 +26,10 @@ import javax.swing.text.JTextComponent;
 import java.util.List;
 
 import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for RestRequestDesktopPanel.
@@ -37,6 +40,7 @@ public class RestRequestDesktopPanelTest
 	public static final String PARAMETER_NAME = "jsessionid";
 	public static final String PARAMETER_VALUE = "Da Value";
 	public static final String ENDPOINT = "http://sunet.se/search";
+	public static final String RESOURCE_PATH = "abc/path";
 
 	private RestRequestDesktopPanel requestDesktopPanel;
 	private RestRequest restRequest;
@@ -50,6 +54,7 @@ public class RestRequestDesktopPanelTest
 		restRequest = ModelItemFactory.makeRestRequest();
 		restRequest.setMethod( RestRequestInterface.RequestMethod.GET);
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
+		restRequest.getResource().setPath( RESOURCE_PATH );
 		restService().addEndpoint( ENDPOINT );
 		restRequest.setEndpoint( ENDPOINT );
 		RestParamProperty restParamProperty = restRequest.getParams().getProperty( PARAMETER_NAME );
@@ -79,6 +84,37 @@ public class RestRequestDesktopPanelTest
 		getRestParameterTable().setValueAt( NewRestResourceActionBase.ParamLocation.METHOD, 0, 3 );
 
 		assertThat( (String) getRestParameterTable().getValueAt( 0, 0 ), is(PARAMETER_NAME));
+	}
+
+	@Test
+	public void addsAndRemovesTemplateParamterFromPath() throws Exception
+	{
+		String path = restRequest.getResource().getPath();
+		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		// Assert that it adds the template parameter on the path
+		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + PARAMETER_NAME + "}"));
+
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+		// Assert that it removes the template parameter from the path
+		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path ));
+	}
+
+	@Test
+	public void updatesExistingTemplateParamterName() throws Exception
+	{
+
+		String newParamName = "sessionID";
+		String path = restRequest.getResource().getPath();
+		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setName( newParamName );
+
+		// Assert that parameter is replaced with new name
+		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + newParamName + "}"));
 	}
 
 	@Test

@@ -196,6 +196,12 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	}
 
 	@Override
+	protected void updateFieldWithTemplateParameters( String oldTemplateParameterName , String newTemplateParameterName )
+	{
+		//Test Editor does not have to do for template param changes
+	}
+
+	@Override
 	protected void updateUiValues()
 	{
 		updateFullPathLabel();

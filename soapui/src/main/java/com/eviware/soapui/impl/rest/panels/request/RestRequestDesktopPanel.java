@@ -80,6 +80,36 @@ public class RestRequestDesktopPanel extends
 	}
 
 	@Override
+	protected void updateFieldWithTemplateParameters( String oldTemplateParameterName, String newTemplateParameterName )
+	{
+		String currentPath = resourcePanel.getText();
+
+		if( !oldTemplateParameterName.isEmpty() ) //then replace existing template parameter
+		{
+			currentPath = replaceExistingParamName( oldTemplateParameterName, newTemplateParameterName, currentPath );
+
+		}
+		else if( !currentPath.contains( "{" + newTemplateParameterName + "}" ) ) //then append new template parameter
+		{
+			currentPath = currentPath + "{" + newTemplateParameterName + "}";
+		}
+
+		resourcePanel.setText( currentPath );
+
+	}
+
+	private String replaceExistingParamName( String oldTemplateParameterName, String newTemplateParameterName, String currentPath )
+	{
+		if( !newTemplateParameterName.isEmpty() )
+		{
+			newTemplateParameterName = "{" + newTemplateParameterName + "}";
+		}
+		currentPath = currentPath.replaceAll( "\\{" + oldTemplateParameterName + "\\}", newTemplateParameterName );
+		return currentPath;
+	}
+
+
+	@Override
 	protected void updateUiValues()
 	{
 		if( updating.booleanValue() )
