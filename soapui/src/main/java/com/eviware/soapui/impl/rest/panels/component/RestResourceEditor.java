@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.impl.rest.panels.component;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -37,6 +38,7 @@ public class RestResourceEditor extends JTextField
 {
 	private RestResource editingRestResource;
 	private MutableBoolean updating;
+	private List<RestSubResourceTextField> restSubResourceTextFields;
 
 	public RestResourceEditor( RestResource editingRestResource, MutableBoolean updating )
 	{
@@ -68,7 +70,7 @@ public class RestResourceEditor extends JTextField
 				public void mouseClicked( MouseEvent e )
 				{
 					setEditable( false );
-					showDialog();
+					openPopup();
 					setEditable( true );
 				}
 			} );
@@ -117,10 +119,19 @@ public class RestResourceEditor extends JTextField
 		return restResource.getParentResource() == null && restResource.getChildResourceCount() == 0;
 	}
 
-	public void showDialog()
+	public void openPopup()
 	{
-		final JDialog dialog = new JDialog( UISupport.getMainFrame(), "Resource Path", true );
-		dialog.setResizable( false );
+		final JPanel panel = createResourceEditorPanel();
+
+		PopupWindow popupWindow = new PopupWindow( panel );
+		popupWindow.pack();
+		moveWindowBelowTextField( popupWindow );
+		popupWindow.setModal( true );
+		popupWindow.setVisible( true );
+	}
+
+	private JPanel createResourceEditorPanel()
+	{
 		final JPanel panel = new JPanel( new BorderLayout() );
 
 		Box contentBox = Box.createVerticalBox();
@@ -133,7 +144,7 @@ public class RestResourceEditor extends JTextField
 		changeWarningLabel.setBorder( BorderFactory.createCompoundBorder(
 				contentBox.getBorder(),
 				BorderFactory.createEmptyBorder( 10, 0, 10, 0 ) ) );
-		final List<RestSubResourceTextField> restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
+		restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
 		DocumentListener pathChangedListener = new DocumentListenerAdapter()
 		{
 			@Override
@@ -192,40 +203,11 @@ public class RestResourceEditor extends JTextField
 
 		panel.add( changeWarningLabel, BorderLayout.CENTER );
 
-		JButton okButton = new JButton( "OK" );
-		JButton cancelButton = new JButton( "Cancel" );
-
-		JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( okButton, cancelButton );
-
-		panel.add( buttonBar, BorderLayout.SOUTH );
 		panel.setBorder( BorderFactory.createCompoundBorder(
-				panel.getBorder(),
+				BorderFactory.createLineBorder( Color.black ),
 				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
 
-		okButton.addActionListener( new ActionListener()
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				for( RestSubResourceTextField restSubResourceTextField : restSubResourceTextFields )
-				{
-					restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText() );
-				}
-				dialog.setVisible( false );
-				scanForTemplateParameters();
-			}
-		} );
-		cancelButton.addActionListener( new ActionListener()
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				dialog.setVisible( false );
-			}
-		} );
-		dialog.getRootPane().setContentPane( panel );
-		dialog.pack();
-		UISupport.showDialog( dialog );
+		return panel;
 	}
 
 	private List<RestResource> getRestResources()
@@ -285,6 +267,58 @@ public class RestResourceEditor extends JTextField
 			updating.setValue( true );
 			editingRestResource.setPath( getText( document ) );
 			updating.setValue( false );
+		}
+	}
+
+	private class PopupWindow extends JDialog
+	{
+
+		private PopupWindow( final JPanel panel )
+		{
+			super( SoapUI.getFrame() );
+
+			getContentPane().setLayout( new BorderLayout() );
+
+			JButton okButton = new JButton( new AbstractAction( "OK" )
+			{
+
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					for( RestSubResourceTextField restSubResourceTextField : restSubResourceTextFields )
+					{
+						restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText() );
+					}
+					dispose();
+					scanForTemplateParameters();
+				}
+			} );
+
+			JButton cancelButton = new JButton( new AbstractAction( "Cancel" )
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					dispose();
+				}
+			} );
+			JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( okButton, cancelButton );
+			buttonBar.setLayout( new FlowLayout( FlowLayout.RIGHT ) );
+			getContentPane().add( panel, BorderLayout.CENTER );
+			getContentPane().add( buttonBar, BorderLayout.SOUTH );
+		}
+	}
+
+	private void moveWindowBelowTextField( PopupWindow popupWindow )
+	{
+		try
+		{
+			Point textFieldLocation = this.getLocationOnScreen();
+			popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + this.getHeight() );
+		}
+		catch( IllegalComponentStateException ignore )
+		{
+			// this will happen when the desktop panel is being closed
 		}
 	}
 }
