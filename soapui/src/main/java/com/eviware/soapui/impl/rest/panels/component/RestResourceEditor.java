@@ -22,12 +22,13 @@ import com.jgoodies.forms.factories.ButtonBarFactory;
 import org.apache.commons.lang.mutable.MutableBoolean;
 
 import javax.swing.*;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,8 +40,9 @@ public class RestResourceEditor extends JTextField
 	private RestResource editingRestResource;
 	private MutableBoolean updating;
 	private List<RestSubResourceTextField> restSubResourceTextFields;
+	private int lastSelectedPosition;
 
-	public RestResourceEditor( RestResource editingRestResource, MutableBoolean updating )
+	public RestResourceEditor( final RestResource editingRestResource, MutableBoolean updating )
 	{
 		super( editingRestResource.getFullPath() );
 		this.editingRestResource = editingRestResource;
@@ -64,26 +66,39 @@ public class RestResourceEditor extends JTextField
 		}
 		else
 		{
-			setEnabled( false );
-			setDisabledTextColor( Color.BLACK );
+			setEditable( false );
 			setBackground( Color.WHITE );
-			//TODO: Do some better listening
 			addMouseListener( new MouseAdapter()
 			{
 				@Override
 				public void mouseClicked( MouseEvent e )
 				{
-					setEditable( false );
-					openPopup();
-					setEditable( true );
+					final RestResource focusedResource = new RestResourceFinder( editingRestResource ).findResourceAt( lastSelectedPosition );
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							openPopup( focusedResource );
+						}
+					} );
 				}
+			} );
+			addCaretListener( new CaretListener()
+			{
+				@Override
+				public void caretUpdate( final CaretEvent e )
+				{
+					lastSelectedPosition = e.getDot();
+				}
+
 			} );
 		}
 	}
 
 	void scanForTemplateParameters()
 	{
-		for( RestResource restResource : getRestResources() )
+		for( RestResource restResource : RestUtils.extractAncestorsParentFirst( editingRestResource ) )
 		{
 			for( String p : RestUtils.extractTemplateParams( restResource.getPath() ) )
 			{
@@ -123,18 +138,16 @@ public class RestResourceEditor extends JTextField
 		return restResource.getParentResource() == null && restResource.getChildResourceCount() == 0;
 	}
 
-	public void openPopup()
+	public void openPopup( RestResource focusedResource )
 	{
-		final JPanel panel = createResourceEditorPanel();
+		final JPanel panel = createResourceEditorPanel( focusedResource );
 
 		PopupWindow popupWindow = new PopupWindow( panel );
-		popupWindow.pack();
 		moveWindowBelowTextField( popupWindow );
-		popupWindow.setModal( true );
 		popupWindow.setVisible( true );
 	}
 
-	private JPanel createResourceEditorPanel()
+	private JPanel createResourceEditorPanel( RestResource focusedResource )
 	{
 		final JPanel panel = new JPanel( new BorderLayout() );
 
@@ -144,10 +157,10 @@ public class RestResourceEditor extends JTextField
 
 		ImageIcon icon = UISupport.createImageIcon( "/connector.png" );
 
-		final JLabel changeWarningLabel = new JLabel( " " );
+		final JLabel changeWarningLabel = new JLabel( "hejhopp" );
 		changeWarningLabel.setBorder( BorderFactory.createCompoundBorder(
 				contentBox.getBorder(),
-				BorderFactory.createEmptyBorder( 10, 0, 10, 0 ) ) );
+				BorderFactory.createEmptyBorder( 10, 0, 0, 0 ) ) );
 		restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
 		DocumentListener pathChangedListener = new DocumentListenerAdapter()
 		{
@@ -175,7 +188,7 @@ public class RestResourceEditor extends JTextField
 				}
 			}
 		};
-		for( RestResource restResource : getRestResources() )
+		for( RestResource restResource : RestUtils.extractAncestorsParentFirst( editingRestResource ) )
 		{
 			Box row = Box.createHorizontalBox();
 			row.setAlignmentX( 0 );
@@ -189,7 +202,7 @@ public class RestResourceEditor extends JTextField
 				row.add( new JLabel( icon ) );
 			}
 
-			RestSubResourceTextField restSubResourceTextField = new RestSubResourceTextField( restResource );
+			final RestSubResourceTextField restSubResourceTextField = new RestSubResourceTextField( restResource );
 			restSubResourceTextField.getTextField().getDocument().addDocumentListener( pathChangedListener );
 			restSubResourceTextFields.add( restSubResourceTextField );
 
@@ -199,6 +212,18 @@ public class RestResourceEditor extends JTextField
 			row.add( textFieldBox );
 
 			contentBox.add( row );
+			if( restResource == focusedResource )
+			{
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						restSubResourceTextField.getTextField().requestFocusInWindow();
+						restSubResourceTextField.getTextField().selectAll();
+					}
+				} );
+			}
 
 			index++;
 		}
@@ -208,21 +233,10 @@ public class RestResourceEditor extends JTextField
 		panel.add( changeWarningLabel, BorderLayout.CENTER );
 
 		panel.setBorder( BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder( Color.BLACK ),
+				BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.BLACK ),
 				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
 
 		return panel;
-	}
-
-	private List<RestResource> getRestResources()
-	{
-		final List<RestResource> resources = new ArrayList<RestResource>();
-		for( RestResource r = editingRestResource; r != null; r = r.getParentResource() )
-		{
-			resources.add( r );
-		}
-		Collections.reverse( resources );
-		return resources;
 	}
 
 	private class RestSubResourceTextField
@@ -279,9 +293,13 @@ public class RestResourceEditor extends JTextField
 
 		private PopupWindow( final JPanel panel )
 		{
-			super( SoapUI.getFrame());
+			super( SoapUI.getFrame() );
+			setModal( true );
+			setResizable( false );
+			//setUndecorated( true );
 
-			getContentPane().setLayout( new BorderLayout() );
+			JPanel contentPane = new JPanel( new BorderLayout() );
+			setContentPane( contentPane );
 
 			JButton okButton = new JButton( new AbstractAction( "OK" )
 			{
@@ -299,18 +317,25 @@ public class RestResourceEditor extends JTextField
 				}
 			} );
 
-			JButton cancelButton = new JButton( new AbstractAction( "Cancel" )
+			AbstractAction cancelAction = new AbstractAction( "Cancel" )
 			{
 				@Override
 				public void actionPerformed( ActionEvent e )
 				{
 					dispose();
 				}
-			} );
+			};
+			JButton cancelButton = new JButton( cancelAction );
+			cancelButton.getInputMap( WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "cancel" );
+			cancelButton.getActionMap().put( "cancel", cancelAction );
+
 			JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( okButton, cancelButton );
 			buttonBar.setLayout( new FlowLayout( FlowLayout.RIGHT ) );
-			getContentPane().add( panel, BorderLayout.CENTER );
-			getContentPane().add( buttonBar, BorderLayout.SOUTH );
+			contentPane.add( panel, BorderLayout.CENTER );
+			contentPane.add( buttonBar, BorderLayout.SOUTH );
+			contentPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+
+			pack();
 		}
 	}
 

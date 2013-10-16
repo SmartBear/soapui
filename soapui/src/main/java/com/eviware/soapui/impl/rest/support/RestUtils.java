@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -28,6 +29,8 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -392,5 +395,16 @@ public class RestUtils
 		}
 
 		return result;
+	}
+
+	public static List<RestResource> extractAncestorsParentFirst( RestResource childResource )
+	{
+		final List<RestResource> resources = new ArrayList<RestResource>();
+		for( RestResource r = childResource; r != null; r = r.getParentResource() )
+		{
+			resources.add( r );
+		}
+		Collections.reverse( resources );
+		return resources;
 	}
 }
