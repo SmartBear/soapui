@@ -109,7 +109,7 @@ class ParametersField extends JPanel
 	{
 		final RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
 				request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
-				NewRestResourceActionBase.ParamLocation.METHOD, true, true );
+				NewRestResourceActionBase.ParamLocation.RESOURCE, true, true );
 		restParamsTable.addKeyListener( new KeyAdapter()
 		{
 			@Override
