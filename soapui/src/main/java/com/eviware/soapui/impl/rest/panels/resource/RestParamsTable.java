@@ -17,9 +17,9 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -99,13 +99,14 @@ public class RestParamsTable extends JPanel
 
 		movePropertyDownAction = new MovePropertyDownAction();
 		movePropertyUpAction = new MovePropertyUpAction();
+		paramsTable = new JTable( paramsTableModel );
 
 		if( showEditableButtons )
 		{
 			initEditableButtons();
 		}
 
-		paramsTable = new JTable( paramsTableModel );
+
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
 				new JComboBox<ParameterStyle>( paramsTableModel.getParameterStylesForEdit() ) ) );
@@ -170,7 +171,14 @@ public class RestParamsTable extends JPanel
 
 	private void initEditableButtons()
 	{
-		addParamAction = new AddParamAction();
+		addParamAction = AddParamAction.builder()
+				.withSmallIcon( "/add_property.gif"  )
+				.withShortDescription( "Adds a parameter to the parameter table"  )
+				.forTable( paramsTable )
+				.withParent( this )
+				.withPropertyHolder( params )
+				.build();
+				//new AddParamAction();
 		removeParamAction = new RemoveParamAction();
 		updateParamsAction = new UpdateParamsAction();
 
@@ -291,45 +299,6 @@ public class RestParamsTable extends JPanel
 			}
 		}
 
-	}
-
-	private class AddParamAction extends AbstractAction
-	{
-		public AddParamAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to the parameter table" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String name = UISupport.prompt( "Specify parameter name", "Add Parameter", "" );
-			if( StringUtils.hasContent( name ) )
-			{
-				params.addProperty( name );
-				RestParamProperty addedProperty = params.getProperty( name );
-				addedProperty.setParamLocation( defaultParamLocation );
-
-				final int row = params.getPropertyNames().length - 1;
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						requestFocusInWindow();
-						scrollRectToVisible( paramsTable.getCellRect( row, 1, true ) );
-						SwingUtilities.invokeLater( new Runnable()
-						{
-							public void run()
-							{
-								paramsTable.editCellAt( row, 1 );
-								paramsTable.getEditorComponent().requestFocusInWindow();
-							}
-						} );
-					}
-				} );
-
-			}
-		}
 	}
 
 	private class UpdateParamsAction extends AbstractAction
