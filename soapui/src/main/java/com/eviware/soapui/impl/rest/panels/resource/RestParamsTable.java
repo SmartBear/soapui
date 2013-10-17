@@ -165,12 +165,7 @@ public class RestParamsTable extends JPanel
 
 	private void initEditableButtons()
 	{
-		addParamAction = AddParamAction.builder()
-				.withSmallIcon( "/add_property.gif" )
-				.withShortDescription( "Adds a parameter to the parameter table" )
-				.forTable( paramsTable )
-				.withPropertyHolder( params )
-				.build();
+		addParamAction = new AddParamAction( paramsTable, params, "Adds a parameter to the parameter table" );
 		removeParamAction = new RemovePropertyAction( paramsTable, params, "Removes the selected parameter" );
 		updateParamsAction = new UpdateParamsAction();
 

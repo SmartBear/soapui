@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.TestPropertyHolder;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 import javax.swing.*;
@@ -35,13 +34,12 @@ public class AddParamAction extends AbstractAction
 	private TestPropertyHolder propertyHolder;
 	private JTable parameterTable;
 
-	private AddParamAction()
+	public AddParamAction( JTable parameterTable, TestPropertyHolder propertyHolder, String description )
 	{
-	}
-
-	public static Builder builder()
-	{
-		return new Builder();
+		this.parameterTable = parameterTable;
+		this.propertyHolder = propertyHolder;
+		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+		putValue( Action.SHORT_DESCRIPTION, description );
 	}
 
 	public void actionPerformed( ActionEvent e )
@@ -90,63 +88,4 @@ public class AddParamAction extends AbstractAction
 		} );
 	}
 
-
-	public static class Builder
-	{
-		private AddParamAction instance = new AddParamAction();
-
-		private Builder()
-		{
-		}
-
-		public Builder withSmallIcon( String smallIcon )
-		{
-			instance.putValue( Action.SMALL_ICON, UISupport.createImageIcon( smallIcon ) );
-			return this;
-		}
-
-		public Builder withShortDescription( String shortDescription )
-		{
-			instance.putValue( Action.SHORT_DESCRIPTION, shortDescription );
-			return this;
-		}
-
-		public Builder forTable( JTable paramTable )
-		{
-			instance.parameterTable = paramTable;
-			return this;
-		}
-
-		public Builder withPropertyHolder( TestPropertyHolder propertyHolder )
-		{
-			instance.propertyHolder = propertyHolder;
-			return this;
-		}
-
-		public AddParamAction build()
-		{
-			assertNotEmpty( "iconImage", instance.getValue( SMALL_ICON ) );
-			assertNotEmpty( "shortDescription", ( String )instance.getValue( SHORT_DESCRIPTION ) );
-			assertNotEmpty( "parameterTable", instance.parameterTable );
-			assertNotEmpty( "propertyHolder", instance.propertyHolder );
-
-			return instance;
-		}
-
-		private void assertNotEmpty( String name, String value )
-		{
-			if( StringUtils.isNullOrEmpty( value ) )
-			{
-				throw new IllegalArgumentException( name + " should not be null/empty" );
-			}
-		}
-
-		private void assertNotEmpty( String name, Object value )
-		{
-			if( value == null )
-			{
-				throw new IllegalArgumentException( name + " should not be null" );
-			}
-		}
-	}
 }

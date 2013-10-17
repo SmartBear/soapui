@@ -164,12 +164,7 @@ public class PropertyHolderTable extends JPanel
 		{
 			removePropertyAction = new RemovePropertyAction( propertiesTable, holder,
 					"Removes the selected property from the property list" );
-			addPropertyAction = AddParamAction.builder()
-					.withSmallIcon( "/add_property.gif" )
-					.withShortDescription( "Adds a property to the property list" )
-					.forTable( propertiesTable )
-					.withPropertyHolder( holder )
-					.build();
+			addPropertyAction = new AddParamAction( propertiesTable, holder, "Adds a property to the property list" );
 			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, holder,
 					"Moves selected property up one row" );
 			movePropertyDownAction = new MovePropertyDownAction( propertiesTable, holder,
