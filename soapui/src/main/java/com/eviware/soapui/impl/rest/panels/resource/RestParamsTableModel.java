@@ -40,29 +40,27 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 		FULL( COLUMN_NAMES, COLUMN_TYPES );
 
 		final String[] columnNames;
-		final Class[] columnTypes;
 
+		final Class[] columnTypes;
 		private Mode( String[] columnNames, Class[] columnTypes )
 		{
 			this.columnNames = columnNames;
 			this.columnTypes = columnTypes;
 		}
+
 	}
 
 	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
-	protected RestParamsPropertyHolder params;
-	private List<String> paramNameIndex = new ArrayList<String>();
 
 	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
 
+	protected RestParamsPropertyHolder params;
+
+	private List<String> paramNameIndex = new ArrayList<String>();
 	private Mode mode;
 	private boolean isLastChangeParameterLevelChange = false;
 
-	public RestParamsTableModel( RestParamsPropertyHolder params )
-	{
-		this(params, Mode.FULL);
-	}
 	public RestParamsTableModel( RestParamsPropertyHolder params, Mode mode )
 	{
 		this.params = params;
@@ -74,6 +72,16 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 			parametersOwner.addPropertyChangeListener( this );
 		}
 		buildParamNameIndex( params );
+	}
+
+	public RestParamsTableModel( RestParamsPropertyHolder params )
+	{
+		this(params, Mode.FULL);
+	}
+
+	public boolean isInFullMode()
+	{
+		return mode == Mode.FULL;
 	}
 
 	private void buildParamNameIndex( RestParamsPropertyHolder params )
@@ -94,6 +102,8 @@ public class RestParamsTableModel extends AbstractTableModel implements TableMod
 	{
 		return mode.columnTypes.length;
 	}
+
+
 
 	@Override
 	public String getColumnName( int columnIndex )

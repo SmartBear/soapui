@@ -26,7 +26,6 @@ import java.awt.IllegalComponentStateException;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -41,7 +40,6 @@ class ParametersField extends JPanel
 	private final RestRequestInterface request;
 	private final JLabel textLabel;
 	private final JTextField textField;
-	private PopupWindow popupWindow;
 	private int lastSelectedPosition;
 
 	ParametersField( RestRequestInterface request )
@@ -112,27 +110,14 @@ class ParametersField extends JPanel
 
 	private void openPopup( final String selectedParameter )
 	{
-		final RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
+		RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
 				request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
 				NewRestResourceActionBase.ParamLocation.RESOURCE, true, true );
-		JTable innerTable = restParamsTable.getParamsTable();
-		innerTable.addKeyListener( new KeyAdapter()
-		{
-			@Override
-			public void keyPressed( KeyEvent e )
-			{
-				if( e.getKeyCode() == KeyEvent.VK_ESCAPE && popupWindow != null )
-				{
-					popupWindow.dispose();
-				}
-			}
-		} );
 		showParametersTableInWindow( restParamsTable, selectedParameter );
 	}
 
 	private void showParametersTableInWindow( RestParamsTable restParamsTable, String selectedParameter )
 	{
-		popupWindow = new PopupWindow( restParamsTable );
 		PopupWindow popupWindow = new PopupWindow( restParamsTable );
 		popupWindow.pack();
 		restParamsTable.focusParameter( selectedParameter );
