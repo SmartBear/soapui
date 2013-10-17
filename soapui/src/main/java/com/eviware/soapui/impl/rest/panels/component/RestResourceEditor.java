@@ -22,6 +22,7 @@ import com.jgoodies.forms.factories.ButtonBarFactory;
 import org.apache.commons.lang.mutable.MutableBoolean;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
@@ -66,8 +67,11 @@ public class RestResourceEditor extends JTextField
 		}
 		else
 		{
+			Color originalBackground = getBackground();
+			Border originalBorder = getBorder();
 			setEditable( false );
-			setBackground( Color.WHITE );
+			setBackground( originalBackground );
+			setBorder( originalBorder );
 			setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
 
 			addMouseListener( new MouseAdapter()
