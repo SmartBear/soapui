@@ -22,6 +22,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,7 @@ import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
@@ -92,6 +94,8 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorView<XmlDocument>
 {
+	private static final String RSYNTAXAREA_THEME = "/rsyntaxarea-theme/soapui.xml";
+
 	private RSyntaxTextArea editArea;
 	private RTextScrollPane editorScrollPane;
 	private ValidateMessageXmlAction validateXmlAction;
@@ -125,6 +129,17 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 	protected void buildUI()
 	{
 		editArea = new RSyntaxTextArea( 20, 60 );
+
+		try
+		{
+			Theme theme = Theme.load( XmlSourceEditorView.class.getResourceAsStream( RSYNTAXAREA_THEME ) );
+			theme.apply( editArea );
+		}
+		catch( IOException e )
+		{
+			SoapUI.logError( e, "Could not load XML editor color theme file" );
+		}
+
 		editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_XML );
 		editArea.setFont( UISupport.getEditorFont() );
 		editArea.setCodeFoldingEnabled( true );
