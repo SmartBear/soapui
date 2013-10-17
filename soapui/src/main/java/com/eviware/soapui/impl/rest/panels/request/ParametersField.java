@@ -7,12 +7,14 @@ import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
@@ -28,6 +30,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * A component that displays matrix and query string parameters for a REST request and provides a popup to edit them.
@@ -165,6 +168,7 @@ class ParametersField extends JPanel
 		private PopupWindow( final RestParamsTable restParamsTable )
 		{
 			super( SoapUI.getFrame() );
+			setResizable( false );
 			this.restParamsTable = restParamsTable;
 			getContentPane().setLayout( new BorderLayout() );
 			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
@@ -180,6 +184,8 @@ class ParametersField extends JPanel
 			buttonPanel.add( closeButton );
 			getContentPane().add( restParamsTable, BorderLayout.CENTER );
 			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
+			closeButton.getInputMap( WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( ( char )KeyEvent.VK_ESCAPE ), "closePopup" );
+			closeButton.getActionMap().put( "closePopup", new CloseAction() );
 		}
 
 		private void close()
@@ -193,6 +199,50 @@ class ParametersField extends JPanel
 			dispose();
 		}
 
+		private class CloseAction implements Action
+		{
+			@Override
+			public Object getValue( String key )
+			{
+				return null;
+			}
+
+			@Override
+			public void putValue( String key, Object value )
+			{
+
+			}
+
+			@Override
+			public void setEnabled( boolean b )
+			{
+
+			}
+
+			@Override
+			public boolean isEnabled()
+			{
+				return true;
+			}
+
+			@Override
+			public void addPropertyChangeListener( PropertyChangeListener listener )
+			{
+
+			}
+
+			@Override
+			public void removePropertyChangeListener( PropertyChangeListener listener )
+			{
+
+			}
+
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				close();
+			}
+		}
 	}
 
 }
