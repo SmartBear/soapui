@@ -47,8 +47,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,21 +66,12 @@ public class RestParamsTable extends JPanel
 	protected MovePropertyUpAction movePropertyUpAction = null;
 	protected UpdateParamsAction updateParamsAction = null;
 	private PresentationModel<RestParamProperty> paramDetailsModel;
-	private StringListFormComponent optionsFormComponent;
 	private SimpleBindingForm detailsForm;
 	private final ParamLocation defaultParamLocation;
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
-	private FocusAdapter focusAdapter = new FocusAdapter()
-	{
-		@Override
-		public void focusGained( FocusEvent e )
-		{
-			System.out.println( "Gained focus" );
-		}
-	};
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation ,
+	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
 		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showEditableButtons,
@@ -103,7 +92,7 @@ public class RestParamsTable extends JPanel
 
 	protected void init( boolean showInspector )
 	{
-		if ( showDefaultParamsButton )
+		if( showDefaultParamsButton )
 		{
 			defaultParamsAction = new UseDefaultParamsAction();
 		}
@@ -119,9 +108,9 @@ public class RestParamsTable extends JPanel
 		paramsTable = new JTable( paramsTableModel );
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
-				new JComboBox( paramsTableModel.getParameterStylesForEdit() ) ) );
+				new JComboBox<ParameterStyle>( paramsTableModel.getParameterStylesForEdit() ) ) );
 		paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor(
-				new JComboBox( paramsTableModel.getParameterLevels() ) ) );
+				new JComboBox<ParamLocation>( paramsTableModel.getParameterLevels() ) ) );
 		// Workaround: for some reason the lower part of text gets clipped on some platforms
 		paramsTable.setRowHeight( 25 );
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -130,7 +119,7 @@ public class RestParamsTable extends JPanel
 			public void valueChanged( ListSelectionEvent e )
 			{
 				int selectedRow = paramsTable.getSelectedRow();
-				if( showEditableButtons)
+				if( showEditableButtons )
 				{
 					removeParamAction.setEnabled( selectedRow != -1 );
 				}
@@ -204,7 +193,7 @@ public class RestParamsTable extends JPanel
 		}
 
 		detailsForm.appendComboBox( "type", "Type", types.toArray(), "The type of the parameter" );
-		optionsFormComponent = new StringListFormComponent( "Available values for this Parameter" );
+		StringListFormComponent optionsFormComponent = new StringListFormComponent( "Available values for this Parameter" );
 		//TODO: Consider removing hardcoded size
 		optionsFormComponent.setPreferredSize( new Dimension( 350, 100 ) );
 		detailsForm.appendComponent( "options", "Options", optionsFormComponent );
@@ -254,11 +243,12 @@ public class RestParamsTable extends JPanel
 		}
 
 		toolbar.addSeparator();
-		toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
-		toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
+		if( inFullMode() )
+		{
+			toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
+			toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
+		}
 		toolbar.addSeparator();
-
-		insertAdditionalButtons( toolbar );
 
 		toolbar.addGlue();
 
@@ -267,8 +257,10 @@ public class RestParamsTable extends JPanel
 		return toolbar;
 	}
 
-	protected void insertAdditionalButtons( JXToolBar toolbar )
+	private boolean inFullMode()
 	{
+		RestParamsTableModel tableModel = (RestParamsTableModel )getParamsTable().getModel();
+		return tableModel.isInFullMode();
 	}
 
 	public void extractParams( RestParamsPropertyHolder params, ParamLocation location )
@@ -283,19 +275,20 @@ public class RestParamsTable extends JPanel
 		}
 	}
 
-	public void focusParameter(String parameterName)
+	public void focusParameter( String parameterName )
 	{
 		paramsTable.grabFocus();
-		for (int i = 0; i < paramsTable.getRowCount(); i++)
+		for( int i = 0; i < paramsTable.getRowCount(); i++ )
 		{
-			 if (paramsTable.getValueAt(i, 0).equals(parameterName))
-			 {
-				 paramsTable.editCellAt( i, 1 );
-				 JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
-				 editorComponent.grabFocus();
-				 editorComponent.selectAll();
-				 return;
-			 }
+			if( paramsTable.getValueAt( i, 0 ).equals( parameterName ) )
+			{
+				paramsTable.setRowSelectionInterval( i, i );
+				paramsTable.editCellAt( i, 1 );
+				JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
+				editorComponent.grabFocus();
+				editorComponent.selectAll();
+				return;
+			}
 		}
 
 	}
@@ -426,7 +419,7 @@ public class RestParamsTable extends JPanel
 			int ix = paramsTable.getSelectedRow();
 			if( ix != -1 )
 			{
-				moveProperty( ix, ix-1 );
+				moveProperty( ix, ix - 1 );
 				paramsTable.setRowSelectionInterval( ix - 1, ix - 1 );
 			}
 		}
@@ -446,7 +439,7 @@ public class RestParamsTable extends JPanel
 			int ix = paramsTable.getSelectedRow();
 			if( ix != -1 )
 			{
-				moveProperty( ix, ix+1 );
+				moveProperty( ix, ix + 1 );
 				paramsTable.setRowSelectionInterval( ix + 1, ix + 1 );
 			}
 		}
@@ -454,7 +447,7 @@ public class RestParamsTable extends JPanel
 
 	private void moveProperty( int oldRow, int newRow )
 	{
-		String propName = (String) paramsTableModel.getValueAt( oldRow, 0 );
+		String propName = ( String )paramsTableModel.getValueAt( oldRow, 0 );
 		params.moveProperty( propName, newRow );
 		paramsTableModel.moveProperty( propName, oldRow, newRow );
 	}
