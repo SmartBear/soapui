@@ -157,7 +157,7 @@ public class RestResourceEditor extends JTextField
 
 		ImageIcon icon = UISupport.createImageIcon( "/connector.png" );
 
-		final JLabel changeWarningLabel = new JLabel( "hejhopp" );
+		final JLabel changeWarningLabel = new JLabel( " " );
 		changeWarningLabel.setBorder( BorderFactory.createCompoundBorder(
 				contentBox.getBorder(),
 				BorderFactory.createEmptyBorder( 10, 0, 0, 0 ) ) );
@@ -296,7 +296,6 @@ public class RestResourceEditor extends JTextField
 			super( SoapUI.getFrame() );
 			setModal( true );
 			setResizable( false );
-			//setUndecorated( true );
 
 			JPanel contentPane = new JPanel( new BorderLayout() );
 			setContentPane( contentPane );
