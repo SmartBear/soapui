@@ -1,5 +1,5 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ *  SoapUI, copyright (C) 2004-2013 smartbear.com
  *
  *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
@@ -18,6 +18,9 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterSt
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyDownAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyUpAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.RemovePropertyAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.UISupport;
@@ -28,24 +31,11 @@ import com.jgoodies.binding.PresentationModel;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlBeans;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.xml.namespace.QName;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -60,14 +50,13 @@ public class RestParamsTable extends JPanel
 	protected RestParamsTableModel paramsTableModel;
 	protected JTable paramsTable;
 	protected AddParamAction addParamAction = null;
-	protected RemoveParamAction removeParamAction = null;
+	protected RemovePropertyAction removeParamAction = null;
 	protected UseDefaultParamsAction defaultParamsAction = null;
 	protected MovePropertyDownAction movePropertyDownAction = null;
 	protected MovePropertyUpAction movePropertyUpAction = null;
 	protected UpdateParamsAction updateParamsAction = null;
 	private PresentationModel<RestParamProperty> paramDetailsModel;
 	private SimpleBindingForm detailsForm;
-	private final ParamLocation defaultParamLocation;
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
 
@@ -86,20 +75,21 @@ public class RestParamsTable extends JPanel
 		this.showDefaultParamsButton = showDefaultParamsButton;
 		this.params = params;
 		this.paramsTableModel = model;
-		this.defaultParamLocation = defaultParamLocation;
 		init( showInspector );
 	}
 
 	protected void init( boolean showInspector )
 	{
+		paramsTable = new JTable( paramsTableModel );
+
 		if( showDefaultParamsButton )
 		{
 			defaultParamsAction = new UseDefaultParamsAction();
 		}
 
-		movePropertyDownAction = new MovePropertyDownAction();
-		movePropertyUpAction = new MovePropertyUpAction();
-		paramsTable = new JTable( paramsTableModel );
+		movePropertyDownAction = new MovePropertyDownAction( paramsTable, params, "Moves selected parameter down one row" );
+		movePropertyUpAction = new MovePropertyUpAction( paramsTable, params, "Moves selected parameter up one row" );
+
 
 		if( showEditableButtons )
 		{
@@ -123,6 +113,10 @@ public class RestParamsTable extends JPanel
 				if( showEditableButtons )
 				{
 					removeParamAction.setEnabled( selectedRow != -1 );
+				}
+				if( showDefaultParamsButton )
+				{
+					defaultParamsAction.setEnabled( paramsTable.getRowCount() > 0 );
 				}
 				movePropertyDownAction.setEnabled( selectedRow < paramsTable.getRowCount() - 1 );
 				movePropertyUpAction.setEnabled( selectedRow > 0 );
@@ -172,14 +166,12 @@ public class RestParamsTable extends JPanel
 	private void initEditableButtons()
 	{
 		addParamAction = AddParamAction.builder()
-				.withSmallIcon( "/add_property.gif"  )
-				.withShortDescription( "Adds a parameter to the parameter table"  )
+				.withSmallIcon( "/add_property.gif" )
+				.withShortDescription( "Adds a parameter to the parameter table" )
 				.forTable( paramsTable )
-				.withParent( this )
 				.withPropertyHolder( params )
 				.build();
-				//new AddParamAction();
-		removeParamAction = new RemoveParamAction();
+		removeParamAction = new RemovePropertyAction( paramsTable, params, "Removes the selected parameter" );
 		updateParamsAction = new UpdateParamsAction();
 
 	}
@@ -247,7 +239,8 @@ public class RestParamsTable extends JPanel
 
 		if( showDefaultParamsButton )
 		{
-			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
+			boolean defaultParamsActionEnabled = paramsTable.getRowCount() > 0;
+			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, defaultParamsActionEnabled ) );
 		}
 
 		toolbar.addSeparator();
@@ -267,7 +260,7 @@ public class RestParamsTable extends JPanel
 
 	private boolean inFullMode()
 	{
-		RestParamsTableModel tableModel = (RestParamsTableModel )getParamsTable().getModel();
+		RestParamsTableModel tableModel = ( RestParamsTableModel )getParamsTable().getModel();
 		return tableModel.isInFullMode();
 	}
 
@@ -327,33 +320,6 @@ public class RestParamsTable extends JPanel
 		}
 	}
 
-	private class RemoveParamAction extends AbstractAction
-	{
-		public RemoveParamAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes the selected parameter" );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int row = paramsTable.getSelectedRow();
-			if( row == -1 )
-				return;
-
-			UISupport.stopCellEditing( paramsTable );
-
-			String propertyName = paramsTableModel.getValueAt( row, 0 ).toString();
-			if( UISupport.confirm( "Remove parameter [" + propertyName + "]?", "Remove Parameter" ) )
-			{
-				paramsTable.clearSelection();
-				paramsTableModel.removeProperty( propertyName );
-				//params.removeProperty( propertyName );
-			}
-		}
-	}
-
 	private class UseDefaultParamsAction extends AbstractAction
 	{
 		public UseDefaultParamsAction()
@@ -372,53 +338,6 @@ public class RestParamsTable extends JPanel
 				}
 			}
 		}
-	}
-
-	private class MovePropertyUpAction extends AbstractAction
-	{
-		public MovePropertyUpAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/up_arrow.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Moves selected parameter up one row" );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int ix = paramsTable.getSelectedRow();
-			if( ix != -1 )
-			{
-				moveProperty( ix, ix - 1 );
-				paramsTable.setRowSelectionInterval( ix - 1, ix - 1 );
-			}
-		}
-	}
-
-	private class MovePropertyDownAction extends AbstractAction
-	{
-		public MovePropertyDownAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/down_arrow.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Moves selected parameter down one row" );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int ix = paramsTable.getSelectedRow();
-			if( ix != -1 )
-			{
-				moveProperty( ix, ix + 1 );
-				paramsTable.setRowSelectionInterval( ix + 1, ix + 1 );
-			}
-		}
-	}
-
-	private void moveProperty( int oldRow, int newRow )
-	{
-		String propName = ( String )paramsTableModel.getValueAt( oldRow, 0 );
-		params.moveProperty( propName, newRow );
-		paramsTableModel.moveProperty( propName, oldRow, newRow );
 	}
 
 	public void setParams( RestParamsPropertyHolder params )

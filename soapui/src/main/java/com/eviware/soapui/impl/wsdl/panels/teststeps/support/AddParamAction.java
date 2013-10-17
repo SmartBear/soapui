@@ -1,8 +1,19 @@
+/*
+ *  soapUI, copyright (C) 2004-2013 smartbear.com
+ *
+ *  soapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation.
+ *
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
@@ -21,12 +32,10 @@ import java.awt.event.ActionEvent;
  */
 public class AddParamAction extends AbstractAction
 {
-	private MutableTestPropertyHolder propertyHolder;
+	private TestPropertyHolder propertyHolder;
 	private JTable parameterTable;
-	private JPanel parent;
 
-
-	private AddParamAction( String iconImage, String shortDescription )
+	private AddParamAction()
 	{
 	}
 
@@ -35,11 +44,10 @@ public class AddParamAction extends AbstractAction
 		return new Builder();
 	}
 
-
 	public void actionPerformed( ActionEvent e )
 	{
 		String name = "";
-		propertyHolder.addProperty( name );
+		( ( MutableTestPropertyHolder )propertyHolder ).addProperty( name );
 
 		final int row = propertyHolder.getPropertyNames().length - 1;
 		SwingUtilities.invokeLater( new Runnable()
@@ -66,8 +74,8 @@ public class AddParamAction extends AbstractAction
 		{
 			public void run()
 			{
-				parent.requestFocusInWindow();
-				parent.scrollRectToVisible( parameterTable.getCellRect( row, column, true ) );
+				parameterTable.requestFocusInWindow();
+				parameterTable.scrollRectToVisible( parameterTable.getCellRect( row, column, true ) );
 				SwingUtilities.invokeLater( new Runnable()
 				{
 					public void run()
@@ -85,11 +93,10 @@ public class AddParamAction extends AbstractAction
 
 	public static class Builder
 	{
-		private AddParamAction instance = new AddParamAction( "", "" );
+		private AddParamAction instance = new AddParamAction();
 
 		private Builder()
 		{
-
 		}
 
 		public Builder withSmallIcon( String smallIcon )
@@ -110,13 +117,7 @@ public class AddParamAction extends AbstractAction
 			return this;
 		}
 
-		public Builder withParent( JPanel parentPanel )
-		{
-			instance.parent = parentPanel;
-			return this;
-		}
-
-		public Builder withPropertyHolder( MutableTestPropertyHolder propertyHolder )
+		public Builder withPropertyHolder( TestPropertyHolder propertyHolder )
 		{
 			instance.propertyHolder = propertyHolder;
 			return this;
@@ -125,9 +126,8 @@ public class AddParamAction extends AbstractAction
 		public AddParamAction build()
 		{
 			assertNotEmpty( "iconImage", instance.getValue( SMALL_ICON ) );
-			assertNotEmpty( "shortDescription", (String) instance.getValue( SHORT_DESCRIPTION ) );
+			assertNotEmpty( "shortDescription", ( String )instance.getValue( SHORT_DESCRIPTION ) );
 			assertNotEmpty( "parameterTable", instance.parameterTable );
-			assertNotEmpty( "parent", instance.parent );
 			assertNotEmpty( "propertyHolder", instance.propertyHolder );
 
 			return instance;

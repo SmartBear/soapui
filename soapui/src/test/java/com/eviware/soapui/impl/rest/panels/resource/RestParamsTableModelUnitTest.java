@@ -1,11 +1,25 @@
+/*
+ *  SoapUI, copyright (C) 2004-2013 smartbear.com
+ *
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation.
+ *
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.rest.panels.resource;
 
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
@@ -52,54 +66,56 @@ public class RestParamsTableModelUnitTest
 
 
 	@Test
-	public void givenModelWithParamsWhenSetParamsThenModelShouldBeRemovedAsListenerAndAddedAgain()
+	public void removesAndAddThePropertyListenerAgainWhenParamIsSet()
 	{
 		mockParams();
 		restParamsTableModel = new RestParamsTableModel( params );
 		restParamsTableModel.setParams( params );
-		verify( params, times( 1 ) ).removeTestPropertyListener( restParamsTableModel );
-		verify( params, times( 2 ) ).addTestPropertyListener( restParamsTableModel );
+		verify( params, times( 1 ) ).removeTestPropertyListener( any( TestPropertyListener.class ) );
+		verify( params, times( 2 ) ).addTestPropertyListener( any( TestPropertyListener.class ) );
 	}
 
 	@Test
-	public void givenModelWithParamsWhenReleaseItShouldRemoveItselfAsListenerFromParams()
+	public void removesListenerOnRelease()
 	{
 		mockParams();
 		restParamsTableModel.setParams( params );
 		restParamsTableModel.release();
-		verify( params, times( 1 ) ).addTestPropertyListener( restParamsTableModel );
-		verify( params, times( 1 ) ).removeTestPropertyListener( restParamsTableModel );
+		verify( params, times( 1 ) ).addTestPropertyListener( any( TestPropertyListener.class ) );
+		verify( params, times( 1 ) ).removeTestPropertyListener( any( TestPropertyListener.class ) );
 
 	}
 
 	@Test
-	public void givenModelWithParamsWhenSetValueThenShouldSetValueToProperty()
+	public void setsValueToPropertyWhenSetValueAtIsInvoked()
 	{
 		String value = "New value";
 		restParamsTableModel.setValueAt( value, 0, VALUE_COLUMN_INDEX );
-		assertThat( params.getPropertyAt( 0 ).getValue(), is( value ) );
+		assertThat( ( String )restParamsTableModel.getValueAt( 0, VALUE_COLUMN_INDEX ), is( value ) );
 	}
 
 	@Test
-	public void givenModelWithParamsWhenSetNameThenShouldRenameProperty()
+	public void renamesThePropertyIfSetValueIsInvokedOnFirstColumn()
 	{
 		String value = "New Name";
 		restParamsTableModel.setValueAt( value, 0, NAME_COLUMN_INDEX );
-		assertThat( (String)restParamsTableModel.getValueAt( 0, 0 ), is( value ) );
+		assertThat( ( String )restParamsTableModel.getValueAt( 0, NAME_COLUMN_INDEX ), is( value ) );
 	}
 
 	@Test
-	public void givenModelWithParamsWhenSetStyleThenShouldStyleToProperty()
+	public void changesPropertyStyleWhenSetValueIsInvokedonStyleColumn()
 	{
 		restParamsTableModel.setValueAt( QUERY, 0, STYLE_COLUMN_INDEX );
-		assertThat( params.getPropertyAt( 0 ).getStyle(), is( QUERY ) );
+		assertThat( ( RestParamsPropertyHolder.ParameterStyle )restParamsTableModel.getValueAt( 0, STYLE_COLUMN_INDEX ),
+				is( QUERY ) );
 	}
 
 	@Test
 	public void givenModelWithParamsWhenSetLocationAndGetLocationThenShouldReturnSameValue()
 	{
 		restParamsTableModel.setValueAt( METHOD, 0, LOCATION_COLUMN_INDEX );
-		assertThat( params.getPropertyAt( 0 ).getParamLocation(), is( METHOD ) );
+		assertThat( ( NewRestResourceActionBase.ParamLocation )restParamsTableModel.getValueAt( 0, LOCATION_COLUMN_INDEX ),
+				is( METHOD ) );
 	}
 
 	private void mockParams()
