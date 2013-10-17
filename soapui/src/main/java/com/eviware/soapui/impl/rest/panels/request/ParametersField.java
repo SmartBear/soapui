@@ -17,7 +17,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.IllegalComponentStateException;
 import java.awt.Point;
@@ -47,12 +49,13 @@ class ParametersField extends JPanel
 		String paramsString = RestUtils.makeSuffixParameterString( request );
 		textField = new JTextField( paramsString );
 		textField.setEditable( false );
+		textField.setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
+		textField.setBackground( Color.WHITE );
 		setToolTipText( paramsString );
 		super.setLayout( new BorderLayout() );
 		super.add( textLabel, BorderLayout.NORTH );
 		super.add( textField, BorderLayout.SOUTH );
 		addListeners();
-
 	}
 
 	private void addListeners()
@@ -86,7 +89,6 @@ class ParametersField extends JPanel
 			}
 
 		} );
-
 	}
 
 	public String getText()
@@ -112,7 +114,7 @@ class ParametersField extends JPanel
 	{
 		final RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
 				request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
-				NewRestResourceActionBase.ParamLocation.METHOD, true, true );
+				NewRestResourceActionBase.ParamLocation.RESOURCE, true, true );
 		restParamsTable.addKeyListener( new KeyAdapter()
 		{
 			@Override
@@ -159,9 +161,13 @@ class ParametersField extends JPanel
 		}
 	}
 
+	public void updateTextField()
+	{
+		textField.setText(RestUtils.makeSuffixParameterString( request ));
+	}
+
 	private class PopupWindow extends JDialog
 	{
-
 		private PopupWindow( final RestParamsTable restParamsTable )
 		{
 			super( SoapUI.getFrame() );
@@ -186,6 +192,6 @@ class ParametersField extends JPanel
 			getContentPane().add( restParamsTable, BorderLayout.CENTER );
 			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
 		}
-	}
 
+	}
 }

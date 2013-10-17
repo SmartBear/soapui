@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.rest.panels.request;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.panels.component.RestResourceEditor;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
@@ -118,7 +117,7 @@ public class RestRequestDesktopPanel extends
 		}
 		updating.setValue( true );
 		resourcePanel.setText( getRequest().getResource().getFullPath() );
-		queryPanel.setText( RestUtils.makeSuffixParameterString( getRequest() ) );
+		queryPanel.updateTextField();
 		updating.setValue( false );
 
 	}
