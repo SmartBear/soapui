@@ -329,7 +329,6 @@ public class RestResourceEditor extends JTextField
 			buttonBar.setLayout( new FlowLayout( FlowLayout.RIGHT ) );
 			contentPane.add( panel, BorderLayout.CENTER );
 			contentPane.add( buttonBar, BorderLayout.SOUTH );
-			contentPane.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 
 			pack();
 		}
