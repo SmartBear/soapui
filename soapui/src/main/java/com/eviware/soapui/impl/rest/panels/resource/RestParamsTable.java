@@ -224,6 +224,8 @@ public class RestParamsTable extends JPanel
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
+		//TODO: the action should be disabled by default if the corresponding component (button)
+		// is supposed to be disabled by default.
 		if( showEditableButtons )
 		{
 			toolbar.add( UISupport.createToolbarButton( addParamAction ) );
@@ -234,8 +236,7 @@ public class RestParamsTable extends JPanel
 
 		if( showDefaultParamsButton )
 		{
-			boolean defaultParamsActionEnabled = paramsTable.getRowCount() > 0;
-			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, defaultParamsActionEnabled ) );
+			toolbar.add( UISupport.createToolbarButton( defaultParamsAction, paramsTable.getRowCount() > 0 ) );
 		}
 
 		toolbar.addSeparator();
@@ -321,6 +322,7 @@ public class RestParamsTable extends JPanel
 		{
 			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/default_properties.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Reverts all current parameters to default values" );
+			setEnabled( false );
 		}
 
 		public void actionPerformed( ActionEvent e )
