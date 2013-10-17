@@ -306,6 +306,7 @@ public class RestResourceEditor extends JTextField
 			super( SoapUI.getFrame() );
 			setModal( true );
 			setResizable( false );
+			setMinimumSize( new Dimension( 230, 0 ) );
 
 			JPanel contentPane = new JPanel( new BorderLayout() );
 			setContentPane( contentPane );
