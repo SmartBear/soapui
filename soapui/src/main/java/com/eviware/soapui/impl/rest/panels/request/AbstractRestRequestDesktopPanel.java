@@ -197,7 +197,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	protected abstract void addBottomToolbar( JPanel panel );
 
-	protected abstract void updateFieldWithTemplateParameters( String oldTemplateParameterName, String newTemplateParameterName );
+	protected abstract void updatePathWithTemplateParameters( String oldTemplateParameterName, String newTemplateParameterName );
 
 	protected abstract void updateUiValues();
 
@@ -244,7 +244,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		@Override
 		public void propertyRenamed( String oldName, String newName )
 		{
-			updateFieldWithTemplateParameters( oldName, newName );
+			updatePathWithTemplateParameters( oldName, newName );
 			updateUiValues();
 		}
 	}
@@ -259,7 +259,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) )
 				{
 					RestParamProperty source = ( RestParamProperty )evt.getSource();
-					addRemoveTemplateParam( source.getName(), ( ParameterStyle )evt.getOldValue(), ( ParameterStyle ) evt.getNewValue() );
+					addRemoveTemplateParam( source.getName(), ( ParameterStyle )evt.getOldValue(), ( ParameterStyle )evt.getNewValue() );
 					( ( AbstractModelItem )source.getModelItem() ).notifyPropertyChanged( evt.getPropertyName(),
 							evt.getOldValue(), evt.getNewValue() );
 				}
@@ -286,11 +286,11 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			if( fromStyle == ParameterStyle.TEMPLATE )
 			{
-				updateFieldWithTemplateParameters( newTemplateParamName, "" );
+				updatePathWithTemplateParameters( newTemplateParamName, "" );
 			}
 			else if( toStyle == ParameterStyle.TEMPLATE )
 			{
-				updateFieldWithTemplateParameters( "", newTemplateParamName );
+				updatePathWithTemplateParameters( "", newTemplateParamName );
 			}
 		}
 

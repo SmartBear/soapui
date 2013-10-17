@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.panels.component.RestResourceEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -79,21 +80,32 @@ public class RestRequestDesktopPanel extends
 	}
 
 	@Override
-	protected void updateFieldWithTemplateParameters( String oldTemplateParameterName, String newTemplateParameterName )
+	protected void updatePathWithTemplateParameters( String oldTemplateParameterName, String newTemplateParameterName )
 	{
-		String currentPath = resourcePanel.getText();
+		RestResource resource = getRequest().getResource();
+		String currentPath = resource.getPath();
 
-		if( !oldTemplateParameterName.isEmpty() ) //then replace existing template parameter
+		// If old param name is not empty then we replace the old parameter name with new one provided that, we own it.
+		// Also in case of rename old parameter already gets renamed before a notification is fired, so we also have to
+		// check that new param name is my param.
+		if( !oldTemplateParameterName.isEmpty() && ( isMyParameter( oldTemplateParameterName ) || isMyParameter( newTemplateParameterName ) ) )
 		{
 			currentPath = replaceExistingParamName( oldTemplateParameterName, newTemplateParameterName, currentPath );
+			resource.setPath( currentPath );
 
 		}
-		else if( !currentPath.contains( "{" + newTemplateParameterName + "}" ) ) //then append new template parameter
+		// If old param name is empty then we append new template parameter provided that, we own this parameter and not our parent or child.
+		else if( isMyParameter( newTemplateParameterName ) && !currentPath.contains( "{" + newTemplateParameterName + "}" ) )
 		{
 			currentPath = currentPath + "{" + newTemplateParameterName + "}";
+			resource.setPath( currentPath );
 		}
 
-		resourcePanel.setText( currentPath );
+	}
+
+	private boolean isMyParameter( String paramName )
+	{
+		return getRequest().getResource().getParams().getProperty( paramName ) != null;
 
 	}
 

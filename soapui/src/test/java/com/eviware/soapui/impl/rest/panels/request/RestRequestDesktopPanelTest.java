@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
@@ -68,6 +69,12 @@ public class RestRequestDesktopPanelTest
 		endpointsCombo = findEndpointsComboBox();
 	}
 
+	@After
+	public void resetDialogs()
+	{
+		UISupport.setDialogs( originalDialogs );
+	}
+
 	@Test
 	public void retainsParameterValueWhenChangingItsLevel() throws Exception
 	{
@@ -89,19 +96,143 @@ public class RestRequestDesktopPanelTest
 	}
 
 	@Test
-	public void addsAndRemovesTemplateParamterFromPath() throws Exception
+	public void addsAndRemovesTemplateParameterOnResourceField() throws Exception
 	{
 		String path = restRequest.getResource().getPath();
-		assertThat( ( String )requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
 
 		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
 		// Assert that it adds the template parameter on the path
-		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + PARAMETER_NAME + "}"));
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + PARAMETER_NAME + "}" ));
 
 
 		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
 		// Assert that it removes the template parameter from the path
-		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path ));
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( path ));
+	}
+
+	@Test
+	public void addsAndRemovesTemplateParameterOnParentShouldOnlyUpdateParentPath() throws Exception
+	{
+		RestResource restResource = restRequest.getResource();
+		RestResource childResource = restResource.addNewChildResource( "childResource", "/subPath" );
+		String childPath = childResource.getPath();
+		String parentPath = restResource.getPath();
+		String expectedParentPath = parentPath + "{" + PARAMETER_NAME + "}" ;
+		String expectedChildPath = expectedParentPath + childPath ;
+
+		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
+		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+
+		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+
+		// Assert that it adds the template parameter on the path
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( expectedParentPath ));
+		assertThat( childRequestDesktopPanel.resourcePanel.getText(), equalTo( expectedChildPath ));
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( parentPath ));
+		assertThat( childRequestDesktopPanel.resourcePanel.getText(), equalTo( childResource.getFullPath() ));
+	}
+
+	@Test
+	public void renamesTemplateParameterOnParentResource() throws Exception
+	{
+		RestResource restResource = restRequest.getResource();
+		RestResource childResource = restResource.addNewChildResource( "childResource", "/subPath" );
+		String childPath = childResource.getPath();
+		String parentPath = restResource.getPath();
+		String newParamName = "sessionID";
+		String expectedParentPath = parentPath + "{" + newParamName + "}" ;
+		String expectedChildPath = expectedParentPath + childPath ;
+
+
+		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
+		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+
+		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setName( newParamName );
+
+		// Assert that it adds the template parameter on the path
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( expectedParentPath ) );
+		assertThat( childRequestDesktopPanel.resourcePanel.getText(), equalTo( expectedChildPath ));
+
+	}
+
+	@Test
+	public void addsAndRemovesTemplateParameterOnChildResourcePath() throws Exception
+	{
+		RestResource restResource = restRequest.getResource();
+		RestResource childResource = restResource.addNewChildResource( "childResource", "/subPath" );
+		String fullPath = childResource.getFullPath();
+
+		String childParamName = "childParam";
+		childResource.setPropertyValue( childParamName, "childValue" );
+
+		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
+		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+
+		RestRequestDesktopPanel origDesktopPanel = requestDesktopPanel;
+		requestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
+
+		childResource.getProperty( childParamName ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		// Assert that it adds the template parameter on the path
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( fullPath + "{" + childParamName + "}" ) );
+
+		childResource.getProperty( childParamName ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+		// Assert that it adds the template parameter on the path
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( fullPath ) );
+
+		// Set back the desktop panel
+		requestDesktopPanel = origDesktopPanel;
+	}
+
+	@Test
+	public void renameTemplateParameterOnChildResourcePath() throws Exception
+	{
+		RestResource restResource = restRequest.getResource();
+		RestResource childResource = restResource.addNewChildResource( "childResource", "/subPath" );
+		String fullPath = childResource.getFullPath();
+
+		String childParamName = "childParam";
+		String newParamName = "newChildParam";
+		childResource.setPropertyValue( childParamName, "childValue" );
+
+		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
+		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+
+		RestRequestDesktopPanel origDesktopPanel = requestDesktopPanel;
+		requestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
+
+		childResource.getProperty( childParamName ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		childResource.getProperty( childParamName ).setName( newParamName );
+
+		// Assert that it adds the template parameter on the path
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( fullPath + "{" + newParamName + "}" ) );
+
+		// Set back the desktop panel
+		requestDesktopPanel = origDesktopPanel;
+	}
+
+	@Test
+	public void addsAndRemovesTemplateParameterOnModel() throws Exception
+	{
+		String path = restRequest.getResource().getPath();
+		assertThat( requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		// Assert that it adds the template parameter on the path
+		assertThat( restRequest.getResource().getPath(), equalTo( path + "{" + PARAMETER_NAME + "}"));
+
+
+		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+		// Assert that it removes the template parameter from the path
+		assertThat( restRequest.getResource().getPath(), equalTo( path ));
 	}
 
 	@Test
@@ -110,13 +241,13 @@ public class RestRequestDesktopPanelTest
 
 		String newParamName = "sessionID";
 		String path = restRequest.getResource().getPath();
-		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
+		assertThat( ( String )requestDesktopPanel.resourcePanel.getText(), equalTo( path ) );
 
 		restRequest.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
 		restRequest.getParams().getProperty( PARAMETER_NAME ).setName( newParamName );
 
 		// Assert that parameter is replaced with new name
-		assertThat( (String) requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + newParamName + "}" ));
+		assertThat( ( String )requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + newParamName + "}" ) );
 	}
 
 	@Test
@@ -129,7 +260,6 @@ public class RestRequestDesktopPanelTest
 		restRequest.getParams().removeProperty( PARAMETER_NAME );
 		paramNameAtRow0 = ( String )getRestParameterTable().getValueAt( 0, 0 );
 		assertThat( paramNameAtRow0, is( "Param2" ) );
-
 	}
 
 
@@ -204,11 +334,6 @@ public class RestRequestDesktopPanelTest
 		assertThat( requestDesktopPanel.queryPanel.getText(), containsString( parameterName + "=" + value ) );
 	}
 
-	@After
-	public void resetDialogs()
-	{
-		UISupport.setDialogs( originalDialogs );
-	}
 
 	/* Helpers */
 
