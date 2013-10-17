@@ -47,8 +47,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,14 +71,6 @@ public class RestParamsTable extends JPanel
 	private final ParamLocation defaultParamLocation;
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
-	private FocusAdapter focusAdapter = new FocusAdapter()
-	{
-		@Override
-		public void focusGained( FocusEvent e )
-		{
-			System.out.println( "Gained focus" );
-		}
-	};
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation ,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
@@ -130,7 +120,7 @@ public class RestParamsTable extends JPanel
 			public void valueChanged( ListSelectionEvent e )
 			{
 				int selectedRow = paramsTable.getSelectedRow();
-				if( showEditableButtons)
+				if( showEditableButtons )
 				{
 					removeParamAction.setEnabled( selectedRow != -1 );
 				}
@@ -290,6 +280,7 @@ public class RestParamsTable extends JPanel
 		{
 			 if (paramsTable.getValueAt(i, 0).equals(parameterName))
 			 {
+				 paramsTable.setRowSelectionInterval( i, i );
 				 paramsTable.editCellAt( i, 1 );
 				 JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
 				 editorComponent.grabFocus();

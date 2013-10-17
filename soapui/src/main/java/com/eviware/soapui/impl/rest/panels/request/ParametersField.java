@@ -18,7 +18,6 @@ import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
 import java.awt.IllegalComponentStateException;
@@ -39,7 +38,7 @@ class ParametersField extends JPanel
 	private final RestRequestInterface request;
 	private final JLabel textLabel;
 	private final JTextField textField;
-	private Component popupComponent;
+	private PopupWindow popupWindow;
 	private int lastSelectedPosition;
 
 	ParametersField( RestRequestInterface request )
@@ -66,16 +65,14 @@ class ParametersField extends JPanel
 			@Override
 			public void mouseClicked( MouseEvent e )
 			{
-					final ParameterFinder finder = new ParameterFinder( textField.getText() );
-					SwingUtilities.invokeLater( new Runnable()
+				final ParameterFinder finder = new ParameterFinder( textField.getText() );
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					public void run()
 					{
-						public void run()
-						{
-							openPopup( finder.findParameterAt( lastSelectedPosition ) );
-						}
-					} );
-				// this is to prevent direct edits of the text field
-				textLabel.requestFocus();
+						openPopup( finder.findParameterAt( lastSelectedPosition ) );
+					}
+				} );
 			}
 
 
@@ -115,14 +112,15 @@ class ParametersField extends JPanel
 		final RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
 				request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
 				NewRestResourceActionBase.ParamLocation.RESOURCE, true, true );
-		restParamsTable.addKeyListener( new KeyAdapter()
+		JTable innerTable = restParamsTable.getParamsTable();
+		innerTable.addKeyListener( new KeyAdapter()
 		{
 			@Override
 			public void keyPressed( KeyEvent e )
 			{
-				if( e.getKeyChar() == KeyEvent.VK_ESCAPE )
+				if( e.getKeyCode() == KeyEvent.VK_ESCAPE && popupWindow != null )
 				{
-					closePopup();
+					popupWindow.dispose();
 				}
 			}
 		} );
@@ -131,7 +129,7 @@ class ParametersField extends JPanel
 
 	private void showParametersTableInWindow( RestParamsTable restParamsTable, String selectedParameter )
 	{
-		popupComponent = new PopupWindow( restParamsTable );
+		popupWindow = new PopupWindow( restParamsTable );
 		PopupWindow popupWindow = new PopupWindow( restParamsTable );
 		popupWindow.pack();
 		restParamsTable.focusParameter( selectedParameter );
@@ -146,46 +144,37 @@ class ParametersField extends JPanel
 		{
 			Point textFieldLocation = textField.getLocationOnScreen();
 			popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + textField.getHeight() );
-		} catch (IllegalComponentStateException ignore)
-		{
-			 // this will happen when the desktop panel is being closed
 		}
-	}
-
-	public void closePopup()
-	{
-		if( popupComponent != null )
+		catch( IllegalComponentStateException ignore )
 		{
-			popupComponent.setVisible( false );
-			popupComponent = null;
+			// this will happen when the desktop panel is being closed
 		}
 	}
 
 	public void updateTextField()
 	{
-		textField.setText(RestUtils.makeSuffixParameterString( request ));
+		textField.setText( RestUtils.makeSuffixParameterString( request ) );
 	}
 
 	private class PopupWindow extends JDialog
 	{
+
+		private final JButton closeButton;
+		private RestParamsTable restParamsTable;
+
 		private PopupWindow( final RestParamsTable restParamsTable )
 		{
 			super( SoapUI.getFrame() );
+			this.restParamsTable = restParamsTable;
 			getContentPane().setLayout( new BorderLayout() );
-			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.CENTER ) );
-			JButton closeButton = new JButton( "Close" );
+			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
+			closeButton = new JButton( "Close" );
 			closeButton.addActionListener( new ActionListener()
 			{
 				@Override
 				public void actionPerformed( ActionEvent e )
 				{
-					JTable actualTable = restParamsTable.getParamsTable();
-					if (actualTable.isEditing())
-					{
-						actualTable.getCellEditor().stopCellEditing();
-					}
-					setVisible( false );
-					dispose();
+					close();
 				}
 			} );
 			buttonPanel.add( closeButton );
@@ -193,5 +182,17 @@ class ParametersField extends JPanel
 			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
 		}
 
+		private void close()
+		{
+			JTable actualTable = restParamsTable.getParamsTable();
+			if( actualTable.isEditing() )
+			{
+				actualTable.getCellEditor().stopCellEditing();
+			}
+			setVisible( false );
+			dispose();
+		}
+
 	}
+
 }
