@@ -68,6 +68,8 @@ public class RestResourceEditor extends JTextField
 		{
 			setEditable( false );
 			setBackground( Color.WHITE );
+			setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
+
 			addMouseListener( new MouseAdapter()
 			{
 				@Override
@@ -249,8 +251,8 @@ public class RestResourceEditor extends JTextField
 		{
 			this.restResource = restResource;
 			textField = new JTextField( restResource.getPath() );
-			textField.setMaximumSize( new Dimension( 150, ( int )textField.getPreferredSize().getHeight() ) );
-			textField.setPreferredSize( new Dimension( 150, ( int )textField.getPreferredSize().getHeight() ) );
+			textField.setMaximumSize( new Dimension( 170, ( int )textField.getPreferredSize().getHeight() ) );
+			textField.setPreferredSize( new Dimension( 170, ( int )textField.getPreferredSize().getHeight() ) );
 		}
 
 		public JTextField getTextField()
