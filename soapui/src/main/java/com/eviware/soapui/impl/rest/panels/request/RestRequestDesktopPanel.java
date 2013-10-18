@@ -80,47 +80,6 @@ public class RestRequestDesktopPanel extends
 	}
 
 	@Override
-	protected void updatePathWithTemplateParameters( String oldTemplateParameterName, String newTemplateParameterName )
-	{
-		RestResource resource = getRequest().getResource();
-		String currentPath = resource.getPath();
-
-		// If old param name is not empty then we replace the old parameter name with new one provided that, we own it.
-		// Also in case of rename old parameter already gets renamed before a notification is fired, so we also have to
-		// check that new param name is my param.
-		if( !oldTemplateParameterName.isEmpty() && ( isMyParameter( oldTemplateParameterName ) || isMyParameter( newTemplateParameterName ) ) )
-		{
-			currentPath = replaceExistingParamName( oldTemplateParameterName, newTemplateParameterName, currentPath );
-			resource.setPath( currentPath );
-
-		}
-		// If old param name is empty then we append new template parameter provided that, we own this parameter and not our parent or child.
-		else if( isMyParameter( newTemplateParameterName ) && !currentPath.contains( "{" + newTemplateParameterName + "}" ) )
-		{
-			currentPath = currentPath + "{" + newTemplateParameterName + "}";
-			resource.setPath( currentPath );
-		}
-
-	}
-
-	private boolean isMyParameter( String paramName )
-	{
-		return getRequest().getResource().getParams().getProperty( paramName ) != null;
-
-	}
-
-	private String replaceExistingParamName( String oldTemplateParameterName, String newTemplateParameterName, String currentPath )
-	{
-		if( !newTemplateParameterName.isEmpty() )
-		{
-			newTemplateParameterName = "{" + newTemplateParameterName + "}";
-		}
-		currentPath = currentPath.replaceAll( "\\{" + oldTemplateParameterName + "\\}", newTemplateParameterName );
-		return currentPath;
-	}
-
-
-	@Override
 	protected void updateUiValues()
 	{
 		if( updating.booleanValue() )
