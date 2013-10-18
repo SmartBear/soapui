@@ -5,7 +5,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.smartbear.soapui</groupId>
     <artifactId>soapui-maven-plugin-tester</artifactId>
     <name>SoapUI Maven plugin tester</name>
     <packaging>pom</packaging>
@@ -26,10 +25,19 @@
         <plugins>
             <plugin>
                 <groupId>com.smartbear.soapui</groupId>
-                <artifactId>maven-soapui-plugin</artifactId>
+                <artifactId>soapui-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
                 <configuration>
-                    <projectFile>${project.basedir}/src/main/soapui/test-soapui-project.xml</projectFile>
+                    <projectFile>${project.basedir}/src/test/soapui/test-soapui-project.xml</projectFile>
+                    <testSuite>maven-plugin-testSuite</testSuite>
+                    <testCase>maven-plugin-TestCase</testCase>
+                    <loadTest>LoadTest</loadTest>
+                    <securityTest>SecurityTest</securityTest>
+                    <exportAll>true</exportAll>
+                    <junitReport>true</junitReport>
+                    <printReport>true</printReport>
+                    <outputFolder>${project.build.directory}/soapui/output</outputFolder>
+                    <endpoint>http://localhost:9090/mockService4TestPortBinding</endpoint>
                     <soapuiProperties>
                       <property>
                           <name>soapui.logroot</name>
@@ -54,14 +62,10 @@
                         <phase>integration-test</phase>
                         <goals>
                             <goal>test</goal>
+                            <goal>loadtest</goal>
+                            <!-- TODO Disabled due to SOAP-804 -->
+                            <!-- <goal>security-test</goal> -->
                         </goals>
-                        <configuration>
-                            <exportAll>true</exportAll>
-                            <host>localhost:${mockServerPort}</host>
-                            <junitReport>true</junitReport>
-                            <outputFolder>${project.build.directory}/soapui/output</outputFolder>
-                            <printReport>true</printReport>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
