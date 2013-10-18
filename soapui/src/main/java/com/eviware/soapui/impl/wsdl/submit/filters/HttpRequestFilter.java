@@ -1,11 +1,11 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ *  soapUI, copyright (C) 2004-2012 smartbear.com 
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
+ *  soapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -183,9 +183,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				}
 				break;
 			case MATRIX :
-				String valueInPath = ";" + param.getName() + "=" + value;
-				String valueToBeSet = ";" + param.getName(); //if parameter type is boolean then it is presented by
-				                                             // presence of parameter
 				try
 				{
 					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
@@ -196,14 +193,21 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					SoapUI.logError( e );
 				}
 
-				if( !param.getType().equals( XmlBoolean.type.getName() ) )
+				if( param.getType().equals( XmlBoolean.type.getName() ) )
 				{
-					if( StringUtils.hasContent( value ) )
+					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
 					{
-						valueToBeSet += "=" + value;
+						path += ";" + param.getName();
 					}
 				}
-				path = path.replaceAll( valueInPath,  valueToBeSet);
+				else
+				{
+					path += ";" + param.getName();
+					if( StringUtils.hasContent( value ) )
+					{
+						path += "=" + value;
+					}
+				}
 				break;
 			case PLAIN :
 				break;
