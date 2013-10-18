@@ -253,7 +253,7 @@ public class RestRequestDesktopPanelTest
 
 	@Test
 	@Ignore("This needs to be fixed")
-	public void addingTemplateResourceOnParentShouldUpdateChildPathEvenIfParentDialogNotOpen() throws SoapUIException
+	public void addingTemplateParameterOnParentShouldUpdateChildPathEvenIfParentDialogNotOpen() throws SoapUIException
 	{
 		RestResource parentResource = ModelItemFactory.makeRestResource();
 		parentResource.setPath( "/parent" );
