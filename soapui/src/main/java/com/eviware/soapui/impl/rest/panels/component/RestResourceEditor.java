@@ -110,17 +110,14 @@ public class RestResourceEditor extends JTextField
 			{
 				if( !resourceOrParentHasProperty( restResource, p ) )
 				{
-					if( UISupport.confirm( "Add template parameter [" + p + "] to resource?", "Add Parameter" ) )
+					RestParamProperty property = restResource.addProperty( p );
+					property.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+					String value = UISupport.prompt( "Specify default value for parameter [" + p + "]",
+							"Add Parameter", "" );
+					if( value != null )
 					{
-						RestParamProperty property = restResource.addProperty( p );
-						property.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-						String value = UISupport.prompt( "Specify default value for parameter [" + p + "]",
-								"Add Parameter", "" );
-						if( value != null )
-						{
-							property.setDefaultValue( value );
-							property.setValue( value );
-						}
+						property.setDefaultValue( value );
+						property.setValue( value );
 					}
 				}
 			}
