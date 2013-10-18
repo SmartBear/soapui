@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.config.OldRestRequestConfig;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestResourceConfig;
@@ -39,6 +30,15 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * WSDL implementation of Operation, maps to a WSDL BindingOperation
@@ -79,6 +79,10 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 		params = new XmlBeansRestParamsTestPropertyHolder( this, resourceConfig.getParameters() );
 		params.addTestPropertyListener( new PathChanger() );
+		for( String name : params.getPropertyNames() )
+		{
+			params.getProperty( name ).addPropertyChangeListener( new StyleChangeListener() );
+		}
 
 		for( RestMethodConfig config : resourceConfig.getMethodList() )
 		{
@@ -568,8 +572,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 			return path;
 		}
 
-		String pathWithOutMatrixParam = path.replaceAll( "(\\;).+(\\=).+(?!\\/)", "" );
-		return pathWithOutMatrixParam;
+		return path.replaceAll( "(\\;).+(\\=).+(?!\\/)", "" );
 	}
 
 	private class PathChanger implements TestPropertyListener
@@ -598,7 +601,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		@Override
 		public void propertyRenamed( String oldName, String newName )
 		{
-			if( isTemplateProperty( newName ) ) // Since the property is already renamed so we try with the newName
+			if( isTemplateProperty( newName ) ) // Since the property is already renamed, we look for the new name
 			{
 				setPath( getPath().replaceAll( "\\{" + oldName + "\\}", "\\{" + newName + "\\}" ) );
 			}
