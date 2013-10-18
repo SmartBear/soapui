@@ -54,6 +54,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	private List<RestResource> resources = new ArrayList<RestResource>();
 	private RestResource parentResource;
 	private XmlBeansRestParamsTestPropertyHolder params;
+	private PropertyChangeListener styleChangeListener = new StyleChangeListener();
 
 	public RestResource( RestService service, RestResourceConfig resourceConfig )
 	{
@@ -77,6 +78,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 			resourceConfig.addNewParameters();
 
 		params = new XmlBeansRestParamsTestPropertyHolder( this, resourceConfig.getParameters() );
+		params.addTestPropertyListener( new PathChanger() );
 
 		for( RestMethodConfig config : resourceConfig.getMethodList() )
 		{
@@ -570,4 +572,69 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return pathWithOutMatrixParam;
 	}
 
+	private class PathChanger implements TestPropertyListener
+	{
+		@Override
+		public void propertyAdded( String name )
+		{
+			params.getProperty( name ).addPropertyChangeListener( styleChangeListener );
+		}
+
+		@Override
+		public void propertyRemoved( String name )
+		{
+			if( isTemplateProperty( name ) )
+			{
+				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
+			}
+		}
+
+		private boolean isTemplateProperty( String name )
+		{
+			RestParamProperty property = params.getProperty( name );
+			return property != null && property.getStyle() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE;
+		}
+
+		@Override
+		public void propertyRenamed( String oldName, String newName )
+		{
+			if( isTemplateProperty( newName ) ) // Since the property is already renamed so we try with the newName
+			{
+				setPath( getPath().replaceAll( "\\{" + oldName + "\\}", "\\{" + newName + "\\}" ) );
+			}
+		}
+
+		@Override
+		public void propertyValueChanged( String name, String oldValue, String newValue )
+		{
+
+		}
+
+		@Override
+		public void propertyMoved( String name, int oldIndex, int newIndex )
+		{
+
+		}
+	}
+
+	private class StyleChangeListener implements PropertyChangeListener
+	{
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			if (evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ))
+			{
+				String name = ((RestParamProperty)evt.getSource()).getName();
+				if ( evt.getOldValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE)
+				{
+				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
+				}
+				else if (evt.getNewValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE)
+				{
+					setPath( getPath() + "{" + name + "}" );
+				}
+			}
+
+		}
+	}
 }
