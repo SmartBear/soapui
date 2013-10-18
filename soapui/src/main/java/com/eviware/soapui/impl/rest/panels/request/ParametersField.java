@@ -158,6 +158,7 @@ class ParametersField extends JPanel
 			getContentPane().setLayout( new BorderLayout() );
 			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
 			closeButton = new JButton( "Close" );
+			getRootPane().setDefaultButton( closeButton );
 			closeButton.addActionListener( new ActionListener()
 			{
 				@Override
