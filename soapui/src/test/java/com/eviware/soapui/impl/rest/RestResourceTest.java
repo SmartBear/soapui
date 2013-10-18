@@ -73,6 +73,22 @@ public class RestResourceTest
 	}
 
 	@Test
+	public void shouldIgnoreMatrixParamsWithoutValueOnPath() throws Exception
+	{
+		String matrixParameterString = ";Param2=1;address=";
+		restResource.setPath( "/maps/api/geocode/xml" + matrixParameterString );
+
+		assertThat( restResource.getFullPath(), not( containsString( matrixParameterString ) ) );
+
+		String childResourceParameterString = ";ver=";
+		RestResource childResource = restResource.addNewChildResource( "Child", "{test}/test/version" + childResourceParameterString );
+		assertThat( childResource.getPath(), not(containsString( childResourceParameterString )) );
+
+		assertThat( childResource.getFullPath(), not(containsString( matrixParameterString )) );
+		assertThat( childResource.getFullPath(), not(containsString( childResourceParameterString )) );
+	}
+
+	@Test
 	public void shouldListenToChangesInConfiguredParameters() throws Exception
 	{
 		RestService parentService = restResource.getService();

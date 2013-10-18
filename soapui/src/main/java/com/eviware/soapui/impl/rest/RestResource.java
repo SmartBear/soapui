@@ -572,7 +572,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 			return path;
 		}
 
-		return path.replaceAll( "(\\;).+(\\=).+(?!\\/)", "" );
+		return path.replaceAll( "(\\;).+(\\=).*(?!\\/)", "" );
 	}
 
 	private class PathChanger implements TestPropertyListener
