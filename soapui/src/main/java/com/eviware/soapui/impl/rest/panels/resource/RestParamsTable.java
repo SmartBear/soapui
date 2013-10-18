@@ -306,7 +306,6 @@ public class RestParamsTable extends JPanel
 
 			try
 			{
-				params.resetValues();
 				RestUtils.extractParams( str, params, false );
 			}
 			catch( Exception e1 )
