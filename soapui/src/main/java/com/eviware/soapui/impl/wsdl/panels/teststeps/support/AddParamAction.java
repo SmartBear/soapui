@@ -19,6 +19,7 @@ import com.eviware.soapui.support.UISupport;
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
@@ -52,6 +53,11 @@ public class AddParamAction extends AbstractAction
 		{
 			public void run()
 			{
+				TableCellEditor cellEditor = parameterTable.getCellEditor();
+				if(cellEditor!=null)
+				{
+					cellEditor.stopCellEditing();
+				}
 				editTableCell( row, 0 );
 				parameterTable.getModel().addTableModelListener( new TableModelListener()
 				{
