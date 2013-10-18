@@ -24,8 +24,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static com.eviware.soapui.utils.CommonMatchers.anEmptyArray;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
@@ -45,31 +46,30 @@ public class RestResourceTest
 	@Test
 	public void shouldGetTemplateParams() throws Exception
 	{
-		assertEquals( restResource.getDefaultParams().length, 0 );
+		assertThat( restResource.getDefaultParams(), is( anEmptyArray() ) );
 
 		restResource.setPath( "/{id}/test" );
-		assertEquals( restResource.getDefaultParams().length, 0 );
-		assertEquals( "/{id}/test", restResource.getFullPath() );
+		assertThat( restResource.getDefaultParams(), is( anEmptyArray() ) );
+		assertThat( restResource.getFullPath(), is("/{id}/test") );
 
 		RestResource subResource = restResource.addNewChildResource( "Child", "{test}/test" );
-		assertEquals( "/{id}/test/{test}/test", subResource.getFullPath() );
+		assertThat( subResource.getFullPath(), is( "/{id}/test/{test}/test" ) );
 	}
 
 	@Test
 	public void shouldIgnoreMatrixParamsOnPath() throws Exception
 	{
-		restResource.setPath( "/maps/api/geocode/xml;Param2=matrixValue2;address=16" );
+		String matrixParameterString = ";Param2=matrixValue2;address=16";
+		restResource.setPath( "/maps/api/geocode/xml" + matrixParameterString );
 
-		// asserts full path does not have the matrix params
-		assertEquals( "/maps/api/geocode/xml", restResource.getFullPath() );
+		assertThat( restResource.getFullPath(), not( containsString( matrixParameterString ) ) );
 
-		RestResource subResource = restResource.addNewChildResource( "Child", "{test}/test/version;ver=2" );
+		String childResourceParameterString = ";ver=2";
+		RestResource childResource = restResource.addNewChildResource( "Child", "{test}/test/version" + childResourceParameterString );
+		assertThat( childResource.getPath(), not(containsString( childResourceParameterString )) );
 
-		// asserts child resource's path does not have the matrix params
-		assertEquals( "{test}/test/version", subResource.getPath() );
-
-		// asserts child resource's full path does not have the matrix params
-		assertEquals( "/maps/api/geocode/xml/{test}/test/version", subResource.getFullPath() );
+		assertThat( childResource.getFullPath(), not(containsString( matrixParameterString )) );
+		assertThat( childResource.getFullPath(), not(containsString( childResourceParameterString )) );
 	}
 
 	@Test

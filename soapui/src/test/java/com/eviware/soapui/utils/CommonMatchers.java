@@ -46,4 +46,22 @@ public class CommonMatchers
 		};
 	}
 
+	public static Matcher<Object[]> anEmptyArray()
+	{
+		return new TypeSafeMatcher<Object[]>()
+		{
+			@Override
+			public boolean matchesSafely( Object[] objects )
+			{
+				return objects != null && objects.length == 0;
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an empty array" );
+			}
+		};
+	}
+
 }
