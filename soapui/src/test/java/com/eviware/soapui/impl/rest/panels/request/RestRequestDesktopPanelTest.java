@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestCont
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -249,6 +250,29 @@ public class RestRequestDesktopPanelTest
 		// Assert that parameter is replaced with new name
 		assertThat( ( String )requestDesktopPanel.resourcePanel.getText(), equalTo( path + "{" + newParamName + "}" ) );
 	}
+
+	@Test
+	@Ignore("This needs to be fixed")
+	public void addingTemplateResourceOnParentShouldUpdateChildPathEvenIfParentDialogNotOpen() throws SoapUIException
+	{
+		RestResource parentResource = ModelItemFactory.makeRestResource();
+		parentResource.setPath( "/parent" );
+
+		RestResource childResource = parentResource.addNewChildResource( "child", "/child" );
+
+		String expectedChildPath = parentResource.getPath() + "{" + PARAMETER_NAME + "}"+ childResource.getPath()  ;
+
+		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
+		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+
+		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
+
+		parentResource.addProperty( PARAMETER_NAME );
+		parentResource.getParams().getProperty( PARAMETER_NAME ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+		assertThat( childRequestDesktopPanel.resourcePanel.getText(), equalTo( expectedChildPath ));
+	}
+
+
 
 	@Test
 	public void allowsRemovalOfParameterAfterParameterLevelChange() throws Exception
