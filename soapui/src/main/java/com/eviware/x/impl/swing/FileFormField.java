@@ -188,7 +188,7 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 		else if( name.equals( CURRENT_DIRECTORY ) )
 		{
 			currentDirectory = ( String )value;
-			log.debug( "Set projectRoot to [" + projectRoot + "]" );
+			log.debug( "Set currentDirectory to [" + currentDirectory + "]" );
 		}
 	}
 
