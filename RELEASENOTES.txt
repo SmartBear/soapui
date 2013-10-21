@@ -6,6 +6,7 @@
 ### Known Issue ###
 
 ### Bugs fixed ###
+* User shouldn't have the ability to change the method in REST test steps (SOAP-833)
 
 ### Minor improvements
 * Should be able to use ws-s truststore without password (SOAP-751)
