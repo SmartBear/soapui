@@ -138,7 +138,7 @@ public class RestResourceEditor extends JTextField
 
 	private boolean isResourceLonely( RestResource restResource )
 	{
-		return restResource.getParentResource() == null && restResource.getChildResourceCount() == 0;
+		return restResource.getParentResource() == null;
 	}
 
 	public void openPopup( RestResource focusedResource )
