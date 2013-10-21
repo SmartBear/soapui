@@ -12,24 +12,16 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import java.io.File;
-
+import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.RestRequest;
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Test;
 
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.RestServiceFactory;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
+import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
+import static com.eviware.soapui.utils.ModelItemMatchers.hasParameter;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class RestUtilsTestCase
 {
@@ -50,6 +42,16 @@ public class RestUtilsTestCase
 		assertEquals( "test", params[1] );
 	}
 
+	@Test
+	public void extractsQueryStringParamsFromUrl() throws Exception
+	{
+		RestRequest request = makeRestRequest();
+		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( request, RestParametersConfig.Factory.newInstance() );
+		String url = request.getEndpoint() + request.getPath() + "?q=foo&page=2";
+		RestUtils.extractParams(url, params, true);
+		assertThat( params, hasParameter( "q" ) );
+		assertThat(params, hasParameter( "page" ));
+	}
 
 	@Test
 	public void expandsRestRequestPathsWithoutTemplateParameters() throws Exception
