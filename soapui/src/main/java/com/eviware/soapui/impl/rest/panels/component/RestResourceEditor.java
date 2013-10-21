@@ -252,8 +252,8 @@ public class RestResourceEditor extends JTextField
 		{
 			this.restResource = restResource;
 			textField = new JTextField( restResource.getPath() );
-			textField.setMaximumSize( new Dimension( 170, ( int )textField.getPreferredSize().getHeight() ) );
-			textField.setPreferredSize( new Dimension( 170, ( int )textField.getPreferredSize().getHeight() ) );
+			textField.setMaximumSize( new Dimension( 340, ( int )textField.getPreferredSize().getHeight() ) );
+			textField.setPreferredSize( new Dimension( 340, ( int )textField.getPreferredSize().getHeight() ) );
 		}
 
 		public JTextField getTextField()
