@@ -17,6 +17,8 @@ import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.support.UISupport;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
@@ -32,6 +34,7 @@ import java.awt.event.ActionEvent;
  */
 public class AddParamAction extends AbstractAction
 {
+	public static final String EMPTY_STRING = "";
 	private TestPropertyHolder propertyHolder;
 	private JTable parameterTable;
 
@@ -45,27 +48,36 @@ public class AddParamAction extends AbstractAction
 
 	public void actionPerformed( ActionEvent e )
 	{
-		String name = "";
-		( ( MutableTestPropertyHolder )propertyHolder ).addProperty( name );
+		( ( MutableTestPropertyHolder )propertyHolder ).addProperty( EMPTY_STRING );
 
 		final int row = propertyHolder.getPropertyNames().length - 1;
 		SwingUtilities.invokeLater( new Runnable()
 		{
 			public void run()
 			{
-				TableCellEditor cellEditor = parameterTable.getCellEditor();
-				if(cellEditor!=null)
-				{
-					cellEditor.stopCellEditing();
-				}
 				editTableCell( row, 0 );
-				parameterTable.getModel().addTableModelListener( new TableModelListener()
+
+				final TableCellEditor cellEditor1 = parameterTable.getCellEditor( row, 0 );
+				cellEditor1.addCellEditorListener( new CellEditorListener()
 				{
 					@Override
-					public void tableChanged( TableModelEvent e )
+					public void editingStopped( ChangeEvent e )
 					{
+						cellEditor1.removeCellEditorListener( this );
+						if(parameterTable.getRowCount() > row &&
+								parameterTable.getValueAt( row, 0 ).toString().equals( EMPTY_STRING ))
+						{
+							( ( MutableTestPropertyHolder )propertyHolder ).removeProperty( EMPTY_STRING );
+							return;
+						}
 						editTableCell( row, 1 );
-						parameterTable.getModel().removeTableModelListener( this );
+					}
+
+					@Override
+					public void editingCanceled( ChangeEvent e )
+					{
+						cellEditor1.removeCellEditorListener( this );
+						( ( MutableTestPropertyHolder )propertyHolder ).removeProperty( EMPTY_STRING );
 					}
 				} );
 			}
@@ -74,6 +86,12 @@ public class AddParamAction extends AbstractAction
 
 	private void editTableCell( final int row, final int column )
 	{
+		TableCellEditor cellEditor = parameterTable.getCellEditor();
+		if(cellEditor!=null)
+		{
+			cellEditor.stopCellEditing();
+		}
+
 		SwingUtilities.invokeLater( new Runnable()
 		{
 			public void run()

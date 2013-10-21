@@ -44,6 +44,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -144,6 +145,19 @@ public class PropertyHolderTable extends JPanel
 			setSurrendersFocusOnKeystroke( true );
 			setRowHeight( 19 );
 			// setHorizontalScrollEnabled(true);
+		}
+
+		@Override
+		public void removeEditor()
+		{
+			TableCellEditor editor = getCellEditor();
+			// must be called here to remove the editor and to avoid an infinite
+			// loop, because the table is an editor listener and the
+			// editingCanceled method calls this removeEditor method
+			super.removeEditor();
+			if (editor != null) {
+				editor.cancelCellEditing();
+			}
 		}
 
 		public PropertyModelItem getTestProperty()
