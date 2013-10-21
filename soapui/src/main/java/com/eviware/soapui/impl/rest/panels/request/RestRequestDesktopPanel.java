@@ -97,6 +97,24 @@ public class RestRequestDesktopPanel extends
 	protected void insertButtons( JXToolBar toolbar )
 	{
 		toolbar.add( addToTestCaseButton );
+
+		JPanel methodPanel = addMethodCombo();
+		toolbar.addWithOnlyMinimumHeight( methodPanel );
+	}
+
+	private JPanel addMethodCombo()
+	{
+		JPanel methodPanel = new JPanel( new BorderLayout() );
+		JComboBox<RestRequestInterface.RequestMethod> methodComboBox = new JComboBox<RestRequestInterface.RequestMethod>( new RestRequestMethodModel( getRequest() ) );
+		methodComboBox.setSelectedItem( getRequest().getMethod() );
+
+		JLabel methodLabel = new JLabel( "Method" );
+		methodPanel.add( methodLabel, BorderLayout.NORTH );
+		methodPanel.add( methodComboBox, BorderLayout.SOUTH );
+		methodPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
+		//TODO: remove hard coded height adjustment
+		methodPanel.setMaximumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT + 10 ) );
+		return methodPanel;
 	}
 
 	protected class TextPanelWithTopLabel extends JPanel

@@ -102,17 +102,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 	}
 
 	@Override
-	protected void insertButtons( JXToolBar toolbar )
-	{
-		if( getRequest().getResource() == null )
-		{
-			JButton addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
-					AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
-			toolbar.add( addToTestCaseButton );
-		}
-	}
-
-	@Override
 	protected JComponent buildToolbar()
 	{
 		if( getRequest().getResource() != null )
@@ -127,16 +116,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
 			insertButtons( topToolBar );
-			JPanel methodPanel = new JPanel( new BorderLayout() );
-			JComboBox<RequestMethod> methodComboBox = new JComboBox<RequestMethod>( new RestRequestMethodModel( getRequest() ) );
-			methodComboBox.setSelectedItem( getRequest().getMethod() );
-
-			JLabel methodLabel = new JLabel( "Method" );
-			methodPanel.add( methodLabel, BorderLayout.NORTH );
-			methodPanel.add( methodComboBox, BorderLayout.SOUTH );
-			methodPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
-			//TODO: remove hard coded height adjustment
-			methodPanel.setMaximumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT + 10 ) );
 
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
@@ -149,8 +128,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
 			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
 
-
-			topToolBar.addWithOnlyMinimumHeight( methodPanel );
 			topToolBar.add( Box.createHorizontalStrut( 4 ) );
 			topToolBar.addWithOnlyMinimumHeight( endpointPanel );
 			topToolBar.add( Box.createHorizontalStrut( 4 ) );
