@@ -270,7 +270,12 @@ public class RestResourceEditor extends JTextField
 		{
 			if( affectedRequestCount == null )
 			{
-				affectedRequestCount = restResource.getAllChildResources().length + 1;
+				int count = restResource.getRequestCount();
+				for( RestResource childResource : restResource.getAllChildResources() )
+				{
+					count += childResource.getRequestCount();
+				}
+				affectedRequestCount = count;
 			}
 			return affectedRequestCount;
 		}
