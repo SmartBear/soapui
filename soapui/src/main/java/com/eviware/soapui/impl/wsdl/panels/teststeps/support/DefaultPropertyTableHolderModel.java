@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.environment.EnvironmentListener;
@@ -121,6 +123,10 @@ public class DefaultPropertyTableHolderModel<T extends TestPropertyHolder> exten
 			case 1:
 			{
 				property.setValue( aValue.toString() );
+				if( !(params.getModelItem() instanceof RestRequest) && property instanceof RestParamProperty )
+				{
+					((RestParamProperty)property).setDefaultValue( aValue.toString() );
+				}
 				break;
 			}
 		}
