@@ -43,17 +43,6 @@ public class RestUtilsTestCase
 	}
 
 	@Test
-	public void extractsQueryStringParamsFromUrl() throws Exception
-	{
-		RestRequest request = makeRestRequest();
-		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( request, RestParametersConfig.Factory.newInstance() );
-		String url = request.getEndpoint() + request.getPath() + "?q=foo&page=2";
-		RestUtils.extractParams(url, params, true);
-		assertThat( params, hasParameter( "q" ) );
-		assertThat(params, hasParameter( "page" ));
-	}
-
-	@Test
 	public void expandsRestRequestPathsWithoutTemplateParameters() throws Exception
 	{
 		RestRequest restRequest = makeRestRequest();
