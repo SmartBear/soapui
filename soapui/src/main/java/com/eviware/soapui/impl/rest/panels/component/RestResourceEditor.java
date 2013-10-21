@@ -181,7 +181,7 @@ public class RestResourceEditor extends JTextField
 				}
 				if( affectedRequestCount > 0 )
 				{
-					changeWarningLabel.setText( String.format( "<html>Changes will affect: <b>%d</b> request%s</html>",
+					changeWarningLabel.setText( String.format( "<html>Changes will affect <b>%d</b> request%s</html>",
 							affectedRequestCount, affectedRequestCount > 1 ? "s" : "" ) );
 					changeWarningLabel.setVisible( true );
 				}
