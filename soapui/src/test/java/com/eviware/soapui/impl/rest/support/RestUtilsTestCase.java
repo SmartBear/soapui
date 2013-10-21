@@ -12,13 +12,11 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
-import static com.eviware.soapui.utils.ModelItemMatchers.hasParameter;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
