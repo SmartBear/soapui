@@ -19,8 +19,6 @@ import com.eviware.soapui.support.UISupport;
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -64,8 +62,8 @@ public class AddParamAction extends AbstractAction
 					public void editingStopped( ChangeEvent e )
 					{
 						cellEditor1.removeCellEditorListener( this );
-						if(parameterTable.getRowCount() > row &&
-								parameterTable.getValueAt( row, 0 ).toString().equals( EMPTY_STRING ))
+						if( parameterTable.getRowCount() > row &&
+								parameterTable.getValueAt( row, 0 ).toString().equals( EMPTY_STRING ) )
 						{
 							( ( MutableTestPropertyHolder )propertyHolder ).removeProperty( EMPTY_STRING );
 							return;
@@ -87,7 +85,7 @@ public class AddParamAction extends AbstractAction
 	private void editTableCell( final int row, final int column )
 	{
 		TableCellEditor cellEditor = parameterTable.getCellEditor();
-		if(cellEditor!=null)
+		if( cellEditor != null )
 		{
 			cellEditor.stopCellEditing();
 		}
@@ -97,6 +95,10 @@ public class AddParamAction extends AbstractAction
 			public void run()
 			{
 				parameterTable.requestFocusInWindow();
+				if( parameterTable.getRowCount() > row )
+				{
+					parameterTable.setRowSelectionInterval( row, row );
+				}
 				parameterTable.scrollRectToVisible( parameterTable.getCellRect( row, column, true ) );
 				SwingUtilities.invokeLater( new Runnable()
 				{
