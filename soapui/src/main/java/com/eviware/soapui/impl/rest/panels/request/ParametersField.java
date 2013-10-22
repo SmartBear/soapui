@@ -141,7 +141,7 @@ class ParametersField extends JPanel
 
 	public void updateTextField()
 	{
-		textField.setText( RestUtils.makeSuffixParameterString( request ) );
+		setText( RestUtils.makeSuffixParameterString( request ) );
 	}
 
 	private class PopupWindow extends JDialog

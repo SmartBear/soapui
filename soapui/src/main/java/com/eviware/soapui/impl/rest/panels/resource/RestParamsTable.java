@@ -34,6 +34,7 @@ import org.apache.xmlbeans.XmlBeans;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellEditor;
 import javax.xml.namespace.QName;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -80,7 +81,20 @@ public class RestParamsTable extends JPanel
 
 	protected void init( boolean showInspector )
 	{
-		paramsTable = new JTable( paramsTableModel );
+		paramsTable = new JTable( paramsTableModel ){
+			@Override
+			public void removeEditor()
+			{
+				TableCellEditor editor = getCellEditor();
+				// must be called here to remove the editor and to avoid an inifinite
+				// loop, because the table is an editor listener and the
+				// editingCanceled method calls this removeEditor method
+				super.removeEditor();
+				if (editor != null) {
+					editor.cancelCellEditing();
+				}
+			}
+		};
 
 		if( showDefaultParamsButton )
 		{
