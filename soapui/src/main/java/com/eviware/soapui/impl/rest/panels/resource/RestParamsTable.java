@@ -95,6 +95,7 @@ public class RestParamsTable extends JPanel
 				}
 			}
 		};
+		paramsTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
 
 		if( showDefaultParamsButton )
 		{
