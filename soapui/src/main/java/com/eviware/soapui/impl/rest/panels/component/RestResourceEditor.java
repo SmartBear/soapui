@@ -291,7 +291,7 @@ public class RestResourceEditor extends JTextField
 				return;
 			}
 			updating.setValue( true );
-			editingRestResource.setPath( getText( document ) );
+			editingRestResource.setPath( getText( document ).trim() );
 			updating.setValue( false );
 		}
 	}
@@ -317,7 +317,7 @@ public class RestResourceEditor extends JTextField
 				{
 					for( RestSubResourceTextField restSubResourceTextField : restSubResourceTextFields )
 					{
-						restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText() );
+						restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText().trim() );
 					}
 					scanForTemplateParameters();
 					dispose();
