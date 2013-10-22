@@ -63,11 +63,21 @@
             <directory>${basedir}/src/dist_standalone/bin</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
-                <include>*.sh</include>
                 <include>*.bat</include>
             </includes>
             <fileMode>0755</fileMode>
             <filtered>true</filtered>
+            <lineEnding>windows</lineEnding>
+        </fileSet>
+        <fileSet>
+            <directory>${basedir}/src/dist_standalone/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>*.sh</include>
+            </includes>
+            <fileMode>0755</fileMode>
+            <filtered>true</filtered>
+            <lineEnding>unix</lineEnding>
         </fileSet>
         <fileSet>
             <directory>${basedir}/src/dist/bin</directory>
