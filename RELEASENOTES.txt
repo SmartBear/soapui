@@ -3,37 +3,35 @@
 
 ### Major New Feature ###
 * All parameters editable on top URI bar (SOAP-671)
-* Better view when editing parent resource from child (SOAP-671)
-* Better synchronization of editor windows – add parameters easier (SOAP-671)
+* Better control and feedback when editing parent resource from child
+* Better synchronization of editors regarding parameters. Add new parameter simplified.
+* Retina support for SoapUI on OS X (SOAP-655)
 
 ### Known Issue ###
 * Template parameter not synched from method to top URI bar (SOAP-834)
 
 ### Bugs fixed ###
 * Editing resource params from the properties tab doesn't set default value (SOAP-841)
-* User shouldn't have the ability to change the method in REST test steps (SOAP-833)
-* SoapUI doesn't support SPnego/Kerberios authentication (SOAP-445)
+* Should not be possible to change the method in REST test steps (SOAP-833)
+* SoapUI didn’t support SPNEGO/Kerberos authentication in a good way (SOAP-445)
 * Double Encoded URIs (SOAP-697)
 * Child resources don't show complete path in Resource field (SOAP-622)
 * Can't write to Excel DataSinks when using a template file (SOAP-680)
 * Easy way to get binary content of response (SOAP-747)
-* Change colour of CDATA section in editor (SOAP-749)
+* Change color of CDATA section in editor (SOAP-749)
 * JVM crash on latest OS X when running test ( SOAP-459)
 * Closes without saving if save folder selection cancelled (SOAP-653)
 * Wrap search and Whole word options in find/replace dialog do nothing (SOAP-158)
 
-### Minor improvements
-* Add retina support for SoapUI on OS X (SOAP-655)
+### Minor improvements ###
 * Add installer for 64 bit Linux (SOAP-670)
 * New REST Project from a WADL dialog (SOAP-348)
 * Solve the duplicate project name issue (SOAP-638)
 * Automate maven plugin release process (SOAP-599)
 * Should be able to use ws-s truststore without password (SOAP-751)
 
-### Updated libraries
+### Updated libraries ###
 * Updated to JRE 7u40
-
-### Updated libraries
 
 -------------------------------------------------------------------------------
 
