@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.support.UISupport;
 
 import javax.swing.*;
@@ -24,19 +23,15 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-15
- * Time: 13:02
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 public class AddParamAction extends AbstractAction
 {
 	public static final String EMPTY_STRING = "";
-	private TestPropertyHolder propertyHolder;
+	private MutableTestPropertyHolder propertyHolder;
 	private JTable parameterTable;
 
-	public AddParamAction( JTable parameterTable, TestPropertyHolder propertyHolder, String description )
+	public AddParamAction( JTable parameterTable, MutableTestPropertyHolder propertyHolder, String description )
 	{
 		this.parameterTable = parameterTable;
 		this.propertyHolder = propertyHolder;
@@ -46,7 +41,12 @@ public class AddParamAction extends AbstractAction
 
 	public void actionPerformed( ActionEvent e )
 	{
-		( ( MutableTestPropertyHolder )propertyHolder ).addProperty( EMPTY_STRING );
+		// If already in the process of adding a parameter then don't add another at the same time.
+		if( propertyHolder.getProperty( EMPTY_STRING ) != null )
+		{
+			return;
+		}
+		propertyHolder.addProperty( EMPTY_STRING );
 
 		final int row = propertyHolder.getPropertyNames().length - 1;
 		SwingUtilities.invokeLater( new Runnable()
@@ -65,7 +65,7 @@ public class AddParamAction extends AbstractAction
 						if( parameterTable.getRowCount() > row &&
 								parameterTable.getValueAt( row, 0 ).toString().equals( EMPTY_STRING ) )
 						{
-							( ( MutableTestPropertyHolder )propertyHolder ).removeProperty( EMPTY_STRING );
+							propertyHolder.removeProperty( EMPTY_STRING );
 							return;
 						}
 						editTableCell( row, 1 );
@@ -75,7 +75,7 @@ public class AddParamAction extends AbstractAction
 					public void editingCanceled( ChangeEvent e )
 					{
 						cellEditor1.removeCellEditorListener( this );
-						( ( MutableTestPropertyHolder )propertyHolder ).removeProperty( EMPTY_STRING );
+						propertyHolder.removeProperty( EMPTY_STRING );
 					}
 				} );
 			}
