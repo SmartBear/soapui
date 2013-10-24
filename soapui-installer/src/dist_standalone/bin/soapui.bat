@@ -37,7 +37,9 @@ rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.jxbrowser.disable="true"
 
 :START
 
+set OLDDIR=%CD%
+cd /d %SOAPUI_HOME%
 rem ********* run soapui ***********
 
 "%JAVA%" %JAVA_OPTS% com.eviware.soapui.SoapUI %*
-
+cd /d %OLDDIR%

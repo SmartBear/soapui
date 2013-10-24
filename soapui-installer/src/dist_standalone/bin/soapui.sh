@@ -68,6 +68,7 @@ then
     SOAPUI_CLASSPATH=`cygpath --path --dos "$SOAPUI_CLASSPATH"`
 fi
 
+cd $DIRNAME
 echo ================================
 echo =
 echo = SOAPUI_HOME = $SOAPUI_HOME

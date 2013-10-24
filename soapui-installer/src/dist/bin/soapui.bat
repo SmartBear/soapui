@@ -31,6 +31,9 @@ rem uncomment to disable browser component
 rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.jxbrowser.disable="true"
 :START
 
+set OLDDIR=%CD%
+cd /d %SOAPUI_HOME%
 rem ********* run soapui ***********
 
 "%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.SoapUI %*
+cd /d %OLDDIR%
