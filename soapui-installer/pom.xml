@@ -86,7 +86,7 @@
                         </property>
                         <property>
                             <name>SRC_ROOT</name>
-                            <value>${basedir}/src</value>
+                            <value>${parent.basedir}/soapui/src</value>
                         </property>
                         <property>
                             <name>DIST_ROOT</name>
