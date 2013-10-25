@@ -1,3 +1,18 @@
+# SoapUI 4.6.2
+#### Released YYYY-MM-DD ####
+
+### Major New Feature ###
+
+### Known Issue ###
+
+### Bugs fixed ###
+
+### Minor improvements ###
+
+### Updated libraries ###
+
+-------------------------------------------------------------------------------
+
 # SoapUI 4.6.1
 #### Released 2013-10-24 ####
 
