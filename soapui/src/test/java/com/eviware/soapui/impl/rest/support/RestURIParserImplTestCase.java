@@ -317,6 +317,34 @@ public class RestURIParserImplTestCase
 	}
 
 	@Test
+	public void onlyEndpointTest() throws MalformedURLException
+	{
+		String uri = "http://www.google.se";
+		String expectedEndpoint = "http://www.google.se";
+		String expectedPath = "";
+		String expectedResourceName = "";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
+	public void onlyEndpointWithSlashAtEndTest() throws MalformedURLException
+	{
+		String uri = "http://www.google.se/";
+		String expectedEndpoint = "http://www.google.se";
+		String expectedPath = "/";
+		String expectedResourceName = "";
+		String expectedQuery = "";
+
+		restURIParser = new RestURIParserImpl( uri );
+
+		assertURIParsedCorrectly( expectedEndpoint, expectedPath, expectedResourceName, expectedQuery, restURIParser );
+	}
+
+	@Test
 	public void invalidProtocol() throws MalformedURLException
 	{
 		String uri = "ftp://spotify.com/api/?userId=1234";
