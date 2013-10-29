@@ -12,6 +12,11 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,11 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
 public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 {
@@ -367,6 +367,14 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
+			if (parent.hasProperty( name ))
+			{
+				firePropertyValueChanged( name, null, parent.getPropertyValue( name ) );
+			}
+			else
+			{
+				firePropertyMoved( name, oldIndex, newIndex );
+			}
 		}
 
 		public void propertyRemoved( String name )

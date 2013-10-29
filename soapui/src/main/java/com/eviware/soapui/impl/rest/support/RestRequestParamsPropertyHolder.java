@@ -12,6 +12,16 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -24,37 +34,20 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
-import org.apache.xmlbeans.SchemaType;
-
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.support.types.StringToStringMap;
-
 public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder, TestPropertyListener
 {
 	private StringToStringMap values;
 	private RestParamsPropertyHolder methodParams;
-	private ModelItem modelItem;
+	private RestRequest restRequest;
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 	private Map<RestParamProperty, InternalRestParamProperty> wrappers = new HashMap<RestParamProperty, InternalRestParamProperty>();
 
-	public RestRequestParamsPropertyHolder( RestParamsPropertyHolder methodParams, ModelItem modelItem,
+	public RestRequestParamsPropertyHolder( RestParamsPropertyHolder methodParams, RestRequest restRequest,
 			StringToStringMap values )
 	{
 		this.methodParams = methodParams;
-		this.modelItem = modelItem;
+		this.restRequest = restRequest;
 		this.values = values;
-		/*
-		 * for (String key : methodParams.getPropertyNames()) { if
-		 * (!values.containsKey(key) && methodParams.getPropertyValue(key) != null
-		 * && !(methodParams.getPropertyValue(key).length() == 0)) {
-		 * values.put(key, methodParams.getPropertyValue(key)); } }
-		 */
 		methodParams.addTestPropertyListener( this );
 	}
 
@@ -134,7 +127,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public ModelItem getModelItem()
 	{
-		return this.modelItem;
+		return this.restRequest;
 	}
 
 	public Map<String, TestProperty> getProperties()
@@ -472,7 +465,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public ModelItem getModelItem()
 		{
-			return modelItem;
+			return restRequest;
 		}
 
 		public String getName()
