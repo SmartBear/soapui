@@ -216,10 +216,11 @@ public class PropertyHolderTable extends JPanel
 		if( holder instanceof MutableTestPropertyHolder )
 		{
 			removePropertyAction = new RemovePropertyAction();
-			addPropertyAction = new AddParamAction( propertiesTable, ( MutableTestPropertyHolder )holder, "Adds a property to the property list" );
-			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, holder,
+			MutableTestPropertyHolder mutablePropertyHolder = ( MutableTestPropertyHolder )holder;
+			addPropertyAction = new AddParamAction( propertiesTable, mutablePropertyHolder, "Adds a property to the property list" );
+			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, mutablePropertyHolder,
 					"Moves selected property up one row" );
-			movePropertyDownAction = new MovePropertyDownAction( propertiesTable, holder,
+			movePropertyDownAction = new MovePropertyDownAction( propertiesTable, mutablePropertyHolder,
 					"Moves selected property down one row" );
 
 			JButton addPropertyButton = UISupport.createToolbarButton( addPropertyAction );
@@ -285,98 +286,6 @@ public class PropertyHolderTable extends JPanel
 		loadPropertiesAction.setEnabled( enabled );
 
 		super.setEnabled( enabled );
-	}
-
-	private final class InternalTestPropertyListener implements TestPropertyListener
-	{
-		private boolean enabled = true;
-
-		@SuppressWarnings("unused")
-		public boolean isEnabled()
-		{
-			return enabled;
-		}
-
-		@SuppressWarnings("unused")
-		public void setEnabled( boolean enabled )
-		{
-			this.enabled = enabled;
-		}
-
-		public void propertyAdded( String name )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyRemoved( String name )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyRenamed( String oldName, String newName )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyValueChanged( String name, String oldValue, String newValue )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyMoved( String name, int oldIndex, int newIndex )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-	}
-
-	private class AddPropertyAction extends AbstractAction
-	{
-		public AddPropertyAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a property to the property list" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String name = UISupport.prompt( "Specify unique property name", "Add Property", "" );
-			if( StringUtils.hasContent( name ) )
-			{
-				if( holder.hasProperty( name ) )
-				{
-					UISupport.showErrorMessage( "Property name [" + name + "] already exists.." );
-					return;
-				}
-
-				( ( MutableTestPropertyHolder )holder ).addProperty( name );
-				final int row = holder.getPropertyNames().length - 1;
-				propertiesModel.fireTableDataChanged();
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						requestFocusInWindow();
-						scrollRectToVisible( propertiesTable.getCellRect( row, 1, true ) );
-						SwingUtilities.invokeLater( new Runnable()
-						{
-							public void run()
-							{
-								propertiesTable.editCellAt( row, 1 );
-								Component editorComponent = propertiesTable.getEditorComponent();
-								if( editorComponent != null )
-									editorComponent.requestFocusInWindow();
-							}
-						} );
-					}
-				} );
-
-			}
-		}
 	}
 
 	protected class RemovePropertyAction extends AbstractAction

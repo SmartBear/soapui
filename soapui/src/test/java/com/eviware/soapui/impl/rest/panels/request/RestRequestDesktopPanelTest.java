@@ -23,7 +23,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import java.lang.reflect.InvocationTargetException;
@@ -31,7 +32,9 @@ import java.util.List;
 
 import static com.eviware.soapui.utils.ModelItemMatchers.hasParameter;
 import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
@@ -87,6 +90,7 @@ public class RestRequestDesktopPanelTest
 		assertThat( returnedParameter.getValue(), is( PARAMETER_VALUE ) );
 	}
 
+	@Ignore("Discuss this!")
 	@Test
 	public void retainsParameterOrderWhenChangingItsLevel() throws Exception
 	{

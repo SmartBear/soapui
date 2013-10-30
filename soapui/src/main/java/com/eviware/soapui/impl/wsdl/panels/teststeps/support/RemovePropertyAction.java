@@ -13,10 +13,11 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.support.UISupport;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JTable;
 import java.awt.event.ActionEvent;
 
 /**
@@ -29,9 +30,9 @@ import java.awt.event.ActionEvent;
 public class RemovePropertyAction extends AbstractAction
 {
 	private final JTable propertyTable;
-	private final TestPropertyHolder propertyHolder;
+	private final MutableTestPropertyHolder propertyHolder;
 
-	public RemovePropertyAction( JTable propertyTable, TestPropertyHolder propertyHolder, String description )
+	public RemovePropertyAction( JTable propertyTable, MutableTestPropertyHolder propertyHolder, String description )
 	{
 		this.propertyTable = propertyTable;
 		this.propertyHolder = propertyHolder;
@@ -52,7 +53,7 @@ public class RemovePropertyAction extends AbstractAction
 		if( UISupport.confirm( "Remove parameter [" + propertyName + "]?", "Remove Parameter" ) )
 		{
 			propertyTable.clearSelection();
-			( ( MutableTestPropertyHolder )propertyHolder ).removeProperty( propertyName );
+			propertyHolder.removeProperty( propertyName );
 		}
 	}
 }

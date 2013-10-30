@@ -1924,7 +1924,7 @@
                 <xsd:sequence>
                     <xsd:element name="parameters" type="tns:StringToStringMap">
                     </xsd:element>
-                    <xsd:element name="parameterOrder" type="tns:StringToStringMap" minOccurs="0"/>
+                    <xsd:element name="parameterOrder" type="tns:StringList" minOccurs="0"/>
                 </xsd:sequence>
                 <xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>

@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -81,10 +82,10 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		params.addTestPropertyListener( paramUpdater );
 
 		method.addPropertyChangeListener( this );
-		if (requestConfig.getMediaType() == null)
+		if( requestConfig.getMediaType() == null )
 		{
-		String defaultMediaType = getRestMethod().getDefaultRequestMediaType();
-		getConfig().setMediaType( defaultMediaType );
+			String defaultMediaType = getRestMethod().getDefaultRequestMediaType();
+			getConfig().setMediaType( defaultMediaType );
 		}
 	}
 
@@ -575,7 +576,9 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		{
 			try
 			{
-				getConfig().setParameters( StringToStringMapConfig.Factory.parse( values.toXml() ) );
+				RestRequestConfig requestConfig = getConfig();
+				requestConfig.setParameters( StringToStringMapConfig.Factory.parse( values.toXml() ) );
+				updateParameterOrder();
 			}
 			catch( XmlException e )
 			{
@@ -590,19 +593,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
-			StringToStringMapConfig mapConfig = StringToStringMapConfig.Factory.newInstance();
-			List<StringToStringMapConfig.Entry> entries = new ArrayList<StringToStringMapConfig.Entry>(  );
-			int index = 0;
-			for( Map.Entry<String, TestProperty> paramEntry : params.entrySet() )
-			{
-				StringToStringMapConfig.Entry mapEntry = StringToStringMapConfig.Entry.Factory.newInstance();
-				mapEntry.setKey(paramEntry.getKey());
-				mapEntry.setValue(String.valueOf(index));
-				entries.add(mapEntry);
-				index++;
-			}
-			mapConfig.setEntryArray( entries.toArray(new StringToStringMapConfig.Entry[entries.size()]) );
-			getConfig().setParameterOrder( mapConfig );
+			updateParameterOrder();
 		}
 
 		public void propertyRemoved( String name )
@@ -618,6 +609,13 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		public void propertyValueChanged( String name, String oldValue, String newValue )
 		{
 			sync();
+		}
+
+		private void updateParameterOrder()
+		{
+			StringListConfig mapConfig = StringListConfig.Factory.newInstance();
+			mapConfig.setEntryArray( params.keySet().toArray( new String[params.keySet().size()] ) );
+			getConfig().setParameterOrder( mapConfig );
 		}
 	}
 

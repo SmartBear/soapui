@@ -12,25 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
-import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.support.UISupport;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JTable;
 import java.awt.event.ActionEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-17
- * Time: 10:40
- * To change this template use File | Settings | File Templates.
+ * Action that moves a property down in the display order of a table.
  */
 public class MovePropertyDownAction extends AbstractAction
 {
 	private final JTable propertyTable;
-	private final TestPropertyHolder propertyHolder;
+	private final MutableTestPropertyHolder propertyHolder;
 
-	public MovePropertyDownAction( JTable propertyTable, TestPropertyHolder propertyHolder, String description )
+	public MovePropertyDownAction( JTable propertyTable, MutableTestPropertyHolder propertyHolder, String description )
 	{
 		this.propertyTable = propertyTable;
 		this.propertyHolder = propertyHolder;

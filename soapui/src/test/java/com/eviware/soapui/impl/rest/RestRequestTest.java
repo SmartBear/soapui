@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -58,9 +59,9 @@ public class RestRequestTest
 		addRequestParameter( lastParameterName, "someValue" );
 		request.getParams().moveProperty( lastParameterName, 0 );
 
-		StringToStringMapConfig parameterOrder = request.getConfig().getParameterOrder();
+		StringListConfig parameterOrder = request.getConfig().getParameterOrder();
 		assertThat(parameterOrder, is(notNullValue()));
-		assertThat(getEntryValue(parameterOrder, lastParameterName), is("0"));
+		assertThat(parameterOrder.getEntryArray( 0 ), is(lastParameterName));
 	}
 
 	private String getEntryValue( StringToStringMapConfig parameterOrder, String key )

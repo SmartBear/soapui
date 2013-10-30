@@ -194,7 +194,6 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 		this.params = params;
 		this.params.addTestPropertyListener( testPropertyListener );
 
-		buildParamNameIndex( params );
 		fireTableDataChanged();
 	}
 
