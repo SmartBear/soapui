@@ -37,18 +37,18 @@ public class ProxyUtilsTestCase
 {
 	private static final String URL = "http://example.com";
 
-	public static final String PROXY_HOST_PROP = "proxyhostprop";
-	public static final String PROXY_PORT_PROP = "1";
+	public static final String SYSTEM_PROPERTY_PROXY_HOST = "systempropertyhost.com";
+	public static final String SYSTEM_PROPERTY_PROXY_PORT = "1";
 
-	public static final String PROXY_HOST_SETTINGS = "proxyhostsettings";
-	public static final String PROXY_PORT_SETTINGS = "2";
+	public static final String MANUAL_SETTING_PROXY_HOST = "manualsettingshost.com";
+	public static final String MANUAL_SETTING_PROXY_PORT = "2";
 
-	public static final String PROXY_HOST_AUTO = "proxyhostauto";
-	public static final String PROXY_PORT_AUTO = "3";
+	public static final String AUTOMATIC_PROXY_HOST = "autosettingshost.com";
+	public static final String AUTOMATIC_PROXY_PORT = "3";
 
-	public static final String PROXY_PARAMETER_URL_STRING = String.format( "http://%s:%s", PROXY_HOST_PROP, PROXY_PORT_PROP );
-	public static final String PROXY_SETTINGS_URL_STRING = String.format( "http://%s:%s", PROXY_HOST_SETTINGS, PROXY_PORT_SETTINGS );
-	public static final String PROXY_AUTO_URL_STRING = String.format( "http://%s:%s", PROXY_HOST_AUTO, PROXY_PORT_AUTO );
+	public static final String URL_STRING_SYSTEM_PROPERTY = String.format( "http://%s:%s", SYSTEM_PROPERTY_PROXY_HOST, SYSTEM_PROPERTY_PROXY_PORT );
+	public static final String URL_STRING_MANUAL_SETTINGS = String.format( "http://%s:%s", MANUAL_SETTING_PROXY_HOST, MANUAL_SETTING_PROXY_PORT );
+	public static final String URL_STRING_AUTOMATIC_PROXY = String.format( "http://%s:%s", AUTOMATIC_PROXY_HOST, AUTOMATIC_PROXY_PORT );
 
 	public static junit.framework.Test suite()
 	{
@@ -74,7 +74,7 @@ public class ProxyUtilsTestCase
 	@Before
 	public void setup()
 	{
-		clearProxyProperties();
+		clearProxySystemProperties();
 	}
 
 	@Test
@@ -130,7 +130,7 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 
-		assertManualProxy( httpMethod, PROXY_SETTINGS_URL_STRING );
+		assertManualProxy( httpMethod, URL_STRING_MANUAL_SETTINGS );
 	}
 
 	@Test
@@ -159,7 +159,7 @@ public class ProxyUtilsTestCase
 		assertEquals( proxyUrl, proxy.toURI() );
 	}
 
-	private SettingsImpl emptySettings()
+	private Settings emptySettings()
 	{
 		return new SettingsImpl();
 	}
@@ -167,12 +167,12 @@ public class ProxyUtilsTestCase
 	private Settings manualSettings()
 	{
 		Settings settings = emptySettings();
-		settings.setString( ProxySettings.HOST, PROXY_HOST_SETTINGS );
-		settings.setString( ProxySettings.PORT, PROXY_PORT_SETTINGS );
+		settings.setString( ProxySettings.HOST, MANUAL_SETTING_PROXY_HOST );
+		settings.setString( ProxySettings.PORT, MANUAL_SETTING_PROXY_PORT );
 		return settings;
 	}
 
-	private void clearProxyProperties()
+	private void clearProxySystemProperties()
 	{
 		System.clearProperty( "http.proxyHost" );
 		System.clearProperty( "http.proxyPort" );
@@ -180,8 +180,8 @@ public class ProxyUtilsTestCase
 
 	private void setProxySystemProperties()
 	{
-		System.setProperty( "http.proxyHost", PROXY_HOST_PROP );
-		System.setProperty( "http.proxyPort", PROXY_PORT_PROP );
+		System.setProperty( "http.proxyHost", SYSTEM_PROPERTY_PROXY_HOST );
+		System.setProperty( "http.proxyPort", SYSTEM_PROPERTY_PROXY_PORT );
 	}
 
 	private void assertAutoProxy( Proxy.Type type )
