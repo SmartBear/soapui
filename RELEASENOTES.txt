@@ -6,6 +6,7 @@
 ### Known Issue ###
 
 ### Bugs fixed ###
+* Deleting a mid level resource while request editor of child resource is open freezes the GUI (SOAP-854)
 
 ### Minor improvements ###
 
