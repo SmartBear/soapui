@@ -165,7 +165,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 
 	public void deleteResource( RestResource resource )
 	{
-		deleteAllChildResources( resource );
+		resource.deleteAllChildResources( resource );
 
 		int ix = resources.indexOf( resource );
 		if( !resources.remove( resource ) )
@@ -311,14 +311,6 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 	public void setExportChanges( boolean exportChanges )
 	{
 		this.exportChanges = exportChanges;
-	}
-
-	private void deleteAllChildResources( RestResource resource )
-	{
-		for( RestResource childResource : resource.getChildResourceList() )
-		{
-			resource.deleteResource( childResource );
-		}
 	}
 
 }
