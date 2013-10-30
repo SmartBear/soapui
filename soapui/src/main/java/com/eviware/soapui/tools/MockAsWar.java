@@ -12,21 +12,6 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -34,12 +19,24 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.Worker.WorkerAdapter;
 import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
+
+import javax.annotation.Nullable;
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MockAsWar
 {
 	protected static final String SOAPUI_SETTINGS = "[SoapUISettings]";
 	protected static final String PROJECT_FILE_NAME = "[ProjectFileName]";
 	protected static final String MOCKSERVICE_ENDPOINT = "[mockServiceEndpoint]";
+
+	private static final String SOAPUI_HOME = "soapui.home";
 
 	protected File projectFile;
 	protected File settingsFile;
@@ -60,7 +57,7 @@ public class MockAsWar
 	protected boolean enableWebUI;
 
 	public MockAsWar( String projectPath, String settingsPath, String warDir, String warFile, boolean includeExt,
-			boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI )
+							boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI )
 	{
 		this.localEndpoint = localEndpoint;
 		this.projectFile = new File( projectPath );
@@ -142,7 +139,7 @@ public class MockAsWar
 			StringBuilder content = new StringBuilder();
 
 			while( ( inputLine = in.readLine() ) != null )
-				content.append( inputLine + "\n" );
+				content.append( inputLine ).append( "\n" );
 
 			createContent( content );
 
@@ -172,15 +169,24 @@ public class MockAsWar
 				+ MOCKSERVICE_ENDPOINT.length(), localEndpoint );
 
 		if( !includeActions )
-			content.replace( content.indexOf( "WEB-INF/actions" ), content.indexOf( "WEB-INF/actions" )
-					+ "WEB-INF/actions".length(), "" );
+		{
+			String actionsString = "WEB-INF/actions";
+			content.delete( content.indexOf( actionsString ), content.indexOf( actionsString ) + actionsString.length() );
+		}
 		if( !includeListeners )
-			content.replace( content.indexOf( "WEB-INF/listeners" ), content.indexOf( "WEB-INF/listeners" )
-					+ "WEB-INF/listeners".length(), "" );
+		{
+			String listenersString = "WEB-INF/listeners";
+			content.delete( content.indexOf( listenersString ), content.indexOf( listenersString )
+					+ listenersString.length() );
+		}
 		if( !enableWebUI )
-			content.replace( content.indexOf( "<param-value>true</param-value>" ),
-					content.indexOf( "<param-value>true</param-value>" ) + "<param-value>true</param-value>".length(),
-					"<param-value>false</param-value>" );
+		{
+			String webUIEnabled = "<param-value>true</param-value>";
+			String webUIDisabled = "<param-value>false</param-value>";
+			content.replace( content.indexOf( webUIEnabled ),
+					content.indexOf( webUIEnabled ) + webUIEnabled.length(),
+					webUIDisabled );
+		}
 	}
 
 	protected boolean prepareWarFile()
@@ -189,42 +195,29 @@ public class MockAsWar
 		if( createWarFileSystem() )
 		{
 			// copy all from bin/../lib to soapui.home/war/WEB-INF/lib/
-			File fromDir = new File( System.getProperty( "soapui.home" ), ".." + File.separator + "lib" );
-			JarPackager.copyAllFromTo( fromDir, lib, new FileFilter()
-			{
-				public boolean accept( File pathname )
-				{
-					return pathname.getName().indexOf( "servlet" ) == -1 && pathname.getName().indexOf( "xulrunner" ) == -1
-							&& pathname.getName().indexOf( "Mozilla" ) == -1 && pathname.getName().indexOf( "l2fprod" ) == -1
-							&& pathname.getName().indexOf( "tuxpack" ) == -1
-							&& pathname.getName().indexOf( "winpack" ) == -1
-							//	&& pathname.getName().indexOf( "rsyntax" ) == -1
-							&& pathname.getName().indexOf( "ActiveQueryBuilder" ) == -1
-							&& pathname.getName().indexOf( "jxbrowser" ) == -1
-							&& pathname.getName().toLowerCase().indexOf( "protection" ) == -1;
-				}
-			} );
+			File fromDir = new File( System.getProperty( SOAPUI_HOME ), ".." + File.separator + "lib" );
+
+
+			JarPackager.copyAllFromTo( fromDir, lib, new CaseInsensitiveFileFilter() );
 
 			if( includeExt )
 			{
 				// copy all from bin/ext to soapui.home/war/WEB-INF/lib/
-				fromDir = new File( System.getProperty( "soapui.home" ), "ext" );
+				fromDir = new File( System.getProperty( SOAPUI_HOME ), "ext" );
 				JarPackager.copyAllFromTo( fromDir, lib, null );
 			}
 
 			// copy soapui jar to soapui.home/war/WEB-INF/lib/
-			File soapUIHome = new File( System.getProperty( "soapui.home" ) );
+			File soapUIHome = new File( System.getProperty( SOAPUI_HOME ) );
 			String[] mainJar = soapUIHome.list( new FilenameFilter()
 			{
 				public boolean accept( File dir, String name )
 				{
-					if( name.toLowerCase().startsWith( "soapui" ) && name.toLowerCase().endsWith( ".jar" ) )
-						return true;
-					return false;
+					return name.toLowerCase().startsWith( "soapui" ) && name.toLowerCase().endsWith( ".jar" );
 				}
 			} );
 
-			fromDir = new File( System.getProperty( "soapui.home" ), mainJar[0] );
+			fromDir = new File( System.getProperty( SOAPUI_HOME ), mainJar[0] );
 			JarPackager.copyFileToDir( fromDir, lib );
 			// copy project and settings file to bin/war/WEB-INF/soapui/
 			copyProjectFile();
@@ -276,24 +269,23 @@ public class MockAsWar
 		{
 			log.info( "Creating WAR directory in [" + warDir.getAbsolutePath() + "]" );
 			webInf = new File( warDir, "WEB-INF" );
-			if( !( webInf.mkdir() || webInf.exists() ) )
+			if( !directoryIsUsable( webInf ) )
 			{
-				UISupport.showErrorMessage( "Could not create directory " + webInf.getAbsolutePath() );
 				return false;
 			}
 			else
 			{
 				clearDir( webInf );
 				lib = new File( webInf, "lib" );
-				if( !( lib.mkdir() || lib.exists() ) )
+
+				if( !directoryIsUsable( lib ) )
 				{
-					UISupport.showErrorMessage( "Could not create directory " + lib.getAbsolutePath() );
 					return false;
 				}
+
 				soapuiDir = new File( webInf, "soapui" );
-				if( !( soapuiDir.mkdir() || soapuiDir.exists() ) )
+				if( !directoryIsUsable( soapuiDir ) )
 				{
-					UISupport.showErrorMessage( "Could not create directory " + soapuiDir.getAbsolutePath() );
 					return false;
 				}
 				clearDir( soapuiDir );
@@ -301,9 +293,8 @@ public class MockAsWar
 				if( includeActions )
 				{
 					actionsDir = new File( webInf, "actions" );
-					if( !( actionsDir.mkdirs() || actionsDir.exists() ) )
+					if( !directoryIsUsable( actionsDir ) )
 					{
-						UISupport.showErrorMessage( "Could not create directory " + actionsDir.getAbsolutePath() );
 						return false;
 					}
 					clearDir( actionsDir );
@@ -311,9 +302,8 @@ public class MockAsWar
 				if( includeListeners )
 				{
 					listenersDir = new File( webInf, "listeners" );
-					if( !( listenersDir.mkdirs() || listenersDir.exists() ) )
+					if( !directoryIsUsable( listenersDir ) )
 					{
-						UISupport.showErrorMessage( "Could not create directory " + listenersDir.getAbsolutePath() );
 						return false;
 					}
 					clearDir( listenersDir );
@@ -324,14 +314,24 @@ public class MockAsWar
 		}
 		else
 		{
-			UISupport.showErrorMessage( warDir.getName() + " need to be directory!" );
+			UISupport.showErrorMessage( warDir.getName() + " needs to be a directory!" );
 			return false;
 		}
 	}
 
+	private boolean directoryIsUsable( File dir )
+	{
+		if( !( dir.mkdir() || dir.exists() ) )
+		{
+			UISupport.showErrorMessage( "Could not create directory " + dir.getAbsolutePath() );
+			return false;
+		}
+		return true;
+	}
+
 	/**
 	 * Deletes all files, just files, in directory
-	 * 
+	 *
 	 * @param dir
 	 */
 	protected void clearDir( File dir )
@@ -341,4 +341,26 @@ public class MockAsWar
 				file.delete();
 	}
 
+	protected static class CaseInsensitiveFileFilter implements FileFilter
+	{
+		protected static final ArrayList<String> excludes = Lists.newArrayList( "servlet", "xulrunner", "Mozilla", "l2fprod", "tuxpack", "winpack", "ActiveQueryBuilder", "jxbrowser", "protection" );
+
+		public boolean accept( final File file )
+		{
+
+			boolean pathNameExcluded = FluentIterable.from( excludes ).anyMatch( new Predicate<String>()
+			{
+				@Override
+				public boolean apply( @Nullable String s )
+				{
+					if (file == null || s == null || file.getName().isEmpty()){
+						return true;
+					}
+
+					return file.getName().toLowerCase().contains( s.toLowerCase() );
+				}
+			} );
+			return !pathNameExcluded;
+		}
+	}
 }
