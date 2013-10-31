@@ -12,35 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.endpoint;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumn;
-
 import com.eviware.soapui.config.EndpointConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -59,7 +30,36 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.MetricsPanel;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements PropertyChangeListener
 {
@@ -85,7 +85,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 	private void buildUI()
 	{
 		tableModel = iface instanceof WsdlInterface ? new WsdlEndpointsTableModel() : new RestEndpointsTableModel();
-		table = new JTable( tableModel );
+		table = JTableFactory.getInstance().makeJTable( tableModel );
 
 		TableColumn passwordColumn = table.getColumnModel().getColumn( tableModel.getPasswordColumnIndex() );
 		JPasswordField textField = new JPasswordField();

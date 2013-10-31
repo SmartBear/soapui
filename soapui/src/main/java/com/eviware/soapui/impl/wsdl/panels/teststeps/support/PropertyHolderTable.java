@@ -29,10 +29,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -40,15 +43,32 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import java.awt.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -141,10 +161,13 @@ public class PropertyHolderTable extends JPanel
 		{
 			super( propertiesModel );
 			setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-			// setAutoStartEditOnKeyStroke( true );
 			setSurrendersFocusOnKeystroke( true );
 			setRowHeight( 19 );
-			// setHorizontalScrollEnabled(true);
+			if (UISupport.isMac())
+			{
+				setShowGrid( false );
+				setIntercellSpacing( new Dimension(0, 0) );
+			}
 		}
 
 		@Override
@@ -158,6 +181,22 @@ public class PropertyHolderTable extends JPanel
 			if (editor != null) {
 				editor.cancelCellEditing();
 			}
+		}
+
+		public Component prepareRenderer( TableCellRenderer renderer, int row, int column )
+		{
+			Component defaultRenderer = super.prepareRenderer( renderer, row, column );
+			if( UISupport.isMac() )
+			{
+				JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+			}
+			return defaultRenderer;
+		}
+
+		@Override
+		public boolean getShowVerticalLines()
+		{
+			return !UISupport.isMac();
 		}
 
 		public PropertyModelItem getTestProperty()
@@ -176,8 +215,7 @@ public class PropertyHolderTable extends JPanel
 
 		if( holder instanceof MutableTestPropertyHolder )
 		{
-			removePropertyAction = new RemovePropertyAction( propertiesTable, holder,
-					"Removes the selected property from the property list" );
+			removePropertyAction = new RemovePropertyAction();
 			addPropertyAction = new AddParamAction( propertiesTable, ( MutableTestPropertyHolder )holder, "Adds a property to the property list" );
 			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, holder,
 					"Moves selected property up one row" );
@@ -247,6 +285,124 @@ public class PropertyHolderTable extends JPanel
 		loadPropertiesAction.setEnabled( enabled );
 
 		super.setEnabled( enabled );
+	}
+
+	private final class InternalTestPropertyListener implements TestPropertyListener
+	{
+		private boolean enabled = true;
+
+		@SuppressWarnings("unused")
+		public boolean isEnabled()
+		{
+			return enabled;
+		}
+
+		@SuppressWarnings("unused")
+		public void setEnabled( boolean enabled )
+		{
+			this.enabled = enabled;
+		}
+
+		public void propertyAdded( String name )
+		{
+			if( enabled )
+				propertiesModel.fireTableDataChanged();
+		}
+
+		public void propertyRemoved( String name )
+		{
+			if( enabled )
+				propertiesModel.fireTableDataChanged();
+		}
+
+		public void propertyRenamed( String oldName, String newName )
+		{
+			if( enabled )
+				propertiesModel.fireTableDataChanged();
+		}
+
+		public void propertyValueChanged( String name, String oldValue, String newValue )
+		{
+			if( enabled )
+				propertiesModel.fireTableDataChanged();
+		}
+
+		public void propertyMoved( String name, int oldIndex, int newIndex )
+		{
+			if( enabled )
+				propertiesModel.fireTableDataChanged();
+		}
+	}
+
+	private class AddPropertyAction extends AbstractAction
+	{
+		public AddPropertyAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Adds a property to the property list" );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			String name = UISupport.prompt( "Specify unique property name", "Add Property", "" );
+			if( StringUtils.hasContent( name ) )
+			{
+				if( holder.hasProperty( name ) )
+				{
+					UISupport.showErrorMessage( "Property name [" + name + "] already exists.." );
+					return;
+				}
+
+				( ( MutableTestPropertyHolder )holder ).addProperty( name );
+				final int row = holder.getPropertyNames().length - 1;
+				propertiesModel.fireTableDataChanged();
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					public void run()
+					{
+						requestFocusInWindow();
+						scrollRectToVisible( propertiesTable.getCellRect( row, 1, true ) );
+						SwingUtilities.invokeLater( new Runnable()
+						{
+							public void run()
+							{
+								propertiesTable.editCellAt( row, 1 );
+								Component editorComponent = propertiesTable.getEditorComponent();
+								if( editorComponent != null )
+									editorComponent.requestFocusInWindow();
+							}
+						} );
+					}
+				} );
+
+			}
+		}
+	}
+
+	protected class RemovePropertyAction extends AbstractAction
+	{
+		public RemovePropertyAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Removes the selected property from the property list" );
+			setEnabled( false );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int row = propertiesTable.getSelectedRow();
+			if( row == -1 )
+				return;
+
+			UISupport.stopCellEditing( propertiesTable );
+
+			String propertyName = propertiesModel.getValueAt( row, 0 ).toString();
+			if( UISupport.confirm( "Remove property [" + propertyName + "]?", "Remove Property" ) )
+			{
+				( ( MutableTestPropertyHolder )holder ).removeProperty( propertyName );
+				propertiesModel.fireTableRowsDeleted( row, row );
+			}
+		}
 	}
 
 	protected class ClearPropertiesAction extends AbstractAction
@@ -428,16 +584,16 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	@AForm( name = "Load Properties", description = "Set load options below" )
+	@AForm(name = "Load Properties", description = "Set load options below")
 	private static interface LoadOptionsForm
 	{
-		@AField( name = "File", description = "The Properties file to load", type = AFieldType.FILE )
+		@AField(name = "File", description = "The Properties file to load", type = AFieldType.FILE)
 		public static final String FILE = "File";
 
-		@AField( name = "Create Missing", description = "Creates Missing Properties", type = AFieldType.BOOLEAN )
+		@AField(name = "Create Missing", description = "Creates Missing Properties", type = AFieldType.BOOLEAN)
 		public static final String CREATEMISSING = "Create Missing";
 
-		@AField( name = "Delete Remaining", description = "Deletes properties not in file", type = AFieldType.BOOLEAN )
+		@AField(name = "Delete Remaining", description = "Deletes properties not in file", type = AFieldType.BOOLEAN)
 		public static final String DELETEREMAINING = "Delete Remaining";
 	}
 

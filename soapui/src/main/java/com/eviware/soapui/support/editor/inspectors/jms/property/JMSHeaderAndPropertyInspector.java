@@ -12,9 +12,13 @@
 
 package com.eviware.soapui.support.editor.inspectors.jms.property;
 
-import java.awt.BorderLayout;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
+import com.eviware.soapui.support.editor.EditorView;
+import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
+import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -22,13 +26,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
-import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
-import com.eviware.soapui.support.editor.EditorView;
-import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
-import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
-import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.types.StringToStringMap;
+import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
@@ -65,7 +65,7 @@ public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implemen
 				setTitle( "JMS (" + ( map == null ? "0" : map.size() ) + ")" );
 			}
 		} );
-		headersTable = new JTable( headersTableModel );
+		headersTable = JTableFactory.getInstance().makeJTable( headersTableModel );
 
 		panel = new JPanel( new BorderLayout() );
 		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );

@@ -12,6 +12,22 @@
 
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.PropertyChangeNotifier;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JPropertiesTable.PropertyDescriptor;
+import com.eviware.soapui.support.components.JPropertiesTable.PropertyFormatter;
+import com.eviware.soapui.support.swing.JTableFactory;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
@@ -20,21 +36,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableModel;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.PropertyChangeNotifier;
-import com.eviware.soapui.support.components.JPropertiesTable.PropertyDescriptor;
-import com.eviware.soapui.support.components.JPropertiesTable.PropertyFormatter;
 
 /**
  * Table for displaying property name/value pairs
@@ -239,6 +240,10 @@ public class JDebugPropertiesTable<T>
 		public PTable( TableModel tableModel )
 		{
 			super( tableModel );
+			if( UISupport.isMac() )
+			{
+				JTableFactory.setGridAttributes( this );
+			}
 		}
 
 		public TableCellEditor getCellEditor( int row, int column )
@@ -247,6 +252,20 @@ public class JDebugPropertiesTable<T>
 				return super.getCellEditor( row, column );
 			else
 				return tableModel.getPropertyDescriptorAt( row ).getCellEditor();
+		}
+
+		@Override
+		public Component prepareRenderer( TableCellRenderer renderer, int row, int column )
+		{
+			Component defaultRenderer = super.prepareRenderer( renderer, row, column );
+			JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+			return defaultRenderer;
+		}
+
+		@Override
+		public boolean getShowVerticalLines()
+		{
+			return UISupport.isMac() ? false : super.getShowVerticalLines();
 		}
 	}
 
@@ -259,4 +278,6 @@ public class JDebugPropertiesTable<T>
 	{
 		return table;
 	}
+
+
 }

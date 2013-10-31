@@ -12,17 +12,15 @@
 
 package com.eviware.soapui.support.resolver;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
+import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
+import com.eviware.soapui.support.swing.JTableFactory;
+import org.jdesktop.swingx.JXTable;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.BorderFactory;
@@ -37,16 +35,17 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
-import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Utility for resolving items
@@ -83,7 +82,7 @@ public class ResolveDialog
 			protected Component buildContent()
 			{
 				JPanel panel = new JPanel( new BorderLayout() );
-				table = new JXTable( resolveContextTableModel );
+				table = JTableFactory.getInstance().makeJXTable( resolveContextTableModel );
 				table.setHorizontalScrollEnabled( true );
 				table.setDefaultRenderer( JComboBox.class, new ResolverRenderer() );
 				table.setDefaultEditor( JComboBox.class, new ResolverEditor() );

@@ -11,13 +11,20 @@
  */
 package com.eviware.soapui.security.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.eviware.soapui.config.InvalidSecurityScanConfig;
+import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.support.ADialogBuilder;
+import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
+import com.eviware.x.impl.swing.JComboBoxFormField;
+import org.apache.xmlbeans.SchemaType;
+import org.jdesktop.swingx.JXTable;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -25,21 +32,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableRowSorter;
-
-import org.apache.xmlbeans.SchemaType;
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.config.InvalidSecurityScanConfig;
-import com.eviware.soapui.config.SchemaTypeForSecurityScanConfig;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.impl.swing.JComboBoxFormField;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Table for handling schema types for InvalidTypes Security Scan
@@ -107,7 +106,7 @@ public class InvalidTypesTable extends JPanel
 		toolbar.addGlue();
 
 		add( toolbar, BorderLayout.NORTH );
-		table = new JXTable( model );
+		table = JTableFactory.getInstance().makeJXTable( model );
 		TableRowSorter<InvalidTypeTableModel> sorter = new TableRowSorter<InvalidTypeTableModel>( model );
 		table.setRowSorter( sorter );
 		table.toggleSortOrder( 0 );

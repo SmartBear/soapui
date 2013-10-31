@@ -12,12 +12,10 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.util.HashMap;
-import java.util.Map;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.swing.JTableFactory;
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.VerticalLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,11 +27,12 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
-
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.VerticalLayout;
-
-import com.eviware.soapui.support.UISupport;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MetricsPanel extends JPanel
 {
@@ -126,7 +125,7 @@ public class MetricsPanel extends JPanel
 
 		public JXTable addTable( TableModel model )
 		{
-			JXTable table = new JXTable( model );
+			JXTable table = JTableFactory.getInstance().makeJXTable( model );
 			table.setBorder( null );
 			table.setShowGrid( false );
 			table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );

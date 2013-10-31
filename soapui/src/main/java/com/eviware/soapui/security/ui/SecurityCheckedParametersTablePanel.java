@@ -11,26 +11,6 @@
  */
 package com.eviware.soapui.security.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
-
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.security.SecurityParametersTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -43,6 +23,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -54,6 +35,24 @@ import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.eviware.x.impl.swing.SwingXFormDialog;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings( "serial" )
 public class SecurityCheckedParametersTablePanel extends JPanel implements ListSelectionListener
@@ -105,7 +104,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 		toolbar.addGlue();
 
 		add( toolbar, BorderLayout.NORTH );
-		table = new JXTable( model );
+		table = JTableFactory.getInstance().makeJXTable( model );
 		table.getSelectionModel().addListSelectionListener( this );
 		defineColumnWidth();
 		table.setDefaultEditor( String.class, getDefaultCellEditor() );

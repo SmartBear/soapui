@@ -12,16 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
+import com.eviware.soapui.impl.wsdl.loadtest.data.actions.ExportLoadTestLogAction;
+import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
+import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogEntry;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.DateUtil;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.Filter;
+import org.jdesktop.swingx.decorator.FilterPipeline;
+import org.jdesktop.swingx.decorator.PatternFilter;
+import org.jdesktop.swingx.decorator.SortOrder;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -43,24 +50,16 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
-
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.Filter;
-import org.jdesktop.swingx.decorator.FilterPipeline;
-import org.jdesktop.swingx.decorator.PatternFilter;
-import org.jdesktop.swingx.decorator.SortOrder;
-
-import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
-import com.eviware.soapui.impl.wsdl.loadtest.data.actions.ExportLoadTestLogAction;
-import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLog;
-import com.eviware.soapui.impl.wsdl.loadtest.log.LoadTestLogEntry;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.support.DateUtil;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Compound component for showing a LoadTestLog
@@ -91,7 +90,7 @@ public class JLoadTestLogTable extends JPanel
 		loadTestLog = log;
 
 		logTableModel = new LoadTestLogTableModel();
-		logTable = new JXTable( logTableModel );
+		logTable = JTableFactory.getInstance().makeJXTable( logTableModel );
 		logTable.setHorizontalScrollEnabled( true );
 		logTable.setColumnControlVisible( true );
 		logTable.addMouseListener( new LoadTestLogTableMouseListener() );
