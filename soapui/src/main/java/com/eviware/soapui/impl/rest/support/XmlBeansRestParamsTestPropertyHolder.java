@@ -88,12 +88,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 	private ParamLocation getParamLocation()
 	{
-
-		//TODO: uncomment when we suppor request level parameters
-		/*if(getModelItem() instanceof RestRequest)
-		{
-			return ParamLocation.REQUEST;
-		} else*/
 		if (getModelItem()==null || getModelItem() instanceof RestResource)
 		{
 			return ParamLocation.RESOURCE;
@@ -901,6 +895,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		prop.setOptions( property.getOptions() );
 		prop.setPath( property.getPath() );
 		prop.setRequired( property.getRequired() );
+	}
+
+	@Override
+	public void setParameterLocation( RestParamProperty parameter, ParamLocation newLocation )
+	{
+		// defensive programming, since parameter may be a disconnected XmlObject
+		getProperty( parameter.getName() ).setParamLocation( newLocation );
 	}
 
 	public void release()

@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -43,6 +44,12 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 	public void addParameter( RestParamProperty prop )
 	{
 		overlay.addParameter( prop );
+	}
+
+	@Override
+	public void setParameterLocation( RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation )
+	{
+		overlay.setParameterLocation( parameter, newLocation );
 	}
 
 	public RestParamProperty addProperty( String name )

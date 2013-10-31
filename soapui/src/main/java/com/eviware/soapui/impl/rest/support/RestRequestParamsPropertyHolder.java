@@ -45,6 +45,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	private RestRequest restRequest;
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 	private Map<RestParamProperty, InternalRestParamProperty> wrappers = new HashMap<RestParamProperty, InternalRestParamProperty>();
+	private String parameterBeingMoved;
 
 	public RestRequestParamsPropertyHolder( RestParamsPropertyHolder methodParams, RestRequest restRequest,
 														 StringToStringMap values )
@@ -105,6 +106,38 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	public void addParameter( RestParamProperty prop )
 	{
 		methodParams.addParameter( prop );
+	}
+
+	@Override
+	public void setParameterLocation( RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation )
+	{
+		if (newLocation == parameter.getParamLocation())
+		{
+			return;
+		}
+		parameterBeingMoved = parameter.getName();
+		try
+		{
+			ParameterStyle parameterStyle = parameter.getStyle();
+			String parameterValue = parameter.getValue();
+			if (newLocation == NewRestResourceActionBase.ParamLocation.METHOD)
+			{
+				restRequest.getResource().removeProperty( parameterBeingMoved );
+				RestParamProperty newParameter = restRequest.getRestMethod().addProperty( parameterBeingMoved );
+				newParameter.setStyle( parameterStyle );
+				newParameter.setValue( parameterValue );
+			}
+			else
+			{
+				restRequest.getRestMethod().removeProperty( parameterBeingMoved );
+				RestParamProperty newParameter = restRequest.getResource().addProperty( parameterBeingMoved );
+				newParameter.setStyle( parameterStyle );
+				newParameter.setValue( parameterValue );
+			}
+		} finally
+		{
+   		parameterBeingMoved = null;
+		}
 	}
 
 	public void addTestPropertyListener( TestPropertyListener listener )
@@ -417,6 +450,10 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void propertyAdded( String name )
 	{
+		if ( isMovingParameter( name ))
+		{
+			return;
+		}
 		if( !sortedPropertyNames.contains( name ) )
 		{
 			sortedPropertyNames.add( name );
@@ -431,6 +468,10 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void propertyRemoved( String name )
 	{
+		if ( isMovingParameter( name ))
+		{
+			return;
+		}
 		sortedPropertyNames.remove( name );
 		values.remove( name );
 		firePropertyRemoved( name );
@@ -454,6 +495,11 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	{
 		if( !values.containsKey( name ) )
 			firePropertyValueChanged( name, oldValue, newValue );
+	}
+
+	private boolean isMovingParameter( String name )
+	{
+		return parameterBeingMoved != null && parameterBeingMoved.equals(name);
 	}
 
 	public class InternalRestParamProperty implements RestParamProperty, PropertyChangeListener

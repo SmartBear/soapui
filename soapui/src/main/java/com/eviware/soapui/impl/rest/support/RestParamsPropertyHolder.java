@@ -12,12 +12,13 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import java.util.Map;
-import java.util.Properties;
-
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
+
+import java.util.Map;
+import java.util.Properties;
 
 public interface RestParamsPropertyHolder extends MutableTestPropertyHolder, Map<String, TestProperty>
 {
@@ -43,6 +44,8 @@ public interface RestParamsPropertyHolder extends MutableTestPropertyHolder, Map
 	public RestParamProperty get( Object key );
 
 	public void addParameter( RestParamProperty prop );
+
+	void setParameterLocation( RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation );
 
 	/**
 	 * Internal property class

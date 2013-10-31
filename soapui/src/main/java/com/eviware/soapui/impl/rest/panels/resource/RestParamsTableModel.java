@@ -167,7 +167,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 					{
 						this.isLastChangeParameterLevelChange = true;
 					}
-					prop.setParamLocation( ( ParamLocation )value );
+					params.setParameterLocation( prop, ( ParamLocation )value );
 				}
 		}
 	}

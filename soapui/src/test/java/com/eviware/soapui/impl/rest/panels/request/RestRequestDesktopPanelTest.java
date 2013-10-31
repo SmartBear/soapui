@@ -90,7 +90,6 @@ public class RestRequestDesktopPanelTest
 		assertThat( returnedParameter.getValue(), is( PARAMETER_VALUE ) );
 	}
 
-	@Ignore("Discuss this!")
 	@Test
 	public void retainsParameterOrderWhenChangingItsLevel() throws Exception
 	{
