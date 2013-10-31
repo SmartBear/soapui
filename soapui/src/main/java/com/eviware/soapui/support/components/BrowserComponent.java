@@ -858,8 +858,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		if( proxyConf == null )
 			return;
 
-		try
-		{
+		try {
 			proxyConf.setAutoDetectForNetwork( false );
 
 			if( !proxyAuthenticationInitialized )
@@ -908,9 +907,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			{
 				proxyConf.setDirectConnection();
 			}
-		}
-		catch( Throwable e )
-		{
+		} catch (Exception e){
+			//ignore
 		}
 	}
 

@@ -36,10 +36,12 @@ public class ProxyPrefs implements Prefs
 	public static final String PASSWORD = "Password";
 	public static final String EXCLUDES = "Excludes";
 	public static final String ENABLE_PROXY = "Enable Proxy";
+	public static final String AUTO_PROXY = "Auto Proxy";
 
 	private JTextField hostTextField;
 	private JTextField portTextField;
 	private JCheckBox enableProxyCheckbox;
+	private JCheckBox autoProxyCheckbox;
 	private SimpleForm proxyPrefForm;
 
 	private final String title;
@@ -68,6 +70,7 @@ public class ProxyPrefs implements Prefs
 			proxyPrefForm.appendPasswordField( PASSWORD, "proxy password to use" );
 			proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
 			enableProxyCheckbox = proxyPrefForm.appendCheckBox( ENABLE_PROXY, "enable using proxy", true );
+			autoProxyCheckbox = proxyPrefForm.appendCheckBox( AUTO_PROXY, "enable auto proxy", true );
 		}
 		return proxyPrefForm;
 	}
@@ -98,8 +101,7 @@ public class ProxyPrefs implements Prefs
 		values.put( PASSWORD, settings.getString( ProxySettings.PASSWORD, "" ) );
 		values.put( EXCLUDES, settings.getString( ProxySettings.EXCLUDES, "" ) );
 		values.put( ENABLE_PROXY, settings.getBoolean( ProxySettings.ENABLE_PROXY ) );
-		ProxyUtils.setProxyEnabled( settings.getBoolean( ProxySettings.ENABLE_PROXY ) );
-
+		values.put( AUTO_PROXY, settings.getBoolean( ProxySettings.AUTO_PROXY ) );
 		return values;
 	}
 
@@ -116,7 +118,8 @@ public class ProxyPrefs implements Prefs
 		settings.setString( ProxySettings.PASSWORD, values.get( PASSWORD ) );
 		settings.setString( ProxySettings.EXCLUDES, values.get( EXCLUDES ) );
 		settings.setBoolean( ProxySettings.ENABLE_PROXY, values.getBoolean( ENABLE_PROXY ) );
-		JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
+		settings.setBoolean( ProxySettings.AUTO_PROXY, values.getBoolean( AUTO_PROXY ) );
+		JToggleButton applyProxyButton = SoapUI.getApplyProxyButton();
 		if( values.getBoolean( ENABLE_PROXY ) )
 		{
 			if( applyProxyButton != null )
@@ -131,6 +134,7 @@ public class ProxyPrefs implements Prefs
 
 			ProxyUtils.setProxyEnabled( false );
 		}
+		ProxyUtils.setAutoProxy( values.getBoolean( AUTO_PROXY ) );
 	}
 
 }

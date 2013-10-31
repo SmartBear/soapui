@@ -47,29 +47,24 @@ public class ProxyUtils
 {
 	private static boolean proxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY );
 
-	// FIXME: just temp until the settings have been fixed
-	private static boolean manualProxy = false;
-
-	public static void setManualProxy( boolean manualProxy )
-	{
-		ProxyUtils.manualProxy = manualProxy;
-	}
+	private static boolean autoProxy = SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY );
 
 	public static void initProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
 													  String urlString, PropertyExpansionContext context )
 	{
-
-		if( manualProxy && proxyEnabled )
+		if( !proxyEnabled )
 		{
-			setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
+			resetRoutePlanner();
+			return;
 		}
-		else if( proxyEnabled )
+
+		if( autoProxy )
 		{
 			setAutomaticProxySettings();
 		}
 		else
 		{
-			resetRoutePlanner();
+			setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
 		}
 	}
 
@@ -77,13 +72,25 @@ public class ProxyUtils
 	{
 		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
 
+		if( httpClient.getRoutePlanner() instanceof DefaultHttpRoutePlanner )
+		{
+			return;
+		}
+
 		httpClient.setRoutePlanner( new DefaultHttpRoutePlanner( httpClient.getConnectionManager().getSchemeRegistry() ) );
 
 	}
 
 	private static void setAutomaticProxySettings()
 	{
-		ProxySearch proxySearch = ProxySearch.getDefaultProxySearch();
+
+		ProxySearch proxySearch = new ProxySearch();
+
+		proxySearch.addStrategy( ProxySearch.Strategy.JAVA );
+		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
+		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
+		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
+
 		ProxySelector proxySelector = proxySearch.getProxySelector();
 
 		if( proxySelector == null )
@@ -233,4 +240,10 @@ public class ProxyUtils
 	{
 		ProxyUtils.proxyEnabled = proxyEnabled;
 	}
+
+	public static void setAutoProxy( boolean autoProxy )
+	{
+		ProxyUtils.autoProxy = autoProxy;
+	}
+
 }

@@ -13,6 +13,7 @@ package com.eviware.soapui.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -91,9 +92,11 @@ public class SoapUIVersionUpdate
 	{
 		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
 
-		HttpGet getRequest = new HttpGet( versionUrl.toURI() );
+		HttpGet request = new HttpGet( versionUrl.toURI() );
 
-		HttpResponse response = httpClient.execute( getRequest );
+		ProxyUtils.initProxySettings( SoapUI.getSettings(), request, null, versionUrl.toString(), null );
+
+		HttpResponse response = httpClient.execute( request );
 
 		return EntityUtils.toString( response.getEntity() );
 	}

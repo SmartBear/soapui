@@ -21,6 +21,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.impl.conn.DefaultHttpRoutePlanner;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -80,9 +81,8 @@ public class ProxyUtilsTestCase
 	@Test
 	public void givenProxyEnabledAndProxyPropertiesSetThenSetAutoProxy()
 	{
-
-		ProxyUtils.setManualProxy( false );
 		ProxyUtils.setProxyEnabled( true );
+		ProxyUtils.setAutoProxy( true );
 		setProxySystemProperties();
 
 		HttpUriRequest httpMethod = new ExtendedGetMethod();
@@ -95,8 +95,8 @@ public class ProxyUtilsTestCase
 	@Test
 	public void givenAutomaticProxyDetectionAndProxyPropertiesSetThenSetAutoProxy()
 	{
-		ProxyUtils.setManualProxy( false );
 		ProxyUtils.setProxyEnabled( true );
+		ProxyUtils.setAutoProxy( true );
 		setProxySystemProperties();
 
 		HttpUriRequest httpMethod = new ExtendedGetMethod();
@@ -107,24 +107,25 @@ public class ProxyUtilsTestCase
 	}
 
 	@Test
-	public void givenProxyDisabledButProxyPropertiesSetThenSetProxyAnyway()
+	public void givenProxyDisabledThenUseDefaultRoutePlanner()
 	{
-		ProxyUtils.setManualProxy( false );
-		ProxyUtils.setProxyEnabled( true );
+		ProxyUtils.setProxyEnabled( false );
+		ProxyUtils.setAutoProxy( false );
 		setProxySystemProperties();
 
 		HttpUriRequest httpMethod = new ExtendedGetMethod();
 
 		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
+		assertProxyDisabled( httpMethod );
 
-		assertAutoProxy( Proxy.Type.HTTP );
 	}
 
 	@Test
 	public void givenProxyEnabledAndManuallyConfiguredThenSetProxy()
 	{
-		ProxyUtils.setManualProxy( true );
 		ProxyUtils.setProxyEnabled( true );
+
+		ProxyUtils.setAutoProxy( false );
 
 		HttpUriRequest httpMethod = new ExtendedGetMethod();
 
@@ -134,29 +135,31 @@ public class ProxyUtilsTestCase
 	}
 
 	@Test
-	public void givenAutomaticProxyDetectionAndNoProxyAvailableThenDoNotSetProxy()
+	public void givenAutomaticProxyDetectionAndNoProxyAvailableThenSetDirectProxyType()
 	{
-		ProxyUtils.setManualProxy( false );
 		ProxyUtils.setProxyEnabled( true );
 
-		ProxyUtils.initProxySettings( manualSettings(), new ExtendedGetMethod(), null, URL, null );
+		ProxyUtils.setAutoProxy( true );
+
+		HttpUriRequest httpMethod = new ExtendedGetMethod();
+
+		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 
 		assertAutoProxy( Proxy.Type.DIRECT );
 	}
-
-	@Test
-	@Ignore
-	public void testSwitchBetweenDifferentProxySettings()
-	{
-
-	}
-
 
 	private void assertManualProxy( HttpUriRequest httpMethod, String proxyUrl )
 	{
 		HttpHost proxy = ( HttpHost )httpMethod.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
 
 		assertEquals( proxyUrl, proxy.toURI() );
+	}
+	private void assertProxyDisabled( HttpUriRequest httpMethod )
+	{HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
+		HttpHost proxy = ( HttpHost )httpMethod.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
+
+		assertNull( proxy );
+		assertTrue(routePlanner instanceof DefaultHttpRoutePlanner );
 	}
 
 	private Settings emptySettings()
