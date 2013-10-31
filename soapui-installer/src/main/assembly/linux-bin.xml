@@ -72,7 +72,6 @@ bundled or none -->
             <includes>
                 <include>*.sh</include>
             </includes>
-            <lineEnding>unix</lineEnding>
             <fileMode>0755</fileMode>
             <filtered>true</filtered>
         </fileSet>
