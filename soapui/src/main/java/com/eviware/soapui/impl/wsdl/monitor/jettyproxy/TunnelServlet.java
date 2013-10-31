@@ -236,7 +236,6 @@ public class TunnelServlet extends ProxyServlet
 			listenerCallBack.fireAddMessageExchange( capturedData );
 		}
 
-		capturedData = null;
 	}
 
 

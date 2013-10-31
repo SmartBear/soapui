@@ -12,20 +12,16 @@
 
 package com.eviware.soapui.actions;
 
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ProxyPrefs implements Prefs
 {
@@ -35,17 +31,22 @@ public class ProxyPrefs implements Prefs
 	public static final String USERNAME = "Username";
 	public static final String PASSWORD = "Password";
 	public static final String EXCLUDES = "Excludes";
-	public static final String ENABLE_PROXY = "Enable Proxy";
-	public static final String AUTO_PROXY = "Auto Proxy";
 
 	private JTextField hostTextField;
 	private JTextField portTextField;
-	private JCheckBox enableProxyCheckbox;
-	private JCheckBox autoProxyCheckbox;
+	private JTextField userTextField;
+	private JPasswordField passwordTextField;
+	private JTextField excludesTextField;
+
 	private SimpleForm proxyPrefForm;
 
 	private final String title;
 
+	private JRadioButton automatic;
+	private JRadioButton none;
+	private JRadioButton manual;
+
+	private boolean autoProxy;
 	public ProxyPrefs( String title )
 	{
 		this.title = title;
@@ -62,27 +63,53 @@ public class ProxyPrefs implements Prefs
 		{
 			proxyPrefForm = new SimpleForm();
 			proxyPrefForm.addSpace( 5 );
+			ButtonGroup group = new ButtonGroup();
+			automatic = proxyPrefForm.appendRadioButton( "Proxy Setting", "Automatic", group, false );
+			none = proxyPrefForm.appendRadioButton( "", "None", group, false );
+			manual = proxyPrefForm.appendRadioButton( "", "Manual", group, false );
+			automatic.addActionListener( new ActionListener()
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					autoProxy = true;
+					setManualProxyTextFieldsEnabled( false );
+				}
+			} );
+			manual.addActionListener( new ActionListener()
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					autoProxy = false;
+					setManualProxyTextFieldsEnabled( true );
+				}
+			} );
+			none.addActionListener( new ActionListener()
+			{
+				@Override
+				public void actionPerformed( ActionEvent e )
+				{
+					setManualProxyTextFieldsEnabled( false );
+				}
+			} );
 			hostTextField = proxyPrefForm.appendTextField( HOST, "proxy host to use" );
-			hostTextField.getDocument().addDocumentListener( new ProxyDocumentListenerAdapter() );
 			portTextField = proxyPrefForm.appendTextField( PORT, "proxy port to use" );
-			portTextField.getDocument().addDocumentListener( new ProxyDocumentListenerAdapter() );
-			proxyPrefForm.appendTextField( USERNAME, "proxy username to use" );
-			proxyPrefForm.appendPasswordField( PASSWORD, "proxy password to use" );
-			proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
-			enableProxyCheckbox = proxyPrefForm.appendCheckBox( ENABLE_PROXY, "enable using proxy", true );
-			autoProxyCheckbox = proxyPrefForm.appendCheckBox( AUTO_PROXY, "enable auto proxy", true );
+			userTextField = proxyPrefForm.appendTextField( USERNAME, "proxy username to use" );
+			passwordTextField = proxyPrefForm.appendPasswordField( PASSWORD, "proxy password to use" );
+			excludesTextField = proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
+
 		}
 		return proxyPrefForm;
 	}
 
-	private class ProxyDocumentListenerAdapter extends DocumentListenerAdapter
+	private void setManualProxyTextFieldsEnabled( boolean enabled )
 	{
-		@Override
-		public void update( Document document )
-		{
-			enableProxyCheckbox.setSelected( !StringUtils.isNullOrEmpty( hostTextField.getText() )
-					&& !StringUtils.isNullOrEmpty( portTextField.getText() ) );
-		}
+		hostTextField.setEnabled( enabled );
+		portTextField.setEnabled( enabled );
+		userTextField.setEnabled( enabled );
+		passwordTextField.setEnabled( enabled );
+		excludesTextField.setEnabled( enabled );
 	}
 
 	public void getFormValues( Settings settings )
@@ -100,14 +127,30 @@ public class ProxyPrefs implements Prefs
 		values.put( USERNAME, settings.getString( ProxySettings.USERNAME, "" ) );
 		values.put( PASSWORD, settings.getString( ProxySettings.PASSWORD, "" ) );
 		values.put( EXCLUDES, settings.getString( ProxySettings.EXCLUDES, "" ) );
-		values.put( ENABLE_PROXY, settings.getBoolean( ProxySettings.ENABLE_PROXY ) );
-		values.put( AUTO_PROXY, settings.getBoolean( ProxySettings.AUTO_PROXY ) );
 		return values;
 	}
 
 	public void setFormValues( Settings settings )
 	{
 		getForm().setValues( getValues( settings ) );
+		if( !settings.getBoolean( ProxySettings.ENABLE_PROXY ) )
+		{
+			none.setSelected( true );
+			setManualProxyTextFieldsEnabled( false );
+		}
+		else if( settings.getBoolean( ProxySettings.AUTO_PROXY ) )
+		{
+			automatic.setSelected( true );
+			autoProxy = true;
+			setManualProxyTextFieldsEnabled( false );
+		}
+		else
+		{
+			manual.setSelected( true );
+			autoProxy = false;
+			setManualProxyTextFieldsEnabled( true );
+		}
+		autoProxy = settings.getBoolean( ProxySettings.AUTO_PROXY );
 	}
 
 	public void storeValues( StringToStringMap values, Settings settings )
@@ -117,24 +160,10 @@ public class ProxyPrefs implements Prefs
 		settings.setString( ProxySettings.USERNAME, values.get( USERNAME ) );
 		settings.setString( ProxySettings.PASSWORD, values.get( PASSWORD ) );
 		settings.setString( ProxySettings.EXCLUDES, values.get( EXCLUDES ) );
-		settings.setBoolean( ProxySettings.ENABLE_PROXY, values.getBoolean( ENABLE_PROXY ) );
-		settings.setBoolean( ProxySettings.AUTO_PROXY, values.getBoolean( AUTO_PROXY ) );
-		JToggleButton applyProxyButton = SoapUI.getApplyProxyButton();
-		if( values.getBoolean( ENABLE_PROXY ) )
-		{
-			if( applyProxyButton != null )
-				applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
-
-			ProxyUtils.setProxyEnabled( true );
-		}
-		else
-		{
-			if( applyProxyButton != null )
-				applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_DISABLED_ICON ) );
-
-			ProxyUtils.setProxyEnabled( false );
-		}
-		ProxyUtils.setAutoProxy( values.getBoolean( AUTO_PROXY ) );
+		boolean enableProxy = !none.isSelected();
+		settings.setBoolean( ProxySettings.ENABLE_PROXY, enableProxy );
+		settings.setBoolean( ProxySettings.AUTO_PROXY, autoProxy );
+		SoapUI.updateProxyFromSettings();
 	}
 
 }

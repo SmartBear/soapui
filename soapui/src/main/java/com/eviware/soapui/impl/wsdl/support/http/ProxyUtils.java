@@ -241,6 +241,11 @@ public class ProxyUtils
 		ProxyUtils.proxyEnabled = proxyEnabled;
 	}
 
+	public static boolean isAutoProxy()
+	{
+		return autoProxy;
+	}
+
 	public static void setAutoProxy( boolean autoProxy )
 	{
 		ProxyUtils.autoProxy = autoProxy;

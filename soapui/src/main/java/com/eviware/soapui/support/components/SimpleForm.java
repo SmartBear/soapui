@@ -19,21 +19,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
@@ -181,7 +167,19 @@ public class SimpleForm
 		return checkBox;
 	}
 
-	// public <T extends JComponent> T append( String label, T component )
+	public JRadioButton appendRadioButton( String caption, String label, ButtonGroup group, boolean selected )
+	{
+		JRadioButton radioButton = new JRadioButton( label, selected );
+		radioButton.getAccessibleContext().setAccessibleDescription( caption );
+		if (group != null)
+		{
+			group.add( radioButton );
+		}
+		components.put( caption, radioButton );
+		append( caption, radioButton );
+		return radioButton;
+	}
+
 
 	public void append( String label, JComponent component )
 	{
@@ -245,7 +243,7 @@ public class SimpleForm
 		JLabel jlabel = null;
 		if( label != null )
 		{
-			jlabel = new JLabel( label.endsWith( ":" ) ? label : label + ":" );
+			jlabel = new JLabel( label.endsWith( ":" )|| label.isEmpty() ? label : label + ":" );
 			jlabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
 			if( labelFont != null )
 				jlabel.setFont( labelFont );

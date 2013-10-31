@@ -12,12 +12,7 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.actions.SaveAllProjectsAction;
-import com.eviware.soapui.actions.ShowSystemPropertiesAction;
-import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
-import com.eviware.soapui.actions.SwitchDesktopPanelAction;
-import com.eviware.soapui.actions.VersionUpdateAction;
+import com.eviware.soapui.actions.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -63,22 +58,14 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
-import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.*;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JPropertiesTable;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -116,47 +103,20 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
+import java.io.*;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -174,8 +134,8 @@ public class SoapUI
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
-	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
-	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+	private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
+	private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
@@ -319,11 +279,6 @@ public class SoapUI
 		desktop.init();
 	}
 
-	public static JToggleButton getApplyProxyButton()
-	{
-		return applyProxyButton;
-	}
-
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
@@ -344,18 +299,7 @@ public class SoapUI
 		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new PreferencesActionDelegate() );
 		applyProxyButton = ( JToggleButton )mainToolbar.add( new JToggleButton( new ApplyProxyButtonAction() ) );
-		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
-		if( ProxyUtils.isProxyEnabled() )
-		{
-			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-			applyProxyButton.setSelected( true );
-			ProxyUtils.setProxyEnabled( true );
-		}
-		else
-		{
-			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
-			ProxyUtils.setProxyEnabled( false );
-		}
+		updateProxyButtonAndTooltip();
 
 		mainToolbar.addGlue();
 
@@ -1228,41 +1172,56 @@ public class SoapUI
 
 	private class ApplyProxyButtonAction extends AbstractAction
 	{
-		public ApplyProxyButtonAction()
-		{
-			putValue( Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences" );
-		}
-
 		public void actionPerformed( ActionEvent e )
 		{
 			if( ProxyUtils.isProxyEnabled() )
 			{
-				ProxyUtils.setProxyEnabled( false );
 				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, false );
-				applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
 			}
 			else
 			{
-				if( StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
-						|| StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) ) )
+				if( !ProxyUtils.isAutoProxy() && emptyManualSettings() )
 				{
-					SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.PROXY_SETTINGS );
-					if( !StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
-							&& !StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) ) )
-					{
-						ProxyUtils.setProxyEnabled( true );
-						SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-						applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-					}
+					SoapUI.getSettings().setBoolean( ProxySettings.AUTO_PROXY, true );
 				}
-				else
-				{
-					ProxyUtils.setProxyEnabled( true );
-					SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-					applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-				}
+				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
+			}
+
+			updateProxyFromSettings();
+		}
+
+		private boolean emptyManualSettings()
+		{
+			return StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
+					|| StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) );
+		}
+	}
+
+	public static void updateProxyButtonAndTooltip()
+	{
+		if( applyProxyButton == null )
+		{
+			return;
+		}
+		if( ProxyUtils.isProxyEnabled() )
+		{
+			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
+			if( ProxyUtils.isAutoProxy() )
+			{
+				applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: Automatic" );
+
+			}
+			else
+			{
+				applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: Manual" );
 			}
 		}
+		else
+		{
+			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
+			applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: None" );
+		}
+		applyProxyButton.setSelected( ProxyUtils.isProxyEnabled() );
 	}
 
 	private class ShowPushPageAction extends AbstractAction
@@ -1767,14 +1726,11 @@ public class SoapUI
 		SoapUI.launchedTestRunner = launchedTestRunner;
 	}
 
-	public static void setProxyEnabled( boolean proxyEnabled )
+	public static void updateProxyFromSettings()
 	{
-		if( applyProxyButton != null )
-		{
-			applyProxyButton.setSelected( proxyEnabled );
-		}
-
-		ProxyUtils.setProxyEnabled( proxyEnabled );
+		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
+		ProxyUtils.setAutoProxy( getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+		updateProxyButtonAndTooltip();
 	}
 
 	public static Timer getSoapUITimer()

@@ -723,7 +723,7 @@ public class DefaultSoapUICore implements SoapUICore
 				{
 					log.info( "Reloading updated settings file" );
 					initSettings( settingsFile );
-					SoapUI.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
+					SoapUI.updateProxyFromSettings();
 				}
 			}
 		}

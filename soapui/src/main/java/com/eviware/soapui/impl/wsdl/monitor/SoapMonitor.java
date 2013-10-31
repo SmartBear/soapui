@@ -20,16 +20,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Stack;
 
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -47,7 +42,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.apache.commons.collections.list.TreeList;
-import org.apache.http.HttpRequest;
 import org.jdesktop.swingx.JXTable;
 import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
@@ -157,6 +151,7 @@ public class SoapMonitor extends JPanel
 	private String oldProxyHost;
 	private String oldProxyPort;
 	private boolean oldProxyEnabled;
+	private boolean oldProxyAuto;
 	private String sslEndpoint;
 	private JInspectorPanel inspectorPanel;
 	private SoapMonitorListenerCallBack listenerCallBack;
@@ -517,14 +512,13 @@ public class SoapMonitor extends JPanel
 				oldProxyHost = SoapUI.getSettings().getString( ProxySettings.HOST, "" );
 				oldProxyPort = SoapUI.getSettings().getString( ProxySettings.PORT, "" );
 				oldProxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY );
+				oldProxyAuto = SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY );
 
 				SoapUI.getSettings().setString( ProxySettings.HOST, "127.0.0.1" );
 				SoapUI.getSettings().setString( ProxySettings.PORT, String.valueOf( localPort ) );
 				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-				SoapUI.setProxyEnabled( true );
-				JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
-				if( applyProxyButton != null )
-					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
+				SoapUI.getSettings().setBoolean( ProxySettings.AUTO_PROXY, false );
+				SoapUI.updateProxyFromSettings();
 			}
 
 			SoapUI.log.info( "Started HTTP Monitor on local port " + localPort );
@@ -574,19 +568,8 @@ public class SoapMonitor extends JPanel
 			SoapUI.getSettings().setString( ProxySettings.HOST, oldProxyHost );
 			SoapUI.getSettings().setString( ProxySettings.PORT, oldProxyPort );
 			SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, oldProxyEnabled );
-			SoapUI.setProxyEnabled( oldProxyEnabled );
-			JToggleButton applyProxyButton = ( JToggleButton )SoapUI.getApplyProxyButton();
-			if( applyProxyButton != null )
-			{
-				if( oldProxyEnabled )
-				{
-					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_ENABLED_ICON ) );
-				}
-				else
-				{
-					applyProxyButton.setIcon( UISupport.createImageIcon( SoapUI.PROXY_DISABLED_ICON ) );
-				}
-			}
+			SoapUI.getSettings().setBoolean( ProxySettings.AUTO_PROXY, oldProxyAuto );
+			SoapUI.updateProxyFromSettings();
 		}
 	}
 
