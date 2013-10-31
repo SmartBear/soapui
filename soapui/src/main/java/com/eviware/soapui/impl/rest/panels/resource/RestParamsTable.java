@@ -61,6 +61,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 
 public class RestParamsTable extends JPanel
 {
+	public static final String REST_PARAMS_TABLE = "RestParamsTable";
 	protected RestParamsPropertyHolder params;
 	protected RestParamsTableModel paramsTableModel;
 	protected JTable paramsTable;
@@ -117,10 +118,11 @@ public class RestParamsTable extends JPanel
 				// editingCanceled method calls this removeEditor method
 				super.removeEditor();
 				if (editor != null) {
-					editor.cancelCellEditing();
+							editor.cancelCellEditing();
+						}
 				}
-			}
 		};
+		paramsTable.setName( REST_PARAMS_TABLE );
 		paramsTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
 
 		if( showDefaultParamsButton )

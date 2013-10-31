@@ -28,6 +28,7 @@ import java.awt.*;
 public class RestRequestDesktopPanel extends
 		AbstractRestRequestDesktopPanel<RestRequestInterface, RestRequestInterface>
 {
+	public static final String REST_REQUEST_DESKTOP_PANEL = "rest-request-desktop-panel";
 	protected TextPanelWithTopLabel resourcePanel;
 	protected ParametersField queryPanel;
 	private JButton addToTestCaseButton;
@@ -36,6 +37,7 @@ public class RestRequestDesktopPanel extends
 	public RestRequestDesktopPanel( RestRequestInterface modelItem )
 	{
 		super( modelItem, modelItem );
+		setName( REST_REQUEST_DESKTOP_PANEL );
 	}
 
 	@Override

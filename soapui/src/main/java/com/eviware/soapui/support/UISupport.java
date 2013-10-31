@@ -502,6 +502,10 @@ public class UISupport
 	public static JButton createToolbarButton( Action action )
 	{
 		JButton result = new JButton( action );
+		if(action.getValue( Action.NAME ) != null)
+		{
+			result.setName( String.valueOf(  action.getValue( Action.NAME ) ));
+		}
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		result.setText( "" );
 		result.setBorder( BorderFactory.createEmptyBorder( 4, 2, 4, 2 ) );
