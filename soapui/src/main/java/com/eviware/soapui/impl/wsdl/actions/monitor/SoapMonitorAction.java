@@ -167,7 +167,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 				else
 				{
 					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
-							dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ),
+							dialog.getValue( LaunchForm.RESPONSE_WSS ), false,
 							dialog.getValue( LaunchForm.SETSSLMON ) );
 				}
 			}
