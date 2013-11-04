@@ -17,6 +17,7 @@ import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -99,5 +100,17 @@ public class RestResourceFinderTest
 		assertThat( finder.findResourceAt( 18 ), is( four ) );
 		assertThat( finder.findResourceAt( 19 ), is( four ) );
 		assertThat( finder.findResourceAt( 20 ), is( four ) );
+	}
+
+	@Test
+	public void returnsNullWhenBasePathIsClicked() throws Exception
+	{
+		RestResource parent = ModelItemFactory.makeRestResource();
+		String basePath = "/base";
+		parent.getInterface().setBasePath( basePath );
+		RestResourceFinder finder = new RestResourceFinder( parent );
+
+		assertThat(finder.findResourceAt( basePath.length()), is(nullValue()) );
+
 	}
 }

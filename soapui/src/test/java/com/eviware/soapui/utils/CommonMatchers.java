@@ -4,6 +4,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
+import java.util.Collection;
+
 /**
  * Hamcrest matchers for common data types.
  */
@@ -60,6 +62,24 @@ public class CommonMatchers
 			public void describeTo( Description description )
 			{
 				description.appendText( "an empty array" );
+			}
+		};
+	}
+
+	public static Matcher<Collection> aCollectionWithSize( final int size )
+	{
+		return new TypeSafeMatcher<Collection>()
+		{
+			@Override
+			public boolean matchesSafely( Collection collection )
+			{
+				return collection != null && collection.size() == size;
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "a collection with " + size + " elements" );
 			}
 		};
 	}

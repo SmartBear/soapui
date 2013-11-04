@@ -99,18 +99,16 @@ public class RestResourceEditorTest
 	@Test
 	public void addingPathWithTemplateParametersAddsParametersToResource()
 	{
-		RestResourceEditor restResourceEditor = new RestResourceEditor( templateResource, new MutableBoolean() );
 		dialogs.mockPromptWithReturnValue( "value" );
-		restResourceEditor.scanForTemplateParameters();
+		RestResourceEditor.scanForTemplateParameters(templateResource);
 		assertThat( templateResource.getParams().get( "param2" ).getValue(), is( "value" ) );
 	}
 
 	@Test
 	public void existingParameterOnParentNotAddedToChildWithPathContainingThatParameter()
 	{
-		RestResourceEditor restResourceEditor = new RestResourceEditor( childResource, new MutableBoolean() );
 		dialogs.mockPromptWithReturnValue( "value" );
-		restResourceEditor.scanForTemplateParameters();
+		RestResourceEditor.scanForTemplateParameters(childResource);
 		assertThat( parentResource.getParams().get( "param1" ), parameterWithValue( "value" ) );
 		assertThat( parentResource.getParams().get( "param2" ), is( nullValue() ) );
 		assertThat( parentResource.getParams().get( "existingparam" ), parameterWithValue( "existingvalue" ) );
