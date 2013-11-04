@@ -231,6 +231,13 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
 		}
 	}
 
+	@Override
+	public void shutdown() {
+		super.shutdown(); //To change body of generated methods, choose Tools | Templates.
+		idleConnectionHandler.shutdown();
+	}
+
+	
 	private class SoapUIClientConnectionOperator extends DefaultClientConnectionOperator
 	{
 		public SoapUIClientConnectionOperator( SchemeRegistry schemes )
