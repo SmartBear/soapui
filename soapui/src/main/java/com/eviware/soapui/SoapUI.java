@@ -668,6 +668,17 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
+				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
+				{
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							showPushPage();
+						}
+					} );
+				}
+
 				if( isAutoUpdateVersion() )
 					new SoapUIVersionUpdate().checkForNewVersion( false );
 
@@ -831,17 +842,6 @@ public class SoapUI
 		core.prepareUI();
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
-
-		if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
-		{
-			SwingUtilities.invokeLater( new Runnable()
-			{
-				public void run()
-				{
-					showPushPage();
-				}
-			} );
-		}
 
 		frame.setSize( 1000, 750 );
 
