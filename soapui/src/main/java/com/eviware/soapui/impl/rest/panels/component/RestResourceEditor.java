@@ -17,18 +17,41 @@ import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.jgoodies.forms.factories.ButtonBarFactory;
 import org.apache.commons.lang.mutable.MutableBoolean;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.IllegalComponentStateException;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +61,10 @@ import java.util.List;
  */
 public class RestResourceEditor extends JTextField
 {
+	MouseListener mouseListener;
+	// package protected field to facilitate unit testing
+	JTextField basePathTextField;
+
 	private RestResource editingRestResource;
 	private MutableBoolean updating;
 	private List<RestSubResourceTextField> restSubResourceTextFields;
@@ -73,8 +100,7 @@ public class RestResourceEditor extends JTextField
 			setBackground( originalBackground );
 			setBorder( originalBorder );
 			setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
-
-			addMouseListener( new MouseAdapter()
+			mouseListener = new MouseAdapter()
 			{
 				@Override
 				public void mouseClicked( MouseEvent e )
@@ -89,7 +115,8 @@ public class RestResourceEditor extends JTextField
 						}
 					} );
 				}
-			} );
+			};
+			addMouseListener( mouseListener );
 			addCaretListener( new CaretListener()
 			{
 				@Override
@@ -138,7 +165,7 @@ public class RestResourceEditor extends JTextField
 
 	private boolean isResourceLonely( RestResource restResource )
 	{
-		return restResource.getParentResource() == null;
+		return restResource.getParentResource() == null && StringUtils.isNullOrEmpty( restResource.getInterface().getBasePath() );
 	}
 
 	public void openPopup( RestResource focusedResource )
@@ -156,41 +183,48 @@ public class RestResourceEditor extends JTextField
 
 		Box contentBox = Box.createVerticalBox();
 
-		int index = 0;
-
-		ImageIcon icon = UISupport.createImageIcon( "/connector.png" );
-
 		final JLabel changeWarningLabel = new JLabel( " " );
 		changeWarningLabel.setBorder( BorderFactory.createCompoundBorder(
 				contentBox.getBorder(),
 				BorderFactory.createEmptyBorder( 10, 0, 0, 0 ) ) );
 		restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
-		DocumentListener pathChangedListener = new DocumentListenerAdapter()
+		addBasePathIfApplicable( contentBox, changeWarningLabel );
+		addSubResources( focusedResource, contentBox, changeWarningLabel );
+
+		panel.add( contentBox, BorderLayout.NORTH );
+
+		panel.add( changeWarningLabel, BorderLayout.CENTER );
+
+		panel.setBorder( BorderFactory.createCompoundBorder(
+				BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.BLACK ),
+				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
+
+		return panel;
+	}
+
+
+	private void addBasePathIfApplicable( Box contentBox, JLabel changeWarningLabel )
+	{
+
+		if( !StringUtils.isNullOrEmpty( editingRestResource.getInterface().getBasePath() ) )
 		{
-			@Override
-			public void update( Document document )
-			{
-				int affectedRequestCount = 0;
-				for( RestSubResourceTextField restResourceTextField : restSubResourceTextFields )
-				{
-					if( !restResourceTextField.getTextField().getText().equals( restResourceTextField.getRestResource().getPath() ) )
-					{
-						affectedRequestCount = restResourceTextField.getAffectedRequestCount();
-						break;
-					}
-				}
-				if( affectedRequestCount > 0 )
-				{
-					changeWarningLabel.setText( String.format( "<html>Changes will affect <b>%d</b> request%s</html>",
-							affectedRequestCount, affectedRequestCount > 1 ? "s" : "" ) );
-					changeWarningLabel.setVisible( true );
-				}
-				else
-				{
-					changeWarningLabel.setVisible( false );
-				}
-			}
-		};
+			basePathTextField = new JTextField( editingRestResource.getInterface().getBasePath() );
+			basePathTextField.getDocument().addDocumentListener( new PathChangeListener( changeWarningLabel,
+					editingRestResource.getTopLevelResource() ) );
+			Box row = Box.createHorizontalBox();
+			row.setAlignmentX( 0 );
+			row.add( createBoxWith( basePathTextField ) );
+			contentBox.add( row );
+		}
+
+	}
+
+
+	private void addSubResources( RestResource focusedResource, Box contentBox, JLabel changeWarningLabel )
+	{
+		ImageIcon icon = UISupport.createImageIcon( "/connector.png" );
+		int index = contentBox.getComponents().length;
+
 		for( RestResource restResource : RestUtils.extractAncestorsParentFirst( editingRestResource ) )
 		{
 			Box row = Box.createHorizontalBox();
@@ -206,12 +240,13 @@ public class RestResourceEditor extends JTextField
 			}
 
 			final RestSubResourceTextField restSubResourceTextField = new RestSubResourceTextField( restResource );
-			restSubResourceTextField.getTextField().getDocument().addDocumentListener( pathChangedListener );
+			final JTextField innerTextField = restSubResourceTextField.getTextField();
+			DocumentListener pathChangedListener = new PathChangeListener( changeWarningLabel, restResource );
+
+			innerTextField.getDocument().addDocumentListener( pathChangedListener );
 			restSubResourceTextFields.add( restSubResourceTextField );
 
-			Box textFieldBox = Box.createVerticalBox();
-			textFieldBox.add( Box.createVerticalGlue() );
-			textFieldBox.add( restSubResourceTextField.getTextField() );
+			Box textFieldBox = createBoxWith( innerTextField );
 			row.add( textFieldBox );
 
 			contentBox.add( row );
@@ -222,24 +257,22 @@ public class RestResourceEditor extends JTextField
 					@Override
 					public void run()
 					{
-						restSubResourceTextField.getTextField().requestFocusInWindow();
-						restSubResourceTextField.getTextField().selectAll();
+						innerTextField.requestFocusInWindow();
+						innerTextField.selectAll();
 					}
 				} );
 			}
 
 			index++;
 		}
+	}
 
-		panel.add( contentBox, BorderLayout.NORTH );
-
-		panel.add( changeWarningLabel, BorderLayout.CENTER );
-
-		panel.setBorder( BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.BLACK ),
-				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
-
-		return panel;
+	private Box createBoxWith( JTextField innerTextField )
+	{
+		Box textFieldBox = Box.createVerticalBox();
+		textFieldBox.add( Box.createVerticalGlue() );
+		textFieldBox.add( innerTextField );
+		return textFieldBox;
 	}
 
 	private class RestSubResourceTextField
@@ -266,19 +299,6 @@ public class RestResourceEditor extends JTextField
 			return restResource;
 		}
 
-		public int getAffectedRequestCount()
-		{
-			if( affectedRequestCount == null )
-			{
-				int count = restResource.getRequestCount();
-				for( RestResource childResource : restResource.getAllChildResources() )
-				{
-					count += childResource.getRequestCount();
-				}
-				affectedRequestCount = count;
-			}
-			return affectedRequestCount;
-		}
 	}
 
 	private class LonelyDocumentListener extends DocumentListenerAdapter
@@ -315,6 +335,10 @@ public class RestResourceEditor extends JTextField
 				@Override
 				public void actionPerformed( ActionEvent e )
 				{
+					if( basePathTextField != null )
+					{
+						editingRestResource.getInterface().setBasePath( basePathTextField.getText().trim() );
+					}
 					for( RestSubResourceTextField restSubResourceTextField : restSubResourceTextFields )
 					{
 						restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText().trim() );
@@ -359,4 +383,41 @@ public class RestResourceEditor extends JTextField
 		}
 	}
 
+	private class PathChangeListener extends DocumentListenerAdapter
+	{
+		private final JLabel changeWarningLabel;
+		private RestResource affectedRestResource;
+
+		public PathChangeListener( JLabel changeWarningLabel, RestResource affectedRestResource )
+		{
+			this.changeWarningLabel = changeWarningLabel;
+			this.affectedRestResource = affectedRestResource;
+		}
+
+		@Override
+		public void update( Document document )
+		{
+			int affectedRequestCount = getRequestCountForResource( affectedRestResource );
+			if( affectedRequestCount > 0 )
+			{
+				changeWarningLabel.setText( String.format( "<html>Changes will affect <b>%d</b> request%s</html>",
+						affectedRequestCount, affectedRequestCount > 1 ? "s" : "" ) );
+				changeWarningLabel.setVisible( true );
+			}
+			else
+			{
+				changeWarningLabel.setVisible( false );
+			}
+		}
+
+		private int getRequestCountForResource( RestResource affectedRestResource )
+		{
+			int affectedRequestCount = affectedRestResource.getRequestCount();
+			for( RestResource childResource : affectedRestResource.getAllChildResources() )
+			{
+				affectedRequestCount += childResource.getRequestCount();
+			}
+			return affectedRequestCount;
+		}
+	}
 }

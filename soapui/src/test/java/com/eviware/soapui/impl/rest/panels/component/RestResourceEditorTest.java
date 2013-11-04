@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -74,6 +75,25 @@ public class RestResourceEditorTest
 		RestResourceEditor restResourceEditor = new RestResourceEditor( lonelyResource, new MutableBoolean() );
 		restResourceEditor.setText( "hello" );
 		assertThat( lonelyResource.getFullPath(), is( "/hello" ) );
+	}
+
+	@Test
+	public void displaysBasePathOfServiceInField()
+	{
+		lonelyResource.getInterface().setBasePath( "/base" );
+		lonelyResource.setPath("resource");
+		RestResourceEditor restResourceEditor = new RestResourceEditor( lonelyResource, new MutableBoolean() );
+		assertThat( restResourceEditor.getText(), is( "/base/resource" ) );
+	}
+
+	@Test
+	public void displaysResourcePopupIfHasBasePath()
+	{
+		lonelyResource.getInterface().setBasePath( "/base" );
+		lonelyResource.setPath("resource");
+		RestResourceEditor restResourceEditor = new RestResourceEditor( lonelyResource, new MutableBoolean() );
+
+		assertThat( restResourceEditor.mouseListener, is(notNullValue()) );
 	}
 
 	@Test
