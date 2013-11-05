@@ -35,6 +35,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 
 public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 {
+	public static final String REST_METHOD_EDITOR = "rest-method-editor";
 	private RestParamsTable paramsTable;
 	private boolean updatingRequest;
 	private JComboBox methodCombo;
@@ -43,7 +44,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	public RestMethodDesktopPanel( RestMethod modelItem )
 	{
 		super( modelItem );
-
+		setName( REST_METHOD_EDITOR );
 		add( buildToolbar(), BorderLayout.NORTH );
 		add( buildContent(), BorderLayout.CENTER );
 	}

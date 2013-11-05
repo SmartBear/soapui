@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.panels.component.RestResourceEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -28,7 +27,7 @@ import java.awt.*;
 public class RestRequestDesktopPanel extends
 		AbstractRestRequestDesktopPanel<RestRequestInterface, RestRequestInterface>
 {
-	public static final String REST_REQUEST_DESKTOP_PANEL = "rest-request-desktop-panel";
+	public static final String REST_REQUEST_EDITOR = "rest-request-editor";
 	protected TextPanelWithTopLabel resourcePanel;
 	protected ParametersField queryPanel;
 	private JButton addToTestCaseButton;
@@ -37,7 +36,7 @@ public class RestRequestDesktopPanel extends
 	public RestRequestDesktopPanel( RestRequestInterface modelItem )
 	{
 		super( modelItem, modelItem );
-		setName( REST_REQUEST_DESKTOP_PANEL );
+		setName( REST_REQUEST_EDITOR );
 	}
 
 	@Override
