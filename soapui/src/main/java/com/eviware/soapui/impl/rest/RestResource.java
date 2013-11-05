@@ -486,13 +486,18 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		getConfig().removeMethod( ix );
 	}
 
-	public void deleteChildResource( RestResource resource )
+	protected void deleteAllChildResources( RestResource resource )
 	{
-		deleteResource( resource );
+		for( RestResource childResource : resource.getChildResourceList() )
+		{
+			resource.deleteResource( childResource );
+		}
 	}
 
 	public void deleteResource( RestResource resource )
 	{
+		deleteAllChildResources( resource );
+
 		int ix = resources.indexOf( resource );
 		if( !resources.remove( resource ) )
 			return;

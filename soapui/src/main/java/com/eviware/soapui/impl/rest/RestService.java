@@ -165,6 +165,8 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
 
 	public void deleteResource( RestResource resource )
 	{
+		resource.deleteAllChildResources( resource );
+
 		int ix = resources.indexOf( resource );
 		if( !resources.remove( resource ) )
 			return;

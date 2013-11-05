@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
 import org.apache.xmlbeans.XmlException;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -116,11 +117,33 @@ public class RestResourceTest
 		String parameterName = "theName";
 		parameterConfig.setName( parameterName );
 		parameterConfig.setStyle( RestParameterConfig.Style.Enum.forInt( RestParamsPropertyHolder.ParameterStyle.TEMPLATE.ordinal() ) );
-		config.setPath( "/actual_path");
+		config.setPath( "/actual_path" );
 
 		RestResource restResource = new RestResource( parentService, config );
-		restResource.getParams().getProperty( parameterName ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY);
-		assertThat( restResource.getPath(), not( containsString( parameterName ) ));
+		restResource.getParams().getProperty( parameterName ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+		assertThat( restResource.getPath(), not( containsString( parameterName ) ) );
+
+	}
+
+	@Test
+	public void deletingResourceDeletesAllChildResources() throws Exception
+	{
+		// restResource -> childResourceA, childResourceB
+		RestResource childResourceA = restResource.addNewChildResource( "ChildA", "/childPathA" );
+		restResource.addNewChildResource( "ChildB", "/childPathB" );
+
+		// childResourceA -> grandChildAA, grandChildAB
+		RestResource grandChildAA = childResourceA.addNewChildResource( "GrandChildAA", "/grandChildPathAA" );
+		childResourceA.addNewChildResource( "GrandChildAB", "/grandChildPathAB" );
+
+		// grandChildAA -> greatGrandChildAAA
+		grandChildAA.addNewChildResource( "GreatGrandChildAAA", "/greatGrandChildAAA" );
+
+		restResource.deleteResource( childResourceA );
+
+		assertThat( restResource.getChildResourceList().size(), is( 1 ) ); // ensure it does not delete the sibling
+		assertThat( childResourceA.getChildResourceList().size(), is( 0 ) );
+		assertThat( grandChildAA.getChildResourceList().size(), is( 0 ) );
 
 	}
 

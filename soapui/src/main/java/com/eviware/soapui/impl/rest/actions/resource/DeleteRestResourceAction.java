@@ -32,7 +32,7 @@ public class DeleteRestResourceAction extends AbstractSoapUIAction<RestResource>
 	public void perform( RestResource resource, Object param )
 	{
 		if( UISupport.confirm( "Delete Resource [" + resource.getName() + "] from ["
-				+ resource.getResourceContainer().getName() + "]", "Delete Resource" ) )
+				+ resource.getResourceContainer().getName() + "]. This will also delete all the child resources and test steps!", "Delete Resource" ) )
 		{
 			resource.getResourceContainer().deleteResource( resource );
 		}
