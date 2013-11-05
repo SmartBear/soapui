@@ -84,23 +84,28 @@ public class ProxyUtils
 	private static void setAutomaticProxySettings()
 	{
 
+		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
+
+		if( httpClient.getRoutePlanner() instanceof ProxySelectorRoutePlanner )
+		{
+			return;
+		}
+
 		ProxySearch proxySearch = new ProxySearch();
 
 		proxySearch.addStrategy( ProxySearch.Strategy.JAVA );
 		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
 		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
 		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
+		proxySearch.setPacCacheSettings( 32, 1000 * 60 * 5 ); // Cache 32 urls for up to 5 min.
 
 		ProxySelector proxySelector = proxySearch.getProxySelector();
 
 		if( proxySelector == null )
 		{
+			resetRoutePlanner();
 			return;
 		}
-
-		ProxySelector.setDefault( proxySelector );
-
-		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
 
 		httpClient.setRoutePlanner( new ProxySelectorRoutePlanner( httpClient.getConnectionManager().getSchemeRegistry(), proxySelector ) );
 	}
