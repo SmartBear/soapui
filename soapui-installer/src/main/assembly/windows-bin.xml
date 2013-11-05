@@ -68,7 +68,6 @@
             <includes>
                 <include>*.bat</include>
             </includes>
-            <lineEnding>windows</lineEnding>
             <fileMode>0755</fileMode>
             <filtered>true</filtered>
         </fileSet>
