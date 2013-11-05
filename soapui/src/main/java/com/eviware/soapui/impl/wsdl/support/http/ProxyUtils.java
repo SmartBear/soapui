@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import com.btr.proxy.search.ProxySearch;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -29,11 +28,12 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.conn.DefaultHttpRoutePlanner;
-import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.apache.http.protocol.HttpContext;
 
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,75 +45,27 @@ import java.util.regex.Pattern;
 
 public class ProxyUtils
 {
-	private static boolean proxyEnabled = SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY );
+	private static boolean proxyEnabled;
 
-	private static boolean autoProxy = SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY );
+	private static boolean autoProxy;
+
+	static
+	{
+		setProxyEnabled( SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
+		setAutoProxy( SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+	}
 
 	public static void initProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
 													  String urlString, PropertyExpansionContext context )
 	{
-		if( !proxyEnabled )
-		{
-			resetRoutePlanner();
-			return;
-		}
-
-		if( autoProxy )
-		{
-			setAutomaticProxySettings();
-		}
-		else
+		if( proxyEnabled && !autoProxy )
 		{
 			setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
 		}
 	}
 
-	private static void resetRoutePlanner()
-	{
-		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
-
-		if( httpClient.getRoutePlanner() instanceof DefaultHttpRoutePlanner )
-		{
-			return;
-		}
-
-		httpClient.setRoutePlanner( new DefaultHttpRoutePlanner( httpClient.getConnectionManager().getSchemeRegistry() ) );
-
-	}
-
-	private static void setAutomaticProxySettings()
-	{
-
-		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
-
-		if( httpClient.getRoutePlanner() instanceof ProxySelectorRoutePlanner )
-		{
-			return;
-		}
-
-		ProxySearch proxySearch = new ProxySearch();
-
-		proxySearch.addStrategy( ProxySearch.Strategy.JAVA );
-		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
-		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
-		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
-		proxySearch.setPacCacheSettings( 32, 1000 * 60 * 5 ); // Cache 32 urls for up to 5 min.
-
-		ProxySelector proxySelector = proxySearch.getProxySelector();
-
-		if( proxySelector == null )
-		{
-			resetRoutePlanner();
-			return;
-		}
-
-		httpClient.setRoutePlanner( new ProxySelectorRoutePlanner( httpClient.getConnectionManager().getSchemeRegistry(), proxySelector ) );
-	}
-
 	private static void setManualProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext, String urlString, PropertyExpansionContext context )
 	{
-		resetRoutePlanner();
-
 		String proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
 		String proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
 
@@ -254,6 +206,6 @@ public class ProxyUtils
 	public static void setAutoProxy( boolean autoProxy )
 	{
 		ProxyUtils.autoProxy = autoProxy;
+		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy );
 	}
-
 }

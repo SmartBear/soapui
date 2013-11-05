@@ -16,13 +16,13 @@ import com.eviware.soapui.impl.settings.SettingsImpl;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
-import junit.framework.JUnit4TestAdapter;
+import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.apache.http.impl.conn.DefaultHttpRoutePlanner;
 import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -47,14 +47,7 @@ public class ProxyUtilsTestCase
 	public static final String AUTOMATIC_PROXY_HOST = "autosettingshost.com";
 	public static final String AUTOMATIC_PROXY_PORT = "3";
 
-	public static final String URL_STRING_SYSTEM_PROPERTY = String.format( "http://%s:%s", SYSTEM_PROPERTY_PROXY_HOST, SYSTEM_PROPERTY_PROXY_PORT );
-	public static final String URL_STRING_MANUAL_SETTINGS = String.format( "http://%s:%s", MANUAL_SETTING_PROXY_HOST, MANUAL_SETTING_PROXY_PORT );
-	public static final String URL_STRING_AUTOMATIC_PROXY = String.format( "http://%s:%s", AUTOMATIC_PROXY_HOST, AUTOMATIC_PROXY_PORT );
-
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( ProxyUtilsTestCase.class );
-	}
+	private HttpUriRequest httpMethod;
 
 	/* FIXME This will do nslookups which will not always mach of natural reasons since test.com is a real domain
 		What is the purpose of this? */
@@ -76,6 +69,13 @@ public class ProxyUtilsTestCase
 	public void setup()
 	{
 		clearProxySystemProperties();
+		httpMethod = new ExtendedGetMethod();
+	}
+
+	@After
+	public void teardown(){
+		ProxyUtils.setAutoProxy( false );
+		ProxyUtils.setProxyEnabled( false );
 	}
 
 	@Test
@@ -85,11 +85,9 @@ public class ProxyUtilsTestCase
 		ProxyUtils.setAutoProxy( true );
 		setProxySystemProperties();
 
-		HttpUriRequest httpMethod = new ExtendedGetMethod();
-
 		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 
-		assertAutoProxy( Proxy.Type.HTTP );
+		assertProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 	}
 
 	@Test
@@ -99,11 +97,9 @@ public class ProxyUtilsTestCase
 		ProxyUtils.setAutoProxy( true );
 		setProxySystemProperties();
 
-		HttpUriRequest httpMethod = new ExtendedGetMethod();
-
 		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
 
-		assertAutoProxy( Proxy.Type.HTTP );
+		assertProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 	}
 
 	@Test
@@ -113,10 +109,8 @@ public class ProxyUtilsTestCase
 		ProxyUtils.setAutoProxy( false );
 		setProxySystemProperties();
 
-		HttpUriRequest httpMethod = new ExtendedGetMethod();
-
 		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
-		assertProxyDisabled( httpMethod );
+		assertProxyHost( null );
 
 	}
 
@@ -127,11 +121,9 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setAutoProxy( false );
 
-		HttpUriRequest httpMethod = new ExtendedGetMethod();
-
 		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 
-		assertManualProxy( httpMethod, URL_STRING_MANUAL_SETTINGS );
+		assertProxyHost( MANUAL_SETTING_PROXY_HOST );
 	}
 
 	@Test
@@ -141,25 +133,22 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setAutoProxy( true );
 
-		HttpUriRequest httpMethod = new ExtendedGetMethod();
+		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+
+		assertProxyHost( null );
+	}
+
+	@Test
+	@Ignore
+	public void givenAutomaticProxyDetectionAndEnvironmentProxySetThenUseTheEnvironmentProxy()
+	{
+		ProxyUtils.setProxyEnabled( true );
+
+		ProxyUtils.setAutoProxy( true );
 
 		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 
-		assertAutoProxy( Proxy.Type.DIRECT );
-	}
-
-	private void assertManualProxy( HttpUriRequest httpMethod, String proxyUrl )
-	{
-		HttpHost proxy = ( HttpHost )httpMethod.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
-
-		assertEquals( proxyUrl, proxy.toURI() );
-	}
-	private void assertProxyDisabled( HttpUriRequest httpMethod )
-	{HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
-		HttpHost proxy = ( HttpHost )httpMethod.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
-
-		assertNull( proxy );
-		assertTrue(routePlanner instanceof DefaultHttpRoutePlanner );
+		assertProxyHost( "environmentshost.com" );
 	}
 
 	private Settings emptySettings()
@@ -198,5 +187,28 @@ public class ProxyUtilsTestCase
 		List<Proxy> select = proxySelector.select( URI.create( URL ) );
 
 		assertEquals( type, select.get( 0 ).type() );
+	}
+
+	private void assertProxyHost( String expectedProxyHost )
+	{
+		HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
+		HttpRoute httpRoute = null;
+		try
+		{
+			httpRoute = routePlanner.determineRoute( new HttpHost( "soapui.org" ), httpMethod, null );
+		}
+		catch( HttpException e )
+		{
+			e.printStackTrace();
+			fail( e.getMessage() );
+		}
+		if( expectedProxyHost == null )
+		{
+			assertNull( httpRoute.getProxyHost() );
+		}
+		else
+		{
+			assertEquals( expectedProxyHost, httpRoute.getProxyHost().getHostName() );
+		}
 	}
 }
