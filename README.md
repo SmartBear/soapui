@@ -1,7 +1,5 @@
 # The SoapUI project
 
-This is the main SoapUI project.
-
 ## Structure and submodules
 
 * *[soapui](soapui)* - The core module that creates the SoapUI jar
