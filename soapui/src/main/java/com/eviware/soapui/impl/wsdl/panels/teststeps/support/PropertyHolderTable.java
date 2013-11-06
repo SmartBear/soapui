@@ -1,49 +1,16 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2013 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
-
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Point;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
-import java.awt.event.ActionEvent;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.TransferHandler;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -62,10 +29,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -75,14 +40,31 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellEditor;
+import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.*;
+import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 @SuppressWarnings( "serial" )
 public class PropertyHolderTable extends JPanel
 {
 	protected final TestPropertyHolder holder;
-	protected PropertyHolderTableModel propertiesModel;
+	protected DefaultPropertyTableHolderModel propertiesModel;
 	protected RemovePropertyAction removePropertyAction;
-	protected AddPropertyAction addPropertyAction;
-	protected InternalTestPropertyListener testPropertyListener;
+	protected AddParamAction addPropertyAction;
 	protected JTable propertiesTable;
 	protected JXToolBar toolbar;
 	protected LoadPropertiesAction loadPropertiesAction;
@@ -97,9 +79,6 @@ public class PropertyHolderTable extends JPanel
 		this.holder = holder;
 
 		loadPropertiesAction = new LoadPropertiesAction();
-		testPropertyListener = new InternalTestPropertyListener();
-		holder.addTestPropertyListener( testPropertyListener );
-
 		JScrollPane scrollPane = new JScrollPane( buildPropertiesTable() );
 
 		if( getHolder().getModelItem() != null )
@@ -124,7 +103,6 @@ public class PropertyHolderTable extends JPanel
 	{
 		propertiesModel = new DefaultPropertyTableHolderModel( holder );
 		propertiesTable = new PropertiesHolderJTable();
-		propertiesTable.setSurrendersFocusOnKeystroke( true );
 
 		propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
 		propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -169,6 +147,19 @@ public class PropertyHolderTable extends JPanel
 			// setHorizontalScrollEnabled(true);
 		}
 
+		@Override
+		public void removeEditor()
+		{
+			TableCellEditor editor = getCellEditor();
+			// must be called here to remove the editor and to avoid an infinite
+			// loop, because the table is an editor listener and the
+			// editingCanceled method calls this removeEditor method
+			super.removeEditor();
+			if (editor != null) {
+				editor.cancelCellEditing();
+			}
+		}
+
 		public PropertyModelItem getTestProperty()
 		{
 			int index = getSelectedRow();
@@ -185,10 +176,13 @@ public class PropertyHolderTable extends JPanel
 
 		if( holder instanceof MutableTestPropertyHolder )
 		{
-			removePropertyAction = new RemovePropertyAction();
-			addPropertyAction = new AddPropertyAction();
-			movePropertyUpAction = new MovePropertyUpAction();
-			movePropertyDownAction = new MovePropertyDownAction();
+			removePropertyAction = new RemovePropertyAction( propertiesTable, holder,
+					"Removes the selected property from the property list" );
+			addPropertyAction = new AddParamAction( propertiesTable, ( MutableTestPropertyHolder )holder, "Adds a property to the property list" );
+			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, holder,
+					"Moves selected property up one row" );
+			movePropertyDownAction = new MovePropertyDownAction( propertiesTable, holder,
+					"Moves selected property down one row" );
 
 			JButton addPropertyButton = UISupport.createToolbarButton( addPropertyAction );
 			toolbar.add( addPropertyButton );
@@ -233,7 +227,7 @@ public class PropertyHolderTable extends JPanel
 		if( propertiesTable.isEditing() )
 			propertiesTable.getCellEditor().stopCellEditing();
 
-		holder.removeTestPropertyListener( testPropertyListener );
+		propertiesModel.release();
 
 		if( holder instanceof WsdlProject )
 		{
@@ -255,124 +249,6 @@ public class PropertyHolderTable extends JPanel
 		super.setEnabled( enabled );
 	}
 
-	private final class InternalTestPropertyListener implements TestPropertyListener
-	{
-		private boolean enabled = true;
-
-		@SuppressWarnings( "unused" )
-		public boolean isEnabled()
-		{
-			return enabled;
-		}
-
-		@SuppressWarnings( "unused" )
-		public void setEnabled( boolean enabled )
-		{
-			this.enabled = enabled;
-		}
-
-		public void propertyAdded( String name )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyRemoved( String name )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyRenamed( String oldName, String newName )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyValueChanged( String name, String oldValue, String newValue )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-
-		public void propertyMoved( String name, int oldIndex, int newIndex )
-		{
-			if( enabled )
-				propertiesModel.fireTableDataChanged();
-		}
-	}
-
-	private class AddPropertyAction extends AbstractAction
-	{
-		public AddPropertyAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a property to the property list" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			String name = UISupport.prompt( "Specify unique property name", "Add Property", "" );
-			if( StringUtils.hasContent( name ) )
-			{
-				if( holder.hasProperty( name ) )
-				{
-					UISupport.showErrorMessage( "Property name [" + name + "] already exists.." );
-					return;
-				}
-
-				( ( MutableTestPropertyHolder )holder ).addProperty( name );
-				final int row = holder.getPropertyNames().length - 1;
-				propertiesModel.fireTableDataChanged();
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						requestFocusInWindow();
-						scrollRectToVisible( propertiesTable.getCellRect( row, 1, true ) );
-						SwingUtilities.invokeLater( new Runnable()
-						{
-							public void run()
-							{
-								propertiesTable.editCellAt( row, 1 );
-								Component editorComponent = propertiesTable.getEditorComponent();
-								if( editorComponent != null )
-									editorComponent.requestFocusInWindow();
-							}
-						} );
-					}
-				} );
-
-			}
-		}
-	}
-
-	protected class RemovePropertyAction extends AbstractAction
-	{
-		public RemovePropertyAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes the selected property from the property list" );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int row = propertiesTable.getSelectedRow();
-			if( row == -1 )
-				return;
-
-			UISupport.stopCellEditing( propertiesTable );
-
-			String propertyName = propertiesModel.getValueAt( row, 0 ).toString();
-			if( UISupport.confirm( "Remove property [" + propertyName + "]?", "Remove Property" ) )
-			{
-				( ( MutableTestPropertyHolder )holder ).removeProperty( propertyName );
-				propertiesModel.fireTableRowsDeleted( row, row );
-			}
-		}
-	}
-
 	protected class ClearPropertiesAction extends AbstractAction
 	{
 		public ClearPropertiesAction()
@@ -389,47 +265,6 @@ public class PropertyHolderTable extends JPanel
 				{
 					holder.getProperty( name ).setValue( null );
 				}
-			}
-		}
-	}
-
-	protected class MovePropertyUpAction extends AbstractAction
-	{
-		public MovePropertyUpAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/up_arrow.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Moves selected property up one row" );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int ix = propertiesTable.getSelectedRow();
-			if( ix != -1 )
-			{
-				( ( MutableTestPropertyHolder )holder ).moveProperty( holder.getPropertyAt( ix ).getName(), ix - 1 );
-				propertiesTable.setRowSelectionInterval( ix - 1, ix - 1 );
-			}
-		}
-	}
-
-	protected class MovePropertyDownAction extends AbstractAction
-	{
-		public MovePropertyDownAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/down_arrow.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Moves selected property down one row" );
-			setEnabled( false );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			int ix = propertiesTable.getSelectedRow();
-			if( ix != -1 )
-			{
-				( ( MutableTestPropertyHolder )holder ).moveProperty( holder.getPropertyAt( ix ).getName(), ix + 1 );
-
-				propertiesTable.setRowSelectionInterval( ix + 1, ix + 1 );
 			}
 		}
 	}
@@ -494,7 +329,7 @@ public class PropertyHolderTable extends JPanel
 
 								if( holder.hasProperty( name ) )
 								{
-									count++ ;
+									count++;
 									holder.setPropertyValue( name, value );
 								}
 								else if( dialog.getBooleanValue( LoadOptionsForm.CREATEMISSING )
@@ -503,7 +338,7 @@ public class PropertyHolderTable extends JPanel
 									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
 									if( !prop.isReadOnly() )
 										prop.setValue( value );
-									count++ ;
+									count++;
 								}
 
 								names.remove( name );
@@ -584,9 +419,8 @@ public class PropertyHolderTable extends JPanel
 			try
 			{
 				UISupport.setHourglassCursor();
-				TestPropertyUtils.sortProperties( ( MutableTestPropertyHolder )holder );
-			}
-			finally
+				propertiesModel.sort();
+			} finally
 			{
 				UISupport.resetCursor();
 			}
@@ -743,7 +577,7 @@ public class PropertyHolderTable extends JPanel
 						Object modelItem = transferable.getTransferData( flavor );
 						if( modelItem instanceof PropertyModelItem
 								&& ( ( PropertyModelItem )modelItem ).getProperty().getModelItem() != getHolder()
-										.getModelItem() )
+								.getModelItem() )
 						{
 							return PropertyExpansionUtils.canExpandProperty( getHolder().getModelItem(),
 									( ( PropertyModelItem )modelItem ).getProperty() );
@@ -763,16 +597,14 @@ public class PropertyHolderTable extends JPanel
 	/**
 	 * Idea is that all values which property name starts or ends with 'password'
 	 * case insesitive be shadowed.
-	 * 
 	 * This cell render in applied only on property value column.
-	 * 
+	 *
 	 * @author robert
-	 * 
 	 */
 	protected static class PropertiesTableCellRenderer extends DefaultTableCellRenderer
 	{
 		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column )
+																		int row, int column )
 		{
 			Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 			if( value instanceof String )

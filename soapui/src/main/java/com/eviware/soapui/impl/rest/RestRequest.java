@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -59,7 +59,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Request implementation holding a SOAP request
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -82,8 +82,12 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		paramUpdater = new ParamUpdater( paramValues );
 		params.addTestPropertyListener( paramUpdater );
 
-		if( method != null )
-			method.addPropertyChangeListener( this );
+		method.addPropertyChangeListener( this );
+		if (requestConfig.getMediaType() == null)
+		{
+		String defaultMediaType = getRestMethod().getDefaultRequestMediaType();
+		getConfig().setMediaType( defaultMediaType );
+		}
 	}
 
 	public ModelItem getParent()
@@ -167,12 +171,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 	public String getMediaType()
 	{
-		if( getConfig().getMediaType() == null )
-		{
-			String mediaType = getRestMethod().getDefaultRequestMediaType();
-			getConfig().setMediaType( mediaType );
-			notifyPropertyChanged( "mediaType", null, mediaType );
-		}
 		return getConfig().getMediaType();
 	}
 
@@ -227,7 +225,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	}
 
 	public void addJMSHeaderExpansions( PropertyExpansionsResult result, JMSHeaderConfig jmsHeaderConfig,
-			ModelItem modelItem )
+													ModelItem modelItem )
 	{
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, jmsHeaderConfig,
 				JMSHeader.JMSCORRELATIONID ) );

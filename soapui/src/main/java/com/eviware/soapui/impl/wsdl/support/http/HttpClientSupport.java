@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -37,6 +37,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.impl.auth.NTLMSchemeFactory;
+import org.apache.http.impl.auth.NegotiateSchemeFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RequestWrapper;
@@ -225,7 +226,7 @@ public class HttpClientSupport
 			// this interceptor needs to be last one added and executed.
 			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
-			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
+			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NegotiateSchemeFactory( null, true ) );
 
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}

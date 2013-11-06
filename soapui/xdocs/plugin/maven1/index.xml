@@ -4,7 +4,7 @@
         <title>maven 1.X plugin for SOAP Testing</title>
     </properties>
     <body>
-		<section name="soapUI maven 1.X plugin">
+		<section name="SoapUI maven 1.X plugin">
 
 		 <subsection name="Download soapUI Maven Plugin">
 		 <p>Prior to installing a new version of the plugin, you should delete any old versions from you local 
@@ -26,7 +26,7 @@
 		
 		</subsection>	
 		
-		<subsection name="soapUI Maven Plugin Usage">
+		<subsection name="SoapUI Maven Plugin Usage">
 		<p>Download and install the plugin as described above. By default, it will look for a 
 		<a href="../../userguide/projects/index.html">soapUI project file</a>
 		named <code>${pom.artifactId}-soapui-project.xml</code>, you can override this by setting with the

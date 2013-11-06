@@ -419,7 +419,7 @@
    <soapenv:Body>
       <sc0:SendMessages/>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/SendMessages"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="200508" name="sc003SOAP12Binding" type="wsdl" bindingName="{http://www.wstf.org/docs/scenarios/sc003}sc003SOAP12Binding" soapVersion="1_2" anonymous="optional" definition="file:/D:/soapUI-resources/sc003.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/D:/soapUI-resources/sc003.wsdl"><con:part><con:url>http://www.w3.org/2006/03/addressing/ws-addr.xsd</con:url><con:content><![CDATA[<!--W3C XML Schema defined in the Web Services Addressing 1.0 specification
+</soapenv:Envelope>]]></con:request><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.wstf.org/docs/scenarios/sc002/SendMessages"/></con:call></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" wsaVersion="200508" name="sc003SOAP12Binding" type="wsdl" bindingName="{http://www.wstf.org/docs/scenarios/sc003}sc003SOAP12Binding" soapVersion="1_2" anonymous="optional" definition="file:/D:/SoapUI-resources/sc003.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/D:/SoapUI-resources/sc003.wsdl"><con:part><con:url>http://www.w3.org/2006/03/addressing/ws-addr.xsd</con:url><con:content><![CDATA[<!--W3C XML Schema defined in the Web Services Addressing 1.0 specification
     http://www.w3.org/TR/ws-addr-core
 
    Copyright © 2005 World Wide Web Consortium,
@@ -534,7 +534,7 @@
     </xs:sequence>
     <xs:anyAttribute namespace="##other" processContents="lax"/>
   </xs:complexType>
-</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:/D:/soapUI-resources/sc003.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.wstf.org/docs/scenarios/sc003" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wstf.org/docs/scenarios/sc003" xmlns:sc002="http://www.wstf.org/docs/scenarios/sc002" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp="http://www.w3.org/ns/ws-policy">
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part><con:part><con:url>file:/D:/SoapUI-resources/sc003.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://www.wstf.org/docs/scenarios/sc003" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.wstf.org/docs/scenarios/sc003" xmlns:sc002="http://www.wstf.org/docs/scenarios/sc002" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp="http://www.w3.org/ns/ws-policy">
   <wsdl:types>
     <xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002">
       <xs:include schemaLocation="sc002.xsd"/>
@@ -725,7 +725,7 @@
       </wsp:Policy>
     </wsdl:port>
   </wsdl:service>
-</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>file:\D:\soapUI-resources\sc002.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wstf.org/docs/scenarios/sc002" xmlns:wsa="http://www.w3.org/2005/08/addressing">
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>file:\D:\SoapUI-resources\sc002.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://www.wstf.org/docs/scenarios/sc002" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.wstf.org/docs/scenarios/sc002" xmlns:wsa="http://www.w3.org/2005/08/addressing">
   <xs:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="http://www.w3.org/2006/03/addressing/ws-addr.xsd"/>
   <xs:complexType name="BeginType">
     <xs:sequence>

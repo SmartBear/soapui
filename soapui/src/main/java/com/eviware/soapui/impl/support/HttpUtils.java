@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -13,8 +13,12 @@
 package com.eviware.soapui.impl.support;
 
 import java.net.InetAddress;
+import java.net.URISyntaxException;
 
 import com.eviware.soapui.support.StringUtils;
+import org.apache.commons.httpclient.URI;
+import org.apache.commons.httpclient.URIException;
+import org.apache.http.client.utils.URIUtils;
 
 public class HttpUtils
 {
@@ -75,5 +79,18 @@ public class HttpUtils
 	
 	public static String getPingErrorMessage() {
 		return pingErrorMessage;
+	}
+
+	public static java.net.URI createUri( URI uri ) throws URISyntaxException, URIException
+	{
+		return createUri( uri.getScheme(), uri.getUserinfo(), uri.getHost(), uri.getPort(), uri.getEscapedPath(),
+				uri.getEscapedQuery(), uri.getEscapedFragment() );
+	}
+
+	public static java.net.URI createUri( String scheme, String userinfo, String host, int port, String escapedPath,
+													  String escapedQuery, String escapedFragment ) throws URISyntaxException
+	{
+		return URIUtils.createURI( scheme, ( userinfo == null ? "" : ( userinfo + "@" ) ) + host, port, escapedPath,
+				escapedQuery, escapedFragment );
 	}
 }

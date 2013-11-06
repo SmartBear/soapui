@@ -20,7 +20,7 @@
 <table width="700" height="825" border="0" cellpadding="0">
   
   <tr>
-    <td height="75" colspan="3"><img src="Images/soapuipro_header.png" alt="soapUI Header" width="685" height="68" longdesc="http://www.soapui.org" /></td>
+    <td height="75" colspan="3"><img src="Images/soapuipro_header.png" alt="SoapUI Header" width="685" height="68" longdesc="http://www.soapui.org" /></td>
   </tr>
   <tr>
     <td height="720" width="150" valign="top">
@@ -50,7 +50,7 @@
           <a onclick="javascript:urchinTracker('/appindexsoapUIProForum')" href="http://www.eviware.com/component/option,com_smf/Itemid,53/" title="Visit our forums" target="_blank">Go to the Forums</a></p></td>
       </tr>
     </table>      <p>&nbsp;</p>    </td>
-    <td height="720" width="400" class="greyBox" valign="top"><h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" /> Latest News</h1>
+    <td height="720" width="400" class="greyBox" valign="top"><h1><img src="Images/Pro-Icon-50.png" alt="SoapUI" width="50" height="50" /> Latest News</h1>
     
         <p class="center_p"><em><strong>June 10 2009 - soapUI 3.0 beta2</strong></em></p>
       <p class="center_p">Many bugfixes and minor improvements, check it out!<br /><br />
@@ -80,7 +80,7 @@
 
 <hr/>
     
-      <h1><img src="Images/Pro-Icon-50.png" alt="soapUI" width="50" height="50" /> How do I start?</h1>
+      <h1><img src="Images/Pro-Icon-50.png" alt="SoapUI" width="50" height="50" /> How do I start?</h1>
       <p class="center_p"><em><strong>New soapUI User?</strong></em></p>
     <p class="center_p"><em> Start by doing the following:</em></p>
     <ul class="evilist">

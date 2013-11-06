@@ -1,38 +1,33 @@
 /*
- *  soapUI, copyright (C) 2004-2011 eviware.com 
+ *  SoapUI, copyright (C) 2004-2011 eviware.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.support.wss.crypto;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.security.KeyStore;
-
+import com.eviware.soapui.config.KeyMaterialCryptoConfig;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
+import com.eviware.soapui.support.SoapUIException;
 import junit.framework.JUnit4TestAdapter;
-
 import org.apache.xmlbeans.XmlException;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.eviware.soapui.config.KeyMaterialCryptoConfig;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
-import com.eviware.soapui.support.SoapUIException;
+import java.io.IOException;
+import java.security.KeyStore;
+
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Erik R. Yverling
@@ -72,6 +67,18 @@ public class KeyMaterialWssCryptoTest
 	public void testLoadingJKSKeystoreWithCorrectPassword() throws Exception
 	{
 		loadCryptoSucessfully( CryptoType.KEYSTORE, "jks-test-key.jks", CORRECT_PASSWORD );
+	}
+
+	@Test
+	public void testLoadingJKSKeystoreWithNullPassword() throws Exception
+	{
+		loadCryptoSucessfully( CryptoType.TRUSTSTORE, "jks-test-key.jks", null );
+	}
+
+	@Test
+	public void testLoadingJKSKeystoreWithBlankPassword() throws Exception
+	{
+		loadCryptoSucessfully( CryptoType.TRUSTSTORE, "jks-test-key.jks", "" );
 	}
 
 	@Test

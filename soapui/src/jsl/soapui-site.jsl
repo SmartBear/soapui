@@ -71,7 +71,7 @@
         </style>
         
         <link rel="stylesheet" type="text/css" href="${relativePath}/style/print.css" media="print"/>
-        <meta name="description" content="soapUI, the leading SOA Testing Tool" />
+        <meta name="description" content="SoapUI, the leading SOA Testing Tool" />
 		<meta name="keywords" content="eviware, soapui, soap ui, soapui, testing, soap, soa , web services, soap testing, soa testing, web services testing, webservices, web service development, webservices, service oriented architecture," />
         <meta http-equiv="Content-Type" content="text/html; charset=${outputencoding}"/>
         <x:forEach var="author" select="./properties/author">
@@ -305,7 +305,7 @@ urchinTracker();
     <input type="hidden" name="cx" value="007200683325252461236:o_7361jqhqo" />
     <input type="hidden" name="sa" value="Search" />
     <input name="q" type="text" size="15" />
-    <input type="submit" name="a" value="soapUI search" />
+    <input type="submit" name="a" value="SoapUI search" />
     <input type="hidden" name="cof" value="FORID:0" />
   </form>
   <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_007200683325252461236:o_7361jqhqo"></script>
@@ -542,7 +542,7 @@ urchinTracker();
        <table class="relatedInfo" cellspacing="0" cellpadding="0">
             <tr class="a">
                 <td width="75" style="padding-top:5px">
-                    <img src="/images/where_do_i_start.jpg" alt="Start soapUI Testing"
+                    <img src="/images/where_do_i_start.jpg" alt="Start SoapUI Testing"
                          longdesc="http://www.soapui.org"></img>
                 </td>
                 <td>
@@ -578,11 +578,11 @@ urchinTracker();
                                        </j:if>
 
                                      <x:element name="a">
-     <x:attribute name="title">try soapUI Pro</x:attribute>
+     <x:attribute name="title">try SoapUI Pro</x:attribute>
 
                                         <x:attribute name="href"><x:expr select="@tryIt"/></x:attribute>
      <x:attribute name="onclick">javascript:urchinTracker:('<x:expr select="@tryItUrchin"/>');</x:attribute>
-                                        <img src="/images/try_pro_100.png" alt="Try soapUI Pro to soap test"
+                                        <img src="/images/try_pro_100.png" alt="Try SoapUI Pro to soap test"
                                              width="101" height="20" longdesc="http://www.eviware.com"/>
                                     </x:element>
                                 </span>

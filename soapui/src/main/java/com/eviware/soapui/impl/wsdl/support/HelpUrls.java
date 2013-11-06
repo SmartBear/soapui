@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -13,8 +13,8 @@
 package com.eviware.soapui.impl.wsdl.support;
 
 /**
- * Help URLS in soapUI documentation
- * 
+ * Help URLS in SoapUI documentation
+ *
  * @author ole.matzura
  */
 
@@ -36,30 +36,11 @@ public interface HelpUrls
 	public static final String HEADERS_HELP_URL = HELP_URL_ROOT + "requests.html#HTTP_Headers";
 	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT
 			+ "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
-	// commented ones are not currently used
 	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
 	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
 	public static final String ATTACHMENTS_HELP_URL = HELP_URL_ROOT + "attachments.html";
 
 	public static final String TESTSUITE_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html";
-	// public static final String TESTCASE_HELP_URL = HELP_URL_ROOT +
-	// "functional/testcases.html";
-	// public static final String PROPERTYTRANSFER_HELP_URL = HELP_URL_ROOT +
-	// "functional/propertytransfers.html";
-	// public static final String DELAYSTEP_HELP_URL = HELP_URL_ROOT +
-	// "functional/testcases.html#Delay_Test_Step";
-	// public static final String GOTOSTEP_HELP_URL = HELP_URL_ROOT +
-	// "functional/gotostep.html";
-	// public static final String PROPERTIESSTEP_HELP_URL = HELP_URL_ROOT +
-	// "functional/propertiesstep.html";
-	// public static final String GROOVYSTEP_HELP_URL = HELP_URL_ROOT +
-	// "fFunctional/groovystep.html";
-	// public static final String TESTREQUEST_HELP_URL = HELP_URL_ROOT +
-	// "functional/testrequests.html";
-	// public static final String LOADTEST_HELP_URL = HELP_URL_ROOT +
-	// "loadtest/index.html";
-	// public static final String MOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT +
-	// "functional/mockresponsestep.html";
 	public static final String CREATEMOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT + "functional/mockresponse.html";
 
 	public static final String ADDREQUESTASMOCKRESPONSESTEP_HELP_URL = HELP_URL_ROOT + "functional/mockresponse.html";
@@ -193,7 +174,7 @@ public interface HelpUrls
 
 	public static final String RESOLVEPROJECT_HELP_URL = HELP_URL_ROOT + "projects/resolving.html";
 
-	public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
+	public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/getting-started.html";
 
 	public static final String NEWRESTSERVICE_HELP_URL = HELP_URL_ROOT + "rest/index.html";
 
@@ -206,6 +187,8 @@ public interface HelpUrls
 	public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
 
 	public static final String WADL_PARAMS_HELP_URL = HELP_URL_ROOT + "rest/params.html";
+
+	public static final String NEW_WADL_PROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
 
 	public static final String RESTRESOURCEEDITOR_HELPURL = HELP_URL_ROOT + "rest/resources.html";
 

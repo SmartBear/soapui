@@ -4,7 +4,7 @@
         <title>maven plugins for testing Web Services</title>
     </properties>
     <body>
-		<section name="soapUI maven plugins">
+		<section name="SoapUI maven plugins">
 		 <p>soapUI includes plugins for running Web Service tests in both <a target="_new" href="http://maven.apache.org/maven-1.x/">maven 1.x</a> 
 		 and <a target="_new" href="http://maven.apache.org">maven 2.x</a> 
 		 allowing one to automate <a href="../userguide/functional/testsuites.html">Functional test in TestSuites / TestCases</a>, 

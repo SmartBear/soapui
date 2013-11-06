@@ -1,39 +1,16 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.support.wss.crypto;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.util.List;
-import java.util.Properties;
-
-import org.apache.commons.ssl.KeyStoreBuilder;
-import org.apache.commons.ssl.ProbablyBadPasswordException;
-import org.apache.commons.ssl.Util;
-import org.apache.log4j.Logger;
-import org.apache.ws.security.components.crypto.CredentialException;
-import org.apache.ws.security.components.crypto.Merlin;
-import org.apache.ws.security.util.Loader;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.KeyMaterialCryptoConfig;
@@ -48,8 +25,20 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.google.common.io.Files;
-
 import edu.umd.cs.findbugs.annotations.NonNull;
+import org.apache.commons.ssl.KeyStoreBuilder;
+import org.apache.commons.ssl.ProbablyBadPasswordException;
+import org.apache.commons.ssl.Util;
+import org.apache.log4j.Logger;
+import org.apache.ws.security.components.crypto.CredentialException;
+import org.apache.ws.security.components.crypto.Merlin;
+import org.apache.ws.security.util.Loader;
+
+import java.io.*;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.util.List;
+import java.util.Properties;
 
 public class KeyMaterialWssCrypto implements WssCrypto
 {
@@ -171,7 +160,15 @@ public class KeyMaterialWssCrypto implements WssCrypto
 			ClassLoader loader = Loader.getClassLoader( KeyMaterialWssCrypto.class );
 			InputStream input = Merlin.loadInputStream( loader, crypotFilePath );
 			keyStore = KeyStore.getInstance( keystoreType );
-			keyStore.load( input, getPassword().toCharArray() );
+
+			char[] password = null;
+
+			if( !StringUtils.isNullOrEmpty( getPassword() ) )
+			{
+				password = getPassword().toCharArray();
+			}
+
+			keyStore.load( input, password );
 
 			return keyStore;
 		}

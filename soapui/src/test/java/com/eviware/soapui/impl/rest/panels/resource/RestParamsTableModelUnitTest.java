@@ -1,18 +1,34 @@
+/*
+ *  SoapUI, copyright (C) 2004-2013 smartbear.com
+ *
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
+ *  the Free Software Foundation.
+ *
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ *  See the GNU Lesser General Public License for more details at gnu.org.
+ */
+
 package com.eviware.soapui.impl.rest.panels.resource;
 
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation.METHOD;
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -28,75 +44,96 @@ public class RestParamsTableModelUnitTest
 	public static final int VALUE_COLUMN_INDEX = 1;
 	private static final int STYLE_COLUMN_INDEX = 2;
 	private static final int LOCATION_COLUMN_INDEX = 3;
-	public static final String PARAM_NAME = "ParamName";
+	public static final String PARAM_NAME_1 = "ParamName1";
+	public static final String PARAM_NAME_2 = "ParamName2";
 
 	private RestParamsTableModel restParamsTableModel;
 	private RestParamsPropertyHolder params;
-	private RestParamProperty param;
+	private RestRequest restRequest;
 
 	@Before
-	public void setUp()
+	public void setUp() throws SoapUIException
 	{
-		params = Mockito.mock( RestParamsPropertyHolder.class );
-		param = mock( RestParamProperty.class );
-		when( param.getParamLocation() ).thenReturn( NewRestResourceActionBase.ParamLocation.METHOD );
-		when( param.getName() ).thenReturn( PARAM_NAME );
-		when( params.getProperty(PARAM_NAME) ).thenReturn( param );
-		when( params.getPropertyIndex( PARAM_NAME ) ).thenReturn( 0 );
-		when( params.size() ).thenReturn( 1 );
-
-		Map<String, TestProperty> properties = new HashMap<String, TestProperty>(  );
-		properties.put( PARAM_NAME, param );
-		when (params.getProperties()).thenReturn( properties );
+		restRequest = ModelItemFactory.makeRestRequest();
+		params = restRequest.getParams();
+		RestParamProperty param = params.addProperty( PARAM_NAME_1 );
+		param.setParamLocation( METHOD );
+		RestParamProperty param2 = params.addProperty( PARAM_NAME_2 );
+		param2.setParamLocation( METHOD );
 
 		restParamsTableModel = new RestParamsTableModel( params );
 	}
 
 
 	@Test
-	public void givenModelWithParamsWhenSetParamsThenModelShouldBeRemovedAsListenerAndAddedAgain()
+	public void removesAndAddThePropertyListenerAgainWhenParamIsSet()
 	{
+		mockParams();
+		restParamsTableModel = new RestParamsTableModel( params );
 		restParamsTableModel.setParams( params );
-		verify( params, times( 2 ) ).addTestPropertyListener( restParamsTableModel );
-		verify( params, times( 1 ) ).removeTestPropertyListener( restParamsTableModel );
+		verify( params, times( 1 ) ).removeTestPropertyListener( any( TestPropertyListener.class ) );
+		verify( params, times( 2 ) ).addTestPropertyListener( any( TestPropertyListener.class ) );
 	}
 
 	@Test
-	public void givenModelWithParamsWhenReleaseItShouldRemoveItselfAsListenerFromParams()
+	public void removesListenerOnRelease()
 	{
+		mockParams();
+		restParamsTableModel.setParams( params );
 		restParamsTableModel.release();
-		verify( params, times( 1 ) ).addTestPropertyListener( restParamsTableModel );
-		verify( params, times( 1 ) ).removeTestPropertyListener( restParamsTableModel );
+		verify( params, times( 1 ) ).addTestPropertyListener( any( TestPropertyListener.class ) );
+		verify( params, times( 1 ) ).removeTestPropertyListener( any( TestPropertyListener.class ) );
 
 	}
 
 	@Test
-	public void givenModelWithParamsWhenSetValueThenShouldSetValueToProperty()
+	public void setsValueToPropertyWhenSetValueAtIsInvoked()
 	{
 		String value = "New value";
 		restParamsTableModel.setValueAt( value, 0, VALUE_COLUMN_INDEX );
-		verify( param, times( 1 ) ).setValue( value );
+		assertThat( ( String )restParamsTableModel.getValueAt( 0, VALUE_COLUMN_INDEX ), is( value ) );
 	}
 
 	@Test
-	public void givenModelWithParamsWhenSetNameThenShouldRenameProperty()
+	public void renamesThePropertyIfSetValueIsInvokedOnFirstColumn()
 	{
 		String value = "New Name";
 		restParamsTableModel.setValueAt( value, 0, NAME_COLUMN_INDEX );
-		verify( params, times( 1 ) ).renameProperty(PARAM_NAME, value );
+		assertThat( ( String )restParamsTableModel.getValueAt( 0, NAME_COLUMN_INDEX ), is( value ) );
 	}
 
 	@Test
-	public void givenModelWithParamsWhenSetStyleThenShouldStyleToProperty()
+	public void changesPropertyStyleWhenSetValueIsInvokedonStyleColumn()
 	{
 		restParamsTableModel.setValueAt( QUERY, 0, STYLE_COLUMN_INDEX );
-		verify( param, times( 1 ) ).setStyle( QUERY );
+		assertThat( ( RestParamsPropertyHolder.ParameterStyle )restParamsTableModel.getValueAt( 0, STYLE_COLUMN_INDEX ),
+				is( QUERY ) );
 	}
 
 	@Test
 	public void givenModelWithParamsWhenSetLocationAndGetLocationThenShouldReturnSameValue()
 	{
 		restParamsTableModel.setValueAt( METHOD, 0, LOCATION_COLUMN_INDEX );
-		verify( param, times( 1 ) ).setParamLocation( METHOD );
+		assertThat( ( NewRestResourceActionBase.ParamLocation )restParamsTableModel.getValueAt( 0, LOCATION_COLUMN_INDEX ),
+				is( METHOD ) );
+	}
+
+	private void mockParams()
+	{
+		params = mock( RestParamsPropertyHolder.class );
+		RestRequest restRequest = mock( RestRequest.class );
+
+		RestResource resource = mock( RestResource.class );
+		RestParamsPropertyHolder resourceParams = mock( XmlBeansRestParamsTestPropertyHolder.class );
+		when( resource.getParams() ).thenReturn( resourceParams );
+		when( restRequest.getResource() ).thenReturn( resource );
+
+		RestMethod restMethod = mock( RestMethod.class );
+		RestParamsPropertyHolder methodParams = mock( XmlBeansRestParamsTestPropertyHolder.class );
+		when( restMethod.getParams() ).thenReturn( methodParams );
+		when( restRequest.getRestMethod() ).thenReturn( restMethod );
+
+		when( params.getModelItem() ).thenReturn( restRequest );
+
 	}
 }

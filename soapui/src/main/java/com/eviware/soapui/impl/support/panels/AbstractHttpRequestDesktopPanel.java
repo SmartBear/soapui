@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -23,6 +23,8 @@ import java.beans.PropertyChangeEvent;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
 
 import org.apache.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
@@ -131,6 +133,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	protected void init( T2 request )
 	{
+		initializeFields();
 		setEndpointsModel( request );
 
 		request.addSubmitListener( this );
@@ -154,6 +157,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 					requestEditor.requestFocusInWindow();
 			}
 		} );
+	}
+
+	protected void initializeFields()
+	{
+
 	}
 
 	public final T2 getRequest()
@@ -290,6 +298,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		final JComboBox endpointCombo = new JComboBox( endpointsModel );
 		endpointCombo.setEditable( true );
+		Document textFieldDocument = ( ( JTextComponent )endpointCombo.getEditor().getEditorComponent() ).getDocument();
+		endpointsModel.listenToChangesIn( textFieldDocument );
 		endpointCombo.addPropertyChangeListener( this );
 		endpointCombo.setToolTipText( endpointsModel.getSelectedItem().toString() );
 
@@ -679,7 +689,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				if( retVal == null )
 					return false;
 
-				if( retVal.booleanValue() && submit.getStatus() == Submit.Status.RUNNING )
+				if( retVal && submit.getStatus() == Submit.Status.RUNNING )
 				{
 					submit.cancel();
 				}

@@ -1,5 +1,5 @@
-# The soapUI core module
+# The SoapUI core module
 
-*This is a submodule of [The soapUI project](../)*
+*This is a submodule of [The SoapUI project](../)*
 
-This is the core module for creating the soapUI jar and installers.
+This is the core module for creating the SoapUI jar and installers.

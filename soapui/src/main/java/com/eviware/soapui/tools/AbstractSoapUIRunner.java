@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -120,7 +120,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 					formatter.printHelp( options.getRunnerName() + " [options] <soapui-project-file>", options );
 				}
 
-				System.err.println( "Missing soapUI project file.." );
+				System.err.println( "Missing SoapUI project file.." );
 				return false;
 			}
 
@@ -283,10 +283,10 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	}
 
 	/**
-	 * Sets the soapUI project file containing the tests to run
+	 * Sets the SoapUI project file containing the tests to run
 	 * 
 	 * @param projectFile
-	 *           the soapUI project file containing the tests to run
+	 *           the SoapUI project file containing the tests to run
 	 */
 
 	public void setProjectFile( String projectFile )
@@ -295,10 +295,10 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner
 	}
 
 	/**
-	 * Sets the soapUI settings file containing the tests to run
+	 * Sets the SoapUI settings file containing the tests to run
 	 * 
 	 * @param settingsFile
-	 *           the soapUI settings file to use
+	 *           the SoapUI settings file to use
 	 */
 
 	public void setSettingsFile( String settingsFile )

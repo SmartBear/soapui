@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -83,7 +83,7 @@ public class RestRequestConverter
 											"The model for REST requests has changed slightly,\r\n"
 													+ "introducing a new REST Method item in-between each REST Resource and Request.\r\n"
 													+ "Any existing REST Request must now be placed under either an existing Method or a new one, "
-													+ "either automatically or manually.\r\n\r\nWould You like soapUI to do this automatically using the default values?",
+													+ "either automatically or manually.\r\n\r\nWould You like SoapUI to do this automatically using the default values?",
 											"Update REST model for project: " + project.getName() ) );
 		}
 		RestMethod method = null;

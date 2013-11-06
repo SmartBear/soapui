@@ -34,7 +34,7 @@
 		 a new workspace.</p>
 		 </subsection>
 		 
-		 <subsection name="soapUI Workspace Actions">
+		 <subsection name="SoapUI Workspace Actions">
 		 
 		<p>
             The following actions are available from the workspace nodes right-button
@@ -56,7 +56,7 @@
 		 <li><b>Online Help</b> - Displays this page in an external browser</li>
 		 </ul></p>
 		</subsection>
-		<subsection name="soapUI Workspace Details Tab">
+		<subsection name="SoapUI Workspace Details Tab">
 		  <p>
               The "Details" tab shown in the bottom left shows the following values when the workspace node is selected in
 		 the navigation tree

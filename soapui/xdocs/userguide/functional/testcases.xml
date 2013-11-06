@@ -4,7 +4,7 @@
         <title>Functional Testing of Web Services - TestCase</title>
     </properties>
     <body>
-		<section name="soapUI TestCases">
+		<section name="SoapUI TestCases">
 		 
 		 <p>
 		 soapUI supports functional testing of web services by providing a TestCase metaphor where a number

@@ -70,7 +70,7 @@
 		</subsection>
 		
 		<subsection name="MockResponse Editor Toolbar">
-		<p align="center"><img src="images/mockresponseeditor_toolbar.gif" alt="soapUI MockResponse toolbar"/></p>
+		<p align="center"><img src="images/mockresponseeditor_toolbar.gif" alt="SoapUI MockResponse toolbar"/></p>
 		<p>The toolbar at the top of the MockResponse editor contains the following actions (left to right):</p>
 		<ul>
 		<li><b>Open Request</b> - Opens a new or existing request that can be issued to this MockOperation

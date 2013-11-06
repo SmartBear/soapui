@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -125,13 +125,13 @@ public class SwingSoapUICore extends DefaultSoapUICore
 
 	protected String importSettingsOnStartup( String fileName ) throws Exception
 	{
-		if( UISupport.getDialogs().confirm( "Missing soapUI Settings, import from existing installation?",
+		if( UISupport.getDialogs().confirm( "Missing SoapUI Settings, import from existing installation?",
 				"Import Preferences" ) )
 		{
 			while( true )
 			{
 				File settingsFile = UISupport.getFileDialogs().open( null, "Import Preferences", ".xml",
-						"soapUI settings XML", fileName );
+						"SoapUI settings XML", fileName );
 				if( settingsFile != null )
 				{
 					try

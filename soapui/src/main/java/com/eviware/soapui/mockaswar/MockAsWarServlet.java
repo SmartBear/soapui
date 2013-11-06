@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -379,7 +379,7 @@ public class MockAsWarServlet extends HttpServlet
 		PrintWriter out = response.getWriter();
 		startHtmlPage( out, "MockService Log Table", "15" );
 
-		out.print( "<h3><img src=\"header_logo.jpg\"> soapUI MockServices Log for project [" + project.getName()
+		out.print( "<h3><img src=\"header_logo.jpg\"> SoapUI MockServices Log for project [" + project.getName()
 				+ "]</h3>" + "<p style=\"text-align: left\">WSDLs:" );
 
 		for( MockRunner mockRunner : mockRunners )
@@ -452,7 +452,7 @@ public class MockAsWarServlet extends HttpServlet
 		response.setContentType( "text/html" );
 
 		PrintWriter out = response.getWriter();
-		out.print( "<html><head><title>soapUI MockServices Log for project [" + project.getName() + "]</title></head>" );
+		out.print( "<html><head><title>SoapUI MockServices Log for project [" + project.getName() + "]</title></head>" );
 		out.print( "<body>" );
 		out.print( "<h3>" );
 		out.print( "Log is disabled." );
@@ -467,7 +467,7 @@ public class MockAsWarServlet extends HttpServlet
 		response.setContentType( "text/html" );
 
 		PrintWriter out = response.getWriter();
-		out.print( "<html><head><title>soapUI MockServices Log for project [" + project.getName() + "]</title></head>" );
+		out.print( "<html><head><title>SoapUI MockServices Log for project [" + project.getName() + "]</title></head>" );
 		out.print( "<frameset rows=\"40%,40%,*\">" );
 		out.print( "<frame src=\"master\"/>" );
 		out.print( "<frame name=\"detail\" src=\"detail\"/>" );

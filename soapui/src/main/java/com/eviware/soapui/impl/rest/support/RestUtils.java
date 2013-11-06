@@ -1,35 +1,38 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.rest.support;
 
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.apache.xmlbeans.XmlBoolean;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.xmlbeans.XmlBoolean;
+
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public class RestUtils
 {
@@ -92,11 +95,10 @@ public class RestUtils
 		String[] items = path.split( "/" );
 
 		int templateParamCount = 0;
-		StringBuffer resultPath = new StringBuffer();
+		StringBuilder resultPath = new StringBuilder();
 
-		for( int i = 0; i < items.length; i++ )
+		for( String item : items )
 		{
-			String item = items[i];
 			try
 			{
 				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
@@ -150,7 +152,7 @@ public class RestUtils
 					{
 						Integer.parseInt( item );
 
-						String name = "param" + templateParamCount++ ;
+						String name = "param" + templateParamCount++;
 						RestParamProperty property = params.getProperty( name );
 						if( !params.hasProperty( name ) )
 						{
@@ -166,7 +168,7 @@ public class RestUtils
 					}
 				}
 			}
-			catch( Throwable e )
+			catch( Exception ignore )
 			{
 			}
 
@@ -229,143 +231,125 @@ public class RestUtils
 		}
 	}
 
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public static String expandPath( String path, RestParamsPropertyHolder params, RestRequestInterface request )
 	{
-		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
-				: new StringBuffer();
 		DefaultPropertyExpansionContext context = new DefaultPropertyExpansionContext( request );
-
 		for( int c = 0; c < params.getPropertyCount(); c++ )
 		{
 			RestParamProperty param = params.getPropertyAt( c );
 
 			String value = PropertyExpander.expandProperties( context, param.getValue() );
-			List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
+			if( !StringUtils.hasContent( value ) && !param.getRequired() )
+				continue;
+
 
 			if( value != null && !param.isDisableUrlEncoding() )
 			{
 				try
 				{
 					String encoding = System.getProperty( "soapui.request.encoding", request.getEncoding() );
-
-					if( StringUtils.hasContent( encoding ) )
-					{
-						value = URLEncoder.encode( value, encoding );
-						for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ), encoding ) );
-					}
-					else
-					{
-						value = URLEncoder.encode( value );
-						for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
-					}
+					encoding = StringUtils.hasContent( encoding ) ? encoding : Charset.defaultCharset().toString();
+					value = URLEncoder.encode( value, encoding );
 				}
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
 					value = URLEncoder.encode( value );
-					for( int i = 0; i < valueParts.size(); i++ )
-						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
 				}
 			}
 
-			if( !StringUtils.hasContent( value ) && !param.getRequired() )
-				continue;
-
-			if( value == null )
-				value = "";
-
-			switch( param.getStyle() )
+			if( param.getStyle() == ParameterStyle.TEMPLATE )
 			{
-			case QUERY :
-				if( query != null && valueParts != null )
-				{
-					for( String valuePart : valueParts )
-					{
-						if( query.length() > 0 )
-							query.append( '&' );
-
-						query.append( URLEncoder.encode( param.getName() ) );
-						query.append( '=' );
-
-						if( StringUtils.hasContent( valuePart ) )
-							query.append( valuePart );
-					}
-				}
-				break;
-			case TEMPLATE :
 				path = path.replaceAll( "\\{" + param.getName() + "\\}", value );
-				break;
-			case MATRIX :
+			}
+		}
+
+		return path + makeSuffixParameterString( request );
+	}
+
+	/**
+	 * Build the parameter string to be appended to the path of an REST request
+	 *
+	 * @param request an object representing the REST request
+	 * @return the full parameter string, including matrix style parameters and query string.
+	 */
+	public static String makeSuffixParameterString( RestRequestInterface request )
+	{
+		return makeMatrixParameterString( request.getParams() ) + getQueryParamsString( request );
+	}
+
+	private static String makeMatrixParameterString( RestParamsPropertyHolder params )
+	{
+		StringBuilder buffer = new StringBuilder();
+		for( int i = 0; i < params.getPropertyCount(); i++ )
+		{
+			RestParamProperty param = params.getPropertyAt( i );
+			String value = param.getValue();
+			if( param.getStyle() == ParameterStyle.MATRIX )
+			{
 				if( param.getType().equals( XmlBoolean.type.getName() ) )
 				{
 					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
 					{
-						path += ";" + param.getName();
+						buffer.append( ";" ).append( param.getName() );
 					}
 				}
 				else
 				{
-					path += ";" + param.getName();
+					buffer.append( ";" ).append( param.getName() );
 					if( StringUtils.hasContent( value ) )
 					{
-						path += "=" + value;
+						buffer.append( "=" ).append( value );
 					}
 				}
-			case PLAIN :
-				break;
+
 			}
 		}
-
-		if( query != null && query.length() > 0 )
-			path += "?" + query.toString();
-
-		return path;
+		return buffer.toString();
 	}
 
-	// TODO: make it cleaner
-	public static String getQueryParamsString( RestParamsPropertyHolder params, RestRequestInterface request )
+
+	public static String getQueryParamsString( RestRequestInterface request )
 	{
-		StringBuffer query = request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() ) ? null
-				: new StringBuffer();
+		if( isRequestWithoutQueryString( request ) )
+		{
+			return "";
+		}
+		RestParamsPropertyHolder params = request.getParams();
+		StringBuilder query = new StringBuilder();
 
 		for( int c = 0; c < params.getPropertyCount(); c++ )
 		{
 			RestParamProperty param = params.getPropertyAt( c );
-
 			String value = param.getValue();
 			List<String> valueParts = splitMultipleParameters( value, request.getMultiValueDelimiter() );
 
-			if( ( !StringUtils.hasContent( value ) && !param.getRequired() ) || param.getStyle() != ParameterStyle.QUERY )
-				continue;
-
-			if( value == null )
-				value = "";
-
-			if( query != null && valueParts != null )
+			if( param.getStyle() != ParameterStyle.QUERY || ( valueParts.isEmpty() && !param.getRequired() ) )
 			{
-				for( String valuePart : valueParts )
-				{
-					if( query.length() > 0 )
-						query.append( '&' );
-
-					query.append( param.getName() );
-					query.append( '=' );
-
-					if( StringUtils.hasContent( valuePart ) )
-						query.append( valuePart );
-				}
+				continue;
 			}
 
+			for( String valuePart : valueParts )
+			{
+				if( query.length() > 0 )
+				{
+					query.append( '&' );
+				}
+				query.append( param.getName() ).append( '=' );
+				if( StringUtils.hasContent( valuePart ) )
+				{
+					query.append( valuePart );
+				}
+			}
 		}
 
-		String queryString = "";
-		if( query != null && query.length() > 0 )
-			queryString += "?" + query.toString();
+		return ( query.length() > 0 ? "?" : "" ) + query.toString();
+	}
 
-		return queryString;
+	private static boolean isRequestWithoutQueryString( RestRequestInterface request )
+	{
+		return request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() );
 	}
 
 
@@ -387,24 +371,12 @@ public class RestUtils
 
 		return result;
 
-		// Matcher matcher = splitPattern.matcher( paramStr );
-		// List<String> parts = new ArrayList<String>();
-		// int i = 0;
-		// while( matcher.find() )
-		// {
-		// parts.add( paramStr.substring( i, matcher.start() + 1 ).replaceAll(
-		// "\\|\\|", "|" ) );
-		// i = matcher.start() + 2;
-		// }
-		// parts.add( paramStr.substring( i, paramStr.length() ).replaceAll(
-		// "\\|\\|", "|" ) );
-		// return parts;
 	}
 
 	/**
 	 * specificaly used for adding empty parameters also in the list when
 	 * "send empty parameters" are checked in HTTP TestRequest Properties
-	 * 
+	 *
 	 * @param paramStr
 	 * @param delimiter
 	 * @return
@@ -423,5 +395,16 @@ public class RestUtils
 		}
 
 		return result;
+	}
+
+	public static List<RestResource> extractAncestorsParentFirst( RestResource childResource )
+	{
+		final List<RestResource> resources = new ArrayList<RestResource>();
+		for( RestResource r = childResource; r != null; r = r.getParentResource() )
+		{
+			resources.add( r );
+		}
+		Collections.reverse( resources );
+		return resources;
 	}
 }

@@ -4,7 +4,7 @@
         <title>Data Driven Testing - soapUI Pro Data Source loop step</title>
     </properties>
     <body>
-		<section name="soapUI Pro DataSourceLoop Step">
+		<section name="SoapUI Pro DataSourceLoop Step">
 		<p>
 		Data Driven Web Service Testing is one on soapUIs' strengths. In soapUI this can be done by Groovy scripting, but in soapUI
 		Pro this is simplified. 

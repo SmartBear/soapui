@@ -4,7 +4,7 @@
         <title>Easy XPath creating - soapUI Pro XPath selector</title>
     </properties>
     <body>
-		<section name="soapUI Pro XPath Selection Dialog">
+		<section name="SoapUI Pro XPath Selection Dialog">
 		<p>
 			soapUI Pro includes a XPath Wizard or Selection dialog that is available wherever an XPath 
 			expression is required:

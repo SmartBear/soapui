@@ -4,7 +4,7 @@
         <title>userguide - requests - message inspectors</title>
     </properties>
     <body>
-		<section name="soapUI Pro Message Inspectors">
+		<section name="SoapUI Pro Message Inspectors">
 		<p>soapUI Pro adds a number of WSDL Context sensitive message inspectors that are available
 		for both the standard XML Source editor and the Outline Editor displaying context 
 		sensitive details for the currently selected content element.</p>

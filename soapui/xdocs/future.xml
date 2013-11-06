@@ -4,8 +4,8 @@
         <title>soapUI Future Plans</title>
     </properties>
     <body>
-		<section name="soapUI Future Plans">
-		<subsection name="soapUI Next Release"> 
+		<section name="SoapUI Future Plans">
+		<subsection name="SoapUI Next Release">
 		<p>March 01 2010 - soapUI 3.5 release date </p>
         <p>The following theme is planned for the upcoming version:</p>
          <ul>
@@ -15,7 +15,7 @@
 		 any wishes/suggestions that should be included!</p>
 		</subsection>
 		
-		<subsection name="soapUI Upcoming Releases">
+		<subsection name="SoapUI Upcoming Releases">
 		<p>We have ideas for several upcoming releases, here are just a few themes;</p>
 		<ul>
 		 <li>The WCF Release</li>
@@ -27,7 +27,7 @@
 		</subsection>
 		
 		
-		<subsection name="soapUI Feature Wish list">
+		<subsection name="SoapUI Feature Wish list">
 		 
 		 <p>Obviously, there are a lot more features on the soapUI wish list for upcoming versions,  
 		 <a target="_new" href="http://sourceforge.net/tracker/?group_id=136013">add a feature request</a> and it will be 

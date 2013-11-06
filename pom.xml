@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.smartbear.soapui</groupId>
-    <name>soapUI project</name>
+    <name>SoapUI project</name>
     <artifactId>soapui-project</artifactId>
-    <version>4.6.0</version>
+    <version>4.6.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <repositories>
@@ -32,6 +32,7 @@
         <build.date>${maven.build.timestamp}</build.date>
 
         <project.name.full>soapui-${project.version}</project.name.full>
+        <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
     </properties>
 

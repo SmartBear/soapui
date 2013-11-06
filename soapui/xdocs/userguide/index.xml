@@ -4,7 +4,7 @@
         <title>soapUI User Guide - for Web Service Testing</title>
     </properties>
     <body>
-		<section name="soapUI User Guide">
+		<section name="SoapUI User Guide">
 		 
 		<p>The soapUI User Guide aims at giving an overview of all features available together with some 
 		explanations on the underlying implementations. The User Guide covers both soapUI, its IDE Plugins and soapUI Pro, 

@@ -4,13 +4,13 @@
         <title>news</title>
     </properties>
     <body>
-    <section name="soapUI Releases">
+    <section name="SoapUI Releases">
 
 
 		<subsection name="2010-03-01: soapUI 3.5">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 3.5, is out!</p>
@@ -26,7 +26,7 @@
 		<subsection name="2009-08-09: soapUI 3.0.1">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 3.0.1, is out!</p>
@@ -41,7 +41,7 @@
 				<subsection name="2009-07-09: soapUI 3.0 ">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 3.0, is out!</p>
@@ -56,7 +56,7 @@
 		<subsection name="2009-02-02: soapUI 2.5.1">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 2.5.1, is out!</p>
@@ -71,7 +71,7 @@
         <subsection name="2008-11-17: soapUI 2.5">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 2.5, the REST Release, is out!</p>
@@ -89,7 +89,7 @@
         <subsection name="2008-09-26: soapUI 2.5 beta 1">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 2.5, the REST Release, beta 1 is out!<br/>
@@ -101,7 +101,7 @@
     	<subsection name="2008-01-28: soapUI 2.0.2">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">Mostly bug fixes and Plug in updates <br/>
@@ -114,7 +114,7 @@
     	<subsection name="2007-12-12: soapUI 2.0 Final">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI 2.0 Final of the Coverage Release <br/>
@@ -126,7 +126,7 @@
 		<subsection name="2007-12-02: soapUI 2.0 beta2">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">Improved WS-Security, Raw message viewer and more... <br/>
@@ -138,7 +138,7 @@
 		<subsection name="2007-11-20: SNAPSHOT Update and 2.0 beta1  ">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">Releases of the IDE plugins. LoadTest statistics logging, minor updates and bug fixes... <br/>
@@ -150,7 +150,7 @@
     	<subsection name="2007-11-14: soapUI 2.0 beta1">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">Major release filled with functionality such as Message Capture, WS-Security and more...<br/>
@@ -162,7 +162,7 @@
     	<subsection name="2007-09-26: soapUI 1.7.6 release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">Intermediate release with a bunch of fixes and improvements...<br/>
@@ -174,7 +174,7 @@
         <subsection name="2007-08-29: SNAPSHOT Update">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">Some important bug-fixes and a large number of improvements... <br/>
@@ -186,7 +186,7 @@
 		<subsection name="2007-08-06: soapUI 1.7.5 Final">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">The "Community Release" goes final... <br/>
@@ -198,7 +198,7 @@
 	    <subsection name="2007-05-11: soapUI in the news.">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">soapUI gets "9/10 - Excellent" score in InfoWorld round-up <br/>
@@ -211,7 +211,7 @@
     	<subsection name="2007-05-07 : 1.7.1">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">A Bug-Fix release including a much-improved NetBeans plugin and some goodies for soapUI Pro users.....<br/>
@@ -223,7 +223,7 @@
 	    <subsection name="2007-04-10 : 1.7 final">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">We are extremely happy to finally release soapUI 1.7, which you can read everything about <br/>
@@ -240,7 +240,7 @@
 		<subsection name="2006-11-12 : 1.6 final">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">We are extremely happy to finally release soapUI 1.6, which you can
@@ -257,7 +257,7 @@
 		<subsection name="2006-09-12 : 1.6 beta2">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">We are extremely happy to finally release the second beta of soapUI 1.6, which you can
@@ -273,7 +273,7 @@
         <subsection name="2006-07-14 : 1.6 beta1">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">We are extremely happy to announce the first beta of soapUI 1.6, which you can
@@ -286,7 +286,7 @@
 		<subsection name="2006-05-11 : SNAPSHOT release and eclipse-plugin">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">After a month of refactorings and testing we are finally releasing a new snapshot and a sneak-peak
@@ -303,7 +303,7 @@
     	<subsection name="2006-04-06 : 1.5 final release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 		<div align="left">
@@ -326,7 +326,7 @@
 		<subsection name="2006-03-13 : 1.5 beta2 release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 		<div align="left">
@@ -345,7 +345,7 @@
 		<subsection name="2006-02-27 : 1.5 beta1 release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    			<p align="left">This is the first beta for soapUI 1.5, read all about it <a href="new_and_noteworthy_15beta1.html">[Read more]</a><br/></p>
@@ -356,7 +356,7 @@
         <subsection name="2005-11-24 : 1.0.3 maintenance release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    <div align="left">
@@ -388,7 +388,7 @@
     	<subsection name="2005-11-20 : 1.0.2 maintenance release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    <div align="left">		
@@ -441,7 +441,7 @@
     	<subsection name="2008-01-28: soapUI 2.0.2">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    <div align="left">		
@@ -466,7 +466,7 @@
     	<subsection name="2008-01-28: soapUI 2.0.2">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    <div align="left">		
@@ -492,7 +492,7 @@
 		<subsection name="2005-10-02 : 1.0 beta2 release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    <div align="left">
@@ -531,7 +531,7 @@
         <subsection name="2005-09-16 : 1.0 beta1 release">
 	    	<columns>
 	    		<column width="75">
-	    		<img src="images/soapui-icon-50.png" alt="soapUI, your testing solution"/>
+	    		<img src="images/soapui-icon-50.png" alt="SoapUI, your testing solution"/>
 	    		</column>
 	    		<column>
 	    <p align="left">This is the first "public" version of soapUI so please have patience

@@ -1,27 +1,28 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
+import java.io.File;
+import java.io.IOException;
+
 /**
  * Prompts to save a WsdlProject to a new file
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -54,7 +55,7 @@ public class SaveProjectAsAction extends AbstractSoapUIAction<WsdlProject>
 				if( fileName == null )
 					return;
 
-				if( project.saveAs( fileName ) )
+				if( project.saveAs( fileName ) == SaveStatus.SUCCESS )
 				{
 					project.getWorkspace().save( true );
 				}

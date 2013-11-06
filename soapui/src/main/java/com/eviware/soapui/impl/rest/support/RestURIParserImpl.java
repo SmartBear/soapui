@@ -1,11 +1,11 @@
 /*
- * soapUI, copyright (C) 2004-2013 smartbear.com
+ * SoapUI, copyright (C) 2004-2013 smartbear.com
  *
- * soapUI is free software; you can redistribute it and/or modify it under the
+ * SoapUI is free software; you can redistribute it and/or modify it under the
  * terms of version 2.1 of the GNU Lesser General Public License as published by
  * the Free Software Foundation.
  *
- * soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -128,6 +128,8 @@ public class RestURIParserImpl implements RestURIParser
 			return path;
 
 		String[] splitResourcePath = path.split( "/" );
+		if(splitResourcePath.length == 0)
+			return "";
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
 		resourceName = resourceName.replaceAll( "^\\{|\\}$", "" );
 		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );

@@ -1,21 +1,20 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.io.File;
-
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
 import com.eviware.soapui.impl.rest.support.WadlImporter;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -32,9 +31,11 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
+import java.io.File;
+
 /**
  * Action for creating a new WSDL project
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -52,6 +53,41 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
+		createOrUpdateDialog();
+
+		while( dialog.show() )
+		{
+			try
+			{
+				String url = dialog.getValue( Form.INITIALWSDL ).trim();
+				if( StringUtils.hasContent( url ) )
+				{
+					String expandedUrl = PathUtils.expandPath( url, project );
+
+					if( new File( expandedUrl ).exists() )
+						expandedUrl = new File( expandedUrl ).toURI().toURL().toString();
+
+					RestService result = importWadl( project, expandedUrl );
+					if( !url.equals( expandedUrl ) && result != null )
+					{
+						result.setWadlUrl( url );
+						if (dialog.getBooleanValue( Form.GENERATETESTSUITE ))
+						{
+							new GenerateRestTestSuiteAction().perform( result, true );
+						}
+					}
+					break;
+				}
+			}
+			catch( Exception ex )
+			{
+				UISupport.showErrorMessage( ex );
+			}
+		}
+	}
+
+	private void createOrUpdateDialog()
+	{
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildDialog( Form.class );
@@ -59,7 +95,6 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
 			{
 				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 				{
-					String value = newValue.toLowerCase().trim();
 
 					dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
 				}
@@ -69,32 +104,6 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
 		{
 			dialog.setValue( Form.INITIALWSDL, "" );
 			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
-		}
-
-		while( dialog.show() )
-		{
-			try
-			{
-				String url = dialog.getValue( Form.INITIALWSDL ).trim();
-				if( StringUtils.hasContent( url ) )
-				{
-					String expUrl = PathUtils.expandPath( url, project );
-
-					if( new File( expUrl ).exists() )
-						expUrl = new File( expUrl ).toURI().toURL().toString();
-
-					RestService result = importWadl( project, expUrl );
-					if( !url.equals( expUrl ) && result != null )
-					{
-						result.setWadlUrl( url );
-					}
-					break;
-				}
-			}
-			catch( Exception ex )
-			{
-				UISupport.showErrorMessage( ex );
-			}
 		}
 	}
 
@@ -115,13 +124,13 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
 		return restService;
 	}
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
 	public interface Form
 	{
-		@AField( description = "Form.InitialWadl.Description", type = AFieldType.FILE )
+		@AField(description = "Form.InitialWadl.Description", type = AFieldType.FILE)
 		public final static String INITIALWSDL = messages.get( "Form.InitialWadl.Label" );
 
-		@AField( description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false )
+		@AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
 		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
 	}
 }

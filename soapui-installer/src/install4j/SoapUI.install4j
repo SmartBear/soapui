@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="5.1.6" transformSequenceNumber="4">
   <directoryPresets config="./resources/images" />
-  <application name="soapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="soapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
+  <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages />
@@ -14,7 +14,7 @@
     <variables>
       <variable name="SOAPUI_HOME" value="${installer:sys.installationDir}" description="" category="" />
       <variable name="BRANDED_TITLE" value="" description="" category="" />
-      <variable name="EXECUTABLE_NAME" value="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" description="" category="" />
+      <variable name="EXECUTABLE_NAME" value="SoapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" description="" category="" />
       <variable name="LOADUI_INSTALLER_URL" value="${compiler:LOADUI_INSTALLER_URL_BASE}" description="" category="" />
       <variable name="OS_EXT" value="" description="" category="" />
     </variables>
@@ -72,7 +72,7 @@
       <mountPoint id="2236" root="2231" location="lib" mode="755" />
       <mountPoint id="2237" root="2233" location="lib" mode="755" />
       <mountPoint id="2238" root="2235" location="lib" mode="755" />
-      <mountPoint id="2392" root="2391" location="soapUI-Tutorials" mode="755" />
+      <mountPoint id="2392" root="2391" location="SoapUI-Tutorials" mode="755" />
       <mountPoint id="3662" root="2809" location="lib" mode="755" />
       <mountPoint id="3779" root="3778" location="tempLoadUI" mode="755" />
       <mountPoint id="4418" root="4416" location="bin" mode="755" />
@@ -197,14 +197,14 @@
         <dependencies />
       </component>
       <component name="Source" id="714" customizedId="" displayDescription="false" hideHelpButton="false" selected="false" changeable="true" downloadable="false" hidden="false">
-        <description>Installs the soapUI source code</description>
+        <description>Installs the SoapUI source code</description>
         <include all="false">
           <entry location=".i4j_fileset_711" fileType="regular" />
         </include>
         <dependencies />
       </component>
       <component name="HermesJMS" id="1263" customizedId="" displayDescription="true" hideHelpButton="false" selected="true" changeable="true" downloadable="false" hidden="false">
-        <description>Installs HermesJMS which is the application that allows soapUI to interact with JMS providers (required for JMS Testing)</description>
+        <description>Installs HermesJMS which is the application that allows SoapUI to interact with JMS providers (required for JMS Testing)</description>
         <include all="false">
           <entry location=".i4j_fileset_1260" fileType="regular" />
         </include>
@@ -220,11 +220,11 @@
     </components>
   </files>
   <launchers>
-    <launcher name="soapUI GUI" id="64" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="soapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
+    <launcher name="SoapUI GUI" id="64" customizedId="" external="false" excludeFromMenu="false" unixMode="755" menuName="SoapUI-${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" icnsFile="${compiler:RESOURCES_HOME}/images/soapui.icns" customMacBundleIdentifier="false" macBundleIdentifier="" swtApp="false" fileset="" macBundleBinary="JavaApplicationStub" addMacEntitlements="false" macEntitlementsFile="">
       <executable name="${compiler:EXECUTABLE_NAME}" type="1" iconSet="true" iconFile="${compiler:RESOURCES_HOME}/images/soapui.ico" executableDir="bin" redirectStderr="true" stderrFile="error.log" stderrMode="overwrite" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="false" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="false" globalSingleInstance="false">
         <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" />
       </executable>
-      <splashScreen show="false" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="${compiler:RESOURCES_HOME}/images/soapui-splash.bmp" java6SplashScreen="false">
+      <splashScreen show="true" autoOff="true" alwaysOnTop="true" width="0" height="0" bitmapFile="${compiler:DIST_ROOT}/bin/soapui-splash.png" java6SplashScreen="true">
         <text>
           <statusLine x="20" y="20" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
           <versionLine x="20" y="40" text="" font="Arial" fontSize="8" fontColor="0,0,0" fontWeight="500" />
@@ -249,8 +249,11 @@
         <content />
       </infoPlist>
       <iconImageFiles>
-        <file path="${compiler:RESOURCES_HOME}/images/soapui16.png" />
-        <file path="${compiler:RESOURCES_HOME}/images/soapui32.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-16.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-24.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-32.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-48.png" />
+        <file path="${compiler:RESOURCES_HOME}/images/soapui-icon-256.png" />
       </iconImageFiles>
     </launcher>
   </launchers>
@@ -267,18 +270,18 @@
             <object class="com.install4j.runtime.beans.applications.InstallerApplication">
               <void property="customHeaderImage">
                 <object class="com.install4j.api.beans.ExternalFile">
-                  <string>${compiler:RESOURCES_HOME}/images/soapui32.png</string>
+                  <string>${compiler:RESOURCES_HOME}/images/soapui-icon-32.png</string>
                 </object>
               </void>
               <void property="customIconImageFiles">
                 <void method="add">
                   <object class="com.install4j.api.beans.ExternalFile">
-                    <string>${compiler:RESOURCES_HOME}/images/soapui16.png</string>
+                    <string>${compiler:RESOURCES_HOME}/images/soapui-icon-16.png</string>
                   </object>
                 </void>
                 <void method="add">
                   <object class="com.install4j.api.beans.ExternalFile">
-                    <string>${compiler:RESOURCES_HOME}/images/soapui32.png</string>
+                    <string>${compiler:RESOURCES_HOME}/images/soapui-icon-32.png</string>
                   </object>
                 </void>
               </void>
@@ -488,9 +491,9 @@ return component.isSelected();</string>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.MultilineLabelComponent">
                       <void property="labelText">
-                        <string>soapUI Load Testing Companion
+                        <string>SoapUI Load Testing Companion
 
-Try loadUI! Using it you can run soapUI tests as advanced Load Tests making sure your Services perform under load. Create advanced performance tests, distribute them on site or in The Cloud, create assertions, do sophisticated analysis of results and export reports intreractively in an amazing GUI. 
+Try loadUI! Using it you can run SoapUI tests as advanced Load Tests making sure your Services perform under load. Create advanced performance tests, distribute them on site or in The Cloud, create assertions, do sophisticated analysis of results and export reports intreractively in an amazing GUI.
 
 loadUI is Open Source and for Free. Try it now! </string>
                       </void>
@@ -656,7 +659,7 @@ return !Util.isMacosInstaller() &amp;&amp; component.isSelected();</condition>
                     <boolean>true</boolean>
                   </void>
                   <void property="infoText">
-                    <string>Please select the target directory for soapUI Tutorials. 
+                    <string>Please select the target directory for SoapUI Tutorials.
 Be sure to have write permissions for this directory.</string>
                   </void>
                   <void property="initialDirectory">
@@ -666,7 +669,7 @@ Be sure to have write permissions for this directory.</string>
                     <boolean>true</boolean>
                   </void>
                   <void property="standardDirectoryName">
-                    <string>soapUI-Tutorials</string>
+                    <string>SoapUI-Tutorials</string>
                   </void>
                   <void property="title">
                     <string>Tutorials location</string>
@@ -1613,7 +1616,7 @@ else return "";</string>
                             </void>
                             <void property="target">
                               <object class="java.io.File">
-                                <string>${installer:sys.installationDir}/soapUI.url</string>
+                                <string>${installer:sys.installationDir}/SoapUI.url</string>
                               </object>
                             </void>
                           </object>
@@ -1652,7 +1655,7 @@ else return "";</string>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>bin/soapUI-${compiler:VERSION_NUMBER}.vmoptions</string>
+                              <string>bin/SoapUI-${compiler:VERSION_NUMBER}.vmoptions</string>
                             </object>
                           </void>
                         </array>
@@ -1859,7 +1862,7 @@ else return "";</string>
                             <string>-Djava.util.Arrays.useLegacyMergeSort=true</string>
                           </void>
                           <void index="10">
-                            <string>-Dfile.encoding=UTF8</string>
+                            <string>-splash:soapui-splash.png</string>
                           </void>
                         </array>
                       </void>
@@ -1938,11 +1941,8 @@ return false;
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="2">
+                        <array class="java.lang.String" length="1">
                           <void index="0">
-                            <string>-Dapple.awt.graphics.UseQuartz=true</string>
-                          </void>
-                          <void index="1">
                             <string>-Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel</string>
                           </void>
                         </array>
@@ -2090,7 +2090,7 @@ return false;</condition>
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>soapUI-Tutorials</string>
+                              <string>SoapUI-Tutorials</string>
                             </object>
                           </void>
                         </array>
@@ -2259,7 +2259,7 @@ return installTutorials;</condition>
                     <object class="com.install4j.runtime.beans.actions.finish.ShowFileAction">
                       <void property="file">
                         <object class="java.io.File">
-                          <string>readme.txt</string>
+                          <string>RELEASENOTES.txt</string>
                         </object>
                       </void>
                     </object>
@@ -2286,7 +2286,7 @@ return installTutorials;</condition>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.formcomponents.CheckboxComponent">
                       <void property="checkboxText">
-                        <string>${i18n:ShowReadmeCheck}</string>
+                        <string>View the release notes</string>
                       </void>
                       <void property="initiallySelected">
                         <boolean>true</boolean>
@@ -2548,7 +2548,7 @@ return installTutorials;</condition>
     </applications>
   </installerGui>
   <mediaSets>
-    <windows name="Windows x32" id="23" customizedId="" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x86-1.7.0_15" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+    <windows name="Windows x32" id="23" customizedId="" mediaFileName="SoapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-x86-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
@@ -2571,14 +2571,13 @@ return installTutorials;</condition>
       <excludedComponents />
       <includedDownloadableComponents />
     </windows>
-    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="soapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x86-1.7.0_15" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+    <unixInstaller name="Unix Installer x32" id="196" customizedId="" mediaFileName="SoapUI-x32-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-x86-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
       <excludedLaunchers />
       <excludedBeans>
         <bean refId="493" />
       </excludedBeans>
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
-        <entry location="bin/soapui32.png" fileType="regular" />
         <entry location=".i4j_fileset_1658" fileType="regular" />
         <entry location=".i4j_fileset_1843" fileType="regular" />
         <entry location=".i4j_fileset_1573" fileType="regular" />
@@ -2600,7 +2599,7 @@ return installTutorials;</condition>
         <content />
       </installerScript>
     </unixInstaller>
-    <macos name="Mac OS X Single Bundle" id="198" customizedId="" mediaFileName="soapUI-${compiler:VERSION_NUMBER}" installDir="soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.7.0_15" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false" launcherId="64">
+    <macos name="Mac OS X Single Bundle" id="198" customizedId="" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false" launcherId="64">
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>
@@ -2625,7 +2624,7 @@ return installTutorials;</condition>
       <excludedComponents />
       <includedDownloadableComponents />
     </macos>
-    <windows name="Windows x64" id="1215" customizedId="" mediaFileName="soapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/soapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="64" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-amd64-1.7.0_15" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
+    <windows name="Windows x64" id="1215" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="64" runPostProcessor="true" postProcessor="${compiler:SIGNTOOL_PATH} sign /v /f ${compiler:CERT_PATH} /p ${compiler:CERT_PASS} $EXECUTABLE" failOnPostProcessorError="true" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="windows-amd64-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" verifyIntegrity="true">
       <excludedLaunchers />
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
@@ -2648,6 +2647,34 @@ return installTutorials;</condition>
       <excludedComponents />
       <includedDownloadableComponents />
     </windows>
+    <unixInstaller name="Unix Installer x64" id="4755" customizedId="" mediaFileName="SoapUI-x64-${compiler:VERSION_NUMBER}" installDir="SmartBear/SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="all" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="linux-amd64-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" customInstallBaseDir="" contentFilesType="1" downloadURL="">
+      <excludedLaunchers />
+      <excludedBeans>
+        <bean refId="493" />
+      </excludedBeans>
+      <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
+      <exclude>
+        <entry location=".i4j_fileset_1658" fileType="regular" />
+        <entry location=".i4j_fileset_1843" fileType="regular" />
+        <entry location=".i4j_fileset_1573" fileType="regular" />
+        <entry location=".i4j_fileset_1861" fileType="regular" />
+        <entry location=".i4j_fileset_2230" fileType="regular" />
+        <entry location=".i4j_fileset_2232" fileType="regular" />
+      </exclude>
+      <variables>
+        <variable name="XULRUNNER" value="xulrunner-linux" description="" category="" />
+        <variable name="32-BIT-INSTALLER" value="false" description="" category="" />
+      </variables>
+      <autoUpdate useMinUpdatableVersion="false" minUpdatableVersion="" useMaxUpdatableVersion="false" maxUpdatableVersion="">
+        <commentFiles />
+        <customAttributes />
+      </autoUpdate>
+      <excludedComponents />
+      <includedDownloadableComponents />
+      <installerScript mode="1" file="">
+        <content />
+      </installerScript>
+    </unixInstaller>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="196" />

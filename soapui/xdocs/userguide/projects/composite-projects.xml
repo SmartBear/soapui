@@ -4,7 +4,7 @@
         <title>Composite Projects - Collaboration based Web Service Testing</title>
     </properties>
     <body>
-		<section name="soapUI Pro Composite Projects ">
+		<section name="SoapUI Pro Composite Projects ">
 		<p>What is a Composite Project?</p>
 		<p>Behind the somewhat bewildering terminology lies a very simple concept; Composite Projects are soapUI projects saved to enable 
 		Team Collaboration.</p>

@@ -41,11 +41,11 @@ SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.j
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin -Dfile.encoding=UTF8"
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin -splash:soapui-splash.png"
 
 if $darwin
 then
-    JAVA_OPTS="$JAVA_OPTS -Dapple.awt.graphics.UseQuartz=true; -Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel"
+    JAVA_OPTS="$JAVA_OPTS -Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel"
 fi
 
 if [ $SOAPUI_HOME != "" ]
@@ -68,6 +68,7 @@ then
     SOAPUI_CLASSPATH=`cygpath --path --dos "$SOAPUI_CLASSPATH"`
 fi
 
+cd $DIRNAME
 echo ================================
 echo =
 echo = SOAPUI_HOME = $SOAPUI_HOME

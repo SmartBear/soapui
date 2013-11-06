@@ -1,26 +1,28 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.util.Date;
 
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.ListModel;
+import javax.swing.*;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.panels.request.AbstractRestRequestDesktopPanel;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -54,13 +56,15 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 	private JLogList logArea;
 	private InternalTestMonitorListener testMonitorListener = new InternalTestMonitorListener();
 	private JButton addAssertionButton;
-	protected boolean updatingRequest;
+	protected JComboBox methodResourceCombo;
 	private AssertionsPanel assertionsPanel;
 	private JInspectorPanel inspectorPanel;
 	private JComponentInspector<?> assertionInspector;
 	private JComponentInspector<?> logInspector;
 	private InternalAssertionsListener assertionsListener = new InternalAssertionsListener();
 	private long startTime;
+	protected JLabel pathLabel;
+
 
 	public RestTestRequestDesktopPanel( RestTestRequestStep requestStep )
 	{
@@ -94,7 +98,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		{
 			protected void selectError( AssertionError error )
 			{
-				ModelItemXmlEditor<?, ?> editor = ( ModelItemXmlEditor<?, ?> )getResponseEditor();
+				ModelItemXmlEditor<?, ?> editor = getResponseEditor();
 				editor.requestFocus();
 			}
 		};
@@ -162,21 +166,62 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		}
 	}
 
-	protected JComponent buildToolbar()
+	@Override
+	protected void addTopToolbarComponents( JXToolBar toolBar )
 	{
-		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
-		return super.buildToolbar();
+		//RestTestRequestDesktopPanel does not need any extra top toolbar component
+	}
+
+	@Override
+	protected void addBottomToolbar( JPanel panel )
+	{
+		if( getRequest().getResource() != null  )
+		{
+			JXToolBar toolbar = UISupport.createToolbar();
+			methodResourceCombo = new JComboBox<ComboBoxModel>( new PathComboBoxModel() );
+			methodResourceCombo.setRenderer( new RestMethodListCellRenderer() );
+			methodResourceCombo.setPreferredSize( new Dimension( 200, 20 ) );
+			methodResourceCombo.setSelectedItem( getRequest().getRestMethod() );
+
+			toolbar.addLabeledFixed( "Resource/Method:", methodResourceCombo );
+			toolbar.addSeparator();
+
+			pathLabel = new JLabel();
+			updateFullPathLabel();
+
+			toolbar.add( pathLabel );
+
+			panel.add( toolbar, BorderLayout.SOUTH );
+		}
+	}
+
+	@Override
+	protected void updateUiValues()
+	{
+		updateFullPathLabel();
+	}
+
+	private void updateFullPathLabel()
+	{
+		if( pathLabel != null && getRequest().getResource() != null )
+		{
+			String text = RestUtils.expandPath( getRequest().getResource().getFullPath(), getRequest().getParams(),
+					getRequest() );
+			pathLabel.setText( "[" + text + "]" );
+			pathLabel.setToolTipText( text );
+		}
 	}
 
 	@Override
 	protected void insertButtons( JXToolBar toolbar )
 	{
+		addAssertionButton = createActionButton( new AddAssertionAction( getRequest() ), true );
 		toolbar.add( addAssertionButton );
 	}
 
 	public void setEnabled( boolean enabled )
 	{
-		if( enabled == true )
+		if( enabled )
 			enabled = !SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem().getTestCase() )
 					&& !SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem().getTestCase() );
 
@@ -314,4 +359,66 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		if( evt.getPropertyName().equals( RestTestRequestInterface.STATUS_PROPERTY ) )
 			updateStatusIcon();
 	}
+
+	private class PathComboBoxModel extends AbstractListModel implements ComboBoxModel
+	{
+		public int getSize()
+		{
+			int sz = 0;
+			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
+			{
+				sz += resource.getRestMethodCount();
+			}
+
+			return sz;
+		}
+
+		public Object getElementAt( int index )
+		{
+			int sz = 0;
+			for( RestResource resource : getRequest().getResource().getService().getAllResources() )
+			{
+				if( index < sz + resource.getRestMethodCount() )
+				{
+					return resource.getRestMethodAt( index - sz );
+				}
+
+				sz += resource.getRestMethodCount();
+			}
+
+			return null;
+		}
+
+		public void setSelectedItem( Object anItem )
+		{
+			getRequest().getTestStep().setRestMethod( ( RestMethod )anItem );
+		}
+
+		public Object getSelectedItem()
+		{
+			return getRequest().getRestMethod();
+		}
+	}
+
+	private class RestMethodListCellRenderer extends DefaultListCellRenderer
+	{
+		@Override
+		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
+																	  boolean cellHasFocus )
+		{
+			Component result = super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+
+			if( value instanceof RestMethod )
+			{
+				RestMethod item = ( RestMethod )value;
+				setIcon( item.getIcon() );
+				setText( item.getResource().getName() + " -> " + item.getName() );
+			}
+
+			return result;
+		}
+
+	}
+
+
 }

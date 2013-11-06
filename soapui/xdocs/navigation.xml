@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="soapUI">
+<project name="SoapUI">
     <title>soapUI</title>
     <body>
         <links>
@@ -22,11 +22,11 @@
 
         <menu name="Home" collapse="true" href="/index.html">
             <item href="/features.html" name="Feature Overview">
-                <item href="/comparison.html" name="soapUI Pro comparison"/>
+                <item href="/comparison.html" name="SoapUI Pro comparison"/>
             </item>
             <item href="/news.html" name="News and History">
                 pagingInit
-                <item href="/soapUI_in_the_news.html" name="soapUI in the news"/>
+                <item href="/soapUI_in_the_news.html" name="SoapUI in the news"/>
                  <item href="/new_and_noteworthy_3_5.html" name="New and Noteworthy in 3.5"/>
                 <item href="/new_and_noteworthy_3_0.html" name="New and Noteworthy in 3.0"/>
                 <item href="/new_and_noteworthy_2_5.html" name="New and Noteworthy in 2.5"/>
@@ -51,8 +51,8 @@
             <item href="/gettingstarted/functional.html" name="Functional Web Service Tests"/>
             <item href="/gettingstarted/loadtest.html" name="Web Service Load Tests"/>
             <item href="/gettingstarted/mocking.html" name="Web Service Mocking"/>
-            <item href="/gettingstarted/sample-project.html" name="soapUI Sample Project"/>
-            <item href="/gettingstarted/sample-REST.html" name="soapUI Sample REST Project"/>
+            <item href="/gettingstarted/sample-project.html" name="SoapUI Sample Project"/>
+            <item href="/gettingstarted/sample-REST.html" name="SoapUI Sample REST Project"/>
             <item href="/userguide/rest/tutorial.html" name="Schema Inference"/>
             <item href="/userguide/scenarios/ws-reliablemessaging.html" name="WS-ReliableMessaging"/>
   			<item href="/tutorials/amf/amf-tutorial.html" name="AMF Testing"/>            
@@ -238,7 +238,7 @@
             <item name="IntelliJ Plugin" href="/intellij/index.html"/>
 
             <item name="Eclipse Plugin" href="/eclipse/index.html">
-                <item href="/eclipse/soapui_nature.html" name="soapUI Nature"/>
+                <item href="/eclipse/soapui_nature.html" name="SoapUI Nature"/>
             </item>
 
 <!-- 
@@ -262,7 +262,7 @@
        <menu name="Eclipse Plugin" collapse="true" href="/eclipse/index.html">
         <item href="/eclipse/index.html" name="Eclipse Plugin"/>
         <item href="/eclipse/getting_started.html" name="Getting Started"/>
-        <item href="/eclipse/soapui_nature.html" name="soapUI Nature"/>
+        <item href="/eclipse/soapui_nature.html" name="SoapUI Nature"/>
        </menu>
 
        <menu name="JBossWS Plugin" collapse="true" href="/jbossws/index.html">

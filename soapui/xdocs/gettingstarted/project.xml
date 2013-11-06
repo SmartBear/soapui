@@ -5,7 +5,7 @@
     </properties>
     <body>
 		
-			<section name="soapUI example Movies">
+			<section name="SoapUI example Movies">
 			<div>
 			<p>
 			As an easy start, before doing the tutorial watch the Sample Project Movie.		
@@ -59,7 +59,7 @@
 		
 
 		
-		<section name="soapUI Sample Project">
+		<section name="SoapUI Sample Project">
 			<p>We know that getting started with a new application always is a challenge. 
 			In order to make it easier for you, soapUI comes shipping with a sample soapUI Project file. 
 			This soapUI Projects illustrates some of the basic concepts of soapUI and can be used as a soapUI 

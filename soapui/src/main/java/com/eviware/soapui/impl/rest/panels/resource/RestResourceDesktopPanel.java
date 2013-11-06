@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -14,32 +14,28 @@ package com.eviware.soapui.impl.rest.panels.resource;
 
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.panels.component.RestResourceEditor;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.commons.lang.mutable.MutableBoolean;
 
 import javax.swing.*;
-import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.beans.PropertyChangeEvent;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
-	private JUndoableTextField pathTextField;
-	private boolean updating;
+	// package protected to facilitate unit testing
+	JTextField pathTextField;
+
+	private MutableBoolean updating = new MutableBoolean();
 	private RestParamsTable paramsTable;
 
 	public RestResourceDesktopPanel( RestResource modelItem )
@@ -93,44 +89,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 
 		toolbar.addSeparator();
 
-		pathTextField = new JUndoableTextField( getModelItem().getPath(), 20 );
-		pathTextField.getDocument().addDocumentListener( new DocumentListenerAdapter()
-		{
-			public void update( Document document )
-			{
-				if( !updating )
-				{
-					updating = true;
-					getModelItem().setPath( getText( document ) );
-					updating = false;
-				}
-			}
-		} );
-		pathTextField.addFocusListener( new FocusListener()
-		{
-			public void focusLost( FocusEvent e )
-			{
-				for( String p : RestUtils.extractTemplateParams( getModelItem().getPath() ) )
-				{
-					if( !getModelItem().hasProperty( p ) )
-					{
-						if( UISupport.confirm( "Add template parameter [" + p + "] to resource?", "Add Parameter" ) )
-						{
-							RestParamProperty property = getModelItem().addProperty( p );
-							property.setStyle( ParameterStyle.TEMPLATE );
-							String value = UISupport.prompt( "Specify default value for parameter [" + p + "]",
-									"Add Parameter", "" );
-							if( value != null )
-								property.setDefaultValue( value );
-						}
-					}
-				}
-			}
-
-			public void focusGained( FocusEvent e )
-			{
-			}
-		} );
+		pathTextField = new RestResourceEditor( getModelItem(), updating );
 
 		toolbar.addFixed( new JLabel( "Resource Path" ) );
 		toolbar.addSeparator( new Dimension( 3, 3 ) );
@@ -158,11 +117,11 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	{
 		if( evt.getPropertyName().equals( "path" ) )
 		{
-			if( !updating )
+			if( !updating.booleanValue() )
 			{
-				updating = true;
-				pathTextField.setText( String.valueOf( evt.getNewValue() ) );
-				updating = false;
+				updating.setValue( true );
+				pathTextField.setText( getModelItem().getFullPath() );
+				updating.setValue( false );
 			}
 		}
 		paramsTable.refresh();

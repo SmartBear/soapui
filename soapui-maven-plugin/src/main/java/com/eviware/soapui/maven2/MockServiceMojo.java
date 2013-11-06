@@ -1,7 +1,7 @@
 package com.eviware.soapui.maven2;
 
 /*
- *  soapUI, copyright (C) 2004-2011 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2011 smartbear.com
  *
  *  SoapUI is free software; you can redistribute it and/or modify it under the 
  *  terms of the GNU Lesser General Public License as published by the Free Software Foundation; 
@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.Properties;
 
 /**
- * Runs soapUI mockservice
+ * Runs SoapUI mockservice
  * 
  * @goal mock
  */
@@ -45,7 +45,7 @@ public class MockServiceMojo extends AbstractMojo
 //		}
 		
 		SoapUIMockServiceRunner runner = new SoapUIMockServiceRunner(
-					"soapUI " + SoapUI.SOAPUI_VERSION + " Maven2 MockService Runner");
+					"SoapUI " + SoapUI.SOAPUI_VERSION + " Maven2 MockService Runner");
 		runner.setProjectFile( projectFile );
 		
 		
@@ -95,7 +95,7 @@ public class MockServiceMojo extends AbstractMojo
 	}
 	
 	/**
-    * The soapUI project file to test with
+    * The SoapUI project file to test with
     *
     * @parameter expression="${soapui.projectFile}"    
     * 	default-value="${project.artifactId}-soapui-project.xml"
@@ -128,7 +128,7 @@ public class MockServiceMojo extends AbstractMojo
    private String port;
    
    /**
-    * Specifies soapUI settings file to use
+    * Specifies SoapUI settings file to use
     *
     * @parameter expression="${soapui.settingsFile}"    
     */
@@ -150,7 +150,7 @@ public class MockServiceMojo extends AbstractMojo
    private boolean skip;
    
    /**
-    * Specifies password for encrypted soapUI project file
+    * Specifies password for encrypted SoapUI project file
     * 
     * @parameter expression="${soapui.project.password}"
     */

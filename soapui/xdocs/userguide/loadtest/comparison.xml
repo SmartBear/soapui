@@ -44,7 +44,7 @@
 		
 		<subsection name="Results">
 		<p>The table shows the results, for each test the average and TPS times are shown, (*) tests are run without closing connections</p>
-		<table><tr><th>Threads</th><th>jmeter</th><th>soapUI</th><th>soapUI (*)</th><th>soapUI cmdline</th><th>soapUI cmdline (*)</th></tr>
+		<table><tr><th>Threads</th><th>jmeter</th><th>SoapUI</th><th>SoapUI (*)</th><th>SoapUI cmdline</th><th>SoapUI cmdline (*)</th></tr>
 		<tr><td>1</td><td>8 ms, 105 TPS</td><td>6.78 ms, 147 TPS</td><td>10.7 ms, 94 TPS</td><td>5.75 ms, 174 TPS</td><td>10 ms, 99 TPS</td></tr>
 		<tr><td>5</td><td>43 ms, 110 TPS</td><td>38.7 ms, 128 TPS</td><td>23.7 ms, 211 TPS</td><td>30.4 ms, 164 TPS</td><td>24 ms, 210 TPS</td></tr>
 		<tr><td>10</td><td>86 ms, 112 TPS</td><td>82 ms, 122 TPS</td><td>46.5 ms, 215 TPS</td><td>61 ms, 164 TPS</td><td>38 ms, 262 TPS</td></tr>
@@ -74,11 +74,11 @@
 		using the "Threads" strategy increasing the number of threads from 1 to 25 over a period of 250 seconds, both 
 		with and without connection reuse. The graphs below show the results:</p>
 		<p>First without connection reuse (click on image for full-size):</p>
-		<p align="center"><a href="images/comparison3.gif" alt="soapUI Graph without Connection reuse"><img width="70%" height="70%" src="images/comparison3.gif"/></a></p>
+		<p align="center"><a href="images/comparison3.gif" alt="SoapUI Graph without Connection reuse"><img width="70%" height="70%" src="images/comparison3.gif"/></a></p>
 		<p>This confirms the previous results; TPS does not vary much when increasing the number of threads, the average
 		request time "takes" the entire increased load.</p>
 		<p>And then with connection reuse (click on image for full-size):</p>
-		<p align="center"><a href="images/comparison4.gif" alt="soapUI Graph without Connection reuse"><img width="70%" height="70%" src="images/comparison4.gif"/></a></p>
+		<p align="center"><a href="images/comparison4.gif" alt="SoapUI Graph without Connection reuse"><img width="70%" height="70%" src="images/comparison4.gif"/></a></p>
 		<p>The results here also confirmed those above; when reusing connections the TPS value increases steadily up to about 6 threads
 		and then lies still. Also, one can see that the average request time starts increasing steadily first when the TPS has 
 		hit its peak, the average then "takes" all the increased load just as when not reusing connections at all.</p>

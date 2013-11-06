@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -67,7 +67,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 {
 	public static final String SOAPUI_EXPORT_SEPARATOR = "soapui.export.separator";
 
-	public static final String TITLE = "soapUI " + SoapUI.SOAPUI_VERSION + " Security Test Runner";
+	public static final String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " Security Test Runner";
 	private String securityTestName;
 	private int securityTestCount;
 	private int securityScanCount;
@@ -77,7 +77,7 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 	private JUnitSecurityReportCollector reportCollector = new JUnitSecurityReportCollector();
 
 	/**
-	 * Runs the tests in the specified soapUI project file, see soapUI xdocs for
+	 * Runs the tests in the specified soapUI project file, see SoapUI xdocs for
 	 * details.
 	 * 
 	 * @param args
@@ -130,12 +130,12 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 				getProjectPassword() );
 
 		if( project.isDisabled() )
-			throw new Exception( "Failed to load soapUI project file [" + projectFile + "]" );
+			throw new Exception( "Failed to load SoapUI project file [" + projectFile + "]" );
 
 		initProject( project );
 		ensureOutputFolder( project );
 
-		log.info( "Running soapUI tests in project [" + project.getName() + "]" );
+		log.info( "Running SoapUI tests in project [" + project.getName() + "]" );
 
 		String testSuite = getTestSuite();
 		String testCase = getTestCase();

@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -37,7 +37,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 
 
 /**
- * Actions for importing an existing soapUI project file into the current
+ * Actions for importing an existing SoapUI project file into the current
  * workspace
  *
  * @author Ole.Matzura
@@ -71,8 +71,8 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 			params = new XmlBeansRestParamsTestPropertyHolder( null, RestParametersConfig.Factory.newInstance() );
 
 
-		RestParamsTableModel model = new RestParamsTableModel( params );
-		RestParamsTable paramsTable = new RestParamsTable( params, false, model, ParamLocation.METHOD, true, false );
+		RestParamsTableModel paramsTableModel = new RestParamsTableModel( params );
+		RestParamsTable paramsTable = new RestParamsTable( params, false, paramsTableModel, ParamLocation.METHOD, true, false );
 
 		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
 
@@ -81,7 +81,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 			RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
 			method.setMethod( RestRequestInterface.RequestMethod.valueOf( dialog.getValue( Form.METHOD ) ) );
 			paramsTable.extractParams( method.getParams(), ParamLocation.METHOD );
-
+			method.addPropertyChangeListener( paramsTableModel );
 			UISupport.select( method );
 
 			if( dialog.getBooleanValue( Form.CREATEREQUEST ) )

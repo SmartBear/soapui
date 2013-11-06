@@ -1,48 +1,70 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2013 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
-import javax.swing.table.AbstractTableModel;
-
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.environment.EnvironmentListener;
 import com.eviware.soapui.model.environment.Property;
+import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.EvaluatedOnReadTestProperty;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 
-public class DefaultPropertyTableHolderModel extends AbstractTableModel implements PropertyHolderTableModel,
-		EnvironmentListener
-{
-	private StringList names = new StringList();
-	private final TestPropertyHolder holder;
+import javax.swing.table.AbstractTableModel;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Collections;
 
-	public DefaultPropertyTableHolderModel( TestPropertyHolder holder )
+public class DefaultPropertyTableHolderModel<T extends TestPropertyHolder> extends AbstractTableModel implements PropertyHolderTableModel,
+		EnvironmentListener, PropertyChangeListener
+{
+	protected final InternalTestPropertyListener testPropertyListener;
+	protected StringList paramNameIndex = new StringList();
+	protected T params;
+	protected boolean isLastChangeParameterLevelChange = false;
+
+	public DefaultPropertyTableHolderModel( T holder )
 	{
-		this.holder = holder;
-		names = new StringList( getPropertyNames() );
+		this.params = holder;
+		buildParamNameIndex( holder );
+
+		testPropertyListener = new InternalTestPropertyListener();
+		holder.addTestPropertyListener( testPropertyListener );
 	}
 
-	public String[] getPropertyNames()
+	protected void buildParamNameIndex( TestPropertyHolder holder )
 	{
-		return holder.getPropertyNames();
+		paramNameIndex = new StringList( getPropertyNames() );
+	}
+
+	protected String[] getPropertyNames()
+	{
+		return params.getPropertyNames();
+	}
+
+	public void release()
+	{
+		params.removeTestPropertyListener( testPropertyListener );
 	}
 
 	public int getRowCount()
 	{
-		return names.size();
+		return paramNameIndex.size();
 	}
 
 	public int getColumnCount()
@@ -50,21 +72,14 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 		return 2;
 	}
 
-	@Override
-	public void fireTableDataChanged()
-	{
-		names = new StringList( getPropertyNames() );
-		super.fireTableDataChanged();
-	}
-
 	public String getColumnName( int columnIndex )
 	{
 		switch( columnIndex )
 		{
-		case 0 :
-			return "Name";
-		case 1 :
-			return "Value";
+			case 0:
+				return "Name";
+			case 1:
+				return "Value";
 		}
 
 		return null;
@@ -74,38 +89,10 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 	{
 		if( columnIndex == 0 )
 		{
-			return holder instanceof MutableTestPropertyHolder;
+			return params instanceof MutableTestPropertyHolder;
 		}
 
-		return !holder.getProperty( names.get( rowIndex ) ).isReadOnly();
-	}
-
-	@Override
-	public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-	{
-		TestProperty property = holder.getProperty( names.get( rowIndex ) );
-		switch( columnIndex )
-		{
-		case 0 :
-		{
-			if( holder instanceof MutableTestPropertyHolder )
-			{
-				TestProperty prop = holder.getProperty( aValue.toString() );
-				if( prop != null && prop != property )
-				{
-					UISupport.showErrorMessage( "Property name exists!" );
-					return;
-				}
-				( ( MutableTestPropertyHolder )holder ).renameProperty( property.getName(), aValue.toString() );
-			}
-			break;
-		}
-		case 1 :
-		{
-			property.setValue( aValue.toString() );
-			break;
-		}
-		}
+		return !getPropertyAtRow( rowIndex ).isReadOnly();
 	}
 
 	@Override
@@ -114,27 +101,72 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 		return String.class;
 	}
 
+	@Override
+	public void setValueAt( Object aValue, int rowIndex, int columnIndex )
+	{
+		TestProperty property = getPropertyAtRow( rowIndex );
+		switch( columnIndex )
+		{
+			case 0:
+			{
+				if( params instanceof MutableTestPropertyHolder )
+				{
+					if( propertyExists( aValue, property ) )
+					{
+						return;
+					}
+					( ( MutableTestPropertyHolder )params ).renameProperty( property.getName(), aValue.toString() );
+
+				}
+				break;
+			}
+			case 1:
+			{
+				property.setValue( aValue.toString() );
+				if( !(params.getModelItem() instanceof RestRequest) && property instanceof RestParamProperty )
+				{
+					((RestParamProperty)property).setDefaultValue( aValue.toString() );
+				}
+				break;
+			}
+		}
+	}
+
+	protected boolean propertyExists( Object aValue, TestProperty property )
+	{
+		TestProperty prop = params.getProperty( aValue.toString() );
+
+		if( prop != null && prop != property )
+		{
+			UISupport.showErrorMessage( "Property name exists!" );
+			return true;
+		}
+
+		return false;
+	}
+
+
 	public TestProperty getPropertyAtRow( int rowIndex )
 	{
-		return holder.getProperty( names.get( rowIndex ) );
+		return params.getProperty( paramNameIndex.get( rowIndex ) );
 	}
 
 	public Object getValueAt( int rowIndex, int columnIndex )
 	{
-		TestProperty property = holder.getProperty( names.get( rowIndex ) );
+		TestProperty property = getPropertyAtRow( rowIndex );
 		if( property == null )
 			return null;
 
 		switch( columnIndex )
 		{
-		case 0 :
-			return property.getName();
-		case 1 :
-			if( property instanceof EvaluatedOnReadTestProperty )
-			{
-				return ( ( EvaluatedOnReadTestProperty )property ).getCurrentValue();
-			}
-			return property.getValue();
+			case 0:
+				return property.getName();
+			case 1:
+				if( property instanceof EvaluatedOnReadTestProperty )
+				{
+					return ( ( EvaluatedOnReadTestProperty )property ).getCurrentValue();
+				}
+				return property.getValue();
 		}
 
 		return null;
@@ -150,4 +182,73 @@ public class DefaultPropertyTableHolderModel extends AbstractTableModel implemen
 	{
 		fireTableDataChanged();
 	}
+
+	@Override
+	public void propertyChange( PropertyChangeEvent evt )
+	{
+		fireTableDataChanged();
+	}
+
+	@Override
+	public void moveProperty( String name, int oldIndex, int newIndex )
+	{
+		( ( MutableTestPropertyHolder )params ).moveProperty( name, newIndex );
+		String valueAtNewindex = paramNameIndex.get( newIndex );
+		paramNameIndex.set( newIndex, name );
+		paramNameIndex.set( oldIndex, valueAtNewindex );
+		testPropertyListener.propertyMoved( name, oldIndex, newIndex );
+	}
+
+	public void sort()
+	{
+		Collections.sort( paramNameIndex );
+		TestPropertyUtils.sortProperties( ( ( MutableTestPropertyHolder )params ) );
+		fireTableDataChanged();
+	}
+
+	protected final class InternalTestPropertyListener implements TestPropertyListener
+	{
+
+
+		public void propertyAdded( String name )
+		{
+			if( !paramNameIndex.contains( name ) )
+			{
+				paramNameIndex.add( name );
+			}
+			fireTableDataChanged();
+		}
+
+		public void propertyRemoved( String name )
+		{
+			if( !isLastChangeParameterLevelChange )
+			{
+				paramNameIndex.remove( name );
+			}
+			isLastChangeParameterLevelChange = false;
+			fireTableDataChanged();
+		}
+
+		public void propertyRenamed( String oldName, String newName )
+		{
+			int paramIndex = paramNameIndex.indexOf( oldName );
+			if( paramIndex < 0 )
+			{
+				return;
+			}
+			paramNameIndex.set( paramIndex, newName );
+			fireTableDataChanged();
+		}
+
+		public void propertyValueChanged( String name, String oldValue, String newValue )
+		{
+			fireTableDataChanged();
+		}
+
+		public void propertyMoved( String name, int oldIndex, int newIndex )
+		{
+			fireTableDataChanged();
+		}
+	}
+
 }

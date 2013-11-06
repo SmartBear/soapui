@@ -1,25 +1,16 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.rest;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.eviware.soapui.config.OldRestRequestConfig;
 import com.eviware.soapui.config.RestMethodConfig;
@@ -40,6 +31,15 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * WSDL implementation of Operation, maps to a WSDL BindingOperation
  * 
@@ -54,6 +54,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	private List<RestResource> resources = new ArrayList<RestResource>();
 	private RestResource parentResource;
 	private XmlBeansRestParamsTestPropertyHolder params;
+	private PropertyChangeListener styleChangeListener = new StyleChangeListener();
 
 	public RestResource( RestService service, RestResourceConfig resourceConfig )
 	{
@@ -77,6 +78,11 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 			resourceConfig.addNewParameters();
 
 		params = new XmlBeansRestParamsTestPropertyHolder( this, resourceConfig.getParameters() );
+		params.addTestPropertyListener( new PathChanger() );
+		for( String name : params.getPropertyNames() )
+		{
+			params.getProperty( name ).addPropertyChangeListener( new StyleChangeListener() );
+		}
 
 		for( RestMethodConfig config : resourceConfig.getMethodList() )
 		{
@@ -247,7 +253,10 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public String getPath()
 	{
-		return getConfig().getPath();
+		String path = getConfig().getPath();
+		// A bug introduced in 4.6.0 appended matrix param in the resource path, so projects created with 4.6.0 will save
+		// matrix param in the path. Following line takes away matrix param from the path.
+		return removeMatrixParams( path );
 	}
 
 	public void setPath( String path )
@@ -477,13 +486,18 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		getConfig().removeMethod( ix );
 	}
 
-	public void deleteChildResource( RestResource resource )
+	protected void deleteAllChildResources( RestResource resource )
 	{
-		deleteResource( resource );
+		for( RestResource childResource : resource.getChildResourceList() )
+		{
+			resource.deleteResource( childResource );
+		}
 	}
 
 	public void deleteResource( RestResource resource )
 	{
+		deleteAllChildResources( resource );
+
 		int ix = resources.indexOf( resource );
 		if( !resources.remove( resource ) )
 			return;
@@ -555,4 +569,86 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		return params.getPropertyList();
 	}
 
+	//Helper methods
+	private String removeMatrixParams(String path)
+	{
+		if ( path == null || path.isEmpty() )
+		{
+			return path;
+		}
+
+		return path.replaceAll( "(\\;).+(\\=).*(?!\\/)", "" );
+	}
+
+	private class PathChanger implements TestPropertyListener
+	{
+		@Override
+		public void propertyAdded( String name )
+		{
+			params.getProperty( name ).addPropertyChangeListener( styleChangeListener );
+		}
+
+		@Override
+		public void propertyRemoved( String name )
+		{
+			if( !doesParameterExist( name ) || isTemplateProperty( name ) )
+			{
+				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
+			}
+		}
+
+		private boolean doesParameterExist( String name )
+		{
+			RestParamProperty property = params.getProperty( name );
+			return property != null;
+		}
+
+		private boolean isTemplateProperty( String name )
+		{
+			RestParamProperty property = params.getProperty( name );
+			return property != null && property.getStyle() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE;
+		}
+
+		@Override
+		public void propertyRenamed( String oldName, String newName )
+		{
+			if( isTemplateProperty( newName ) ) // Since the property is already renamed, we look for the new name
+			{
+				setPath( getPath().replaceAll( "\\{" + oldName + "\\}", "\\{" + newName + "\\}" ) );
+			}
+		}
+
+		@Override
+		public void propertyValueChanged( String name, String oldValue, String newValue )
+		{
+
+		}
+
+		@Override
+		public void propertyMoved( String name, int oldIndex, int newIndex )
+		{
+
+		}
+	}
+
+	private class StyleChangeListener implements PropertyChangeListener
+	{
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			if (evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ))
+			{
+				String name = ((RestParamProperty)evt.getSource()).getName();
+				if ( evt.getOldValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE)
+				{
+				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
+				}
+				else if (evt.getNewValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE && !getPath().contains( "{" + name + "}" ))
+				{
+					setPath( getPath() + "{" + name + "}" );
+				}
+			}
+
+		}
+	}
 }

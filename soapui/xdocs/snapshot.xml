@@ -4,7 +4,7 @@
         <title>Testing Web Services - the soapUI snapshot</title>
     </properties>
     <body>
-		<section name="soapUI SNAPSHOT release">
+		<section name="SoapUI SNAPSHOT release">
 		<columns><column>
 		<p>The soapUI SNAPSHOT release will be updated frequently to mirror the current code base and fix critical
 		bugs. It will primarily be available through Java WebStart and as a zip binary without the JRE or any documentation.</p>
@@ -49,7 +49,7 @@
 		NetBeans plugins;</p>
 		<ul>
 		<li>The NetBeans plugin has been overhauled to now use the standard NetBeans project model instead of a soapUI 
-		Navigator. Create new "soapUI" projects with New Project\SOA\Web Service Testing Project;
+		Navigator. Create new "SoapUI" projects with New Project\SOA\Web Service Testing Project;
 		<p align="center"><img src="images/netbeans_new_project.gif"/></p>
 		Projects can then either be created or imported from an existing soapUI Project and are displayed in the 
 		standard NetBeans project explorer:

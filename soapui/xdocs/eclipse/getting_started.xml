@@ -29,11 +29,11 @@
 		<columns>
 		<column>
 		<div>Once installed, open the soapUI Perspective by using the standard Window/Open Perspective/Other.. Command and 
-		selecting "soapUI" from the list. The perspective will open 2 views;</div>
+		selecting "SoapUI" from the list. The perspective will open 2 views;</div>
 		<ul>
-		<li>A "soapUI Navigator" view to the left containing the same Navigator and Details tab as the standalone soapUI 
+		<li>A "SoapUI Navigator" view to the left containing the same Navigator and Details tab as the standalone soapUI
 		version.</li>
-		<li>A "soapUI Logs" view to the bottom containing the same log tabs as the standalone soapUI version. </li>
+		<li>A "SoapUI Logs" view to the bottom containing the same log tabs as the standalone soapUI version. </li>
 		</ul>
 		<p>Navigation/actions work the same as in the standalone version, windows are opened as tabs on the eclipse desktop
 		and can be moved/docked around as usual</p>
@@ -46,7 +46,7 @@
 		
 		</subsection>
 		
-		<subsection name="soapUI Preferences">
+		<subsection name="SoapUI Preferences">
 		<p>Most soapUI Settings are available from the standard Window/Preferences dialog under the soapUI node;</p>
 		<p align="center"><img src="images/eclipse-preferences.gif" alt="soap test"/></p>
 		

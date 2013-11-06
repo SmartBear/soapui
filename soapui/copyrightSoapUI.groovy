@@ -9,13 +9,13 @@ System.exit(0)
 
 def currentYear = new Date().getYear()+1900
 def copyright = """/*\r
- *  soapUI, copyright (C) 2004-${currentYear} eviware.com \r
+ *  SoapUI, copyright (C) 2004-${currentYear} eviware.com \r
  *\r
- *  soapUI is free software; you can redistribute it and/or modify it under the \r
+ *  SoapUI is free software; you can redistribute it and/or modify it under the \r
  *  terms of version 2.1 of the GNU Lesser General Public License as published by \r
  *  the Free Software Foundation.\r
  *\r
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without \r
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without \r
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. \r
  *  See the GNU Lesser General Public License for more details at gnu.org.\r
  */\r

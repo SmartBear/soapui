@@ -1,21 +1,16 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.model.tree.nodes;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -24,6 +19,11 @@ import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for Operation implementations
@@ -43,6 +43,10 @@ public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource
 	{
 		super( restResource, restResource.getParent(), treeModel );
 		this.restResource = restResource;
+
+
+		restResource.addPropertyChangeListener( RestResource.PATH_PROPERTY, this );
+
 		treeModel.mapModelItem( this );
 
 		for( int c = 0; c < restResource.getChildResourceCount(); c++ )
@@ -114,6 +118,7 @@ public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource
 		{
 			resource.release();
 		}
+		restResource.removePropertyChangeListener( this );
 	}
 
 	public void addChildResource( RestResource restResource )
@@ -183,6 +188,10 @@ public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource
 			{
 				methodRemoved( ( RestMethod )evt.getOldValue() );
 			}
+		}
+		else if( evt.getPropertyName().equals( RestResource.PATH_PROPERTY  ) )
+		{
+			getTreeModel().notifyNodeChanged( this );
 		}
 	}
 }

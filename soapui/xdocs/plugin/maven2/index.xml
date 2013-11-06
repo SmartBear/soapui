@@ -4,9 +4,9 @@
         <title>maven 2.X plugin for SOAP Testing</title>
     </properties>
     <body>
-		<section name="soapUI maven 2.X plugin">
+		<section name="SoapUI maven 2.X plugin">
 		
-		 <subsection name="soapUI Maven Plugin Usage">
+		 <subsection name="SoapUI Maven Plugin Usage">
 		 <p>Prior to using the plugin, add the eviware maven 2 repository either to your project or settings.xml;</p>
 		<source><![CDATA[<pluginRepositories>
    <pluginRepository>

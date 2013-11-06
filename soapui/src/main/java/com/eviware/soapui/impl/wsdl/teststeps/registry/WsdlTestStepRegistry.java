@@ -1,11 +1,11 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
@@ -46,11 +46,11 @@ public class WsdlTestStepRegistry
 		addFactory( new ManualTestStepFactory() );
 
 		// soapUI Pro TestStep placeholders
-		addFactory( new ProPlaceholderStepFactory( "datasource", "soapUI Pro DataSource", "/datasource.gif" ) );
-		addFactory( new ProPlaceholderStepFactory( "datasourceloop", "soapUI Pro DataSourceLoop", "/datasource_loop.gif" ) );
-		addFactory( new ProPlaceholderStepFactory( "datasink", "soapUI Pro DataSink", "/datasink.gif" ) );
-		addFactory( new ProPlaceholderStepFactory( "datagen", "soapUI Pro DataGen", "/datagen.gif" ) );
-		addFactory( new ProPlaceholderStepFactory( "assertionteststep", "soapUI Pro Assertion TestStep", "/unknown_assertion_step.gif" ));
+		addFactory( new ProPlaceholderStepFactory( "datasource", "SoapUI Pro DataSource", "/datasource.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "datasourceloop", "SoapUI Pro DataSourceLoop", "/datasource_loop.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "datasink", "SoapUI Pro DataSink", "/datasink.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "datagen", "SoapUI Pro DataGen", "/datagen.gif" ) );
+		addFactory( new ProPlaceholderStepFactory( "assertionteststep", "SoapUI Pro Assertion TestStep", "/unknown_assertion_step.gif" ));
 
 		for( WsdlTestStepFactory factory : SoapUI.getFactoryRegistry().getFactories( WsdlTestStepFactory.class ) )
 		{

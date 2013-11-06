@@ -4,11 +4,11 @@
         <title>netbeans soapUI plugin</title>
     </properties>
     <body>
-		<section name="soapUI NetBeans Plugin">
+		<section name="SoapUI NetBeans Plugin">
 		<p>The soapUI NetBeans Plugin provides all soapui functionality directly from within 
 		<a target="_new" href="http://www.netbeans.org/">NetBeans 5.5/6.0</a> allowing one integrated development and 
 		testing environment for Web Services in java. Since soapUI 2.0, the plug-in hosts soapUI projects just as standard
-		NetBeans projects, ie the previously available "soapUI Navigator" tab has been removed and soapUI projects are 
+		NetBeans projects, ie the previously available "SoapUI Navigator" tab has been removed and soapUI projects are
 		managed like any other NetBeans projects. Here are some screenshots:</p>
 	
 		<columns><column>

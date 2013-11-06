@@ -1,46 +1,48 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
+ *  SoapUI is free software; you can redistribute it and/or modify it under the
  *  terms of version 2.1 of the GNU Lesser General Public License as published by 
  *  the Free Software Foundation.
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
+ *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
  *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.impl.support;
 
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.support.UISupport;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
-
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.support.UISupport;
-
 /**
  * ComboBox model for a request endpoint
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeListener
 {
-	private static final String ADD_NEW_ENDPOINT = "[add new endpoint..]";
-	private static final String EDIT_ENDPOINT = "[edit current..]";
+	public static final String ADD_NEW_ENDPOINT = "[add new endpoint..]";
+	public static final String EDIT_ENDPOINT = "[edit current..]";
 	private static final String DELETE_ENDPOINT = "[delete current]";
 
 	private Set<ListDataListener> listeners = new HashSet<ListDataListener>();
 	private String[] endpoints;
 	private AbstractHttpRequestInterface<?> request;
+	private Document textFieldDocument;
 
 	public EndpointsComboBoxModel( AbstractHttpRequestInterface<?> request )
 	{
@@ -59,6 +61,7 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	public void setSelectedItem( Object anItem )
 	{
 		final String endpoint = request.getEndpoint();
+		final String enteredValue = getEnteredEndpointValue();
 		if( anItem != null && anItem.equals( ADD_NEW_ENDPOINT ) )
 		{
 			SwingUtilities.invokeLater( new Runnable()
@@ -66,13 +69,17 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 				public void run()
 				{
 					String value = UISupport.prompt( "Add new endpoint for interface ["
-							+ request.getOperation().getInterface().getName() + "]", "Add new endpoint", endpoint );
+							+ request.getOperation().getInterface().getName() + "]", "Add new endpoint", enteredValue );
 
 					if( value != null )
 					{
 						if( request.getOperation() != null )
 							request.getOperation().getInterface().addEndpoint( value );
 						request.setEndpoint( value );
+					}
+					else
+					{
+						setEditorTextTo( enteredValue );
 					}
 
 				}
@@ -86,13 +93,17 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 				public void run()
 				{
 					String value = UISupport.prompt( "Edit endpoint for interface ["
-							+ request.getOperation().getInterface().getName() + "]", "Edit endpoint", endpoint );
+							+ request.getOperation().getInterface().getName() + "]", "Edit endpoint", enteredValue );
 
 					if( value != null )
 					{
 						if( request.getOperation() != null )
 							request.getOperation().getInterface().changeEndpoint( endpoint, value );
 						request.setEndpoint( value );
+					}
+					else
+					{
+						setEditorTextTo( enteredValue );
 					}
 				}
 			} );
@@ -118,6 +129,31 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 		}
 
 		notifyContentsChanged();
+	}
+
+	private void setEditorTextTo( String enteredValue )
+	{
+		try
+		{
+			textFieldDocument.remove( 0, textFieldDocument.getLength() );
+			textFieldDocument.insertString( 0, enteredValue, null );
+		}
+		catch( BadLocationException ignore )
+		{
+
+		}
+	}
+
+	private String getEnteredEndpointValue()
+	{
+		try
+		{
+			return textFieldDocument.getText( 0, textFieldDocument.getLength() );
+		}
+		catch( BadLocationException ignore )
+		{
+			return "";
+		}
 	}
 
 	public void refresh()
@@ -207,5 +243,10 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 		request.removePropertyChangeListener( this );
 		if( request.getOperation() != null )
 			request.getOperation().getInterface().removePropertyChangeListener( this );
+	}
+
+	public void listenToChangesIn( Document textFieldDocument )
+	{
+		this.textFieldDocument = textFieldDocument;
 	}
 }

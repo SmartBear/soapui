@@ -6,7 +6,7 @@ This is the main SoapUI project.
 
 * *[soapui](soapui)* - The core module.
 * *[soapui-installer](soapui-installer)* - The installer module for creating packages.
-* *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used for running soapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
+* *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used for running SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
 * *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
 
 ## Building and running

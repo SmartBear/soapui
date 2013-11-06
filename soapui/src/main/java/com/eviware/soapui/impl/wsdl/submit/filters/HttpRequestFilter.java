@@ -26,6 +26,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
 
+import com.eviware.soapui.impl.support.HttpUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
@@ -182,9 +183,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				}
 				break;
 			case MATRIX :
-				String valueInPath = ";" + param.getName() + "=" + value;
-				String valueToBeSet = ";" + param.getName(); //if parameter type is boolean then it is presented by
-				                                             // presence of parameter
 				try
 				{
 					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
@@ -195,14 +193,21 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					SoapUI.logError( e );
 				}
 
-				if( !param.getType().equals( XmlBoolean.type.getName() ) )
+				if( param.getType().equals( XmlBoolean.type.getName() ) )
 				{
-					if( StringUtils.hasContent( value ) )
+					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
 					{
-						valueToBeSet += "=" + value;
+						path += ";" + param.getName();
 					}
 				}
-				path = path.replaceAll( valueInPath,  valueToBeSet);
+				else
+				{
+					path += ";" + param.getName();
+					if( StringUtils.hasContent( value ) )
+					{
+						path += "=" + value;
+					}
+				}
 				break;
 			case PLAIN :
 				break;
@@ -222,9 +227,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 				context.setProperty( BaseHttpRequestTransport.REQUEST_URI, uri );
 				java.net.URI oldUri = httpMethod.getURI();
 				httpMethod
-						.setURI( new java.net.URI( oldUri.getScheme(), oldUri.getUserInfo(), oldUri.getHost(), oldUri
-								.getPort(), ( uri.getPath() ) == null ? "/" : uri.getPath(), oldUri.getQuery(), oldUri
-								.getFragment() ) );
+						.setURI( HttpUtils.createUri( oldUri.getScheme(), oldUri.getRawUserInfo(), oldUri.getHost(), oldUri.getPort(), oldUri.getRawPath(),
+								uri.getEscapedQuery(), oldUri.getRawFragment() ) );
 			}
 			catch( Exception e )
 			{

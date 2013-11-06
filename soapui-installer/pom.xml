@@ -5,7 +5,7 @@
     <parent>
         <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
-        <version>4.6.0</version>
+        <version>4.6.2-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -62,7 +62,7 @@
                         <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
-                    <finalName>${project.name.full}</finalName>
+                    <finalName>${project.name.visible}-${project.version}</finalName>
                     <appendAssemblyId>true</appendAssemblyId>
                 </configuration>
             </plugin>
@@ -86,7 +86,7 @@
                         </property>
                         <property>
                             <name>SRC_ROOT</name>
-                            <value>${basedir}/src</value>
+                            <value>${project.parent.basedir}/soapui/src</value>
                         </property>
                         <property>
                             <name>DIST_ROOT</name>
@@ -145,29 +145,32 @@
                     <files>
                         <!-- Archives -->
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-windows-bin.zip
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-windows-bin.zip
                         </file>
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-win32-standalone-bin.zip
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-win32-standalone-bin.zip
                         </file>
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-linux-bin.tar.gz
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-linux-bin.tar.gz
                         </file>
                         <file>
-                            ${assembly.build.directory}/${project.name.full}-mac-bin.zip
+                            ${assembly.build.directory}/${project.name.visible}-${project.version}-mac-bin.zip
                         </file>
                         <!-- Installers -->
                         <file>
-                            ${installer.build.directory}/soapUI-x32-${project.version}.exe
+                            ${installer.build.directory}/${project.name.visible}-x32-${project.version}.exe
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-x64-${project.version}.exe
+                            ${installer.build.directory}/${project.name.visible}-x64-${project.version}.exe
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-x32-${project.version}.sh
+                            ${installer.build.directory}/${project.name.visible}-x32-${project.version}.sh
                         </file>
                         <file>
-                            ${installer.build.directory}/soapUI-${project.version}.dmg
+                            ${installer.build.directory}/${project.name.visible}-x64-${project.version}.sh
+                        </file>
+                        <file>
+                            ${installer.build.directory}/${project.name.visible}-${project.version}.dmg
                         </file>
                     </files>
                 </configuration>
@@ -178,11 +181,33 @@
                 <artifactId>maven-gitlog-plugin</artifactId>
                 <version>1.4.11</version>
                 <configuration>
-                    <reportTitle>soapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
+                    <reportTitle>SoapUI ${project.version} | https://github.com/SmartBear/soapui/tree/maintenance
                     </reportTitle>
                     <generatePlainTextChangeLog>false</generatePlainTextChangeLog>
                     <generateHTMLTableOnlyChangeLog>false</generateHTMLTableOnlyChangeLog>
                     <generateSimpleHTMLChangeLog>true</generateSimpleHTMLChangeLog>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>com.eviware.soapui.tools.SplashScreenStomper</mainClass>
+                    <arguments>
+                        <argument>SoapUI ${project.version}</argument>
+                        <argument>${basedir}/src/main/resources/soapui-splash-blank.png</argument>
+                        <argument>${basedir}/target/soapui-splash.png</argument>
+                    </arguments>
                 </configuration>
             </plugin>
         </plugins>
