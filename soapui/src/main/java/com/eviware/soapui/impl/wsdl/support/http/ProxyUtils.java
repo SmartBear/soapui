@@ -30,10 +30,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.protocol.HttpContext;
 
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,19 +52,31 @@ public class ProxyUtils
 		setAutoProxy( SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
 	}
 
-	public static void initProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
-													  String urlString, PropertyExpansionContext context )
+	public static void initProxySettings( final Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
+													  String urlString, final PropertyExpansionContext context )
 	{
-		if( proxyEnabled && !autoProxy )
+		if( proxyEnabled )
 		{
-			setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
+			if( autoProxy )
+			{
+				setProxyCredentials( settings, httpContext, context, null );
+			}
+			else
+			{
+				setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
+			}
 		}
+	}
+
+	private static String getExpandedProperty( PropertyExpansionContext context, Settings settings, String property )
+	{
+		return PropertyExpander.expandProperties( context, settings.getString( property, null ) );
 	}
 
 	private static void setManualProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext, String urlString, PropertyExpansionContext context )
 	{
-		String proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
-		String proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+		String proxyHost = getExpandedProperty( context, settings, ProxySettings.HOST );
+		String proxyPort = getExpandedProperty( context, settings, ProxySettings.PORT );
 
 		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
 		{
@@ -83,7 +92,7 @@ public class ProxyUtils
 				{
 					HttpHost proxy = new HttpHost( proxyHost, Integer.parseInt( proxyPort ) );
 
-					setProxyCredentials( settings, httpContext, context, proxyHost, proxy );
+					setProxyCredentials( settings, httpContext, context, proxy );
 					httpMethod.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
 				}
 			}
@@ -94,31 +103,30 @@ public class ProxyUtils
 		}
 	}
 
-	private static void setProxyCredentials( Settings settings, HttpContext httpContext, PropertyExpansionContext context, String proxyHost, HttpHost proxy )
+	private static void setProxyCredentials( Settings settings, HttpContext httpContext, PropertyExpansionContext context, HttpHost proxy )
 	{
-		String proxyUsername = PropertyExpander.expandProperties( context,
-				settings.getString( ProxySettings.USERNAME, null ) );
-		String proxyPassword = PropertyExpander.expandProperties( context,
-				settings.getString( ProxySettings.PASSWORD, null ) );
+		String proxyUsername = getExpandedProperty( context, settings, ProxySettings.USERNAME );
+		String proxyPassword = getExpandedProperty( context, settings, ProxySettings.PASSWORD );
 
-		if( proxyUsername != null && proxyPassword != null
-				&& ( proxyUsername.trim().length() > 0 && proxyPassword.trim().length() > 0 ) )
+		if( !StringUtils.isNullOrEmpty( proxyUsername ) && !StringUtils.isNullOrEmpty( proxyPassword ) )
 		{
 			Credentials proxyCreds = new UsernamePasswordCredentials( proxyUsername, proxyPassword );
 
 			// check for nt-username
 			int ix = proxyUsername.indexOf( '\\' );
+			String hostName = proxy == null ? null : proxy.getHostName();
+			int port = proxy == null ? -1 : proxy.getPort();
 			if( ix > 0 )
 			{
 				String domain = proxyUsername.substring( 0, ix );
 				if( proxyUsername.length() > ix + 1 )
 				{
 					String user = proxyUsername.substring( ix + 1 );
-					proxyCreds = new NTCredentials( user, proxyPassword, proxyHost, domain );
+					proxyCreds = new NTCredentials( user, proxyPassword, hostName, domain );
 				}
 			}
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
-			credsProvider.setCredentials( new AuthScope( proxy.getHostName(), proxy.getPort() ), proxyCreds );
+			credsProvider.setCredentials( new AuthScope( hostName, port ), proxyCreds );
 			httpContext.setAttribute( ClientContext.CREDS_PROVIDER, credsProvider );
 		}
 	}
