@@ -12,15 +12,12 @@
 
 package com.eviware.soapui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
+import java.util.Enumeration;
 import java.util.TimerTask;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -29,6 +26,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+import com.eviware.soapui.support.Tools;
 import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -161,7 +159,8 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			for( File pluginFile : pluginFiles )
 			{
-				if( !pluginFile.getName().toLowerCase().endsWith( "-plugin.jar" ) )
+				if( !pluginFile.getName().toLowerCase().endsWith( ".jar" ) ||
+                        !pluginFile.getName().toLowerCase().contains("plugin"))
 					continue;
 
 				try
@@ -187,6 +186,21 @@ public class DefaultSoapUICore implements SoapUICore
 					if( entry != null )
 						getActionRegistry().addConfig( jarFile.getInputStream( entry ), extClassLoader );
 
+                    // look for libraries
+                    Enumeration<JarEntry> entries = jarFile.entries();
+                    while( entries.hasMoreElements() )
+                    {
+                        entry = entries.nextElement();
+
+                        // library?
+                        if( entry.getName().startsWith( "lib/") && entry.getName().endsWith( ".jar"))
+                        {
+                            File libFile = extractPluginLibrary(jarFile, entry);
+                            SoapUI.log.info( "Adding [" + libFile.getAbsolutePath() + "] to extensions classpath" );
+                            getExtensionClassLoader().addFile(libFile);
+                        }
+                    }
+
 					// add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
 					UISupport.addResourceClassLoader( new URLClassLoader( new URL[] { pluginFile.toURI().toURL() } ) );
 				}
@@ -198,7 +212,36 @@ public class DefaultSoapUICore implements SoapUICore
 		}
 	}
 
-	protected void initExtensions( ClassLoader extensionClassLoader )
+    /**
+     * Extracts a library in a plugin file to a local file so it can be added to the extension classloader. Will
+     * not override existing files.
+     *
+     * @param jarFile the jarFile containing the library
+     * @param entry the entry of the library in the jarFile
+     * @return the created file
+     * @throws IOException if anything IO-related goes wrong
+     */
+
+    protected File extractPluginLibrary(JarFile jarFile, JarEntry entry) throws IOException
+    {
+        // create name from plugin file name
+        File libDir = new File( jarFile.getName().substring(0, jarFile.getName().length()-4) + "-libs");
+        if( !libDir.exists())
+            libDir.mkdirs();
+
+        File libFile = new File(libDir, entry.getName().substring(4));
+        if( !libFile.exists() )
+        {
+            SoapUI.log.info( "Extracting library [" + libFile.getName() + "] from plugin [" +
+                    jarFile.getName().substring(8) + "]");
+
+            Tools.writeAll( new FileOutputStream(libFile), jarFile.getInputStream( entry ));
+        }
+
+       return libFile;
+    }
+
+    protected void initExtensions( ClassLoader extensionClassLoader )
 	{
 		String extDir = System.getProperty( "soapui.ext.listeners" );
 		addExternalListeners( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar
