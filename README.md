@@ -40,14 +40,18 @@ When you have decided that you want to take a more active part in improving Soap
 
 As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an IDE is usually very straight forward, as long as the IDE has good Maven support.
 
-**Intellij IDEA (version 12)**
+**Getting started using Intellij IDEA (version 12)**
 
 * [Clone the project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3#getting-the-source-code-for-the-first-time)
-* In the main menu select *File* -> *Import project* -> At *Root directory* enter the path to the root folder of the SoapUI project -> Make sure that *Maven* is selected and click *Next* -> Finish the wizard by just clicking *Next* and then lastly *Finish*.
+* In the main menu select *File* 
+* Then click *Import project* 
+* At *Root directory* enter the path to the root folder of the SoapUI project
+* A the next screen make sure that *Maven* is selected and click *Next*
+* Finish the wizard by just clicking *Next* and then finally *Finish*
 * After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run*. 
 * To get the latest changes right click on the root folder in the *Project* view and select *Git* -> *Repository* -> *Pull...*
 
-**Eclipse (version 4 / Juno)**
+**Getting started using Eclipse (version 4 / Juno)**
 
 * [Clone the project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3#getting-the-source-code-for-the-first-time)
 * In the main menu select *File* -> *Import* -> *Maven* -> *Existing Maven projects* and at *Root directory* enter the path to the root folder of the SoapUI project and then finish the wizard.
