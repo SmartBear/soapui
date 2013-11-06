@@ -30,7 +30,10 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.protocol.HttpContext;
 
-import java.net.*;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -204,6 +207,7 @@ public class ProxyUtils
 	public static void setProxyEnabled( boolean proxyEnabled )
 	{
 		ProxyUtils.proxyEnabled = proxyEnabled;
+		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
 	}
 
 	public static boolean isAutoProxy()
@@ -214,6 +218,6 @@ public class ProxyUtils
 	public static void setAutoProxy( boolean autoProxy )
 	{
 		ProxyUtils.autoProxy = autoProxy;
-		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy );
+		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
 	}
 }
