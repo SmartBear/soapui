@@ -24,11 +24,12 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	private HttpRoutePlanner defaultHttpRoutePlanner;
 	private boolean autoProxyEnabled;
 	private SchemeRegistry registry;
+	private ProxySelector cachedProxySelector;
 
 	public CompositeHttpRoutePlanner( SchemeRegistry registry )
 	{
 		this.registry = registry;
-		this.defaultHttpRoutePlanner = new DefaultHttpRoutePlanner(registry);
+		this.defaultHttpRoutePlanner = new DefaultHttpRoutePlanner( registry );
 		this.proxySearch = createProxySearch();
 	}
 
@@ -39,7 +40,6 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
 		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
 		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
-		proxySearch.setPacCacheSettings( 32, 1000 * 60 * 5 ); // Cache 32 urls for up to 5 min.
 		return proxySearch;
 	}
 
@@ -47,6 +47,7 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	public void setAutoProxyEnabled( boolean autoProxyEnabled )
 	{
 		this.autoProxyEnabled = autoProxyEnabled;
+		cachedProxySelector = null;
 	}
 
 	@Override
@@ -55,12 +56,21 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 		Object proxy = request.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
 		if( proxy == null && autoProxyEnabled )
 		{
-			ProxySelector proxySelector = proxySearch.getProxySelector();
+			ProxySelector proxySelector = getProxySelector();
 			if( proxySelector != null )
 			{
 				return new ProxySelectorRoutePlanner( registry, proxySelector ).determineRoute( target, request, context );
 			}
 		}
 		return defaultHttpRoutePlanner.determineRoute( target, request, context );
+	}
+
+	private ProxySelector getProxySelector()
+	{
+		if( cachedProxySelector == null )
+		{
+			cachedProxySelector = proxySearch.getProxySelector();
+		}
+		return cachedProxySelector;
 	}
 }
