@@ -4,10 +4,10 @@ This is the main SoapUI project.
 
 ## Structure and submodules
 
-* *[soapui](soapui)* - The core module
+* *[soapui](soapui)* - The core module that creates the SoapUI jar
 * *[soapui-installer](soapui-installer)* - Creates the SoapUI distributions, such as installers and archives
-* *[soapui-maven-plugin](soapui-maven-plugin)* – A Maven plugin used for running SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
-* *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - A small test `pom.xml` used for testing the *soapui-maven-plugin*.
+* *[soapui-maven-plugin](soapui-maven-plugin)* – Maven plugin used for running SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
+* *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - Small test `pom.xml` used for testing the *soapui-maven-plugin*.
 
 ## Building and running
 
