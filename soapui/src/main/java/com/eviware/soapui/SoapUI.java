@@ -852,8 +852,6 @@ public class SoapUI
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
 
-		frame.setSize( 1000, 750 );
-
 		SwingUtilities.invokeLater( new WindowInitializationTask() );
 
 		String[] args2 = cmd.getArgs();
@@ -978,7 +976,6 @@ public class SoapUI
 
 		testMonitor.addTestMonitorListener( new LogDisablingTestMonitorListener() );
 		testMonitor.init( workspace );
-		frame.setVisible( true );
 
 		initAutoSaveTimer();
 		initGCTimer();
@@ -1857,6 +1854,7 @@ public class SoapUI
 		public void run()
 		{
 			expandWindow( frame );
+			frame.setVisible( true );
 			if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 			{
 				showPushPage();
