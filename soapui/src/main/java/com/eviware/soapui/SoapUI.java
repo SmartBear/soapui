@@ -117,11 +117,29 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
@@ -286,7 +304,6 @@ public class SoapUI
 		frame.getContentPane().add( buildToolbar(), BorderLayout.NORTH );
 		frame.getContentPane().add( mainInspector.getComponent(), BorderLayout.CENTER );
 		frame.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
-		frame.setSize( 1000, 750 );
 
 		mainInspector.setDividerLocation( 250 );
 		mainInspector.setResizeWeight( 0.1 );
@@ -670,17 +687,6 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
-				{
-					SwingUtilities.invokeLater( new Runnable()
-					{
-						public void run()
-						{
-							showPushPage();
-						}
-					} );
-				}
-
 				if( isAutoUpdateVersion() )
 					new SoapUIVersionUpdate().checkForNewVersion( false );
 
@@ -735,6 +741,8 @@ public class SoapUI
 			}
 		}
 	}
+
+
 
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{
@@ -846,6 +854,8 @@ public class SoapUI
 		core.afterStartup( workspace );
 
 		frame.setSize( 1000, 750 );
+
+		SwingUtilities.invokeLater( new WindowInitializationTask() );
 
 		String[] args2 = cmd.getArgs();
 		if( args2 != null && args2.length > 0 )
@@ -1045,7 +1055,7 @@ public class SoapUI
 
 	public static boolean isJXBrowserDisabled( boolean allowNative )
 	{
-		if( UISupport.isHeadless() || isCommandLine())
+		if( UISupport.isHeadless() || isCommandLine() )
 			return true;
 
 		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
@@ -1061,7 +1071,6 @@ public class SoapUI
 
 		return !disable.equals( "false" )
 				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) );
-
 	}
 
 	public static boolean isJXBrowserPluginsDisabled()
@@ -1842,6 +1851,34 @@ public class SoapUI
 	public static boolean isAutoUpdateVersion()
 	{
 		return getSettings().getBoolean( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE );
+	}
+
+	private static class WindowInitializationTask implements Runnable
+	{
+		public void run()
+		{
+			maximizeWindow( frame );
+			if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
+			{
+				showPushPage();
+			}
+		}
+
+		private void maximizeWindow(JFrame frame)
+		{
+			Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
+			// the following code is a workaround for the fact that setExtendedState() crashes the GUI on Mac,
+			if (UISupport.isMac())
+			{
+				frame.setSize( screenResolution.width, (int)(.9 * screenResolution.height) );
+			}
+			else
+			{
+				frame.setSize(new Dimension((int)(.7 * screenResolution.width), (int)(.7 * screenResolution.width)));
+				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+			}
+		}
+
 	}
 
 }
