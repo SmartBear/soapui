@@ -252,7 +252,6 @@ public class ContentTypeHandler
 		// suffixToContentType.put("", "application/x-sprite");
 		suffixToContentType.put( "rad", "application/x-rad-powermedia" );
 		suffixToContentType.put( "ppz", "application/mspowerpoint" );
-		suffixToContentType.put( "css", "application/x-pointplus" );
 		suffixToContentType.put( "asp", "application/x-asap" );
 		suffixToContentType.put( "asn", "application/astound" );
 		suffixToContentType.put( "axs", "application/x-olescript" );
