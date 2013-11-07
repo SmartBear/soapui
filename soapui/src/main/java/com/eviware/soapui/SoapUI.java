@@ -743,7 +743,6 @@ public class SoapUI
 	}
 
 
-
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{
 		@Override
@@ -1857,26 +1856,17 @@ public class SoapUI
 	{
 		public void run()
 		{
-			maximizeWindow( frame );
+			expandWindow( frame );
 			if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
 			{
 				showPushPage();
 			}
 		}
 
-		private void maximizeWindow(JFrame frame)
+		private void expandWindow( JFrame frame )
 		{
 			Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
-			// the following code is a workaround for the fact that setExtendedState() crashes the GUI on Mac,
-			if (UISupport.isMac())
-			{
-				frame.setSize( screenResolution.width, (int)(.9 * screenResolution.height) );
-			}
-			else
-			{
-				frame.setSize(new Dimension((int)(.7 * screenResolution.width), (int)(.7 * screenResolution.width)));
-				frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-			}
+			frame.setSize( screenResolution.width, ( int )( .9 * screenResolution.height ) );
 		}
 
 	}
