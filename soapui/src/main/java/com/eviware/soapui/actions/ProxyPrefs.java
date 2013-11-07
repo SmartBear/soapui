@@ -73,7 +73,7 @@ public class ProxyPrefs implements Prefs
 				public void actionPerformed( ActionEvent e )
 				{
 					autoProxy = true;
-					setManualProxyTextFieldsEnabled( false );
+					setManualProxyTextFieldsEnabled( true, false );
 				}
 			} );
 			manual.addActionListener( new ActionListener()
@@ -82,7 +82,7 @@ public class ProxyPrefs implements Prefs
 				public void actionPerformed( ActionEvent e )
 				{
 					autoProxy = false;
-					setManualProxyTextFieldsEnabled( true );
+					setManualProxyTextFieldsEnabled( true, true );
 				}
 			} );
 			none.addActionListener( new ActionListener()
@@ -90,7 +90,7 @@ public class ProxyPrefs implements Prefs
 				@Override
 				public void actionPerformed( ActionEvent e )
 				{
-					setManualProxyTextFieldsEnabled( false );
+					setManualProxyTextFieldsEnabled( false, false );
 				}
 			} );
 			hostTextField = proxyPrefForm.appendTextField( HOST, "proxy host to use" );
@@ -103,13 +103,13 @@ public class ProxyPrefs implements Prefs
 		return proxyPrefForm;
 	}
 
-	private void setManualProxyTextFieldsEnabled( boolean enabled )
+	private void setManualProxyTextFieldsEnabled( boolean userPasswordEnabled, boolean otherFieldsEnabled )
 	{
-		hostTextField.setEnabled( enabled );
-		portTextField.setEnabled( enabled );
-		userTextField.setEnabled( enabled );
-		passwordTextField.setEnabled( enabled );
-		excludesTextField.setEnabled( enabled );
+		hostTextField.setEnabled( otherFieldsEnabled );
+		portTextField.setEnabled( otherFieldsEnabled );
+		userTextField.setEnabled( userPasswordEnabled );
+		passwordTextField.setEnabled( userPasswordEnabled );
+		excludesTextField.setEnabled( otherFieldsEnabled );
 	}
 
 	public void getFormValues( Settings settings )
@@ -136,19 +136,19 @@ public class ProxyPrefs implements Prefs
 		if( !settings.getBoolean( ProxySettings.ENABLE_PROXY ) )
 		{
 			none.setSelected( true );
-			setManualProxyTextFieldsEnabled( false );
+			setManualProxyTextFieldsEnabled( false, false );
 		}
 		else if( settings.getBoolean( ProxySettings.AUTO_PROXY ) )
 		{
 			automatic.setSelected( true );
 			autoProxy = true;
-			setManualProxyTextFieldsEnabled( false );
+			setManualProxyTextFieldsEnabled( true, false );
 		}
 		else
 		{
 			manual.setSelected( true );
 			autoProxy = false;
-			setManualProxyTextFieldsEnabled( true );
+			setManualProxyTextFieldsEnabled( true, true );
 		}
 		autoProxy = settings.getBoolean( ProxySettings.AUTO_PROXY );
 	}
