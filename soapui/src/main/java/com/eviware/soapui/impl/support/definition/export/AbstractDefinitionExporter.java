@@ -132,11 +132,14 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 			URL url = new URL( path );
 			path = url.getPath();
 		}
-		catch( MalformedURLException e )
+		catch( MalformedURLException ignored )
 		{
 		}
 
 		int ix = path.lastIndexOf( '/' );
+		if(ix == -1) {
+			ix = path.lastIndexOf( '\\' );
+		}
 		String fileName = ix == -1 ? path : path.substring( ix + 1 );
 
 		ix = fileName.lastIndexOf( '.' );
@@ -178,9 +181,9 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 		{
 			XmlObject[] locations = xmlObject.selectPath( path );
 
-			for( int i = 0; i < locations.length; i++ )
+			for( XmlObject location : locations )
 			{
-				SimpleValue wsdlImport = ( ( SimpleValue )locations[i] );
+				SimpleValue wsdlImport = ( ( SimpleValue )location );
 				replaceLocation( urlToFileMap, baseUrl, wsdlImport );
 			}
 		}
@@ -206,6 +209,14 @@ public abstract class AbstractDefinitionExporter<T extends Interface> implements
 			{
 				String loc = Tools.joinRelativeUrl( baseUrl, location );
 				String newLocation = urlToFileMap.get( loc );
+				if( newLocation == null )
+				{
+					newLocation = urlToFileMap.get( loc.replaceAll( "/", "\\\\" ) );
+				}
+				if( newLocation == null )
+				{
+					newLocation = urlToFileMap.get( loc.replaceAll( "\\\\", "/" ) );
+				}
 				if( newLocation != null )
 					wsdlImport.setStringValue( newLocation );
 				else
