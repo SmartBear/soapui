@@ -135,11 +135,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
@@ -1863,8 +1859,9 @@ public class SoapUI
 
 		private void expandWindow( JFrame frame )
 		{
-			Dimension screenResolution = Toolkit.getDefaultToolkit().getScreenSize();
-			frame.setSize( screenResolution.width, ( int )( .9 * screenResolution.height ) );
+			Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+			Dimension screenResolution = availableScreenArea.getSize();
+			frame.setSize( screenResolution.width, screenResolution.height );
 		}
 
 	}
