@@ -20,10 +20,6 @@
     <url>http://www.soapui.org</url>
     <packaging>jar</packaging>
 
-    <scm>
-        <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
-    </scm>
-
     <build>
         <resources>
             <resource>

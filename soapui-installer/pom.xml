@@ -36,10 +36,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-    <scm>
-        <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
-    </scm>
-
     <build>
         <resources>
             <resource>
