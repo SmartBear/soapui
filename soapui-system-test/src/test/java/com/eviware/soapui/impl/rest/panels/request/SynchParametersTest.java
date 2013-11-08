@@ -5,6 +5,7 @@ import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.ComponentDragAndDrop;
 import org.fest.swing.core.Robot;
 import org.fest.swing.core.Settings;
+import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.fest.swing.fixture.*;
 import org.fest.swing.security.ExitCallHook;
 import org.fest.swing.security.NoExitSecurityManagerInstaller;
@@ -49,9 +50,10 @@ public class SynchParametersTest
 			@Override
 			public void exitCalled( int status )
 			{
-				SoapUI.setSoapUICore( null );
+				System.out.print( "Exit status : " + status );
 			}
 		} );
+		FailOnThreadViolationRepaintManager.install();
 	}
 
 	@AfterClass
@@ -62,16 +64,14 @@ public class SynchParametersTest
 	@Before
 	public void setUp()
 	{
-		application( SoapUI.class ).start();
+		ApplicationLauncher.application( SoapUI.class ).start();
 		robot = BasicRobot.robotWithCurrentAwtHierarchy();
-		robot.settings().delayBetweenEvents( 200 );
 	}
 
 	@Test
-	@Ignore
-	public void test() throws InterruptedException
+	public void testParameterSync() throws InterruptedException
 	{
-		FrameFixture rootWindow = frameWithTitle( "SoapUI" ).using( robot );
+		FrameFixture rootWindow = FestMatchers.frameWithTitle( "SoapUI" ).using( robot );
 		rootWindow.maximize();
 
 		createNewRestProject( rootWindow );
@@ -80,9 +80,9 @@ public class SynchParametersTest
 
 		JPanelFixture requestEditor = openRequestEditor( rootWindow );
 
-		addNewParameter( requestEditor, "ParamName", "value" );
-		verifyParamValues( requestEditor, 0, "ParamName", "value" );
-		verifyParamValues( resourceEditor, 0, "ParamName", "" );
+		addNewParameter( requestEditor, "Address", "Stockholm" );
+		verifyParamValues( requestEditor, 0, "Address", "Stockholm" );
+		verifyParamValues( resourceEditor, 0, "Address", "" );
 
 		openResourceEditor( rootWindow );
 
@@ -91,15 +91,15 @@ public class SynchParametersTest
 		verifyParamValues( requestEditor, 1, "resParam", "value1" );
 
 		JPanelFixture methodEditor = openMethodEditor( rootWindow );
-		addNewParameter( methodEditor, "methodParam", "mValue" );
-		verifyParamValues( methodEditor, 0, "methodParam", "mValue" );
-		verifyParamValues( requestEditor, 2, "methodParam", "mValue" );
+		addNewParameter( methodEditor, "mParam", "mValue" );
+		verifyParamValues( methodEditor, 0, "mParam", "mValue" );
+		verifyParamValues( requestEditor, 2, "mParam", "mValue" );
 
 
 		changeParameterLevel( methodEditor, 0, ParamLocation.RESOURCE );
-		verifyParamValues( resourceEditor, 2, "methodParam", "mValue" );
-
 		verifyEmptyTable( methodEditor );
+		verifyParamValues( resourceEditor, 2, "mParam", "mValue" );
+
 
 		openResourceEditor( rootWindow );
 
@@ -119,29 +119,36 @@ public class SynchParametersTest
 		Thread.sleep( 2000 );
 		rootWindow.close();
 
-		DialogFixture confirmationDialog = dialogWithTitle( "Question" ).using( robot );
-		confirmationDialog.button( buttonWithText( "Yes" ) ).click();
+		DialogFixture confirmationDialog = FestMatchers.dialogWithTitle( "Question" ).using( robot );
+		confirmationDialog.button( FestMatchers.buttonWithText( "Yes" ) ).click();
 
-		DialogFixture saveProjectDialog = dialogWithTitle( "Save Project" ).using( robot );
-		while( saveProjectDialog != null )
+		try
 		{
-			saveProjectDialog.button( buttonWithText( "No" ) ).click();
-			saveProjectDialog = dialogWithTitle( "Save Project" ).using( robot );
+			DialogFixture saveProjectDialog = FestMatchers.dialogWithTitle( "Save Project" ).using( robot );
+			while( saveProjectDialog != null )
+			{
+				saveProjectDialog.button( FestMatchers.buttonWithText( "No" ) ).click();
+				saveProjectDialog = FestMatchers.dialogWithTitle( "Save Project" ).using( robot );
+			}
+		}
+		catch( Exception e )
+		{
+		 //Do nothing
 		}
 	}
 
 	private void verifyParamValues( JPanelFixture parentPanel, int rowNum, String paramName, String paramValue )
 	{
 		JTableFixture paramTableInResourceEditor = parentPanel.table( REST_PARAMS_TABLE );
-		assertThat( paramTableInResourceEditor.cell( row( rowNum ).column( 0 ) ).value(), is( paramName ) );
-		assertThat( paramTableInResourceEditor.cell( row( rowNum ).column( 1 ) ).value(), is( paramValue ) );
+		assertThat( paramTableInResourceEditor.cell( TableCell.row( rowNum ).column( 0 ) ).value(), is( paramName ) );
+		assertThat( paramTableInResourceEditor.cell( TableCell.row( rowNum ).column( 1 ) ).value(), is( paramValue ) );
 	}
 
 	private void openCreateNewRestProjectDialog( FrameFixture rootWindow )
 	{
 		JPopupMenuFixture projects = rightClickOnProjectsMenu( rootWindow );
 
-		JMenuItemFixture createNewRestProjectMenu = projects.menuItem( menuItemWithText( "New REST Project" ) );
+		JMenuItemFixture createNewRestProjectMenu = projects.menuItem( FestMatchers.menuItemWithText( "New REST Project" ) );
 		createNewRestProjectMenu.click();
 	}
 
@@ -152,21 +159,23 @@ public class SynchParametersTest
 
 		robot.waitForIdle();
 		int rowNumToEdit = restParamsTable.target.getRowCount() - 1;
-		JTableCellFixture cellFixture = restParamsTable.cell( row( rowNumToEdit ).column( 0 ) );
-		JTextComponentFixture textBox = new JTextComponentFixture( robot, ( JTextField )cellFixture.editor() );
-		textBox.enterText( paramName );
-		textBox.pressKey( KeyEvent.VK_ENTER );
+		editTableCell( paramName, restParamsTable, rowNumToEdit, 0 );
+		editTableCell( paramValue, restParamsTable, rowNumToEdit, 1 );
+	}
 
+	private void editTableCell( String paramValue, JTableFixture restParamsTable, int rowNumToEdit, int column )
+	{
 		robot.waitForIdle();
-		textBox = new JTextComponentFixture( robot, ( JTextField )restParamsTable.cell( row( rowNumToEdit ).column( 1 ) ).editor() );
-		textBox.enterText( paramValue );
-		textBox.pressKey( KeyEvent.VK_ENTER );
+		JTextField tableCellEditor = ( JTextField )restParamsTable.cell( TableCell.row( rowNumToEdit ).column( column ) ).editor();
+		new JTextComponentFixture( robot, tableCellEditor )
+				.enterText( paramValue )
+				.pressKey( KeyEvent.VK_ENTER );
 	}
 
 	private void changeParameterLevel( JPanelFixture parentPanel, int rownum, ParamLocation newLocation )
 	{
 		JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
-		restParamsTable.cell( row( rownum ).column( 3 ) ).enterValue( newLocation.toString() );
+		restParamsTable.cell( TableCell.row( rownum ).column( 3 ) ).enterValue( newLocation.toString() );
 	}
 
 	public void verifyEmptyTable( JPanelFixture parentPanel )
@@ -208,14 +217,14 @@ public class SynchParametersTest
 
 	private void enterURIandClickOk()
 	{
-		DialogFixture newRestProjectDialog = dialogWithTitle( "New REST Project" ).withTimeout( 2000 )
+		DialogFixture newRestProjectDialog = FestMatchers.dialogWithTitle( "New REST Project" ).withTimeout( 2000 )
 				.using( robot );
 
 		newRestProjectDialog.textBox().focus();
 		newRestProjectDialog.textBox().click();
 		newRestProjectDialog.textBox().setText( "http://soapui.org" );
 
-		JButtonFixture buttonOK = newRestProjectDialog.button( buttonWithText( "OK" ) );
+		JButtonFixture buttonOK = newRestProjectDialog.button( FestMatchers.buttonWithText( "OK" ) );
 		buttonOK.click();
 	}
 }
