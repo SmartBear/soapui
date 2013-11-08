@@ -96,6 +96,17 @@ public class RestRequestParamsPropertyHolderTest
 	}
 
 	@Test
+	public void retainsLocationWhenRenamingParameter() throws Exception
+	{
+		String originalName = "secondParameter";
+		parametersHolder.addProperty( originalName );
+		String newName ="secondParameter_with_new_name";
+		parametersHolder.renameProperty( originalName, newName );
+
+		assertThat(parametersHolder.getProperty( newName ).getParamLocation(), is( NewRestResourceActionBase.ParamLocation.RESOURCE) );
+	}
+
+	@Test
 	public void detectsParameterNameChange() throws Exception
 	{
 		String newParameterName = "newOne";

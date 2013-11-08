@@ -98,7 +98,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	{
 
 		RestParamProperty property = methodParams.addProperty( name );
-		property.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
+		setParameterLocation( property, NewRestResourceActionBase.ParamLocation.RESOURCE );
 		//setting the param location changes the parent of the property, hence need to get it again
 		return methodParams.getProperty( name );
 	}
@@ -314,7 +314,16 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		{
 			return false;
 		}
-		boolean renamePerformed = methodParams.renameProperty( name, newName );
+		RestParamProperty parameter = methodParams.getProperty( name );
+		boolean renamePerformed;
+		if( parameter.getParamLocation() == NewRestResourceActionBase.ParamLocation.METHOD )
+		{
+			renamePerformed = methodParams.renameProperty( name, newName );
+		}
+		else
+		{
+			renamePerformed = restRequest.getResource().renameProperty( name, newName );
+		}
 		if( renamePerformed )
 		{
 			renameLocalProperty( name, newName );
