@@ -15,19 +15,6 @@
     <description>Creates the SoapUI distributions, such as installers and archives</description>
     <packaging>jar</packaging>
 
-    <repositories>
-        <repository>
-            <id>eviware</id>
-            <name>Eviware Maven2 Repository</name>
-            <url>http://www.eviware.com/repository/maven2</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Central Maven2 Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-    </repositories>
-
     <pluginRepositories>
         <pluginRepository>
             <id>googlecode-maven-install4j</id>
