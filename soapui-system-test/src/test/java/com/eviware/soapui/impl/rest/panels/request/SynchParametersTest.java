@@ -1,18 +1,19 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.utils.FestMatchers;
 import org.fest.swing.core.BasicRobot;
-import org.fest.swing.core.ComponentDragAndDrop;
 import org.fest.swing.core.Robot;
-import org.fest.swing.core.Settings;
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.fest.swing.fixture.*;
 import org.fest.swing.security.ExitCallHook;
 import org.fest.swing.security.NoExitSecurityManagerInstaller;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
@@ -22,7 +23,7 @@ import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_
 import static com.eviware.soapui.impl.rest.panels.resource.RestResourceDesktopPanel.REST_RESOURCE_EDITOR;
 import static com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction.ADD_PARAM_ACTION_NAME;
 import static com.eviware.soapui.ui.Navigator.NAVIGATOR;
-import static com.eviware.soapui.utils.FestMatchers.*;
+import static com.eviware.soapui.utils.FestMatchers.frameWithTitle;
 import static org.fest.swing.data.TableCell.row;
 import static org.fest.swing.launcher.ApplicationLauncher.application;
 import static org.hamcrest.core.Is.is;
@@ -44,7 +45,8 @@ public class SynchParametersTest
 	private Robot robot;
 
 	@BeforeClass
-	public static void setUpOnce() {
+	public static void setUpOnce()
+	{
 		noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager( new ExitCallHook()
 		{
 			@Override
@@ -57,21 +59,22 @@ public class SynchParametersTest
 	}
 
 	@AfterClass
-	public static void tearDown() {
+	public static void tearDown()
+	{
 		noExitSecurityManagerInstaller.uninstall();
 	}
 
 	@Before
 	public void setUp()
 	{
-		ApplicationLauncher.application( SoapUI.class ).start();
+		application( SoapUI.class ).start();
 		robot = BasicRobot.robotWithCurrentAwtHierarchy();
 	}
 
 	@Test
 	public void testParameterSync() throws InterruptedException
 	{
-		FrameFixture rootWindow = FestMatchers.frameWithTitle( "SoapUI" ).using( robot );
+		FrameFixture rootWindow = frameWithTitle( "SoapUI" ).using( robot );
 		rootWindow.maximize();
 
 		createNewRestProject( rootWindow );
@@ -133,15 +136,15 @@ public class SynchParametersTest
 		}
 		catch( Exception e )
 		{
-		 //Do nothing
+			//Do nothing
 		}
 	}
 
 	private void verifyParamValues( JPanelFixture parentPanel, int rowNum, String paramName, String paramValue )
 	{
 		JTableFixture paramTableInResourceEditor = parentPanel.table( REST_PARAMS_TABLE );
-		assertThat( paramTableInResourceEditor.cell( TableCell.row( rowNum ).column( 0 ) ).value(), is( paramName ) );
-		assertThat( paramTableInResourceEditor.cell( TableCell.row( rowNum ).column( 1 ) ).value(), is( paramValue ) );
+		assertThat( paramTableInResourceEditor.cell( row( rowNum ).column( 0 ) ).value(), is( paramName ) );
+		assertThat( paramTableInResourceEditor.cell( row( rowNum ).column( 1 ) ).value(), is( paramValue ) );
 	}
 
 	private void openCreateNewRestProjectDialog( FrameFixture rootWindow )
@@ -166,7 +169,7 @@ public class SynchParametersTest
 	private void editTableCell( String paramValue, JTableFixture restParamsTable, int rowNumToEdit, int column )
 	{
 		robot.waitForIdle();
-		JTextField tableCellEditor = ( JTextField )restParamsTable.cell( TableCell.row( rowNumToEdit ).column( column ) ).editor();
+		JTextField tableCellEditor = ( JTextField )restParamsTable.cell( row( rowNumToEdit ).column( column ) ).editor();
 		new JTextComponentFixture( robot, tableCellEditor )
 				.enterText( paramValue )
 				.pressKey( KeyEvent.VK_ENTER );
@@ -175,7 +178,7 @@ public class SynchParametersTest
 	private void changeParameterLevel( JPanelFixture parentPanel, int rownum, ParamLocation newLocation )
 	{
 		JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
-		restParamsTable.cell( TableCell.row( rownum ).column( 3 ) ).enterValue( newLocation.toString() );
+		restParamsTable.cell( row( rownum ).column( 3 ) ).enterValue( newLocation.toString() );
 	}
 
 	public void verifyEmptyTable( JPanelFixture parentPanel )

@@ -36,6 +36,7 @@
         <module>soapui-maven-plugin</module>
         <module>soapui-installer</module>
         <module>soapui-maven-plugin-tester</module>
+		<module>soapui-system-test</module>
     </modules>
 
     <build>
