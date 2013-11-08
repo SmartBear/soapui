@@ -117,11 +117,25 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
@@ -153,6 +167,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class SoapUI
 {
+	// ------------------------------ CONSTANTS ------------------------------
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
@@ -160,23 +175,24 @@ public class SoapUI
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
-	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
-
 	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
+
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
 			+ "/starter-page.html";
+
+	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
+	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
+
 
 	// ------------------------------ FIELDS ------------------------------
 
 	private static List<Object> logCache = new ArrayList<Object>();
-
 	private static SoapUICore soapUICore;
 	private static Timer soapUITimer = new Timer();
 	private static JFrame frame;
@@ -284,7 +300,6 @@ public class SoapUI
 		frame.getContentPane().add( buildToolbar(), BorderLayout.NORTH );
 		frame.getContentPane().add( mainInspector.getComponent(), BorderLayout.CENTER );
 		frame.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
-		frame.setSize( 1000, 750 );
 
 		mainInspector.setDividerLocation( 250 );
 		mainInspector.setResizeWeight( 0.1 );
@@ -668,17 +683,6 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
-				{
-					SwingUtilities.invokeLater( new Runnable()
-					{
-						public void run()
-						{
-							showPushPage();
-						}
-					} );
-				}
-
 				if( isAutoUpdateVersion() )
 					new SoapUIVersionUpdate().checkForNewVersion( false );
 
@@ -733,6 +737,7 @@ public class SoapUI
 			}
 		}
 	}
+
 
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{
@@ -843,7 +848,7 @@ public class SoapUI
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
 
-		frame.setSize( 1000, 750 );
+		SwingUtilities.invokeLater( new WindowInitializationTask() );
 
 		String[] args2 = cmd.getArgs();
 		if( args2 != null && args2.length > 0 )
@@ -967,7 +972,6 @@ public class SoapUI
 
 		testMonitor.addTestMonitorListener( new LogDisablingTestMonitorListener() );
 		testMonitor.init( workspace );
-		frame.setVisible( true );
 
 		initAutoSaveTimer();
 		initGCTimer();
@@ -1043,7 +1047,7 @@ public class SoapUI
 
 	public static boolean isJXBrowserDisabled( boolean allowNative )
 	{
-		if( UISupport.isHeadless() || isCommandLine())
+		if( UISupport.isHeadless() || isCommandLine() )
 			return true;
 
 		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
@@ -1059,7 +1063,6 @@ public class SoapUI
 
 		return !disable.equals( "false" )
 				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) );
-
 	}
 
 	public static boolean isJXBrowserPluginsDisabled()
@@ -1840,6 +1843,27 @@ public class SoapUI
 	public static boolean isAutoUpdateVersion()
 	{
 		return getSettings().getBoolean( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE );
+	}
+
+	private static class WindowInitializationTask implements Runnable
+	{
+		public void run()
+		{
+			expandWindow( frame );
+			frame.setVisible( true );
+			if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
+			{
+				showPushPage();
+			}
+		}
+
+		private void expandWindow( JFrame frame )
+		{
+			Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+			Dimension screenResolution = availableScreenArea.getSize();
+			frame.setSize( screenResolution.width, screenResolution.height );
+		}
+
 	}
 
 }
