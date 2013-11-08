@@ -30,16 +30,16 @@
                 <artifactId>soapui-maven-plugin</artifactId>
                 <version>${project.parent.version}</version>
                 <configuration>
-                    <projectFile>${project.basedir}/src/test/soapui/test-soapui-project.xml</projectFile>
-                    <testSuite>maven-plugin-testSuite</testSuite>
-                    <testCase>maven-plugin-TestCase</testCase>
+                    <projectFile>${project.basedir}/src/test/soapui/SoapUI-Maven-Plugin-Tester-soapui-project.xml</projectFile>
+                    <testSuite>ShouldRun</testSuite>
+                    <testCase>ShouldRun</testCase>
                     <loadTest>LoadTest</loadTest>
-                    <securityTest>SecurityTest</securityTest>
+                    <!-- TODO Disabled due to SOAP-804 -->
+                    <!-- <securityTest>SecurityTest</securityTest> -->
                     <exportAll>true</exportAll>
                     <junitReport>true</junitReport>
                     <printReport>true</printReport>
                     <outputFolder>${project.build.directory}/soapui/output</outputFolder>
-                    <endpoint>http://localhost:9090/mockService4TestPortBinding</endpoint>
                     <soapuiProperties>
                       <property>
                           <name>soapui.logroot</name>
@@ -48,17 +48,6 @@
                     </soapuiProperties>
                 </configuration>
                 <executions>
-                    <execution>
-                        <id>soapui-mock</id>
-                        <phase>pre-integration-test</phase>
-                        <goals>
-                            <goal>mock</goal>
-                        </goals>
-                        <configuration>
-                            <noBlock>true</noBlock>
-                            <port>${mockServerPort}</port>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>soapui-test</id>
                         <phase>integration-test</phase>
