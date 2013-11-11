@@ -846,12 +846,19 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			{
 				if( ProxyUtils.isAutoProxy() )
 				{
-						HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
-						HttpRoute httpRoute = routePlanner.determineRoute( new HttpHost( "soapui.org" ), new HttpGet("http://soapui.org"), null );
+					HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
+					HttpRoute httpRoute = routePlanner.determineRoute( new HttpHost( "soapui.org" ), new HttpGet( "http://soapui.org" ), null );
 
-						HttpHost proxyHost = httpRoute.getProxyHost();
+					HttpHost proxyHost = httpRoute.getProxyHost();
 
+					if( proxyHost != null )
+					{
 						proxyConf.setProxy( ServerType.HTTP, new ProxyServer( proxyHost.getHostName(), proxyHost.getPort() ) );
+					}
+					else
+					{
+						proxyConf.setDirectConnection();
+					}
 				}
 				else
 				{
