@@ -12,18 +12,13 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Toolkit;
-import java.awt.datatransfer.StringSelection;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.List;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.PropertyChangeNotifier;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.swing.JTableFactory;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -43,14 +38,21 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.PropertyUtils;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.PropertyChangeNotifier;
-import com.eviware.soapui.support.StringUtils;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Table for displaying property name/value pairs
@@ -476,33 +478,6 @@ public class JPropertiesTable<T> extends JPanel
 		}
 	}
 
-	/*
-	 * defaultcelleditor private class PropertiesTableCellEditor extends
-	 * AbstractCellEditor implements TableCellEditor { private JTextField
-	 * textField; private JComboBox comboBox; private JComponent current;
-	 * 
-	 * public PropertiesTableCellEditor() { textField = new JTextField();
-	 * comboBox = new JComboBox();
-	 * comboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE); }
-	 * 
-	 * public Component getTableCellEditorComponent(JTable table, Object value,
-	 * boolean isSelected, int row, int column) { PropertyDescriptor descriptor =
-	 * tableModel.getPropertyDescriptorAt( row );
-	 * 
-	 * if( descriptor.hasOptions()) { comboBox.setModel( new
-	 * DefaultComboBoxModel( descriptor.getOptions() ));
-	 * comboBox.setSelectedItem( value ); current = comboBox; } else {
-	 * textField.setText( value == null ? "" : value.toString() ); current =
-	 * textField; }
-	 * 
-	 * current.setBorder( null ); current.setBackground( Color.WHITE );
-	 * 
-	 * return current; }
-	 * 
-	 * public Object getCellEditorValue() { return current == comboBox ?
-	 * comboBox.getSelectedItem() : textField.getText(); } }
-	 */
-
 	/**
 	 * Formatter used for displaying property values
 	 * 
@@ -543,8 +518,6 @@ public class JPropertiesTable<T> extends JPanel
 		{
 			super( tableModel );
 
-			// setAutoStartEditOnKeyStroke( true );
-
 			getActionMap().put( TransferHandler.getCopyAction().getValue( Action.NAME ), new AbstractAction()
 			{
 				public void actionPerformed( ActionEvent e )
@@ -559,12 +532,28 @@ public class JPropertiesTable<T> extends JPanel
 			} );
 
 			putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
-			/*
-			 * addFocusListener( new FocusAdapter() {
-			 * 
-			 * public void focusLost(FocusEvent e) { if( isEditing() &&
-			 * getCellEditor() != null ) getCellEditor().stopCellEditing(); }} );
-			 */
+			if (UISupport.isMac())
+			{
+				setShowGrid( false );
+				setIntercellSpacing( new Dimension(0, 0) );
+			}
+		}
+
+		@Override
+		public Component prepareRenderer( TableCellRenderer renderer, int row, int column )
+		{
+			Component defaultRenderer = super.prepareRenderer( renderer, row, column );
+			if( UISupport.isMac() )
+			{
+				JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+			}
+			return defaultRenderer;
+		}
+
+		@Override
+		public boolean getShowVerticalLines()
+		{
+			return !UISupport.isMac();
 		}
 
 		public TableCellEditor getCellEditor( int row, int column )

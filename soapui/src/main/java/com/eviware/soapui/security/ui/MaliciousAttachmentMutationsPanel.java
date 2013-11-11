@@ -1,30 +1,5 @@
 package com.eviware.soapui.security.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-
-import javax.activation.MimetypesFileTypeMap;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.KeyStroke;
-import javax.swing.ListModel;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableCellEditor;
-
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.config.MaliciousAttachmentElementConfig;
 import com.eviware.soapui.config.MaliciousAttachmentSecurityScanConfig;
@@ -44,6 +19,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -54,6 +30,29 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JCheckBoxFormField;
 import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
+import org.jdesktop.swingx.JXTable;
+
+import javax.activation.MimetypesFileTypeMap;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
+import javax.swing.ListModel;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableCellEditor;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class MaliciousAttachmentMutationsPanel
 {
@@ -136,7 +135,7 @@ public class MaliciousAttachmentMutationsPanel
 	protected JPanel buildGenerateTable( MaliciousAttachmentTableModel tableModel )
 	{
 		final JPanel panel = new JPanel( new BorderLayout() );
-		final JXTable table = new JXTable( tableModel );
+		final JXTable table = JTableFactory.getInstance().makeJXTable( tableModel );
 		setupTable( table );
 		JScrollPane tableScrollPane = new JScrollPane( table );
 		tableScrollPane.setBorder( BorderFactory.createEmptyBorder() );
@@ -175,7 +174,7 @@ public class MaliciousAttachmentMutationsPanel
 	protected JPanel buildReplacementTable( MaliciousAttachmentTableModel tableModel )
 	{
 		final JPanel panel = new JPanel( new BorderLayout() );
-		final JXTable table = new JXTable( tableModel );
+		final JXTable table = JTableFactory.getInstance().makeJXTable( tableModel );
 		setupTable( table );
 		JScrollPane tableScrollPane = new JScrollPane( table );
 		tableScrollPane.setBorder( BorderFactory.createEmptyBorder() );

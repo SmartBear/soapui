@@ -11,24 +11,6 @@
  */
 package com.eviware.soapui.security.assertion;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import org.apache.xmlbeans.XmlObject;
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -52,6 +34,7 @@ import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XFormDialog;
@@ -59,6 +42,22 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import org.apache.xmlbeans.XmlObject;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion implements ResponseAssertion
 {
@@ -364,7 +363,7 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 			toolbar.add( UISupport.createToolbarButton( new AddTokenAction() ) );
 			toolbar.add( UISupport.createToolbarButton( new RemoveTokenAction() ) );
 
-			tokenTable = new JXTable( sensitiveInformationTableModel );
+			tokenTable = JTableFactory.getInstance().makeJXTable( sensitiveInformationTableModel );
 			tokenTable.setPreferredSize( new Dimension( 200, 100 ) );
 			sensitiveInfoTableForm.add( toolbar, BorderLayout.NORTH );
 			sensitiveInfoTableForm.add( new JScrollPane( tokenTable ), BorderLayout.CENTER );

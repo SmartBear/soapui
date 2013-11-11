@@ -11,20 +11,6 @@
  */
 package com.eviware.soapui.security.panels;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
-import org.apache.xmlbeans.XmlObject;
-import org.jdesktop.swingx.JXTable;
-
 import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.SensitiveInformationConfig;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -34,6 +20,7 @@ import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.x.form.XFormDialog;
@@ -41,6 +28,18 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import org.apache.xmlbeans.XmlObject;
+import org.jdesktop.swingx.JXTable;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectSensitiveInformationPanel
 {
@@ -49,7 +48,7 @@ public class ProjectSensitiveInformationPanel
 	private SensitiveInformationConfig config;
 	private List<String> projectSpecificExposureList;
 	public static final String PROJECT_SPECIFIC_EXPOSURE_LIST = "ProjectSpecificExposureList";
-	private SensitiveInformationTableModel sensitivInformationTableModel;
+	private SensitiveInformationTableModel sensitiveInformationTableModel;
 	private JXTable tokenTable;
 	private JPanel sensitiveInfoTableForm;
 
@@ -87,7 +86,7 @@ public class ProjectSensitiveInformationPanel
 				siph.setPropertyValue( tokens[0], "" );
 			}
 		}
-		sensitivInformationTableModel = new SensitiveInformationTableModel( siph );
+		sensitiveInformationTableModel = new SensitiveInformationTableModel( siph );
 	}
 
 	public boolean build()
@@ -107,7 +106,7 @@ public class ProjectSensitiveInformationPanel
 	private List<String> createListFromTable()
 	{
 		List<String> temp = new ArrayList<String>();
-		for( TestProperty tp : sensitivInformationTableModel.getHolder().getPropertyList() )
+		for( TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList() )
 		{
 			String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
 			temp.add( tokenPlusDescription );
@@ -160,7 +159,7 @@ public class ProjectSensitiveInformationPanel
 			toolbar.add( UISupport.createToolbarButton( new AddTokenAction() ) );
 			toolbar.add( UISupport.createToolbarButton( new RemoveTokenAction() ) );
 
-			tokenTable = new JXTable( sensitivInformationTableModel );
+			tokenTable = JTableFactory.getInstance().makeJXTable( sensitiveInformationTableModel );
 			tokenTable.setPreferredSize( new Dimension( 200, 100 ) );
 			sensitiveInfoTableForm.add( toolbar, BorderLayout.NORTH );
 			sensitiveInfoTableForm.add( new JScrollPane( tokenTable ), BorderLayout.CENTER );
@@ -186,7 +185,7 @@ public class ProjectSensitiveInformationPanel
 			String newValue = "";
 			newValue = UISupport.prompt( "Enter description", "New Description", newValue );
 
-			sensitivInformationTableModel.addToken( newToken, newValue );
+			sensitiveInformationTableModel.addToken( newToken, newValue );
 			save();
 		}
 
@@ -204,7 +203,7 @@ public class ProjectSensitiveInformationPanel
 		@Override
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			sensitivInformationTableModel.removeRows( tokenTable.getSelectedRows() );
+			sensitiveInformationTableModel.removeRows( tokenTable.getSelectedRows() );
 			save();
 		}
 	}

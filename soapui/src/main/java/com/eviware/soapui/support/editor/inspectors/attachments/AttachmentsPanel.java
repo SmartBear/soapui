@@ -12,6 +12,30 @@
 
 package com.eviware.soapui.support.editor.inspectors.attachments;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.AttachmentContainer;
+import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.MessagePart.AttachmentPart;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+
+import javax.swing.AbstractListModel;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -32,30 +56,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
-
-import javax.swing.AbstractListModel;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.AttachmentContainer;
-import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.MessagePart.AttachmentPart;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
 
 /**
  * Utility Panel for displaying a table of attachments
@@ -158,7 +158,7 @@ public class AttachmentsPanel extends javax.swing.JPanel
 	{
 		jScrollPane1 = new javax.swing.JScrollPane();
 		tableModel = new AttachmentsTableModel( container );
-		fileTable = new JTable( tableModel );
+		fileTable = JTableFactory.getInstance().makeJTable( tableModel );
 
 		if( container instanceof MutableAttachmentContainer )
 		{
