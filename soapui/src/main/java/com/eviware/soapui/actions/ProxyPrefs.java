@@ -13,9 +13,9 @@
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 
@@ -155,12 +155,18 @@ public class ProxyPrefs implements Prefs
 
 	public void storeValues( StringToStringMap values, Settings settings )
 	{
-		settings.setString( ProxySettings.HOST, values.get( HOST ) );
-		settings.setString( ProxySettings.PORT, values.get( PORT ) );
+		String proxyHost = values.get( HOST );
+		String proxyPort = values.get( PORT );
+		settings.setString( ProxySettings.HOST, proxyHost );
+		settings.setString( ProxySettings.PORT, proxyPort );
 		settings.setString( ProxySettings.USERNAME, values.get( USERNAME ) );
 		settings.setString( ProxySettings.PASSWORD, values.get( PASSWORD ) );
 		settings.setString( ProxySettings.EXCLUDES, values.get( EXCLUDES ) );
 		boolean enableProxy = !none.isSelected();
+		if( !autoProxy && ( StringUtils.isNullOrEmpty( proxyHost ) || StringUtils.isNullOrEmpty( proxyPort ) ) )
+		{
+			enableProxy = false;
+		}
 		settings.setBoolean( ProxySettings.ENABLE_PROXY, enableProxy );
 		settings.setBoolean( ProxySettings.AUTO_PROXY, autoProxy );
 		SoapUI.updateProxyFromSettings();
