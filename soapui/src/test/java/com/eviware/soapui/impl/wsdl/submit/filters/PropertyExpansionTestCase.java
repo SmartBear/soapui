@@ -116,6 +116,7 @@ public class PropertyExpansionTestCase
 		MockTestRunContext context = new MockTestRunContext( mockTestRunner, testStep );
 
 		PropertyExpansionUtils.getGlobalProperties().setPropertyValue( "testSuiteId", "testing" );
+		SoapUI.getSettings().setBoolean( GlobalPropertySettings.ENABLE_OVERRIDE, false );
 
 		assertEquals( "123", context.expand( "${#Project#projectId}" ) );
 		assertEquals( "234", context.expand( "${#TestSuite#testSuiteId}" ) );
