@@ -603,7 +603,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		@Override
 		public void propertyRemoved( String name )
 		{
-			if( !doesParameterExist( name ) || isTemplateProperty( name ) )
+			if( doesParameterExist( name ) && isTemplateProperty( name ) )
 			{
 				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
 			}

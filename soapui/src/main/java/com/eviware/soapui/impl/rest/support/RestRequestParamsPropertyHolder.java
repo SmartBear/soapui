@@ -100,7 +100,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		RestParamProperty property = methodParams.addProperty( name );
 		setParameterLocation( property, NewRestResourceActionBase.ParamLocation.RESOURCE );
 		//setting the param location changes the parent of the property, hence need to get it again
-		return methodParams.getProperty( name );
+		return getWrapper(methodParams.getProperty( name ));
 	}
 
 	public void addParameter( RestParamProperty prop )

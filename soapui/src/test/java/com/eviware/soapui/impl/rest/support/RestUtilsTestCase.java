@@ -51,7 +51,7 @@ public class RestUtilsTestCase
 		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.MATRIX, "matrixName2", "theMatrixValue2" );
 		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.QUERY, "queryName2", "queryValue2");
 
-		assertThat(RestUtils.expandPath( restRequest.getResource().getFullPath(), restRequest.getParams(), restRequest ),
+		assertThat(RestUtils.expandPath( "/the/path", restRequest.getParams(), restRequest ),
 				is("/the/path;matrixName=theMatrixValue;matrixName2=theMatrixValue2?queryName=queryValue&queryName2=queryValue2"));
 	}
 

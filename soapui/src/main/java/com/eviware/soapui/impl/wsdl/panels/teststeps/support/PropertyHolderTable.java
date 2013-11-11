@@ -29,10 +29,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.JTableFactory;
@@ -50,7 +48,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -674,7 +671,7 @@ public class PropertyHolderTable extends JPanel
 			Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 			if( value instanceof String )
 			{
-				if( value != null && ( ( String )value ).length() > 0 )
+				if(  ( ( String )value ).length() > 0 )
 				{
 					String val = ( ( String )table.getValueAt( row, 0 ) ).toLowerCase();
 					if( val.startsWith( "password" ) || val.endsWith( "password" ) )

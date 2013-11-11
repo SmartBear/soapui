@@ -44,7 +44,17 @@ public class RestRequestParamsPropertyHolderTest
 		parametersHolder.addProperty( newParameterName );
 
 		assertThat( parametersHolder.getPropertyAt( 1 ).getName(), is( newParameterName ));
-		assertThat( methodParams.getPropertyAt( 1 ).getName(), is( newParameterName ));
+	}
+
+	@Test
+	public void canSetAndGetValueOfNewParameter() throws Exception
+	{
+		String newParameterName = "newOne";
+		RestParamProperty restParamProperty = parametersHolder.addProperty( newParameterName );
+		String parameterValue = "theValue";
+		restParamProperty.setValue( parameterValue );
+
+		assertThat( parametersHolder.getProperty( newParameterName ).getValue(), is( parameterValue ));
 	}
 
 	@Test
@@ -121,8 +131,8 @@ public class RestRequestParamsPropertyHolderTest
 	public void handlesParameterLevelChange() throws Exception
 	{
 		String newParameterName = "newOne";
-		parametersHolder.addProperty( newParameterName );
-		parametersHolder.getProperty(newParameterName).setParamLocation( NewRestResourceActionBase.ParamLocation.METHOD );
+		RestParamProperty restParamProperty = parametersHolder.addProperty( newParameterName );
+		parametersHolder.setParameterLocation( restParamProperty, NewRestResourceActionBase.ParamLocation.METHOD );
 
 		assertThat( methodParams.getPropertyAt( 1 ).getName(), is( newParameterName ));
 	}
