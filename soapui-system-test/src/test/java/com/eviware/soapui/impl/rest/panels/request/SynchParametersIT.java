@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.panels.request;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.utils.FestMatchers;
 import org.fest.swing.core.BasicRobot;
+import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
 import org.fest.swing.edt.FailOnThreadViolationRepaintManager;
 import org.fest.swing.fixture.*;
@@ -67,6 +68,7 @@ public class SynchParametersIT
 	@Before
 	public void setUp()
 	{
+		System.setProperty( "soapui.jxbrowser.disable", "true" );
 		application( SoapUI.class ).start();
 		robot = BasicRobot.robotWithCurrentAwtHierarchy();
 	}
@@ -119,7 +121,6 @@ public class SynchParametersIT
 
 	private void closeWindow( FrameFixture rootWindow ) throws InterruptedException
 	{
-		Thread.sleep( 2000 );
 		rootWindow.close();
 
 		DialogFixture confirmationDialog = FestMatchers.dialogWithTitle( "Question" ).using( robot );
@@ -141,7 +142,9 @@ public class SynchParametersIT
 	}
 
 	private void verifyParamValues( JPanelFixture parentPanel, int rowNum, String paramName, String paramValue )
+			throws InterruptedException
 	{
+		Thread.sleep( 500 );
 		JTableFixture paramTableInResourceEditor = parentPanel.table( REST_PARAMS_TABLE );
 		assertThat( paramTableInResourceEditor.cell( row( rowNum ).column( 0 ) ).value(), is( paramName ) );
 		assertThat( paramTableInResourceEditor.cell( row( rowNum ).column( 1 ) ).value(), is( paramValue ) );
@@ -151,11 +154,11 @@ public class SynchParametersIT
 	{
 		JPopupMenuFixture projects = rightClickOnProjectsMenu( rootWindow );
 
-		JMenuItemFixture createNewRestProjectMenu = projects.menuItem( FestMatchers.menuItemWithText( "New REST Project" ) );
-		createNewRestProjectMenu.click();
+		projects.menuItem( FestMatchers.menuItemWithText( "New REST Project" ) ).click();
 	}
 
 	private void addNewParameter( JPanelFixture parentPanel, String paramName, String paramValue )
+			throws InterruptedException
 	{
 		parentPanel.button( ADD_PARAM_ACTION_NAME ).click();
 		JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
@@ -163,6 +166,7 @@ public class SynchParametersIT
 		robot.waitForIdle();
 		int rowNumToEdit = restParamsTable.target.getRowCount() - 1;
 		editTableCell( paramName, restParamsTable, rowNumToEdit, 0 );
+		Thread.sleep( 200 );
 		editTableCell( paramValue, restParamsTable, rowNumToEdit, 1 );
 	}
 
@@ -172,7 +176,7 @@ public class SynchParametersIT
 		JTextField tableCellEditor = ( JTextField )restParamsTable.cell( row( rowNumToEdit ).column( column ) ).editor();
 		new JTextComponentFixture( robot, tableCellEditor )
 				.enterText( paramValue )
-				.pressKey( KeyEvent.VK_ENTER );
+				.pressAndReleaseKey( KeyPressInfo.keyCode(KeyEvent.VK_ENTER ));
 	}
 
 	private void changeParameterLevel( JPanelFixture parentPanel, int rownum, ParamLocation newLocation )
