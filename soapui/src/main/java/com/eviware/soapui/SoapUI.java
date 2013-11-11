@@ -406,11 +406,11 @@ public class SoapUI
 
 		if( StringUtils.hasContent( text ) )
 		{
-			Tools.openURL( "http://forum.soapui.org/search.php?keywords=" + URLEncoder.encode( text.trim() ) );
+			Tools.openURL( HelpUrls.FORUMS_HELP_URL + "search.php?keywords=" + URLEncoder.encode( text.trim() ) );
 		}
 		else
 		{
-			Tools.openURL( "http://forum.soapui.org/" );
+			Tools.openURL( HelpUrls.FORUMS_HELP_URL );
 		}
 	}
 
