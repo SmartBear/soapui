@@ -17,6 +17,7 @@ import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.util.EntityUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -93,10 +94,11 @@ public class SoapUIVersionUpdate
 		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
 
 		HttpGet request = new HttpGet( versionUrl.toURI() );
+		BasicHttpContext httpContext = HttpClientSupport.createEmptyContext();
 
-		ProxyUtils.initProxySettings( SoapUI.getSettings(), request, null, versionUrl.toString(), null );
+		ProxyUtils.initProxySettings( SoapUI.getSettings(), request, httpContext, versionUrl.toString(), null );
 
-		HttpResponse response = httpClient.execute( request );
+		HttpResponse response = httpClient.execute( request, httpContext );
 
 		return EntityUtils.toString( response.getEntity() );
 	}
