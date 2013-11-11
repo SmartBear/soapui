@@ -382,6 +382,11 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
 		setIfNotSet( WsaSettings.ENABLE_FOR_OPTIONAL, false );
 		setIfNotSet( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE, true );
+		if( !settings.isSet( ProxySettings.AUTO_PROXY ) && !settings.isSet( ProxySettings.ENABLE_PROXY ))
+		{
+			settings.setBoolean( ProxySettings.AUTO_PROXY, true );
+			settings.setBoolean( ProxySettings.ENABLE_PROXY, true );
+		}
 
 		boolean setWsiDir = false;
 		String wsiLocationString = settings.getString( WSISettings.WSI_LOCATION, null );
