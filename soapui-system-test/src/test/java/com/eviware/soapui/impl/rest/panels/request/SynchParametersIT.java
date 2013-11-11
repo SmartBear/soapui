@@ -36,7 +36,7 @@ import static org.junit.Assert.assertThat;
  * Time: 14:37
  * To change this template use File | Settings | File Templates.
  */
-public class SynchParametersTest
+public class SynchParametersIT
 {
 	private static final int REST_RESOURCE_POSITION_IN_TREE = 3;
 	private static final int REST_REQUEST_POSITION_IN_TREE = 5;
