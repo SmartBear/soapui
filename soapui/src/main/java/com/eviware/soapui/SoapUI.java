@@ -625,8 +625,16 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( isAutoUpdateVersion() )
-					new SoapUIVersionUpdate().checkForNewVersion( false );
+				if( isAutoUpdateVersion() ){
+					new Thread( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							new SoapUIVersionUpdate().checkForNewVersion( false );
+						}
+					} ).start();
+				}
 
 				CajoServer.getInstance().start();
 			}
