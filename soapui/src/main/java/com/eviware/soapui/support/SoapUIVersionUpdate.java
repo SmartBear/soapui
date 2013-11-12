@@ -254,7 +254,7 @@ public class SoapUIVersionUpdate
 		return SoapUI.getSettings().getString( VERSION_TO_SKIP, "" ).equals( getLatestVersion() );
 	}
 
-	public void checkForNewVersion( boolean helpAction )
+	public void checkForNewVersion( final boolean helpAction )
 	{
 		try
 		{
@@ -266,10 +266,17 @@ public class SoapUIVersionUpdate
 			SoapUI.log( e.getMessage() );
 			return;
 		}
-		if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
-			showNewVersionDownloadDialog();
-		else if( helpAction )
-			UISupport.showInfoMessage( "You are running the latest version of SoapUI!", "Version Check" );
+		SwingUtilities.invokeLater( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if( isNewReleaseAvailable() && ( !skipThisVersion() || helpAction ) )
+					showNewVersionDownloadDialog();
+				else if( helpAction )
+					UISupport.showInfoMessage( "You are running the latest version of SoapUI!", "Version Check" );
+			}
+		} );
 	}
 
 	protected class IgnoreUpdateAction extends AbstractAction
