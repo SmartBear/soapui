@@ -14,11 +14,17 @@ package com.eviware.soapui.support;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.settings.ProxySettings;
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.util.EntityUtils;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.apache.http.protocol.HttpContext;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -31,8 +37,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.net.*;
 
 public class SoapUIVersionUpdate
 {
@@ -89,18 +94,53 @@ public class SoapUIVersionUpdate
 		return nodes.item( 0 ).getNodeValue();
 	}
 
-	private String fetchVersionDocumentContent( URL versionUrl ) throws URISyntaxException, IOException
+	private String fetchVersionDocumentContent( final URL versionUrl ) throws URISyntaxException, IOException
 	{
-		HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
+		Proxy proxy = null;
+		if( ProxyUtils.isProxyEnabled() )
+		{
+			HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
+			HttpRoute httpRoute;
+			try
+			{
+				HttpGet request = new HttpGet( versionUrl.toURI() );
+				HttpContext httpContext = HttpClientSupport.createEmptyContext();
+				ProxyUtils.initProxySettings( SoapUI.getSettings(), request, httpContext, versionUrl.toString(), null );
+				httpRoute = routePlanner.determineRoute( new HttpHost( versionUrl.getHost() ), request, null );
+			}
+			catch( HttpException e )
+			{
+				throw new IOException( "Error detecting proxy", e );
+			}
+			HttpHost proxyHost = httpRoute.getProxyHost();
+			if( proxyHost != null )
+			{
+				proxy = new Proxy( Proxy.Type.HTTP, new InetSocketAddress( proxyHost.getHostName(), proxyHost.getPort() ) );
+				Authenticator.setDefault( new Authenticator()
+				{
+					@Override
+					protected PasswordAuthentication getPasswordAuthentication()
+					{
+						if( !getRequestingURL().getHost().equals( versionUrl.getHost() ) )
+						{
+							return null;
+						}
+						Settings settings = SoapUI.getSettings();
+						String proxyUsername = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
+								settings.getString( ProxySettings.USERNAME, null ) );
+						String proxyPassword = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
+								settings.getString( ProxySettings.PASSWORD, null ) );
 
-		HttpGet request = new HttpGet( versionUrl.toURI() );
-		BasicHttpContext httpContext = HttpClientSupport.createEmptyContext();
+						return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
+					}
+				} );
+			}
+		}
 
-		ProxyUtils.initProxySettings( SoapUI.getSettings(), request, httpContext, versionUrl.toString(), null );
-
-		HttpResponse response = httpClient.execute( request, httpContext );
-
-		return EntityUtils.toString( response.getEntity() );
+		URLConnection connection = proxy == null ? versionUrl.openConnection() : versionUrl.openConnection(proxy);
+		String response = IOUtils.toString( connection.getInputStream() );
+		Authenticator.setDefault( null );
+		return response;
 	}
 
 	private static String versionUpdateUrl( String defaultUrl )
