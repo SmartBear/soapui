@@ -10,6 +10,7 @@
 * Can not deploy project as war (SOAP-906)
 * REST resource base path is duplicated each time Request is opened (SOAP-941)
 * Test Step editor parameter table value column heading is wrong (SOAP-856)
+* Make mock services packaged as war files work across different OSes. (SOAP-976)
 
 ### Minor improvements ###
 
