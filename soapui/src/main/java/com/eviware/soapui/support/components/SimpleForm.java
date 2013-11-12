@@ -15,6 +15,8 @@ package com.eviware.soapui.support.components;
 import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,6 +38,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class SimpleForm
 {
+	public static final String ENABLED_PROPERTY_NAME = "enabled";
 	private JPanel panel;
 	private CellConstraints cc = new CellConstraints();
 	private FormLayout layout;
@@ -269,6 +272,7 @@ public class SimpleForm
 		{
 			panel.add( label, cc.xy( 2, row ) );
 			component.addComponentListener( new LabelHider( label, spaceRowIndex ) );
+			component.addPropertyChangeListener( ENABLED_PROPERTY_NAME, new LabelEnabler( label ) );
 
 			if( label instanceof JLabel )
 			{
@@ -533,6 +537,22 @@ public class SimpleForm
 	public void setDefaultTextFieldColumns( int defaultTextFieldColumns )
 	{
 		this.defaultTextFieldColumns = defaultTextFieldColumns;
+	}
+
+	private static class LabelEnabler implements PropertyChangeListener
+	{
+		private final JComponent label;
+
+		public LabelEnabler( JComponent label )
+		{
+			this.label = label;
+		}
+
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			label.setEnabled( ( Boolean )evt.getNewValue() );
+		}
 	}
 
 	private final class LabelHider extends ComponentAdapter
