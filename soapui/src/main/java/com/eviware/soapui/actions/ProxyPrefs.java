@@ -63,44 +63,63 @@ public class ProxyPrefs implements Prefs
 		{
 			proxyPrefForm = new SimpleForm();
 			proxyPrefForm.addSpace( 5 );
-			ButtonGroup group = new ButtonGroup();
-			automatic = proxyPrefForm.appendRadioButton( "Proxy Setting", "Automatic", group, false );
-			none = proxyPrefForm.appendRadioButton( "", "None", group, false );
-			manual = proxyPrefForm.appendRadioButton( "", "Manual", group, false );
-			automatic.addActionListener( new ActionListener()
-			{
-				@Override
-				public void actionPerformed( ActionEvent e )
-				{
-					autoProxy = true;
-					setManualProxyTextFieldsEnabled( true, false );
-				}
-			} );
-			manual.addActionListener( new ActionListener()
-			{
-				@Override
-				public void actionPerformed( ActionEvent e )
-				{
-					autoProxy = false;
-					setManualProxyTextFieldsEnabled( true, true );
-				}
-			} );
-			none.addActionListener( new ActionListener()
-			{
-				@Override
-				public void actionPerformed( ActionEvent e )
-				{
-					setManualProxyTextFieldsEnabled( false, false );
-				}
-			} );
+			addProxySettingRadioButtons();
 			hostTextField = proxyPrefForm.appendTextField( HOST, "proxy host to use" );
 			portTextField = proxyPrefForm.appendTextField( PORT, "proxy port to use" );
+			excludesTextField = proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
+			proxyPrefForm.appendSeparator();
 			userTextField = proxyPrefForm.appendTextField( USERNAME, "proxy username to use" );
 			passwordTextField = proxyPrefForm.appendPasswordField( PASSWORD, "proxy password to use" );
-			excludesTextField = proxyPrefForm.appendTextField( EXCLUDES, "Comma-seperated list of hosts to exclude" );
 
 		}
 		return proxyPrefForm;
+	}
+
+	private void addProxySettingRadioButtons()
+	{
+		ButtonGroup group = new ButtonGroup();
+		JPanel radioPanel = new JPanel(  );
+		radioPanel.setLayout( new BoxLayout( radioPanel, BoxLayout.Y_AXIS ) );
+		radioPanel.add( Box.createVerticalStrut( 4 ) );
+		automatic = createRadioButton( "Automatic", group, radioPanel );
+		none = createRadioButton( "None", group, radioPanel );
+		manual = createRadioButton( "Manual", group, radioPanel );
+		proxyPrefForm.append( "Proxy Setting", radioPanel );
+		automatic.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				autoProxy = true;
+				setManualProxyTextFieldsEnabled( true, false );
+			}
+		} );
+		manual.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				autoProxy = false;
+				setManualProxyTextFieldsEnabled( true, true );
+			}
+		} );
+		none.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				setManualProxyTextFieldsEnabled( false, false );
+			}
+		} );
+	}
+
+	private JRadioButton createRadioButton( String text, ButtonGroup group, JPanel radioPanel )
+	{
+		JRadioButton radioButton = new JRadioButton( text );
+		radioButton.setBorder( null );
+		group.add( radioButton );
+		radioPanel.add( radioButton );
+		return radioButton;
 	}
 
 	private void setManualProxyTextFieldsEnabled( boolean userPasswordEnabled, boolean otherFieldsEnabled )
