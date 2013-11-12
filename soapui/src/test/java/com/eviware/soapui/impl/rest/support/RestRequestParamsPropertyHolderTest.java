@@ -27,11 +27,12 @@ public class RestRequestParamsPropertyHolderTest
 
 	private RestRequestParamsPropertyHolder parametersHolder;
 	private RestParamsPropertyHolder methodParams;
+	private RestRequest restRequest;
 
 	@Before
 	public void setUp() throws SoapUIException
 	{
-		RestRequest restRequest = makeRestRequest();
+		restRequest = makeRestRequest();
 		methodParams = restRequest.getRestMethod().getParams();
 		methodParams.addProperty( FIRST_PARAMETER_NAME );
 		parametersHolder = ( RestRequestParamsPropertyHolder )restRequest.getParams();
@@ -65,6 +66,21 @@ public class RestRequestParamsPropertyHolderTest
 		parametersHolder.moveProperty( newParameterName, 0 );
 
 		assertThat( parametersHolder.getPropertyAt( 0 ).getName(), is( newParameterName ) );
+		assertThat( restRequest.getConfig().isSetParameterOrder(), is(true));
+		assertThat(restRequest.getConfig().getParameterOrder().getEntryArray( 0 ), is(newParameterName));
+	}
+
+	@Test
+	public void movesParameterCorrectlyAfterLocationChange() throws Exception
+	{
+		String newParameterName = "newOne";
+		RestParamProperty restParamProperty = parametersHolder.addProperty( newParameterName );
+		parametersHolder.setParameterLocation(restParamProperty, NewRestResourceActionBase.ParamLocation.METHOD );
+		parametersHolder.moveProperty( newParameterName, 0 );
+
+		assertThat( parametersHolder.getPropertyAt( 0 ).getName(), is( newParameterName ) );
+		assertThat( restRequest.getConfig().isSetParameterOrder(), is(true));
+		assertThat(restRequest.getConfig().getParameterOrder().getEntryArray( 0 ), is(newParameterName));
 	}
 
 	@Test

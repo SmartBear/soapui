@@ -120,20 +120,33 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		{
 			ParameterStyle parameterStyle = parameter.getStyle();
 			String parameterValue = parameter.getValue();
+			QName type = parameter.getType();
+			String[] options = parameter.getOptions();
+			boolean required = parameter.getRequired();
+			String description = parameter.getDescription();
+			boolean disableURLEncoding = parameter.isDisableUrlEncoding();
+			RestParamProperty newParameter;
 			if (newLocation == NewRestResourceActionBase.ParamLocation.METHOD)
 			{
 				restRequest.getResource().removeProperty( parameterBeingMoved );
-				RestParamProperty newParameter = restRequest.getRestMethod().addProperty( parameterBeingMoved );
-				newParameter.setStyle( parameterStyle );
-				newParameter.setValue( parameterValue );
+				newParameter = restRequest.getRestMethod().addProperty( parameterBeingMoved );
 			}
 			else
 			{
 				restRequest.getRestMethod().removeProperty( parameterBeingMoved );
-				RestParamProperty newParameter = restRequest.getResource().addProperty( parameterBeingMoved );
-				newParameter.setStyle( parameterStyle );
-				newParameter.setValue( parameterValue );
+				newParameter = restRequest.getResource().addProperty( parameterBeingMoved );
 			}
+			newParameter.setType(type);
+			newParameter.setStyle( parameterStyle );
+			newParameter.setValue( parameterValue );
+			newParameter.setDefaultValue( parameterValue );
+			newParameter.setOptions(options);
+			newParameter.setRequired( required );
+			newParameter.setDescription( description );
+			newParameter.setDisableUrlEncoding( disableURLEncoding );
+			restRequest.getProperty( parameterBeingMoved ).setValue( parameterValue );
+			firePropertyRemoved( parameterBeingMoved );
+			firePropertyAdded( parameterBeingMoved );
 		} finally
 		{
    		parameterBeingMoved = null;

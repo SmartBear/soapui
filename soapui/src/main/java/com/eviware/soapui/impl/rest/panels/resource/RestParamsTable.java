@@ -75,6 +75,7 @@ public class RestParamsTable extends JPanel
 	private SimpleBindingForm detailsForm;
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
+	private JSplitPane splitPane;
 
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
@@ -169,7 +170,7 @@ public class RestParamsTable extends JPanel
 					RestParamProperty selectedParameter = getSelectedParameter();
 					if( paramDetailsModel != null )
 					{
-						paramDetailsModel.setBean( selectedParameter );
+						updateDetailsFormWith( selectedParameter );
 						detailsForm.setEnabled( true );
 					}
 				}
@@ -178,7 +179,7 @@ public class RestParamsTable extends JPanel
 					if( paramDetailsModel != null )
 					{
 						detailsForm.setEnabled( false );
-						paramDetailsModel.setBean( null );
+						updateDetailsFormWith( null );
 					}
 				}
 			}
@@ -188,7 +189,7 @@ public class RestParamsTable extends JPanel
 
 		if( showInspector )
 		{
-			final JSplitPane splitPane = UISupport.createVerticalSplit( new JScrollPane( paramsTable ), buildDetails() );
+			splitPane = UISupport.createVerticalSplit( new JScrollPane( paramsTable ), buildDetails() );
 			add( splitPane, BorderLayout.CENTER );
 
 			splitPane.setResizeWeight( 0.7 );
@@ -196,6 +197,19 @@ public class RestParamsTable extends JPanel
 		else
 		{
 			add( new JScrollPane( paramsTable ), BorderLayout.CENTER );
+		}
+	}
+
+	private void updateDetailsFormWith( RestParamProperty selectedParameter )
+	{
+		try
+		{
+			paramDetailsModel.setBean( selectedParameter );
+		}
+		catch( Exception e )
+		{
+			splitPane.setBottomComponent( buildDetails() );
+			paramDetailsModel.setBean(selectedParameter);
 		}
 	}
 
@@ -221,8 +235,6 @@ public class RestParamsTable extends JPanel
 
 		detailsForm.addSpace( 5 );
 		detailsForm.appendCheckBox( "required", "Required", "Sets if parameter is required" );
-		// form.appendTextField( "defaultValue", "Default",
-		// "The default value for this parameter" );
 
 		List<QName> types = new ArrayList<QName>();
 		for( SchemaType type : XmlBeans.getBuiltinTypeSystem().globalTypes() )
