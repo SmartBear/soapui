@@ -78,8 +78,6 @@ public class UISupport
 	public static final String IMAGES_RESOURCE_PATH = "/com/eviware/soapui/resources/images";
 	public static final String TOOL_ICON_PATH = "/applications-system.png";
 	public static final String OPTIONS_ICON_PATH = "/preferences-system.png";
-	public static final String LOADUI_ICON_PATH = "/runWithLoadui.png";
-	public static final String CONVERT_TO_LOADUI_ICON_PATH = "/convertLoadTestToLoadUI.png";
 
 	// This is needed in Eclipse that has strict class loader constraints.
 	private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<ClassLoader>();
@@ -113,7 +111,6 @@ public class UISupport
 
 	public static ImageIcon TOOL_ICON = UISupport.createImageIcon( TOOL_ICON_PATH );
 	public static ImageIcon OPTIONS_ICON = UISupport.createImageIcon( OPTIONS_ICON_PATH );
-	public static ImageIcon LOADUI_ICON = UISupport.createImageIcon( LOADUI_ICON_PATH );
 	public static ImageIcon HELP_ICON = UISupport.createImageIcon( "/help-browser.png" );
 	private static EditorFactory editorFactory = new DefaultEditorFactory();
 

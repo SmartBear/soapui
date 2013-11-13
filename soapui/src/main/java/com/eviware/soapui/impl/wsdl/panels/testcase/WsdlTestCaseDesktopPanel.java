@@ -46,7 +46,6 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
@@ -63,7 +62,6 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.ProPlaceholderStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
-import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
@@ -128,8 +126,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
 	public TestCaseRunner lastRunner;
-	private JButton runWithLoadUIButton;
-	private JButton synchronizeWithLoadUIButton;
 	private WsdlTestCase testCase;
 	protected TestOnDemandPanel testOnDemandPanel;
 
@@ -345,9 +341,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		createSecurityTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/security_test.gif" ) );
 
-		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
-		synchronizeWithLoadUIButton = UISupport.createToolbarButton( new SynchronizeWithLoadUIAction() );
 		addToolbarActions( toolbar );
 
 		toolbar.add( Box.createHorizontalGlue() );
@@ -374,9 +367,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		toolbar.add( createSecurityTestButton );
 		toolbar.addSeparator();
 		toolbar.add( optionsButton );
-		toolbar.addSeparator();
-		toolbar.add( runWithLoadUIButton );
-		toolbar.add( synchronizeWithLoadUIButton );
 	}
 
 	private Component buildRunnerBar()
@@ -825,35 +815,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	public TestCaseRunner getTestCaseRunner()
 	{
 		return runner == null ? lastRunner : runner;
-	}
-
-	public class SynchronizeWithLoadUIAction extends AbstractAction
-	{
-		public SynchronizeWithLoadUIAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/synchronizeWithLoadUI.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Synchronizes this testcase with loadUI" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			WsdlProject project = testCase.getTestSuite().getProject();
-			//			try
-			//			{
-			//				if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
-			//					project.save();
-			//				else
-			//					project.save( project.getWorkspace().getProjectRoot() );
-			//			}
-			//			catch( IOException e1 )
-			//			{
-			//				UISupport.showErrorMessage( "Failed to save project; " + e1 );
-			//			}
-			// IntegrationUtils.removeLoadUILoadedProject( new File(
-			// project.getPath() ) );
-			if( IntegrationUtils.forceSaveProject( project ) )
-				IntegrationUtils.bringLoadUIToFront();
-		}
 	}
 
 	@Override
