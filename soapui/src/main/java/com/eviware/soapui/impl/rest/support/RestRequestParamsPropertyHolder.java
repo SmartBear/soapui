@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.model.ModelItem;
@@ -126,6 +127,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			String description = parameter.getDescription();
 			boolean disableURLEncoding = parameter.isDisableUrlEncoding();
 			RestParamProperty newParameter;
+			List<String> copyOfSortedPropertyNames = new ArrayList<String>(sortedPropertyNames);
 			if (newLocation == NewRestResourceActionBase.ParamLocation.METHOD)
 			{
 				restRequest.getResource().removeProperty( parameterBeingMoved );
@@ -140,11 +142,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			newParameter.setStyle( parameterStyle );
 			newParameter.setValue( parameterValue );
 			newParameter.setDefaultValue( parameterValue );
-			newParameter.setOptions(options);
+			newParameter.setOptions( options );
 			newParameter.setRequired( required );
 			newParameter.setDescription( description );
 			newParameter.setDisableUrlEncoding( disableURLEncoding );
 			restRequest.getProperty( parameterBeingMoved ).setValue( parameterValue );
+			sortedPropertyNames = copyOfSortedPropertyNames;
 			firePropertyRemoved( parameterBeingMoved );
 			firePropertyAdded( parameterBeingMoved );
 		} finally
@@ -418,6 +421,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyAdded( String name )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -427,6 +431,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyRemoved( String name )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -436,6 +441,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyMoved( String name, int oldIndex, int newIndex )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -445,6 +451,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyRenamed( String oldName, String newName )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -461,6 +468,13 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		}
 	}
 
+	private void saveParameterOrder()
+	{
+		StringListConfig mapConfig = StringListConfig.Factory.newInstance();
+		mapConfig.setEntryArray( keySet().toArray( new String[keySet().size()] ) );
+		restRequest.getConfig().setParameterOrder( mapConfig );
+	}
+
 	private RestParamProperty getWrapper( RestParamProperty key )
 	{
 		if( !wrappers.containsKey( key ) )
@@ -472,7 +486,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void propertyAdded( String name )
 	{
-		if ( isMovingParameter( name ))
+		if ( isChangingLocationOfParameter( name ))
 		{
 			return;
 		}
@@ -490,7 +504,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void propertyRemoved( String name )
 	{
-		if ( isMovingParameter( name ))
+		if ( isChangingLocationOfParameter( name ))
 		{
 			return;
 		}
@@ -519,7 +533,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			firePropertyValueChanged( name, oldValue, newValue );
 	}
 
-	private boolean isMovingParameter( String name )
+	private boolean isChangingLocationOfParameter( String name )
 	{
 		return parameterBeingMoved != null && parameterBeingMoved.equals(name);
 	}

@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.RestRequestConfig;
-import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -578,7 +577,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			{
 				RestRequestConfig requestConfig = getConfig();
 				requestConfig.setParameters( StringToStringMapConfig.Factory.parse( values.toXml() ) );
-				updateParameterOrder();
 			}
 			catch( XmlException e )
 			{
@@ -593,7 +591,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
-			updateParameterOrder();
 		}
 
 		public void propertyRemoved( String name )
@@ -611,12 +608,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			sync();
 		}
 
-		private void updateParameterOrder()
-		{
-			StringListConfig mapConfig = StringListConfig.Factory.newInstance();
-			mapConfig.setEntryArray( params.keySet().toArray( new String[params.keySet().size()] ) );
-			getConfig().setParameterOrder( mapConfig );
-		}
 	}
 
 	public List<TestProperty> getPropertyList()

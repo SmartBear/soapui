@@ -122,6 +122,17 @@ public class RestRequestParamsPropertyHolderTest
 	}
 
 	@Test
+	public void retainsOrderWhenChangingLocation() throws Exception
+	{
+		String originalName = "secondParameter";
+		parametersHolder.addProperty( originalName );
+		parametersHolder.setParameterLocation( parametersHolder.getProperty( FIRST_PARAMETER_NAME ),
+				NewRestResourceActionBase.ParamLocation.METHOD );
+
+		assertThat( parametersHolder.getPropertyIndex( FIRST_PARAMETER_NAME ), is( 0 ) );
+	}
+
+	@Test
 	public void retainsLocationWhenRenamingParameter() throws Exception
 	{
 		String originalName = "secondParameter";
