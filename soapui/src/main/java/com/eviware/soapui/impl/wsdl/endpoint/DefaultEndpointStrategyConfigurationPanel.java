@@ -63,8 +63,11 @@ import java.util.List;
 
 public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements PropertyChangeListener
 {
+
+	// package protected to facilitate unit testing
+	JTable table;
+
 	private EndpointsTableModel tableModel;
-	private JTable table;
 	private JButton deleteButton;
 	private JButton assignButton;
 	private Interface iface;
@@ -150,7 +153,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 		add( scrollPane, BorderLayout.CENTER );
 		add( createButtons(), BorderLayout.NORTH );
 
-		iface.addPropertyChangeListener( "endpoints", this );
+		iface.addPropertyChangeListener( Interface.ENDPOINT_PROPERTY, this );
 	}
 
 	protected void enableButtons()
@@ -651,7 +654,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 
 	public void release()
 	{
-		iface.removePropertyChangeListener( "endpoints", this );
+		iface.removePropertyChangeListener( Interface.ENDPOINT_PROPERTY, this );
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
