@@ -103,12 +103,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.12.1</version>
+                <version>2.16</version>
                 <configuration>
                     <systemProperties>
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
                     </systemProperties>
-                    <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
 
