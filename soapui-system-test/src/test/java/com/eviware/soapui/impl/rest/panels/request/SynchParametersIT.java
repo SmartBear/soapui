@@ -18,6 +18,7 @@ import org.junit.Test;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
@@ -133,6 +134,7 @@ public class SynchParametersIT
 		{
 			projectNameList.add(project.getName());
 		}
+		Collections.sort( projectNameList );
 		return projectNameList;
 	}
 
