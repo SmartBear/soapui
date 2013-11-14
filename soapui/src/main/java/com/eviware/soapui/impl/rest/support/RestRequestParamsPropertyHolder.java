@@ -732,7 +732,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public List<TestProperty> getPropertyList()
 	{
-		return methodParams.getPropertyList();
+		List<TestProperty> propertyList = new ArrayList<TestProperty>();
+		for( InternalRestParamProperty internalRestParamProperty : wrappers.values() )
+		{
+			propertyList.add( internalRestParamProperty );
+		}
+		return propertyList;
 	}
 
 }
