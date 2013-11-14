@@ -38,7 +38,6 @@ import static org.junit.Assert.assertThat;
  * Time: 14:37
  * To change this template use File | Settings | File Templates.
  */
-@Ignore
 public class SynchParametersIT
 {
 	private static final int REST_RESOURCE_POSITION_IN_TREE = 3;
@@ -46,6 +45,7 @@ public class SynchParametersIT
 	private static final int REST_METHOD_POSITION_IN_TREE = 4;
 	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 	private Robot robot;
+	private int newPojectIndexInTree;
 
 	@BeforeClass
 	public static void setUpOnce()
@@ -73,6 +73,7 @@ public class SynchParametersIT
 		System.setProperty( "soapui.jxbrowser.disable", "true" );
 		application( SoapUI.class ).start();
 		robot = BasicRobot.robotWithCurrentAwtHierarchy();
+		newPojectIndexInTree = SoapUI.getWorkspace().getProjectList().size();
 	}
 
 	@Test
@@ -209,7 +210,7 @@ public class SynchParametersIT
 
 	private JPanelFixture getPanelFixture( FrameFixture frame, int panelPositionInNavigationTree, String panelName )
 	{
-		getNavigatorPanel( frame ).tree().node( panelPositionInNavigationTree ).doubleClick();
+		getNavigatorPanel( frame ).tree().node( newPojectIndexInTree + panelPositionInNavigationTree ).doubleClick();
 		return frame.panel( panelName );
 	}
 
