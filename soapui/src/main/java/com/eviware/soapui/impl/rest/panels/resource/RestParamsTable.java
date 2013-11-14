@@ -80,7 +80,7 @@ public class RestParamsTable extends JPanel
 	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
-		this( params, showInspector, new RestParamsTableModel( params ), defaultParamLocation, showEditableButtons,
+		this( params, showInspector, new RestParamsTableModel( params, RestParamsTableModel.Mode.MEDIUM ), defaultParamLocation, showEditableButtons,
 				showDefaultParamsButton );
 	}
 
@@ -295,7 +295,7 @@ public class RestParamsTable extends JPanel
 		}
 
 		toolbar.addSeparator();
-		if( inFullMode() )
+		if( !inMinimalMode() )
 		{
 			toolbar.add( UISupport.createToolbarButton( movePropertyDownAction, false ) );
 			toolbar.add( UISupport.createToolbarButton( movePropertyUpAction, false ) );
@@ -309,10 +309,10 @@ public class RestParamsTable extends JPanel
 		return toolbar;
 	}
 
-	private boolean inFullMode()
+	private boolean inMinimalMode()
 	{
 		RestParamsTableModel tableModel = ( RestParamsTableModel )getParamsTable().getModel();
-		return tableModel.isInFullMode();
+		return tableModel.isInMinimalMode();
 	}
 
 	public void extractParams( RestParamsPropertyHolder params, ParamLocation location )

@@ -23,14 +23,19 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestParamsPropertyHolder>
 {
 
+	private static final String NAME = "Name";
+	private static final String VALUE = "Value";
+	private static final String STYLE = "Style";
+
 	public static enum Mode
 	{
-		MINIMAL( new String[] { "Name", "Value" }, new Class[] { String.class, String.class } ),
+		MINIMAL( new String[] { NAME, VALUE }, new Class[] { String.class, String.class } ),
+		MEDIUM( new String[] { NAME, VALUE, STYLE }, new Class[] { String.class, String.class, ParameterStyle.class } ),
 		FULL( COLUMN_NAMES, COLUMN_TYPES );
 
-		final String[] columnNames;
+		private final String[] columnNames;
 
-		final Class[] columnTypes;
+		private final Class[] columnTypes;
 
 		private Mode( String[] columnNames, Class[] columnTypes )
 		{
@@ -40,9 +45,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 	}
 
-	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
-
-	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
+	static String[] COLUMN_NAMES = new String[] { NAME, "Default value", STYLE, "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
 
 	private Mode mode;
@@ -63,9 +66,9 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 		this( params, Mode.FULL );
 	}
 
-	public boolean isInFullMode()
+	public boolean isInMinimalMode()
 	{
-		return mode == Mode.FULL;
+		return mode == Mode.MINIMAL;
 	}
 
 	@Override
@@ -73,7 +76,6 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 	{
 		return mode.columnTypes.length;
 	}
-
 
 	@Override
 	public String getColumnName( int columnIndex )
@@ -108,7 +110,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 	public ParamLocation getParamLocationAt( int rowIndex )
 	{
-		return ( ParamLocation )getValueAt( rowIndex, PARAM_LOCATION_COLUMN_INDEX );
+		return getParameterAt( rowIndex ).getParamLocation();
 	}
 
 
@@ -126,7 +128,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 			case 2:
 				return mode == Mode.MINIMAL ? null : prop.getStyle();
 			case 3:
-				return mode == Mode.MINIMAL ? null : prop.getParamLocation();
+				return mode != Mode.FULL ? null : prop.getParamLocation();
 		}
 
 		return null;
@@ -155,7 +157,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 				prop.setValue( value.toString() );
 				return;
 			case 2:
-				if( mode == Mode.FULL )
+				if( mode != Mode.MINIMAL)
 				{
 					prop.setStyle( ( ParameterStyle )value );
 				}

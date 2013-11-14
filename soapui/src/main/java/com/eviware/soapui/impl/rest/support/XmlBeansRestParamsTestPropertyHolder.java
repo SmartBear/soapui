@@ -56,14 +56,21 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	private List<RestParamProperty> properties = new ArrayList<RestParamProperty>();
 	private Map<String, RestParamProperty> propertyMap = new HashMap<String, RestParamProperty>();
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
-	private ModelItem modelItem;
+	private final ModelItem modelItem;
+	private ParamLocation defaultParamLocation;
 	private Properties overrideProperties;
 	private String propertiesLabel = "Test Properties";
 
 	public XmlBeansRestParamsTestPropertyHolder( ModelItem modelItem, RestParametersConfig config )
 	{
+		this(modelItem, config, getParamLocation(modelItem) );
+	}
+
+	public XmlBeansRestParamsTestPropertyHolder( ModelItem modelItem, RestParametersConfig config, ParamLocation defaultParamLocation )
+	{
 		this.modelItem = modelItem;
 		this.config = config;
+		this.defaultParamLocation = defaultParamLocation;
 
 		for( RestParameterConfig propertyConfig : config.getParameterList() )
 		{
@@ -74,7 +81,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	protected XmlBeansRestParamProperty addProperty( RestParameterConfig propertyConfig, boolean notify )
 	{
 		XmlBeansRestParamProperty propertiesStepProperty = new XmlBeansRestParamProperty( propertyConfig,
-				getParamLocation());
+				defaultParamLocation);
 		properties.add( propertiesStepProperty );
 		propertyMap.put( propertiesStepProperty.getName().toUpperCase(), propertiesStepProperty );
 
@@ -86,12 +93,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		return propertiesStepProperty;
 	}
 
-	private ParamLocation getParamLocation()
+	private static ParamLocation getParamLocation(ModelItem modelItem1)
 	{
-		if (getModelItem()==null || getModelItem() instanceof RestResource)
+		if ( modelItem1 ==null || modelItem1 instanceof RestResource)
 		{
 			return ParamLocation.RESOURCE;
-		} else if (getModelItem() instanceof RestMethod)
+		} else if ( modelItem1 instanceof RestMethod)
 		{
 			return ParamLocation.METHOD;
 		}
@@ -575,7 +582,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	 */
 	public void saveTo( Properties props )
 	{
-		int cnt = 0;
 		for( RestParamProperty p : properties )
 		{
 			String name = p.getName();
@@ -584,7 +590,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 				value = "";
 
 			props.setProperty( name, value );
-			cnt++ ;
 		}
 	}
 
@@ -721,7 +726,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 		config.removeParameter( ix );
 
-		RestParameterConfig propertyConfig = null;
+		RestParameterConfig propertyConfig;
 
 		if( targetIndex < properties.size() )
 		{

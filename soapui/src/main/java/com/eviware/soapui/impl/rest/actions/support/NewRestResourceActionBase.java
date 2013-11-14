@@ -105,7 +105,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 			paramsTable.extractParams( resource.getParams(), ParamLocation.RESOURCE );
 
 			XmlBeansRestParamsTestPropertyHolder methodParams = new XmlBeansRestParamsTestPropertyHolder( null,
-					RestParametersConfig.Factory.newInstance() );
+					RestParametersConfig.Factory.newInstance(), ParamLocation.METHOD );
 			paramsTable.extractParams( methodParams, ParamLocation.METHOD );
 			SoapUI.getActionRegistry().getAction( NewRestMethodAction.SOAPUI_ACTION_ID ).perform( resource, methodParams );
 		}

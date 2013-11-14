@@ -48,35 +48,6 @@ public class RestResourceDesktopPanelTest
 		assertThat( resourceDesktopPanel.pathTextField.getText(), is( childResource.getFullPath() ));
 	}
 
-	@Ignore("Fix now, or later?")
-	@Test
-	public void allowsToDeleteParameterAfterParameterLevelChange() throws SoapUIException
-	{
-		RestParamsPropertyHolder params = addParamsToChildResource();
-
-		JTable parameterTable = getRestParameterTable();
-		openRestRequestDesktopPanelToAttachTheEventListenersForParameterlevelChange();
-
-		//Param1 to Method, and hence it should be removed
-		parameterTable.setValueAt( METHOD, 0, RestParamsTableModel.PARAM_LOCATION_COLUMN_INDEX );
-		params.removeProperty(PARAM_2 );
-
-		String remainingParam3 =  (String)parameterTable.getValueAt( 0, 0 );
-		assertThat( remainingParam3, Is.is( PARAM_3 ) );
-	}
-
-	@Test
-	public void doesNotMoveTheParameterToMethodOnParamLocationChangeToMethodWhenListenersNotAttached()
-			throws SoapUIException
-	{
-		RestParamsPropertyHolder params = addParamsToChildResource();
-		JTable parameterTable = getRestParameterTable();
-		//Change the level but it will not  really move it as listeners are not registered
-		parameterTable.setValueAt( METHOD, 0, RestParamsTableModel.PARAM_LOCATION_COLUMN_INDEX );
-		String param1StillExists =  (String)parameterTable.getValueAt( 0, 0 );
-		assertThat( param1StillExists, Is.is( PARAM_1 ) );
-	}
-
 	/**
 	 * This should be fixed as param location change listener should be present at each level
 	 * @return
