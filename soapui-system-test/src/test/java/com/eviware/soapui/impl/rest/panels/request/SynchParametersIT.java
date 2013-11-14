@@ -235,7 +235,8 @@ public class SynchParametersIT
 	private JPanelFixture getPanelFixture( int newPojectIndexInTree, FrameFixture frame,
 														int panelPositionInNavigationTree, String panelName )
 	{
-		getNavigatorPanel( frame ).tree().node( newPojectIndexInTree + panelPositionInNavigationTree ).doubleClick();
+		getNavigatorPanel( frame ).tree().node( newPojectIndexInTree + panelPositionInNavigationTree ).click();
+		robot.pressAndReleaseKeys( KeyEvent.VK_ENTER );
 		return frame.panel( panelName );
 	}
 
