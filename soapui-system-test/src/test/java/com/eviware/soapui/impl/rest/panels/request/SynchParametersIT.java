@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.utils.FestMatchers;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.KeyPressInfo;
@@ -13,10 +14,11 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.Ignore;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 import static com.eviware.soapui.impl.rest.panels.method.RestMethodDesktopPanel.REST_METHOD_EDITOR;
@@ -45,7 +47,7 @@ public class SynchParametersIT
 	private static final int REST_METHOD_POSITION_IN_TREE = 4;
 	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 	private Robot robot;
-	private int newPojectIndexInTree;
+	private List<String> existingProjectsNameList;
 
 	@BeforeClass
 	public static void setUpOnce()
@@ -73,7 +75,7 @@ public class SynchParametersIT
 		System.setProperty( "soapui.jxbrowser.disable", "true" );
 		application( SoapUI.class ).start();
 		robot = BasicRobot.robotWithCurrentAwtHierarchy();
-		newPojectIndexInTree = SoapUI.getWorkspace().getProjectList().size();
+		existingProjectsNameList = createProjectNameList();
 	}
 
 	@Test
@@ -83,21 +85,22 @@ public class SynchParametersIT
 
 		createNewRestProject( rootWindow );
 
-		JPanelFixture resourceEditor = openResourceEditor( rootWindow );
+		int newPojectIndexInTree = findTheIndexOfcurrentProjectInnavigationTree();
+		JPanelFixture resourceEditor = openResourceEditor( newPojectIndexInTree, rootWindow );
 
-		JPanelFixture requestEditor = openRequestEditor( rootWindow );
+		JPanelFixture requestEditor = openRequestEditor( newPojectIndexInTree, rootWindow );
 
 		addNewParameter( requestEditor, "Address", "Stockholm" );
 		verifyParamValues( requestEditor, 0, "Address", "Stockholm" );
 		verifyParamValues( resourceEditor, 0, "Address", "" );
 
-		openResourceEditor( rootWindow );
+		openResourceEditor(  newPojectIndexInTree, rootWindow );
 
 		addNewParameter( resourceEditor, "resParam", "value1" );
 		verifyParamValues( resourceEditor, 1, "resParam", "value1" );
 		verifyParamValues( requestEditor, 1, "resParam", "value1" );
 
-		JPanelFixture methodEditor = openMethodEditor( rootWindow );
+		JPanelFixture methodEditor = openMethodEditor(  newPojectIndexInTree, rootWindow );
 		addNewParameter( methodEditor, "mParam", "mValue" );
 		verifyParamValues( methodEditor, 0, "mParam", "mValue" );
 		verifyParamValues( requestEditor, 2, "mParam", "mValue" );
@@ -108,10 +111,29 @@ public class SynchParametersIT
 		verifyParamValues( resourceEditor, 2, "mParam", "mValue" );
 
 
-		openResourceEditor( rootWindow );
+		openResourceEditor(  newPojectIndexInTree, rootWindow );
 
 		closeWindow( rootWindow );
 
+	}
+
+	private int findTheIndexOfcurrentProjectInnavigationTree()
+	{
+		List<String> projectNameListWithNewProject = createProjectNameList();
+		projectNameListWithNewProject.removeAll( existingProjectsNameList );
+		String projectName = projectNameListWithNewProject.get( 0 );
+
+		return createProjectNameList().indexOf( projectName );
+	}
+
+	private List<String> createProjectNameList()
+	{
+		List<String> projectNameList = new ArrayList<String>(  );
+		for(Project project : SoapUI.getWorkspace().getProjectList() )
+		{
+			projectNameList.add(project.getName());
+		}
+		return projectNameList;
 	}
 
 	private void createNewRestProject( FrameFixture rootWindow )
@@ -193,22 +215,23 @@ public class SynchParametersIT
 		assertThat( restParamsTable.target.getRowCount(), is( 0 ) );
 	}
 
-	private JPanelFixture openMethodEditor( FrameFixture frame )
+	private JPanelFixture openMethodEditor( int newPojectIndexInTree, FrameFixture frame )
 	{
-		return getPanelFixture( frame, REST_METHOD_POSITION_IN_TREE, REST_METHOD_EDITOR );
+		return getPanelFixture( newPojectIndexInTree, frame, REST_METHOD_POSITION_IN_TREE, REST_METHOD_EDITOR );
 	}
 
-	private JPanelFixture openResourceEditor( FrameFixture frame )
+	private JPanelFixture openResourceEditor( int newPojectIndexInTree, FrameFixture frame )
 	{
-		return getPanelFixture( frame, REST_RESOURCE_POSITION_IN_TREE, REST_RESOURCE_EDITOR );
+		return getPanelFixture(  newPojectIndexInTree, frame, REST_RESOURCE_POSITION_IN_TREE, REST_RESOURCE_EDITOR );
 	}
 
-	private JPanelFixture openRequestEditor( FrameFixture frame )
+	private JPanelFixture openRequestEditor( int newPojectIndexInTree, FrameFixture frame )
 	{
-		return getPanelFixture( frame, REST_REQUEST_POSITION_IN_TREE, REST_REQUEST_EDITOR );
+		return getPanelFixture(  newPojectIndexInTree, frame, REST_REQUEST_POSITION_IN_TREE, REST_REQUEST_EDITOR );
 	}
 
-	private JPanelFixture getPanelFixture( FrameFixture frame, int panelPositionInNavigationTree, String panelName )
+	private JPanelFixture getPanelFixture( int newPojectIndexInTree, FrameFixture frame,
+														int panelPositionInNavigationTree, String panelName )
 	{
 		getNavigatorPanel( frame ).tree().node( newPojectIndexInTree + panelPositionInNavigationTree ).doubleClick();
 		return frame.panel( panelName );
