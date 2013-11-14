@@ -106,8 +106,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.ImportTestSuiteAction"/>
     <tns:action id="StarHermesJMS"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>
-    <tns:action id="StartLoadUI"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI"/>
     <tns:action id="CreateWebTestAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction"/>
 
@@ -222,10 +220,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteDownAction"/>
     <tns:action id="MoveTestSuiteUpAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
-    <tns:action id="GenerateLoadUITestsAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.GenerateLoadUITestsAction"/>
-    <tns:action id="ConvertTestSuiteLoadTestsToLoadUIAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ConvertTestSuiteLoadTestsToLoadUIAction"/>
     <tns:action id="CreateWebTestCaseAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction"/>
 
@@ -256,10 +250,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ToggleDisableTestCaseAction"/>
     <tns:action id="ExportTestCase"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ExportTestCaseAction"/>
-    <tns:action id="RunTestCaseWithLoadUIAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction"/>
-    <tns:action id="ConvertTestCaseLoadTestsToLoadUIAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ConvertTestCaseLoadTestsToLoadUIAction"/>
 
 
     <!-- TestStep Actions -->
@@ -309,8 +299,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.DeleteLoadTestAction"/>
     <tns:action id="CloneLoadTestAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.CloneLoadTestAction"/>
-    <tns:action id="ConvertToLoadUIAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.ConvertToLoadUIAction"/>
 
     <!-- SecurityTest Actions -->
     <tns:action id="RenameSecurityTestAction"
@@ -348,8 +336,6 @@
     <tns:action id="ImportMockService"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ImportMockService"/>
     <tns:action id="MockAsWar" actionClass="com.eviware.soapui.actions.MockAsWarAction"/>
-    <tns:action id="RunMockserviceWithLoadUIAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RunMockServiceWithLoadUIAction"/>
 
     <!-- MockOperation Actions -->
     <tns:action id="OpenRequestForMockOperationAction"
@@ -518,7 +504,6 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="StarHermesJMS"/>
         <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="StartLoadUI"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ShowOnlineSoapUIHelp"
                            keyStroke="F1" param="projects/index.html"/>
@@ -726,9 +711,6 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="TestSuiteTestRunnerAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="GenerateLoadUITestsAction"/>
-        <tns:actionMapping actionId="ConvertTestSuiteLoadTestsToLoadUIAction"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameTestSuiteAction"
                            keyStroke="F2"/>
         <tns:actionMapping actionId="DeleteTestSuiteAction"
@@ -773,10 +755,6 @@
         <tns:actionMapping actionId="ClearTestCaseAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="TestCaseTestRunnerAction"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="RunTestCaseWithLoadUIAction"/>
-        <tns:actionMapping actionId="ConvertTestCaseLoadTestsToLoadUIAction"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameTestCaseAction"
                            keyStroke="F2"/>
@@ -972,8 +950,6 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="LoadTestLoadTestRunnerAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="ConvertToLoadUIAction"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="CloneLoadTestAction"
                            keyStroke="F9"/>
         <tns:actionMapping actionId="RenameLoadTestAction"
@@ -1024,8 +1000,6 @@
                            keyStroke="menu N"/>
         <tns:actionMapping actionId="CloneMockServiceAction"
                            keyStroke="F9"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="RunMockserviceWithLoadUIAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddEndpointToInterfaceAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>

@@ -40,7 +40,6 @@ import javax.swing.event.ChangeListener;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.actions.loadtest.ConvertToLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTestRunner;
@@ -119,7 +118,6 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private GroovyEditorComponent tearDownGroovyEditor;
 	private GroovyEditorComponent setupGroovyEditor;
 	private JInspectorPanel inspectorPanel;
-	protected JButton convertToLoadUIButton;
 
 	public WsdlLoadTestDesktopPanel( WsdlLoadTest loadTest )
 	{
@@ -137,15 +135,10 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 	private void buildUI()
 	{
-		// why we need contentPanel???!
-		
-//		contentPanel = new JPanel( new BorderLayout() );
-
 		add( buildToolbar(), BorderLayout.NORTH );
 		add( buildContent(), BorderLayout.CENTER );
 
     	setPreferredSize( new Dimension( 600, 500 ) );
-//		add( contentPanel , BorderLayout.CENTER);
 	}
 
 	private JComponent buildContent()
@@ -222,8 +215,6 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 				loadTest );
 		optionsDelegate.putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/options.gif" ) );
 		optionsButton = UISupport.createToolbarButton( optionsDelegate );
-		convertToLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				ConvertToLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/convertLoadTestToLoadUI.png" ) );
 
 		strategyCombo = new JComboBox( LoadStrategyRegistry.getInstance().getStrategies() );
 		strategyCombo.setToolTipText( "Selects which LoadTest Strategy to use" );
@@ -249,7 +240,6 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		toolbar.add( exportButton );
 
 		toolbar.add( optionsButton );
-		toolbar.add( convertToLoadUIButton );
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.LOADTESTEDITOR_HELP_URL ) ) );
 		toolbar.add( Box.createHorizontalGlue() );
 		buildLimitBar( toolbar );
@@ -384,11 +374,6 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 		return release();
 	}
-
-//	public JComponent getComponent()
-//	{
-//		return contentPanel;
-//	}
 
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{

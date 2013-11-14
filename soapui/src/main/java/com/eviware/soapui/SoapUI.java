@@ -39,7 +39,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile.WSCompileActio
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
-import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
@@ -148,12 +147,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -362,7 +356,6 @@ public class SoapUI
 			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
 			ProxyUtils.setProxyEnabled( false );
 		}
-		mainToolbar.add( new LaunchLoadUIButtonAction() );
 
 		mainToolbar.addGlue();
 
@@ -1269,52 +1262,6 @@ public class SoapUI
 					applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
 				}
 			}
-		}
-	}
-
-	private class LaunchLoadUIButtonAction extends AbstractAction
-	{
-		private final class LoadUIRunner implements Runnable
-		{
-			public void run()
-			{
-				Process p = StartLoadUI.launchLoadUI();
-				if( p != null )
-				{
-					InputStream is = p.getInputStream();
-					Logger soapUILogger = Logger.getLogger( "com.eviware.soapui" );
-					try
-					{
-						BufferedInputStream inputStream = new BufferedInputStream( is );
-						BufferedReader bris = new BufferedReader( new InputStreamReader( inputStream ) );
-						String line;
-						while( ( line = bris.readLine() ) != null )
-						{
-							soapUILogger.info( line );
-						}
-						inputStream.close();
-						bris.close();
-						is.close();
-					}
-					catch( IOException e1 )
-					{// Catch exception if any
-						SoapUI.logError( e1 );
-					}
-				}
-
-			}
-		}
-
-		public LaunchLoadUIButtonAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/launchLoadUI.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Launch loadUI" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			Thread launchLoadUI = new Thread( new LoadUIRunner() );
-			launchLoadUI.start();
 		}
 	}
 
