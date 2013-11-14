@@ -18,14 +18,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
 public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 {
@@ -158,7 +151,7 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public Set<String> keySet()
 	{
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new LinkedHashSet<String>();
 		for( TestProperty prop : values() )
 		{
 			names.add( prop.getName() );

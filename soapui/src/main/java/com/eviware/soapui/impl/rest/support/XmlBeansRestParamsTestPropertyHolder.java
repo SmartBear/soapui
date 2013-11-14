@@ -853,7 +853,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	public Collection<TestProperty> values()
 	{
 		ArrayList<TestProperty> result = new ArrayList<TestProperty>();
-		result.addAll( propertyMap.values() );
+		result.addAll( properties );
 		return result;
 	}
 
