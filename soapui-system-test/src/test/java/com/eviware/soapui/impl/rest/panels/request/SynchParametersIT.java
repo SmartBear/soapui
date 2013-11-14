@@ -13,6 +13,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.Ignore;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -37,6 +38,7 @@ import static org.junit.Assert.assertThat;
  * Time: 14:37
  * To change this template use File | Settings | File Templates.
  */
+@Ignore
 public class SynchParametersIT
 {
 	private static final int REST_RESOURCE_POSITION_IN_TREE = 3;
