@@ -92,6 +92,7 @@ import com.eviware.soapui.support.log.Log4JMonitor;
 import com.eviware.soapui.support.log.LogDisablingTestMonitorListener;
 import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
+import com.eviware.soapui.support.preferences.UserPreferences;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.tools.CmdLineRunner;
@@ -165,6 +166,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.prefs.BackingStoreException;
 
 /**
  * Main SoapUI entry point.
@@ -183,7 +185,7 @@ public class SoapUI
 	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
@@ -403,7 +405,7 @@ public class SoapUI
 		return mainToolbar;
 	}
 
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public void doForumSearch( String text )
 	{
 		if( !searchField.getText().equals( text ) )
@@ -1864,9 +1866,32 @@ public class SoapUI
 
 		private void expandWindow( JFrame frame )
 		{
-			Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-			Dimension screenResolution = availableScreenArea.getSize();
-			frame.setSize( screenResolution.width, screenResolution.height );
+			Rectangle savedWindowBounds = new UserPreferences().getSoapUIWindowBounds();
+			if( savedWindowBounds == null )
+			{
+				Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+				Dimension screenResolution = availableScreenArea.getSize();
+				frame.setSize( screenResolution.width, screenResolution.height );
+			}
+			else
+			{
+				frame.setBounds( savedWindowBounds );
+			}
+			frame.addWindowListener( new WindowAdapter()
+			{
+				@Override
+				public void windowClosing( WindowEvent event )
+				{
+					try
+					{
+						new UserPreferences().setSoapUIWindowBounds( event.getWindow().getBounds() );
+					}
+					catch( BackingStoreException e )
+					{
+						logError( e, "Could not save SoapUI window bounds" );
+					}
+				}
+			} );
 		}
 
 	}
