@@ -136,12 +136,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
@@ -1867,11 +1862,10 @@ public class SoapUI
 		private void expandWindow( JFrame frame )
 		{
 			Rectangle savedWindowBounds = new UserPreferences().getSoapUIWindowBounds();
-			if( savedWindowBounds == null )
+			if( savedWindowBounds == null || !windowFullyVisibleOnScreen( savedWindowBounds ) )
 			{
 				Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-				Dimension screenResolution = availableScreenArea.getSize();
-				frame.setSize( screenResolution.width, screenResolution.height );
+				frame.setBounds( availableScreenArea );
 			}
 			else
 			{
@@ -1894,6 +1888,18 @@ public class SoapUI
 			} );
 		}
 
+		private boolean windowFullyVisibleOnScreen( Rectangle windowBounds )
+		{
+			Rectangle bargainBounds = new Rectangle( windowBounds.x, windowBounds.y, windowBounds.width * 4 / 5, windowBounds.height * 4 / 5 );
+			for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
+			{
+				if( graphicsDevice.getDefaultConfiguration().getBounds().contains( bargainBounds ) )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 }
