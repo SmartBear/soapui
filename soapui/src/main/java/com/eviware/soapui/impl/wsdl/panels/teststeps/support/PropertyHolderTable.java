@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
@@ -325,7 +326,12 @@ public class PropertyHolderTable extends JPanel
 			{
 				for( String name : holder.getPropertyNames() )
 				{
-					holder.getProperty( name ).setValue( null );
+					TestProperty property = holder.getProperty( name );
+					property.setValue( null );
+					if( property instanceof RestParameter )
+					{
+						( ( RestParameter )property ).setDefaultValue( null );
+					}
 				}
 			}
 		}
@@ -398,8 +404,13 @@ public class PropertyHolderTable extends JPanel
 										&& holder instanceof MutableTestPropertyHolder )
 								{
 									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
-									if( !prop.isReadOnly() )
+									if( !prop.isReadOnly() ) {
 										prop.setValue( value );
+										if( prop instanceof RestParameter )
+										{
+											( ( RestParameter )prop ).setDefaultValue( value );
+										}
+									}
 									count++;
 								}
 
