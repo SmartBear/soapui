@@ -21,11 +21,7 @@ import javax.swing.JTable;
 import java.awt.event.ActionEvent;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-17
- * Time: 11:03
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 public class RemovePropertyAction extends AbstractAction
 {

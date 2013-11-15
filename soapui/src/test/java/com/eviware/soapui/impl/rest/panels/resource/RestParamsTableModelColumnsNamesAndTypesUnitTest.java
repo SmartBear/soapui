@@ -16,11 +16,7 @@ import java.util.Collection;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-08-29
- * Time: 14:41
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 @RunWith( Parameterized.class )
 public class RestParamsTableModelColumnsNamesAndTypesUnitTest

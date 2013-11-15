@@ -11,11 +11,7 @@ import static org.fest.swing.finder.WindowFinder.findDialog;
 import static org.fest.swing.finder.WindowFinder.findFrame;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-30
- * Time: 09:42
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 public class FestMatchers
 {

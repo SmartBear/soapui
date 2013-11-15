@@ -32,11 +32,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-18
- * Time: 11:06
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 public class AddParamActionTest
 {

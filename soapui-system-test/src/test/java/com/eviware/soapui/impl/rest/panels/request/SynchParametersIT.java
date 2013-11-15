@@ -35,11 +35,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-29
- * Time: 14:37
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 public class SynchParametersIT
 {
