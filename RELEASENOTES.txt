@@ -11,8 +11,10 @@
 * REST resource base path is duplicated each time Request is opened (SOAP-941)
 * Test Step editor parameter table value column heading is wrong (SOAP-856)
 * Make mock services packaged as war files work across different OSes. (SOAP-976)
+* Add missing break statement in case SEPARATOR (SOAP-910) ( Contribution from Marc Paquette)
 
 ### Minor improvements ###
+* Sort endpoints alphanumerically (SOAP-983) ( Contribution from Vincent Frison)
 
 ### Updated libraries ###
 * Groovy 2.1.7 (SOAP-630)
