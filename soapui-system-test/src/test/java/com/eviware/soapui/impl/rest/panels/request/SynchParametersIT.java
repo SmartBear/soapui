@@ -106,8 +106,8 @@ public class SynchParametersIT
 		verifyParamValues( methodEditor, 0, "mParam", "mValue" );
 		verifyParamValues( requestEditor, 2, "mParam", "mValue" );
 
-
-		changeParameterLevel( methodEditor, 0, ParamLocation.RESOURCE );
+		openRequestEditor( newPojectIndexInTree, rootWindow );
+		changeParameterLevel( requestEditor, 2, ParamLocation.RESOURCE );
 		verifyEmptyTable( methodEditor );
 		verifyParamValues( resourceEditor, 2, "mParam", "mValue" );
 
