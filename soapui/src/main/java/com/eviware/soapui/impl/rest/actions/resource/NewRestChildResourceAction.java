@@ -21,8 +21,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormDialog;
 
 /**
- * Actions for importing an existing SoapUI project file into the current
- * workspace
+ * Action for adding a new child REST resource.
  * 
  * @author Ole.Matzura
  */
@@ -70,11 +69,11 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 		{
 			// adjust path
 			path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
-			resource = possibleParent.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
+			resource = possibleParent.addNewChildResource( extractNameFromPath( path ), path );
 		}
 		else
 		{
-			resource = parentResource.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
+			resource = parentResource.addNewChildResource( extractNameFromPath( path ), path );
 		}
 
 		return resource;
@@ -83,7 +82,7 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 	@Override
 	protected RestMethod createRestMethod( RestResource resource, XFormDialog dialog )
 	{
-		RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
+		RestMethod method = resource.addNewMethod( dialog.getValue( extractNameFromPath(dialog.getValue( Form.RESOURCEPATH )) ) );
 		method.setMethod( RestRequestInterface.RequestMethod.GET );
 		return method;
 	}
