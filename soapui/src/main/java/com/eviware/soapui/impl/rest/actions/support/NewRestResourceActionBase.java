@@ -85,12 +85,28 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 	protected abstract RestResource createRestResource( T service, String path, XFormDialog dialog );
 
-	protected abstract RestMethod createRestMethod( RestResource resource, XFormDialog dialog );
-
 	protected String extractNameFromPath( String path )
 	{
-		String[] items = path.split( "/" );
-		return items[items.length - 1];
+		String strippedPath;
+		if (path.contains("?") || path.contains(";"))
+		{
+			int parametersIndex = findParametersIndex( path );
+			strippedPath = path.substring(0, parametersIndex);
+		}
+		else
+		{
+			strippedPath = path;
+		}
+		String[] items = strippedPath.split( "/" );
+		return items.length == 0 ? "" : items[items.length - 1];
+	}
+
+	private int findParametersIndex( String path )
+	{
+		int semicolonIndex = path.indexOf( ';' );
+		int questionMarkIndex = path.indexOf( '?' );
+		return Math.min( semicolonIndex == -1 ? Integer.MAX_VALUE : semicolonIndex,
+				questionMarkIndex == -1  ? Integer.MAX_VALUE : questionMarkIndex);
 	}
 
 	protected void createRequest( RestMethod method )

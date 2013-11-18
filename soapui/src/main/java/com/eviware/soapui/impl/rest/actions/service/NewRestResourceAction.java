@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.rest.actions.service;
 
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
@@ -71,22 +69,14 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
 			// adjust path
 			if( p.length() > 0 && possibleParent.getFullPath().length() > 0 )
 				path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
-			resource = possibleParent.addNewChildResource( extractNameFromPath(path), path );
+			resource = possibleParent.addNewChildResource( extractNameFromPath( path ), path );
 		}
 		else
 		{
-			resource = service.addNewResource( extractNameFromPath(path), path );
+			resource = service.addNewResource( extractNameFromPath( path ), path );
 		}
 
 		return resource;
-	}
-
-	@Override
-	protected RestMethod createRestMethod( RestResource resource, XFormDialog dialog )
-	{
-		RestMethod method = resource.addNewMethod( extractNameFromPath( dialog.getValue( Form.RESOURCEPATH ) ) );
-		method.setMethod( RestRequestInterface.RequestMethod.GET );
-		return method;
 	}
 
 }
