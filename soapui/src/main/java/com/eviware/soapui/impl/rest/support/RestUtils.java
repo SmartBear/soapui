@@ -31,12 +31,24 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class RestUtils
 {
-	private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]" );
+
+	public static enum TemplateExtractionOption
+	{
+		/**
+		 * .../{param}/...
+		 */
+		CURLY_BRACKETS,
+		/**
+		 * .../42/...
+		 */
+		INTEGER
+	}
 
 	public static String[] extractTemplateParams( String path )
 	{
@@ -64,10 +76,10 @@ public class RestUtils
 
 	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
-		return extractParams( pathOrEndpoint, params, keepHost, true );
+		return extractParams( pathOrEndpoint, params, keepHost, EnumSet.allOf( TemplateExtractionOption.class ) );
 	}
 
-	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, boolean createTemplateParams )
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, EnumSet<TemplateExtractionOption> templateExtractionOptions )
 	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
@@ -103,16 +115,19 @@ public class RestUtils
 			{
 				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
 				{
-					String name = item.substring( 1, item.length() - 1 );
-					RestParamProperty property = params.getProperty( name );
-					if( !params.hasProperty( name ) )
+					if( templateExtractionOptions.contains( TemplateExtractionOption.CURLY_BRACKETS ) )
 					{
-						property = params.addProperty( name );
-					}
+						String name = item.substring( 1, item.length() - 1 );
+						RestParamProperty property = params.getProperty( name );
+						if( !params.hasProperty( name ) )
+						{
+							property = params.addProperty( name );
+						}
 
-					property.setStyle( ParameterStyle.TEMPLATE );
-					property.setValue( name );
-					property.setDefaultValue( name );
+						property.setStyle( ParameterStyle.TEMPLATE );
+						property.setValue( name );
+						property.setDefaultValue( name );
+					}
 				}
 				else
 				{
@@ -148,7 +163,7 @@ public class RestUtils
 						}
 					}
 
-					if( createTemplateParams )
+					if( templateExtractionOptions.contains( TemplateExtractionOption.INTEGER ) )
 					{
 						Integer.parseInt( item );
 

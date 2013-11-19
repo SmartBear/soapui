@@ -42,6 +42,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
@@ -61,6 +62,7 @@ public class RestParamsTable extends JPanel
 	protected UpdateParamsAction updateParamsAction = null;
 	private PresentationModel<RestParamProperty> paramDetailsModel;
 	private SimpleBindingForm detailsForm;
+	private ParamLocation defaultParamLocation;
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
 	private JSplitPane splitPane;
@@ -76,6 +78,7 @@ public class RestParamsTable extends JPanel
 									ParamLocation defaultParamLocation, boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
 		super( new BorderLayout() );
+		this.defaultParamLocation = defaultParamLocation;
 		this.showEditableButtons = showEditableButtons;
 		this.showDefaultParamsButton = showDefaultParamsButton;
 		this.params = params;
@@ -380,7 +383,10 @@ public class RestParamsTable extends JPanel
 
 			try
 			{
-				RestUtils.extractParams( str, params, false );
+				RestUtils.extractParams( str, params, false,
+						defaultParamLocation == ParamLocation.RESOURCE
+								? EnumSet.allOf(RestUtils.TemplateExtractionOption.class )
+								: EnumSet.noneOf( RestUtils.TemplateExtractionOption.class ) );
 			}
 			catch( Exception e1 )
 			{

@@ -13,8 +13,11 @@
 package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.utils.ModelItemFactory;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
+
+import java.util.EnumSet;
 
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
 import static org.hamcrest.core.Is.is;
@@ -38,6 +41,51 @@ public class RestUtilsTestCase
 		assertEquals( params.length, 2 );
 		assertEquals( "id", params[0] );
 		assertEquals( "test", params[1] );
+	}
+
+	@Test
+	public void extractsTemplateParameterFromCurlyBracketsAndInteger() throws Exception
+	{
+		String path = "/{id}/42";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, EnumSet.allOf( RestUtils.TemplateExtractionOption.class ) );
+		assertThat( extractedPath, is( "/{id}/{param0}" ) );
+		assertEquals( params.getPropertyCount(), 2 );
+		RestParamProperty id = params.getProperty( "id" );
+		assertThat( id.getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
+		assertThat( id.getValue(), is( "id" ) );
+		RestParamProperty param0 = params.getProperty( "param0" );
+		assertThat( param0.getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
+		assertThat( param0.getValue(), is( "42" ) );
+	}
+
+	@Test
+	public void extractsTemplateParameterFromCurlyBrackets() throws Exception
+	{
+		String path = "/{id}/42";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, EnumSet.of( RestUtils.TemplateExtractionOption.CURLY_BRACKETS ) );
+		assertThat( extractedPath, is( path ) );
+		assertEquals( params.getPropertyCount(), 1 );
+		RestParamProperty id = params.getProperty( "id" );
+		assertThat( id.getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
+		assertThat( id.getValue(), is( "id" ) );
+	}
+
+	@Test
+	public void extractsTemplateParameterFromInteger() throws Exception
+	{
+		String path = "/{id}/42";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, EnumSet.of( RestUtils.TemplateExtractionOption.INTEGER ) );
+		assertThat( extractedPath, is( "/{id}/{param0}" ) );
+		assertEquals( params.getPropertyCount(), 1 );
+		RestParamProperty param0 = params.getProperty( "param0" );
+		assertThat( param0.getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
+		assertThat( param0.getValue(), is( "42" ) );
 	}
 
 	@Test

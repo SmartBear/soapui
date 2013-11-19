@@ -18,14 +18,8 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 import java.net.MalformedURLException;
+import java.util.EnumSet;
 
-/**
- * Created with IntelliJ IDEA.
- * User: manne
- * Date: 11/19/13
- * Time: 11:32 AM
- * To change this template use File | Settings | File Templates.
- */
 public class RestServiceBuilder
 {
 
@@ -62,7 +56,7 @@ public class RestServiceBuilder
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
 	{
 		// This does lot of magic including extracting and filling up parameters on the params
-		RestUtils.extractParams( URI, params, false, false );
+		RestUtils.extractParams( URI, params, false, EnumSet.of(RestUtils.TemplateExtractionOption.CURLY_BRACKETS ) );
 	}
 
 	//TODO: In advanced version we have to apply filtering like which type of parameter goes to which location
