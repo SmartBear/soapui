@@ -239,7 +239,7 @@ public class UISupport
 
 	public static void showErrorMessage( String message )
 	{
-		if( message.length() > 120 )
+		if( message != null && message.length() > 120 )
 		{
 			dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
 		}

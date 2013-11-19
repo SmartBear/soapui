@@ -15,25 +15,28 @@ package com.eviware.soapui.impl.actions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
-import com.eviware.soapui.impl.rest.*;
-import com.eviware.soapui.impl.rest.support.*;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.RestURIParser;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
+import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.x.form.*;
-import com.eviware.x.impl.swing.JTextFieldFormField;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
+import com.eviware.x.form.XFormDialog;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.AbstractAction;
+import java.awt.event.ActionEvent;
 import java.net.MalformedURLException;
 
 /**
@@ -46,21 +49,13 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 {
 	public static final String SOAPUI_ACTION_ID = "NewRestProjectAction";
 
-	private static final Logger logger = Logger.getLogger( NewRestProjectAction.class );
 	private static final String DEFAULT_PROJECT_NAME = "REST Project";
-	private static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
 	private static final MessageSupport messages = MessageSupport.getMessages( NewRestProjectAction.class );
-	private static final String URI_LABEL = messages.get( "Form.URI.Label" );
-	private static final String URI_DESCRIPTION = messages.get( "Form.URI.Description" );
 
 
+	private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
 	private XFormDialog dialog;
 
-	private KeyListener initialKeyListener;
-	private MouseListener initialMouseListener;
-	private Font originalFont;
-
-	private boolean defaultURIReplaced;
 
 	public NewRestProjectAction()
 	{
@@ -68,16 +63,9 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	}
 
 
-	private XFormDialog buildDialog()
+	public void perform( WorkspaceImpl workspace, Object param )
 	{
-
-		XFormDialogBuilder newDialogBuilder = XFormFactory.createDialogBuilder( messages.get( "Title" ) );
-		XForm form = newDialogBuilder.createForm( "" );
-		form.addTextField( URI_LABEL, URI_DESCRIPTION, XForm.FieldType.TEXT );
-
-		ActionList actions = newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL );
-
-		actions.addAction( new AbstractAction( "Import WADL..." )
+		dialog = dialogBuilder.buildDialog( messages, new AbstractAction( "Import WADL..." )
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -86,48 +74,17 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				SoapUI.getActionRegistry().getAction( NewWadlProjectAction.SOAPUI_ACTION_ID ).perform( SoapUI.getWorkspace(), null );
 			}
 		} );
-
-		return newDialogBuilder.buildDialog( actions, messages.get( "Description" ), UISupport.TOOL_ICON );
-	}
-
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		if( dialog == null )
-		{
-			dialog = buildDialog();
-		}
-		dialog.setValue( URI_LABEL, EXAMPLE_URI );
-		XFormField uriField = dialog.getFormField( URI_LABEL );
-
-		JUndoableTextField textField = null;
-		if( uriField instanceof JTextFieldFormField )
-		{
-			defaultURIReplaced = false;
-			textField = ( ( JTextFieldFormField )uriField ).getComponent();
-			textField.requestFocus();
-			originalFont = textField.getFont();
-			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
-			textField.setForeground( new Color( 170, 170, 170 ) );
-			logger.log( Level.TRACE, "Adding listeners to URI text field" );
-			addListenersTo( textField );
-		}
-
 		while( dialog.show() )
 		{
 			WsdlProject project = null;
 			try
 			{
-				if( !defaultURIReplaced && textField != null )
+				String uri = dialogBuilder.getUri();
+				if( uri != null )
 				{
-					resetUriField( textField );
+					project = workspace.createProject( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), null );
+					createRestService( project, uri );
 				}
-
-				String URI = dialog.getValue( URI_LABEL ).trim();
-
-				project = workspace.createProject( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), null );
-
-				createRestProject( project, URI );
-
 				// If there is no exception or error we break out
 				break;
 
@@ -139,64 +96,12 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 				{
 					workspace.removeProject( project );
 				}
+				dialogBuilder.resetUriField();
 			}
-		}
-		if( !defaultURIReplaced && textField != null )
-		{
-			resetUriField( textField );
 		}
 	}
 
-
-	private void addListenersTo( final JUndoableTextField innerField )
-	{
-		initialKeyListener = new KeyAdapter()
-		{
-
-			@Override
-			public void keyPressed( KeyEvent e )
-			{
-				resetUriField( innerField );
-
-			}
-		};
-		innerField.addKeyListener( initialKeyListener );
-		initialMouseListener = new MouseAdapter()
-		{
-
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				resetUriField( innerField );
-			}
-		};
-		innerField.addMouseListener( initialMouseListener );
-	}
-
-	private void resetUriField( JUndoableTextField innerField )
-	{
-		try
-		{
-			defaultURIReplaced = true;
-			innerField.setText( "" );
-			innerField.setFont( originalFont );
-			innerField.setForeground( Color.BLACK );
-		}
-		finally
-		{
-			if( initialKeyListener != null )
-			{
-				innerField.removeKeyListener( initialKeyListener );
-			}
-			if( initialMouseListener != null )
-			{
-				innerField.removeMouseListener( initialMouseListener );
-			}
-		}
-
-	}
-
-	protected void createRestProject( WsdlProject project, String URI ) throws MalformedURLException
+	protected void createRestService( WsdlProject project, String URI ) throws MalformedURLException
 	{
 		if( StringUtils.isNullOrEmpty( URI ) )
 		{
@@ -248,7 +153,6 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 	{
 		RestMethod restMethod = restResource.addNewMethod( methodName );
 		restMethod.setMethod( RestRequestInterface.RequestMethod.GET );
-
 		return restMethod;
 	}
 
