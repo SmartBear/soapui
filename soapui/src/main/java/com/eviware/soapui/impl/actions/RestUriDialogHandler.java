@@ -47,7 +47,10 @@ public class RestUriDialogHandler
 
 		ActionList actions = newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL );
 
-		actions.addAction( actionToBeAdded );
+		if( actionToBeAdded != null )
+		{
+			actions.addAction( actionToBeAdded );
+		}
 
 		dialog = newDialogBuilder.buildDialog( actions, messages.get( "Description" ), UISupport.TOOL_ICON );
 		dialog.setValue( uriLabelKey, EXAMPLE_URI );
