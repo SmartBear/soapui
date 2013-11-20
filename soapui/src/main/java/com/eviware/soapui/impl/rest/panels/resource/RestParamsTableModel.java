@@ -27,6 +27,11 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 	private static final String VALUE = "Value";
 	private static final String STYLE = "Style";
 
+	public static final int NAME_COLUMN_INDEX = 0;
+	public static final int VALUE_COLUMN_INDEX = 1;
+	public static final int STYLE_COLUMN_INDEX = 2;
+	public static final int LOCATION_COLUMN_INDEX = 3;
+
 	public static enum Mode
 	{
 		MINIMAL( new String[] { NAME, VALUE }, new Class[] { String.class, String.class } ),
@@ -121,13 +126,13 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 		switch( columnIndex )
 		{
-			case 0:
+			case NAME_COLUMN_INDEX:
 				return prop.getName();
-			case 1:
+			case VALUE_COLUMN_INDEX:
 				return prop.getValue();
-			case 2:
+			case STYLE_COLUMN_INDEX:
 				return mode == Mode.MINIMAL ? null : prop.getStyle();
-			case 3:
+			case LOCATION_COLUMN_INDEX:
 				return mode != Mode.FULL ? null : prop.getParamLocation();
 		}
 
@@ -141,7 +146,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 		switch( columnIndex )
 		{
-			case 0:
+			case NAME_COLUMN_INDEX:
 				if( propertyExists( value, prop ) )
 				{
 					return;
@@ -149,20 +154,20 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 				params.renameProperty( prop.getName(), value.toString() );
 				return;
-			case 1:
+			case VALUE_COLUMN_INDEX:
 				//if( !prop.getParamLocation().equals( ParamLocation.REQUEST ) )
 				//{
 				prop.setDefaultValue( value.toString() );
 				//}
 				prop.setValue( value.toString() );
 				return;
-			case 2:
-				if( mode != Mode.MINIMAL)
+			case STYLE_COLUMN_INDEX:
+				if( mode != Mode.MINIMAL )
 				{
 					prop.setStyle( ( ParameterStyle )value );
 				}
 				return;
-			case 3:
+			case LOCATION_COLUMN_INDEX:
 				if( mode == Mode.FULL )
 				{
 					if( params.getModelItem() != null && params.getModelItem() instanceof RestRequest )
@@ -177,12 +182,6 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 	public RestParamProperty getParameterAt( int selectedRow )
 	{
 		return ( RestParamProperty )super.getPropertyAtRow( selectedRow );
-	}
-
-	public ParameterStyle[] getParameterStylesForEdit()
-	{
-		return new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER,
-				ParameterStyle.MATRIX, ParameterStyle.PLAIN };
 	}
 
 	public ParamLocation[] getParameterLevels()

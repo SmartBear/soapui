@@ -648,7 +648,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) )
+			if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) && getPath() != null)
 			{
 				String name = ( ( RestParamProperty )evt.getSource() ).getName();
 				if( evt.getOldValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE )

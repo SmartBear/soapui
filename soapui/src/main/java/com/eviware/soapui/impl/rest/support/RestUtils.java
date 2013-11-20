@@ -32,11 +32,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class RestUtils
 {
-	private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]" );
+
+	public static enum TemplateExtractionOption
+	{
+		EXTRACT_TEMPLATE_PARAMETERS, IGNORE_TEMPLATE_PARAMETERS
+	}
 
 	public static String[] extractTemplateParams( String path )
 	{
@@ -64,10 +67,10 @@ public class RestUtils
 
 	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
-		return extractParams( pathOrEndpoint, params, keepHost, true );
+		return extractParams( pathOrEndpoint, params, keepHost, TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
 	}
 
-	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, boolean createTemplateParams )
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, TemplateExtractionOption templateExtractionOptions )
 	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
@@ -94,7 +97,6 @@ public class RestUtils
 
 		String[] items = path.split( "/" );
 
-		int templateParamCount = 0;
 		StringBuilder resultPath = new StringBuilder();
 
 		for( String item : items )
@@ -103,16 +105,19 @@ public class RestUtils
 			{
 				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
 				{
-					String name = item.substring( 1, item.length() - 1 );
-					RestParamProperty property = params.getProperty( name );
-					if( !params.hasProperty( name ) )
+					if( templateExtractionOptions == TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS )
 					{
-						property = params.addProperty( name );
-					}
+						String name = item.substring( 1, item.length() - 1 );
+						RestParamProperty property = params.getProperty( name );
+						if( !params.hasProperty( name ) )
+						{
+							property = params.addProperty( name );
+						}
 
-					property.setStyle( ParameterStyle.TEMPLATE );
-					property.setValue( name );
-					property.setDefaultValue( name );
+						property.setStyle( ParameterStyle.TEMPLATE );
+						property.setValue( name );
+						property.setDefaultValue( name );
+					}
 				}
 				else
 				{
@@ -146,25 +151,6 @@ public class RestUtils
 								property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
 							}
 						}
-					}
-
-					if( createTemplateParams )
-					{
-						Integer.parseInt( item );
-
-						String name = "param" + templateParamCount++;
-						RestParamProperty property = params.getProperty( name );
-						if( !params.hasProperty( name ) )
-						{
-							property = params.addProperty( name );
-						}
-
-						property.setStyle( ParameterStyle.TEMPLATE );
-						property.setValue( item );
-						property.setDefaultValue( item );
-
-						item = "{" + property.getName() + "}";
-
 					}
 				}
 			}

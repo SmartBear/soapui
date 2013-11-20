@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.resource;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.hamcrest.core.Is;
@@ -61,7 +62,9 @@ public class RestParamsTableModelColumnsNamesAndTypesUnitTest
 	public void setUp() throws SoapUIException
 	{
 		RestRequest restRequest = ModelItemFactory.makeRestRequest();
-		restParamsTableModel = new RestParamsTableModel( restRequest.getParams() );
+		RestParamsPropertyHolder params = restRequest.getParams();
+		params.addProperty( "param" );
+		restParamsTableModel = new RestParamsTableModel( params );
 	}
 
 	@Test
@@ -71,7 +74,7 @@ public class RestParamsTableModelColumnsNamesAndTypesUnitTest
 		assertThat( restParamsTableModel.getColumnName( this.columnIndex ), IsEqual.equalTo( this.columnName ) );
 		assertThat( restParamsTableModel.getColumnClass( this.columnIndex ), IsEqual.equalTo( this.columnType ) );
 
-		assertThat( restParamsTableModel.isCellEditable( 1, this.columnIndex ), Is.is (true) );
+		assertThat( restParamsTableModel.isCellEditable( 0, this.columnIndex ), Is.is (true) );
 	}
 
 }

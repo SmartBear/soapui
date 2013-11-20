@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.utils.ModelItemFactory;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
@@ -38,6 +39,31 @@ public class RestUtilsTestCase
 		assertEquals( params.length, 2 );
 		assertEquals( "id", params[0] );
 		assertEquals( "test", params[1] );
+	}
+
+	@Test
+	public void extractsTemplateParameterFromCurlyBrackets() throws Exception
+	{
+		String path = "/{id}/42";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
+		assertThat( extractedPath, is( path ) );
+		assertEquals( params.getPropertyCount(), 1 );
+		RestParamProperty id = params.getProperty( "id" );
+		assertThat( id.getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
+		assertThat( id.getValue(), is( "id" ) );
+	}
+
+	@Test
+	public void extractsTemplateParameterFromInteger() throws Exception
+	{
+		String path = "/{id}/42";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, RestUtils.TemplateExtractionOption.IGNORE_TEMPLATE_PARAMETERS );
+		assertThat( extractedPath, is( "/{id}/42" ) );
+		assertEquals( params.getPropertyCount(), 0 );
 	}
 
 	@Test
