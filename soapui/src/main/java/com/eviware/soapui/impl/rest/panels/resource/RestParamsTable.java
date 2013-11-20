@@ -42,7 +42,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
@@ -385,8 +384,8 @@ public class RestParamsTable extends JPanel
 			{
 				RestUtils.extractParams( str, params, false,
 						defaultParamLocation == ParamLocation.RESOURCE
-								? EnumSet.allOf(RestUtils.TemplateExtractionOption.class )
-								: EnumSet.noneOf( RestUtils.TemplateExtractionOption.class ) );
+								? RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS
+								: RestUtils.TemplateExtractionOption.IGNORE_TEMPLATE_PARAMETERS );
 			}
 			catch( Exception e1 )
 			{

@@ -31,23 +31,14 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class RestUtils
 {
 
 	public static enum TemplateExtractionOption
 	{
-		/**
-		 * .../{param}/...
-		 */
-		CURLY_BRACKETS,
-		/**
-		 * .../42/...
-		 */
-		INTEGER
+		EXTRACT_TEMPLATE_PARAMETERS, IGNORE_TEMPLATE_PARAMETERS
 	}
 
 	public static String[] extractTemplateParams( String path )
@@ -76,10 +67,10 @@ public class RestUtils
 
 	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
-		return extractParams( pathOrEndpoint, params, keepHost, EnumSet.allOf( TemplateExtractionOption.class ) );
+		return extractParams( pathOrEndpoint, params, keepHost, TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
 	}
 
-	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, EnumSet<TemplateExtractionOption> templateExtractionOptions )
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, TemplateExtractionOption templateExtractionOptions )
 	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
@@ -106,7 +97,6 @@ public class RestUtils
 
 		String[] items = path.split( "/" );
 
-		int templateParamCount = 0;
 		StringBuilder resultPath = new StringBuilder();
 
 		for( String item : items )
@@ -115,7 +105,7 @@ public class RestUtils
 			{
 				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
 				{
-					if( templateExtractionOptions.contains( TemplateExtractionOption.CURLY_BRACKETS ) )
+					if( templateExtractionOptions == TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS )
 					{
 						String name = item.substring( 1, item.length() - 1 );
 						RestParamProperty property = params.getProperty( name );
@@ -161,25 +151,6 @@ public class RestUtils
 								property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
 							}
 						}
-					}
-
-					if( templateExtractionOptions.contains( TemplateExtractionOption.INTEGER ) )
-					{
-						Integer.parseInt( item );
-
-						String name = "param" + templateParamCount++;
-						RestParamProperty property = params.getProperty( name );
-						if( !params.hasProperty( name ) )
-						{
-							property = params.addProperty( name );
-						}
-
-						property.setStyle( ParameterStyle.TEMPLATE );
-						property.setValue( item );
-						property.setDefaultValue( item );
-
-						item = "{" + property.getName() + "}";
-
 					}
 				}
 			}
