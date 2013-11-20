@@ -3,7 +3,14 @@ package com.eviware.soapui.utils;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
+import javax.xml.XMLConstants;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import java.net.URL;
 import java.util.Collection;
 
 /**
@@ -80,6 +87,51 @@ public class CommonMatchers
 			public void describeTo( Description description )
 			{
 				description.appendText( "a collection with " + size + " elements" );
+			}
+		};
+	}
+
+	public static Matcher<Node> compliantWithSchema(final String schemaPath)
+	{
+		return new TypeSafeMatcher<Node>()
+		{
+			@Override
+			public boolean matchesSafely( Node node )
+			{
+				URL schemaURL = CommonMatchers.class.getResource( schemaPath );
+				if (schemaURL == null)
+				{
+					throw new IllegalArgumentException( "No schema found at " + schemaPath );
+				}
+				SchemaFactory sf = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
+				Schema schema = null;
+				try
+				{
+					schema = sf.newSchema( schemaURL );
+				}
+				catch( SAXException e )
+				{
+					throw new IllegalArgumentException( "The file at " + schemaURL + " does not contain a valid XML schema", e);
+				}
+				try
+				{
+					schema.newValidator().validate( new DOMSource( node ) );
+					return true;
+				}
+				catch( SAXException e )
+				{
+					return false;
+				}
+				catch( Exception e )
+				{
+					throw new RuntimeException( "Unexpected exception", e );
+				}
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an XML node compliant with the XML schema at " + schemaPath );
 			}
 		};
 	}

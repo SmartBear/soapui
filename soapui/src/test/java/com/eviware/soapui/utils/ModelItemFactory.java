@@ -1,16 +1,20 @@
 package com.eviware.soapui.utils;
 
+import com.eviware.soapui.config.OperationConfig;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.RestResourceConfig;
 import com.eviware.soapui.config.RestServiceConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
+import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -61,5 +65,15 @@ public class ModelItemFactory
 	public static WsdlTestCase makeTestCase() throws SoapUIException
 	{
 		return new WsdlTestCase( new WsdlTestSuite( makeWsdlProject(), TestSuiteConfig.Factory.newInstance() ), TestCaseConfig.Factory.newInstance(), false );
+	}
+
+	public static WsdlOperation makeWsdlOperation() throws SoapUIException
+	{
+		return new WsdlOperation( makeWsdlInterface(), OperationConfig.Factory.newInstance() );
+	}
+
+	private static WsdlInterface makeWsdlInterface() throws SoapUIException
+	{
+		return new WsdlInterface( makeWsdlProject(), WsdlInterfaceConfig.Factory.newInstance() );
 	}
 }

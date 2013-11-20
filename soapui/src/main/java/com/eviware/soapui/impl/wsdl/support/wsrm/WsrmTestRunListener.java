@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsrm;
 
-import java.util.HashMap;
-
 import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -25,6 +23,8 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunListener;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
+
+import java.util.HashMap;
 
 public class WsrmTestRunListener implements TestRunListener
 {
@@ -50,28 +50,7 @@ public class WsrmTestRunListener implements TestRunListener
 
 	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
 	{
-		// TestStep currentStep = runContext.getCurrentStep();
-		// WsdlTestCase testCase = (WsdlTestCase) runContext.getTestCase();
-		// if (currentStep instanceof WsdlTestRequestStep
-		// && testCase.getWsrmEnabled()) {
-		// if (wsrmMap == null) {
-		// wsrmMap = new HashMap<String, WsrmSequence>();
-		// }
-		// WsdlTestRequestStep requestStep = (WsdlTestRequestStep) currentStep;
-		// String endpoint = requestStep.getHttpRequest().getEndpoint();
-		// if (wsrmMap.containsKey(endpoint)) {
-		// SoapVersion soapVersion = requestStep.getOperation()
-		// .getInterface().getSoapVersion();
-		//
-		// WsrmSequence sequence = wsrmMap.get(endpoint);
-		//
-		// WsmcUtils wsmcUtils = new WsmcUtils();
-		// wsmcUtils.sendMakeConnectionRequest(endpoint, soapVersion,
-		// requestStep.getOperation(), sequence.getUuid());
-		//
-		// }
-		//
-		// }
+
 	}
 
 	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
@@ -84,15 +63,14 @@ public class WsrmTestRunListener implements TestRunListener
 
 	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
 	{
-		TestStep currentStep = testStep;
 		WsdlTestCase testCase = ( WsdlTestCase )runContext.getTestCase();
-		if( currentStep instanceof WsdlTestRequestStep && testCase.getWsrmEnabled() )
+		if( testStep instanceof WsdlTestRequestStep && testCase.getWsrmEnabled() )
 		{
 			if( wsrmMap == null )
 			{
 				wsrmMap = new HashMap<String, WsrmSequence>();
 			}
-			WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )currentStep;
+			WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )testStep;
 			String endpoint = requestStep.getHttpRequest().getEndpoint();
 			SoapVersion soapVersion = requestStep.getOperation().getInterface().getSoapVersion();
 			if( !wsrmMap.containsKey( endpoint ) )
@@ -100,13 +78,13 @@ public class WsrmTestRunListener implements TestRunListener
 
 				WsrmUtils utils = new WsrmUtils( soapVersion );
 				WsrmSequence sequence = utils.createSequence( endpoint, soapVersion, testCase.getWsrmVersionNamespace(),
-						testCase.getWsrmAckTo(), testCase.getWsrmExpires(), requestStep.getOperation(), null );
+						testCase.getWsrmAckTo(), testCase.getWsrmExpires(), requestStep.getOperation(), null, null );
 
 				wsrmMap.put( endpoint, sequence );
 			}
 
 			WsrmSequence sequence = wsrmMap.get( endpoint );
-			WsdlRequest wsdlRequest = ( WsdlRequest )requestStep.getHttpRequest();
+			WsdlRequest wsdlRequest = requestStep.getHttpRequest();
 
 			wsdlRequest.getWsrmConfig().setVersion( testCase.getWsrmVersion() );
 			wsdlRequest.getWsrmConfig().setSequenceIdentifier( sequence.getIdentifier() );
