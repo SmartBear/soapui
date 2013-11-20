@@ -655,7 +655,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 				{
 					setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
 				}
-				else if( evt.getNewValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE && !getPath().contains( "{" + name + "}" ) )
+				else if( evt.getNewValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE && !getFullPath().contains( "{" + name + "}" ) )
 				{
 					setPath( getPath() + "{" + name + "}" );
 				}
