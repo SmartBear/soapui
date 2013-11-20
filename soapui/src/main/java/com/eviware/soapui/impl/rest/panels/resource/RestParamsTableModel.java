@@ -110,10 +110,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 	@Override
 	public boolean isCellEditable( int rowIndex, int columnIndex )
 	{
-		RestParamProperty parameter = getParameterAt( rowIndex );
-		return columnIndex != LOCATION_COLUMN_INDEX
-				|| parameter.getStyle() != ParameterStyle.TEMPLATE
-				|| parameter.getParamLocation() == ParamLocation.METHOD;
+		return true;
 	}
 
 	public ParamLocation getParamLocationAt( int rowIndex )

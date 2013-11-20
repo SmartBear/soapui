@@ -127,6 +127,13 @@ public class RestParamsTable extends JPanel
 					comboBox.setModel( getStylesForLocation( parameter.getParamLocation() ) );
 					super.prepareEditor( editor, row, column );
 				}
+				if( getColumnClass( column ) == ParamLocation.class )
+				{
+					RestParamProperty parameter = paramsTableModel.getParameterAt( row );
+					JComboBox comboBox = ( JComboBox )( ( DefaultCellEditor )editor ).getComponent();
+					comboBox.setModel( getLocationForParameter( parameter.getStyle() ) );
+					super.prepareEditor( editor, row, column );
+				}
 				return component;
 			}
 		};
@@ -152,7 +159,7 @@ public class RestParamsTable extends JPanel
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
 				new JComboBox<ParameterStyle>( getStylesForLocation( ParamLocation.RESOURCE ) ) ) );
 		paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor(
-				new JComboBox<ParamLocation>( paramsTableModel.getParameterLevels() ) ) );
+				new JComboBox<ParamLocation>( ParamLocation.values() ) ) );
 		// Workaround: for some reason the lower part of text gets clipped on some platforms
 		paramsTable.setRowHeight( 25 );
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -218,6 +225,20 @@ public class RestParamsTable extends JPanel
 		{
 			return new DefaultComboBoxModel<ParameterStyle>(
 					new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN } );
+		}
+	}
+
+	private DefaultComboBoxModel<ParamLocation> getLocationForParameter( ParameterStyle style )
+	{
+		if( style != ParameterStyle.TEMPLATE )
+		{
+			return new DefaultComboBoxModel<ParamLocation>(
+					new ParamLocation[] { ParamLocation.RESOURCE, ParamLocation.METHOD } );
+		}
+		else
+		{
+			return new DefaultComboBoxModel<ParamLocation>(
+					new ParamLocation[] { ParamLocation.RESOURCE } );
 		}
 	}
 

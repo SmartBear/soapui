@@ -22,7 +22,6 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -61,30 +60,33 @@ public class RestParamsTableTest
 	}
 
 	@Test
-	public void disabledLocationColumnForTemplateParameter() throws Exception
+	public void disallowsMethodLocationForTemplateParameter() throws Exception
 	{
 		RestParamProperty prop = params.addProperty( "prop" );
 		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
 		prop.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-		assertThat( paramTable.isCellEditable( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX ), is( false ) );
+		List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
+		assertThat( availableLocations, not( hasItem( NewRestResourceActionBase.ParamLocation.METHOD ) ) );
 	}
 
 	@Test
-	public void enabledLocationColumnForTemplateParameterOnMethodLevel() throws Exception
+	public void disallowsMethodLocationForTemplateParameterOnMethodLevel() throws Exception
 	{
 		RestParamProperty prop = params.addProperty( "prop" );
 		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.METHOD );
 		prop.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-		assertThat( paramTable.isCellEditable( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX ), is( true ) );
+		List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
+		assertThat( availableLocations, not( hasItem( NewRestResourceActionBase.ParamLocation.METHOD ) ) );
 	}
 
 	@Test
-	public void enabledLocationColumnForQueryParameter() throws Exception
+	public void allowsMethodLocationForQueryParameter() throws Exception
 	{
 		RestParamProperty prop = params.addProperty( "prop" );
 		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
 		prop.setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
-		assertThat( paramTable.isCellEditable( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX ), is( true ) );
+		List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
+		assertThat( availableLocations, hasItem( NewRestResourceActionBase.ParamLocation.METHOD ) );
 	}
 
 	private List<RestParamsPropertyHolder.ParameterStyle> getParameterStyles()
@@ -92,12 +94,20 @@ public class RestParamsTableTest
 		paramTable.editCellAt( 0, RestParamsTableModel.STYLE_COLUMN_INDEX );
 		DefaultCellEditor cellEditor = ( DefaultCellEditor )paramTable.getCellEditor( 0, RestParamsTableModel.STYLE_COLUMN_INDEX );
 		JComboBox<RestParamsPropertyHolder.ParameterStyle> comboBox = ( JComboBox )cellEditor.getComponent();
-		return getSelectableStyle( comboBox );
+		return getSelectableValues( comboBox );
 	}
 
-	private List<RestParamsPropertyHolder.ParameterStyle> getSelectableStyle( JComboBox<RestParamsPropertyHolder.ParameterStyle> comboBox )
+	private List<NewRestResourceActionBase.ParamLocation> getParameterLocations()
 	{
-		List<RestParamsPropertyHolder.ParameterStyle> availableStyles = new ArrayList<RestParamsPropertyHolder.ParameterStyle>();
+		paramTable.editCellAt( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX );
+		DefaultCellEditor cellEditor = ( DefaultCellEditor )paramTable.getCellEditor( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX );
+		JComboBox<NewRestResourceActionBase.ParamLocation> comboBox = ( JComboBox )cellEditor.getComponent();
+		return getSelectableValues( comboBox );
+	}
+
+	private <T> List<T> getSelectableValues( JComboBox<T> comboBox )
+	{
+		List<T> availableStyles = new ArrayList<T>();
 		for( int i = 0; i < comboBox.getItemCount(); i++ )
 		{
 			availableStyles.add( comboBox.getItemAt( i ) );
