@@ -1534,6 +1534,7 @@
         <xsd:attribute name="version" type="tns:WsrmVersionType"></xsd:attribute>
         <xsd:attribute name="ackTo" type="xsd:string"></xsd:attribute>
         <xsd:attribute name="sequenceExpires" type="xsd:integer"></xsd:attribute>
+        <xsd:attribute name="offerEndpoint" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="MockOperationQueryMatchDispatch">
