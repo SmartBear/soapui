@@ -12,32 +12,6 @@
 
 package com.eviware.soapui.ui.desktop.standalone;
 
-import java.awt.BorderLayout;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyVetoException;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.event.InternalFrameAdapter;
-import javax.swing.event.InternalFrameEvent;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
@@ -51,9 +25,37 @@ import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.event.InternalFrameAdapter;
+import javax.swing.event.InternalFrameEvent;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyVetoException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 /**
  * The default standalone SoapUI desktop using a JDesktopPane
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -136,8 +138,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 				return false;
 			}
-		}
-		finally
+		} finally
 		{
 			enableWindowActions();
 		}
@@ -225,20 +226,37 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		JInternalFrame frame = new JInternalFrame( title, true, true, true, true );
 		frame.addInternalFrameListener( internalFrameListener );
 		frame.setContentPane( panel );
-		frame.setSize( panel.getPreferredSize() );
+		frame.setLocation( xOffset * ( openFrameCount % 10 ), yOffset * ( openFrameCount % 10 ) );
+		Point location = frame.getLocation();
+		Dimension frameSize = calculateDesktopPanelSize( panel, location );
+		frame.setSize( frameSize );
 		frame.setVisible( true );
 		frame.setFrameIcon( desktopPanel.getIcon() );
 		frame.setToolTipText( desktopPanel.getDescription() );
 		frame.setDefaultCloseOperation( JInternalFrame.DO_NOTHING_ON_CLOSE );
-		frame.setLocation( xOffset * ( openFrameCount % 10 ), yOffset * ( openFrameCount % 10 ) );
 		if( !SoapUI.getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 		{
 			// This creates an empty frame on Mac OS X native L&F.
 			frame.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createRaisedBevelBorder(),
 					BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
 		}
-		openFrameCount++ ;
+		openFrameCount++;
 		return frame;
+	}
+
+	private Dimension calculateDesktopPanelSize( JComponent panel, Point location )
+	{
+		Dimension frameSize;
+		Dimension preferredSize = panel.getPreferredSize();
+		if( desktopPane.getBounds().contains( new Rectangle( location, preferredSize ) ) )
+		{
+			frameSize = preferredSize;
+		}
+		else
+		{
+			frameSize = new Dimension((int)((desktopPane.getWidth() - location.x) * .95), (int)((desktopPane.getHeight() - location.y) * .95));
+		}
+		return frameSize;
 	}
 
 	public boolean closeDesktopPanel( ModelItem modelItem )
@@ -253,8 +271,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			}
 
 			return false;
-		}
-		finally
+		} finally
 		{
 			enableWindowActions();
 		}

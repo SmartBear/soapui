@@ -12,23 +12,6 @@
 
 package com.eviware.soapui.impl.support.panels;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.beans.PropertyChangeEvent;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
-
-import org.apache.log4j.Logger;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
@@ -58,6 +41,34 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView.JE
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.log4j.Logger;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
+import javax.swing.KeyStroke;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+import javax.swing.text.JTextComponent;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
 
 /**
  * Abstract DesktopPanel for HttpRequests
@@ -143,7 +154,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		add( buildToolbar(), BorderLayout.NORTH );
 		add( buildStatusLabel(), BorderLayout.SOUTH );
 
-		setPreferredSize( new Dimension( 600, 500 ) );
+		//TODO: remove this when other hardcoded sizes are gone
+		setPreferredSize( new Dimension( 1200, 800 ) );
 
 		addFocusListener( new FocusAdapter()
 		{
@@ -625,8 +637,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		cancelButton.setEnabled( false );
 		setEnabled( true );
 
-		String message = null;
-		String infoMessage = null;
+		String message;
+		String infoMessage;
 		String requestName = request.getOperation() == null ? request.getName() : request.getOperation().getInterface()
 				.getName()
 				+ "." + request.getOperation().getName() + ":" + request.getName();
