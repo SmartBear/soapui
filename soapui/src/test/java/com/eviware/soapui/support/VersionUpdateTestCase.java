@@ -11,15 +11,13 @@
  */
 package com.eviware.soapui.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.eviware.soapui.SoapUI;
+import static org.junit.Assert.*;
 
 public class VersionUpdateTestCase
 {
@@ -32,6 +30,7 @@ public class VersionUpdateTestCase
 	@Test
 	public void shouldParseVersionUpdateXml() throws Exception
 	{
+		ProxyUtils.setProxyEnabled( false );
 		SoapUIVersionUpdate versionUpdate = new SoapUIVersionUpdate();
 		versionUpdate.getLatestVersionAvailable( SoapUI.class.getResource( "/soapui-latest-version.xml" ) );
 
