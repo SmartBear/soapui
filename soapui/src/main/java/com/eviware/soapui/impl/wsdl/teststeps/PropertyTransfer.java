@@ -54,7 +54,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * Class for transferring a property value between 2 test steps. This class is
  * relatively complex due to backwards compatibility issues and to gracefull
  * handling of references test steps and properties.
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -323,7 +323,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	}
 
 	protected String[] transferXPathToXml( TestProperty sourceProperty, TestProperty targetProperty,
-			SubmitContext context ) throws Exception
+														SubmitContext context ) throws Exception
 	{
 		XmlCursor sourceXml;
 		try
@@ -465,19 +465,25 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			}
 
 			return result.toArray( new String[result.size()] );
-		}
-		finally
+		} finally
 		{
-			sourceXml.dispose();
-			targetXml.dispose();
-
+			if( sourceXml != null )
+			{
+				sourceXml.dispose();
+			}
+			if( targetXml != null )
+			{
+				targetXml.dispose();
+			}
 			if( lastSource != null )
+			{
 				lastSource.dispose();
+			}
 		}
 	}
 
 	protected String[] transferStringToXml( TestProperty sourceProperty, TestProperty targetProperty,
-			SubmitContext context ) throws XmlException, Exception
+														 SubmitContext context ) throws XmlException, Exception
 	{
 		if( !StringUtils.hasContent( targetProperty.getValue() ) )
 			throw new Exception( "Missing target property value" );
@@ -516,8 +522,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 			targetProperty.setValue( targetXml.xmlText( new XmlOptions().setSaveAggressiveNamespaces() ) );
 
 			return result.toArray( new String[result.size()] );
-		}
-		finally
+		} finally
 		{
 			targetCursor.dispose();
 		}
@@ -555,7 +560,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 	}
 
 	protected String transferXPathToString( TestProperty sourceProperty, TestProperty targetProperty,
-			SubmitContext context ) throws Exception
+														 SubmitContext context ) throws Exception
 	{
 		String sourceValue = sourceProperty.getValue();
 
@@ -646,10 +651,12 @@ public class PropertyTransfer implements PropertyChangeNotifier
 				value = "";
 
 			return value;
-		}
-		finally
+		} finally
 		{
-			sourceCursor.dispose();
+			if( sourceCursor != null )
+			{
+				sourceCursor.dispose();
+			}
 		}
 	}
 
@@ -1158,7 +1165,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 
 	/**
 	 * Handle changes to source/target testStep names
-	 * 
+	 *
 	 * @author Ole.Matzura
 	 */
 
@@ -1194,7 +1201,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 
 	/**
 	 * Handle changes to source/target property names
-	 * 
+	 *
 	 * @author Ole.Matzura
 	 */
 
@@ -1241,7 +1248,7 @@ public class PropertyTransfer implements PropertyChangeNotifier
 		}
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	public void resolve( ResolveContext<?> context, PropertyTransfersTestStep parent )
 	{
 		if( isDisabled() )
