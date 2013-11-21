@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
@@ -31,6 +29,7 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import org.apache.xmlbeans.XmlObject;
 
 /**
  * Assertion for verifiying that responses occurred in the desired amount of
@@ -102,7 +101,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
 			value = "200";
 		}
 
-		value = UISupport.prompt( "Specify desired response time", "Configure Response SLA Assertion", value );
+		value = UISupport.prompt( "Specify maximum response time (ms)", "Configure Response SLA Assertion", value );
 
 		try
 		{
