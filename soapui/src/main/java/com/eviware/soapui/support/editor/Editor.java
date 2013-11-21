@@ -12,25 +12,17 @@
 
 package com.eviware.soapui.support.editor;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.*;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.Inspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.VTextIcon;
-import com.eviware.soapui.support.components.VerticalTabbedPaneUI;
 
 /**
  * Editor-framework for Documents
@@ -57,10 +49,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 		setBackground( Color.LIGHT_GRAY );
 		inputTabs = new JTabbedPane( JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT );
 
-		if( !UISupport.isMac() )
-		{
-			inputTabs.setUI( new VerticalTabbedPaneUI() );
-		}
+		prettifyTabbedPaneUI();
 
 		inputTabs.setFont( inputTabs.getFont().deriveFont( 8 ) );
 		inputTabsChangeListener = new InputTabsChangeListener();
@@ -68,6 +57,19 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 
 		inspectorPanel = JInspectorPanelFactory.build( inputTabs );
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+	}
+
+	private void prettifyTabbedPaneUI()
+	{
+		if( !UISupport.isMac()  )
+		{
+			// For some reason the tabs get very wide in some L&Fs. Workaround is to replace the UI.
+			if(inputTabs.getUI().getClass().getSimpleName().equals( "WindowsTabbedPaneUI" )){
+				inputTabs.setUI( new VerticalWindowsTabbedPaneUI() );
+			} else {
+				inputTabs.setUI( new VerticalMetalTabbedPaneUI() );
+			}
+		}
 	}
 
 	public void addEditorView( EditorView<T> editorView )
