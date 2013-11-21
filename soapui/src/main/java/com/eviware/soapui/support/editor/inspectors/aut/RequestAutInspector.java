@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.aut;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -29,6 +23,9 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.types.StringList;
 import com.jgoodies.binding.PresentationModel;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class RequestAutInspector extends AbstractXmlInspector
 {
 	private JPanel mainPanel;
@@ -37,7 +34,7 @@ public class RequestAutInspector extends AbstractXmlInspector
 
 	protected RequestAutInspector( AbstractHttpRequest<?> request )
 	{
-		super( "Aut", "Authentication and Security-related settings", true, AutInspectorFactory.INSPECTOR_ID );
+		super( "Auth", "Authentication and Security-related settings", true, AutInspectorFactory.INSPECTOR_ID );
 		this.request = request;
 	}
 
