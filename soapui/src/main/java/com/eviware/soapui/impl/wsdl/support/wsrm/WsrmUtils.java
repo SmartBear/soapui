@@ -22,7 +22,6 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -34,7 +33,6 @@ import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.log4j.Logger;
@@ -74,7 +72,7 @@ public class WsrmUtils
 		this.soapVersion = soapVersion;
 	}
 
-	public WsrmUtils( String content, SoapVersion soapVersion, PropertyExpansionContext context )
+	public WsrmUtils( String content, SoapVersion soapVersion )
 	{
 		this.soapVersion = soapVersion;
 		this.content = content;
@@ -89,8 +87,8 @@ public class WsrmUtils
 		}
 	}
 
-	public String createNewWSReliableMessagingRequest( WsdlRequest wsrmContainer, ExtendedHttpMethod httpMethod,
-			String identifier, long msgNumber, String endpoint )
+	public String createNewWSReliableMessagingRequest( WsdlRequest wsrmContainer,
+																		String identifier, long msgNumber, String endpoint )
 	{
 
 		try
@@ -247,12 +245,13 @@ public class WsrmUtils
 			cursor.insertNamespace( "wsrm", wsrmNamespace );
 
 			cursor.beginElement( WSRM_CREATE_SEQUENCE, wsrmNamespace );
-			if( !StringUtils.isNullOrEmpty( offerEndpoint ) )
+			String wsaNamespace = wsrmNamespace.equals( WSRM_NS_1_0 ) ? WsaUtils.WS_A_NAMESPACE_200408 : WsaUtils.WS_A_NAMESPACE_200508;
+			if( !wsrmNamespace.equals( WSRM_NS_1_0 ) && !StringUtils.isNullOrEmpty( offerEndpoint ) )
 			{
 				cursor.beginElement( "Offer", wsrmNamespace );
 
 				cursor.beginElement( "Endpoint", wsrmNamespace );
-				cursor.beginElement( "Address", WsaUtils.WS_A_NAMESPACE_200508 );
+				cursor.beginElement( "Address", wsaNamespace );
 				cursor.insertChars( offerEndpoint );
 				cursor.toParent();
 				cursor.toParent();
@@ -264,8 +263,8 @@ public class WsrmUtils
 			}
 
 			cursor.beginElement( WSRM_ACKNOWLEDGMENTS_TO, wsrmNamespace );
-			cursor.insertNamespace( "wsa", WsaUtils.getNamespace( startSequenceRequest.getWsaConfig().getVersion() ) );
-			cursor.beginElement( "Address", WsaUtils.getNamespace( startSequenceRequest.getWsaConfig().getVersion() ) );
+			cursor.insertNamespace( "wsa", wsaNamespace );
+			cursor.beginElement( "Address", wsaNamespace );
 			if( ackTo == null || ackTo.length() < 1 )
 				ackTo = WsaUtils.getNamespace( startSequenceRequest.getWsaConfig().getVersion() ) + "/anonymous" + "?id="
 						+ uuid;
@@ -398,12 +397,12 @@ public class WsrmUtils
 
 				if( result.length > 0 )
 				{
-					for( int i = 0; i < result.length; i++ )
+					for( XmlObject aResult : result )
 					{
-						String upper = result[i].selectAttribute( null, "Upper" ).getDomNode().getNodeValue();
-						String lower = result[i].selectAttribute( null, "Lower" ).getDomNode().getNodeValue();
+						String upper = aResult.selectAttribute( null, "Upper" ).getDomNode().getNodeValue();
+						String lower = aResult.selectAttribute( null, "Lower" ).getDomNode().getNodeValue();
 
-						if( lower == upper )
+						if( lower.equals( upper ) )
 						{
 							Logger.getLogger( "wsrm" ).info(
 									"Acknowledgment for message " + upper + " received for identifier: " + identifier );
@@ -483,8 +482,7 @@ public class WsrmUtils
 
 		try
 		{
-			WsdlSubmit wsdlSubmit = terminateSequenceRequest.submit( new WsdlSubmitContext( null ), true );
-
+			terminateSequenceRequest.submit( new WsdlSubmitContext( null ), true );
 		}
 		catch( SubmitException e1 )
 		{
@@ -576,12 +574,6 @@ public class WsrmUtils
 			// XmlObject xml = XmlObject.Factory.parse( responseContent );
 			XmlObject xml = XmlUtils.createXmlObject( responseContent );
 			XmlObject result = xml.selectPath( "Envelope/Header/SequenceAcknowledgment" )[0];
-
-			if( result != null )
-			{
-
-			}
-
 		}
 		catch( SubmitException e1 )
 		{

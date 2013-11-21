@@ -26,6 +26,7 @@ import static org.junit.Assert.assertThat;
 public class WsrmUtilsTest
 {
 
+	public static final String WSRM_1_0_SCHEMA_200502_LOCATION = "/xsds/wsrm-1.0-schema-200502.xsd";
 	public static final String WSRM_1_1_SCHEMA_200702_LOCATION = "/xsds/wsrm-1.1-schema-200702.xsd";
 
 	@Before
@@ -47,6 +48,18 @@ public class WsrmUtilsTest
 	}
 
 	@Test
+	public void buildsValidStartSequenceRequestWithVersion10() throws Exception
+	{
+		WsrmUtils requestBuilder = new WsrmUtils( SoapVersion.Soap12 );
+		WsaRequest wsaRequest = requestBuilder.buildStartSequenceRequest( "http://example.com", SoapVersion.Soap12, WsrmUtils.WSRM_NS_1_0, "http://example.com",
+				0l, ModelItemFactory.makeWsdlOperation(), UUID.randomUUID().toString(), null);
+		Document soapEnvelope = getContentAsDocument( wsaRequest );
+		NodeList nodeList = soapEnvelope.getElementsByTagNameNS( WsrmUtils.WSRM_NS_1_0, "CreateSequence" );
+
+		assertThat( nodeList.item( 0 ), is( compliantWithSchema( WSRM_1_0_SCHEMA_200502_LOCATION ) ) );
+	}
+
+	@Test
 	public void buildsValidStartSequenceRequestWhenOfferEndpointIsSet() throws Exception
 	{
 		WsrmUtils requestBuilder = new WsrmUtils( SoapVersion.Soap12 );
@@ -56,6 +69,18 @@ public class WsrmUtilsTest
 		NodeList nodeList = soapEnvelope.getElementsByTagNameNS( WsrmUtils.WSRM_NS_1_1, "CreateSequence" );
 
 		assertThat( nodeList.item( 0 ), is(compliantWithSchema(WSRM_1_1_SCHEMA_200702_LOCATION )));
+	}
+
+	@Test
+	public void buildsValidStartSequenceRequestWhenOfferEndpointIsSetWithVersion10() throws Exception
+	{
+		WsrmUtils requestBuilder = new WsrmUtils( SoapVersion.Soap12 );
+		WsaRequest wsaRequest = requestBuilder.buildStartSequenceRequest( "http://example.com", SoapVersion.Soap12, WsrmUtils.WSRM_NS_1_0, "http://example.com",
+				0l, ModelItemFactory.makeWsdlOperation(), UUID.randomUUID().toString(), "http://some.endpoint.com");
+		Document soapEnvelope = getContentAsDocument( wsaRequest );
+		NodeList nodeList = soapEnvelope.getElementsByTagNameNS( WsrmUtils.WSRM_NS_1_0, "CreateSequence" );
+
+		assertThat( nodeList.item( 0 ), is(compliantWithSchema(WSRM_1_0_SCHEMA_200502_LOCATION )));
 	}
 
 	private Document getContentAsDocument( WsaRequest wsaRequest ) throws ParserConfigurationException, SAXException, IOException
