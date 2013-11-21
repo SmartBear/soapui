@@ -1770,7 +1770,8 @@ public class SoapUI
 
 		private void expandWindow( JFrame frame )
 		{
-			Rectangle savedWindowBounds = new UserPreferences().getSoapUIWindowBounds();
+			UserPreferences userPreferences = new UserPreferences();
+			Rectangle savedWindowBounds = userPreferences.getSoapUIWindowBounds();
 			if( savedWindowBounds == null || !windowFullyVisibleOnScreen( savedWindowBounds ) )
 			{
 				Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -1779,6 +1780,10 @@ public class SoapUI
 			else
 			{
 				frame.setBounds( savedWindowBounds );
+				if( !UISupport.isMac() )
+				{
+					frame.setExtendedState( userPreferences.getSoapUIExtendedState() );
+				}
 			}
 			frame.addWindowListener( new WindowAdapter()
 			{
@@ -1787,7 +1792,10 @@ public class SoapUI
 				{
 					try
 					{
-						new UserPreferences().setSoapUIWindowBounds( event.getWindow().getBounds() );
+						JFrame frame = ( JFrame )event.getWindow();
+						UserPreferences userPreferences = new UserPreferences();
+						userPreferences.setSoapUIWindowBounds( frame.getBounds() );
+						userPreferences.setSoapUIExtendedState( frame.getExtendedState() );
 					}
 					catch( BackingStoreException e )
 					{
@@ -1799,7 +1807,7 @@ public class SoapUI
 
 		private boolean windowFullyVisibleOnScreen( Rectangle windowBounds )
 		{
-			Rectangle bargainBounds = new Rectangle( windowBounds.x, windowBounds.y, windowBounds.width * 4 / 5, windowBounds.height * 4 / 5 );
+			Rectangle bargainBounds = new Rectangle( windowBounds.x + 12, windowBounds.y + 12, windowBounds.width * 4 / 5, windowBounds.height * 4 / 5 );
 			for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
 			{
 				if( graphicsDevice.getDefaultConfiguration().getBounds().contains( bargainBounds ) )
