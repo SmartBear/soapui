@@ -12,13 +12,6 @@
 
 package com.eviware.soapui.actions;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-import javax.swing.ToolTipManager;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
@@ -26,6 +19,10 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Preferences class for UISettings
@@ -50,7 +47,7 @@ public class UIPrefs implements Prefs
 	public static final String AUTOSAVE_ONEXIT = "Save projects on exit";
 	public static final String SHOW_STARTUP_PAGE = "Show Startup Page";
 	public static final String LINEBREAK = "Normalize line-break";
-	public static final String GC_INTERVAL = "Garbage Collection Interval";
+	public static final String GC_INTERVAL = "Garbage Collection Interval (s)";
 	public static final String RAW_RESPONSE_MESSAGE_SIZE = "Size of Raw Response Message to Show";
 	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
 	public static final String WRAP_RAW_MESSAGES = "Wrap content in Raw Message Viewers";
