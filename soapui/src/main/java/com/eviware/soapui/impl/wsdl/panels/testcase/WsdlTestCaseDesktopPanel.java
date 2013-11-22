@@ -31,9 +31,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.ProPlaceholderStepFactory;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.*;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.*;
@@ -212,6 +210,15 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			if( factory instanceof ProPlaceholderStepFactory )
 				testStepButton.setEnabled( false );
 			toolbar.addFixed( testStepButton );
+			String type = factory.getType();
+			if( type.equals( JdbcRequestTestStepFactory.JDBC_TYPE )
+					|| type.equals( PropertyTransfersStepFactory.TRANSFER_TYPE )
+					|| type.equals( "datasourceloop" )
+					|| type.equals( RunTestCaseStepFactory.RUNTESTCASE_TYPE )
+					|| type.equals( ManualTestStepFactory.MANUAL_TEST_STEP ) )
+			{
+				toolbar.addRelatedGap();
+			}
 		}
 
 		p.add( toolbar, BorderLayout.NORTH );
@@ -561,7 +568,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 				if( retval == null )
 					return false;
-				if( retval.booleanValue() )
+				if( retval )
 				{
 					if( runner != null )
 						runner.cancel( null );
