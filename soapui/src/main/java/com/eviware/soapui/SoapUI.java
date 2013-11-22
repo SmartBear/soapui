@@ -816,7 +816,7 @@ public class SoapUI
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
 
-		SwingUtilities.invokeLater( new WindowInitializationTask() );
+		new WindowInitializationTask().run();
 
 		String[] args2 = cmd.getArgs();
 		if( args2 != null && args2.length > 0 )
