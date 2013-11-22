@@ -21,6 +21,7 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.ui.URLDesktopPanel;
 import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
@@ -43,6 +44,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
@@ -50,6 +53,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,7 +65,7 @@ import java.util.Map;
 
 public class StandaloneDesktop extends AbstractSoapUIDesktop
 {
-	private JDesktopPane desktopPane;
+	private JDesktopPane desktop;
 	private Map<ModelItem, JInternalFrame> modelItemToInternalFrameMap = new HashMap<ModelItem, JInternalFrame>();
 	private Map<JInternalFrame, DesktopPanel> internalFrameToDesktopPanelMap = new HashMap<JInternalFrame, DesktopPanel>();
 	private DesktopPanelPropertyChangeListener desktopPanelPropertyChangeListener = new DesktopPanelPropertyChangeListener();
@@ -80,6 +84,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	private boolean transferring;
 
+	private List<DesktopPanel> deferredDesktopPanels = new LinkedList<DesktopPanel>();
+
 	public StandaloneDesktop( Workspace workspace )
 	{
 		super( workspace );
@@ -92,9 +98,10 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		actions.addAction( closeAllAction );
 
 		// Setting Mac-like color for all platforms pending 
-		desktopPane.setBackground( UISupport.MAC_BACKGROUND_COLOR );
+		desktop.setBackground( UISupport.MAC_BACKGROUND_COLOR );
 
 		enableWindowActions();
+		desktop.addComponentListener( new DesktopResizeListener() );
 	}
 
 	private void enableWindowActions()
@@ -106,8 +113,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	private void buildUI()
 	{
-		desktopPane = new SoapUIDesktopPane();
-		JScrollPane scrollPane = new JScrollPane( desktopPane );
+		desktop = new SoapUIDesktopPane();
+		JScrollPane scrollPane = new JScrollPane( desktop );
 		desktopPanel.add( scrollPane, BorderLayout.CENTER );
 	}
 
@@ -170,7 +177,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			JInternalFrame frame = modelItemToInternalFrameMap.get( modelItem );
 			try
 			{
-				desktopPane.getDesktopManager().deiconifyFrame( frame );
+				desktop.getDesktopManager().deiconifyFrame( frame );
 				frame.setSelected( true );
 				frame.moveToFront();
 				currentPanel = internalFrameToDesktopPanelMap.get( frame );
@@ -188,7 +195,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 			JInternalFrame frame = createContentFrame( desktopPanel );
 
-			desktopPane.add( frame );
+			desktop.add( frame );
 			try
 			{
 				frame.setSelected( true );
@@ -248,13 +255,14 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	{
 		Dimension frameSize;
 		Dimension preferredSize = panel.getPreferredSize();
-		if( desktopPane.getBounds().contains( new Rectangle( location, preferredSize ) ) )
+		if( desktop.getBounds().contains( new Rectangle( location, preferredSize ) ) )
 		{
 			frameSize = preferredSize;
 		}
 		else
 		{
-			frameSize = new Dimension((int)((desktopPane.getWidth() - location.x) * .95), (int)((desktopPane.getHeight() - location.y) * .95));
+			frameSize = new Dimension( ( int )( ( desktop.getWidth() - location.x ) * .95 ),
+					( int )( ( desktop.getHeight() - location.y ) * .95 ) );
 		}
 		return frameSize;
 	}
@@ -333,7 +341,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		public void actionPerformed( ActionEvent e )
 		{
-			JInternalFrame frame = desktopPane.getSelectedFrame();
+			JInternalFrame frame = desktop.getSelectedFrame();
 			if( frame != null )
 				closeDesktopPanel( internalFrameToDesktopPanelMap.get( frame ) );
 		}
@@ -350,7 +358,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		public void actionPerformed( ActionEvent e )
 		{
-			JInternalFrame frame = desktopPane.getSelectedFrame();
+			JInternalFrame frame = desktop.getSelectedFrame();
 			if( frame == null )
 				return;
 
@@ -413,17 +421,29 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	public DesktopPanel getDesktopPanel( ModelItem modelItem )
 	{
-		return internalFrameToDesktopPanelMap.get( modelItem );
+		for( DesktopPanel panel : internalFrameToDesktopPanelMap.values() )
+		{
+			if (panel.getModelItem() == modelItem)
+			{
+				return panel;
+			}
+		}
+		return null;
 	}
 
 	public DesktopPanel showDesktopPanel( DesktopPanel desktopPanel )
 	{
+		if( desktop.getBounds().width == 0 )
+		{
+			deferredDesktopPanels.add( desktopPanel );
+			return desktopPanel;
+		}
 		JInternalFrame frame = getFrameForDesktopPanel( desktopPanel );
 		if( frame != null )
 		{
 			try
 			{
-				desktopPane.getDesktopManager().deiconifyFrame( frame );
+				desktop.getDesktopManager().deiconifyFrame( frame );
 				frame.setSelected( true );
 				frame.moveToFront();
 			}
@@ -435,7 +455,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		else
 		{
 			frame = createContentFrame( desktopPanel );
-			desktopPane.add( frame );
+			desktop.add( frame );
 
 			if( desktopPanel.getModelItem() != null )
 				modelItemToInternalFrameMap.put( desktopPanel.getModelItem(), frame );
@@ -477,6 +497,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			}
 			catch( Exception e )
 			{
+				SoapUI.logError( e, "Could not load graphics for desktop" );
 			}
 		}
 
@@ -526,7 +547,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		internalFrameToDesktopPanelMap.clear();
 		modelItemToInternalFrameMap.clear();
 
-		JInternalFrame[] allFrames = desktopPane.getAllFrames();
+		JInternalFrame[] allFrames = desktop.getAllFrames();
 		for( JInternalFrame frame : allFrames )
 		{
 			frame.doDefaultCloseAction();
@@ -550,6 +571,46 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 	public void maximize( DesktopPanel desktopPanel )
 	{
-		desktopPane.getDesktopManager().maximizeFrame( getFrameForDesktopPanel( desktopPanel ) );
+		desktop.getDesktopManager().maximizeFrame( getFrameForDesktopPanel( desktopPanel ) );
+	}
+
+
+	/**
+	 * Helper class that ensures that desktop panels are displayed after a change from Tabbed to Standalone desktop.
+	 */
+	private class DesktopResizeListener implements ComponentListener
+	{
+		@Override
+		public void componentResized( ComponentEvent e )
+		{
+			Iterator<DesktopPanel> iterator = deferredDesktopPanels.iterator();
+			while( iterator.hasNext() )
+			{
+				DesktopPanel nextPanel = iterator.next();
+				//Workaround: Avoid JXBrowser problems on Mac
+				if( !( UISupport.isMac() && nextPanel instanceof URLDesktopPanel ) )
+				{
+					showDesktopPanel( nextPanel );
+				}
+				iterator.remove();
+			}
+		}
+
+		@Override
+		public void componentMoved( ComponentEvent e )
+		{
+
+		}
+
+		@Override
+		public void componentShown( ComponentEvent e )
+		{
+		}
+
+		@Override
+		public void componentHidden( ComponentEvent e )
+		{
+
+		}
 	}
 }
