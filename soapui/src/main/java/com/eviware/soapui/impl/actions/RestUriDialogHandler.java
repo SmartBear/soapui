@@ -27,8 +27,6 @@ import java.awt.event.MouseListener;
  */
 public class RestUriDialogHandler
 {
-	private static final String EXAMPLE_URI = "http://example.com/resource/path/search?parameter=value";
-
 	private KeyListener initialKeyListener;
 	private MouseListener initialMouseListener;
 	private Font originalFont;
@@ -36,6 +34,7 @@ public class RestUriDialogHandler
 	private JUndoableTextField textField;
 	private XFormDialog dialog;
 	private String uriLabelKey;
+	private String exampleUri;
 
 
 	public XFormDialog buildDialog( MessageSupport messages, AbstractAction actionToBeAdded )
@@ -43,6 +42,7 @@ public class RestUriDialogHandler
 		XFormDialogBuilder newDialogBuilder = XFormFactory.createDialogBuilder( messages.get( "Title" ) );
 		XForm form = newDialogBuilder.createForm( "" );
 		uriLabelKey = messages.get( "Form.URI.Label" );
+		exampleUri = messages.get( "Form.Example.URI" );
 		form.addTextField( uriLabelKey, messages.get( "Form.URI.Description" ), XForm.FieldType.TEXT );
 
 		ActionList actions = newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL );
@@ -53,7 +53,7 @@ public class RestUriDialogHandler
 		}
 
 		dialog = newDialogBuilder.buildDialog( actions, messages.get( "Description" ), UISupport.TOOL_ICON );
-		dialog.setValue( uriLabelKey, EXAMPLE_URI );
+		dialog.setValue( uriLabelKey, exampleUri );
 		XFormField uriField = dialog.getFormField( uriLabelKey );
 
 		if( uriField instanceof JTextFieldFormField )
@@ -118,6 +118,11 @@ public class RestUriDialogHandler
 
 	public String getUri()
 	{
-		return dialog.getReturnValue() == XFormDialog.OK_OPTION ? dialog.getValue( uriLabelKey ).trim() : null;
+		if (dialog.getReturnValue() != XFormDialog.OK_OPTION)
+		{
+			return null;
+		}
+		String uri = dialog.getValue( uriLabelKey ).trim();
+		return uri.equals(exampleUri) ? "" : uri;
 	}
 }

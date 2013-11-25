@@ -34,9 +34,6 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestServiceAction.class );
 
 
-	private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
-	private RestServiceBuilder serviceBuilder = new RestServiceBuilder();
-
 	public NewRestServiceAction()
 	{
 		super( messages.get( "Title" ), messages.get( "Description" ) );
@@ -44,6 +41,8 @@ public class NewRestServiceAction extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
+		RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
+		RestServiceBuilder serviceBuilder = new RestServiceBuilder();
 		XFormDialog dialog = dialogBuilder.buildDialog( messages, null );
 		while( dialog.show() )
 		{
