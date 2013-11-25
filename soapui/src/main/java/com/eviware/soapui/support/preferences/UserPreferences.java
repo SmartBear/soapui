@@ -2,7 +2,7 @@ package com.eviware.soapui.support.preferences;
 
 import com.eviware.soapui.SoapUI;
 
-import java.awt.Rectangle;
+import java.awt.*;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -20,6 +20,7 @@ public class UserPreferences
 	static final String WINDOW_Y = "SoapUIWindowY";
 	static final String WINDOW_WIDTH = "SoapUIWindowWidth";
 	static final String WINDOW_HEIGHT = "SoapUIWindowHeight";
+	static final String EXTENDED_STATE = "SoapUIExtendedState";
 
 	private Preferences preferences = Preferences.userRoot().node( ROOT_NODE_NAME );
 
@@ -47,6 +48,24 @@ public class UserPreferences
 			else
 			{
 				return null;
+			}
+	}
+
+	public void setSoapUIExtendedState( int extendedState ) throws BackingStoreException
+	{
+		preferences.putInt( EXTENDED_STATE, extendedState );
+		preferences.flush();
+	}
+
+	public int getSoapUIExtendedState()
+	{
+			if ( hasAllIntProperties( EXTENDED_STATE ) )
+			{
+				 return preferences.getInt( EXTENDED_STATE, Frame.NORMAL );
+			}
+			else
+			{
+				return Frame.NORMAL;
 			}
 	}
 

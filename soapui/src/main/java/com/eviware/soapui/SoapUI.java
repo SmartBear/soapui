@@ -116,7 +116,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.List;
+import java.util.Properties;
 import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.prefs.BackingStoreException;
@@ -135,8 +137,8 @@ public class SoapUI
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
-	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
-	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+	private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
+	private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 	@SuppressWarnings("deprecation")
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
@@ -280,11 +282,6 @@ public class SoapUI
 		desktop.init();
 	}
 
-	public static JToggleButton getApplyProxyButton()
-	{
-		return applyProxyButton;
-	}
-
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
@@ -303,18 +300,7 @@ public class SoapUI
 		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new PreferencesActionDelegate() );
 		applyProxyButton = ( JToggleButton )mainToolbar.add( new JToggleButton( new ApplyProxyButtonAction() ) );
-		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
-		if( ProxyUtils.isProxyEnabled() )
-		{
-			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-			applyProxyButton.setSelected( true );
-			ProxyUtils.setProxyEnabled( true );
-		}
-		else
-		{
-			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
-			ProxyUtils.setProxyEnabled( false );
-		}
+		updateProxyButtonAndTooltip();
 
 		mainToolbar.addGlue();
 
@@ -640,8 +626,27 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( isAutoUpdateVersion() )
-					new SoapUIVersionUpdate().checkForNewVersion( false );
+				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
+				{
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							showPushPage();
+						}
+					} );
+				}
+
+				if( isAutoUpdateVersion() ){
+					new Thread( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							new SoapUIVersionUpdate().checkForNewVersion( false );
+						}
+					} ).start();
+				}
 
 				CajoServer.getInstance().start();
 			}
@@ -805,7 +810,7 @@ public class SoapUI
 		soapUI.show( workspace );
 		core.afterStartup( workspace );
 
-		SwingUtilities.invokeLater( new WindowInitializationTask() );
+		new WindowInitializationTask().run();
 
 		String[] args2 = cmd.getArgs();
 		if( args2 != null && args2.length > 0 )
@@ -1187,41 +1192,56 @@ public class SoapUI
 
 	private class ApplyProxyButtonAction extends AbstractAction
 	{
-		public ApplyProxyButtonAction()
-		{
-			putValue( Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences" );
-		}
-
 		public void actionPerformed( ActionEvent e )
 		{
 			if( ProxyUtils.isProxyEnabled() )
 			{
-				ProxyUtils.setProxyEnabled( false );
 				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, false );
-				applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
 			}
 			else
 			{
-				if( StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
-						|| StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) ) )
+				if( !ProxyUtils.isAutoProxy() && emptyManualSettings() )
 				{
-					SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.PROXY_SETTINGS );
-					if( !StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
-							&& !StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) ) )
-					{
-						ProxyUtils.setProxyEnabled( true );
-						SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-						applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-					}
+					SoapUI.getSettings().setBoolean( ProxySettings.AUTO_PROXY, true );
 				}
-				else
-				{
-					ProxyUtils.setProxyEnabled( true );
-					SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-					applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-				}
+				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
+			}
+
+			updateProxyFromSettings();
+		}
+
+		private boolean emptyManualSettings()
+		{
+			return StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
+					|| StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) );
+		}
+	}
+
+	public static void updateProxyButtonAndTooltip()
+	{
+		if( applyProxyButton == null )
+		{
+			return;
+		}
+		if( ProxyUtils.isProxyEnabled() )
+		{
+			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
+			if( ProxyUtils.isAutoProxy() )
+			{
+				applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: Automatic" );
+
+			}
+			else
+			{
+				applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: Manual" );
 			}
 		}
+		else
+		{
+			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
+			applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: None" );
+		}
+		applyProxyButton.setSelected( ProxyUtils.isProxyEnabled() );
 	}
 
 	private class ShowPushPageAction extends AbstractAction
@@ -1726,14 +1746,11 @@ public class SoapUI
 		SoapUI.launchedTestRunner = launchedTestRunner;
 	}
 
-	public static void setProxyEnabled( boolean proxyEnabled )
+	public static void updateProxyFromSettings()
 	{
-		if( applyProxyButton != null )
-		{
-			applyProxyButton.setSelected( proxyEnabled );
-		}
-
-		ProxyUtils.setProxyEnabled( proxyEnabled );
+		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
+		ProxyUtils.setAutoProxy( getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+		updateProxyButtonAndTooltip();
 	}
 
 	public static Timer getSoapUITimer()
@@ -1762,15 +1779,12 @@ public class SoapUI
 		{
 			expandWindow( frame );
 			frame.setVisible( true );
-			if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
-			{
-				showPushPage();
-			}
 		}
 
 		private void expandWindow( JFrame frame )
 		{
-			Rectangle savedWindowBounds = new UserPreferences().getSoapUIWindowBounds();
+			UserPreferences userPreferences = new UserPreferences();
+			Rectangle savedWindowBounds = userPreferences.getSoapUIWindowBounds();
 			if( savedWindowBounds == null || !windowFullyVisibleOnScreen( savedWindowBounds ) )
 			{
 				Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -1779,6 +1793,10 @@ public class SoapUI
 			else
 			{
 				frame.setBounds( savedWindowBounds );
+				if( !UISupport.isMac() )
+				{
+					frame.setExtendedState( userPreferences.getSoapUIExtendedState() );
+				}
 			}
 			frame.addWindowListener( new WindowAdapter()
 			{
@@ -1787,7 +1805,10 @@ public class SoapUI
 				{
 					try
 					{
-						new UserPreferences().setSoapUIWindowBounds( event.getWindow().getBounds() );
+						JFrame frame = ( JFrame )event.getWindow();
+						UserPreferences userPreferences = new UserPreferences();
+						userPreferences.setSoapUIWindowBounds( frame.getBounds() );
+						userPreferences.setSoapUIExtendedState( frame.getExtendedState() );
 					}
 					catch( BackingStoreException e )
 					{
@@ -1799,7 +1820,7 @@ public class SoapUI
 
 		private boolean windowFullyVisibleOnScreen( Rectangle windowBounds )
 		{
-			Rectangle bargainBounds = new Rectangle( windowBounds.x, windowBounds.y, windowBounds.width * 4 / 5, windowBounds.height * 4 / 5 );
+			Rectangle bargainBounds = new Rectangle( windowBounds.x + 12, windowBounds.y + 12, windowBounds.width * 4 / 5, windowBounds.height * 4 / 5 );
 			for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
 			{
 				if( graphicsDevice.getDefaultConfiguration().getBounds().contains( bargainBounds ) )

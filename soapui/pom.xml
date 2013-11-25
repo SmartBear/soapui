@@ -90,7 +90,8 @@
                 <configuration>
                     <systemProperties>
                         <!-- Only log errors and only log to the console to decrease the log verbosity -->
-                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
+                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
+                        </soapui.log4j.config>
                     </systemProperties>
                 </configuration>
             </plugin>
@@ -106,7 +107,8 @@
                 <version>2.16</version>
                 <configuration>
                     <systemProperties>
-                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml</soapui.log4j.config>
+                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
+                        </soapui.log4j.config>
                     </systemProperties>
                 </configuration>
             </plugin>
@@ -631,7 +633,11 @@
             <artifactId>ws-commons-util</artifactId>
             <version>1.0.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.btr</groupId>
+            <artifactId>proxy-vole</artifactId>
+            <version>20121203</version>
+        </dependency>
 
 
         <!-- TODO Not sure if thease are needed -->
