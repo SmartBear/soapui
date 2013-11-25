@@ -40,4 +40,6 @@ public interface ProxySettings
 	@Setting( name = "Enable Proxy", description = "enable using proxy", type = SettingType.BOOLEAN, defaultValue = "true" )
 	public final static String ENABLE_PROXY = ProxySettings.class.getSimpleName() + "@" + "enableProxy";
 
+	@Setting( name = "Auto Proxy", description = "use automatic proxy detection", type = SettingType.BOOLEAN, defaultValue = "true" )
+	public final static String AUTO_PROXY = ProxySettings.class.getSimpleName() + "@" + "autoProxy";
 }
