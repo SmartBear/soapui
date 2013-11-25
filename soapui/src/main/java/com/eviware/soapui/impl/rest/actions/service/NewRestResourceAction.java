@@ -79,4 +79,6 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
 		return resource;
 	}
 
+
+
 }

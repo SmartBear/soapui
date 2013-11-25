@@ -12,12 +12,11 @@
 
 package com.eviware.soapui.impl.rest.actions.support;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -78,7 +77,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 			XmlBeansRestParamsTestPropertyHolder methodParams = new XmlBeansRestParamsTestPropertyHolder( null,
 					RestParametersConfig.Factory.newInstance(), ParamLocation.METHOD );
-			SoapUI.getActionRegistry().getAction( NewRestMethodAction.SOAPUI_ACTION_ID ).perform( resource, methodParams );
+			createMethodAndRequestFor( resource );
 		}
 
 	}
@@ -126,5 +125,14 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		@AField(description = "Form.ServiceUrl.Description", type = AFieldType.STRING)
 		public final static String RESOURCEPATH = messages.get( "Form.ResourcePath.Label" );
 
+	}
+
+	private void createMethodAndRequestFor( RestResource resource )
+	{
+		RestMethod method = resource.addNewMethod( "Method " + (resource.getRestMethodCount() + 1) );
+		method.setMethod( RestRequestInterface.RequestMethod.GET );
+		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
+		UISupport.select( request );
+		UISupport.showDesktopPanel( request );
 	}
 }
