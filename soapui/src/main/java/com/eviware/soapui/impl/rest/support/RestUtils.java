@@ -121,37 +121,34 @@ public class RestUtils
 						property.setDefaultValue( name );
 					}
 				}
-				else
+				String[] matrixParams = item.split( ";" );
+				if( matrixParams.length > 0 )
 				{
-					String[] matrixParams = item.split( ";" );
-					if( matrixParams.length > 0 )
+					item = matrixParams[0];
+					for( int c = 1; c < matrixParams.length; c++ )
 					{
-						item = matrixParams[0];
-						for( int c = 1; c < matrixParams.length; c++ )
+						String matrixParam = matrixParams[c];
+
+						int ix = matrixParam.indexOf( '=' );
+						if( ix == -1 )
 						{
-							String matrixParam = matrixParams[c];
+							String name = URLDecoder.decode( matrixParam, "Utf-8" );
+							if( !params.hasProperty( name ) )
+								params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
+						}
+						else
+						{
 
-							int ix = matrixParam.indexOf( '=' );
-							if( ix == -1 )
+							String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
+							RestParamProperty property = params.getProperty( name );
+							if( property == null )
 							{
-								String name = URLDecoder.decode( matrixParam, "Utf-8" );
-								if( !params.hasProperty( name ) )
-									params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
+								property = params.addProperty( name );
 							}
-							else
-							{
 
-								String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
-								RestParamProperty property = params.getProperty( name );
-								if( property == null )
-								{
-									property = params.addProperty( name );
-								}
-
-								property.setStyle( ParameterStyle.MATRIX );
-								property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
-								property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
-							}
+							property.setStyle( ParameterStyle.MATRIX );
+							property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
+							property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
 						}
 					}
 				}
