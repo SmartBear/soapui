@@ -342,7 +342,6 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		}
 		if( renamePerformed )
 		{
-			renameLocalProperty( name, newName );
 			buildPropertyNameList();
 		}
 		return renamePerformed;

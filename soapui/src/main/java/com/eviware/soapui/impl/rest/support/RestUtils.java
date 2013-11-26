@@ -103,11 +103,13 @@ public class RestUtils
 		{
 			try
 			{
-				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
+				if( templateExtractionOptions == TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS )
 				{
-					if( templateExtractionOptions == TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS )
+					int openCurlyIndex = item.indexOf( "{" ) ;
+					int closingCurlyIndex = item.indexOf( "}" ) ;
+					if( openCurlyIndex != -1 && closingCurlyIndex > openCurlyIndex )
 					{
-						String name = item.substring( 1, item.length() - 1 );
+						String name = item.substring( openCurlyIndex + 1, closingCurlyIndex );
 						RestParamProperty property = params.getProperty( name );
 						if( !params.hasProperty( name ) )
 						{

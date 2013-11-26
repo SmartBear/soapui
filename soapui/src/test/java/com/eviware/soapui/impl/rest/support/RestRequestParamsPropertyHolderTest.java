@@ -144,6 +144,19 @@ public class RestRequestParamsPropertyHolderTest
 	}
 
 	@Test
+	public void retainsValueWhenRenamingParameter() throws Exception
+	{
+		String originalName = "secondParameter";
+		RestParamProperty parameter = parametersHolder.addProperty( originalName );
+		String value = "ulysses";
+		parameter.setValue( value );
+		String newName ="secondParameter_with_new_name";
+		parametersHolder.renameProperty( originalName, newName );
+
+		assertThat(parametersHolder.getProperty( newName ).getValue(), is( value ) );
+	}
+
+	@Test
 	public void detectsParameterNameChange() throws Exception
 	{
 		String newParameterName = "newOne";

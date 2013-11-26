@@ -67,6 +67,18 @@ public class RestUtilsTestCase
 	}
 
 	@Test
+	public void extractsEmbeddedTemplateParameters() throws Exception
+	{
+		String path = "/conversation/date-{date}/time-{time}?userId=1234";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
+		assertThat( extractedPath, is( "/conversation/date-{date}/time-{time}" ) );
+		assertThat( params.getProperty("date").getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE));
+		assertThat( params.getProperty("time").getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE));
+	}
+
+	@Test
 	public void expandsRestRequestPathsWithoutTemplateParameters() throws Exception
 	{
 		RestRequest restRequest = makeRestRequest();
