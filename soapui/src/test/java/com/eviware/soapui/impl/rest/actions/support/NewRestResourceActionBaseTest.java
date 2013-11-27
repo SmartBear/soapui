@@ -1,7 +1,8 @@
-package com.eviware.soapui.impl.rest.actions.service;
+package com.eviware.soapui.impl.rest.actions.support;
 
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogs;
@@ -17,9 +18,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Unit tests for the NewRestResourceAction
+ * Tests generic functionality in  NewRestResourceActionBase using an instance of NewRestResourceAction
  */
-public class NewRestResourceActionTest
+public class NewRestResourceActionBaseTest
 {
 
 	public static final String ENDPOINT = "http://sopranos.com";
@@ -54,7 +55,7 @@ public class NewRestResourceActionTest
 		stubbedDialogs.mockConfirmWithReturnValue( true );
 		String childResourcePath = "anthony_jr";
 
-		action.createRestResource( service, ENDPOINT + "/" + PARENT_RESOURCE_PATH + "/" + childResourcePath, null );
+		action.createRestResource( service, ENDPOINT + "/" + PARENT_RESOURCE_PATH + "/" + childResourcePath );
 		List<RestResource> rootLevelResources = service.getResourceList();
 		assertThat( rootLevelResources, is( aCollectionWithSize( 1 ) ) );
 		RestResource newChildResource = rootLevelResources.get( 0 ).getAllChildResources()[0];
@@ -69,7 +70,7 @@ public class NewRestResourceActionTest
 		stubbedDialogs.mockConfirmWithReturnValue( true );
 		String childResourcePath = "anthony_jr";
 
-		action.createRestResource( service, ENDPOINT + parentResource.getFullPath() +  "/" + childResourcePath, null );
+		action.createRestResource( service, ENDPOINT + parentResource.getFullPath() +  "/" + childResourcePath );
 		List<RestResource> rootLevelResources = service.getResourceList();
 		assertThat( rootLevelResources, is( aCollectionWithSize( 1 ) ) );
 		RestResource newChildResource = rootLevelResources.get( 0 ).getAllChildResources()[0];
@@ -82,7 +83,7 @@ public class NewRestResourceActionTest
 		stubbedDialogs.mockConfirmWithReturnValue( false );
 		String newResourcePath = "anthony_jr";
 
-		action.createRestResource( service, ENDPOINT + "/" + PARENT_RESOURCE_PATH + "/" + newResourcePath, null );
+		action.createRestResource( service, ENDPOINT + "/" + PARENT_RESOURCE_PATH + "/" + newResourcePath );
 		List<RestResource> rootLevelResources = service.getResourceList();
 		assertThat( rootLevelResources, is( aCollectionWithSize( 2 ) ) );
 	}
@@ -93,7 +94,7 @@ public class NewRestResourceActionTest
 		stubbedDialogs.mockConfirmWithReturnValue( true );
 		String childResourcePath = "anthony_jr";
 
-		action.createRestResource( service, ENDPOINT + "/" + PARENT_RESOURCE_PATH + "/" + childResourcePath, null );
+		action.createRestResource( service, ENDPOINT + "/" + PARENT_RESOURCE_PATH + "/" + childResourcePath );
 		assertThat(stubbedDialogs.getConfirmations(), is(aCollectionWithSize( 1 )));
 		StubbedDialogs.Confirmation confirmation = stubbedDialogs.getConfirmations().get( 0 );
 		assertThat( confirmation.title, is(NewRestResourceAction.CONFIRM_DIALOG_TITLE));
