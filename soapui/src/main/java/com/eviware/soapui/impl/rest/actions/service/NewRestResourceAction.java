@@ -29,6 +29,7 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
 {
 	public static final String SOAPUI_ACTION_ID = "NewRestResourceAction";
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceAction.class );
+	public static final String CONFIRM_DIALOG_TITLE = "New Child Resource";
 
 	public NewRestResourceAction()
 	{
@@ -38,45 +39,60 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
 	protected RestResource createRestResource( RestService service, String path, XFormDialog dialog )
 	{
 		RestResource possibleParent = null;
-		String p = service.getBasePath() + path;
+		String strippedPath = null;
+		for( String endpoint : service.getEndpoints() )
+		{
+			if (path.startsWith( endpoint + "/"))
+			{
+				strippedPath = path.substring(endpoint.length());
+			}
+		}
+		if( strippedPath == null )
+		{
+			strippedPath = path.startsWith( service.getBasePath() ) ? path : service.getBasePath() + path;
+		}
+
 
 		for( RestResource resource : service.getAllResources() )
 		{
-			if( p.startsWith( resource.getFullPath() ) )
+			if( strippedPath.startsWith( resource.getFullPath() ) )
 			{
 				int c = 0;
 				for( ; c < resource.getChildResourceCount(); c++ )
 				{
-					if( p.startsWith( resource.getChildResourceAt( c ).getFullPath() ) )
+					if( strippedPath.startsWith( resource.getChildResourceAt( c ).getFullPath() ) )
+					{
 						break;
+					}
 				}
 
 				// found subresource?
 				if( c != resource.getChildResourceCount() )
+				{
 					continue;
+				}
 
 				possibleParent = resource;
 				break;
 			}
 		}
 
-		RestResource resource;
-
 		if( possibleParent != null
 				&& UISupport.confirm( "Create resource as child to [" + possibleParent.getName() + "]",
-						"New Child Resource" ) )
+				CONFIRM_DIALOG_TITLE ) )
 		{
 			// adjust path
-			if( p.length() > 0 && possibleParent.getFullPath().length() > 0 )
-				path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
-			resource = possibleParent.addNewChildResource( extractNameFromPath( path ), path );
+			if( strippedPath.length() > 0 && possibleParent.getFullPath().length() > 0 )
+			{
+				strippedPath = strippedPath.substring( possibleParent.getFullPath().length() + 1 );
+			}
+			return possibleParent.addNewChildResource( extractNameFromPath( strippedPath ), strippedPath );
 		}
 		else
 		{
-			resource = service.addNewResource( extractNameFromPath( path ), path );
+			return service.addNewResource( extractNameFromPath( path ), path );
 		}
 
-		return resource;
 	}
 
 

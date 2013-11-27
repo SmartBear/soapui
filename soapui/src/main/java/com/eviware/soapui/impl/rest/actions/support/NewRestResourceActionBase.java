@@ -71,12 +71,9 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		{
 			String path = dialog.getValue( Form.RESOURCEPATH );
 			RestResource resource = createRestResource( service, path, dialog );
-			String strippedPath = RestUtils.extractParams( dialog.getValue( Form.RESOURCEPATH ), resource.getParams(), false );
-			resource.setPath(strippedPath);
-			resource.setName( extractNameFromPath( path ) );
+			RestUtils.extractParams( dialog.getValue( Form.RESOURCEPATH ), resource.getParams(), false );
+			resource.setPath(removeParametersFrom( resource.getPath() ));
 
-			XmlBeansRestParamsTestPropertyHolder methodParams = new XmlBeansRestParamsTestPropertyHolder( null,
-					RestParametersConfig.Factory.newInstance(), ParamLocation.METHOD );
 			createMethodAndRequestFor( resource );
 		}
 
@@ -85,6 +82,13 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 	protected abstract RestResource createRestResource( T service, String path, XFormDialog dialog );
 
 	protected String extractNameFromPath( String path )
+	{
+		String strippedPath = removeParametersFrom( path );
+		String[] items = strippedPath.split( "/" );
+		return items.length == 0 ? "" : items[items.length - 1];
+	}
+
+	private String removeParametersFrom( String path )
 	{
 		String strippedPath;
 		if (path.contains("?") || path.contains(";"))
@@ -96,8 +100,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 		{
 			strippedPath = path;
 		}
-		String[] items = strippedPath.split( "/" );
-		return items.length == 0 ? "" : items[items.length - 1];
+		return strippedPath;
 	}
 
 	private int findParametersIndex( String path )

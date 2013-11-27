@@ -643,6 +643,12 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		}
 	}
 
+	@Override
+	public String toString()
+	{
+		return "RestResource: " + getFullPath();
+	}
+
 	private class StyleChangeListener implements PropertyChangeListener
 	{
 		@Override
