@@ -17,6 +17,11 @@ import com.eviware.soapui.utils.ModelItemFactory;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.MATRIX;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.TEMPLATE;
+import static com.eviware.soapui.impl.rest.support.RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS;
+import static com.eviware.soapui.impl.rest.support.RestUtils.TemplateExtractionOption.IGNORE_TEMPLATE_PARAMETERS;
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
@@ -47,11 +52,11 @@ public class RestUtilsTestCase
 		String path = "/{id}/42";
 
 		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
-		String extractedPath = RestUtils.extractParams( path, params, true, RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
+		String extractedPath = RestUtils.extractParams( path, params, true, EXTRACT_TEMPLATE_PARAMETERS );
 		assertThat( extractedPath, is( path ) );
 		assertEquals( params.getPropertyCount(), 1 );
 		RestParamProperty id = params.getProperty( "id" );
-		assertThat( id.getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
+		assertThat( id.getStyle(), is( TEMPLATE ) );
 		assertThat( id.getValue(), is( "id" ) );
 	}
 
@@ -61,7 +66,7 @@ public class RestUtilsTestCase
 		String path = "/{id}/42";
 
 		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
-		String extractedPath = RestUtils.extractParams( path, params, true, RestUtils.TemplateExtractionOption.IGNORE_TEMPLATE_PARAMETERS );
+		String extractedPath = RestUtils.extractParams( path, params, true, IGNORE_TEMPLATE_PARAMETERS );
 		assertThat( extractedPath, is( "/{id}/42" ) );
 		assertEquals( params.getPropertyCount(), 0 );
 	}
@@ -72,10 +77,23 @@ public class RestUtilsTestCase
 		String path = "/conversation/date-{date}/time-{time}?userId=1234";
 
 		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
-		String extractedPath = RestUtils.extractParams( path, params, true, RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
+		String extractedPath = RestUtils.extractParams( path, params, true, EXTRACT_TEMPLATE_PARAMETERS );
 		assertThat( extractedPath, is( "/conversation/date-{date}/time-{time}" ) );
-		assertThat( params.getProperty("date").getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE));
-		assertThat( params.getProperty("time").getStyle(), is( RestParamsPropertyHolder.ParameterStyle.TEMPLATE));
+		assertThat( params.getProperty("date").getStyle(), is( TEMPLATE));
+		assertThat( params.getProperty("time").getStyle(), is( TEMPLATE));
+	}
+
+	@Test
+	public void extractsEmbeddedTemplateAndMatrixParameters() throws Exception
+	{
+		String path = "/{templateParam};matrixParam=matrixValue?queryParam=value";
+
+		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
+		String extractedPath = RestUtils.extractParams( path, params, true, EXTRACT_TEMPLATE_PARAMETERS );
+		assertThat( extractedPath, is( "/{templateParam}" ) );
+		assertThat( params.getProperty("templateParam").getStyle(), is( TEMPLATE));
+		assertThat( params.getProperty("matrixParam").getStyle(), is( MATRIX));
+		assertThat( params.getProperty("queryParam").getStyle(), is( QUERY));
 	}
 
 	@Test
@@ -85,7 +103,7 @@ public class RestUtilsTestCase
 		restRequest.getResource().setPath( "/the/path" );
 		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.QUERY, "queryName", "queryValue" );
 		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.MATRIX, "matrixName", "theMatrixValue" );
-		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.TEMPLATE, "templateName", "templateValue" );
+		addParameter( restRequest, TEMPLATE, "templateName", "templateValue" );
 		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.MATRIX, "matrixName2", "theMatrixValue2" );
 		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.QUERY, "queryName2", "queryValue2");
 
@@ -100,7 +118,7 @@ public class RestUtilsTestCase
 		String templateParameterName = "templateName";
 		String templateParameterValue = "templateValue";
 		restRequest.getResource().setPath( "/the/{" + templateParameterName + "}/path" );
-		addParameter( restRequest, RestParamsPropertyHolder.ParameterStyle.TEMPLATE, templateParameterName, templateParameterValue );
+		addParameter( restRequest, TEMPLATE, templateParameterName, templateParameterValue );
 
 		assertThat(RestUtils.expandPath( restRequest.getResource().getFullPath(), restRequest.getParams(), restRequest ),
 				is( "/the/" + templateParameterValue + "/path" ));

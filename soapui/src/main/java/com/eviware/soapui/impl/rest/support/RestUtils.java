@@ -153,8 +153,9 @@ public class RestUtils
 					}
 				}
 			}
-			catch( Exception ignore )
+			catch( Exception e )
 			{
+				SoapUI.logError(  e, "Couldn't parse the template/matrix parameters from URI" );
 			}
 
 			if( StringUtils.hasContent( item ) )
