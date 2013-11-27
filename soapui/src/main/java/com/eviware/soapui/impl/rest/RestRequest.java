@@ -42,6 +42,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
@@ -63,6 +64,8 @@ import java.util.Map;
 
 public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implements RestRequestInterface
 {
+	static final String ACCEPT_HEADER_NAME = "Accept";
+
 	private RestMethod method;
 	private RestRequestParamsPropertyHolder params;
 	private ParamUpdater paramUpdater;
@@ -85,6 +88,18 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		{
 			String defaultMediaType = getRestMethod().getDefaultRequestMediaType();
 			getConfig().setMediaType( defaultMediaType );
+		}
+		cleanUpAcceptEncoding();
+	}
+
+	private void cleanUpAcceptEncoding()
+	{
+		if (StringUtils.hasContent( getAccept() ))
+		{
+			StringToStringsMap requestHeaders = getRequestHeaders();
+			requestHeaders.add( ACCEPT_HEADER_NAME, getAccept() );
+			setRequestHeaders( requestHeaders );
+			setAccept( null );
 		}
 	}
 
@@ -187,7 +202,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			{
 				endpoint = new URL( getPath() ).toString();
 			}
-			catch( MalformedURLException e )
+			catch( MalformedURLException ignore )
 			{
 			}
 		}
@@ -277,7 +292,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	@Override
 	public RestResource getOperation()
 	{
-		return ( RestResource )method.getOperation();
+		return method.getOperation();
 	}
 
 	public Map<String, TestProperty> getProperties()
