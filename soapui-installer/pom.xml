@@ -73,7 +73,7 @@
                         </property>
                         <property>
                             <name>SRC_ROOT</name>
-                            <value>${project.parent.basedir}/soapui/src</value>
+                            <value>${project.basedir}/src</value>
                         </property>
                         <property>
                             <name>DIST_ROOT</name>
@@ -85,7 +85,11 @@
                         </property>
                         <property>
                             <name>RESOURCES_HOME</name>
-                            <value>${basedir}/src/install4j/resources</value>
+                            <value>${project.basedir}/src/install4j/resources</value>
+                        </property>
+                        <property>
+                            <name>SOURCE_CODE_ROOT</name>
+                            <value>${project.parent.basedir}/soapui/src</value>
                         </property>
                         <property>
                             <name>SIGNTOOL_PATH</name>
