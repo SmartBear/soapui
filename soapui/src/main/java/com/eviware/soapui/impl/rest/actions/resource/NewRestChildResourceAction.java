@@ -33,7 +33,7 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 
 	public NewRestChildResourceAction()
 	{
-		super( messages.get( "title" ), messages.get( "description" ) );
+		super( messages.get( "Title" ), messages.get( "Description" ) );
 	}
 
 

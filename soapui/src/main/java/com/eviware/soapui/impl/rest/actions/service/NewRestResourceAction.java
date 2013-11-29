@@ -32,7 +32,7 @@ public class NewRestResourceAction extends NewRestResourceActionBase<RestService
 
 	public NewRestResourceAction()
 	{
-		super( messages.get( "title" ), messages.get( "description" ) );
+		super( messages.get( "Title" ), messages.get( "Description" ) );
 	}
 
 

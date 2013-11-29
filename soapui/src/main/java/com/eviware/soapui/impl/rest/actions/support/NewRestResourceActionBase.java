@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest.actions.support;
 
 import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.actions.RestUriDialogHandler;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -25,7 +26,6 @@ import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
@@ -42,9 +42,8 @@ import java.util.List;
 
 public abstract class NewRestResourceActionBase<T extends ModelItem> extends AbstractSoapUIAction<T>
 {
-	public static final String CONFIRM_DIALOG_TITLE = "New Child Resource";
+	public static final String CONFIRM_DIALOG_TITLE = "New REST Resource";
 
-	private XFormDialog dialog;
 	public static final MessageSupport messages = MessageSupport.getMessages( NewRestResourceActionBase.class );
 
 	public NewRestResourceActionBase( String title, String description )
@@ -54,15 +53,8 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 	public void perform( T parent, Object param )
 	{
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
-		}
-		else
-		{
-			dialog.setValue( Form.RESOURCEPATH, "" );
-		}
-
+		RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
+		XFormDialog dialog = dialogBuilder.buildDialog( messages, null );
 
 		if( param instanceof URL )
 		{
@@ -73,7 +65,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
 		if( dialog.show() )
 		{
-			String path = dialog.getValue( Form.RESOURCEPATH );
+			String path = dialogBuilder.getUri();
 			RestResource resource = createRestResource( parent, path );
 			RestUtils.extractParams( dialog.getValue( Form.RESOURCEPATH ), resource.getParams(), false );
 			resource.setPath(removeParametersFrom( resource.getPath() ));
