@@ -4,6 +4,7 @@ import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
+import static com.eviware.soapui.utils.ModelItemFactory.makeRestResource;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -107,6 +109,23 @@ public class RestRequestParamsPropertyHolderTest
 		methodParams.removeProperty( "first" );
 
 		assertThat( parametersHolder.getPropertyCount(), is(0));
+	}
+
+	@Test
+	public void canRenameRestParameterInAncestorResource() throws Exception
+	{
+		RestResource parentResource = makeRestResource();
+		String oldName = "the_original_name";
+		parentResource.addProperty( oldName );
+		RestResource childResource = parentResource.addNewChildResource( "child", "child" );
+		RestMethod method = childResource.addNewMethod( "Get Method" );
+		restRequest = new RestRequest( method, RestRequestConfig.Factory.newInstance(), false );
+
+		parametersHolder = ( RestRequestParamsPropertyHolder )restRequest.getParams();
+		String newParameterName = "the_new_name";
+		parametersHolder.renameProperty( oldName, newParameterName );
+		assertThat(parentResource.getPropertyAt( 0 ).getName(), is (newParameterName));
+
 	}
 
 	@Test

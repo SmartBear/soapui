@@ -355,7 +355,18 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public boolean renameProperty( String name, String newName )
 	{
-		return params.renameProperty( name, newName );
+		if( hasProperty( name ) )
+		{
+			return params.renameProperty( name, newName );
+		}
+		else if (parentResource != null)
+		{
+			return parentResource.renameProperty( name, newName );
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	public void addTestPropertyListener( TestPropertyListener listener )
@@ -654,7 +665,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) && getPath() != null)
+			if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) && getPath() != null )
 			{
 				String name = ( ( RestParamProperty )evt.getSource() ).getName();
 				if( evt.getOldValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE )
