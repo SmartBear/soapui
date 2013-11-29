@@ -21,7 +21,7 @@
 		<init-param>
 			<description>global settings file</description>
 			<param-name>soapUISettings</param-name>
-			<param-value>[soapUISettings]</param-value>
+			<param-value>[SoapUISettings]</param-value>
 		</init-param>
 		<init-param>
 			<description>set listeners directory</description>

@@ -134,21 +134,7 @@
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/testrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/securitytestrunner.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1575" file="${compiler:DIST_ROOT}/bin/wargenerator.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
-      <dirEntry mountPoint="776" file="${compiler:SRC_ROOT}" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes=".svn" dirMode="755" overrideDirMode="true">
-        <exclude>
-          <entry location="conf" fileType="regular" />
-          <entry location="demo" fileType="regular" />
-          <entry location="dist" fileType="regular" />
-          <entry location="dist_standalone" fileType="regular" />
-          <entry location="iistest" fileType="regular" />
-          <entry location="images" fileType="regular" />
-          <entry location="install4j" fileType="regular" />
-          <entry location="jsl" fileType="regular" />
-          <entry location="META-INF" fileType="regular" />
-          <entry location="nsis" fileType="regular" />
-          <entry location="wstf" fileType="regular" />
-        </exclude>
-      </dirEntry>
+      <dirEntry mountPoint="776" file="${compiler:SOURCE_CODE_ROOT}" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes=".svn" dirMode="755" overrideDirMode="true"/>
       <fileEntry mountPoint="1334" file="${compiler:HERMES_INSTALLER}" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1334" file="${compiler:SRC_ROOT}/install4j/hermes/hermesInstall64bit.bat" overwriteMode="4" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />

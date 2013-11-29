@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.rest;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.RestResourceConfig;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
@@ -34,6 +35,7 @@ public class RestResourceTest
 {
 
 	private RestResource restResource;
+	private RestService parentService;
 
 	@Before
 	public void setUp() throws XmlException, IOException, SoapUIException
@@ -41,6 +43,7 @@ public class RestResourceTest
 		WsdlProject project = new WsdlProject();
 		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
 		restResource = restService.addNewResource( "Resource", "/test" );
+		parentService = restResource.getService();
 	}
 
 	@Test
@@ -57,7 +60,7 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldIgnoreMatrixParamsOnPath() throws Exception
+	public void ignoresMatrixParamsOnPath() throws Exception
 	{
 		String matrixParameterString = ";Param2=matrixValue2;address=16";
 		restResource.setPath( "/maps/api/geocode/xml" + matrixParameterString );
@@ -73,7 +76,7 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldIgnoreMatrixParamsWithoutValueOnPath() throws Exception
+	public void ignoresMatrixParamsWithoutValueOnPath() throws Exception
 	{
 		String matrixParameterString = ";Param2=1;address=";
 		restResource.setPath( "/maps/api/geocode/xml" + matrixParameterString );
@@ -89,9 +92,8 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldListenToChangesInConfiguredParameters() throws Exception
+	public void listensToChangesInConfiguredParameters() throws Exception
 	{
-		RestService parentService = restResource.getService();
 		RestResourceConfig config = RestResourceConfig.Factory.newInstance();
 		RestParametersConfig restParametersConfig = config.addNewParameters();
 		RestParameterConfig parameterConfig = restParametersConfig.addNewParameter();
@@ -107,20 +109,53 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldRemoveFormerTemplateParametersFromPath() throws Exception
+	public void removesFormerTemplateParametersFromPath() throws Exception
 	{
-		RestService parentService = restResource.getService();
 		RestResourceConfig config = RestResourceConfig.Factory.newInstance();
 		RestParametersConfig restParametersConfig = config.addNewParameters();
 		RestParameterConfig parameterConfig = restParametersConfig.addNewParameter();
 		String parameterName = "theName";
 		parameterConfig.setName( parameterName );
 		parameterConfig.setStyle( RestParameterConfig.Style.Enum.forInt( RestParamsPropertyHolder.ParameterStyle.TEMPLATE.ordinal() ) );
-		config.setPath( "/actual_path");
+		config.setPath( "/actual_path" );
 
 		RestResource restResource = new RestResource( parentService, config );
-		restResource.getParams().getProperty( parameterName ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY);
-		assertThat( restResource.getPath(), not( containsString( parameterName ) ));
+		restResource.getParams().getProperty( parameterName ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
+		assertThat( restResource.getPath(), not( containsString( parameterName ) ) );
+
+	}
+
+	@Test
+	public void considersBasePathWhenAddingTemplateParameter() throws Exception
+	{
+		String parameterName = "version";
+		String parameterInPath = "{" + parameterName + "}";
+		parentService.setBasePath( "/base/" + parameterInPath);
+		RestParamProperty parameter = restResource.addProperty( parameterName );
+		parameter.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+
+		assertThat(restResource.getPath(), not(containsString( parameterInPath )));
+	}
+
+	@Test
+	public void deletingResourceDeletesAllChildResources() throws Exception
+	{
+		// restResource -> childResourceA, childResourceB
+		RestResource childResourceA = restResource.addNewChildResource( "ChildA", "/childPathA" );
+		restResource.addNewChildResource( "ChildB", "/childPathB" );
+
+		// childResourceA -> grandChildAA, grandChildAB
+		RestResource grandChildAA = childResourceA.addNewChildResource( "GrandChildAA", "/grandChildPathAA" );
+		childResourceA.addNewChildResource( "GrandChildAB", "/grandChildPathAB" );
+
+		// grandChildAA -> greatGrandChildAAA
+		grandChildAA.addNewChildResource( "GreatGrandChildAAA", "/greatGrandChildAAA" );
+
+		restResource.deleteResource( childResourceA );
+
+		assertThat( restResource.getChildResourceList().size(), is( 1 ) ); // ensure it does not delete the sibling
+		assertThat( childResourceA.getChildResourceList().size(), is( 0 ) );
+		assertThat( grandChildAA.getChildResourceList().size(), is( 0 ) );
 
 	}
 

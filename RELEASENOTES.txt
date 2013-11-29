@@ -1,3 +1,40 @@
+# SoapUI 4.6.2
+#### Released 2013-12-02 ####
+
+### Major New Feature ###
+Proxy settings can now be auto-detected (SOAP-454)
+
+### Bugs fixed ###
+* Deleting a mid level resource while request editor of child resource is open freezes the GUI (SOAP-854)
+* Can not deploy project as war (SOAP-906)
+* REST resource base path is duplicated each time Request is opened (SOAP-941)
+* Test Step editor parameter table value column heading is wrong (SOAP-856)
+* Mock services packaged as WAR files don't work across different OSes. (SOAP-976)
+* REST parameter order not saved in Request Editor (SOAP-594)
+* Error while creating a Data Export report (SOAP-928)
+* Endpoint not sent in WS-RM exchange (SOAP-816)
+* Conditional property expansion not working (SOAP-677)
+* Mock service returns incorrect content type for CSS files (SOAP-966)
+* Incorrect logging from FileFormField (SOAP-909) ( Contribution from Marc Paquette)
+* Break statement missing in case SEPARATOR (SOAP-910) ( Contribution from Marc Paquette)
+* LoadUI and Hermes installers cannot be started from SoapUI installer (SOAP-1069)
+
+
+### Improvements ###
+* SoapUI now remembers window position and size after relaunch (SOAP-885)
+* One-click dialogs to add REST resources (SOAP-344 and SOAP-398)
+* Improved default window and Request Editor size (SOAP-679)
+* Unnecessary elements removed from GUI
+* Endpoints are now sorted alphanumerically (SOAP-983) ( Contribution from Vincent Frison)
+* Look and feel improvements on Mac OS
+* Less confusing GUI for REST template (path) parameters
+
+### Updated libraries ###
+* Groovy 2.1.7 (SOAP-630)
+* proxy-vole 20121203 (SOAP-454)
+
+-------------------------------------------------------------------------------
+
 # SoapUI 4.6.1
 #### Released 2013-10-24 ####
 

@@ -12,41 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.panels.testcase;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DragSource;
-import java.awt.event.ActionEvent;
-import java.util.Date;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction;
-import com.eviware.soapui.impl.wsdl.actions.testcase.RunTestCaseWithLoadUIAction;
 import com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
@@ -60,18 +31,10 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.ProPlaceholderStepFactory;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
-import com.eviware.soapui.integration.loadui.IntegrationUtils;
+import com.eviware.soapui.impl.wsdl.teststeps.registry.*;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestRunnable;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
@@ -80,20 +43,23 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JFocusableComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.JListDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
 import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DragSource;
+import java.awt.event.ActionEvent;
+import java.util.Date;
 
 /**
  * WsdlTestCase desktop panel
@@ -114,7 +80,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private JButton setCredentialsButton;
 	private JButton optionsButton;
 	private ComponentBag stateDependantComponents = new ComponentBag();
-	private JTestCaseTestRunLog testCaseLog;
+	private JTestRunLog testCaseLog;
 	private JToggleButton loopButton;
 	private ProgressBarTestCaseAdapter progressBarAdapter;
 	private InternalTestMonitorListener testMonitorListener;
@@ -128,8 +94,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	private JButton createSecurityTestButton;
 	private JInspectorPanel inspectorPanel;
 	public TestCaseRunner lastRunner;
-	private JButton runWithLoadUIButton;
-	private JButton synchronizeWithLoadUIButton;
 	private WsdlTestCase testCase;
 	protected TestOnDemandPanel testOnDemandPanel;
 
@@ -212,7 +176,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 	private JComponent buildTestLog()
 	{
-		testCaseLog = new JTestCaseTestRunLog( getModelItem() );
+		testCaseLog = new JTestRunLog( getModelItem().getSettings() );
 		stateDependantComponents.add( testCaseLog );
 		return testCaseLog;
 	}
@@ -246,6 +210,15 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			if( factory instanceof ProPlaceholderStepFactory )
 				testStepButton.setEnabled( false );
 			toolbar.addFixed( testStepButton );
+			String type = factory.getType();
+			if( type.equals( JdbcRequestTestStepFactory.JDBC_TYPE )
+					|| type.equals( PropertyTransfersStepFactory.TRANSFER_TYPE )
+					|| type.equals( "datasourceloop" )
+					|| type.equals( RunTestCaseStepFactory.RUNTESTCASE_TYPE )
+					|| type.equals( ManualTestStepFactory.MANUAL_TEST_STEP ) )
+			{
+				toolbar.addRelatedGap();
+			}
 		}
 
 		p.add( toolbar, BorderLayout.NORTH );
@@ -345,9 +318,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		createSecurityTestButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/security_test.gif" ) );
 
-		runWithLoadUIButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				RunTestCaseWithLoadUIAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestCaseWithLoadUI.png" ) );
-		synchronizeWithLoadUIButton = UISupport.createToolbarButton( new SynchronizeWithLoadUIAction() );
 		addToolbarActions( toolbar );
 
 		toolbar.add( Box.createHorizontalGlue() );
@@ -374,9 +344,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		toolbar.add( createSecurityTestButton );
 		toolbar.addSeparator();
 		toolbar.add( optionsButton );
-		toolbar.addSeparator();
-		toolbar.add( runWithLoadUIButton );
-		toolbar.add( synchronizeWithLoadUIButton );
 	}
 
 	private Component buildRunnerBar()
@@ -601,7 +568,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 				if( retval == null )
 					return false;
-				if( retval.booleanValue() )
+				if( retval )
 				{
 					if( runner != null )
 						runner.cancel( null );
@@ -825,35 +792,6 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	public TestCaseRunner getTestCaseRunner()
 	{
 		return runner == null ? lastRunner : runner;
-	}
-
-	public class SynchronizeWithLoadUIAction extends AbstractAction
-	{
-		public SynchronizeWithLoadUIAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/synchronizeWithLoadUI.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Synchronizes this testcase with loadUI" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			WsdlProject project = testCase.getTestSuite().getProject();
-			//			try
-			//			{
-			//				if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
-			//					project.save();
-			//				else
-			//					project.save( project.getWorkspace().getProjectRoot() );
-			//			}
-			//			catch( IOException e1 )
-			//			{
-			//				UISupport.showErrorMessage( "Failed to save project; " + e1 );
-			//			}
-			// IntegrationUtils.removeLoadUILoadedProject( new File(
-			// project.getPath() ) );
-			if( IntegrationUtils.forceSaveProject( project ) )
-				IntegrationUtils.bringLoadUIToFront();
-		}
 	}
 
 	@Override

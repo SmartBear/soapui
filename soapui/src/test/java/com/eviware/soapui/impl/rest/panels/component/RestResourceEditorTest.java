@@ -26,6 +26,7 @@ import org.junit.Test;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -77,20 +78,37 @@ public class RestResourceEditorTest
 	}
 
 	@Test
+	public void displaysBasePathOfServiceInField()
+	{
+		lonelyResource.getInterface().setBasePath( "/base" );
+		lonelyResource.setPath("resource");
+		RestResourceEditor restResourceEditor = new RestResourceEditor( lonelyResource, new MutableBoolean() );
+		assertThat( restResourceEditor.getText(), is( "/base/resource" ) );
+	}
+
+	@Test
+	public void displaysResourcePopupIfHasBasePath()
+	{
+		lonelyResource.getInterface().setBasePath( "/base" );
+		lonelyResource.setPath("resource");
+		RestResourceEditor restResourceEditor = new RestResourceEditor( lonelyResource, new MutableBoolean() );
+
+		assertThat( restResourceEditor.mouseListener, is(notNullValue()) );
+	}
+
+	@Test
 	public void addingPathWithTemplateParametersAddsParametersToResource()
 	{
-		RestResourceEditor restResourceEditor = new RestResourceEditor( templateResource, new MutableBoolean() );
 		dialogs.mockPromptWithReturnValue( "value" );
-		restResourceEditor.scanForTemplateParameters();
+		RestResourceEditor.scanForTemplateParameters(templateResource);
 		assertThat( templateResource.getParams().get( "param2" ).getValue(), is( "value" ) );
 	}
 
 	@Test
 	public void existingParameterOnParentNotAddedToChildWithPathContainingThatParameter()
 	{
-		RestResourceEditor restResourceEditor = new RestResourceEditor( childResource, new MutableBoolean() );
 		dialogs.mockPromptWithReturnValue( "value" );
-		restResourceEditor.scanForTemplateParameters();
+		RestResourceEditor.scanForTemplateParameters(childResource);
 		assertThat( parentResource.getParams().get( "param1" ), parameterWithValue( "value" ) );
 		assertThat( parentResource.getParams().get( "param2" ), is( nullValue() ) );
 		assertThat( parentResource.getParams().get( "existingparam" ), parameterWithValue( "existingvalue" ) );

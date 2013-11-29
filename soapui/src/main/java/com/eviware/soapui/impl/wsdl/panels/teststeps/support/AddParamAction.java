@@ -28,11 +28,13 @@ import java.awt.event.ActionEvent;
 public class AddParamAction extends AbstractAction
 {
 	public static final String EMPTY_STRING = "";
+	public static final String ADD_PARAM_ACTION_NAME = "Add Param";
 	private MutableTestPropertyHolder propertyHolder;
 	private JTable parameterTable;
 
 	public AddParamAction( JTable parameterTable, MutableTestPropertyHolder propertyHolder, String description )
 	{
+		super( ADD_PARAM_ACTION_NAME );
 		this.parameterTable = parameterTable;
 		this.propertyHolder = propertyHolder;
 		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );

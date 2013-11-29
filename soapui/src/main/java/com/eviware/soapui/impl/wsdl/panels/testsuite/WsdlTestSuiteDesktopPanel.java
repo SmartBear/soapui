@@ -23,7 +23,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
@@ -38,7 +37,6 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction;
-import com.eviware.soapui.impl.wsdl.actions.testsuite.GenerateLoadUITestsAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog;
 import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLogTestRunListener;
@@ -95,9 +93,6 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 	private JInspectorPanel testCaseListInspectorPanel;
 	private JInspectorPanel inspectorPanel;
 	private WsdlTestSuiteRunner testSuiteRunner;
-	private JButton generateLoadUITestsButton;
-
-	// private JButton convertToLoadUIButton;
 
 	public WsdlTestSuiteDesktopPanel( WsdlTestSuite testSuite )
 	{
@@ -203,9 +198,6 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
 		toolbar.add( sequentialButton );
 		toolbar.add( parallellButton );
-		generateLoadUITestsButton = UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				GenerateLoadUITestsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/runTestSuiteWithLoadUI.png" ) );
-		toolbar.add( generateLoadUITestsButton );
 	}
 
 	private JComponent buildTabs()
@@ -331,9 +323,6 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 	protected void runTestSuite()
 	{
 		testSuiteRunner = getModelItem().run( new StringToObjectMap(), true );
-
-		// new Thread( testSuiteRunner, getModelItem().getName() +
-		// " TestSuiteRunner" ).start();
 	}
 
 	protected void beforeRun()

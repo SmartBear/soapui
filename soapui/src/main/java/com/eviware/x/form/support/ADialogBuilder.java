@@ -363,6 +363,7 @@ public class ADialogBuilder
 			break;
 		case SEPARATOR :
 			form.addSeparator( description );
+         break;
 		case RADIOGROUP_TOP_BUTTON :
 			field = form.addComponent( name, new XFormRadioGroupTopButtonPosition( values ) );
 			break;

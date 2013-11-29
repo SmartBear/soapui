@@ -6,12 +6,8 @@ import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
 /**
-* Created with IntelliJ IDEA.
-* User: manne
-* Date: 9/12/13
-* Time: 10:03 PM
-* To change this template use File | Settings | File Templates.
-*/
+ * @author manne
+ */
 public class RestRequestWithParamsMatcher extends TypeSafeMatcher<RestRequest>
 {
 

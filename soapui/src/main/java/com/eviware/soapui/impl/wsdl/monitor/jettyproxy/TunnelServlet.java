@@ -178,7 +178,7 @@ public class TunnelServlet extends ProxyServlet
 				new DefaultPropertyExpansionContext( project ) );
 
 		String path = null;
-		if( sslEndPoint.indexOf( "/" ) < 0 )
+		if( !sslEndPoint.contains( "/" ) )
 			path = "/";
 		else
 			path = sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() );
@@ -236,7 +236,6 @@ public class TunnelServlet extends ProxyServlet
 			listenerCallBack.fireAddMessageExchange( capturedData );
 		}
 
-		capturedData = null;
 	}
 
 

@@ -12,6 +12,36 @@
 
 package com.eviware.soapui.support;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SwingPluginSoapUICore;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.components.ConfigurationDialog;
+import com.eviware.soapui.support.components.JButtonBar;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.PreviewCorner;
+import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.swing.GradientPanel;
+import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
+import com.eviware.soapui.support.swing.SwingUtils;
+import com.eviware.soapui.ui.desktop.DesktopPanel;
+import com.eviware.soapui.ui.desktop.SoapUIDesktop;
+import com.eviware.x.dialogs.XDialogs;
+import com.eviware.x.dialogs.XFileDialogs;
+import com.eviware.x.impl.swing.SwingDialogs;
+import com.eviware.x.impl.swing.SwingFileDialogs;
+import com.jgoodies.looks.HeaderStyle;
+import com.jgoodies.looks.Options;
+import org.syntax.jedit.InputHandler;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableColumn;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -37,57 +67,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JProgressBar;
-import javax.swing.JRootPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableColumn;
-
-import org.syntax.jedit.InputHandler;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SwingPluginSoapUICore;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.ConfigurationDialog;
-import com.eviware.soapui.support.components.JButtonBar;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.PreviewCorner;
-import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
-import com.eviware.soapui.support.swing.GradientPanel;
-import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
-import com.eviware.soapui.support.swing.SwingUtils;
-import com.eviware.soapui.ui.desktop.DesktopPanel;
-import com.eviware.soapui.ui.desktop.SoapUIDesktop;
-import com.eviware.x.dialogs.XDialogs;
-import com.eviware.x.dialogs.XFileDialogs;
-import com.eviware.x.impl.swing.SwingDialogs;
-import com.eviware.x.impl.swing.SwingFileDialogs;
-import com.jgoodies.looks.HeaderStyle;
-import com.jgoodies.looks.Options;
-
 /**
  * Facade for common UI-related tasks
  * 
@@ -99,8 +78,6 @@ public class UISupport
 	public static final String IMAGES_RESOURCE_PATH = "/com/eviware/soapui/resources/images";
 	public static final String TOOL_ICON_PATH = "/applications-system.png";
 	public static final String OPTIONS_ICON_PATH = "/preferences-system.png";
-	public static final String LOADUI_ICON_PATH = "/runWithLoadui.png";
-	public static final String CONVERT_TO_LOADUI_ICON_PATH = "/convertLoadTestToLoadUI.png";
 
 	// This is needed in Eclipse that has strict class loader constraints.
 	private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<ClassLoader>();
@@ -134,7 +111,6 @@ public class UISupport
 
 	public static ImageIcon TOOL_ICON = UISupport.createImageIcon( TOOL_ICON_PATH );
 	public static ImageIcon OPTIONS_ICON = UISupport.createImageIcon( OPTIONS_ICON_PATH );
-	public static ImageIcon LOADUI_ICON = UISupport.createImageIcon( LOADUI_ICON_PATH );
 	public static ImageIcon HELP_ICON = UISupport.createImageIcon( "/help-browser.png" );
 	private static EditorFactory editorFactory = new DefaultEditorFactory();
 
@@ -263,7 +239,7 @@ public class UISupport
 
 	public static void showErrorMessage( String message )
 	{
-		if( message.length() > 120 )
+		if( message != null && message.length() > 120 )
 		{
 			dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
 		}
@@ -523,6 +499,10 @@ public class UISupport
 	public static JButton createToolbarButton( Action action )
 	{
 		JButton result = new JButton( action );
+		if(action.getValue( Action.NAME ) != null)
+		{
+			result.setName( String.valueOf(  action.getValue( Action.NAME ) ));
+		}
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		result.setText( "" );
 		result.setBorder( BorderFactory.createEmptyBorder( 4, 2, 4, 2 ) );

@@ -22,14 +22,18 @@ import static org.junit.Assert.assertEquals;
 
 public class WorkspaceImplTest
 {
+	private static final String OUTPUT_FOLDER_PATH = WorkspaceImpl.class.getResource( "/" ).getPath();
+	private static final String TEST_WORKSPACE_FILE_PATH = OUTPUT_FOLDER_PATH + "test-workspace.xml";
+	private static final String TEST_PROJECT_FILE_PATH = OUTPUT_FOLDER_PATH + "test-project.xml";
+
 	@Before
 	public void setUp() throws Exception
 	{
-		File file = new File( "test-workspace.xml" );
+		File file = new File( TEST_WORKSPACE_FILE_PATH );
 		if( file.exists() )
 			file.delete();
 
-		file = new File( "test-project.xml" );
+		file = new File( TEST_PROJECT_FILE_PATH );
 		if( file.exists() )
 			file.delete();
 	}
@@ -37,11 +41,11 @@ public class WorkspaceImplTest
 	@Test
 	public void testProjectRoot() throws Exception
 	{
-		File wsFile = new File( "test-workspace.xml" );
+		File wsFile = new File( TEST_WORKSPACE_FILE_PATH );
 		WorkspaceImpl ws = new WorkspaceImpl( wsFile.getAbsolutePath(), null );
 
 		WsdlProject project = ws.createProject( "Test Project", null );
-		project.saveAs( new File( "test-project.xml" ).getAbsolutePath() );
+		project.saveAs( new File( TEST_PROJECT_FILE_PATH ).getAbsolutePath() );
 
 		ws.save( false );
 		ws.switchWorkspace( wsFile );

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-workspace name="Projects" soapui-version="UNKNOWN VERSION" projectRoot="${workspaceDir}" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-workspace name="Projects" soapui-version="4.6.2-SNAPSHOT" projectRoot="${workspaceDir}" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
   <con:project name="Test Project">test-project.xml</con:project>
 </con:soapui-workspace>

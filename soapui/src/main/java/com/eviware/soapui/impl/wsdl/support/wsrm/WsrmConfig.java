@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsrm;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.math.BigInteger;
-
 import com.eviware.soapui.config.WsrmConfigConfig;
 import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.support.PropertyChangeNotifier;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.math.BigInteger;
 
 public class WsrmConfig implements PropertyChangeNotifier
 {
@@ -102,11 +102,23 @@ public class WsrmConfig implements PropertyChangeNotifier
 		return wsrmConfig.getAckTo();
 	}
 
+	public String getOfferEndpoint()
+	{
+		return wsrmConfig.getOfferEndpoint();
+	}
+
 	public void setSequenceExpires( BigInteger newTimeout )
 	{
 		BigInteger oldValue = wsrmConfig.getSequenceExpires();
 		wsrmConfig.setSequenceExpires( newTimeout );
 		propertyChangeSupport.firePropertyChange( "sequenceExpires", oldValue, newTimeout );
+	}
+
+	public void setOfferEndpoint(String endpointUri)
+	{
+		String oldValue = wsrmConfig.getOfferEndpoint();
+		wsrmConfig.setOfferEndpoint( endpointUri );
+		propertyChangeSupport.firePropertyChange( "offerEndpoint", oldValue, endpointUri );
 	}
 
 	public BigInteger getSequenceExpires()

@@ -12,23 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.html;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JToggleButton;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -44,6 +27,22 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JToggleButton;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @SuppressWarnings( "unchecked" )
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
@@ -230,7 +229,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		JXToolBar toolbar = UISupport.createToolbar();
 		recordButton = new JToggleButton( new RecordHttpTraficAction() );
 
-		toolbar.addLabeledFixed( "Record HTTP trafic", recordButton );
+		toolbar.addLabeledFixed( "Record HTTP traffic", recordButton );
 		return toolbar;
 	}
 

@@ -42,7 +42,7 @@ import java.util.Set;
 
 /**
  * WSDL implementation of Operation, maps to a WSDL BindingOperation
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -98,7 +98,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		{
 			RestRequestConverter.convert( this, config );
 		}
-		resourceConfig.setRequestArray( new OldRestRequestConfig[] {} );
+		resourceConfig.setRequestArray( new OldRestRequestConfig[] { } );
 
 		service.addPropertyChangeListener( this );
 	}
@@ -486,13 +486,18 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		getConfig().removeMethod( ix );
 	}
 
-	public void deleteChildResource( RestResource resource )
+	protected void deleteAllChildResources( RestResource resource )
 	{
-		deleteResource( resource );
+		for( RestResource childResource : resource.getChildResourceList() )
+		{
+			resource.deleteResource( childResource );
+		}
 	}
 
 	public void deleteResource( RestResource resource )
 	{
+		deleteAllChildResources( resource );
+
 		int ix = resources.indexOf( resource );
 		if( !resources.remove( resource ) )
 			return;
@@ -565,14 +570,26 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	}
 
 	//Helper methods
-	private String removeMatrixParams(String path)
+	private String removeMatrixParams( String path )
 	{
-		if ( path == null || path.isEmpty() )
+		if( path == null || path.isEmpty() )
 		{
 			return path;
 		}
 
 		return path.replaceAll( "(\\;).+(\\=).*(?!\\/)", "" );
+	}
+
+	public RestResource getTopLevelResource()
+	{
+		if( getParentResource() == null )
+		{
+			return this;
+		}
+		else
+		{
+			return getParentResource().getTopLevelResource();
+		}
 	}
 
 	private class PathChanger implements TestPropertyListener
@@ -586,7 +603,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		@Override
 		public void propertyRemoved( String name )
 		{
-			if( !doesParameterExist( name ) || isTemplateProperty( name ) )
+			if( doesParameterExist( name ) && isTemplateProperty( name ) )
 			{
 				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
 			}
@@ -626,19 +643,25 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 		}
 	}
 
+	@Override
+	public String toString()
+	{
+		return "RestResource: " + getFullPath();
+	}
+
 	private class StyleChangeListener implements PropertyChangeListener
 	{
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if (evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ))
+			if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) && getPath() != null)
 			{
-				String name = ((RestParamProperty)evt.getSource()).getName();
-				if ( evt.getOldValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE)
+				String name = ( ( RestParamProperty )evt.getSource() ).getName();
+				if( evt.getOldValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE )
 				{
-				setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
+					setPath( getPath().replaceAll( "\\{" + name + "\\}", "" ) );
 				}
-				else if (evt.getNewValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE && !getPath().contains( "{" + name + "}" ))
+				else if( evt.getNewValue() == RestParamsPropertyHolder.ParameterStyle.TEMPLATE && !getFullPath().contains( "{" + name + "}" ) )
 				{
 					setPath( getPath() + "{" + name + "}" );
 				}

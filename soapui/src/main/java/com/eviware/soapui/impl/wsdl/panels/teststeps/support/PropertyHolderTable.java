@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.support.RestParameter;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
@@ -33,6 +34,7 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
@@ -40,15 +42,31 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
-import java.awt.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -141,10 +159,13 @@ public class PropertyHolderTable extends JPanel
 		{
 			super( propertiesModel );
 			setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
-			// setAutoStartEditOnKeyStroke( true );
 			setSurrendersFocusOnKeystroke( true );
 			setRowHeight( 19 );
-			// setHorizontalScrollEnabled(true);
+			if (UISupport.isMac())
+			{
+				setShowGrid( false );
+				setIntercellSpacing( new Dimension(0, 0) );
+			}
 		}
 
 		@Override
@@ -158,6 +179,22 @@ public class PropertyHolderTable extends JPanel
 			if (editor != null) {
 				editor.cancelCellEditing();
 			}
+		}
+
+		public Component prepareRenderer( TableCellRenderer renderer, int row, int column )
+		{
+			Component defaultRenderer = super.prepareRenderer( renderer, row, column );
+			if( UISupport.isMac() )
+			{
+				JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+			}
+			return defaultRenderer;
+		}
+
+		@Override
+		public boolean getShowVerticalLines()
+		{
+			return !UISupport.isMac();
 		}
 
 		public PropertyModelItem getTestProperty()
@@ -176,12 +213,12 @@ public class PropertyHolderTable extends JPanel
 
 		if( holder instanceof MutableTestPropertyHolder )
 		{
-			removePropertyAction = new RemovePropertyAction( propertiesTable, holder,
-					"Removes the selected property from the property list" );
-			addPropertyAction = new AddParamAction( propertiesTable, ( MutableTestPropertyHolder )holder, "Adds a property to the property list" );
-			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, holder,
+			removePropertyAction = new RemovePropertyAction();
+			MutableTestPropertyHolder mutablePropertyHolder = ( MutableTestPropertyHolder )holder;
+			addPropertyAction = new AddParamAction( propertiesTable, mutablePropertyHolder, "Adds a property to the property list" );
+			movePropertyUpAction = new MovePropertyUpAction( propertiesTable, mutablePropertyHolder,
 					"Moves selected property up one row" );
-			movePropertyDownAction = new MovePropertyDownAction( propertiesTable, holder,
+			movePropertyDownAction = new MovePropertyDownAction( propertiesTable, mutablePropertyHolder,
 					"Moves selected property down one row" );
 
 			JButton addPropertyButton = UISupport.createToolbarButton( addPropertyAction );
@@ -249,6 +286,32 @@ public class PropertyHolderTable extends JPanel
 		super.setEnabled( enabled );
 	}
 
+	protected class RemovePropertyAction extends AbstractAction
+	{
+		public RemovePropertyAction()
+		{
+			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
+			putValue( Action.SHORT_DESCRIPTION, "Removes the selected property from the property list" );
+			setEnabled( false );
+		}
+
+		public void actionPerformed( ActionEvent e )
+		{
+			int row = propertiesTable.getSelectedRow();
+			if( row == -1 )
+				return;
+
+			UISupport.stopCellEditing( propertiesTable );
+
+			String propertyName = propertiesModel.getValueAt( row, 0 ).toString();
+			if( UISupport.confirm( "Remove property [" + propertyName + "]?", "Remove Property" ) )
+			{
+				( ( MutableTestPropertyHolder )holder ).removeProperty( propertyName );
+				propertiesModel.fireTableRowsDeleted( row, row );
+			}
+		}
+	}
+
 	protected class ClearPropertiesAction extends AbstractAction
 	{
 		public ClearPropertiesAction()
@@ -263,7 +326,12 @@ public class PropertyHolderTable extends JPanel
 			{
 				for( String name : holder.getPropertyNames() )
 				{
-					holder.getProperty( name ).setValue( null );
+					TestProperty property = holder.getProperty( name );
+					property.setValue( null );
+					if( property instanceof RestParameter )
+					{
+						( ( RestParameter )property ).setDefaultValue( null );
+					}
 				}
 			}
 		}
@@ -336,8 +404,13 @@ public class PropertyHolderTable extends JPanel
 										&& holder instanceof MutableTestPropertyHolder )
 								{
 									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
-									if( !prop.isReadOnly() )
+									if( !prop.isReadOnly() ) {
 										prop.setValue( value );
+										if( prop instanceof RestParameter )
+										{
+											( ( RestParameter )prop ).setDefaultValue( value );
+										}
+									}
 									count++;
 								}
 
@@ -428,16 +501,16 @@ public class PropertyHolderTable extends JPanel
 		}
 	}
 
-	@AForm( name = "Load Properties", description = "Set load options below" )
+	@AForm(name = "Load Properties", description = "Set load options below")
 	private static interface LoadOptionsForm
 	{
-		@AField( name = "File", description = "The Properties file to load", type = AFieldType.FILE )
+		@AField(name = "File", description = "The Properties file to load", type = AFieldType.FILE)
 		public static final String FILE = "File";
 
-		@AField( name = "Create Missing", description = "Creates Missing Properties", type = AFieldType.BOOLEAN )
+		@AField(name = "Create Missing", description = "Creates Missing Properties", type = AFieldType.BOOLEAN)
 		public static final String CREATEMISSING = "Create Missing";
 
-		@AField( name = "Delete Remaining", description = "Deletes properties not in file", type = AFieldType.BOOLEAN )
+		@AField(name = "Delete Remaining", description = "Deletes properties not in file", type = AFieldType.BOOLEAN)
 		public static final String DELETEREMAINING = "Delete Remaining";
 	}
 
@@ -609,7 +682,7 @@ public class PropertyHolderTable extends JPanel
 			Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 			if( value instanceof String )
 			{
-				if( value != null && ( ( String )value ).length() > 0 )
+				if(  ( ( String )value ).length() > 0 )
 				{
 					String val = ( ( String )table.getValueAt( row, 0 ) ).toLowerCase();
 					if( val.startsWith( "password" ) || val.endsWith( "password" ) )

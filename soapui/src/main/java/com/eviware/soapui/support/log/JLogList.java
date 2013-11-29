@@ -12,6 +12,27 @@
 
 package com.eviware.soapui.support.log;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.UISupport;
+import org.apache.commons.collections.list.TreeList;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.apache.log4j.spi.LoggingEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -31,29 +52,6 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.concurrent.Future;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
-
-import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.spi.LoggingEvent;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.support.UISupport;
-
 /**
  * Component for displaying log entries
  * 
@@ -64,14 +62,11 @@ public class JLogList extends JPanel
 {
 	private long maxRows = 1000;
 	private JList logList;
-	private SimpleAttributeSet requestAttributes;
-	private SimpleAttributeSet responseAttributes;
 	private LogListModel model;
 	private List<Logger> loggers = new ArrayList<Logger>();
 	private InternalLogAppender internalLogAppender = new InternalLogAppender();
 	private boolean tailing = true;
 	private Stack<Object> linesToAdd = new Stack<Object>();
-	private EnableAction enableAction;
 	private JCheckBoxMenuItem enableMenuItem;
 	private final String title;
 	private boolean released;
@@ -91,7 +86,7 @@ public class JLogList extends JPanel
 
 		JPopupMenu listPopup = new JPopupMenu();
 		listPopup.add( new ClearAction() );
-		enableAction = new EnableAction();
+		EnableAction enableAction = new EnableAction();
 		enableMenuItem = new JCheckBoxMenuItem( enableAction );
 		enableMenuItem.setSelected( true );
 		listPopup.add( enableMenuItem );
@@ -108,10 +103,10 @@ public class JLogList extends JPanel
 		UISupport.addPreviewCorner( scrollPane, true );
 		add( scrollPane, BorderLayout.CENTER );
 
-		requestAttributes = new SimpleAttributeSet();
+		SimpleAttributeSet requestAttributes = new SimpleAttributeSet();
 		StyleConstants.setForeground( requestAttributes, Color.BLUE );
 
-		responseAttributes = new SimpleAttributeSet();
+		SimpleAttributeSet responseAttributes = new SimpleAttributeSet();
 		StyleConstants.setForeground( responseAttributes, Color.GREEN );
 
 		try
@@ -402,7 +397,7 @@ public class JLogList extends JPanel
 		{
 			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			int[] selectedIndices = logList.getSelectedIndices();
 			if( selectedIndices.length == 0 )
 			{
@@ -414,9 +409,9 @@ public class JLogList extends JPanel
 			}
 			else
 			{
-				for( int c = 0; c < selectedIndices.length; c++ )
+				for( int selectedIndex : selectedIndices )
 				{
-					buf.append( logList.getModel().getElementAt( selectedIndices[c] ).toString() );
+					buf.append( logList.getModel().getElementAt( selectedIndex ).toString() );
 					buf.append( "\r\n" );
 				}
 			}
@@ -448,7 +443,7 @@ public class JLogList extends JPanel
 	@SuppressWarnings( "unchecked" )
 	private final class LogListModel extends AbstractListModel implements Runnable
 	{
-		private List<Object> lines = new TreeList();
+		private final List<Object> lines = new TreeList();
 
 		public int getSize()
 		{
@@ -481,6 +476,7 @@ public class JLogList extends JPanel
 
 		public void run()
 		{
+			String originalName = Thread.currentThread().getName();
 			Thread.currentThread().setName( "LogList Updater for " + title );
 
 			try
@@ -523,7 +519,7 @@ public class JLogList extends JPanel
 											}
 										}
 									}
-									catch( Throwable e )
+									catch( Exception e )
 									{
 										SoapUI.logError( e );
 									}
@@ -533,7 +529,7 @@ public class JLogList extends JPanel
 
 						Thread.sleep( 500 );
 					}
-					catch( Throwable e )
+					catch( Exception e )
 					{
 						SoapUI.logError( e );
 					}
@@ -541,6 +537,7 @@ public class JLogList extends JPanel
 			}
 			finally
 			{
+				Thread.currentThread().setName(originalName);
 				future = null;
 			}
 		}

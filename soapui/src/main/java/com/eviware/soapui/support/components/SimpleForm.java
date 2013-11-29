@@ -15,25 +15,13 @@ package com.eviware.soapui.support.components;
 import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 
@@ -50,6 +38,7 @@ import com.jgoodies.forms.layout.RowSpec;
 
 public class SimpleForm
 {
+	public static final String ENABLED_PROPERTY_NAME = "enabled";
 	private JPanel panel;
 	private CellConstraints cc = new CellConstraints();
 	private FormLayout layout;
@@ -181,7 +170,19 @@ public class SimpleForm
 		return checkBox;
 	}
 
-	// public <T extends JComponent> T append( String label, T component )
+	public JRadioButton appendRadioButton( String caption, String label, ButtonGroup group, boolean selected )
+	{
+		JRadioButton radioButton = new JRadioButton( label, selected );
+		radioButton.getAccessibleContext().setAccessibleDescription( caption );
+		if (group != null)
+		{
+			group.add( radioButton );
+		}
+		components.put( caption, radioButton );
+		append( caption, radioButton );
+		return radioButton;
+	}
+
 
 	public void append( String label, JComponent component )
 	{
@@ -245,7 +246,7 @@ public class SimpleForm
 		JLabel jlabel = null;
 		if( label != null )
 		{
-			jlabel = new JLabel( label.endsWith( ":" ) ? label : label + ":" );
+			jlabel = new JLabel( label.endsWith( ":" )|| label.isEmpty() ? label : label + ":" );
 			jlabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
 			if( labelFont != null )
 				jlabel.setFont( labelFont );
@@ -271,6 +272,7 @@ public class SimpleForm
 		{
 			panel.add( label, cc.xy( 2, row ) );
 			component.addComponentListener( new LabelHider( label, spaceRowIndex ) );
+			component.addPropertyChangeListener( ENABLED_PROPERTY_NAME, new LabelEnabler( label ) );
 
 			if( label instanceof JLabel )
 			{
@@ -535,6 +537,22 @@ public class SimpleForm
 	public void setDefaultTextFieldColumns( int defaultTextFieldColumns )
 	{
 		this.defaultTextFieldColumns = defaultTextFieldColumns;
+	}
+
+	private static class LabelEnabler implements PropertyChangeListener
+	{
+		private final JComponent label;
+
+		public LabelEnabler( JComponent label )
+		{
+			this.label = label;
+		}
+
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			label.setEnabled( ( Boolean )evt.getNewValue() );
+		}
 	}
 
 	private final class LabelHider extends ComponentAdapter

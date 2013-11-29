@@ -12,11 +12,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 
 /**
- * Created with IntelliJ IDEA.
- * User: manne
- * Date: 8/28/13
- * Time: 3:51 PM
- * To change this template use File | Settings | File Templates.
+ * @author manne
  */
 public class WsdlTestSuiteTest
 {
