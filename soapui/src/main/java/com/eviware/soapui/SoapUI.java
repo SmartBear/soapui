@@ -808,9 +808,8 @@ public class SoapUI
 
 		core.prepareUI();
 		soapUI.show( workspace );
-		core.afterStartup( workspace );
-
 		new WindowInitializationTask().run();
+		core.afterStartup( workspace );
 
 		String[] args2 = cmd.getArgs();
 		if( args2 != null && args2.length > 0 )
