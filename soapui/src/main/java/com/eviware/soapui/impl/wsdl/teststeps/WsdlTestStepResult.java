@@ -215,7 +215,8 @@ public class WsdlTestStepResult implements TestStepResult
 
 		if( messages != null )
 		{
-			writer.println( "\r\n----------------- Messages ------------------------------" );
+			writer.println();
+			writer.println( "----------------- Messages ------------------------------" );
 			for( String message : messages )
 				if( message != null )
 					writer.println( message );

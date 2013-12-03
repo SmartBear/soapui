@@ -198,7 +198,8 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 	public void writeTo( PrintWriter writer )
 	{
 		super.writeTo( writer );
-		writer.println( "\r\n----------------- Properties ------------------------------" );
+		writer.println();
+		writer.println( "----------------- Properties ------------------------------" );
 		if( properties != null )
 		{
 			for( String key : properties.keySet() )
@@ -208,11 +209,13 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 			}
 		}
 
-		writer.println( "\r\n---------------- Request ---------------------------" );
+		writer.println();
+		writer.println( "---------------- Request ---------------------------" );
 		WsdlResponse resp = getResponse();
 		if( resp != null )
 		{
-			writer.println( "Request Headers: " + resp.getRequestHeaders().toString() + "\r\n" );
+			writer.println( "Request Headers: " + resp.getRequestHeaders().toString() );
+			writer.println();
 		}
 
 		if( getRequestContent() != null )
@@ -220,10 +223,12 @@ public class WsdlTestRequestStepResult extends WsdlTestStepResult implements Res
 		else
 			writer.println( "- missing request / garbage collected -" );
 
-		writer.println( "\r\n---------------- Response --------------------------" );
+		writer.println();
+		writer.println( "---------------- Response --------------------------" );
 		if( resp != null )
 		{
-			writer.println( "Response Headers: " + resp.getResponseHeaders().toString() + "\r\n" );
+			writer.println( "Response Headers: " + resp.getResponseHeaders().toString() );
+			writer.println();
 
 			String respContent = resp.getContentAsString();
 			if( respContent != null )

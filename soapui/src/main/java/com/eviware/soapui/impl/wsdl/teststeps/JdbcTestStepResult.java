@@ -12,7 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import java.io.PrintWriter;
 import java.lang.ref.SoftReference;
+import java.util.Map;
+
+import org.apache.xmlbeans.XmlException;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -21,7 +25,11 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.testsuite.AssertedXPath;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.XmlHolder;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -178,4 +186,46 @@ public class JdbcTestStepResult extends WsdlTestStepResult implements AssertedXP
 		return null;
 	}
 
+	/**
+	 * Write out a log for a JDBC test step.
+	 * 
+	 * @author SiKing
+	 */
+	@Override
+	public void writeTo(PrintWriter writer) {
+		super.writeTo(writer);
+
+		writer.println();
+		writer.println("----------------- Properties ------------------------------");
+		PropertyExpansionContext context = new DefaultPropertyExpansionContext(getModelItem());
+		Map<String, TestProperty> properties = getTestStep().getProperties();
+		for (String key : properties.keySet()) {
+			if (key.equals("ResponseAsXml"))
+				continue;
+			writer.println(key + ": " + context.expand(properties.get(key).getValue()));
+		}
+
+		writer.println();
+		writer.println("---------------- Request ---------------------------");
+		StringToStringsMap requestHeaders = getRequestHeaders();
+		for (String key : requestHeaders.keySet())
+			writer.println(key + ": " + requestHeaders.get(key).toString());
+		writer.println();
+		writer.println(getRequestContent());
+
+		writer.println();
+		writer.println("---------------- Response --------------------------");
+		StringToStringsMap responseHeaders = getResponseHeaders();
+		for (String key : responseHeaders.keySet())
+			writer.println(key + ": " + responseHeaders.get(key).toString());
+		writer.println();
+		XmlHolder xmlResponse = null;
+		try {
+			xmlResponse = new XmlHolder(getResponseContentAsXml());
+		} catch (XmlException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		writer.println(xmlResponse.getPrettyXml());
+	}
 }
