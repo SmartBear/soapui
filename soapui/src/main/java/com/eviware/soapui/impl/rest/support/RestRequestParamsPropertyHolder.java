@@ -12,50 +12,69 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import javax.xml.namespace.QName;
-
+import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.StringListConfig;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
-import org.apache.xmlbeans.SchemaType;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
 public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder, TestPropertyListener
 {
 	private StringToStringMap values;
 	private RestParamsPropertyHolder methodParams;
-	private ModelItem modelItem;
+	private List<String> sortedPropertyNames;
+	private RestRequest restRequest;
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 	private Map<RestParamProperty, InternalRestParamProperty> wrappers = new HashMap<RestParamProperty, InternalRestParamProperty>();
+	private String parameterBeingMoved;
 
-	public RestRequestParamsPropertyHolder( RestParamsPropertyHolder methodParams, ModelItem modelItem,
-			StringToStringMap values )
+	public RestRequestParamsPropertyHolder( RestParamsPropertyHolder methodParams, RestRequest restRequest,
+														 StringToStringMap values )
 	{
 		this.methodParams = methodParams;
-		this.modelItem = modelItem;
+		this.restRequest = restRequest;
+		buildPropertyNameList();
 		this.values = values;
-		/*
-		 * for (String key : methodParams.getPropertyNames()) { if
-		 * (!values.containsKey(key) && methodParams.getPropertyValue(key) != null
-		 * && !(methodParams.getPropertyValue(key).length() == 0)) {
-		 * values.put(key, methodParams.getPropertyValue(key)); } }
-		 */
 		methodParams.addTestPropertyListener( this );
+	}
+
+	private void buildPropertyNameList()
+	{
+		RestRequestConfig requestConfig = restRequest.getConfig();
+		List<String> propertyNames;
+		List<String> methodParamNames = new ArrayList<String>( Arrays.asList( methodParams.getPropertyNames() ) );
+		if( requestConfig.isSetParameterOrder() )
+		{
+			propertyNames = new ArrayList<String>( requestConfig.getParameterOrder().getEntryList() );
+			propertyNames.retainAll( methodParamNames );
+			methodParamNames.removeAll( propertyNames );
+			propertyNames.addAll( methodParamNames );
+		}
+		else
+		{
+			propertyNames = new ArrayList<String>( methodParamNames );
+		}
+		sortedPropertyNames = propertyNames;
 	}
 
 	public void reset( RestParamsPropertyHolder methodParams, StringToStringMap values )
@@ -80,14 +99,61 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	{
 
 		RestParamProperty property = methodParams.addProperty( name );
-		property.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
+		setParameterLocation( property, NewRestResourceActionBase.ParamLocation.RESOURCE );
 		//setting the param location changes the parent of the property, hence need to get it again
-		return methodParams.getProperty( name );
+		return getWrapper(methodParams.getProperty( name ));
 	}
 
 	public void addParameter( RestParamProperty prop )
 	{
 		methodParams.addParameter( prop );
+	}
+
+	@Override
+	public void setParameterLocation( RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation )
+	{
+		if (newLocation == parameter.getParamLocation())
+		{
+			return;
+		}
+		parameterBeingMoved = parameter.getName();
+		try
+		{
+			ParameterStyle parameterStyle = parameter.getStyle();
+			String parameterValue = parameter.getValue();
+			QName type = parameter.getType();
+			String[] options = parameter.getOptions();
+			boolean required = parameter.getRequired();
+			String description = parameter.getDescription();
+			boolean disableURLEncoding = parameter.isDisableUrlEncoding();
+			RestParamProperty newParameter;
+			List<String> copyOfSortedPropertyNames = new ArrayList<String>(sortedPropertyNames);
+			if (newLocation == NewRestResourceActionBase.ParamLocation.METHOD)
+			{
+				restRequest.getResource().removeProperty( parameterBeingMoved );
+				newParameter = restRequest.getRestMethod().addProperty( parameterBeingMoved );
+			}
+			else
+			{
+				restRequest.getRestMethod().removeProperty( parameterBeingMoved );
+				newParameter = restRequest.getResource().addProperty( parameterBeingMoved );
+			}
+			newParameter.setType(type);
+			newParameter.setStyle( parameterStyle );
+			newParameter.setValue( parameterValue );
+			newParameter.setDefaultValue( parameterValue );
+			newParameter.setOptions( options );
+			newParameter.setRequired( required );
+			newParameter.setDescription( description );
+			newParameter.setDisableUrlEncoding( disableURLEncoding );
+			restRequest.getProperty( parameterBeingMoved ).setValue( parameterValue );
+			sortedPropertyNames = copyOfSortedPropertyNames;
+			firePropertyRemoved( parameterBeingMoved );
+			firePropertyAdded( parameterBeingMoved );
+		} finally
+		{
+   		parameterBeingMoved = null;
+		}
 	}
 
 	public void addTestPropertyListener( TestPropertyListener listener )
@@ -134,7 +200,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public ModelItem getModelItem()
 	{
-		return this.modelItem;
+		return this.restRequest;
 	}
 
 	public Map<String, TestProperty> getProperties()
@@ -162,8 +228,13 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	public RestParamProperty getPropertyAt( int index )
 	{
 		if( methodParams.getPropertyCount() <= index )
+		{
 			return null;
-		return getWrapper( methodParams.getPropertyAt( index ) );
+		}
+		buildPropertyNameList();
+		String propertyName = sortedPropertyNames.get( index );
+		RestParamProperty propertyToWrap = methodParams.getProperty( propertyName );
+		return getWrapper( propertyToWrap );
 	}
 
 	public int getPropertyCount()
@@ -178,12 +249,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public int getPropertyIndex( String name )
 	{
-		return methodParams.getPropertyIndex( name );
+		return sortedPropertyNames.indexOf( name );
 	}
 
 	public String[] getPropertyNames()
 	{
-		return methodParams.getPropertyNames();
+		return sortedPropertyNames.toArray( new String[sortedPropertyNames.size()] );
 	}
 
 	public String getPropertyValue( String name )
@@ -203,12 +274,19 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public Set<String> keySet()
 	{
-		return methodParams.keySet();
+		return new LinkedHashSet<String>( sortedPropertyNames );
 	}
 
 	public void moveProperty( String propertyName, int targetIndex )
 	{
-		methodParams.moveProperty( propertyName, targetIndex );
+		if( sortedPropertyNames.contains( propertyName ) )
+		{
+			int oldIndex = sortedPropertyNames.indexOf( propertyName );
+			String valueAtNewindex = sortedPropertyNames.get( targetIndex );
+			sortedPropertyNames.set( targetIndex, propertyName );
+			sortedPropertyNames.set( oldIndex, valueAtNewindex );
+			firePropertyMoved( propertyName, oldIndex, targetIndex );
+		}
 	}
 
 	public TestProperty put( String key, TestProperty value )
@@ -222,7 +300,6 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void putAll( Map<? extends String, ? extends TestProperty> m )
 	{
-		// methodParams.putAll(m);
 		for( Entry<? extends String, ? extends TestProperty> e : m.entrySet() )
 			put( e.getKey(), e.getValue() );
 	}
@@ -237,6 +314,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		values.remove( propertyName );
 
 		RestParamProperty property = methodParams.removeProperty( propertyName );
+		sortedPropertyNames.remove( propertyName );
 		firePropertyRemoved( propertyName );
 		return property;
 	}
@@ -248,20 +326,33 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public boolean renameProperty( String name, String newName )
 	{
-		if(name.equals( newName ))
+		if( name.equals( newName ) )
 		{
 			return false;
 		}
-
-		renameLocalProperty( name, newName );
-		return methodParams.renameProperty( name, newName );
+		RestParamProperty parameter = methodParams.getProperty( name );
+		boolean renamePerformed;
+		if( parameter.getParamLocation() == NewRestResourceActionBase.ParamLocation.METHOD )
+		{
+			renamePerformed = methodParams.renameProperty( name, newName );
+		}
+		else
+		{
+			renamePerformed = restRequest.getResource().renameProperty( name, newName );
+		}
+		if( renamePerformed )
+		{
+			buildPropertyNameList();
+		}
+		return renamePerformed;
 	}
 
 	private void renameLocalProperty( String name, String newName )
 	{
-		String value =  values.get( name )==null ?  getPropertyValue( name ) :  values.get( name );
+		String value = values.get( name ) == null ? getPropertyValue( name ) : values.get( name );
 
-		if(this.containsKey( name )) {
+		if( this.containsKey( name ) )
+		{
 			RestParamProperty restParamProperty = this.get( name );
 			restParamProperty.setName( newName );
 			this.put( newName, restParamProperty );
@@ -329,6 +420,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyAdded( String name )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -338,6 +430,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyRemoved( String name )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -347,6 +440,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyMoved( String name, int oldIndex, int newIndex )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -356,6 +450,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	private void firePropertyRenamed( String oldName, String newName )
 	{
+		saveParameterOrder();
 		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
 		for( TestPropertyListener listener : listenersArray )
 		{
@@ -372,6 +467,13 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		}
 	}
 
+	private void saveParameterOrder()
+	{
+		StringListConfig mapConfig = StringListConfig.Factory.newInstance();
+		mapConfig.setEntryArray( keySet().toArray( new String[keySet().size()] ) );
+		restRequest.getConfig().setParameterOrder( mapConfig );
+	}
+
 	private RestParamProperty getWrapper( RestParamProperty key )
 	{
 		if( !wrappers.containsKey( key ) )
@@ -383,6 +485,14 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void propertyAdded( String name )
 	{
+		if ( isChangingLocationOfParameter( name ))
+		{
+			return;
+		}
+		if( !sortedPropertyNames.contains( name ) )
+		{
+			sortedPropertyNames.add( name );
+		}
 		firePropertyAdded( name );
 	}
 
@@ -393,6 +503,11 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public void propertyRemoved( String name )
 	{
+		if ( isChangingLocationOfParameter( name ))
+		{
+			return;
+		}
+		sortedPropertyNames.remove( name );
 		values.remove( name );
 		firePropertyRemoved( name );
 	}
@@ -404,13 +519,22 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 			values.put( newName, values.get( oldName ) );
 			values.remove( oldName );
 		}
-		firePropertyRenamed( oldName, newName );
+		if( sortedPropertyNames.contains( oldName ) )
+		{
+			sortedPropertyNames.set( sortedPropertyNames.indexOf( oldName ), newName );
+			firePropertyRenamed( oldName, newName );
+		}
 	}
 
 	public void propertyValueChanged( String name, String oldValue, String newValue )
 	{
 		if( !values.containsKey( name ) )
 			firePropertyValueChanged( name, oldValue, newValue );
+	}
+
+	private boolean isChangingLocationOfParameter( String name )
+	{
+		return parameterBeingMoved != null && parameterBeingMoved.equals(name);
 	}
 
 	public class InternalRestParamProperty implements RestParamProperty, PropertyChangeListener
@@ -452,12 +576,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDisableUrlEncoding( boolean encode )
 		{
-			overriddenProp.setDisableUrlEncoding(encode);
+			overriddenProp.setDisableUrlEncoding( encode );
 		}
 
 		public void setName( String name )
 		{
-			overriddenProp.setName(name);
+			overriddenProp.setName( name );
 		}
 
 		public String getDefaultValue()
@@ -472,7 +596,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public ModelItem getModelItem()
 		{
-			return modelItem;
+			return restRequest;
 		}
 
 		public String getName()
@@ -532,22 +656,22 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setDescription( String description )
 		{
-			overriddenProp.setDescription(description);
+			overriddenProp.setDescription( description );
 		}
 
 		public void setOptions( String[] arg0 )
 		{
-			overriddenProp.setOptions(arg0);
+			overriddenProp.setOptions( arg0 );
 		}
 
 		public void setRequired( boolean arg0 )
 		{
-			overriddenProp.setRequired(arg0);
+			overriddenProp.setRequired( arg0 );
 		}
 
 		public void setStyle( ParameterStyle style )
 		{
-			overriddenProp.setStyle(style);
+			overriddenProp.setStyle( style );
 		}
 
 		@Override
@@ -564,7 +688,7 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void setType( QName arg0 )
 		{
-			overriddenProp.setType(arg0);
+			overriddenProp.setType( arg0 );
 		}
 
 		public void propertyChange( PropertyChangeEvent evt )
@@ -607,7 +731,12 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public List<TestProperty> getPropertyList()
 	{
-		return methodParams.getPropertyList();
+		List<TestProperty> propertyList = new ArrayList<TestProperty>();
+		for( InternalRestParamProperty internalRestParamProperty : wrappers.values() )
+		{
+			propertyList.add( internalRestParamProperty );
+		}
+		return propertyList;
 	}
 
 }

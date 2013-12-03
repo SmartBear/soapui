@@ -23,14 +23,24 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestParamsPropertyHolder>
 {
 
+	private static final String NAME = "Name";
+	private static final String VALUE = "Value";
+	private static final String STYLE = "Style";
+
+	public static final int NAME_COLUMN_INDEX = 0;
+	public static final int VALUE_COLUMN_INDEX = 1;
+	public static final int STYLE_COLUMN_INDEX = 2;
+	public static final int LOCATION_COLUMN_INDEX = 3;
+
 	public static enum Mode
 	{
-		MINIMAL( new String[] { "Name", "Value" }, new Class[] { String.class, String.class } ),
+		MINIMAL( new String[] { NAME, VALUE }, new Class[] { String.class, String.class } ),
+		MEDIUM( new String[] { NAME, VALUE, STYLE }, new Class[] { String.class, String.class, ParameterStyle.class } ),
 		FULL( COLUMN_NAMES, COLUMN_TYPES );
 
-		final String[] columnNames;
+		private final String[] columnNames;
 
-		final Class[] columnTypes;
+		private final Class[] columnTypes;
 
 		private Mode( String[] columnNames, Class[] columnTypes )
 		{
@@ -40,9 +50,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 	}
 
-	public static final int PARAM_LOCATION_COLUMN_INDEX = 3;
-
-	static String[] COLUMN_NAMES = new String[] { "Name", "Default value", "Style", "Level" };
+	static String[] COLUMN_NAMES = new String[] { NAME, "Default value", STYLE, "Level" };
 	static Class[] COLUMN_TYPES = new Class[] { String.class, String.class, ParameterStyle.class, ParamLocation.class };
 
 	private Mode mode;
@@ -63,9 +71,9 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 		this( params, Mode.FULL );
 	}
 
-	public boolean isInFullMode()
+	public boolean isInMinimalMode()
 	{
-		return mode == Mode.FULL;
+		return mode == Mode.MINIMAL;
 	}
 
 	@Override
@@ -73,7 +81,6 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 	{
 		return mode.columnTypes.length;
 	}
-
 
 	@Override
 	public String getColumnName( int columnIndex )
@@ -108,7 +115,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 	public ParamLocation getParamLocationAt( int rowIndex )
 	{
-		return ( ParamLocation )getValueAt( rowIndex, PARAM_LOCATION_COLUMN_INDEX );
+		return getParameterAt( rowIndex ).getParamLocation();
 	}
 
 
@@ -119,14 +126,14 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 		switch( columnIndex )
 		{
-			case 0:
+			case NAME_COLUMN_INDEX:
 				return prop.getName();
-			case 1:
+			case VALUE_COLUMN_INDEX:
 				return prop.getValue();
-			case 2:
+			case STYLE_COLUMN_INDEX:
 				return mode == Mode.MINIMAL ? null : prop.getStyle();
-			case 3:
-				return mode == Mode.MINIMAL ? null : prop.getParamLocation();
+			case LOCATION_COLUMN_INDEX:
+				return mode != Mode.FULL ? null : prop.getParamLocation();
 		}
 
 		return null;
@@ -139,7 +146,7 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 		switch( columnIndex )
 		{
-			case 0:
+			case NAME_COLUMN_INDEX:
 				if( propertyExists( value, prop ) )
 				{
 					return;
@@ -147,27 +154,27 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 
 				params.renameProperty( prop.getName(), value.toString() );
 				return;
-			case 1:
+			case VALUE_COLUMN_INDEX:
 				//if( !prop.getParamLocation().equals( ParamLocation.REQUEST ) )
 				//{
 				prop.setDefaultValue( value.toString() );
 				//}
 				prop.setValue( value.toString() );
 				return;
-			case 2:
-				if( mode == Mode.FULL )
+			case STYLE_COLUMN_INDEX:
+				if( mode != Mode.MINIMAL )
 				{
 					prop.setStyle( ( ParameterStyle )value );
 				}
 				return;
-			case 3:
+			case LOCATION_COLUMN_INDEX:
 				if( mode == Mode.FULL )
 				{
 					if( params.getModelItem() != null && params.getModelItem() instanceof RestRequest )
 					{
 						this.isLastChangeParameterLevelChange = true;
 					}
-					prop.setParamLocation( ( ParamLocation )value );
+					params.setParameterLocation( prop, ( ParamLocation )value );
 				}
 		}
 	}
@@ -175,12 +182,6 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 	public RestParamProperty getParameterAt( int selectedRow )
 	{
 		return ( RestParamProperty )super.getPropertyAtRow( selectedRow );
-	}
-
-	public ParameterStyle[] getParameterStylesForEdit()
-	{
-		return new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER,
-				ParameterStyle.MATRIX, ParameterStyle.PLAIN };
 	}
 
 	public ParamLocation[] getParameterLevels()
@@ -194,7 +195,6 @@ public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestPa
 		this.params = params;
 		this.params.addTestPropertyListener( testPropertyListener );
 
-		buildParamNameIndex( params );
 		fireTableDataChanged();
 	}
 

@@ -1,10 +1,13 @@
 package com.eviware.soapui.impl.wsdl.panels.assertions;
 
-import java.util.List;
-
-import javax.swing.table.TableModel;
-
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.swing.JTableFactory;
 import org.jdesktop.swingx.JXTable;
+
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import java.awt.Component;
+import java.util.List;
 
 public class CategoriesListTable extends JXTable
 {
@@ -14,6 +17,10 @@ public class CategoriesListTable extends JXTable
 	public CategoriesListTable( TableModel tableModel )
 	{
 		super( tableModel );
+		if( UISupport.isMac() )
+		{
+			JTableFactory.setGridAttributes(this);
+		}
 	}
 
 	public void setSelectable( boolean selectable )
@@ -51,6 +58,20 @@ public class CategoriesListTable extends JXTable
 	public List<Integer> getSelectableIndexes()
 	{
 		return selectableIndexes;
+	}
+
+	@Override
+	public Component prepareRenderer( TableCellRenderer renderer, int row, int column )
+	{
+		Component defaultRenderer = super.prepareRenderer( renderer, row, column );
+		JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+		return defaultRenderer;
+	}
+
+	@Override
+	public boolean getShowVerticalLines()
+	{
+		return UISupport.isMac() ? false : super.getShowVerticalLines();
 	}
 
 }

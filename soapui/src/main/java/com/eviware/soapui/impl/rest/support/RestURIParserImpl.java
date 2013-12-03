@@ -131,7 +131,11 @@ public class RestURIParserImpl implements RestURIParser
 		if(splitResourcePath.length == 0)
 			return "";
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
-		resourceName = resourceName.replaceAll( "^\\{|\\}$", "" );
+		resourceName = resourceName.replaceAll( "\\{", "" ).replaceAll( "\\}", ""  );
+		if( resourceName.contains( ";" ) )
+		{
+			resourceName = resourceName.substring( 0, resourceName.indexOf(";" ) );
+		}
 		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 
 		return capitalizedResourceName;

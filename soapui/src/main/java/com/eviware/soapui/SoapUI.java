@@ -12,12 +12,7 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.actions.SaveAllProjectsAction;
-import com.eviware.soapui.actions.ShowSystemPropertiesAction;
-import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
-import com.eviware.soapui.actions.SwitchDesktopPanelAction;
-import com.eviware.soapui.actions.VersionUpdateAction;
+import com.eviware.soapui.actions.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -39,7 +34,6 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile.WSCompileActio
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action;
-import com.eviware.soapui.impl.wsdl.actions.project.StartLoadUI;
 import com.eviware.soapui.impl.wsdl.actions.support.OpenUrlAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
@@ -64,22 +58,14 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
-import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.*;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JPropertiesTable;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -92,6 +78,7 @@ import com.eviware.soapui.support.log.Log4JMonitor;
 import com.eviware.soapui.support.log.LogDisablingTestMonitorListener;
 import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
+import com.eviware.soapui.support.preferences.UserPreferences;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.tools.CmdLineRunner;
@@ -118,34 +105,23 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
+import java.awt.event.*;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.prefs.BackingStoreException;
 
 /**
  * Main SoapUI entry point.
@@ -153,6 +129,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 public class SoapUI
 {
+	// ------------------------------ CONSTANTS ------------------------------
 	public static final String DEFAULT_DESKTOP = "Default";
 	public static final String CURRENT_SOAPUI_WORKSPACE = SoapUI.class.getName() + "@workspace";
 	public final static Logger log = Logger.getLogger( SoapUI.class );
@@ -160,23 +137,24 @@ public class SoapUI
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
-	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
-	public static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
-	public static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+	private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
+	private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
-
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
+
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
 			+ "/starter-page.html";
+
+	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
+	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
+
 
 	// ------------------------------ FIELDS ------------------------------
 
 	private static List<Object> logCache = new ArrayList<Object>();
-
 	private static SoapUICore soapUICore;
 	private static Timer soapUITimer = new Timer();
 	private static JFrame frame;
@@ -284,7 +262,6 @@ public class SoapUI
 		frame.getContentPane().add( buildToolbar(), BorderLayout.NORTH );
 		frame.getContentPane().add( mainInspector.getComponent(), BorderLayout.CENTER );
 		frame.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
-		frame.setSize( 1000, 750 );
 
 		mainInspector.setDividerLocation( 250 );
 		mainInspector.setResizeWeight( 0.1 );
@@ -305,11 +282,6 @@ public class SoapUI
 		desktop.init();
 	}
 
-	public static JToggleButton getApplyProxyButton()
-	{
-		return applyProxyButton;
-	}
-
 	private JComponent buildToolbar()
 	{
 		mainToolbar = new JXToolBar();
@@ -320,8 +292,6 @@ public class SoapUI
 		mainToolbar.add( new ImportWsdlProjectActionDelegate() );
 		mainToolbar.add( new SaveAllActionDelegate() );
 		mainToolbar.addSpace( 2 );
-		mainToolbar.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL,
-				"Opens the SoapUI User-Guide in a browser" ) );
 		mainToolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL,
 				"Opens the SoapUI Forum in a browser", "/group_go.png" ) );
 		mainToolbar.addSpace( 2 );
@@ -330,19 +300,7 @@ public class SoapUI
 		mainToolbar.addSpace( 2 );
 		mainToolbar.add( new PreferencesActionDelegate() );
 		applyProxyButton = ( JToggleButton )mainToolbar.add( new JToggleButton( new ApplyProxyButtonAction() ) );
-		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
-		if( ProxyUtils.isProxyEnabled() )
-		{
-			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-			applyProxyButton.setSelected( true );
-			ProxyUtils.setProxyEnabled( true );
-		}
-		else
-		{
-			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
-			ProxyUtils.setProxyEnabled( false );
-		}
-		mainToolbar.add( new LaunchLoadUIButtonAction() );
+		updateProxyButtonAndTooltip();
 
 		mainToolbar.addGlue();
 
@@ -383,7 +341,7 @@ public class SoapUI
 		return mainToolbar;
 	}
 
-	@SuppressWarnings( "deprecation" )
+	@SuppressWarnings("deprecation")
 	public void doForumSearch( String text )
 	{
 		if( !searchField.getText().equals( text ) )
@@ -391,11 +349,11 @@ public class SoapUI
 
 		if( StringUtils.hasContent( text ) )
 		{
-			Tools.openURL( "http://forum.soapui.org/search.php?keywords=" + URLEncoder.encode( text.trim() ) );
+			Tools.openURL( HelpUrls.FORUMS_HELP_URL + "search.php?keywords=" + URLEncoder.encode( text.trim() ) );
 		}
 		else
 		{
-			Tools.openURL( "http://forum.soapui.org/" );
+			Tools.openURL( HelpUrls.FORUMS_HELP_URL );
 		}
 	}
 
@@ -679,8 +637,16 @@ public class SoapUI
 					} );
 				}
 
-				if( isAutoUpdateVersion() )
-					new SoapUIVersionUpdate().checkForNewVersion( false );
+				if( isAutoUpdateVersion() ){
+					new Thread( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							new SoapUIVersionUpdate().checkForNewVersion( false );
+						}
+					} ).start();
+				}
 
 				CajoServer.getInstance().start();
 			}
@@ -733,6 +699,7 @@ public class SoapUI
 			}
 		}
 	}
+
 
 	private final class InternalDesktopListener extends DesktopListenerAdapter
 	{
@@ -841,9 +808,8 @@ public class SoapUI
 
 		core.prepareUI();
 		soapUI.show( workspace );
+		new WindowInitializationTask().run();
 		core.afterStartup( workspace );
-
-		frame.setSize( 1000, 750 );
 
 		String[] args2 = cmd.getArgs();
 		if( args2 != null && args2.length > 0 )
@@ -967,7 +933,6 @@ public class SoapUI
 
 		testMonitor.addTestMonitorListener( new LogDisablingTestMonitorListener() );
 		testMonitor.init( workspace );
-		frame.setVisible( true );
 
 		initAutoSaveTimer();
 		initGCTimer();
@@ -1043,7 +1008,7 @@ public class SoapUI
 
 	public static boolean isJXBrowserDisabled( boolean allowNative )
 	{
-		if( UISupport.isHeadless() || isCommandLine())
+		if( UISupport.isHeadless() || isCommandLine() )
 			return true;
 
 		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
@@ -1059,7 +1024,6 @@ public class SoapUI
 
 		return !disable.equals( "false" )
 				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) );
-
 	}
 
 	public static boolean isJXBrowserPluginsDisabled()
@@ -1227,87 +1191,56 @@ public class SoapUI
 
 	private class ApplyProxyButtonAction extends AbstractAction
 	{
-		public ApplyProxyButtonAction()
-		{
-			putValue( Action.SHORT_DESCRIPTION, "Apply proxy defined in global preferences" );
-		}
-
 		public void actionPerformed( ActionEvent e )
 		{
 			if( ProxyUtils.isProxyEnabled() )
 			{
-				ProxyUtils.setProxyEnabled( false );
 				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, false );
-				applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
 			}
 			else
 			{
-				if( StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
-						|| StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) ) )
+				if( !ProxyUtils.isAutoProxy() && emptyManualSettings() )
 				{
-					SoapUIPreferencesAction.getInstance().show( SoapUIPreferencesAction.PROXY_SETTINGS );
-					if( !StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
-							&& !StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) ) )
-					{
-						ProxyUtils.setProxyEnabled( true );
-						SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-						applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-					}
+					SoapUI.getSettings().setBoolean( ProxySettings.AUTO_PROXY, true );
 				}
-				else
-				{
-					ProxyUtils.setProxyEnabled( true );
-					SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
-					applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
-				}
+				SoapUI.getSettings().setBoolean( ProxySettings.ENABLE_PROXY, true );
 			}
+
+			updateProxyFromSettings();
+		}
+
+		private boolean emptyManualSettings()
+		{
+			return StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.HOST, "" ) )
+					|| StringUtils.isNullOrEmpty( SoapUI.getSettings().getString( ProxySettings.PORT, "" ) );
 		}
 	}
 
-	private class LaunchLoadUIButtonAction extends AbstractAction
+	public static void updateProxyButtonAndTooltip()
 	{
-		private final class LoadUIRunner implements Runnable
+		if( applyProxyButton == null )
 		{
-			public void run()
+			return;
+		}
+		if( ProxyUtils.isProxyEnabled() )
+		{
+			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_ENABLED_ICON ) );
+			if( ProxyUtils.isAutoProxy() )
 			{
-				Process p = StartLoadUI.launchLoadUI();
-				if( p != null )
-				{
-					InputStream is = p.getInputStream();
-					Logger soapUILogger = Logger.getLogger( "com.eviware.soapui" );
-					try
-					{
-						BufferedInputStream inputStream = new BufferedInputStream( is );
-						BufferedReader bris = new BufferedReader( new InputStreamReader( inputStream ) );
-						String line;
-						while( ( line = bris.readLine() ) != null )
-						{
-							soapUILogger.info( line );
-						}
-						inputStream.close();
-						bris.close();
-						is.close();
-					}
-					catch( IOException e1 )
-					{// Catch exception if any
-						SoapUI.logError( e1 );
-					}
-				}
+				applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: Automatic" );
 
 			}
+			else
+			{
+				applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: Manual" );
+			}
 		}
-
-		public LaunchLoadUIButtonAction()
+		else
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/launchLoadUI.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Launch loadUI" );
+			applyProxyButton.setIcon( UISupport.createImageIcon( PROXY_DISABLED_ICON ) );
+			applyProxyButton.getAction().putValue( Action.SHORT_DESCRIPTION, "Proxy Setting: None" );
 		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			Thread launchLoadUI = new Thread( new LoadUIRunner() );
-			launchLoadUI.start();
-		}
+		applyProxyButton.setSelected( ProxyUtils.isProxyEnabled() );
 	}
 
 	private class ShowPushPageAction extends AbstractAction
@@ -1812,14 +1745,11 @@ public class SoapUI
 		SoapUI.launchedTestRunner = launchedTestRunner;
 	}
 
-	public static void setProxyEnabled( boolean proxyEnabled )
+	public static void updateProxyFromSettings()
 	{
-		if( applyProxyButton != null )
-		{
-			applyProxyButton.setSelected( proxyEnabled );
-		}
-
-		ProxyUtils.setProxyEnabled( proxyEnabled );
+		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
+		ProxyUtils.setAutoProxy( getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+		updateProxyButtonAndTooltip();
 	}
 
 	public static Timer getSoapUITimer()
@@ -1840,6 +1770,65 @@ public class SoapUI
 	public static boolean isAutoUpdateVersion()
 	{
 		return getSettings().getBoolean( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE );
+	}
+
+	protected static class WindowInitializationTask implements Runnable
+	{
+		public void run()
+		{
+			expandWindow( frame );
+			frame.setVisible( true );
+		}
+
+		private void expandWindow( JFrame frame )
+		{
+			UserPreferences userPreferences = new UserPreferences();
+			Rectangle savedWindowBounds = userPreferences.getSoapUIWindowBounds();
+			if( savedWindowBounds == null || !windowFullyVisibleOnScreen( savedWindowBounds ) )
+			{
+				Rectangle availableScreenArea = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+				frame.setBounds( availableScreenArea );
+			}
+			else
+			{
+				frame.setBounds( savedWindowBounds );
+				if( !UISupport.isMac() )
+				{
+					frame.setExtendedState( userPreferences.getSoapUIExtendedState() );
+				}
+			}
+			frame.addWindowListener( new WindowAdapter()
+			{
+				@Override
+				public void windowClosing( WindowEvent event )
+				{
+					try
+					{
+						JFrame frame = ( JFrame )event.getWindow();
+						UserPreferences userPreferences = new UserPreferences();
+						userPreferences.setSoapUIWindowBounds( frame.getBounds() );
+						userPreferences.setSoapUIExtendedState( frame.getExtendedState() );
+					}
+					catch( BackingStoreException e )
+					{
+						logError( e, "Could not save SoapUI window bounds" );
+					}
+				}
+			} );
+		}
+
+		private boolean windowFullyVisibleOnScreen( Rectangle windowBounds )
+		{
+			Rectangle bargainBounds = new Rectangle( windowBounds.x + 12, windowBounds.y + 12, windowBounds.width * 4 / 5, windowBounds.height * 4 / 5 );
+			for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
+			{
+				if( graphicsDevice.getDefaultConfiguration().getBounds().contains( bargainBounds ) )
+				{
+					return true;
+				}
+			}
+			return false;
+		}
 	}
 
 }

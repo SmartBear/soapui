@@ -12,37 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.PreencodedMimeBodyPart;
-
-import com.eviware.soapui.impl.support.HttpUtils;
-import org.apache.commons.httpclient.URI;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.InputStreamEntity;
-import org.apache.http.entity.StringEntity;
-import org.apache.xmlbeans.XmlBoolean;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentDataSource;
@@ -59,6 +34,28 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.commons.httpclient.URI;
+import org.apache.http.HttpEntityEnclosingRequest;
+import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
+import org.apache.xmlbeans.XmlBoolean;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.PreencodedMimeBodyPart;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * RequestFilter that adds SOAP specific headers
@@ -75,7 +72,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 
 		String path = PropertyExpander.expandProperties( context, request.getPath() );
-		StringBuffer query = new StringBuffer();
+		StringBuilder query = new StringBuilder();
 		String encoding = System.getProperty( "soapui.request.encoding", StringUtils.unquote( request.getEncoding() ) );
 
 		StringToStringMap responseProperties = ( StringToStringMap )context
@@ -267,15 +264,6 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			}
 		}
 
-		if( request instanceof RestRequest )
-		{
-			String acceptEncoding = ( ( RestRequest )request ).getAccept();
-			if( StringUtils.hasContent( acceptEncoding ) )
-			{
-				httpMethod.setHeader( "Accept", acceptEncoding );
-			}
-		}
-
 		if( formMp != null )
 		{
 			// create request message
@@ -461,10 +449,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 			part.setText( value, System.getProperty( "soapui.request.encoding", request.getEncoding() ) );
 		}
 
-		if( part != null )
-		{
-			formMp.addBodyPart( part );
-		}
+		formMp.addBodyPart( part );
 	}
 
 	protected void initRootPart( HttpRequestInterface<?> wsdlRequest, String requestContent, MimeMultipart mp )

@@ -40,7 +40,7 @@ import com.eviware.soapui.support.Tools;
 /**
  * Extended PostMethod that supports limiting of response size and detailed
  * timestamps
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -186,7 +186,7 @@ public class HttpMethodSupport
 
 	/**
 	 * Handles charset specified in Content-Encoding headers
-	 * 
+	 *
 	 * @return
 	 */
 
@@ -352,10 +352,12 @@ public class HttpMethodSupport
 
 					responseBody = outstream.toByteArray();
 				}
-			}
-			finally
+			} finally
 			{
-				instream.close();
+				if( instream != null )
+				{
+					instream.close();
+				}
 			}
 		}
 

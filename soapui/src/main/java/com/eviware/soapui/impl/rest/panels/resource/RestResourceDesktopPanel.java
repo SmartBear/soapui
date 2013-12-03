@@ -32,6 +32,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 
 public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
 {
+	public static final String REST_RESOURCE_EDITOR = "rest-resource-editor";
 	// package protected to facilitate unit testing
 	JTextField pathTextField;
 
@@ -41,7 +42,7 @@ public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource
 	public RestResourceDesktopPanel( RestResource modelItem )
 	{
 		super( modelItem );
-
+		setName( REST_RESOURCE_EDITOR );
 		add( buildToolbar(), BorderLayout.NORTH );
 		add( buildContent(), BorderLayout.CENTER );
 	}

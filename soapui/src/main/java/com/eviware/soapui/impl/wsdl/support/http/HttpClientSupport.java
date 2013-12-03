@@ -12,22 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import java.io.File;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUISystemProperties;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.settings.SettingsListener;
+import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.settings.SSLSettings;
 import org.apache.commons.ssl.KeyMaterial;
-import org.apache.http.Header;
-import org.apache.http.HttpClientConnection;
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
+import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.params.AuthPolicy;
@@ -48,19 +43,14 @@ import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpRequestExecutor;
 import org.apache.log4j.Logger;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUISystemProperties;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.settings.SettingsListener;
-import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.settings.SSLSettings;
+import java.io.File;
+import java.io.IOException;
+import java.security.*;
+import java.security.cert.CertificateException;
 
 /**
  * HttpClient related tools
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -121,7 +111,7 @@ public class HttpClientSupport
 
 		@Override
 		protected HttpResponse doReceiveResponse( final HttpRequest request, final HttpClientConnection conn,
-				final HttpContext context ) throws HttpException, IOException
+																final HttpContext context ) throws HttpException, IOException
 		{
 			if( request == null )
 			{
@@ -184,9 +174,10 @@ public class HttpClientSupport
 
 			} // while intermediate response
 
-			if(original instanceof ExtendedHttpMethod ) {
-				ExtendedHttpMethod extendedHttpMethod = (ExtendedHttpMethod)original;
-				extendedHttpMethod.afterReadResponse(((SoapUIMultiThreadedHttpConnectionManager.SoapUIBasicPooledConnAdapter ) conn).getSSLSession());
+			if( original instanceof ExtendedHttpMethod )
+			{
+				ExtendedHttpMethod extendedHttpMethod = ( ExtendedHttpMethod )original;
+				extendedHttpMethod.afterReadResponse( ( ( SoapUIMultiThreadedHttpConnectionManager.SoapUIBasicPooledConnAdapter )conn ).getSSLSession() );
 			}
 
 			return response;
@@ -227,6 +218,7 @@ public class HttpClientSupport
 			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
 			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
 			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NegotiateSchemeFactory( null, true ) );
+			httpClient.setRoutePlanner( new CompositeHttpRoutePlanner(  registry ) );
 
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}

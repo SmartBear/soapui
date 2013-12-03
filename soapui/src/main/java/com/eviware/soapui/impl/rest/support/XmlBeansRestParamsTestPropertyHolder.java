@@ -12,6 +12,24 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.RestParameterConfig;
+import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.support.StringUtils;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlBeans;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlString;
+
+import javax.xml.namespace.QName;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
@@ -22,32 +40,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-
-import javax.xml.namespace.QName;
-
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlBeans;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlString;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RestParameterConfig;
-import com.eviware.soapui.config.RestParametersConfig;
-import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.support.StringUtils;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
@@ -59,14 +56,21 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	private List<RestParamProperty> properties = new ArrayList<RestParamProperty>();
 	private Map<String, RestParamProperty> propertyMap = new HashMap<String, RestParamProperty>();
 	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
-	private ModelItem modelItem;
+	private final ModelItem modelItem;
+	private ParamLocation defaultParamLocation;
 	private Properties overrideProperties;
 	private String propertiesLabel = "Test Properties";
 
 	public XmlBeansRestParamsTestPropertyHolder( ModelItem modelItem, RestParametersConfig config )
 	{
+		this(modelItem, config, getParamLocation(modelItem) );
+	}
+
+	public XmlBeansRestParamsTestPropertyHolder( ModelItem modelItem, RestParametersConfig config, ParamLocation defaultParamLocation )
+	{
 		this.modelItem = modelItem;
 		this.config = config;
+		this.defaultParamLocation = defaultParamLocation;
 
 		for( RestParameterConfig propertyConfig : config.getParameterList() )
 		{
@@ -77,7 +81,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	protected XmlBeansRestParamProperty addProperty( RestParameterConfig propertyConfig, boolean notify )
 	{
 		XmlBeansRestParamProperty propertiesStepProperty = new XmlBeansRestParamProperty( propertyConfig,
-				getParamLocation());
+				defaultParamLocation);
 		properties.add( propertiesStepProperty );
 		propertyMap.put( propertiesStepProperty.getName().toUpperCase(), propertiesStepProperty );
 
@@ -89,18 +93,12 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		return propertiesStepProperty;
 	}
 
-	private ParamLocation getParamLocation()
+	private static ParamLocation getParamLocation(ModelItem modelItem1)
 	{
-
-		//TODO: uncomment when we suppor request level parameters
-		/*if(getModelItem() instanceof RestRequest)
-		{
-			return ParamLocation.REQUEST;
-		} else*/
-		if (getModelItem()==null || getModelItem() instanceof RestResource)
+		if ( modelItem1 ==null || modelItem1 instanceof RestResource)
 		{
 			return ParamLocation.RESOURCE;
-		} else if (getModelItem() instanceof RestMethod)
+		} else if ( modelItem1 instanceof RestMethod)
 		{
 			return ParamLocation.METHOD;
 		}
@@ -584,7 +582,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	 */
 	public void saveTo( Properties props )
 	{
-		int cnt = 0;
 		for( RestParamProperty p : properties )
 		{
 			String name = p.getName();
@@ -593,7 +590,6 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 				value = "";
 
 			props.setProperty( name, value );
-			cnt++ ;
 		}
 	}
 
@@ -730,7 +726,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 		config.removeParameter( ix );
 
-		RestParameterConfig propertyConfig = null;
+		RestParameterConfig propertyConfig;
 
 		if( targetIndex < properties.size() )
 		{
@@ -831,7 +827,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
 	public Set<String> keySet()
 	{
-		return new HashSet<String>( Arrays.asList( getPropertyNames() ) );
+		return new LinkedHashSet<String>( Arrays.asList( getPropertyNames() ) );
 	}
 
 	public TestProperty put( String key, TestProperty value )
@@ -862,7 +858,7 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 	public Collection<TestProperty> values()
 	{
 		ArrayList<TestProperty> result = new ArrayList<TestProperty>();
-		result.addAll( propertyMap.values() );
+		result.addAll( properties );
 		return result;
 	}
 
@@ -904,6 +900,13 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 		prop.setOptions( property.getOptions() );
 		prop.setPath( property.getPath() );
 		prop.setRequired( property.getRequired() );
+	}
+
+	@Override
+	public void setParameterLocation( RestParamProperty parameter, ParamLocation newLocation )
+	{
+		// defensive programming, since parameter may be a disconnected XmlObject
+		getProperty( parameter.getName() ).setParamLocation( newLocation );
 	}
 
 	public void release()

@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.wsrm;
 
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-
 import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -30,6 +25,10 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 
 /*
  *  SoapUI, copyright (C) 2004-2012 smartbear.com
@@ -58,7 +57,7 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 	public void buildContent( SimpleBindingForm form )
 	{
 		form.addSpace( 5 );
-		form.appendCheckBox( "wsrmEnabled", "Enable WS-Reliable Messaging", "Enable/Disable WS-Reliable Messaging" );
+		form.appendCheckBox( "wsrmEnabled", "Enable WS-Reliable Messaging", "" );
 		form.addSpace( 5 );
 
 		form.appendComboBox( "version", "WS-RM Version", new String[] { WsrmVersionTypeConfig.X_1_0.toString(),
@@ -67,6 +66,8 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 
 		form.appendTextField( "ackTo", "Acknowledgment to",
 				"The acknowledgment endpoint reference, will be generated if left empty" );
+		form.appendTextField( "offerEndpoint", "Offer endpoint",
+				"The endpoint address included in the Offer element" );
 
 		form.addSpace( 5 );
 	}
@@ -87,7 +88,6 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 			XmlOptions options = new XmlOptions();
 			try
 			{
-				// XmlObject xml = XmlObject.Factory.parse( content );
 				XmlObject xml = XmlUtils.createXmlObject( content );
 
 				String namespaceDeclaration = "declare namespace wsrm='" + request.getWsrmConfig().getVersionNameSpace()
@@ -96,12 +96,12 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 
 				if( result.length > 0 )
 				{
-					for( int i = 0; i < result.length; i++ )
+					for( XmlObject aResult : result )
 					{
-						String upper = result[i].selectAttribute( null, "Upper" ).getDomNode().getNodeValue();
-						String lower = result[i].selectAttribute( null, "Lower" ).getDomNode().getNodeValue();
+						String upper = aResult.selectAttribute( null, "Upper" ).getDomNode().getNodeValue();
+						String lower = aResult.selectAttribute( null, "Lower" ).getDomNode().getNodeValue();
 
-						if( lower == upper )
+						if( lower.equals( upper ) )
 						{
 							Logger.getLogger( "wsrm" ).info(
 									"Acknowledgment for message " + upper + " received for identifier: "
@@ -143,7 +143,7 @@ public class WsdlRequestWsrmInspector extends AbstractWsrmInspector implements X
 
 			WsrmSequence sequence = utils.createSequence( request.getEndpoint(), iface.getSoapVersion(), request
 					.getWsrmConfig().getVersionNameSpace(), request.getWsrmConfig().getAckTo(), 0l, request.getOperation(),
-					( ( WsdlRequest )submit.getRequest() ).getWsaConfig().getTo() );
+					( ( WsdlRequest )submit.getRequest() ).getWsaConfig().getTo(), request.getWsrmConfig().getOfferEndpoint() );
 
 			request.getWsrmConfig().setSequenceIdentifier( sequence.getIdentifier() );
 			request.getWsrmConfig().setUuid( sequence.getUuid() );

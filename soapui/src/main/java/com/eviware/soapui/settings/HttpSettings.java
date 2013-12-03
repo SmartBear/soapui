@@ -82,7 +82,7 @@ public interface HttpSettings
 	public final static String INCLUDE_RESPONSE_IN_TIME_TAKEN = HttpSettings.class.getSimpleName() + "@"
 			+ "include_response_in_time_taken";
 
-	@Setting( name = "Socket Timeout", description = "Socket timeout in milliseconds" )
+	@Setting( name = "Socket Timeout (ms)", description = "Socket timeout in milliseconds" )
 	public final static String SOCKET_TIMEOUT = HttpSettings.class.getSimpleName() + "@" + "socket_timeout";
 
 	@Setting( name = "Max response size", description = "Maximum size to read from response (0 = no limit)" )

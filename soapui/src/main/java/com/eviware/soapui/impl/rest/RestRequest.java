@@ -12,20 +12,6 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.beans.PropertyChangeEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlString;
-
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
@@ -56,6 +42,19 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlString;
+
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Request implementation holding a SOAP request
@@ -65,6 +64,8 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implements RestRequestInterface
 {
+	static final String ACCEPT_HEADER_NAME = "Accept";
+
 	private RestMethod method;
 	private RestRequestParamsPropertyHolder params;
 	private ParamUpdater paramUpdater;
@@ -83,10 +84,22 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		params.addTestPropertyListener( paramUpdater );
 
 		method.addPropertyChangeListener( this );
-		if (requestConfig.getMediaType() == null)
+		if( requestConfig.getMediaType() == null )
 		{
-		String defaultMediaType = getRestMethod().getDefaultRequestMediaType();
-		getConfig().setMediaType( defaultMediaType );
+			String defaultMediaType = getRestMethod().getDefaultRequestMediaType();
+			getConfig().setMediaType( defaultMediaType );
+		}
+		cleanUpAcceptEncoding();
+	}
+
+	private void cleanUpAcceptEncoding()
+	{
+		if (StringUtils.hasContent( getAccept() ))
+		{
+			StringToStringsMap requestHeaders = getRequestHeaders();
+			requestHeaders.add( ACCEPT_HEADER_NAME, getAccept() );
+			setRequestHeaders( requestHeaders );
+			setAccept( null );
 		}
 	}
 
@@ -189,7 +202,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			{
 				endpoint = new URL( getPath() ).toString();
 			}
-			catch( MalformedURLException e )
+			catch( MalformedURLException ignore )
 			{
 			}
 		}
@@ -279,7 +292,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	@Override
 	public RestResource getOperation()
 	{
-		return ( RestResource )method.getOperation();
+		return method.getOperation();
 	}
 
 	public Map<String, TestProperty> getProperties()
@@ -577,7 +590,8 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		{
 			try
 			{
-				getConfig().setParameters( StringToStringMapConfig.Factory.parse( values.toXml() ) );
+				RestRequestConfig requestConfig = getConfig();
+				requestConfig.setParameters( StringToStringMapConfig.Factory.parse( values.toXml() ) );
 			}
 			catch( XmlException e )
 			{
@@ -592,7 +606,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
-			sync();
 		}
 
 		public void propertyRemoved( String name )
@@ -609,6 +622,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		{
 			sync();
 		}
+
 	}
 
 	public List<TestProperty> getPropertyList()

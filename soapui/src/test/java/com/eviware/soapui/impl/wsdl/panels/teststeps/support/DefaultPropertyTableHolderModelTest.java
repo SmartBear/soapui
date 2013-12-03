@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.utils.ModelItemFactory;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -23,36 +24,84 @@ import static org.junit.Assert.assertThat;
 public class DefaultPropertyTableHolderModelTest
 {
 
+	public static final String FIRST_PARAM_NAME = "Param1";
 	public static final String PARAM_VALUE = "ParamValue";
 	public static final String EMPTY_STRING = "";
+	private RestParamsPropertyHolder methodParams;
+	private DefaultPropertyTableHolderModel tableHolderModel;
+	private RestParamsPropertyHolder requestParams;
+	private DefaultPropertyTableHolderModel requestTableHolderModel;
+
+	@Before
+	public void setUp() throws Exception
+	{
+		methodParams = ModelItemFactory.makeRestMethod().getParams();
+		methodParams.addProperty( FIRST_PARAM_NAME );
+		tableHolderModel = createDefaultPropertyHolderTableModel( methodParams );
+		requestParams = ModelItemFactory.makeRestRequest().getParams();
+		requestTableHolderModel = createDefaultPropertyHolderTableModel( requestParams );
+	}
 
 	@Test
 	public void doesNotSetDefaultValueIfModelItemIsRestRequest() throws Exception
 	{
-		RestParamsPropertyHolder params = ModelItemFactory.makeRestRequest().getParams();
-		createDefaultPropertyHolderTableModel( params );
-
-		RestParamProperty property = params.getPropertyAt( 0 );
+		RestParamProperty property = requestParams.getPropertyAt( 0 );
 		assertThat( property.getValue(), is( PARAM_VALUE ) );
 		assertThat( property.getDefaultValue(), is( EMPTY_STRING ) );
 	}
 
 	@Test
-	public void setsDefaultValueIfModelItemIsRestRequest() throws Exception
+	public void setsDefaultValueIfModelItemIsRestMethod() throws Exception
 	{
-		RestParamsPropertyHolder params = ModelItemFactory.makeRestMethod().getParams();
-		createDefaultPropertyHolderTableModel( params );
-
-		RestParamProperty property = params.getPropertyAt( 0 );
+		RestParamProperty property = methodParams.getPropertyAt( 0 );
 		assertThat( property.getValue(), is( PARAM_VALUE ) );
 		assertThat( property.getDefaultValue(), is( PARAM_VALUE ) );
 	}
 
-	private void createDefaultPropertyHolderTableModel( RestParamsPropertyHolder params )
+	@Test
+	public void handlesParameterMoveCorrectlyForMethodParameters() throws Exception
 	{
-		params.addProperty( "Param1" );
+		String lastParameterName = "lastOne";
+		methodParams.addProperty( lastParameterName );
+		tableHolderModel.moveProperty( lastParameterName, 1, 0 );
+
+		String[] propertyNames = tableHolderModel.getPropertyNames();
+		assertThat( propertyNames[0], is(lastParameterName) );
+		assertThat(tableHolderModel.getPropertyAtRow( 0 ).getName(), is(lastParameterName));
+	}
+
+	@Test
+	public void detectsParameterNameChange() throws Exception
+	{
+		String newParameterName = "lastOne";
+		methodParams.renameProperty( FIRST_PARAM_NAME, newParameterName );
+
+		String[] propertyNames = tableHolderModel.getPropertyNames();
+		assertThat( propertyNames[0], is(newParameterName) );
+		assertThat(tableHolderModel.getPropertyAtRow( 0 ).getName(), is(newParameterName));
+	}
+
+	@Test
+	public void handlesParameterMoveCorrectlyForRequestParameters() throws Exception
+	{
+		String lastParameterName = "lastOne";
+		requestParams.addProperty( lastParameterName );
+		requestTableHolderModel.moveProperty( lastParameterName, 1, 0 );
+
+		String[] propertyNames = requestTableHolderModel.getPropertyNames();
+		assertThat( propertyNames[0], is(lastParameterName) );
+		assertThat(requestTableHolderModel.getPropertyAtRow( 0 ).getName(), is(lastParameterName));
+	}
+
+
+	/* helper */
+
+	private DefaultPropertyTableHolderModel createDefaultPropertyHolderTableModel( RestParamsPropertyHolder params )
+	{
+		params.addProperty( FIRST_PARAM_NAME);
 		DefaultPropertyTableHolderModel tableHolderModel =
 				new DefaultPropertyTableHolderModel<RestParamsPropertyHolder>( params );
 		tableHolderModel.setValueAt( PARAM_VALUE, 0, 1 );
+		return tableHolderModel;
 	}
 }

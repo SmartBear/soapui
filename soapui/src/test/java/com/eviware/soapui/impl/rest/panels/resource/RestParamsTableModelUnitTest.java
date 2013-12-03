@@ -32,11 +32,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-08-29
- * Time: 16:50
- * To change this template use File | Settings | File Templates.
+ * Unit tests for the RestParamsTableModel class
  */
 public class RestParamsTableModelUnitTest
 {
@@ -49,12 +45,11 @@ public class RestParamsTableModelUnitTest
 
 	private RestParamsTableModel restParamsTableModel;
 	private RestParamsPropertyHolder params;
-	private RestRequest restRequest;
 
 	@Before
 	public void setUp() throws SoapUIException
 	{
-		restRequest = ModelItemFactory.makeRestRequest();
+		RestRequest restRequest = ModelItemFactory.makeRestRequest();
 		params = restRequest.getParams();
 		RestParamProperty param = params.addProperty( PARAM_NAME_1 );
 		param.setParamLocation( METHOD );
@@ -116,6 +111,14 @@ public class RestParamsTableModelUnitTest
 		restParamsTableModel.setValueAt( METHOD, 0, LOCATION_COLUMN_INDEX );
 		assertThat( ( NewRestResourceActionBase.ParamLocation )restParamsTableModel.getValueAt( 0, LOCATION_COLUMN_INDEX ),
 				is( METHOD ) );
+	}
+
+	@Test
+	public void retainsParameterOrderWhenChangingLocation() throws Exception
+	{
+		restParamsTableModel.setValueAt( METHOD, 0, LOCATION_COLUMN_INDEX );
+
+		assertThat((String)restParamsTableModel.getValueAt( 0, NAME_COLUMN_INDEX ), is(PARAM_NAME_1));
 	}
 
 	private void mockParams()

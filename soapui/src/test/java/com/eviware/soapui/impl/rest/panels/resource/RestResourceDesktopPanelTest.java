@@ -9,9 +9,10 @@ import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.hamcrest.core.Is;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JTable;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation.METHOD;
 import static org.hamcrest.core.Is.is;
@@ -45,34 +46,6 @@ public class RestResourceDesktopPanelTest
 	public void displaysFullPathForChildResource() throws Exception
 	{
 		assertThat( resourceDesktopPanel.pathTextField.getText(), is( childResource.getFullPath() ));
-	}
-
-	@Test
-	public void allowsToDeleteParameterAfterParameterLevelChange() throws SoapUIException
-	{
-		RestParamsPropertyHolder params = addParamsToChildResource();
-
-		JTable parameterTable = getRestParameterTable();
-		openRestRequestDesktopPanelToAttachTheEventListenersForParameterlevelChange();
-
-		//Param1 to Method, and hence it should be removed
-		parameterTable.setValueAt( METHOD, 0, RestParamsTableModel.PARAM_LOCATION_COLUMN_INDEX );
-		params.removeProperty(PARAM_2 );
-
-		String remainingParam3 =  (String)parameterTable.getValueAt( 0, 0 );
-		assertThat( remainingParam3, Is.is( PARAM_3 ) );
-	}
-
-	@Test
-	public void doesNotMoveTheParameterToMethodOnParamLocationChangeToMethodWhenListenersNotAttached()
-			throws SoapUIException
-	{
-		RestParamsPropertyHolder params = addParamsToChildResource();
-		JTable parameterTable = getRestParameterTable();
-		//Change the level but it will not  really move it as listeners are not registered
-		parameterTable.setValueAt( METHOD, 0, RestParamsTableModel.PARAM_LOCATION_COLUMN_INDEX );
-		String param1StillExists =  (String)parameterTable.getValueAt( 0, 0 );
-		assertThat( param1StillExists, Is.is( PARAM_1 ) );
 	}
 
 	/**

@@ -67,6 +67,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 
 public class Navigator extends JPanel
 {
+	public static final String NAVIGATOR = "navigator";
 	private Workspace workspace;
 	private JTree mainTree;
 	private SoapUITreeModel treeModel;
@@ -75,6 +76,7 @@ public class Navigator extends JPanel
 	public Navigator( Workspace workspace )
 	{
 		super( new BorderLayout() );
+		setName( NAVIGATOR );
 		this.workspace = workspace;
 
 		buildUI();

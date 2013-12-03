@@ -12,12 +12,16 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
+import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
+import com.eviware.soapui.impl.wsdl.loadtest.assertions.LoadTestAssertionRegistry;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionListBuilder;
+import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.swing.JTableFactory;
+import org.jdesktop.swingx.JXTable;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -28,17 +32,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
-import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
-import com.eviware.soapui.impl.wsdl.loadtest.assertions.LoadTestAssertionRegistry;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionListBuilder;
-import com.eviware.soapui.support.action.swing.ActionSupport;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Table for displaying real-time LoadTest Statistics
@@ -57,7 +56,7 @@ public class JStatisticsTable extends JPanel
 		super( new BorderLayout() );
 		this.loadTest = loadTest;
 
-		statisticsTable = new JXTable( loadTest.getStatisticsModel() );
+		statisticsTable = JTableFactory.getInstance().makeJXTable( loadTest.getStatisticsModel() );
 		statisticsTable.setColumnControlVisible( true );
 		statisticsTable.getTableHeader().setReorderingAllowed( false );
 

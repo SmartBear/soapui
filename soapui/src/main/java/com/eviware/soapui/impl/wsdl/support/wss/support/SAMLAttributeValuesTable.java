@@ -12,12 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.support;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.List;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -27,11 +26,12 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-
-import com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.types.StringToStringMap;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 /**
  * @author Erik R. Yverling
@@ -54,7 +54,7 @@ public class SAMLAttributeValuesTable extends JPanel
 		this.entry = entry;
 
 		attributeValuesTableModel = new AttributeValuesTableModel();
-		attributeValuesTable = new JTable( attributeValuesTableModel );
+		attributeValuesTable = JTableFactory.getInstance().makeJTable( attributeValuesTableModel );
 		attributeValuesTable.setTableHeader( null );
 		attributeValuesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{

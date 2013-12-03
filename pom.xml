@@ -12,14 +12,8 @@
 
     <repositories>
         <repository>
-            <id>eviware</id>
-            <name>Eviware Maven2 Repository</name>
+            <id>smartbear-sweden-repository</id>
             <url>http://www.soapui.org/repository/maven2</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Central Maven2 Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
         </repository>
     </repositories>
 
@@ -42,6 +36,7 @@
         <module>soapui-maven-plugin</module>
         <module>soapui-installer</module>
         <module>soapui-maven-plugin-tester</module>
+		<module>soapui-system-test</module>
     </modules>
 
     <build>

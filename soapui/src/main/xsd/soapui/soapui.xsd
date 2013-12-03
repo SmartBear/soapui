@@ -1534,6 +1534,7 @@
         <xsd:attribute name="version" type="tns:WsrmVersionType"></xsd:attribute>
         <xsd:attribute name="ackTo" type="xsd:string"></xsd:attribute>
         <xsd:attribute name="sequenceExpires" type="xsd:integer"></xsd:attribute>
+        <xsd:attribute name="offerEndpoint" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="MockOperationQueryMatchDispatch">
@@ -1924,6 +1925,7 @@
                 <xsd:sequence>
                     <xsd:element name="parameters" type="tns:StringToStringMap">
                     </xsd:element>
+                    <xsd:element name="parameterOrder" type="tns:StringList" minOccurs="0"/>
                 </xsd:sequence>
                 <xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>

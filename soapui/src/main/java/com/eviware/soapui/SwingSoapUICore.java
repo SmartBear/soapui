@@ -12,9 +12,6 @@
 
 package com.eviware.soapui;
 
-import java.io.File;
-import java.io.FileInputStream;
-
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.rest.panels.request.inspectors.representations.RestRepresentationsInspectorFactory;
 import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaInspectorFactory;
@@ -24,7 +21,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.attachments.AttachmentsInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.aut.AutInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.aut.AuthInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.header.JMSHeaderInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorFactory;
@@ -40,6 +37,9 @@ import com.eviware.soapui.support.editor.registry.InspectorFactory;
 import com.eviware.soapui.support.editor.registry.InspectorRegistry;
 import com.eviware.x.form.XFormFactory;
 import com.eviware.x.impl.swing.SwingFormFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 public class SwingSoapUICore extends DefaultSoapUICore
 {
@@ -73,7 +73,7 @@ public class SwingSoapUICore extends DefaultSoapUICore
 
 		InspectorRegistry inspectorRegistry = InspectorRegistry.getInstance();
 		inspectorRegistry.addFactory( new ScriptInspectorFactory() );
-		inspectorRegistry.addFactory( new AutInspectorFactory() );
+		inspectorRegistry.addFactory( new AuthInspectorFactory() );
 		inspectorRegistry.addFactory( new HttpHeadersInspectorFactory() );
 		inspectorRegistry.addFactory( new AttachmentsInspectorFactory() );
 		inspectorRegistry.addFactory( new SSLInspectorFactory() );
