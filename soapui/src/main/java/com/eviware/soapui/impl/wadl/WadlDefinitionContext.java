@@ -52,8 +52,8 @@ public class WadlDefinitionContext extends
 
 	protected DefinitionLoader createDefinitionLoader( String url )
 	{
-		if( ( getInterface() != null && getInterface().isGenerated() ) || StringUtils.isNullOrEmpty( url )
-					|| getInterface().exportChanges() )
+		if( ( getInterface() != null && ( getInterface().isGenerated() || getInterface().exportChanges() ) )
+				|| StringUtils.isNullOrEmpty( url ) )
 			return new GeneratedWadlDefinitionLoader( getInterface() );
 		else
 			return new UrlWsdlLoader( url, getInterface() );
