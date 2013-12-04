@@ -120,8 +120,8 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 
 		public Credentials getCredentials( final AuthScope authScope )
 		{
-			if( checkedCredentials )
-				return null;
+//			if( checkedCredentials )
+//				return null;
 
 			if( authScope == null )
 			{
