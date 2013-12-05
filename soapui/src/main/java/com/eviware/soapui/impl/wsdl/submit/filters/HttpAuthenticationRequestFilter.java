@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -49,6 +50,7 @@ import java.net.UnknownHostException;
 
 public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 {
+
 	@Override
 	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
 	{
@@ -62,9 +64,9 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		String password = PropertyExpander.expandProperties( context, wsdlRequest.getPassword() );
 		String domain = PropertyExpander.expandProperties( context, wsdlRequest.getDomain() );
 
-		Enum authtype = AuthType.Enum.forString( wsdlRequest.getAuthType() );
+		Enum authType = Enum.forString( wsdlRequest.getAuthType() );
 
-		registerSpnegoAuthSchemeFactory( authtype );
+		registerSpnegoAuthSchemeFactory( authType );
 
 		String wssPasswordType = null;
 
@@ -76,7 +78,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 
 		if( StringUtils.isNullOrEmpty( wssPasswordType ) )
 		{
-			initRequestCredentials( context, username, settings, password, domain, authtype );
+			initRequestCredentials( context, username, settings, password, domain, authType );
 
 			if( !SoapUI.isJXBrowserDisabled() )
 			{
@@ -95,7 +97,7 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		}
 		else if( authtype == AuthType.SPNEGO_KERBEROS )
 		{
-			HttpClientSupport.getHttpClient().getAuthSchemes().register( AuthPolicy.SPNEGO, new NegotiateSchemeFactory( null, true ) );
+			HttpClientSupport.getHttpClient().getAuthSchemes().register( AuthPolicy.SPNEGO,  new NegotiateSchemeFactory( null, true ) );
 		}
 	}
 
