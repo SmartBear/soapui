@@ -88,7 +88,7 @@ public class OAuth2Profile extends AbstractModelItem
 		return configuration.getAuthorizeURI();
 	}
 
-	public String getClientID()
+	public String getClientId()
 	{
 		return configuration.getClientID();
 	}
@@ -101,5 +101,40 @@ public class OAuth2Profile extends AbstractModelItem
 	public String getScope()
 	{
 		return null;
+	}
+
+	public void setAuthorizationUri( String authorizationURI )
+	{
+		configuration.setAuthorizeURI( authorizationURI );
+	}
+
+	public void setAccessTokenUri( String accessTokenUri )
+	{
+		configuration.setAccessTokenURI( accessTokenUri );
+	}
+
+	public void setRedirectUri( String redirectUri )
+	{
+		configuration.setRedirectURI( redirectUri );
+	}
+
+	public void setClientId( String clientId )
+	{
+		configuration.setClientID( clientId );
+	}
+
+	public void setClientSecret( String clientSecret )
+	{
+		configuration.setClientSecret( clientSecret );
+	}
+
+	public String getAccessTokenUri()
+	{
+		return configuration.getAccessTokenURI();
+	}
+
+	public String getClientSecret()
+	{
+		return configuration.getClientSecret();
 	}
 }

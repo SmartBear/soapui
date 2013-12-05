@@ -12,9 +12,14 @@
 
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.actions.oauth.BrowserStateChangeListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -25,17 +30,18 @@ import org.mozilla.interfaces.nsIRequest;
 import org.mozilla.interfaces.nsIURI;
 import org.mozilla.interfaces.nsIWebProgress;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.StringWriter;
+import java.util.*;
 
 public class WebViewBasedBrowserComponent
 {
@@ -46,6 +52,8 @@ public class WebViewBasedBrowserComponent
 	private Boolean possibleError = false;
 	private final boolean addStatusBar;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
+
+	private java.util.List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>(  );
 
 	private WebView webView;
 
@@ -69,11 +77,56 @@ public class WebViewBasedBrowserComponent
 
 			final JFXPanel browserPanel = new JFXPanel();
 			panel.add( browserPanel, BorderLayout.CENTER );
+
 			Platform.runLater( new Runnable()
 			{
 				public void run()
 				{
 					webView = new WebView();
+					webView.getEngine().getLoadWorker().stateProperty().addListener(
+							new ChangeListener<Worker.State>()
+							{
+								@Override
+								public void changed( ObservableValue ov, Worker.State oldState, Worker.State newState )
+								{
+									if( newState == Worker.State.SUCCEEDED )
+									{
+										try
+										{
+											String location = getWebEngine().getLocation();
+											for( BrowserStateChangeListener listener : listeners )
+											{
+												listener.locationChanged( location );
+											}
+
+											if(getWebEngine().getDocument() != null)
+											{
+												Transformer transformer = TransformerFactory.newInstance().newTransformer();
+												transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
+												transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+												transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+												transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+												transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
+
+												StringWriter stringWriter = new StringWriter();
+												transformer.transform( new DOMSource( getWebEngine().getDocument() ),
+														new StreamResult( stringWriter ) );
+
+												String output = stringWriter.getBuffer().toString().replaceAll( "\n|\r", "" );
+
+												for( BrowserStateChangeListener listener : listeners )
+												{
+													listener.contentChanged( output );
+												}
+											}
+										}
+										catch( Exception ex )
+										{
+											SoapUI.logError(ex, "Error processing state change to " + newState);
+										}
+									}
+								}
+							} );
 					Group jfxComponentGroup = new Group();
 					Scene scene = new Scene( jfxComponentGroup );
 					jfxComponentGroup.getChildren().add( webView );
@@ -97,13 +150,13 @@ public class WebViewBasedBrowserComponent
 		public void actionPerformed( ActionEvent e )
 		{
 			WebHistory history = getWebEngine().getHistory();
-			if( history.getCurrentIndex () == 0 )
+			if( history.getCurrentIndex() == 0 )
 			{
 				Toolkit.getDefaultToolkit().beep();
 			}
 			else
 			{
-				history.go(history.getCurrentIndex() - 1);
+				history.go( history.getCurrentIndex() - 1 );
 			}
 		}
 	}
@@ -119,7 +172,7 @@ public class WebViewBasedBrowserComponent
 		public void actionPerformed( ActionEvent e )
 		{
 			WebHistory history = getWebEngine().getHistory();
-			if( history.getCurrentIndex () >= history.getEntries().size() -1 )
+			if( history.getCurrentIndex() >= history.getEntries().size() - 1 )
 			{
 				Toolkit.getDefaultToolkit().beep();
 			}
@@ -137,7 +190,6 @@ public class WebViewBasedBrowserComponent
 	}
 
 
-
 	public void setContent( String contentAsString, String contextUri )
 	{
 		getWebEngine().loadContent( contentAsString, contextUri );
@@ -146,7 +198,7 @@ public class WebViewBasedBrowserComponent
 	public void setContent( String content )
 	{
 		getWebEngine().loadContent( content );
-		pcs.firePropertyChange( "content", null, null );
+		pcs.firePropertyChange( "content", null, content );
 	}
 
 	private WebEngine getWebEngine()
@@ -188,7 +240,6 @@ public class WebViewBasedBrowserComponent
 	}
 
 
-
 	private void showErrorPage()
 	{
 		if( errorPage != null && !errorPage.equals( getUrl() ) )
@@ -214,8 +265,6 @@ public class WebViewBasedBrowserComponent
 	{
 		this.errorPage = errorPage;
 	}
-
-
 
 
 	public void addPropertyChangeListener( PropertyChangeListener pcl )
@@ -247,5 +296,16 @@ public class WebViewBasedBrowserComponent
 
 		if( showingErrorPage )
 			showingErrorPage = false;
+	}
+
+
+	public void addBrowserStateListener( BrowserStateChangeListener listener )
+	{
+		listeners.add(listener);
+	}
+
+	public void removeBrowserStateListener( BrowserStateChangeListener listener )
+	{
+		listeners.remove( listener );
 	}
 }
