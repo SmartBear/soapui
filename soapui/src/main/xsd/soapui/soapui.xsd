@@ -562,7 +562,8 @@
         			<xsd:restriction base="xsd:string">
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
-        				<xsd:enumeration value="NTLM/Kerberos"></xsd:enumeration>
+        				<xsd:enumeration value="NTLM"></xsd:enumeration>
+        				<xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
         			</xsd:restriction>
         		</xsd:simpleType>
         	</xsd:element>

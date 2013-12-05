@@ -48,8 +48,8 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 
 			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
 			form.addSpace( 5 );
-			form.appendComboBox( "authType", "Authorisation Type", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
-					AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() }, "" );
+			form.appendComboBox( "authType", "Authentication Type", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
+					AuthType.PREEMPTIVE.toString(), AuthType.SPNEGO_KERBEROS.toString(), AuthType.NTLM.toString() }, "" );
 			form.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
 			form.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
 			form.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );

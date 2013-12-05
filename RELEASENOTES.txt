@@ -1,4 +1,10 @@
 # SoapUI 4.6.2
+#### Released 2014-xx-xx ####
+
+### Bugs fixed ###
+* Fixed NTLM authentication not working under certain conditions (SOAP-1021)
+
+# SoapUI 4.6.2
 #### Released 2013-12-02 ####
 
 ### Major New Feature ###

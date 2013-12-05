@@ -12,9 +12,20 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.CredentialsConfig.AuthType;
+import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
+import com.eviware.soapui.impl.wsdl.support.BrowserCredentials;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.NTLMSchemeFactory;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.support.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -25,21 +36,12 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.auth.BasicScheme;
+import org.apache.http.impl.auth.NegotiateSchemeFactory;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.CredentialsConfig.AuthType;
-import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
-import com.eviware.soapui.impl.wsdl.support.BrowserCredentials;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.support.StringUtils;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * RequestFilter for setting preemptive authentication and related credentials
@@ -59,8 +61,10 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		Settings settings = wsdlRequest.getSettings();
 		String password = PropertyExpander.expandProperties( context, wsdlRequest.getPassword() );
 		String domain = PropertyExpander.expandProperties( context, wsdlRequest.getDomain() );
-		
-		Enum authtype = AuthType.Enum.forString(  wsdlRequest.getAuthType() );
+
+		Enum authtype = AuthType.Enum.forString( wsdlRequest.getAuthType() );
+
+		registerSpnegoAuthSchemeFactory( authtype );
 
 		String wssPasswordType = null;
 
@@ -81,8 +85,22 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		}
 	}
 
+	private void registerSpnegoAuthSchemeFactory( Enum authtype )
+	{
+		// Due to a bug in apache http client 4.1.1 (HTTPCLIENT-1107) the user must explicitly set the auth type on the request.
+		// For more info, see SOAP-1021
+		if( authtype == AuthType.NTLM )
+		{
+			HttpClientSupport.getHttpClient().getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
+		}
+		else if( authtype == AuthType.SPNEGO_KERBEROS )
+		{
+			HttpClientSupport.getHttpClient().getAuthSchemes().register( AuthPolicy.SPNEGO, new NegotiateSchemeFactory( null, true ) );
+		}
+	}
+
 	public static void initRequestCredentials( SubmitContext context, String username, Settings settings,
-			String password, String domain, Enum authType )
+															 String password, String domain, Enum authType )
 	{
 		HttpRequestBase httpMethod = ( HttpRequestBase )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
 		HttpContext httpContext = ( HttpContext )context.getProperty( SubmitContext.HTTP_STATE_PROPERTY );
@@ -120,8 +138,8 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 
 		public Credentials getCredentials( final AuthScope authScope )
 		{
-//			if( checkedCredentials )
-//				return null;
+			if( checkedCredentials )
+				return null;
 
 			if( authScope == null )
 			{
