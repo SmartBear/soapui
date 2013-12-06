@@ -68,6 +68,8 @@ public class OltuAuth2ClientFacadeTest
 		oltuClientFacade.browserFacade = new UserBrowserFacadeStub();
 	}
 
+	/* Happy path tests */
+
 	@Test
 	public void getsTheAccessTokenFromResponseUri() throws Exception
 	{
@@ -101,6 +103,60 @@ public class OltuAuth2ClientFacadeTest
 		assertThat( ( ( UserBrowserFacadeStub )oltuClientFacade.browserFacade ).browserClosed, is( true ) );
 	}
 
+	/* Validation tests */
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsUrnAsAuthorizationUri() throws Exception
+	{
+		profile.setAuthorizationUri( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsNonHttpAuthorizationUrl() throws Exception
+	{
+		profile.setAuthorizationUri( "ftp://ftp.sunet.se" );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsNonHttpRedirectUri() throws Exception
+	{
+		profile.setRedirectUri( "ftp://ftp.sunet.se" );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsUrnAsAccessTokenUri() throws Exception
+	{
+		profile.setAccessTokenUri( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsNonHttpAccessTokenUri() throws Exception
+	{
+		profile.setAccessTokenUri( "ftp://ftp.sunet.se" );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyClientId() throws Exception
+	{
+		profile.setClientId( "" );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyClientSecret() throws Exception
+	{
+		profile.setClientSecret( "" );
+		oltuClientFacade.requestAccessToken( profile );
+	}
+
+
+
+	/* Helpers */
 
 	private void initializeOAuthProfileWithDefaultValues()
 	{
