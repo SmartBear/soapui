@@ -39,6 +39,10 @@ public class GetOAuthAccessTokenAction extends AbstractSoapUIAction<OAuth2Profil
 		{
 			getOAuthClientFacade().requestAccessToken( target );
 		}
+		catch (InvalidOAuth2ParametersException e)
+		{
+			UISupport.showErrorMessage( "Invalid OAuth2 parameters: " + e.getMessage() );
+		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "Error retrieving OAuth2 access token" );

@@ -27,9 +27,9 @@ import org.mockito.stubbing.Answer;
 import static com.eviware.soapui.utils.CommonMatchers.aCollectionWithSize;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -78,7 +78,7 @@ public class GetOAuthAccessTokenActionTest
 			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
 			{
 				profile.setAccessToken( accessToken );
-				return profile;
+				return null;
 			}
 		} ).when(clientFacade).requestAccessToken( profile );
 		action.perform( profile, null );
@@ -101,6 +101,27 @@ public class GetOAuthAccessTokenActionTest
 		Mockito.doThrow( new OAuth2Exception( new RuntimeException (  )) ).when(clientFacade).requestAccessToken( profile );
 
 		action.perform( profile, null );
-		assertThat( stubbedDialogs.getErrorMessages(), is(aCollectionWithSize(1)) );
+		assertThat( stubbedDialogs.getErrorMessages(), is( aCollectionWithSize( 1 ) ) );
+	}
+
+	@Test
+	public void displaysValidationErrorWhenValidationFails() throws Exception
+	{
+		OAuthConfigConfig configuration = OAuthConfigConfig.Factory.newInstance();
+		OAuth2Profile profile = new OAuth2Profile( configuration );
+		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
+		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(){
+			@Override
+			protected OAuth2ClientFacade getOAuthClientFacade()
+			{
+				return clientFacade;
+			}
+		};
+		String theMessage = "Access token URI blabla is not a valid HTTP URL";
+		Mockito.doThrow( new InvalidOAuth2ParametersException ( theMessage  )).when( clientFacade ).requestAccessToken( profile );
+
+		action.perform( profile, null );
+		assertThat( stubbedDialogs.getErrorMessages(), is( aCollectionWithSize( 1 ) ) );
+		assertThat( stubbedDialogs.getErrorMessages().get(0), containsString(theMessage) );
 	}
 }

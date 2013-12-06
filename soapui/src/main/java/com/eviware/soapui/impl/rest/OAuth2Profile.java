@@ -16,16 +16,12 @@ import com.eviware.soapui.config.OAuthConfigConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
-import com.eviware.soapui.model.tree.nodes.support.EmptyModelItem;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-12-04
- * Time: 15:52
- * To change this template use File | Settings | File Templates.
+ * Encapsulates information necessary to perform an OAuth2 three-legged authorization. All property values may contain
+ * property expansion expressions.
  */
 public class OAuth2Profile extends AbstractModelItem
 {
@@ -88,34 +84,14 @@ public class OAuth2Profile extends AbstractModelItem
 		return configuration.getAuthorizeURI();
 	}
 
-	public String getClientId()
-	{
-		return configuration.getClientID();
-	}
-
-	public String getRedirectURL()
-	{
-		return configuration.getRedirectURI();
-	}
-
-	public String getScope()
-	{
-		return null;
-	}
-
 	public void setAuthorizationUri( String authorizationURI )
 	{
 		configuration.setAuthorizeURI( authorizationURI );
 	}
 
-	public void setAccessTokenUri( String accessTokenUri )
+	public String getClientId()
 	{
-		configuration.setAccessTokenURI( accessTokenUri );
-	}
-
-	public void setRedirectUri( String redirectUri )
-	{
-		configuration.setRedirectURI( redirectUri );
+		return configuration.getClientID();
 	}
 
 	public void setClientId( String clientId )
@@ -123,9 +99,19 @@ public class OAuth2Profile extends AbstractModelItem
 		configuration.setClientID( clientId );
 	}
 
-	public void setClientSecret( String clientSecret )
+	public String getRedirectUri()
 	{
-		configuration.setClientSecret( clientSecret );
+		return configuration.getRedirectURI();
+	}
+
+	public void setRedirectUri( String redirectUri )
+	{
+		configuration.setRedirectURI( redirectUri );
+	}
+
+	public String getScope()
+	{
+		return null;
 	}
 
 	public String getAccessTokenUri()
@@ -133,8 +119,18 @@ public class OAuth2Profile extends AbstractModelItem
 		return configuration.getAccessTokenURI();
 	}
 
+	public void setAccessTokenUri( String accessTokenUri )
+	{
+		configuration.setAccessTokenURI( accessTokenUri );
+	}
+
 	public String getClientSecret()
 	{
 		return configuration.getClientSecret();
+	}
+
+	public void setClientSecret( String clientSecret )
+	{
+		configuration.setClientSecret( clientSecret );
 	}
 }
