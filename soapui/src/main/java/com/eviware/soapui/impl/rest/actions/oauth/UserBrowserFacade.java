@@ -25,4 +25,6 @@ interface UserBrowserFacade
 	void addBrowserStateListener(BrowserStateChangeListener listener);
 
 	void removeBrowserStateListener(BrowserStateChangeListener listener);
+
+	void close();
 }

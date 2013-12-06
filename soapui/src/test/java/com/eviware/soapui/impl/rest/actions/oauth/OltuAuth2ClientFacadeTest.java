@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 public class OltuAuth2ClientFacadeTest
 {
 
-	private OltuAuth2ClientFacadeTest.SpyingOauthClientStub spyingOauthClientStub;
+	private SpyingOauthClientStub spyingOauthClientStub;
 
 	private String authorizationCode;
 	private String accessToken;
@@ -56,7 +56,8 @@ public class OltuAuth2ClientFacadeTest
 		authorizationCode = "some_code";
 		accessToken = "expected_access_token";
 		spyingOauthClientStub = new SpyingOauthClientStub();
-		oltuClientFacade = new OltuAuth2ClientFacade() {
+		oltuClientFacade = new OltuAuth2ClientFacade()
+		{
 			@Override
 			protected OAuthClient getOAuthClient()
 			{
@@ -106,6 +107,14 @@ public class OltuAuth2ClientFacadeTest
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( authorizationCode ) );
+	}
+
+	@Test
+	public void closesBrowserWindowAfterSavingTheAccessTokenToProfile() throws Exception
+	{
+		oltuClientFacade.requestAccessToken( profile );
+
+		assertThat( ( ( UserBrowserFacadeStub )oltuClientFacade.browserFacade ).browserClosed, is( true ) );
 	}
 
 	/* Validation tests */
@@ -174,6 +183,7 @@ public class OltuAuth2ClientFacadeTest
 		profile.setClientSecret( "ClientSecret" );
 	}
 
+
 	class SpyingOauthClientStub extends OAuthClient
 	{
 
@@ -199,6 +209,7 @@ public class OltuAuth2ClientFacadeTest
 	{
 
 		private BrowserStateChangeListener listener;
+		private boolean browserClosed;
 
 		@Override
 		public void open( URL url )
@@ -217,8 +228,9 @@ public class OltuAuth2ClientFacadeTest
 					}
 				}
 			}
-			else {
-				listener.contentChanged( "<TITLE>code="+authorizationCode+"</TITLE>" );
+			else
+			{
+				listener.contentChanged( "<TITLE>code=" + authorizationCode + "</TITLE>" );
 			}
 		}
 
@@ -232,6 +244,12 @@ public class OltuAuth2ClientFacadeTest
 		public void removeBrowserStateListener( BrowserStateChangeListener listener )
 		{
 			this.listener = null;
+		}
+
+		@Override
+		public void close()
+		{
+			browserClosed = true;
 		}
 	}
 }
