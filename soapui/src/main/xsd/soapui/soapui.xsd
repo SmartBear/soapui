@@ -63,7 +63,7 @@
                     <xsd:element name="databaseConnectionContainer" type="tns:DatabaseConnectionContainer"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
-                    <xsd:element name="oAuthConfig" type="tns:OAuthConfig"
+                    <xsd:element name="oAuth2ProfileContainer" type="tns:OAuth2ProfileContainer"
                                  maxOccurs="1" minOccurs="0">
                     </xsd:element>
                     <xsd:element name="reporting" type="tns:ReportingType"
@@ -1871,7 +1871,14 @@
         </xsd:sequence>
     </xsd:complexType>
 
-    <xsd:complexType name="OAuthConfig">
+    <xsd:complexType name="OAuth2ProfileContainer">
+        <xsd:sequence>
+            <xsd:element name="oAuth2Profile" type="tns:OAuth2Profile"
+                         maxOccurs="unbounded" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="OAuth2Profile">
         <xsd:sequence>
             <xsd:element name="clientID" type="xsd:string"></xsd:element>
             <xsd:element name="clientSecret" type="xsd:string"></xsd:element>
@@ -1879,6 +1886,7 @@
             <xsd:element name="accessTokenURI" type="xsd:string"></xsd:element>
             <xsd:element name="redirectURI" type="xsd:string"></xsd:element>
             <xsd:element name="accessToken" type="xsd:string"></xsd:element>
+            <xsd:element name="scope" type="xsd:string"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 

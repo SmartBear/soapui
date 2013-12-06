@@ -17,6 +17,8 @@ import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.rest.DefaultOAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter.RestConversionException;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
@@ -113,6 +115,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	private SoapUIScriptEngine beforeSaveScriptEngine;
 	private PropertyExpansionContext context = new DefaultPropertyExpansionContext( this );
 	protected DefaultWssContainer wssContainer;
+	protected OAuth2ProfileContainer oAuth2ProfileContainer;
 	private String projectPassword = null;
 	private String hermesConfig;
 	private boolean wrongPasswordSupplied;
@@ -246,6 +249,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 				setPropertiesConfig( getConfig().addNewProperties() );
 				wssContainer = new DefaultWssContainer( this, getConfig().addNewWssContainer() );
+				oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer( this, getConfig().getOAuth2ProfileContainer() );
 				// setResourceRoot("${projectDir}");
 			}
 
@@ -341,6 +345,13 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				getConfig().addNewWssContainer();
 
 			wssContainer = new DefaultWssContainer( this, getConfig().getWssContainer() );
+
+			if( !getConfig().isSetOAuth2ProfileContainer() )
+			{
+				getConfig().addNewOAuth2ProfileContainer();
+			}
+			oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer( this, getConfig().addNewOAuth2ProfileContainer() );
+
 
 			endpointStrategy.init( this );
 
@@ -1264,6 +1275,13 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				wssContainer.release();
 				wssContainer = null;
 			}
+
+			if( oAuth2ProfileContainer != null )
+			{
+				oAuth2ProfileContainer.release();
+				oAuth2ProfileContainer = null;
+			}
+
 		}
 
 		projectListeners.clear();
@@ -1573,6 +1591,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return wssContainer;
 	}
 
+	public OAuth2ProfileContainer getOAuth2ProfileContainer()
+	{
+		return oAuth2ProfileContainer;
+	}
+
 	@Override
 	public void resolve( ResolveContext<?> context )
 	{
@@ -1586,6 +1609,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
 
 		result.addAll( Arrays.asList( wssContainer.getPropertyExpansions() ) );
+		result.addAll( Arrays.asList( oAuth2ProfileContainer.getPropertyExpansions() ) );
 
 		return result.toArray( new PropertyExpansion[result.size()] );
 

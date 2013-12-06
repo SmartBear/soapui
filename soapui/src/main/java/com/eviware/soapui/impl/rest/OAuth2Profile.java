@@ -12,13 +12,11 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.OAuthConfigConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.AbstractModelItem;
-import com.eviware.soapui.model.tree.nodes.support.EmptyModelItem;
-
-import javax.swing.*;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 
 /**
  * Created with IntelliJ IDEA.
@@ -27,50 +25,16 @@ import javax.swing.*;
  * Time: 15:52
  * To change this template use File | Settings | File Templates.
  */
-public class OAuth2Profile extends AbstractModelItem
+public class OAuth2Profile implements PropertyExpansionContainer
 {
 
-	private OAuthConfigConfig configuration;
+	private final ModelItem modelItem;
+	private final OAuth2ProfileConfig configuration;
 
-	public OAuth2Profile(OAuthConfigConfig configuration)
+	public OAuth2Profile( ModelItem modelItem, OAuth2ProfileConfig configuration )
 	{
+		this.modelItem = modelItem;
 		this.configuration = configuration;
-	}
-
-	@Override
-	public String getName()
-	{
-		return null;
-	}
-
-	@Override
-	public String getId()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public ImageIcon getIcon()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public String getDescription()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public Settings getSettings()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public ModelItem getParent()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
 	}
 
 	public String getAccessToken()
@@ -100,6 +64,17 @@ public class OAuth2Profile extends AbstractModelItem
 
 	public String getScope()
 	{
-		return null;
+		return configuration.getScope();
+	}
+
+	@Override
+	public PropertyExpansion[] getPropertyExpansions()
+	{
+		PropertyExpansionsResult result = new PropertyExpansionsResult( modelItem, this );
+
+		//TODO: Add the fields we want to support property expansion
+		// result.extractAndAddAll( "clientID" );
+
+		return result.toArray();
 	}
 }
