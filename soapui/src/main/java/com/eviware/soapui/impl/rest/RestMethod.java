@@ -375,13 +375,13 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 
 	public RestRequest cloneRequest( RestRequest request, String name )
 	{
+		request.beforeSave();
 		RestRequestConfig requestConfig = ( RestRequestConfig )getConfig().addNewRequest().set( request.getConfig() );
 		requestConfig.setName( name );
 
 		RestRequest newRequest = new RestRequest( this, requestConfig, false );
 		requests.add( newRequest );
 
-		// getInterface().fireRequestAdded(newRequest);
 		notifyPropertyChanged( "childRequests", null, newRequest );
 		return newRequest;
 	}
