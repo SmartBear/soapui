@@ -51,9 +51,10 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 	{
 		try
 		{
-			validateProfileContents( profile );
-			String authorizationURL = createAuthorizationURL( profile );
-			launchConsentScreenAndGetAuthorizationCode( authorizationURL, profile );
+			OAuth2Parameters parameters = buildParametersFrom(profile);
+			validateProfileContents( parameters );
+			String authorizationURL = createAuthorizationURL( parameters );
+			launchConsentScreenAndGetAuthorizationCode( authorizationURL, parameters );
 		}
 		catch( OAuthSystemException e )
 		{
@@ -70,9 +71,14 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 
 	}
 
-	private void validateProfileContents( OAuth2Profile profile )
+	private OAuth2Parameters buildParametersFrom( OAuth2Profile profile )
 	{
-		String authorizationUri = profile.getAuthorizationURL();
+		return new OAuth2Parameters(profile);
+	}
+
+	private void validateProfileContents( OAuth2Parameters profile )
+	{
+		String authorizationUri = profile.getAuthorizationUri();
 		String uriName = "Authorization URI ";
 		validateHttpUrl( authorizationUri, uriName );
 		if (!profile.getRedirectUri().equals(OAUTH_2_OOB_URN)) {
@@ -122,10 +128,10 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 		throw new OAuth2Exception( e );
 	}
 
-	private String createAuthorizationURL( OAuth2Profile profile ) throws OAuthSystemException
+	private String createAuthorizationURL( OAuth2Parameters profile ) throws OAuthSystemException
 	{
 		return OAuthClientRequest
-				.authorizationLocation( profile.getAuthorizationURL() )
+				.authorizationLocation( profile.getAuthorizationUri() )
 				.setClientId( profile.getClientId() )
 				.setResponseType( CODE )
 				.setScope( profile.getScope() )
@@ -134,7 +140,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 
 	}
 
-	private void launchConsentScreenAndGetAuthorizationCode( String authorizationURL, final OAuth2Profile profile )
+	private void launchConsentScreenAndGetAuthorizationCode( String authorizationURL, final OAuth2Parameters parameters )
 			throws URISyntaxException, MalformedURLException
 	{
 		browserFacade.addBrowserStateListener( new BrowserStateChangeListener()
@@ -142,19 +148,19 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			@Override
 			public void locationChanged( String newLocation )
 			{
-				if( !profile.getRedirectUri().contains( OAUTH_2_OOB_URN ) )
+				if( !parameters.getRedirectUri().contains( OAUTH_2_OOB_URN ) )
 				{
-					getAccessTokenAndSaveToProfile( profile, extractAuthorizationCode( newLocation ) );
+					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( newLocation ) );
 				}
 			}
 
 			@Override
 			public void contentChanged( String newContent )
 			{
-				if( profile.getRedirectUri().contains( OAUTH_2_OOB_URN ) )
+				if( parameters.getRedirectUri().contains( OAUTH_2_OOB_URN ) )
 				{
 					String title = newContent.substring( newContent.indexOf( TITLE ) + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
-					getAccessTokenAndSaveToProfile( profile, extractAuthorizationCode( title ) );
+					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
 				}
 			}
 
@@ -171,7 +177,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 		return null;
 	}
 
-	private void getAccessTokenAndSaveToProfile( OAuth2Profile profile, String authorizationCode )
+	private void getAccessTokenAndSaveToProfile( OAuth2Parameters profile, String authorizationCode )
 	{
 		if( authorizationCode != null )
 		{
@@ -188,7 +194,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 				OAuthToken token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
 				if( token != null && token.getAccessToken() != null )
 				{
-					profile.setAccessToken( token.getAccessToken() );
+					profile.setAccessTokenInProfile( token.getAccessToken() );
 				}
 			}
 			catch( OAuthSystemException e )
@@ -201,4 +207,5 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			}
 		}
 	}
+
 }

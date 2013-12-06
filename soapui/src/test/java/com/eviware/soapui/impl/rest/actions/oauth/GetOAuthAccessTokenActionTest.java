@@ -25,6 +25,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import static com.eviware.soapui.utils.CommonMatchers.aCollectionWithSize;
+import static com.eviware.soapui.utils.ModelItemFactory.makeWsdlProject;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -43,6 +44,9 @@ public class GetOAuthAccessTokenActionTest
 
 	private XDialogs originalDialogs;
 	private StubbedDialogs stubbedDialogs;
+	private OAuth2Profile profile;
+	private OAuthConfigConfig configuration;
+
 
 	@Before
 	public void setUp() throws Exception
@@ -50,6 +54,8 @@ public class GetOAuthAccessTokenActionTest
 		originalDialogs = UISupport.getDialogs();
 		stubbedDialogs = new StubbedDialogs();
 		UISupport.setDialogs( stubbedDialogs );
+		configuration = OAuthConfigConfig.Factory.newInstance();
+		profile = new OAuth2Profile( makeWsdlProject(), configuration );
 	}
 
 	@After
@@ -61,8 +67,6 @@ public class GetOAuthAccessTokenActionTest
 	@Test
 	public void savesAccessTokenInProfile() throws Exception
 	{
-		OAuthConfigConfig configuration = OAuthConfigConfig.Factory.newInstance();
-		final OAuth2Profile profile = new OAuth2Profile( configuration );
 		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
 		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(){
 			@Override
@@ -88,8 +92,6 @@ public class GetOAuthAccessTokenActionTest
 	@Test
 	public void showsAnErrorMessageWhenGetAccessTokenFails() throws Exception
 	{
-		OAuthConfigConfig configuration = OAuthConfigConfig.Factory.newInstance();
-		OAuth2Profile profile = new OAuth2Profile( configuration );
 		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
 		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(){
 			@Override
@@ -107,8 +109,6 @@ public class GetOAuthAccessTokenActionTest
 	@Test
 	public void displaysValidationErrorWhenValidationFails() throws Exception
 	{
-		OAuthConfigConfig configuration = OAuthConfigConfig.Factory.newInstance();
-		OAuth2Profile profile = new OAuth2Profile( configuration );
 		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
 		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(){
 			@Override

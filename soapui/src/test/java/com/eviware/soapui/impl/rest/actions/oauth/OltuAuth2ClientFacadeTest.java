@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.config.OAuthConfigConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.support.SoapUIException;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
@@ -27,6 +29,7 @@ import org.junit.Test;
 
 import java.net.URL;
 
+import static com.eviware.soapui.utils.ModelItemFactory.makeWsdlProject;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -34,11 +37,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-12-04
- * Time: 16:50
- * To change this template use File | Settings | File Templates.
+ * Unit tests for OltuAuth2ClientFacade
  */
 public class OltuAuth2ClientFacadeTest
 {
@@ -81,6 +80,21 @@ public class OltuAuth2ClientFacadeTest
 	public void getsTheAccessTokenFromResponseBodyInOobRequest() throws Exception
 	{
 		profile.setRedirectUri( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		oltuClientFacade.requestAccessToken( profile );
+
+		assertThat( profile.getAccessToken(), is( accessToken ) );
+	}
+
+	@Test
+	public void performsPropertyExpansionOnProfileValues() throws Exception
+	{
+		String authorizationPropertyName = "myAuthorizationUri";
+		String redirectUriPropertyName = "myRedirectUri";
+		WsdlProject project = (WsdlProject )profile.getParent();
+		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURL() );
+		project.addProperty( redirectUriPropertyName).setValue( profile.getRedirectUri() );
+		profile.setAuthorizationUri( "${#Project#" + authorizationPropertyName + "}" );
+		profile.setRedirectUri( "${#Project#" + redirectUriPropertyName + "}" );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
@@ -149,10 +163,10 @@ public class OltuAuth2ClientFacadeTest
 
 	/* Helpers */
 
-	private void initializeOAuthProfileWithDefaultValues()
+	private void initializeOAuthProfileWithDefaultValues() throws SoapUIException
 	{
 		OAuthConfigConfig configuration = OAuthConfigConfig.Factory.newInstance();
-		profile = new OAuth2Profile( configuration );
+		profile = new OAuth2Profile( makeWsdlProject(), configuration );
 		profile.setAuthorizationUri( "http://localhost:8080/authorize" );
 		profile.setAccessTokenUri( "http://localhost:8080/accesstoken" );
 		profile.setRedirectUri( "http://localhost:8080/redirect" );

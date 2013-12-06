@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.OAuthConfigConfig;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.AbstractModelItem;
@@ -28,8 +29,11 @@ public class OAuth2Profile extends AbstractModelItem
 
 	private OAuthConfigConfig configuration;
 
-	public OAuth2Profile(OAuthConfigConfig configuration)
+	private WsdlProject project;
+
+	public OAuth2Profile(WsdlProject project, OAuthConfigConfig configuration)
 	{
+		this.project = project;
 		this.configuration = configuration;
 	}
 
@@ -66,7 +70,7 @@ public class OAuth2Profile extends AbstractModelItem
 	@Override
 	public ModelItem getParent()
 	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
+		return project;
 	}
 
 	public String getAccessToken()
