@@ -146,6 +146,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 				if( token != null && token.getAccessToken() != null )
 				{
 					profile.setAccessToken( token.getAccessToken() );
+					browserFacade.close();
 				}
 			}
 			catch( OAuthSystemException e )

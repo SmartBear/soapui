@@ -24,14 +24,15 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 {
 
 	private WebViewBasedBrowserComponent browserComponent = new WebViewBasedBrowserComponent( false );
+	private JFrame popupWindow;
 
 	@Override
 	public void open( URL url )
 	{
-		JFrame popupWindow = new JFrame( "Browser" );
+		popupWindow = new JFrame( "Browser" );
 
 		popupWindow.getContentPane().add( browserComponent.getComponent() );
-		popupWindow.setBounds(100, 100, 800, 600);
+		popupWindow.setBounds( 100, 100, 800, 600 );
 		popupWindow.setVisible( true );
 
 		browserComponent.navigate( url.toString(), null );
@@ -48,6 +49,12 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 	public void removeBrowserStateListener( BrowserStateChangeListener listener )
 	{
 		browserComponent.removeBrowserStateListener( listener );
+	}
+
+	@Override
+	public void close()
+	{
+		popupWindow.dispose();
 	}
 
 }
