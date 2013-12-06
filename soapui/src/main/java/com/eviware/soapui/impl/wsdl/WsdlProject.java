@@ -459,7 +459,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		try
 		{
-			data = OpenSSL.decrypt( "des3", password, encryptedContent );
+			String encryptionAlgorithm = soapuiProject.getEncryptedContentAlgorithm();
+			data = OpenSSL.decrypt( StringUtils.isNullOrEmpty( encryptionAlgorithm ) ? "des3" : encryptionAlgorithm, password, encryptedContent );
 		}
 		catch( Exception e )
 		{
@@ -788,7 +789,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		if( hasBeenSuccessfullyDecrypted( projectDocument ) && hasEncryptionPassword() )
 		{
-			encrypt( projectDocument );
+			ProjectConfig encryptedProjectConfig = encrypt( projectDocument );
+			projectDocument.setSoapuiProject( encryptedProjectConfig );
 		}
 
 		XmlOptions options = new XmlOptions();
@@ -869,7 +871,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		tempSettings.clearSetting( ProjectSettings.PROJECT_ROOT );
 	}
 
-	private void encrypt( SoapuiProjectDocumentConfig projectDocument ) throws IOException
+	private ProjectConfig encrypt( SoapuiProjectDocumentConfig projectDocument ) throws IOException
 	{
 		// check for encryption
 		String passwordForEncryption = getSettings().getString( ProjectSettings.SHADOW_PASSWORD, null );
@@ -880,21 +882,21 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			try
 			{
 				String data = getConfig().xmlText();
-				byte[] encrypted = OpenSSL.encrypt( "des3", passwordForEncryption.toCharArray(), data.getBytes() );
-				projectDocument.getSoapuiProject().setEncryptedContent( encrypted );
-				projectDocument.getSoapuiProject().setInterfaceArray( null );
-				projectDocument.getSoapuiProject().setTestSuiteArray( null );
-				projectDocument.getSoapuiProject().setMockServiceArray( null );
-				projectDocument.getSoapuiProject().unsetWssContainer();
-				projectDocument.getSoapuiProject().unsetSettings();
-				projectDocument.getSoapuiProject().unsetProperties();
-
+				String encryptionAlgorithm = "des3";
+				byte[] encrypted = OpenSSL.encrypt( encryptionAlgorithm, passwordForEncryption.toCharArray(), data.getBytes() );
+				ProjectConfig newProjectConfig = ProjectConfig.Factory.newInstance();
+				ProjectConfig soapuiProject = projectDocument.getSoapuiProject();
+				newProjectConfig.setName( soapuiProject.getName() );
+				newProjectConfig.setEncryptedContent( encrypted );
+				newProjectConfig.setEncryptedContentAlgorithm(encryptionAlgorithm);
+				return newProjectConfig;
 			}
 			catch( GeneralSecurityException e )
 			{
 				UISupport.showErrorMessage( "Encryption Error" );
 			}
 		}
+		return projectDocument.getSoapuiProject();
 	}
 
 	private static void normalizeLineBreak( File target, File tmpFile ) throws IOException

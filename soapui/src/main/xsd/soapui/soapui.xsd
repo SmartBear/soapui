@@ -57,6 +57,8 @@
                     <xsd:element name="encryptedContent" type="xsd:base64Binary"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
+                    <xsd:element name="encryptedContentAlgorithm" type="xsd:string"
+                                 maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="wssContainer" type="tns:WssContainer"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
@@ -666,6 +668,8 @@
             </xsd:element>
             <xsd:element name="encryptedContent" type="xsd:base64Binary"
                 maxOccurs="1" minOccurs="0"></xsd:element>
+            <xsd:element name="encryptedContentAlgorithm" type="xsd:string"
+                         maxOccurs="1" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
 
