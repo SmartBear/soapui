@@ -2,16 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
+        <artifactId>soapui-project</artifactId>
         <version>4.6.3-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>soapui-system-test</artifactId>
-    <scm>
-        <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
-    </scm>
+    <name>SoapUI system test</name>
+    <packaging>pom</packaging>
 
     <build>
         <plugins>
