@@ -12,7 +12,7 @@
 
     <artifactId>soapui-system-test</artifactId>
     <name>SoapUI system test</name>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <build>
         <plugins>
