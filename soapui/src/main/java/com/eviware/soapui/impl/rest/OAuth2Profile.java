@@ -27,6 +27,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 public class OAuth2Profile implements PropertyExpansionContainer
 {
 
+	public static final String CLIENT_ID_PROPERTY = "clientID";
+	public static final String CLIENT_SECRET_PROPERTY = "clientSecret";
+	public static final String AUTHORIZATION_URI_PROPERTY = "authorizationURI";
+	public static final String ACCESS_TOKEN_URI_PROPERTY = "accessTokenURI";
+	public static final String REDIRECT_URI_PROPERTY = "redirectURI";
+	public static final String ACCESS_TOKEN_PROPERTY = "accessToken";
+	public static final String SCOPE_PROPERTY = "scope";
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
 	private final OAuth2ProfileConfig configuration;
 
@@ -111,18 +118,23 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		configuration.setAccessTokenURI( accessTokenURI );
 	}
 
+	public OAuth2ProfileContainer getContainer()
+	{
+		return oAuth2ProfileContainer;
+	}
+
 	@Override
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( oAuth2ProfileContainer.getProject(), this );
 
-		result.extractAndAddAll( "clientID" );
-		result.extractAndAddAll( "clientSecret" );
-		result.extractAndAddAll( "authorizationURI" );
-		result.extractAndAddAll( "accessTokenURI" );
-		result.extractAndAddAll( "redirectURI" );
-		result.extractAndAddAll( "accessToken" );
-		result.extractAndAddAll( "scope" );
+		result.extractAndAddAll( CLIENT_ID_PROPERTY );
+		result.extractAndAddAll( CLIENT_SECRET_PROPERTY );
+		result.extractAndAddAll( AUTHORIZATION_URI_PROPERTY );
+		result.extractAndAddAll( ACCESS_TOKEN_URI_PROPERTY );
+		result.extractAndAddAll( REDIRECT_URI_PROPERTY );
+		result.extractAndAddAll( ACCESS_TOKEN_PROPERTY );
+		result.extractAndAddAll( SCOPE_PROPERTY );
 
 		return result.toArray();
 	}

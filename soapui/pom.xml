@@ -9,6 +9,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <javafx.version>2.2</javafx.version>
+        <javafx.runtime.lib.jar>${java.home}/lib/jfxrt.jar</javafx.runtime.lib.jar>
+    </properties>
+
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
@@ -424,6 +429,18 @@
             <type>jar</type>
         </dependency>
 
+        <!-- Oauth2 dependencies -->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>0.31</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.httpclient4</artifactId>
+            <version>0.31</version>
+        </dependency>
+
         <!--              -->
 
         <dependency>
@@ -582,7 +599,13 @@
             <artifactId>nekohtml</artifactId>
             <version>1.9.14</version>
         </dependency>
-
+        <dependency>
+            <groupId>javafx</groupId>
+            <artifactId>jfxrt</artifactId>
+            <version>${javafx.version}</version>
+            <scope>system</scope>
+            <systemPath>${javafx.runtime.lib.jar}</systemPath>
+        </dependency>
         <!--- Added -->
 
         <dependency>
