@@ -35,9 +35,23 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		popupWindow.setBounds( 100, 100, 800, 600 );
 		popupWindow.setVisible( true );
 
-		browserComponent.navigate( url.toString(), null );
+		addBrowserStateListener( new BrowserStateChangeListener()
+		{
+			@Override
+			public void locationChanged( String newLocation )
+			{
+			}
 
+			@Override
+			public void contentChanged( String newContent )
+			{
+				browserComponent.executeJavaScript( javaScriptToFocusFirstInputElementInTheForm() );
+			}
+		} );
+
+		browserComponent.navigate( url.toString(), null );
 	}
+
 
 	@Override
 	public void addBrowserStateListener( BrowserStateChangeListener listener )
@@ -57,4 +71,24 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		popupWindow.dispose();
 	}
 
+	private String javaScriptToFocusFirstInputElementInTheForm()
+	{
+		return "var bFound = false;\n" +
+				"\n" +
+				"  for (f=0; f < document.forms.length; f++)\n" +
+				"  {\n" +
+				"    for(i=0; i < document.forms[f].length; i++)\n" +
+				"    {\n" +
+				"      if (document.forms[f][i].type != \"hidden\" && document.forms[f][i].disabled != true)\n" +
+				"      {" +
+				"        document.forms[f][i].focus();\n" +
+				"        var bFound = true;\n" +
+				"      }\n" +
+				"      if (bFound == true)\n" +
+				"        break;\n" +
+				"    }\n" +
+				"    if (bFound == true)\n" +
+				"      break;\n" +
+				"  }";
+	}
 }
