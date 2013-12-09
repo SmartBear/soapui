@@ -97,7 +97,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 
 	private String expandProperty( OAuth2Profile profile, String value )
 	{
-		return PropertyExpander.expandProperties( profile.getContainer().getModelItem(), value );
+		return PropertyExpander.expandProperties( profile.getContainer().getProject(), value );
 	}
 
 	private void validateRequiredStringValue( String value, String propertyName )

@@ -65,6 +65,21 @@ public class OAuthConfigTest
 	}
 
 	@Test
+	public void basicOAuthConfigIsProjectSpecific() throws Exception
+	{
+
+		project.saveAs( projectFileName );
+
+		WsdlProject retrievedProject = new WsdlProject( projectFileName );
+
+		assertThat( retrievedProject.getOAuth2ProfileContainer().getOAuth2ProfileList().size(), is( 1 ) );
+		OAuth2Profile savedOAuth2Profile = retrievedProject.getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 );
+
+		assertOAuth2ProfileFields( savedOAuth2Profile );
+
+	}
+
+	@Test
 	public void basicOAuthConfigIsSaved() throws Exception
 	{
 
