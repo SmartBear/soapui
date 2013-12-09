@@ -13,7 +13,17 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.InterfaceConfig;
+import com.eviware.soapui.config.MockServiceConfig;
+import com.eviware.soapui.config.MockServiceDocumentConfig;
+import com.eviware.soapui.config.ProjectConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
+import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
+import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.config.TestStepSecurityTestConfig;
+import com.eviware.soapui.config.TestSuiteConfig;
+import com.eviware.soapui.config.TestSuiteDocumentConfig;
+import com.eviware.soapui.config.TestSuiteRunTypesConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
@@ -48,7 +58,11 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.ProjectRunContext;
+import com.eviware.soapui.model.testsuite.ProjectRunListener;
+import com.eviware.soapui.model.testsuite.ProjectRunner;
+import com.eviware.soapui.model.testsuite.TestRunnable;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.settings.UISettings;
@@ -69,15 +83,28 @@ import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * WSDL project implementation

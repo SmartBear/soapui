@@ -12,9 +12,10 @@
 
 package com.eviware.soapui.impl.rest.actions.oauth;
 
-import com.eviware.soapui.config.OAuthConfigConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogs;
 import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
@@ -25,7 +26,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import static com.eviware.soapui.utils.CommonMatchers.aCollectionWithSize;
-import static com.eviware.soapui.utils.ModelItemFactory.makeWsdlProject;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -45,7 +45,7 @@ public class GetOAuthAccessTokenActionTest
 	private XDialogs originalDialogs;
 	private StubbedDialogs stubbedDialogs;
 	private OAuth2Profile profile;
-	private OAuthConfigConfig configuration;
+	private OAuth2ProfileConfig configuration;
 
 
 	@Before
@@ -54,8 +54,8 @@ public class GetOAuthAccessTokenActionTest
 		originalDialogs = UISupport.getDialogs();
 		stubbedDialogs = new StubbedDialogs();
 		UISupport.setDialogs( stubbedDialogs );
-		configuration = OAuthConfigConfig.Factory.newInstance();
-		profile = new OAuth2Profile( makeWsdlProject(), configuration );
+		configuration = OAuth2ProfileConfig.Factory.newInstance();
+		profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
 	}
 
 	@After

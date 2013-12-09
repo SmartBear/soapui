@@ -41,7 +41,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	@Override
 	public void release()
 	{
-		throw new UnsupportedOperationException( "TODO When adding listeners, this must be used to release them" );
+
 	}
 
 	@Override

@@ -15,20 +15,15 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Action for retrieving an OAuth2 access token using the values in the OAuth2Profile object.
  */
-public class GetOAuthAccessTokenAction extends AbstractSoapUIAction<OAuth2Profile>
+public class GetOAuthAccessTokenAction
 {
 
-	public GetOAuthAccessTokenAction()
-	{
-		super( "Get Authorization Code", "Gets an OAuth2 authorization code for an OAuth profile" );
-	}
 
-	@Override
+
 	public void perform( OAuth2Profile target, Object param )
 	{
 		try
@@ -46,8 +41,12 @@ public class GetOAuthAccessTokenAction extends AbstractSoapUIAction<OAuth2Profil
 		}
 	}
 
+
+
 	protected OAuth2ClientFacade getOAuthClientFacade()
 	{
 		return new OltuAuth2ClientFacade();
 	}
+
+
 }

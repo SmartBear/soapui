@@ -3,7 +3,6 @@ package com.eviware.soapui.impl.rest;
 import com.eviware.soapui.config.OAuth2ProfileContainerConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
-import org.apache.xmlbeans.XmlObject;
 
 import java.util.List;
 

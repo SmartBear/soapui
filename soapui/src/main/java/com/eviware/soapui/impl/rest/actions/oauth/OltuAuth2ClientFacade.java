@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -73,20 +74,30 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 
 	private OAuth2Parameters buildParametersFrom( OAuth2Profile profile )
 	{
-		return new OAuth2Parameters(profile);
+		String authorizationUri = expandProperty( profile, profile.getAuthorizationURI() );
+		String redirectUri = expandProperty( profile, profile.getRedirectURI() );
+		String accessTokenUri = expandProperty( profile, profile.getAccessTokenURI() );
+		String clientId = expandProperty( profile, profile.getClientID() );
+		String clientSecret = expandProperty( profile, profile.getClientSecret() );
+		String scope = expandProperty( profile, profile.getScope() );
+		return new OAuth2Parameters(profile, authorizationUri, redirectUri, accessTokenUri, clientId, clientSecret, scope);
 	}
 
-	private void validateProfileContents( OAuth2Parameters profile )
+	private void validateProfileContents( OAuth2Parameters parameters )
 	{
-		String authorizationUri = profile.getAuthorizationUri();
-		String uriName = "Authorization URI ";
-		validateHttpUrl( authorizationUri, uriName );
-		if (!profile.getRedirectUri().equals(OAUTH_2_OOB_URN)) {
-			validateHttpUrl( profile.getRedirectUri(), "Redirect URI" );
+
+		validateHttpUrl( parameters.authorizationUri, "Authorization URI " );
+		if (!parameters.redirectUri.equals(OAUTH_2_OOB_URN)) {
+			validateHttpUrl( parameters.redirectUri, "Redirect URI" );
 		}
-		validateHttpUrl(profile.getAccessTokenUri(), "Access token URI");
-		validateRequiredStringValue( profile.getClientId(), "Client ID" );
-		validateRequiredStringValue( profile.getClientSecret(), "Client secret" );
+		validateHttpUrl(parameters.accessTokenUri, "Access token URI");
+		validateRequiredStringValue( parameters.clientId, "Client ID" );
+		validateRequiredStringValue( parameters.clientSecret, "Client secret" );
+	}
+
+	private String expandProperty( OAuth2Profile profile, String value )
+	{
+		return PropertyExpander.expandProperties( profile.getContainer().getModelItem(), value );
 	}
 
 	private void validateRequiredStringValue( String value, String propertyName )
@@ -131,11 +142,11 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 	private String createAuthorizationURL( OAuth2Parameters profile ) throws OAuthSystemException
 	{
 		return OAuthClientRequest
-				.authorizationLocation( profile.getAuthorizationUri() )
-				.setClientId( profile.getClientId() )
+				.authorizationLocation( profile.authorizationUri )
+				.setClientId( profile.clientId )
 				.setResponseType( CODE )
-				.setScope( profile.getScope() )
-				.setRedirectURI( profile.getRedirectUri() )
+				.setScope( profile.scope )
+				.setRedirectURI( profile.redirectUri )
 				.buildQueryMessage().getLocationUri();
 
 	}
@@ -148,7 +159,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			@Override
 			public void locationChanged( String newLocation )
 			{
-				if( !parameters.getRedirectUri().contains( OAUTH_2_OOB_URN ) )
+				if( !parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
 				{
 					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( newLocation ) );
 				}
@@ -157,7 +168,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			@Override
 			public void contentChanged( String newContent )
 			{
-				if( parameters.getRedirectUri().contains( OAUTH_2_OOB_URN ) )
+				if( parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
 				{
 					String title = newContent.substring( newContent.indexOf( TITLE ) + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
 					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
@@ -184,11 +195,11 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			try
 			{
 				OAuthClientRequest accessTokenRequest = OAuthClientRequest
-						.tokenLocation( parameters.getAccessTokenUri() )
+						.tokenLocation( parameters.accessTokenUri )
 						.setGrantType( GrantType.AUTHORIZATION_CODE )
-						.setClientId( parameters.getClientId() )
-						.setClientSecret( parameters.getClientSecret() )
-						.setRedirectURI( parameters.getRedirectUri() )
+						.setClientId( parameters.clientId )
+						.setClientSecret( parameters.clientSecret )
+						.setRedirectURI( parameters.redirectUri )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
 				OAuthToken token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();

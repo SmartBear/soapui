@@ -12,10 +12,11 @@
 
 package com.eviware.soapui.impl.rest.actions.oauth;
 
-import com.eviware.soapui.config.OAuthConfigConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
@@ -29,7 +30,6 @@ import org.junit.Test;
 
 import java.net.URL;
 
-import static com.eviware.soapui.utils.ModelItemFactory.makeWsdlProject;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -70,7 +70,7 @@ public class OltuAuth2ClientFacadeTest
 	/* Happy path tests */
 
 	@Test
-	public void getsTheAccessTokenFromResponseUri() throws Exception
+	public void getsTheAccessTokenFromResponseURI() throws Exception
 	{
 		oltuClientFacade.requestAccessToken( profile );
 
@@ -80,7 +80,7 @@ public class OltuAuth2ClientFacadeTest
 	@Test
 	public void getsTheAccessTokenFromResponseBodyInOobRequest() throws Exception
 	{
-		profile.setRedirectUri( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setRedirectURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
@@ -89,13 +89,13 @@ public class OltuAuth2ClientFacadeTest
 	@Test
 	public void performsPropertyExpansionOnProfileValues() throws Exception
 	{
-		String authorizationPropertyName = "myAuthorizationUri";
-		String redirectUriPropertyName = "myRedirectUri";
-		WsdlProject project = (WsdlProject )profile.getParent();
-		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURL() );
-		project.addProperty( redirectUriPropertyName).setValue( profile.getRedirectUri() );
-		profile.setAuthorizationUri( "${#Project#" + authorizationPropertyName + "}" );
-		profile.setRedirectUri( "${#Project#" + redirectUriPropertyName + "}" );
+		String authorizationPropertyName = "myAuthorizationURI";
+		String redirectURIPropertyName = "myRedirectURI";
+		WsdlProject project = (WsdlProject )profile.getContainer().getModelItem();
+		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURI() );
+		project.addProperty( redirectURIPropertyName).setValue( profile.getRedirectURI() );
+		profile.setAuthorizationURI( "${#Project#" + authorizationPropertyName + "}" );
+		profile.setRedirectURI( "${#Project#" + redirectURIPropertyName + "}" );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
@@ -120,44 +120,44 @@ public class OltuAuth2ClientFacadeTest
 	/* Validation tests */
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
-	public void rejectsUrnAsAuthorizationUri() throws Exception
+	public void rejectsUrnAsAuthorizationURI() throws Exception
 	{
-		profile.setAuthorizationUri( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAuthorizationURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
 	public void rejectsNonHttpAuthorizationUrl() throws Exception
 	{
-		profile.setAuthorizationUri( "ftp://ftp.sunet.se" );
+		profile.setAuthorizationURI( "ftp://ftp.sunet.se" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
-	public void rejectsNonHttpRedirectUri() throws Exception
+	public void rejectsNonHttpRedirectURI() throws Exception
 	{
-		profile.setRedirectUri( "ftp://ftp.sunet.se" );
+		profile.setRedirectURI( "ftp://ftp.sunet.se" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
-	public void rejectsUrnAsAccessTokenUri() throws Exception
+	public void rejectsUrnAsAccessTokenURI() throws Exception
 	{
-		profile.setAccessTokenUri( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAccessTokenURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
-	public void rejectsNonHttpAccessTokenUri() throws Exception
+	public void rejectsNonHttpAccessTokenURI() throws Exception
 	{
-		profile.setAccessTokenUri( "ftp://ftp.sunet.se" );
+		profile.setAccessTokenURI( "ftp://ftp.sunet.se" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
 	public void rejectsEmptyClientId() throws Exception
 	{
-		profile.setClientId( "" );
+		profile.setClientID( "" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -174,12 +174,12 @@ public class OltuAuth2ClientFacadeTest
 
 	private void initializeOAuthProfileWithDefaultValues() throws SoapUIException
 	{
-		OAuthConfigConfig configuration = OAuthConfigConfig.Factory.newInstance();
-		profile = new OAuth2Profile( makeWsdlProject(), configuration );
-		profile.setAuthorizationUri( "http://localhost:8080/authorize" );
-		profile.setAccessTokenUri( "http://localhost:8080/accesstoken" );
-		profile.setRedirectUri( "http://localhost:8080/redirect" );
-		profile.setClientId( "ClientId" );
+		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+		profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
+		profile.setAuthorizationURI( "http://localhost:8080/authorize" );
+		profile.setAccessTokenURI( "http://localhost:8080/accesstoken" );
+		profile.setRedirectURI( "http://localhost:8080/redirect" );
+		profile.setClientID( "ClientId" );
 		profile.setClientSecret( "ClientSecret" );
 	}
 
@@ -223,8 +223,8 @@ public class OltuAuth2ClientFacadeTest
 					String prefix = "redirect_uri=";
 					if( parameter.startsWith( prefix ) )
 					{
-						String redirectUri = parameter.substring( prefix.length() );
-						listener.locationChanged( redirectUri + "?code=" + authorizationCode );
+						String redirectURI = parameter.substring( prefix.length() );
+						listener.locationChanged( redirectURI + "?code=" + authorizationCode );
 					}
 				}
 			}
