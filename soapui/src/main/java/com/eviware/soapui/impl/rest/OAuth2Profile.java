@@ -126,7 +126,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	@Override
 	public PropertyExpansion[] getPropertyExpansions()
 	{
-		PropertyExpansionsResult result = new PropertyExpansionsResult( oAuth2ProfileContainer.getModelItem(), this );
+		PropertyExpansionsResult result = new PropertyExpansionsResult( oAuth2ProfileContainer.getProject(), this );
 
 		result.extractAndAddAll( CLIENT_ID_PROPERTY );
 		result.extractAndAddAll( CLIENT_SECRET_PROPERTY );
