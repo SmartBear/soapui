@@ -76,7 +76,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		configuration.setClientSecret( clientSecret );
 	}
 
-	public String getRedirectURL()
+	public String getRedirectURI()
 	{
 		return configuration.getRedirectURI();
 	}
