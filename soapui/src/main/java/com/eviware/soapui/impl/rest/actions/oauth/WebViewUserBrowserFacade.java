@@ -14,11 +14,11 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 import java.net.URL;
 
 /**
- *
+ * Implementation based on the JavaFX WebView component.
  */
 public class WebViewUserBrowserFacade implements UserBrowserFacade
 {

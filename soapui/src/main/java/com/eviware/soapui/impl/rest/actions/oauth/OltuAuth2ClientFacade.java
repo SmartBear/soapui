@@ -177,24 +177,24 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 		return null;
 	}
 
-	private void getAccessTokenAndSaveToProfile( OAuth2Parameters profile, String authorizationCode )
+	private void getAccessTokenAndSaveToProfile( OAuth2Parameters parameters, String authorizationCode )
 	{
 		if( authorizationCode != null )
 		{
 			try
 			{
 				OAuthClientRequest accessTokenRequest = OAuthClientRequest
-						.tokenLocation( profile.getAccessTokenUri() )
+						.tokenLocation( parameters.getAccessTokenUri() )
 						.setGrantType( GrantType.AUTHORIZATION_CODE )
-						.setClientId( profile.getClientId() )
-						.setClientSecret( profile.getClientSecret() )
-						.setRedirectURI( profile.getRedirectUri() )
+						.setClientId( parameters.getClientId() )
+						.setClientSecret( parameters.getClientSecret() )
+						.setRedirectURI( parameters.getRedirectUri() )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
 				OAuthToken token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
 				if( token != null && token.getAccessToken() != null )
 				{
-					profile.setAccessTokenInProfile( token.getAccessToken() );
+					parameters.setAccessTokenInProfile( token.getAccessToken() );
 					browserFacade.close();
 				}
 			}

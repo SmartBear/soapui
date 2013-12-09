@@ -18,18 +18,14 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-12-04
- * Time: 15:25
- * To change this template use File | Settings | File Templates.
+ * Action for retrieving an OAuth2 access token using the values in the OAuth2Profile object.
  */
 public class GetOAuthAccessTokenAction extends AbstractSoapUIAction<OAuth2Profile>
 {
 
 	public GetOAuthAccessTokenAction()
 	{
-		super( "Get Authorization Code", "Gets an OAuth authorization code for a given client id and client secret " );
+		super( "Get Authorization Code", "Gets an OAuth2 authorization code for an OAuth profile" );
 	}
 
 	@Override
