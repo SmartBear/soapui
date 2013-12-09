@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.submit.OAuth2RequestFacade;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
@@ -34,7 +36,7 @@ import java.net.URL;
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
  */
-public class OltuAuth2ClientFacade implements OAuth2ClientFacade
+public class OltuAuth2ClientFacade implements OAuth2ClientFacade, OAuth2RequestFacade
 {
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
@@ -97,7 +99,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 
 	private String expandProperty( OAuth2Profile profile, String value )
 	{
-		return PropertyExpander.expandProperties( profile.getContainer().getModelItem(), value );
+		return PropertyExpander.expandProperties( profile.getContainer().getProject(), value );
 	}
 
 	private void validateRequiredStringValue( String value, String propertyName )
@@ -220,4 +222,9 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 		}
 	}
 
+	@Override
+	public void applyAccessToken( OAuth2Profile profile, HttpRequestInterface request )
+	{
+		//To change body of implemented methods use File | Settings | File Templates.
+	}
 }

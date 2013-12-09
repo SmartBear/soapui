@@ -91,7 +91,7 @@ public class OltuAuth2ClientFacadeTest
 	{
 		String authorizationPropertyName = "myAuthorizationURI";
 		String redirectURIPropertyName = "myRedirectURI";
-		WsdlProject project = (WsdlProject )profile.getContainer().getModelItem();
+		WsdlProject project = (WsdlProject )profile.getContainer().getProject();
 		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURI() );
 		project.addProperty( redirectURIPropertyName).setValue( profile.getRedirectURI() );
 		profile.setAuthorizationURI( "${#Project#" + authorizationPropertyName + "}" );
