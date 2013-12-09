@@ -22,7 +22,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 
 		for( OAuth2ProfileConfig oAuth2ProfileConfig: configuration.getOAuth2ProfileList() )
 		{
-			oAuth2ProfileList.add( new OAuth2Profile( modelItem, oAuth2ProfileConfig ) );
+			oAuth2ProfileList.add( new OAuth2Profile( this, oAuth2ProfileConfig ) );
 		}
 	}
 
@@ -45,6 +45,21 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	}
 
 	@Override
+	public OAuth2Profile addNewOAuth2Profile()
+	{
+		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, configuration.addNewOAuth2Profile() );
+		oAuth2ProfileList.add( oAuth2Profile );
+
+		return oAuth2Profile;
+	}
+
+	@Override
+	public OAuth2ProfileContainerConfig getConfig()
+	{
+		return configuration;
+	}
+
+	@Override
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( getModelItem(), this );
@@ -56,4 +71,5 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 
 		return result.toArray();
 	}
+
 }

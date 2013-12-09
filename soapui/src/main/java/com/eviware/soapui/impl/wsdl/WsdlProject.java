@@ -249,7 +249,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 				setPropertiesConfig( getConfig().addNewProperties() );
 				wssContainer = new DefaultWssContainer( this, getConfig().addNewWssContainer() );
-				oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer( this, getConfig().getOAuth2ProfileContainer() );
+				oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer( this, getConfig().addNewOAuth2ProfileContainer() );
 				// setResourceRoot("${projectDir}");
 			}
 
@@ -350,7 +350,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			{
 				getConfig().addNewOAuth2ProfileContainer();
 			}
-			oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer( this, getConfig().addNewOAuth2ProfileContainer() );
+			oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer( this, getConfig().getOAuth2ProfileContainer() );
 
 
 			endpointStrategy.init( this );

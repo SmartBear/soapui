@@ -1882,7 +1882,7 @@
         <xsd:sequence>
             <xsd:element name="clientID" type="xsd:string"></xsd:element>
             <xsd:element name="clientSecret" type="xsd:string"></xsd:element>
-            <xsd:element name="authorizeURI" type="xsd:string"></xsd:element>
+            <xsd:element name="authorizationURI" type="xsd:string"></xsd:element>
             <xsd:element name="accessTokenURI" type="xsd:string"></xsd:element>
             <xsd:element name="redirectURI" type="xsd:string"></xsd:element>
             <xsd:element name="accessToken" type="xsd:string"></xsd:element>

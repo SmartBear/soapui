@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.OAuth2ProfileConfig;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -28,12 +27,12 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 public class OAuth2Profile implements PropertyExpansionContainer
 {
 
-	private final ModelItem modelItem;
+	private final OAuth2ProfileContainer oAuth2ProfileContainer;
 	private final OAuth2ProfileConfig configuration;
 
-	public OAuth2Profile( ModelItem modelItem, OAuth2ProfileConfig configuration )
+	public OAuth2Profile( OAuth2ProfileContainer oAuth2ProfileContainer, OAuth2ProfileConfig configuration )
 	{
-		this.modelItem = modelItem;
+		this.oAuth2ProfileContainer = oAuth2ProfileContainer;
 		this.configuration = configuration;
 	}
 
@@ -47,9 +46,14 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		configuration.setAccessToken( accessToken );
 	}
 
-	public String getAuthorizationURL()
+	public String getAuthorizationURI()
 	{
-		return configuration.getAuthorizeURI();
+		return configuration.getAuthorizationURI();
+	}
+
+	public void setAuthorizationURI( String authorizationURI )
+	{
+		configuration.setAuthorizationURI( authorizationURI );
 	}
 
 	public String getClientID()
@@ -57,9 +61,29 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return configuration.getClientID();
 	}
 
+	public void setClientID( String clientID )
+	{
+		configuration.setClientID( clientID );
+	}
+
+	public String getClientSecret()
+	{
+		return configuration.getClientSecret();
+	}
+
+	public void setClientSecret( String clientSecret )
+	{
+		configuration.setClientSecret( clientSecret );
+	}
+
 	public String getRedirectURL()
 	{
 		return configuration.getRedirectURI();
+	}
+
+	public void setRedirectURI( String redirectURI )
+	{
+		configuration.setRedirectURI( redirectURI );
 	}
 
 	public String getScope()
@@ -67,14 +91,40 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return configuration.getScope();
 	}
 
+	public void setScope( String scope )
+	{
+		configuration.setScope( scope );
+	}
+
+	public OAuth2ProfileConfig getConfiguration()
+	{
+		return configuration;
+	}
+
+	public String getAccessTokenURI()
+	{
+		return configuration.getAccessTokenURI();
+	}
+
+	public void setAccessTokenURI( String accessTokenURI )
+	{
+		configuration.setAccessTokenURI( accessTokenURI );
+	}
+
 	@Override
 	public PropertyExpansion[] getPropertyExpansions()
 	{
-		PropertyExpansionsResult result = new PropertyExpansionsResult( modelItem, this );
+		PropertyExpansionsResult result = new PropertyExpansionsResult( oAuth2ProfileContainer.getModelItem(), this );
 
-		//TODO: Add the fields we want to support property expansion
-		// result.extractAndAddAll( "clientID" );
+		result.extractAndAddAll( "clientID" );
+		result.extractAndAddAll( "clientSecret" );
+		result.extractAndAddAll( "authorizationURI" );
+		result.extractAndAddAll( "accessTokenURI" );
+		result.extractAndAddAll( "redirectURI" );
+		result.extractAndAddAll( "accessToken" );
+		result.extractAndAddAll( "scope" );
 
 		return result.toArray();
 	}
+
 }
