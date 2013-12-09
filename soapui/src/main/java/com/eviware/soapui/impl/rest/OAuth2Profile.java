@@ -12,65 +12,28 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.OAuthConfigConfig;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.AbstractModelItem;
-
-import javax.swing.ImageIcon;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 
 /**
- * Encapsulates information necessary to perform an OAuth2 three-legged authorization. All property values may contain
- * property expansion expressions.
+ * Created with IntelliJ IDEA.
+ * User: Prakash
+ * Date: 2013-12-04
+ * Time: 15:52
+ * To change this template use File | Settings | File Templates.
  */
-public class OAuth2Profile extends AbstractModelItem
+public class OAuth2Profile implements PropertyExpansionContainer
 {
 
-	private OAuthConfigConfig configuration;
+	private final OAuth2ProfileContainer oAuth2ProfileContainer;
+	private final OAuth2ProfileConfig configuration;
 
-	private WsdlProject project;
-
-	public OAuth2Profile(WsdlProject project, OAuthConfigConfig configuration)
+	public OAuth2Profile( OAuth2ProfileContainer oAuth2ProfileContainer, OAuth2ProfileConfig configuration )
 	{
-		this.project = project;
+		this.oAuth2ProfileContainer = oAuth2ProfileContainer;
 		this.configuration = configuration;
-	}
-
-	@Override
-	public String getName()
-	{
-		return null;
-	}
-
-	@Override
-	public String getId()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public ImageIcon getIcon()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public String getDescription()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public Settings getSettings()
-	{
-		return null;  //To change body of implemented methods use File | Settings | File Templates.
-	}
-
-	@Override
-	public ModelItem getParent()
-	{
-		return project;
 	}
 
 	public String getAccessToken()
@@ -83,49 +46,24 @@ public class OAuth2Profile extends AbstractModelItem
 		configuration.setAccessToken( accessToken );
 	}
 
-	public String getAuthorizationURL()
+	public String getAuthorizationURI()
 	{
-		return configuration.getAuthorizeURI();
+		return configuration.getAuthorizationURI();
 	}
 
-	public void setAuthorizationUri( String authorizationURI )
+	public void setAuthorizationURI( String authorizationURI )
 	{
-		configuration.setAuthorizeURI( authorizationURI );
+		configuration.setAuthorizationURI( authorizationURI );
 	}
 
-	public String getClientId()
+	public String getClientID()
 	{
 		return configuration.getClientID();
 	}
 
-	public void setClientId( String clientId )
+	public void setClientID( String clientID )
 	{
-		configuration.setClientID( clientId );
-	}
-
-	public String getRedirectUri()
-	{
-		return configuration.getRedirectURI();
-	}
-
-	public void setRedirectUri( String redirectUri )
-	{
-		configuration.setRedirectURI( redirectUri );
-	}
-
-	public String getScope()
-	{
-		return null;
-	}
-
-	public String getAccessTokenUri()
-	{
-		return configuration.getAccessTokenURI();
-	}
-
-	public void setAccessTokenUri( String accessTokenUri )
-	{
-		configuration.setAccessTokenURI( accessTokenUri );
+		configuration.setClientID( clientID );
 	}
 
 	public String getClientSecret()
@@ -137,4 +75,56 @@ public class OAuth2Profile extends AbstractModelItem
 	{
 		configuration.setClientSecret( clientSecret );
 	}
+
+	public String getRedirectURL()
+	{
+		return configuration.getRedirectURI();
+	}
+
+	public void setRedirectURI( String redirectURI )
+	{
+		configuration.setRedirectURI( redirectURI );
+	}
+
+	public String getScope()
+	{
+		return configuration.getScope();
+	}
+
+	public void setScope( String scope )
+	{
+		configuration.setScope( scope );
+	}
+
+	public OAuth2ProfileConfig getConfiguration()
+	{
+		return configuration;
+	}
+
+	public String getAccessTokenURI()
+	{
+		return configuration.getAccessTokenURI();
+	}
+
+	public void setAccessTokenURI( String accessTokenURI )
+	{
+		configuration.setAccessTokenURI( accessTokenURI );
+	}
+
+	@Override
+	public PropertyExpansion[] getPropertyExpansions()
+	{
+		PropertyExpansionsResult result = new PropertyExpansionsResult( oAuth2ProfileContainer.getModelItem(), this );
+
+		result.extractAndAddAll( "clientID" );
+		result.extractAndAddAll( "clientSecret" );
+		result.extractAndAddAll( "authorizationURI" );
+		result.extractAndAddAll( "accessTokenURI" );
+		result.extractAndAddAll( "redirectURI" );
+		result.extractAndAddAll( "accessToken" );
+		result.extractAndAddAll( "scope" );
+
+		return result.toArray();
+	}
+
 }
