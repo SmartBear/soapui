@@ -12,17 +12,20 @@
 
 package com.eviware.soapui.impl.rest;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AccessTokenStatusConfig;
 import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import org.apache.commons.lang.StringUtils;
+
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-12-04
- * Time: 15:52
- * To change this template use File | Settings | File Templates.
+ * Encapsulates values associated with an Oauth2 flow. Mostly they will be input by users, but the "accessToken" and
+ * "status" properties will be modified during the OAuth2 interactions.
  */
 public class OAuth2Profile implements PropertyExpansionContainer
 {
@@ -34,13 +37,39 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String REDIRECT_URI_PROPERTY = "redirectURI";
 	public static final String ACCESS_TOKEN_PROPERTY = "accessToken";
 	public static final String SCOPE_PROPERTY = "scope";
+	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
+
+
+	public enum AccessTokenStatus
+	{
+		UPDATED_MANUALLY,
+		PENDING,
+		FAILED,
+		RETRIEVED_FROM_SERVER
+	}
+
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
 	private final OAuth2ProfileConfig configuration;
+	private final PropertyChangeSupport pcs;
 
 	public OAuth2Profile( OAuth2ProfileContainer oAuth2ProfileContainer, OAuth2ProfileConfig configuration )
 	{
 		this.oAuth2ProfileContainer = oAuth2ProfileContainer;
 		this.configuration = configuration;
+		pcs = new PropertyChangeSupport( this );
+	}
+
+	public void startAccessTokenFlow()
+	{
+		setAccessTokenStatus( AccessTokenStatus.PENDING );
+	}
+
+	public void applyRetrievedAccessToken( String accessToken )
+	{
+		// Ignore return value in this case: even if it is not a change, it is important to know that a token has been
+		// retrieved from the server
+		doSetAccessToken(accessToken);
+		setAccessTokenStatus( AccessTokenStatus.RETRIEVED_FROM_SERVER  );
 	}
 
 	public String getAccessToken()
@@ -48,9 +77,29 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return configuration.getAccessToken();
 	}
 
+	/**
+	 * NOTE: This setter should only be used from the GUI, because it also sets the property "accessTokenStatus" to
+	 * UPDATED_MANUALLY
+	 * @param accessToken the access token supplied by the user
+	 */
 	public void setAccessToken( String accessToken )
 	{
-		configuration.setAccessToken( accessToken );
+		if (doSetAccessToken( accessToken ))
+		{
+			setAccessTokenStatus( AccessTokenStatus.UPDATED_MANUALLY );
+		}
+	}
+
+	private boolean doSetAccessToken( String accessToken )
+	{
+		String oldValue = configuration.getAuthorizationURI();
+		if( !StringUtils.equals( oldValue, accessToken ) )
+		{
+			configuration.setAuthorizationURI( accessToken );
+			pcs.firePropertyChange( ACCESS_TOKEN_PROPERTY, oldValue, accessToken );
+			return true;
+		}
+		return false;
 	}
 
 	public String getAuthorizationURI()
@@ -60,7 +109,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void setAuthorizationURI( String authorizationURI )
 	{
-		configuration.setAuthorizationURI( authorizationURI );
+		String oldValue = configuration.getAuthorizationURI();
+		if( !StringUtils.equals( oldValue, authorizationURI ) )
+		{
+			configuration.setAuthorizationURI( authorizationURI );
+			pcs.firePropertyChange( AUTHORIZATION_URI_PROPERTY, oldValue, authorizationURI );
+		}
 	}
 
 	public String getClientID()
@@ -70,7 +124,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void setClientID( String clientID )
 	{
-		configuration.setClientID( clientID );
+		String oldValue = configuration.getClientID();
+		if( !StringUtils.equals( oldValue, clientID ) )
+		{
+			configuration.setClientID( clientID );
+			pcs.firePropertyChange( CLIENT_ID_PROPERTY, oldValue, clientID );
+		}
 	}
 
 	public String getClientSecret()
@@ -80,7 +139,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void setClientSecret( String clientSecret )
 	{
-		configuration.setClientSecret( clientSecret );
+		String oldValue = configuration.getClientSecret();
+		if( !StringUtils.equals( oldValue, clientSecret ) )
+		{
+			configuration.setClientSecret( clientSecret );
+			pcs.firePropertyChange( CLIENT_SECRET_PROPERTY, oldValue, clientSecret );
+		}
 	}
 
 	public String getRedirectURI()
@@ -90,7 +154,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void setRedirectURI( String redirectURI )
 	{
-		configuration.setRedirectURI( redirectURI );
+		String oldValue = configuration.getRedirectURI();
+		if( !StringUtils.equals( oldValue, redirectURI ) )
+		{
+			configuration.setRedirectURI( redirectURI );
+			pcs.firePropertyChange( REDIRECT_URI_PROPERTY, oldValue, redirectURI );
+		}
 	}
 
 	public String getScope()
@@ -100,7 +169,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void setScope( String scope )
 	{
-		configuration.setScope( scope );
+		String oldValue = configuration.getScope();
+		if( !StringUtils.equals( oldValue, scope ) )
+		{
+			configuration.setScope( scope );
+			pcs.firePropertyChange( SCOPE_PROPERTY, oldValue, scope );
+		}
 	}
 
 	public OAuth2ProfileConfig getConfiguration()
@@ -115,7 +189,29 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void setAccessTokenURI( String accessTokenURI )
 	{
-		configuration.setAccessTokenURI( accessTokenURI );
+		String oldValue = configuration.getAccessTokenURI();
+		if( !StringUtils.equals( oldValue, accessTokenURI ) )
+		{
+			configuration.setAccessTokenURI( accessTokenURI );
+			pcs.firePropertyChange( ACCESS_TOKEN_URI_PROPERTY, oldValue, accessTokenURI );
+		}
+	}
+
+	public AccessTokenStatus getAccessTokenStatus()
+	{
+		AccessTokenStatusConfig.Enum configurationStatus = configuration.getAccessTokenStatus();
+		if( configurationStatus != null )
+		{
+			try
+			{
+				return AccessTokenStatus.valueOf( configurationStatus.toString() );
+			}
+			catch( IllegalArgumentException e )
+			{
+				SoapUI.log.warn( "Invalid access token value status read from configuration: " + configurationStatus );
+			}
+		}
+		return null;
 	}
 
 	public OAuth2ProfileContainer getContainer()
@@ -137,6 +233,50 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		result.extractAndAddAll( SCOPE_PROPERTY );
 
 		return result.toArray();
+	}
+
+	public void addPropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.addPropertyChangeListener( listener );
+	}
+
+	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+		pcs.addPropertyChangeListener( propertyName, listener );
+	}
+
+	public void removePropertyChangeListener( PropertyChangeListener listener )
+	{
+		pcs.removePropertyChangeListener( listener );
+	}
+
+	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
+	{
+		pcs.removePropertyChangeListener( propertyName, listener );
+	}
+
+	/* Helper method */
+
+	private void setAccessTokenStatus( AccessTokenStatus status )
+	{
+		AccessTokenStatus oldValue = getAccessTokenStatus();
+		if( status == null && oldValue == null )
+		{
+			return;
+		}
+		else if( status != null )
+		{
+			if( status.equals( oldValue ) )
+			{
+				return;
+			}
+			configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.toString() ) );
+		}
+		else
+		{
+			configuration.setAccessTokenStatus( null );
+		}
+		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValue, status );
 	}
 
 }

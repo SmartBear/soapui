@@ -28,11 +28,16 @@ import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -99,6 +104,24 @@ public class OltuAuth2ClientFacadeTest
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
+	}
+
+	@Test
+	public void updatesProfileAccessTokenStatus() throws Exception
+	{
+		final List<OAuth2Profile.AccessTokenStatus> statusValues = new ArrayList<OAuth2Profile.AccessTokenStatus>(  );
+		profile.addPropertyChangeListener(OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, new PropertyChangeListener()
+		{
+			@Override
+			public void propertyChange( PropertyChangeEvent evt )
+			{
+				statusValues.add(( OAuth2Profile.AccessTokenStatus )evt.getNewValue());
+			}
+		} );
+
+		oltuClientFacade.requestAccessToken( profile );
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER));
 	}
 
 	@Test

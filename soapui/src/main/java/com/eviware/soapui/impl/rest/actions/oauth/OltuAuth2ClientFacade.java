@@ -176,6 +176,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			}
 
 		} );
+		parameters.startAccessTokenFlow();
 		browserFacade.open( new URI( authorizationURL ).toURL() );
 	}
 
