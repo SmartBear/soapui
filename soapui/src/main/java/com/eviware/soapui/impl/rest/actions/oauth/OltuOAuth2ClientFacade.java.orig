@@ -24,7 +24,11 @@ import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+<<<<<<< HEAD:soapui/src/main/java/com/eviware/soapui/impl/rest/actions/oauth/OltuAuth2ClientFacade.java
 import org.apache.oltu.oauth2.common.OAuth;
+=======
+import org.apache.oltu.oauth2.common.OAuthProviderType;
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67:soapui/src/main/java/com/eviware/soapui/impl/rest/actions/oauth/OltuOAuth2ClientFacade.java
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
@@ -40,18 +44,20 @@ import java.util.Map;
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
  */
-public class OltuAuth2ClientFacade implements OAuth2ClientFacade
+public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 {
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
 	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
+	private static final OAuthProviderType provider = OAuthProviderType.GOOGLE;
+
+	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
+
 	protected OAuthClient getOAuthClient()
 	{
 		return new OAuthClient( new HttpClient4( HttpClientSupport.getHttpClient() ) );
 	}
-
-	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
 
 	@Override
 	public void requestAccessToken( OAuth2Profile profile ) throws OAuth2Exception
@@ -176,12 +182,17 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			{
 				if( parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
 				{
-					String title = newContent.substring( newContent.indexOf( TITLE ) + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
-					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
+					int titlePosition = newContent.indexOf( TITLE );
+					if( titlePosition != -1 )
+					{
+						String title = newContent.substring( titlePosition + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
+						getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
+					}
 				}
 			}
 
 		} );
+		parameters.startAccessTokenFlow();
 		browserFacade.open( new URI( authorizationURL ).toURL() );
 	}
 
@@ -212,6 +223,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 				if( token != null && token.getAccessToken() != null )
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
+					parameters.setRefreshTokenInProfile (token.getRefreshToken());
 					browserFacade.close();
 				}
 			}
@@ -227,6 +239,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 	}
 
 	@Override
+<<<<<<< HEAD:soapui/src/main/java/com/eviware/soapui/impl/rest/actions/oauth/OltuAuth2ClientFacade.java
 	public void applyAccessToken( OAuth2Profile profile, RestRequestInterface request )
 	{
 		// TODO: Validation if access token is null
@@ -254,4 +267,27 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 		requestHeaders.add( OAuth.HeaderType.AUTHORIZATION, oAuthHeaders.get( OAuth.HeaderType.AUTHORIZATION ) );
 		request.setRequestHeaders( requestHeaders );
 	}
+=======
+	public void refreshAccessToken( OAuth2Profile profile ) throws Exception
+	{
+		String refreshToken = profile.getRefreshToken();
+		validateRequiredStringValue( refreshToken, "refreshToken" );
+		OAuth2Parameters parameters = buildParametersFrom( profile );
+		validateRequiredStringValue( parameters.clientId, "client ID" );
+		validateRequiredStringValue( parameters.clientSecret, "client secret" );
+		OAuthClientRequest accessTokenRequest = OAuthClientRequest
+				.tokenProvider( provider )
+				.setGrantType( GrantType.REFRESH_TOKEN )
+				.setClientId( parameters.clientId )
+				.setClientSecret( parameters.clientSecret )
+				.setRefreshToken( refreshToken )
+				.buildBodyMessage();
+
+		OAuthClient oAuthClient = getOAuthClient();
+
+		OAuthToken oAuthToken = oAuthClient.accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
+		profile.applyRetrievedAccessToken( oAuthToken.getAccessToken() );
+	}
+
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67:soapui/src/main/java/com/eviware/soapui/impl/rest/actions/oauth/OltuOAuth2ClientFacade.java
 }

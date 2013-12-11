@@ -23,22 +23,23 @@ import java.awt.event.ActionEvent;
 /**
  * Action for retrieving an OAuth2 access token using the values in the OAuth2Profile object.
  */
-public class GetOAuthAccessTokenAction extends AbstractAction
+public class RefreshOAuthAccessTokenAction extends AbstractAction
 {
 
 	private OAuth2Profile target;
 
-	public GetOAuthAccessTokenAction( OAuth2Profile target )
+	public RefreshOAuthAccessTokenAction( OAuth2Profile target )
 	{
+		super("Refresh OAuth2 access token");
 		this.target = target;
-		putValue( Action.SHORT_DESCRIPTION, "Gets an OAuth2 access token and stores it in this profile" );
+		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth2 the access token in the profile using the refresh token" );
 	}
 
 	public void actionPerformed(ActionEvent event)
 	{
 		try
 		{
-			getOAuthClientFacade().requestAccessToken( target );
+			getOAuthClientFacade().refreshAccessToken( target );
 		}
 		catch (InvalidOAuth2ParametersException e)
 		{
@@ -46,12 +47,18 @@ public class GetOAuthAccessTokenAction extends AbstractAction
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "Error retrieving OAuth2 access token" );
-			UISupport.showErrorMessage( "Could not retrieve access token. Check the SoapUI log for details" );
+			SoapUI.logError( e, "Error refreshing OAuth2 access token" );
+			UISupport.showErrorMessage( "Could not refresh access token. Check the SoapUI log for details" );
 		}
 	}
 
-
+	@Override
+	public boolean isEnabled()
+	{
+		return true;
+		// FIXME: Check if this condition should apply, and if so probably add PropertyChangeListener support!
+//		return StringUtils.hasContent( target.getRefreshToken());
+	}
 
 	protected OAuth2ClientFacade getOAuthClientFacade()
 	{

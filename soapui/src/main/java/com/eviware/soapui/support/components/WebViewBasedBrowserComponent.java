@@ -30,18 +30,28 @@ import org.mozilla.interfaces.nsIRequest;
 import org.mozilla.interfaces.nsIURI;
 import org.mozilla.interfaces.nsIWebProgress;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.DefaultKeyboardFocusManager;
+import java.awt.Dimension;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
 
 public class WebViewBasedBrowserComponent
 {
@@ -53,9 +63,9 @@ public class WebViewBasedBrowserComponent
 	private final boolean addStatusBar;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
-	private java.util.List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>(  );
+	private java.util.List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>();
 
-	private WebView webView;
+	public WebView webView;
 
 	public WebViewBasedBrowserComponent( boolean addStatusBar )
 	{
@@ -99,7 +109,7 @@ public class WebViewBasedBrowserComponent
 												listener.locationChanged( location );
 											}
 
-											if(getWebEngine().getDocument() != null)
+											if( getWebEngine().getDocument() != null )
 											{
 												Transformer transformer = TransformerFactory.newInstance().newTransformer();
 												transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
@@ -122,7 +132,7 @@ public class WebViewBasedBrowserComponent
 										}
 										catch( Exception ex )
 										{
-											SoapUI.logError(ex, "Error processing state change to " + newState);
+											SoapUI.logError( ex, "Error processing state change to " + newState );
 										}
 									}
 								}
@@ -131,11 +141,39 @@ public class WebViewBasedBrowserComponent
 					Scene scene = new Scene( jfxComponentGroup );
 					jfxComponentGroup.getChildren().add( webView );
 					browserPanel.setScene( scene );
+					addKeybaordFocusManager( browserPanel );
 				}
 			} );
 
 		}
+
 		return panel;
+	}
+
+	private void addKeybaordFocusManager( final JFXPanel browserPanel )
+	{
+		KeyboardFocusManager kfm = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager();
+		kfm.addKeyEventDispatcher( new KeyEventDispatcher()
+		{
+			@Override
+			public boolean dispatchKeyEvent( KeyEvent e )
+			{
+				if( DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == browserPanel )
+				{
+					if( e.getID() == KeyEvent.KEY_TYPED && e.getKeyChar() == 10 )
+					{
+						e.setKeyChar( ( char )13 );
+					}
+				}
+				return false;
+			}
+		}
+		);
+	}
+
+	public void executeJavaScript( String script )
+	{
+		getWebEngine().executeScript( script );
 	}
 
 	// TODO: Evaluate whether these should be used
@@ -301,7 +339,7 @@ public class WebViewBasedBrowserComponent
 
 	public void addBrowserStateListener( BrowserStateChangeListener listener )
 	{
-		listeners.add(listener);
+		listeners.add( listener );
 	}
 
 	public void removeBrowserStateListener( BrowserStateChangeListener listener )

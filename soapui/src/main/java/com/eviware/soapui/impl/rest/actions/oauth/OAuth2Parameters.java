@@ -39,14 +39,23 @@ class OAuth2Parameters
 	}
 
 
+	public void startAccessTokenFlow()
+	{
+		profile.startAccessTokenFlow();
+	}
+
+
 	/**
 	 * Sets the accessToken property on the wrapped OAuth2Profile instance
 	 * @param accessToken the access token String
 	 */
 	void setAccessTokenInProfile( String accessToken )
 	{
-		profile.setAccessToken( accessToken );
+		profile.applyRetrievedAccessToken( accessToken );
 	}
 
-
+	public void setRefreshTokenInProfile( String refreshToken )
+	{
+		profile.setRefreshToken( refreshToken );
+	}
 }

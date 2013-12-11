@@ -18,8 +18,10 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 public interface OAuth2ClientFacade
 {
 	void requestAccessToken( OAuth2Profile profile ) throws OAuth2Exception;
-
+<<<<<<< HEAD
 	void applyAccessToken( OAuth2Profile profile, RestRequestInterface request );
+=======
 
 	void refreshAccessToken( OAuth2Profile profile ) throws Exception;
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67
 }

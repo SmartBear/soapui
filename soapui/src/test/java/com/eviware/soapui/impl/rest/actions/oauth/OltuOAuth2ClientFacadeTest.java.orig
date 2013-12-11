@@ -32,19 +32,24 @@ import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for OltuAuth2ClientFacade
  */
-public class OltuAuth2ClientFacadeTest
+public class OltuOAuth2ClientFacadeTest
 {
 
 	private SpyingOauthClientStub spyingOauthClientStub;
@@ -52,22 +57,31 @@ public class OltuAuth2ClientFacadeTest
 	private String authorizationCode;
 	private String accessToken;
 	private OAuth2Profile profile;
+<<<<<<< HEAD:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuAuth2ClientFacadeTest.java
 	private OAuth2Profile profileWithOnlyAccessToken;
 	private OltuAuth2ClientFacade oltuClientFacade;
 	private RestRequestInterface restRequest;
+=======
+	private OltuOAuth2ClientFacade oltuClientFacade;
+	private String refreshToken;
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuOAuth2ClientFacadeTest.java
 
 	@Before
 	public void setUp() throws Exception
 	{
 		authorizationCode = "some_code";
 		accessToken = "expected_access_token";
+<<<<<<< HEAD:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuAuth2ClientFacadeTest.java
 
 		initializeOAuthProfileWithDefaultValues();
 		initializeOAuthProfileWithOnlyAccessToken();
 
 		restRequest =  new RestRequest( ModelItemFactory.makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
+=======
+		refreshToken = "expected_refresh_token";
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuOAuth2ClientFacadeTest.java
 		spyingOauthClientStub = new SpyingOauthClientStub();
-		oltuClientFacade = new OltuAuth2ClientFacade()
+		oltuClientFacade = new OltuOAuth2ClientFacade()
 		{
 			@Override
 			protected OAuthClient getOAuthClient()
@@ -89,20 +103,42 @@ public class OltuAuth2ClientFacadeTest
 	}
 
 	@Test
+	public void getsRefreshTokenFromResponseURI() throws Exception
+	{
+		oltuClientFacade.requestAccessToken( profile );
+
+		assertThat( profile.getRefreshToken(), is( refreshToken ) );
+	}
+
+	@Test
 	public void getsTheAccessTokenFromResponseBodyInOobRequest() throws Exception
 	{
-		profile.setRedirectURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setRedirectURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
 	}
 
 	@Test
-	public void performsPropertyExpansionOnProfileValues() throws Exception
+	public void storesTheAccessTokenAfterUsingRefreshToken() throws Exception
+	{
+		profile.setAccessToken( "expired_token!" );
+		profile.setRefreshToken( refreshToken );
+		oltuClientFacade.refreshAccessToken( profile );
+
+		assertThat( profile.getAccessToken(), is( accessToken ) );
+	}
+
+	@Test
+	public void performsPropertyExpansionBeforeRequestingToken() throws Exception
 	{
 		String authorizationPropertyName = "myAuthorizationURI";
 		String redirectURIPropertyName = "myRedirectURI";
+<<<<<<< HEAD:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuAuth2ClientFacadeTest.java
 		WsdlProject project = (WsdlProject )profile.getContainer().getProject();
+=======
+		WsdlProject project = profile.getContainer().getProject();
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuOAuth2ClientFacadeTest.java
 		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURI() );
 		project.addProperty( redirectURIPropertyName).setValue( profile.getRedirectURI() );
 		profile.setAuthorizationURI( "${#Project#" + authorizationPropertyName + "}" );
@@ -110,6 +146,24 @@ public class OltuAuth2ClientFacadeTest
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
+	}
+
+	@Test
+	public void updatesProfileAccessTokenStatus() throws Exception
+	{
+		final List<OAuth2Profile.AccessTokenStatus> statusValues = new ArrayList<OAuth2Profile.AccessTokenStatus>(  );
+		profile.addPropertyChangeListener(OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, new PropertyChangeListener()
+		{
+			@Override
+			public void propertyChange( PropertyChangeEvent evt )
+			{
+				statusValues.add(( OAuth2Profile.AccessTokenStatus )evt.getNewValue());
+			}
+		} );
+
+		oltuClientFacade.requestAccessToken( profile );
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER));
 	}
 
 	@Test
@@ -129,6 +183,7 @@ public class OltuAuth2ClientFacadeTest
 	}
 
 	@Test
+<<<<<<< HEAD:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuAuth2ClientFacadeTest.java
 	public void appendsAccessTokenToHeader() throws Exception
 	{
 		// TODO: Authentication shceme should be fetched from profile/advanced config in SOAP-1160
@@ -136,6 +191,24 @@ public class OltuAuth2ClientFacadeTest
 		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
 
 		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ).get( 0 ), is( expectedAccessTokenValue ) ) ;
+=======
+	public void performsPropertyExpansionBeforeRefreshingToken() throws Exception
+	{
+		String clientIdPropertyName = "myClientId";
+		String clientSecretPropertyName = "myRedirectURI";
+		WsdlProject project = profile.getContainer().getProject();
+		String clientIdValue = "some_client_id";
+		String clientSecretValue = "some_client_secret";
+		project.addProperty( clientIdPropertyName).setValue( clientIdValue );
+		project.addProperty( clientSecretPropertyName).setValue( clientSecretValue );
+		profile.setClientID( "${#Project#" + clientIdPropertyName + "}" );
+		profile.setClientSecret( "${#Project#" + clientSecretPropertyName + "}" );
+		profile.setRefreshToken( "some_refresh_token" );
+		oltuClientFacade.refreshAccessToken( profile );
+
+		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( clientIdValue ) );
+		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( clientSecretValue ) );
+>>>>>>> 39e1438b2c505e62ea31012e449b607de0996d67:soapui/src/test/java/com/eviware/soapui/impl/rest/actions/oauth/OltuOAuth2ClientFacadeTest.java
 	}
 
 	/* Validation tests */
@@ -143,7 +216,7 @@ public class OltuAuth2ClientFacadeTest
 	@Test(expected = InvalidOAuth2ParametersException.class)
 	public void rejectsUrnAsAuthorizationURI() throws Exception
 	{
-		profile.setAuthorizationURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAuthorizationURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -164,7 +237,7 @@ public class OltuAuth2ClientFacadeTest
 	@Test(expected = InvalidOAuth2ParametersException.class)
 	public void rejectsUrnAsAccessTokenURI() throws Exception
 	{
-		profile.setAccessTokenURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAccessTokenURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -187,6 +260,29 @@ public class OltuAuth2ClientFacadeTest
 	{
 		profile.setClientSecret( "" );
 		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyRefreshTokenOnRefresh() throws Exception
+	{
+		profile.setRefreshToken( "" );
+		oltuClientFacade.refreshAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyClientIdOnRefresh() throws Exception
+	{
+		profile.setRefreshToken( "someRefreshToken" );
+		profile.setClientID( "" );
+		oltuClientFacade.refreshAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyClientSecretOnRefresh() throws Exception
+	{
+		profile.setRefreshToken( "someRefreshToken" );
+		profile.setClientSecret( "" );
+		oltuClientFacade.refreshAccessToken( profile );
 	}
 
 
@@ -227,7 +323,7 @@ public class OltuAuth2ClientFacadeTest
 		{
 			oAuthClientRequest = request;
 			OAuthJSONAccessTokenResponse response = mock( OAuthJSONAccessTokenResponse.class );
-			when( response.getOAuthToken() ).thenReturn( new BasicOAuthToken( accessToken ) );
+			when( response.getOAuthToken() ).thenReturn( new BasicOAuthToken( accessToken, 60000L, refreshToken, "user" ));
 			return ( T )response;
 		}
 
