@@ -1878,6 +1878,16 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:simpleType name="AccessTokenStatus">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="UPDATED_MANUALLY"></xsd:enumeration>
+            <xsd:enumeration value="PENDING"></xsd:enumeration>
+            <xsd:enumeration value="FAILED"></xsd:enumeration>
+            <xsd:enumeration value="RETRIEVED_FROM_SERVER"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
     <xsd:complexType name="OAuth2Profile">
         <xsd:sequence>
             <xsd:element name="clientID" type="xsd:string"></xsd:element>
@@ -1887,6 +1897,7 @@
             <xsd:element name="redirectURI" type="xsd:string"></xsd:element>
             <xsd:element name="accessToken" type="xsd:string"></xsd:element>
             <xsd:element name="scope" type="xsd:string"></xsd:element>
+            <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 

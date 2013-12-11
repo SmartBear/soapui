@@ -19,12 +19,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.components.NativeBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 public class URLDesktopPanel extends DefaultDesktopPanel
 {
-	private NativeBrowserComponent browser;
+	private WebViewBasedBrowserComponent browser;
 	private boolean closed;
 
 	public URLDesktopPanel( String title, String description, String url ) throws InterruptedException,
@@ -34,7 +34,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 		JPanel panel = ( JPanel )getComponent();
 
-		browser = new NativeBrowserComponent( true, false );
+		browser = new WebViewBasedBrowserComponent( false );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 
 		if( StringUtils.hasContent( url ) )
