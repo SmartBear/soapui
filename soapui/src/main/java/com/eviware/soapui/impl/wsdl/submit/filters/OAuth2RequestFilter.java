@@ -15,8 +15,8 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		WsdlProject project = request.getResource().getService().getProject();
 		OAuth2Profile profile = project.getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 );
 
-		OAuth2ClientFacade oAuth2Request = new OltuAuth2ClientFacade();
-		oAuth2Request.applyAccessToken( profile, request );
+		OAuth2ClientFacade oAuth2Client = new OltuAuth2ClientFacade();
+		oAuth2Client.applyAccessToken( profile, request );
 
 	}
 

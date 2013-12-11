@@ -14,13 +14,17 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.oltu.oauth2.client.OAuthClient;
+import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
@@ -31,6 +35,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
@@ -222,8 +227,29 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 	}
 
 	@Override
-	public void applyAccessToken( OAuth2Profile profile, HttpRequestInterface request )
+	public void applyAccessToken( OAuth2Profile profile, RestRequestInterface request )
 	{
-		//To change body of implemented methods use File | Settings | File Templates.
+		// TODO: In Advanced config story we need to fill the uri with full path including query params
+		String uri = request.getPath();
+		OAuthBearerClientRequest oAuthBearerClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
+
+		try
+		{
+			appendAccessTokenToHeader( request, oAuthBearerClientRequest );
+		}
+		catch( OAuthSystemException e )
+		{
+			SoapUI.logError( e );
+		}
+	}
+
+	private void appendAccessTokenToHeader( HttpRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	{
+		OAuthClientRequest oAuthClientRequest = oAuthBearerClientRequest.buildHeaderMessage();
+
+		Map<String, String> oAuthHeaders = oAuthClientRequest.getHeaders();
+		StringToStringsMap requestHeaders = request.getRequestHeaders();
+		requestHeaders.add( OAuth.HeaderType.AUTHORIZATION, oAuthHeaders.get( OAuth.HeaderType.AUTHORIZATION ) );
+		request.setRequestHeaders( requestHeaders );
 	}
 }
