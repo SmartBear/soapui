@@ -229,7 +229,9 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 	@Override
 	public void applyAccessToken( OAuth2Profile profile, RestRequestInterface request )
 	{
-		// TODO: In Advanced config story we need to fill the uri with full path including query params
+		// TODO: Validation if access token is null
+		// TODO: SOAP-1160 story we need to fill the uri with full path including query params and also support different
+		// ways of sending access token (query, header. body) and different authentication scheme (bearer, mac etc)
 		String uri = request.getPath();
 		OAuthBearerClientRequest oAuthBearerClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
 

@@ -13,7 +13,10 @@
 package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -21,6 +24,7 @@ import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.token.BasicOAuthToken;
@@ -32,6 +36,7 @@ import java.net.URL;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,14 +52,20 @@ public class OltuAuth2ClientFacadeTest
 	private String authorizationCode;
 	private String accessToken;
 	private OAuth2Profile profile;
+	private OAuth2Profile profileWithOnlyAccessToken;
 	private OltuAuth2ClientFacade oltuClientFacade;
+	private RestRequestInterface restRequest;
 
 	@Before
 	public void setUp() throws Exception
 	{
-		initializeOAuthProfileWithDefaultValues();
 		authorizationCode = "some_code";
 		accessToken = "expected_access_token";
+
+		initializeOAuthProfileWithDefaultValues();
+		initializeOAuthProfileWithOnlyAccessToken();
+
+		restRequest =  new RestRequest( ModelItemFactory.makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
 		spyingOauthClientStub = new SpyingOauthClientStub();
 		oltuClientFacade = new OltuAuth2ClientFacade()
 		{
@@ -117,6 +128,16 @@ public class OltuAuth2ClientFacadeTest
 		assertThat( ( ( UserBrowserFacadeStub )oltuClientFacade.browserFacade ).browserClosed, is( true ) );
 	}
 
+	@Test
+	public void appendsAccessTokenToHeader() throws Exception
+	{
+		// TODO: Authentication shceme should be fetched from profile/advanced config in SOAP-1160
+		String expectedAccessTokenValue = "Bearer "+ profileWithOnlyAccessToken.getAccessToken();
+		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
+
+		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ).get( 0 ), is( expectedAccessTokenValue ) ) ;
+	}
+
 	/* Validation tests */
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
@@ -172,7 +193,7 @@ public class OltuAuth2ClientFacadeTest
 
 	/* Helpers */
 
-	private void initializeOAuthProfileWithDefaultValues() throws SoapUIException
+	private void initializeOAuthProfileWithDefaultValues( ) throws SoapUIException
 	{
 		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
 		profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
@@ -181,6 +202,13 @@ public class OltuAuth2ClientFacadeTest
 		profile.setRedirectURI( "http://localhost:8080/redirect" );
 		profile.setClientID( "ClientId" );
 		profile.setClientSecret( "ClientSecret" );
+	}
+
+	private void initializeOAuthProfileWithOnlyAccessToken( ) throws SoapUIException
+	{
+		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+		profileWithOnlyAccessToken = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
+		profileWithOnlyAccessToken.setAccessToken( accessToken );
 	}
 
 

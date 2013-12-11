@@ -12,24 +12,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-public class HttpRequestFilterEncodingTestCase
+public class HttpRequestFilterEncodingTest
 {
-
-	public static junit.framework.Test suite() {
-		return new JUnit4TestAdapter(
-				HttpRequestFilterEncodingTestCase.class);
-	}
 
 	HttpRequestFilter httpRequestFilter;
 
 	@Before
 	public void setUp() {
 		httpRequestFilter = new HttpRequestFilter();
-	}
-
-	@After
-	public void tearDown() {
-		httpRequestFilter = null;
 	}
 
 	@Test
