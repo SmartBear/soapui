@@ -42,31 +42,16 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.TransferHandler;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetDragEvent;
-import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
+import java.awt.dnd.*;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -80,7 +65,7 @@ import java.util.Set;
 public class PropertyHolderTable extends JPanel
 {
 	protected final TestPropertyHolder holder;
-	protected DefaultPropertyTableHolderModel propertiesModel;
+	protected DefaultPropertyHolderTableModel propertiesModel;
 	protected RemovePropertyAction removePropertyAction;
 	protected AddParamAction addPropertyAction;
 	protected JTable propertiesTable;
@@ -119,7 +104,7 @@ public class PropertyHolderTable extends JPanel
 
 	protected JTable buildPropertiesTable()
 	{
-		propertiesModel = new DefaultPropertyTableHolderModel( holder );
+		propertiesModel = new DefaultPropertyHolderTableModel( holder );
 		propertiesTable = new PropertiesHolderJTable();
 
 		propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );

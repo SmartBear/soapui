@@ -16,11 +16,11 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DirectAccessPropertyHolderTableModel;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
-public class RestParamsTableModel extends DefaultPropertyTableHolderModel<RestParamsPropertyHolder>
+public class RestParamsTableModel extends DirectAccessPropertyHolderTableModel<RestParamsPropertyHolder>
 {
 
 	private static final String NAME = "Name";
