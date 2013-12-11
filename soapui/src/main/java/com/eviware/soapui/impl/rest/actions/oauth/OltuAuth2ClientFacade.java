@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
-import com.eviware.soapui.impl.wsdl.submit.OAuth2RequestFacade;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
@@ -36,7 +35,7 @@ import java.net.URL;
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
  */
-public class OltuAuth2ClientFacade implements OAuth2ClientFacade, OAuth2RequestFacade
+public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 {
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
