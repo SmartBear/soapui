@@ -30,19 +30,28 @@ import org.mozilla.interfaces.nsIRequest;
 import org.mozilla.interfaces.nsIURI;
 import org.mozilla.interfaces.nsIWebProgress;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.DefaultKeyboardFocusManager;
+import java.awt.Dimension;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
 
 public class WebViewBasedBrowserComponent
 {
@@ -56,7 +65,7 @@ public class WebViewBasedBrowserComponent
 
 	private java.util.List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>();
 
-	private WebView webView;
+	public WebView webView;
 
 	public WebViewBasedBrowserComponent( boolean addStatusBar )
 	{

@@ -95,7 +95,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		String oldValue = configuration.getAuthorizationURI();
 		if( !StringUtils.equals( oldValue, accessToken ) )
 		{
-			configuration.setAuthorizationURI( accessToken );
+			configuration.setAccessToken( accessToken );
 			pcs.firePropertyChange( ACCESS_TOKEN_PROPERTY, oldValue, accessToken );
 			return true;
 		}

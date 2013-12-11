@@ -170,8 +170,12 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 			{
 				if( parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
 				{
-					String title = newContent.substring( newContent.indexOf( TITLE ) + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
-					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
+					int titlePosition = newContent.indexOf( TITLE );
+					if( titlePosition != -1 )
+					{
+						String title = newContent.substring( titlePosition + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
+						getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
+					}
 				}
 			}
 

@@ -12,9 +12,12 @@
 
 package com.eviware.soapui.impl.rest.actions.oauth;
 
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import javafx.application.Platform;
 
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import java.net.URL;
 
 /**
@@ -45,7 +48,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 			@Override
 			public void contentChanged( String newContent )
 			{
-				browserComponent.executeJavaScript( javaScriptToFocusFirstInputElementInTheForm() );
+
 			}
 		} );
 
@@ -68,27 +71,36 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 	@Override
 	public void close()
 	{
-		popupWindow.dispose();
+		//FIXME: Find out what the problem is with closing the popup on Mac!
+		if( UISupport.isMac() )
+		{
+			return;
+		}
+		Platform.runLater( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				browserComponent.webView.getEngine().load( null );
+				try
+				{
+					SwingUtilities.invokeAndWait( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							popupWindow.setVisible( false );
+							popupWindow.dispose();
+						}
+					} );
+				}
+				catch( Exception ignore )
+				{
+					  ignore.printStackTrace();
+				}
+			}
+		} );
+
 	}
 
-	private String javaScriptToFocusFirstInputElementInTheForm()
-	{
-		return "var bFound = false;\n" +
-				"\n" +
-				"  for (f=0; f < document.forms.length; f++)\n" +
-				"  {\n" +
-				"    for(i=0; i < document.forms[f].length; i++)\n" +
-				"    {\n" +
-				"      if (document.forms[f][i].type != \"hidden\" && document.forms[f][i].disabled != true)\n" +
-				"      {" +
-				"        document.forms[f][i].focus();\n" +
-				"        var bFound = true;\n" +
-				"      }\n" +
-				"      if (bFound == true)\n" +
-				"        break;\n" +
-				"    }\n" +
-				"    if (bFound == true)\n" +
-				"      break;\n" +
-				"  }";
-	}
 }
