@@ -32,6 +32,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.actions.AddAssertionAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request.SubmitException;
+import com.eviware.soapui.model.iface.Script;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -1045,7 +1046,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		super.propertyChange( evt );
-		if( evt.getPropertyName().equals( "script" ) && !updating )
+		if( evt.getPropertyName().equals( Script.SCRIPT_PROPERTY ) && !updating )
 		{
 			updating = true;
 			groovyEditor.getEditArea().setText( ( String )evt.getNewValue() );
