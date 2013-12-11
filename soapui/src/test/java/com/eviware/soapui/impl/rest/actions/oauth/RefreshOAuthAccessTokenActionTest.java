@@ -20,6 +20,7 @@ import com.eviware.soapui.utils.StubbedDialogs;
 import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -35,15 +36,17 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 /**
- * Unit tests for GetOAuthAccessTokenAction
+ * Unit tests for RefreshOAuthAccessTokenAction
  */
-public class GetOAuthAccessTokenActionTest
+public class RefreshOAuthAccessTokenActionTest
 {
 
 	public static final ActionEvent DUMMY_ACTION_EVENT = new ActionEvent( new Object(), 0, "click" );
 	private XDialogs originalDialogs;
 	private StubbedDialogs stubbedDialogs;
 	private OAuth2Profile profile;
+	private RefreshOAuthAccessTokenAction action;
+	private OAuth2ClientFacade clientFacade;
 
 
 	@Before
@@ -54,6 +57,15 @@ public class GetOAuthAccessTokenActionTest
 		UISupport.setDialogs( stubbedDialogs );
 		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
 		profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
+
+		clientFacade = mock(OAuth2ClientFacade.class);
+		action = new RefreshOAuthAccessTokenAction(profile){
+			@Override
+			protected OAuth2ClientFacade getOAuthClientFacade()
+			{
+				return clientFacade;
+			}
+		};
 	}
 
 	@After
@@ -65,14 +77,7 @@ public class GetOAuthAccessTokenActionTest
 	@Test
 	public void savesAccessTokenInProfile() throws Exception
 	{
-		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
-		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(profile){
-			@Override
-			protected OAuth2ClientFacade getOAuthClientFacade()
-			{
-				return clientFacade;
-			}
-		};
+
 		final String accessToken = "4/98789adfc8234278243987";
 		doAnswer( new Answer()
 		{
@@ -82,23 +87,15 @@ public class GetOAuthAccessTokenActionTest
 				profile.setAccessToken( accessToken );
 				return null;
 			}
-		} ).when(clientFacade).requestAccessToken( profile );
-		action.actionPerformed(DUMMY_ACTION_EVENT);
+		} ).when( clientFacade ).refreshAccessToken( profile );
+		action.actionPerformed( DUMMY_ACTION_EVENT );
 		assertThat( profile.getAccessToken(), is(accessToken) );
 	}
 
 	@Test
 	public void showsAnErrorMessageWhenGetAccessTokenFails() throws Exception
 	{
-		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
-		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(profile) {
-			@Override
-			protected OAuth2ClientFacade getOAuthClientFacade()
-			{
-				return clientFacade;
-			}
-		};
-		Mockito.doThrow( new OAuth2Exception( new RuntimeException (  )) ).when(clientFacade).requestAccessToken( profile );
+		Mockito.doThrow( new OAuth2Exception( new RuntimeException (  )) ).when(clientFacade).refreshAccessToken( profile );
 
 		action.actionPerformed(DUMMY_ACTION_EVENT);
 		assertThat( stubbedDialogs.getErrorMessages(), is( aCollectionWithSize( 1 ) ) );
@@ -107,19 +104,22 @@ public class GetOAuthAccessTokenActionTest
 	@Test
 	public void displaysValidationErrorWhenValidationFails() throws Exception
 	{
-		final OAuth2ClientFacade clientFacade = mock(OAuth2ClientFacade.class);
-		GetOAuthAccessTokenAction action = new GetOAuthAccessTokenAction(profile){
-			@Override
-			protected OAuth2ClientFacade getOAuthClientFacade()
-			{
-				return clientFacade;
-			}
-		};
-		String theMessage = "Access token URI blabla is not a valid HTTP URL";
-		Mockito.doThrow( new InvalidOAuth2ParametersException ( theMessage  )).when( clientFacade ).requestAccessToken( profile );
+		String theMessage = "Client ID is empty";
+		Mockito.doThrow( new InvalidOAuth2ParametersException ( theMessage  )).when( clientFacade ).refreshAccessToken( profile );
 
 		action.actionPerformed( DUMMY_ACTION_EVENT );
 		assertThat( stubbedDialogs.getErrorMessages(), is( aCollectionWithSize( 1 ) ) );
 		assertThat( stubbedDialogs.getErrorMessages().get(0), containsString(theMessage) );
+	}
+
+	@Ignore("Ignored until requirement is clarified - see comment in RefreshOAuthAccessTokenAction.isEnabled()")
+	@Test
+	public void disabledIfAndOnlyIfRefreshTokenIsEmpty() throws Exception
+	{
+		profile.setRefreshToken( "" );
+		action = new RefreshOAuthAccessTokenAction( profile );
+		assertThat(action.isEnabled(), is(false));
+		profile.setRefreshToken( "some_refresh_token" );
+		assertThat( action.isEnabled(), is(true));
 	}
 }

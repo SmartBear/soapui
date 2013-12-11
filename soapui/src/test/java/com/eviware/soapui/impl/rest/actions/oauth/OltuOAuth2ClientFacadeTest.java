@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for OltuAuth2ClientFacade
  */
-public class OltuAuth2ClientFacadeTest
+public class OltuOAuth2ClientFacadeTest
 {
 
 	private SpyingOauthClientStub spyingOauthClientStub;
@@ -52,7 +52,8 @@ public class OltuAuth2ClientFacadeTest
 	private String authorizationCode;
 	private String accessToken;
 	private OAuth2Profile profile;
-	private OltuAuth2ClientFacade oltuClientFacade;
+	private OltuOAuth2ClientFacade oltuClientFacade;
+	private String refreshToken;
 
 	@Before
 	public void setUp() throws Exception
@@ -60,8 +61,9 @@ public class OltuAuth2ClientFacadeTest
 		initializeOAuthProfileWithDefaultValues();
 		authorizationCode = "some_code";
 		accessToken = "expected_access_token";
+		refreshToken = "expected_refresh_token";
 		spyingOauthClientStub = new SpyingOauthClientStub();
-		oltuClientFacade = new OltuAuth2ClientFacade()
+		oltuClientFacade = new OltuOAuth2ClientFacade()
 		{
 			@Override
 			protected OAuthClient getOAuthClient()
@@ -83,16 +85,34 @@ public class OltuAuth2ClientFacadeTest
 	}
 
 	@Test
+	public void getsRefreshTokenFromResponseURI() throws Exception
+	{
+		oltuClientFacade.requestAccessToken( profile );
+
+		assertThat( profile.getRefreshToken(), is( refreshToken ) );
+	}
+
+	@Test
 	public void getsTheAccessTokenFromResponseBodyInOobRequest() throws Exception
 	{
-		profile.setRedirectURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setRedirectURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
 	}
 
 	@Test
-	public void performsPropertyExpansionOnProfileValues() throws Exception
+	public void storesTheAccessTokenAfterUsingRefreshToken() throws Exception
+	{
+		profile.setAccessToken( "expired_token!" );
+		profile.setRefreshToken( refreshToken );
+		oltuClientFacade.refreshAccessToken( profile );
+
+		assertThat( profile.getAccessToken(), is( accessToken ) );
+	}
+
+	@Test
+	public void performsPropertyExpansionBeforeRequestingToken() throws Exception
 	{
 		String authorizationPropertyName = "myAuthorizationURI";
 		String redirectURIPropertyName = "myRedirectURI";
@@ -140,12 +160,31 @@ public class OltuAuth2ClientFacadeTest
 		assertThat( ( ( UserBrowserFacadeStub )oltuClientFacade.browserFacade ).browserClosed, is( true ) );
 	}
 
+	@Test
+	public void performsPropertyExpansionBeforeRefreshingToken() throws Exception
+	{
+		String clientIdPropertyName = "myClientId";
+		String clientSecretPropertyName = "myRedirectURI";
+		WsdlProject project = profile.getContainer().getProject();
+		String clientIdValue = "some_client_id";
+		String clientSecretValue = "some_client_secret";
+		project.addProperty( clientIdPropertyName).setValue( clientIdValue );
+		project.addProperty( clientSecretPropertyName).setValue( clientSecretValue );
+		profile.setClientID( "${#Project#" + clientIdPropertyName + "}" );
+		profile.setClientSecret( "${#Project#" + clientSecretPropertyName + "}" );
+		profile.setRefreshToken( "some_refresh_token" );
+		oltuClientFacade.refreshAccessToken( profile );
+
+		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( clientIdValue ) );
+		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( clientSecretValue ) );
+	}
+
 	/* Validation tests */
 
 	@Test(expected = InvalidOAuth2ParametersException.class)
 	public void rejectsUrnAsAuthorizationURI() throws Exception
 	{
-		profile.setAuthorizationURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAuthorizationURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -166,7 +205,7 @@ public class OltuAuth2ClientFacadeTest
 	@Test(expected = InvalidOAuth2ParametersException.class)
 	public void rejectsUrnAsAccessTokenURI() throws Exception
 	{
-		profile.setAccessTokenURI( OltuAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAccessTokenURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -189,6 +228,29 @@ public class OltuAuth2ClientFacadeTest
 	{
 		profile.setClientSecret( "" );
 		oltuClientFacade.requestAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyRefreshTokenOnRefresh() throws Exception
+	{
+		profile.setRefreshToken( "" );
+		oltuClientFacade.refreshAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyClientIdOnRefresh() throws Exception
+	{
+		profile.setRefreshToken( "someRefreshToken" );
+		profile.setClientID( "" );
+		oltuClientFacade.refreshAccessToken( profile );
+	}
+
+	@Test(expected = InvalidOAuth2ParametersException.class)
+	public void rejectsEmptyClientSecretOnRefresh() throws Exception
+	{
+		profile.setRefreshToken( "someRefreshToken" );
+		profile.setClientSecret( "" );
+		oltuClientFacade.refreshAccessToken( profile );
 	}
 
 
@@ -222,7 +284,7 @@ public class OltuAuth2ClientFacadeTest
 		{
 			oAuthClientRequest = request;
 			OAuthJSONAccessTokenResponse response = mock( OAuthJSONAccessTokenResponse.class );
-			when( response.getOAuthToken() ).thenReturn( new BasicOAuthToken( accessToken ) );
+			when( response.getOAuthToken() ).thenReturn( new BasicOAuthToken( accessToken, 60000L, refreshToken, "user" ));
 			return ( T )response;
 		}
 

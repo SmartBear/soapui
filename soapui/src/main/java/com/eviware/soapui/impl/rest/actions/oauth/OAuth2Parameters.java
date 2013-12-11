@@ -53,4 +53,9 @@ class OAuth2Parameters
 	{
 		profile.applyRetrievedAccessToken( accessToken );
 	}
+
+	public void setRefreshTokenInProfile( String refreshToken )
+	{
+		profile.setRefreshToken( refreshToken );
+	}
 }

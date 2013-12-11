@@ -36,6 +36,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_URI_PROPERTY = "accessTokenURI";
 	public static final String REDIRECT_URI_PROPERTY = "redirectURI";
 	public static final String ACCESS_TOKEN_PROPERTY = "accessToken";
+	public static final String REFRESH_TOKEN_PROPERTY = "refreshToken";
 	public static final String SCOPE_PROPERTY = "scope";
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
 
@@ -90,9 +91,24 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
+	public String getRefreshToken()
+	{
+		return configuration.getRefreshToken();
+	}
+
+	public void setRefreshToken( String refreshToken )
+	{
+		String oldValue = configuration.getRefreshToken();
+		if( !StringUtils.equals( oldValue, refreshToken ) )
+		{
+			configuration.setRefreshToken( refreshToken );
+			pcs.firePropertyChange( REFRESH_TOKEN_PROPERTY, oldValue, refreshToken );
+		}
+	}
+
 	private boolean doSetAccessToken( String accessToken )
 	{
-		String oldValue = configuration.getAuthorizationURI();
+		String oldValue = configuration.getAccessToken();
 		if( !StringUtils.equals( oldValue, accessToken ) )
 		{
 			configuration.setAccessToken( accessToken );

@@ -1896,6 +1896,7 @@
             <xsd:element name="accessTokenURI" type="xsd:string"></xsd:element>
             <xsd:element name="redirectURI" type="xsd:string"></xsd:element>
             <xsd:element name="accessToken" type="xsd:string"></xsd:element>
+            <xsd:element name="refreshToken" type="xsd:string"></xsd:element>
             <xsd:element name="scope" type="xsd:string"></xsd:element>
             <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus"></xsd:element>
         </xsd:sequence>

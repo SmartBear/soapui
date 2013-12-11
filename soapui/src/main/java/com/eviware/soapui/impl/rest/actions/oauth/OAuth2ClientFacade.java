@@ -17,4 +17,6 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 public interface OAuth2ClientFacade
 {
 	void requestAccessToken( OAuth2Profile profile ) throws OAuth2Exception;
+
+	void refreshAccessToken( OAuth2Profile profile ) throws Exception;
 }

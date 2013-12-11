@@ -20,6 +20,7 @@ import com.eviware.soapui.support.StringUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
+import org.apache.oltu.oauth2.common.OAuthProviderType;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
@@ -34,18 +35,20 @@ import java.net.URL;
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
  */
-public class OltuAuth2ClientFacade implements OAuth2ClientFacade
+public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 {
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
 	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
+	private static final OAuthProviderType provider = OAuthProviderType.GOOGLE;
+
+	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
+
 	protected OAuthClient getOAuthClient()
 	{
 		return new OAuthClient( new HttpClient4( HttpClientSupport.getHttpClient() ) );
 	}
-
-	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
 
 	@Override
 	public void requestAccessToken( OAuth2Profile profile ) throws OAuth2Exception
@@ -211,6 +214,7 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 				if( token != null && token.getAccessToken() != null )
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
+					parameters.setRefreshTokenInProfile (token.getRefreshToken());
 					browserFacade.close();
 				}
 			}
@@ -223,6 +227,28 @@ public class OltuAuth2ClientFacade implements OAuth2ClientFacade
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	@Override
+	public void refreshAccessToken( OAuth2Profile profile ) throws Exception
+	{
+		String refreshToken = profile.getRefreshToken();
+		validateRequiredStringValue( refreshToken, "refreshToken" );
+		OAuth2Parameters parameters = buildParametersFrom( profile );
+		validateRequiredStringValue( parameters.clientId, "client ID" );
+		validateRequiredStringValue( parameters.clientSecret, "client secret" );
+		OAuthClientRequest accessTokenRequest = OAuthClientRequest
+				.tokenProvider( provider )
+				.setGrantType( GrantType.REFRESH_TOKEN )
+				.setClientId( parameters.clientId )
+				.setClientSecret( parameters.clientSecret )
+				.setRefreshToken( refreshToken )
+				.buildBodyMessage();
+
+		OAuthClient oAuthClient = getOAuthClient();
+
+		OAuthToken oAuthToken = oAuthClient.accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
+		profile.applyRetrievedAccessToken( oAuthToken.getAccessToken() );
 	}
 
 }
