@@ -16,7 +16,6 @@ import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -40,7 +39,6 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Mockito.mock;
@@ -57,17 +55,21 @@ public class OltuOAuth2ClientFacadeTest
 	private String authorizationCode;
 	private String accessToken;
 	private OAuth2Profile profile;
+	private OAuth2Profile profileWithOnlyAccessToken;
 	private OltuOAuth2ClientFacade oltuClientFacade;
 	private String refreshToken;
+	private RestRequest restRequest;
 
 	@Before
 	public void setUp() throws Exception
 	{
-		initializeOAuthProfileWithDefaultValues();
 		authorizationCode = "some_code";
 		accessToken = "expected_access_token";
 		refreshToken = "expected_refresh_token";
+		initializeOAuthProfileWithDefaultValues();
+		initializeOAuthProfileWithOnlyAccessToken();
 		spyingOauthClientStub = new SpyingOauthClientStub();
+		restRequest =  new RestRequest( ModelItemFactory.makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
 		oltuClientFacade = new OltuOAuth2ClientFacade()
 		{
 			@Override
