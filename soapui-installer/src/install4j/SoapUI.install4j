@@ -1927,9 +1927,12 @@ return false;
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="1">
+                        <array class="java.lang.String" length="2">
                           <void index="0">
                             <string>-Dswing.crossplatformlaf=apple.laf.AquaLookAndFeel</string>
+                          </void>
+                          <void index="1">
+                            <string>-Dapple.eawt.quitStrategy=CLOSE_ALL_WINDOWS</string>
                           </void>
                         </array>
                       </void>
