@@ -87,13 +87,7 @@ import javax.swing.ImageIcon;
 import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
@@ -315,7 +309,9 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 			UrlWsdlLoader loader = new UrlWsdlLoader( file.toString(), this );
 			loader.setUseWorker( false );
-			projectDocument = SoapuiProjectDocumentConfig.Factory.parse( loader.load() );
+			InputStream inputStream = loader.load();
+			projectDocument = SoapuiProjectDocumentConfig.Factory.parse( inputStream );
+			inputStream.close();
 
 			// see if there is encoded data
 			this.encrypted = checkForEncodedData( projectDocument.getSoapuiProject() );

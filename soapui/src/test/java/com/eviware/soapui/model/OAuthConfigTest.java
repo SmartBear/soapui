@@ -55,21 +55,22 @@ public class OAuthConfigTest
 		oAuth2Profile.setAccessToken( "ACDFECDSFKJFK#SDFSD8df" );
 		oAuth2Profile.setScope( "google.com/calendar/read" );
 
+		project.saveAs( projectFileName );
 	}
 
 	@After
 	public void tearDown()
 	{
 		File file = new File( projectFileName );
-		file.delete();
+		if(file.exists())
+		{
+			file.delete();
+		}
 	}
 
 	@Test
 	public void basicOAuthConfigIsProjectSpecific() throws Exception
 	{
-
-		project.saveAs( projectFileName );
-
 		WsdlProject retrievedProject = new WsdlProject( projectFileName );
 
 		assertThat( retrievedProject.getOAuth2ProfileContainer().getOAuth2ProfileList().size(), is( 1 ) );
@@ -82,9 +83,6 @@ public class OAuthConfigTest
 	@Test
 	public void basicOAuthConfigIsSaved() throws Exception
 	{
-
-		project.saveAs( projectFileName );
-
 		WsdlProject retrievedProject = new WsdlProject( projectFileName );
 
 		assertThat( retrievedProject.getOAuth2ProfileContainer().getOAuth2ProfileList().size(), is( 1 ) );
