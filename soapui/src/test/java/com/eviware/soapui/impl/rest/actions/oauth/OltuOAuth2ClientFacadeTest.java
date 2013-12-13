@@ -38,9 +38,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -123,7 +125,7 @@ public class OltuOAuth2ClientFacadeTest
 	{
 		String authorizationPropertyName = "myAuthorizationURI";
 		String redirectURIPropertyName = "myRedirectURI";
-		WsdlProject project = (WsdlProject )profile.getContainer().getProject();
+		WsdlProject project = profile.getContainer().getProject();
 		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURI() );
 		project.addProperty( redirectURIPropertyName).setValue( profile.getRedirectURI() );
 		profile.setAuthorizationURI( "${#Project#" + authorizationPropertyName + "}" );
@@ -148,7 +150,7 @@ public class OltuOAuth2ClientFacadeTest
 
 		oltuClientFacade.requestAccessToken( profile );
 		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER ));
 	}
 
 	@Test
@@ -268,6 +270,14 @@ public class OltuOAuth2ClientFacadeTest
 		profile.setRefreshToken( "someRefreshToken" );
 		profile.setClientSecret( "" );
 		oltuClientFacade.refreshAccessToken( profile );
+	}
+
+	@Test
+	public void doNotApplyNullAccessTokenToHeader() throws Exception
+	{
+		oltuClientFacade.applyAccessToken( profile, restRequest );
+
+		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ), is( nullValue()) ) ;
 	}
 
 

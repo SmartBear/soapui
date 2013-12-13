@@ -241,6 +241,13 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		// TODO: Validation if access token is null
 		// TODO: SOAP-1160 story we need to fill the uri with full path including query params and also support different
 		// ways of sending access token (query, header. body) and different authentication scheme (bearer, mac etc)
+
+		if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
+		{
+			// Since access token is null/empty we don't append it
+			return;
+		}
+
 		String uri = request.getPath();
 		OAuthBearerClientRequest oAuthBearerClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
 
