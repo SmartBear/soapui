@@ -2,7 +2,7 @@
 #### Released 2014-xx-xx ####
 
 ### Bugs fixed ###
-* Fixed NTLM authentication not working under certain conditions (SOAP-1021)
+* Fixed NTLM authentication not working under certain conditions (SOAP-1021) (Note: If you are using Kerberos authentication, you will have to re-select authentication method in the "auth" tab)
 
 -------------------------------------------------------------------------------
 
