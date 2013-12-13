@@ -98,6 +98,7 @@ import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import com.jniwrapper.PlatformContext;
 import com.teamdev.jxbrowser.BrowserType;
+import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.PosixParser;
@@ -194,6 +195,10 @@ public class SoapUI
 	private static JToggleButton applyProxyButton;
 	private static Logger groovyLogger;
 	private static CmdLineRunner soapUIRunner;
+
+	static {
+		Platform.setImplicitExit( false );
+	}
 
 	// --------------------------- CONSTRUCTORS ---------------------------
 
