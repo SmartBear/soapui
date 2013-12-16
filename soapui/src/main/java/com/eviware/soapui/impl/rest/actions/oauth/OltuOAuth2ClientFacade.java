@@ -245,6 +245,9 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
 		{
 			// Since access token is null/empty we don't append it
+			StringToStringsMap requestHeaders = request.getRequestHeaders();
+			requestHeaders.remove( OAuth.HeaderType.AUTHORIZATION );
+			request.setRequestHeaders( requestHeaders );
 			return;
 		}
 

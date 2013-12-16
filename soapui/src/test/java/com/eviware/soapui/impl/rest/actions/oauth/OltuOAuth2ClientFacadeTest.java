@@ -280,6 +280,17 @@ public class OltuOAuth2ClientFacadeTest
 		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ), is( nullValue()) ) ;
 	}
 
+	@Test
+	public void doesNotSendAccessTokenFromPreviousRequest() throws Exception
+	{
+		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
+
+		// Now try a profile without access token
+		oltuClientFacade.applyAccessToken( profile, restRequest );
+
+		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ), is( nullValue() ) ) ;
+	}
+
 
 
 	/* Helpers */
