@@ -267,6 +267,8 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 		Map<String, String> oAuthHeaders = oAuthClientRequest.getHeaders();
 		StringToStringsMap requestHeaders = request.getRequestHeaders();
+		// replacing the old value since we no more care about it
+		requestHeaders.remove( OAuth.HeaderType.AUTHORIZATION );
 		requestHeaders.add( OAuth.HeaderType.AUTHORIZATION, oAuthHeaders.get( OAuth.HeaderType.AUTHORIZATION ) );
 		request.setRequestHeaders( requestHeaders );
 	}
