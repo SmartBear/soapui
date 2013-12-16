@@ -33,6 +33,7 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 		this.proxySearch = createProxySearch();
 	}
 
+	//FIXME: This code also exists in ProxyUtils
 	private ProxySearch createProxySearch()
 	{
 		ProxySearch proxySearch = new ProxySearch();

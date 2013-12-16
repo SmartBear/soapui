@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
+import com.btr.proxy.search.ProxySearch;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -30,10 +31,7 @@ import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.protocol.HttpContext;
 
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -208,6 +206,7 @@ public class ProxyUtils
 	{
 		ProxyUtils.proxyEnabled = proxyEnabled;
 		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
+		setGlobalProxy();
 	}
 
 	public static boolean isAutoProxy()
@@ -219,5 +218,56 @@ public class ProxyUtils
 	{
 		ProxyUtils.autoProxy = autoProxy;
 		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
+		setGlobalProxy();
+	}
+
+	private static void setGlobalProxy()
+	{
+		//FIXME: Error handling of the property expansion
+		ProxySelector proxySelector = null;
+		if( proxyEnabled )
+		{
+			if( autoProxy )
+			{
+				proxySelector = createAutoProxySearch().getProxySelector();
+			}
+			else
+			{
+				Settings settings = SoapUI.getSettings();
+				String proxyHost = getExpandedProperty( null, settings, ProxySettings.HOST );
+				String proxyPort = getExpandedProperty( null, settings, ProxySettings.PORT );
+				if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
+				{
+					String[] excludes = PropertyExpander.expandProperties( (PropertyExpansionContext) null,
+							settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
+					proxySelector = new ManualProxySelector( proxyHost, Integer.valueOf( proxyPort ), excludes );
+				}
+			}
+			Authenticator.setDefault( new Authenticator()
+			{
+				@Override
+				protected PasswordAuthentication getPasswordAuthentication()
+				{
+					Settings settings = SoapUI.getSettings();
+					String proxyUsername = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
+							settings.getString( ProxySettings.USERNAME, null ) );
+					String proxyPassword = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
+							settings.getString( ProxySettings.PASSWORD, null ) );
+
+					return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
+				}
+			} );
+		}
+		ProxySelector.setDefault( proxySelector );
+	}
+
+	public static ProxySearch createAutoProxySearch()
+	{
+		ProxySearch proxySearch = new ProxySearch();
+		proxySearch.addStrategy( ProxySearch.Strategy.JAVA );
+		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
+		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
+		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
+		return proxySearch;
 	}
 }
