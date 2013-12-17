@@ -663,14 +663,6 @@
         </dependency>
 
 
-        <!-- TODO Not sure if thease are needed -->
-
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>1.0.b2</version>
-        </dependency>
-
         <!--  old http client needed by some 3rd party components -->
 
         <dependency>
