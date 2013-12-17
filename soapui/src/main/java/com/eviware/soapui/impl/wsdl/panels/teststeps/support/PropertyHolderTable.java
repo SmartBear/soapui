@@ -104,7 +104,7 @@ public class PropertyHolderTable extends JPanel
 
 	protected JTable buildPropertiesTable()
 	{
-		propertiesModel = new DefaultPropertyHolderTableModel( holder );
+		propertiesModel = getPropertyHolderTableModel();
 		propertiesTable = new PropertiesHolderJTable();
 
 		propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
@@ -136,6 +136,11 @@ public class PropertyHolderTable extends JPanel
 		// Set render this only for value column. In this cell render we handle password shadowing.
 		propertiesTable.getColumnModel().getColumn( 1 ).setCellRenderer( new PropertiesTableCellRenderer() );
 		return propertiesTable;
+	}
+
+	protected DefaultPropertyHolderTableModel getPropertyHolderTableModel()
+	{
+		return new DefaultPropertyHolderTableModel( holder );
 	}
 
 	public class PropertiesHolderJTable extends JTable

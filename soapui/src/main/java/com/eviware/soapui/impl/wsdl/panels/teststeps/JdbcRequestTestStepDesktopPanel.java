@@ -294,9 +294,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		propertyHolderTable = new PropertyHolderTable( getModelItem() )
 		{
-			protected JTable buildPropertiesTable()
+			@Override
+			protected DefaultPropertyHolderTableModel getPropertyHolderTableModel()
 			{
-				propertiesModel = new DefaultPropertyHolderTableModel( holder )
+				return new DefaultPropertyHolderTableModel( holder )
 				{
 					@Override
 					public String[] getPropertyNames()
@@ -313,38 +314,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 						return propertyNamesList.toArray( new String[propertyNamesList.size()] );
 					}
 				};
-				propertiesTable = new PropertiesHolderJTable();
-				propertiesTable.setSurrendersFocusOnKeystroke( true );
-
-				propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
-				propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-				{
-					public void valueChanged( ListSelectionEvent e )
-					{
-						int selectedRow = propertiesTable.getSelectedRow();
-						if( removePropertyAction != null )
-							removePropertyAction.setEnabled( selectedRow != -1 );
-
-						if( movePropertyUpAction != null )
-							movePropertyUpAction.setEnabled( selectedRow > 0 );
-
-						if( movePropertyDownAction != null )
-							movePropertyDownAction.setEnabled( selectedRow >= 0
-									&& selectedRow < propertiesTable.getRowCount() - 1 );
-					}
-				} );
-
-				propertiesTable.setDragEnabled( true );
-				propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
-
-				if( getHolder().getModelItem() != null )
-				{
-					DropTarget dropTarget = new DropTarget( propertiesTable,
-							new PropertyHolderTablePropertyExpansionDropTarget() );
-					dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
-				}
-
-				return propertiesTable;
 			}
 		};
 
@@ -359,31 +328,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	public PropertyHolderTable getPropertyHolderTable()
 	{
 		return propertyHolderTable;
-	}
-
-	public void setPropertyHolderTable( StringToStringMap preparedProperties )
-	{
-		// first remove the old content
-		String[] names = propertyHolderTable.getHolder().getPropertyNames();
-		if( names.length > 0 )
-		{
-			for( String propertyName : names )
-			{
-				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).removeProperty( propertyName );
-			}
-		}
-		propertyHolderTable.getPropertiesTable().removeAll();
-		if( preparedProperties != null )
-		{
-			int i = 0;
-			for( String key : preparedProperties.keySet() )
-			{
-				String value = preparedProperties.get( key );
-				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).addProperty( key );
-				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).setPropertyValue( key, value );
-				i++ ;
-			}
-		}
 	}
 
 	protected JComponent buildToolbar()

@@ -321,9 +321,10 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 		propertyHolderTable = new PropertyHolderTable( getModelItem() )
 		{
-			protected JTable buildPropertiesTable()
+			@Override
+			protected DefaultPropertyHolderTableModel getPropertyHolderTableModel()
 			{
-				propertiesModel = new DefaultPropertyHolderTableModel( holder )
+				return new DefaultPropertyHolderTableModel( holder )
 				{
 					@Override
 					public String[] getPropertyNames()
@@ -340,38 +341,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 						return propertyNamesList.toArray( new String[propertyNamesList.size()] );
 					}
 				};
-				propertiesTable = new PropertiesHolderJTable();
-				propertiesTable.setSurrendersFocusOnKeystroke( true );
-
-				propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
-				propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-				{
-					public void valueChanged( ListSelectionEvent e )
-					{
-						int selectedRow = propertiesTable.getSelectedRow();
-						if( removePropertyAction != null )
-							removePropertyAction.setEnabled( selectedRow != -1 );
-
-						if( movePropertyUpAction != null )
-							movePropertyUpAction.setEnabled( selectedRow > 0 );
-
-						if( movePropertyDownAction != null )
-							movePropertyDownAction.setEnabled( selectedRow >= 0
-									&& selectedRow < propertiesTable.getRowCount() - 1 );
-					}
-				} );
-
-				propertiesTable.setDragEnabled( true );
-				propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
-
-				if( getHolder().getModelItem() != null )
-				{
-					DropTarget dropTarget = new DropTarget( propertiesTable,
-							new PropertyHolderTablePropertyExpansionDropTarget() );
-					dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
-				}
-
-				return propertiesTable;
 			}
 		};
 
