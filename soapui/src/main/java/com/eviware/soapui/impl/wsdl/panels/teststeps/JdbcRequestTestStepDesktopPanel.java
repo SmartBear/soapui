@@ -330,6 +330,32 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return propertyHolderTable;
 	}
 
+	//Used from SoapUI Pro
+	public void setPropertyHolderTable( StringToStringMap preparedProperties )
+	{
+		// first remove the old content
+		String[] names = propertyHolderTable.getHolder().getPropertyNames();
+		if( names.length > 0 )
+		{
+			for( String propertyName : names )
+			{
+				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).removeProperty( propertyName );
+			}
+		}
+		propertyHolderTable.getPropertiesTable().removeAll();
+		if( preparedProperties != null )
+		{
+			int i = 0;
+			for( String key : preparedProperties.keySet() )
+			{
+				String value = preparedProperties.get( key );
+				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).addProperty( key );
+				( ( MutableTestPropertyHolder )propertyHolderTable.getHolder() ).setPropertyValue( key, value );
+				i++ ;
+			}
+		}
+	}
+
 	protected JComponent buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
