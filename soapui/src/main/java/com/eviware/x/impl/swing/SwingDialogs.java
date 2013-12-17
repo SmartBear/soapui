@@ -103,10 +103,10 @@ public class SwingDialogs implements XDialogs
 	{
 		int result = JOptionPane.showConfirmDialog( parent, question, title, JOptionPane.YES_NO_CANCEL_OPTION );
 
-		if( result == JOptionPane.CANCEL_OPTION )
+		if( result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION )
 			return null;
 
-		return Boolean.valueOf( result == JOptionPane.YES_OPTION );
+		return result == JOptionPane.YES_OPTION;
 	}
 
 	public int yesYesToAllOrNo( String question, String title )
