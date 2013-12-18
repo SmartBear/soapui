@@ -141,7 +141,7 @@ public class SoapUI
 	private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
 			+ URLEncoder.encode( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
@@ -346,7 +346,7 @@ public class SoapUI
 		return mainToolbar;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings( "deprecation" )
 	public void doForumSearch( String text )
 	{
 		if( !searchField.getText().equals( text ) )
@@ -1754,6 +1754,7 @@ public class SoapUI
 	{
 		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 		ProxyUtils.setAutoProxy( getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+		ProxyUtils.setGlobalProxy();
 		updateProxyButtonAndTooltip();
 	}
 

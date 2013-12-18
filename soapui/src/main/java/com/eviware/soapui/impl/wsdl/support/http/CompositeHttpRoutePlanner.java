@@ -30,20 +30,8 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	{
 		this.registry = registry;
 		this.defaultHttpRoutePlanner = new DefaultHttpRoutePlanner( registry );
-		this.proxySearch = createProxySearch();
+		this.proxySearch = new ProxyVoleUtil().createAutoProxySearch();
 	}
-
-	//FIXME: This code also exists in ProxyUtils
-	private ProxySearch createProxySearch()
-	{
-		ProxySearch proxySearch = new ProxySearch();
-		proxySearch.addStrategy( ProxySearch.Strategy.JAVA );
-		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
-		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
-		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
-		return proxySearch;
-	}
-
 
 	public void setAutoProxyEnabled( boolean autoProxyEnabled )
 	{
@@ -70,7 +58,7 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	{
 		if( cachedProxySelector == null )
 		{
-			cachedProxySelector = proxySearch.getProxySelector();
+			cachedProxySelector = ProxyUtils.filterHttpHttpsProxy( proxySearch.getProxySelector() );
 		}
 		return cachedProxySelector;
 	}

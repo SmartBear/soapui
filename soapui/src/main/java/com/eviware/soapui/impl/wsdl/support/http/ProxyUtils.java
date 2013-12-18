@@ -12,7 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import com.btr.proxy.search.ProxySearch;
+import com.btr.proxy.selector.whitelist.ProxyBypassListSelector;
+import com.btr.proxy.util.UriFilter;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -32,6 +33,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.protocol.HttpContext;
 
 import java.net.*;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,6 +53,7 @@ public class ProxyUtils
 	{
 		setProxyEnabled( SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 		setAutoProxy( SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+		setGlobalProxy();
 	}
 
 	public static void initProxySettings( final Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
@@ -71,7 +74,8 @@ public class ProxyUtils
 
 	private static String getExpandedProperty( PropertyExpansionContext context, Settings settings, String property )
 	{
-		return PropertyExpander.expandProperties( context, settings.getString( property, null ) );
+		String content = settings.getString( property, null );
+		return context != null ? PropertyExpander.expandProperties( context, content ) : PropertyExpander.expandProperties( content );
 	}
 
 	private static void setManualProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext, String urlString, PropertyExpansionContext context )
@@ -206,7 +210,6 @@ public class ProxyUtils
 	{
 		ProxyUtils.proxyEnabled = proxyEnabled;
 		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
-		setGlobalProxy();
 	}
 
 	public static boolean isAutoProxy()
@@ -218,56 +221,74 @@ public class ProxyUtils
 	{
 		ProxyUtils.autoProxy = autoProxy;
 		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
-		setGlobalProxy();
 	}
 
-	private static void setGlobalProxy()
+	public static void setGlobalProxy()
 	{
-		//FIXME: Error handling of the property expansion
 		ProxySelector proxySelector = null;
 		if( proxyEnabled )
 		{
 			if( autoProxy )
 			{
-				proxySelector = createAutoProxySearch().getProxySelector();
+				proxySelector = new ProxyVoleUtil().createAutoProxySearch().getProxySelector();
 			}
 			else
 			{
-				Settings settings = SoapUI.getSettings();
-				String proxyHost = getExpandedProperty( null, settings, ProxySettings.HOST );
-				String proxyPort = getExpandedProperty( null, settings, ProxySettings.PORT );
-				if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
-				{
-					String[] excludes = PropertyExpander.expandProperties( (PropertyExpansionContext) null,
-							settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
-					proxySelector = new ManualProxySelector( proxyHost, Integer.valueOf( proxyPort ), excludes );
-				}
+				proxySelector = getManualProxySelector( SoapUI.getSettings() );
 			}
-			Authenticator.setDefault( new Authenticator()
-			{
-				@Override
-				protected PasswordAuthentication getPasswordAuthentication()
-				{
-					Settings settings = SoapUI.getSettings();
-					String proxyUsername = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
-							settings.getString( ProxySettings.USERNAME, null ) );
-					String proxyPassword = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
-							settings.getString( ProxySettings.PASSWORD, null ) );
-
-					return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
-				}
-			} );
+			Authenticator.setDefault( new ProxySettingsAuthenticator() );
+			if(proxySelector != null) {
+				// Don't register any proxies for other schemes
+				proxySelector = filterHttpHttpsProxy( proxySelector );
+			}
 		}
 		ProxySelector.setDefault( proxySelector );
 	}
 
-	public static ProxySearch createAutoProxySearch()
+	public static ProxySelector filterHttpHttpsProxy( ProxySelector proxySelector )
 	{
-		ProxySearch proxySearch = new ProxySearch();
-		proxySearch.addStrategy( ProxySearch.Strategy.JAVA );
-		proxySearch.addStrategy( ProxySearch.Strategy.ENV_VAR );
-		proxySearch.addStrategy( ProxySearch.Strategy.BROWSER );
-		proxySearch.addStrategy( ProxySearch.Strategy.OS_DEFAULT );
-		return proxySearch;
+		return new ProxyBypassListSelector(
+				Arrays.<UriFilter>asList( new SchemeProxyFilter( "http", "https" ) ),
+				proxySelector);
 	}
+
+	private static ProxySelector getManualProxySelector( Settings settings )
+	{
+		try
+		{
+			String proxyHost = getExpandedProperty( null, settings, ProxySettings.HOST );
+			String proxyPort = getExpandedProperty( null, settings, ProxySettings.PORT );
+			if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
+			{
+				String[] excludes = PropertyExpander.expandProperties( settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
+				return new ManualProxySelector( proxyHost, Integer.valueOf( proxyPort ), excludes );
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e, "Unable to expand proxy settings" );
+		}
+		return null;
+	}
+
+	private static class ProxySettingsAuthenticator extends Authenticator
+	{
+		@Override
+		protected PasswordAuthentication getPasswordAuthentication()
+		{
+			Settings settings = SoapUI.getSettings();
+			try
+			{
+				String proxyUsername = PropertyExpander.expandProperties( settings.getString( ProxySettings.USERNAME, null ) );
+				String proxyPassword = PropertyExpander.expandProperties( settings.getString( ProxySettings.PASSWORD, null ) );
+				return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e, "Unable to expand proxy settings" );
+				return null;
+			}
+		}
+	}
+
 }
