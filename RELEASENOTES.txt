@@ -7,6 +7,8 @@
 * AMF Request test step add\delete properties table is broken (SOAP-1060)
 * Request body not copied to test step when creating from POST/PUT REST request (SOAP-1098)
 * Security tests ignores endpoint, host and environment parameters in command line tool (SOAP-1190)
+* XPATH assertion should show XPATH in error message (SOAP-1155)
+* ⌘+Q on mac quits without saving (SOAP-1106)
 
 -------------------------------------------------------------------------------
 
