@@ -24,7 +24,6 @@ import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
-import org.apache.oltu.oauth2.common.OAuthProviderType;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -46,8 +45,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
 	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
-
-	private static final OAuthProviderType provider = OAuthProviderType.GOOGLE;
 
 	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
 
@@ -280,12 +277,12 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 	public void refreshAccessToken( OAuth2Profile profile ) throws Exception
 	{
 		String refreshToken = profile.getRefreshToken();
-		validateRequiredStringValue( refreshToken, "refreshToken" );
+		validateRequiredStringValue( refreshToken, "refresh token" );
 		OAuth2Parameters parameters = buildParametersFrom( profile );
 		validateRequiredStringValue( parameters.clientId, "client ID" );
 		validateRequiredStringValue( parameters.clientSecret, "client secret" );
 		OAuthClientRequest accessTokenRequest = OAuthClientRequest
-				.tokenProvider( provider )
+				.tokenLocation( parameters.accessTokenUri )
 				.setGrantType( GrantType.REFRESH_TOKEN )
 				.setClientId( parameters.clientId )
 				.setClientSecret( parameters.clientSecret )
