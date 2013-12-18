@@ -10,7 +10,7 @@
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.support.editor.inspectors.aut;
+package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
