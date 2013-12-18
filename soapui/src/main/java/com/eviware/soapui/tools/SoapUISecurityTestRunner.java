@@ -377,18 +377,6 @@ public class SoapUISecurityTestRunner extends SoapUITestCaseRunner implements Se
 			securityTest.removeSecurityTestRunListener( reportCollector );
 	}
 
-	public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
-	{
-	}
-
-	public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep currentStep )
-	{
-	}
-
-	public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
-	{
-	}
-
 	@Override
 	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
 	{

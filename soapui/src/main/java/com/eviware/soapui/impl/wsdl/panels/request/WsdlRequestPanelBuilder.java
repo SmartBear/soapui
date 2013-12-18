@@ -62,7 +62,7 @@ public class WsdlRequestPanelBuilder extends EmptyPanelBuilder<WsdlRequest>
 		table.addPropertyShadow( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
 		table.addProperty( "Authentication Type", "authType", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
-				AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() } );
+				AuthType.PREEMPTIVE.toString(), AuthType.SPNEGO_KERBEROS.toString(), AuthType.NTLM.toString() } );
 		
 		table.addProperty( "WSS-Password Type", "wssPasswordType", new String[] { null, WsdlRequest.PW_TYPE_NONE,
 				WsdlRequest.PW_TYPE_TEXT, WsdlRequest.PW_TYPE_DIGEST } );
