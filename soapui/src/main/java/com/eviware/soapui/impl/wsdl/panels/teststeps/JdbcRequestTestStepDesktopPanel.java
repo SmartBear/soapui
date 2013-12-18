@@ -496,7 +496,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	protected void createSimpleJdbcConfigForm()
 	{
 		configForm.addSpace( 5 );
-		configForm.setDefaultTextFieldColumns( 50 );
+		configForm.setDefaultTextFieldColumns( SimpleForm.LONG_TEXT_FIELD_COLUMNS );
 
 		driverTextField = configForm.appendTextField( DRIVER_FIELD, "JDBC Driver to use" );
 		driverTextField.setText( jdbcRequestTestStep.getDriver() );
