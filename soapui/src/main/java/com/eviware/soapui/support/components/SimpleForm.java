@@ -2,17 +2,18 @@
  *  SoapUI, copyright (C) 2004-2012 smartbear.com
  *
  *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
+ *  terms of version 2.1 of the GNU Lesser General Public License as published by
  *  the Free Software Foundation.
  *
  *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *  See the GNU Lesser General Public License for more details at gnu.org.
  */
 
 package com.eviware.soapui.support.components;
 
-import java.awt.Font;
+import java.awt.*;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
@@ -39,6 +40,12 @@ import com.jgoodies.forms.layout.RowSpec;
 public class SimpleForm
 {
 	public static final String ENABLED_PROPERTY_NAME = "enabled";
+
+	public static final int SHORT_TEXT_FIELD_COLUMNS = 20;
+	public static final int MEDIUM_TEXT_FIELD_COLUMNS = 30;
+	public static final int LONG_TEXT_FIELD_COLUMNS = 50;
+	public static final int DEFAULT_TEXT_FIELD_COLUMNS = MEDIUM_TEXT_FIELD_COLUMNS;
+
 	private JPanel panel;
 	private CellConstraints cc = new CellConstraints();
 	private FormLayout layout;
@@ -52,7 +59,7 @@ public class SimpleForm
 	private Font labelFont;
 	private int defaultTextAreaColumns = 30;
 	private int defaultTextAreaRows = 3;
-	private int defaultTextFieldColumns = 30;
+	private int defaultTextFieldColumns = DEFAULT_TEXT_FIELD_COLUMNS;
 
 	public SimpleForm()
 	{
@@ -139,6 +146,24 @@ public class SimpleForm
 		return button;
 	}
 
+	public JButton addButtonWithoutLabel( String text, ActionListener actionListener )
+	{
+		if( rowSpacing > 0 && !components.isEmpty() )
+			addSpace( rowSpacing );
+
+		layout.appendRow( rowSpec );
+		int row = layout.getRowCount();
+
+		JButton button = new JButton( text );
+		button.addActionListener( actionListener );
+
+
+		panel.add( button, cc.xy( 4, row, "left,bottom" ) );
+
+		return button;
+	}
+
+
 	public void addSpace()
 	{
 		addSpace( rowSpacing );
@@ -174,7 +199,7 @@ public class SimpleForm
 	{
 		JRadioButton radioButton = new JRadioButton( label, selected );
 		radioButton.getAccessibleContext().setAccessibleDescription( caption );
-		if (group != null)
+		if( group != null )
 		{
 			group.add( radioButton );
 		}
@@ -246,7 +271,7 @@ public class SimpleForm
 		JLabel jlabel = null;
 		if( label != null )
 		{
-			jlabel = new JLabel( label.endsWith( ":" )|| label.isEmpty() ? label : label + ":" );
+			jlabel = new JLabel( label.endsWith( ":" ) || label.isEmpty() ? label : label + ":" );
 			jlabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
 			if( labelFont != null )
 				jlabel.setFont( labelFont );
@@ -322,10 +347,29 @@ public class SimpleForm
 		appended = true;
 	}
 
+	/**
+	 * Appends a label and a text field to the form
+	 *
+	 * @param label The value of the label
+	 * @param tooltip The value of the text field tool tip
+	 */
 	public JTextField appendTextField( String label, String tooltip )
 	{
+		return appendTextField( label, tooltip, defaultTextFieldColumns );
+	}
+
+	/**
+	 * Appends a label and a text field to the form
+	 *
+	 * @param label The value of the label
+	 * @param tooltip The value of the text field tool tip
+	 * @param textFieldColumns The number of columns to display for the text field. Should be a constant defined in SimpleForm
+	 * @see com.eviware.soapui.support.components.SimpleForm
+	 */
+	public JTextField appendTextField( String label, String tooltip, int textFieldColumns )
+	{
 		JTextField textField = new JUndoableTextField();
-		textField.setColumns( defaultTextFieldColumns );
+		textField.setColumns( textFieldColumns );
 		textField.setToolTipText( tooltip );
 		textField.getAccessibleContext().setAccessibleDescription( tooltip );
 		JTextComponentPopupMenu.add( textField );
@@ -534,6 +578,10 @@ public class SimpleForm
 		appended = true;
 	}
 
+	/**
+	 * @param defaultTextFieldColumns Should be a constant defined in SimpleForm
+	 * @see com.eviware.soapui.support.components.SimpleForm
+	 */
 	public void setDefaultTextFieldColumns( int defaultTextFieldColumns )
 	{
 		this.defaultTextFieldColumns = defaultTextFieldColumns;

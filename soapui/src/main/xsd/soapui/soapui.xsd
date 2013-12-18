@@ -564,7 +564,8 @@
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
         				<xsd:enumeration value="NTLM/Kerberos"></xsd:enumeration>
-        			</xsd:restriction>
+                        <xsd:enumeration value="OAuth 2"></xsd:enumeration>
+                    </xsd:restriction>
         		</xsd:simpleType>
         	</xsd:element>
         </xsd:sequence>
