@@ -14,13 +14,11 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.support.RestUtils;
-import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -235,20 +233,10 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 	}
 
 	@Override
-	public void applyAccessToken( OAuth2Profile profile, RestRequestInterface request )
+	public void applyAccessToken( OAuth2Profile profile, HttpRequestBase request, String requestContent )
 	{
 
-		if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
-		{
-			// Since access token is null/empty we don't append it
-			StringToStringsMap requestHeaders = request.getRequestHeaders();
-			requestHeaders.remove( OAuth.HeaderType.AUTHORIZATION );
-			request.setRequestHeaders( requestHeaders );
-			return;
-		}
-
-
-		String uri = request.getPath();
+		String uri = request.getURI().getPath();
 		OAuthBearerClientRequest oAuthBearerClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
 
 		try
@@ -259,7 +247,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 					appendAccessTokenToQuery( request, oAuthBearerClientRequest );
 					break;
 				case BODY:
-					appendAccessTokenToBody( request, oAuthBearerClientRequest );
+					appendAccessTokenToBody( request, oAuthBearerClientRequest, requestContent );
 					break;
 				case HEADER:
 				default:
@@ -273,29 +261,35 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		}
 	}
 
-	private void appendAccessTokenToBody( RestRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	private void appendAccessTokenToBody( HttpRequestBase request, OAuthBearerClientRequest oAuthBearerClientRequest, String requestContent ) throws OAuthSystemException
 	{
-		String bodyWithAccessToken = oAuthBearerClientRequest.buildBodyMessage().getBody();
-		request.setRequestContent( request.getRequestContent() + bodyWithAccessToken );
 	}
 
-	private void appendAccessTokenToQuery( RestRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	private void appendAccessTokenToQuery( HttpRequestBase request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
 	{
 		String uriWithAccessToken = oAuthBearerClientRequest.buildQueryMessage().getLocationUri();
 		String queryString = uriWithAccessToken.split( "\\?" )[1];
-		RestUtils.extractParamsFromQueryString( request.getParams(), queryString );
+		URI oldUri = request.getURI();
+		String requestQueryString = oldUri.getQuery() != null ? oldUri.getQuery() + "&" + queryString : queryString;
+
+		try
+		{
+			request.setURI( URIUtils.createURI( oldUri.getScheme(), oldUri.getHost(), oldUri.getPort(),
+					oldUri.getRawPath(), requestQueryString, oldUri.getFragment() ) );
+		}
+		catch( URISyntaxException e )
+		{
+			throw new OAuthSystemException( e );
+		}
 	}
 
-	private void appendAccessTokenToHeader( HttpRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	private void appendAccessTokenToHeader( HttpRequestBase request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
 	{
 		OAuthClientRequest oAuthClientRequest = oAuthBearerClientRequest.buildHeaderMessage();
 
 		Map<String, String> oAuthHeaders = oAuthClientRequest.getHeaders();
-		StringToStringsMap requestHeaders = request.getRequestHeaders();
-		// replacing the old value since we no more care about it
-		requestHeaders.remove( OAuth.HeaderType.AUTHORIZATION );
-		requestHeaders.add( OAuth.HeaderType.AUTHORIZATION, oAuthHeaders.get( OAuth.HeaderType.AUTHORIZATION ) );
-		request.setRequestHeaders( requestHeaders );
+		request.removeHeaders( OAuth.HeaderType.AUTHORIZATION );
+		request.addHeader( OAuth.HeaderType.AUTHORIZATION, oAuthHeaders.get( OAuth.HeaderType.AUTHORIZATION ) );
 	}
 
 	@Override
