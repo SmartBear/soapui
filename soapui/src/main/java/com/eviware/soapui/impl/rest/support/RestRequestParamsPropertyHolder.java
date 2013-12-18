@@ -342,26 +342,21 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 		}
 		if( renamePerformed )
 		{
+			RestRequestConfig requestConfig = restRequest.getConfig();
+			if ( requestConfig.isSetParameterOrder())
+			{
+				List<String> entryList = requestConfig.getParameterOrder().getEntryList();
+				for (int i = 0; i < entryList.size(); i++) {
+					if (entryList.get(i).equals(name))
+					{
+						requestConfig.getParameterOrder().setEntryArray( i, newName );
+						break;
+					}
+				}
+			}
 			buildPropertyNameList();
 		}
 		return renamePerformed;
-	}
-
-	private void renameLocalProperty( String name, String newName )
-	{
-		String value = values.get( name ) == null ? getPropertyValue( name ) : values.get( name );
-
-		if( this.containsKey( name ) )
-		{
-			RestParamProperty restParamProperty = this.get( name );
-			restParamProperty.setName( newName );
-			this.put( newName, restParamProperty );
-			this.remove( name );
-		}
-
-		values.put( newName, value );
-		values.remove( name );
-		firePropertyRenamed( name, newName );
 	}
 
 	public void resetValues()
