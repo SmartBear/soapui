@@ -16,7 +16,11 @@ import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.oltu.oauth2.client.OAuthClient;
@@ -172,11 +176,41 @@ public class OltuOAuth2ClientFacadeTest
 	@Test
 	public void appendsAccessTokenToHeader() throws Exception
 	{
-		// TODO: Authentication shceme should be fetched from profile/advanced config in SOAP-1160
+		profileWithOnlyAccessToken.setAccessTokenPosition( OAuth2Profile.AccessTokenPosition.HEADER );
 		String expectedAccessTokenValue = "Bearer "+ profileWithOnlyAccessToken.getAccessToken();
 		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
 
 		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ).get( 0 ), is( expectedAccessTokenValue ) ) ;
+	}
+
+	@Test
+	public void appendsAccessTokenToHeaderByDefault() throws Exception
+	{
+		String expectedAccessTokenValue = "Bearer "+ profileWithOnlyAccessToken.getAccessToken();
+		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
+
+		assertThat( restRequest.getRequestHeaders().get( OAuth.HeaderType.AUTHORIZATION ).get( 0 ), is( expectedAccessTokenValue ) ) ;
+	}
+
+	@Test
+	public void appendsAccessTokenToQuery() throws Exception
+	{
+		profileWithOnlyAccessToken.setAccessTokenPosition( OAuth2Profile.AccessTokenPosition.QUERY );
+		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
+
+		assertThat( restRequest.getParams().size(), is( 1 ) );
+		RestParamProperty accessTokenParam = restRequest.getParams().getProperty( OAuth.OAUTH_ACCESS_TOKEN );
+		assertThat( accessTokenParam.getValue(), is( profileWithOnlyAccessToken.getAccessToken() ) ) ;
+	}
+
+	@Test
+	public void appendsAccessTokenToBody() throws OAuth2Exception
+	{
+		String expectedBodyContent = "access_token=" + profileWithOnlyAccessToken.getAccessToken();
+		profileWithOnlyAccessToken.setAccessTokenPosition( OAuth2Profile.AccessTokenPosition.BODY );
+		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, restRequest );
+
+		assertThat( restRequest.getRequestContent(), is( expectedBodyContent ) );
 	}
 
 	@Test

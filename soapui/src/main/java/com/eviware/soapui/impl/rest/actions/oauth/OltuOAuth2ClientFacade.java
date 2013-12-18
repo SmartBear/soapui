@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -58,7 +59,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 	{
 		try
 		{
-			OAuth2Parameters parameters = buildParametersFrom(profile);
+			OAuth2Parameters parameters = buildParametersFrom( profile );
 			validateProfileContents( parameters );
 			String authorizationURL = createAuthorizationURL( parameters );
 			launchConsentScreenAndGetAuthorizationCode( authorizationURL, parameters );
@@ -86,17 +87,18 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		String clientId = expandProperty( profile, profile.getClientID() );
 		String clientSecret = expandProperty( profile, profile.getClientSecret() );
 		String scope = expandProperty( profile, profile.getScope() );
-		return new OAuth2Parameters(profile, authorizationUri, redirectUri, accessTokenUri, clientId, clientSecret, scope);
+		return new OAuth2Parameters( profile, authorizationUri, redirectUri, accessTokenUri, clientId, clientSecret, scope );
 	}
 
 	private void validateProfileContents( OAuth2Parameters parameters )
 	{
 
 		validateHttpUrl( parameters.authorizationUri, "Authorization URI " );
-		if (!parameters.redirectUri.equals(OAUTH_2_OOB_URN)) {
+		if( !parameters.redirectUri.equals( OAUTH_2_OOB_URN ) )
+		{
 			validateHttpUrl( parameters.redirectUri, "Redirect URI" );
 		}
-		validateHttpUrl(parameters.accessTokenUri, "Access token URI");
+		validateHttpUrl( parameters.accessTokenUri, "Access token URI" );
 		validateRequiredStringValue( parameters.clientId, "Client ID" );
 		validateRequiredStringValue( parameters.clientSecret, "Client secret" );
 	}
@@ -108,7 +110,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	private void validateRequiredStringValue( String value, String propertyName )
 	{
-		if (!StringUtils.hasContent( value ))
+		if( !StringUtils.hasContent( value ) )
 		{
 			throw new InvalidOAuth2ParametersException( propertyName + " is empty" );
 		}
@@ -116,7 +118,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	private void validateHttpUrl( String authorizationUri, String uriName )
 	{
-		if (!isValidHttpUrl( authorizationUri ))
+		if( !isValidHttpUrl( authorizationUri ) )
 		{
 			throw new InvalidOAuth2ParametersException( uriName + " " + authorizationUri + " is not a valid HTTP URL" );
 		}
@@ -124,7 +126,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	private boolean isValidHttpUrl( String authorizationUri )
 	{
-		if (!StringUtils.hasContent(authorizationUri))
+		if( !StringUtils.hasContent( authorizationUri ) )
 		{
 			return false;
 		}
@@ -217,7 +219,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 				if( token != null && token.getAccessToken() != null )
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
-					parameters.setRefreshTokenInProfile (token.getRefreshToken());
+					parameters.setRefreshTokenInProfile( token.getRefreshToken() );
 					browserFacade.close();
 				}
 			}
@@ -235,9 +237,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 	@Override
 	public void applyAccessToken( OAuth2Profile profile, RestRequestInterface request )
 	{
-		// TODO: Validation if access token is null
-		// TODO: SOAP-1160 story we need to fill the uri with full path including query params and also support different
-		// ways of sending access token (query, header. body) and different authentication scheme (bearer, mac etc)
 
 		if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
 		{
@@ -248,17 +247,43 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 			return;
 		}
 
+
 		String uri = request.getPath();
 		OAuthBearerClientRequest oAuthBearerClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
 
 		try
 		{
-			appendAccessTokenToHeader( request, oAuthBearerClientRequest );
+			switch( profile.getAccessTokenPosition() )
+			{
+				case QUERY:
+					appendAccessTokenToQuery( request, oAuthBearerClientRequest );
+					break;
+				case BODY:
+					appendAccessTokenToBody( request, oAuthBearerClientRequest );
+					break;
+				case HEADER:
+				default:
+					appendAccessTokenToHeader( request, oAuthBearerClientRequest );
+					break;
+			}
 		}
 		catch( OAuthSystemException e )
 		{
 			SoapUI.logError( e );
 		}
+	}
+
+	private void appendAccessTokenToBody( RestRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	{
+		String bodyWithAccessToken = oAuthBearerClientRequest.buildBodyMessage().getBody();
+		request.setRequestContent( request.getRequestContent() + bodyWithAccessToken );
+	}
+
+	private void appendAccessTokenToQuery( RestRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	{
+		String uriWithAccessToken = oAuthBearerClientRequest.buildQueryMessage().getLocationUri();
+		String queryString = uriWithAccessToken.split( "\\?" )[1];
+		RestUtils.extractParamsFromQueryString( request.getParams(), queryString );
 	}
 
 	private void appendAccessTokenToHeader( HttpRequestInterface request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException

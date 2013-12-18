@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AccessTokenPositionConfig;
 import com.eviware.soapui.config.AccessTokenStatusConfig;
 import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -41,12 +42,20 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
 
 
+
 	public enum AccessTokenStatus
 	{
 		UPDATED_MANUALLY,
 		PENDING,
 		FAILED,
 		RETRIEVED_FROM_SERVER
+	}
+
+	public enum AccessTokenPosition
+	{
+		QUERY,
+		HEADER,
+		BODY
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -90,6 +99,22 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			setAccessTokenStatus( AccessTokenStatus.UPDATED_MANUALLY );
 		}
 	}
+
+	public AccessTokenPosition getAccessTokenPosition()
+	{
+		if( configuration.getAccessTokenPosition() == null )
+		{
+			configuration.setAccessTokenPosition( AccessTokenPositionConfig.HEADER );
+		}
+		return AccessTokenPosition.valueOf( configuration.getAccessTokenPosition().toString() );
+	}
+
+
+	public void setAccessTokenPosition( AccessTokenPosition accessTokenPosition )
+	{
+		configuration.setAccessTokenPosition( AccessTokenPositionConfig.Enum.forString( accessTokenPosition.toString() ) );
+	}
+
 
 	public String getRefreshToken()
 	{
