@@ -2198,20 +2198,20 @@ return installTutorials;</condition>
                   </action>
                 </beans>
               </group>
-              	<action name="Put the JavaFX jar in the correct folder" id="4757" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="2" errorMessage="">
+              	<action name="Put the JavaFX jar in the correct folder" id="4757" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="">
 						<serializedBean>
 						  <java class="java.beans.XMLDecoder">
 							 <object class="com.install4j.runtime.beans.actions.files.CopyFileAction">
 								<void property="destinationFile">
 								  <object class="java.io.File">
-									 <string>${installer:sys.javaHome}${installer:sys.fileSeparator}lib${installer:sys.fileSeparator}ext</string>
+									 <string>${installer:sys.preferredJre}${installer:sys.fileSeparator}lib${installer:sys.fileSeparator}ext</string>
 								  </object>
 								</void>
 								<void property="files">
 								  <array class="java.io.File" length="1">
 									 <void index="0">
 										<object class="java.io.File">
-										  <string>${installer:sys.javaHome}${installer:sys.fileSeparator}lib${installer:sys.fileSeparator}jfxrt.jar</string>
+										  <string>${installer:sys.preferredJre}${installer:sys.fileSeparator}lib${installer:sys.fileSeparator}jfxrt.jar</string>
 										</object>
 									 </void>
 								  </array>
