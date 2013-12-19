@@ -12,12 +12,13 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.EditorView;
@@ -34,9 +35,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 import java.util.List;
 
+import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
 import static com.google.common.base.Preconditions.checkArgument;
 
 @ParametersAreNonnullByDefault
@@ -73,7 +74,7 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 		// Currently there's only support for one profile per project
 		List<OAuth2Profile> oAuth2ProfileList = request.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList();
 
-		checkArgument(oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project");
+		checkArgument( oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project" );
 
 		profile = oAuth2ProfileList.get( 0 );
 
@@ -208,6 +209,63 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 		oauth2Form.addSpace( GROUP_SPACING );
 
 		oauth2Form.appendTextField( "accessToken", "Access Token", "", SimpleForm.LONG_TEXT_FIELD_COLUMNS );
+
+		oauth2Form.addButtonWithoutLabel( "Advanced Options", new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				showAdvancedOAuth2Options();
+			}
+
+
+		} );
+	}
+
+	private void showAdvancedOAuth2Options()
+	{
+		final JDialog popup = new JDialog( SoapUI.getFrame(), "Advanced OAuth2 Options" );
+
+		SimpleBindingForm advancedOptionsForm = new SimpleBindingForm(
+				new PresentationModel<AbstractHttpRequest<?>>( profile ) );
+		ButtonGroup buttonGroup = new ButtonGroup();
+
+		addRadioButton( advancedOptionsForm, buttonGroup, "Send Access Token as", AccessTokenPosition.HEADER );
+		addRadioButton( advancedOptionsForm, buttonGroup, "", AccessTokenPosition.QUERY );
+		addRadioButton( advancedOptionsForm, buttonGroup, "", AccessTokenPosition.BODY );
+
+		advancedOptionsForm.addButtonWithoutLabel( "Ok", new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				popup.dispose();
+			}
+		} );
+
+		popup.getContentPane().add( advancedOptionsForm.getPanel() );
+		popup.setBounds( 200, 200, 400, 400 );
+		popup.setVisible( true );
+		UISupport.centerDialog( popup );
+
+	}
+
+	private void addRadioButton( SimpleBindingForm form, final ButtonGroup group,
+										  String groupText, final AccessTokenPosition accessTokenPosition )
+	{
+		final JRadioButton radioButton = form.appendRadioButton( groupText, accessTokenPosition.toString(), group,
+				profile.getAccessTokenPosition().equals( accessTokenPosition ) );
+		radioButton.setFocusPainted( false );
+		radioButton.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				radioButton.setRequestFocusEnabled( true );
+				profile.setAccessTokenPosition( accessTokenPosition );
+				group.setSelected( radioButton.getModel(), true );
+			}
+		} );
 	}
 
 	private void initForm( SimpleBindingForm form )
