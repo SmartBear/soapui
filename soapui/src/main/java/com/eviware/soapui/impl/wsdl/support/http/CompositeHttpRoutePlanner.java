@@ -24,7 +24,7 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	private HttpRoutePlanner defaultHttpRoutePlanner;
 	private boolean autoProxyEnabled;
 	private SchemeRegistry registry;
-	private ProxySelector cachedProxySelector;
+	private CachedProxySelector cachedProxySelector;
 
 	public CompositeHttpRoutePlanner( SchemeRegistry registry )
 	{
@@ -42,24 +42,41 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	@Override
 	public HttpRoute determineRoute( HttpHost target, HttpRequest request, HttpContext context ) throws HttpException
 	{
-		Object proxy = request.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
-		if( proxy == null && autoProxyEnabled )
+		Object manualProxy = request.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
+		if( manualProxy == null && autoProxyEnabled )
 		{
-			ProxySelector proxySelector = getProxySelector();
+			CachedProxySelector proxySelector = getProxySelector();
 			if( proxySelector != null )
 			{
-				return new ProxySelectorRoutePlanner( registry, proxySelector ).determineRoute( target, request, context );
+				return new ProxySelectorRoutePlanner( registry, proxySelector.getProxySelector() ).determineRoute( target, request, context );
 			}
 		}
 		return defaultHttpRoutePlanner.determineRoute( target, request, context );
 	}
 
-	private ProxySelector getProxySelector()
+	private CachedProxySelector getProxySelector()
 	{
 		if( cachedProxySelector == null )
 		{
-			cachedProxySelector = ProxyUtils.filterHttpHttpsProxy( proxySearch.getProxySelector() );
+			ProxySelector proxySelector = proxySearch.getProxySelector();
+			cachedProxySelector = new CachedProxySelector( proxySelector == null ? null
+					: ProxyUtils.filterHttpHttpsProxy( proxySearch.getProxySelector() ) );
 		}
 		return cachedProxySelector;
+	}
+
+	private static class CachedProxySelector
+	{
+		private ProxySelector proxySelector;
+
+		private CachedProxySelector( ProxySelector proxySelector )
+		{
+			this.proxySelector = proxySelector;
+		}
+
+		private ProxySelector getProxySelector()
+		{
+			return proxySelector;
+		}
 	}
 }
