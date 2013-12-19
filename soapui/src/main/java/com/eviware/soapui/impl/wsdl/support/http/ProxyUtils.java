@@ -53,7 +53,7 @@ public class ProxyUtils
 	{
 		setProxyEnabled( SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 		setAutoProxy( SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
-		setGlobalProxy();
+		setGlobalProxy( SoapUI.getSettings() );
 	}
 
 	public static void initProxySettings( final Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
@@ -223,7 +223,7 @@ public class ProxyUtils
 		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
 	}
 
-	public static void setGlobalProxy()
+	public static void setGlobalProxy( Settings settings )
 	{
 		ProxySelector proxySelector = null;
 		if( proxyEnabled )
@@ -234,7 +234,7 @@ public class ProxyUtils
 			}
 			else
 			{
-				proxySelector = getManualProxySelector( SoapUI.getSettings() );
+				proxySelector = getManualProxySelector( settings );
 			}
 			Authenticator.setDefault( new ProxySettingsAuthenticator() );
 			if(proxySelector != null) {

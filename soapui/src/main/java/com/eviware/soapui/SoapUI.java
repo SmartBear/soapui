@@ -1754,7 +1754,7 @@ public class SoapUI
 	{
 		ProxyUtils.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 		ProxyUtils.setAutoProxy( getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
-		ProxyUtils.setGlobalProxy();
+		ProxyUtils.setGlobalProxy( getSettings() );
 		updateProxyButtonAndTooltip();
 	}
 
