@@ -2204,14 +2204,14 @@ return installTutorials;</condition>
 							 <object class="com.install4j.runtime.beans.actions.files.CopyFileAction">
 								<void property="destinationFile">
 								  <object class="java.io.File">
-									 <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}jre${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}ext</string>
+									 <string>${installer:sys.javaHome}${installer:sys.fileSeparator}lib${installer:sys.fileSeparator}ext</string>
 								  </object>
 								</void>
 								<void property="files">
 								  <array class="java.io.File" length="1">
 									 <void index="0">
 										<object class="java.io.File">
-										  <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}jre${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jfxrt.jar</string>
+										  <string>${installer:sys.javaHome}${installer:sys.fileSeparator}lib${installer:sys.fileSeparator}jfxrt.jar</string>
 										</object>
 									 </void>
 								  </array>
