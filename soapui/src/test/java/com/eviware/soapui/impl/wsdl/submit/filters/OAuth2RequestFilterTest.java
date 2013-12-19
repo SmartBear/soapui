@@ -68,15 +68,4 @@ public class OAuth2RequestFilterTest
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
 	}
 
-	@Ignore
-	@Test
-	public void doesNotSendAccessTokenFromPreviousRequest() throws Exception
-	{
-		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-
-		//new ExtendedPostMethod();
-		restRequest.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 ).setAccessToken( null );
-
-		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
-	}
 }
