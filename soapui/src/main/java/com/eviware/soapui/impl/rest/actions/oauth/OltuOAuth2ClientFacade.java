@@ -17,8 +17,11 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.utils.URIUtils;
+import org.apache.http.entity.StringEntity;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
@@ -30,6 +33,7 @@ import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.token.OAuthToken;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -237,21 +241,21 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 	{
 
 		String uri = request.getURI().getPath();
-		OAuthBearerClientRequest oAuthBearerClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
+		OAuthBearerClientRequest oAuthClientRequest = new OAuthBearerClientRequest( uri ).setAccessToken( profile.getAccessToken() );
 
 		try
 		{
 			switch( profile.getAccessTokenPosition() )
 			{
 				case QUERY:
-					appendAccessTokenToQuery( request, oAuthBearerClientRequest );
+					appendAccessTokenToQuery( request, oAuthClientRequest );
 					break;
 				case BODY:
-					appendAccessTokenToBody( request, oAuthBearerClientRequest, requestContent );
+					appendAccessTokenToBody( request, oAuthClientRequest );
 					break;
 				case HEADER:
 				default:
-					appendAccessTokenToHeader( request, oAuthBearerClientRequest );
+					appendAccessTokenToHeader( request, oAuthClientRequest );
 					break;
 			}
 		}
@@ -261,14 +265,32 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		}
 	}
 
-	private void appendAccessTokenToBody( HttpRequestBase request, OAuthBearerClientRequest oAuthBearerClientRequest, String requestContent ) throws OAuthSystemException
+	private void appendAccessTokenToBody(HttpRequestBase request, OAuthBearerClientRequest oAuthClientRequest )
+			throws OAuthSystemException
 	{
+		try
+		{
+			if(request instanceof HttpEntityEnclosingRequest )
+			{
+				HttpEntity httpEntity = ( ( HttpEntityEnclosingRequest )request ).getEntity();
+				if(httpEntity==null)
+				{
+					String accenTokenParameter = getQueryStringFromOAuthClientRequest( oAuthClientRequest );
+					( ( HttpEntityEnclosingRequest )request).setEntity( new StringEntity( accenTokenParameter ) );
+				}  else
+				{
+					//TODO: re-create the entity from existing one and append the new content for access token
+				}
+			}
+		}catch( UnsupportedEncodingException e )
+		{
+			throw new OAuthSystemException( e );
+		}
 	}
 
-	private void appendAccessTokenToQuery( HttpRequestBase request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	private void appendAccessTokenToQuery( HttpRequestBase request, OAuthBearerClientRequest oAuthClientRequest ) throws OAuthSystemException
 	{
-		String uriWithAccessToken = oAuthBearerClientRequest.buildQueryMessage().getLocationUri();
-		String queryString = uriWithAccessToken.split( "\\?" )[1];
+		String queryString = getQueryStringFromOAuthClientRequest( oAuthClientRequest );
 		URI oldUri = request.getURI();
 		String requestQueryString = oldUri.getQuery() != null ? oldUri.getQuery() + "&" + queryString : queryString;
 
@@ -283,11 +305,15 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		}
 	}
 
-	private void appendAccessTokenToHeader( HttpRequestBase request, OAuthBearerClientRequest oAuthBearerClientRequest ) throws OAuthSystemException
+	private String getQueryStringFromOAuthClientRequest( OAuthBearerClientRequest oAuthClientRequest ) throws OAuthSystemException
 	{
-		OAuthClientRequest oAuthClientRequest = oAuthBearerClientRequest.buildHeaderMessage();
+		String uriWithAccessToken = oAuthClientRequest.buildQueryMessage().getLocationUri();
+		return uriWithAccessToken.split( "\\?" )[1];
+	}
 
-		Map<String, String> oAuthHeaders = oAuthClientRequest.getHeaders();
+	private void appendAccessTokenToHeader( HttpRequestBase request, OAuthBearerClientRequest oAuthClientRequest ) throws OAuthSystemException
+	{
+		Map<String, String> oAuthHeaders = oAuthClientRequest.buildHeaderMessage().getHeaders();
 		request.removeHeaders( OAuth.HeaderType.AUTHORIZATION );
 		request.addHeader( OAuth.HeaderType.AUTHORIZATION, oAuthHeaders.get( OAuth.HeaderType.AUTHORIZATION ) );
 	}

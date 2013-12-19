@@ -13,15 +13,12 @@
 package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.config.OAuth2ProfileConfig;
-import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
-import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
@@ -32,18 +29,18 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.token.BasicOAuthToken;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -64,7 +61,7 @@ public class OltuOAuth2ClientFacadeTest
 	private OAuth2Profile profileWithOnlyAccessToken;
 	private OltuOAuth2ClientFacade oltuClientFacade;
 	private String refreshToken;
-	private HttpRequestBase httpRequest;
+	private ExtendedPostMethod httpRequest;
 
 
 	@Before
@@ -204,15 +201,18 @@ public class OltuOAuth2ClientFacadeTest
 		assertThat( httpRequest.getURI().getQuery(), is( "access_token=" + profileWithOnlyAccessToken.getAccessToken() ) ) ;
 	}
 
-	@Ignore
 	@Test
-	public void appendsAccessTokenToBody() throws OAuth2Exception
+	public void appendsAccessTokenToBody() throws OAuth2Exception, IOException
 	{
 		String expectedBodyContent = "access_token=" + profileWithOnlyAccessToken.getAccessToken();
 		profileWithOnlyAccessToken.setAccessTokenPosition( OAuth2Profile.AccessTokenPosition.BODY );
 		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, httpRequest, "" );
 
-		//TODO: assert request body contains the access token
+		StringWriter writer = new StringWriter();
+		IOUtils.copy( httpRequest.getEntity().getContent(), writer, "UTF-8" );
+		String actualContent = writer.toString();
+
+		assertThat( actualContent, is( expectedBodyContent ) );
 	}
 
 	@Test

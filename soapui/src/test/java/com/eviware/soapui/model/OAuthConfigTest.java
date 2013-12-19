@@ -45,7 +45,6 @@ public class OAuthConfigTest
 		List<OAuth2Profile> oAuth2Profiles = project.getOAuth2ProfileContainer().getOAuth2ProfileList();
 		assertThat( oAuth2Profiles.size(), is( 1 ) );
 		oAuth2Profile = oAuth2Profiles.get( 0 );
-
 		oAuth2Profile.setClientID( "google" );
 		oAuth2Profile.setAccessTokenURI( "http://google.com/accessTokenURI" );
 		oAuth2Profile.setAuthorizationURI( "http://google.com/auth" );
