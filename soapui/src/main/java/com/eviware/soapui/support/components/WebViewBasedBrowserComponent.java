@@ -139,6 +139,8 @@ public class WebViewBasedBrowserComponent
 							} );
 					Group jfxComponentGroup = new Group();
 					Scene scene = new Scene( jfxComponentGroup );
+					webView.prefWidthProperty().bind( scene.widthProperty() );
+					webView.prefHeightProperty().bind( scene.heightProperty() );
 					jfxComponentGroup.getChildren().add( webView );
 					browserPanel.setScene( scene );
 					addKeybaordFocusManager( browserPanel );
