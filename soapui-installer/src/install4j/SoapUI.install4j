@@ -689,7 +689,7 @@ return component.isSelected();</string>
                     <boolean>true</boolean>
                   </void>
                   <void property="infoText">
-                    <string>Please select the target directory for unpacking the Integrated Browser component. 
+                    <string>Please select the target directory for unpacking the Integrated Browser component.
 Be sure to have write permissions for this directory. </string>
                   </void>
                   <void property="initialDirectory">
@@ -841,7 +841,7 @@ else return false;
     return  "bat";
 } else {
     return "sh";
-} 
+}
 </string>
                           </void>
                         </object>
@@ -881,7 +881,7 @@ else return false;
     return  context.getVariable("sys.contentDir");
 } else {
     return context.getVariable("sys.installationDir");
-} 
+}
 </string>
                           </void>
                         </object>
@@ -2198,6 +2198,32 @@ return installTutorials;</condition>
                   </action>
                 </beans>
               </group>
+              	<action name="Put the JavaFX jar in the correct folder" id="4757" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="2" errorMessage="">
+						<serializedBean>
+						  <java class="java.beans.XMLDecoder">
+							 <object class="com.install4j.runtime.beans.actions.files.CopyFileAction">
+								<void property="destinationFile">
+								  <object class="java.io.File">
+									 <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}jre${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}ext</string>
+								  </object>
+								</void>
+								<void property="files">
+								  <array class="java.io.File" length="1">
+									 <void index="0">
+										<object class="java.io.File">
+										  <string>${installer:sys.installationDir}${installer:FILE_SEPARATOR}jre${installer:FILE_SEPARATOR}lib${installer:FILE_SEPARATOR}jfxrt.jar</string>
+										</object>
+									 </void>
+								  </array>
+								</void>
+								<void property="overwriteMode">
+								  <object class="com.install4j.api.context.OverwriteMode" field="ALWAYS" />
+								</void>
+							 </object>
+						  </java>
+						</serializedBean>
+						<condition />
+					 </action>
             </actions>
             <formComponents />
           </screen>
