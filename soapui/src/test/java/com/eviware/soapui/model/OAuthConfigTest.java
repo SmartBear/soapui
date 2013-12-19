@@ -13,7 +13,6 @@
 package com.eviware.soapui.model;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -25,29 +24,28 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class OAuthConfigTest
 {
-	private WsdlProject project;
-
 	private OAuth2Profile oAuth2Profile;
-	private OAuth2ProfileContainer oAuth2ProfileContainer;
 	private String projectFileName = "OAuthTestProject.xml";
 
 	@Before
 	public void setUp() throws XmlException, IOException, SoapUIException
 	{
-		project = new WsdlProject();
+		WsdlProject project = new WsdlProject();
 
 		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
 		restService.addNewResource( "Resource", "/test" );
 
-		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
+		List<OAuth2Profile> oAuth2Profiles = project.getOAuth2ProfileContainer().getOAuth2ProfileList();
+		assertThat( oAuth2Profiles.size(), is( 1 ) );
+		oAuth2Profile = oAuth2Profiles.get( 0 );
 
-		oAuth2Profile = oAuth2ProfileContainer.addNewOAuth2Profile();
 		oAuth2Profile.setClientID( "google" );
 		oAuth2Profile.setAccessTokenURI( "http://google.com/accessTokenURI" );
 		oAuth2Profile.setAuthorizationURI( "http://google.com/auth" );
@@ -62,7 +60,7 @@ public class OAuthConfigTest
 	public void tearDown()
 	{
 		File file = new File( projectFileName );
-		if(file.exists())
+		if( file.exists() )
 		{
 			file.delete();
 		}

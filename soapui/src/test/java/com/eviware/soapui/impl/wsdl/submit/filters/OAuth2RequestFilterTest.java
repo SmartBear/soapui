@@ -39,7 +39,7 @@ public class OAuth2RequestFilterTest
 		restRequest = ModelItemFactory.makeRestRequest();
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		OAuth2ProfileContainer oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
-		OAuth2Profile oAuth2Profile = oAuth2ProfileContainer.addNewOAuth2Profile();
+		OAuth2Profile oAuth2Profile = oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
 		oAuth2Profile.setAccessToken( accessToken );
 
 
@@ -52,9 +52,8 @@ public class OAuth2RequestFilterTest
 	@Test
 	public void appliesAccessToken() throws URISyntaxException
 	{
-		String expectedAccessTokenValue = "Bearer "+ accessToken;
+		String expectedAccessTokenValue = "Bearer " + accessToken;
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-
 		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
 	}
 
@@ -62,9 +61,7 @@ public class OAuth2RequestFilterTest
 	public void doNotApplyNullAccessTokenToHeader() throws Exception
 	{
 		restRequest.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 ).setAccessToken( null );
-
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
 	}
 
