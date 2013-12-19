@@ -13,16 +13,21 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 {
 	private final WsdlProject project;
 	private final OAuth2ProfileContainerConfig configuration;
-	List<OAuth2Profile> oAuth2ProfileList = new ArrayList<OAuth2Profile>(  );
+	List<OAuth2Profile> oAuth2ProfileList = new ArrayList<OAuth2Profile>();
 
 	public DefaultOAuth2ProfileContainer( WsdlProject project, OAuth2ProfileContainerConfig configuration )
 	{
 		this.project = project;
 		this.configuration = configuration;
 
-		for( OAuth2ProfileConfig oAuth2ProfileConfig: configuration.getOAuth2ProfileList() )
+		// Pre load the container with an empty profile at the project initialization rather than in the request
+		if( configuration.getOAuth2Profile() == null )
 		{
-			oAuth2ProfileList.add( new OAuth2Profile( this, oAuth2ProfileConfig ) );
+			oAuth2ProfileList.add( new OAuth2Profile( this, configuration.addNewOAuth2Profile() ) );
+		}
+		else
+		{
+			oAuth2ProfileList.add( new OAuth2Profile( this, configuration.getOAuth2Profile() ) );
 		}
 	}
 

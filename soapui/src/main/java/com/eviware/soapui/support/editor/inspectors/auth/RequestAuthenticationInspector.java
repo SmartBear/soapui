@@ -34,6 +34,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.*;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 @ParametersAreNonnullByDefault
 public class RequestAuthenticationInspector extends AbstractXmlInspector
@@ -67,8 +71,11 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 		this.request = request;
 
 		// Currently there's only support for one profile per project
-		OAuth2ProfileContainer profileContainer = request.getOperation().getInterface().getProject().getOAuth2ProfileContainer();
-		profile = profileContainer.getOAuth2ProfileList().get( 0 );
+		List<OAuth2Profile> oAuth2ProfileList = request.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList();
+
+		checkArgument(oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project");
+
+		profile = oAuth2ProfileList.get( 0 );
 
 		authTypeForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
 		legacyForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
