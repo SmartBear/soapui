@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -9,6 +10,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransp
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.http.client.methods.HttpRequestBase;
+
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
@@ -20,7 +23,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
 				.getOAuth2ProfileContainer();
 
-		if( !profileContainer.getOAuth2ProfileList().isEmpty() )
+		if( !profileContainer.getOAuth2ProfileList().isEmpty() && O_AUTH_2.toString().equals( request.getAuthType() ) )
 		{
 			OAuth2Profile profile = profileContainer.getOAuth2ProfileList().get( 0 );
 			if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )

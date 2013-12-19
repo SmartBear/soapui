@@ -18,6 +18,8 @@ import org.mockito.Mockito;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.PREEMPTIVE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -37,6 +39,7 @@ public class OAuth2RequestFilterTest
 		oAuth2RequestFilter = new OAuth2RequestFilter();
 
 		restRequest = ModelItemFactory.makeRestRequest();
+		restRequest.setAuthType( O_AUTH_2.toString());
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		OAuth2ProfileContainer oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
 		OAuth2Profile oAuth2Profile = oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
@@ -61,6 +64,14 @@ public class OAuth2RequestFilterTest
 	public void doNotApplyNullAccessTokenToHeader() throws Exception
 	{
 		restRequest.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 ).setAccessToken( null );
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
+	}
+
+	@Test
+	public void doesNotApplyAccessTokenIfOAuthTypeIsNotOAuth2()
+	{
+		restRequest.setAuthType( PREEMPTIVE.toString() );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
 	}
