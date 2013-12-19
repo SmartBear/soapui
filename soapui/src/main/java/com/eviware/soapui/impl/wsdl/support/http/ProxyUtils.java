@@ -226,6 +226,7 @@ public class ProxyUtils
 	public static void setGlobalProxy( Settings settings )
 	{
 		ProxySelector proxySelector = null;
+		ProxySettingsAuthenticator authenticator = null;
 		if( proxyEnabled )
 		{
 			if( autoProxy )
@@ -236,13 +237,15 @@ public class ProxyUtils
 			{
 				proxySelector = getManualProxySelector( settings );
 			}
-			Authenticator.setDefault( new ProxySettingsAuthenticator() );
 			if(proxySelector != null) {
 				// Don't register any proxies for other schemes
 				proxySelector = filterHttpHttpsProxy( proxySelector );
 			}
+			authenticator = new ProxySettingsAuthenticator();
 		}
 		ProxySelector.setDefault( proxySelector );
+		Authenticator.setDefault( authenticator );
+
 	}
 
 	public static ProxySelector filterHttpHttpsProxy( ProxySelector proxySelector )
@@ -276,6 +279,9 @@ public class ProxyUtils
 		@Override
 		protected PasswordAuthentication getPasswordAuthentication()
 		{
+			if(getRequestorType() != RequestorType.PROXY) {
+				return null;
+			}
 			Settings settings = SoapUI.getSettings();
 			try
 			{
