@@ -12,44 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.SwingUtilities;
-import javax.swing.TransferHandler;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.text.Document;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -59,7 +21,7 @@ import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.AssertionsPanel;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyHolderTableModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
@@ -75,12 +37,8 @@ import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
@@ -88,13 +46,7 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.support.AbstractEditorView;
@@ -104,6 +56,26 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @SuppressWarnings( "serial" )
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener
@@ -349,9 +321,10 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	{
 		propertyHolderTable = new PropertyHolderTable( getModelItem() )
 		{
-			protected JTable buildPropertiesTable()
+			@Override
+			protected DefaultPropertyHolderTableModel getPropertyHolderTableModel()
 			{
-				propertiesModel = new DefaultPropertyTableHolderModel( holder )
+				return new DefaultPropertyHolderTableModel( holder )
 				{
 					@Override
 					public String[] getPropertyNames()
@@ -368,38 +341,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 						return propertyNamesList.toArray( new String[propertyNamesList.size()] );
 					}
 				};
-				propertiesTable = new PropertiesHolderJTable();
-				propertiesTable.setSurrendersFocusOnKeystroke( true );
-
-				propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
-				propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-				{
-					public void valueChanged( ListSelectionEvent e )
-					{
-						int selectedRow = propertiesTable.getSelectedRow();
-						if( removePropertyAction != null )
-							removePropertyAction.setEnabled( selectedRow != -1 );
-
-						if( movePropertyUpAction != null )
-							movePropertyUpAction.setEnabled( selectedRow > 0 );
-
-						if( movePropertyDownAction != null )
-							movePropertyDownAction.setEnabled( selectedRow >= 0
-									&& selectedRow < propertiesTable.getRowCount() - 1 );
-					}
-				} );
-
-				propertiesTable.setDragEnabled( true );
-				propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
-
-				if( getHolder().getModelItem() != null )
-				{
-					DropTarget dropTarget = new DropTarget( propertiesTable,
-							new PropertyHolderTablePropertyExpansionDropTarget() );
-					dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
-				}
-
-				return propertiesTable;
 			}
 		};
 

@@ -12,11 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.Date;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.panels.request.StringToStringsMapTableModel;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.ui.desktop.DesktopPanel;
+import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -26,19 +32,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.panels.request.StringToStringsMapTableModel;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.xml.SyntaxEditorUtil;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.ui.desktop.DesktopPanel;
-import com.eviware.soapui.ui.support.DefaultDesktopPanel;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.Date;
 
 /**
  * Shows a desktop-panel with the MessageExchange for a WsdlMockResult
@@ -115,7 +113,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 		scrollPane.setFoldIndicatorEnabled( true );
 		scrollPane.setLineNumbersEnabled( true );
 
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringsMapTableModel(
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( JTableFactory.getInstance().makeJTable( new StringToStringsMapTableModel(
 				result.getResponseHeaders(), "Header", "Value", false ) ) ), scrollPane );
 		split.setDividerLocation( 150 );
 		return split;
@@ -132,7 +130,7 @@ public class ViewWsdlMockResultAction extends AbstractAction
 		RTextScrollPane scrollPane = new RTextScrollPane( resultArea );
 		scrollPane.setFoldIndicatorEnabled( true );
 		scrollPane.setLineNumbersEnabled( true );
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( new JTable( new StringToStringsMapTableModel(
+		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( JTableFactory.getInstance().makeJTable( new StringToStringsMapTableModel(
 				result.getMockRequest().getRequestHeaders(), "Header", "Value", false ) ) ), scrollPane );
 		split.setDividerLocation( 150 );
 		return split;

@@ -32,11 +32,14 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class RestUtils
 {
-	private final static Pattern splitPattern = Pattern.compile( "[^|]\\|[^|]" );
+
+	public static enum TemplateExtractionOption
+	{
+		EXTRACT_TEMPLATE_PARAMETERS, IGNORE_TEMPLATE_PARAMETERS
+	}
 
 	public static String[] extractTemplateParams( String path )
 	{
@@ -64,10 +67,10 @@ public class RestUtils
 
 	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost )
 	{
-		return extractParams( pathOrEndpoint, params, keepHost, true );
+		return extractParams( pathOrEndpoint, params, keepHost, TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS );
 	}
 
-	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, boolean createTemplateParams )
+	public static String extractParams( String pathOrEndpoint, RestParamsPropertyHolder params, boolean keepHost, TemplateExtractionOption templateExtractionOptions )
 	{
 		if( StringUtils.isNullOrEmpty( pathOrEndpoint ) )
 			return "";
@@ -94,65 +97,19 @@ public class RestUtils
 
 		String[] items = path.split( "/" );
 
-		int templateParamCount = 0;
 		StringBuilder resultPath = new StringBuilder();
 
 		for( String item : items )
 		{
 			try
 			{
-				if( item.startsWith( "{" ) && item.endsWith( "}" ) )
+				if( templateExtractionOptions == TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS )
 				{
-					String name = item.substring( 1, item.length() - 1 );
-					RestParamProperty property = params.getProperty( name );
-					if( !params.hasProperty( name ) )
+					int openCurlyIndex = item.indexOf( "{" ) ;
+					int closingCurlyIndex = item.indexOf( "}" ) ;
+					if( openCurlyIndex != -1 && closingCurlyIndex > openCurlyIndex )
 					{
-						property = params.addProperty( name );
-					}
-
-					property.setStyle( ParameterStyle.TEMPLATE );
-					property.setValue( name );
-					property.setDefaultValue( name );
-				}
-				else
-				{
-					String[] matrixParams = item.split( ";" );
-					if( matrixParams.length > 0 )
-					{
-						item = matrixParams[0];
-						for( int c = 1; c < matrixParams.length; c++ )
-						{
-							String matrixParam = matrixParams[c];
-
-							int ix = matrixParam.indexOf( '=' );
-							if( ix == -1 )
-							{
-								String name = URLDecoder.decode( matrixParam, "Utf-8" );
-								if( !params.hasProperty( name ) )
-									params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
-							}
-							else
-							{
-
-								String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
-								RestParamProperty property = params.getProperty( name );
-								if( property == null )
-								{
-									property = params.addProperty( name );
-								}
-
-								property.setStyle( ParameterStyle.MATRIX );
-								property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
-								property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
-							}
-						}
-					}
-
-					if( createTemplateParams )
-					{
-						Integer.parseInt( item );
-
-						String name = "param" + templateParamCount++;
+						String name = item.substring( openCurlyIndex + 1, closingCurlyIndex );
 						RestParamProperty property = params.getProperty( name );
 						if( !params.hasProperty( name ) )
 						{
@@ -160,16 +117,45 @@ public class RestUtils
 						}
 
 						property.setStyle( ParameterStyle.TEMPLATE );
-						property.setValue( item );
-						property.setDefaultValue( item );
+						property.setValue( name );
+						property.setDefaultValue( name );
+					}
+				}
+				String[] matrixParams = item.split( ";" );
+				if( matrixParams.length > 0 )
+				{
+					item = matrixParams[0];
+					for( int c = 1; c < matrixParams.length; c++ )
+					{
+						String matrixParam = matrixParams[c];
 
-						item = "{" + property.getName() + "}";
+						int ix = matrixParam.indexOf( '=' );
+						if( ix == -1 )
+						{
+							String name = URLDecoder.decode( matrixParam, "Utf-8" );
+							if( !params.hasProperty( name ) )
+								params.addProperty( name ).setStyle( ParameterStyle.MATRIX );
+						}
+						else
+						{
 
+							String name = URLDecoder.decode( matrixParam.substring( 0, ix ), "Utf-8" );
+							RestParamProperty property = params.getProperty( name );
+							if( property == null )
+							{
+								property = params.addProperty( name );
+							}
+
+							property.setStyle( ParameterStyle.MATRIX );
+							property.setValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
+							property.setDefaultValue( URLDecoder.decode( matrixParam.substring( ix + 1 ), "Utf-8" ) );
+						}
 					}
 				}
 			}
-			catch( Exception ignore )
+			catch( Exception e )
 			{
+				SoapUI.logError(  e, "Couldn't parse the template/matrix parameters from URI" );
 			}
 
 			if( StringUtils.hasContent( item ) )

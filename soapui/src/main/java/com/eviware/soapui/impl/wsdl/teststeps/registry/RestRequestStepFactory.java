@@ -74,6 +74,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory
 
 	public static TestStepConfig createConfig( RestRequest request, String stepName )
 	{
+		request.beforeSave(); //SOAP-1098
 		RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 
 		requestStepConfig.setService( request.getOperation().getInterface().getName() );

@@ -13,11 +13,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import java.util.UUID;
 
 /**
- * Created with IntelliJ IDEA.
- * User: manne
- * Date: 9/10/13
- * Time: 8:45 AM
- * To change this template use File | Settings | File Templates.
+ * @author manne
  */
 public class StatefulModelItemFactory
 {

@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="Test Project" soapui-version="UNKNOWN VERSION" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:properties/><con:wssContainer/></con:soapui-project>
+<con:soapui-project activeEnvironment="Default" name="Test Project" soapui-version="4.6.2-SNAPSHOT" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:properties/><con:wssContainer/></con:soapui-project>

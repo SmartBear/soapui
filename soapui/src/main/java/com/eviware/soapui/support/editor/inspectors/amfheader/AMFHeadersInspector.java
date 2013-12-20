@@ -12,10 +12,16 @@
 
 package com.eviware.soapui.support.editor.inspectors.amfheader;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.EditorView;
+import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
+import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
+import com.eviware.soapui.support.swing.JTableFactory;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -28,16 +34,10 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.panels.request.StringToStringMapTableModel;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.editor.EditorView;
-import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
-import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
-import com.eviware.soapui.support.editor.xml.XmlDocument;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class AMFHeadersInspector extends AbstractXmlInspector implements PropertyChangeListener
 {
@@ -73,7 +73,7 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
 			}
 		} );
 
-		headersTable = new JTable( headersTableModel );
+		headersTable = JTableFactory.getInstance().makeJTable( headersTableModel );
 
 		panel = new JPanel( new BorderLayout() );
 		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );

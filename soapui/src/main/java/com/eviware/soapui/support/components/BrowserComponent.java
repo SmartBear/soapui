@@ -12,51 +12,11 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import org.mozilla.interfaces.nsIBinaryInputStream;
-import org.mozilla.interfaces.nsIDOMWindow;
-import org.mozilla.interfaces.nsIHttpChannel;
-import org.mozilla.interfaces.nsIHttpHeaderVisitor;
-import org.mozilla.interfaces.nsIInputStream;
-import org.mozilla.interfaces.nsIInterfaceRequestor;
-import org.mozilla.interfaces.nsIObserver;
-import org.mozilla.interfaces.nsIObserverService;
-import org.mozilla.interfaces.nsIRequest;
-import org.mozilla.interfaces.nsISeekableStream;
-import org.mozilla.interfaces.nsIServiceManager;
-import org.mozilla.interfaces.nsISupports;
-import org.mozilla.interfaces.nsIURI;
-import org.mozilla.interfaces.nsIUploadChannel;
-import org.mozilla.interfaces.nsIWeakReference;
-import org.mozilla.interfaces.nsIWebProgress;
-import org.mozilla.interfaces.nsIWebProgressListener;
-import org.mozilla.xpcom.Mozilla;
-import org.mozilla.xpcom.XPCOMException;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
 import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
@@ -73,36 +33,37 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.teamdev.jxbrowser.Browser;
-import com.teamdev.jxbrowser.BrowserFactory;
-import com.teamdev.jxbrowser.BrowserServices;
-import com.teamdev.jxbrowser.BrowserType;
-import com.teamdev.jxbrowser.Configurable;
-import com.teamdev.jxbrowser.Feature;
-import com.teamdev.jxbrowser.NewWindowContainer;
-import com.teamdev.jxbrowser.NewWindowManager;
-import com.teamdev.jxbrowser.NewWindowParams;
+import com.teamdev.jxbrowser.*;
 import com.teamdev.jxbrowser.cookie.HttpCookieStorage;
-import com.teamdev.jxbrowser.events.NavigationAdapter;
-import com.teamdev.jxbrowser.events.NavigationEvent;
-import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
-import com.teamdev.jxbrowser.events.NavigationListener;
-import com.teamdev.jxbrowser.events.NavigationStatusCode;
-import com.teamdev.jxbrowser.events.StatusChangedEvent;
-import com.teamdev.jxbrowser.events.StatusListener;
+import com.teamdev.jxbrowser.events.*;
 import com.teamdev.jxbrowser.gecko.xpcom.XPCOM;
 import com.teamdev.jxbrowser.gecko.xpcom.XPCOMManager;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
 import com.teamdev.jxbrowser.mozilla.MozillaCookieStorage;
 import com.teamdev.jxbrowser.prompt.DefaultPromptService;
-import com.teamdev.jxbrowser.proxy.AuthenticationHandler;
-import com.teamdev.jxbrowser.proxy.ProxyConfig;
-import com.teamdev.jxbrowser.proxy.ProxyServer;
-import com.teamdev.jxbrowser.proxy.ProxyServerLogin;
-import com.teamdev.jxbrowser.proxy.ServerType;
+import com.teamdev.jxbrowser.proxy.*;
 import com.teamdev.jxbrowser.security.HttpSecurityAction;
 import com.teamdev.jxbrowser.security.HttpSecurityHandler;
 import com.teamdev.jxbrowser.security.SecurityProblem;
+import org.apache.http.HttpException;
+import org.apache.http.HttpHost;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.conn.routing.HttpRoute;
+import org.apache.http.conn.routing.HttpRoutePlanner;
+import org.mozilla.interfaces.*;
+import org.mozilla.xpcom.Mozilla;
+import org.mozilla.xpcom.XPCOMException;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+import java.util.List;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
@@ -115,7 +76,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private boolean showingErrorPage;
 	public String url;
 	private Boolean possibleError = false;
-	@SuppressWarnings( "unused" )
+	@SuppressWarnings("unused")
 	private boolean disposed;
 	// private static boolean disabled;
 	private NavigationListener internalNavigationListener;
@@ -152,9 +113,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 					panel.add( statusBar, BorderLayout.SOUTH );
 				}
 
-				// if( addToolbar )
-				// panel.add( buildToolbar(), BorderLayout.NORTH );
-
 				if( !initBrowser() )
 					return panel;
 
@@ -166,7 +124,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		return panel;
 	}
 
-	@SuppressWarnings( "unused" )
+	@SuppressWarnings("unused")
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -886,31 +844,51 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 			if( ProxyUtils.isProxyEnabled() )
 			{
-				Settings settings = SoapUI.getSettings();
-				PropertyExpansionContext context = null;
+				if( ProxyUtils.isAutoProxy() )
+				{
+					HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
+					HttpRoute httpRoute = routePlanner.determineRoute( new HttpHost( "soapui.org" ), new HttpGet( "http://soapui.org" ), null );
 
-				// check system properties first
-				String proxyHost = System.getProperty( "http.proxyHost" );
-				String proxyPort = System.getProperty( "http.proxyPort" );
+					HttpHost proxyHost = httpRoute.getProxyHost();
 
-				if( proxyHost == null )
-					proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+					if( proxyHost != null )
+					{
+						proxyConf.setProxy( ServerType.HTTP, new ProxyServer( proxyHost.getHostName(), proxyHost.getPort() ) );
+					}
+					else
+					{
+						proxyConf.setDirectConnection();
+					}
+				}
+				else
+				{
+					Settings settings = SoapUI.getSettings();
+					PropertyExpansionContext context = null;
 
-				if( proxyPort == null )
-					proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+					// check system properties first
+					String proxyHost = System.getProperty( "http.proxyHost" );
+					String proxyPort = System.getProperty( "http.proxyPort" );
 
-				proxyConf.setProxy( ServerType.HTTP, new ProxyServer( proxyHost, Integer.parseInt( proxyPort ) ) );
-				// check excludes
-				proxyConf.setExceptions( PropertyExpander.expandProperties( context,
-						settings.getString( ProxySettings.EXCLUDES, "" ) ) );
+					if( proxyHost == null )
+						proxyHost = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.HOST, "" ) );
+
+					if( proxyPort == null )
+						proxyPort = PropertyExpander.expandProperties( context, settings.getString( ProxySettings.PORT, "" ) );
+
+					proxyConf.setProxy( ServerType.HTTP, new ProxyServer( proxyHost, Integer.parseInt( proxyPort ) ) );
+					// check excludes
+					proxyConf.setExceptions( PropertyExpander.expandProperties( context,
+							settings.getString( ProxySettings.EXCLUDES, "" ) ) );
+				}
 			}
 			else
 			{
 				proxyConf.setDirectConnection();
 			}
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
+			//ignore
 		}
 	}
 
@@ -928,7 +906,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 
 	/**
 	 * Called after a HTTP response from the server is received.
-	 * 
+	 *
 	 * @see http://developer.mozilla.org/en/Observer_Notifications
 	 */
 	public static final String EVENT_HTTP_ON_MODIFY_REQUEST = "http-on-modify-request";
@@ -943,9 +921,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	/**
 	 * Converts an object implementing the nsIURI interface into a human readable
 	 * URI.
-	 * 
-	 * @param uri
-	 *           nsIURI object to convert
+	 *
+	 * @param uri nsIURI object to convert
 	 * @return String URI result string
 	 */
 	public static String dumpUri( nsIURI uri )

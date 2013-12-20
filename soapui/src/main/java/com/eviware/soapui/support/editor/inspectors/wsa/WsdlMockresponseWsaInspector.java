@@ -12,21 +12,18 @@
 
 package com.eviware.soapui.support.editor.inspectors.wsa;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.swing.JCheckBox;
-import javax.swing.JTextField;
-
 import com.eviware.soapui.config.MustUnderstandTypeConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
+import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
 public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implements XmlInspector
 {
-	private final WsdlMockResponse response;
 	private JCheckBox generateMessageIdCheckBox;
 	private JTextField messageIdTextField;
 	private JCheckBox addDefaultToCheckBox;
@@ -37,13 +34,12 @@ public class WsdlMockresponseWsaInspector extends AbstractWsaInspector implement
 	public WsdlMockresponseWsaInspector( WsdlMockResponse response )
 	{
 		super( response );
-		this.response = response;
 	}
 
 	public void buildContent( SimpleBindingForm form )
 	{
 		form.addSpace( 5 );
-		form.appendCheckBox( "wsaEnabled", "Enable WS-A addressing", "Enable/Disable WS-A addressing" );
+		form.appendCheckBox( "wsaEnabled", "Enable WS-A addressing", "" );
 		form.addSpace( 5 );
 		// add mustUnderstand drop down list
 		form.appendComboBox( "mustUnderstand", "Must understand", new String[] {

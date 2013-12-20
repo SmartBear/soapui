@@ -10,6 +10,7 @@ import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.EndpointsComboBoxModel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
@@ -23,15 +24,19 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
+import javax.swing.JTable;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import java.awt.event.ActionEvent;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static com.eviware.soapui.utils.ModelItemMatchers.hasParameter;
 import static com.eviware.soapui.utils.StubbedDialogs.hasPromptWithValue;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
@@ -85,6 +90,19 @@ public class RestRequestDesktopPanelTest
 
 		RestParamProperty returnedParameter = restRequest.getParams().getProperty( PARAMETER_NAME );
 		assertThat( returnedParameter.getValue(), is( PARAMETER_VALUE ) );
+	}
+
+	@Test
+	public void addsNewParameterToResource() throws Exception
+	{
+		JTable restParameterTable = getRestParameterTable();
+		new AddParamAction( restParameterTable, restRequest.getParams(), "" ).actionPerformed( new ActionEvent( restParameterTable, 1, "Add" ) );
+		String newParamName = "newParamName";
+		restParameterTable.setValueAt( newParamName, 1, 0 );
+		restParameterTable.setValueAt( "newParamValue", 1, 1 );
+
+		assertThat( restRequest.getRestMethod().hasProperty( newParamName ), is( false ) );
+		assertThat(restRequest.getResource().hasProperty( newParamName ), is(true));
 	}
 
 	@Test

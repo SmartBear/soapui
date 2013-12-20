@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -23,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmContainer;
 import com.eviware.soapui.impl.wsdl.support.wsrm.WsrmUtils;
 import com.eviware.soapui.model.iface.SubmitContext;
+import org.apache.log4j.Logger;
 
 public class WsrmRequestFilter extends AbstractRequestFilter
 {
@@ -51,8 +50,8 @@ public class WsrmRequestFilter extends AbstractRequestFilter
 			String identifier = ( ( WsdlRequest )wsdlRequest ).getWsrmConfig().getSequenceIdentifier();
 			long msgNumber = ( ( WsdlRequest )wsdlRequest ).getWsrmConfig().getLastMessageId();
 
-			content = new WsrmUtils( content, soapVersion, context ).createNewWSReliableMessagingRequest(
-					( WsdlRequest )wsdlRequest, httpMethod, identifier, msgNumber, wsdlRequest.getEndpoint() );
+			content = new WsrmUtils( content, soapVersion ).createNewWSReliableMessagingRequest(
+					( WsdlRequest )wsdlRequest, identifier, msgNumber, wsdlRequest.getEndpoint() );
 			if( content != null )
 				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
 		}

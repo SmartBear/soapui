@@ -12,16 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsrm;
 
-import java.util.UUID;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.WsaConfigConfig;
@@ -32,7 +22,6 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -44,8 +33,17 @@ import com.eviware.soapui.model.iface.Request.SubmitException;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
+import java.util.UUID;
 
 public class WsrmUtils
 {
@@ -74,14 +72,13 @@ public class WsrmUtils
 		this.soapVersion = soapVersion;
 	}
 
-	public WsrmUtils( String content, SoapVersion soapVersion, PropertyExpansionContext context )
+	public WsrmUtils( String content, SoapVersion soapVersion )
 	{
 		this.soapVersion = soapVersion;
 		this.content = content;
 
 		try
 		{
-			// xmlContentObject = XmlObject.Factory.parse( content );
 			xmlContentObject = XmlUtils.createXmlObject( content );
 		}
 		catch( Exception e )
@@ -90,13 +87,13 @@ public class WsrmUtils
 		}
 	}
 
-	public String createNewWSReliableMessagingRequest( WsdlRequest wsrmContainer, ExtendedHttpMethod httpMethod,
-			String identifier, long msgNumber, String endpoint )
+	public String createNewWSReliableMessagingRequest( WsdlRequest wsrmContainer,
+																		String identifier, long msgNumber, String endpoint )
 	{
 
 		try
 		{
-			Element header = getHeader( wsrmContainer );
+			Element header = getHeader();
 
 			header.setAttribute( "xmlns:" + "wsrm", wsrmContainer.getWsrmConfig().getVersionNameSpace() );
 
@@ -139,20 +136,67 @@ public class WsrmUtils
 		return content;
 	}
 
-	private Element getHeader( WsrmContainer wsrmContainer ) throws XmlException
+	private Element getHeader() throws XmlException
 	{
-
-		String wsrmNameSpace = wsrmContainer.getWsrmConfig().getVersionNameSpace();
-
-		Element header = ( Element )SoapUtils.getHeaderElement( xmlContentObject, soapVersion, true ).getDomNode();
-		return header;
+		return ( Element )SoapUtils.getHeaderElement( xmlContentObject, soapVersion, true ).getDomNode();
 	}
 
 	public WsrmSequence createSequence( String endpoint, SoapVersion soapVersion, String wsrmNamespace, String ackTo,
-			Long expires, WsdlOperation operation, String wsaTo )
+													Long expires, WsdlOperation operation, String wsaTo, String offerEndpoint )
 	{
-		String identifier = null;
+		String uuid = UUID.randomUUID().toString();
+		WsaRequest startSequenceRequest = buildStartSequenceRequest( endpoint, soapVersion, wsrmNamespace, ackTo, expires, operation, uuid,
+				offerEndpoint);
 
+		try
+		{
+
+			Response response = submitCreateSequenceRequest( uuid, startSequenceRequest );
+			String responseContent = response.getContentAsString();
+			// XmlObject xml = XmlObject.Factory.parse( responseContent );
+			XmlObject xml = XmlUtils.createXmlObject( responseContent );
+			XmlCursor cursor = xml.newCursor();
+			cursor.toFirstContentToken();
+			cursor.toFirstChild();
+			cursor.toNextSibling();
+			cursor.toFirstChild();
+			cursor.toFirstChild();
+			String sequenceIdentifier = cursor.getTextValue();
+			Logger.getLogger( "wsrm" ).info( "Sequence response Received, sequence ID: " + sequenceIdentifier );
+
+			// WsmcInjection receiveInjection = new WsmcInjection(request);
+			// request.setAfterRequestInjection(receiveInjection);
+
+			return new WsrmSequence( sequenceIdentifier.trim(), uuid, soapVersion, wsrmNamespace,
+					operation );
+		}
+		catch( SubmitException e1 )
+		{
+			SoapUI.logError( e1 );
+			return null;
+		}
+		catch( XmlException e )
+		{
+			SoapUI.logError( e );
+			return null;
+		}
+	}
+
+	private Response submitCreateSequenceRequest( String uuid, WsaRequest startSequenceRequest ) throws SubmitException
+	{
+		WsdlSubmit wsdlSubmit = startSequenceRequest.submit( new WsdlSubmitContext( null ), true );
+		Logger.getLogger( "wsrm" ).info( "StartSequence Request Sent: " + uuid );
+
+		// startSequenceRequest.getWsaConfig().setWsaEnabled(false);
+		while( wsdlSubmit.getStatus() != Status.FINISHED )
+		{
+			wsdlSubmit.waitUntilFinished();
+		}
+		return wsdlSubmit.getResponse();
+	}
+
+	WsaRequest buildStartSequenceRequest( String endpoint, SoapVersion soapVersion, String wsrmNamespace, String ackTo, Long expires, WsdlOperation operation, String uuid, String offerEndpoint )
+	{
 		HttpRequestConfig httpRequestConfig = ( HttpRequestConfig )( XmlObject.Factory.newInstance()
 				.changeType( HttpRequestConfig.type ) );
 		httpRequestConfig.setEndpoint( endpoint );
@@ -176,7 +220,6 @@ public class WsrmUtils
 
 		startSequenceRequest.getWsaConfig().setWsaEnabled( true );
 		startSequenceRequest.getWsaConfig().setAction( wsrmNamespace + WSRM_CREATE_SEQUENCE_ACTION );
-		String uuid = UUID.randomUUID().toString();
 
 		// if (wsaTo == null) {
 		// startSequenceRequest.getWsaConfig().setTo(
@@ -191,8 +234,6 @@ public class WsrmUtils
 
 		try
 		{
-			// XmlObject object = XmlObject.Factory.parse(
-			// openSequenceMessageContent );
 			XmlObject object = XmlUtils.createXmlObject( openSequenceMessageContent );
 			XmlCursor cursor = object.newCursor();
 
@@ -204,16 +245,26 @@ public class WsrmUtils
 			cursor.insertNamespace( "wsrm", wsrmNamespace );
 
 			cursor.beginElement( WSRM_CREATE_SEQUENCE, wsrmNamespace );
-			cursor.beginElement( "Offer", wsrmNamespace );
-			cursor.beginElement( "Identifier", wsrmNamespace );
-			cursor.insertChars( "urn:soapui:" + uuid );
+			String wsaNamespace = wsrmNamespace.equals( WSRM_NS_1_0 ) ? WsaUtils.WS_A_NAMESPACE_200408 : WsaUtils.WS_A_NAMESPACE_200508;
+			if( !wsrmNamespace.equals( WSRM_NS_1_0 ) && !StringUtils.isNullOrEmpty( offerEndpoint ) )
+			{
+				cursor.beginElement( "Offer", wsrmNamespace );
 
-			cursor.toParent();
-			cursor.toParent();
+				cursor.beginElement( "Endpoint", wsrmNamespace );
+				cursor.beginElement( "Address", wsaNamespace );
+				cursor.insertChars( offerEndpoint );
+				cursor.toParent();
+				cursor.toParent();
+				cursor.beginElement( "Identifier", wsrmNamespace );
+				cursor.insertChars( "urn:soapui:" + uuid );
+
+				cursor.toParent();
+				cursor.toParent();
+			}
 
 			cursor.beginElement( WSRM_ACKNOWLEDGMENTS_TO, wsrmNamespace );
-			cursor.insertNamespace( "wsa", WsaUtils.getNamespace( startSequenceRequest.getWsaConfig().getVersion() ) );
-			cursor.beginElement( "Address", WsaUtils.getNamespace( startSequenceRequest.getWsaConfig().getVersion() ) );
+			cursor.insertNamespace( "wsa", wsaNamespace );
+			cursor.beginElement( "Address", wsaNamespace );
 			if( ackTo == null || ackTo.length() < 1 )
 				ackTo = WsaUtils.getNamespace( startSequenceRequest.getWsaConfig().getVersion() ) + "/anonymous" + "?id="
 						+ uuid;
@@ -242,48 +293,7 @@ public class WsrmUtils
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		try
-		{
-
-			WsdlSubmit wsdlSubmit = startSequenceRequest.submit( new WsdlSubmitContext( null ), true );
-			Logger.getLogger( "wsrm" ).info( "StartSequence Request Sent: " + uuid );
-
-			// startSequenceRequest.getWsaConfig().setWsaEnabled(false);
-			while( wsdlSubmit.getStatus() != Status.FINISHED )
-			{
-				wsdlSubmit.waitUntilFinished();
-			}
-			Response response = wsdlSubmit.getResponse();
-			String responseContent = response.getContentAsString();
-			// XmlObject xml = XmlObject.Factory.parse( responseContent );
-			XmlObject xml = XmlUtils.createXmlObject( responseContent );
-			XmlCursor cursor = xml.newCursor();
-			cursor.toFirstContentToken();
-			cursor.toFirstChild();
-			cursor.toNextSibling();
-			cursor.toFirstChild();
-			cursor.toFirstChild();
-			String sequenceIdentifier = cursor.getTextValue();
-			Logger.getLogger( "wsrm" ).info( "Sequence response Received, sequence ID: " + sequenceIdentifier );
-
-			// WsmcInjection receiveInjection = new WsmcInjection(request);
-			// request.setAfterRequestInjection(receiveInjection);
-
-			WsrmSequence sequence = new WsrmSequence( sequenceIdentifier.trim(), uuid, soapVersion, wsrmNamespace,
-					operation );
-			return sequence;
-		}
-		catch( SubmitException e1 )
-		{
-			SoapUI.logError( e1 );
-			return null;
-		}
-		catch( XmlException e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
+		return startSequenceRequest;
 	}
 
 	public static String getWsrmVersionNamespace( WsrmVersionTypeConfig.Enum wsrmVersion )
@@ -387,12 +397,12 @@ public class WsrmUtils
 
 				if( result.length > 0 )
 				{
-					for( int i = 0; i < result.length; i++ )
+					for( XmlObject aResult : result )
 					{
-						String upper = result[i].selectAttribute( null, "Upper" ).getDomNode().getNodeValue();
-						String lower = result[i].selectAttribute( null, "Lower" ).getDomNode().getNodeValue();
+						String upper = aResult.selectAttribute( null, "Upper" ).getDomNode().getNodeValue();
+						String lower = aResult.selectAttribute( null, "Lower" ).getDomNode().getNodeValue();
 
-						if( lower == upper )
+						if( lower.equals( upper ) )
 						{
 							Logger.getLogger( "wsrm" ).info(
 									"Acknowledgment for message " + upper + " received for identifier: " + identifier );
@@ -472,8 +482,7 @@ public class WsrmUtils
 
 		try
 		{
-			WsdlSubmit wsdlSubmit = terminateSequenceRequest.submit( new WsdlSubmitContext( null ), true );
-
+			terminateSequenceRequest.submit( new WsdlSubmitContext( null ), true );
 		}
 		catch( SubmitException e1 )
 		{
@@ -565,12 +574,6 @@ public class WsrmUtils
 			// XmlObject xml = XmlObject.Factory.parse( responseContent );
 			XmlObject xml = XmlUtils.createXmlObject( responseContent );
 			XmlObject result = xml.selectPath( "Envelope/Header/SequenceAcknowledgment" )[0];
-
-			if( result != null )
-			{
-
-			}
-
 		}
 		catch( SubmitException e1 )
 		{

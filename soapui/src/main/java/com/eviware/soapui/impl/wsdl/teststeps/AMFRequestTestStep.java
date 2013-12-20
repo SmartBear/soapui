@@ -12,27 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFSubmit;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlSinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.AMFMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.XmlBeansPropertiesTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
@@ -48,22 +35,22 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.SamplerTestStep;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -517,13 +504,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 
 			AMFMessageExchange messageExchange = new AMFMessageExchange( this, getAMFRequest().getResponse() );
 
-			if( this != null )
+			// assert!
+			for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
 			{
-				// assert!
-				for( WsdlMessageAssertion assertion : assertionsSupport.getAssertionList() )
-				{
-					assertion.assertResponse( messageExchange, context );
-				}
+				assertion.assertResponse( messageExchange, context );
 			}
 
 			notifier.notifyChange();
@@ -550,57 +534,68 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 	}
 
 	// FIXME Remove the overridden methods in TestPropertyHolder
-
-	//	public void addTestPropertyListener( TestPropertyListener listener )
-	//	{
-	//		propertyHolderSupport.addTestPropertyListener( listener );
-	//	}
-
+	@Override
 	public Map<String, TestProperty> getProperties()
 	{
 		return propertyHolderSupport.getProperties();
 	}
 
+	@Override
 	public TestProperty getProperty( String name )
 	{
 		return propertyHolderSupport.getProperty( name );
 	}
 
+	@Override
 	public TestProperty getPropertyAt( int index )
 	{
 		return propertyHolderSupport.getPropertyAt( index );
 	}
 
+	@Override
 	public int getPropertyCount()
 	{
 		return propertyHolderSupport.getPropertyCount();
 	}
 
+
+	@Override
 	public List<TestProperty> getPropertyList()
 	{
 		return propertyHolderSupport.getPropertyList();
 	}
 
+	@Override
 	public String[] getPropertyNames()
 	{
 		return propertyHolderSupport.getPropertyNames();
 	}
 
+	@Override
 	public String getPropertyValue( String name )
 	{
 		return propertyHolderSupport.getPropertyValue( name );
 	}
 
+	@Override
+	public void addTestPropertyListener( TestPropertyListener listener )
+	{
+		propertyHolderSupport.addTestPropertyListener( listener );
+	}
+
+	@Override
 	public void removeTestPropertyListener( TestPropertyListener listener )
 	{
 		propertyHolderSupport.removeTestPropertyListener( listener );
 	}
 
+	@Override
 	public boolean hasProperty( String name )
 	{
 		return propertyHolderSupport.hasProperty( name );
 	}
 
+	@Override
 	public void setPropertyValue( String name, String value )
 	{
 		propertyHolderSupport.setPropertyValue( name, value );
@@ -611,6 +606,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		setPropertyValue( name, String.valueOf( value ) );
 	}
 
+	@Override
 	public void moveProperty( String propertyName, int targetIndex )
 	{
 		propertyHolderSupport.moveProperty( propertyName, targetIndex );

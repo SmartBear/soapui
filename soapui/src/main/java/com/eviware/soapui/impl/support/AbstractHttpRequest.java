@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -59,6 +60,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
@@ -520,10 +522,24 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
 		if( credentialsConfig == null )
 			credentialsConfig = getConfig().addNewCredentials();
-		if ( credentialsConfig.getAuthType() == null )
-			credentialsConfig.setAuthType( AuthType.GLOBAL_HTTP_SETTINGS );
+
+		initializeAuthType( credentialsConfig );
 
 		return credentialsConfig.getAuthType().toString();
+	}
+
+	private void initializeAuthType( CredentialsConfig credentialsConfig )
+	{
+		try
+		{
+			if( credentialsConfig.getAuthType() == null )
+				credentialsConfig.setAuthType( AuthType.GLOBAL_HTTP_SETTINGS );
+		}
+		catch( XmlValueOutOfRangeException e )
+		{
+			// Migration from deleted enum NTLM/Kerberos
+			credentialsConfig.setAuthType( AuthType.NTLM );
+		}
 	}
 
 	public void setUsername( String username )

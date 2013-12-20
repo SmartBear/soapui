@@ -12,10 +12,22 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms.util;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
+import com.eviware.soapui.actions.SoapUIPreferencesAction;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.settings.ToolsSettings;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import hermes.Hermes;
 import hermes.HermesInitialContextFactory;
 import hermes.JAXBHermesLoader;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -26,20 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUIExtensionClassLoader;
-import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
-import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.settings.ToolsSettings;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
 
 public class HermesUtils
 {
@@ -206,9 +204,10 @@ public class HermesUtils
 		{
 			UISupport
 					.showErrorMessage( "Hermes configuration is not valid. Please check that 'Hermes Config' project property is set to path of proper hermes-config.xml file" );
+			SoapUI.logError( ne, "Error when trying to find JMS session" );
 			throw new NamingException( "Session name '" + sessionName
 					+ "' does not exist in Hermes configuration or path to Hermes config ( " + project.getHermesConfig()
-					+ " )is not valid !!!!" );
+					+ " )is not valid!" );
 		}
 		catch( MalformedURLException mue )
 		{

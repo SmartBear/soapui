@@ -321,7 +321,8 @@ public class DefaultSoapUICore implements SoapUICore
 						password = this.password.toCharArray();
 					}
 
-					byte[] data = OpenSSL.decrypt( "des3", password, encryptedContent );
+					String encryptionAlgorithm = settingsDocument.getSoapuiSettings().getEncryptedContentAlgorithm();
+					byte[] data = OpenSSL.decrypt( StringUtils.isNullOrEmpty( encryptionAlgorithm ) ? "des3" : encryptionAlgorithm, password, encryptedContent );
 					try
 					{
 						settingsDocument = SoapuiSettingsDocumentConfig.Factory.parse( new String( data, "UTF-8" ) );
@@ -425,6 +426,11 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
 		setIfNotSet( WsaSettings.ENABLE_FOR_OPTIONAL, false );
 		setIfNotSet( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE, true );
+		if( !settings.isSet( ProxySettings.AUTO_PROXY ) && !settings.isSet( ProxySettings.ENABLE_PROXY ))
+		{
+			settings.setBoolean( ProxySettings.AUTO_PROXY, true );
+			settings.setBoolean( ProxySettings.ENABLE_PROXY, true );
+		}
 
 		boolean setWsiDir = false;
 		String wsiLocationString = settings.getString( WSISettings.WSI_LOCATION, null );
@@ -533,9 +539,11 @@ public class DefaultSoapUICore implements SoapUICore
 				try
 				{
 					byte[] data = settingsDocument.xmlText().getBytes();
-					byte[] encryptedData = OpenSSL.encrypt( "des3", password.toCharArray(), data );
+					String encryptionAlgorithm = "des3";
+					byte[] encryptedData = OpenSSL.encrypt( encryptionAlgorithm, password.toCharArray(), data );
 					settingsDocument.setSoapuiSettings( null );
 					settingsDocument.getSoapuiSettings().setEncryptedContent( encryptedData );
+					settingsDocument.getSoapuiSettings().setEncryptedContentAlgorithm(encryptionAlgorithm);
 				}
 				catch( UnsupportedEncodingException e )
 				{
@@ -766,7 +774,7 @@ public class DefaultSoapUICore implements SoapUICore
 				{
 					log.info( "Reloading updated settings file" );
 					initSettings( settingsFile );
-					SoapUI.setProxyEnabled( getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
+					SoapUI.updateProxyFromSettings();
 				}
 			}
 		}

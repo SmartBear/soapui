@@ -17,11 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Prakash
- * Date: 2013-10-04
- * Time: 11:01
- * To change this template use File | Settings | File Templates.
+ * @author Prakash
  */
 public class ModelItemNamerTest
 {

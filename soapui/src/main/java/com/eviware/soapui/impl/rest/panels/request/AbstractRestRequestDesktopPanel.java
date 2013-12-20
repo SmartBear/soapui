@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -28,13 +27,10 @@ import com.eviware.soapui.model.support.AbstractModelItem;
 import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
 
 import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -45,7 +41,6 @@ import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 
@@ -235,17 +230,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 					RestParamProperty source = ( RestParamProperty )evt.getSource();
 					( ( AbstractModelItem )source.getModelItem() ).notifyPropertyChanged( evt.getPropertyName(),
 							evt.getOldValue(), evt.getNewValue() );
-				}
-
-				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PARAM_LOCATION ) )
-				{
-					RestParamProperty source = ( RestParamProperty )evt.getSource();
-					String propName = source.getName();
-					String propValue = source.getValue();
-					ParameterStyle propStyle = source.getStyle();
-					String requestLevelValue = getRequest().getParams().getProperty( propName ).getValue();
-					removePropertyFromLevel( source.getName(), ( ParamLocation )evt.getOldValue() );
-					addPropertyToLevel( propName, propValue, propStyle, ( ParamLocation )evt.getNewValue(), requestLevelValue );
 				}
 			}
 			catch( XmlValueDisconnectedException exception )

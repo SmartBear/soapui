@@ -57,6 +57,8 @@
                     <xsd:element name="encryptedContent" type="xsd:base64Binary"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
+                    <xsd:element name="encryptedContentAlgorithm" type="xsd:string"
+                                 maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="wssContainer" type="tns:WssContainer"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
@@ -560,7 +562,8 @@
         			<xsd:restriction base="xsd:string">
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
-        				<xsd:enumeration value="NTLM/Kerberos"></xsd:enumeration>
+        				<xsd:enumeration value="NTLM"></xsd:enumeration>
+        				<xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
         			</xsd:restriction>
         		</xsd:simpleType>
         	</xsd:element>
@@ -666,6 +669,8 @@
             </xsd:element>
             <xsd:element name="encryptedContent" type="xsd:base64Binary"
                 maxOccurs="1" minOccurs="0"></xsd:element>
+            <xsd:element name="encryptedContentAlgorithm" type="xsd:string"
+                         maxOccurs="1" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -1534,6 +1539,7 @@
         <xsd:attribute name="version" type="tns:WsrmVersionType"></xsd:attribute>
         <xsd:attribute name="ackTo" type="xsd:string"></xsd:attribute>
         <xsd:attribute name="sequenceExpires" type="xsd:integer"></xsd:attribute>
+        <xsd:attribute name="offerEndpoint" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
 
     <xsd:complexType name="MockOperationQueryMatchDispatch">
@@ -1924,6 +1930,7 @@
                 <xsd:sequence>
                     <xsd:element name="parameters" type="tns:StringToStringMap">
                     </xsd:element>
+                    <xsd:element name="parameterOrder" type="tns:StringList" minOccurs="0"/>
                 </xsd:sequence>
                 <xsd:attribute name="wadlId" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="fullPath" type="xsd:string"></xsd:attribute>

@@ -195,7 +195,7 @@ public interface HelpUrls
 	public static final String MOCKOPERATION_QUERYMATCHDISPATCH_HELP_URL = HELP_URL_ROOT
 			+ "mock/operations.html#Query/Match_Dispatching";
 
-	public static final String FORUMS_HELP_URL = "http://www.eviware.com/forums";
+	public static final String FORUMS_HELP_URL = "http://forum.soapui.org/";
 
 	public static final String TRIAL_URL = "http://www.eviware.com/soapui/trial";
 

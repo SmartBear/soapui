@@ -345,7 +345,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 				// if( actual.length() > ERROR_LENGTH_LIMIT )
 				// actual = actual.substring(0, ERROR_LENGTH_LIMIT) + "..";
 
-				msg = "XPathContains comparison failed, expecting [" + expected + "], actual was [" + actual + "]";
+				msg = "XPathContains comparison failed for path [" + path + "], expecting [" + expected + "], actual was [" + actual + "]";
 			}
 			else
 			{

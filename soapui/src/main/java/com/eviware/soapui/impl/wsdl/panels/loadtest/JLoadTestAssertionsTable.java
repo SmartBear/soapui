@@ -12,14 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
+import com.eviware.soapui.impl.wsdl.loadtest.LoadTestListener;
+import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
+import com.eviware.soapui.impl.wsdl.loadtest.assertions.LoadTestAssertionRegistry;
+import com.eviware.soapui.impl.wsdl.support.Configurable;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+import org.jdesktop.swingx.JXTable;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -37,18 +40,14 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumnModel;
-
-import org.jdesktop.swingx.JXTable;
-
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
-import com.eviware.soapui.impl.wsdl.loadtest.LoadTestListener;
-import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
-import com.eviware.soapui.impl.wsdl.loadtest.assertions.LoadTestAssertionRegistry;
-import com.eviware.soapui.impl.wsdl.support.Configurable;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Table showing configured assertions for a WsdlLoadTest
@@ -77,7 +76,7 @@ public class JLoadTestAssertionsTable extends JPanel
 		loadTest.addLoadTestListener( internalLoadTestListener );
 
 		tableModel = new LoadTestAssertionsTableModel();
-		table = new JXTable( tableModel );
+		table = JTableFactory.getInstance().makeJXTable( tableModel );
 		table.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 
 		TableColumnModel columnModel = table.getColumnModel();

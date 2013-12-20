@@ -40,9 +40,20 @@ public class RestTestRequestContentView extends RestRequestContentView
 			@Override
 			public void setValueAt( Object value, int rowIndex, int columnIndex )
 			{
-				RestParamProperty prop = params.getProperty( ( String ) getValueAt( rowIndex, 0 ));
+				RestParamProperty prop = params.getProperty( ( String )getValueAt( rowIndex, 0 ) );
 				if( columnIndex == 1 )
 					prop.setValue( value.toString() );
+			}
+
+			@Override
+			public String getColumnName( int columnIndex )
+			{
+				if( columnIndex == 1 )
+				{
+					return "Value";
+				}
+
+				return super.getColumnName( columnIndex );
 			}
 
 			@Override

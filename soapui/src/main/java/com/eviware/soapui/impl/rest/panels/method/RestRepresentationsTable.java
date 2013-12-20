@@ -12,13 +12,13 @@
 
 package com.eviware.soapui.impl.rest.panels.method;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRepresentation;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.eviware.soapui.support.types.StringList;
 
 import javax.swing.AbstractAction;
 import javax.swing.JPanel;
@@ -27,13 +27,13 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.types.StringList;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class RestRepresentationsTable extends JPanel implements PropertyChangeListener
 {
@@ -53,7 +53,7 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
 		this.readOnly = readOnly;
 
 		tableModel = new RepresentationsTableModel();
-		representationsTable = new JTable( tableModel );
+		representationsTable = JTableFactory.getInstance().makeJTable(  tableModel );
 		representationsTable.setRowHeight( 18 );
 
 		add( buildToolbar(), BorderLayout.NORTH );

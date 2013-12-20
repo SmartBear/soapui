@@ -2,27 +2,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
-        <version>4.6.2-SNAPSHOT</version>
+        <version>4.6.4-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>soapui-installer</artifactId>
-
-    <repositories>
-        <repository>
-            <id>eviware</id>
-            <name>Eviware Maven2 Repository</name>
-            <url>http://www.eviware.com/repository/maven2</url>
-        </repository>
-        <repository>
-            <id>central</id>
-            <name>Central Maven2 Repository</name>
-            <url>http://repo1.maven.org/maven2</url>
-        </repository>
-    </repositories>
+    <name>SoapUI installer</name>
+    <description>Creates the SoapUI distributions, such as installers and archives</description>
+    <packaging>jar</packaging>
 
     <pluginRepositories>
         <pluginRepository>
@@ -31,10 +22,6 @@
             <url>http://maven-install4j.googlecode.com/svn/m2-repo</url>
         </pluginRepository>
     </pluginRepositories>
-
-    <scm>
-        <connection>scm:git:git://github.com/SmartBear/soapui.git</connection>
-    </scm>
 
     <build>
         <resources>
@@ -86,7 +73,7 @@
                         </property>
                         <property>
                             <name>SRC_ROOT</name>
-                            <value>${project.parent.basedir}/soapui/src</value>
+                            <value>${project.basedir}/src</value>
                         </property>
                         <property>
                             <name>DIST_ROOT</name>
@@ -98,7 +85,11 @@
                         </property>
                         <property>
                             <name>RESOURCES_HOME</name>
-                            <value>${basedir}/src/install4j/resources</value>
+                            <value>${project.basedir}/src/install4j/resources</value>
+                        </property>
+                        <property>
+                            <name>SOURCE_CODE_ROOT</name>
+                            <value>${project.parent.basedir}/soapui/src</value>
                         </property>
                         <property>
                             <name>SIGNTOOL_PATH</name>

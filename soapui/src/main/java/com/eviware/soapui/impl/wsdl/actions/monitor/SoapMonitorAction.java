@@ -13,23 +13,15 @@
 package com.eviware.soapui.impl.wsdl.actions.monitor;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.panels.monitor.SoapMonitorDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.eviware.soapui.support.types.StringList;
-import com.eviware.x.form.XForm;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormDialogBuilder;
-import com.eviware.x.form.XFormFactory;
-import com.eviware.x.form.XFormField;
-import com.eviware.x.form.XFormFieldListener;
+import com.eviware.x.form.*;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
@@ -42,8 +34,6 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 	private static final String HTTP_TUNNEL = "HTTP Tunnel";
 	private static final String HTTP_PROXY = "HTTP Proxy";
 	private XFormDialog dialog;
-	private XForm generalForm;
-	private XForm securityForm;
 
 	public SoapMonitorAction()
 	{
@@ -52,12 +42,6 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
-		// if( project.getInterfaceCount() == 0 )
-		// {
-		// UISupport.showErrorMessage( "Missing interfaces to monitor" );
-		// return;
-		// }
-
 		if( dialog == null )
 		{
 			dialog = ADialogBuilder.buildTabbedDialog( WizardForm.class, null );
@@ -65,17 +49,6 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		}
 
 		Settings settings = project.getSettings();
-
-		StringList endpoints = new StringList();
-		endpoints.add( null );
-
-		for( Interface iface : ModelSupport.getChildren( project, WsdlInterface.class ) )
-		{
-			endpoints.addAll( iface.getEndpoints() );
-		}
-
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Launch LoadTestRunner" );
-		generalForm = builder.createForm( "General" );
 
 		dialog.setIntValue( LaunchForm.PORT, ( int )settings.getLong( LaunchForm.PORT, 8081 ) );
 		dialog.setOptions( LaunchForm.REQUEST_WSS,
@@ -167,7 +140,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 				else
 				{
 					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
-							dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ),
+							dialog.getValue( LaunchForm.RESPONSE_WSS ), false,
 							dialog.getValue( LaunchForm.SETSSLMON ) );
 				}
 			}
@@ -188,7 +161,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 	}
 
 	protected void openSoapMonitor( WsdlProject target, int listenPort, String incomingRequestWss,
-			String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
+											  String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
 	{
 		if( sslEndpoint == null )
 		{
@@ -212,10 +185,9 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 	protected String validate( String sslEndpoint )
 	{
-		String res = sslEndpoint;
-		if( res.trim().length() > 0 )
+		if( sslEndpoint.trim().length() > 0 )
 		{
-			return res.trim();
+			return sslEndpoint.trim();
 		}
 		return null;
 	}
@@ -297,7 +269,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 	}
 
-	@AForm( description = "Specify HTTP tunel security settings", name = "HTTP tunel security", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL )
+	@AForm( description = "Specify HTTP tunnel security settings", name = "HTTP tunnel security", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL )
 	public interface SecurityTabForm
 	{
 		@AField( description = "Set SSL Tunnel KeyStore", name = "HTTP tunnel - KeyStore", type = AFieldType.FILE )

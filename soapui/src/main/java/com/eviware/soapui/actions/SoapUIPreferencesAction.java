@@ -54,7 +54,6 @@ public class SoapUIPreferencesAction extends AbstractAction
 	public static final String SSL_SETTINGS = "SSL Settings";
 	public static final String INTEGRATED_TOOLS = "Tools";
 	public static final String WSA_SETTINGS = "WS-A Settings";
-	public static final String LOADUI_SETTINGS = "loadUI Settings";
 	public static final String WEBRECORDING_SETTINGS = "Web Recording Settings";
 	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
 	public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
@@ -83,7 +82,6 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new GlobalPropertiesPrefs() );
 		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
-		addPrefs( new LoadUIPrefs( LOADUI_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WebRecordingSettings.class, WEBRECORDING_SETTINGS ) );
 		addPrefs( new SecurityScansPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
 		addPrefs( new AnnotatedSettingsPrefs( VersionUpdateSettings.class, VERSIONUPDATE_SETTINGS ) );

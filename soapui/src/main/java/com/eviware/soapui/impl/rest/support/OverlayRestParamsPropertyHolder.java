@@ -12,19 +12,13 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
+import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+
+import java.util.*;
 
 public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 {
@@ -43,6 +37,12 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 	public void addParameter( RestParamProperty prop )
 	{
 		overlay.addParameter( prop );
+	}
+
+	@Override
+	public void setParameterLocation( RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation )
+	{
+		overlay.setParameterLocation( parameter, newLocation );
 	}
 
 	public RestParamProperty addProperty( String name )
@@ -151,7 +151,7 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 	public Set<String> keySet()
 	{
-		Set<String> names = new HashSet<String>();
+		Set<String> names = new LinkedHashSet<String>();
 		for( TestProperty prop : values() )
 		{
 			names.add( prop.getName() );
@@ -367,6 +367,14 @@ public class OverlayRestParamsPropertyHolder implements RestParamsPropertyHolder
 
 		public void propertyMoved( String name, int oldIndex, int newIndex )
 		{
+			if (parent.hasProperty( name ))
+			{
+				firePropertyValueChanged( name, null, parent.getPropertyValue( name ) );
+			}
+			else
+			{
+				firePropertyMoved( name, oldIndex, newIndex );
+			}
 		}
 
 		public void propertyRemoved( String name )

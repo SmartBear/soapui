@@ -12,17 +12,16 @@
 
 package com.eviware.soapui.impl.rest.actions.resource;
 
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.support.MessageSupport;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.x.form.XFormDialog;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * Actions for importing an existing SoapUI project file into the current
- * workspace
+ * Action for adding a new child REST resource.
  * 
  * @author Ole.Matzura
  */
@@ -34,57 +33,24 @@ public class NewRestChildResourceAction extends NewRestResourceActionBase<RestRe
 
 	public NewRestChildResourceAction()
 	{
-		super( messages.get( "title" ), messages.get( "description" ) );
+		super( messages.get( "Title" ), messages.get( "Description" ) );
 	}
 
-	protected RestResource createRestResource( RestResource parentResource, String path, XFormDialog dialog )
+
+	@Override
+	protected List<RestResource> getResourcesFor( RestResource item )
 	{
-		RestResource possibleParent = null;
-		String p = parentResource.getFullPath() + path;
-
-		for( RestResource resource : parentResource.getAllChildResources() )
-		{
-			if( p.startsWith( resource.getFullPath() ) )
-			{
-				int c = 0;
-				for( ; c < resource.getChildResourceCount(); c++ )
-				{
-					if( p.startsWith( resource.getChildResourceAt( c ).getFullPath() ) )
-						break;
-				}
-
-				// found subresource?
-				if( c != resource.getChildResourceCount() )
-					continue;
-
-				possibleParent = resource;
-				break;
-			}
-		}
-
-		RestResource resource;
-
-		if( possibleParent != null
-				&& UISupport.confirm( "Create resource as child to [" + possibleParent.getName() + "]",
-						"New Child Resource" ) )
-		{
-			// adjust path
-			path = path.substring( p.length() - possibleParent.getFullPath().length() - 1 );
-			resource = possibleParent.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
-		}
-		else
-		{
-			resource = parentResource.addNewChildResource( dialog.getValue( Form.RESOURCENAME ), path );
-		}
-
-		return resource;
+		List<RestResource> returnValue = new ArrayList<RestResource>( );
+		returnValue.add(item);
+		returnValue.addAll( Arrays.asList( item.getAllChildResources() ));
+		return returnValue;
 	}
 
 	@Override
-	protected RestMethod createRestMethod( RestResource resource, XFormDialog dialog )
+	protected RestResource addResourceTo( RestResource parentResource, String name, String path )
 	{
-		RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
-		method.setMethod( RestRequestInterface.RequestMethod.GET );
-		return method;
+		return parentResource.addNewChildResource( name, path );
 	}
+
+
 }

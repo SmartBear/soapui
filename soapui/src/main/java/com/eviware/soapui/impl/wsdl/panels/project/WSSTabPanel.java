@@ -12,33 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.DefaultCellEditor;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellRenderer;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -58,8 +31,34 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
-
+import com.eviware.soapui.support.swing.JTableFactory;
 import edu.umd.cs.findbugs.annotations.NonNull;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 // FIXME Consider splitting this up into smaller entities for each main inner component and put all actions into separate files
 public class WSSTabPanel extends JPanel
@@ -154,7 +153,7 @@ public class WSSTabPanel extends JPanel
 
 	private JPanel buildOutgoingConfigurationsTab()
 	{
-		outgoingWssTable = new JTable( new OutgoingWssTableModel() );
+		outgoingWssTable = JTableFactory.getInstance().makeJTable( new OutgoingWssTableModel() );
 		outgoingWssTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
 			public void valueChanged( ListSelectionEvent e )
@@ -280,7 +279,7 @@ public class WSSTabPanel extends JPanel
 
 	private JPanel buildIncomingConfigurationsTab()
 	{
-		incomingWssTable = new JTable( new IncomingWssTableModel() );
+		incomingWssTable = JTableFactory.getInstance().makeJTable( new IncomingWssTableModel() );
 		incomingWssTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
 			public void valueChanged( ListSelectionEvent e )
@@ -325,7 +324,7 @@ public class WSSTabPanel extends JPanel
 
 	private JPanel buildCryptoTable( final CryptoType cryptoType )
 	{
-		final JTable cryptoTable = new JTable( new CryptoTableModel( cryptoType ) );
+		final JTable cryptoTable = JTableFactory.getInstance().makeJTable( new CryptoTableModel( cryptoType ) );
 
 		switch( cryptoType )
 		{

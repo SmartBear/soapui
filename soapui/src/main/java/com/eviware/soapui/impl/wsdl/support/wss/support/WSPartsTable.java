@@ -12,12 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.support;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.List;
+import com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.swing.JTableFactory;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -29,11 +28,12 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-
-import com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.types.StringToStringMap;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.List;
 
 public class WSPartsTable extends JPanel
 {
@@ -50,7 +50,7 @@ public class WSPartsTable extends JPanel
 		this.entry = entry;
 
 		partsTableModel = new PartsTableModel();
-		partsTable = new JTable( partsTableModel );
+		partsTable = JTableFactory.getInstance().makeJTable( partsTableModel );
 		partsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
 

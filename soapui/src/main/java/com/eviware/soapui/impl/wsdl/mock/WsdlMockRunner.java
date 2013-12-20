@@ -112,7 +112,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 				WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( ( WsdlInterface )iface );
 
 				String wsdlPrefix = getInterfacePrefix( iface ).substring( 1 );
-				StringToStringMap parts = exporter.createFilesForExport( "/" + wsdlPrefix + "&part=" );
+				StringToStringMap parts = exporter.createFilesForExport(wsdlPrefix + "&part=" );
 
 				for( String key : parts.keySet() )
 				{

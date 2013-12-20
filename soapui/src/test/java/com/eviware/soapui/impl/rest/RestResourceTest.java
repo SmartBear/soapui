@@ -15,11 +15,11 @@ package com.eviware.soapui.impl.rest;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.RestResourceConfig;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
 import org.apache.xmlbeans.XmlException;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,6 +35,7 @@ public class RestResourceTest
 {
 
 	private RestResource restResource;
+	private RestService parentService;
 
 	@Before
 	public void setUp() throws XmlException, IOException, SoapUIException
@@ -42,6 +43,7 @@ public class RestResourceTest
 		WsdlProject project = new WsdlProject();
 		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
 		restResource = restService.addNewResource( "Resource", "/test" );
+		parentService = restResource.getService();
 	}
 
 	@Test
@@ -58,7 +60,7 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldIgnoreMatrixParamsOnPath() throws Exception
+	public void ignoresMatrixParamsOnPath() throws Exception
 	{
 		String matrixParameterString = ";Param2=matrixValue2;address=16";
 		restResource.setPath( "/maps/api/geocode/xml" + matrixParameterString );
@@ -74,7 +76,7 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldIgnoreMatrixParamsWithoutValueOnPath() throws Exception
+	public void ignoresMatrixParamsWithoutValueOnPath() throws Exception
 	{
 		String matrixParameterString = ";Param2=1;address=";
 		restResource.setPath( "/maps/api/geocode/xml" + matrixParameterString );
@@ -90,9 +92,8 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldListenToChangesInConfiguredParameters() throws Exception
+	public void listensToChangesInConfiguredParameters() throws Exception
 	{
-		RestService parentService = restResource.getService();
 		RestResourceConfig config = RestResourceConfig.Factory.newInstance();
 		RestParametersConfig restParametersConfig = config.addNewParameters();
 		RestParameterConfig parameterConfig = restParametersConfig.addNewParameter();
@@ -108,9 +109,8 @@ public class RestResourceTest
 	}
 
 	@Test
-	public void shouldRemoveFormerTemplateParametersFromPath() throws Exception
+	public void removesFormerTemplateParametersFromPath() throws Exception
 	{
-		RestService parentService = restResource.getService();
 		RestResourceConfig config = RestResourceConfig.Factory.newInstance();
 		RestParametersConfig restParametersConfig = config.addNewParameters();
 		RestParameterConfig parameterConfig = restParametersConfig.addNewParameter();
@@ -123,6 +123,18 @@ public class RestResourceTest
 		restResource.getParams().getProperty( parameterName ).setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
 		assertThat( restResource.getPath(), not( containsString( parameterName ) ) );
 
+	}
+
+	@Test
+	public void considersBasePathWhenAddingTemplateParameter() throws Exception
+	{
+		String parameterName = "version";
+		String parameterInPath = "{" + parameterName + "}";
+		parentService.setBasePath( "/base/" + parameterInPath);
+		RestParamProperty parameter = restResource.addProperty( parameterName );
+		parameter.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+
+		assertThat(restResource.getPath(), not(containsString( parameterInPath )));
 	}
 
 	@Test

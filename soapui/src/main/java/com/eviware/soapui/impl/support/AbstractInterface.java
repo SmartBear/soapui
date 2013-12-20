@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.support;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -69,6 +70,7 @@ public abstract class AbstractInterface<T extends InterfaceConfig> extends Abstr
 	{
 		EndpointsConfig endpoints = getConfig().getEndpoints();
 		List<String> endpointArray = endpoints.getEndpointList();
+		Collections.sort(endpointArray);
 		return endpointArray.toArray( new String[endpointArray.size()] );
 	}
 
