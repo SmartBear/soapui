@@ -134,7 +134,7 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 
 		authTypeForm.addSpace( OUTERMOST_SPACING );
 		JComboBox comboBox = authTypeForm.appendComboBox( "authType", COMBO_BOX_LABEL, new String[] {
-				AuthType.GLOBAL_HTTP_SETTINGS.toString(),  AuthType.NTLM.toString(), AuthType.PREEMPTIVE.toString(),
+				AuthType.GLOBAL_HTTP_SETTINGS.toString(), AuthType.PREEMPTIVE.toString(),  AuthType.NTLM.toString(),
 				AuthType.SPNEGO_KERBEROS.toString(), AuthType.O_AUTH_2.toString() }, "" );
 		comboBox.addActionListener( new ActionListener()
 		{
@@ -231,7 +231,6 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 
 		addRadioButton( advancedOptionsForm, buttonGroup, "Send Access Token as", AccessTokenPosition.HEADER );
 		addRadioButton( advancedOptionsForm, buttonGroup, "", AccessTokenPosition.QUERY );
-		addRadioButton( advancedOptionsForm, buttonGroup, "", AccessTokenPosition.BODY );
 
 		advancedOptionsForm.addButtonWithoutLabel( "Ok", new ActionListener()
 		{
