@@ -12,51 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.ListModel;
-import javax.swing.SwingUtilities;
-import javax.swing.TransferHandler;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.text.Document;
-
-import org.apache.log4j.Logger;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -64,7 +19,7 @@ import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyHolderTableModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -79,29 +34,14 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.monitor.support.TestMonitorListenerAdapter;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.DateUtil;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.ListDataChangeListener;
-import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.*;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.jdbc.JdbcUtils;
 import com.eviware.soapui.support.log.JLogList;
@@ -109,6 +49,26 @@ import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListen
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.log4j.Logger;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcRequestTestStep> implements
 		SubmitListener
@@ -334,9 +294,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 	{
 		propertyHolderTable = new PropertyHolderTable( getModelItem() )
 		{
-			protected JTable buildPropertiesTable()
+			@Override
+			protected DefaultPropertyHolderTableModel getPropertyHolderTableModel()
 			{
-				propertiesModel = new DefaultPropertyTableHolderModel( holder )
+				return new DefaultPropertyHolderTableModel( holder )
 				{
 					@Override
 					public String[] getPropertyNames()
@@ -353,38 +314,6 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 						return propertyNamesList.toArray( new String[propertyNamesList.size()] );
 					}
 				};
-				propertiesTable = new PropertiesHolderJTable();
-				propertiesTable.setSurrendersFocusOnKeystroke( true );
-
-				propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
-				propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-				{
-					public void valueChanged( ListSelectionEvent e )
-					{
-						int selectedRow = propertiesTable.getSelectedRow();
-						if( removePropertyAction != null )
-							removePropertyAction.setEnabled( selectedRow != -1 );
-
-						if( movePropertyUpAction != null )
-							movePropertyUpAction.setEnabled( selectedRow > 0 );
-
-						if( movePropertyDownAction != null )
-							movePropertyDownAction.setEnabled( selectedRow >= 0
-									&& selectedRow < propertiesTable.getRowCount() - 1 );
-					}
-				} );
-
-				propertiesTable.setDragEnabled( true );
-				propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
-
-				if( getHolder().getModelItem() != null )
-				{
-					DropTarget dropTarget = new DropTarget( propertiesTable,
-							new PropertyHolderTablePropertyExpansionDropTarget() );
-					dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
-				}
-
-				return propertiesTable;
 			}
 		};
 
@@ -401,6 +330,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 		return propertyHolderTable;
 	}
 
+	//Used from SoapUI Pro
 	public void setPropertyHolderTable( StringToStringMap preparedProperties )
 	{
 		// first remove the old content

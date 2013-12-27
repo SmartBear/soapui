@@ -1,3 +1,17 @@
+# SoapUI 4.6.3
+#### Released 2013-12-18 ####
+
+### Bugs fixed ###
+* Fixed NTLM authentication not working under certain conditions (SOAP-1021) (Note: If you are using Kerberos authentication, you will have to re-select authentication method in the "auth" tab)
+* JDBC Request test step add\delete properties table is broken (SOAP-1144)
+* AMF Request test step add\delete properties table is broken (SOAP-1060)
+* Request body not copied to test step when creating from POST/PUT REST request (SOAP-1098)
+* Security tests ignores endpoint, host and environment parameters in command line tool (SOAP-1190)
+* XPATH assertion should show XPATH in error message (SOAP-1155)
+* ⌘+Q on mac quits without saving (SOAP-1106)
+
+-------------------------------------------------------------------------------
+
 # SoapUI 4.6.2
 #### Released 2013-12-02 ####
 

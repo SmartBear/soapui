@@ -64,7 +64,7 @@ public class RestRequestPanelBuilder extends EmptyPanelBuilder<RestRequest>
 		table.addPropertyShadow( "Password", "password", true );
 		table.addProperty( "Domain", "domain", true );
 		table.addProperty( "Authentication Type", "authType", new String[] { AuthType.GLOBAL_HTTP_SETTINGS.toString(),
-				AuthType.PREEMPTIVE.toString(), AuthType.NTLM_KERBEROS.toString() } );
+				AuthType.PREEMPTIVE.toString(), AuthType.SPNEGO_KERBEROS.toString(), AuthType.NTLM.toString() } );
 
 		StringList keystores = new StringList( request.getOperation().getInterface().getProject().getWssContainer()
 				.getCryptoNames() );

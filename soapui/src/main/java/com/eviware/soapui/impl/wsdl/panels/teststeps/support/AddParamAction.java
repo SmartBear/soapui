@@ -50,7 +50,7 @@ public class AddParamAction extends AbstractAction
 		}
 		propertyHolder.addProperty( EMPTY_STRING );
 
-		final int row = propertyHolder.getPropertyNames().length - 1;
+		final int row = parameterTable.getModel().getRowCount()-1;
 		SwingUtilities.invokeLater( new Runnable()
 		{
 			public void run()

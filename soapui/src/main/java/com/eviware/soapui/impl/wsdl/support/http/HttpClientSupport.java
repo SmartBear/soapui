@@ -195,6 +195,7 @@ public class HttpClientSupport
 		{
 			Settings settings = SoapUI.getSettings();
 			registry = new SchemeRegistry();
+
 			registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
 
 			try
@@ -216,8 +217,6 @@ public class HttpClientSupport
 
 			// this interceptor needs to be last one added and executed.
 			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
-			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
-			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NegotiateSchemeFactory( null, true ) );
 			httpClient.setRoutePlanner( new CompositeHttpRoutePlanner(  registry ) );
 
 			settings.addSettingsListener( new SSLSettingsListener() );

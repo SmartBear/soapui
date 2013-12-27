@@ -12,22 +12,19 @@
 
 package com.eviware.soapui.actions;
 
-import java.awt.Dimension;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.TransferHandler;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyTableHolderModel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyHolderTableModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
 
 public class SecurityScansPrefs implements Prefs
 {
@@ -52,8 +49,9 @@ public class SecurityScansPrefs implements Prefs
 			{
 				protected JTable buildPropertiesTable()
 				{
-					propertiesModel = new DefaultPropertyTableHolderModel( holder )
+					propertiesModel = new DefaultPropertyHolderTableModel( holder )
 					{
+						@Override
 						public String getColumnName( int columnIndex )
 						{
 							switch( columnIndex )

@@ -71,6 +71,10 @@ public class SecurityTestRunnerImpl extends AbstractTestCaseRunner<SecurityTest,
 	@Override
 	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
 	{
+		if( !runBeforeSteps( testStep ) )
+		{
+			return null;
+		}
 		TestStepResult stepResult = testStep.run( this, getRunContext() );
 		getResults().add( stepResult );
 		setResultCount( getResultCount() + 1 );

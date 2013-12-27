@@ -64,7 +64,10 @@ public class CategoriesListTable extends JXTable
 	public Component prepareRenderer( TableCellRenderer renderer, int row, int column )
 	{
 		Component defaultRenderer = super.prepareRenderer( renderer, row, column );
-		JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+		if( UISupport.isMac() )
+		{
+			JTableFactory.applyStripesToRenderer( row, defaultRenderer );
+		}
 		return defaultRenderer;
 	}
 

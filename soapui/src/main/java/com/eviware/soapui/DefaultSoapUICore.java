@@ -278,7 +278,8 @@ public class DefaultSoapUICore implements SoapUICore
 						password = this.password.toCharArray();
 					}
 
-					byte[] data = OpenSSL.decrypt( "des3", password, encryptedContent );
+					String encryptionAlgorithm = settingsDocument.getSoapuiSettings().getEncryptedContentAlgorithm();
+					byte[] data = OpenSSL.decrypt( StringUtils.isNullOrEmpty( encryptionAlgorithm ) ? "des3" : encryptionAlgorithm, password, encryptedContent );
 					try
 					{
 						settingsDocument = SoapuiSettingsDocumentConfig.Factory.parse( new String( data, "UTF-8" ) );
@@ -495,9 +496,11 @@ public class DefaultSoapUICore implements SoapUICore
 				try
 				{
 					byte[] data = settingsDocument.xmlText().getBytes();
-					byte[] encryptedData = OpenSSL.encrypt( "des3", password.toCharArray(), data );
+					String encryptionAlgorithm = "des3";
+					byte[] encryptedData = OpenSSL.encrypt( encryptionAlgorithm, password.toCharArray(), data );
 					settingsDocument.setSoapuiSettings( null );
 					settingsDocument.getSoapuiSettings().setEncryptedContent( encryptedData );
+					settingsDocument.getSoapuiSettings().setEncryptedContentAlgorithm(encryptionAlgorithm);
 				}
 				catch( UnsupportedEncodingException e )
 				{

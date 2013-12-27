@@ -21,16 +21,16 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class DefaultPropertyTableHolderModelTest
+public class DefaultPropertyHolderTableModelTest
 {
 
 	public static final String FIRST_PARAM_NAME = "Param1";
 	public static final String PARAM_VALUE = "ParamValue";
 	public static final String EMPTY_STRING = "";
 	private RestParamsPropertyHolder methodParams;
-	private DefaultPropertyTableHolderModel tableHolderModel;
+	private DirectAccessPropertyHolderTableModel tableHolderModel;
 	private RestParamsPropertyHolder requestParams;
-	private DefaultPropertyTableHolderModel requestTableHolderModel;
+	private DirectAccessPropertyHolderTableModel requestTableHolderModel;
 
 	@Before
 	public void setUp() throws Exception
@@ -65,8 +65,6 @@ public class DefaultPropertyTableHolderModelTest
 		methodParams.addProperty( lastParameterName );
 		tableHolderModel.moveProperty( lastParameterName, 1, 0 );
 
-		String[] propertyNames = tableHolderModel.getPropertyNames();
-		assertThat( propertyNames[0], is(lastParameterName) );
 		assertThat(tableHolderModel.getPropertyAtRow( 0 ).getName(), is(lastParameterName));
 	}
 
@@ -76,8 +74,6 @@ public class DefaultPropertyTableHolderModelTest
 		String newParameterName = "lastOne";
 		methodParams.renameProperty( FIRST_PARAM_NAME, newParameterName );
 
-		String[] propertyNames = tableHolderModel.getPropertyNames();
-		assertThat( propertyNames[0], is(newParameterName) );
 		assertThat(tableHolderModel.getPropertyAtRow( 0 ).getName(), is(newParameterName));
 	}
 
@@ -88,19 +84,17 @@ public class DefaultPropertyTableHolderModelTest
 		requestParams.addProperty( lastParameterName );
 		requestTableHolderModel.moveProperty( lastParameterName, 1, 0 );
 
-		String[] propertyNames = requestTableHolderModel.getPropertyNames();
-		assertThat( propertyNames[0], is(lastParameterName) );
 		assertThat(requestTableHolderModel.getPropertyAtRow( 0 ).getName(), is(lastParameterName));
 	}
 
 
 	/* helper */
 
-	private DefaultPropertyTableHolderModel createDefaultPropertyHolderTableModel( RestParamsPropertyHolder params )
+	private DirectAccessPropertyHolderTableModel createDefaultPropertyHolderTableModel( RestParamsPropertyHolder params )
 	{
 		params.addProperty( FIRST_PARAM_NAME);
-		DefaultPropertyTableHolderModel tableHolderModel =
-				new DefaultPropertyTableHolderModel<RestParamsPropertyHolder>( params );
+		DirectAccessPropertyHolderTableModel tableHolderModel =
+				new DirectAccessPropertyHolderTableModel<RestParamsPropertyHolder>( params );
 		tableHolderModel.setValueAt( PARAM_VALUE, 0, 1 );
 		return tableHolderModel;
 	}

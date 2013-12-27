@@ -57,6 +57,8 @@
                     <xsd:element name="encryptedContent" type="xsd:base64Binary"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
+                    <xsd:element name="encryptedContentAlgorithm" type="xsd:string"
+                                 maxOccurs="1" minOccurs="0"/>
                     <xsd:element name="wssContainer" type="tns:WssContainer"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
@@ -563,7 +565,8 @@
         			<xsd:restriction base="xsd:string">
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
-        				<xsd:enumeration value="NTLM/Kerberos"></xsd:enumeration>
+                        <xsd:enumeration value="NTLM"></xsd:enumeration>
+                        <xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
                         <xsd:enumeration value="OAuth 2"></xsd:enumeration>
                     </xsd:restriction>
         		</xsd:simpleType>
@@ -670,6 +673,8 @@
             </xsd:element>
             <xsd:element name="encryptedContent" type="xsd:base64Binary"
                 maxOccurs="1" minOccurs="0"></xsd:element>
+            <xsd:element name="encryptedContentAlgorithm" type="xsd:string"
+                         maxOccurs="1" minOccurs="0"/>
         </xsd:sequence>
     </xsd:complexType>
 

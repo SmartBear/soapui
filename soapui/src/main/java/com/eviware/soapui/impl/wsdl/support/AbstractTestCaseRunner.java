@@ -227,13 +227,9 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 
 	public TestStepResult runTestStep( TestStep testStep, boolean discard, boolean process )
 	{
-		for( int i = 0; i < testRunListeners.length; i++ )
+		if( !runBeforeSteps( testStep ) )
 		{
-			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( testRunListeners[i] ) )
-				testRunListeners[i].beforeStep( this, getRunContext(), testStep );
-
-			if( !isRunning() )
-				return null;
+			return null;
 		}
 
 		TestStepResult stepResult = testStep.run( this, getRunContext() );
@@ -275,6 +271,23 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		}
 		// preserveContext( getRunContext() );
 		return stepResult;
+	}
+
+	protected boolean runBeforeSteps( TestStep testStep )
+	{
+		for( TestRunListener testRunListener : testRunListeners )
+		{
+			if( Arrays.asList( getTestCase().getTestRunListeners() ).contains( testRunListener ) )
+			{
+				testRunListener.beforeStep( this, getRunContext(), testStep );
+			}
+
+			if( !isRunning() )
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
