@@ -133,10 +133,9 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 		initForm( authTypeForm );
 
 		authTypeForm.addSpace( OUTERMOST_SPACING );
-
 		JComboBox comboBox = authTypeForm.appendComboBox( "authType", COMBO_BOX_LABEL, new String[] {
-				AuthType.GLOBAL_HTTP_SETTINGS.toString(), AuthType.PREEMPTIVE.toString(),
-				AuthType.NTLM_KERBEROS.toString(), AuthType.O_AUTH_2.toString() }, "" );
+				AuthType.GLOBAL_HTTP_SETTINGS.toString(),  AuthType.NTLM.toString(), AuthType.PREEMPTIVE.toString(),
+				AuthType.SPNEGO_KERBEROS.toString(), AuthType.O_AUTH_2.toString() }, "" );
 		comboBox.addActionListener( new ActionListener()
 		{
 			@Override
