@@ -48,7 +48,7 @@ public class RestTestRequestDesktopPanelTest
 	private RestRequest restRequest;
 	private StubbedDialogs dialogs;
 	private XDialogs originalDialogs;
-	private JComboBox<String> endpointsCombo;
+	private JComboBox endpointsCombo;
 
 	@Before
 	public void setUp() throws Exception
@@ -99,7 +99,7 @@ public class RestTestRequestDesktopPanelTest
 
 	/* Helpers */
 
-	private JComboBox<String> findEndpointsComboBox()
+	private JComboBox findEndpointsComboBox()
 
 	{
 		ContainerWalker finder = new ContainerWalker( restTestDesktopPanel );

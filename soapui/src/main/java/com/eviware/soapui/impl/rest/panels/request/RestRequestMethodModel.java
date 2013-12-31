@@ -2,12 +2,9 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 
-import javax.swing.*;
-import javax.swing.event.ListDataListener;
+import javax.swing.DefaultComboBoxModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.List;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 
@@ -23,7 +20,7 @@ import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
  * See the GNU Lesser General Public License for more details at gnu.org.
  *
  */
-public class RestRequestMethodModel extends DefaultComboBoxModel<RequestMethod> implements PropertyChangeListener
+public class RestRequestMethodModel extends DefaultComboBoxModel implements PropertyChangeListener
 {
 	private RestRequestInterface request;
 

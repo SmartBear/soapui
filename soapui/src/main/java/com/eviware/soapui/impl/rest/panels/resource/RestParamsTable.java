@@ -157,9 +157,9 @@ public class RestParamsTable extends JPanel
 
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
-				new JComboBox<ParameterStyle>( getStylesForLocation( ParamLocation.RESOURCE ) ) ) );
+				new JComboBox( getStylesForLocation( ParamLocation.RESOURCE ) ) ) );
 		paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor(
-				new JComboBox<ParamLocation>( ParamLocation.values() ) ) );
+				new JComboBox( ParamLocation.values() ) ) );
 		// Workaround: for some reason the lower part of text gets clipped on some platforms
 		paramsTable.setRowHeight( 25 );
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -214,30 +214,30 @@ public class RestParamsTable extends JPanel
 		}
 	}
 
-	private DefaultComboBoxModel<ParameterStyle> getStylesForLocation( ParamLocation paramLocation )
+	private DefaultComboBoxModel getStylesForLocation( ParamLocation paramLocation )
 	{
 		if( paramLocation == ParamLocation.METHOD )
 		{
-			return new DefaultComboBoxModel<ParameterStyle>(
+			return new DefaultComboBoxModel(
 					new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN } );
 		}
 		else
 		{
-			return new DefaultComboBoxModel<ParameterStyle>(
+			return new DefaultComboBoxModel(
 					new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN } );
 		}
 	}
 
-	private DefaultComboBoxModel<ParamLocation> getLocationForParameter( ParameterStyle style )
+	private DefaultComboBoxModel getLocationForParameter( ParameterStyle style )
 	{
 		if( style != ParameterStyle.TEMPLATE )
 		{
-			return new DefaultComboBoxModel<ParamLocation>(
+			return new DefaultComboBoxModel(
 					new ParamLocation[] { ParamLocation.RESOURCE, ParamLocation.METHOD } );
 		}
 		else
 		{
-			return new DefaultComboBoxModel<ParamLocation>(
+			return new DefaultComboBoxModel(
 					new ParamLocation[] { ParamLocation.RESOURCE } );
 		}
 	}
