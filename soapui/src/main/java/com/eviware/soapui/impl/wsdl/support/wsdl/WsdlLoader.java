@@ -12,17 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.net.URL;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.xml.sax.InputSource;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
@@ -31,10 +20,21 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.tools.PropertyExpansionRemover;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.xml.sax.InputSource;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
  * Abstract WSDLLocator for loading definitions from either URL or cache..
- * 
+ *
  * @author ole.matzura
  */
 
@@ -110,16 +110,8 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 				monitor.setProgress( progressIndex, "Loading [" + url + "]" );
 
 			options.setLoadLineNumbers();
-
-			if( Boolean.TRUE.equals( ( ( Boolean )SoapUI.getSettings().getBoolean( WsdlSettings.TRIM_WSDL ) ) ) )
-			{
-				String content = Tools.readAll( load( url ), 0 ).toString().trim();
-				return XmlUtils.createXmlObject( new ByteArrayInputStream( content.getBytes() ), options );
-			}
-			else
-			{
-				return XmlUtils.createXmlObject( load( url ), options );
-			}
+			String content = readCleanWsdlFrom( url );
+			return XmlUtils.createXmlObject( new ByteArrayInputStream( content.getBytes() ), options );
 		}
 		catch( Exception e )
 		{
@@ -137,6 +129,17 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 			log.error( "Failed to load url [" + url + "]" );
 			throw new InvalidDefinitionException( "Error loading [" + url + "]: " + e );
 		}
+	}
+
+	private String readCleanWsdlFrom( String url ) throws Exception
+	{
+		String content = Tools.readAll( load( url ), 0 ).toString();
+
+		if( SoapUI.getSettings().getBoolean( WsdlSettings.TRIM_WSDL )  )
+		{
+			content = content.trim();
+		}
+		return PropertyExpansionRemover.removeExpansions( content );
 	}
 
 	public String getBaseURI()
