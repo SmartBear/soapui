@@ -1113,12 +1113,12 @@ public class WsdlUtils
 
 		Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
 
-		for( Iterator<String> i = urls.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, XmlObject> urlEntry : urls.entrySet() )
 		{
 			DefintionPartConfig definitionPart = definitionCache.addNewPart();
-			String url = i.next();
+			String url = urlEntry.getKey();
 			definitionPart.setUrl( url );
-			XmlObject xmlObject = urls.get( url );
+			XmlObject xmlObject = urlEntry.getValue();
 			Node domNode = xmlObject.getDomNode();
 
 			if( domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )

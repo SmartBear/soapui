@@ -997,16 +997,15 @@ public final class XmlUtils
 
 		cursor.dispose();
 
-		Iterator<QName> i = map.keySet().iterator();
 		int nsCnt = 0;
 
 		StringBuffer buf = new StringBuffer();
 		Set<String> prefixes = new HashSet<String>();
 		Set<String> usedPrefixes = new HashSet<String>();
 
-		while( i.hasNext() )
+		for( Map.Entry<QName, String> entry : map.entrySet() )
 		{
-			QName name = i.next();
+			QName name = entry.getKey();
 			String prefix = name.getLocalPart();
 			if( prefix.length() == 0 )
 				prefix = "ns" + Integer.toString( ++nsCnt );
@@ -1027,7 +1026,7 @@ public final class XmlUtils
 			buf.append( "declare namespace " );
 			buf.append( prefix );
 			buf.append( "='" );
-			buf.append( map.get( name ) );
+			buf.append( entry.getValue() );
 			buf.append( "';\n" );
 
 			usedPrefixes.add( prefix );

@@ -1312,11 +1312,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, mockResponse, "responseContent" ) );
 
 		StringToStringsMap responseHeaders = mockResponse.getResponseHeaders();
-		for( String key : responseHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
 		{
-			for( String value : responseHeaders.get( key ) )
-				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder( key,
-						value, mockResponse ), "value" ) );
+			for( String value : headerEntry.getValue() )
+				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this,
+						new ResponseHeaderHolder( headerEntry.getKey(), value, mockResponse ), "value" ) );
 		}
 		mockResponse.addWsaPropertyExpansions( result, mockResponse.getWsaConfig(), this );
 

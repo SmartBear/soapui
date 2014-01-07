@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1;
 
 import java.io.File;
+import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
@@ -182,9 +183,9 @@ public class Axis1XWSDL2JavaAction extends AbstractToolsAction<Interface>
 		try
 		{
 			StringToStringMap nsMappings = StringToStringMap.fromXml( values.get( NAMESPACE_MAPPING ) );
-			for( String namespace : nsMappings.keySet() )
+			for( Map.Entry<String, String> entry : nsMappings.entrySet() )
 			{
-				builder.addArgs( "-N" + namespace + "=" + nsMappings.get( namespace ) );
+				builder.addArgs( "-N" + entry.getKey() + "=" + entry.getValue() );
 			}
 		}
 		catch( Exception e )

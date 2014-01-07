@@ -2,6 +2,7 @@ package com.eviware.soapui.security.scan;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.config.SecurityScanConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
@@ -132,10 +133,10 @@ public abstract class AbstractSecurityScanWithProperties extends AbstractSecurit
 	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message,
 			SecurityTestRunContext context )
 	{
-		for( String param : updatedParams.keySet() )
+		for( Map.Entry<String, String> param : updatedParams.entrySet() )
 		{
-			String value = context.expand( updatedParams.get( param ) );
-			updatedParams.put( param, value );
+			String value = context.expand( param.getValue() );
+			updatedParams.put( param.getKey(), value );
 		}
 		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
 		getSecurityScanRequestResult().setMessageExchange( message );

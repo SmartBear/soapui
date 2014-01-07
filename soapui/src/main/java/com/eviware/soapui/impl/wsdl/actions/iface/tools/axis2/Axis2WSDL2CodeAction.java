@@ -96,9 +96,9 @@ public class Axis2WSDL2CodeAction extends AbstractToolsAction<Interface>
 			Definition definition = modelItem.getWsdlContext().getDefinition();
 			Map<QName, Service> services = definition.getAllServices();
 
-			for( QName serviceName : services.keySet() )
+			for( Map.Entry<QName, Service> entry : services.entrySet() )
 			{
-				Service service = services.get( serviceName );
+				Service service = entry.getValue();
 
 				Map<String, Port> portMap = service.getPorts();
 				for( String portName : portMap.keySet() )
@@ -106,7 +106,7 @@ public class Axis2WSDL2CodeAction extends AbstractToolsAction<Interface>
 					Port port = portMap.get( portName );
 					if( port.getBinding().getQName().equals( bindingName ) )
 					{
-						values.put( SERVICE_NAME, serviceName.getLocalPart() );
+						values.put( SERVICE_NAME, entry.getKey().getLocalPart() );
 						values.put( PORT_NAME, portName );
 
 						break;
@@ -227,12 +227,12 @@ public class Axis2WSDL2CodeAction extends AbstractToolsAction<Interface>
 		{
 			StringBuilder nsMapArg = new StringBuilder();
 			StringToStringMap nsMappings = StringToStringMap.fromXml( values.get( NAMESPACE_MAPPING ) );
-			for( String namespace : nsMappings.keySet() )
+			for( Map.Entry<String, String> entry : nsMappings.entrySet() )
 			{
 				if( nsMapArg.length() > 0 )
 					nsMapArg.append( ',' );
 
-				nsMapArg.append( namespace ).append( '=' ).append( nsMappings.get( namespace ) );
+				nsMapArg.append( entry.getKey() ).append( '=' ).append( entry.getValue() );
 			}
 
 			builder.addArgs( "-ns2p", nsMapArg.toString() );

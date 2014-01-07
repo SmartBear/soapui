@@ -97,12 +97,12 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 		Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
 		definitionCache.setRootPart( baseUri );
 
-		for( Iterator<String> i = urls.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, XmlObject> entry : urls.entrySet() )
 		{
 			DefintionPartConfig definitionPart = definitionCache.addNewPart();
-			String url = i.next();
+			String url = entry.getKey();
 			definitionPart.setUrl( url );
-			XmlObject xmlObject = urls.get( url );
+			XmlObject xmlObject = entry.getValue();
 			Node domNode = xmlObject.getDomNode();
 
 			if( domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )

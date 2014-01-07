@@ -83,10 +83,9 @@ public class SettingUtils
 	public static String qnameValues2String( Map<QName, String[]> valueMap )
 	{
 		StringListConfig config = StringListConfig.Factory.newInstance();
-		for( QName qname : valueMap.keySet() )
+		for( Map.Entry<QName, String[]> entry : valueMap.entrySet() )
 		{
-			String[] values = valueMap.get( qname );
-			String nameAndValues = qname2string( qname ) + "=" + StringUtils.join( values, "," );
+			String nameAndValues = qname2string( entry.getKey() ) + "=" + StringUtils.join( entry.getValue(), "," );
 			config.addEntry( nameAndValues );
 		}
 		return config.toString();

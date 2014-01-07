@@ -259,10 +259,9 @@ public class SwingXFormImpl implements XForm
 
 	public void setValues( StringToStringMap values )
 	{
-		for( Iterator<String> i = values.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, String> entry : values.entrySet() )
 		{
-			String key = i.next();
-			setComponentValue( key, values.get( key ) );
+			setComponentValue( entry.getKey(), entry.getValue() );
 		}
 	}
 

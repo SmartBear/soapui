@@ -262,9 +262,9 @@ public class XmlHolder implements Map<String, Object>
 		if( t.keySet() == null )
 			return;
 
-		for( String key : t.keySet() )
+		for( Entry<? extends String, ?> entry : t.entrySet() )
 		{
-			put( key, t.get( key ) );
+			put( entry.getKey(), entry.getValue() );
 		}
 	}
 

@@ -185,8 +185,8 @@ public class EvalPropertyResolver implements PropertyResolver
 		try
 		{
 			scriptEngine.setScript( name );
-			for( String key : objects.keySet() )
-				scriptEngine.setVariable( key, objects.get( key ) );
+			for( Map.Entry<String, Object> entry : objects.entrySet() )
+				scriptEngine.setVariable( entry.getKey(), entry.getValue() );
 
 			Object result = scriptEngine.run();
 			return result == null ? null : result.toString();

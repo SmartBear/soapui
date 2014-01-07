@@ -542,10 +542,9 @@ public class SimpleForm
 
 	public void setValues( Map<String, String> values )
 	{
-		for( Iterator<String> i = values.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, String> entry : values.entrySet() )
 		{
-			String key = i.next();
-			setComponentValue( key, values.get( key ) );
+			setComponentValue( entry.getKey(), entry.getValue() );
 		}
 	}
 
