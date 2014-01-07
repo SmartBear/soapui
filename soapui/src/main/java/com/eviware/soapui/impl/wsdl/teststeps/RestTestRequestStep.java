@@ -801,10 +801,11 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		result.extractAndAddAll( "domain" );
 
 		StringToStringsMap requestHeaders = testRequest.getRequestHeaders();
-		for( String key : requestHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : requestHeaders.entrySet() )
 		{
-			for( String value : requestHeaders.get( key ) )
-				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( key, value, testRequest ), "value" );
+			for( String value : headerEntry.getValue() )
+				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( headerEntry.getKey(), value,
+						testRequest ), "value" );
 		}
 
 		return result.toArray( new PropertyExpansion[result.size()] );

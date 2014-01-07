@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 import org.jboss.jbosswsTools.ConfigurationDocument;
 import org.jboss.jbosswsTools.ConfigurationType;
@@ -217,11 +218,11 @@ public class WSToolsWsdl2JavaAction extends AbstractToolsAction<Interface>
 			{
 				GlobalType global = config.addNewGlobal();
 
-				for( String namespace : nsMappings.keySet() )
+				for( Map.Entry<String, String> namespaceEntry : nsMappings.entrySet() )
 				{
 					PkgNSType entry = global.addNewPackageNamespace();
-					entry.setNamespace( namespace );
-					entry.setPackage( nsMappings.get( namespace ) );
+					entry.setNamespace( namespaceEntry.getKey() );
+					entry.setPackage( namespaceEntry.getValue() );
 				}
 			}
 		}

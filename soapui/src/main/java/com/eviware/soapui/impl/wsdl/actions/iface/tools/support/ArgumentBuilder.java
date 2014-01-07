@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -70,11 +71,10 @@ public class ArgumentBuilder
 	private StringToStringMap escapeQuotes( StringToStringMap values )
 	{
 		StringToStringMap map = new StringToStringMap();
-		for( String key : values.keySet() )
+		for( Map.Entry<String, String> entry : values.entrySet() )
 		{
-			String oldValue = values.get( key );
-			String newValue = internalEscapeQuotes( oldValue );
-			map.put( key, newValue );
+			String newValue = internalEscapeQuotes( entry.getValue() );
+			map.put( entry.getKey(), newValue );
 		}
 		return map;
 	}

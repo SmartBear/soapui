@@ -114,16 +114,16 @@ public class WsdlMockRunner extends AbstractMockRunner
 				String wsdlPrefix = getInterfacePrefix( iface ).substring( 1 );
 				StringToStringMap parts = exporter.createFilesForExport(wsdlPrefix + "&part=" );
 
-				for( String key : parts.keySet() )
+				for( Map.Entry<String, String> partEntry : parts.entrySet() )
 				{
-					if( key.toLowerCase().endsWith( ".wsdl" ) )
+					if( partEntry.getKey().toLowerCase().endsWith( ".wsdl" ) )
 					{
-						InputSource inputSource = new InputSource( new StringReader( parts.get( key ) ) );
+						InputSource inputSource = new InputSource( new StringReader( partEntry.getValue() ) );
 						String content = WsdlUtils.replacePortEndpoint( ( WsdlInterface )iface, inputSource,
 								mockService.getLocalMockServiceEndpoint() );
 
 						if( content != null )
-							parts.put( key, content );
+							parts.put( partEntry.getKey(), content );
 					}
 				}
 

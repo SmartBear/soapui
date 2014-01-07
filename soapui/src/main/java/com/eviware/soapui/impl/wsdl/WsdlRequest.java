@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 
@@ -519,11 +520,11 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		result.addAll( super.getPropertyExpansions() );
 
 		StringToStringsMap requestHeaders = getRequestHeaders();
-		for( String key : requestHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : requestHeaders.entrySet() )
 		{
-			for( String value : requestHeaders.get( key ) )
+			for( String value : headerEntry.getValue())
 				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this,
-						new HttpTestRequestStep.RequestHeaderHolder( key, value, this ), "value" ) );
+						new HttpTestRequestStep.RequestHeaderHolder( headerEntry.getKey(), value, this ), "value" ) );
 		}
 		addWsaPropertyExpansions( result, getWsaConfig(), this );
 		addJMSHeaderExpansions( result, getJMSHeaderConfig(), this );

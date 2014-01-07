@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 import org.wsI.testing.x2003.x03.common.AddStyleSheet;
 import org.wsI.testing.x2003.x03.log.Environment;
@@ -284,12 +286,12 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 			buffer.append( headers.get( "#status#" ) ).append( "\r\n" );
 		}
 
-		for( String header : headers.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : headers.entrySet() )
 		{
-			if( !header.equals( "#status#" ) )
+			if( !headerEntry.getKey().equals( "#status#" ) )
 			{
-				for( String value : headers.get( header ) )
-					buffer.append( header ).append( ": " ).append( value ).append( "\r\n" );
+				for( String value : headerEntry.getValue() )
+					buffer.append( headerEntry.getKey() ).append( ": " ).append( value ).append( "\r\n" );
 			}
 		}
 

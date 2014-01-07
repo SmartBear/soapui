@@ -64,8 +64,8 @@ public class SecurityScanUtil
 
 		StringToStringMap result = new StringToStringMap();
 
-		for( String key : map.keySet() )
-			result.put( key, map.get( key ).getValue() );
+		for( Map.Entry<String, TestProperty> entry : map.entrySet() )
+			result.put( entry.getKey(), entry.getValue().getValue() );
 
 		return result;
 	}

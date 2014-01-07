@@ -682,10 +682,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		result.extractAndAddAll( "domain" );
 
 		StringToStringsMap requestHeaders = testRequest.getRequestHeaders();
-		for( String key : requestHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : requestHeaders.entrySet() )
 		{
-			for( String value : requestHeaders.get( key ) )
-				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( key, value, testRequest ), "value" );
+			for( String value : headerEntry.getValue() )
+				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( headerEntry.getKey(), value,
+						testRequest ), "value" );
 		}
 
 		testRequest.addWsaPropertyExpansions( result, testRequest.getWsaConfig(), this );
