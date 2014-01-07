@@ -14,14 +14,21 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.RestParameter;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.environment.EnvironmentListener;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -29,9 +36,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
+import com.eviware.soapui.model.testsuite.LoadTest;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.JTableFactory;
@@ -41,17 +52,34 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.impl.swing.FileFormField;
+import org.apache.commons.io.FilenameUtils;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -337,10 +365,90 @@ public class PropertyHolderTable extends JPanel
 			putValue( Action.SHORT_DESCRIPTION, "Loads property values from an external file" );
 		}
 
+        // TODO : this should really be centralized in a helper or utility class
+        private Project getProjectFromModelItem(ModelItem modelItem) {
+            if (modelItem == null)
+            {
+                return null;
+            }
+            if( modelItem instanceof Project )
+            {
+                return ( Project) modelItem;
+            }
+            else if( modelItem instanceof Interface )
+            {
+                return ( ( Interface )modelItem ).getProject();
+            }
+            else if( modelItem instanceof Operation )
+            {
+                return ( (Operation)modelItem ).getInterface().getProject();
+            }
+            else if( modelItem instanceof Request )
+            {
+                return ( (Request)modelItem ).getOperation().getInterface().getProject();
+            }
+            else if( modelItem instanceof TestSuite )
+            {
+                return ( ( TestSuite )modelItem ).getProject();
+            }
+            else if( modelItem instanceof TestCase )
+            {
+                return ( (TestCase)modelItem ).getTestSuite().getProject();
+            }
+            else if( modelItem instanceof TestStep )
+            {
+                return ( (TestStep)modelItem ).getTestCase().getTestSuite().getProject();
+            }
+            else if( modelItem instanceof LoadTest )
+            {
+                return ( (LoadTest)modelItem ).getTestCase().getTestSuite().getProject();
+            }
+            else if( modelItem instanceof MockService )
+            {
+                return ( ( MockService )modelItem ).getProject();
+            }
+            else if( modelItem instanceof MockOperation )
+            {
+                return ( (MockOperation)modelItem ).getMockService().getProject();
+            }
+            else if( modelItem instanceof MockResponse )
+            {
+                return ( (MockResponse)modelItem ).getMockOperation().getMockService().getProject();
+            }
+            else {
+                return null;
+            }
+        }
+
 		public void actionPerformed( ActionEvent e )
 		{
 			if( dialog == null )
 				dialog = ADialogBuilder.buildDialog( LoadOptionsForm.class );
+
+            Project project = getProjectFromModelItem(holder.getModelItem());
+            if (project != null) {
+                FileFormField fileFormField = (FileFormField) dialog.getFormField( LoadOptionsForm.FILE );
+                String currentDirectory = StringUtils.hasContent(project.getResourceRoot()) ? project.getResourceRoot() : project.getPath();
+                if (! StringUtils.hasContent(currentDirectory)) {
+                    currentDirectory = System.getProperty("user.dir", ".");
+                } else if (holder.getModelItem() instanceof AbstractWsdlModelItem) {
+                    currentDirectory = FilenameUtils.normalize(PathUtils.expandPath(currentDirectory, ((AbstractWsdlModelItem) (holder.getModelItem()))));
+                }
+                File file = new File(currentDirectory);
+                while (! (file == null) && ! file.exists()) {
+                    file = file.getParentFile();
+                }
+                if (file == null) {
+                    // pathname was invalid, fallback on current directory of jvm
+                    file = new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
+                }
+                if (! file.isDirectory()) {
+                    currentDirectory = file.getParentFile().getAbsolutePath();
+                } else {
+                    currentDirectory = file.getAbsolutePath();
+                }
+                fileFormField.setCurrentDirectory( currentDirectory );
+            }
 
 			dialog.getFormField( LoadOptionsForm.DELETEREMAINING )
 					.setEnabled( holder instanceof MutableTestPropertyHolder );
