@@ -10,9 +10,9 @@ Feature:Saves the access token to OAuth2 profile when valid OAuth 2.0 parameters
     And the internal browser, opened for consent screen, is closed automatically.
 
   Examples:
-  | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope                                            | clientID                                   | clientSecret             |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       | https://www.googleapis.com/auth/tasks.readonly   | 669184148999.apps.googleusercontent.com    | vqWu7TpONtgABF2Ooay4fODG |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | urn:ietf:wg:oauth:2.0:oob    | https://www.googleapis.com/auth/tasks.readonly   | 669184148999.apps.googleusercontent.com    | vqWu7TpONtgABF2Ooay4fODG |
+  | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope                                            | clientID                                       | clientSecret |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       | https://www.googleapis.com/auth/tasks.readonly   | TEAMPASS: SoapUI Development Google account    | TEAMPASS     |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | urn:ietf:wg:oauth:2.0:oob    | https://www.googleapis.com/auth/tasks.readonly   | TEAMPASS: SoapUI Development Google account    | TEAMPASS     |
 
 
   Scenario Outline: Access token is overwritten if exists already
@@ -24,9 +24,9 @@ Feature:Saves the access token to OAuth2 profile when valid OAuth 2.0 parameters
     And the internal browser, opened for consent screen, is closed automatically.
 
   Examples:
-  | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope                                            | clientID                                   | clientSecret             |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       | https://www.googleapis.com/auth/tasks.readonly   | 669184148999.apps.googleusercontent.com    | vqWu7TpONtgABF2Ooay4fODG |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | urn:ietf:wg:oauth:2.0:oob    | https://www.googleapis.com/auth/tasks.readonly   | 669184148999.apps.googleusercontent.com    | vqWu7TpONtgABF2Ooay4fODG |
+  | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope                                            | clientID                                      | clientSecret  |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       | https://www.googleapis.com/auth/tasks.readonly   | TEAMPASS: SoapUI Development Google account   | TEAMPASS      |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | urn:ietf:wg:oauth:2.0:oob    | https://www.googleapis.com/auth/tasks.readonly   | TEAMPASS: SoapUI Development Google account   | TEAMPASS      |
 
 
 
@@ -39,13 +39,13 @@ Feature:Saves the access token to OAuth2 profile when valid OAuth 2.0 parameters
 
 
   Examples:
-  | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope      | clientID       | clientSecret             |  error message                 |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | htttps://accounts.google.com/o/oauth2/auth | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       | readonly   | 669184148999   | vqWu7TpONtgABF2Ooay4fODG | Invalid authorization URI      |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | htttps://accounts.google.com/o/oauth2/token| urn:ietf:wg:oauth:2.0:oob    | readonly   | 669184148999   | vqWu7TpONtgABF2Ooay4fODG | Invalid access token URI       |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | htttp://localhost:8080/      | readonly   | 669184148999   | vqWu7TpONtgABF2Ooay4fODG | Invalid redirect URI           |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       |            | 669184148999   | vqWu7TpONtgABF2Ooay4fODG | Scope can't be empty.          |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       |  readonly  |                | vqWu7TpONtgABF2Ooay4fODG | Client ID can't be empty.      |
-  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       |  readonly  | 669184148999   |                          | Client secret can't be empty.  |
+  | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope      | clientID                                    | clientSecret  |  error message                 |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | htttps://accounts.google.com/o/oauth2/auth | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       | readonly   | TEAMPASS: SoapUI Development Google account | TEAMPASS      | Invalid authorization URI      |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | htttps://accounts.google.com/o/oauth2/token| urn:ietf:wg:oauth:2.0:oob    | readonly   | TEAMPASS: SoapUI Development Google account | TEAMPASS      | Invalid access token URI       |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | htttp://localhost:8080/      | readonly   | TEAMPASS: SoapUI Development Google account | TEAMPASS      | Invalid redirect URI           |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       |            | TEAMPASS: SoapUI Development Google account | TEAMPASS      | Scope can't be empty.          |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       |  readonly  |                                             | TEAMPASS      | Client ID can't be empty.      |
+  | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth  | https://accounts.google.com/o/oauth2/token | http://localhost:8080/       |  readonly  | TEAMPASS: SoapUI Development Google account |               | Client secret can't be empty.  |
 
   Scenario Outline: message is displayed when access token was not fetched due to some problems, even though the parameters are valid.
     Given Uwe Krull created a REST project with <RestURI>
@@ -55,5 +55,5 @@ Feature:Saves the access token to OAuth2 profile when valid OAuth 2.0 parameters
     And browser is not closed automatically.
 
   Examples:
-    | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope      | clientID       | clientSecret             | error message                     |
-    | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth | https://accounts.google.com/o/oauth2/token  | http://localhost:8080/       | readonly   | 669184148999   | vqWu7TpONtgABF2Ooay4fODG | Client not registered             |
+    | RestURI                                             | authURI                                    | accessTokenURI                             | redirectUri                  | scope      | clientID                                      | clientSecret | error message                     |
+    | https://www.googleapis.com/tasks/v1/users/@me/lists | https://accounts.google.com/o/oauth2/auth | https://accounts.google.com/o/oauth2/token  | http://localhost:8080/       | readonly   |  TEAMPASS: SoapUI Development Google account | TEAMPASS      | Client not registered             |
