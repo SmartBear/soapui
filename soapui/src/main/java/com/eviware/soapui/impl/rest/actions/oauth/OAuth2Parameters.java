@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 /**
 * Wrapper class that performs property expansion on the values in an OAuth2Profile instance.
@@ -20,22 +21,16 @@ class OAuth2Parameters
 	/**
 	 * Constructs an OAuth2Parameters object
 	 * @param profile the profile to be wrapped
-	 * @param authorizationUri
-	 * @param redirectUri
-	 * @param accessTokenUri
-	 * @param clientId
-	 * @param clientSecret
 	 */
-	OAuth2Parameters( OAuth2Profile profile, String authorizationUri, String redirectUri, String accessTokenUri,
-							String clientId, String clientSecret, String scope )
+	OAuth2Parameters( OAuth2Profile profile )
 	{
 		this.profile = profile;
-		this.authorizationUri = authorizationUri;
-		this.redirectUri = redirectUri;
-		this.accessTokenUri = accessTokenUri;
-		this.clientId = clientId;
-		this.clientSecret = clientSecret;
-		this.scope = scope;
+		this.authorizationUri = expandProperty( profile, profile.getAuthorizationURI() );
+		this.redirectUri = expandProperty( profile, profile.getRedirectURI() );
+		this.accessTokenUri =  expandProperty( profile, profile.getAccessTokenURI() );
+		this.clientId = expandProperty( profile, profile.getClientID() );
+		this.clientSecret = expandProperty( profile, profile.getClientSecret() );
+		this.scope = expandProperty( profile, profile.getScope() );
 	}
 
 
@@ -57,5 +52,20 @@ class OAuth2Parameters
 	public void setRefreshTokenInProfile( String refreshToken )
 	{
 		profile.setRefreshToken( refreshToken );
+	}
+
+	public void waitingForAuthorization()
+	{
+		profile.waitingForAuthorization();
+	}
+
+	private String expandProperty( OAuth2Profile profile, String value )
+	{
+		return PropertyExpander.expandProperties( profile.getContainer().getProject(), value );
+	}
+
+	public void receivedAuthorizationCode()
+	{
+		profile.receivedAuthorizationCode();
 	}
 }
