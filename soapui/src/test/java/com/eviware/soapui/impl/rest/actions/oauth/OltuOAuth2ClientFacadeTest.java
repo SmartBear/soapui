@@ -73,7 +73,6 @@ public class OltuOAuth2ClientFacadeTest
 		initializeOAuthProfileWithDefaultValues();
 		initializeOAuthProfileWithOnlyAccessToken();
 		spyingOauthClientStub = new SpyingOauthClientStub();
-//		httpRequest =  new RestRequest( ModelItemFactory.makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
 		httpRequest = new ExtendedPostMethod(  );
 		httpRequest.setURI(  new URI( "endpoint/path" ) );
 		oltuClientFacade = new OltuOAuth2ClientFacade()
@@ -153,7 +152,11 @@ public class OltuOAuth2ClientFacadeTest
 		} );
 
 		oltuClientFacade.requestAccessToken( profile );
+
+		assertThat( statusValues.size(), is( 4 ) );
 		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE));
 		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER ));
 	}
 

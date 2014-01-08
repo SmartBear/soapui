@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -83,13 +82,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	private OAuth2Parameters buildParametersFrom( OAuth2Profile profile )
 	{
-		String authorizationUri = expandProperty( profile, profile.getAuthorizationURI() );
-		String redirectUri = expandProperty( profile, profile.getRedirectURI() );
-		String accessTokenUri = expandProperty( profile, profile.getAccessTokenURI() );
-		String clientId = expandProperty( profile, profile.getClientID() );
-		String clientSecret = expandProperty( profile, profile.getClientSecret() );
-		String scope = expandProperty( profile, profile.getScope() );
-		return new OAuth2Parameters( profile, authorizationUri, redirectUri, accessTokenUri, clientId, clientSecret, scope );
+		return new OAuth2Parameters( profile );
 	}
 
 	private void validateProfileContents( OAuth2Parameters parameters )
@@ -105,10 +98,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		validateRequiredStringValue( parameters.clientSecret, "Client secret" );
 	}
 
-	private String expandProperty( OAuth2Profile profile, String value )
-	{
-		return PropertyExpander.expandProperties( profile.getContainer().getProject(), value );
-	}
 
 	private void validateRequiredStringValue( String value, String propertyName )
 	{
@@ -192,6 +181,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		} );
 		parameters.startAccessTokenFlow();
 		browserFacade.open( new URI( authorizationURL ).toURL() );
+		parameters.waitingForAuthorization();
 	}
 
 	private String extractAuthorizationCode( String title )
@@ -209,6 +199,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		{
 			try
 			{
+				parameters.receivedAuthorizationCode();
 				OAuthClientRequest accessTokenRequest = OAuthClientRequest
 						.tokenLocation( parameters.accessTokenUri )
 						.setGrantType( GrantType.AUTHORIZATION_CODE )
@@ -265,24 +256,26 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		}
 	}
 
-	private void appendAccessTokenToBody(HttpRequestBase request, OAuthBearerClientRequest oAuthClientRequest )
+	private void appendAccessTokenToBody( HttpRequestBase request, OAuthBearerClientRequest oAuthClientRequest )
 			throws OAuthSystemException
 	{
 		try
 		{
-			if(request instanceof HttpEntityEnclosingRequest )
+			if( request instanceof HttpEntityEnclosingRequest )
 			{
 				HttpEntity httpEntity = ( ( HttpEntityEnclosingRequest )request ).getEntity();
-				if(httpEntity==null)
+				if( httpEntity == null )
 				{
 					String accenTokenParameter = getQueryStringFromOAuthClientRequest( oAuthClientRequest );
-					( ( HttpEntityEnclosingRequest )request).setEntity( new StringEntity( accenTokenParameter ) );
-				}  else
+					( ( HttpEntityEnclosingRequest )request ).setEntity( new StringEntity( accenTokenParameter ) );
+				}
+				else
 				{
 					//TODO: re-create the entity from existing one and append the new content for access token
 				}
 			}
-		}catch( UnsupportedEncodingException e )
+		}
+		catch( UnsupportedEncodingException e )
 		{
 			throw new OAuthSystemException( e );
 		}
