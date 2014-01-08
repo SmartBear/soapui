@@ -47,6 +47,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		UPDATED_MANUALLY,
 		PENDING,
+		WAITING_FOR_AUTHORIZATION,
+		RECEIVED_AUTHORIZATION_CODE,
 		FAILED,
 		RETRIEVED_FROM_SERVER
 	}
@@ -67,6 +69,16 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		this.oAuth2ProfileContainer = oAuth2ProfileContainer;
 		this.configuration = configuration;
 		pcs = new PropertyChangeSupport( this );
+	}
+
+	public void waitingForAuthorization()
+	{
+		setAccessTokenStatus( AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
+	}
+
+	public void receivedAuthorizationCode()
+	{
+		setAccessTokenStatus( AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE  );
 	}
 
 	public void startAccessTokenFlow()
