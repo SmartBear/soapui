@@ -32,16 +32,8 @@ import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -143,8 +135,8 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 
 		authTypeForm.addSpace( OUTERMOST_SPACING );
 		JComboBox comboBox = authTypeForm.appendComboBox( "authType", COMBO_BOX_LABEL, new String[] {
-				AuthType.GLOBAL_HTTP_SETTINGS.toString(),  AuthType.NTLM.toString(), AuthType.PREEMPTIVE.toString(),
-				AuthType.SPNEGO_KERBEROS.toString(), AuthType.O_AUTH_2.toString() }, "" );
+				AuthType.GLOBAL_HTTP_SETTINGS.toString(), AuthType.PREEMPTIVE.toString(),
+				AuthType.NTLM.toString(), AuthType.SPNEGO_KERBEROS.toString(), AuthType.O_AUTH_2.toString() }, "" );
 		comboBox.addActionListener( new ActionListener()
 		{
 			@Override
@@ -189,29 +181,29 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 
 		oauth2Form.addSpace( TOP_SPACING );
 
-		oauth2Form.appendTextField( "clientID", "Client Identification", "" );
-		oauth2Form.appendTextField( "clientSecret", "Client Secret", "" );
+		oauth2Form.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
+		oauth2Form.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
 
 		oauth2Form.addSpace( GROUP_SPACING );
 
-		oauth2Form.appendTextField( "authorizationURI", "Authorization URI", "" );
-		oauth2Form.appendTextField( "accessTokenURI", "Access Token URI", "" );
-		oauth2Form.appendTextField( "redirectURI", "Redirect URI", "" );
+		oauth2Form.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
+		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
+		oauth2Form.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
 
 		oauth2Form.addSpace( GROUP_SPACING );
 
-		oauth2Form.appendTextField( "scope", "Scope", "" );
+		oauth2Form.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
 
 		oauth2Form.addSpace( NORMAL_SPACING );
 
 		// TODO This should be a bit wider, but leaving it at default size for now
 		oauth2Form.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
-
+		oauth2Form.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 		oauth2Form.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
 
 		oauth2Form.addSpace( GROUP_SPACING );
 
-		oauth2Form.appendTextField( "accessToken", "Access Token", "", SimpleForm.LONG_TEXT_FIELD_COLUMNS );
+		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "", SimpleForm.LONG_TEXT_FIELD_COLUMNS );
 
 		oauth2Form.addButtonWithoutLabel( "Advanced Options", new ActionListener()
 		{
@@ -220,8 +212,6 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 			{
 				showAdvancedOAuth2Options();
 			}
-
-
 		} );
 	}
 

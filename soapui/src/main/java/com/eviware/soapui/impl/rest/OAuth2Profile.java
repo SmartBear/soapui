@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AccessTokenPositionConfig;
 import com.eviware.soapui.config.AccessTokenStatusConfig;
 import com.eviware.soapui.config.OAuth2ProfileConfig;
@@ -40,7 +39,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String REFRESH_TOKEN_PROPERTY = "refreshToken";
 	public static final String SCOPE_PROPERTY = "scope";
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
-
 
 
 	public enum AccessTokenStatus
@@ -73,12 +71,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public void waitingForAuthorization()
 	{
-		setAccessTokenStatus( AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
+		setAccessTokenStatus( AccessTokenStatus.WAITING_FOR_AUTHORIZATION );
 	}
 
 	public void receivedAuthorizationCode()
 	{
-		setAccessTokenStatus( AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE  );
+		setAccessTokenStatus( AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE );
 	}
 
 	public void startAccessTokenFlow()
@@ -90,8 +88,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		// Ignore return value in this case: even if it is not a change, it is important to know that a token has been
 		// retrieved from the server
-		doSetAccessToken(accessToken);
-		setAccessTokenStatus( AccessTokenStatus.RETRIEVED_FROM_SERVER  );
+		doSetAccessToken( accessToken );
+		setAccessTokenStatus( AccessTokenStatus.RETRIEVED_FROM_SERVER );
 	}
 
 	public String getAccessToken()
@@ -102,11 +100,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	/**
 	 * NOTE: This setter should only be used from the GUI, because it also sets the property "accessTokenStatus" to
 	 * UPDATED_MANUALLY
+	 *
 	 * @param accessToken the access token supplied by the user
 	 */
 	public void setAccessToken( String accessToken )
 	{
-		if (doSetAccessToken( accessToken ))
+		if( doSetAccessToken( accessToken ) )
 		{
 			setAccessTokenStatus( AccessTokenStatus.UPDATED_MANUALLY );
 		}
@@ -250,19 +249,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
-	public AccessTokenStatus getAccessTokenStatus()
+	public String getAccessTokenStatus()
 	{
-		AccessTokenStatusConfig.Enum configurationStatus = configuration.getAccessTokenStatus();
-		if( configurationStatus != null )
+		if( configuration.getAccessTokenStatus() != null )
 		{
-			try
-			{
-				return AccessTokenStatus.valueOf( configurationStatus.toString() );
-			}
-			catch( IllegalArgumentException e )
-			{
-				SoapUI.log.warn( "Invalid access token value status read from configuration: " + configurationStatus );
-			}
+			return configuration.getAccessTokenStatus().toString();
 		}
 		return null;
 	}
@@ -312,7 +303,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	private void setAccessTokenStatus( AccessTokenStatus status )
 	{
-		AccessTokenStatus oldValue = getAccessTokenStatus();
+		String oldValue = getAccessTokenStatus();
+
 		if( status == null && oldValue == null )
 		{
 			return;
@@ -329,7 +321,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			configuration.setAccessTokenStatus( null );
 		}
-		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValue, status );
+		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValue, status.toString() );
 	}
 
 }

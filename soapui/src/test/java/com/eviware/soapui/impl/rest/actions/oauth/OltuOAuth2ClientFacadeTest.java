@@ -141,23 +141,23 @@ public class OltuOAuth2ClientFacadeTest
 	@Test
 	public void updatesProfileAccessTokenStatus() throws Exception
 	{
-		final List<OAuth2Profile.AccessTokenStatus> statusValues = new ArrayList<OAuth2Profile.AccessTokenStatus>(  );
+		final List<String> statusValues = new ArrayList<String>(  );
 		profile.addPropertyChangeListener(OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, new PropertyChangeListener()
 		{
 			@Override
 			public void propertyChange( PropertyChangeEvent evt )
 			{
-				statusValues.add(( OAuth2Profile.AccessTokenStatus )evt.getNewValue());
+				statusValues.add((String)evt.getNewValue());
 			}
 		} );
 
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( statusValues.size(), is( 4 ) );
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER ));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING.toString()));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString()));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE.toString()));
+		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER.toString() ));
 	}
 
 	@Test
