@@ -26,7 +26,7 @@ public class PropertyExpansionRemover
 			output = removeExpansionAt( output, output.indexOf( EXPANSION_START, startIndex + 1 ) );
 		}
 		int endIndex = output.indexOf('}', startIndex);
-		return output.substring(0, startIndex) + output.substring(endIndex + 1);
+		return endIndex == -1 ? output : output.substring(0, startIndex) + output.substring(endIndex + 1);
 	}
 
 	private static boolean containsNestedExpansion( String output, int startIndex )
