@@ -24,7 +24,7 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 	private HttpRoutePlanner defaultHttpRoutePlanner;
 	private boolean autoProxyEnabled;
 	private SchemeRegistry registry;
-	private ProxySelector cachedProxySelector;
+	private CachedProxySelector cachedProxySelector;
 
 	public CompositeHttpRoutePlanner( SchemeRegistry registry )
 	{
@@ -56,7 +56,7 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 		Object proxy = request.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
 		if( proxy == null && autoProxyEnabled )
 		{
-			ProxySelector proxySelector = getProxySelector();
+			ProxySelector proxySelector = getProxySelector().getProxySelector();
 			if( proxySelector != null )
 			{
 				return new ProxySelectorRoutePlanner( registry, proxySelector ).determineRoute( target, request, context );
@@ -65,12 +65,29 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 		return defaultHttpRoutePlanner.determineRoute( target, request, context );
 	}
 
-	private ProxySelector getProxySelector()
+	private CachedProxySelector getProxySelector()
 	{
 		if( cachedProxySelector == null )
 		{
-			cachedProxySelector = proxySearch.getProxySelector();
+			ProxySelector proxySelector = proxySearch.getProxySelector();
+			cachedProxySelector = new CachedProxySelector( proxySelector == null ? null
+					: proxySearch.getProxySelector() );
 		}
 		return cachedProxySelector;
+	}
+
+	private static class CachedProxySelector
+	{
+		private ProxySelector proxySelector;
+
+		private CachedProxySelector( ProxySelector proxySelector )
+		{
+			this.proxySelector = proxySelector;
+		}
+
+		private ProxySelector getProxySelector()
+		{
+			return proxySelector;
+		}
 	}
 }
