@@ -10,7 +10,7 @@ Feature: Access token status is updated when 'Get access token' button is clicke
   Scenario: Access token status is set to WAITING_FOR_AUTHORIZATION when consent screen is presented
     Given A REST project is created
     And OAuth2 is selected as auth type in the Auth tab
-    And Cliend ID is set to <TEAMPASS: >
+    And Cliend ID is set to <TEAMPASS: SoapUI Development Google account>
     And Client secret is set to <FROM TEAMPASS>
     And authURI is set to https://accounts.google.com/o/oauth2/auth
     And access token URI is set to https://accounts.google.com/o/oauth2/token
@@ -22,7 +22,7 @@ Feature: Access token status is updated when 'Get access token' button is clicke
   Scenario: Access token status is set to RECEIVED_AUTHORIZATION_CODE when consent screen is presented
     Given A REST project is created
     And OAuth2 is selected as auth type in the Auth tab
-    And Cliend ID is set to <TEAMPASS: >
+    And Cliend ID is set to <TEAMPASS: SoapUI Development Google account>
     And Client secret is set to <FROM TEAMPASS>
     And authURI is set to https://accounts.google.com/o/oauth2/auth
     And access token URI is set to https://accounts.google.com/o/oauth2/token
@@ -34,7 +34,7 @@ Feature: Access token status is updated when 'Get access token' button is clicke
   Scenario: Access token status is set to RETRIEVED_FROM_SERVER when user authorizes the app and browser window is closed
     Given A REST project is created
     And OAuth2 is selected as auth type in the Auth tab
-    And Cliend ID is set to <TEAMPASS: >
+    And Cliend ID is set to <TEAMPASS: SoapUI Development Google account>
     And Client secret is set to <FROM TEAMPASS>
     And authURI is set to https://accounts.google.com/o/oauth2/auth
     And access token URI is set to https://accounts.google.com/o/oauth2/token
