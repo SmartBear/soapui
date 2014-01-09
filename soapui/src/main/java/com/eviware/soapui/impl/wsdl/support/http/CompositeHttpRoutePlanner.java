@@ -45,10 +45,10 @@ public class CompositeHttpRoutePlanner implements HttpRoutePlanner
 		Object manualProxy = request.getParams().getParameter( ConnRoutePNames.DEFAULT_PROXY );
 		if( manualProxy == null && autoProxyEnabled )
 		{
-			CachedProxySelector proxySelector = getProxySelector();
+			ProxySelector proxySelector = getProxySelector().getProxySelector();
 			if( proxySelector != null )
 			{
-				return new ProxySelectorRoutePlanner( registry, proxySelector.getProxySelector() ).determineRoute( target, request, context );
+				return new ProxySelectorRoutePlanner( registry, proxySelector ).determineRoute( target, request, context );
 			}
 		}
 		return defaultHttpRoutePlanner.determineRoute( target, request, context );
