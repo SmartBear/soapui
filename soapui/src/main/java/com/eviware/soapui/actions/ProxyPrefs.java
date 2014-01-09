@@ -31,8 +31,9 @@ public class ProxyPrefs implements Prefs
 	public static final String USERNAME = "Username";
 	public static final String PASSWORD = "Password";
 	public static final String EXCLUDES = "Excludes";
+    public static final String IGNORE_PROXY_SYSTEM_PROPERTIES = "Ignore Proxy System Properties";
 
-	private JTextField hostTextField;
+    private JTextField hostTextField;
 	private JTextField portTextField;
 	private JTextField userTextField;
 	private JPasswordField passwordTextField;
@@ -71,7 +72,10 @@ public class ProxyPrefs implements Prefs
 			userTextField = proxyPrefForm.appendTextField( USERNAME, "proxy username to use" );
 			passwordTextField = proxyPrefForm.appendPasswordField( PASSWORD, "proxy password to use" );
 
-		}
+            proxyPrefForm.addSpace(5);
+            proxyPrefForm.appendCheckBox( IGNORE_PROXY_SYSTEM_PROPERTIES, "Ignore proxy system properties", false );
+
+        }
 		return proxyPrefForm;
 	}
 
@@ -146,6 +150,7 @@ public class ProxyPrefs implements Prefs
 		values.put( USERNAME, settings.getString( ProxySettings.USERNAME, "" ) );
 		values.put( PASSWORD, settings.getString( ProxySettings.PASSWORD, "" ) );
 		values.put( EXCLUDES, settings.getString( ProxySettings.EXCLUDES, "" ) );
+        values.put( IGNORE_PROXY_SYSTEM_PROPERTIES, settings.getBoolean( ProxySettings.IGNORE_PROXY_SYSTEM_PROPERTIES ) );
 		return values;
 	}
 
@@ -181,7 +186,9 @@ public class ProxyPrefs implements Prefs
 		settings.setString( ProxySettings.USERNAME, values.get( USERNAME ) );
 		settings.setString( ProxySettings.PASSWORD, values.get( PASSWORD ) );
 		settings.setString( ProxySettings.EXCLUDES, values.get( EXCLUDES ) );
-		boolean enableProxy = !none.isSelected();
+        settings.setBoolean( ProxySettings.IGNORE_PROXY_SYSTEM_PROPERTIES, values.getBoolean( IGNORE_PROXY_SYSTEM_PROPERTIES ) );
+
+        boolean enableProxy = !none.isSelected();
 		if( !autoProxy && ( StringUtils.isNullOrEmpty( proxyHost ) || StringUtils.isNullOrEmpty( proxyPort ) ) )
 		{
 			enableProxy = false;
