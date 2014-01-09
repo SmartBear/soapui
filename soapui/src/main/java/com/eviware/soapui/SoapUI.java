@@ -60,6 +60,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
+import com.eviware.soapui.settings.LoadUISettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
@@ -703,7 +704,13 @@ public class SoapUI
 					} ).start();
 				}
 
-				CajoServer.getInstance().start();
+                if ( ! getSettings().isSet( LoadUISettings.START_CAJO_SERVER_AT_STARTUP ) || getSettings().getBoolean( LoadUISettings.START_CAJO_SERVER_AT_STARTUP ) ) {
+                    CajoServer.getInstance().start();
+                }
+                else
+                {
+                    log.info("Cajo server not started because setting '" + LoadUISettings.START_CAJO_SERVER_AT_STARTUP + "' is false.");
+                }
 			}
 			catch( Exception e )
 			{
