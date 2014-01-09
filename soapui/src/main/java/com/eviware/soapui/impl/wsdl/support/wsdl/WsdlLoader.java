@@ -113,27 +113,36 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 			String content = readCleanWsdlFrom( url );
 			return XmlUtils.createXmlObject( new ByteArrayInputStream( content.getBytes() ), options );
 		}
+		catch (XmlException e)
+		{
+			XmlError error = e.getError();
+			if( error != null )
+			{
+				InvalidDefinitionException ex = new InvalidDefinitionException( e );
+				ex.setMessage( "Error loading [" + url + "]" );
+				throw ex;
+			}
+			else
+			{
+				throw makeInvalidDefinitionException( url, e );
+			}
+		}
 		catch( Exception e )
 		{
-			if( e instanceof XmlException )
-			{
-				XmlError error = ( ( XmlException )e ).getError();
-				if( error != null )
-				{
-					InvalidDefinitionException ex = new InvalidDefinitionException( ( XmlException )e );
-					ex.setMessage( "Error loading [" + url + "]" );
-					throw ex;
-				}
-			}
-			e.printStackTrace();
-			log.error( "Failed to load url [" + url + "]" );
-			throw new InvalidDefinitionException( "Error loading [" + url + "]: " + e );
+			throw makeInvalidDefinitionException( url, e );
 		}
+	}
+
+	private InvalidDefinitionException makeInvalidDefinitionException( String url, Exception e ) throws InvalidDefinitionException
+	{
+		e.printStackTrace();
+		log.error( "Failed to load url [" + url + "]" );
+		return new InvalidDefinitionException( "Error loading [" + url + "]: " + e );
 	}
 
 	private String readCleanWsdlFrom( String url ) throws Exception
 	{
-		String content = Tools.readAll( load( url ), 0 ).toString();
+		String content = XmlUtils.createXmlObject( new URL(url) ).xmlText();
 
 		if( SoapUI.getSettings().getBoolean( WsdlSettings.TRIM_WSDL )  )
 		{
