@@ -12,14 +12,12 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.EditorView;
@@ -38,7 +36,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
 import static com.google.common.base.Preconditions.checkArgument;
 
 @ParametersAreNonnullByDefault
@@ -135,7 +132,7 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 
 		authTypeForm.addSpace( OUTERMOST_SPACING );
 		JComboBox comboBox = authTypeForm.appendComboBox( "authType", COMBO_BOX_LABEL, new String[] {
-			AuthType.GLOBAL_HTTP_SETTINGS.toString(), AuthType.PREEMPTIVE.toString(), AuthType.NTLM.toString(),
+				AuthType.GLOBAL_HTTP_SETTINGS.toString(), AuthType.PREEMPTIVE.toString(), AuthType.NTLM.toString(),
 				AuthType.SPNEGO_KERBEROS.toString(), AuthType.O_AUTH_2.toString() }, "" );
 		comboBox.addActionListener( new ActionListener()
 		{
@@ -210,52 +207,7 @@ public class RequestAuthenticationInspector extends AbstractXmlInspector
 			@Override
 			public void actionPerformed( ActionEvent e )
 			{
-				showAdvancedOAuth2Options();
-			}
-		} );
-	}
-
-	private void showAdvancedOAuth2Options()
-	{
-		final JDialog popup = new JDialog( SoapUI.getFrame(), "Advanced OAuth2 Options" );
-
-		SimpleBindingForm advancedOptionsForm = new SimpleBindingForm(
-				new PresentationModel<AbstractHttpRequest<?>>( profile ) );
-		ButtonGroup buttonGroup = new ButtonGroup();
-
-		addRadioButton( advancedOptionsForm, buttonGroup, "Send Access Token as", AccessTokenPosition.HEADER );
-		addRadioButton( advancedOptionsForm, buttonGroup, "", AccessTokenPosition.QUERY );
-
-		advancedOptionsForm.addButtonWithoutLabel( "Ok", new ActionListener()
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				popup.dispose();
-			}
-		} );
-
-		popup.getContentPane().add( advancedOptionsForm.getPanel() );
-		popup.setBounds( 200, 200, 400, 400 );
-		popup.setVisible( true );
-		UISupport.centerDialog( popup );
-
-	}
-
-	private void addRadioButton( SimpleBindingForm form, final ButtonGroup group,
-										  String groupText, final AccessTokenPosition accessTokenPosition )
-	{
-		final JRadioButton radioButton = form.appendRadioButton( groupText, accessTokenPosition.toString(), group,
-				profile.getAccessTokenPosition().equals( accessTokenPosition ) );
-		radioButton.setFocusPainted( false );
-		radioButton.addActionListener( new ActionListener()
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				radioButton.setRequestFocusEnabled( true );
-				profile.setAccessTokenPosition( accessTokenPosition );
-				group.setSelected( radioButton.getModel(), true );
+				new OAuth2AdvanceOptionsDialog( profile );
 			}
 		} );
 	}
