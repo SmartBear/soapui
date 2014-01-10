@@ -26,9 +26,6 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
-import org.mozilla.interfaces.nsIRequest;
-import org.mozilla.interfaces.nsIURI;
-import org.mozilla.interfaces.nsIWebProgress;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -230,15 +227,27 @@ public class WebViewBasedBrowserComponent
 	}
 
 
-	public void setContent( String contentAsString, String contextUri )
+	public void setContent( final String contentAsString, final String contentType )
 	{
-		getWebEngine().loadContent( contentAsString, contextUri );
+		Platform.runLater( new Runnable()
+		{
+			public void run()
+			{
+				getWebEngine().loadContent( contentAsString, contentType);
+			}
+		} );
 	}
 
-	public void setContent( String content )
+	public void setContent( final String contentAsString )
 	{
-		getWebEngine().loadContent( content );
-		pcs.firePropertyChange( "content", null, content );
+		Platform.runLater( new Runnable()
+		{
+			public void run()
+			{
+				getWebEngine().loadContent( contentAsString );
+			}
+		} );
+		pcs.firePropertyChange( "content", null, contentAsString );
 	}
 
 	private WebEngine getWebEngine()
@@ -261,40 +270,6 @@ public class WebViewBasedBrowserComponent
 		return url;
 	}
 
-	// TODO: Check whether we need to do anything here
-
-	public void onLocationChange( nsIWebProgress arg0, nsIRequest arg1, nsIURI arg2 )
-	{
-		if( getUrl() != null && !getUrl().equals( "about:blank" ) )
-		{
-			if( !possibleError )
-				possibleError = true;
-			else
-			{
-				if( !showingErrorPage )
-				{
-					showErrorPage();
-				}
-			}
-		}
-	}
-
-
-	private void showErrorPage()
-	{
-		if( errorPage != null && !errorPage.equals( getUrl() ) )
-		{
-			try
-			{
-				showingErrorPage = true;
-				navigate( errorPage, null );
-			}
-			catch( Throwable e )
-			{
-				e.printStackTrace();
-			}
-		}
-	}
 
 	public String getErrorPage()
 	{

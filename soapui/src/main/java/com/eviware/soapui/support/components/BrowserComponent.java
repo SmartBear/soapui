@@ -13,15 +13,8 @@
 package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseView;
-import com.eviware.soapui.impl.rest.support.RestUtils;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequest;
-import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.registry.HttpRequestStepFactory;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
@@ -33,41 +26,79 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.teamdev.jxbrowser.*;
-import com.teamdev.jxbrowser.cookie.HttpCookieStorage;
-import com.teamdev.jxbrowser.events.*;
+import com.teamdev.jxbrowser.Browser;
+import com.teamdev.jxbrowser.BrowserFactory;
+import com.teamdev.jxbrowser.BrowserServices;
+import com.teamdev.jxbrowser.BrowserType;
+import com.teamdev.jxbrowser.Configurable;
+import com.teamdev.jxbrowser.Feature;
+import com.teamdev.jxbrowser.NewWindowContainer;
+import com.teamdev.jxbrowser.NewWindowManager;
+import com.teamdev.jxbrowser.NewWindowParams;
+import com.teamdev.jxbrowser.events.NavigationAdapter;
+import com.teamdev.jxbrowser.events.NavigationEvent;
+import com.teamdev.jxbrowser.events.NavigationFinishedEvent;
+import com.teamdev.jxbrowser.events.NavigationListener;
+import com.teamdev.jxbrowser.events.NavigationStatusCode;
+import com.teamdev.jxbrowser.events.StatusChangedEvent;
+import com.teamdev.jxbrowser.events.StatusListener;
 import com.teamdev.jxbrowser.gecko.xpcom.XPCOM;
 import com.teamdev.jxbrowser.gecko.xpcom.XPCOMManager;
 import com.teamdev.jxbrowser.mozilla.MozillaBrowser;
-import com.teamdev.jxbrowser.mozilla.MozillaCookieStorage;
 import com.teamdev.jxbrowser.prompt.DefaultPromptService;
-import com.teamdev.jxbrowser.proxy.*;
+import com.teamdev.jxbrowser.proxy.AuthenticationHandler;
+import com.teamdev.jxbrowser.proxy.ProxyConfig;
+import com.teamdev.jxbrowser.proxy.ProxyServer;
+import com.teamdev.jxbrowser.proxy.ProxyServerLogin;
+import com.teamdev.jxbrowser.proxy.ServerType;
 import com.teamdev.jxbrowser.security.HttpSecurityAction;
 import com.teamdev.jxbrowser.security.HttpSecurityHandler;
 import com.teamdev.jxbrowser.security.SecurityProblem;
-import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.mozilla.interfaces.*;
+import org.mozilla.interfaces.nsIBinaryInputStream;
+import org.mozilla.interfaces.nsIDOMWindow;
+import org.mozilla.interfaces.nsIHttpChannel;
+import org.mozilla.interfaces.nsIHttpHeaderVisitor;
+import org.mozilla.interfaces.nsIInputStream;
+import org.mozilla.interfaces.nsIInterfaceRequestor;
+import org.mozilla.interfaces.nsIObserver;
+import org.mozilla.interfaces.nsIObserverService;
+import org.mozilla.interfaces.nsIRequest;
+import org.mozilla.interfaces.nsISeekableStream;
+import org.mozilla.interfaces.nsIServiceManager;
+import org.mozilla.interfaces.nsISupports;
+import org.mozilla.interfaces.nsIURI;
+import org.mozilla.interfaces.nsIUploadChannel;
+import org.mozilla.interfaces.nsIWeakReference;
+import org.mozilla.interfaces.nsIWebProgress;
+import org.mozilla.interfaces.nsIWebProgressListener;
 import org.mozilla.xpcom.Mozilla;
 import org.mozilla.xpcom.XPCOMException;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class BrowserComponent implements nsIWebProgressListener, nsIWeakReference, StatusListener
 {
-	private static final String CONTENT_TYPE_FORM_URLENCODED = "application/x-www-form-urlencoded";
 	private MozillaBrowser browser;
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private JPanel statusBar;
@@ -80,14 +111,13 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	private boolean disposed;
 	// private static boolean disabled;
 	private NavigationListener internalNavigationListener;
-	private HttpHtmlResponseView httpHtmlResponseView;
 	private static SoapUINewWindowManager newWindowManager;
 	private static Map<nsIDOMWindow, BrowserComponent> browserMap = new HashMap<nsIDOMWindow, BrowserComponent>();
 	private static Map<BrowserComponent, Map<String, RecordedRequest>> browserRecordingMap = new HashMap<BrowserComponent, Map<String, RecordedRequest>>();
 	private static Object recordingHttpListener;
 	private final boolean addStatusBar;
 
-	public BrowserComponent( boolean addToolbar, boolean addStatusBar )
+	public BrowserComponent( boolean addStatusBar )
 	{
 		this.addStatusBar = addStatusBar;
 	}
@@ -136,26 +166,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		toolbar.addGlue();
 
 		return toolbar;
-	}
-
-	public void setRecordingHttpHtmlResponseView( HttpHtmlResponseView httpHtmlResponseView )
-	{
-		this.httpHtmlResponseView = httpHtmlResponseView;
-		if( httpHtmlResponseView != null )
-		{
-			if( !browserRecordingMap.containsKey( BrowserComponent.this ) )
-			{
-				browserRecordingMap.put( BrowserComponent.this, new HashMap<String, RecordedRequest>() );
-			}
-
-			// clear cookies when we start recording
-			HttpCookieStorage cookies = MozillaCookieStorage.getInstance( BrowserType.Mozilla );
-			cookies.deleteCookie( cookies.getCookies() );
-		}
-		else
-		{
-			browserRecordingMap.remove( BrowserComponent.this );
-		}
 	}
 
 	private final class InternalNavigationAdapter extends NavigationAdapter
@@ -414,52 +424,8 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 			{
 				Map<String, RecordedRequest> map = browserRecordingMap.get( BrowserComponent.this );
 				RecordedRequest recordedRequest = map.get( arg0.getUrl() );
-				if( recordedRequest != null )
-				{
-					if( httpHtmlResponseView != null && httpHtmlResponseView.isRecordHttpTrafic() )
-					{
-						HttpTestRequest httpTestRequest = ( HttpTestRequest )( httpHtmlResponseView.getDocument()
-								.getRequest() );
-						WsdlTestCase testCase = httpTestRequest.getTestStep().getTestCase();
-						int count = testCase.getTestStepList().size();
 
-						String url2 = recordedRequest.getUrl();
-						try
-						{
-							url2 = new URL( recordedRequest.getUrl() ).getPath();
-						}
-						catch( MalformedURLException e )
-						{
-
-						}
-
-						HttpTestRequestStep newHttpStep = ( HttpTestRequestStep )testCase.addTestStep(
-								HttpRequestStepFactory.HTTPREQUEST_TYPE, "Http Test Step " + ++count + " [" + url2 + "]",
-								recordedRequest.getUrl(), recordedRequest.getMethod() );
-
-						newHttpStep.getTestRequest().setRequestHeaders( recordedRequest.getHeaders() );
-
-						if( recordedRequest.getContent() != null )
-						{
-							newHttpStep.getTestRequest().setMediaType( recordedRequest.getContentType() );
-							if( newHttpStep.getTestRequest().getMediaType().equals( CONTENT_TYPE_FORM_URLENCODED ) )
-							{
-								newHttpStep.getTestRequest().setPostQueryString( true );
-								newHttpStep.getTestRequest().setMediaType( CONTENT_TYPE_FORM_URLENCODED );
-								RestUtils.extractParamsFromQueryString( newHttpStep.getTestRequest().getParams(),
-										recordedRequest.getContent() );
-							}
-							else
-							{
-								newHttpStep.getTestRequest().setRequestContent( recordedRequest.getContent() );
-							}
-						}
-					}
-				}
 			}
-			// TODO ask Ole why was this removing necessary
-
-			// browserRecordingMap.remove( BrowserComponent.this );
 		}
 	}
 
@@ -562,12 +528,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 	}
 
-	// public static boolean isRecording()
-	// {
-	// return httpHtmlResponseView != null &&
-	// httpHtmlResponseView.isRecordHttpTrafic();
-	// }
-
 	public void release()
 	{
 		if( browser != null )
@@ -585,7 +545,6 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 		{
 			browserMap.remove( browser.getPeer().getNsIWebBrowser().getContentDOMWindow() );
 			browserRecordingMap.remove( this );
-			httpHtmlResponseView = null;
 
 			browser.stop();
 			browser.dispose();
@@ -907,7 +866,7 @@ public class BrowserComponent implements nsIWebProgressListener, nsIWeakReferenc
 	/**
 	 * Called after a HTTP response from the server is received.
 	 *
-	 * @see http://developer.mozilla.org/en/Observer_Notifications
+	 * @link http://developer.mozilla.org/en/Observer_Notifications
 	 */
 	public static final String EVENT_HTTP_ON_MODIFY_REQUEST = "http-on-modify-request";
 	private InternalHttpSecurityHandler internalHttpSecurityHandler;

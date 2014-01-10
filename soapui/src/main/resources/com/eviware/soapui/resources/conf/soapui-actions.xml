@@ -106,8 +106,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.ImportTestSuiteAction"/>
     <tns:action id="StarHermesJMS"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>
-    <tns:action id="CreateWebTestAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction"/>
 
     <!-- WsdlInterface Actions -->
     <tns:action id="WSToolsRegenerateJava2WsdlAction"
@@ -220,8 +218,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteDownAction"/>
     <tns:action id="MoveTestSuiteUpAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
-    <tns:action id="CreateWebTestCaseAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction"/>
 
     <!-- TestCase Actions -->
     <tns:action id="AddNewLoadTestAction"
