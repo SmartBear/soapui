@@ -178,6 +178,8 @@
     <!-- RestRequest Actions -->
     <tns:action id="AddRestRequestToTestCaseAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
+    <tns:action id="AddRestRequestToMockServiceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.mock.AddRestRequestToMockServiceAction"/>
     <tns:action id="CloneRestRequestAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.request.CloneRestRequestAction"/>
     <tns:action id="RenameRestRequestAction"
@@ -682,6 +684,8 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddRestRequestToTestCaseAction"
                            keyStroke="menu alt A" iconPath="/addToTestCase.gif"/>
+        <tns:actionMapping actionId="AddRestRequestToMockServiceAction"
+                           keyStroke="menu alt M" iconPath="/rest_request.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="CloneRestRequestAction"
                            keyStroke="F9" iconPath="/clone_request.gif"/>
