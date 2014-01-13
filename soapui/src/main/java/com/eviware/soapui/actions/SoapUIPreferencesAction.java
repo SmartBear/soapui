@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.actions;
 
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.settings.Settings;
@@ -29,12 +20,19 @@ import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.settings.WSISettings;
-import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action for managing SoapUI preferences
@@ -82,7 +80,6 @@ public class SoapUIPreferencesAction extends AbstractAction
 		addPrefs( new GlobalPropertiesPrefs() );
 		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS ) );
 		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
-		addPrefs( new AnnotatedSettingsPrefs( WebRecordingSettings.class, WEBRECORDING_SETTINGS ) );
 		addPrefs( new SecurityScansPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
 		addPrefs( new AnnotatedSettingsPrefs( VersionUpdateSettings.class, VERSIONUPDATE_SETTINGS ) );
 
