@@ -350,25 +350,29 @@ public class SimpleForm
 	/**
 	 * Appends a label and a text field to the form
 	 *
-	 * @param label The value of the label
+	 * @param label The value of the label. Will also be the name of the text field.
 	 * @param tooltip The value of the text field tool tip
+	 * @return The text field
 	 */
 	public JTextField appendTextField( String label, String tooltip )
 	{
-		return appendTextField( label, tooltip, defaultTextFieldColumns );
+		return appendTextField( label, label, tooltip, defaultTextFieldColumns );
 	}
 
 	/**
 	 * Appends a label and a text field to the form
 	 *
 	 * @param label The value of the label
+	 * @param name The name of the text field
 	 * @param tooltip The value of the text field tool tip
 	 * @param textFieldColumns The number of columns to display for the text field. Should be a constant defined in SimpleForm
+	 * @return The text field
 	 * @see com.eviware.soapui.support.components.SimpleForm
 	 */
-	public JTextField appendTextField( String label, String tooltip, int textFieldColumns )
+	public JTextField appendTextField( String label, String name, String tooltip, int textFieldColumns )
 	{
 		JTextField textField = new JUndoableTextField();
+		textField.setName( name );
 		textField.setColumns( textFieldColumns );
 		textField.setToolTipText( tooltip );
 		textField.getAccessibleContext().setAccessibleDescription( tooltip );

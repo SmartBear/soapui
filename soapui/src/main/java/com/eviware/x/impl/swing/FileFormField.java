@@ -46,13 +46,14 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 	private String oldValue;
 	private String currentDirectory;
 
-	public FileFormField( String tooltip, FieldType type )
+	public FileFormField( String tooltip, FieldType type, String name )
 	{
 		super( new JPanel() );
 		this.type = type;
 
 		ButtonBarBuilder builder = new ButtonBarBuilder( getComponent() );
 		textField = new JUndoableTextField( 30 );
+		textField.setName( name );
 		textField.setToolTipText( tooltip );
 		builder.addGriddedGrowing( textField );
 		builder.addRelatedGap();

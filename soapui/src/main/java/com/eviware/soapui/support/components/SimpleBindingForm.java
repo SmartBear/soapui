@@ -30,21 +30,19 @@ public class SimpleBindingForm extends SimpleForm
 	/**
 	 * Appends a label and a text field to the form
 	 *
-	 * @param propertyName The name of the property the field should be bound to
+	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
 	 * @param label The value of the label
 	 * @param tooltip The value of the text field tool tip
 	 */
 	public JTextField appendTextField( String propertyName, String label, String tooltip )
 	{
-		JTextField textField = super.appendTextField( label, tooltip );
-		Bindings.bind( textField, pm.getModel( propertyName ) );
-		return textField;
+		return appendTextField( propertyName, label, tooltip, SimpleForm.DEFAULT_TEXT_FIELD_COLUMNS );
 	}
 
 	/**
 	 * Appends a label and a text field to the form
 	 *
-	 * @param propertyName The name of the property the field should be bound to
+	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
 	 * @param label The value of the label
 	 * @param tooltip The value of the text field tool tip
 	 * @param textFieldColumns The number of columns to display for the text field. Should be a constant defined in SimpleForm
@@ -52,7 +50,7 @@ public class SimpleBindingForm extends SimpleForm
 	 */
 	public JTextField appendTextField( String propertyName, String label, String tooltip, int textFieldColumns )
 	{
-		JTextField textField = super.appendTextField( label, tooltip, textFieldColumns );
+		JTextField textField = super.appendTextField( label, propertyName, tooltip, textFieldColumns);
 		Bindings.bind( textField, pm.getModel( propertyName ) );
 		return textField;
 	}
