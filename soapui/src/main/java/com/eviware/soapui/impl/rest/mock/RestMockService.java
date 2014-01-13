@@ -2,7 +2,6 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.project.Project;
 
@@ -10,9 +9,10 @@ import java.util.List;
 
 public class RestMockService extends AbstractTestPropertyHolderWsdlModelItem<RESTMockServiceConfig> implements MockService
 {
-	protected RestMockService( RESTMockServiceConfig config, ModelItem parent, String icon )
+
+	public RestMockService( Project project, RESTMockServiceConfig config )
 	{
-		super( config, parent, icon );
+		super( config, project, "/mockService.gif" );
 	}
 
 	@Override
