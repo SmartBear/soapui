@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.DefaultOAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.rest.support.RestRequestConverter.RestConversionException;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractInterface;
@@ -119,7 +120,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	protected String path;
 	protected List<AbstractInterface<?>> interfaces = new ArrayList<AbstractInterface<?>>();
 	protected List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
-	protected List<WsdlMockService> mockServices = new ArrayList<WsdlMockService>();
+    protected List<WsdlMockService> mockServices = new ArrayList<WsdlMockService>();
+    protected List<RestMockService> restMockServices = new ArrayList<RestMockService>();
 	protected Set<ProjectListener> projectListeners = new HashSet<ProjectListener>();
 	protected SoapuiProjectDocumentConfig projectDocument;
 	private ImageIcon disabledIcon;
@@ -1108,7 +1110,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
-	public void fireMockServiceAdded( WsdlMockService mockService )
+	public void fireMockServiceAdded( MockService mockService )
 	{
 		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
@@ -1320,27 +1322,42 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			beforeSaveScriptEngine.release();
 	}
 
-	public WsdlMockService addNewMockService( String name )
-	{
-		WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
-		mockService.setName( name );
-		mockServices.add( mockService );
-		fireMockServiceAdded( mockService );
+    public WsdlMockService addNewMockService( String name )
+    {
+        WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
+        mockService.setName( name );
+        mockServices.add( mockService );
+        fireMockServiceAdded( mockService );
 
-		return mockService;
-	}
+        return mockService;
+    }
 
-	public WsdlMockService getMockServiceAt( int index )
+    public RestMockService addNewRestMockService( String name )
+    {
+        RestMockService mockService = new RestMockService( this, getConfig().addNewRestMockService() );
+        mockService.setName( name );
+        restMockServices.add( mockService );
+        fireMockServiceAdded( mockService );
+
+        return mockService;
+    }
+
+    public WsdlMockService getMockServiceAt( int index )
 	{
 		return mockServices.get( index );
 	}
 
-	public WsdlMockService getMockServiceByName( String mockServiceName )
-	{
-		return ( WsdlMockService )getWsdlModelItemByName( mockServices, mockServiceName );
-	}
+    public WsdlMockService getMockServiceByName( String mockServiceName )
+    {
+        return ( WsdlMockService )getWsdlModelItemByName( mockServices, mockServiceName );
+    }
 
-	public int getMockServiceCount()
+    public RestMockService getRestMockServiceByName( String mockServiceName )
+    {
+        return ( RestMockService )getWsdlModelItemByName( restMockServices, mockServiceName );
+    }
+
+    public int getMockServiceCount()
 	{
 		return mockServices.size();
 	}
@@ -1366,12 +1383,17 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return new ArrayList<TestSuite>( testSuites );
 	}
 
-	public List<MockService> getMockServiceList()
+	public List<WsdlMockService> getMockServiceList()
 	{
-		return new ArrayList<MockService>( mockServices );
+		return new ArrayList<WsdlMockService>( mockServices );
 	}
 
-	public List<Interface> getInterfaceList()
+    public List<RestMockService> getRestMockServiceList()
+    {
+        return restMockServices;
+    }
+
+    public List<Interface> getInterfaceList()
 	{
 		return new ArrayList<Interface>( interfaces );
 	}
@@ -2136,4 +2158,5 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		environmentListeners.remove( listener );
 	}
+
 }

@@ -9,16 +9,21 @@ import java.util.List;
 
 public class RestMockService extends AbstractTestPropertyHolderWsdlModelItem<RESTMockServiceConfig> implements MockService
 {
-
 	public RestMockService( Project project, RESTMockServiceConfig config )
 	{
 		super( config, project, "/mockService.gif" );
-	}
+
+        if( !getConfig().isSetProperties() )
+            getConfig().addNewProperties();
+
+        setPropertiesConfig(config.getProperties());
+
+    }
 
 	@Override
 	public Project getProject()
 	{
-		return null;
+		return (Project) getParent();
 	}
 
 	@Override
