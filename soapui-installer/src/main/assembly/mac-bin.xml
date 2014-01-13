@@ -16,10 +16,6 @@ bundled or none -->
             <useProjectArtifact>false</useProjectArtifact>
             <scope>runtime</scope>
             <excludes>
-                <exclude>teamdev:xulrunner-windows</exclude>
-                <exclude>teamdev:xulrunner15-windows</exclude>
-                <exclude>teamdev:xulrunner-linux</exclude>
-                <exclude>teamdev:xulrunner-linux64</exclude>
                 <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
             </excludes>
         </dependencySet>
