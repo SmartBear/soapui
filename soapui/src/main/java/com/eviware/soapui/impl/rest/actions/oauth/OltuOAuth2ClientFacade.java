@@ -266,8 +266,8 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 				HttpEntity httpEntity = ( ( HttpEntityEnclosingRequest )request ).getEntity();
 				if( httpEntity == null )
 				{
-					String accenTokenParameter = getQueryStringFromOAuthClientRequest( oAuthClientRequest );
-					( ( HttpEntityEnclosingRequest )request ).setEntity( new StringEntity( accenTokenParameter ) );
+					String accessTokenParameter = getQueryStringFromOAuthClientRequest( oAuthClientRequest );
+					( ( HttpEntityEnclosingRequest )request ).setEntity( new StringEntity( accessTokenParameter ) );
 				}
 				else
 				{
