@@ -17,6 +17,8 @@ import org.fest.swing.security.ExitCallHook;
 import org.fest.swing.security.NoExitSecurityManagerInstaller;
 import org.junit.*;
 
+import java.awt.*;
+
 import static com.eviware.soapui.utils.FestMatchers.frameWithTitle;
 import static org.fest.swing.launcher.ApplicationLauncher.application;
 import static org.hamcrest.CoreMatchers.not;
@@ -36,6 +38,7 @@ public class BasicOAuth2ConfigurationIT
 
 	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2.toString();
 	private static final String GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
+	public static final Dimension WINDOW_SIZE = new Dimension( 1024, 768 );
 
 	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 
@@ -76,7 +79,7 @@ public class BasicOAuth2ConfigurationIT
 		application( SoapUI.class ).start();
 
 		rootWindow = frameWithTitle( "SoapUI" ).withTimeout( 3000 ).using( robot );
-		rootWindow.show();
+		rootWindow.show( WINDOW_SIZE );
 	}
 
 	@After
