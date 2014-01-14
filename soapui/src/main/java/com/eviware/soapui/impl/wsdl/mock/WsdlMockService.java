@@ -32,6 +32,7 @@ import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockOperationDocumentConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -66,7 +67,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
  * @author ole.matzura
  */
 
-public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfig> implements MockService
+public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 {
 	private static final String REQUIRE_SOAP_VERSION = WsdlMockService.class.getName() + "@require-soap-version";
 	private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
@@ -76,10 +77,9 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	public static final String INCOMING_WSS = WsdlMockService.class.getName() + "@incoming-wss";
 	public static final String OUGOING_WSS = WsdlMockService.class.getName() + "@outgoing-wss";
 
-	private List<WsdlMockOperation> mockOperations = new ArrayList<WsdlMockOperation>();
+	//TODO: move mockRunListeners and mockServiceListeners
 	private Set<MockRunListener> mockRunListeners = new HashSet<MockRunListener>();
 	private Set<MockServiceListener> mockServiceListeners = new HashSet<MockServiceListener>();
-	private MockServiceIconAnimator iconAnimator;
 	private WsdlMockRunner mockRunner;
 	private SoapUIScriptEngine startScriptEngine;
 	private SoapUIScriptEngine stopScriptEngine;
@@ -89,22 +89,18 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	private WsdlMockOperation faultMockOperation;
 	private String mockServiceEndpoint;
 
+	private MockServiceIconAnimator iconAnimator;
+
 	public WsdlMockService( Project project, MockServiceConfig config )
 	{
-		super( config, project, "/mockService.gif" );
+		super( config, project );
 
 		List<MockOperationConfig> testStepConfigs = config.getMockOperationList();
 		for( MockOperationConfig tsc : testStepConfigs )
 		{
 			WsdlMockOperation testStep = new WsdlMockOperation( this, tsc );
-			mockOperations.add( testStep );
+			addMockOperation( testStep );
 		}
-
-		if( !config.isSetPort() || config.getPort() < 1 )
-			config.setPort( 8080 );
-
-		if( !config.isSetPath() )
-			config.setPath( "/" );
 
 		if( !getSettings().isSet( REQUIRE_SOAP_ACTION ) )
 			setRequireSoapAction( false );
@@ -119,9 +115,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 			SoapUI.logError( e );
 		}
 
-		iconAnimator = new MockServiceIconAnimator();
-		addMockRunListener( iconAnimator );
-
 		for( MockRunListener listener : SoapUI.getListenerRegistry().getListeners( MockRunListener.class ) )
 		{
 			addMockRunListener( listener );
@@ -135,49 +128,13 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 
 		if( getConfig().isSetFaultMockOperation() )
 		{
-			faultMockOperation = getMockOperationByName( getConfig().getFaultMockOperation() );
+			faultMockOperation = ( WsdlMockOperation )getMockOperationByName( getConfig().getFaultMockOperation() );
 		}
+
+		iconAnimator = new MockServiceIconAnimator();
+		addMockRunListener( iconAnimator );
 	}
 
-	public void addMockRunListener( MockRunListener listener )
-	{
-		mockRunListeners.add( listener );
-	}
-
-	public String getPath()
-	{
-		return getConfig().getPath();
-	}
-
-	public WsdlMockOperation getMockOperationAt( int index )
-	{
-		return mockOperations.get( index );
-	}
-
-	public WsdlMockOperation getMockOperationByName( String name )
-	{
-		return ( WsdlMockOperation )getWsdlModelItemByName( mockOperations, name );
-	}
-
-	public int getMockOperationCount()
-	{
-		return mockOperations.size();
-	}
-
-	public WsdlProject getProject()
-	{
-		return ( WsdlProject )getParent();
-	}
-
-	public int getPort()
-	{
-		return getConfig().getPort();
-	}
-
-	public String getHost()
-	{
-		return getConfig().getHost();
-	}
 
 	public void setHost( String host )
 	{
@@ -194,10 +151,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		getConfig().setBindToHostOnly( bindToHostOnly );
 	}
 
-	public void removeMockRunListener( MockRunListener listener )
-	{
-		mockRunListeners.remove( listener );
-	}
+
 
 	public WsdlMockRunner start( WsdlTestRunContext context ) throws Exception
 	{
@@ -218,7 +172,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		for( int c = 0; c < getMockOperationCount(); c++ )
 		{
-			WsdlMockOperation mockOperation = mockOperations.get( c );
+			WsdlMockOperation mockOperation = getMockOperationAt( c );
 			if( mockOperation.getOperation() == operation )
 				return mockOperation;
 		}
@@ -235,7 +189,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		config.setName( operation.getName() );
 		WsdlMockOperation mockOperation = new WsdlMockOperation( this, config, operation );
 
-		mockOperations.add( mockOperation );
+		addMockOperation( mockOperation );
 		fireMockOperationAdded( mockOperation );
 
 		return mockOperation;
@@ -263,9 +217,9 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		Set<WsdlInterface> result = new HashSet<WsdlInterface>();
 
-		for( WsdlMockOperation mockOperation : mockOperations )
+		for( MockOperation mockOperation : getMockOperationList() )
 		{
-			WsdlOperation operation = mockOperation.getOperation();
+			WsdlOperation operation = ( WsdlOperation )mockOperation.getOperation();
 			if( operation != null )
 				result.add( operation.getInterface() );
 		}
@@ -287,8 +241,10 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 				mockRunner.release();
 		}
 
-		for( WsdlMockOperation operation : mockOperations )
-			operation.release();
+		for( MockOperation operation : getMockOperationList() )
+		{
+			((WsdlMockOperation)operation).release();
+		}
 
 		mockServiceListeners.clear();
 
@@ -340,15 +296,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		getConfig().removeMockOperation( ix );
 	}
 
-	public void addMockServiceListener( MockServiceListener listener )
-	{
-		mockServiceListeners.add( listener );
-	}
-
-	public void removeMockServiceListener( MockServiceListener listener )
-	{
-		mockServiceListeners.remove( listener );
-	}
 
 	protected void fireMockOperationAdded( WsdlMockOperation mockOperation )
 	{
@@ -390,12 +337,6 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		}
 	}
 
-	@Override
-	public ImageIcon getIcon()
-	{
-		return iconAnimator.getIcon();
-	}
-
 	public WsdlMockOperation getFaultMockOperation()
 	{
 		return faultMockOperation;
@@ -417,32 +358,10 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		}
 	}
 
-	private class MockServiceIconAnimator extends ModelItemIconAnimator<WsdlMockService> implements MockRunListener
+	@Override
+	public WsdlMockRunner start() throws Exception
 	{
-		public MockServiceIconAnimator()
-		{
-			super( WsdlMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
-		}
-
-		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
-		{
-			return null;
-		}
-
-		public void onMockResult( MockResult result )
-		{
-		}
-
-		public void onMockRunnerStart( MockRunner mockRunner )
-		{
-			start();
-		}
-
-		public void onMockRunnerStop( MockRunner mockRunner )
-		{
-			stop();
-			WsdlMockService.this.mockRunner = null;
-		}
+		return start( null );
 	}
 
 	public String getLocalEndpoint()
@@ -454,6 +373,11 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		}
 
 		return getProtocol() + host + ":" + getPort() + getPath();
+	}
+
+	public String getHost()
+	{
+		return getConfig().getHost();
 	}
 
 	private String getProtocol()
@@ -490,10 +414,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		getSettings().setBoolean( REQUIRE_SOAP_ACTION, requireSoapAction );
 	}
 
-	public WsdlMockRunner start() throws Exception
-	{
-		return start( null );
-	}
+
 
 	public boolean hasMockOperation( Operation operation )
 	{
@@ -677,10 +598,7 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 		return mockOperations;
 	}
 
-	public List<MockOperation> getMockOperationList()
-	{
-		return Collections.unmodifiableList( new ArrayList<MockOperation>( mockOperations ) );
-	}
+
 
 	public String getIncomingWss()
 	{
@@ -722,8 +640,11 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 	{
 		List<WsdlOperation> result = new ArrayList<WsdlOperation>();
 
-		for( WsdlMockOperation mockOperation : mockOperations )
-			result.add( mockOperation.getOperation() );
+		for( MockOperation mockOperation : mockOperations )
+		{
+			result.add( ( WsdlOperation )mockOperation.getOperation() );
+		}
+
 
 		return result;
 	}
@@ -857,6 +778,41 @@ public class WsdlMockService extends AbstractTestPropertyHolderWsdlModelItem<Moc
 				SSLSettings.MOCK_PORT, 443 ) : getPort() );
 
 		return getProtocol() + host + ":" + port + getPath();
+	}
+
+	// Implements AbstractWsdlModelItem
+	@Override
+	public ImageIcon getIcon()
+	{
+		return iconAnimator.getIcon();
+	}
+
+	private class MockServiceIconAnimator extends ModelItemIconAnimator<WsdlMockService> implements MockRunListener
+	{
+		public MockServiceIconAnimator()
+		{
+			super( WsdlMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
+		}
+
+		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+		{
+			return null;
+		}
+
+		public void onMockResult( MockResult result )
+		{
+		}
+
+		public void onMockRunnerStart( MockRunner mockRunner )
+		{
+			start();
+		}
+
+		public void onMockRunnerStop( MockRunner mockRunner )
+		{
+			stop();
+			WsdlMockService.this.mockRunner = null;
+		}
 	}
 
 }
