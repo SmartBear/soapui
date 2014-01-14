@@ -1070,6 +1070,13 @@
                            keyStroke="F1" param="mock/responses.html"/>
     </tns:actionGroup>
 
+    <!-- WsdlMockService ActionGroup -->
+    <tns:actionGroup name="RestMockService Actions" id="RestMockServiceActions"
+                     default="ShowDesktopPanelAction">
+        <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
+        <tns:actionMapping actionId="StopMockServiceAction"/>
+        <tns:actionMapping actionId="RestartMockServiceAction"/>
+    </tns:actionGroup>
 
     <!-- MultiActions Group -->
 
