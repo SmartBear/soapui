@@ -72,6 +72,7 @@ public class ProxyUtilsTestCase
 	public void setup()
 	{
 		clearProxySystemProperties();
+
 		httpMethod = new ExtendedGetMethod();
 	}
 
@@ -91,8 +92,6 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setGlobalProxy( manualSettings() );
 		assertGlobalProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
-
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 		assertHttpClientProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 	}
 
@@ -105,13 +104,11 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setGlobalProxy( emptySettings() );
 		assertGlobalProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
-
-		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
 		assertHttpClientProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 	}
 
 	@Test
-	public void givenProxyDisabledThenUseDefaultRoutePlanner()
+	public void givenProxyDisabledThenUseNoProxy()
 	{
 		ProxyUtils.setProxyEnabled( false );
 		ProxyUtils.setAutoProxy( false );
@@ -119,10 +116,7 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setGlobalProxy( emptySettings() );
 		assertGlobalProxyHost( null );
-
-		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
 		assertHttpClientProxyHost( null );
-
 	}
 
 	@Test
@@ -134,8 +128,6 @@ public class ProxyUtilsTestCase
 		manualSettings();
 		ProxyUtils.setGlobalProxy( manualSettings() );
 		assertGlobalProxyHost( MANUAL_SETTING_PROXY_HOST );
-
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 		assertHttpClientProxyHost( MANUAL_SETTING_PROXY_HOST );
 	}
 
@@ -147,8 +139,31 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setGlobalProxy( manualSettings() );
 		assertGlobalProxyHost( null );
+		assertHttpClientProxyHost( null );
+	}
 
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+	@Test
+	public void forceDirectConnectionOverridesManualProxySettings()
+	{
+		ProxyUtils.setProxyEnabled( true );
+		ProxyUtils.setAutoProxy( false );
+		ProxyUtils.setForceDirectConnection( httpMethod.getParams() );
+
+		ProxyUtils.setGlobalProxy( manualSettings() );
+		assertGlobalProxyHost( MANUAL_SETTING_PROXY_HOST );
+		assertHttpClientProxyHost( null );
+	}
+
+	@Test
+	public void forceDirectConnectionOverridesAutomaticProxySettings()
+	{
+		ProxyUtils.setProxyEnabled( true );
+		ProxyUtils.setAutoProxy( true );
+		setProxySystemProperties();
+		ProxyUtils.setForceDirectConnection( httpMethod.getParams() );
+
+		ProxyUtils.setGlobalProxy( emptySettings() );
+		assertGlobalProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 		assertHttpClientProxyHost( null );
 	}
 
@@ -162,8 +177,6 @@ public class ProxyUtilsTestCase
 
 		ProxyUtils.setGlobalProxy( manualSettings() );
 		assertGlobalProxyHost( "environmentshost.com" );
-
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
 		assertHttpClientProxyHost( "environmentshost.com" );
 	}
 

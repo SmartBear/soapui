@@ -49,7 +49,6 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
 		httpTransport.addRequestFilter( new RestRequestFilter() );
 		httpTransport.addRequestFilter( new SoapHeadersRequestFilter() );
-		httpTransport.addRequestFilter( new HttpProxyRequestFilter() );
 		httpTransport.addRequestFilter( new HttpAuthenticationRequestFilter() );
 		httpTransport.addRequestFilter( new WssAuthenticationRequestFilter() );
 		httpTransport.addRequestFilter( new PropertyExpansionRequestFilter() );
