@@ -23,12 +23,12 @@ public class WorkspaceUtils
 {
 	private static final String NAVIGATOR = "navigator";
 
-	public JPanelFixture getNavigatorPanel( FrameFixture frame )
+	public static JPanelFixture getNavigatorPanel( FrameFixture frame )
 	{
 		return frame.panel( NAVIGATOR );
 	}
 
-	public JPopupMenuFixture rightClickOnWorkspace( FrameFixture frame )
+	public static JPopupMenuFixture rightClickOnWorkspace( FrameFixture frame )
 	{
 		return getNavigatorPanel( frame ).tree().showPopupMenuAt( SoapUI.getWorkspace().getName() );
 	}

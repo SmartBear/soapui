@@ -12,7 +12,10 @@
 package com.eviware.soapui.utils;
 
 import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.*;
+import org.fest.swing.fixture.DialogFixture;
+import org.fest.swing.fixture.FrameFixture;
+import org.fest.swing.fixture.JButtonFixture;
+import org.fest.swing.fixture.JPopupMenuFixture;
 
 /**
  * Utility class used for generic operations on a REST project
@@ -25,28 +28,19 @@ public class RestProjectUtils
 	private static final String NEW_REST_PROJECT_DIALOG_NAME = "New REST Project";
 	private static final String OK_BUTTON_NAME = "OK";
 
-	private final WorkspaceUtils workspaceUtils;
-	private final Robot robot;
-
-	public RestProjectUtils( Robot robot )
-	{
-		this.robot = robot;
-		workspaceUtils = new WorkspaceUtils();
-	}
-
-	public void createNewRestProject( FrameFixture rootWindow )
+	public static void createNewRestProject( FrameFixture rootWindow, Robot robot )
 	{
 		openCreateNewRestProjectDialog( rootWindow );
-		enterURIandClickOk();
+		enterURIandClickOk( robot );
 	}
 
-	private void openCreateNewRestProjectDialog( FrameFixture rootWindow )
+	private static void openCreateNewRestProjectDialog( FrameFixture rootWindow )
 	{
-		JPopupMenuFixture workspace = workspaceUtils.rightClickOnWorkspace( rootWindow );
+		JPopupMenuFixture workspace = WorkspaceUtils.rightClickOnWorkspace( rootWindow );
 		workspace.menuItem( FestMatchers.menuItemWithText( NEW_REST_PROJECT_MENU_ITEM ) ).click();
 	}
 
-	private void enterURIandClickOk()
+	private static void enterURIandClickOk( Robot robot )
 	{
 		DialogFixture newProjectDialog = FestMatchers.dialogWithTitle( NEW_REST_PROJECT_DIALOG_NAME ).withTimeout( NEW_PROJECT_TIMEOUT )
 				.using( robot );

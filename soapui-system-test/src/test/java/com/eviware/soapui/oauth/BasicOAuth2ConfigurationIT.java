@@ -3,6 +3,8 @@ package com.eviware.soapui.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.support.ConsoleDialogs;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.auth.OAuth2AuthenticationInspector;
 import com.eviware.soapui.utils.ApplicationUtils;
@@ -40,10 +42,6 @@ public class BasicOAuth2ConfigurationIT
 	private Robot robot;
 	private FrameFixture rootWindow;
 
-	private RestProjectUtils restProjectUtils;
-	private SoapProjectUtils soapProjectUtils;
-	private ApplicationUtils applicationUtils;
-
 	@BeforeClass
 	public static void setUpOnce()
 	{
@@ -73,45 +71,43 @@ public class BasicOAuth2ConfigurationIT
 
 		System.setProperty( "soapui.jxbrowser.disable", "true" );
 
+		robot = BasicRobot.robotWithNewAwtHierarchy();
+
 		application( SoapUI.class ).start();
 
-		robot = BasicRobot.robotWithCurrentAwtHierarchy();
-		this.restProjectUtils = new RestProjectUtils( robot );
-		this.soapProjectUtils = new SoapProjectUtils( robot );
-		this.applicationUtils = new ApplicationUtils( robot );
-
 		rootWindow = frameWithTitle( "SoapUI" ).withTimeout( 3000 ).using( robot );
+		rootWindow.show();
+		rootWindow.maximize();
 	}
 
 	@After
 	public void after()
 	{
 		robot.cleanUp();
+		UISupport.setDialogs( new ConsoleDialogs() );
 	}
 
-	@Ignore
 	@Test
 	public void testUsingARequestNotSupportingOAuth()
 	{
-		soapProjectUtils.createNewSoapProject( rootWindow );
-		soapProjectUtils.openRequestEditor( rootWindow );
+		SoapProjectUtils.createNewSoapProject(rootWindow, robot  );
+		SoapProjectUtils.openRequestEditor( rootWindow );
 		clickOnTheAuthTab( rootWindow );
 		verifyThatTheOAuth2ItemIsNotPresent( rootWindow );
-		applicationUtils.closeApplicationWithoutSaving( rootWindow );
+		ApplicationUtils.closeApplicationWithoutSaving( rootWindow, robot );
 	}
 
-	@Ignore
 	@Test
 	public void testFillInBasicValues()
 	{
-		restProjectUtils.createNewRestProject( rootWindow );
+		RestProjectUtils.createNewRestProject( rootWindow, robot );
 		clickOnTheAuthTab( rootWindow );
 		clickOnComboBoxItem( rootWindow, OAUTH_2_COMBOBOX_ITEM );
 		fillInAllOAuth2Fields( rootWindow );
 		clickOnComboBoxItem( rootWindow, GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM );
 		clickOnComboBoxItem( rootWindow, OAUTH_2_COMBOBOX_ITEM );
 		verifyAllOAuth2Fields( rootWindow );
-		applicationUtils.closeApplicationWithoutSaving( rootWindow );
+		ApplicationUtils.closeApplicationWithoutSaving( rootWindow, robot);
 	}
 
 	private void clickOnTheAuthTab( FrameFixture rootWindow )

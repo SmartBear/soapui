@@ -2,6 +2,8 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.support.ConsoleDialogs;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.utils.ApplicationUtils;
 import com.eviware.soapui.utils.RestProjectUtils;
 import com.eviware.soapui.utils.WorkspaceUtils;
@@ -47,10 +49,6 @@ public class SynchParametersIT
 	private Robot robot;
 	private List<String> existingProjectsNameList;
 
-	private RestProjectUtils restProjectUtils;
-	private WorkspaceUtils workspaceUtils;
-	private ApplicationUtils applicationUtils;
-
 	@BeforeClass
 	public static void setUpOnce()
 	{
@@ -63,28 +61,31 @@ public class SynchParametersIT
 			}
 		} );
 
-		FailOnThreadViolationRepaintManager.install();
+		//FailOnThreadViolationRepaintManager.install();
 	}
 
 	@AfterClass
-	public static void tearDown()
+	public static void tearDownOnce()
 	{
 		noExitSecurityManagerInstaller.uninstall();
 	}
 
 	@Before
-	public void setUp()
+	public void setUp() throws InterruptedException
 	{
 		System.setProperty( "soapui.jxbrowser.disable", "true" );
 
 		application( SoapUI.class ).start();
-
 		robot = BasicRobot.robotWithCurrentAwtHierarchy();
-		this.applicationUtils = new ApplicationUtils( robot );
-		this.workspaceUtils = new WorkspaceUtils();
-		this.restProjectUtils = new RestProjectUtils( robot );
 
 		existingProjectsNameList = createProjectNameList();
+	}
+
+	@After
+	public void tearDown()
+	{
+		robot.cleanUp();
+		UISupport.setDialogs( new ConsoleDialogs() );
 	}
 
 	@Test
@@ -92,7 +93,7 @@ public class SynchParametersIT
 	{
 		FrameFixture rootWindow = frameWithTitle( "SoapUI" ).using( robot );
 
-		restProjectUtils.createNewRestProject( rootWindow );
+		RestProjectUtils.createNewRestProject( rootWindow, robot );
 
 		int newProjectIndexInTree = findTheIndexOfCurrentProjectInNavigationTree();
 		JPanelFixture resourceEditor = openResourceEditor( newProjectIndexInTree, rootWindow );
@@ -122,7 +123,7 @@ public class SynchParametersIT
 
 		openResourceEditor( newProjectIndexInTree, rootWindow );
 
-		applicationUtils.closeApplicationWithoutSaving( rootWindow );
+		ApplicationUtils.closeApplicationWithoutSaving( rootWindow, robot );
 	}
 
 	private int findTheIndexOfCurrentProjectInNavigationTree()
@@ -206,7 +207,8 @@ public class SynchParametersIT
 	private JPanelFixture getPanelFixture( int newProjectIndexInTree, FrameFixture frame,
 														int panelPositionInNavigationTree, String panelName )
 	{
-		workspaceUtils.getNavigatorPanel( frame ).tree().node( newProjectIndexInTree + panelPositionInNavigationTree ).click();
+		WorkspaceUtils.getNavigatorPanel( frame ).tree().node( newProjectIndexInTree + panelPositionInNavigationTree )
+				.click();
 		robot.pressAndReleaseKeys( KeyEvent.VK_ENTER );
 		return frame.panel( panelName );
 	}
