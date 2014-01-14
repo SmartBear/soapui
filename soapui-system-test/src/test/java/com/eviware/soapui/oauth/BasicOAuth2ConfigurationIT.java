@@ -77,7 +77,6 @@ public class BasicOAuth2ConfigurationIT
 
 		rootWindow = frameWithTitle( "SoapUI" ).withTimeout( 3000 ).using( robot );
 		rootWindow.show();
-		rootWindow.maximize();
 	}
 
 	@After
