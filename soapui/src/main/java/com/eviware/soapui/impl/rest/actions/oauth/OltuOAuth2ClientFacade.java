@@ -24,6 +24,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.GitHubTokenResponse;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
@@ -38,6 +39,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
+
+import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenRetrievalLocation.BODY_JSON;
 
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
@@ -208,7 +211,18 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 						.setRedirectURI( parameters.redirectUri )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
-				OAuthToken token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
+				OAuthToken token = null;
+				switch( parameters.accessTokenRetrievalLocation )
+				{
+					case BODY_JSON:
+						token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
+						break;
+					case BODY_URL_ENCODED_FORM:
+						token = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
+						break;
+					default:
+						break;
+				}
 				if( token != null && token.getAccessToken() != null )
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
