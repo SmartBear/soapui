@@ -1070,6 +1070,18 @@
                            keyStroke="F1" param="mock/responses.html"/>
     </tns:actionGroup>
 
+    <!-- RestMockService ActionGroup -->
+    <tns:actionGroup name="RestMockService Actions" id="RestMockServiceActions"
+                     default="ShowDesktopPanelAction">
+        <tns:actionMapping actionId="ShowDesktopPanelAction"
+                           name="Show REST MockService Editor"
+                           description="Shows the REST MockService Editor for this MockService"
+                           keyStroke="ENTER"/>
+        <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
+        <tns:actionMapping actionId="StopMockServiceAction"/>
+        <tns:actionMapping actionId="RestartMockServiceAction"/>
+    </tns:actionGroup>
 
     <!-- MultiActions Group -->
 

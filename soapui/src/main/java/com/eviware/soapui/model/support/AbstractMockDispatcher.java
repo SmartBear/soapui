@@ -16,10 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
 
-public abstract class AbstractMockRunner implements MockRunner
+public abstract class AbstractMockDispatcher implements MockDispatcher
 {
 
 	public MockResult dispatchGetRequest( HttpServletRequest request, HttpServletResponse response )

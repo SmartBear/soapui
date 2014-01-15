@@ -23,18 +23,11 @@ import com.eviware.soapui.impl.wsdl.mock.DispatchException;
  * @author ole.matzura
  */
 
-public interface MockRunner
+public interface MockRunner extends MockDispatcher
 {
 	public void stop();
 
-	public int getMockResultCount();
-
-	public MockResult getMockResultAt( int c );
-
 	public MockService getMockService();
-
-	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
-			throws DispatchException;
 
 	public boolean isRunning();
 }
