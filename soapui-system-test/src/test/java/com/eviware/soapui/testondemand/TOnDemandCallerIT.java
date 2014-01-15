@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -33,7 +32,7 @@ import static org.junit.Assert.assertEquals;
  *         AlertSite Rest API.
  */
 
-public class TestOnDemandCallerTestIT
+public class TOnDemandCallerIT
 {
 	private static final String FIRST_LOCATION_NAME = "Fort Lauderdale, FL";
 	private static final String FIRST_LOCATION_CODE = "10";
@@ -46,12 +45,12 @@ public class TestOnDemandCallerTestIT
 	private WsdlTestCase testCase;
 	private static final String NOT_THE_RIGHT_HOST = "You need to specify the host name of the test server";
 
-	public final static Logger log = Logger.getLogger( TestOnDemandCallerTestIT.class );
+	public final static Logger log = Logger.getLogger( TOnDemandCallerIT.class );
 
 	@Before
 	public void setUp() throws Exception
 	{
-		WsdlProject project = new WsdlProject(TestOnDemandCallerTestIT.class.getResource(
+		WsdlProject project = new WsdlProject(TOnDemandCallerIT.class.getResource(
 				"/sample-soapui-project.xml").getPath() );
 		WsdlTestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
 		testCase = testSuite.getTestCaseByName( "Test Conversions" );

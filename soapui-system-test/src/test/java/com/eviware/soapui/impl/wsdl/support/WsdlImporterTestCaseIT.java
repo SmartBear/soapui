@@ -25,7 +25,6 @@ import javax.wsdl.Definition;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
@@ -36,7 +35,7 @@ public class WsdlImporterTestCaseIT extends JettyTestCaseBase
 	@Test
 	public void testOneWayOperationImport() throws Exception
 	{
-		replaceInFile("testonewayop/TestService.wsdl","8082","" + getPort());
+		replaceInFile( "testonewayop/TestService.wsdl","8082","" + getPort());
 
 		WsdlProject project = new WsdlProject();
 		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:" + getPort() + "/testonewayop/TestService.wsdl" );
