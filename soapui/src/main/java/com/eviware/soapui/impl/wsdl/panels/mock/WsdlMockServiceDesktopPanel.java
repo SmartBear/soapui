@@ -917,7 +917,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{
@@ -958,7 +958,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{

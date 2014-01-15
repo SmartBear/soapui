@@ -519,7 +519,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		return getConfig().isSetAfterRequestScript() ? getConfig().getAfterRequestScript().getStringValue() : null;
 	}
 
-	public Object runOnRequestScript( WsdlMockRunContext runContext, WsdlMockRunner runner, WsdlMockRequest mockRequest )
+	public Object runOnRequestScript( WsdlMockRunContext runContext, WsdlMockRequest mockRequest )
 			throws Exception
 	{
 		String script = getOnRequestScript();
@@ -538,7 +538,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		{
 			scriptEngine.setVariable( "context", runContext );
 			scriptEngine.setVariable( "mockRequest", mockRequest );
-			scriptEngine.setVariable( "mockRunner", runner );
+			scriptEngine.setVariable( "mockRunner", getMockRunner() );
 			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 			return scriptEngine.run();
 		}
@@ -548,7 +548,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		}
 	}
 
-	public Object runAfterRequestScript( WsdlMockRunContext runContext, WsdlMockRunner runner, MockResult mockResult )
+	public Object runAfterRequestScript( WsdlMockRunContext runContext, MockResult mockResult )
 			throws Exception
 	{
 		String script = getAfterRequestScript();
@@ -567,7 +567,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		{
 			scriptEngine.setVariable( "context", runContext );
 			scriptEngine.setVariable( "mockResult", mockResult );
-			scriptEngine.setVariable( "mockRunner", runner );
+			scriptEngine.setVariable( "mockRunner", getMockRunner());
 			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
 			return scriptEngine.run();
 		}
