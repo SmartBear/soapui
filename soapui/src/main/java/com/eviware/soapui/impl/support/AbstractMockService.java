@@ -105,7 +105,22 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		mockServiceListeners.remove( listener );
 	}
 
-	@Override
+    public MockRunListener[] getMockRunListeners()
+    {
+        return mockRunListeners.toArray( new MockRunListener[mockRunListeners.size()] );
+    }
+
+    public MockServiceListener[] getMockServiceListeners()
+    {
+        return mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners.size()] );
+    }
+
+    public void clearMockServiceListeners()
+    {
+        mockServiceListeners.clear();
+    }
+
+    @Override
 	public List<MockOperation> getMockOperationList()
 	{
 		return Collections.unmodifiableList( new ArrayList<MockOperation>( mockOperations ) );

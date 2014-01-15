@@ -77,9 +77,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	public static final String INCOMING_WSS = WsdlMockService.class.getName() + "@incoming-wss";
 	public static final String OUGOING_WSS = WsdlMockService.class.getName() + "@outgoing-wss";
 
-	//TODO: move mockRunListeners and mockServiceListeners
-	private Set<MockRunListener> mockRunListeners = new HashSet<MockRunListener>();
-	private Set<MockServiceListener> mockServiceListeners = new HashSet<MockServiceListener>();
 	private WsdlMockRunner mockRunner;
 	private SoapUIScriptEngine startScriptEngine;
 	private SoapUIScriptEngine stopScriptEngine;
@@ -246,7 +243,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 			((WsdlMockOperation)operation).release();
 		}
 
-		mockServiceListeners.clear();
+        clearMockServiceListeners();
 
 		if( onRequestScriptEnginePool != null )
 			onRequestScriptEnginePool.release();
@@ -279,11 +276,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		}
 	}
 
-	public MockRunListener[] getMockRunListeners()
-	{
-		return mockRunListeners.toArray( new MockRunListener[mockRunListeners.size()] );
-	}
-
 	public void removeMockOperation( WsdlMockOperation mockOperation )
 	{
 		int ix = mockOperations.indexOf( mockOperation );
@@ -299,9 +291,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 
 	protected void fireMockOperationAdded( WsdlMockOperation mockOperation )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
-				.size()] );
-		for( MockServiceListener listener : listeners )
+		for( MockServiceListener listener : getMockServiceListeners())
 		{
 			listener.mockOperationAdded( mockOperation );
 		}
@@ -309,9 +299,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 
 	protected void fireMockOperationRemoved( WsdlMockOperation mockOperation )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
-				.size()] );
-		for( MockServiceListener listener : listeners )
+        for( MockServiceListener listener : getMockServiceListeners())
 		{
 			listener.mockOperationRemoved( mockOperation );
 		}
@@ -319,9 +307,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 
 	protected void fireMockResponseAdded( WsdlMockResponse mockResponse )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
-				.size()] );
-		for( MockServiceListener listener : listeners )
+        for( MockServiceListener listener : getMockServiceListeners())
 		{
 			listener.mockResponseAdded( mockResponse );
 		}
@@ -329,9 +315,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 
 	protected void fireMockResponseRemoved( WsdlMockResponse mockResponse )
 	{
-		MockServiceListener[] listeners = mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners
-				.size()] );
-		for( MockServiceListener listener : listeners )
+        for( MockServiceListener listener : getMockServiceListeners())
 		{
 			listener.mockResponseRemoved( mockResponse );
 		}
