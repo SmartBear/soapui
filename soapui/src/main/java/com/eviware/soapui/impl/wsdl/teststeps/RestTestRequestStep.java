@@ -349,15 +349,17 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 	private RestResource findRestResource()
 	{
 		Project project = ModelSupport.getModelItemProject( this );
-		RestService restService = ( RestService )project.getInterfaceByName( getRequestStepConfig().getService() );
-		if( restService != null )
+		for( Interface iface : project.getInterfaceList() )
 		{
-			// get all resources with the configured path
-			for( RestResource resource : restService.getResourcesByFullPath( getRequestStepConfig().getResourcePath() ) )
-			{
-				// try to find matching method
-				if( getWsdlModelItemByName( resource.getRestMethodList(), getRequestStepConfig().getMethodName() ) != null )
-					return resource;
+			if( iface.getName().equals( getRequestStepConfig().getService() ) && iface instanceof RestService) {
+				RestService restService = (RestService) iface;
+				// get all resources with the configured path
+				for( RestResource resource : restService.getResourcesByFullPath( getRequestStepConfig().getResourcePath() ) )
+				{
+					// try to find matching method
+					if( getWsdlModelItemByName( resource.getRestMethodList(), getRequestStepConfig().getMethodName() ) != null )
+						return resource;
+				}
 			}
 		}
 		return null;
