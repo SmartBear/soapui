@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@Ignore
 public class BasicOAuth2ConfigurationIT
 {
 	private static final String CLIENT_ID = "client-id";
@@ -38,7 +39,7 @@ public class BasicOAuth2ConfigurationIT
 
 	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2.toString();
 	private static final String GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
-	public static final Dimension WINDOW_SIZE = new Dimension( 1024, 768 );
+	private static final Dimension WINDOW_SIZE = new Dimension( 1024, 768 );
 
 	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 

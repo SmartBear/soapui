@@ -10,18 +10,19 @@
  * See the GNU Lesser General Public License for more details at gnu.org.
  */
 
-package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
+package com.eviware.soapui.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.JTableFixture;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.fest.swing.security.ExitCallHook;
+import org.fest.swing.security.NoExitSecurityManagerInstaller;
+import org.junit.*;
 import org.mockito.Mockito;
 
 import javax.swing.*;
@@ -31,16 +32,39 @@ import static org.fest.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@Ignore
 /**
  * @author Prakash
  */
-public class AddParamActionTest
+public class AddParamActionIT
 {
 	public static final String PARAM = "Param";
+
+	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 
 	private JTable paramTable;
 	private RestParamsPropertyHolder params;
 	private static Robot robot;
+
+	@BeforeClass
+	public static void setUpOnce()
+	{
+		noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager( new ExitCallHook()
+		{
+			@Override
+			public void exitCalled( int status )
+			{
+				System.out.print( "Exit status : " + status );
+			}
+		} );
+	}
+
+	@AfterClass
+	public static void classTearDown()
+	{
+		noExitSecurityManagerInstaller.uninstall();
+	}
+
 
 	@Before
 	public void setUp() throws SoapUIException

@@ -11,12 +11,12 @@ public class CucumberGUIRunnerStepdefs
 
 	FESTRunner runner = new FESTRunner();
 
-	@Given( "^the SoapUI (.+) is installed in windows-32-bit$" )
+	@Given("^the soapUI OS is installed in windows-(\\d+)-bit$")
 	public void soapUIIsInstalled(String version) throws Throwable
 	{
 	}
 
-	@When( "^user open the SoapUI OS$" )
+	@When("^user open the SoapUI OS$")
 	public void usingASpecifictVersion() throws Throwable
 	{
 		runner.startSoapUI();

@@ -20,9 +20,9 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.utils.StubbedDialogs;
 import com.eviware.x.dialogs.XDialogs;
 import com.eviware.x.dialogs.XFileDialogs;
-import cucumber.annotation.Before;
 import org.apache.xmlbeans.XmlException;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
