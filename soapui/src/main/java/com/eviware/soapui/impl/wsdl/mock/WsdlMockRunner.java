@@ -12,49 +12,21 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractMockService;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.model.mock.MockDispatcher;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunListener;
+import com.eviware.soapui.model.mock.MockRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.wsdl.Definition;
-import javax.wsdl.Import;
-import javax.wsdl.factory.WSDLFactory;
-import javax.wsdl.xml.WSDLWriter;
-
-import com.eviware.soapui.impl.support.AbstractMockService;
-import com.eviware.soapui.model.mock.*;
-import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.Logger;
-import org.xml.sax.InputSource;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.WsdlInterfaceFactory;
-import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.xml.XmlUtils;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * MockRunner that dispatches Http Requests to their designated
@@ -87,10 +59,8 @@ public class WsdlMockRunner implements MockRunner
 		for( WsdlInterface iface : interfaces )
 			iface.getWsdlContext().loadIfNecessary();
 
-
-
 		mockContext = new WsdlMockRunContext( this.mockService, context );
-		dispatcher = new WsdlMockDispatcher( this.mockService, mockContext );
+		dispatcher = mockService.createDispatcher(mockContext);
 
 		start();
 	}
