@@ -476,7 +476,6 @@
                            keyStroke="menu T"/>
         <tns:actionMapping actionId="AddNewMockServiceAction"
                            keyStroke="menu O"/>
-        <tns:actionMapping actionId="CreateWebTestAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameProjectAction"
                            keyStroke="F2"/>
