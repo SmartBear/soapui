@@ -389,9 +389,6 @@ public class UISupport
 		if( StringUtils.isNullOrEmpty( path ) )
 			return null;
 
-		if( isHeadless() )
-			return null;
-
 		if( iconCache.containsKey( path ) )
 			return iconCache.get( path );
 

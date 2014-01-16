@@ -285,6 +285,11 @@ public class SoapUI
 		}
 	}
 
+	public static boolean usingGraphicalEnvironment()
+	{
+		return !UISupport.isHeadless() && !isCommandLine();
+	}
+
 	private void buildUI()
 	{
 		log.info( "Used java version: " + System.getProperty( "java.version" ) );
