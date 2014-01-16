@@ -122,7 +122,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
 		testStepResult = new ManualTestStepResult( this );
 		testStepResult.startTimer();
 
-		if( !forLoadTest && !UISupport.isHeadless() && !SoapUI.isCommandLine() )
+		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
 		{
 			XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
 			dialog.setSize( 450, 550 );

@@ -68,7 +68,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 
 		initAssertions();
 
-		if( !forLoadTest )
+		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
 			initIcons();
 	}
 
@@ -277,7 +277,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
@@ -373,7 +373,13 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 							.hasRunningSecurityTest( getTarget().getTestCase() ) ) )
 				return true;
 
-			return super.beforeSubmit( submit, context );
+
+			long start = System.nanoTime();
+			System.out.println( "Starting  ");
+			boolean b = super.beforeSubmit( submit, context );
+			long duration = (System.nanoTime()-start) / 1000000;
+			System.out.println( " duration = " + duration );
+			return b;
 		}
 
 		@Override

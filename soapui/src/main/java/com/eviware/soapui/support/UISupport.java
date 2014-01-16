@@ -389,7 +389,7 @@ public class UISupport
 		if( StringUtils.isNullOrEmpty( path ) )
 			return null;
 
-		if( isHeadless() )
+		if( !SoapUI.usingGraphicalEnvironment() )
 			return null;
 
 		if( iconCache.containsKey( path ) )
