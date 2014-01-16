@@ -77,7 +77,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	public static final String INCOMING_WSS = WsdlMockService.class.getName() + "@incoming-wss";
 	public static final String OUGOING_WSS = WsdlMockService.class.getName() + "@outgoing-wss";
 
-	private WsdlMockRunner mockRunner;
 	private SoapUIScriptEngine startScriptEngine;
 	private SoapUIScriptEngine stopScriptEngine;
 	private BeanPathPropertySupport docrootProperty;
@@ -85,8 +84,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	private ScriptEnginePool afterRequestScriptEnginePool;
 	private WsdlMockOperation faultMockOperation;
 	private String mockServiceEndpoint;
-
-	private MockServiceIconAnimator iconAnimator;
 
 	public WsdlMockService( Project project, MockServiceConfig config )
 	{
@@ -127,9 +124,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		{
 			faultMockOperation = ( WsdlMockOperation )getMockOperationByName( getConfig().getFaultMockOperation() );
 		}
-
-		iconAnimator = new MockServiceIconAnimator();
-		addMockRunListener( iconAnimator );
 	}
 
 
@@ -148,22 +142,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		getConfig().setBindToHostOnly( bindToHostOnly );
 	}
 
-
-
-	public WsdlMockRunner start( WsdlTestRunContext context ) throws Exception
-	{
-		String path = getPath();
-		if( path == null || path.trim().length() == 0 || path.trim().charAt( 0 ) != '/' )
-			throw new Exception( "Invalid path; must start with '/'" );
-
-		mockRunner = new WsdlMockRunner( this, context );
-		return mockRunner;
-	}
-
-	public WsdlMockRunner getMockRunner()
-	{
-		return mockRunner;
-	}
 
 	public WsdlMockOperation getMockOperation( Operation operation )
 	{
@@ -229,21 +207,10 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	{
 		super.release();
 
-		if( mockRunner != null )
-		{
-			if( mockRunner.isRunning() )
-				mockRunner.stop();
-
-			if( mockRunner != null )
-				mockRunner.release();
-		}
-
 		for( MockOperation operation : getMockOperationList() )
 		{
 			((WsdlMockOperation)operation).release();
 		}
-
-        clearMockServiceListeners();
 
 		if( onRequestScriptEnginePool != null )
 			onRequestScriptEnginePool.release();
@@ -762,41 +729,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 				SSLSettings.MOCK_PORT, 443 ) : getPort() );
 
 		return getProtocol() + host + ":" + port + getPath();
-	}
-
-	// Implements AbstractWsdlModelItem
-	@Override
-	public ImageIcon getIcon()
-	{
-		return iconAnimator.getIcon();
-	}
-
-	private class MockServiceIconAnimator extends ModelItemIconAnimator<WsdlMockService> implements MockRunListener
-	{
-		public MockServiceIconAnimator()
-		{
-			super( WsdlMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
-		}
-
-		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
-		{
-			return null;
-		}
-
-		public void onMockResult( MockResult result )
-		{
-		}
-
-		public void onMockRunnerStart( MockRunner mockRunner )
-		{
-			start();
-		}
-
-		public void onMockRunnerStop( MockRunner mockRunner )
-		{
-			stop();
-			WsdlMockService.this.mockRunner = null;
-		}
 	}
 
 }

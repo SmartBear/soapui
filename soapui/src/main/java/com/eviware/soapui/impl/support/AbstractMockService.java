@@ -3,9 +3,15 @@ package com.eviware.soapui.impl.support;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 import java.util.*;
 
 public abstract class AbstractMockService<MockOperationType extends MockOperation> extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfig> implements MockService
@@ -14,6 +20,9 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	protected List<MockOperation> mockOperations = new ArrayList<MockOperation>();
 	private Set<MockRunListener> mockRunListeners = new HashSet<MockRunListener>();
 	private Set<MockServiceListener> mockServiceListeners = new HashSet<MockServiceListener>();
+	private MockServiceIconAnimator iconAnimator;
+	private WsdlMockRunner mockRunner;
+
 
 	protected AbstractMockService( MockServiceConfig config, ModelItem parent )
 	{
@@ -25,6 +34,8 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		if( !config.isSetPath() )
 			config.setPath( "/" );
 
+		iconAnimator = new MockServiceIconAnimator();
+		addMockRunListener( iconAnimator );
 	}
 
 	// Implements MockService
@@ -80,6 +91,18 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	@Override
 	public abstract MockRunner start() throws Exception;
 
+
+	// TODO: think about naming - this does not start nothing.....
+	public WsdlMockRunner start( WsdlTestRunContext context ) throws Exception
+	{
+		String path = getPath();
+		if( path == null || path.trim().length() == 0 || path.trim().charAt( 0 ) != '/' )
+			throw new Exception( "Invalid path; must start with '/'" );
+
+		mockRunner = new WsdlMockRunner( this, context );
+		return mockRunner;
+	}
+
 	@Override
 	public void addMockRunListener( MockRunListener listener )
 	{
@@ -98,14 +121,18 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		mockServiceListeners.add( listener );
 	}
 
-
 	@Override
 	public void removeMockServiceListener( MockServiceListener listener )
 	{
 		mockServiceListeners.remove( listener );
 	}
 
-    public MockRunListener[] getMockRunListeners()
+	public WsdlMockRunner getMockRunner()
+	{
+		return mockRunner;
+	}
+
+	public MockRunListener[] getMockRunListeners()
     {
         return mockRunListeners.toArray( new MockRunListener[mockRunListeners.size()] );
     }
@@ -115,12 +142,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
         return mockServiceListeners.toArray( new MockServiceListener[mockServiceListeners.size()] );
     }
 
-    public void clearMockServiceListeners()
-    {
-        mockServiceListeners.clear();
-    }
-
-    @Override
+   @Override
 	public List<MockOperation> getMockOperationList()
 	{
 		return Collections.unmodifiableList( new ArrayList<MockOperation>( mockOperations ) );
@@ -130,4 +152,57 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	{
 		return mockOperations;
 	}
+
+	@Override
+	public void release()
+	{
+		super.release();
+
+		mockServiceListeners.clear();
+
+		if( mockRunner != null )
+		{
+			if( mockRunner.isRunning() )
+				mockRunner.stop();
+
+			if( mockRunner != null )
+				mockRunner.release();
+		}
+	}
+
+	// Implements AbstractWsdlModelItem
+	@Override
+	public ImageIcon getIcon()
+	{
+		return iconAnimator.getIcon();
+	}
+
+	private class MockServiceIconAnimator extends ModelItemIconAnimator<AbstractMockService<MockOperationType>> implements MockRunListener
+	{
+		public MockServiceIconAnimator()
+		{
+			super( AbstractMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
+		}
+
+		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
+		{
+			return null;
+		}
+
+		public void onMockResult( MockResult result )
+		{
+		}
+
+		public void onMockRunnerStart( MockRunner mockRunner )
+		{
+			start();
+		}
+
+		public void onMockRunnerStop( MockRunner mockRunner )
+		{
+			stop();
+			AbstractMockService.this.mockRunner = null;
+		}
+	}
+
 }

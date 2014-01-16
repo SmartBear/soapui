@@ -32,6 +32,7 @@ import javax.wsdl.Import;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
 
+import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.model.mock.*;
 import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.Logger;
@@ -70,15 +71,15 @@ public class WsdlMockRunner implements MockRunner
 	private boolean running;
 	private MockDispatcher dispatcher;
 
-	public WsdlMockRunner( WsdlMockService mockService, WsdlTestRunContext context ) throws Exception
+	public WsdlMockRunner( AbstractMockService mockService, WsdlTestRunContext context ) throws Exception
 	{
-		this.mockService = mockService;
+		this.mockService = (WsdlMockService)mockService;
 
 		Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
 
 		for( int i = 0; i < mockService.getMockOperationCount(); i++ )
 		{
-			WsdlOperation operation = mockService.getMockOperationAt( i ).getOperation();
+			WsdlOperation operation = this.mockService.getMockOperationAt( i ).getOperation();
 			if( operation != null )
 				interfaces.add( operation.getInterface() );
 		}
@@ -88,8 +89,8 @@ public class WsdlMockRunner implements MockRunner
 
 
 
-		mockContext = new WsdlMockRunContext( mockService, context );
-		dispatcher = new WsdlMockDispatcher( mockService, mockContext );
+		mockContext = new WsdlMockRunContext( this.mockService, context );
+		dispatcher = new WsdlMockDispatcher( this.mockService, mockContext );
 
 		start();
 	}
