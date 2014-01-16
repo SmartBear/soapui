@@ -205,7 +205,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
 				if( timeWaited - lastUpdate > 1000 && context.getProperty( TestCaseRunContext.LOAD_TEST_RUNNER ) == null )
 				{
 					String newLabel = getLabel();
-					if( !UISupport.isHeadless() )
+					if( SoapUI.usingGraphicalEnvironment() )
 					{
 						final String finalOldLabel = oldLabel, finalNewLabel = newLabel;
 						SwingUtilities.invokeLater( new Runnable()

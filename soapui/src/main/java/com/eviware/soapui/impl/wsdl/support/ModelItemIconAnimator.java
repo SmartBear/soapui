@@ -34,7 +34,7 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 	private boolean enabled = true;
 	private ImageIcon baseIcon;
 	private ImageIcon[] animateIcons;
-	private Future<?> future;
+	private volatile Future<?> future;
 
 	public ModelItemIconAnimator( T target, String baseIcon, String animationBaseIcon, int num, String type )
 	{
@@ -77,19 +77,22 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 		 */
 		if( isStopped() )
 		{
-			if( future != null && !future.isDone() )
+
+			Future<?> localFuture = future;
+			if( future != null && !localFuture.isDone() )
 			{
-				future.cancel( true );
+				localFuture.cancel( true );
 				while( future != null )
+				{
 					try
 					{
-						Thread.sleep( 500 );
+						Thread.sleep( 1 );
 					}
 					catch( InterruptedException e )
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
 			}
 			stopped = false;
 			future = SoapUI.getThreadPool().submit( this );
@@ -139,6 +142,7 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 
 		target.setIcon( getIcon() );
 		future = null;
+		notify();
 		// iconAnimationThread = null;
 	}
 
