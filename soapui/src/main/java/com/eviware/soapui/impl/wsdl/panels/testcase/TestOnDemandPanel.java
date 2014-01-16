@@ -12,6 +12,30 @@
 
 package com.eviware.soapui.impl.wsdl.panels.testcase;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUISystemProperties;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.testondemand.DependencyValidator;
+import com.eviware.soapui.testondemand.Location;
+import com.eviware.soapui.testondemand.TestOnDemandCaller;
+import com.eviware.x.dialogs.Worker.WorkerAdapter;
+import com.eviware.x.dialogs.XProgressDialog;
+import com.eviware.x.dialogs.XProgressMonitor;
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
+import edu.umd.cs.findbugs.annotations.NonNull;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -21,37 +45,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUISystemProperties;
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.NativeBrowserComponent;
-import com.eviware.soapui.testondemand.DependencyValidator;
-import com.eviware.soapui.testondemand.Location;
-import com.eviware.soapui.testondemand.TestOnDemandCaller;
-import com.eviware.x.dialogs.Worker.WorkerAdapter;
-import com.eviware.x.dialogs.XProgressDialog;
-import com.eviware.x.dialogs.XProgressMonitor;
-import com.google.common.base.Joiner;
-import com.google.common.base.Strings;
-
-import edu.umd.cs.findbugs.annotations.NonNull;
-
 /**
- * 
  * Panel for displaying a Test On Demand report
- * 
  */
 public class TestOnDemandPanel extends JPanel
 {
@@ -80,7 +75,7 @@ public class TestOnDemandPanel extends JPanel
 	private JComboBox locationsComboBox;
 
 	@NonNull
-	private CustomNativeBrowserComponent browser;
+	private WebViewBasedBrowserComponent browser;
 
 	@NonNull
 	private Action sendTestCaseAction;
@@ -112,17 +107,8 @@ public class TestOnDemandPanel extends JPanel
 
 		add( buildToolbar(), BorderLayout.NORTH );
 
-		if( !SoapUI.isJXBrowserDisabled( true ) )
-		{
-			browser = new CustomNativeBrowserComponent( true, false );
-			add( browser.getComponent(), BorderLayout.CENTER );
-		}
-		else
-		{
-			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "Browser component disabled or not available on this platform" );
-			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
-		}
+		browser = new WebViewBasedBrowserComponent( false );
+		add( browser.getComponent(), BorderLayout.CENTER );
 
 		openInInternalBrowser( FIRST_PAGE_URL );
 	}
@@ -219,28 +205,9 @@ public class TestOnDemandPanel extends JPanel
 
 	// FIXME These guys should probably go in a utils class
 
-	private void openURLSafely( String url )
-
-	{
-		if( SoapUI.isJXBrowserDisabled( true ) )
-		{
-			Tools.openURL( url );
-		}
-		else
-		{
-			if( browser != null )
-			{
-				browser.navigate( url, null );
-			}
-		}
-	}
-
 	private void openInInternalBrowser( String url )
 	{
-		if( !SoapUI.isJXBrowserDisabled( true ) && browser != null )
-		{
-			browser.navigate( url, null );
-		}
+		browser.navigate( url, null );
 	}
 
 	private void openInExternalBrowser( String url )
@@ -295,7 +262,7 @@ public class TestOnDemandPanel extends JPanel
 				String redirectUrl = sendTestCaseWorker.getResult();
 				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
-					openURLSafely( redirectUrl );
+					browser.navigate( redirectUrl, null );
 				}
 			}
 		}
@@ -345,16 +312,6 @@ public class TestOnDemandPanel extends JPanel
 		}
 	}
 
-	private class CustomNativeBrowserComponent extends NativeBrowserComponent
-	{
-		public CustomNativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
-		{
-			super( addToolbar, addStatusBar );
-		}
-
-		// TODO check if clicking a link opens a new window
-	}
-
 	private class SendTestCaseWorker extends WorkerAdapter
 	{
 		private final WsdlTestCase testCase;
@@ -400,8 +357,7 @@ public class TestOnDemandPanel extends JPanel
 			catch( Exception e )
 			{
 				SoapUI.logError( e, COULD_NOT_GET_LOCATIONS_MESSAGE );
-			}
-			finally
+			} finally
 			{
 				populateLocationsComboBox();
 			}

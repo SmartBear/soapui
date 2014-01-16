@@ -25,7 +25,6 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction;
-import com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.model.project.SaveStatus;
@@ -157,11 +156,6 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 							SoapUI.getActionRegistry().getAction( NewRestServiceAction.SOAPUI_ACTION_ID )
 									.perform( project, project );
 						}
-						if( dialog.getBooleanValue( Form.CREATEWEBTEST ) )
-						{
-							new CreateWebTestAction().perform( project, param );
-						}
-
 						break;
 					}
 				}
@@ -264,9 +258,6 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
 		@AField(description = "Form.RelativePaths.Description", type = AField.AFieldType.BOOLEAN, enabled = true)
 		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
-
-		@AField(description = "Form.CreateWebTest.Description", type = AField.AFieldType.BOOLEAN, enabled = true)
-		public final static String CREATEWEBTEST = messages.get( "Form.CreateWebTest.Label" );
 
 	}
 }
