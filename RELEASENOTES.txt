@@ -1,6 +1,9 @@
 # SoapUI 5.0.0
 #### Released 2014-??-?? ####
 
+### Bugs fixed ###
+* SOAP request calls no longer take 500 ms longer in Data Driven tests than in single calls (SOAP-769)
+
 ### Updated libraries ###
 * proxy-vole 20131209 (SOAP-1208)
 
