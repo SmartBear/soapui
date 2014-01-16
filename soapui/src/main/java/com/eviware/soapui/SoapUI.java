@@ -669,7 +669,7 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
+				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) )
 				{
 					SwingUtilities.invokeLater( new Runnable()
 					{
@@ -1041,21 +1041,6 @@ public class SoapUI
 
 		shutdown();
 
-		return true;
-	}
-
-	public static boolean isJXBrowserDisabled()
-	{
-		return isJXBrowserDisabled( false );
-	}
-
-	public static boolean isJXBrowserDisabled( boolean allowNative )
-	{
-		return true;
-	}
-
-	public static boolean isJXBrowserPluginsDisabled()
-	{
 		return true;
 	}
 

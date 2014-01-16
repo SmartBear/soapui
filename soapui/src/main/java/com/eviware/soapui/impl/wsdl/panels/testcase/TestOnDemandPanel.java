@@ -205,28 +205,9 @@ public class TestOnDemandPanel extends JPanel
 
 	// FIXME These guys should probably go in a utils class
 
-	private void openURLSafely( String url )
-
-	{
-		if( SoapUI.isJXBrowserDisabled( true ) )
-		{
-			Tools.openURL( url );
-		}
-		else
-		{
-			if( browser != null )
-			{
-				browser.navigate( url, null );
-			}
-		}
-	}
-
 	private void openInInternalBrowser( String url )
 	{
-		if( !SoapUI.isJXBrowserDisabled( true ) && browser != null )
-		{
-			browser.navigate( url, null );
-		}
+		browser.navigate( url, null );
 	}
 
 	private void openInExternalBrowser( String url )
@@ -281,7 +262,7 @@ public class TestOnDemandPanel extends JPanel
 				String redirectUrl = sendTestCaseWorker.getResult();
 				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
-					openURLSafely( redirectUrl );
+					browser.navigate( redirectUrl, null );
 				}
 			}
 		}
