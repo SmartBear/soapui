@@ -373,13 +373,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 							.hasRunningSecurityTest( getTarget().getTestCase() ) ) )
 				return true;
 
-
-			long start = System.nanoTime();
-			System.out.println( "Starting  ");
-			boolean b = super.beforeSubmit( submit, context );
-			long duration = (System.nanoTime()-start) / 1000000;
-			System.out.println( " duration = " + duration );
-			return b;
+			return super.beforeSubmit( submit, context );
 		}
 
 		@Override
