@@ -61,7 +61,7 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 		this.testStep = testStep;
 
 		initAssertions();
-		if( !forLoadTest )
+		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
 			initIcons();
 	}
 
@@ -142,7 +142,7 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null )
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
