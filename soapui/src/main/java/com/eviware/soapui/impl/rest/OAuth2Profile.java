@@ -63,7 +63,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public enum AccessTokenRetrievalLocation
 	{
 		BODY_JSON,
-		URL_FRAGMENT,
 		BODY_URL_ENCODED_FORM
 	}
 

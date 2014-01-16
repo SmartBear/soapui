@@ -40,8 +40,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Map;
 
-import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenRetrievalLocation.BODY_JSON;
-
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
  */
@@ -214,13 +212,13 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 				OAuthToken token = null;
 				switch( parameters.accessTokenRetrievalLocation )
 				{
-					case BODY_JSON:
-						token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
-						break;
 					case BODY_URL_ENCODED_FORM:
 						token = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
 						break;
+					case BODY_JSON:
 					default:
+						token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
+								.getOAuthToken();
 						break;
 				}
 				if( token != null && token.getAccessToken() != null )
