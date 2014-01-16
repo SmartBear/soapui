@@ -232,16 +232,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 			return null;
 		}
 
-		long start = System.nanoTime();
-		System.out.println( "Starting  " + testStep.getName());
-		TestStepResult stepResult;
-		if(testStep.getName().equals( "PUT courtroom request" )){
-			stepResult = ruuuuun( testStep );
-		} else {
-			stepResult = testStep.run( this, getRunContext() );
-		}
-		long duration = (System.nanoTime()-start) / 1000000;
-		System.out.println( testStep.getName() + " duration = " + duration );
+		TestStepResult stepResult = testStep.run( this, getRunContext() );
 
 		testStepResults.add( stepResult );
 		resultCount++ ;
@@ -280,11 +271,6 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 		}
 		// preserveContext( getRunContext() );
 		return stepResult;
-	}
-
-	private TestStepResult ruuuuun( TestStep testStep )
-	{
-		return testStep.run( this, getRunContext() );
 	}
 
 	protected boolean runBeforeSteps( TestStep testStep )
