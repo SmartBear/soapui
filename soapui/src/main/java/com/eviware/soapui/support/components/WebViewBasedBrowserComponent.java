@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -56,7 +57,6 @@ public class WebViewBasedBrowserComponent
 	private String errorPage;
 	private boolean showingErrorPage;
 	public String url;
-	private Boolean possibleError = false;
 	private final boolean addStatusBar;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
@@ -108,19 +108,7 @@ public class WebViewBasedBrowserComponent
 
 											if( getWebEngine().getDocument() != null )
 											{
-												Transformer transformer = TransformerFactory.newInstance().newTransformer();
-												transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
-												transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
-												transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
-												transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
-												transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
-
-												StringWriter stringWriter = new StringWriter();
-												transformer.transform( new DOMSource( getWebEngine().getDocument() ),
-														new StreamResult( stringWriter ) );
-
-												String output = stringWriter.getBuffer().toString().replaceAll( "\n|\r", "" );
-
+												String output = readDocumentAsString();
 												for( BrowserStateChangeListener listener : listeners )
 												{
 													listener.contentChanged( output );
@@ -140,7 +128,7 @@ public class WebViewBasedBrowserComponent
 					webView.prefHeightProperty().bind( scene.heightProperty() );
 					jfxComponentGroup.getChildren().add( webView );
 					browserPanel.setScene( scene );
-					addKeybaordFocusManager( browserPanel );
+					addKeyboardFocusManager( browserPanel );
 				}
 			} );
 
@@ -149,7 +137,23 @@ public class WebViewBasedBrowserComponent
 		return panel;
 	}
 
-	private void addKeybaordFocusManager( final JFXPanel browserPanel )
+	private String readDocumentAsString() throws TransformerException
+	{
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
+		transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+		transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+		transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+		transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
+
+		StringWriter stringWriter = new StringWriter();
+		transformer.transform( new DOMSource( getWebEngine().getDocument() ),
+				new StreamResult( stringWriter ) );
+
+		return stringWriter.getBuffer().toString().replaceAll( "\n|\r", "" );
+	}
+
+	private void addKeyboardFocusManager( final JFXPanel browserPanel )
 	{
 		KeyboardFocusManager kfm = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager();
 		kfm.addKeyEventDispatcher( new KeyEventDispatcher()
@@ -168,11 +172,6 @@ public class WebViewBasedBrowserComponent
 			}
 		}
 		);
-	}
-
-	public void executeJavaScript( String script )
-	{
-		getWebEngine().executeScript( script );
 	}
 
 	// TODO: Evaluate whether these should be used
@@ -223,7 +222,6 @@ public class WebViewBasedBrowserComponent
 	public void release()
 	{
 		// TODO: Check whether we need to do anything here
-		possibleError = false;
 	}
 
 
@@ -233,6 +231,7 @@ public class WebViewBasedBrowserComponent
 		{
 			public void run()
 			{
+
 				getWebEngine().loadContent( contentAsString, contentType);
 			}
 		} );
