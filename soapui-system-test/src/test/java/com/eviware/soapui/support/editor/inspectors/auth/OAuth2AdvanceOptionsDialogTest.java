@@ -8,10 +8,7 @@ import com.eviware.x.form.XFormFactory;
 import com.eviware.x.impl.swing.SwingFormFactory;
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.Robot;
-import org.fest.swing.finder.DialogFinder;
 import org.fest.swing.fixture.DialogFixture;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -61,7 +58,7 @@ public class OAuth2AdvanceOptionsDialogTest
 		//wait for the dialog to show up
 		Thread.sleep( 200 );
 
-		Dialog advanceOptionsDialog = ( Dialog ) robot.finder().findByName( "OAuth2.0 Advanced options" );
+		Dialog advanceOptionsDialog = ( Dialog )robot.finder().findByName( "OAuth2.0 Advanced options" );
 		DialogFixture dialogFixture = new DialogFixture( robot, advanceOptionsDialog );
 
 		dialogFixture.radioButton( QUERY.toString() ).click();
