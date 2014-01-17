@@ -77,10 +77,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		super( config, parent, icon );
 
-		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
+		if( !forLoadTest )
 		{
 			iconAnimator = initIconAnimator();
-			addSubmitListener( iconAnimator );
+			if( SoapUI.usingGraphicalEnvironment() )
+			{
+				addSubmitListener( iconAnimator );
+			}
 		}
 
 		initAttachments();
@@ -466,7 +469,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	@Override
 	public ImageIcon getIcon()
 	{
-		return iconAnimator == null || UISupport.isHeadless() ? null : iconAnimator.getIcon();
+		return iconAnimator == null ? null : iconAnimator.getIcon();
 	}
 
 	public PropertyExpansion[] getPropertyExpansions()
@@ -715,7 +718,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			removeSubmitListener( this.iconAnimator );
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener( this.iconAnimator );
+		if( SoapUI.usingGraphicalEnvironment() )
+		{
+			addSubmitListener( this.iconAnimator );
+		}
 	}
 
 	public HttpResponse getResponse()

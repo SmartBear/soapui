@@ -313,7 +313,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null )
+		if( forLoadTest || getIconAnimator() == null )
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

@@ -68,7 +68,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 
 		initAssertions();
 
-		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
+		if( !forLoadTest )
 			initIcons();
 	}
 
@@ -277,7 +277,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null)
+		if( forLoadTest || getIconAnimator() == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
