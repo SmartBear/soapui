@@ -17,10 +17,7 @@ import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.mock.MockDispatcher;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunListener;
-import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,22 +35,28 @@ import java.util.Set;
 @SuppressWarnings( "unchecked" )
 public class WsdlMockRunner implements MockRunner
 {
-	private WsdlMockService mockService;
+	private AbstractMockService mockService;
 	private final WsdlMockRunContext mockContext;
 	private boolean running;
 	private MockDispatcher dispatcher;
 
 	public WsdlMockRunner( AbstractMockService mockService, WsdlTestRunContext context ) throws Exception
 	{
-		this.mockService = (WsdlMockService)mockService;
+		this.mockService = mockService;
 
 		Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
 
-		for( int i = 0; i < mockService.getMockOperationCount(); i++ )
+		// TODO: move this code elsewhere when the rest counterpoint is in place
+		if( mockService instanceof WsdlMockService )
 		{
-			WsdlOperation operation = this.mockService.getMockOperationAt( i ).getOperation();
-			if( operation != null )
-				interfaces.add( operation.getInterface() );
+			WsdlMockService wsdlMockService = (WsdlMockService)mockService;
+
+			for( int i = 0; i < mockService.getMockOperationCount(); i++ )
+			{
+				WsdlOperation operation = wsdlMockService.getMockOperationAt( i ).getOperation();
+				if( operation != null )
+					interfaces.add( operation.getInterface() );
+			}
 		}
 
 		for( WsdlInterface iface : interfaces )
@@ -122,7 +125,7 @@ public class WsdlMockRunner implements MockRunner
 		return dispatcher.getMockResultAt( index );
 	}
 
-	public WsdlMockService getMockService()
+	public MockService getMockService()
 	{
 		return mockService;
 	}

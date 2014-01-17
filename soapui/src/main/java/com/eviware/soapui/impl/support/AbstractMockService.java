@@ -125,8 +125,21 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public abstract void setPath( String path);
 
 	@Override
-	public abstract MockRunner start() throws Exception;
+	public WsdlMockRunner start() throws Exception
+	{
+		return start( null );
+	}
 
+
+	public boolean getBindToHostOnly()
+	{
+		return getConfig().getBindToHostOnly();
+	}
+
+	public void setBindToHostOnly( boolean bindToHostOnly )
+	{
+		getConfig().setBindToHostOnly( bindToHostOnly );
+	}
 
 	// TODO: think about naming - this does not start nothing.....
 	public WsdlMockRunner start( WsdlTestRunContext context ) throws Exception

@@ -97,17 +97,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
 	}
 
 
-	public boolean getBindToHostOnly()
-	{
-		return getConfig().getBindToHostOnly();
-	}
-
-	public void setBindToHostOnly( boolean bindToHostOnly )
-	{
-		getConfig().setBindToHostOnly( bindToHostOnly );
-	}
-
-
 	public WsdlMockOperation getMockOperation( Operation operation )
 	{
 		for( int c = 0; c < getMockOperationCount(); c++ )
@@ -268,11 +257,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
 		}
 	}
 
-	@Override
-	public WsdlMockRunner start() throws Exception
-	{
-		return start( null );
-	}
 
 	public String getLocalEndpoint()
 	{

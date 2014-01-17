@@ -33,6 +33,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.eviware.soapui.impl.support.AbstractMockService;
 import org.apache.log4j.Logger;
 import org.mortbay.component.AbstractLifeCycle;
 import org.mortbay.io.Connection;
@@ -105,7 +106,7 @@ public class JettyMockEngine implements MockEngine
 
 		synchronized( server )
 		{
-			WsdlMockService mockService = ( WsdlMockService )runner.getMockService();
+			MockService mockService = runner.getMockService();
 			int port = mockService.getPort();
 
 			if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) && !addedSslConnector )
@@ -135,7 +136,7 @@ public class JettyMockEngine implements MockEngine
 
 				if( mockService.getBindToHostOnly() )
 				{
-					String host = PropertyExpander.expandProperties( mockService, mockService.getHost() );
+					String host = PropertyExpander.expandProperties( (AbstractMockService)mockService, ((AbstractMockService)mockService).getHost() );
 					if( StringUtils.hasContent( host ) )
 					{
 						connector.setHost( host );
