@@ -155,13 +155,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				iface.addInterfaceListener( interfaceListener );
 			}
 
-			if( SoapUI.usingGraphicalEnvironment() )
-			{
-				iconAnimator = new ModelItemIconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
-						"/exec_mockResponse", 4, "gif" );
+			iconAnimator = new ModelItemIconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
+					"/exec_mockResponse", 4, "gif" );
 
-				initIcons();
-			}
+			initIcons();
 		}
 
 		// init properties
@@ -206,7 +203,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() || iconAnimator == null)
+		if( forLoadTest || iconAnimator == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

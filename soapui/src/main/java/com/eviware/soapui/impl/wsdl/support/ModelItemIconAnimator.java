@@ -66,6 +66,11 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 	{
 		if( !enabled )
 			return;
+		if( !SoapUI.usingGraphicalEnvironment() )
+		{
+			// Don't use animation if we're not in the SoapUI GUI.
+			return;
+		}
 
 		/*
 		 * mock service to be run needs to be stopped first.
@@ -116,6 +121,11 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 
 	public void run()
 	{
+		if( !SoapUI.usingGraphicalEnvironment() )
+		{
+			// Don't use animation if we're not in the SoapUI GUI.
+			return;
+		}
 		if( future != null )
 		{
 			if( System.getProperty( "soapui.enablenamedthreads" ) != null )

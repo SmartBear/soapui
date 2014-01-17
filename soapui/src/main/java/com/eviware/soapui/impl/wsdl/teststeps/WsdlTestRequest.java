@@ -79,7 +79,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
 		initAssertions();
 
-		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
+		if( !forLoadTest )
 			initIcons();
 	}
 
@@ -319,7 +319,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null)
+		if( forLoadTest || getIconAnimator() == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
