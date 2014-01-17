@@ -111,6 +111,19 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		return getConfig().getPath();
 	}
 
+	public String getHost()
+	{
+		return getConfig().getHost();
+	}
+
+	public void setHost( String host )
+	{
+		getConfig().setHost( host );
+	}
+
+	public abstract void setPort( int port );
+	public abstract void setPath( String path);
+
 	@Override
 	public abstract MockRunner start() throws Exception;
 

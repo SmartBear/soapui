@@ -97,11 +97,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
 	}
 
 
-	public void setHost( String host )
-	{
-		getConfig().setHost( host );
-	}
-
 	public boolean getBindToHostOnly()
 	{
 		return getConfig().getBindToHostOnly();

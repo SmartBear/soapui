@@ -41,6 +41,8 @@ public interface MockService extends TestModelItem
 
 	public int getPort();
 
+	public MockRunner getMockRunner();
+
 	public MockRunner start() throws Exception;
 
 	public void addMockRunListener( MockRunListener listener );

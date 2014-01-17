@@ -21,6 +21,18 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
     }
 
 	@Override
+	public void setPort( int port )
+	{
+
+	}
+
+	@Override
+	public void setPath( String path )
+	{
+
+	}
+
+	@Override
 	public MockRunner start() throws Exception
 	{
 		return null;
