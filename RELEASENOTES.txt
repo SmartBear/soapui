@@ -1,3 +1,9 @@
+# SoapUI 4.6.4-m-SNAPSHOT
+### Bugs fixed ###
+* SOAP request calls no longer take 500 ms longer in Data Driven tests than in single calls (SOAP-769)
+
+-------------------------------------------------------------------------------
+
 # SoapUI 4.6.4
 #### Released 2014-01-14 ####
 
