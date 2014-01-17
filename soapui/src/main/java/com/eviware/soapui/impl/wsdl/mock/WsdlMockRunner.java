@@ -111,7 +111,7 @@ public class WsdlMockRunner extends AbstractMockRunner
 			{
 				WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( ( WsdlInterface )iface );
 
-				String wsdlPrefix = getInterfacePrefix( iface ).substring( 1 );
+				String wsdlPrefix = trimLastSlash( getInterfacePrefix( iface ) );
 				StringToStringMap parts = exporter.createFilesForExport(wsdlPrefix + "&part=" );
 
 				for( String key : parts.keySet() )
@@ -136,6 +136,16 @@ public class WsdlMockRunner extends AbstractMockRunner
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	private String trimLastSlash( String wsdlPrefix )
+	{
+		int lastSlash = wsdlPrefix.lastIndexOf( '/' );
+		if( lastSlash != -1 )
+		{
+			return wsdlPrefix.substring( lastSlash + 1 );
+		}
+		return wsdlPrefix;
 	}
 
 	public String getInterfacePrefix( Interface iface )
