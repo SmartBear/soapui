@@ -282,7 +282,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		catch( Exception e )
 		{
 			if( e instanceof DispatchException )
-				throw ( DispatchException )e;
+				throw e;
 
 			throw new DispatchException( e );
 		}

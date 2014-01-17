@@ -45,7 +45,7 @@ import java.util.*;
  * @author ole.matzura
  */
 
-public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
+public class WsdlMockService extends AbstractMockService<WsdlMockOperation, MockServiceConfig>
 {
 	private static final String REQUIRE_SOAP_VERSION = WsdlMockService.class.getName() + "@require-soap-version";
 	private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
@@ -329,8 +329,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		getSettings().setBoolean( REQUIRE_SOAP_ACTION, requireSoapAction );
 	}
 
-
-
 	public boolean hasMockOperation( Operation operation )
 	{
 		return getMockOperation( operation ) != null;
@@ -340,8 +338,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	{
 		return mockOperations;
 	}
-
-
 
 	public String getIncomingWss()
 	{
@@ -365,18 +361,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		String old = getOutgoingWss();
 		getConfig().setOutgoingWss( outgoingWss );
 		notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
-	}
-
-	public boolean isDispatchResponseMessages()
-	{
-		return getConfig().getDispatchResponseMessages();
-	}
-
-	public void setDispatchResponseMessages( boolean dispatchResponseMessages )
-	{
-		boolean old = isDispatchResponseMessages();
-		getConfig().setDispatchResponseMessages( dispatchResponseMessages );
-		notifyPropertyChanged( "dispatchResponseMessages", old, dispatchResponseMessages );
 	}
 
 	public List<WsdlOperation> getMockedOperations()

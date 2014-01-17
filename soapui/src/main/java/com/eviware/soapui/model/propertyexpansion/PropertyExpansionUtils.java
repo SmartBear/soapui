@@ -402,7 +402,7 @@ public class PropertyExpansionUtils
 		else if( modelItem instanceof WsdlMockService )
 		{
 			mockService = ( WsdlMockService )modelItem;
-			project = mockService.getProject();
+			project = ( WsdlProject )mockService.getProject();
 		}
 		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
@@ -411,13 +411,13 @@ public class PropertyExpansionUtils
 		else if( modelItem instanceof WsdlMockOperation )
 		{
 			mockService = ( ( WsdlMockOperation )modelItem ).getMockService();
-			project = mockService.getProject();
+			project = ( WsdlProject )mockService.getProject();
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
 			mockResponse = ( WsdlMockResponse )modelItem;
 			mockService = mockResponse.getMockOperation().getMockService();
-			project = mockService.getProject();
+			project = ( WsdlProject )mockService.getProject();
 		}
 		else if( modelItem instanceof SecurityTest )
 		{

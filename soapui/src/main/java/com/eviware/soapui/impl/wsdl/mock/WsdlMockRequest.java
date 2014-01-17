@@ -23,6 +23,7 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
@@ -124,7 +125,7 @@ public class WsdlMockRequest implements MockRequest
 
 			if( StringUtils.hasContent( context.getMockService().getIncomingWss() ) )
 			{
-				IncomingWss incoming = context.getMockService().getProject().getWssContainer()
+				IncomingWss incoming = ((WsdlProject)context.getMockService().getProject()).getWssContainer()
 						.getIncomingWssByName( context.getMockService().getIncomingWss() );
 				if( incoming != null )
 				{
