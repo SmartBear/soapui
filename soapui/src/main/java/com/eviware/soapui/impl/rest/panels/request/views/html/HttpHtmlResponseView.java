@@ -105,7 +105,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				try
 				{
-					browser.setContent( content, contentType );
+					browser.setContent( content, removeCharsetFrom( contentType ));
 				}
 				catch( Exception e )
 				{
@@ -121,6 +121,12 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			browser.setContent( "<missing content>" );
 		}
+	}
+
+	private String removeCharsetFrom( String contentType )
+	{
+		int charsetIndex = contentType.indexOf( ";charset=" );
+		return charsetIndex == -1 ? contentType : contentType.substring( 0, charsetIndex );
 	}
 
 	private boolean isSupportedContentType( String contentType )
