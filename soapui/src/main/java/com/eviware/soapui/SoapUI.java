@@ -241,7 +241,7 @@ public class SoapUI
 		}
 		catch( NoClassDefFoundError e )
 		{
-			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly.", e );
+			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly.");
 		}
 	}
 
