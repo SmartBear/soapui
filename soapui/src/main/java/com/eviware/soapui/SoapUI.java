@@ -235,7 +235,14 @@ public class SoapUI
 	private static CmdLineRunner soapUIRunner;
 
 	static {
-		Platform.setImplicitExit( false );
+		try
+		{
+			Platform.setImplicitExit( false );
+		}
+		catch( NoClassDefFoundError e )
+		{
+			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly.", e );
+		}
 	}
 
 	// --------------------------- CONSTRUCTORS ---------------------------
