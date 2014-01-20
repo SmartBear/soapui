@@ -26,6 +26,7 @@ import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.token.BasicOAuthToken;
+import org.apache.oltu.oauth2.common.utils.OAuthUtils;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import org.junit.Before;
 import org.junit.Test;
@@ -173,7 +174,8 @@ public class OltuOAuth2ClientFacadeTest
 	{
 		oltuClientFacade.requestAccessToken( profile );
 
-		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( authorizationCode ) );
+		String code = ( String )OAuthUtils.decodeForm( spyingOauthClientStub.oAuthClientRequest.getBody() ).get( "code" );
+		assertThat( code, is( authorizationCode ) );
 	}
 
 	@Test
@@ -380,7 +382,7 @@ public class OltuOAuth2ClientFacadeTest
 					if( parameter.startsWith( prefix ) )
 					{
 						String redirectURI = parameter.substring( prefix.length() );
-						listener.locationChanged( redirectURI + "?code=" + authorizationCode );
+						listener.locationChanged( redirectURI + "?code=" + authorizationCode + "&state=foo");
 					}
 				}
 			}

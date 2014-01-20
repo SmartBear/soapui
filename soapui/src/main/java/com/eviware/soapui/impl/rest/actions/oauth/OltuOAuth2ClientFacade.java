@@ -31,6 +31,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.token.OAuthToken;
+import org.apache.oltu.oauth2.common.utils.OAuthUtils;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 
 import java.io.UnsupportedEncodingException;
@@ -161,7 +162,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 			{
 				if( !parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
 				{
-					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( newLocation ) );
+					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( extractFormData( newLocation ) ) );
 				}
 			}
 
@@ -185,13 +186,19 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		parameters.waitingForAuthorization();
 	}
 
-	private String extractAuthorizationCode( String title )
+	private String extractFormData( String url )
 	{
-		if( title.contains( "code=" ) )
+		int questionMarkIndex = url.indexOf( '?' );
+		if( questionMarkIndex != -1 )
 		{
-			return title.substring( title.indexOf( "code=" ) + 5 );
+			return url.substring( questionMarkIndex + 1 );
 		}
-		return null;
+		return url;
+	}
+
+	private String extractAuthorizationCode( String formData )
+	{
+		return ( String )OAuthUtils.decodeForm( formData ).get( "code" ) ;
 	}
 
 	private void getAccessTokenAndSaveToProfile( OAuth2Parameters parameters, String authorizationCode )
