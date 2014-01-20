@@ -374,8 +374,9 @@ public class AttachmentUtils
 	{
 		String contentType = "application/xop+xml; charset=UTF-8; type=\"" + soapVersion.getContentType();
 		if( soapVersion == SoapVersion.Soap12 )
-			contentType += "; action=\\\"" + action + "\\\"";
-
+		{
+			contentType += "\"; action=\"" + action;
+		}
 		return contentType + "\"";
 	}
 
