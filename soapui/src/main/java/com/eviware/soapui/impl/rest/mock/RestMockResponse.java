@@ -1,9 +1,15 @@
 package com.eviware.soapui.impl.rest.mock;
 
 
+import com.eviware.soapui.config.AttachmentConfig;
+import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.MockFileAttachment;
+import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Attachment;
@@ -15,6 +21,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
+import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
 import java.beans.PropertyChangeListener;
@@ -29,9 +36,9 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 
 	String responseContent;
 
-	protected RestMockResponse( RESTMockResponseConfig config, ModelItem parent, String icon )
+	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
 	{
-		super( config, parent, icon );
+		super( config, action, "/mockResponse.gif" );
 	}
 
 	@Override
