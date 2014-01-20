@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
+import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.support.UISupport;
@@ -23,7 +24,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author Ole.Matzura
  */
 
-public class StopMockServiceAction extends AbstractSoapUIAction<WsdlMockService>
+public class StopMockServiceAction <MockServiceType extends AbstractMockService>
+		extends AbstractSoapUIAction<MockServiceType>
 {
 	public final static String SOAPUI_ACTION_ID = "StopMockServiceAction";
 
@@ -32,7 +34,7 @@ public class StopMockServiceAction extends AbstractSoapUIAction<WsdlMockService>
 		super( "Stop", "Stops the MockService if running" );
 	}
 
-	public void perform( WsdlMockService mockService, Object param )
+	public void perform( MockServiceType mockService, Object param )
 	{
 		try
 		{
