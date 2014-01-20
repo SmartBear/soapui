@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -23,7 +24,8 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author Ole.Matzura
  */
 
-public class RestartMockServiceAction extends AbstractSoapUIAction<WsdlMockService>
+public class RestartMockServiceAction<MockServiceType extends AbstractMockService>
+		extends AbstractSoapUIAction<MockServiceType>
 {
 	public final static String SOAPUI_ACTION_ID = "RestartMockServiceAction";
 
@@ -32,7 +34,7 @@ public class RestartMockServiceAction extends AbstractSoapUIAction<WsdlMockServi
 		super( "Restart", "(Re)starts this MockService and opens its desktop window if required" );
 	}
 
-	public void perform( WsdlMockService mockService, Object param )
+	public void perform( MockServiceType mockService, Object param )
 	{
 		try
 		{

@@ -76,7 +76,7 @@ public class MockServiceToProjectDropHandler extends AbstractAfterModelItemDropH
 		if( a.cloneToAnotherProject( source, target.getName(), name, source.getDescription() ) == null )
 			return false;
 
-		source.getProject().removeMockService( source );
+		((WsdlProject)source.getProject()).removeMockService( source );
 		return true;
 	}
 

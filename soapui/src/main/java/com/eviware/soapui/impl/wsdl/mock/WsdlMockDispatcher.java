@@ -40,10 +40,6 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 
 	private WsdlMockService mockService;
 	private WsdlMockRunContext mockContext;
-	private final List<WsdlMockResult> mockResults = Collections.synchronizedList( new TreeList() );
-	private long maxResults = 100;
-	private int removed = 0;
-	private boolean logEnabled = true;
 
 	private final Map<String, StringToStringMap> wsdlCache = new HashMap<String, StringToStringMap>();
 	private final static Logger log = Logger.getLogger( WsdlMockDispatcher.class );
@@ -282,7 +278,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		catch( Exception e )
 		{
 			if( e instanceof DispatchException )
-				throw ( DispatchException )e;
+				throw e;
 
 			throw new DispatchException( e );
 		}
@@ -328,59 +324,10 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		}
 	}
 
-	public synchronized void addMockResult( WsdlMockResult mockResult )
-	{
-		if( maxResults > 0 && logEnabled )
-			mockResults.add( mockResult );
-
-		while( mockResults.size() > maxResults )
-		{
-			mockResults.remove( 0 );
-			removed++;
-		}
-	}
-
-	public MockResult getMockResultAt( int index )
-	{
-		return index <= removed ? null : mockResults.get( index - removed );
-	}
-
-	public int getMockResultCount()
-	{
-		return mockResults.size() + removed;
-	}
-
-	public synchronized void clearResults()
-	{
-		mockResults.clear();
-	}
-
 	public void release()
 	{
 		clearResults();
 		mockContext.clear();
-	}
-
-
-	public long getMaxResults()
-	{
-		return maxResults;
-	}
-
-	public synchronized void setMaxResults( long maxNumberOfResults )
-	{
-		this.maxResults = maxNumberOfResults;
-
-		while( mockResults.size() > maxNumberOfResults )
-		{
-			mockResults.remove( 0 );
-			removed++;
-		}
-	}
-
-	public void setLogEnabled( boolean logEnabled )
-	{
-		this.logEnabled = logEnabled;
 	}
 
 	public void printWsdl( HttpServletResponse response ) throws IOException

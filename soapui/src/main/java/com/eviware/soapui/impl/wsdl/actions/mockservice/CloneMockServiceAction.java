@@ -77,7 +77,7 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
 		dialog.setBooleanValue( Form.CLONE_DESCRIPTION, true );
 		dialog.getFormField( Form.DESCRIPTION ).setEnabled( false );
 		dialog.setValue( Form.DESCRIPTION, mockService.getDescription() );
-		WorkspaceImpl workspace = mockService.getProject().getWorkspace();
+		WorkspaceImpl workspace = ((WsdlProject)mockService.getProject()).getWorkspace();
 		dialog.setOptions( Form.PROJECT,
 				ModelSupport.getNames( workspace.getOpenProjectList(), new String[] { "<Create New>" } ) );
 
@@ -122,7 +122,7 @@ public class CloneMockServiceAction extends AbstractSoapUIAction<WsdlMockService
 	public WsdlMockService cloneToAnotherProject( WsdlMockService mockService, String targetProjectName, String name,
 			String description )
 	{
-		WorkspaceImpl workspace = mockService.getProject().getWorkspace();
+		WorkspaceImpl workspace = ((WsdlProject)mockService.getProject()).getWorkspace();
 		WsdlProject targetProject = ( WsdlProject )workspace.getProjectByName( targetProjectName );
 		if( targetProject == null )
 		{

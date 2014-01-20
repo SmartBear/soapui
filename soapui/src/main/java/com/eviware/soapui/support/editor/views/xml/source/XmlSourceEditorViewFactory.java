@@ -20,6 +20,8 @@ import javax.swing.JSeparator;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.Project;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -351,8 +353,8 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 				public void popupMenuWillBecomeVisible( PopupMenuEvent e )
 				{
 					applyMenu.removeAll();
-					DefaultWssContainer wss = getModelItem().getMockOperation().getMockService().getProject()
-							.getWssContainer();
+					WsdlProject project = (WsdlProject)getModelItem().getMockOperation().getMockService().getProject();
+					DefaultWssContainer wss = project.getWssContainer();
 					List<OutgoingWss> outgoingWssList = wss.getOutgoingWssList();
 					applyMenu.setEnabled( !outgoingWssList.isEmpty() );
 

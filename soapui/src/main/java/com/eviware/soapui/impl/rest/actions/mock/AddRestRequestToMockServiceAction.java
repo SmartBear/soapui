@@ -22,13 +22,12 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 	@Override
 	public void perform( RestRequest target, Object param )
 	{
-        String title = getName();
-        WsdlProject project = target.getRestMethod().getInterface().getProject();
+      String title = getName();
+      WsdlProject project = target.getRestMethod().getInterface().getProject();
 
+		String defaultName = "MockService " + (project.getMockServiceCount() + 1);
+      String mockServiceName = UISupport.prompt("Enter name of new MockService", title, defaultName);
 
-        String mockServiceName = UISupport.prompt("Enter name of new MockService", title, "MockService "
-                + (project.getMockServiceCount() + 1));
-
-        project.addNewRestMockService(mockServiceName);
-        }
+      project.addNewRestMockService(mockServiceName);
+   }
 }
