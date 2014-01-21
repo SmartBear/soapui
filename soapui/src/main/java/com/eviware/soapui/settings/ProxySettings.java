@@ -42,4 +42,8 @@ public interface ProxySettings
 
 	@Setting( name = "Auto Proxy", description = "use automatic proxy detection", type = SettingType.BOOLEAN, defaultValue = "true" )
 	public final static String AUTO_PROXY = ProxySettings.class.getSimpleName() + "@" + "autoProxy";
+
+    @Setting( name = "Ignore proxy system properties", description="Ignore the values of system properties socksProxyHost, socksProxyPort, http.proxyHost and http.proxyPort.", type = SettingType.BOOLEAN, defaultValue = "false" )
+    public final static String IGNORE_PROXY_SYSTEM_PROPERTIES = ProxySettings.class.getSimpleName() + "@" + "ignoreProxySystemProperties";
+
 }

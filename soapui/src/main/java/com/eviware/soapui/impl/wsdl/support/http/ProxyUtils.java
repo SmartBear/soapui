@@ -49,15 +49,50 @@ public class ProxyUtils
 
 	private static boolean autoProxy;
 
+    private static final String systemPropertySocksProxyHost;
+    private static final String systemPropertySocksProxyPort;
+    private static final String systemPropertyHttpProxyHost;
+    private static final String systemPropertyHttpProxyPort;
+
 	static
 	{
 		setProxyEnabled( SoapUI.getSettings().getBoolean( ProxySettings.ENABLE_PROXY ) );
 		setAutoProxy( SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
+        systemPropertySocksProxyHost = System.getProperty( "socksProxyHost" );
+        systemPropertySocksProxyPort = System.getProperty( "socksProxyPort" );
+        systemPropertyHttpProxyHost = System.getProperty( "http.proxyHost" );
+        systemPropertyHttpProxyPort = System.getProperty( "http.proxyPort" );
 	}
 
 	public static void initProxySettings( final Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
 													  String urlString, final PropertyExpansionContext context )
 	{
+        if (settings.getBoolean( ProxySettings.IGNORE_PROXY_SYSTEM_PROPERTIES ))
+        {
+            System.clearProperty("socksProxyHost");
+            System.clearProperty("socksProxyPort");
+            System.clearProperty("http.proxyHost");
+            System.clearProperty("http.proxyPort");
+        }
+        else
+        {
+            // restore socks properties
+            if (! StringUtils.isNullOrEmpty( systemPropertySocksProxyHost ) ) {
+                System.setProperty( "socksProxyHost", systemPropertySocksProxyHost );
+            }
+            if (! StringUtils.isNullOrEmpty( systemPropertySocksProxyPort ) ) {
+                System.setProperty( "socksProxyPort", systemPropertySocksProxyPort );
+            }
+            // restore http properties
+            if (! StringUtils.isNullOrEmpty( systemPropertyHttpProxyHost ) ) {
+                System.setProperty( "http.proxyHost", systemPropertyHttpProxyHost );
+            }
+            if (! StringUtils.isNullOrEmpty( systemPropertyHttpProxyPort ) ) {
+                System.setProperty( "http.proxyPort", systemPropertyHttpProxyPort );
+            }
+        }
+
+
 		if( proxyEnabled )
 		{
 			if( autoProxy )
