@@ -34,6 +34,7 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.ModelItemUtils;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.LoadTest;
@@ -89,7 +90,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings( "serial" )
+@SuppressWarnings("serial")
 public class PropertyHolderTable extends JPanel
 {
 	protected final TestPropertyHolder holder;
@@ -179,10 +180,10 @@ public class PropertyHolderTable extends JPanel
 			setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 			setSurrendersFocusOnKeystroke( true );
 			setRowHeight( 19 );
-			if (UISupport.isMac())
+			if( UISupport.isMac() )
 			{
 				setShowGrid( false );
-				setIntercellSpacing( new Dimension(0, 0) );
+				setIntercellSpacing( new Dimension( 0, 0 ) );
 			}
 		}
 
@@ -194,7 +195,8 @@ public class PropertyHolderTable extends JPanel
 			// loop, because the table is an editor listener and the
 			// editingCanceled method calls this removeEditor method
 			super.removeEditor();
-			if (editor != null) {
+			if( editor != null )
+			{
 				editor.cancelCellEditing();
 			}
 		}
@@ -365,90 +367,18 @@ public class PropertyHolderTable extends JPanel
 			putValue( Action.SHORT_DESCRIPTION, "Loads property values from an external file" );
 		}
 
-        // TODO : this should really be centralized in a helper or utility class
-        private Project getProjectFromModelItem(ModelItem modelItem) {
-            if (modelItem == null)
-            {
-                return null;
-            }
-            if( modelItem instanceof Project )
-            {
-                return ( Project) modelItem;
-            }
-            else if( modelItem instanceof Interface )
-            {
-                return ( ( Interface )modelItem ).getProject();
-            }
-            else if( modelItem instanceof Operation )
-            {
-                return ( (Operation)modelItem ).getInterface().getProject();
-            }
-            else if( modelItem instanceof Request )
-            {
-                return ( (Request)modelItem ).getOperation().getInterface().getProject();
-            }
-            else if( modelItem instanceof TestSuite )
-            {
-                return ( ( TestSuite )modelItem ).getProject();
-            }
-            else if( modelItem instanceof TestCase )
-            {
-                return ( (TestCase)modelItem ).getTestSuite().getProject();
-            }
-            else if( modelItem instanceof TestStep )
-            {
-                return ( (TestStep)modelItem ).getTestCase().getTestSuite().getProject();
-            }
-            else if( modelItem instanceof LoadTest )
-            {
-                return ( (LoadTest)modelItem ).getTestCase().getTestSuite().getProject();
-            }
-            else if( modelItem instanceof MockService )
-            {
-                return ( ( MockService )modelItem ).getProject();
-            }
-            else if( modelItem instanceof MockOperation )
-            {
-                return ( (MockOperation)modelItem ).getMockService().getProject();
-            }
-            else if( modelItem instanceof MockResponse )
-            {
-                return ( (MockResponse)modelItem ).getMockOperation().getMockService().getProject();
-            }
-            else {
-                return null;
-            }
-        }
-
 		public void actionPerformed( ActionEvent e )
 		{
 			if( dialog == null )
 				dialog = ADialogBuilder.buildDialog( LoadOptionsForm.class );
 
-            Project project = getProjectFromModelItem(holder.getModelItem());
-            if (project != null) {
-                FileFormField fileFormField = (FileFormField) dialog.getFormField( LoadOptionsForm.FILE );
-                String currentDirectory = StringUtils.hasContent(project.getResourceRoot()) ? project.getResourceRoot() : project.getPath();
-                if (! StringUtils.hasContent(currentDirectory)) {
-                    currentDirectory = System.getProperty("user.dir", ".");
-                } else if (holder.getModelItem() instanceof AbstractWsdlModelItem) {
-                    currentDirectory = FilenameUtils.normalize(PathUtils.expandPath(currentDirectory, ((AbstractWsdlModelItem) (holder.getModelItem()))));
-                }
-                File file = new File(currentDirectory);
-                while (! (file == null) && ! file.exists()) {
-                    file = file.getParentFile();
-                }
-                if (file == null) {
-                    // pathname was invalid, fallback on current directory of jvm
-                    file = new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
-                }
-                if (! file.isDirectory()) {
-                    currentDirectory = file.getParentFile().getAbsolutePath();
-                } else {
-                    currentDirectory = file.getAbsolutePath();
-                }
-                fileFormField.setCurrentDirectory( currentDirectory );
-            }
+			Project project = ModelItemUtils.getProjectFromModelItem( holder.getModelItem() );
+			if( project != null )
+			{
+				FileFormField fileFormField = ( FileFormField )dialog.getFormField( LoadOptionsForm.FILE );
+				String currentDirectory = extractFileChooserPathForProject( project );
+				fileFormField.setCurrentDirectory( currentDirectory );
+			}
 
 			dialog.getFormField( LoadOptionsForm.DELETEREMAINING )
 					.setEnabled( holder instanceof MutableTestPropertyHolder );
@@ -502,7 +432,8 @@ public class PropertyHolderTable extends JPanel
 										&& holder instanceof MutableTestPropertyHolder )
 								{
 									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
-									if( !prop.isReadOnly() ) {
+									if( !prop.isReadOnly() )
+									{
 										prop.setValue( value );
 										if( prop instanceof RestParameter )
 										{
@@ -536,6 +467,55 @@ public class PropertyHolderTable extends JPanel
 					UISupport.showErrorMessage( ex );
 				}
 			}
+		}
+
+		private String extractFileChooserPathForProject( Project project )
+		{
+			String currentDirectory = determineSuggestedDirectory( project );
+			File file = ensurePathExistsAndIsDirectory( currentDirectory );
+
+			return file.getAbsolutePath();
+		}
+
+		private String determineSuggestedDirectory( Project project )
+		{
+			String currentDirectory = StringUtils.hasContent( project.getResourceRoot() ) ? project.getResourceRoot() : project.getPath();
+			if( !StringUtils.hasContent( currentDirectory ) )
+			{
+				return System.getProperty( "user.dir", "." );
+			}
+			else if( holder.getModelItem() instanceof AbstractWsdlModelItem )
+			{
+				String expandedPath = PathUtils.expandPath( currentDirectory, ( ( AbstractWsdlModelItem )( holder.getModelItem() ) ) );
+				return FilenameUtils.normalize( expandedPath );
+			}
+			else
+			{
+				return currentDirectory;
+			}
+		}
+
+		private File ensurePathExistsAndIsDirectory( String path )
+		{
+			File file = new File( path );
+			while( !( file == null ) && !file.exists() )
+			{
+				file = file.getParentFile();
+			}
+			if( file == null )
+			{
+				file = getCurrentJvmDirectory();
+			}
+			if( !file.isDirectory() )
+			{
+				file = file.getParentFile();
+			}
+			return file;
+		}
+
+		private File getCurrentJvmDirectory()
+		{
+			return new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
 		}
 	}
 
@@ -780,7 +760,7 @@ public class PropertyHolderTable extends JPanel
 			Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 			if( value instanceof String )
 			{
-				if(  ( ( String )value ).length() > 0 )
+				if( ( ( String )value ).length() > 0 )
 				{
 					String val = ( ( String )table.getValueAt( row, 0 ) ).toLowerCase();
 					if( val.startsWith( "password" ) || val.endsWith( "password" ) )
