@@ -1,16 +1,20 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.support.StringUtils;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -23,10 +27,9 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 	private RestResource resource = null;
 	private List<RestMockResponse> responses = new ArrayList<RestMockResponse>();
 
-
 	public RestMockAction( RestMockService mockService, RESTMockActionConfig config )
 	{
-		super( config, mockService, "/mockOperation.gif" );
+		super( config, mockService, RestMockAction.getIconName( config ) );
 
 		Interface iface = mockService.getProject().getInterfaceByName( mockService.getName() );
 		if( iface == null )
@@ -46,13 +49,19 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 			responses.add( restMockResponse );
 		}
 
-		//initData( config );
+		//TODO: initData( config );
+	}
+
+	public static String getIconName(RESTMockActionConfig methodConfig)
+	{
+		String method = StringUtils.isNullOrEmpty( methodConfig.getMethod() ) ? "get" : methodConfig.getMethod().toLowerCase();
+		return "/" + method + "_method.gif";
 	}
 
 	@Override
-	public MockService getMockService()
+	public RestMockService getMockService()
 	{
-		return null;
+		return ( RestMockService )getParent();
 	}
 
 	@Override
@@ -95,5 +104,19 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 
+	}
+
+	public RestMockResponse addNewMockResponse( RESTMockResponseConfig responseConfig )
+	{
+		RestMockResponse mockResponse = new RestMockResponse( this, responseConfig );
+
+		responses.add( mockResponse );
+
+		// TODO: Set default response
+
+		( getMockService() ).fireMockResponseAdded( mockResponse );
+		notifyPropertyChanged( "mockResponses", null, mockResponse );
+
+		return mockResponse;
 	}
 }

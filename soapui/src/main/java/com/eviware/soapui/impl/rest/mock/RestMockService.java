@@ -7,6 +7,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
@@ -69,6 +70,14 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
 		for( MockServiceListener listener : getMockServiceListeners() )
 		{
 			listener.mockOperationAdded( mockOperation );
+		}
+	}
+
+	protected void fireMockResponseAdded( RestMockResponse mockResponse )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockResponseAdded( mockResponse );
 		}
 	}
 

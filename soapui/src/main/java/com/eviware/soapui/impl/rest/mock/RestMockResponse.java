@@ -34,7 +34,7 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 		MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder
 {
 
-	String responseContent;
+	private String responseContent;
 
 	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
 	{
@@ -98,7 +98,12 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	@Override
 	public void setResponseContent( String responseContent )
 	{
+		String oldContent = getResponseContent();
+		if( responseContent != null && responseContent.equals( oldContent ) )
+			return;
 
+		this.responseContent = responseContent;
+		notifyPropertyChanged( RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
 	}
 
 	@Override
@@ -140,7 +145,7 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	@Override
 	public MockOperation getMockOperation()
 	{
-		return null;
+		return ( MockOperation ) getParent();
 	}
 
 	@Override

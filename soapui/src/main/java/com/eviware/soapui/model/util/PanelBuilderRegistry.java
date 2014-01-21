@@ -22,8 +22,10 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.rest.panels.method.RestMethodPanelBuilder;
+import com.eviware.soapui.impl.rest.panels.mock.RestMockActionPanelBuilder;
 import com.eviware.soapui.impl.rest.panels.mock.RestMockServicePanelBuilder;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestPanelBuilder;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourcePanelBuilder;
@@ -126,6 +128,7 @@ public class PanelBuilderRegistry
 		register( WsdlMockOperation.class, new WsdlMockOperationPanelBuilder() );
 		register( WsdlMockResponse.class, new WsdlMockResponsePanelBuilder() );
 		register( RestMockService.class, new RestMockServicePanelBuilder() );
+		register( RestMockAction.class, new RestMockActionPanelBuilder() );
 		register( WsdlGotoTestStep.class, new GotoStepPanelBuilder() );
 		register( WsdlDelayTestStep.class, new DelayTestStepPanelBuilder() );
 		register( ManualTestStep.class, new ManualTestStepPanelBuilder() );
