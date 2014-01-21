@@ -12,7 +12,7 @@ import org.fest.swing.fixture.DialogFixture;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.*;
+import java.awt.Dialog;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition.HEADER;
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition.QUERY;
