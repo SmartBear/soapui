@@ -29,5 +29,5 @@ public interface MockRunContext extends PropertyExpansionContext
 
 	public MockRunner getMockRunner();
 
-	public void setMockResponse( WsdlMockResponse wsdlMockResponse );
+	public void setMockResponse( MockResponse mockResponse );
 }

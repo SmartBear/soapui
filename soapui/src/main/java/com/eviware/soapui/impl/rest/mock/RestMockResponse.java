@@ -6,7 +6,10 @@ import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.support.MockFileAttachment;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -254,5 +257,11 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	public String getPropertiesLabel()
 	{
 		return null;
+	}
+
+	public RestMockResult execute( RestMockRequest request, RestMockResult result ) throws DispatchException
+	{
+		// TODO: implement like applying encryption on the result
+	   return result;
 	}
 }

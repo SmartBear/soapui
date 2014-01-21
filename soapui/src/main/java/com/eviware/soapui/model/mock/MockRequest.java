@@ -18,6 +18,8 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
+import javax.servlet.http.HttpServletResponse;
+
 /**
  * A Request to a MockService
  * 
@@ -34,6 +36,8 @@ public interface MockRequest
 
 	public MockRunContext getContext();
 
+	public MockRunContext getRequestContext();
+
 	public String getMethod();
 
 	public XmlObject getContentElement() throws XmlException;
@@ -43,4 +47,7 @@ public interface MockRequest
 	public byte[] getRawRequestData();
 
 	public String getProtocol();
+
+	public HttpServletResponse getHttpResponse();
+
 }

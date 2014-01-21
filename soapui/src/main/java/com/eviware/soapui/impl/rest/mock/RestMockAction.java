@@ -6,14 +6,14 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.support.StringUtils;
 
 import java.beans.PropertyChangeEvent;
@@ -118,5 +118,40 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 		notifyPropertyChanged( "mockResponses", null, mockResponse );
 
 		return mockResponse;
+	}
+
+	public RestMockResult dispatchRequest( RestMockRequest request ) throws DispatchException
+	{
+		try
+		{
+			RestMockResult result = new RestMockResult( request );
+
+			if( getMockResponseCount() == 0 )
+				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
+
+			result.setMockOperation( this );
+			RestMockResponse response = responses.get( 0 ); //FIXME
+			if( response == null )
+			{
+				throw new UnknownError( "not implemented" ); // FIXME send default
+			}
+
+			if( response == null )
+			{
+				throw new DispatchException( "Failed to find MockResponse" );
+			}
+
+			result.setMockResponse( response );
+			response.execute( request, result );
+
+			return result;
+		}
+		catch( Throwable e )
+		{
+			if( e instanceof DispatchException )
+				throw ( DispatchException )e;
+			else
+				throw new DispatchException( e );
+		}
 	}
 }

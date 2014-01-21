@@ -19,7 +19,6 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 
@@ -30,9 +29,7 @@ import javax.wsdl.Import;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
 import java.io.*;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WsdlMockDispatcher extends AbstractMockDispatcher

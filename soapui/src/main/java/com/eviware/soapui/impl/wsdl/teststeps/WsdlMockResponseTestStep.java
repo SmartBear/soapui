@@ -1345,7 +1345,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		public AssertedWsdlMockResultMessageExchange( WsdlMockResult mockResult )
 		{
-			super( mockResult, mockResult == null ? null : mockResult.getMockResponse() );
+			super( mockResult, mockResult == null ? null : (WsdlMockResponse)mockResult.getMockResponse() );
 		}
 
 		public AssertedXPath[] getAssertedXPathsForRequest()
@@ -1422,7 +1422,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 					+ "/" + mockResponseStepConfig.getOperation() ) )
 			{
 				@SuppressWarnings( "rawtypes" )
-				PathToResolve path = context.getPath( this, "Missing Operation in Project",
+				//FIXME need to understand why this needs casting, we need to find the root cause
+				PathToResolve path = ( PathToResolve )context.getPath( this, "Missing Operation in Project",
 						mockResponseStepConfig.getInterface() + "/" + mockResponseStepConfig.getOperation() );
 				path.setSolved( true );
 			}

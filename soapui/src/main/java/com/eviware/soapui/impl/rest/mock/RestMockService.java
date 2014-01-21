@@ -48,7 +48,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
 	@Override
 	public MockDispatcher createDispatcher( WsdlMockRunContext mockContext )
 	{
-		return new RestMockDispatcher();
+		return new RestMockDispatcher( this );
 	}
 
 	public RestMockAction addNewMockAction( RestRequest restRequest )

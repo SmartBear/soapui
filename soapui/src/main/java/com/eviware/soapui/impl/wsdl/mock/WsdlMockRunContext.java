@@ -18,6 +18,7 @@ import java.util.Set;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
@@ -44,7 +45,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 	private DefaultPropertyExpansionContext properties;
 	private final MockService mockService;
 	private final WsdlTestRunContext context;
-	private WsdlMockResponse mockResponse;
+	private MockResponse mockResponse;
 
 	public WsdlMockRunContext( MockService mockService, WsdlTestRunContext context )
 	{
@@ -309,12 +310,12 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		return context == null ? mockService.getSettings() : context.getTestCase().getSettings();
 	}
 
-	public void setMockResponse( WsdlMockResponse mockResponse )
+	public void setMockResponse( MockResponse mockResponse )
 	{
 		this.mockResponse = mockResponse;
 	}
 
-	public WsdlMockResponse getMockResponse()
+	public MockResponse getMockResponse()
 	{
 		return mockResponse;
 	}
