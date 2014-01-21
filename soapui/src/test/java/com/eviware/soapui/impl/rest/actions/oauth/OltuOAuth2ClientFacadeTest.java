@@ -266,9 +266,9 @@ public class OltuOAuth2ClientFacadeTest
 	}
 
 	@Test( expected = InvalidOAuth2ParametersException.class )
-	public void rejectsNonHttpRedirectURI() throws Exception
+	public void rejectsNonUriRedirectUri() throws Exception
 	{
-		profile.setRedirectURI( "ftp://ftp.sunet.se" );
+		profile.setRedirectURI( "(/&#)!#%/(¤#!" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
