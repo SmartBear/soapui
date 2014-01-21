@@ -24,6 +24,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
@@ -68,6 +69,7 @@ public class SchemaUtils
 {
 	private final static Logger log = Logger.getLogger( SchemaUtils.class );
 	private static Map<String, XmlObject> defaultSchemas = new HashMap<String, XmlObject>();
+	private static final Pattern ABSOLUTE_URL = Pattern.compile("^[a-z-]+://.*$");
 
 	static
 	{
@@ -428,7 +430,7 @@ public class SchemaUtils
 					String location = ( ( SimpleValue )wsdlImports[i] ).getStringValue();
 					if( location != null )
 					{
-						if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+						if( !location.startsWith( "file:" ) && !ABSOLUTE_URL.matcher(location).matches() )
 							location = Tools.joinRelativeUrl( wsdlUrl, location );
 
 						getSchemas( location, existing, loader, null );
@@ -442,7 +444,7 @@ public class SchemaUtils
 					String location = ( ( SimpleValue )wadl10Imports[i] ).getStringValue();
 					if( location != null )
 					{
-						if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+						if( !location.startsWith( "file:" ) && !ABSOLUTE_URL.matcher(location).matches() )
 							location = Tools.joinRelativeUrl( wsdlUrl, location );
 
 						getSchemas( location, existing, loader, null );
@@ -456,7 +458,7 @@ public class SchemaUtils
 					String location = ( ( SimpleValue )wadlImports[i] ).getStringValue();
 					if( location != null )
 					{
-						if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+						if( !location.startsWith( "file:" ) && !ABSOLUTE_URL.matcher(location).matches() )
 							location = Tools.joinRelativeUrl( wsdlUrl, location );
 
 						getSchemas( location, existing, loader, null );
@@ -482,7 +484,7 @@ public class SchemaUtils
 
 					if( location != null && !defaultSchemas.containsKey( elm.getAttribute( "namespace" ) ) )
 					{
-						if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+						if( !location.startsWith( "file:" ) && !ABSOLUTE_URL.matcher(location).matches() )
 							location = Tools.joinRelativeUrl( wsdlUrl, location );
 
 						getSchemas( location, existing, loader, null );
@@ -498,7 +500,7 @@ public class SchemaUtils
 					{
 						String targetNS = getTargetNamespace( xmlObject );
 
-						if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+						if( !location.startsWith( "file:" ) && !ABSOLUTE_URL.matcher(location).matches() )
 							location = Tools.joinRelativeUrl( wsdlUrl, location );
 
 						getSchemas( location, existing, loader, targetNS );
@@ -559,7 +561,7 @@ public class SchemaUtils
 			{
 				if( StringUtils.hasContent( location ) )
 				{
-					if( !location.startsWith( "file:" ) && location.indexOf( "://" ) == -1 )
+					if( !location.startsWith( "file:" ) && !ABSOLUTE_URL.matcher(location).matches() )
 						location = Tools.joinRelativeUrl( wsdlUrl, location );
 
 					getDefinitionParts( location, existing, loader );
