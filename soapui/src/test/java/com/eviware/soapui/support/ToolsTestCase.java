@@ -12,31 +12,13 @@
 
 package com.eviware.soapui.support;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class ToolsTestCase
 {
-	private String originalOSName;
-
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( ToolsTestCase.class );
-	}
-
-	@Before
-	public void setUpSystemProperties()
-	{
-		//Sets the OS name system property to Mac for testing purposes.
-		originalOSName = System.getProperty( "os.name" );
-		System.setProperty( "os.name", "Mac OS X" );
-	}
-
 	@Test
 	public void shouldTokenizeArgs() throws Exception
 	{
@@ -54,15 +36,5 @@ public class ToolsTestCase
 		assertEquals( args[0], "test\" ett" );
 	}
 
-	@Test
-	public void testIsMac()
-	{
-		assertTrue( Tools.isMac() );
-	}
 
-	@After
-	public void resetSystemProperties()
-	{
-		System.setProperty( "os.name", originalOSName );
-	}
 }

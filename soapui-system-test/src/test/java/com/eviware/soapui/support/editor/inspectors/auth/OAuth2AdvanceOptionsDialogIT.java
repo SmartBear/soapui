@@ -24,7 +24,7 @@ import static org.junit.Assert.assertThat;
 /**
  *
  */
-public class OAuth2AdvanceOptionsDialogTest
+public class OAuth2AdvanceOptionsDialogIT
 {
 	private Robot robot;
 	private OAuth2Profile profile;

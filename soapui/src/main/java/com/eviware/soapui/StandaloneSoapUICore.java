@@ -13,7 +13,7 @@
 package com.eviware.soapui;
 
 import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
@@ -42,7 +42,7 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 
 	}
 
-	public StandaloneSoapUICore( boolean init, boolean settingPassword, String soapUISettingsPassword )
+	public StandaloneSoapUICore( boolean init, String soapUISettingsPassword )
 	{
 		super( true, soapUISettingsPassword );
 
@@ -66,15 +66,15 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 		try
 		{
 			// Enabling native look & feel by default on Mac OS X
-			if( Tools.isMac() )
+			if( UISupport.isMac() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 				getSettings().setBoolean( UISettings.NATIVE_LAF, true );
 				log.info( "Defaulting to native L&F for Mac OS X" );
 			}
-			else if( !getSettings().getBoolean( UISettings.NATIVE_LAF ) )
+			else if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 			{
-				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
+				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 			}
 			else
 			{
@@ -91,9 +91,9 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 				PlasticXPLookAndFeel.setPlasticTheme( theme );
 			}
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
-			System.err.println( "Error initializing PlasticXPLookAndFeel; " + e.getMessage() );
+			SoapUI.logError( e, "Error initializing Look and Feel" );
 		}
 	}
 

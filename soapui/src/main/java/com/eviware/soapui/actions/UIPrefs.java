@@ -15,12 +15,14 @@ package com.eviware.soapui.actions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -105,7 +107,7 @@ public class UIPrefs implements Prefs
 				editorForm.appendComboBox( DESKTOP_TYPE, DesktopRegistry.getInstance().getNames(),
 						"Select the type of desktop to use" );
 				JCheckBox cb = editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
-				if( Tools.isMac() )
+				if( UISupport.isMac() )
 				{
 					cb.setSelected( true );
 				}
