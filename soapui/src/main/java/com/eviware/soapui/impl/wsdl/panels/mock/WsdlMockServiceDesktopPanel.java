@@ -42,6 +42,11 @@ import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.impl.rest.actions.mock.RestMockServiceOptionsAction;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.support.AbstractMockService;
+import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.SoapUI;
@@ -56,11 +61,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunner;
-import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -91,7 +91,8 @@ import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
 
 @SuppressWarnings( "serial" )
-public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPanel<WsdlMockService>
+public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockService>
+		extends KeySensitiveModelItemDesktopPanel<MockServiceType>
 {
 	private JButton runButton;
 	private WsdlMockRunner mockRunner;
@@ -115,7 +116,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 	private JInspectorPanel inspectorPanel;
 	private JInspectorPanel contentInspector;
 
-	public WsdlMockServiceDesktopPanel( WsdlMockService mockService )
+	public WsdlMockServiceDesktopPanel( MockServiceType mockService )
 	{
 		super( mockService );
 		buildUI();
@@ -372,8 +373,17 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		runButton = createActionButton( new RunMockServiceAction(), true );
 		stopButton = createActionButton( new StopMockServiceAction(), false );
+		MockServiceType modelItem = getModelItem();
+
+		AbstractSoapUIAction<MockServiceType> action = ( AbstractSoapUIAction<MockServiceType> )new MockServiceOptionsAction();
+
+		if( modelItem instanceof RestMockService )
+		{
+			action = ( AbstractSoapUIAction<MockServiceType> )new RestMockServiceOptionsAction();
+		}
+
 		optionsButton = createActionButton(
-				SwingActionDelegate.createDelegate( new MockServiceOptionsAction(), getModelItem(), null, "/options.gif" ),
+				SwingActionDelegate.createDelegate( action, modelItem, null, "/options.gif" ),
 				true );
 		showWsdlButton = createActionButton( new ShowWsdlAction(), false );
 
@@ -467,13 +477,13 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 	public class OperationListModel extends AbstractListModel implements ListModel, MockServiceListener,
 			PropertyChangeListener
 	{
-		private List<WsdlMockOperation> operations = new ArrayList<WsdlMockOperation>();
+		private List<MockOperation> operations = new ArrayList<MockOperation>();
 
 		public OperationListModel()
 		{
 			for( int c = 0; c < getModelItem().getMockOperationCount(); c++ )
 			{
-				WsdlMockOperation mockOperation = getModelItem().getMockOperationAt( c );
+				MockOperation mockOperation = getModelItem().getMockOperationAt( c );
 				mockOperation.addPropertyChangeListener( this );
 
 				operations.add( mockOperation );
@@ -526,7 +536,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		public void release()
 		{
-			for( WsdlMockOperation operation : operations )
+			for( MockOperation operation : operations )
 			{
 				operation.removePropertyChangeListener( this );
 			}
@@ -589,7 +599,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			WsdlMockService mockService = getModelItem();
+			WsdlMockService mockService = (WsdlMockService)getModelItem();
 			Tools.openURL( mockService.getLocalEndpoint() + "?WSDL" );
 		}
 	}
@@ -921,7 +931,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{
@@ -962,7 +972,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{

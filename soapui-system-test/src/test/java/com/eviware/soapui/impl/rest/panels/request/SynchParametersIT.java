@@ -37,6 +37,7 @@ import static org.fest.swing.launcher.ApplicationLauncher.application;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+@Ignore
 /**
  * @author Prakash
  */

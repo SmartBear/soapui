@@ -277,7 +277,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || getIconAnimator() == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

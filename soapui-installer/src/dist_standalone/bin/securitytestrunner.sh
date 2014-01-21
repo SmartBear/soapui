@@ -36,7 +36,7 @@ SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.j
 
 export SOAPUI_HOME
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin"
 
 if [ $SOAPUI_HOME != "" ] 
 then
@@ -59,4 +59,4 @@ echo = SOAPUI_HOME = $SOAPUI_HOME
 echo =
 echo ================================
 
-java $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUISecurityTestRunner "$@"
+$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUISecurityTestRunner "$@"

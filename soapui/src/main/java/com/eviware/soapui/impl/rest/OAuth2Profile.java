@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.AccessTokenPositionConfig;
+import com.eviware.soapui.config.AccessTokenRetrievalLocationConfig;
 import com.eviware.soapui.config.AccessTokenStatusConfig;
 import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -39,7 +40,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String REFRESH_TOKEN_PROPERTY = "refreshToken";
 	public static final String SCOPE_PROPERTY = "scope";
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
-
+	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
+	public static final String ACCESS_TOKEN_RETRIEVAL_PROPERTY = "accessTokenRetrievalLocation";
 
 	public enum AccessTokenStatus
 	{
@@ -56,6 +58,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		QUERY,
 		HEADER,
 		BODY
+	}
+
+	public enum AccessTokenRetrievalLocation
+	{
+		BODY_JSON,
+		BODY_URL_ENCODED_FORM
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -120,12 +128,36 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return AccessTokenPosition.valueOf( configuration.getAccessTokenPosition().toString() );
 	}
 
+	public AccessTokenRetrievalLocation getAccessTokenRetrievalLocation()
+	{
+		if( configuration.getAccessTokenRetrievalLocation() == null )
+		{
+			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.BODY_JSON );
+		}
+		return AccessTokenRetrievalLocation.valueOf( configuration.getAccessTokenRetrievalLocation().toString() );
+	}
 
 	public void setAccessTokenPosition( AccessTokenPosition accessTokenPosition )
 	{
-		configuration.setAccessTokenPosition( AccessTokenPositionConfig.Enum.forString( accessTokenPosition.toString() ) );
+		AccessTokenPosition oldValue = getAccessTokenPosition();
+		if( !accessTokenPosition.equals( oldValue.toString() ) )
+		{
+			configuration.setAccessTokenPosition( AccessTokenPositionConfig.Enum.forString( accessTokenPosition.toString() ) );
+			pcs.firePropertyChange( ACCESS_TOKEN_POSITION_PROPERTY, AccessTokenPosition.valueOf( oldValue.toString() ),
+					accessTokenPosition );
+		}
 	}
 
+	public void setAccesTokenRetrievalLocation(AccessTokenRetrievalLocation retrievalLocation)
+	{
+		AccessTokenRetrievalLocation oldValue =getAccessTokenRetrievalLocation();
+		if( !retrievalLocation.equals( oldValue.toString() ) )
+		{
+			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.Enum.forString(
+					retrievalLocation.toString() ) );
+			pcs.firePropertyChange( ACCESS_TOKEN_RETRIEVAL_PROPERTY, oldValue, retrievalLocation );
+		}
+	}
 
 	public String getRefreshToken()
 	{

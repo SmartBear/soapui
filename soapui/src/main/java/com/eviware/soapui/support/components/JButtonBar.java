@@ -55,6 +55,7 @@ public class JButtonBar extends JXButtonPanel
 					builder.addRelatedGap();
 
 				JButton button = new JButton( action );
+				button.setName( (String) action.getValue( Action.NAME ) );
 				if( c == 0 || actions.getDefaultAction() == action )
 					defaultButton = button;
 

@@ -17,6 +17,7 @@ class OAuth2Parameters
 	final String clientId;
 	final String clientSecret;
 	final String scope;
+	public OAuth2Profile.AccessTokenRetrievalLocation accessTokenRetrievalLocation;
 
 	/**
 	 * Constructs an OAuth2Parameters object
@@ -31,6 +32,7 @@ class OAuth2Parameters
 		this.clientId = expandProperty( profile, profile.getClientID() );
 		this.clientSecret = expandProperty( profile, profile.getClientSecret() );
 		this.scope = expandProperty( profile, profile.getScope() );
+		this.accessTokenRetrievalLocation = profile.getAccessTokenRetrievalLocation();
 	}
 
 

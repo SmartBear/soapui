@@ -12,27 +12,6 @@
 
 package com.eviware.soapui;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.GeneralSecurityException;
-import java.util.TimerTask;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-
-import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
-
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -48,7 +27,6 @@ import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.settings.WSISettings;
-import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SecurityScanUtil;
@@ -58,6 +36,25 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.commons.ssl.OpenSSL;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.GeneralSecurityException;
+import java.util.TimerTask;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Initializes core objects. Transform to a Spring "ApplicationContext"?
@@ -331,22 +328,6 @@ public class DefaultSoapUICore implements SoapUICore
 			StringList list = new StringList();
 			list.add( "schema@http://www.w3.org/2001/XMLSchema" );
 			settings.setString( WsdlSettings.EXCLUDED_TYPES, list.toXml() );
-		}
-
-		if( !settings.isSet( WebRecordingSettings.EXCLUDED_HEADERS ) )
-		{
-			StringList list = new StringList();
-			list.add( "Cookie" );
-			list.add( "Set-Cookie" );
-			list.add( "Referer" );
-			list.add( "Keep-Alive" );
-			list.add( "Connection" );
-			list.add( "Proxy-Connection" );
-			list.add( "Pragma" );
-			list.add( "Cache-Control" );
-			list.add( "Transfer-Encoding" );
-			list.add( "Date" );
-			settings.setString( WebRecordingSettings.EXCLUDED_HEADERS, list.toXml() );
 		}
 
 		if( settings.getString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 ).equals(

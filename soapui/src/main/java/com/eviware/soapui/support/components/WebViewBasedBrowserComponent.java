@@ -26,9 +26,6 @@ import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
-import org.mozilla.interfaces.nsIRequest;
-import org.mozilla.interfaces.nsIURI;
-import org.mozilla.interfaces.nsIWebProgress;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -36,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -59,7 +57,6 @@ public class WebViewBasedBrowserComponent
 	private String errorPage;
 	private boolean showingErrorPage;
 	public String url;
-	private Boolean possibleError = false;
 	private final boolean addStatusBar;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
@@ -111,19 +108,7 @@ public class WebViewBasedBrowserComponent
 
 											if( getWebEngine().getDocument() != null )
 											{
-												Transformer transformer = TransformerFactory.newInstance().newTransformer();
-												transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
-												transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
-												transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
-												transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
-												transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
-
-												StringWriter stringWriter = new StringWriter();
-												transformer.transform( new DOMSource( getWebEngine().getDocument() ),
-														new StreamResult( stringWriter ) );
-
-												String output = stringWriter.getBuffer().toString().replaceAll( "\n|\r", "" );
-
+												String output = readDocumentAsString();
 												for( BrowserStateChangeListener listener : listeners )
 												{
 													listener.contentChanged( output );
@@ -143,7 +128,7 @@ public class WebViewBasedBrowserComponent
 					webView.prefHeightProperty().bind( scene.heightProperty() );
 					jfxComponentGroup.getChildren().add( webView );
 					browserPanel.setScene( scene );
-					addKeybaordFocusManager( browserPanel );
+					addKeyboardFocusManager( browserPanel );
 				}
 			} );
 
@@ -152,7 +137,23 @@ public class WebViewBasedBrowserComponent
 		return panel;
 	}
 
-	private void addKeybaordFocusManager( final JFXPanel browserPanel )
+	private String readDocumentAsString() throws TransformerException
+	{
+		Transformer transformer = TransformerFactory.newInstance().newTransformer();
+		transformer.setOutputProperty( OutputKeys.OMIT_XML_DECLARATION, "no" );
+		transformer.setOutputProperty( OutputKeys.METHOD, "xml" );
+		transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
+		transformer.setOutputProperty( OutputKeys.ENCODING, "UTF-8" );
+		transformer.setOutputProperty( "{http://xml.apache.org/xslt}indent-amount", "4" );
+
+		StringWriter stringWriter = new StringWriter();
+		transformer.transform( new DOMSource( getWebEngine().getDocument() ),
+				new StreamResult( stringWriter ) );
+
+		return stringWriter.getBuffer().toString().replaceAll( "\n|\r", "" );
+	}
+
+	private void addKeyboardFocusManager( final JFXPanel browserPanel )
 	{
 		KeyboardFocusManager kfm = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager();
 		kfm.addKeyEventDispatcher( new KeyEventDispatcher()
@@ -171,11 +172,6 @@ public class WebViewBasedBrowserComponent
 			}
 		}
 		);
-	}
-
-	public void executeJavaScript( String script )
-	{
-		getWebEngine().executeScript( script );
 	}
 
 	// TODO: Evaluate whether these should be used
@@ -226,19 +222,31 @@ public class WebViewBasedBrowserComponent
 	public void release()
 	{
 		// TODO: Check whether we need to do anything here
-		possibleError = false;
 	}
 
 
-	public void setContent( String contentAsString, String contextUri )
+	public void setContent( final String contentAsString, final String contentType )
 	{
-		getWebEngine().loadContent( contentAsString, contextUri );
+		Platform.runLater( new Runnable()
+		{
+			public void run()
+			{
+
+				getWebEngine().loadContent( contentAsString, contentType);
+			}
+		} );
 	}
 
-	public void setContent( String content )
+	public void setContent( final String contentAsString )
 	{
-		getWebEngine().loadContent( content );
-		pcs.firePropertyChange( "content", null, content );
+		Platform.runLater( new Runnable()
+		{
+			public void run()
+			{
+				getWebEngine().loadContent( contentAsString );
+			}
+		} );
+		pcs.firePropertyChange( "content", null, contentAsString );
 	}
 
 	private WebEngine getWebEngine()
@@ -261,40 +269,6 @@ public class WebViewBasedBrowserComponent
 		return url;
 	}
 
-	// TODO: Check whether we need to do anything here
-
-	public void onLocationChange( nsIWebProgress arg0, nsIRequest arg1, nsIURI arg2 )
-	{
-		if( getUrl() != null && !getUrl().equals( "about:blank" ) )
-		{
-			if( !possibleError )
-				possibleError = true;
-			else
-			{
-				if( !showingErrorPage )
-				{
-					showErrorPage();
-				}
-			}
-		}
-	}
-
-
-	private void showErrorPage()
-	{
-		if( errorPage != null && !errorPage.equals( getUrl() ) )
-		{
-			try
-			{
-				showingErrorPage = true;
-				navigate( errorPage, null );
-			}
-			catch( Throwable e )
-			{
-				e.printStackTrace();
-			}
-		}
-	}
 
 	public String getErrorPage()
 	{

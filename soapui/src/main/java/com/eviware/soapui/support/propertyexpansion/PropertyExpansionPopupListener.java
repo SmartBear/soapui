@@ -119,13 +119,13 @@ public class PropertyExpansionPopupListener implements PopupMenuListener
 		}
 		else if( modelItem instanceof WsdlMockService )
 		{
-			project = ( ( WsdlMockService )modelItem ).getProject();
+			project = ( WsdlProject )( ( WsdlMockService )modelItem ).getProject();
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
 			mockResponse = ( WsdlMockResponse )modelItem;
 			mockService = ( mockResponse ).getMockOperation().getMockService();
-			project = mockService.getProject();
+			project = ( WsdlProject )mockService.getProject();
 		}
 		else if( modelItem instanceof WsdlProject )
 		{

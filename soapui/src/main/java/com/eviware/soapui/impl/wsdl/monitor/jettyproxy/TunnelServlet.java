@@ -176,9 +176,6 @@ public class TunnelServlet extends ProxyServlet
 
 		setProtocolversion( postMethod, request.getProtocol() );
 
-		ProxyUtils.initProxySettings( settings, postMethod, httpState, prot + sslEndPoint,
-				new DefaultPropertyExpansionContext( project ) );
-
 		String path = null;
 		if( !sslEndPoint.contains( "/" ) )
 			path = "/";

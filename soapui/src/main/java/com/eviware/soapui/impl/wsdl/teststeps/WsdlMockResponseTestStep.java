@@ -203,7 +203,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || iconAnimator == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

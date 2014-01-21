@@ -14,7 +14,9 @@ package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.AbstractInterface;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -42,7 +44,8 @@ public class AddEndpointToInterfaceAction extends AbstractSoapUIAction<WsdlMockS
 
 		if( ifaceName != null )
 		{
-			AbstractInterface<?> iface = mockService.getProject().getInterfaceByName( ifaceName );
+			WsdlProject project = (WsdlProject)mockService.getProject();
+			AbstractInterface<?> iface = project.getInterfaceByName( ifaceName );
 			if( iface != null )
 			{
 				iface.addEndpoint( mockService.getLocalEndpoint() );

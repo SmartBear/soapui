@@ -1,89 +1,41 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.config.RESTMockServiceConfig;
-import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.impl.support.AbstractMockService;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.model.mock.MockDispatcher;
+import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.support.UISupport;
 
-import java.util.List;
-
-public class RestMockService extends AbstractTestPropertyHolderWsdlModelItem<RESTMockServiceConfig> implements MockService
+public class RestMockService extends AbstractMockService<RestMockAction, RESTMockServiceConfig>
 {
-	protected RestMockService( RESTMockServiceConfig config, ModelItem parent, String icon )
+	public RestMockService( Project project, RESTMockServiceConfig config )
 	{
-		super( config, parent, icon );
-	}
+		super( config, project );
+
+        if( !getConfig().isSetProperties() )
+            getConfig().addNewProperties();
+
+        setPropertiesConfig(config.getProperties());
+
+    }
 
 	@Override
-	public Project getProject()
-	{
-		return null;
-	}
-
-	@Override
-	public int getMockOperationCount()
-	{
-		return 0;
-	}
-
-	@Override
-	public MockOperation getMockOperationAt( int index )
-	{
-		return null;
-	}
-
-	@Override
-	public MockOperation getMockOperationByName( String name )
-	{
-		return null;
-	}
-
-	@Override
-	public String getPath()
-	{
-		return null;
-	}
-
-	@Override
-	public int getPort()
-	{
-		return 0;
-	}
-
-	@Override
-	public MockRunner start() throws Exception
-	{
-		return null;
-	}
-
-	@Override
-	public void addMockRunListener( MockRunListener listener )
+	public void setPort( int port )
 	{
 
 	}
 
 	@Override
-	public void removeMockRunListener( MockRunListener listener )
+	public void setPath( String path )
 	{
 
 	}
 
 	@Override
-	public void addMockServiceListener( MockServiceListener listener )
+	public MockDispatcher createDispatcher( WsdlMockRunContext mockContext )
 	{
-
-	}
-
-	@Override
-	public void removeMockServiceListener( MockServiceListener listener )
-	{
-
-	}
-
-	@Override
-	public List<MockOperation> getMockOperationList()
-	{
-		return null;
+		return new RestMockDispatcher();
 	}
 }

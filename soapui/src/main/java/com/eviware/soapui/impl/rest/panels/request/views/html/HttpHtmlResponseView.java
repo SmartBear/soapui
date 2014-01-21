@@ -17,72 +17,27 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
-import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.BrowserComponent;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 @SuppressWarnings( "unchecked" )
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
 	private HttpRequestInterface<?> httpRequest;
 	private JPanel panel;
-	private BrowserComponent browser;
-	private JToggleButton recordButton;
-	private boolean recordHttpTrafic;
+	private WebViewBasedBrowserComponent browser;
 	private MessageExchangeModelItem messageExchangeModelItem;
-	private boolean hasResponseForRecording;
-
-	public boolean isRecordHttpTrafic()
-	{
-		return recordHttpTrafic;
-	}
-
-	public void setRecordHttpTrafic( boolean recordHttpTrafic )
-	{
-		// no change?
-		if( SoapUI.isJXBrowserDisabled() || recordHttpTrafic == this.recordHttpTrafic )
-			return;
-
-		if( recordHttpTrafic )
-		{
-			recordButton.setIcon( UISupport.createImageIcon( "/record_http_true.gif" ) );
-			recordButton.setToolTipText( "Stop recording" );
-			recordButton.setSelected( true );
-			browser.setRecordingHttpHtmlResponseView( HttpHtmlResponseView.this );
-		}
-		else
-		{
-			browser.setRecordingHttpHtmlResponseView( null );
-			recordButton.setIcon( UISupport.createImageIcon( "/record_http_false.gif" ) );
-			recordButton.setToolTipText( "Start recording" );
-			recordButton.setSelected( false );
-		}
-		this.recordHttpTrafic = recordHttpTrafic;
-
-	}
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
 	{
@@ -105,22 +60,14 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			panel = new JPanel( new BorderLayout() );
 
-			if( SoapUI.isJXBrowserDisabled() )
-			{
-				panel.add( new JLabel( "Browser Component is disabled" ) );
-			}
-			else
-			{
-				browser = new BrowserComponent( false, true );
-				Component component = browser.getComponent();
-				component.setMinimumSize( new Dimension( 100, 100 ) );
-				panel.add( buildToolbar(), BorderLayout.NORTH );
-				panel.add( component, BorderLayout.CENTER );
+			browser = new WebViewBasedBrowserComponent( false );
+			Component component = browser.getComponent();
+			component.setMinimumSize( new Dimension( 100, 100 ) );
+			panel.add( component, BorderLayout.CENTER );
 
-				HttpResponse response = httpRequest.getResponse();
-				if( response != null )
-					setEditorContent( response );
-			}
+			HttpResponse response = httpRequest.getResponse();
+			if( response != null )
+				setEditorContent( response );
 		}
 
 		return panel;
@@ -145,92 +92,47 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
-		if( httpResponse != null && httpResponse.getContentAsString() != null )
+		if( httpResponse == null )
+		{
+			return;
+		}
+		String content = httpResponse.getContentAsString();
+		if( content != null )
 		{
 			String contentType = httpResponse.getContentType();
 
-			if( contentType != null )
+			if( contentType != null && isSupportedContentType( contentType ) )
 			{
-				if( isSupportedContentType( contentType ) )
+				try
 				{
-					try
-					{
-						String ext = ContentTypeHandler.getExtensionForContentType( contentType );
-						File temp = File.createTempFile( "response", "." + ext );
-						FileOutputStream fileOutputStream = new FileOutputStream( temp );
-						writeHttpBody( httpResponse.getRawResponseData(), fileOutputStream );
-						fileOutputStream.close();
-						browser.navigate( temp.toURI().toURL().toString(), null );
-						temp.deleteOnExit();
-						hasResponseForRecording = true;
-					}
-					catch( Throwable e )
-					{
-						e.printStackTrace();
-					}
+					browser.setContent( content, removeCharsetFrom( contentType ));
 				}
-				else
+				catch( Exception e )
 				{
-					try
-					{
-						browser.setContent( new String( httpResponse.getContentAsString().getBytes( "utf-8" ) ), httpResponse
-								.getURL().toURI().toString() );
-						hasResponseForRecording = true;
-					}
-					catch( Throwable e )
-					{
-						e.printStackTrace();
-					}
+					SoapUI.logError( e, "Could not display response from " + httpResponse.getURL() + " as HTML" );
 				}
 			}
 			else
 			{
 				browser.setContent( "unsupported content-type [" + contentType + "]" );
-				hasResponseForRecording = false;
 			}
 		}
 		else
 		{
 			browser.setContent( "<missing content>" );
-			hasResponseForRecording = false;
 		}
+	}
+
+	private String removeCharsetFrom( String contentType )
+	{
+		int charsetIndex = contentType.indexOf( ";charset=" );
+		return charsetIndex == -1 ? contentType : contentType.substring( 0, charsetIndex );
 	}
 
 	private boolean isSupportedContentType( String contentType )
 	{
-		return contentType != null && contentType.trim().toLowerCase().startsWith( "image" );
-	}
-
-	private void writeHttpBody( byte[] rawResponse, FileOutputStream out ) throws IOException
-	{
-		int index = 0;
-		byte[] divider = "\r\n\r\n".getBytes();
-		for( ; index < ( rawResponse.length - divider.length ); index++ )
-		{
-			int i;
-			for( i = 0; i < divider.length; i++ )
-			{
-				if( rawResponse[index + i] != divider[i] )
-					break;
-			}
-
-			if( i == divider.length )
-			{
-				out.write( rawResponse, index + divider.length, rawResponse.length - ( index + divider.length ) );
-				return;
-			}
-		}
-
-		out.write( rawResponse );
-	}
-
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
-		recordButton = new JToggleButton( new RecordHttpTraficAction() );
-
-		toolbar.addLabeledFixed( "Record HTTP traffic", recordButton );
-		return toolbar;
+		return contentType != null && ( contentType.trim().toLowerCase().startsWith( "text" ) ||
+				contentType.trim().toLowerCase().startsWith( "image" ) );
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
@@ -254,44 +156,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	public void setEditable( boolean enabled )
 	{
-	}
-
-	private class RecordHttpTraficAction extends AbstractAction
-	{
-		public RecordHttpTraficAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/record_http_false.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Start recording" );
-		}
-
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			if( browser == null )
-				return;
-
-			if( isRecordHttpTrafic() )
-			{
-				setRecordHttpTrafic( false );
-			}
-			else
-			{
-				if( !hasResponseForRecording )
-				{
-					// resubmit so we have "live" content
-					try
-					{
-						getHttpRequest().submit( new WsdlSubmitContext( getHttpRequest() ), false ).waitUntilFinished();
-					}
-					catch( SubmitException e )
-					{
-						SoapUI.logError( e );
-					}
-				}
-
-				setRecordHttpTrafic( true );
-			}
-		}
 	}
 
 	public HttpRequestInterface<?> getHttpRequest()

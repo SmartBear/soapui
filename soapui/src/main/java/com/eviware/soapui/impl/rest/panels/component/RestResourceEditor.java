@@ -62,9 +62,19 @@ public class RestResourceEditor extends JTextField
 				public void focusLost( FocusEvent e )
 				{
 					scanForTemplateParameters(editingRestResource);
+                    removeMatrixParameters();
 				}
 
-				public void focusGained( FocusEvent e )
+                /**
+                 * Matrix parameters should not be added directly on the rest resource.
+                 * The parameter editor should be used. Hence they are removed from the rest resource editor
+                 * text field at this time.
+                 */
+                private void removeMatrixParameters() {
+                    setText(getText().split(";")[0]);
+                }
+
+                public void focusGained( FocusEvent e )
 				{
 				}
 			} );

@@ -25,14 +25,11 @@ import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.impl.auth.NTLMSchemeFactory;
-import org.apache.http.impl.auth.NegotiateSchemeFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RequestWrapper;
@@ -45,6 +42,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ProxySelector;
 import java.security.*;
 import java.security.cert.CertificateException;
 
@@ -57,6 +55,9 @@ import java.security.cert.CertificateException;
 public class HttpClientSupport
 {
 	private final static Helper helper = new Helper();
+	static {
+		ProxyUtils.setGlobalProxy( SoapUI.getSettings() );
+	}
 
 	/**
 	 * Internal helper to ensure synchronized access..
@@ -217,7 +218,6 @@ public class HttpClientSupport
 
 			// this interceptor needs to be last one added and executed.
 			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
-			httpClient.setRoutePlanner( new CompositeHttpRoutePlanner(  registry ) );
 
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}
@@ -225,6 +225,11 @@ public class HttpClientSupport
 		public SoapUIHttpClient getHttpClient()
 		{
 			return httpClient;
+		}
+
+		private SchemeRegistry getRegistry()
+		{
+			return registry;
 		}
 
 		public HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext ) throws ClientProtocolException,
@@ -340,6 +345,11 @@ public class HttpClientSupport
 	public static SoapUIHttpClient getHttpClient()
 	{
 		return helper.getHttpClient();
+	}
+
+	public static void setProxySelector( ProxySelector proxySelector )
+	{
+		getHttpClient().setRoutePlanner( new OverridableProxySelectorRoutePlanner( helper.getRegistry(), proxySelector ) );
 	}
 
 	public static HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext )

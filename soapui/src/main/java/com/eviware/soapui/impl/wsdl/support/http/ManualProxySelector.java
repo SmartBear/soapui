@@ -27,7 +27,6 @@ public class ManualProxySelector extends ProxySelector
 
 	public ManualProxySelector( Proxy proxy, String[] excludes )
 	{
-		super();
 		this.excludes = excludes;
 		this.proxyList = Arrays.asList( proxy );
 	}

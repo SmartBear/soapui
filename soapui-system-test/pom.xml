@@ -16,17 +16,35 @@
 
     <build>
         <plugins>
+            <!-- TODO As noticed we are NOT using the Category annotations.
+                    This is because they cause problems when running the Cucumber tests.
+                    We are thus using the standard *Test.java suffix for unit tests and
+                   *IT.java suffix for integration tests.
+                   This should be fixed. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.16</version>
                 <configuration>
                     <systemProperties>
-                        <!-- Only log errors and only log to the console to decrease the log verbosity -->
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
                         </soapui.log4j.config>
                     </systemProperties>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -38,6 +56,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.smartbear.soapui</groupId>
+            <artifactId>soapui</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.easytesting</groupId>
             <artifactId>fest-swing</artifactId>
             <version>1.2.1</version>
@@ -47,6 +71,27 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
             <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- TODO We are using 1.0.8 because of issue with results not
+            being shown correctly in the json report:
+            https://github.com/cucumber/gherkin/issues/165 -->
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.0.8</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

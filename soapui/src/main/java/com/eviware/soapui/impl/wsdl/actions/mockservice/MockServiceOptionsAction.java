@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -65,7 +66,7 @@ public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockServi
 			mockService.setHost( dialog.getValue( OptionsForm.HOST ) );
 			mockService.setBindToHostOnly( dialog.getBooleanValue( OptionsForm.HOSTONLY ) );
 			mockService.setDocroot( dialog.getValue( OptionsForm.DOCROOT ) );
-			mockService.setFaultMockOperation( mockService.getMockOperationByName( dialog
+			mockService.setFaultMockOperation( ( WsdlMockOperation )mockService.getMockOperationByName( dialog
 					.getValue( OptionsForm.FAULT_OPERATION ) ) );
 		}
 	}

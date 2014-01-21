@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.actions.mockresponse;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockResponseStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.support.AbstractAddToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
@@ -44,7 +45,7 @@ public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction
 	public void perform( WsdlMockResponse mockResponse, Object param )
 	{
 		WsdlMockService mockService = mockResponse.getMockOperation().getMockService();
-		WsdlTestCase testCase = getTargetTestCase( mockService.getProject() );
+		WsdlTestCase testCase = getTargetTestCase( (WsdlProject)mockService.getProject() );
 		if( testCase == null )
 			return;
 

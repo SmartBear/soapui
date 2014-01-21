@@ -34,6 +34,7 @@ import javax.wsdl.BindingOperation;
 import javax.wsdl.BindingOutput;
 import javax.wsdl.Message;
 
+import com.eviware.soapui.impl.wsdl.*;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
@@ -43,12 +44,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
-import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
-import com.eviware.soapui.impl.wsdl.WsdlContentPart;
-import com.eviware.soapui.impl.wsdl.WsdlHeaderPart;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.BodyPartAttachment;
@@ -294,7 +289,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 			if( StringUtils.hasContent( outgoingWss ) )
 			{
-				OutgoingWss outgoing = getMockOperation().getMockService().getProject().getWssContainer()
+				OutgoingWss outgoing = ((WsdlProject)getMockOperation().getMockService().getProject()).getWssContainer()
 						.getOutgoingWssByName( outgoingWss );
 				if( outgoing != null )
 				{

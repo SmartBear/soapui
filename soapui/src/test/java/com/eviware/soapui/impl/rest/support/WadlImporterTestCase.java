@@ -12,19 +12,21 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
-
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
+
+import static com.eviware.soapui.utils.CommonMatchers.anEmptyString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 public class WadlImporterTestCase
 {
@@ -67,5 +69,19 @@ public class WadlImporterTestCase
 		RestRequest request = resource.getRequestAt( 0 );
 		assertEquals( RestRequestInterface.RequestMethod.GET, request.getMethod() );
 		assertEquals( 9, request.getPropertyCount() );
+	}
+
+	@Test
+	public void removesPropertyExpansions() throws Exception
+	{
+		WsdlProject project = new WsdlProject();
+		RestService service = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
+
+		new WadlImporter( service ).initFromWadl( RestUtilsTestCase.class.getResource(
+				"/wadl/YahooSearchWithExpansions.wadl" ).toURI().toString());
+		RestResource operation = ( RestResource )service.getAllOperations()[0];
+		RestMethod restMethod = operation.getRestMethodAt( 0 );
+		RestRequest request = restMethod.getRequestAt( 0 );
+		assertThat( request.getParams().getProperty( "language" ).getDefaultValue(), is( anEmptyString() ) );
 	}
 }

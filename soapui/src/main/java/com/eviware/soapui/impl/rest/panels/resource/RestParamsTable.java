@@ -65,8 +65,9 @@ public class RestParamsTable extends JPanel
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
 	private JSplitPane splitPane;
+    private JScrollPane scrollPane;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
+    public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
 		this( params, showInspector, new RestParamsTableModel( params, RestParamsTableModel.Mode.MEDIUM ), defaultParamLocation, showEditableButtons,
@@ -201,20 +202,21 @@ public class RestParamsTable extends JPanel
 
 		add( buildToolbar(), BorderLayout.NORTH );
 
+        scrollPane = new JScrollPane(paramsTable);
+
 		if( showInspector )
 		{
-			splitPane = UISupport.createVerticalSplit( new JScrollPane( paramsTable ), buildDetails() );
-			add( splitPane, BorderLayout.CENTER );
-
-			splitPane.setResizeWeight( 0.7 );
+			splitPane = UISupport.createVerticalSplit(scrollPane, buildDetails() );
+			add(splitPane, BorderLayout.CENTER);
+            splitPane.setResizeWeight( 0.7 );
 		}
 		else
 		{
-			add( new JScrollPane( paramsTable ), BorderLayout.CENTER );
+            add(scrollPane, BorderLayout.CENTER );
 		}
 	}
 
-	private DefaultComboBoxModel<ParameterStyle> getStylesForLocation( ParamLocation paramLocation )
+    private DefaultComboBoxModel<ParameterStyle> getStylesForLocation( ParamLocation paramLocation )
 	{
 		if( paramLocation == ParamLocation.METHOD )
 		{
@@ -381,13 +383,23 @@ public class RestParamsTable extends JPanel
 				JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
 				editorComponent.grabFocus();
 				editorComponent.selectAll();
+                scrollIntoPosition(i, paramsTable.getRowCount());
 				return;
 			}
 		}
 
-	}
+    }
 
-	private class UpdateParamsAction extends AbstractAction
+    private void scrollIntoPosition(int selectedIndex, int numOfIndices) {
+        scrollIntoPosition((double)selectedIndex / numOfIndices);
+    }
+    private void scrollIntoPosition(double percent) {
+        int maximumScrollPosition = scrollPane.getVerticalScrollBar().getMaximum();
+        int requestedScrollPosition = (int) Math.round(maximumScrollPosition * percent);
+        scrollPane.getVerticalScrollBar().setValue(requestedScrollPosition);
+    }
+
+    private class UpdateParamsAction extends AbstractAction
 	{
 		private UpdateParamsAction()
 		{

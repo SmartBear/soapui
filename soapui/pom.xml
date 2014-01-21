@@ -43,6 +43,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <archive>
                         <manifest>
@@ -101,23 +108,6 @@
                 </configuration>
             </plugin>
 
-            <!-- TODO As noticed we are NOT using the Category annotations.
-                      This is because they cause problems when running the Cucumber tests.
-                      We are thus using the standard *Test.java suffix for unit tests and
-                     *IT.java suffix for integration tests.
-                     This should be fixed. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
-                <configuration>
-                    <systemProperties>
-                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
-                        </soapui.log4j.config>
-                    </systemProperties>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -150,29 +140,6 @@
             <version>1.1</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- TODO We are using 1.0.8 because of issue with results not
-             being shown correctly in the json report:
-             https://github.com/cucumber/gherkin/issues/165 -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>1.0.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>1.0.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-swing</artifactId>
-            <version>1.2.1</version>
-            <scope>test</scope>
-        </dependency>
-
 
         <!-- XML Beans -->
 
@@ -271,84 +238,6 @@
             <groupId>fife</groupId>
             <artifactId>rsyntaxtextarea</artifactId>
             <version>2.0.1</version>
-        </dependency>
-
-        <!-- Team dev -->
-
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>jxbrowser</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>comfyj</artifactId>
-            <version>2.9</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>winpack</artifactId>
-            <version>3.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-windows</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-linux64</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-linux</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-mac</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>MozillaInterfaces</artifactId>
-            <version>3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-gecko</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-gecko15</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-ie</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-webkit</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>jniwrap</artifactId>
-            <version>3.8.4</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner15-mac</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner15-windows</artifactId>
-            <version>3.3</version>
         </dependency>
 
         <!-- Jetty -->
@@ -659,7 +548,7 @@
         <dependency>
             <groupId>com.btr</groupId>
             <artifactId>proxy-vole</artifactId>
-            <version>20121203</version>
+            <version>20131209</version>
         </dependency>
 
 

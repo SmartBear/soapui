@@ -59,4 +59,4 @@ echo = SOAPUI_HOME = $SOAPUI_HOME
 echo =
 echo ================================
 
-java $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUIMockAsWarGenerator "$@"
+$JAVA $JAVA_OPTS -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.SoapUIMockAsWarGenerator "$@"

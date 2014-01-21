@@ -12,7 +12,12 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.actions.*;
+import com.eviware.soapui.actions.SaveAllProjectsAction;
+import com.eviware.soapui.actions.ShowSystemPropertiesAction;
+import com.eviware.soapui.actions.SoapUIPreferencesAction;
+import com.eviware.soapui.actions.StartHermesJMSButtonAction;
+import com.eviware.soapui.actions.SwitchDesktopPanelAction;
+import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -58,14 +63,22 @@ import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
-import com.eviware.soapui.support.*;
+import com.eviware.soapui.support.SoapUIException;
+import com.eviware.soapui.support.SoapUIVersionUpdate;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JPropertiesTable;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -96,8 +109,6 @@ import com.eviware.x.impl.swing.SwingDialogs;
 import com.google.common.base.Objects;
 import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
-import com.jniwrapper.PlatformContext;
-import com.teamdev.jxbrowser.BrowserType;
 import javafx.application.Platform;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -105,17 +116,44 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+import javax.swing.JToggleButton;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Timer;
@@ -197,7 +235,14 @@ public class SoapUI
 	private static CmdLineRunner soapUIRunner;
 
 	static {
-		Platform.setImplicitExit( false );
+		try
+		{
+			Platform.setImplicitExit( false );
+		}
+		catch( NoClassDefFoundError e )
+		{
+			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly.");
+		}
 	}
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -245,6 +290,11 @@ public class SoapUI
 		{
 			return DEFAULT_MAX_THREADPOOL_SIZE;
 		}
+	}
+
+	public static boolean usingGraphicalEnvironment()
+	{
+		return !UISupport.isHeadless() && !isCommandLine();
 	}
 
 	private void buildUI()
@@ -631,7 +681,7 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !SoapUI.isJXBrowserDisabled( true ) )
+				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) )
 				{
 					SwingUtilities.invokeLater( new Runnable()
 					{
@@ -1004,36 +1054,6 @@ public class SoapUI
 		shutdown();
 
 		return true;
-	}
-
-	public static boolean isJXBrowserDisabled()
-	{
-		return isJXBrowserDisabled( false );
-	}
-
-	public static boolean isJXBrowserDisabled( boolean allowNative )
-	{
-		if( UISupport.isHeadless() || isCommandLine() )
-			return true;
-
-		String disable = System.getProperty( "soapui.jxbrowser.disable", "nope" );
-		if( disable.equals( "true" ) )
-			return true;
-
-		if( getSoapUICore() != null && getSettings().getBoolean( UISettings.DISABLE_BROWSER ) )
-			return true;
-
-		if( !disable.equals( "false" ) && allowNative
-				&& ( BrowserType.Mozilla.isSupported() || BrowserType.IE.isSupported() || BrowserType.Safari.isSupported() ) )
-			return false;
-
-		return !disable.equals( "false" )
-				&& ( !PlatformContext.isMacOS() && "64".equals( System.getProperty( "sun.arch.data.model" ) ) );
-	}
-
-	public static boolean isJXBrowserPluginsDisabled()
-	{
-		return getSettings().getBoolean( UISettings.DISABLE_BROWSER_PLUGINS );
 	}
 
 	public static void shutdown()

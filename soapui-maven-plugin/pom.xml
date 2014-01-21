@@ -31,69 +31,6 @@
                 <!-- TODO We might also want to remove: fife:rsyntaxtextarea.
                           It's included in prior versions (< 4.5.2) though -->
 
-                <!-- Team dev -->
-
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>jxbrowser</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>comfyj</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>winpack</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>xulrunner-windows</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>xulrunner-linux64</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>xulrunner-linux</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>xulrunner-mac</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>MozillaInterfaces</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>engine-gecko</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>engine-gecko15</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>engine-ie</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>engine-webkit</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>jniwrap</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>xulrunner15-mac</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>teamdev</groupId>
-                    <artifactId>xulrunner15-windows</artifactId>
-                </exclusion>
-
                 <!-- JGoodies -->
 
                 <exclusion>

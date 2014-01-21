@@ -55,6 +55,24 @@ public class CommonMatchers
 		};
 	}
 
+	public static Matcher<String> anEmptyString()
+	{
+		return new TypeSafeMatcher<String>()
+		{
+			@Override
+			public boolean matchesSafely( String s )
+			{
+				return s.isEmpty();
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an empty string" );
+			}
+		};
+	}
+
 	public static Matcher<Object[]> anEmptyArray()
 	{
 		return new TypeSafeMatcher<Object[]>()
@@ -104,7 +122,7 @@ public class CommonMatchers
 					throw new IllegalArgumentException( "No schema found at " + schemaPath );
 				}
 				SchemaFactory sf = SchemaFactory.newInstance( XMLConstants.W3C_XML_SCHEMA_NS_URI );
-				Schema schema = null;
+				Schema schema;
 				try
 				{
 					schema = sf.newSchema( schemaURL );

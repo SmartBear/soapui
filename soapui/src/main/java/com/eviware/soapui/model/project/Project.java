@@ -12,6 +12,8 @@
 
 package com.eviware.soapui.model.project;
 
+import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
@@ -63,15 +65,19 @@ public interface Project extends TestModelItem
 
 	public MockService getMockServiceAt( int index );
 
-	public MockService getMockServiceByName( String mockServiceName );
+    public MockService getMockServiceByName( String mockServiceName );
 
-	public MockService addNewMockService( String name );
+    public RestMockService getRestMockServiceByName( String mockServiceName );
 
-	public SaveStatus save() throws IOException;
+    public MockService addNewMockService( String name );
+
+    public RestMockService addNewRestMockService( String name );
+
+    public SaveStatus save() throws IOException;
 
 	public List<TestSuite> getTestSuiteList();
 
-	public List<MockService> getMockServiceList();
+	public List<WsdlMockService> getMockServiceList();
 
 	public List<Interface> getInterfaceList();
 
