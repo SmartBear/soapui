@@ -12,8 +12,17 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
+import com.eviware.soapui.settings.ProjectSettings;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JUndoableTextField;
+import com.eviware.x.form.XForm.FieldType;
+import com.eviware.x.form.XFormTextField;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.l2fprod.common.swing.JDirectoryChooser;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -21,17 +30,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
-
-import org.apache.log4j.Logger;
-
-import com.eviware.soapui.settings.ProjectSettings;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.x.form.XForm.FieldType;
-import com.eviware.x.form.XFormTextField;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.l2fprod.common.swing.JDirectoryChooser;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class FileFormField extends AbstractSwingXFormField<JPanel> implements XFormTextField
 {
@@ -154,19 +154,42 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 
 			}
 
+            File file = null;
+            String startingDirectory = StringUtils.hasContent(currentDirectory) ? currentDirectory : StringUtils.hasContent(projectRoot) ? projectRoot : null;
+            if (startingDirectory != null) {
+                startingDirectory = FilenameUtils.normalize(startingDirectory);
+            }
+
 			String value = FileFormField.this.getValue();
-			if( value.length() > 0 )
-			{
-				fileChooser.setSelectedFile( new File( value ) );
-			}
-			else if( currentDirectory != null )
-			{
-				fileChooser.setCurrentDirectory( new File( currentDirectory ) );
-			}
-			else if( projectRoot != null )
-			{
-				fileChooser.setCurrentDirectory( new File( projectRoot ) );
-			}
+			if ( StringUtils.hasContent(value) ) {
+                file = new File( FilenameUtils.normalize(value) );
+                if ( ! file.isAbsolute() ) {
+                    if (startingDirectory != null) {
+                        file = new File( FilenameUtils.normalize( startingDirectory + File.separator + value ) );
+                    } else {
+                        file = file.getAbsoluteFile();
+                    }
+                }
+            } else {
+                file = new File( (startingDirectory != null) ? startingDirectory : System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
+            }
+
+            if (file.exists()) {
+                fileChooser.setSelectedFile(file);
+                if (file.isDirectory()) {
+                    fileChooser.setCurrentDirectory(file);
+                } else {
+                    fileChooser.setCurrentDirectory(file.getParentFile());
+                }
+            } else {
+                while (! (file == null) && ! file.exists() ) {
+                    file = file.getParentFile();
+                }
+                if (file == null) {
+                    file = new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
+                }
+                fileChooser.setCurrentDirectory(file);
+            }
 
 			int returnVal = fileChooser.showOpenDialog( UISupport.getMainFrame() );
 			if( returnVal == JFileChooser.APPROVE_OPTION )
