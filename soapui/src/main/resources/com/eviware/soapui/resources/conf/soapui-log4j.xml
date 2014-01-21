@@ -53,7 +53,7 @@
    
 	<appender name="GLOBAL_GROOVY_LOG" class="org.apache.log4j.FileAppender">
       <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
-     <param name="File" value="global-groovy.log"/>
+     <param name="File" value="${soapui.logroot}global-groovy.log"/>
      <param name="Threshold" value="DEBUG"/>
      <param name="Append" value="true"/>
  <!-- <param name="MaxFileSize" value="5000KB"/>
