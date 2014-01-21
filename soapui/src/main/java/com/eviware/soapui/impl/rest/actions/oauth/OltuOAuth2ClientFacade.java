@@ -48,7 +48,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 {
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
-	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
 	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
 
@@ -89,7 +88,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	private void validateProfileContents( OAuth2Parameters parameters )
 	{
-
 		validateHttpUrl( parameters.authorizationUri, "Authorization URI " );
 		validateUri( parameters.redirectUri, "Redirect URI" );
 		validateHttpUrl( parameters.accessTokenUri, "Access token URI" );
