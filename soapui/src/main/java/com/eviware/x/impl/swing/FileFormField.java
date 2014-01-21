@@ -149,48 +149,68 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 					fileChooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
 				}
 				else if( type == FieldType.FOLDER || type == FieldType.PROJECT_FOLDER )
+				{
 					fileChooser = new JDirectoryChooser();
+				}
 				else
+				{
 					fileChooser = new JFileChooser();
+				}
 
 			}
 
-            File file = null;
-            String startingDirectory = StringUtils.hasContent(currentDirectory) ? currentDirectory : StringUtils.hasContent(projectRoot) ? projectRoot : null;
-            if (startingDirectory != null) {
-                startingDirectory = FilenameUtils.normalize(startingDirectory);
-            }
+			File file = null;
+			String startingDirectory = StringUtils.hasContent( currentDirectory ) ? currentDirectory : StringUtils.hasContent( projectRoot ) ? projectRoot : null;
+			if( startingDirectory != null )
+			{
+				startingDirectory = FilenameUtils.normalize( startingDirectory );
+			}
 
 			String value = FileFormField.this.getValue();
-			if ( StringUtils.hasContent(value) ) {
-                file = new File( FilenameUtils.normalize(value) );
-                if ( ! file.isAbsolute() ) {
-                    if (startingDirectory != null) {
-                        file = new File( FilenameUtils.normalize( startingDirectory + File.separator + value ) );
-                    } else {
-                        file = file.getAbsoluteFile();
-                    }
-                }
-            } else {
-                file = new File( (startingDirectory != null) ? startingDirectory : System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
-            }
+			if( StringUtils.hasContent( value ) )
+			{
+				file = new File( FilenameUtils.normalize( value ) );
+				if( !file.isAbsolute() )
+				{
+					if( startingDirectory != null )
+					{
+						file = new File( FilenameUtils.normalize( startingDirectory + File.separator + value ) );
+					}
+					else
+					{
+						file = file.getAbsoluteFile();
+					}
+				}
+			}
+			else
+			{
+				file = new File( ( startingDirectory != null ) ? startingDirectory : System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
+			}
 
-            if (file.exists()) {
-                fileChooser.setSelectedFile(file);
-                if (file.isDirectory()) {
-                    fileChooser.setCurrentDirectory(file);
-                } else {
-                    fileChooser.setCurrentDirectory(file.getParentFile());
-                }
-            } else {
-                while (! (file == null) && ! file.exists() ) {
-                    file = file.getParentFile();
-                }
-                if (file == null) {
-                    file = new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
-                }
-                fileChooser.setCurrentDirectory(file);
-            }
+			if( file.exists() )
+			{
+				fileChooser.setSelectedFile( file );
+				if( file.isDirectory() )
+				{
+					fileChooser.setCurrentDirectory( file );
+				}
+				else
+				{
+					fileChooser.setCurrentDirectory( file.getParentFile() );
+				}
+			}
+			else
+			{
+				while( file != null && !file.exists() )
+				{
+					file = file.getParentFile();
+				}
+				if( file == null )
+				{
+					file = new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
+				}
+				fileChooser.setCurrentDirectory( file );
+			}
 
 			int returnVal = fileChooser.showOpenDialog( UISupport.getMainFrame() );
 			if( returnVal == JFileChooser.APPROVE_OPTION )
