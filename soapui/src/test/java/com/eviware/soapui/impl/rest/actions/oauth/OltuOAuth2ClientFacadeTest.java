@@ -26,6 +26,7 @@ import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.token.BasicOAuthToken;
+import org.apache.oltu.oauth2.common.utils.OAuthUtils;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,14 +54,16 @@ public class OltuOAuth2ClientFacadeTest
 {
 
 	private SpyingOauthClientStub spyingOauthClientStub;
-
 	private String authorizationCode;
+
 	private String accessToken;
 	private OAuth2Profile profile;
 	private OAuth2Profile profileWithOnlyAccessToken;
 	private OltuOAuth2ClientFacade oltuClientFacade;
 	private String refreshToken;
 	private ExtendedPostMethod httpRequest;
+
+	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
 
 	@Before
@@ -115,7 +118,7 @@ public class OltuOAuth2ClientFacadeTest
 	@Test
 	public void getsTheAccessTokenFromResponseBodyInOobRequest() throws Exception
 	{
-		profile.setRedirectURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setRedirectURI( OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
@@ -173,7 +176,8 @@ public class OltuOAuth2ClientFacadeTest
 	{
 		oltuClientFacade.requestAccessToken( profile );
 
-		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( authorizationCode ) );
+		String code = ( String )OAuthUtils.decodeForm( spyingOauthClientStub.oAuthClientRequest.getBody() ).get( "code" );
+		assertThat( code, is( authorizationCode ) );
 	}
 
 	@Test
@@ -250,7 +254,7 @@ public class OltuOAuth2ClientFacadeTest
 	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsUrnAsAuthorizationURI() throws Exception
 	{
-		profile.setAuthorizationURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAuthorizationURI( OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -262,16 +266,16 @@ public class OltuOAuth2ClientFacadeTest
 	}
 
 	@Test( expected = InvalidOAuth2ParametersException.class )
-	public void rejectsNonHttpRedirectURI() throws Exception
+	public void rejectsNonUriRedirectUri() throws Exception
 	{
-		profile.setRedirectURI( "ftp://ftp.sunet.se" );
+		profile.setRedirectURI( "(/&#)!#%/(¤#!" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
 	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsUrnAsAccessTokenURI() throws Exception
 	{
-		profile.setAccessTokenURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAccessTokenURI( OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
@@ -380,7 +384,7 @@ public class OltuOAuth2ClientFacadeTest
 					if( parameter.startsWith( prefix ) )
 					{
 						String redirectURI = parameter.substring( prefix.length() );
-						listener.locationChanged( redirectURI + "?code=" + authorizationCode );
+						listener.locationChanged( redirectURI + "?code=" + authorizationCode + "&state=foo");
 					}
 				}
 			}
