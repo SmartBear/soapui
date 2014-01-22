@@ -92,7 +92,7 @@ public class MockAsWar
 					{
 						ArrayList<File> files = getAllFilesFrom( webInf );
 						files.add( new File( warDir, "stylesheet.css" ) );
-						files.add( new File( warDir, "header_logo.jpg" ) );
+						files.add( new File( warDir, "header_logo.png" ) );
 
 						File[] filez = files.toArray( new File[files.size()] );
 						JarPackager.createJarArchive( warFile, warDir, filez );
@@ -237,7 +237,7 @@ public class MockAsWar
 				JarPackager.copyAllFromTo( fromDir, listenersDir, null );
 			}
 
-			copyWarResource( "header_logo.jpg" );
+			copyWarResource( "header_logo.png" );
 			copyWarResource( "stylesheet.css" );
 
 			return true;
