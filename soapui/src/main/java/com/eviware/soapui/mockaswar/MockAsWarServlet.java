@@ -167,8 +167,7 @@ public class MockAsWarServlet extends HttpServlet
 
 		SoapUI.ensureGroovyLog().addAppender( new GroovyLogAppender() );
 
-		String mockServiceEndpoint = getInitParameter( "mockServiceEndpoint" );
-		return mockServiceEndpoint;
+		return getInitParameter( "mockServiceEndpoint" );
 	}
 
 	public void destroy()
