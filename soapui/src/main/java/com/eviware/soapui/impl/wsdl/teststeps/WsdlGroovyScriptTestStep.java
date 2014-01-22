@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 
-import static com.eviware.soapui.model.iface.Script.*;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.*;
 
 /**
  * TestStep that executes an arbitrary Groovy script

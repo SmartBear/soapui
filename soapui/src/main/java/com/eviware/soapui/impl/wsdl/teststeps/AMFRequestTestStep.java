@@ -52,7 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.eviware.soapui.model.iface.Script.SCRIPT_PROPERTY;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 
 /**
  * 

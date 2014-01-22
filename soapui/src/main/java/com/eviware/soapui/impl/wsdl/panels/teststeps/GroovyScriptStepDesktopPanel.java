@@ -57,7 +57,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
-import static com.eviware.soapui.model.iface.Script.SCRIPT_PROPERTY;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 
 /**
  * DesktopPanel for WsdlGroovyTestSteps

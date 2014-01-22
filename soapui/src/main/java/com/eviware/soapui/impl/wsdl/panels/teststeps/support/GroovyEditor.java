@@ -39,7 +39,7 @@ import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import static com.eviware.soapui.model.iface.Script.SCRIPT_PROPERTY;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 
 /**
  * Groovy editor wrapper

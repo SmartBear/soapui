@@ -1,4 +1,4 @@
-package com.eviware.soapui.model.iface;
+package com.eviware.soapui.impl.wsdl.teststeps;
 
 /**
  * String constants used when dealing with script test steps.

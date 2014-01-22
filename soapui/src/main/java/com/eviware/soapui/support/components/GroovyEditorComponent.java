@@ -31,7 +31,7 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import static com.eviware.soapui.model.iface.Script.*;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.*;
 
 public class GroovyEditorComponent extends JPanel implements PropertyChangeListener
 {
