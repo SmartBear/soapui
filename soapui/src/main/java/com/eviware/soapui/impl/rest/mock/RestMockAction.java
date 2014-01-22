@@ -67,7 +67,7 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 	@Override
 	public int getMockResponseCount()
 	{
-		return 0;
+		return responses.size();
 	}
 
 	@Override

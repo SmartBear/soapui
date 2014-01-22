@@ -20,13 +20,14 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 {
 
 	private RestMockService mockService;
-	// TODO: add support for private WsdlMockRunContext mockContext;
+	private WsdlMockRunContext mockContext;
 
 	private final static Logger log = Logger.getLogger( RestMockDispatcher.class );
 
-	public RestMockDispatcher( RestMockService mockService )
+	public RestMockDispatcher( RestMockService mockService, WsdlMockRunContext mockContext )
 	{
 		this.mockService = mockService;
+		this.mockContext = mockContext;
 	}
 
 	@Override
@@ -35,8 +36,9 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 	{
 		try
 		{
-			RestMockRequest restMockRequest  = new RestMockRequest( request, response, null  ); //FIXME create context and remove null
-			return  ((RestMockAction)(mockService.getMockOperationList().get( 0 ))).dispatchRequest( restMockRequest );
+			RestMockRequest restMockRequest  = new RestMockRequest( request, response, mockContext  );
+			RestMockAction mockAction = mockService.getMockOperationAt( 0 );
+			return mockAction.dispatchRequest( restMockRequest );
 		}
 		catch(Exception e)
 		{
