@@ -49,7 +49,7 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 			responses.add( restMockResponse );
 		}
 
-		//TODO: initData( config );
+		//TODO: split WsdlMockOperation.initData( config ); into several parts moving most of them to superclass call them from here
 	}
 
 	public static String getIconName(RESTMockActionConfig methodConfig)
@@ -112,7 +112,7 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 
 		responses.add( mockResponse );
 
-		// TODO: Set default response
+		// TODO: Set default response - reuse if necessary
 
 		( getMockService() ).fireMockResponseAdded( mockResponse );
 		notifyPropertyChanged( "mockResponses", null, mockResponse );
@@ -130,10 +130,10 @@ public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> 
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
 			result.setMockOperation( this );
-			RestMockResponse response = responses.get( 0 ); //FIXME
+			RestMockResponse response = responses.get( 0 ); // TODO in SOAP-1334
 			if( response == null )
 			{
-				throw new UnknownError( "not implemented" ); // FIXME send default
+				throw new UnknownError( "not implemented" ); // FIXME use the default response when no response if found
 			}
 
 			if( response == null )

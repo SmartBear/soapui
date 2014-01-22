@@ -37,7 +37,7 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 		try
 		{
 			RestMockRequest restMockRequest  = new RestMockRequest( request, response, mockContext  );
-			RestMockAction mockAction = mockService.getMockOperationAt( 0 );
+			RestMockAction mockAction = mockService.getMockOperationAt( 0 ); //TODO in SOAP-1334
 			return mockAction.dispatchRequest( restMockRequest );
 		}
 		catch(Exception e)

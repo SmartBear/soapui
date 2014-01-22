@@ -307,12 +307,11 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 
 	public RestMockResult execute( RestMockRequest request, RestMockResult result ) throws DispatchException
 	{
-		// TODO: implement like applying encryption on the result
 		try
 		{
 			// iconAnimator.start();
          /*
-			TODO
+			TODO: break this out into base class (also remove it from Wsdl counterpart)
 			getProperty( "Request" ).setValue( request.getRequestContent() );
 
 
@@ -343,7 +342,7 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 			}
 
 
-			/* TODO
+			/* TODO: break this out into base class (also remove it from Wsdl counterpart)
 			responseContent = PropertyExpander.expandProperties( context, responseContent, isEntitizeProperties() );
          */
 
@@ -412,7 +411,7 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 		outData.write( content );
 
 
-		/* TODO
+		/* TODO: break this out into base class (also remove it from Wsdl counterpart)
 		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && getAttachmentCount() == 0 )
 		{
 			String encoding = getEncoding();
