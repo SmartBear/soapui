@@ -142,7 +142,7 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 
 	private String readCleanWsdlFrom( String url ) throws Exception
 	{
-		String content = XmlUtils.createXmlObject( new URL(url) ).xmlText();
+		String content = XmlUtils.createXmlObject( load(url) ).xmlText();
 
 		if( SoapUI.getSettings().getBoolean( WsdlSettings.TRIM_WSDL )  )
 		{
