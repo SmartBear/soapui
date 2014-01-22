@@ -13,17 +13,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.InterfaceConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.MockServiceDocumentConfig;
-import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
-import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.config.TestStepSecurityTestConfig;
-import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.config.TestSuiteDocumentConfig;
-import com.eviware.soapui.config.TestSuiteRunTypesConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
@@ -364,6 +354,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			for( MockServiceConfig config : mockServiceConfigs )
 			{
 				mockServices.add( new WsdlMockService( this, config ) );
+			}
+
+			List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
+			for( RESTMockServiceConfig config : restMockServiceConfigs )
+			{
+				restMockServices.add( new RestMockService( this, config ) );
 			}
 
 			if( !getConfig().isSetWssContainer() )
@@ -988,6 +984,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			mockService.beforeSave();
 		}
 
+		for( RestMockService mockService : restMockServices )
+		{
+			mockService.beforeSave();
+		}
+
 		endpointStrategy.onSave();
 	}
 
@@ -1258,7 +1259,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		String oldPath = path;
 		path = fileName;
-		SaveStatus result = save();
+		SaveStatus result = save(); // if remote is true this won't save the file
 		if( result == SaveStatus.SUCCESS )
 		{
 			remote = false;
@@ -1288,6 +1289,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 
 			for( WsdlMockService mockService : mockServices )
+			{
+				mockService.release();
+			}
+
+			for( RestMockService mockService : restMockServices )
 			{
 				mockService.release();
 			}
@@ -1551,6 +1557,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		list.addAll( getInterfaceList() );
 		list.addAll( getTestSuiteList() );
 		list.addAll( getMockServiceList() );
+		list.addAll( getRestMockServiceList() );
 		return list;
 	}
 
