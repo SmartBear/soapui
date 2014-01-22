@@ -19,7 +19,7 @@ Feature: Access token status is updated when 'Get access token' button is clicke
     When user clicks on 'Get access token' button
     Then access token status label is updated to text 'WAITING_FOR_AUTHORIZATION'.
     
-  Scenario: Access token status is set to RECEIVED_AUTHORIZATION_CODE when consent screen is presented
+  Scenario: Access token status is set to RECEIVED_AUTHORIZATION_CODE when resource owner authorizes the app
     Given A REST project is created
     And OAuth2 is selected as auth type in the Auth tab
     And Cliend ID is set to <TEAMPASS: SoapUI Development Google account>
@@ -28,8 +28,9 @@ Feature: Access token status is updated when 'Get access token' button is clicke
     And access token URI is set to https://accounts.google.com/o/oauth2/token
     And redirect URI is set to urn:ietf:wg:oauth:2.0:oob
     And scope is set to https://www.googleapis.com/auth/tasks.readonly
-    When user clicks on 'Get access token' button and authorizes the app
-    Then access token status label is updated to text 'RECEIVED_AUTHORIZATION_CODE' just before setting the access token and closing th browser window.    
+    When user clicks on 'Get access token' button 
+    And user authorizes the app by logging in
+    Then access token status label is updated to text 'RECEIVED_AUTHORIZATION_CODE' just before setting the access token and closing the browser window.    
     
   Scenario: Access token status is set to RETRIEVED_FROM_SERVER when user authorizes the app and browser window is closed
     Given A REST project is created
@@ -40,5 +41,7 @@ Feature: Access token status is updated when 'Get access token' button is clicke
     And access token URI is set to https://accounts.google.com/o/oauth2/token
     And redirect URI is set to urn:ietf:wg:oauth:2.0:oob
     And scope is set to https://www.googleapis.com/auth/tasks.readonly
-    When user clicks on 'Get access token' button and authorizes the app
-    Then access token status label is updated to text 'RETRIEVED_FROM_SERVER' when the access token is set and closing th browser window.       
+    When user clicks on 'Get access token' button 
+    And user authorizes the app by logging in
+    And browser window is closed
+    Then access token status label is updated to text 'RETRIEVED_FROM_SERVER'       
