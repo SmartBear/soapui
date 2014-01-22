@@ -45,7 +45,6 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepResult;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Script;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.support.ListDataChangeListener;
@@ -57,6 +56,8 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+
+import static com.eviware.soapui.model.iface.Script.SCRIPT_PROPERTY;
 
 /**
  * DesktopPanel for WsdlGroovyTestSteps
@@ -298,7 +299,7 @@ public class GroovyScriptStepDesktopPanel extends ModelItemDesktopPanel<WsdlGroo
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( Script.SCRIPT_PROPERTY ) && !updating )
+		if( evt.getPropertyName().equals( SCRIPT_PROPERTY ) && !updating )
 		{
 			updating = true;
 			editor.getEditArea().setText( ( String )evt.getNewValue() );

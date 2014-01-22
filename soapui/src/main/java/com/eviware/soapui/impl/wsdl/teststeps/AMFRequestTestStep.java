@@ -30,7 +30,6 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Request.SubmitException;
-import com.eviware.soapui.model.iface.Script;
 import com.eviware.soapui.model.iface.Submit;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -52,6 +51,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.eviware.soapui.model.iface.Script.SCRIPT_PROPERTY;
 
 /**
  * 
@@ -642,7 +643,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		}
 
 		amfRequestTestStepConfig.getScript().setStringValue( script );
-		notifyPropertyChanged( Script.SCRIPT_PROPERTY, old, script );
+		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
 	public String getAmfCall()

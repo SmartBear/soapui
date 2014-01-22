@@ -15,7 +15,6 @@ package com.eviware.soapui.support.components;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
-import com.eviware.soapui.model.iface.Script;
 import com.eviware.soapui.support.UISupport;
 
 import javax.swing.AbstractAction;
@@ -31,6 +30,8 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.model.iface.Script.*;
 
 public class GroovyEditorComponent extends JPanel implements PropertyChangeListener
 {
@@ -170,7 +171,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( !evt.getPropertyName().equals( Script.SCRIPT_PROPERTY ) )
+		if( !evt.getPropertyName().equals( SCRIPT_PROPERTY ) )
 		{
 			buildToolbar( editorModel, helpUrl );
 		}

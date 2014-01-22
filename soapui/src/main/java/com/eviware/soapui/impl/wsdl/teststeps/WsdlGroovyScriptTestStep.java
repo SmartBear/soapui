@@ -13,10 +13,8 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.ScriptConfig;
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.iface.Script;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -27,7 +25,6 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestRunner.Status;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
-import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.GroovyUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -35,10 +32,10 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.*;
+
+import static com.eviware.soapui.model.iface.Script.*;
 
 /**
  * TestStep that executes an arbitrary Groovy script
@@ -76,7 +73,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 			readConfig( config );
 		}
 
-        addProperty( new DefaultTestStepProperty( Script.RESULT_PROPERTY, true, new DefaultTestStepProperty.PropertyHandlerAdapter()
+        addProperty( new DefaultTestStepProperty( RESULT_PROPERTY, true, new DefaultTestStepProperty.PropertyHandlerAdapter()
 		{
 
 			public String getValue( DefaultTestStepProperty property )
@@ -85,7 +82,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 			}
 		}, this ) );
 
-		addProperty( new TestStepBeanProperty(Script.SCRIPT_PROPERTY, false, this, Script.SCRIPT_PROPERTY, this ) );
+		addProperty( new TestStepBeanProperty( SCRIPT_PROPERTY, false, this, SCRIPT_PROPERTY, this ) );
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
@@ -109,13 +106,13 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 	private void readConfig( TestStepConfig config )
 	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( config.getConfig() );
-		scriptText = reader.readString( Script.SCRIPT_PROPERTY, "" );
+		scriptText = reader.readString( SCRIPT_PROPERTY, "" );
 	}
 
 	private void saveScript( TestStepConfig config )
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( Script.SCRIPT_PROPERTY, scriptText );
+		builder.add( SCRIPT_PROPERTY, scriptText );
 		config.setConfig( builder.finish() );
 	}
 
@@ -127,7 +124,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 
 	public String getDefaultSourcePropertyName()
 	{
-		return Script.RESULT_PROPERTY;
+		return RESULT_PROPERTY;
 	}
 
 	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext context )
@@ -157,7 +154,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 					{
 						result.addMessage( "Script-result: " + scriptResult.toString() );
 						// FIXME The property should not me hard coded
-						firePropertyValueChanged( Script.RESULT_PROPERTY, null, String.valueOf( result ) );
+						firePropertyValueChanged( RESULT_PROPERTY, null, String.valueOf( result ) );
 					}
 
 				}
@@ -210,7 +207,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 		scriptEngine.setScript( scriptText );
 		saveScript( getConfig() );
 
-		notifyPropertyChanged( Script.SCRIPT_PROPERTY, oldScript, scriptText );
+		notifyPropertyChanged( SCRIPT_PROPERTY, oldScript, scriptText );
 	}
 
 	@Override
@@ -224,7 +221,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this );
 
-		result.extractAndAddAll( Script.SCRIPT_PROPERTY );
+		result.extractAndAddAll( SCRIPT_PROPERTY );
 
 		return result.toArray();
 	}

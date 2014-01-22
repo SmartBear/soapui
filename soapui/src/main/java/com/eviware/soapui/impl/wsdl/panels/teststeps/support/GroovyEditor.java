@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.model.iface.Script;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -39,6 +38,8 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.model.iface.Script.SCRIPT_PROPERTY;
 
 /**
  * Groovy editor wrapper
@@ -259,7 +260,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( Script.SCRIPT_PROPERTY ) )
+		if( evt.getPropertyName().equals( SCRIPT_PROPERTY ) )
 		{
 			updating = true;
 			editArea.setText( String.valueOf( evt.getNewValue() ) );
