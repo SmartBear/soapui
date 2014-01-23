@@ -5,6 +5,13 @@
 * SOAP request calls no longer take 500 ms longer in Data Driven tests than in single calls (SOAP-769)
 * Expose XSD correctly for mockservices in subdirs (SOAP-1313)
 
+### Improvements
+* Introduced Script class for internal grouping of constants (Contribution from Marc Paquette)
+* Added a (non-GUI) setting to control starting the Cajo server on startup (Contribution from Marc Paquette)
+* Improved file chooser behavior in certain scenarios (Contribution from Marc Paquette)
+* Added missing soapui.logroot configuration to the log4j definition of the GLOBAL_GROOVY_LOG (Contribution from Michael Ottati)
+* IdleConnectionHandler now correctly stopped (Contribution from Christoph Thelen)
+
 ### Updated libraries ###
 * proxy-vole 20131209 (SOAP-1208)
 
