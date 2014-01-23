@@ -64,6 +64,11 @@ public class ProjectTreeNode extends AbstractModelItemTreeNode<Project>
 			mockServiceNodes.add( new MockServiceTreeNode( project.getMockServiceAt( c ), getTreeModel() ) );
 		}
 
+		for( int c = 0; c < project.getRestMockServiceCount(); c++ )
+		{
+			mockServiceNodes.add( new MockServiceTreeNode( project.getRestMockServiceAt( c ), getTreeModel() ) );
+		}
+
 		initOrdering( interfaceNodes, UISettings.ORDER_SERVICES );
 
 		getTreeModel().mapModelItems( interfaceNodes );

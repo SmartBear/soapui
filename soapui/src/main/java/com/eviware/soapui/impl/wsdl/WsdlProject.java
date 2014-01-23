@@ -1328,44 +1328,54 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			beforeSaveScriptEngine.release();
 	}
 
-    public WsdlMockService addNewMockService( String name )
-    {
-        WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
-        mockService.setName( name );
-        mockServices.add( mockService );
-        fireMockServiceAdded( mockService );
+	public WsdlMockService addNewMockService( String name )
+	{
+		WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
+		mockService.setName( name );
+		mockServices.add( mockService );
+		fireMockServiceAdded( mockService );
 
-        return mockService;
-    }
+		return mockService;
+	}
 
-    public RestMockService addNewRestMockService( String name )
-    {
-        RestMockService mockService = new RestMockService( this, getConfig().addNewRestMockService() );
-        mockService.setName( name );
-        restMockServices.add( mockService );
-        fireMockServiceAdded( mockService );
+	public RestMockService addNewRestMockService( String name )
+	{
+		RestMockService mockService = new RestMockService( this, getConfig().addNewRestMockService() );
+		mockService.setName( name );
+		restMockServices.add( mockService );
+		fireMockServiceAdded( mockService );
 
-        return mockService;
-    }
+		return mockService;
+	}
 
-    public WsdlMockService getMockServiceAt( int index )
+	public WsdlMockService getMockServiceAt( int index )
 	{
 		return mockServices.get( index );
 	}
 
-    public WsdlMockService getMockServiceByName( String mockServiceName )
-    {
-        return ( WsdlMockService )getWsdlModelItemByName( mockServices, mockServiceName );
-    }
+	public WsdlMockService getMockServiceByName( String mockServiceName )
+	{
+		return ( WsdlMockService )getWsdlModelItemByName( mockServices, mockServiceName );
+	}
 
-    public RestMockService getRestMockServiceByName( String mockServiceName )
-    {
-        return ( RestMockService )getWsdlModelItemByName( restMockServices, mockServiceName );
-    }
-
-    public int getMockServiceCount()
+	public int getMockServiceCount()
 	{
 		return mockServices.size();
+	}
+
+	public RestMockService getRestMockServiceAt( int index )
+	{
+		return restMockServices.get( index );
+	}
+
+	public RestMockService getRestMockServiceByName( String mockServiceName )
+   {
+		return ( RestMockService )getWsdlModelItemByName( restMockServices, mockServiceName );
+   }
+
+	public int getRestMockServiceCount()
+	{
+		return restMockServices.size();
 	}
 
 	public void removeMockService( WsdlMockService mockService )
