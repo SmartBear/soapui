@@ -153,10 +153,10 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
 		this.settings = settings;
 	}
 
-	public AbstractWsdlModelItem<?> getWsdlModelItemByName( Collection<? extends AbstractWsdlModelItem<?>> items,
+	public ModelItem getWsdlModelItemByName( Collection<? extends ModelItem> items,
 			String name )
 	{
-		for( AbstractWsdlModelItem<?> item : items )
+		for( ModelItem item : items )
 		{
 			if( item.getName() != null && item.getName().equals( name ) )
 				return item;

@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.mock;
 
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
@@ -49,5 +50,7 @@ public interface MockRequest
 	public String getProtocol();
 
 	public HttpServletResponse getHttpResponse();
+
+	public XmlObject getRequestXmlObject() throws XmlException;
 
 }

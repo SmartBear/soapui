@@ -45,7 +45,7 @@ import java.util.*;
  * @author ole.matzura
  */
 
-public class WsdlMockService extends AbstractMockService<WsdlMockOperation, MockServiceConfig>
+public class WsdlMockService extends AbstractMockService<WsdlMockOperation, WsdlMockResponse, MockServiceConfig>
 {
 	private static final String REQUIRE_SOAP_VERSION = WsdlMockService.class.getName() + "@require-soap-version";
 	private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
@@ -203,38 +203,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
 		getConfig().removeMockOperation( ix );
 	}
 
-
-	protected void fireMockOperationAdded( WsdlMockOperation mockOperation )
-	{
-		for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockOperationAdded( mockOperation );
-		}
-	}
-
-	protected void fireMockOperationRemoved( WsdlMockOperation mockOperation )
-	{
-        for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockOperationRemoved( mockOperation );
-		}
-	}
-
-	protected void fireMockResponseAdded( WsdlMockResponse mockResponse )
-	{
-        for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockResponseAdded( mockResponse );
-		}
-	}
-
-	protected void fireMockResponseRemoved( WsdlMockResponse mockResponse )
-	{
-        for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockResponseRemoved( mockResponse );
-		}
-	}
 
 	public WsdlMockOperation getFaultMockOperation()
 	{

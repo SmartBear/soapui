@@ -167,13 +167,13 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	public class ResponseListModel extends AbstractListModel implements ListModel, MockServiceListener,
 			PropertyChangeListener
 	{
-		private java.util.List<WsdlMockResponse> responses = new ArrayList<WsdlMockResponse>();
+		private java.util.List<MockResponse> responses = new ArrayList<MockResponse>();
 
 		public ResponseListModel()
 		{
 			for( int c = 0; c < getModelItem().getMockResponseCount(); c++ )
 			{
-				WsdlMockResponse mockResponse = ( WsdlMockResponse )getModelItem().getMockResponseAt( c );
+				MockResponse mockResponse = getModelItem().getMockResponseAt( c );
 				mockResponse.addPropertyChangeListener( this );
 
 				responses.add( mockResponse );
@@ -244,7 +244,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 
 		public void release()
 		{
-			for( WsdlMockResponse operation : responses )
+			for( MockResponse operation : responses )
 			{
 				operation.removePropertyChangeListener( this );
 			}

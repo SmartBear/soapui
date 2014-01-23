@@ -1,4 +1,4 @@
-package com.eviware.soapui.impl.support;
+	package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.BaseMockServiceConfig;
@@ -25,7 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.util.*;
 
-public abstract class AbstractMockService<MockOperationType extends MockOperation, MockServiceConfigType extends BaseMockServiceConfig>
+public abstract class AbstractMockService<MockOperationType extends MockOperation,
+			MockResponseType extends MockResponse,
+			MockServiceConfigType extends BaseMockServiceConfig>
 		extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfigType>
 		implements MockService
 {
@@ -200,6 +202,38 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	protected List<MockOperation> getMockOperations()
 	{
 		return mockOperations;
+	}
+
+	public void fireMockOperationAdded( MockOperation mockOperation )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockOperationAdded( mockOperation );
+		}
+	}
+
+	public void fireMockOperationRemoved( MockOperation mockOperation )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockOperationRemoved( mockOperation );
+		}
+	}
+
+	public void fireMockResponseAdded( MockResponse mockResponse )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockResponseAdded( mockResponse );
+		}
+	}
+
+	public void fireMockResponseRemoved( MockResponse mockResponse )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockResponseRemoved( mockResponse );
+		}
 	}
 
 	@Override
@@ -450,7 +484,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public abstract MockDispatcher createDispatcher( WsdlMockRunContext mockContext );
 
 	private class MockServiceIconAnimator
-			extends ModelItemIconAnimator<AbstractMockService<MockOperationType, MockServiceConfigType>>
+			extends ModelItemIconAnimator<AbstractMockService<MockOperationType, MockResponseType, MockServiceConfigType>>
 			implements MockRunListener
 	{
 		public MockServiceIconAnimator()

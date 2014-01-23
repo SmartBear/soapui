@@ -43,4 +43,6 @@ public interface MockResponse extends TestModelItem
 	public StringToStringsMap getResponseHeaders();
 
 	public MockResult getMockResult();
+
+	public void release();
 }

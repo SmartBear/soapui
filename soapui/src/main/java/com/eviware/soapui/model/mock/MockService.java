@@ -54,6 +54,14 @@ public interface MockService extends TestModelItem
 
 	public void removeMockServiceListener( MockServiceListener listener );
 
+	public void fireMockOperationAdded( MockOperation mockOperation );
+
+	public void fireMockOperationRemoved( MockOperation mockOperation );
+
+	public void fireMockResponseAdded( MockResponse mockResponse );
+
+	public void fireMockResponseRemoved( MockResponse mockResponse );
+
 	public List<MockOperation> getMockOperationList();
 
 	public boolean getBindToHostOnly();

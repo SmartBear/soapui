@@ -7,14 +7,13 @@ import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.support.StringUtils;
 
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig>
+public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
 {
 	private RestResource resource = null;
 	private List<RestMockResponse> responses = new ArrayList<RestMockResponse>();
@@ -57,39 +56,15 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig>
 	}
 
 	@Override
-	public int getMockResponseCount()
+	public void removeResponseFromConfig( int index )
 	{
-		return responses.size();
-	}
-
-	@Override
-	public MockResponse getMockResponseAt( int index )
-	{
-		return null;
-	}
-
-	@Override
-	public MockResponse getMockResponseByName( String name )
-	{
-		return null;
+		getConfig().removeResponse( index );
 	}
 
 	@Override
 	public Operation getOperation()
 	{
-		return null;
-	}
-
-	@Override
-	public MockResult getLastMockResult()
-	{
-		return null;
-	}
-
-	@Override
-	public List<MockResponse> getMockResponses()
-	{
-		return null;
+		return resource;
 	}
 
 	@Override

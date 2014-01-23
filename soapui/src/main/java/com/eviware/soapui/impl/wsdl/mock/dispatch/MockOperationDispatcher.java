@@ -15,13 +15,13 @@ package com.eviware.soapui.impl.wsdl.mock.dispatch;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 
 public interface MockOperationDispatcher
 {
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException;
 
 	public JComponent getEditorComponent();

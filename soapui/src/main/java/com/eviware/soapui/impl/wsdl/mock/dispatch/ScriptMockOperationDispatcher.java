@@ -27,9 +27,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
@@ -37,6 +34,9 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
@@ -62,7 +62,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 		mockOperation.addPropertyChangeListener( WsdlMockOperation.DISPATCH_PATH_PROPERTY, this );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException
 	{
 		String dispatchScript = getMockOperation().getDispatchPath();
@@ -229,12 +229,12 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 		public void actionPerformed( ActionEvent e )
 		{
-			WsdlMockResult lastMockResult = getMockOperation().getLastMockResult();
-			WsdlMockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();
+			MockResult lastMockResult = getMockOperation().getLastMockResult();
+			MockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();
 
 			try
 			{
-				WsdlMockResponse retVal = selectMockResponse( mockRequest, null );
+				MockResponse retVal = selectMockResponse( mockRequest, null );
 				UISupport.showInfoMessage( "Script returned [" + ( retVal == null ? "null" : retVal.getName() ) + "]" );
 			}
 			catch( Exception e1 )
