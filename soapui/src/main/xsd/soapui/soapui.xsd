@@ -897,9 +897,16 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:complexType name="MockOperation">
+    <xsd:complexType name="BaseMockOperation">
         <xsd:complexContent>
             <xsd:extension base="tns:ModelItem">
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="MockOperation">
+        <xsd:complexContent>
+            <xsd:extension base="tns:BaseMockOperation">
                 <xsd:sequence>
                     <xsd:element name="dispatchPath" type="xsd:string"
                         minOccurs="0">
@@ -925,12 +932,12 @@
 
     <xsd:complexType name="RESTMockAction">
         <xsd:complexContent>
-            <xsd:extension base="tns:ModelItem">
+            <xsd:extension base="tns:BaseMockOperation">
                 <xsd:sequence>
                     <xsd:element name="defaultResponse" type="xsd:string"
                                  maxOccurs="1" minOccurs="0">
                     </xsd:element>
-                    <xsd:element name="restMockResponse" type="tns:RESTMockResponse"
+                    <xsd:element name="response" type="tns:RESTMockResponse"
                                  maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>

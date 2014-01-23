@@ -1,9 +1,7 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.ModelItemConfig;
-import com.eviware.soapui.config.RESTMockActionConfig;
-import com.eviware.soapui.config.RESTMockResponseConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
@@ -18,7 +16,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig>
+public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RESTMockResponseConfig>
 {
 	private RestResource resource = null;
 	private List<RestMockResponse> responses = new ArrayList<RestMockResponse>();
@@ -37,7 +35,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig>
 			resource = ( RestResource )iface.getOperationByName( mockService.getName() );
 		}
 
-		List<RESTMockResponseConfig> responseConfigs = config.getRestMockResponseList();
+		List<RESTMockResponseConfig> responseConfigs = config.getResponseList();
 		for( RESTMockResponseConfig responseConfig : responseConfigs )
 		{
 			RestMockResponse restMockResponse = new RestMockResponse( this, responseConfig );

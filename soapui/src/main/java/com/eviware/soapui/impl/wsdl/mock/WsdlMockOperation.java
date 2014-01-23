@@ -20,13 +20,11 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MockOperationConfig;
-import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
-import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
@@ -48,7 +46,7 @@ import com.eviware.soapui.support.UISupport;
  * @author ole.matzura
  */
 
-public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig>
+public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig, MockResponseConfig>
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
@@ -198,7 +196,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
 	public WsdlMockResponse addNewMockResponse( String name, boolean createResponse )
 	{
-		MockResponseConfig responseConfig = getConfig().addNewResponse();
+		MockResponseConfig responseConfig = (MockResponseConfig)getConfig().addNewResponse();
 		responseConfig.setName( name );
 		responseConfig.addNewResponseContent();
 
