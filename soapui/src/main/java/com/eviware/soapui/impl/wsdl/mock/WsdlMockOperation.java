@@ -13,7 +13,6 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,13 +20,13 @@ import java.util.List;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.impl.support.AbstractMockOperation;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
@@ -37,7 +36,6 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -50,8 +48,7 @@ import com.eviware.soapui.support.UISupport;
  * @author ole.matzura
  */
 
-public class WsdlMockOperation extends AbstractWsdlModelItem<MockOperationConfig> implements MockOperation,
-		PropertyChangeListener
+public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig>
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );

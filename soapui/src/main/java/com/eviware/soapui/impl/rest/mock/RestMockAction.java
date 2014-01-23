@@ -1,16 +1,13 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MockResponseConfig;
+import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.*;
@@ -21,8 +18,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestMockAction extends AbstractWsdlModelItem<RESTMockActionConfig> implements MockOperation,
-		PropertyChangeListener
+public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig>
 {
 	private RestResource resource = null;
 	private List<RestMockResponse> responses = new ArrayList<RestMockResponse>();
