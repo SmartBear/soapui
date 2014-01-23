@@ -46,7 +46,7 @@ import com.eviware.soapui.support.UISupport;
  * @author ole.matzura
  */
 
-public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig, MockResponseConfig>
+public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig>
 {
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );

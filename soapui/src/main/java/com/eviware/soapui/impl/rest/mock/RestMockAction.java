@@ -4,7 +4,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -12,11 +11,10 @@ import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.support.StringUtils;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RESTMockResponseConfig>
+public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig>
 {
 	private RestResource resource = null;
 	private List<RestMockResponse> responses = new ArrayList<RestMockResponse>();
