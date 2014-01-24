@@ -21,6 +21,8 @@ import javax.swing.ImageIcon;
 
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
+import com.eviware.soapui.model.iface.InterfaceListener;
+import com.eviware.soapui.model.project.ProjectListener;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
@@ -51,14 +53,13 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
 
 	public final static String DISPATCH_STYLE_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchstyle";
-	public final static String DEFAULT_RESPONSE_PROPERTY = WsdlMockOperation.class.getName() + "@defaultresponse";
 	public final static String DISPATCH_PATH_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchpath";
 	public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
 
 	private WsdlOperation operation;
 	private MockOperationDispatcher dispatcher;
-	private InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
-	private InternalProjectListener projectListener = new InternalProjectListener();
+	private InterfaceListener interfaceListener = new InternalInterfaceListener();
+	private ProjectListener projectListener = new InternalProjectListener();
 	private ImageIcon oneWayIcon;
 	private ImageIcon notificationIcon;
 	private ImageIcon solicitResponseIcon;
@@ -85,35 +86,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 			super.addMockResponse( wsdlMockResponse );
 		}
 
-		initData( config );
-	}
-
-	private void initData( MockOperationConfig config )
-	{
-		if( !config.isSetName() )
-			config.setName( operation == null ? "<missing operation>" : operation.getName() );
-
-		if( !config.isSetDefaultResponse() && getMockResponseCount() > 0 )
-			setDefaultResponse( getMockResponseAt( 0 ).getName() );
-
-		if( !config.isSetDispatchStyle() )
-			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
-
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
-
-		dispatcher = MockOperationDispatchRegistry.buildDispatcher( config.getDispatchStyle().toString(), this );
-
-		if( operation != null )
-		{
-			operation.getInterface().getProject().addProjectListener( projectListener );
-			operation.getInterface().addInterfaceListener( interfaceListener );
-			operation.getInterface().addPropertyChangeListener( WsdlInterface.NAME_PROPERTY, this );
-		}
-
-		oneWayIcon = UISupport.createImageIcon( "/onewaymockoperation.gif" );
-		notificationIcon = UISupport.createImageIcon( "/mocknotificationoperation.gif" );
-		solicitResponseIcon = UISupport.createImageIcon( "/mocksolicitresponseoperation.gif" );
+		setupConfig( config );
 	}
 
 	public WsdlMockOperation( WsdlMockService mockService, MockOperationConfig config, WsdlOperation operation )
@@ -124,8 +97,41 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		config.setInterface( operation.getInterface().getName() );
 		config.setOperation( operation.getName() );
 
-		initData( config );
-		interfaceListener = new InternalInterfaceListener();
+		setupConfig( config );
+	}
+
+	protected void setupConfig( MockOperationConfig config )
+	{
+		super.setupConfig( config );
+
+		if( !config.isSetDispatchStyle() )
+			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
+
+		if( !getConfig().isSetDispatchConfig() )
+			getConfig().addNewDispatchConfig();
+
+		dispatcher = MockOperationDispatchRegistry.buildDispatcher( config.getDispatchStyle().toString(), this );
+
+		createIcons();
+		addListeners();
+	}
+
+	private void addListeners()
+	{
+		Operation operation = getOperation();
+		if( operation != null )
+		{
+			operation.getInterface().getProject().addProjectListener( projectListener );
+			operation.getInterface().addInterfaceListener( interfaceListener );
+			operation.getInterface().addPropertyChangeListener( WsdlInterface.NAME_PROPERTY, this );
+		}
+	}
+
+	private void createIcons()
+	{
+		oneWayIcon = UISupport.createImageIcon( "/onewaymockoperation.gif" );
+		notificationIcon = UISupport.createImageIcon( "/mocknotificationoperation.gif" );
+		solicitResponseIcon = UISupport.createImageIcon( "/mocksolicitresponseoperation.gif" );
 	}
 
 	@Override
@@ -293,23 +299,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		notifyPropertyChanged( DISPATCH_PATH_PROPERTY, old, dispatchPath );
 	}
 
-	public String getWsdlOperationName()
-	{
-		return operation == null ? null : operation.getName();
-	}
-
-	public String getDefaultResponse()
-	{
-		return getConfig().getDefaultResponse();
-	}
-
-	public void setDefaultResponse( String defaultResponse )
-	{
-		String old = getDefaultResponse();
-		getConfig().setDefaultResponse( defaultResponse );
-		notifyPropertyChanged( DEFAULT_RESPONSE_PROPERTY, old, defaultResponse );
-	}
-
 	public void propertyChange( PropertyChangeEvent arg0 )
 	{
 		if( arg0.getPropertyName().equals( WsdlMockResponse.NAME_PROPERTY ) )
@@ -359,6 +348,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		@Override
 		public void operationUpdated( Operation operation )
 		{
+			// such wow - works? equals?
 			if( operation == WsdlMockOperation.this.operation )
 				getConfig().setOperation( operation.getName() );
 		}
@@ -366,6 +356,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		@Override
 		public void operationRemoved( Operation operation )
 		{
+			// such wow - works? equals?
 			if( operation == WsdlMockOperation.this.operation )
 				getMockService().removeMockOperation( WsdlMockOperation.this );
 		}

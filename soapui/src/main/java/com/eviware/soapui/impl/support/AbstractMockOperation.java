@@ -1,7 +1,10 @@
 package com.eviware.soapui.impl.support;
 
+import com.eviware.soapui.config.BaseMockOperationConfig;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
@@ -20,6 +23,17 @@ public abstract class AbstractMockOperation
 	protected AbstractMockOperation( ModelItemConfigType config, AbstractMockService parent, String icon )
 	{
 		super( config, parent, icon );
+	}
+
+	protected void setupConfig( ModelItemConfigType config )
+	{
+		BaseMockOperationConfig baseConfig = (BaseMockOperationConfig)config;
+		Operation operation = getOperation();
+		if( !config.isSetName() )
+			config.setName( operation == null ? "<missing operation>" : operation.getName() );
+
+		if( !baseConfig.isSetDefaultResponse() && getMockResponseCount() > 0 )
+			setDefaultResponse( getMockResponseAt( 0 ).getName() );
 	}
 
 	public void addMockResponse(MockResponseType response)
@@ -82,6 +96,18 @@ public abstract class AbstractMockOperation
 	}
 
 	public abstract void removeResponseFromConfig(int index);
+
+	public String getDefaultResponse()
+	{
+		return ((BaseMockOperationConfig)getConfig()).getDefaultResponse();
+	}
+
+	public void setDefaultResponse( String defaultResponse )
+	{
+		String old = getDefaultResponse();
+		((BaseMockOperationConfig)getConfig()).setDefaultResponse( defaultResponse );
+		// noone is listening? notifyPropertyChanged( WsdlMockOperation.DEFAULT_RESPONSE_PROPERTY, old, defaultResponse );
+	}
 
 
 }

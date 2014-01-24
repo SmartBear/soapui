@@ -40,7 +40,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 			responses.add( restMockResponse );
 		}
 
-		//TODO: split WsdlMockOperation.initData( config ); into several parts moving most of them to superclass call them from here
+		super.setupConfig(config);
 	}
 
 	public static String getIconName(RESTMockActionConfig methodConfig)
