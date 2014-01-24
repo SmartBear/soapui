@@ -79,7 +79,10 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 		responses.add( mockResponse );
 
-		// TODO: Set default response - reuse if necessary
+		if( getMockResponseCount() == 1 )
+		{
+			setDefaultResponse( responseConfig.getResponseContent().toString() );
+		}
 
 		( getMockService() ).fireMockResponseAdded( mockResponse );
 		notifyPropertyChanged( "mockResponses", null, mockResponse );
@@ -98,9 +101,11 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 			result.setMockOperation( this );
 			RestMockResponse response = responses.get( 0 ); // TODO in SOAP-1334
+
 			if( response == null )
 			{
-				throw new UnknownError( "not implemented" ); // FIXME use the default response when no response if found
+				// TODO in SOAP-1334 - when there is no matchin response from the dispatcher strategy - use the default
+				throw new UnknownError( "not implemented" );
 			}
 
 			if( response == null )
