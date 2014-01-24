@@ -38,6 +38,7 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -168,12 +169,10 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		return ( WsdlMockOperation )getParent();
 	}
 
-	public WsdlMockResult execute( WsdlMockRequest request, WsdlMockResult result ) throws DispatchException
+	public MockResult execute( MockRequest request, MockResult result ) throws DispatchException
 	{
 		try
 		{
-			// iconAnimator.start();
-
 			getProperty( "Request" ).setValue( request.getRequestContent() );
 
 			long delay = getResponseDelay();
@@ -192,8 +191,9 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 			WsdlMockRunContext context = new WsdlMockRunContext( request.getContext().getMockService(), null );
 			context.setMockResponse( this );
 
-			context.putAll( request.getContext() );
-			context.putAll( request.getRequestContext() );
+			// casting below cause WsdlMockRunContext is both a MockRunContext AND a Map<String,Object>
+			context.putAll( (WsdlMockRunContext)request.getContext() );
+			context.putAll( (WsdlMockRunContext)request.getRequestContext() );
 
 			StringToStringsMap responseHeaders = getResponseHeaders();
 			for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
@@ -206,8 +206,9 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 
 			if( this.getWsaConfig().isWsaEnabled() )
 			{
-				responseContent = new WsaUtils( responseContent, getSoapVersion(), getMockOperation().getOperation(),
-						context ).addWSAddressingMockResponse( this, request );
+				WsdlOperation operation = getMockOperation().getOperation();
+				WsaUtils wsaUtils = new WsaUtils( responseContent, getSoapVersion(), operation, context );
+				responseContent = wsaUtils.addWSAddressingMockResponse( this, ( WsdlMockRequest )request );
 			}
 
 			String outgoingWss = getOutgoingWss();
@@ -244,10 +245,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 			SoapUI.logError( e );
 			throw new DispatchException( e );
 		}
-		// finally
-		// {
-		// iconAnimator.stop();
-		// }
 	}
 
 	public void setResponseHeaders( StringToStringsMap headers )
@@ -463,7 +460,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		notifyPropertyChanged( MTOM_NABLED_PROPERTY, old, mtomEnabled );
 	}
 
-	private String writeResponse( WsdlMockResult response, String responseContent ) throws Exception
+	private String writeResponse( MockResult response, String responseContent ) throws Exception
 	{
 		MimeMultipart mp = null;
 		WsdlOperation operation = getMockOperation().getOperation();
@@ -509,7 +506,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		}
 
 		String status = getResponseHttpStatus();
-		WsdlMockRequest request = response.getMockRequest();
+		WsdlMockRequest request = (WsdlMockRequest)response.getMockRequest();
 
 		if( status == null || status.trim().length() == 0 )
 		{

@@ -42,4 +42,16 @@ public interface MockResult
 	public void finish();
 
 	public byte[] getRawResponseData();
+
+	public void addHeader( String name, String value );
+
+	public boolean isCommitted();
+
+	public void setResponseContent( String responseContent );
+
+	public void setResponseStatus( int scInternalServerError );
+
+	public void setContentType( String contentTypeHttpHeader );
+
+	public void writeRawResponseData( byte[] data );
 }
