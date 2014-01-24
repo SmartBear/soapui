@@ -21,6 +21,7 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.model.project.Project;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -248,8 +249,9 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			}
 
 			WsdlValidator validator = new WsdlValidator( ( operation.getInterface() ).getWsdlContext() );
-			return validator.assertRequest( new WsdlMockResultMessageExchange( getModelItem().getMockResult(),
-					getModelItem() ), false );
+			WsdlMockResultMessageExchange messageExchange =
+					new WsdlMockResultMessageExchange( (WsdlMockResult)getModelItem().getMockResult(), getModelItem() );
+			return validator.assertRequest( messageExchange, false );
 		}
 
 		protected void buildPopup( JPopupMenu inputPopup, RSyntaxTextArea editArea )

@@ -2,26 +2,18 @@ package com.eviware.soapui.impl.rest.mock;
 
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
+import com.eviware.soapui.impl.support.AbstractMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -36,15 +28,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConfig> implements MockResponse,
-		MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder
+public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig>
 {
 
 	private String responseContent;
 	private RestMockResult mockResult;
 	public final static String MOCKRESULT_PROPERTY = RestMockResponse.class.getName() + "@mockresult";
-
-
 
 	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
 	{
@@ -99,30 +88,6 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 		return false;
 	}
 
-	//TODO move it in a common place
-	@Override
-	public String getResponseContent()
-	{
-		if( getConfig().getResponseContent() == null )
-			getConfig().addNewResponseContent();
-
-		if( responseContent == null )
-			responseContent = CompressedStringSupport.getString( getConfig().getResponseContent() );
-
-		return responseContent;
-	}
-
-	@Override
-	public void setResponseContent( String responseContent )
-	{
-		String oldContent = getResponseContent();
-		if( responseContent != null && responseContent.equals( oldContent ) )
-			return;
-
-		this.responseContent = responseContent;
-		notifyPropertyChanged( RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
-	}
-
 	@Override
 	public String getEncoding()
 	{
@@ -163,20 +128,6 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	public MockOperation getMockOperation()
 	{
 		return ( MockOperation )getParent();
-	}
-
-	// TODO move in a a common place
-	@Override
-	public StringToStringsMap getResponseHeaders()
-	{
-		StringToStringsMap result = new StringToStringsMap();
-		List<HeaderConfig> headerList = getConfig().getHeaderList();
-		for( HeaderConfig header : headerList )
-		{
-			result.add( header.getName(), header.getValue() );
-		}
-
-		return result;
 	}
 
 	@Override
@@ -279,30 +230,6 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	public String getPropertiesLabel()
 	{
 		return null;
-	}
-
-	//TODO: move this to a common place
-	public String getResponseHttpStatus()
-	{
-		return getConfig().getHttpResponseStatus();
-	}
-
-
-	//TODO: move this to a common place
-	public String getResponseCompression()
-	{
-		if( getConfig().isSetCompression() )
-			return getConfig().getCompression();
-		else
-			return WsdlMockResponse.AUTO_RESPONSE_COMPRESSION;
-	}
-
-	//TODO: move this to a common place
-	public void setMockResult( RestMockResult mockResult )
-	{
-		RestMockResult oldResult = this.mockResult;
-		this.mockResult = mockResult;
-		notifyPropertyChanged( MOCKRESULT_PROPERTY, oldResult, mockResult );
 	}
 
 	public RestMockResult execute( RestMockRequest request, RestMockResult result ) throws DispatchException
@@ -478,4 +405,10 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 
 		return responseContent;
 	}
+
+	protected String mockresultProperty()
+	{
+		return MOCKRESULT_PROPERTY;
+	}
+
 }

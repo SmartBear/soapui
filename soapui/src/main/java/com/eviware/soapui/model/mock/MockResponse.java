@@ -45,4 +45,10 @@ public interface MockResponse extends TestModelItem
 	public MockResult getMockResult();
 
 	public void release();
+
+	public void evaluateScript( MockRequest request ) throws Exception;
+
+	public String getScript();
+
+	public void setScript(String script);
 }

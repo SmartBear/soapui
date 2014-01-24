@@ -12,52 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.activation.DataHandler;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.internet.PreencodedMimeBodyPart;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.ImageIcon;
-import javax.wsdl.BindingOperation;
-import javax.wsdl.BindingOutput;
-import javax.wsdl.Message;
-
-import com.eviware.soapui.impl.wsdl.*;
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.config.MockResponseConfig;
+import com.eviware.soapui.impl.support.AbstractMockResponse;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.BodyPartAttachment;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
-import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.impl.wsdl.support.FileAttachment;
-import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
-import com.eviware.soapui.impl.wsdl.support.MockFileAttachment;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
-import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
+import com.eviware.soapui.impl.wsdl.support.*;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
@@ -68,15 +34,13 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils.SoapHeader;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
@@ -90,6 +54,31 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+import org.w3c.dom.Document;
+
+import javax.activation.DataHandler;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.PreencodedMimeBodyPart;
+import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
+import javax.wsdl.BindingOperation;
+import javax.wsdl.BindingOutput;
+import javax.wsdl.Message;
+import java.beans.PropertyChangeListener;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A WsdlMockResponse contained by a WsdlMockOperation
@@ -97,16 +86,11 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
-public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> implements MockResponse,
-		MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder, WsaContainer
+public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> implements WsaContainer
 {
-	public static final String AUTO_RESPONSE_COMPRESSION = "<auto>";
-	public static final String NO_RESPONSE_COMPRESSION = "<none>";
-
 	private final static Logger log = Logger.getLogger( WsdlMockResponse.class );
 
 	public final static String MOCKRESULT_PROPERTY = WsdlMockResponse.class.getName() + "@mockresult";
-	public final static String SCRIPT_PROPERTY = WsdlMockResponse.class.getName() + "@script";
 	public final static String HEADERS_PROPERTY = WsdlMockResponse.class.getName() + "@headers";
 	public final static String DISABLE_MULTIPART_ATTACHMENTS = WsdlMockResponse.class.getName()
 			+ "@disable-multipart-attachments";
@@ -116,15 +100,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	public static final String STRIP_WHITESPACES = WsdlMockResponse.class.getName() + "@strip-whitespaces";
 	public static final String REMOVE_EMPTY_CONTENT = WsdlMockResponse.class.getName() + "@remove_empty_content";
 	public static final String ENCODE_ATTACHMENTS = WsdlMockResponse.class.getName() + "@encode_attachments";
-	public static final String RESPONSE_HTTP_STATUS = WsdlMockResponse.class.getName() + "@response-http-status";
 	public static final String OUGOING_WSS = WsdlMockResponse.class.getName() + "@outgoing-wss";
 
 	protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
 	private List<HttpAttachmentPart> definedAttachmentParts;
 	private ModelItemIconAnimator<WsdlMockResponse> iconAnimator;
-	private WsdlMockResult mockResult;
-	private String responseContent;
-	private ScriptEnginePool scriptEnginePool;
 	private MapTestPropertyHolder propertyHolder;
 	private WsaConfig wsaConfig;
 
@@ -142,9 +122,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 		iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request", 4, "gif" );
 
-		scriptEnginePool = new ScriptEnginePool( this );
-		scriptEnginePool.setScript( getScript() );
-
 		propertyHolder = new MapTestPropertyHolder( this );
 		propertyHolder.addProperty( "Request" );
 	}
@@ -161,19 +138,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			else
 				wsaConfig = null;
 		}
-
-		if( scriptEnginePool != null )
-			scriptEnginePool.setScript( getScript() );
 	}
 
 	public Attachment[] getAttachments()
 	{
 		return attachments.toArray( new Attachment[attachments.size()] );
-	}
-
-	public String getScript()
-	{
-		return getConfig().isSetScript() ? getConfig().getScript().getStringValue() : null;
 	}
 
 	public String getEncoding()
@@ -186,48 +155,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		String old = getEncoding();
 		getConfig().setEncoding( encoding );
 		notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
-	}
-
-	public String getResponseContent()
-	{
-		if( getConfig().getResponseContent() == null )
-			getConfig().addNewResponseContent();
-
-		if( responseContent == null )
-			responseContent = CompressedStringSupport.getString( getConfig().getResponseContent() );
-
-		return responseContent;
-	}
-
-	public void setResponseContent( String responseContent )
-	{
-		String oldContent = getResponseContent();
-		if( responseContent != null && responseContent.equals( oldContent ) )
-			return;
-
-		this.responseContent = responseContent;
-		notifyPropertyChanged( RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
-	}
-
-	public void setResponseCompression( String compression )
-	{
-		if( CompressionSupport.ALG_DEFLATE.equals( compression ) || CompressionSupport.ALG_GZIP.equals( compression )
-				|| NO_RESPONSE_COMPRESSION.equals( compression ) )
-		{
-			getConfig().setCompression( compression );
-		}
-		else if( getConfig().isSetCompression() )
-		{
-			getConfig().unsetCompression();
-		}
-	}
-
-	public String getResponseCompression()
-	{
-		if( getConfig().isSetCompression() )
-			return getConfig().getCompression();
-		else
-			return AUTO_RESPONSE_COMPRESSION;
 	}
 
 	@Override
@@ -310,7 +237,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 			setMockResult( result );
 
-			return mockResult;
+			return result;
 		}
 		catch( Throwable e )
 		{
@@ -321,64 +248,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		// {
 		// iconAnimator.stop();
 		// }
-	}
-
-	public void evaluateScript( WsdlMockRequest request ) throws Exception
-	{
-		String script = getScript();
-		if( script == null || script.trim().length() == 0 )
-			return;
-
-		WsdlMockService mockService = getMockOperation().getMockService();
-		WsdlMockRunner mockRunner = mockService.getMockRunner();
-		MockRunContext context = mockRunner == null ? new WsdlMockRunContext( mockService, null ) : mockRunner
-				.getMockContext();
-
-		context.setMockResponse( this );
-
-		SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
-
-		try
-		{
-			scriptEngine.setVariable( "context", context );
-			scriptEngine.setVariable( "requestContext", request == null ? null : request.getRequestContext() );
-			scriptEngine.setVariable( "mockContext", context );
-			scriptEngine.setVariable( "mockRequest", request );
-			scriptEngine.setVariable( "mockResponse", this );
-			scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
-
-			scriptEngine.run();
-		}
-		catch( RuntimeException e )
-		{
-			throw new Exception( e.getMessage(), e );
-		}
-		finally
-		{
-			scriptEnginePool.returnScriptEngine( scriptEngine );
-		}
-	}
-
-	@Override
-	public void release()
-	{
-		super.release();
-		scriptEnginePool.release();
-	}
-
-	public void setScript( String script )
-	{
-		String oldScript = getScript();
-		if( !script.equals( oldScript ) )
-		{
-			if( !getConfig().isSetScript() )
-				getConfig().addNewScript();
-			getConfig().getScript().setStringValue( script );
-
-			scriptEnginePool.setScript( script );
-
-			notifyPropertyChanged( SCRIPT_PROPERTY, oldScript, script );
-		}
 	}
 
 	public void setResponseHeaders( StringToStringsMap headers )
@@ -398,18 +267,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		}
 
 		notifyPropertyChanged( HEADERS_PROPERTY, oldHeaders, headers );
-	}
-
-	public StringToStringsMap getResponseHeaders()
-	{
-		StringToStringsMap result = new StringToStringsMap();
-		List<HeaderConfig> headerList = getConfig().getHeaderList();
-		for( HeaderConfig header : headerList )
-		{
-			result.add( header.getName(), header.getValue() );
-		}
-
-		return result;
 	}
 
 	public MessagePart[] getRequestParts()
@@ -818,32 +675,6 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		return getSettings().getLong( RESPONSE_DELAY_PROPERTY, 0 );
 	}
 
-	public void setResponseHttpStatus( String httpStatus )
-	{
-		String oldStatus = getResponseHttpStatus();
-
-		getConfig().setHttpResponseStatus( httpStatus );
-
-		notifyPropertyChanged( RESPONSE_HTTP_STATUS, oldStatus, httpStatus );
-	}
-
-	public String getResponseHttpStatus()
-	{
-		return getConfig().getHttpResponseStatus();
-	}
-
-	public void setMockResult( WsdlMockResult mockResult )
-	{
-		WsdlMockResult oldResult = this.mockResult;
-		this.mockResult = mockResult;
-		notifyPropertyChanged( MOCKRESULT_PROPERTY, oldResult, mockResult );
-	}
-
-	public WsdlMockResult getMockResult()
-	{
-		return mockResult;
-	}
-
 	public long getContentLength()
 	{
 		return getResponseContent() == null ? 0 : getResponseContent().length();
@@ -932,10 +763,7 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 	{
 		super.beforeSave();
 
-		if( responseContent != null )
-		{
-			CompressedStringSupport.setString( getConfig().getResponseContent(), responseContent );
-		}
+		CompressedStringSupport.setString( getConfig().getResponseContent(), getResponseContent() );
 	}
 
 	public void addAttachmentsChangeListener( PropertyChangeListener listener )
@@ -1150,4 +978,8 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		getMockOperation().setOperation( operation );
 	}
 
+	protected String mockresultProperty()
+	{
+		return MOCKRESULT_PROPERTY;
+	}
 }

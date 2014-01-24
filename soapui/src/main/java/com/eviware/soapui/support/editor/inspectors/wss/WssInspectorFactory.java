@@ -18,6 +18,7 @@ import java.util.Vector;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.ModelItem;
@@ -79,7 +80,7 @@ public class WssInspectorFactory implements RequestInspectorFactory, ResponseIns
 		@Override
 		public Vector<?> getWssResults()
 		{
-			return response.getMockResult() == null ? null : response.getMockResult().getRequestWssResult();
+			return response.getMockResult() == null ? null : ((WsdlMockResult)response.getMockResult()).getRequestWssResult();
 		}
 
 		public void propertyChange( PropertyChangeEvent evt )

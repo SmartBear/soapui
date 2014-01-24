@@ -40,4 +40,6 @@ public interface MockResult
 	public long getTimestamp();
 
 	public void finish();
+
+	public byte[] getRawResponseData();
 }

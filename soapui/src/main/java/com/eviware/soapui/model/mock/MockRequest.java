@@ -53,4 +53,5 @@ public interface MockRequest
 
 	public XmlObject getRequestXmlObject() throws XmlException;
 
+	public void setRequestContent( String xml );
 }

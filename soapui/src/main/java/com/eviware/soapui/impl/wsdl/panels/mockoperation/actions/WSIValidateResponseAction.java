@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
+import com.eviware.soapui.model.mock.MockRequest;
 import org.wsI.testing.x2003.x03.common.AddStyleSheet;
 import org.wsI.testing.x2003.x03.log.Environment;
 import org.wsI.testing.x2003.x03.log.HttpMessageEntry;
@@ -197,7 +198,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 	private void addMessageConfig( Log log, WsdlMockResponse modelItem ) throws MalformedURLException
 	{
 		HttpMessageEntry requestMessage = HttpMessageEntry.Factory.newInstance();
-		WsdlMockRequest mockRequest = modelItem.getMockResult().getMockRequest();
+		MockRequest mockRequest = modelItem.getMockResult().getMockRequest();
 		requestMessage.addNewMessageContent().setStringValue( mockRequest.getRequestContent() );
 		requestMessage.setConversationID( "1" );
 		requestMessage.setTimestamp( Calendar.getInstance() );

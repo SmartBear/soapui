@@ -37,6 +37,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.AbstractWsdlMockResponseDesktopPanel;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.TestRunListenerAdapter;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -407,7 +408,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 		{
 			try
 			{
-				WsdlMockResult lastResult = getMockResponse().getMockResult();
+				MockResult lastResult = getMockResponse().getMockResult();
 				String content = null;
 				if( lastResult == null )
 				{

@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.model.mock;
 
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Context available for the duration of a MockServices execution
@@ -30,4 +30,6 @@ public interface MockRunContext extends PropertyExpansionContext
 	public MockRunner getMockRunner();
 
 	public void setMockResponse( MockResponse mockResponse );
+
+	public StringToStringMap toStringToStringMap();
 }

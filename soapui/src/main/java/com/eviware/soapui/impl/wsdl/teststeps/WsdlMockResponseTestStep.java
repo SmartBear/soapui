@@ -194,7 +194,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		{
 			public String getValue( DefaultTestStepProperty property )
 			{
-				WsdlMockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
+				MockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
 				return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 			}
 		}, this ) );
@@ -985,8 +985,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 			if( getMockResponse().getMockResult() != null )
 			{
-				assertion.assertRequest( new WsdlMockResultMessageExchange( getMockResponse().getMockResult(),
-						getMockResponse() ), new WsdlSubmitContext( this ) );
+				WsdlMockResult mockResult = ( WsdlMockResult )getMockResponse().getMockResult();
+				WsdlMockResultMessageExchange messageExchange
+						= new WsdlMockResultMessageExchange( mockResult, getMockResponse() );
+				assertion.assertRequest( messageExchange, new WsdlSubmitContext( this ) );
 				notifier.notifyChange();
 			}
 
@@ -1087,7 +1089,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 	public String getAssertableContent()
 	{
-		WsdlMockResult mockResult = getMockResponse().getMockResult();
+		MockResult mockResult = getMockResponse().getMockResult();
 		return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 	}
 

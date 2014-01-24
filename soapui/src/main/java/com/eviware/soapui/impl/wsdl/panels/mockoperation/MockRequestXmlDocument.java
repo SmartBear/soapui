@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
+import com.eviware.soapui.model.mock.MockResult;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
@@ -61,13 +62,13 @@ public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDo
 
 	public String getXml()
 	{
-		WsdlMockResult mockResult = mockResponse.getMockResult();
+		MockResult mockResult = mockResponse.getMockResult();
 		return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 	}
 
 	public void setXml( String xml )
 	{
-		WsdlMockResult mockResult = mockResponse.getMockResult();
+		MockResult mockResult = mockResponse.getMockResult();
 		if( mockResult != null )
 		{
 			String oldXml = getXml();
