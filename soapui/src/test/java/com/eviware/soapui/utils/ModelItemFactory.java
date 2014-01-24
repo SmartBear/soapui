@@ -1,14 +1,6 @@
 package com.eviware.soapui.utils;
 
-import com.eviware.soapui.config.OAuth2ProfileContainerConfig;
-import com.eviware.soapui.config.OperationConfig;
-import com.eviware.soapui.config.RestMethodConfig;
-import com.eviware.soapui.config.RestRequestConfig;
-import com.eviware.soapui.config.RestResourceConfig;
-import com.eviware.soapui.config.RestServiceConfig;
-import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.config.WsdlInterfaceConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.DefaultOAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
@@ -21,6 +13,7 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.types.StringToStringMap;
@@ -68,6 +61,11 @@ public class ModelItemFactory
 	public static WsdlTestCase makeTestCase() throws SoapUIException
 	{
 		return new WsdlTestCase( new WsdlTestSuite( makeWsdlProject(), TestSuiteConfig.Factory.newInstance() ), TestCaseConfig.Factory.newInstance(), false );
+	}
+
+	public static WsdlTestRequestStep makeTestRequestStep() throws SoapUIException
+	{
+		return new WsdlTestRequestStep( makeTestCase(), TestStepConfig.Factory.newInstance(), false);
 	}
 
 	public static WsdlOperation makeWsdlOperation() throws SoapUIException
