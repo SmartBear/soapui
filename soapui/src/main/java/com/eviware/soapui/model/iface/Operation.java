@@ -16,6 +16,8 @@ import java.util.List;
 
 import com.eviware.soapui.model.ModelItem;
 
+import javax.wsdl.BindingOperation;
+
 /**
  * Operation interface
  * 

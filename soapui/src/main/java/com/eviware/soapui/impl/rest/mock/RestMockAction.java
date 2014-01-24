@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.*;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
@@ -16,28 +17,19 @@ import java.util.List;
 public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
 {
 	private RestResource resource = null;
-	private List<RestMockResponse> responses = new ArrayList<RestMockResponse>();
 
-	public RestMockAction( RestMockService mockService, RESTMockActionConfig config )
+	public RestMockAction( RestMockService mockService, RESTMockActionConfig config, RestRequest request )
 	{
 		super( config, mockService, RestMockAction.getIconName( config ) );
 
-		Interface iface = mockService.getProject().getInterfaceByName( mockService.getName() );
-		if( iface == null )
-		{
-			SoapUI.log.warn( "Missing interface [" + mockService.getName() + "] for MockOperation in project" );
-		}
-		else
-		{
-			resource = ( RestResource )iface.getOperationByName( mockService.getName() );
-		}
+		resource = request.getResource().getParentResource();
 
 		List<RESTMockResponseConfig> responseConfigs = config.getResponseList();
 		for( RESTMockResponseConfig responseConfig : responseConfigs )
 		{
 			RestMockResponse restMockResponse = new RestMockResponse( this, responseConfig );
 			restMockResponse.addPropertyChangeListener( this );
-			responses.add( restMockResponse );
+			addMockResponse( restMockResponse );
 		}
 
 		super.setupConfig(config);
@@ -77,9 +69,9 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	{
 		RestMockResponse mockResponse = new RestMockResponse( this, responseConfig );
 
-		responses.add( mockResponse );
+		addMockResponse( mockResponse );
 
-		if( getMockResponseCount() == 1 )
+		if( getMockResponseCount() == 1 && responseConfig.getResponseContent() != null )
 		{
 			setDefaultResponse( responseConfig.getResponseContent().toString() );
 		}
@@ -100,7 +92,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
 			result.setMockOperation( this );
-			RestMockResponse response = responses.get( 0 ); // TODO in SOAP-1334
+			RestMockResponse response = getMockResponseAt( 0 ); // TODO in SOAP-1334
 
 			if( response == null )
 			{

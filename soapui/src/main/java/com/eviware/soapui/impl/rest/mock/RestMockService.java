@@ -47,7 +47,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		String mockActionName = restRequest.getResource().getName() + " " + restRequest.getName();
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
 		config.setName( mockActionName );
-		RestMockAction restMockAction = new RestMockAction( this, config );
+		RestMockAction restMockAction = new RestMockAction( this, config, restRequest );
 
 		addMockOperation( restMockAction );
 		fireMockOperationAdded( restMockAction );

@@ -1,28 +1,24 @@
 package com.eviware.soapui.impl.rest.mock;
 
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.support.AbstractMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.xmlbeans.XmlException;
 
-import javax.mail.internet.MimeMultipart;
-import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -232,183 +228,54 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 		return null;
 	}
 
-	public RestMockResult execute( RestMockRequest request, RestMockResult result ) throws DispatchException
-	{
-		try
-		{
-			// iconAnimator.start();
-         /*
-			TODO: break this out into base class (also remove it from Wsdl counterpart)
-			getProperty( "Request" ).setValue( request.getRequestContent() );
-
-
-			long delay = getResponseDelay();
-			if( delay > 0 )
-				Thread.sleep( delay );
-
-			String script = getScript();
-			if( script != null && script.trim().length() > 0 )
-			{
-				evaluateScript( request );
-			}*/
-
-			String responseContent = getResponseContent();
-
-			// create merged context
-			WsdlMockRunContext context = new WsdlMockRunContext( request.getContext().getMockService(), null );
-			context.setMockResponse( this );
-
-			context.putAll( request.getContext() );
-			context.putAll( request.getRequestContext() );
-
-			StringToStringsMap responseHeaders = getResponseHeaders();
-			for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
-			{
-				for( String value : headerEntry.getValue() )
-					result.addHeader( headerEntry.getKey(), PropertyExpander.expandProperties( context, value ) );
-			}
-
-
-			/* TODO: break this out into base class (also remove it from Wsdl counterpart)
-			responseContent = PropertyExpander.expandProperties( context, responseContent, isEntitizeProperties() );
-         */
-
-
-			if( !result.isCommitted() )
-			{
-				responseContent = writeResponse( result, responseContent );
-			}
-
-			result.setResponseContent( responseContent );
-
-			setMockResult( result );
-
-			return mockResult;
-		}
-		catch( Throwable e )
-		{
-			SoapUI.logError( e );
-			throw new DispatchException( e );
-		}
-
-	}
-
-	private String writeResponse( RestMockResult restMockResult, String responseContent ) throws Exception
-	{
-		MimeMultipart mp = null;
-		RestMockAction operation = ( RestMockAction )getMockOperation();
-
-		if( operation == null )
-			throw new Exception( "Missing RestMockAction for mock response" );
-
-
-		StringToStringMap contentIds = new StringToStringMap();
-
-
-		String status = getResponseHttpStatus();
-		RestMockRequest request = restMockResult.getMockRequest();
-
-		if( status == null || status.trim().length() == 0 )
-		{
-
-			request.getHttpResponse().setStatus( HttpServletResponse.SC_OK );
-			restMockResult.setResponseStatus( HttpServletResponse.SC_OK );
-		}
-		else
-		{
-			try
-			{
-				int statusCode = Integer.parseInt( status );
-				request.getHttpResponse().setStatus( statusCode );
-				restMockResult.setResponseStatus( statusCode );
-			}
-			catch( RuntimeException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-
-		ByteArrayOutputStream outData = new ByteArrayOutputStream();
-
-		// non-multipart request?
-
-		String responseCompression = getResponseCompression();
-		String encoding = getEncoding();
-		byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
-		outData.write( content );
-
-
-		/* TODO: break this out into base class (also remove it from Wsdl counterpart)
-		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && getAttachmentCount() == 0 )
-		{
-			String encoding = getEncoding();
-			if( responseContent == null )
-				responseContent = "";
-
-			byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
-
-			String acceptEncoding = restMockResult.getMockRequest().getRequestHeaders().get( "Accept-Encoding", "" );
-			if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
-					&& acceptEncoding.toUpperCase().contains( "GZIP" ) )
-			{
-				restMockResult.addHeader( "Content-Encoding", "gzip" );
-				outData.write( CompressionSupport.compress( CompressionSupport.ALG_GZIP, content ) );
-			}
-			else if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
-					&& acceptEncoding.toUpperCase().contains( "DEFLATE" ) )
-			{
-				restMockResult.addHeader( "Content-Encoding", "deflate" );
-				outData.write( CompressionSupport.compress( CompressionSupport.ALG_DEFLATE, content ) );
-			}
-			else
-			{
-				outData.write( content );
-			}
-		}
-		else
-		{
-			// make sure..
-			if( mp == null )
-				mp = new MimeMultipart();
-
-			// init root part
-			initRootPart( responseContent, mp, isXOP );
-
-			// init mimeparts
-			AttachmentUtils.addMimeParts( this, Arrays.asList( getAttachments() ), mp, contentIds );
-
-			// create request message
-			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
-			message.setContent( mp );
-			message.saveChanges();
-			MimeMessageMockResponseEntity mimeMessageRequestEntity = new MimeMessageMockResponseEntity( message, isXOP,
-					this );
-
-			restMockResult.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType().getValue() );
-			restMockResult.addHeader( "MIME-Version", "1.0" );
-			mimeMessageRequestEntity.writeTo( outData );
-		}*/
-
-		if( outData.size() > 0 )
-		{
-			byte[] data = outData.toByteArray();
-
-			if( responseCompression.equals( CompressionSupport.ALG_DEFLATE )
-					|| responseCompression.equals( CompressionSupport.ALG_GZIP ) )
-			{
-				restMockResult.addHeader( "Content-Encoding", responseCompression );
-				data = CompressionSupport.compress( responseCompression, data );
-			}
-
-			restMockResult.writeRawResponseData( data );
-		}
-
-		return responseContent;
-	}
-
 	protected String mockresultProperty()
 	{
 		return MOCKRESULT_PROPERTY;
+	}
+
+	@Override
+	protected String executeSpecifics( MockRequest request, String responseContent, WsdlMockRunContext context ) throws IOException, WSSecurityException
+	{
+		return responseContent;
+	}
+
+	@Override
+	protected String getContentType( Operation operation, String encoding )
+	{
+		String contentType = "application/xml";
+		if( encoding != null && encoding.trim().length() > 0 )
+			contentType += ";charset=" + encoding;
+		return contentType;
+	}
+
+	@Override
+	protected boolean isFault( String responseContent, MockRequest request ) throws XmlException
+	{
+		return false;
+	}
+
+	@Override
+	protected String removeEmptyContent( String responseContent )
+	{
+		return responseContent;
+	}
+
+	@Override
+	public long getResponseDelay()
+	{
+		return 0;
+	}
+
+	@Override
+	public boolean isForceMtom()
+	{
+		return false;
+	}
+
+	@Override
+	public boolean isStripWhitespaces()
+	{
+		return false;
 	}
 
 }

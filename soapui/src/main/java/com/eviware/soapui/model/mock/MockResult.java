@@ -15,6 +15,8 @@ package com.eviware.soapui.model.mock;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
+import java.io.IOException;
+
 /**
  * Resulting MessageExchange for a request to a MockService
  * 
@@ -53,5 +55,5 @@ public interface MockResult
 
 	public void setContentType( String contentTypeHttpHeader );
 
-	public void writeRawResponseData( byte[] data );
+	public void writeRawResponseData( byte[] data ) throws IOException;
 }
