@@ -125,10 +125,7 @@ public class TestOnDemandPanel extends JPanel
 
 	public void release()
 	{
-		if( browser != null )
-		{
-			browser.release();
-		}
+		browser.release();
 	}
 
 	private Component buildToolbar()
@@ -203,11 +200,12 @@ public class TestOnDemandPanel extends JPanel
 		invalidate();
 	}
 
-	// FIXME These guys should probably go in a utils class
-
 	private void openInInternalBrowser( String url )
 	{
-		browser.navigate( url, null );
+		if( !SoapUI.isBrowserDisabled() )
+		{
+			browser.navigate( url, null );
+		}
 	}
 
 	private void openInExternalBrowser( String url )

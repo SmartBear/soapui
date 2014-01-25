@@ -29,6 +29,7 @@ import javafx.scene.web.WebView;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
@@ -53,11 +54,10 @@ import java.util.ArrayList;
 
 public class WebViewBasedBrowserComponent
 {
-	private JPanel panel = new JPanel( new BorderLayout() );
+	private JPanel panel;
 	private String errorPage;
 	private boolean showingErrorPage;
 	public String url;
-	private final boolean addStatusBar;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
 	private java.util.List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>();
@@ -66,75 +66,84 @@ public class WebViewBasedBrowserComponent
 
 	public WebViewBasedBrowserComponent( boolean addStatusBar )
 	{
-		this.addStatusBar = addStatusBar;
+		panel = new JPanel( new BorderLayout() );
+		if( SoapUI.isBrowserDisabled() )
+		{
+			JEditorPane browserDisabledPanel = new JEditorPane();
+			browserDisabledPanel.setText( "Browser Component disabled" );
+			panel.add( browserDisabledPanel );
+		}
+		else
+		{
+			initializeWebView(addStatusBar);
+		}
 	}
 
 	public Component getComponent()
 	{
-		if( webView == null )
+		return panel;
+	}
+
+	private void initializeWebView( boolean addStatusBar )
+	{
+		if( addStatusBar )
 		{
-			if( addStatusBar )
-			{
-				JPanel statusBar = new JPanel( new BorderLayout() );
-				JLabel statusLabel = new JLabel();
-				UISupport.setFixedSize( statusBar, new Dimension( 20, 20 ) );
-				statusBar.add( statusLabel, BorderLayout.WEST );
-				panel.add( statusBar, BorderLayout.SOUTH );
-			}
-
-			final JFXPanel browserPanel = new JFXPanel();
-			panel.add( browserPanel, BorderLayout.CENTER );
-
-			Platform.runLater( new Runnable()
-			{
-				public void run()
-				{
-					webView = new WebView();
-					webView.getEngine().getLoadWorker().stateProperty().addListener(
-							new ChangeListener<Worker.State>()
-							{
-								@Override
-								public void changed( ObservableValue ov, Worker.State oldState, Worker.State newState )
-								{
-									if( newState == Worker.State.SUCCEEDED )
-									{
-										try
-										{
-											String location = getWebEngine().getLocation();
-											for( BrowserStateChangeListener listener : listeners )
-											{
-												listener.locationChanged( location );
-											}
-
-											if( getWebEngine().getDocument() != null )
-											{
-												String output = readDocumentAsString();
-												for( BrowserStateChangeListener listener : listeners )
-												{
-													listener.contentChanged( output );
-												}
-											}
-										}
-										catch( Exception ex )
-										{
-											SoapUI.logError( ex, "Error processing state change to " + newState );
-										}
-									}
-								}
-							} );
-					Group jfxComponentGroup = new Group();
-					Scene scene = new Scene( jfxComponentGroup );
-					webView.prefWidthProperty().bind( scene.widthProperty() );
-					webView.prefHeightProperty().bind( scene.heightProperty() );
-					jfxComponentGroup.getChildren().add( webView );
-					browserPanel.setScene( scene );
-					addKeyboardFocusManager( browserPanel );
-				}
-			} );
-
+			JPanel statusBar = new JPanel( new BorderLayout() );
+			JLabel statusLabel = new JLabel();
+			UISupport.setFixedSize( statusBar, new Dimension( 20, 20 ) );
+			statusBar.add( statusLabel, BorderLayout.WEST );
+			panel.add( statusBar, BorderLayout.SOUTH );
 		}
 
-		return panel;
+		final JFXPanel browserPanel = new JFXPanel();
+		panel.add( browserPanel, BorderLayout.CENTER );
+
+		Platform.runLater( new Runnable()
+		{
+			public void run()
+			{
+				webView = new WebView();
+				webView.getEngine().getLoadWorker().stateProperty().addListener(
+						new ChangeListener<Worker.State>()
+						{
+							@Override
+							public void changed( ObservableValue ov, Worker.State oldState, Worker.State newState )
+							{
+								if( newState == Worker.State.SUCCEEDED )
+								{
+									try
+									{
+										String location = getWebEngine().getLocation();
+										for( BrowserStateChangeListener listener : listeners )
+										{
+											listener.locationChanged( location );
+										}
+
+										if( getWebEngine().getDocument() != null )
+										{
+											String output = readDocumentAsString();
+											for( BrowserStateChangeListener listener : listeners )
+											{
+												listener.contentChanged( output );
+											}
+										}
+									}
+									catch( Exception ex )
+									{
+										SoapUI.logError( ex, "Error processing state change to " + newState );
+									}
+								}
+							}
+						} );
+				Group jfxComponentGroup = new Group();
+				Scene scene = new Scene( jfxComponentGroup );
+				webView.prefWidthProperty().bind( scene.widthProperty() );
+				webView.prefHeightProperty().bind( scene.heightProperty() );
+				jfxComponentGroup.getChildren().add( webView );
+				browserPanel.setScene( scene );
+				addKeyboardFocusManager( browserPanel );
+			}
+		} );
 	}
 
 	private String readDocumentAsString() throws TransformerException
@@ -227,18 +236,26 @@ public class WebViewBasedBrowserComponent
 
 	public void setContent( final String contentAsString, final String contentType )
 	{
+		if( SoapUI.isBrowserDisabled() )
+		{
+			return;
+		}
 		Platform.runLater( new Runnable()
 		{
 			public void run()
 			{
 
-				getWebEngine().loadContent( contentAsString, contentType);
+				getWebEngine().loadContent( contentAsString, contentType );
 			}
 		} );
 	}
 
 	public void setContent( final String contentAsString )
 	{
+		if( SoapUI.isBrowserDisabled() )
+		{
+			return;
+		}
 		Platform.runLater( new Runnable()
 		{
 			public void run()
@@ -256,6 +273,10 @@ public class WebViewBasedBrowserComponent
 
 	public void navigate( String url, String errorPage )
 	{
+		if( SoapUI.isBrowserDisabled() )
+		{
+			return;
+		}
 		navigate( url, null, errorPage );
 	}
 

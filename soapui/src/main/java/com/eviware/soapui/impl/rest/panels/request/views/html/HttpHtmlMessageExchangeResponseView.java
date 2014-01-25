@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.html;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -35,7 +36,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@SuppressWarnings("unchecked")
+@SuppressWarnings( "unchecked" )
 public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements
 		PropertyChangeListener
 {
@@ -86,12 +87,19 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	private Component buildContent()
 	{
 		JPanel contentPanel = new JPanel( new BorderLayout() );
-		browser = new WebViewBasedBrowserComponent( false );
-		Component component = browser.getComponent();
-		component.setMinimumSize( new Dimension( 100, 100 ) );
-		contentPanel.add( new JScrollPane( component ) );
+		if( SoapUI.isBrowserDisabled() )
+		{
+			contentPanel.add( new JLabel( "Browser Component is disabled" ) );
+		}
+		else
+		{
+			browser = new WebViewBasedBrowserComponent( false );
+			Component component = browser.getComponent();
+			component.setMinimumSize( new Dimension( 100, 100 ) );
+			contentPanel.add( new JScrollPane( component ) );
 
-		setEditorContent( messageExchangeModelItem );
+			setEditorContent( messageExchangeModelItem );
+		}
 		return contentPanel;
 	}
 

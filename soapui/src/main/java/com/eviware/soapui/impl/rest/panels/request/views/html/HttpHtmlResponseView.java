@@ -23,6 +23,7 @@ import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -32,7 +33,7 @@ import java.beans.PropertyChangeListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings("unchecked")
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
 	public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
@@ -54,15 +55,21 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		if( panel == null )
 		{
 			panel = new JPanel( new BorderLayout() );
+			if( SoapUI.isBrowserDisabled() )
+			{
+				panel.add( new JLabel( "Browser Component is disabled" ) );
+			}
+			else
+			{
+				browser = new WebViewBasedBrowserComponent( false );
+				Component component = browser.getComponent();
+				component.setMinimumSize( new Dimension( 100, 100 ) );
+				panel.add( component, BorderLayout.CENTER );
 
-			browser = new WebViewBasedBrowserComponent( false );
-			Component component = browser.getComponent();
-			component.setMinimumSize( new Dimension( 100, 100 ) );
-			panel.add( component, BorderLayout.CENTER );
-
-			HttpResponse response = httpRequest.getResponse();
-			if( response != null )
-				setEditorContent( response );
+				HttpResponse response = httpRequest.getResponse();
+				if( response != null )
+					setEditorContent( response );
+			}
 		}
 
 		return panel;
@@ -100,7 +107,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				try
 				{
-					browser.setContent( content, removeCharsetFrom( contentType ));
+					browser.setContent( content, removeCharsetFrom( contentType ) );
 				}
 				catch( Exception e )
 				{
@@ -121,7 +128,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	private String removeCharsetFrom( String contentType )
 	{
 		Matcher matcher = charsetFinderPattern.matcher( contentType );
-		return matcher.matches() ? matcher.group(1) : contentType;
+		return matcher.matches() ? matcher.group( 1 ) : contentType;
 	}
 
 	private boolean isSupportedContentType( String contentType )

@@ -189,6 +189,7 @@ public class SoapUI
 
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
+	private static final String BROWSER_DISABLED_SYSTEM_PROPERTY = "soapui.browser.disabled";
 
 
 	// ------------------------------ FIELDS ------------------------------
@@ -681,7 +682,7 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) )
+				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !isBrowserDisabled() )
 				{
 					SwingUtilities.invokeLater( new Runnable()
 					{
@@ -1118,6 +1119,11 @@ public class SoapUI
 		}
 
 		return groovyLogger;
+	}
+
+	public static boolean isBrowserDisabled()
+	{
+		return Boolean.valueOf( System.getProperty(BROWSER_DISABLED_SYSTEM_PROPERTY) );
 	}
 
 	public class InternalNavigatorListener implements NavigatorListener
