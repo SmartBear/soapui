@@ -93,7 +93,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 	protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
 	private List<HttpAttachmentPart> definedAttachmentParts;
 	private ModelItemIconAnimator<WsdlMockResponse> iconAnimator;
-	private MapTestPropertyHolder propertyHolder;
 	private WsaConfig wsaConfig;
 
 	public WsdlMockResponse( WsdlMockOperation operation, MockResponseConfig config )
@@ -109,9 +108,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 			config.setEncoding( "UTF-8" );
 
 		iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request", 4, "gif" );
-
-		propertyHolder = new MapTestPropertyHolder( this );
-		propertyHolder.addProperty( "Request" );
 	}
 
 	@Override
@@ -639,50 +635,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		}
 	}
 
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolder.addTestPropertyListener( listener );
-	}
 
-	public ModelItem getModelItem()
-	{
-		return propertyHolder.getModelItem();
-	}
-
-	public Map<String, TestProperty> getProperties()
-	{
-		return propertyHolder.getProperties();
-	}
-
-	public TestProperty getProperty( String name )
-	{
-		return propertyHolder.getProperty( name );
-	}
-
-	public String[] getPropertyNames()
-	{
-		return propertyHolder.getPropertyNames();
-	}
-
-	public String getPropertyValue( String name )
-	{
-		return propertyHolder.getPropertyValue( name );
-	}
-
-	public boolean hasProperty( String name )
-	{
-		return propertyHolder.hasProperty( name );
-	}
-
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-		propertyHolder.removeTestPropertyListener( listener );
-	}
-
-	public void setPropertyValue( String name, String value )
-	{
-		propertyHolder.setPropertyValue( name, value );
-	}
 
 	public String getOutgoingWss()
 	{
@@ -694,21 +647,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		String old = getOutgoingWss();
 		getConfig().setOutgoingWss( outgoingWss );
 		notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
-	}
-
-	public TestProperty getPropertyAt( int index )
-	{
-		return propertyHolder.getPropertyAt( index );
-	}
-
-	public int getPropertyCount()
-	{
-		return propertyHolder.getPropertyCount();
-	}
-
-	public List<TestProperty> getPropertyList()
-	{
-		return propertyHolder.getPropertyList();
 	}
 
 	public String getPropertiesLabel()

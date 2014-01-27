@@ -127,12 +127,6 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	}
 
 	@Override
-	public MockResult getMockResult()
-	{
-		return null;
-	}
-
-	@Override
 	public Attachment attachFile( File file, boolean cache ) throws IOException
 	{
 		return null;
@@ -148,78 +142,6 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	public PropertyExpansion[] getPropertyExpansions()
 	{
 		return new PropertyExpansion[0];
-	}
-
-	@Override
-	public String[] getPropertyNames()
-	{
-		return new String[0];
-	}
-
-	@Override
-	public void setPropertyValue( String name, String value )
-	{
-
-	}
-
-	@Override
-	public String getPropertyValue( String name )
-	{
-		return null;
-	}
-
-	@Override
-	public TestProperty getProperty( String name )
-	{
-		return null;
-	}
-
-	@Override
-	public Map<String, TestProperty> getProperties()
-	{
-		return null;
-	}
-
-	@Override
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-
-	}
-
-	@Override
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-
-	}
-
-	@Override
-	public boolean hasProperty( String name )
-	{
-		return false;
-	}
-
-	@Override
-	public ModelItem getModelItem()
-	{
-		return null;
-	}
-
-	@Override
-	public int getPropertyCount()
-	{
-		return 0;
-	}
-
-	@Override
-	public List<TestProperty> getPropertyList()
-	{
-		return null;
-	}
-
-	@Override
-	public TestProperty getPropertyAt( int index )
-	{
-		return null;
 	}
 
 	@Override

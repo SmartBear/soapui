@@ -13,15 +13,15 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
-import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
-import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
+import com.eviware.soapui.impl.wsdl.support.*;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.CommonSettings;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
@@ -50,6 +50,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 {
 	public static final String AUTO_RESPONSE_COMPRESSION = "<auto>";
 	public static final String NO_RESPONSE_COMPRESSION = "<none>";
+	private MapTestPropertyHolder propertyHolder;
 
 	private String responseContent;
 	private MockResult mockResult;
@@ -62,6 +63,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 		;
 		scriptEnginePool = new ScriptEnginePool( this );
 		scriptEnginePool.setScript( getScript() );
+		propertyHolder = new MapTestPropertyHolder( this );
+		propertyHolder.addProperty( "Request" );
+
 	}
 
 	@Override
@@ -205,7 +209,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 	{
 		try
 		{
-			//getProperty( "Request" ).setValue( request.getRequestContent() );
+			getProperty( "Request" ).setValue( request.getRequestContent() );
 
 			long delay = getResponseDelay();
 			if( delay > 0 )
@@ -437,4 +441,66 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 	public abstract boolean isForceMtom();
 
 	public abstract boolean isStripWhitespaces();
+
+	public void addTestPropertyListener( TestPropertyListener listener )
+	{
+		propertyHolder.addTestPropertyListener( listener );
+	}
+
+	public ModelItem getModelItem()
+	{
+		return propertyHolder.getModelItem();
+	}
+
+	public Map<String, TestProperty> getProperties()
+	{
+		return propertyHolder.getProperties();
+	}
+
+	public TestProperty getProperty( String name )
+	{
+		return propertyHolder.getProperty( name );
+	}
+
+	public String[] getPropertyNames()
+	{
+		return propertyHolder.getPropertyNames();
+	}
+
+	public String getPropertyValue( String name )
+	{
+		return propertyHolder.getPropertyValue( name );
+	}
+
+	public boolean hasProperty( String name )
+	{
+		return propertyHolder.hasProperty( name );
+	}
+
+	public void removeTestPropertyListener( TestPropertyListener listener )
+	{
+		propertyHolder.removeTestPropertyListener( listener );
+	}
+
+	public void setPropertyValue( String name, String value )
+	{
+		propertyHolder.setPropertyValue( name, value );
+	}
+
+
+	public TestProperty getPropertyAt( int index )
+	{
+		return propertyHolder.getPropertyAt( index );
+	}
+
+	public int getPropertyCount()
+	{
+		return propertyHolder.getPropertyCount();
+	}
+
+	public List<TestProperty> getPropertyList()
+	{
+		return propertyHolder.getPropertyList();
+	}
+
 }
