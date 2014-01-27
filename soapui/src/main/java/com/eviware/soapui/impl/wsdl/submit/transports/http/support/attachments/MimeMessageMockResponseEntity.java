@@ -20,6 +20,7 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.http.Header;
 import org.apache.http.entity.AbstractHttpEntity;
@@ -87,8 +88,9 @@ public class MimeMessageMockResponseEntity extends AbstractHttpEntity
 			}
 			else
 			{
-				return new BasicHeader( "Content-Type", "application/xml" );
+				throw new IllegalStateException( "Multipart support is only available for SOAP" );
 			}
+
 		}
 		catch( MessagingException e )
 		{

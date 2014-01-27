@@ -57,7 +57,7 @@ public class MockResponseDataSource implements DataSource
 		}
 		else
 		{
-			return "application/xml; charset=UTF-8";
+			throw new IllegalStateException( "Multipart support is only available for SOAP" );
 		}
 	}
 
