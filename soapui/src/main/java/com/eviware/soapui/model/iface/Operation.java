@@ -12,11 +12,9 @@
 
 package com.eviware.soapui.model.iface;
 
-import java.util.List;
-
 import com.eviware.soapui.model.ModelItem;
 
-import javax.wsdl.BindingOperation;
+import java.util.List;
 
 /**
  * Operation interface
