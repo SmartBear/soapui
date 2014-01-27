@@ -164,6 +164,7 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	@Override
 	protected String getContentType( Operation operation, String encoding )
 	{
+		//TODO as part of SOAP-1260
 		String contentType = "application/xml";
 		if( encoding != null && encoding.trim().length() > 0 )
 			contentType += ";charset=" + encoding;
