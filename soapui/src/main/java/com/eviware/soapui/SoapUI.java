@@ -1329,34 +1329,8 @@ public class SoapUI
 			}
 		}
 
-		DesktopPanel dp = UISupport.showDesktopPanel( urlDesktopPanel );
-		desktop.maximize( dp );
-		addAutoCloseOfStartPageOnMac();
+		UISupport.showDesktopPanel( urlDesktopPanel );
 		urlDesktopPanel.navigate( PUSH_PAGE_URL, PUSH_PAGE_ERROR_URL, true );
-	}
-
-	private static void addAutoCloseOfStartPageOnMac()
-	{
-		if( shouldAutoCloseStartPage() )
-		{
-			desktop.addDesktopListener( new DesktopListenerAdapter()
-			{
-				@Override
-				public void desktopPanelCreated( DesktopPanel desktopPanel )
-				{
-					if( desktopPanel != urlDesktopPanel && urlDesktopPanel != null )
-					{
-						desktop.closeDesktopPanel( urlDesktopPanel );
-					}
-				}
-			} );
-		}
-	}
-
-	private static boolean shouldAutoCloseStartPage()
-	{
-		return System.getProperty( "os.name" ).contains( "Mac" ) &&
-				!( desktop.getClass().getName().contains( "Tabbed" ) );
 	}
 
 	private static class AboutAction extends AbstractAction
