@@ -60,6 +60,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
+import com.eviware.soapui.settings.LoadUISettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
@@ -234,8 +235,16 @@ public class SoapUI
 	private static Logger groovyLogger;
 	private static CmdLineRunner soapUIRunner;
 
-	static {
-		Platform.setImplicitExit( false );
+	static
+	{
+		try
+		{
+			Platform.setImplicitExit( false );
+		}
+		catch( NoClassDefFoundError e )
+		{
+			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly." );
+		}
 	}
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -283,6 +292,11 @@ public class SoapUI
 		{
 			return DEFAULT_MAX_THREADPOOL_SIZE;
 		}
+	}
+
+	public static boolean usingGraphicalEnvironment()
+	{
+		return !UISupport.isHeadless() && !isCommandLine();
 	}
 
 	private void buildUI()
@@ -680,7 +694,8 @@ public class SoapUI
 					} );
 				}
 
-				if( isAutoUpdateVersion() ){
+				if( isAutoUpdateVersion() )
+				{
 					new Thread( new Runnable()
 					{
 						@Override
@@ -691,12 +706,24 @@ public class SoapUI
 					} ).start();
 				}
 
-				CajoServer.getInstance().start();
+				startCajoServerIfNotOverriddenBySetting();
 			}
 			catch( Exception e )
 			{
 				e.printStackTrace();
 				System.exit( 1 );
+			}
+		}
+
+		private void startCajoServerIfNotOverriddenBySetting()
+		{
+			if( !getSettings().isSet( LoadUISettings.START_CAJO_SERVER_AT_STARTUP ) || getSettings().getBoolean( LoadUISettings.START_CAJO_SERVER_AT_STARTUP ) )
+			{
+				CajoServer.getInstance().start();
+			}
+			else
+			{
+				log.info( "Cajo server not started because setting '" + LoadUISettings.START_CAJO_SERVER_AT_STARTUP + "' is false." );
 			}
 		}
 	}

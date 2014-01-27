@@ -12,7 +12,10 @@
 
 package com.eviware.soapui.support;
 
-import java.awt.*;
+import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
+import com.eviware.soapui.support.types.StringToStringMap;
+import junit.framework.ComparisonFailure;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -26,18 +29,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-
-import junit.framework.ComparisonFailure;
-
-import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 public class Tools
 {
@@ -553,19 +550,6 @@ public class Tools
 		return input;
 	}
 
-	public static boolean isMac()
-	{
-		String osName = System.getProperty( "os.name" );
-		if( osName.equals( "Mac OS X" ) )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
-
 	/**
 	 * Compares two string for similarity, allows wildcard.
 	 * 
@@ -613,5 +597,10 @@ public class Tools
 			}
 
 		}
+	}
+
+	public static void main( String[] args )
+	{
+		System.out.println(System.getProperty( "os.name" ));
 	}
 }

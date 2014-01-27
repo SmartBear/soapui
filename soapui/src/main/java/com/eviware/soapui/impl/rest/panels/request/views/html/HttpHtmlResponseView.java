@@ -21,7 +21,6 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
-import com.eviware.soapui.support.editor.xml.XmlEditor;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -30,28 +29,24 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings( "unchecked" )
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
+	public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
 	private HttpRequestInterface<?> httpRequest;
 	private JPanel panel;
 	private WebViewBasedBrowserComponent browser;
 	private MessageExchangeModelItem messageExchangeModelItem;
+	private Pattern charsetFinderPattern = Pattern.compile( CHARSET_PATTERN );
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
 	{
 		super( "HTML", httpRequestMessageEditor, HttpHtmlResponseViewFactory.VIEW_ID );
 		this.httpRequest = httpRequest;
 		httpRequest.addPropertyChangeListener( this );
-	}
-
-	public HttpHtmlResponseView( XmlEditor xmlEditor, MessageExchangeModelItem messageExchangeModelItem )
-	{
-		super( "HTML", xmlEditor, HttpHtmlResponseViewFactory.VIEW_ID );
-		this.messageExchangeModelItem = messageExchangeModelItem;
-		this.httpRequest = ( HttpRequestInterface<?> )messageExchangeModelItem;
-		messageExchangeModelItem.addPropertyChangeListener( this );
 	}
 
 	public JComponent getComponent()
@@ -125,8 +120,8 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	private String removeCharsetFrom( String contentType )
 	{
-		int charsetIndex = contentType.indexOf( ";charset=" );
-		return charsetIndex == -1 ? contentType : contentType.substring( 0, charsetIndex );
+		Matcher matcher = charsetFinderPattern.matcher( contentType );
+		return matcher.matches() ? matcher.group(1) : contentType;
 	}
 
 	private boolean isSupportedContentType( String contentType )

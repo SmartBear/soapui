@@ -22,11 +22,11 @@ import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
-import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.token.BasicOAuthToken;
+import org.apache.oltu.oauth2.common.utils.OAuthUtils;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,14 +54,16 @@ public class OltuOAuth2ClientFacadeTest
 {
 
 	private SpyingOauthClientStub spyingOauthClientStub;
-
 	private String authorizationCode;
+
 	private String accessToken;
 	private OAuth2Profile profile;
 	private OAuth2Profile profileWithOnlyAccessToken;
 	private OltuOAuth2ClientFacade oltuClientFacade;
 	private String refreshToken;
 	private ExtendedPostMethod httpRequest;
+
+	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
 
 	@Before
@@ -73,8 +75,8 @@ public class OltuOAuth2ClientFacadeTest
 		initializeOAuthProfileWithDefaultValues();
 		initializeOAuthProfileWithOnlyAccessToken();
 		spyingOauthClientStub = new SpyingOauthClientStub();
-		httpRequest = new ExtendedPostMethod(  );
-		httpRequest.setURI(  new URI( "endpoint/path" ) );
+		httpRequest = new ExtendedPostMethod();
+		httpRequest.setURI( new URI( "endpoint/path" ) );
 		oltuClientFacade = new OltuOAuth2ClientFacade()
 		{
 			@Override
@@ -89,8 +91,17 @@ public class OltuOAuth2ClientFacadeTest
 	/* Happy path tests */
 
 	@Test
-	public void getsTheAccessTokenFromResponseURI() throws Exception
+	public void getsTheAccessTokenFromJsonResponse() throws Exception
 	{
+		oltuClientFacade.requestAccessToken( profile );
+
+		assertThat( profile.getAccessToken(), is( accessToken ) );
+	}
+
+	@Test
+	public void getsTheAccessTokenFromUrlEncodedFormResponse() throws Exception
+	{
+		profile.setAccesTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.BODY_URL_ENCODED_FORM );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
@@ -107,7 +118,7 @@ public class OltuOAuth2ClientFacadeTest
 	@Test
 	public void getsTheAccessTokenFromResponseBodyInOobRequest() throws Exception
 	{
-		profile.setRedirectURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setRedirectURI( OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );
@@ -129,8 +140,8 @@ public class OltuOAuth2ClientFacadeTest
 		String authorizationPropertyName = "myAuthorizationURI";
 		String redirectURIPropertyName = "myRedirectURI";
 		WsdlProject project = profile.getContainer().getProject();
-		project.addProperty( authorizationPropertyName).setValue( profile.getAuthorizationURI() );
-		project.addProperty( redirectURIPropertyName).setValue( profile.getRedirectURI() );
+		project.addProperty( authorizationPropertyName ).setValue( profile.getAuthorizationURI() );
+		project.addProperty( redirectURIPropertyName ).setValue( profile.getRedirectURI() );
 		profile.setAuthorizationURI( "${#Project#" + authorizationPropertyName + "}" );
 		profile.setRedirectURI( "${#Project#" + redirectURIPropertyName + "}" );
 		oltuClientFacade.requestAccessToken( profile );
@@ -141,23 +152,23 @@ public class OltuOAuth2ClientFacadeTest
 	@Test
 	public void updatesProfileAccessTokenStatus() throws Exception
 	{
-		final List<String> statusValues = new ArrayList<String>(  );
-		profile.addPropertyChangeListener(OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, new PropertyChangeListener()
+		final List<String> statusValues = new ArrayList<String>();
+		profile.addPropertyChangeListener( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, new PropertyChangeListener()
 		{
 			@Override
 			public void propertyChange( PropertyChangeEvent evt )
 			{
-				statusValues.add((String)evt.getNewValue());
+				statusValues.add( ( String )evt.getNewValue() );
 			}
 		} );
 
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( statusValues.size(), is( 4 ) );
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING.toString()));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString()));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE.toString()));
-		assertThat(statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER.toString() ));
+		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING.toString() ) );
+		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString() ) );
+		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE.toString() ) );
+		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER.toString() ) );
 	}
 
 	@Test
@@ -165,7 +176,8 @@ public class OltuOAuth2ClientFacadeTest
 	{
 		oltuClientFacade.requestAccessToken( profile );
 
-		assertThat( spyingOauthClientStub.oAuthClientRequest.getBody(), containsString( authorizationCode ) );
+		String code = ( String )OAuthUtils.decodeForm( spyingOauthClientStub.oAuthClientRequest.getBody() ).get( "code" );
+		assertThat( code, is( authorizationCode ) );
 	}
 
 	@Test
@@ -180,19 +192,19 @@ public class OltuOAuth2ClientFacadeTest
 	public void appendsAccessTokenToHeader() throws Exception
 	{
 		profileWithOnlyAccessToken.setAccessTokenPosition( OAuth2Profile.AccessTokenPosition.HEADER );
-		String expectedAccessTokenValue = "Bearer "+ profileWithOnlyAccessToken.getAccessToken();
+		String expectedAccessTokenValue = "Bearer " + profileWithOnlyAccessToken.getAccessToken();
 		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, httpRequest, "" );
 
-		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) );
 	}
 
 	@Test
 	public void appendsAccessTokenToHeaderByDefault() throws Exception
 	{
-		String expectedAccessTokenValue = "Bearer "+ profileWithOnlyAccessToken.getAccessToken();
+		String expectedAccessTokenValue = "Bearer " + profileWithOnlyAccessToken.getAccessToken();
 		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, httpRequest, "" );
 
-		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) );
 	}
 
 	@Test
@@ -201,7 +213,7 @@ public class OltuOAuth2ClientFacadeTest
 		profileWithOnlyAccessToken.setAccessTokenPosition( OAuth2Profile.AccessTokenPosition.QUERY );
 		oltuClientFacade.applyAccessToken( profileWithOnlyAccessToken, httpRequest, "" );
 
-		assertThat( httpRequest.getURI().getQuery(), is( "access_token=" + profileWithOnlyAccessToken.getAccessToken() ) ) ;
+		assertThat( httpRequest.getURI().getQuery(), is( "access_token=" + profileWithOnlyAccessToken.getAccessToken() ) );
 	}
 
 	@Test
@@ -226,8 +238,8 @@ public class OltuOAuth2ClientFacadeTest
 		WsdlProject project = profile.getContainer().getProject();
 		String clientIdValue = "some_client_id";
 		String clientSecretValue = "some_client_secret";
-		project.addProperty( clientIdPropertyName).setValue( clientIdValue );
-		project.addProperty( clientSecretPropertyName).setValue( clientSecretValue );
+		project.addProperty( clientIdPropertyName ).setValue( clientIdValue );
+		project.addProperty( clientSecretPropertyName ).setValue( clientSecretValue );
 		profile.setClientID( "${#Project#" + clientIdPropertyName + "}" );
 		profile.setClientSecret( "${#Project#" + clientSecretPropertyName + "}" );
 		profile.setRefreshToken( "some_refresh_token" );
@@ -239,63 +251,63 @@ public class OltuOAuth2ClientFacadeTest
 
 	/* Validation tests */
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsUrnAsAuthorizationURI() throws Exception
 	{
-		profile.setAuthorizationURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAuthorizationURI( OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsNonHttpAuthorizationUrl() throws Exception
 	{
 		profile.setAuthorizationURI( "ftp://ftp.sunet.se" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
-	public void rejectsNonHttpRedirectURI() throws Exception
+	@Test( expected = InvalidOAuth2ParametersException.class )
+	public void rejectsNonUriRedirectUri() throws Exception
 	{
-		profile.setRedirectURI( "ftp://ftp.sunet.se" );
+		profile.setRedirectURI( "(/&#)!#%/(¤#!" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsUrnAsAccessTokenURI() throws Exception
 	{
-		profile.setAccessTokenURI( OltuOAuth2ClientFacade.OAUTH_2_OOB_URN );
+		profile.setAccessTokenURI( OAUTH_2_OOB_URN );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsNonHttpAccessTokenURI() throws Exception
 	{
 		profile.setAccessTokenURI( "ftp://ftp.sunet.se" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsEmptyClientId() throws Exception
 	{
 		profile.setClientID( "" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsEmptyClientSecret() throws Exception
 	{
 		profile.setClientSecret( "" );
 		oltuClientFacade.requestAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsEmptyRefreshTokenOnRefresh() throws Exception
 	{
 		profile.setRefreshToken( "" );
 		oltuClientFacade.refreshAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsEmptyClientIdOnRefresh() throws Exception
 	{
 		profile.setRefreshToken( "someRefreshToken" );
@@ -303,7 +315,7 @@ public class OltuOAuth2ClientFacadeTest
 		oltuClientFacade.refreshAccessToken( profile );
 	}
 
-	@Test(expected = InvalidOAuth2ParametersException.class)
+	@Test( expected = InvalidOAuth2ParametersException.class )
 	public void rejectsEmptyClientSecretOnRefresh() throws Exception
 	{
 		profile.setRefreshToken( "someRefreshToken" );
@@ -324,7 +336,7 @@ public class OltuOAuth2ClientFacadeTest
 		profile.setClientSecret( "ClientSecret" );
 	}
 
-	private void initializeOAuthProfileWithOnlyAccessToken( ) throws SoapUIException
+	private void initializeOAuthProfileWithOnlyAccessToken() throws SoapUIException
 	{
 		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
 		profileWithOnlyAccessToken = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
@@ -346,8 +358,8 @@ public class OltuOAuth2ClientFacadeTest
 		public <T extends OAuthAccessTokenResponse> T accessToken( OAuthClientRequest request, Class<T> responseClass ) throws OAuthSystemException, OAuthProblemException
 		{
 			oAuthClientRequest = request;
-			OAuthJSONAccessTokenResponse response = mock( OAuthJSONAccessTokenResponse.class );
-			when( response.getOAuthToken() ).thenReturn( new BasicOAuthToken( accessToken, 60000L, refreshToken, "user" ));
+			OAuthAccessTokenResponse response = mock( responseClass );
+			when( response.getOAuthToken() ).thenReturn( new BasicOAuthToken( accessToken, 60000L, refreshToken, "user" ) );
 			return ( T )response;
 		}
 
@@ -372,7 +384,7 @@ public class OltuOAuth2ClientFacadeTest
 					if( parameter.startsWith( prefix ) )
 					{
 						String redirectURI = parameter.substring( prefix.length() );
-						listener.locationChanged( redirectURI + "?code=" + authorizationCode );
+						listener.locationChanged( redirectURI + "?code=" + authorizationCode + "&state=foo");
 					}
 				}
 			}

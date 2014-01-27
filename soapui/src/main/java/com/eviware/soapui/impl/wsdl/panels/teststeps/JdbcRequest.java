@@ -367,7 +367,7 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null )
+		if( forLoadTest || getIconAnimator() == null )
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

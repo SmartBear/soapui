@@ -63,7 +63,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 			{
 				WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( ( WsdlInterface )iface );
 
-				String wsdlPrefix = getInterfacePrefix( iface ).substring( 1 );
+				String wsdlPrefix = trimLastSlash( getInterfacePrefix( iface ) );
 				StringToStringMap parts = exporter.createFilesForExport( wsdlPrefix + "&part=" );
 
 				for( Map.Entry<String, String> partEntry : parts.entrySet() )
@@ -291,7 +291,6 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		return null;
 	}
 
-
 	protected void dispatchWsdlRequest( HttpServletRequest request, HttpServletResponse response ) throws IOException
 	{
 		if( request.getQueryString().equalsIgnoreCase( "WSDL" ) )
@@ -323,6 +322,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 			printOkXmlResult( response, content );
 		}
 	}
+
 
 	public void release()
 	{
@@ -369,7 +369,6 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		}
 	}
 
-
 	public void printOkXmlResult( HttpServletResponse response, String content ) throws IOException
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
@@ -377,6 +376,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		response.setCharacterEncoding( "UTF-8" );
 		response.getWriter().print( content );
 	}
+
 
 	public void printPartList( WsdlInterface iface, StringToStringMap parts, HttpServletResponse response )
 			throws IOException
@@ -438,6 +438,16 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 	public String getOverviewUrl()
 	{
 		return mockService.getPath() + "?WSDL";
+	}
+
+	private String trimLastSlash( String wsdlPrefix )
+	{
+		int lastSlash = wsdlPrefix.lastIndexOf( '/' );
+		if( lastSlash != -1 )
+		{
+			return wsdlPrefix.substring( lastSlash + 1 );
+		}
+		return wsdlPrefix;
 	}
 
 }

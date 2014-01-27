@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import org.apache.log4j.Logger;
 
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -33,7 +34,7 @@ public class PropertyExpansionRequestFilter extends AbstractRequestFilter
 	public final static Logger log = Logger.getLogger( PropertyExpansionRequestFilter.class );
 
 	@Override
-	public void filterWsdlRequest( SubmitContext context, WsdlRequest request )
+	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> request )
 	{
 		String content = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
 		if( content == null )

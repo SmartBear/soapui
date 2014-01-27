@@ -61,12 +61,8 @@ import org.apache.log4j.Logger;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -76,6 +72,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 
 @SuppressWarnings( "serial" )
 public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFRequestTestStep> implements SubmitListener
@@ -1045,7 +1043,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 	public void propertyChange( PropertyChangeEvent evt )
 	{
 		super.propertyChange( evt );
-		if( evt.getPropertyName().equals( "script" ) && !updating )
+		if( evt.getPropertyName().equals( SCRIPT_PROPERTY ) && !updating )
 		{
 			updating = true;
 			groovyEditor.getEditArea().setText( ( String )evt.getNewValue() );

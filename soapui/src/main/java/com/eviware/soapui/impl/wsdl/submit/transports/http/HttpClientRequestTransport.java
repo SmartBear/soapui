@@ -174,6 +174,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 		submitContext.setProperty( WSDL_REQUEST, httpRequest );
 		submitContext.setProperty( RESPONSE_PROPERTIES, new StringToStringMap() );
 
+
 		for( RequestFilter filter : filters )
 		{
 			filter.filterRequest( submitContext, httpRequest );
@@ -309,6 +310,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport
 				submitContext.setProperty( SubmitContext.HTTP_STATE_PROPERTY, null );
 			}
 		}
+
 
 		return ( Response )submitContext.getProperty( BaseHttpRequestTransport.RESPONSE );
 	}

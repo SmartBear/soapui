@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -78,10 +77,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		super( config, parent, icon );
 
-		if( !forLoadTest && !UISupport.isHeadless() )
+		if( !forLoadTest )
 		{
 			iconAnimator = initIconAnimator();
-			addSubmitListener( iconAnimator );
+			if( SoapUI.usingGraphicalEnvironment() )
+			{
+				addSubmitListener( iconAnimator );
+			}
 		}
 
 		initAttachments();
@@ -467,7 +469,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	@Override
 	public ImageIcon getIcon()
 	{
-		return iconAnimator == null || UISupport.isHeadless() ? null : iconAnimator.getIcon();
+		return iconAnimator == null ? null : iconAnimator.getIcon();
 	}
 
 	public PropertyExpansion[] getPropertyExpansions()
@@ -716,7 +718,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			removeSubmitListener( this.iconAnimator );
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener( this.iconAnimator );
+		if( SoapUI.usingGraphicalEnvironment() )
+		{
+			addSubmitListener( this.iconAnimator );
+		}
 	}
 
 	public HttpResponse getResponse()

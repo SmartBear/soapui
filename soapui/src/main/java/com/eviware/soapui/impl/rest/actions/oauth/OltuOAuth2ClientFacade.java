@@ -24,12 +24,14 @@ import org.apache.http.entity.StringEntity;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.client.response.GitHubTokenResponse;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.apache.oltu.oauth2.common.message.types.GrantType;
 import org.apache.oltu.oauth2.common.token.OAuthToken;
+import org.apache.oltu.oauth2.common.utils.OAuthUtils;
 import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 
 import java.io.UnsupportedEncodingException;
@@ -46,7 +48,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 {
 	public static final String CODE = "code";
 	public static final String TITLE = "<TITLE>";
-	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
 	UserBrowserFacade browserFacade = new WebViewUserBrowserFacade();
 
@@ -87,15 +88,23 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	private void validateProfileContents( OAuth2Parameters parameters )
 	{
-
 		validateHttpUrl( parameters.authorizationUri, "Authorization URI " );
-		if( !parameters.redirectUri.equals( OAUTH_2_OOB_URN ) )
-		{
-			validateHttpUrl( parameters.redirectUri, "Redirect URI" );
-		}
+		validateUri( parameters.redirectUri, "Redirect URI" );
 		validateHttpUrl( parameters.accessTokenUri, "Access token URI" );
 		validateRequiredStringValue( parameters.clientId, "Client ID" );
 		validateRequiredStringValue( parameters.clientSecret, "Client secret" );
+	}
+
+	private void validateUri( String uri, String uriName )
+	{
+		try
+		{
+			new URI( uri );
+		}
+		catch( URISyntaxException e )
+		{
+			throw new InvalidOAuth2ParametersException( uri + " is not a valid " + uriName );
+		}
 	}
 
 
@@ -147,7 +156,6 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 				.setScope( profile.scope )
 				.setRedirectURI( profile.redirectUri )
 				.buildQueryMessage().getLocationUri();
-
 	}
 
 	private void launchConsentScreenAndGetAuthorizationCode( String authorizationURL, final OAuth2Parameters parameters )
@@ -158,23 +166,17 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 			@Override
 			public void locationChanged( String newLocation )
 			{
-				if( !parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
-				{
-					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( newLocation ) );
-				}
+				getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCodeFromForm( extractFormData( newLocation ) ) );
 			}
 
 			@Override
 			public void contentChanged( String newContent )
 			{
-				if( parameters.redirectUri.contains( OAUTH_2_OOB_URN ) )
+				int titlePosition = newContent.indexOf( TITLE );
+				if( titlePosition != -1 )
 				{
-					int titlePosition = newContent.indexOf( TITLE );
-					if( titlePosition != -1 )
-					{
-						String title = newContent.substring( titlePosition + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
-						getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCode( title ) );
-					}
+					String title = newContent.substring( titlePosition + TITLE.length(), newContent.indexOf( "</TITLE>" ) );
+					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCodeFromTitle( title ) );
 				}
 			}
 
@@ -184,13 +186,28 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		parameters.waitingForAuthorization();
 	}
 
-	private String extractAuthorizationCode( String title )
+	private String extractFormData( String url )
+	{
+		int questionMarkIndex = url.indexOf( '?' );
+		if( questionMarkIndex != -1 )
+		{
+			return url.substring( questionMarkIndex + 1 );
+		}
+		return "";
+	}
+
+	private String extractAuthorizationCodeFromTitle( String title )
 	{
 		if( title.contains( "code=" ) )
 		{
 			return title.substring( title.indexOf( "code=" ) + 5 );
 		}
 		return null;
+	}
+
+	private String extractAuthorizationCodeFromForm( String formData )
+	{
+		return ( String )OAuthUtils.decodeForm( formData ).get( "code" );
 	}
 
 	private void getAccessTokenAndSaveToProfile( OAuth2Parameters parameters, String authorizationCode )
@@ -208,7 +225,18 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 						.setRedirectURI( parameters.redirectUri )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
-				OAuthToken token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
+				OAuthToken token = null;
+				switch( parameters.accessTokenRetrievalLocation )
+				{
+					case BODY_URL_ENCODED_FORM:
+						token = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
+						break;
+					case BODY_JSON:
+					default:
+						token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
+								.getOAuthToken();
+						break;
+				}
 				if( token != null && token.getAccessToken() != null )
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
