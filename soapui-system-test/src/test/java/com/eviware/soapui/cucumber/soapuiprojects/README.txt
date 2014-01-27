@@ -1,1 +1,0 @@
-Put the classes for running automated (non-GUI) SoapUI tests here.

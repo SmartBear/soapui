@@ -16,11 +16,16 @@
 
     <build>
         <plugins>
-            <!-- TODO As noticed we are NOT using the Category annotations.
-                    This is because they cause problems when running the Cucumber tests.
-                    We are thus using the standard *Test.java suffix for unit tests and
-                   *IT.java suffix for integration tests.
-                   This should be fixed. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.class</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
@@ -30,9 +35,12 @@
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
                         </soapui.log4j.config>
                     </systemProperties>
+                    <includes>
+                        <include>**/*.class</include>
+                    </includes>
+                    <groups>com.smartbear.soapui.utils.IntegrationTest</groups>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -74,24 +82,38 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
             <version>1.8.5</version>
             <scope>test</scope>
         </dependency>
-        <!-- TODO We are using 1.0.8 because of issue with results not
-            being shown correctly in the json report:
-            https://github.com/cucumber/gherkin/issues/165 -->
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-java</artifactId>
-            <version>1.0.8</version>
+            <version>1.1.5</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>info.cukes</groupId>
             <artifactId>cucumber-junit</artifactId>
-            <version>1.0.8</version>
+            <version>1.1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
+            <version>1.1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.picocontainer</groupId>
+            <artifactId>picocontainer</artifactId>
+            <version>2.14.3</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
