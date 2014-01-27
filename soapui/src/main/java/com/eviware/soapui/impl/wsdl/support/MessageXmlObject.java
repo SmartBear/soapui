@@ -50,7 +50,7 @@ public class MessageXmlObject
 		this.messageContent = messageContent;
 		this.operation = operation;
 		this.isRequest = isRequest;
-		this.operation = operation;
+		wsdlContext = operation.getInterface().getWsdlContext();
 	}
 
 	public String getMessageContent()
