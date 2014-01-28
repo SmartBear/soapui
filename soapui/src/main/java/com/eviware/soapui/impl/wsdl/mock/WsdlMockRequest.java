@@ -66,11 +66,6 @@ public class WsdlMockRequest extends AbstractMockRequest
 	{
 
 		super(request, response, context);
-
-		if( request.getMethod().equals( "POST" ) )
-		{
-			initPostRequest( request, context );
-		}
 	}
 
 	protected void initPostRequest( HttpServletRequest request, WsdlMockRunContext context ) throws Exception
