@@ -160,7 +160,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	private String assertWsdlResponse( WsdlMessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		WsdlContext wsdlContext = null;
+		WsdlContext wsdlContext;
 		try
 		{
 			wsdlContext = ( WsdlContext )getWsdlContext( messageExchange, context );
@@ -271,7 +271,12 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		definitionURL = UISupport
 				.prompt( "Specify definition url to validate by", "Configure Schema Compliance Assertion", definitionURL );
 
-		if( definitionURL == null ||!canLoadDefinitionFrom( definitionURL ))
+		if( definitionURL == null )
+		{
+			return false;
+		}
+
+		if( !canLoadDefinitionFrom( definitionURL ))
 		{
 			UISupport.showErrorMessage( "No valid definition found in " + definitionURL + ". Only WSDL and WADL are supported");
 			return false;

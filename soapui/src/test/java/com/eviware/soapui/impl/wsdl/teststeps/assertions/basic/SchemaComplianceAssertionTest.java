@@ -49,6 +49,15 @@ public class SchemaComplianceAssertionTest
 	}
 
 	@Test
+	public void noErrorMessageShownWhenConfigureIsCancelled() throws Exception
+	{
+		stubbedDialogs.mockPromptWithReturnValue( null );
+
+		assertThat( assertion.configure(), is( false ) );
+		assertThat( stubbedDialogs.getErrorMessages(), is (anEmptyCollection()) );
+	}
+
+	@Test
 	public void canBeConfiguredWithAValidWSDL() throws Exception
 	{
 		String validWsdlURL = SchemaComplianceAssertionTest.class.getResource( "/attachment-test.wsdl" ).toString();
