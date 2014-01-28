@@ -36,6 +36,7 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
@@ -58,7 +59,7 @@ import java.util.jar.JarFile;
 
 /**
  * Initializes core objects. Transform to a Spring "ApplicationContext"?
- * 
+ *
  * @author ole.matzura
  */
 
@@ -198,12 +199,10 @@ public class DefaultSoapUICore implements SoapUICore
 	protected void initExtensions( ClassLoader extensionClassLoader )
 	{
 		String extDir = System.getProperty( "soapui.ext.listeners" );
-		addExternalListeners( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar
-				+ "listeners", extensionClassLoader );
+		addExternalListeners( FilenameUtils.normalize( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar + "listeners" ), extensionClassLoader );
 
 		String factoriesDir = System.getProperty( "soapui.ext.factories" );
-		addExternalFactories( factoriesDir != null ? factoriesDir : root == null ? "factories" : root
-				+ File.separatorChar + "factories", extensionClassLoader );
+		addExternalFactories( FilenameUtils.normalize( factoriesDir != null ? factoriesDir : root == null ? "factories" : root + File.separatorChar + "factories" ), extensionClassLoader );
 	}
 
 	protected void initCoreComponents()
@@ -214,7 +213,7 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 		if( root == null || root.length() == 0 )
 			root = System.getProperty( "soapui.home", new File( "." ).getAbsolutePath() );
-		return root;
+		return FilenameUtils.normalize( root );
 	}
 
 	protected Settings initSettings( String fileName )
@@ -364,7 +363,7 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
 		setIfNotSet( WsaSettings.ENABLE_FOR_OPTIONAL, false );
 		setIfNotSet( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE, true );
-		if( !settings.isSet( ProxySettings.AUTO_PROXY ) && !settings.isSet( ProxySettings.ENABLE_PROXY ))
+		if( !settings.isSet( ProxySettings.AUTO_PROXY ) && !settings.isSet( ProxySettings.ENABLE_PROXY ) )
 		{
 			settings.setBoolean( ProxySettings.AUTO_PROXY, true );
 			settings.setBoolean( ProxySettings.ENABLE_PROXY, true );
@@ -481,7 +480,7 @@ public class DefaultSoapUICore implements SoapUICore
 					byte[] encryptedData = OpenSSL.encrypt( encryptionAlgorithm, password.toCharArray(), data );
 					settingsDocument.setSoapuiSettings( null );
 					settingsDocument.getSoapuiSettings().setEncryptedContent( encryptedData );
-					settingsDocument.getSoapuiSettings().setEncryptedContentAlgorithm(encryptionAlgorithm);
+					settingsDocument.getSoapuiSettings().setEncryptedContentAlgorithm( encryptionAlgorithm );
 				}
 				catch( UnsupportedEncodingException e )
 				{
