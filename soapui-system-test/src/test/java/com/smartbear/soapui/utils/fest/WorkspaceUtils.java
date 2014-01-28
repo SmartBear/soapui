@@ -12,9 +12,14 @@
 package com.smartbear.soapui.utils.fest;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.project.Project;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JPanelFixture;
 import org.fest.swing.fixture.JPopupMenuFixture;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class used for generic operations on the workspace level
@@ -36,5 +41,16 @@ public final class WorkspaceUtils
 	public static JPopupMenuFixture rightClickOnWorkspace( FrameFixture frame )
 	{
 		return getNavigatorPanel( frame ).tree().showPopupMenuAt( SoapUI.getWorkspace().getName() );
+	}
+
+	public static List<String> getProjectNameList()
+	{
+		List<String> projectNameList = new ArrayList<String>();
+		for( Project project : SoapUI.getWorkspace().getProjectList() )
+		{
+			projectNameList.add( project.getName() );
+		}
+		Collections.sort( projectNameList );
+		return projectNameList;
 	}
 }
