@@ -28,7 +28,7 @@ public class SoapProjectStepdefs
 		SoapProjectUtils.createNewSoapProject( rootWindow, robot );
 	}
 
-	@When( "^the the user opens the SOAP request editor$" )
+	@When( "^the user opens the SOAP request editor$" )
 	public void openSoapRequestEditor()
 	{
 		openRequestEditor( rootWindow );

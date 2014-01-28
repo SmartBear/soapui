@@ -86,7 +86,7 @@ public class OAuth2Stepdefs
 	}
 
 
-	@Then( "^the OAuth 2 option is not visble in the Authentication Type dropdown$" )
+	@Then( "^the OAuth 2 option is not visible in the Authentication Type dropdown$" )
 	public void verifyThatOAuth2OptionIsNotShownInAuthenticationDropdown()
 	{
 		assertThat( rootWindow.comboBox( OAuth2AuthenticationInspector.COMBO_BOX_LABEL )
