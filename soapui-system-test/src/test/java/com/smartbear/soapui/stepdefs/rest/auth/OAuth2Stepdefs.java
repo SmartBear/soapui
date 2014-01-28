@@ -1,4 +1,4 @@
-package com.smartbear.soapui.stepdefs.rest.authentication;
+package com.smartbear.soapui.stepdefs.rest.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
@@ -43,7 +43,7 @@ public class OAuth2Stepdefs
 	}
 
 	@When( "^and fills out all fields$" )
-	public void fillOutAllFields()
+	public void fillInAllOAuth2Fields()
 	{
 		fillInAllOAuth2Fields( rootWindow );
 	}

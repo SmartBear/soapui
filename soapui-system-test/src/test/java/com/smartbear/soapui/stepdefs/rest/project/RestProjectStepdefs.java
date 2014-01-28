@@ -2,13 +2,13 @@ package com.smartbear.soapui.stepdefs.rest.project;
 
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
-import static com.smartbear.soapui.utils.fest.RestProjectUtils.createNewRestProject;
 
 public class RestProjectStepdefs
 {
@@ -22,9 +22,9 @@ public class RestProjectStepdefs
 	}
 
 	@Given("^a new REST project is created$")
-	public void createRestProject()
+	public void createNewRestProject()
 	{
-		createNewRestProject( rootWindow, robot );
+		RestProjectUtils.createNewRestProject( rootWindow, robot );
 	}
 
 	@When("^the user clicks on the Auth tab$")

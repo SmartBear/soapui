@@ -1,7 +1,7 @@
 Oh hi, so you want to create a non-cucumber integration test, eh?
 -----------------------------------------------------------------
 
-That's fine aswell. Please organize it according to the following example structure based on feature:
+That's fine as well. Please organize it according to the following example structure based on feature:
 
 --src
 ----test

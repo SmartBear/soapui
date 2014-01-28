@@ -5,8 +5,6 @@ import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
 
-import java.awt.*;
-
 import static com.smartbear.soapui.utils.fest.FestMatchers.frameWithTitle;
 import static org.fest.swing.launcher.ApplicationLauncher.application;
 
@@ -19,7 +17,7 @@ public final class ApplicationUtils
 	private static final String CONFIRMATION_DIALOG_NAME = "Question";
 	private static final String SAVE_PROJECT_DIALOG_NAME = "Save Project";
 	private static final String NO_BUTTON_NAME = "No";
-	private static final String YES_BUTTONM_NAME = "Yes";
+	private static final String YES_BUTTON_NAME = "Yes";
 	private static final int MAIN_WINDOW_TIMEOUT = 3000;
 
 	private ApplicationUtils()
@@ -45,7 +43,7 @@ public final class ApplicationUtils
 		rootWindow.close();
 
 		DialogFixture confirmationDialog = FestMatchers.dialogWithTitle( CONFIRMATION_DIALOG_NAME ).using( robot );
-		confirmationDialog.button( FestMatchers.buttonWithText( YES_BUTTONM_NAME ) ).click();
+		confirmationDialog.button( FestMatchers.buttonWithText( YES_BUTTON_NAME ) ).click();
 
 		DialogFixture saveProjectDialog = FestMatchers.dialogWithTitle( SAVE_PROJECT_DIALOG_NAME ).using( robot );
 		try

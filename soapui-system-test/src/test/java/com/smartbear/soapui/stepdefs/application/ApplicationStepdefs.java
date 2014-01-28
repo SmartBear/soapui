@@ -16,7 +16,6 @@ import static org.junit.Assert.assertThat;
 
 public class ApplicationStepdefs
 {
-	private FrameFixture rootWindow;
 	private Robot robot;
 
 	public ApplicationStepdefs( ScenarioRobot runner )
@@ -24,22 +23,23 @@ public class ApplicationStepdefs
 		robot = runner.getRobot();
 	}
 
-	@When("^SoapUI is started$")
-	public void openSoapUI()
+	@When( "^SoapUI is started$" )
+	public void startSoapUI()
 	{
 		ApplicationUtils.startSoapUI();
-		rootWindow = getMainWindow( robot );
 	}
 
-	@Then("^ensure that the main window is showing up without error$")
+	@Then( "^ensure that the main window is showing up without error$" )
 	public void ensureThatTheMainWindowsIsShowing()
 	{
+		FrameFixture rootWindow = getMainWindow( robot );
 		assertThat( rootWindow, not( nullValue() ) );
 	}
 
-	@Then("^close SoapUI$")
+	@Then( "^close SoapUI$" )
 	public void closeSoapUI()
 	{
+		FrameFixture rootWindow = getMainWindow( robot );
 		rootWindow.close();
 		robot.cleanUp();
 		UISupport.setDialogs( new ConsoleDialogs() );
