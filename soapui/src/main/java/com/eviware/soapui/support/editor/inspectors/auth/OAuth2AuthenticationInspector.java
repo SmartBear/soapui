@@ -22,6 +22,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector
 {
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
+	public static final String ADVANCED_OPTIONS = "Advanced Options";
 
 	private final OAuth2Profile profile;
 	private final SimpleBindingForm oAuth2Form;
@@ -114,7 +115,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "", SimpleForm.LONG_TEXT_FIELD_COLUMNS );
 
-		oauth2Form.addButtonWithoutLabel( "Advanced Options", new ActionListener()
+		JButton advanceOptionsButton = oauth2Form.addButtonWithoutLabel( ADVANCED_OPTIONS, new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -122,6 +123,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				new OAuth2AdvanceOptionsDialog( profile );
 			}
 		} );
+		advanceOptionsButton.setName( ADVANCED_OPTIONS );
 	}
 
 	/**

@@ -7,6 +7,7 @@ import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
+import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
@@ -25,8 +26,11 @@ public class OAuth2Stepdefs
 	private static final String SCOPE = "scope";
 	private static final String ACCESS_TOKEN = "access-token";
 
+	private static final String ADVANCE_OPTIONS_DIALOG_NAME = "OAuth2.0 Advanced options";
+
 	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2.toString();
 	private static final String GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
+	public static final String BUTTON_OK = "OK";
 
 	private FrameFixture rootWindow;
 
@@ -55,6 +59,33 @@ public class OAuth2Stepdefs
 		clickOnComboBoxItem( rootWindow, OAUTH_2_COMBOBOX_ITEM );
 	}
 
+	@When( "^user clicks on Advance options button$" )
+	public void clickOnAdvanceOptionsButton()
+	{
+		rootWindow.button( OAuth2AuthenticationInspector.ADVANCED_OPTIONS ).click();
+	}
+
+	@When( "^user selects access token position (.+)$" )
+	public void selectAccessTokenPosition(String accessTokenPosition)
+	{
+		getAdvanceDialogFixture().radioButton( accessTokenPosition ).click();
+	}
+
+	@When( "^user selects access token retrieval location (.+)$" )
+	public void selectAccessTokenRetrievalLocation(String accessTokenRetrievalLocation)
+	{
+		getAdvanceDialogFixture().radioButton( accessTokenRetrievalLocation ).click();
+	}
+
+
+	@When( "^closes the advance options dialog and reopens it" )
+	public void closeAndReOpenAdvanceOptionsDialog()
+	{
+		closeAdvanceOptionsDialog();
+		clickOnAdvanceOptionsButton();
+	}
+
+
 	@Then( "^the OAuth 2 option is not visble in the Authentication Type dropdown$" )
 	public void verifyThatOAuth2OptionIsNotShownInAuthenticationDropdown()
 	{
@@ -66,6 +97,29 @@ public class OAuth2Stepdefs
 	public void verifyThatThePreviouslyFilledFieldsAreStillPresent()
 	{
 		verifyAllOAuth2Fields( rootWindow );
+	}
+
+	@Then( "^access token position is (.+)$" )
+	public void verifyAccessTokenPosition(String expectedAccessTokenPosition)
+	{
+		getAdvanceDialogFixture().radioButton( expectedAccessTokenPosition ).requireSelected();
+	}
+
+	@Then( "^access token retrieval location is (.+)$" )
+	public void verifyAccessTokenRetrievalLocation(String expectedAccessTokenRetrievalLocation)
+	{
+		getAdvanceDialogFixture().radioButton( expectedAccessTokenRetrievalLocation ).requireSelected();
+	}
+
+	private void closeAdvanceOptionsDialog()
+	{
+		DialogFixture dialogFixture = getAdvanceDialogFixture();
+		dialogFixture.button( BUTTON_OK ).click();
+	}
+
+	private DialogFixture getAdvanceDialogFixture()
+	{
+		return rootWindow.dialog( ADVANCE_OPTIONS_DIALOG_NAME );
 	}
 
 	private void clickOnComboBoxItem( FrameFixture rootWindow, String itemName )
