@@ -91,6 +91,24 @@ public class CommonMatchers
 		};
 	}
 
+	public static Matcher<Collection> anEmptyCollection()
+	{
+		return new TypeSafeMatcher<Collection>()
+		{
+			@Override
+			public boolean matchesSafely( Collection collection)
+			{
+				return collection.isEmpty();
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an empty collection" );
+			}
+		};
+	}
+
 	public static Matcher<Collection> aCollectionWithSize( final int size )
 	{
 		return new TypeSafeMatcher<Collection>()
