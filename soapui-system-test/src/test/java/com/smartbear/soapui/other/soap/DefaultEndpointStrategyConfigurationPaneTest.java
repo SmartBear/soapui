@@ -16,9 +16,10 @@ import org.junit.experimental.categories.Category;
 /**
  * FEST-based test verifying parts of the functionality of DefaultEndpointStrategyConfigurationPaneTest.
  */
-@Category( IntegrationTest.class )
+@Category(IntegrationTest.class)
 public class DefaultEndpointStrategyConfigurationPaneTest
 {
+	private static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
 	private Robot robot;
 	private RestService restService;
 
@@ -29,6 +30,7 @@ public class DefaultEndpointStrategyConfigurationPaneTest
 	@BeforeClass
 	public static void setUpOnce()
 	{
+		System.out.println("Installing jvm exit protection");
 		noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager( new ExitCallHook()
 		{
 			@Override
@@ -40,8 +42,10 @@ public class DefaultEndpointStrategyConfigurationPaneTest
 	}
 
 	@AfterClass
-	public static void classTearDown()
+	public static void classTearDown() throws InterruptedException
 	{
+		Thread.sleep( WAIT_FOR_LAST_TEST_TO_SHUTDOWN );
+		System.out.println( "Shuting down jvm exit protection" );
 		noExitSecurityManagerInstaller.uninstall();
 	}
 
