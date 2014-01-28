@@ -10,22 +10,22 @@ If you're new to the concept of steps please do some quick reading:
 
 then organize it according to the following example structure based on domain concept:
 
---src
-----test
-------java
---------com
-----------smartbear
-------------soapui
---------------stepdefs
-----------------soap
-------------------project
---------------------SoapProjectStepdefs.java
-------------------refactoring
---------------------DefinitionRefactoringStepdefs.java
-----------------rest
-------------------project
---------------------RestProjectStepdefs.java
-------------------authentication
---------------------OAuth2Stepdefs.java
+    --src
+    ----test
+    ------java
+    --------com
+    ----------smartbear
+    ------------soapui
+    --------------stepdefs
+    ----------------soap
+    ------------------project
+    --------------------SoapProjectStepdefs.java
+    ------------------refactoring
+    --------------------DefinitionRefactoringStepdefs.java
+    ----------------rest
+    ------------------project
+    --------------------RestProjectStepdefs.java
+    ------------------authentication
+    --------------------OAuth2Stepdefs.java
 
-That's is!
+**That's is!**
