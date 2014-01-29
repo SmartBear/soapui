@@ -12,15 +12,18 @@
 
 package com.eviware.soapui.impl.support.panels;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+import com.eviware.soapui.support.xml.XmlUtils;
+import net.sf.json.JSON;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2 extends HttpRequestInterface<?>>
 		extends AbstractHttpRequestDesktopPanel<T, T2>
@@ -63,19 +66,19 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
 	public static class HttpRequestDocument extends AbstractXmlDocument implements PropertyChangeListener
 	{
-		private final HttpRequestInterface<?> modelItem;
+		private final HttpRequestInterface<?> request;
 		private boolean updating;
 
-		public HttpRequestDocument( HttpRequestInterface<?> modelItem )
+		public HttpRequestDocument( HttpRequestInterface<?> request )
 		{
-			this.modelItem = modelItem;
+			this.request = request;
 
-			modelItem.addPropertyChangeListener( this );
+			request.addPropertyChangeListener( this );
 		}
 
 		public HttpRequestInterface<?> getRequest()
 		{
-			return modelItem;
+			return request;
 		}
 
 		public String getXml()
@@ -87,7 +90,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 		public void release()
 		{
 			super.release();
-			modelItem.removePropertyChangeListener( this );
+			request.removePropertyChangeListener( this );
 		}
 
 		public void setXml( String xml )
@@ -95,7 +98,15 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 			if( !updating )
 			{
 				updating = true;
-				getRequest().setRequestContent( xml );
+				if( getRequest().getMediaType().startsWith( "application/json" ) && XmlUtils.seemsToBeXml( xml ) )
+				{
+					JSON json = new JsonXmlSerializer().read( xml );
+					request.setRequestContent( json.toString( 3, 0 ) );
+				}
+				else
+				{
+				}
+				request.setRequestContent( xml );
 				updating = false;
 			}
 		}

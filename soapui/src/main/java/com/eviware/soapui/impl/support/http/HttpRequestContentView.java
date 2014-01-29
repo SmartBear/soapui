@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.support.http;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
@@ -24,11 +25,22 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
+import com.eviware.soapui.support.xml.XmlUtils;
+import net.sf.json.JSON;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
@@ -232,7 +244,18 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		if( evt.getPropertyName().equals( AbstractHttpRequest.REQUEST_PROPERTY ) && !updatingRequest )
 		{
 			updatingRequest = true;
-			contentEditor.setText( ( String )evt.getNewValue() );
+			String requestBodyAsXml = ( String )evt.getNewValue();
+			String contentType = ( String )mediaTypeCombo.getSelectedItem();
+			if( XmlUtils.seemsToBeXml( requestBodyAsXml ) &&
+					contentType != null && contentType.startsWith( "application/json" ) )
+			{
+				JSON jsonObject = new JsonXmlSerializer().read( requestBodyAsXml );
+				contentEditor.setText( jsonObject.toString( 3, 0 ) );
+			}
+			else
+			{
+				contentEditor.setText( requestBodyAsXml );
+			}
 			updatingRequest = false;
 		}
 		else if( evt.getPropertyName().equals( "method" ) )
