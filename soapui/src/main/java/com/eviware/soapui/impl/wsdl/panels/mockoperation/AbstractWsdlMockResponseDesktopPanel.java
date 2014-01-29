@@ -176,7 +176,6 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		openRequestButton = createActionButton( SwingActionDelegate.createDelegate(
 				OpenRequestForMockResponseAction.SOAPUI_ACTION_ID, mockResponse, null, "/open_request.gif" ), true );
 
-		// TODO Ericsson: This was removed and replaced with "true" below.
 		boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();
 
 		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), bidirectional );
@@ -184,8 +183,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		createFaultButton = createActionButton( new CreateFaultMockResponseAction( mockResponse ), bidirectional );
 
 		moveFocusAction = new MoveFocusAction();
-		wsiValidateAction = // new WSIValidateResponseAction( mockResponse );
-		SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" );
+		wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" );
 
 		requestEditor = buildRequestEditor();
 		responseEditor = buildResponseEditor();
@@ -279,8 +277,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 				requestEditor.getDocument().setXml( mockRequest == null ? "" : mockRequest.getRequestContent() );
 
 				boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();
-				wsiValidateAction.setEnabled( bidirectional ); // TODO Ericsson: Had
-																				// "true" here. Why?
+				wsiValidateAction.setEnabled( bidirectional );
 			}
 		}
 	}
@@ -340,9 +337,6 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 					inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
 				}
 
-				// TODO Ericsson: This if test was changed and moved up. Ok?
-				// if( !getModelItem().getMockOperation().isOneWay())
-				// {
 				JPopupMenu inputPopup = editor.getEditorPopup();
 				inputPopup.insert( new JSeparator(), 2 );
 				inputPopup.insert( wsiValidateAction, 3 );
@@ -356,7 +350,6 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		{
 			responseHasFocus = false;
 
-			//			statusBar.setTarget( requestEditor.getSourceEditor().getInputArea() );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 0 );
@@ -390,8 +383,6 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		{
 			responseHasFocus = true;
 
-			// What to do with this ???
-			//			statusBar.setTarget( responseEditor.getSourceEditor().getInputArea() );
 			if( !splitButton.isEnabled() )
 			{
 				requestTabs.setSelectedIndex( 1 );
