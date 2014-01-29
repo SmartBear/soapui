@@ -19,10 +19,7 @@ import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyMockResponseAction;
-import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.RecreateMockResponseAction;
-import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.WSIValidateResponseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRequest;
@@ -56,8 +53,8 @@ import java.beans.PropertyChangeListener;
  * @author Ole.Matzura
  */
 
-public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extends MockResponse> extends
-		ModelItemDesktopPanel<T>
+public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelItem, MockResponseType extends MockResponse> extends
+		ModelItemDesktopPanel<ModelItemType>
 {
 	// private final static Log log =
 	// Logger.getLogger(WsdlMockOperationDesktopPanel.class);
@@ -83,15 +80,15 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 
 	private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
 	private JButton createFaultButton;
-	private T2 mockResponse;
+	private MockResponseType mockResponse;
 	private JButton openRequestButton;
 
-	public AbstractWsdlMockResponseDesktopPanel( T modelItem )
+	public AbstractWsdlMockResponseDesktopPanel( ModelItemType modelItem )
 	{
 		super( modelItem );
 	}
 
-	protected void init( T2 mockResponse )
+	protected void init( MockResponseType mockResponse )
 	{
 		this.mockResponse = mockResponse;
 
