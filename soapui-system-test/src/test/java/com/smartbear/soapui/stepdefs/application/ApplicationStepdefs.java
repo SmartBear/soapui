@@ -4,6 +4,7 @@ import com.eviware.soapui.support.ConsoleDialogs;
 import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.ApplicationUtils;
+import cucumber.api.java.After;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
@@ -44,5 +45,22 @@ public class ApplicationStepdefs
 		closeApplicationWithoutSaving(rootWindow, robot);
 		robot.cleanUp();
 		UISupport.setDialogs( new ConsoleDialogs() );
+	}
+
+	@After
+	public void closeSoapUIIfRunning()
+	{
+		try
+		{
+			FrameFixture mainWindow = getMainWindow( robot );
+			if( mainWindow != null )
+			{
+				closeApplicationWithoutSaving( mainWindow, robot );
+			}
+		}
+		catch( Exception e )
+		{
+			//Most probably SoapUI is not running.
+		}
 	}
 }
