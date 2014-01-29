@@ -81,27 +81,27 @@ public class RestProjectStepdefs
 		changeParameterLevel( requestEditor, parameterName, newLevel );
 	}
 
-	@Then( "^request editor has parameter with name (.+) and value (.+) at index (.+)$" )
+	@Then( "^request editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyRequestEditorShowsParameter( String parameterName, String parameterValue, Integer index )
 	{
 		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
 		verifyParamValues( requestEditor, index, parameterName, parameterValue );
 	}
 
-	@Then( "^resource editor has parameter with name (.+) and with empty value at index (.+)$" )
+	@Then( "^resource editor has parameter with name (.+) and with empty value at row (.+)$" )
 	public void verifyResourceEditorShowsTheParameterWithEmptyValue( String parameterName, Integer index )
 	{
 		verifyResourceEditorShowsTheParameter( parameterName, "", index );
 	}
 
-	@Then( "^resource editor has parameter with name (.+) and value (.+) at index (.+)$" )
+	@Then( "^resource editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyResourceEditorShowsTheParameter( String parameterName, String parameterValue, Integer index )
 	{
 		JPanelFixture resourceEditor = findResourceEditor( rootWindow, newProjectIndexInNavigationTree, robot );
 		verifyParamValues( resourceEditor, index, parameterName, parameterValue );
 	}
 
-	@Then( "^method editor has parameter with name (.+) and value (.+) at index (.+)$" )
+	@Then( "^method editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyMethodEditorShowsTheParameter( String parameterName, String parameterValue, Integer index )
 	{
 		JPanelFixture methodEditor = findMethodEditor( rootWindow, newProjectIndexInNavigationTree, robot );

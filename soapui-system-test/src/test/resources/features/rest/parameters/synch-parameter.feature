@@ -6,24 +6,24 @@ Feature: REST request parameter synchronization across REST request, method and 
     Given SoapUI is started
     And a new REST project is created
     When user adds a parameter in request editor with name reqParam and value reqParamValue
-    Then request editor has parameter with name reqParam and value reqParamValue at index 0
-    And resource editor has parameter with name reqParam and with empty value at index 0
+    Then request editor has parameter with name reqParam and value reqParamValue at row 0
+    And resource editor has parameter with name reqParam and with empty value at row 0
     And close SoapUI
 
   Scenario: A new parameter in resource editor is synchronized with request editor
     Given SoapUI is started
     And a new REST project is created
     When user adds a parameter in resource editor with name resParam and value resParamValue
-    Then resource editor has parameter with name resParam and value resParamValue at index 0
-    And request editor has parameter with name resParam and value resParamValue at index 0
+    Then resource editor has parameter with name resParam and value resParamValue at row 0
+    And request editor has parameter with name resParam and value resParamValue at row 0
     And close SoapUI
 
   Scenario: A new parameter in method editor is synchronized with request editor
     Given SoapUI is started
     And a new REST project is created
     When user adds a parameter in method editor with name methodParam and value methodParamValue
-    Then method editor has parameter with name methodParam and value methodParamValue at index 0
-    And request editor has parameter with name methodParam and value methodParamValue at index 0
+    Then method editor has parameter with name methodParam and value methodParamValue at row 0
+    And request editor has parameter with name methodParam and value methodParamValue at row 0
     And close SoapUI
 
   Scenario: A parameter is moved from method to resource when the level is changed from METHOD to RESOURCE in request
@@ -34,6 +34,6 @@ Feature: REST request parameter synchronization across REST request, method and 
     And  user adds a parameter in request editor with name reqParam and value reqParamValue
     And user changes the level to RESOURCE for parameter with name methodParam
     Then method editor has no parameters
-    And resource editor has parameter with name reqParam and with empty value at index 0
-    And resource editor has parameter with name methodParam and value methodParamValue at index 1
+    And resource editor has parameter with name reqParam and with empty value at row 0
+    And resource editor has parameter with name methodParam and value methodParamValue at row 1
     And close SoapUI
