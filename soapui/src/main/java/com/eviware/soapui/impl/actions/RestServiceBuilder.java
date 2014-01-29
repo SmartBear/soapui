@@ -19,27 +19,43 @@ public class RestServiceBuilder
 			return;
 		}
 
-		RestURIParser restURIParser = new RestURIParserImpl( URI );
+		RestResource restResource = createResource( project, URI);
+		RestRequest restRequest = addNewRequest( addNewMethod( restResource ) );
+		copyParameters( extractParams( URI ), restResource.getParams() );
+		UISupport.select( restRequest );
+		UISupport.showDesktopPanel( restRequest );
+
+	}
+
+	public void createRestServiceHeadless(WsdlProject project, String URI) throws MalformedURLException
+	{
+		if( StringUtils.isNullOrEmpty( URI ) )
+		{
+			return;
+		}
+
+		RestResource restResource = createResource( project, URI);
+		RestRequest restRequest = addNewRequest( addNewMethod( restResource ) );
+		copyParametersWithDefaultsOnResource( extractParams( URI ), restResource.getParams(),restRequest.getParams() );
+	}
+
+	private RestParamsPropertyHolder extractParams( String URI )
+	{
 		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( null,
 				RestParametersConfig.Factory.newInstance() );
+		extractAndFillParameters( URI, params );
+		return params;
+	}
 
+	private RestResource createResource( WsdlProject project, String URI) throws MalformedURLException
+	{
+		RestURIParser restURIParser = new RestURIParserImpl( URI );
 		String resourcePath = restURIParser.getResourcePath();
-		String resourceName = restURIParser.getResourceName();
 		String host = restURIParser.getEndpoint();
 
 		RestService restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
 		restService.addEndpoint( restURIParser.getEndpoint() );
-		RestResource restResource = restService.addNewResource( resourceName, resourcePath );
-
-		RestMethod restMethod = addNewMethod( restResource, resourceName );
-
-		extractAndFillParameters( URI, params );
-		copyParameters( params, restResource.getParams() );
-
-		RestRequest restRequest = addNewRequest( restMethod );
-		UISupport.select( restRequest );
-		UISupport.showDesktopPanel( restRequest );
-
+		return restService.addNewResource( restURIParser.getResourceName(), resourcePath );
 	}
 
 	protected void extractAndFillParameters( String URI, RestParamsPropertyHolder params )
@@ -60,9 +76,25 @@ public class RestServiceBuilder
 		}
 	}
 
-	protected RestMethod addNewMethod( RestResource restResource, String methodName )
+	//TODO: In advanced version we have to apply filtering like which type of parameter goes to which location
+	protected void copyParametersWithDefaultsOnResource( RestParamsPropertyHolder srcParams, RestParamsPropertyHolder resourceParams, RestParamsPropertyHolder requestParams )
 	{
-		RestMethod restMethod = restResource.addNewMethod( methodName );
+		for( int i = 0; i < srcParams.size(); i++ )
+		{
+			RestParamProperty prop = srcParams.getPropertyAt( i );
+			String value = prop.getValue();
+			prop.setValue( "" );
+			prop.setDefaultValue( "" );
+			resourceParams.addParameter( prop );
+
+			requestParams.getProperty( prop.getName() ).setValue( value );
+		}
+	}
+
+
+	protected RestMethod addNewMethod( RestResource restResource )
+	{
+		RestMethod restMethod = restResource.addNewMethod( restResource.getName());
 		restMethod.setMethod( RestRequestInterface.RequestMethod.GET );
 		return restMethod;
 	}
