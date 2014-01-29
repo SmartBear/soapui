@@ -16,6 +16,7 @@ import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourceDesktopPanel;
 import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
+import org.fest.swing.driver.JTableComboBoxEditorCellWriter;
 import org.fest.swing.fixture.*;
 
 import javax.swing.*;
@@ -82,7 +83,8 @@ public final class RestProjectUtils
 		editTableCell( paramValue, restParamsTable, robot, rowNumToEdit, 1 );
 	}
 
-	public static void changeParameterLevel( JPanelFixture parentPanel, String parameterName, String newLevel )
+	public static void changeParameterLevel( JPanelFixture parentPanel, String parameterName, String newLevel,
+														  Robot robot )
 	{
 		JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
 		for( int rowCounter = 0; rowCounter < restParamsTable.rowCount(); rowCounter++ )
@@ -90,7 +92,10 @@ public final class RestProjectUtils
 			String paramNameAtIndex = restParamsTable.cell( row( rowCounter ).column( 0 ) ).value();
 			if( paramNameAtIndex.equals( parameterName ) )
 			{
-				restParamsTable.cell( row( rowCounter ).column( 3 ) ).enterValue( newLevel );
+//				JTableCellFixture cell = restParamsTable.cell( row( rowCounter ).column( 3 ) );
+//				cell.enterValue( newLevel );
+				JTableComboBoxEditorCellWriter cellWriter = new JTableComboBoxEditorCellWriter( robot );
+				cellWriter.enterValue( restParamsTable.target, rowCounter,3, newLevel );
 				return;
 			}
 		}

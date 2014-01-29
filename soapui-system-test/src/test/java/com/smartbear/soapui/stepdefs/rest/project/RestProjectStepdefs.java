@@ -78,7 +78,7 @@ public class RestProjectStepdefs
 	public void changesParameterLevel( String newLevel, String parameterName )
 	{
 		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
-		changeParameterLevel( requestEditor, parameterName, newLevel );
+		changeParameterLevel( requestEditor, parameterName, newLevel, robot );
 	}
 
 	@Then( "^request editor has parameter with name (.+) and value (.+) at row (.+)$" )
