@@ -12,36 +12,21 @@
 
 package com.eviware.soapui.support.editor.views.xml.source;
 
-import java.util.List;
-
-import javax.swing.JMenu;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
-import com.eviware.soapui.model.project.Project;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wadl.support.WadlValidator;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.AddWsaHeadersToMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.ApplyOutgoingWSSToMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.RemoveAllOutgoingWSSFromMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.RemoveWsaHeadersFromMockResponseAction;
-import com.eviware.soapui.impl.wsdl.actions.request.AddWSSUsernameTokenAction;
-import com.eviware.soapui.impl.wsdl.actions.request.AddWSTimestampAction;
-import com.eviware.soapui.impl.wsdl.actions.request.AddWsaHeadersToRequestAction;
-import com.eviware.soapui.impl.wsdl.actions.request.ApplyOutgoingWSSToRequestAction;
-import com.eviware.soapui.impl.wsdl.actions.request.RemoveAllOutgoingWSSFromRequestAction;
-import com.eviware.soapui.impl.wsdl.actions.request.RemoveWsaHeadersFromRequestAction;
+import com.eviware.soapui.impl.wsdl.actions.request.*;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -49,11 +34,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlValidator;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlResponseMessageExchange;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
+import com.eviware.soapui.impl.wsdl.teststeps.*;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.support.editor.Editor;
@@ -65,6 +46,12 @@ import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlEditorView;
 import com.eviware.soapui.support.editor.xml.support.ValidationError;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.*;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import java.util.List;
 
 /**
  * Factory for default "XML" source editor view in SoapUI
@@ -103,6 +90,12 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 			return new XmlSourceEditorView<MessageExchangeModelItem>( ( XmlEditor )editor,
 					( MessageExchangeModelItem )modelItem, false );
 		}
+		else if( modelItem instanceof RestMockResponse )
+		{
+			boolean readOnly = false;
+			return new XmlSourceEditorView( ( XmlEditor )editor, modelItem, readOnly );
+		}
+
 
 		return null;
 	}
@@ -135,6 +128,11 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		else if( modelItem instanceof AMFRequestTestStep )
 		{
 			return new XmlSourceEditorView<AMFRequestTestStep>( ( XmlEditor )editor, ( AMFRequestTestStep )modelItem, true );
+		}
+		else if( modelItem instanceof RestMockResponse )
+		{
+			boolean readOnly = false;
+			return new XmlSourceEditorView( ( XmlEditor )editor, modelItem, readOnly );
 		}
 
 		return null;

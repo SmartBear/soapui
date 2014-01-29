@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.WSIValidateResp
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.settings.UISettings;
@@ -55,7 +56,7 @@ import java.beans.PropertyChangeListener;
  * @author Ole.Matzura
  */
 
-public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extends WsdlMockResponse> extends
+public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extends MockResponse> extends
 		ModelItemDesktopPanel<T>
 {
 	// private final static Log log =
@@ -108,7 +109,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 			@Override
 			public void focusGained( FocusEvent e )
 			{
-				if( requestTabs.getSelectedIndex() == 1 || responseHasFocus )
+				if( requestTabs.getSelectedIndex() == 1 || responseHasFocus || true ) //FIXME
 					responseEditor.requestFocus();
 				else
 					requestEditor.requestFocus();
@@ -120,7 +121,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 			// required to avoid deadlock in UI when opening attachments inspector
 			if( mockResponse.getAttachmentCount() > 0 )
 			{
-				mockResponse.getOperation().getInterface().getDefinitionContext().loadIfNecessary();
+				mockResponse.getMockOperation().getOperation().getInterface().getDefinitionContext().loadIfNecessary();
 			}
 		}
 		catch( Exception e )
@@ -129,7 +130,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		}
 	}
 
-	protected WsdlMockResponse getMockResponse()
+	protected MockResponse getMockResponse()
 	{
 		return mockResponse;
 	}
@@ -179,13 +180,18 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();
 
 		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), bidirectional );
-		createEmptyButton = createActionButton( new CreateEmptyMockResponseAction( mockResponse ), bidirectional );
-		createFaultButton = createActionButton( new CreateFaultMockResponseAction( mockResponse ), bidirectional );
+
+		//FIXME push it to subclass
+		//createEmptyButton = createActionButton( new CreateEmptyMockResponseAction( ( WsdlMockResponse )mockResponse ), bidirectional );
+		//FIXME push it to subclass
+		//createFaultButton = createActionButton( new CreateFaultMockResponseAction( ( WsdlMockResponse )mockResponse ), bidirectional );
 
 		moveFocusAction = new MoveFocusAction();
-		wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" );
+		//FIXME push it so subclass
+		//wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), ( WsdlMockResponse )mockResponse, "alt W" );
 
-		requestEditor = buildRequestEditor();
+
+		//requestEditor = buildRequestEditor(); //FIXME
 		responseEditor = buildResponseEditor();
 
 		requestTabs = new JTabbedPane();
@@ -216,12 +222,14 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 
 	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
 	{
+		//FIXME
 		return new WsdlMockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ) );
 	}
 
 	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
 	{
-		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( mockResponse ) );
+		//FIXME
+		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( ( WsdlMockResponse )mockResponse ) );
 	}
 
 	protected JComponent buildToolbar()
@@ -231,8 +239,10 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		toolbar.add( openRequestButton );
 		toolbar.addUnrelatedGap();
 		toolbar.add( recreateButton );
-		toolbar.add( createEmptyButton );
-		toolbar.add( createFaultButton );
+
+		//FIXME
+		//toolbar.add( createEmptyButton );
+		//toolbar.add( createFaultButton );
 
 		createToolbar( toolbar );
 
@@ -286,7 +296,8 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	{
 		public WsdlMockRequestMessageEditor( XmlDocument document )
 		{
-			super( document, mockResponse );
+			//FIXME
+			super( document, ( WsdlMockResponse )mockResponse );
 		}
 
 		protected XmlSourceEditorView<?> buildSourceEditor()
@@ -313,7 +324,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		}
 	}
 
-	public class WsdlMockResponseMessageEditor extends ResponseMessageXmlEditor<WsdlMockResponse, XmlDocument>
+	public class WsdlMockResponseMessageEditor extends ResponseMessageXmlEditor<MockResponse, XmlDocument>
 	{
 		public WsdlMockResponseMessageEditor( XmlDocument document )
 		{
@@ -321,7 +332,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 
 			XmlSourceEditorView<?> editor = getSourceEditor();
 
-			if( getModelItem().getMockOperation().isBidirectional() )
+			if( getModelItem().getMockOperation().getOperation().isBidirectional() )
 			{
 				RSyntaxTextArea inputArea = editor.getInputArea();
 				inputArea.addFocusListener( new ResultAreaFocusListener() );

@@ -13,6 +13,7 @@
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 
 /**
  * DesktopPanel for WsdlMockResponse
@@ -21,11 +22,11 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
  */
 
 public class WsdlMockResponseDesktopPanel extends
-		AbstractWsdlMockResponseDesktopPanel<WsdlMockResponse, WsdlMockResponse>
+		AbstractWsdlMockResponseDesktopPanel<WsdlMockResponse, MockResponse>
 {
-	public WsdlMockResponseDesktopPanel( WsdlMockResponse mockResponse )
+	public WsdlMockResponseDesktopPanel( MockResponse mockResponse )
 	{
-		super( mockResponse );
+		super( ( WsdlMockResponse )mockResponse );
 
 		init( mockResponse );
 	}

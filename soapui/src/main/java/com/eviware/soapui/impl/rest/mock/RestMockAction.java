@@ -22,7 +22,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	{
 		super( config, mockService, RestMockAction.getIconName( config ) );
 
-		resource = request.getResource().getParentResource();
+		resource = request.getResource();
 
 		List<RESTMockResponseConfig> responseConfigs = config.getResponseList();
 		for( RESTMockResponseConfig responseConfig : responseConfigs )

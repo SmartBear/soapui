@@ -38,6 +38,8 @@ public interface MockResponse extends TestModelItem
 
 	public Attachment[] getAttachments();
 
+	public int getAttachmentCount();
+
 	public MockOperation getMockOperation();
 
 	public StringToStringsMap getResponseHeaders();

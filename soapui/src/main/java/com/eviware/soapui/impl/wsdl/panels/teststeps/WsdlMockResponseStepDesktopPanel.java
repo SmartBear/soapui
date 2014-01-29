@@ -32,6 +32,8 @@ import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.AbstractWsdlMockResponseDesktopPanel;
@@ -418,7 +420,7 @@ public class WsdlMockResponseStepDesktopPanel extends
 						return;
 					}
 
-					content = getMockResponse().getMockOperation().getOperation().createRequest( true );
+					content = ((WsdlOperation )getMockResponse().getMockOperation().getOperation()).createRequest( true );
 				}
 				else
 				{

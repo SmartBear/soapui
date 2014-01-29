@@ -268,7 +268,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public boolean isBidirectional()
 	{
-		return false;
+		return true;
 	}
 
 	public boolean isNotification()

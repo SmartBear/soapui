@@ -42,7 +42,8 @@ public class CreateEmptyMockResponseAction extends AbstractAction
 
 	public void actionPerformed( ActionEvent e )
 	{
-		WsdlOperation operation = mockResponse.getMockOperation().getOperation();
+		//FIXME for rest mocking action
+		WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
 
 		if( operation == null )
 		{

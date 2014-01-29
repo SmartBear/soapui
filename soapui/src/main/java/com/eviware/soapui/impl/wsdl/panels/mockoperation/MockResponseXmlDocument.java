@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
@@ -33,9 +34,9 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 
 public class MockResponseXmlDocument extends AbstractXmlDocument implements PropertyChangeListener
 {
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public MockResponseXmlDocument( WsdlMockResponse response )
+	public MockResponseXmlDocument( MockResponse response )
 	{
 		this.mockResponse = response;
 
@@ -46,7 +47,8 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 	{
 		try
 		{
-			WsdlOperation operation = mockResponse.getMockOperation().getOperation();
+			//FIXME for REST mocking
+			WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
 			if( operation != null )
 			{
 				WsdlInterface iface = operation.getInterface();

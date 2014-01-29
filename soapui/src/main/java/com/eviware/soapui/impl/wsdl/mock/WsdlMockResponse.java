@@ -36,6 +36,7 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -186,7 +187,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 			result.addAll( Arrays.asList( getMockOperation().getOperation().getDefaultRequestParts() ) );
 
 			if( getMockResult() != null )
-				result.addAll( AttachmentUtils.extractAttachmentParts( getMockOperation().getOperation(), getMockResult()
+				result.addAll( AttachmentUtils.extractAttachmentParts( ( WsdlOperation )getMockOperation().getOperation(), getMockResult()
 						.getMockRequest().getRequestContent(), true, false, isMtomEnabled() ) );
 
 			return result.toArray( new MessagePart[result.size()] );
@@ -203,7 +204,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		try
 		{
 			// init
-			WsdlOperation op = getMockOperation().getOperation();
+			WsdlOperation op = ( WsdlOperation )getMockOperation().getOperation();
 			if( op == null || op.isUnidirectional() )
 				return new MessagePart[0];
 
@@ -309,7 +310,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		{
 			try
 			{
-				WsdlOperation operation = getMockOperation().getOperation();
+				WsdlOperation operation = ( WsdlOperation )getMockOperation().getOperation();
 				if( operation == null )
 				{
 					definedAttachmentParts = new ArrayList<HttpAttachmentPart>();
@@ -376,14 +377,14 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 	{
 		if( this.getWsaConfig().isWsaEnabled() )
 		{
-			WsdlOperation operation = getMockOperation().getOperation();
+			WsdlOperation operation = ( WsdlOperation )getMockOperation().getOperation();
 			WsaUtils wsaUtils = new WsaUtils( responseContent, getSoapVersion(), operation, context );
 			responseContent = wsaUtils.addWSAddressingMockResponse( this, ( WsdlMockRequest )request );
 		}
 
 		String outgoingWss = getOutgoingWss();
 		if( StringUtils.isNullOrEmpty( outgoingWss ) )
-			outgoingWss = getMockOperation().getMockService().getOutgoingWss();
+			outgoingWss = ((WsdlMockService)getMockOperation().getMockService()).getOutgoingWss();
 
 		if( StringUtils.hasContent( outgoingWss ) )
 		{
@@ -573,7 +574,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 
 	public SoapVersion getSoapVersion()
 	{
-		return getMockOperation().getOperation() == null ? SoapVersion.Soap11 : getMockOperation().getOperation()
+		return getMockOperation().getOperation() == null ? SoapVersion.Soap11 : ((WsdlOperation)getMockOperation().getOperation())
 				.getInterface().getSoapVersion();
 	}
 
@@ -702,12 +703,12 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 
 	public WsdlOperation getOperation()
 	{
-		return getMockOperation().getOperation();
+		return ((WsdlMockOperation)getMockOperation()).getOperation();
 	}
 
 	public void setOperation( WsdlOperation operation )
 	{
-		getMockOperation().setOperation( operation );
+		((WsdlMockOperation)getMockOperation()).setOperation( operation );
 	}
 
 	protected String mockresultProperty()
