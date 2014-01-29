@@ -12,18 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
-import com.eviware.soapui.model.mock.MockResult;
-import org.apache.xmlbeans.SchemaTypeSystem;
-import org.apache.xmlbeans.XmlBeans;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlBeans;
 
 /**
  * XmlDocument for the last request to a WsdlMockResponse
@@ -33,9 +32,9 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 
 public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDocument
 {
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public MockRequestXmlDocument( WsdlMockResponse response )
+	public MockRequestXmlDocument( MockResponse response )
 	{
 		this.mockResponse = response;
 	}
@@ -44,7 +43,8 @@ public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDo
 	{
 		try
 		{
-			WsdlOperation operation = mockResponse.getMockOperation().getOperation();
+			// FIXME for REST mocking
+			WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
 			if( operation != null )
 			{
 				WsdlInterface iface = operation.getInterface();

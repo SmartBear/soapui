@@ -109,7 +109,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 			@Override
 			public void focusGained( FocusEvent e )
 			{
-				if( requestTabs.getSelectedIndex() == 1 || responseHasFocus || true ) //FIXME
+				if( requestTabs.getSelectedIndex() == 1 || responseHasFocus )
 					responseEditor.requestFocus();
 				else
 					requestEditor.requestFocus();
@@ -191,7 +191,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		//wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), ( WsdlMockResponse )mockResponse, "alt W" );
 
 
-		//requestEditor = buildRequestEditor(); //FIXME
+		requestEditor = buildRequestEditor();
 		responseEditor = buildResponseEditor();
 
 		requestTabs = new JTabbedPane();
@@ -229,7 +229,7 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
 	{
 		//FIXME
-		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( ( WsdlMockResponse )mockResponse ) );
+		return new WsdlMockRequestMessageEditor( new MockRequestXmlDocument( mockResponse ) );
 	}
 
 	protected JComponent buildToolbar()
@@ -292,12 +292,11 @@ public class AbstractWsdlMockResponseDesktopPanel<T extends ModelItem, T2 extend
 		}
 	}
 
-	public class WsdlMockRequestMessageEditor extends RequestMessageXmlEditor<WsdlMockResponse, XmlDocument>
+	public class WsdlMockRequestMessageEditor extends RequestMessageXmlEditor<MockResponse, XmlDocument>
 	{
 		public WsdlMockRequestMessageEditor( XmlDocument document )
 		{
-			//FIXME
-			super( document, ( WsdlMockResponse )mockResponse );
+			super( document, mockResponse );
 		}
 
 		protected XmlSourceEditorView<?> buildSourceEditor()
