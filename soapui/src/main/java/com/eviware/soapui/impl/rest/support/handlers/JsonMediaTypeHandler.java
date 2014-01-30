@@ -12,26 +12,32 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
-import java.net.URL;
-
-import net.sf.json.JSON;
-import net.sf.json.JSONException;
-import net.sf.json.JSONSerializer;
-
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
+import net.sf.json.JSON;
+import net.sf.json.JSONException;
+import net.sf.json.JSONSerializer;
+
+import java.net.URL;
 
 public class JsonMediaTypeHandler implements MediaTypeHandler
 {
 	public boolean canHandle( String contentType )
 	{
-		return couldBeJsonContent( contentType );
+		return seemsToBeJsonContentType( contentType );
 	}
 
-	public static boolean couldBeJsonContent( String contentType )
+	/**
+	 * This method and its name are somewhat awkward, but both stem from the fact that there are so many commonly used
+	 * content types for JSON.
+	 * @param contentType the MIME type to examine
+	 * @return <code>true</code> if content type is non-null and contains either "json" or "javascript"
+	 */
+	public static boolean seemsToBeJsonContentType( String contentType )
 	{
 		return contentType != null && ( contentType.contains( "javascript" ) || contentType.contains( "json" ) );
 	}
@@ -57,10 +63,13 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 
 			return content;
 		}
-		catch( Throwable e )
+		catch (JSONException ignore)
 		{
-			if( !( e instanceof JSONException ) )
-				e.printStackTrace();
+			// if the content is not valid JSON, empty XML will be returned
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError(e);
 		}
 		return "<xml/>";
 	}
