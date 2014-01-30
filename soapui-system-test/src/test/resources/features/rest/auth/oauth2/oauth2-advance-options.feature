@@ -9,9 +9,10 @@ Feature: OAuth2 Advance options
     And user clicks on Advance options button
     When user selects access token position <accessTokenPosition>
     And user selects access token retrieval location <accessTokenRetrievalPosition>
-    And closes the advance options dialog and reopens it
+    And closes and reopens the advance options dialog
     Then access token position is <accessTokenPosition>
     And access token retrieval location is <accessTokenRetrievalPosition>
+    And closes the advance options dialog
     And close SoapUI
 
   Examples:

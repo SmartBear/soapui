@@ -78,11 +78,17 @@ public class OAuth2Stepdefs
 	}
 
 
-	@When( "^closes the advance options dialog and reopens it" )
+	@When( "^closes and reopens the advance options dialog" )
 	public void closeAndReOpenAdvanceOptionsDialog()
 	{
 		closeAdvanceOptionsDialog();
 		clickOnAdvanceOptionsButton();
+	}
+
+	@When( "^closes the advance options dialog" )
+	public void closesAdvanceOptionsDialog()
+	{
+		closeAdvanceOptionsDialog();
 	}
 
 
