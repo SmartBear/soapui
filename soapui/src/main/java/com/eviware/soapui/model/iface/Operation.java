@@ -43,4 +43,8 @@ public interface Operation extends ModelItem
 	public MessagePart[] getDefaultRequestParts();
 
 	public MessagePart[] getDefaultResponseParts();
+
+	public String createRequest( boolean b );
+
+	public String createResponse( boolean b );
 }

@@ -19,6 +19,7 @@ import javax.swing.Action;
 
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
@@ -44,8 +45,7 @@ public class RecreateMockResponseAction extends AbstractAction
 
 	public void actionPerformed( ActionEvent arg0 )
 	{
-		//FIXME for REST mocking
-		WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
+		Operation operation = mockResponse.getMockOperation().getOperation();
 		if( operation == null )
 		{
 			UISupport.showErrorMessage( "Missing operation for this mock response" );
