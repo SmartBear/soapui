@@ -852,13 +852,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				FileOutputStream projectOut = new FileOutputStream( projectFile );
 				projectDocument.save( projectOut, options );
 				projectOut.close();
-				// delete tempFile here so we have it as backup in case second save
-				// fails
-				if( !tempFile.delete() )
-				{
-					SoapUI.getErrorLog().warn( "Failed to delete temporary project file; " + tempFile.getAbsolutePath() );
-					tempFile.deleteOnExit();
-				}
 			}
 
 			// delete tempFile here so we have it as backup in case second save fails
