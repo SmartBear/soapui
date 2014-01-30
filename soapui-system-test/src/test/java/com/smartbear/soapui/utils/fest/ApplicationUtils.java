@@ -45,9 +45,9 @@ public final class ApplicationUtils
 		DialogFixture confirmationDialog = FestMatchers.dialogWithTitle( CONFIRMATION_DIALOG_NAME ).using( robot );
 		confirmationDialog.button( FestMatchers.buttonWithText( YES_BUTTON_NAME ) ).click();
 
-		DialogFixture saveProjectDialog = FestMatchers.dialogWithTitle( SAVE_PROJECT_DIALOG_NAME ).using( robot );
 		try
 		{
+			DialogFixture saveProjectDialog = FestMatchers.dialogWithTitle( SAVE_PROJECT_DIALOG_NAME ).using( robot );
 			//Sometimes we have more than one projects modified, then we need to ignore save dialog for each one of them
 			while( saveProjectDialog != null )
 			{

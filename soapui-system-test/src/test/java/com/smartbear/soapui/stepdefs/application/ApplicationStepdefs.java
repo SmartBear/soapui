@@ -9,6 +9,7 @@ import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 
+import static com.smartbear.soapui.utils.fest.ApplicationUtils.closeApplicationWithoutSaving;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -40,7 +41,7 @@ public class ApplicationStepdefs
 	public void closeSoapUI()
 	{
 		FrameFixture rootWindow = getMainWindow( robot );
-		rootWindow.close();
+		closeApplicationWithoutSaving(rootWindow, robot);
 		robot.cleanUp();
 		UISupport.setDialogs( new ConsoleDialogs() );
 	}
