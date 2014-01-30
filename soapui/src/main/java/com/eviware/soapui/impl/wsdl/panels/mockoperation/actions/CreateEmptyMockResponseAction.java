@@ -12,15 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation.actions;
 
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.UISupport;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
 
 /**
  * Creates an empty SOAP response message for WsdlMockResponse
@@ -30,9 +28,9 @@ import com.eviware.soapui.support.UISupport;
 
 public class CreateEmptyMockResponseAction extends AbstractAction
 {
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public CreateEmptyMockResponseAction( WsdlMockResponse mockResponse )
+	public CreateEmptyMockResponseAction( MockResponse mockResponse )
 	{
 		super( "Create Empty" );
 		this.mockResponse = mockResponse;

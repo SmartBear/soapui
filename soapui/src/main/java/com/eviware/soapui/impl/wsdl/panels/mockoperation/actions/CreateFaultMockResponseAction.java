@@ -12,19 +12,17 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation.actions;
 
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.model.iface.MessagePart;
+import com.eviware.soapui.model.iface.MessagePart.FaultPart;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.support.UISupport;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.MessagePart.FaultPart;
-import com.eviware.soapui.support.UISupport;
 
 /**
  * Creates an SOAP Fault response message for WsdlMockResponse
@@ -34,9 +32,9 @@ import com.eviware.soapui.support.UISupport;
 
 public class CreateFaultMockResponseAction extends AbstractAction
 {
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public CreateFaultMockResponseAction( WsdlMockResponse mockResponse )
+	public CreateFaultMockResponseAction( MockResponse mockResponse )
 	{
 		super( "Create Fault" );
 		this.mockResponse = mockResponse;
@@ -46,7 +44,7 @@ public class CreateFaultMockResponseAction extends AbstractAction
 
 	public void actionPerformed( ActionEvent e )
 	{
-		WsdlOperation operation = mockResponse.getMockOperation().getOperation();
+		WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
 		if( operation == null )
 		{
 			UISupport.showErrorMessage( "Missing operation for this mock response" );
