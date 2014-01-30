@@ -47,13 +47,15 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 	{
 		try
 		{
-			//FIXME for REST mocking
-			WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
-			if( operation != null )
+			if( mockResponse instanceof WsdlMockResponse)
 			{
-				WsdlInterface iface = operation.getInterface();
-				WsdlContext wsdlContext = iface.getWsdlContext();
-				return wsdlContext.getSchemaTypeSystem();
+				WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
+				if( operation != null )
+				{
+					WsdlInterface iface = operation.getInterface();
+					WsdlContext wsdlContext = iface.getWsdlContext();
+					return wsdlContext.getSchemaTypeSystem();
+				}
 			}
 		}
 		catch( Exception e1 )
