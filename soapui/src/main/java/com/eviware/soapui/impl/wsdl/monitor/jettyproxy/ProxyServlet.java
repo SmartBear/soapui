@@ -12,23 +12,19 @@
 
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.*;
-
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
+import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
+import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.*;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpVersion;
@@ -39,23 +35,14 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.mortbay.util.IO;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
-import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
-import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.types.StringToStringsMap;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.*;
 
 public class ProxyServlet implements Servlet
 {
@@ -66,7 +53,7 @@ public class ProxyServlet implements Servlet
 	protected Settings settings;
 	protected final SoapMonitorListenerCallBack listenerCallBack;
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();
-	{
+   static {
 		dontProxyHeaders.add( "proxy-connection" );
 		dontProxyHeaders.add( "connection" );
 		dontProxyHeaders.add( "keep-alive" );
@@ -150,6 +137,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setRequestMethod( httpRequest.getMethod() );
 		capturedData.setRequestHeader( httpRequest );
 		capturedData.setHttpRequestParameters( httpRequest );
+		capturedData.setQueryParameters( httpRequest.getQueryString() );
 		capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
 
 		//		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
@@ -159,7 +147,7 @@ public class ProxyServlet implements Servlet
 		if( connectionHeader != null )
 		{
 			connectionHeader = connectionHeader.toLowerCase();
-			if( connectionHeader.indexOf( "keep-alive" ) < 0 && connectionHeader.indexOf( "close" ) < 0 )
+			if( !connectionHeader.contains( "keep-alive" ) && !connectionHeader.contains( "close" ) )
 				connectionHeader = null;
 		}
 
@@ -174,7 +162,7 @@ public class ProxyServlet implements Servlet
 
 			if( dontProxyHeaders.contains( lhdr ) )
 				continue;
-			if( connectionHeader != null && connectionHeader.indexOf( lhdr ) >= 0 )
+			if( connectionHeader != null && connectionHeader.contains( lhdr ) )
 				continue;
 
 			Enumeration<?> vals = httpRequest.getHeaders( hdr );
@@ -247,7 +235,7 @@ public class ProxyServlet implements Servlet
 		capturedData.setRequest( requestBody == null ? null : requestBody.toByteArray() );
 		capturedData.setRawResponseBody( method.getResponseBody() );
 		capturedData.setResponseHeader( method.getHttpResponse() );
-		capturedData.setRawRequestData( getRequestToBytes( request.toString(), method, requestBody ) );
+		capturedData.setRawRequestData( getRequestToBytes( request.toString(), requestBody ) );
 		capturedData.setRawResponseData( getResponseToBytes( method, capturedData.getRawResponseBody() ) );
 		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
 		capturedData.setResponseStatusCode( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
@@ -318,7 +306,7 @@ public class ProxyServlet implements Servlet
 	private byte[] getResponseToBytes( ExtendedHttpMethod method, byte[] res )
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		StringBuffer response = new StringBuffer();
+		StringBuilder response = new StringBuilder();
 
 		if( method.hasHttpResponse() )
 		{
@@ -345,7 +333,7 @@ public class ProxyServlet implements Servlet
 		return out.toByteArray();
 	}
 
-	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod method, ByteArrayOutputStream requestBody )
+	private byte[] getRequestToBytes( String footer, ByteArrayOutputStream requestBody )
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 
