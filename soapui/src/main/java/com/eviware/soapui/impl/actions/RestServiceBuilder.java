@@ -3,9 +3,11 @@ package com.eviware.soapui.impl.actions;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.support.*;
+import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import org.apache.commons.lang.ArrayUtils;
 
 import java.net.MalformedURLException;
 
@@ -19,24 +21,24 @@ public class RestServiceBuilder
 			return;
 		}
 
-		RestResource restResource = createResource( project, URI);
-		RestRequest restRequest = addNewRequest( addNewMethod( restResource ) );
+		RestResource restResource = createResource( ModelCreationStrategy.CREATE_NEW_MODEL, project, URI );
+		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource ) );
 		copyParameters( extractParams( URI ), restResource.getParams() );
 		UISupport.select( restRequest );
 		UISupport.showDesktopPanel( restRequest );
 
 	}
 
-	public void createRestServiceHeadless(WsdlProject project, String URI) throws MalformedURLException
+	public void createRestServiceHeadless( WsdlProject project, String URI ) throws MalformedURLException
 	{
 		if( StringUtils.isNullOrEmpty( URI ) )
 		{
 			return;
 		}
 
-		RestResource restResource = createResource( project, URI);
-		RestRequest restRequest = addNewRequest( addNewMethod( restResource ) );
-		copyParametersWithDefaultsOnResource( extractParams( URI ), restResource.getParams(),restRequest.getParams() );
+		RestResource restResource = createResource( ModelCreationStrategy.REUSE_MODEL, project, URI );
+		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.REUSE_MODEL, restResource ) );
+		copyParametersWithDefaultsOnResource( extractParams( URI ), restResource.getParams(), restRequest.getParams() );
 	}
 
 	private RestParamsPropertyHolder extractParams( String URI )
@@ -47,14 +49,34 @@ public class RestServiceBuilder
 		return params;
 	}
 
-	private RestResource createResource( WsdlProject project, String URI) throws MalformedURLException
+	private RestResource createResource( ModelCreationStrategy creationStrategy, WsdlProject project, String URI ) throws MalformedURLException
 	{
 		RestURIParser restURIParser = new RestURIParserImpl( URI );
 		String resourcePath = restURIParser.getResourcePath();
 		String host = restURIParser.getEndpoint();
 
-		RestService restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
-		restService.addEndpoint( restURIParser.getEndpoint() );
+		RestService restService = null;
+		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
+		{
+			AbstractInterface<?> existingInterface = project.getInterfaceByName( host );
+			if( existingInterface instanceof RestService && ArrayUtils.contains( existingInterface.getEndpoints(), host ) )
+			{
+				restService = ( RestService )existingInterface;
+			}
+		}
+		if( restService == null )
+		{
+			restService = ( RestService )project.addNewInterface( host, RestServiceFactory.REST_TYPE );
+			restService.addEndpoint( restURIParser.getEndpoint() );
+		}
+		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
+		{
+			RestResource existingResource = restService.getResourceByFullPath( resourcePath );
+			if( existingResource != null )
+			{
+				return existingResource;
+			}
+		}
 		return restService.addNewResource( restURIParser.getResourceName(), resourcePath );
 	}
 
@@ -92,9 +114,16 @@ public class RestServiceBuilder
 	}
 
 
-	protected RestMethod addNewMethod( RestResource restResource )
+	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource )
 	{
-		RestMethod restMethod = restResource.addNewMethod( restResource.getName());
+		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
+		{
+			if( restResource.getRestMethodCount() > 0 )
+			{
+				return restResource.getRestMethodAt( 0 );
+			}
+		}
+		RestMethod restMethod = restResource.addNewMethod( restResource.getName() );
 		restMethod.setMethod( RestRequestInterface.RequestMethod.GET );
 		return restMethod;
 	}
@@ -102,5 +131,10 @@ public class RestServiceBuilder
 	protected RestRequest addNewRequest( RestMethod restMethod )
 	{
 		return restMethod.addNewRequest( "Request " + ( restMethod.getRequestCount() + 1 ) );
+	}
+
+	private static enum ModelCreationStrategy
+	{
+		CREATE_NEW_MODEL, REUSE_MODEL
 	}
 }
