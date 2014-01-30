@@ -22,26 +22,14 @@ public class RestServiceBuilder
 		}
 
 		RestResource restResource = createResource( ModelCreationStrategy.CREATE_NEW_MODEL, project, URI );
-		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource ) );
+		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource, RestRequestInterface.RequestMethod.GET ) );
 		copyParameters( extractParams( URI ), restResource.getParams() );
 		UISupport.select( restRequest );
 		UISupport.showDesktopPanel( restRequest );
 
 	}
 
-	public void createRestServiceHeadless( WsdlProject project, String URI ) throws MalformedURLException
-	{
-		if( StringUtils.isNullOrEmpty( URI ) )
-		{
-			return;
-		}
-
-		RestResource restResource = createResource( ModelCreationStrategy.REUSE_MODEL, project, URI );
-		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.REUSE_MODEL, restResource ) );
-		copyParametersWithDefaultsOnResource( extractParams( URI ), restResource.getParams(), restRequest.getParams() );
-	}
-
-	private RestParamsPropertyHolder extractParams( String URI )
+	protected RestParamsPropertyHolder extractParams( String URI )
 	{
 		RestParamsPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder( null,
 				RestParametersConfig.Factory.newInstance() );
@@ -49,7 +37,7 @@ public class RestServiceBuilder
 		return params;
 	}
 
-	private RestResource createResource( ModelCreationStrategy creationStrategy, WsdlProject project, String URI ) throws MalformedURLException
+	protected RestResource createResource( ModelCreationStrategy creationStrategy, WsdlProject project, String URI ) throws MalformedURLException
 	{
 		RestURIParser restURIParser = new RestURIParserImpl( URI );
 		String resourcePath = restURIParser.getResourcePath();
@@ -114,17 +102,20 @@ public class RestServiceBuilder
 	}
 
 
-	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource )
+	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource, RestRequestInterface.RequestMethod requestMethod )
 	{
 		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
 		{
-			if( restResource.getRestMethodCount() > 0 )
+			for( RestMethod restMethod : restResource.getRestMethodList() )
 			{
-				return restResource.getRestMethodAt( 0 );
+				if( restMethod.getMethod() == requestMethod )
+				{
+					return restMethod;
+				}
 			}
 		}
 		RestMethod restMethod = restResource.addNewMethod( restResource.getName() );
-		restMethod.setMethod( RestRequestInterface.RequestMethod.GET );
+		restMethod.setMethod( requestMethod );
 		return restMethod;
 	}
 
@@ -133,7 +124,7 @@ public class RestServiceBuilder
 		return restMethod.addNewRequest( "Request " + ( restMethod.getRequestCount() + 1 ) );
 	}
 
-	private static enum ModelCreationStrategy
+	protected static enum ModelCreationStrategy
 	{
 		CREATE_NEW_MODEL, REUSE_MODEL
 	}
