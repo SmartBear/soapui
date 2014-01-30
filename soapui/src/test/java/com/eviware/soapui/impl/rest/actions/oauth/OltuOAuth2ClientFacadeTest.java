@@ -77,15 +77,15 @@ public class OltuOAuth2ClientFacadeTest
 		spyingOauthClientStub = new SpyingOauthClientStub();
 		httpRequest = new ExtendedPostMethod();
 		httpRequest.setURI( new URI( "endpoint/path" ) );
-		oltuClientFacade = new OltuOAuth2ClientFacade()
-		{
+		oltuClientFacade = new OltuOAuth2ClientFacade();
+		oltuClientFacade.oAuth2TokenExtractor = new OAuth2TokenExtractor(){
 			@Override
 			protected OAuthClient getOAuthClient()
 			{
 				return spyingOauthClientStub;
 			}
 		};
-		oltuClientFacade.browserFacade = new UserBrowserFacadeStub();
+		oltuClientFacade.oAuth2TokenExtractor.browserFacade = new UserBrowserFacadeStub();
 	}
 
 	/* Happy path tests */
@@ -185,7 +185,8 @@ public class OltuOAuth2ClientFacadeTest
 	{
 		oltuClientFacade.requestAccessToken( profile );
 
-		assertThat( ( ( UserBrowserFacadeStub )oltuClientFacade.browserFacade ).browserClosed, is( true ) );
+		assertThat( ( ( UserBrowserFacadeStub )oltuClientFacade.oAuth2TokenExtractor.browserFacade ).browserClosed,
+				is( true ) );
 	}
 
 	@Test
