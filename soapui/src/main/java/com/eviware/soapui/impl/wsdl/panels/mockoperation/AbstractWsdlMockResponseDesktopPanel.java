@@ -2,8 +2,8 @@ package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyMockResponseAction;
-import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultMockResponseAction;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyWsdlMockResponseAction;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultWsdlMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.WSIValidateResponseAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -36,8 +36,8 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
 	{
 		MockResponse mockResponse = getMockResponse();
 
-		createEmptyButton = createActionButton( new CreateEmptyMockResponseAction( mockResponse ), isBidirectional() );
-		createFaultButton = createActionButton( new CreateFaultMockResponseAction( mockResponse ), isBidirectional() );
+		createEmptyButton = createActionButton( new CreateEmptyWsdlMockResponseAction( mockResponse ), isBidirectional() );
+		createFaultButton = createActionButton( new CreateFaultWsdlMockResponseAction( mockResponse ), isBidirectional() );
 		wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" );
 
 		return super.buildContent();

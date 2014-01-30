@@ -26,11 +26,11 @@ import java.awt.event.ActionEvent;
  * @author ole.matzura
  */
 
-public class CreateEmptyMockResponseAction extends AbstractAction
+public class CreateEmptyWsdlMockResponseAction extends AbstractAction
 {
 	private final MockResponse mockResponse;
 
-	public CreateEmptyMockResponseAction( MockResponse mockResponse )
+	public CreateEmptyWsdlMockResponseAction( MockResponse mockResponse )
 	{
 		super( "Create Empty" );
 		this.mockResponse = mockResponse;

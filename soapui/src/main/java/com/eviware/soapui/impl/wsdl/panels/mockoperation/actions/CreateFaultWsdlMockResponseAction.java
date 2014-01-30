@@ -30,11 +30,11 @@ import java.util.List;
  * @author ole.matzura
  */
 
-public class CreateFaultMockResponseAction extends AbstractAction
+public class CreateFaultWsdlMockResponseAction extends AbstractAction
 {
 	private final MockResponse mockResponse;
 
-	public CreateFaultMockResponseAction( MockResponse mockResponse )
+	public CreateFaultWsdlMockResponseAction( MockResponse mockResponse )
 	{
 		super( "Create Fault" );
 		this.mockResponse = mockResponse;
