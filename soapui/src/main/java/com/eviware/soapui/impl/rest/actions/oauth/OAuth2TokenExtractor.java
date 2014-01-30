@@ -40,7 +40,7 @@ public class OAuth2TokenExtractor
 				@Override
 				public void locationChanged( String newLocation )
 				{
-					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCodeFromForm( extractFormData( newLocation ), "code" ) );
+					getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCodeFromForm( extractFormData( newLocation ), CODE ) );
 				}
 
 				@Override
@@ -56,7 +56,7 @@ public class OAuth2TokenExtractor
 
 			} );
 			parameters.startAccessTokenFlow();
-			browserFacade.open( new URI( createAuthorizationURLForAuthorizationCodeGrantFlow( parameters ) ).toURL() );
+			browserFacade.open( new URI( createAuthorizationURL( parameters, CODE ) ).toURL() );
 			parameters.waitingForAuthorization();
 		}
 
@@ -71,7 +71,7 @@ public class OAuth2TokenExtractor
 				@Override
 				public void locationChanged( String newLocation )
 				{
-					String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), "access_token" );
+					String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), ACCESS_TOKEN );
 					if( !StringUtils.isNullOrEmpty( accessToken ))
 					{
 						parameters.setAccessTokenInProfile( accessToken );
@@ -86,7 +86,7 @@ public class OAuth2TokenExtractor
 
 			} );
 			parameters.startAccessTokenFlow();
-			browserFacade.open( new URI( createAuthorizationURLForImplicitGrantFlow( parameters ) ).toURL() );
+			browserFacade.open( new URI( createAuthorizationURL( parameters, TOKEN ) ).toURL() );
 			parameters.waitingForAuthorization();
 		}
 	}
@@ -112,26 +112,15 @@ public class OAuth2TokenExtractor
 		return new OAuthClient( new HttpClient4( HttpClientSupport.getHttpClient() ) );
 	}
 
-	private String createAuthorizationURLForAuthorizationCodeGrantFlow( OAuth2Parameters parameters )
+	private String createAuthorizationURL( OAuth2Parameters parameters, String responseType )
 			throws OAuthSystemException
 	{
 		return OAuthClientRequest
 				.authorizationLocation( parameters.authorizationUri )
 				.setClientId( parameters.clientId )
-				.setResponseType( CODE )
+				.setResponseType( responseType )
 				.setScope( parameters.scope )
 				.setRedirectURI( parameters.redirectUri )
-				.buildQueryMessage().getLocationUri();
-	}
-
-	private String createAuthorizationURLForImplicitGrantFlow( OAuth2Parameters parameters ) throws OAuthSystemException
-	{
-		return OAuthClientRequest
-				.authorizationLocation( parameters.authorizationUri )
-				.setClientId( parameters.clientId )
-				.setRedirectURI( parameters.redirectUri )
-				.setResponseType( TOKEN )
-				.setScope( parameters.scope )
 				.buildQueryMessage().getLocationUri();
 	}
 
@@ -141,6 +130,12 @@ public class OAuth2TokenExtractor
 		if( questionMarkIndex != -1 )
 		{
 			return url.substring( questionMarkIndex + 1 );
+		}
+
+		int hashIndex = url.indexOf( "#" );
+		if(hashIndex!=-1)
+		{
+			return url.substring( hashIndex+1 );
 		}
 		return "";
 	}
