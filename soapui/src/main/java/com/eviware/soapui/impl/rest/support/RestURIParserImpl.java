@@ -83,19 +83,15 @@ public class RestURIParserImpl implements RestURIParser
 	private boolean validateScheme() throws MalformedURLException
 	{
 		String scheme = getScheme();
-		if( scheme.isEmpty() )
-			return true;
+		return scheme.isEmpty() || scheme.matches( "(HTTP|http).*" );
 
-		return scheme.matches( "(HTTP|http).*" );
 	}
 
 	private boolean validateAuthority() throws MalformedURLException
 	{
 		String endpoint = getEndpoint();
-		if( endpoint.isEmpty() )
-			return true;
+		return endpoint.isEmpty() || !endpoint.matches( ".*[\\\\]+.*" );
 
-		return !endpoint.matches( ".*[\\\\]+.*" );
 	}
 
 	@Override
@@ -129,16 +125,21 @@ public class RestURIParserImpl implements RestURIParser
 
 		String[] splitResourcePath = path.split( "/" );
 		if(splitResourcePath.length == 0)
+		{
 			return "";
+		}
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
+		if (resourceName.startsWith( ";" ))
+		{
+			return "";
+		}
 		resourceName = resourceName.replaceAll( "\\{", "" ).replaceAll( "\\}", ""  );
 		if( resourceName.contains( ";" ) )
 		{
 			resourceName = resourceName.substring( 0, resourceName.indexOf(";" ) );
 		}
-		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 
-		return capitalizedResourceName;
+		return resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 	}
 
 	@Override
@@ -196,7 +197,7 @@ public class RestURIParserImpl implements RestURIParser
 
 	private void parseWithURL( String uriString ) throws MalformedURLException
 	{
-		URL url = null;
+		URL url;
 		try
 		{
 			url = new URL( uriString );
