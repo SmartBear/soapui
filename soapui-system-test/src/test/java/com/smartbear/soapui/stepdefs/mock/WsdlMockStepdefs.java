@@ -1,10 +1,13 @@
 package com.smartbear.soapui.stepdefs.mock;
 
+import com.eviware.soapui.support.ConsoleDialogs;
+import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import org.apache.commons.lang.StringUtils;
 import org.fest.swing.core.Robot;
 import org.fest.swing.exception.LocationUnavailableException;
 import org.fest.swing.fixture.*;
@@ -16,6 +19,10 @@ import static org.junit.Assert.assertTrue;
 
 public class WsdlMockStepdefs
 {
+	String PROJECT_NAME = "test";
+	String SOAP_SERVICE_NAME = "GeoCode_Binding";
+	String SOAP_OPERATION_NAME = "geocode";
+
 	private Robot robot;
 	private FrameFixture rootWindow;
 	private JTreeNodeFixture treeNode;
@@ -37,14 +44,15 @@ public class WsdlMockStepdefs
 	public void in_tree_node_context(String NodeLabel) throws Throwable
 	{
 		JTreeFixture tree = WorkspaceUtils.getNavigatorPanel( rootWindow ).tree();
-		treeNode = getTreeNode( tree, "Projects/test/GeoCode_Binding/geocode" );
+		treeNode = getTreeNode( tree, getSoapOperationPath() );
 	}
 
-	@Then( "^“add to mock service” option is available$" )
-	public void _add_to_mock_service_option_is_available() throws Throwable
+	@Then( "^“(.*)” option is available$" )
+	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
 	{
 		JPopupMenuFixture menuItem = getPopupMenuFixture();
-		assertTrue( "Didn't find the MockService menu item", doesLabelExist( menuItem, "MockService" ) );
+		Thread.sleep( 2000 );
+		assertTrue( "Didn't find the MockService menu item", doesLabelExist( menuItem, menuItemLabel ) );
 	}
 
 	private boolean doesLabelExist( JPopupMenuFixture menuItem, String mockService )
@@ -80,6 +88,21 @@ public class WsdlMockStepdefs
 			return getTreeNode( tree, path );
 		}
 		return treeNode;
+	}
+
+	public String getProjectPath()
+	{
+		return StringUtils.join( new String[]{"Projects", PROJECT_NAME}, '/' );
+	}
+
+	public String getSoapServicePath()
+	{
+		return StringUtils.join( new String[]{getProjectPath(), SOAP_SERVICE_NAME}, '/' );
+	}
+
+	public String getSoapOperationPath()
+	{
+		return StringUtils.join( new String[]{getSoapServicePath(), SOAP_OPERATION_NAME}, '/' );
 	}
 
 }
