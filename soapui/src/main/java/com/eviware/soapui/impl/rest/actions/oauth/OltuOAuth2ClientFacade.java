@@ -45,8 +45,16 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		try
 		{
 			OAuth2Parameters parameters = buildParametersFrom( profile );
-			OAuth2ParameterValidator.validate( parameters );
-			oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
+			switch( profile.getOAuth2Flow() )
+			{
+				case IMPLICIT_GRANT:
+					oAuth2TokenExtractor.extractAccessTokenForImplicitGrantFlow( parameters );
+					break;
+				case AUTHORIZATION_CODE_GRANT:
+			   default:
+					OAuth2ParameterValidator.validate( parameters );
+					oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
+			}
 		}
 		catch( OAuthSystemException e )
 		{

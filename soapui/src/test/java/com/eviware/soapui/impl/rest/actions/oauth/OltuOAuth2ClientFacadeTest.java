@@ -101,7 +101,7 @@ public class OltuOAuth2ClientFacadeTest
 	@Test
 	public void getsTheAccessTokenFromUrlEncodedFormResponse() throws Exception
 	{
-		profile.setAccesTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.BODY_URL_ENCODED_FORM );
+		profile.setAccessTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.BODY_URL_ENCODED_FORM );
 		oltuClientFacade.requestAccessToken( profile );
 
 		assertThat( profile.getAccessToken(), is( accessToken ) );

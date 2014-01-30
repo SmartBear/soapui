@@ -12,10 +12,7 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.AccessTokenPositionConfig;
-import com.eviware.soapui.config.AccessTokenRetrievalLocationConfig;
-import com.eviware.soapui.config.AccessTokenStatusConfig;
-import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -42,6 +39,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
 	public static final String ACCESS_TOKEN_RETRIEVAL_PROPERTY = "accessTokenRetrievalLocation";
+	public static final String OAUTH2_FLOW = "oAuth2Flow";
+
 
 	public enum AccessTokenStatus
 	{
@@ -66,7 +65,30 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		BODY_URL_ENCODED_FORM
 	}
 
+
+	public enum OAuth2Flow
+	{
+		AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
+		RESOURCE_OWNER_CREDENTIALS_GRANT("Resource Owner Credentials Grant"),
+		CLIENT_CREDENTIALS_GRANT("Client Credentials Grant"),
+		IMPLICIT_GRANT("Implicit Grant");
+
+		private String description;
+
+		OAuth2Flow( String description )
+		{
+			this.description = description;
+		}
+
+		@Override
+		public String toString()
+		{
+			return description;
+		}
+	}
+
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
+
 	private final OAuth2ProfileConfig configuration;
 	private final PropertyChangeSupport pcs;
 
@@ -148,9 +170,28 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
-	public void setAccesTokenRetrievalLocation(AccessTokenRetrievalLocation retrievalLocation)
+	public void setOAuth2Flow( OAuth2Flow oauth2Flow )
 	{
-		AccessTokenRetrievalLocation oldValue =getAccessTokenRetrievalLocation();
+		OAuth2Flow existingFlow = getOAuth2Flow();
+		if( !oauth2Flow.equals( existingFlow ) )
+		{
+			configuration.setOAuth2Flow( OAuth2FlowConfig.Enum.forString( oauth2Flow.name() ) );
+			pcs.firePropertyChange( OAUTH2_FLOW, existingFlow, oauth2Flow );
+		}
+	}
+
+	public OAuth2Flow getOAuth2Flow()
+	{
+		if( configuration.getOAuth2Flow() == null )
+		{
+			configuration.setOAuth2Flow( OAuth2FlowConfig.AUTHORIZATION_CODE_GRANT );
+		}
+		return OAuth2Flow.valueOf( configuration.getOAuth2Flow().toString() );
+	}
+
+	public void setAccessTokenRetrievalLocation( AccessTokenRetrievalLocation retrievalLocation )
+	{
+		AccessTokenRetrievalLocation oldValue = getAccessTokenRetrievalLocation();
 		if( !retrievalLocation.equals( oldValue.toString() ) )
 		{
 			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.Enum.forString(

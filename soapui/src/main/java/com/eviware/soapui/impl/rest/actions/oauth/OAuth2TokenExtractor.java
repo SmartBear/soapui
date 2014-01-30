@@ -62,6 +62,35 @@ public class OAuth2TokenExtractor
 
 	}
 
+	void extractAccessTokenForImplicitGrantFlow(final OAuth2Parameters parameters) throws OAuthSystemException,
+			URISyntaxException, MalformedURLException
+	{
+		{
+			browserFacade.addBrowserStateListener( new BrowserStateChangeListener()
+			{
+				@Override
+				public void locationChanged( String newLocation )
+				{
+					String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), "access_token" );
+					if( !StringUtils.isNullOrEmpty( accessToken ))
+					{
+						parameters.setAccessTokenInProfile( accessToken );
+						browserFacade.close();
+					}
+				}
+
+				@Override
+				public void contentChanged( String newContent )
+				{
+				}
+
+			} );
+			parameters.startAccessTokenFlow();
+			browserFacade.open( new URI( createAuthorizationURLForImplicitGrantFlow( parameters ) ).toURL() );
+			parameters.waitingForAuthorization();
+		}
+	}
+
 	void refreshAccessToken( OAuth2Parameters parameters ) throws OAuthProblemException, OAuthSystemException
 	{
 		OAuthClientRequest accessTokenRequest = OAuthClientRequest
@@ -92,6 +121,17 @@ public class OAuth2TokenExtractor
 				.setResponseType( CODE )
 				.setScope( parameters.scope )
 				.setRedirectURI( parameters.redirectUri )
+				.buildQueryMessage().getLocationUri();
+	}
+
+	private String createAuthorizationURLForImplicitGrantFlow( OAuth2Parameters parameters ) throws OAuthSystemException
+	{
+		return OAuthClientRequest
+				.authorizationLocation( parameters.authorizationUri )
+				.setClientId( parameters.clientId )
+				.setRedirectURI( parameters.redirectUri )
+				.setResponseType( TOKEN )
+				.setScope( parameters.scope )
 				.buildQueryMessage().getLocationUri();
 	}
 

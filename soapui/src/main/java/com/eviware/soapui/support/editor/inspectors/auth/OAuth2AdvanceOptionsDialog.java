@@ -45,7 +45,7 @@ public class OAuth2AdvanceOptionsDialog
 			target.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
 
 			String retrievalLocation = dialog.getValue( Form.HOW_TO_RECEIVE_ACCESS_TOKEN );
-			target.setAccesTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.valueOf( retrievalLocation ) );
+			target.setAccessTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.valueOf( retrievalLocation ) );
 
 		}
 	}

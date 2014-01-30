@@ -1970,6 +1970,7 @@
             <xsd:element name="accessToken" type="xsd:string"></xsd:element>
             <xsd:element name="accessTokenPosition" type="tns:AccessTokenPosition"></xsd:element>
             <xsd:element name="accessTokenRetrievalLocation" type="tns:AccessTokenRetrievalLocation"></xsd:element>
+            <xsd:element name="oAuth2Flow" type="tns:OAuth2Flow"></xsd:element>
             <xsd:element name="refreshToken" type="xsd:string"></xsd:element>
             <xsd:element name="scope" type="xsd:string"></xsd:element>
             <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus"></xsd:element>
@@ -1989,6 +1990,15 @@
             <xsd:enumeration value="BODY_JSON"></xsd:enumeration>
             <xsd:enumeration value="URL_FRAGMENT"></xsd:enumeration>
             <xsd:enumeration value="BODY_URL_ENCODED_FORM"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="OAuth2Flow">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="AUTHORIZATION_CODE_GRANT"></xsd:enumeration>
+            <xsd:enumeration value="IMPLICIT_GRANT"></xsd:enumeration>
+            <xsd:enumeration value="RESOURCE_OWNER_CREDENTIALS_GRANT"></xsd:enumeration>
+            <xsd:enumeration value="CLIENT_CREDENTIALS_GRANT"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
 
