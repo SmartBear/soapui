@@ -75,9 +75,10 @@ public class RestProjectStepdefs
 	}
 
 	@When( "^user changes the level to (.+) for parameter with name (.+)$" )
-	public void changesParameterLevel( String newLevel, String parameterName )
+	public void changesParameterLevel( String newLevel, String parameterName ) throws InterruptedException
 	{
 		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		Thread.sleep( 3000 );
 		changeParameterLevel( requestEditor, parameterName, newLevel, robot );
 	}
 
