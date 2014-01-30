@@ -47,13 +47,13 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
 @SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
 		PropertyChangeListener
 {
 	private final HttpRequestInterface<?> httpRequest;
-	private JPanel contentPanel;
 	private RSyntaxTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
@@ -146,7 +146,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected Component buildContent()
 	{
-		contentPanel = new JPanel( new BorderLayout() );
+		JPanel contentPanel = new JPanel( new BorderLayout() );
 
 		// Add popup!
 		contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
@@ -245,9 +245,9 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		{
 			updatingRequest = true;
 			String requestBodyAsXml = ( String )evt.getNewValue();
-			String contentType = ( String )mediaTypeCombo.getSelectedItem();
+			String mediaType = ( String )mediaTypeCombo.getSelectedItem();
 			if( XmlUtils.seemsToBeXml( requestBodyAsXml ) &&
-					contentType != null && contentType.startsWith( "application/json" ) )
+					seemsToBeJsonContentType(mediaType))
 			{
 				JSON jsonObject = new JsonXmlSerializer().read( requestBodyAsXml );
 				contentEditor.setText( jsonObject.toString( 3, 0 ) );

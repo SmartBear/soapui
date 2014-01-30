@@ -25,6 +25,8 @@ import net.sf.json.JSON;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
+
 public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2 extends HttpRequestInterface<?>>
 		extends AbstractHttpRequestDesktopPanel<T, T2>
 {
@@ -98,15 +100,15 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 			if( !updating )
 			{
 				updating = true;
-				if( getRequest().getMediaType().startsWith( "application/json" ) && XmlUtils.seemsToBeXml( xml ) )
+				if( seemsToBeJsonContentType( getRequest().getMediaType() ) && XmlUtils.seemsToBeXml( xml ) )
 				{
 					JSON json = new JsonXmlSerializer().read( xml );
 					request.setRequestContent( json.toString( 3, 0 ) );
 				}
 				else
 				{
+					request.setRequestContent( xml );
 				}
-				request.setRequestContent( xml );
 				updating = false;
 			}
 		}
