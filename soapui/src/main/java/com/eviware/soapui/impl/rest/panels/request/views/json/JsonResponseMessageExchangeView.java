@@ -12,20 +12,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.json;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import net.sf.json.JSON;
-import net.sf.json.JSONSerializer;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rtextarea.RTextScrollPane;
-
 import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
@@ -35,6 +21,17 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
+import net.sf.json.JSON;
+import net.sf.json.JSONSerializer;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 @SuppressWarnings( "unchecked" )
 public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpResponseDocument> implements
@@ -109,7 +106,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
 		{
 			String content = "<Not JSON content>";
 
-			if( JsonMediaTypeHandler.couldBeJsonContent( me.getResponseHeaders().get( "Content-Type", "" ) ) )
+			if( JsonMediaTypeHandler.seemsToBeJsonContentType( me.getResponseHeaders().get( "Content-Type", "" ) ) )
 			{
 				try
 				{
