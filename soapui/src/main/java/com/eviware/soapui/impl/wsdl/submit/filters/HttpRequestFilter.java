@@ -466,6 +466,10 @@ public class HttpRequestFilter extends AbstractRequestFilter
 	protected String getEncodedValue( String value, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
 	{
 
+		if(value == null) {
+			return "";
+		}
+
 		// get default encoding if there is no encoding set
 		if(!StringUtils.hasContent( encoding ))
 		{
