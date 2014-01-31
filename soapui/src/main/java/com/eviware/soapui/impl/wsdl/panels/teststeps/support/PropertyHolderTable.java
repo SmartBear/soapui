@@ -20,27 +20,19 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
-import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.environment.EnvironmentListener;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.ModelItemUtils;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
 import com.eviware.soapui.support.StringUtils;
@@ -372,7 +364,7 @@ public class PropertyHolderTable extends JPanel
 			if( dialog == null )
 				dialog = ADialogBuilder.buildDialog( LoadOptionsForm.class );
 
-			Project project = ModelItemUtils.getProjectFromModelItem( holder.getModelItem() );
+			Project project = ModelSupport.getModelItemProject( holder.getModelItem() );
 			if( project != null )
 			{
 				FileFormField fileFormField = ( FileFormField )dialog.getFormField( LoadOptionsForm.FILE );
