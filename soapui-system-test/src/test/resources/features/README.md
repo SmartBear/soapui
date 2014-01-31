@@ -1,20 +1,36 @@
 Oh hi, I'm glad you decided to create a feature file!
 -----------------------------------------------------
 
-Please organize it according to the following example structure based on features:
+Please organize it according to the following structure based on features:
 
     --src
     ----test
     ------resources
     --------features
-    ----------soap
-    ------------definition-refactoring
-    --------------refactor-schema.feature
-    --------------update-xpath-expression.feature
-    ----------rest
-    ------------request
-    --------------resource-path-dropdown.feature
-    --------------parameters.feature
+    ----------Mocking
+    ------------soap-mocking
+    ------------rest-mocking 
+    ----------REST
+    ------------projects-creation (REST only)
+    ------------top-URI-bar
+    ------------parameters
+    ------------request-editor
+    ------------test-step-editor
+    ------------oauth
+    ------------rest_discovery (Pro)
+    ----------project-creation (import, generic and SOAP. except REST)
+    ----------generate-test-suites
+    ------------insert-test-step (different test steps in os or Pro)
+    ------------set-assertions
+    ------------data-driven-testing (Pro,data source <grid,file,Excel,JDBC,XML> and data source loop)
+    ------------property (property expansion-Pro only /property transfer)
+    ----------operate-test-steps (create/edit/reorder/clone/delete/disable)
+    ----------run-tests (in different levels)
+    ----------get-reports ( how can we check the reports contents?)
+    ----------environment (settings and switch)
+    ----------command-line (functional,security,load,mockservice and reports --different options settings )
+    ----------load-test
+    ----------security-test
 
 ... and there are a few more thing that you need to know
 
@@ -27,4 +43,7 @@ Please organize it according to the following example structure based on feature
 Currenly you need to use the "Given SoapUI is started" and "Then/And close SoapUI" steps in all your feature files
 to initialize and cleanup the FEST runner. We're looking in to a better way to do this.
 
+
 **That's it!**
+
+
