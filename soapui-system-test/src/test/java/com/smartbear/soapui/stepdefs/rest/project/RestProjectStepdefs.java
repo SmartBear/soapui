@@ -11,15 +11,18 @@ import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JPanelFixture;
 import org.fest.swing.fixture.JTableFixture;
+import org.fest.swing.fixture.JTreeNodeFixture;
 
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_PARAMS_TABLE;
+import static com.smartbear.soapui.utils.fest.ApplicationUtils.doesLabelExist;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.RestProjectUtils.*;
 import static org.fest.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class RestProjectStepdefs
 {
@@ -113,6 +116,13 @@ public class RestProjectStepdefs
 	{
 		JPanelFixture methodEditor = findMethodEditor( rootWindow, newProjectIndexInNavigationTree, robot );
 		verifyEmptyTable( methodEditor );
+	}
+
+	@Then( "^“(.*)” option is available on REST Request$" )
+	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
+	{
+		JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
 	}
 
 	private void verifyEmptyTable( JPanelFixture parentPanel )

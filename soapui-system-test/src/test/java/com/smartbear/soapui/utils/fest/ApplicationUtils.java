@@ -4,6 +4,7 @@ import com.eviware.soapui.SoapUI;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
+import org.fest.swing.fixture.JTreeNodeFixture;
 
 import static com.smartbear.soapui.utils.fest.FestMatchers.frameWithTitle;
 import static org.fest.swing.launcher.ApplicationLauncher.application;
@@ -59,5 +60,18 @@ public final class ApplicationUtils
 		{
 
 		}
+	}
+
+	public static boolean doesLabelExist( JTreeNodeFixture menuItem, String mockService )
+	{
+		boolean foundLabel = false;
+		for(String label : menuItem.showPopupMenu().menuLabels() )
+		{
+			if(label.contains( mockService ))
+			{
+				foundLabel = true;
+			}
+		}
+		return foundLabel;
 	}
 }
