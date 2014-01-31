@@ -12,11 +12,13 @@
 
 package com.eviware.soapui.support;
 
+import junit.framework.JUnit4TestAdapter;
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
+import static org.junit.Assert.assertThat;
 
 public class StringUtilsTestCase
 {
@@ -58,8 +60,10 @@ public class StringUtilsTestCase
 	}
 
 	@Test
-	public void testReplaceAll() throws Exception
+	public void createsXmlNameForStringStartingWithDigit() throws Exception
 	{
-		assertEquals( "<a>\n\n</a>", "<a>\n<test>--remove--</test>\n</a>".replaceAll( "<(.+)>--remove--</(\\1)>", "" ) );
+		 assertThat(StringUtils.createXmlName( "15" ), is ("_15"));
+		 assertThat(StringUtils.createXmlName( "1pt" ), is ("_1pt"));
 	}
+
 }
