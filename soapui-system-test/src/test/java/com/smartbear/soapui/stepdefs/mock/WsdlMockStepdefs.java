@@ -1,64 +1,62 @@
 package com.smartbear.soapui.stepdefs.mock;
 
-import com.eviware.soapui.support.ConsoleDialogs;
-import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
-import com.smartbear.soapui.utils.fest.WorkspaceUtils;
+import com.smartbear.soapui.utils.fest.SoapProjectUtils;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import org.apache.commons.lang.StringUtils;
 import org.fest.swing.core.Robot;
-import org.fest.swing.exception.LocationUnavailableException;
 import org.fest.swing.fixture.*;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.startSoapUI;
+import static com.smartbear.soapui.utils.fest.RestProjectUtils.createNewRestProject;
+import static com.smartbear.soapui.utils.fest.RestProjectUtils.findRestRequestPopupMenu;
 import static com.smartbear.soapui.utils.fest.SoapProjectUtils.createNewSoapProject;
+import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapOperationPopupMenu;
 import static org.junit.Assert.assertTrue;
 
 public class WsdlMockStepdefs
 {
-	String PROJECT_NAME = "test";
-	String SOAP_SERVICE_NAME = "GeoCode_Binding";
-	String SOAP_OPERATION_NAME = "geocode";
-
 	private Robot robot;
 	private FrameFixture rootWindow;
-	private JTreeNodeFixture treeNode;
+	private JTreeNodeFixture rightClickMenu;
 
 	public WsdlMockStepdefs( ScenarioRobot runner )
 	{
 		robot = runner.getRobot();
 	}
 
-	@Given( "^SoapUI Project exists$" )
-	public void SoapUI_Project_exists() throws Throwable
+	@When( "^in rest (.*) context$" )
+	public void in_rest_tree_node_context(String context) throws Throwable
 	{
-		startSoapUI();
-		rootWindow = getMainWindow( robot );
-		createNewSoapProject( rootWindow, robot );
+		Thread.sleep( 200 );
+		if( "request".equals( context ) )
+		{
+			rightClickMenu = findRestRequestPopupMenu( getMainWindow( robot ), 0 );
+		}
 	}
 
-	@When( "^in (.*) context$" )
-	public void in_tree_node_context(String NodeLabel) throws Throwable
+	@When( "^in soap (.*) context$" )
+	public void in_soap_tree_node_context(String context) throws Throwable
 	{
-		JTreeFixture tree = WorkspaceUtils.getNavigatorPanel( rootWindow ).tree();
-		treeNode = getTreeNode( tree, getSoapOperationPath() );
+		Thread.sleep( 200 );
+		if( "operation".equals( context ) )
+		{
+			rightClickMenu = findSoapOperationPopupMenu( getMainWindow( robot ) );
+		}
 	}
 
 	@Then( "^“(.*)” option is available$" )
 	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
 	{
-		JPopupMenuFixture menuItem = getPopupMenuFixture();
-		Thread.sleep( 2000 );
-		assertTrue( "Didn't find the MockService menu item", doesLabelExist( menuItem, menuItemLabel ) );
+		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( rightClickMenu, menuItemLabel ) );
 	}
 
-	private boolean doesLabelExist( JPopupMenuFixture menuItem, String mockService )
+	private boolean doesLabelExist( JTreeNodeFixture menuItem, String mockService )
 	{
 		boolean foundLabel = false;
-		for(String label : menuItem.menuLabels() )
+		for(String label : menuItem.showPopupMenu().menuLabels() )
 		{
 			if(label.contains( mockService ))
 			{
@@ -67,42 +65,4 @@ public class WsdlMockStepdefs
 		}
 		return foundLabel;
 	}
-
-	private JPopupMenuFixture getPopupMenuFixture()
-	{
-		JTreePathFixture contextFixture = ( JTreePathFixture )treeNode.rightClick();
-		return contextFixture.showPopupMenu();
-	}
-
-	protected JTreeNodeFixture getTreeNode(JTreeFixture tree, String path) throws Throwable
-	{
-		JTreeNodeFixture treeNode = null;
-
-		try
-		{
-		   treeNode = tree.node( path );
-		}
-		catch(LocationUnavailableException e)
-		{
-			Thread.sleep(200);
-			return getTreeNode( tree, path );
-		}
-		return treeNode;
-	}
-
-	public String getProjectPath()
-	{
-		return StringUtils.join( new String[]{"Projects", PROJECT_NAME}, '/' );
-	}
-
-	public String getSoapServicePath()
-	{
-		return StringUtils.join( new String[]{getProjectPath(), SOAP_SERVICE_NAME}, '/' );
-	}
-
-	public String getSoapOperationPath()
-	{
-		return StringUtils.join( new String[]{getSoapServicePath(), SOAP_OPERATION_NAME}, '/' );
-	}
-
 }

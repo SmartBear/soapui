@@ -20,11 +20,12 @@ import org.fest.swing.fixture.*;
  */
 public final class SoapProjectUtils
 {
+	public static final String ROOT_FOLDER = SoapProjectUtils.class.getResource( "/" ).getPath();
+
 	private static final String NEW_SOAP_PROJECT_MENU_ITEM_NAME = "New SOAP Project";
 	private static final String NEW_SOAP_PROJECT_DIALOG_NAME = "New SOAP Project";
 	private static final String OK_BUTTON_NAME = "OK";
 	private static final String WSDL_FIELD_NAME = "Initial WSDL";
-	private static final String ROOT_FOLDER = SoapProjectUtils.class.getResource( "/" ).getPath();
 	private static final String TEST_WSDL = ROOT_FOLDER + "wsdls/test.wsdl";
 	private static final String PROJECT_NAME = "test";
 	private static final String INTERFACE_NAME = "GeoCode_Binding";
@@ -45,12 +46,23 @@ public final class SoapProjectUtils
 
 	public static void openRequestEditor( FrameFixture rootWindow )
 	{
+		JTreeNodeFixture node = getTreeNode( rootWindow, getOperationPath() );
+		node.doubleClick();
+	}
+
+	private static JTreeNodeFixture getTreeNode( FrameFixture rootWindow, String path )
+	{
 		JTreeFixture tree = WorkspaceUtils.getNavigatorPanel( rootWindow ).tree();
 
 		waitForProjectToLoad();
 
-		tree.expandPath( getOperationPath() );
-		tree.node( getRequestPath() ).doubleClick();
+		tree.expandPath( path );
+		return tree.node( getRequestPath() );
+	}
+
+	public static JTreeNodeFixture findSoapOperationPopupMenu( FrameFixture rootWindow )
+	{
+		return getTreeNode( rootWindow, getOperationPath() );
 	}
 
 	private static String getOperationPath()

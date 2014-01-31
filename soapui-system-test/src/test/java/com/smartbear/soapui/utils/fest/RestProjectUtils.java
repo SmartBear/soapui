@@ -53,10 +53,21 @@ public final class RestProjectUtils
 		enterURIandClickOk( robot );
 	}
 
+	public static void createNewRestProject( FrameFixture rootWindow, Robot robot, String uri )
+	{
+		openCreateNewRestProjectDialog( rootWindow );
+		enterURIandClickOk( robot, uri );
+	}
+
 	public static JPanelFixture findRequestEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE, robot );
 		return rootWindow.panel( RestRequestDesktopPanel.REST_REQUEST_EDITOR );
+	}
+
+	public static JTreeRowFixture findRestRequestPopupMenu( FrameFixture rootWindow, int projectIndexInTree )
+	{
+		return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE ).rightClick();
 	}
 
 	public static JPanelFixture findMethodEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
@@ -103,13 +114,18 @@ public final class RestProjectUtils
 
 	private static void enterURIandClickOk( Robot robot )
 	{
+		enterURIandClickOk( robot, URI );
+	}
+
+	public static void enterURIandClickOk( Robot robot, String uri )
+	{
 		DialogFixture newProjectDialog = FestMatchers.dialogWithTitle( NEW_REST_PROJECT_DIALOG_NAME )
 				.withTimeout( NEW_PROJECT_TIMEOUT )
 				.using( robot );
 
 		newProjectDialog.textBox().focus();
 		newProjectDialog.textBox().click();
-		newProjectDialog.textBox().setText( URI );
+		newProjectDialog.textBox().setText( uri );
 
 		JButtonFixture buttonOK = newProjectDialog.button( FestMatchers.buttonWithText( OK_BUTTON_NAME ) );
 		buttonOK.click();
@@ -124,9 +140,18 @@ public final class RestProjectUtils
 	private static void openPanelByClickingOnTheNavigationElement( int newProjectIndexInTree, FrameFixture frame,
 																						int panelPositionInNavigationTree, Robot robot )
 	{
-		WorkspaceUtils.getNavigatorPanel( frame ).tree().node( newProjectIndexInTree + panelPositionInNavigationTree )
-				.click();
+		findTreeNode( newProjectIndexInTree, frame, panelPositionInNavigationTree ).click();
 		robot.pressAndReleaseKeys( KeyEvent.VK_ENTER );
+	}
+
+	private static void rightClickOnTreeNode( int newProjectIndexInTree, FrameFixture frame, int panelPositionInNavigationTree  )
+	{
+		findTreeNode( newProjectIndexInTree, frame, panelPositionInNavigationTree ).rightClick();
+	}
+
+	private static JTreeNodeFixture findTreeNode( int newProjectIndexInTree, FrameFixture frame, int panelPositionInNavigationTree )
+	{
+		return WorkspaceUtils.getNavigatorPanel( frame ).tree().node( newProjectIndexInTree + panelPositionInNavigationTree );
 	}
 
 	private static void editTableCell( String paramValue, JTableFixture table, Robot robot, int row, int column )
