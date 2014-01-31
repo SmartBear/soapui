@@ -1,5 +1,5 @@
 /*
- * SoapUI, copyright (C) 2004-2013 smartbear.com
+ * SoapUI, copyright (C) 2004-2014 smartbear.com
  *
  * SoapUI is free software; you can redistribute it and/or modify it under the
  * terms of version 2.1 of the GNU Lesser General Public License as published by
@@ -45,6 +45,8 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		try
 		{
 			OAuth2Parameters parameters = buildParametersFrom( profile );
+			OAuth2ParameterValidator.validate( parameters );
+
 			switch( profile.getOAuth2Flow() )
 			{
 				case IMPLICIT_GRANT:
@@ -52,8 +54,8 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 					break;
 				case AUTHORIZATION_CODE_GRANT:
 			   default:
-					OAuth2ParameterValidator.validate( parameters );
 					oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
+					break;
 			}
 		}
 		catch( OAuthSystemException e )
