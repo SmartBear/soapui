@@ -12,18 +12,23 @@
 
 package com.eviware.soapui.impl.support.panels;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSON;
+import net.sf.json.JSONObject;
+import net.sf.json.groovy.JsonSlurper;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.StringReader;
 
 import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
@@ -100,18 +105,80 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 			if( !updating )
 			{
 				updating = true;
-				if( seemsToBeJsonContentType( getRequest().getMediaType() ) && XmlUtils.seemsToBeXml( xml ) )
+				try
 				{
-					JSON json = new JsonXmlSerializer().read( xml );
-					request.setRequestContent( json.toString( 3, 0 ) );
+					if( seemsToBeJsonContentType( getRequest().getMediaType() ) && XmlUtils.seemsToBeXml( xml ) )
+					{
+						JSON json = new JsonXmlSerializer().read( xml );
+						processNullsAndEmptyValuesIn( json );
+						request.setRequestContent( json.toString( 3, 0 ) );
+					}
+					else
+					{
+						request.setRequestContent( xml );
+					}
 				}
-				else
+				finally
 				{
-					request.setRequestContent( xml );
+					updating = false;
 				}
-				updating = false;
 			}
 		}
+
+		private void processNullsAndEmptyValuesIn( JSON json )
+		{
+			String requestContent = request.getRequestContent();
+			if (!StringUtils.hasContent(requestContent))
+			{
+				return;
+			}
+			try
+			{
+				JSON oldJson = new JsonSlurper(  ).parse(new StringReader( requestContent ));
+				if (!(json instanceof JSONObject) || !(oldJson instanceof JSONObject))
+				{
+					return;
+				}
+				overwriteNullValues( (JSONObject)json, (JSONObject)oldJson );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError(e, "Unexpected error while parsing JSON");
+			}
+		}
+
+		private void overwriteNullValues( JSONObject json, JSONObject oldJson )
+		{
+			for( Object key : json.keySet() )
+			{
+				Object value = json.get(key);
+				Object oldValue = oldJson.get(key);
+				if ( isNullValue( value ) && isEmptyJson( oldValue ) )
+				{
+					json.put( key, oldJson.get( key ) );
+				}
+				else if (isEmptyJson( value ) && oldValue instanceof String)
+				{
+					json.put(key, "");
+				}
+				//TODO: do this recursively but make sure that cyclic dependencies are handled
+				/*else if ( value instanceof JSONObject && oldJson.get(key) instanceof JSONObject)
+				{
+					overwriteNullValues( (JSONObject) value, (JSONObject) oldJson.get(key) );
+				}*/
+			}
+		}
+
+		private boolean isEmptyJson( Object oldValue )
+		{
+			return oldValue != null && oldValue instanceof JSON && ((JSON)oldValue).isEmpty();
+		}
+
+		private boolean isNullValue( Object value )
+		{
+			return value == null || value.toString().equals("null");
+		}
+
 
 		public void propertyChange( PropertyChangeEvent evt )
 		{

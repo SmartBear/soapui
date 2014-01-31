@@ -19,21 +19,7 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
+import com.eviware.soapui.SoapUI;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -50,11 +36,25 @@ import nu.xom.Elements;
 import nu.xom.Node;
 import nu.xom.Serializer;
 import nu.xom.Text;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Utility class for transforming JSON to XML an back.<br>
@@ -1578,7 +1578,14 @@ public class JsonXmlSerializer
 				}
 				catch( NumberFormatException e )
 				{
-					setOrAccumulate( jsonObject, key, Double.valueOf( element.getValue() ) );
+					try
+					{
+						setOrAccumulate( jsonObject, key, Double.valueOf( element.getValue() ) );
+					}
+					catch( NumberFormatException e1 )
+					{
+						SoapUI.log.debug( "Unable to parse element " + elementName + " as number: " + element.getValue() );
+					}
 				}
 			}
 			else if( type.compareToIgnoreCase( JSONTypes.INTEGER ) == 0 )
