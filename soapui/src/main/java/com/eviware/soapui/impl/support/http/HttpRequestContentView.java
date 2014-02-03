@@ -236,7 +236,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected Object[] getRequestMediaTypes()
 	{
-		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data" };
+		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data", "multipart/mixed" };
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )

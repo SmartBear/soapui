@@ -78,7 +78,8 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		StringToStringMap responseProperties = ( StringToStringMap )context
 				.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
-		MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() )
+		MimeMultipart formMp = ( "multipart/form-data".equals( request.getMediaType() )
+				|| "multipart/mixed".equals( request.getMediaType() ))
 				&& httpMethod instanceof HttpEntityEnclosingRequestBase ? new MimeMultipart() : null;
 
 		RestParamsPropertyHolder params = request.getParams();
