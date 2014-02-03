@@ -225,22 +225,26 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 						.setRedirectURI( parameters.redirectUri )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
-				OAuthToken token = null;
+				OAuthToken tokenResponse = null;
+
 				switch( parameters.accessTokenRetrievalLocation )
 				{
 					case BODY_URL_ENCODED_FORM:
-						token = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
+						tokenResponse = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
 						break;
 					case BODY_JSON:
 					default:
-						token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
+						tokenResponse = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
 								.getOAuthToken();
 						break;
 				}
-				if( token != null && token.getAccessToken() != null )
+				if( tokenResponse != null && tokenResponse.getAccessToken() != null )
 				{
-					parameters.setAccessTokenInProfile( token.getAccessToken() );
-					parameters.setRefreshTokenInProfile( token.getRefreshToken() );
+					parameters.setAccessTokenInProfile( tokenResponse.getAccessToken() );
+					parameters.setRefreshTokenInProfile( tokenResponse.getRefreshToken() );
+					parameters.setAccessTokenExpirationTimeInProfile( tokenResponse.getExpiresIn() );
+					parameters.setAccessTokenIssuedTimeInProfile( getCurrentTimeInSeconds() );
+
 					browserFacade.close();
 				}
 			}
@@ -253,6 +257,11 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	private long getCurrentTimeInSeconds()
+	{
+		return System.nanoTime() / 1000000000;
 	}
 
 	@Override
