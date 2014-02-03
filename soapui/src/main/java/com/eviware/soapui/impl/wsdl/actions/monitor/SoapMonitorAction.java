@@ -157,7 +157,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 	public static String defaultContentTypes()
 	{
-		return "*/html, */xml, */soap+xml, */json, */x-json, */javascript, */x-amf";
+		return "*/html, */xml, */soap+xml, */json, */x-json, */javascript, */x-amf, */http";
 	}
 
 	protected void openSoapMonitor( WsdlProject target, int listenPort, String incomingRequestWss,

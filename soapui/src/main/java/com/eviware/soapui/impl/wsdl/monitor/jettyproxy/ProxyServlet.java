@@ -237,7 +237,8 @@ public class ProxyServlet implements Servlet
 		capturedData.setResponseHeader( method.getHttpResponse() );
 		capturedData.setRawRequestData( getRequestToBytes( request.toString(), requestBody ) );
 		capturedData.setRawResponseData( getResponseToBytes( method, capturedData.getRawResponseBody() ) );
-		capturedData.setResponseContent( new String( method.getDecompressedResponseBody() ) );
+		byte[] decompressedResponseBody = method.getDecompressedResponseBody();
+		capturedData.setResponseContent( decompressedResponseBody != null ? new String( decompressedResponseBody ) : "" );
 		capturedData.setResponseStatusCode( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
 				.getStatusCode() : null );
 		capturedData.setResponseStatusLine( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
@@ -261,7 +262,10 @@ public class ProxyServlet implements Servlet
 					httpServletResponse.addHeader( headerEntry.getKey(), header );
 			}
 
-			IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpServletResponse.getOutputStream() );
+			if( capturedData.getRawResponseBody() != null )
+			{
+				IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpServletResponse.getOutputStream() );
+			}
 		}
 
 		synchronized( this )
@@ -323,7 +327,10 @@ public class ProxyServlet implements Servlet
 			try
 			{
 				out.write( response.toString().getBytes() );
-				out.write( res );
+				if( res != null )
+				{
+					out.write( res );
+				}
 			}
 			catch( IOException e )
 			{
