@@ -55,7 +55,7 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
 		super.setEnabled( enabled );
 	}
 
-	private boolean isBidirectional()
+	protected boolean isBidirectional()
 	{
 		return getMockResponse().getMockOperation().getOperation().isBidirectional();
 	}

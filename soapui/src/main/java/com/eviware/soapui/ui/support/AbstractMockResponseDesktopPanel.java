@@ -169,9 +169,7 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 		openRequestButton = createActionButton( SwingActionDelegate.createDelegate(
 				OpenRequestForMockResponseAction.SOAPUI_ACTION_ID, mockResponse, null, "/open_request.gif" ), true );
 
-		boolean bidirectional = mockResponse.getMockOperation().getOperation().isBidirectional();
-
-		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), bidirectional );
+		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), isBidirectional() );
 
 		moveFocusAction = new MoveFocusAction();
 
@@ -204,6 +202,16 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 		return component;
 	}
 
+	/**
+	 * Override this method if you are not bidirectional.
+	 *
+	 * @return true
+	 */
+	protected boolean isBidirectional()
+	{
+		return true;
+	}
+
 	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
 	{
 		return new MockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ) );
@@ -232,6 +240,11 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 		return toolbar;
 	}
 
+	/**
+	 * Override this method if you want to but your own things in the toolbar.
+	 *
+	 * @param toolbar this is the actual toolbar for you to manipulate. Don't remove stuff on it please....
+	 */
 	protected void createToolbar( JXToolBar toolbar )
 	{
 	}
@@ -299,7 +312,7 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 		{
 			super( document, mockResponse );
 
-			if( getModelItem().getMockOperation().getOperation().isBidirectional() )
+			if( isBidirectional() )
 			{
 				XmlSourceEditorView<?> editor = getSourceEditor();
 

@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.BaseMockResponseConfig;
+import com.eviware.soapui.config.CompressedStringConfig;
 import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
@@ -95,7 +96,17 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 			return;
 
 		this.responseContent = responseContent;
+
+		setConfigResponseContent( responseContent );
+
 		notifyPropertyChanged( RESPONSE_CONTENT_PROPERTY, oldContent, responseContent );
+	}
+
+	private void setConfigResponseContent( String responseContent )
+	{
+		CompressedStringConfig compressedResponseContent = CompressedStringConfig.Factory.newInstance();
+		compressedResponseContent.setStringValue( responseContent );
+		getConfig().setResponseContent( compressedResponseContent );
 	}
 
 	public StringToStringsMap getResponseHeaders()

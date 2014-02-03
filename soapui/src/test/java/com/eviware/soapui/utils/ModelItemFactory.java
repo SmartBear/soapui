@@ -8,6 +8,9 @@ import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -25,7 +28,7 @@ public class ModelItemFactory
 {
 	public static RestRequest makeRestRequest() throws SoapUIException
 	{
-			return new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
+		return new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
 	}
 
 	public static RestRequest makeRestRequest(RestResource restResource) throws SoapUIException
@@ -51,6 +54,16 @@ public class ModelItemFactory
 	public static RestService makeRestService() throws SoapUIException
 	{
 		return new RestService(makeWsdlProject(), RestServiceConfig.Factory.newInstance());
+	}
+
+	public static RestMockResponse makeRestMockResponse(RestMockService restMockService, RestMockAction restMockAction) throws SoapUIException
+	{
+		return new RestMockResponse( restMockAction, RESTMockResponseConfig.Factory.newInstance() );
+	}
+
+	public static RestMockAction makeRestMockAction(RestMockService restMockService) throws SoapUIException
+	{
+		return new RestMockAction( restMockService, RESTMockActionConfig.Factory.newInstance(), makeRestRequest() );
 	}
 
 	public static WsdlProject makeWsdlProject() throws SoapUIException
@@ -82,5 +95,10 @@ public class ModelItemFactory
 	{
 		return new DefaultOAuth2ProfileContainer( makeWsdlProject(),
 				OAuth2ProfileContainerConfig.Factory.newInstance() );
+	}
+
+	public static RestMockService makeRestMockService() throws SoapUIException
+	{
+		return new RestMockService( makeWsdlProject(), RESTMockServiceConfig.Factory.newInstance() );
 	}
 }
