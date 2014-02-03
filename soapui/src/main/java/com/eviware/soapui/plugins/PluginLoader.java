@@ -43,9 +43,6 @@ public class PluginLoader
 		{
 			for( File pluginFile : pluginFiles )
 			{
-				if( !pluginFile.getName().toLowerCase().endsWith( ".jar" ) )
-					continue;
-
 				try
 				{
 					log.info( "Adding plugin from [" + pluginFile.getAbsolutePath() + "]" );
