@@ -176,7 +176,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		getConfig().setPostQueryString( b );
 		notifyPropertyChanged( "postQueryString", old, b );
 
-		if( !"multipart/form-data".equals( getMediaType() ) )
+		if( !( "multipart/form-data".equals( getMediaType() ) ||  "multipart/mixed".equals( getMediaType() )))
 		{
 			setMediaType( b ? "application/x-www-form-urlencoded" : getMediaType() );
 		}
