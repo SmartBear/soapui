@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.value.AbstractValueModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -90,6 +91,11 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		initForm( oauth2Form );
 
 		oauth2Form.addSpace( TOP_SPACING );
+
+		AbstractValueModel valueModel = oauth2Form.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+				"getOAuth2Flow", "setOAuth2Flow" );
+		ComboBoxModel comboBoxModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
+		oauth2Form.appendComboBox( "OAuth2.0 Flow", comboBoxModel, "OAuth2.0 Authorization Flow", valueModel );
 
 		oauth2Form.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
 		oauth2Form.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );

@@ -17,6 +17,7 @@ class OAuth2Parameters
 	final String clientId;
 	final String clientSecret;
 	final String scope;
+	final String refreshToken;
 	public OAuth2Profile.AccessTokenRetrievalLocation accessTokenRetrievalLocation;
 
 	/**
@@ -34,6 +35,7 @@ class OAuth2Parameters
 		this.clientSecret = expandProperty( profile, profile.getClientSecret() );
 		this.scope = expandProperty( profile, profile.getScope() );
 		this.accessTokenRetrievalLocation = profile.getAccessTokenRetrievalLocation();
+		this.refreshToken = expandProperty( profile, profile.getRefreshToken() );
 	}
 
 
@@ -82,4 +84,10 @@ class OAuth2Parameters
 	{
 		profile.receivedAuthorizationCode();
 	}
+
+	public void applyRetrievedAccessToken( String accessToken )
+	{
+		profile.applyRetrievedAccessToken( accessToken );
+	}
+
 }

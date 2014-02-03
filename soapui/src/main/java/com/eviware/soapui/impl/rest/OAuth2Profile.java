@@ -44,6 +44,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_RETRIEVAL_PROPERTY = "accessTokenRetrievalLocation";
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
+	public static final String OAUTH2_FLOW = "oAuth2Flow";
 
 	public enum AccessTokenStatus
 	{
@@ -66,6 +67,28 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		BODY_JSON,
 		BODY_URL_ENCODED_FORM
+	}
+
+
+	public enum OAuth2Flow
+	{
+		AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
+		RESOURCE_OWNER_CREDENTIALS_GRANT("Resource Owner Credentials Grant"),
+		CLIENT_CREDENTIALS_GRANT("Client Credentials Grant"),
+		IMPLICIT_GRANT("Implicit Grant");
+
+		private String description;
+
+		OAuth2Flow( String description )
+		{
+			this.description = description;
+		}
+
+		@Override
+		public String toString()
+		{
+			return description;
+		}
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -150,7 +173,26 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
-	public void setAccesTokenRetrievalLocation( AccessTokenRetrievalLocation retrievalLocation )
+	public void setOAuth2Flow( OAuth2Flow oauth2Flow )
+	{
+		OAuth2Flow existingFlow = getOAuth2Flow();
+		if( !oauth2Flow.equals( existingFlow ) )
+		{
+			configuration.setOAuth2Flow( OAuth2FlowConfig.Enum.forString( oauth2Flow.name() ) );
+			pcs.firePropertyChange( OAUTH2_FLOW, existingFlow, oauth2Flow );
+		}
+	}
+
+	public OAuth2Flow getOAuth2Flow()
+	{
+		if( configuration.getOAuth2Flow() == null )
+		{
+			configuration.setOAuth2Flow( OAuth2FlowConfig.AUTHORIZATION_CODE_GRANT );
+		}
+		return OAuth2Flow.valueOf( configuration.getOAuth2Flow().toString() );
+	}
+
+	public void setAccessTokenRetrievalLocation( AccessTokenRetrievalLocation retrievalLocation )
 	{
 		AccessTokenRetrievalLocation oldValue = getAccessTokenRetrievalLocation();
 		if( !retrievalLocation.equals( oldValue.toString() ) )
