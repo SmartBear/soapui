@@ -1010,7 +1010,7 @@ public class SoapMonitor extends JPanel
 		{
 			exchanges.add( exchange );
 			int size = exchanges.size();
-			fireTableRowsInserted( size - 1, size );
+			fireTableRowsInserted( size - 1, size - 1 );
 
 			fitSizeToMaxRows();
 
