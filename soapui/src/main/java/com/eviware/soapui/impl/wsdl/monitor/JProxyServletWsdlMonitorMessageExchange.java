@@ -598,4 +598,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		this.responseStatusLine = responseStatusLine;
 	}
 
+	public WsdlProject getProject()
+	{
+		return project;
+	}
 }
