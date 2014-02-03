@@ -109,6 +109,16 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 		return activated;
 	}
 
+	@Override
+	public boolean deactivate()
+	{
+		boolean deactivated = super.deactivate();
+		if(deactivated){
+			browser.setContent( "" );
+		}
+		return deactivated;
+	}
+
 	protected void setEditorContent( JProxyServletWsdlMonitorMessageExchange jproxyServletWsdlMonitorMessageExchange )
 	{
 

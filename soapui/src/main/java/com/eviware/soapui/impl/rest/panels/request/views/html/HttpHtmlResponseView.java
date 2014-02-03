@@ -83,6 +83,17 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	}
 
 	@Override
+	public boolean deactivate()
+	{
+		boolean deactivated = super.deactivate();
+		if( deactivated )
+		{
+			browser.setContent( "" );
+		}
+		return deactivated;
+	}
+
+	@Override
 	public void release()
 	{
 		super.release();
