@@ -60,9 +60,15 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebViewBasedBrowserComponent
 {
+
+	public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
+	private Pattern charsetFinderPattern = Pattern.compile( CHARSET_PATTERN );
+
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private String errorPage;
 	private boolean showingErrorPage;
@@ -245,14 +251,21 @@ public class WebViewBasedBrowserComponent
 
 	public void setContent( final String contentAsString, final String contentType )
 	{
+
 		Platform.runLater( new Runnable()
 		{
 			public void run()
 			{
 
-				getWebEngine().loadContent( contentAsString, contentType);
+				getWebEngine().loadContent( contentAsString, removeCharsetFrom(contentType));
 			}
 		} );
+	}
+
+	private String removeCharsetFrom( String contentType )
+	{
+		Matcher matcher = charsetFinderPattern.matcher( contentType );
+		return matcher.matches() ? matcher.group(1) : contentType;
 	}
 
 	public void setContent( final String contentAsString )
