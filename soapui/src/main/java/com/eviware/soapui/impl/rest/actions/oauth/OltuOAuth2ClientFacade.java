@@ -21,6 +21,7 @@ import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import java.io.UnsupportedEncodingException;
@@ -36,9 +37,6 @@ import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2ParameterValidato
  */
 public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 {
-
-	OAuth2TokenExtractor oAuth2TokenExtractor = new OAuth2TokenExtractor();
-
 	@Override
 	public void requestAccessToken( OAuth2Profile profile ) throws OAuth2Exception
 	{
@@ -50,11 +48,11 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 			switch( profile.getOAuth2Flow() )
 			{
 				case IMPLICIT_GRANT:
-					oAuth2TokenExtractor.extractAccessTokenForImplicitGrantFlow( parameters );
+					getOAuth2TokenExtractor().extractAccessTokenForImplicitGrantFlow( parameters );
 					break;
 				case AUTHORIZATION_CODE_GRANT:
 			   default:
-					oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
+					getOAuth2TokenExtractor().extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
 					break;
 			}
 		}
@@ -73,6 +71,11 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 
 	}
 
+	protected OAuth2TokenExtractor getOAuth2TokenExtractor()
+	{
+		return new OAuth2TokenExtractor();
+	}
+
 	@Override
 	public void refreshAccessToken( OAuth2Profile profile ) throws Exception
 	{
@@ -81,7 +84,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		validateRequiredStringValue( parameters.clientId, "client ID" );
 		validateRequiredStringValue( parameters.clientSecret, "client secret" );
 
-		oAuth2TokenExtractor.refreshAccessToken( parameters );
+		getOAuth2TokenExtractor().refreshAccessToken( parameters );
 	}
 
 	@Override

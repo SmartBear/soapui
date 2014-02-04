@@ -16,12 +16,16 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -46,8 +50,7 @@ public class OltuOAuth2ClientFacadeTest
 		profileWithOnlyAccessToken = OAuth2TestUtils.getOAuth2ProfileWithOnlyAccessToken();
 		httpRequest = new ExtendedPostMethod();
 		httpRequest.setURI( new URI( "endpoint/path" ) );
-		oltuClientFacade = new OltuOAuth2ClientFacade();
-		OAuth2TestUtils.mockOAuth2TokenExtractor( oltuClientFacade, profile );
+		oltuClientFacade = OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profile );
 	}
 
 	@Test

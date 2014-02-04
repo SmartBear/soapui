@@ -70,11 +70,10 @@ public class OAuth2TestUtils
 		return profile;
 	}
 
-	public static void mockOAuth2TokenExtractor( OltuOAuth2ClientFacade oltuClientFacade, final OAuth2Profile profile ) throws URISyntaxException,
-			MalformedURLException, OAuthSystemException, OAuthProblemException
+	public static OAuth2TokenExtractor mockOAuth2TokenExtractor( final OAuth2Profile profile )
+			throws OAuthSystemException, MalformedURLException, URISyntaxException, OAuthProblemException
 	{
 		OAuth2TokenExtractor oAuth2TokenExtractor = mock( OAuth2TokenExtractor.class );
-		oltuClientFacade.oAuth2TokenExtractor = oAuth2TokenExtractor;
 		doAnswer( new Answer<Object>()
 		{
 			@Override
@@ -104,5 +103,26 @@ public class OAuth2TestUtils
 				return profile;
 			}
 		} ).when( oAuth2TokenExtractor ).refreshAccessToken( any( OAuth2Parameters.class ) );
+		return oAuth2TokenExtractor;
+	}
+
+	public static OltuOAuth2ClientFacade getOltuOAuth2ClientFacadeWithMockedTokenExtractor( final OAuth2Profile profile )
+	{
+		return new OltuOAuth2ClientFacade()
+		{
+			@Override
+			protected OAuth2TokenExtractor getOAuth2TokenExtractor()
+			{
+				try
+				{
+					return mockOAuth2TokenExtractor( profile );
+				}
+				catch( Exception e )
+				{
+					e.printStackTrace();
+					return null;
+				}
+			}
+		};
 	}
 }

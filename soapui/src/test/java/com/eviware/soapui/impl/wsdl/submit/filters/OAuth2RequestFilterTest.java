@@ -3,7 +3,10 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils;
+import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
+import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -11,11 +14,14 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -37,8 +43,6 @@ public class OAuth2RequestFilterTest
 	private OAuth2Profile oAuth2Profile;
 
 	private final String accessToken = "ACDFECDSFKJFK#SDFSD8df#ACCESS-TOKEN";
-	private final String refreshToken = "ACDFECDSFKJFK#SDFSD8df#REFRESH-TOKEN";
-
 
 	@Before
 	public void setUp() throws SoapUIException, URISyntaxException
@@ -83,21 +87,31 @@ public class OAuth2RequestFilterTest
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
 	}
 
-	@Ignore
 	@Test
-	public void automaticallyRefreshAccessTokenIfExpired() throws SoapUIException
+	public void automaticallyRefreshAccessTokenIfExpired() throws SoapUIException, MalformedURLException, OAuthSystemException, OAuthProblemException, URISyntaxException
 	{
-		// Set expired token on profile
-		String expiredAccessToken = "EXPIREDXLA#EXPIREDX";
+		final OAuth2Profile profileWithRefreshToken = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
+		setExpiredAccessToken( profileWithRefreshToken );
 
-		OAuth2Profile profile = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
-		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profile );
+		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithRefreshToken );
+		oAuth2RequestFilter = new OAuth2RequestFilter(){
+			@Override
+			protected OAuth2ClientFacade getOAuth2ClientFacade()
+			{
+				return OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profileWithRefreshToken );
+			}
+		};
 
-		// Put the request through our filter
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 
-		// Verify that the filter has changed our expired access token
 		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
-		assertThat( actualAccessTokenHeader, is( not( "Bearer " + expiredAccessToken ) ) );
+		assertThat( actualAccessTokenHeader, is( "Bearer " + OAuth2TestUtils.ACCESS_TOKEN ) );
+	}
+
+	private void setExpiredAccessToken( OAuth2Profile profileWithRefreshToken )
+	{
+		profileWithRefreshToken.setAccessToken( "EXPIRED#TOKEN" );
+		profileWithRefreshToken.setAccessTokenIssuedTime( 1 );			//Token was issued Jan 1 1970
+		profileWithRefreshToken.setAccessTokenExpirationTime( 10 );		//and expired 10 seconds later.
 	}
 }

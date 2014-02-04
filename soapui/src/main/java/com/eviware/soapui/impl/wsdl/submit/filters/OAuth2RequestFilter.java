@@ -1,10 +1,11 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
+import com.eviware.soapui.impl.rest.actions.oauth.OAuth2Exception;
 import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -32,7 +33,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 			{
 				return;
 			}
-			OAuth2ClientFacade oAuth2Client = new OltuOAuth2ClientFacade();
+			OAuth2ClientFacade oAuth2Client = getOAuth2ClientFacade();
 
 			if( accessTokenIsExpired( profile ) && hasRefreshToken( profile ) )
 			{
@@ -42,13 +43,21 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		}
 	}
 
+	protected OAuth2ClientFacade getOAuth2ClientFacade()
+	{
+		return new OltuOAuth2ClientFacade();
+	}
+
 	private boolean accessTokenIsExpired( OAuth2Profile profile )
 	{
-		//TODO: Null checks
-
 		long currentTime = TimeUtils.getCurrentTimeInSeconds();
 		long issuedTime = profile.getAccessTokenIssuedTime();
 		long expirationTime = profile.getAccessTokenExpirationTime();
+
+		if( issuedTime <= 0 || expirationTime <= 0 )
+		{
+			return false;
+		}
 
 		return expirationTime < currentTime - issuedTime;
 	}
@@ -66,8 +75,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		}
 		catch( Exception e )
 		{
-			e.printStackTrace();
-			//TODO: Can we do anything here other than just throw?
+			SoapUI.logError( e, "Unable to refresh expired access token." );
 		}
 	}
 }
