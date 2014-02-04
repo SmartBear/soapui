@@ -1,4 +1,4 @@
-@Automated @Acceptance
+@Manual @Acceptance
 Feature: REST request parameter synchronization across REST request, method and resource
 
   Scenario: By default a parameter is added to RESOURCE level and it is synchronized between request editor and
