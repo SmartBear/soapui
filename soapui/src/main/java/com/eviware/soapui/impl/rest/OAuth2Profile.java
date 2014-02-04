@@ -12,10 +12,7 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.AccessTokenPositionConfig;
-import com.eviware.soapui.config.AccessTokenRetrievalLocationConfig;
-import com.eviware.soapui.config.AccessTokenStatusConfig;
-import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -348,7 +345,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			configuration.setAccessTokenExpirationTime( newExpirationTime );
 			pcs.firePropertyChange( ACCESS_TOKEN_EXPIRATION_TIME, oldExpirationTime, newExpirationTime );
 		}
-		configuration.setAccessTokenExpirationTime( newExpirationTime );
 	}
 
 	public long getAccessTokenIssuedTime()

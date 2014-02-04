@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.wsdl.submit.filters;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -11,6 +12,7 @@ import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -30,10 +32,13 @@ public class OAuth2RequestFilterTest
 	private OAuth2RequestFilter oAuth2RequestFilter;
 	private SubmitContext mockContext;
 	private RestRequest restRequest;
-	private String expiredAccessToken = "EXPIREDXLA#EXPIREDX";
-	private String accessToken = "ACDFECDSFKJFK#SDFSD8df";
 	private ExtendedPostMethod httpRequest;
+	private OAuth2ProfileContainer oAuth2ProfileContainer;
 	private OAuth2Profile oAuth2Profile;
+
+	private final String accessToken = "ACDFECDSFKJFK#SDFSD8df#ACCESS-TOKEN";
+	private final String refreshToken = "ACDFECDSFKJFK#SDFSD8df#REFRESH-TOKEN";
+
 
 	@Before
 	public void setUp() throws SoapUIException, URISyntaxException
@@ -43,7 +48,7 @@ public class OAuth2RequestFilterTest
 		restRequest = ModelItemFactory.makeRestRequest();
 		restRequest.setAuthType( O_AUTH_2.toString());
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
-		OAuth2ProfileContainer oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
+		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
 		oAuth2Profile = oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
 		oAuth2Profile.setAccessToken( accessToken );
 
@@ -78,19 +83,21 @@ public class OAuth2RequestFilterTest
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
 	}
 
+	@Ignore
 	@Test
-	public void automaticallyRefreshAccessTokenIfExpired()
+	public void automaticallyRefreshAccessTokenIfExpired() throws SoapUIException
 	{
-		// Sätt en utgången access token på en profil
-		oAuth2Profile.setAccessToken( expiredAccessToken );
-		oAuth2Profile.setAccessTokenIssuedTime( 0 );			//issued 43 years ago
-		oAuth2Profile.setAccessTokenExpirationTime( 1 );  	//and expired one second later
+		// Set expired token on profile
+		String expiredAccessToken = "EXPIREDXLA#EXPIREDX";
 
-		// Skicka en request med den utgångna tokenen
+		OAuth2Profile profile = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
+		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profile );
 
+		// Put the request through our filter
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 
-		// Kolla så att vårt filter upptäckte detta och refreshade den
-		String actualAccessToken = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
-		assertThat( actualAccessToken, is( not( expiredAccessToken ) ) );
+		// Verify that the filter has changed our expired access token
+		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
+		assertThat( actualAccessTokenHeader, is( not( "Bearer " + expiredAccessToken ) ) );
 	}
 }
