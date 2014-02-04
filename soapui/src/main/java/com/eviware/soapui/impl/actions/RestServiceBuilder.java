@@ -59,7 +59,7 @@ public class RestServiceBuilder
 		}
 		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
 		{
-			RestResource existingResource = restService.getResourceByFullPath( resourcePath );
+			RestResource existingResource = restService.getResourceByFullPath( RestResource.removeMatrixParams(resourcePath) );
 			if( existingResource != null )
 			{
 				return existingResource;
