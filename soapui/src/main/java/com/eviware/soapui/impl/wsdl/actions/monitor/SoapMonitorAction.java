@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.actions.monitor;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
+import com.eviware.soapui.impl.wsdl.panels.monitor.SoapMonitorContainer;
 import com.eviware.soapui.impl.wsdl.panels.monitor.SoapMonitorDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Interface;
@@ -21,7 +23,10 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import com.eviware.x.form.*;
+import com.eviware.soapui.ui.desktop.DesktopPanel;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.XFormField;
+import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
@@ -30,10 +35,14 @@ import com.eviware.x.form.support.APage;
 
 public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 {
+
+	public static final String SOAPUI_ACTION_ID = "SoapMonitorAction";
+
 	private static final String HTTPS_PROTOCOL = "https://";
 	private static final String HTTP_TUNNEL = "HTTP Tunnel";
 	private static final String HTTP_PROXY = "HTTP Proxy";
 	private XFormDialog dialog;
+	private SoapMonitor soapMonitor;
 
 	public SoapMonitorAction()
 	{
@@ -134,12 +143,12 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 				if( HTTP_PROXY.equals( dialog.getValue( LaunchForm.SSLORHTTP ) ) )
 				{
-					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
+					soapMonitor = openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
 							dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
 				}
 				else
 				{
-					openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
+					soapMonitor = openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
 							dialog.getValue( LaunchForm.RESPONSE_WSS ), false,
 							dialog.getValue( LaunchForm.SETSSLMON ) );
 				}
@@ -160,13 +169,21 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		return "*/html, */xml, */soap+xml, */json, */x-json, */javascript, */x-amf, */http";
 	}
 
-	protected void openSoapMonitor( WsdlProject target, int listenPort, String incomingRequestWss,
+	public SoapMonitor getSoapMonitor()
+	{
+		return soapMonitor;
+	}
+
+
+
+	private SoapMonitor openSoapMonitor( WsdlProject target, int listenPort, String incomingRequestWss,
 											  String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
 	{
+		DesktopPanel desktopPanel = null;
 		if( sslEndpoint == null )
 		{
-			UISupport.showDesktopPanel( new SoapMonitorDesktopPanel( target, listenPort, incomingRequestWss,
-					incomingResponseWss, setAsProxy, null ) );
+			desktopPanel = createDesktopPanel( target, listenPort, incomingRequestWss, incomingResponseWss, setAsProxy, null );
+			UISupport.showDesktopPanel( desktopPanel );
 		}
 		else
 		{
@@ -177,10 +194,17 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 			}
 			else
 			{
-				UISupport.showDesktopPanel( new SoapMonitorDesktopPanel( target, listenPort, incomingRequestWss,
-						incomingResponseWss, setAsProxy, ssl ) );
+				desktopPanel = createDesktopPanel( target, listenPort, incomingRequestWss, incomingResponseWss, setAsProxy, ssl );
+				UISupport.showDesktopPanel( desktopPanel );
 			}
 		}
+		return desktopPanel != null ? ((SoapMonitorContainer )desktopPanel ).getSoapMonitor() : null;
+	}
+
+	protected DesktopPanel createDesktopPanel( WsdlProject target, int listenPort, String incomingRequestWss, String incomingResponseWss, boolean setAsProxy, String ssl )
+	{
+		return new SoapMonitorDesktopPanel( target, listenPort, incomingRequestWss,
+				incomingResponseWss, setAsProxy, ssl );
 	}
 
 	protected String validate( String sslEndpoint )

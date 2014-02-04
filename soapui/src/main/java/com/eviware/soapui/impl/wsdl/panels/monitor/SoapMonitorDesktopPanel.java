@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.monitor;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
@@ -27,7 +21,12 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
-public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+public class SoapMonitorDesktopPanel extends DefaultDesktopPanel implements SoapMonitorContainer
 {
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
@@ -80,5 +79,10 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	public WsdlProject getProject()
 	{
 		return project;
+	}
+
+	public SoapMonitor getSoapMonitor()
+	{
+		return soapMonitor;
 	}
 }

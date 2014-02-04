@@ -222,17 +222,12 @@ public class SoapMonitor extends JPanel
 				int row = logTable.getSelectedRow();
 				if( row == -1 )
 				{
-					// requestXmlDocument.setXml( null );
-					// responseXmlDocument.setXml( null );
 					requestModelItem.setMessageExchange( null );
 				}
 				else
 				{
 					WsdlMonitorMessageExchange exchange = tableModel.getMessageExchangeAt( row );
 					requestModelItem.setMessageExchange( exchange );
-					// responseModelItem.setMessageExchange( exchange );
-					// requestXmlDocument.setXml( exchange.getRequestContent() );
-					// responseXmlDocument.setXml( exchange.getResponseContent() );
 				}
 
 				addToMockServiceButton.setEnabled( row != -1 );
