@@ -118,10 +118,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		}
 		catch( Throwable e )
 		{
-			if( e instanceof DispatchException )
-				throw ( DispatchException )e;
-			else
-				throw new DispatchException( e );
+			throw new DispatchException( e );
 		}
 	}
 
