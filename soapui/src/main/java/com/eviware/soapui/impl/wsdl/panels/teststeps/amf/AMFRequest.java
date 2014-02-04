@@ -267,20 +267,20 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		if( disabledRequestIcon == null )
 			disabledRequestIcon = UISupport.createImageIcon( "/disabled_amf_request.gif" );
 
-		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 3, "gif" ) );
+		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request.gif", 3 ) );
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 3, "gif" );
+		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request.gif", 3 );
 	}
 
 	public static class RequestIconAnimator<T extends AMFRequest> extends ModelItemIconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
+		public RequestIconAnimator( T modelItem, String baseIcon, String baseAnimateIcon, int iconCount )
 		{
-			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
+			super( modelItem, baseIcon, baseAnimateIcon, iconCount );
 		}
 
 		public boolean beforeSubmit( Submit submit, SubmitContext context )

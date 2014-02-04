@@ -36,15 +36,24 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 	private ImageIcon[] animateIcons;
 	private volatile Future<?> future;
 
-	public ModelItemIconAnimator( T target, String baseIcon, String animationBaseIcon, int num, String type )
+	public ModelItemIconAnimator( T target, String iconName, String animationBaseIconName, int num )
 	{
+		this.baseIcon = UISupport.createImageIcon( iconName );
 		this.target = target;
-		this.baseIcon = UISupport.createImageIcon( baseIcon );
+
+		createAnimatedIcons( animationBaseIconName, num );
+	}
+
+	private void createAnimatedIcons( String animationBaseIcon, int num )
+	{
+		String[] parts = animationBaseIcon.split( "\\.", 2 );
+		String baseName = parts[0];
+		String type = parts[1];
 
 		animateIcons = new ImageIcon[num];
 
 		for( int c = 0; c < animateIcons.length; c++ )
-			animateIcons[c] = UISupport.createImageIcon( animationBaseIcon + "_" + ( c + 1 ) + "." + type );
+			animateIcons[c] = UISupport.createImageIcon( baseName + "_" + ( c + 1 ) + "." + type );
 	}
 
 	public void stop()

@@ -362,7 +362,7 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	{
 		public TestRequestIconAnimator( RestTestRequestInterface modelItem )
 		{
-			super( ( RestTestRequest )modelItem, "/rest_request.gif", "/exec_rest_request", 4, "gif" );
+			super( ( RestTestRequest )modelItem, "/rest_request.gif", "/exec_rest_request.gif", 4 );
 		}
 
 		@Override

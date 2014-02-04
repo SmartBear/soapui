@@ -45,11 +45,12 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	private BeanPathPropertySupport docrootProperty;
 	private ScriptEnginePool onRequestScriptEnginePool;
 	private ScriptEnginePool afterRequestScriptEnginePool;
+	private String baseIcon;
 
 
-	protected AbstractMockService( MockServiceConfigType config, ModelItem parent )
+	protected AbstractMockService( MockServiceConfigType config, ModelItem parent, String icon )
 	{
-		super( config, parent, "/mockService.gif" );
+		super( config, parent, icon );
 
 		if( !config.isSetPort() || config.getPort() < 1 )
 			config.setPort( 8080 );
@@ -474,12 +475,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		notifyPropertyChanged( "dispatchResponseMessages", old, dispatchResponseMessages );
 	}
 
-	// Implements AbstractWsdlModelItem
-	@Override
-	public ImageIcon getIcon()
-	{
-		return iconAnimator.getIcon();
-	}
+	public abstract String getIconName();
 
 	public abstract MockDispatcher createDispatcher( WsdlMockRunContext mockContext );
 
@@ -489,7 +485,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	{
 		public MockServiceIconAnimator()
 		{
-			super( AbstractMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
+			super( AbstractMockService.this, getIconName(), getIconName(), 4 );
 		}
 
 		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )

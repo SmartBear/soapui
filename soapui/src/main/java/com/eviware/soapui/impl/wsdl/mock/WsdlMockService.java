@@ -55,10 +55,11 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 
 	private WsdlMockOperation faultMockOperation;
 	private String mockServiceEndpoint;
+	private static final String ICON_NAME = "/mockService.gif";
 
 	public WsdlMockService( Project project, MockServiceConfig config )
 	{
-		super( config, project );
+		super( config, project, ICON_NAME );
 
 		List<MockOperationConfig> testStepConfigs = config.getMockOperationList();
 		for( MockOperationConfig tsc : testStepConfigs )
@@ -165,6 +166,12 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		{
 			((WsdlMockOperation)operation).release();
 		}
+	}
+
+	@Override
+	public String getIconName()
+	{
+		return ICON_NAME;
 	}
 
 	@Override

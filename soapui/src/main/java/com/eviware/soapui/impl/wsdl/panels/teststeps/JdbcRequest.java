@@ -321,20 +321,20 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 		if( disabledRequestIcon == null )
 			disabledRequestIcon = UISupport.createImageIcon( "/disabled_jdbc_request.gif" );
 
-		setIconAnimator( new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif" ) );
+		setIconAnimator( new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request.gif", 4 ) );
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request", 4, "gif" );
+		return new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request", 4 );
 	}
 
 	public static class RequestIconAnimator<T extends JdbcRequest> extends ModelItemIconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
+		public RequestIconAnimator( T modelItem, String baseIcon, String baseAnimateIcon, int iconCount )
 		{
-			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
+			super( modelItem, baseIcon, baseAnimateIcon, iconCount );
 		}
 
 		public boolean beforeSubmit( Submit submit, SubmitContext context )

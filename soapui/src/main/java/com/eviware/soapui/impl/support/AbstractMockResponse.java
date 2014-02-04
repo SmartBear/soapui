@@ -60,8 +60,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 
 	public AbstractMockResponse( MockResponseConfigType config, MockOperation operation, String icon )
 	{
-		super( config, operation, icon )
-		;
+		super( config, operation, icon );
 		scriptEnginePool = new ScriptEnginePool( this );
 		scriptEnginePool.setScript( getScript() );
 		propertyHolder = new MapTestPropertyHolder( this );

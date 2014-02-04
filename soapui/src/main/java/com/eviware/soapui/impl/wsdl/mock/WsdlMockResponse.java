@@ -108,7 +108,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		if( !config.isSetEncoding() )
 			config.setEncoding( "UTF-8" );
 
-		iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request", 4, "gif" );
+		iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request.gif", 4 );
 	}
 
 	@Override

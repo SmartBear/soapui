@@ -115,7 +115,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/rest_request.gif", "/exec_rest_request", 4, "gif" );
+		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/rest_request.gif", "/exec_rest_request.gif", 4 );
 	}
 
 	public MessagePart[] getRequestParts()

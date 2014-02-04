@@ -156,7 +156,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			}
 
 			iconAnimator = new ModelItemIconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
-					"/exec_mockResponse", 4, "gif" );
+					"/exec_mockResponse.gif", 4 );
 
 			initIcons();
 		}

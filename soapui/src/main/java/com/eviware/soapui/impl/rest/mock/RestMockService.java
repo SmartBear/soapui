@@ -17,9 +17,11 @@ import java.util.List;
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
 {
 
+	private final static String ICON_NAME = "/restMockService.gif";
+
 	public RestMockService( Project project, RESTMockServiceConfig config )
 	{
-		super( config, project );
+		super( config, project, ICON_NAME );
 
 		List<RESTMockActionConfig> restActionConfigList = config.getRestMockActionList();
 		for( RESTMockActionConfig restActionConfig : restActionConfigList )
@@ -45,6 +47,12 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	public void setPath( String path )
 	{
 
+	}
+
+	@Override
+	public String getIconName()
+	{
+		return ICON_NAME;
 	}
 
 	@Override
