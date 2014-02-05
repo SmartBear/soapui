@@ -294,7 +294,8 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 				{
 					mp = new MimeMultipart();
 
-					MessageXmlObject requestXmlObject = new MessageXmlObject( (WsdlOperation)operation, responseContent, false );
+					WsdlOperation wsdlOperation = ( ( WsdlMockOperation )operation ).getOperation();
+					MessageXmlObject requestXmlObject = new MessageXmlObject( wsdlOperation, responseContent, false );
 					MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
 					for( MessageXmlPart requestPart : requestParts )
 					{
@@ -305,7 +306,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 				}
 				catch( Exception e )
 				{
-					e.printStackTrace();
+					SoapUI.logError( e );
 				}
 			}
 		}
