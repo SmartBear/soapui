@@ -70,16 +70,19 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 	}
 
-	public RestMockResponse addNewMockResponse( RESTMockResponseConfig responseConfig )
+	public RestMockResponse addNewMockResponse( String name )
 	{
-		RestMockResponse mockResponse = new RestMockResponse( this, responseConfig );
 
+		RESTMockResponseConfig restMockResponseConfig = getConfig().addNewResponse();
+		restMockResponseConfig.setName( name );
+
+		RestMockResponse mockResponse = new RestMockResponse( this, restMockResponseConfig );
 		addMockResponse( mockResponse );
 
 
-		if( getMockResponseCount() == 1 && responseConfig.getResponseContent() != null )
+		if( getMockResponseCount() == 1 && restMockResponseConfig.getResponseContent() != null )
 		{
-			setDefaultResponse( responseConfig.getResponseContent().toString() );
+			setDefaultResponse( restMockResponseConfig.getResponseContent().toString() );
 		}
 
 		( getMockService() ).fireMockResponseAdded( mockResponse );

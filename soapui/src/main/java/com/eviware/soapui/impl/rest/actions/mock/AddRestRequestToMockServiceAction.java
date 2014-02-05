@@ -65,8 +65,7 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 	private void addNewMockAction( RestRequest restRequest, RestMockService mockService )
 	{
 		RestMockAction restMockAction = mockService.addNewMockAction( restRequest );
-		RESTMockResponseConfig responseConfig = restMockAction.getConfig().addNewResponse();
-		RestMockResponse mockResponse = restMockAction.addNewMockResponse( responseConfig );
+		RestMockResponse mockResponse = restMockAction.addNewMockResponse( "Response 1" );
 
 		// add expected response if available
 		if( restRequest != null && restRequest.getResponse() != null )
