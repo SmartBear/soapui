@@ -68,7 +68,7 @@ public class AddRestRequestToMockServiceActionTest
 	}
 
 	@Test
-	public void shouldAddASecondResponseToAMockAction() throws SoapUIException
+	public void shouldAddASecondResponseToAnOperationForTheSamePath() throws SoapUIException
 	{
 		action.perform( restRequest, notUsed );
 		action.perform( restRequest, notUsed );
@@ -76,6 +76,19 @@ public class AddRestRequestToMockServiceActionTest
 		mockResponseCount = project.getRestMockServiceAt( 0 ).getMockOperationAt( 0 ).getMockResponseCount();
 
 		assertThat( mockResponseCount, is(2));
+	}
+
+	@Test
+	public void shouldCreateNewOperationForDifferentPath() throws SoapUIException
+	{
+		action.perform( restRequest, notUsed );
+		restRequest.setPath( "someotherpath" );
+		action.perform( restRequest, notUsed );
+
+		mockResponseCount = project.getRestMockServiceAt( 0 ).getMockOperationAt( 0 ).getMockResponseCount();
+
+		assertThat( mockResponseCount, is(1));
+		assertThat( project.getRestMockServiceAt( 0 ).getMockOperationCount(), is(2) );
 	}
 
 	private void mockPromptDialog()
