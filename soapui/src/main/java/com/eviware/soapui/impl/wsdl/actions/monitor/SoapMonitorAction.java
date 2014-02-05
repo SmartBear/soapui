@@ -41,7 +41,6 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 	private static final String HTTPS_PROTOCOL = "https://";
 	private static final String HTTP_TUNNEL = "HTTP Tunnel";
 	private static final String HTTP_PROXY = "HTTP Proxy";
-	private XFormDialog dialog;
 	private SoapMonitor soapMonitor;
 
 	public SoapMonitorAction()
@@ -51,52 +50,12 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 	public void perform( WsdlProject project, Object param )
 	{
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildTabbedDialog( WizardForm.class, null );
-			dialog.setSize( 650, 500 );
-		}
+		DialogHandler dialogHandler = createDialogHandler( project, param );
+		final XFormDialog dialog = dialogHandler.buildDialog();
 
 		Settings settings = project.getSettings();
 
-		dialog.setIntValue( LaunchForm.PORT, ( int )settings.getLong( LaunchForm.PORT, 8081 ) );
-		dialog.setOptions( LaunchForm.REQUEST_WSS,
-				StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
-		dialog.setOptions( LaunchForm.RESPONSE_WSS,
-				StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
-		dialog.setValue( LaunchForm.SETSSLMON,
-				settings.getString( LaunchForm.SETSSLMON, "" ).length() > 0 ? settings.getString( LaunchForm.SETSSLMON, "" )
-						: HTTPS_PROTOCOL );
-		dialog.setOptions( LaunchForm.SSLORHTTP, new String[] { HTTP_TUNNEL, HTTP_PROXY } );
-
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTORE, settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTORE, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_PASSWORD, settings.getString( SecurityTabForm.SSLTUNNEL_PASSWORD, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
-				settings.getString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
-				settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD,
-				settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
-		dialog.setBooleanValue( LaunchForm.SSLTUNNEL_REUSESTATE, settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) );
-		dialog.setValue( LaunchForm.SET_CONTENT_TYPES,
-				settings.getString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
-				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) );
-		dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
-				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
-
-		XFormField sslOrHttp = dialog.getFormField( LaunchForm.SSLORHTTP );
-		sslOrHttp.setValue( HTTP_PROXY );
-		setDialogState( HTTP_PROXY );
-		sslOrHttp.addFormFieldListener( new XFormFieldListener()
-		{
-
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				setDialogState( newValue );
-			}
-
-		} );
+		dialogHandler.setDialogValues( settings );
 
 		if( dialog.show() )
 		{
@@ -104,64 +63,33 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 			{
 				UISupport.setHourglassCursor();
 
-				int listenPort = dialog.getIntValue( LaunchForm.PORT, 8080 );
-				settings.setLong( LaunchForm.PORT, listenPort );
+				dialogHandler.saveDialogValues( settings );
+				loadAllInterfacesIn( project );
 
-				settings.setString( LaunchForm.SETSSLMON, dialog.getValue( LaunchForm.SETSSLMON ) );
-
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTORE,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTORE ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_PASSWORD,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_PASSWORD ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD ) );
-				settings.setString( LaunchForm.SSLTUNNEL_REUSESTATE, dialog.getValue( LaunchForm.SSLTUNNEL_REUSESTATE ) );
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH ) );
-				if( dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) != null
-						&& dialog.getValue( LaunchForm.SET_CONTENT_TYPES ).trim().equals( "" ) )
-				{
-					settings.setString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() );
-				}
-				else
-				{
-					settings.setString( LaunchForm.SET_CONTENT_TYPES, dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) );
-				}
-
-				settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
-						dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD ) );
-
-				// load all interfaces in project
-				for( Interface iface : project.getInterfaceList() )
-				{
-					iface.getDefinitionContext().loadIfNecessary();
-				}
-
-				if( HTTP_PROXY.equals( dialog.getValue( LaunchForm.SSLORHTTP ) ) )
-				{
-					soapMonitor = openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
-							dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
-				}
-				else
-				{
-					soapMonitor = openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
-							dialog.getValue( LaunchForm.RESPONSE_WSS ), false,
-							dialog.getValue( LaunchForm.SETSSLMON ) );
-				}
+				soapMonitor = dialogHandler.createSoapMonitor();
 			}
 			catch( Exception e )
 			{
 				SoapUI.logError( e );
-			}
-			finally
+			} finally
 			{
 				UISupport.resetCursor();
 			}
 		}
+	}
+
+	private void loadAllInterfacesIn( WsdlProject project ) throws Exception
+	{
+		for( Interface iface : project.getInterfaceList() )
+		{
+			iface.getDefinitionContext().loadIfNecessary();
+		}
+	}
+
+
+	protected DialogHandler createDialogHandler( WsdlProject project, Object param )
+	{
+		return new FullMonitorDialogHandler(project);
 	}
 
 	public static String defaultContentTypes()
@@ -174,10 +102,19 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		return soapMonitor;
 	}
 
+	protected interface DialogHandler
+	{
+		XFormDialog buildDialog();
 
+		void setDialogValues( Settings settings );
 
-	private SoapMonitor openSoapMonitor( WsdlProject target, int listenPort, String incomingRequestWss,
-											  String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
+		void saveDialogValues( Settings settings );
+
+		SoapMonitor createSoapMonitor();
+	}
+
+	protected SoapMonitor openSoapMonitor( WsdlProject target, int listenPort, String incomingRequestWss,
+														String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
 	{
 		DesktopPanel desktopPanel = null;
 		if( sslEndpoint == null )
@@ -198,7 +135,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 				UISupport.showDesktopPanel( desktopPanel );
 			}
 		}
-		return desktopPanel != null ? ((SoapMonitorContainer )desktopPanel ).getSoapMonitor() : null;
+		return desktopPanel != null ? ( ( SoapMonitorContainer )desktopPanel ).getSoapMonitor() : null;
 	}
 
 	protected DesktopPanel createDesktopPanel( WsdlProject target, int listenPort, String incomingRequestWss, String incomingResponseWss, boolean setAsProxy, String ssl )
@@ -216,7 +153,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		return null;
 	}
 
-	private void setDialogState( String newValue )
+	private void setDialogState( XFormDialog dialog, String newValue )
 	{
 		if( HTTP_PROXY.equals( newValue ) )
 		{
@@ -316,5 +253,123 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 		@AField( description = "Set SSL Client Key Store Password", name = "HTTP tunnel - Set SSL Client Key Store Password", type = AFieldType.PASSWORD )
 		public final static String SSLTUNNEL_KEYSTOREPASSWORD = "HTTP tunnel - Set SSL Client Key Store Password";
+	}
+
+	protected class FullMonitorDialogHandler implements DialogHandler
+	{
+
+
+		private WsdlProject project;
+		private XFormDialog dialog;
+
+		public FullMonitorDialogHandler( WsdlProject project )
+		{
+			this.project = project;
+		}
+
+		@Override
+		public XFormDialog buildDialog()
+		{
+			dialog = ADialogBuilder.buildTabbedDialog( WizardForm.class, null );
+			dialog.setSize( 650, 500 );
+			return dialog;
+		}
+
+		@Override
+		public void setDialogValues( Settings settings )
+		{
+			dialog.setIntValue( LaunchForm.PORT, ( int )settings.getLong( LaunchForm.PORT, 8081 ) );
+			dialog.setOptions( LaunchForm.REQUEST_WSS,
+					StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
+			dialog.setOptions( LaunchForm.RESPONSE_WSS,
+					StringUtils.merge( project.getWssContainer().getIncomingWssNames(), "<none>" ) );
+			dialog.setValue( LaunchForm.SETSSLMON,
+					settings.getString( LaunchForm.SETSSLMON, "" ).length() > 0 ? settings.getString( LaunchForm.SETSSLMON, "" )
+							: HTTPS_PROTOCOL );
+			dialog.setOptions( LaunchForm.SSLORHTTP, new String[] { HTTP_TUNNEL, HTTP_PROXY } );
+
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTORE, settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTORE, "" ) );
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_PASSWORD, settings.getString( SecurityTabForm.SSLTUNNEL_PASSWORD, "" ) );
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
+					settings.getString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD, "" ) );
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
+					settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE, "" ) );
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD,
+					settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
+			dialog.setBooleanValue( LaunchForm.SSLTUNNEL_REUSESTATE, settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) );
+			dialog.setValue( LaunchForm.SET_CONTENT_TYPES,
+					settings.getString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() ) );
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
+					settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) );
+			dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
+					settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
+
+			XFormField sslOrHttp = dialog.getFormField( LaunchForm.SSLORHTTP );
+			sslOrHttp.setValue( HTTP_PROXY );
+			setDialogState( dialog, HTTP_PROXY );
+			sslOrHttp.addFormFieldListener( new XFormFieldListener()
+			{
+
+				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+				{
+					setDialogState( dialog, newValue );
+				}
+
+			} );
+		}
+
+		@Override
+		public void saveDialogValues( Settings settings )
+		{
+			int listenPort = dialog.getIntValue( LaunchForm.PORT, 8080 );
+			settings.setLong( LaunchForm.PORT, listenPort );
+
+			settings.setString( LaunchForm.SETSSLMON, dialog.getValue( LaunchForm.SETSSLMON ) );
+
+			settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTORE,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTORE ) );
+			settings.setString( SecurityTabForm.SSLTUNNEL_PASSWORD,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_PASSWORD ) );
+			settings.setString( SecurityTabForm.SSLTUNNEL_KEYPASSWORD,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYPASSWORD ) );
+			settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE ) );
+			settings.setString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD ) );
+			settings.setString( LaunchForm.SSLTUNNEL_REUSESTATE, dialog.getValue( LaunchForm.SSLTUNNEL_REUSESTATE ) );
+			settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH ) );
+			if( dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) != null
+					&& dialog.getValue( LaunchForm.SET_CONTENT_TYPES ).trim().equals( "" ) )
+			{
+				settings.setString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() );
+			}
+			else
+			{
+				settings.setString( LaunchForm.SET_CONTENT_TYPES, dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) );
+			}
+
+			settings.setString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
+					dialog.getValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD ) );
+		}
+
+		@Override
+		public SoapMonitor createSoapMonitor()
+		{
+			int listenPort = dialog.getIntValue( LaunchForm.PORT, 8080 );
+			if( HTTP_PROXY.equals( dialog.getValue( LaunchForm.SSLORHTTP ) ) )
+			{
+				return openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
+						dialog.getValue( LaunchForm.RESPONSE_WSS ), dialog.getBooleanValue( LaunchForm.SETASPROXY ), null );
+			}
+			else
+			{
+				return openSoapMonitor( project, listenPort, dialog.getValue( LaunchForm.REQUEST_WSS ),
+						dialog.getValue( LaunchForm.RESPONSE_WSS ), false,
+						dialog.getValue( LaunchForm.SETSSLMON ) );
+			}
+		}
+
+
 	}
 }
