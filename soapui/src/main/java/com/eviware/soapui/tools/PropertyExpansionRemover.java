@@ -38,7 +38,7 @@ public class PropertyExpansionRemover
 
 	private static boolean containsPropertyExpansion( String input )
 	{
-		if (!input.contains( EXPANSION_START ))
+		if (input == null || !input.contains( EXPANSION_START ))
 		{
 			return false;
 		}

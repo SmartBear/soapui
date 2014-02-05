@@ -12,18 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import org.apache.http.Header;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -43,6 +31,17 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.uri.HttpParser;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.http.Header;
+import org.w3c.dom.Document;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
 public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 {
@@ -464,6 +463,12 @@ public class TcpMonWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public String getQueryParameters()
+	{
+		return "";
 	}
 
 }

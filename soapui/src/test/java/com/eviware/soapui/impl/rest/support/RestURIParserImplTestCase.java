@@ -12,17 +12,17 @@
  */
 package com.eviware.soapui.impl.rest.support;
 
-import com.eviware.soapui.config.RestParametersConfig;
-import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 
-import static org.junit.Assert.*;
+import static com.eviware.soapui.utils.CommonMatchers.anEmptyString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests RestURIParserImpl
@@ -405,6 +405,22 @@ public class RestURIParserImplTestCase
 
 		restURIParser = new RestURIParserImpl( uri );
 
+	}
+
+	@Test
+	public void handlesEmptyNameWithMatrixParameters() throws Exception
+	{
+		restURIParser = new RestURIParserImpl( "http://example.com/;JSESSIONID=abc" );
+
+		assertThat( restURIParser.getResourceName(), is(anEmptyString()));
+	}
+
+	@Test
+	public void handlesEmptyNameWithQueryParameters() throws Exception
+	{
+		restURIParser = new RestURIParserImpl( "http://example.com/?articleId=234" );
+
+		assertThat( restURIParser.getResourceName(), is(anEmptyString()));
 	}
 
 	private void assertURIParsedCorrectly( String expectedEndpoint,
