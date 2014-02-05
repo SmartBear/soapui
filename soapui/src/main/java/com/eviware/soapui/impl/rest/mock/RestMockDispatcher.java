@@ -4,9 +4,7 @@ import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
-import com.eviware.soapui.model.mock.MockDispatcher;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunListener;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.support.AbstractMockDispatcher;
 import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.log4j.Logger;
@@ -36,13 +34,62 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 	{
 		try
 		{
-			RestMockRequest restMockRequest  = new RestMockRequest( request, response, mockContext  );
-			RestMockAction mockAction = mockService.getMockOperationAt( 0 ); //TODO in SOAP-1334
-			return mockAction.dispatchRequest( restMockRequest );
+			RestMockRequest restMockRequest = new RestMockRequest( request, response, mockContext );
+			return getMockResult( restMockRequest );
 		}
-		catch(Exception e)
+		catch( Exception e )
 		{
 			throw new DispatchException( e );
 		}
+	}
+
+	private MockResult getMockResult( RestMockRequest restMockRequest ) throws DispatchException
+	{
+		RestMockAction mockAction = ( RestMockAction )findOperationBasedOnPath( restMockRequest.getPath() );
+
+		if( mockAction != null )
+		{
+			return mockAction.dispatchRequest( restMockRequest );
+		}
+		else
+		{
+			return getDefaultResponse( restMockRequest );
+		}
+
+	}
+
+	private MockOperation findOperationBasedOnPath( String requestPath )
+	{
+		for( MockOperation operation : mockService.getMockOperationList() )
+		{
+			String path = ( ( RestMockAction )operation ).getPath();
+
+			if( path.equals( requestPath ) )
+			{
+				return operation;
+			}
+
+		}
+
+		return null;
+	}
+
+	RestMockResult getDefaultResponse( RestMockRequest restMockRequest ) throws DispatchException
+	{
+		RestMockResult result = null;
+		try
+		{
+			result = new RestMockResult( restMockRequest );
+		}
+		catch( Exception e )
+		{
+			throw new DispatchException( e );
+		}
+
+		//TODO: it does not work now
+		result.setResponseStatus( 404 );
+
+		return result;
+
 	}
 }

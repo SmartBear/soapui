@@ -52,7 +52,6 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 
 			if( mockService == null )
 			{
-
 				String defaultName = "MockService " + ( project.getRestMockServiceCount() + 1 );
 				String mockServiceName = UISupport.prompt( "Enter name of new MockService", title, defaultName );
 
