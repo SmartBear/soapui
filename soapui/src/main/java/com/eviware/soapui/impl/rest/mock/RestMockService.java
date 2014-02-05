@@ -78,7 +78,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return restMockAction;
 	}
 
-	public MockOperation getMatchingOperation( RestRequest restRequest )
+	public MockOperation findOrCreateNewOperation( RestRequest restRequest )
 	{
 		MockOperation matchedOperation = findOperationMatchingPath( restRequest.getPath() );
 

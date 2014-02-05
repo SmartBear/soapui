@@ -79,9 +79,12 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 
 	private void addRequestToMockService( RestRequest restRequest, RestMockService mockService )
 	{
-		MockOperation matchedOperation = mockService.getMatchingOperation( restRequest );
+		MockOperation matchedOperation = mockService.findOrCreateNewOperation( restRequest );
 
-		RestMockResponse mockResponse = ((RestMockAction )matchedOperation).addNewMockResponse( "Response 1" );
+		int responseCount = matchedOperation.getMockResponseCount() + 1;
+		String responseName = "Response " + responseCount;
+
+		RestMockResponse mockResponse = ((RestMockAction )matchedOperation).addNewMockResponse( responseName );
 		copyResponseContent( restRequest, mockResponse );
 	}
 
