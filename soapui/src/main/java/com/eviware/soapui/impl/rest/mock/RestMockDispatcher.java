@@ -45,7 +45,7 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 
 	private MockResult getMockResult( RestMockRequest restMockRequest ) throws DispatchException
 	{
-		RestMockAction mockAction = ( RestMockAction )findOperationBasedOnPath( restMockRequest.getPath() );
+		RestMockAction mockAction = ( RestMockAction )mockService.findOperationMatchingPath( restMockRequest.getPath() );
 
 		if( mockAction != null )
 		{
@@ -58,23 +58,9 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 
 	}
 
-	private MockOperation findOperationBasedOnPath( String requestPath )
-	{
-		for( MockOperation operation : mockService.getMockOperationList() )
-		{
-			String path = ( ( RestMockAction )operation ).getPath();
 
-			if( path.equals( requestPath ) )
-			{
-				return operation;
-			}
 
-		}
-
-		return null;
-	}
-
-	RestMockResult getDefaultResponse( RestMockRequest restMockRequest ) throws DispatchException
+	private RestMockResult getDefaultResponse( RestMockRequest restMockRequest ) throws DispatchException
 	{
 		RestMockResult result = null;
 		try

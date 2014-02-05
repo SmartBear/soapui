@@ -10,6 +10,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.mock.MockDispatcher;
+import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
 
 import java.util.List;
@@ -75,6 +76,33 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		fireMockOperationAdded( restMockAction );
 
 		return restMockAction;
+	}
+
+	public MockOperation getMatchingOperation( RestRequest restRequest )
+	{
+		MockOperation matchedOperation = findOperationMatchingPath( restRequest.getPath() );
+
+		if( matchedOperation == null)
+		{
+			matchedOperation = addNewMockAction( restRequest );
+		}
+		return matchedOperation;
+	}
+
+	protected MockOperation findOperationMatchingPath( String requestPath )
+	{
+		for( MockOperation operation : getMockOperationList() )
+		{
+
+			String path = ( ( RestMockAction )operation ).getPath();
+
+			if( path.equals( requestPath ) )
+			{
+				return operation;
+			}
+		}
+
+		return null;
 	}
 
 }

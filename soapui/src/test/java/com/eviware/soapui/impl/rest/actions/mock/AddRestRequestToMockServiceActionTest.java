@@ -6,6 +6,7 @@ import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogs;
@@ -23,19 +24,21 @@ import static org.mockito.Mockito.*;
 public class AddRestRequestToMockServiceActionTest
 {
 	AddRestRequestToMockServiceAction action = new AddRestRequestToMockServiceAction();
-	RestRequest target;
-	Object param = mock( RestMockAction.class );
+	RestRequest restRequest;
+	Object notUsed = null;
 	String mockServiceName = "Mock Service1 1";
 	private XDialogs originalDialogs;
 	private WsdlProject project;
+	private int mockResponseCount;
 
 	@Before
 	public void setUp() throws Exception
 	{
-		target = ModelItemFactory.makeRestRequest();
-		target.setMethod( GET );
+		restRequest = ModelItemFactory.makeRestRequest();
+		restRequest.setMethod( GET );
+		restRequest.setPath( "somepath" );
 		mockPromptDialog();
-		project = target.getRestMethod().getInterface().getProject();
+		project = restRequest.getRestMethod().getInterface().getProject();
 	}
 
 	@After
@@ -47,7 +50,7 @@ public class AddRestRequestToMockServiceActionTest
 	@Test
 	public void shouldSaveRestMockWithSetNameToProject()
 	{
-		action.perform( target, param );
+		action.perform( restRequest, notUsed );
 		List<RestMockService> serviceList = project.getRestMockServiceList();
 		assertThat( serviceList.size(), is( 1 ) );
 
@@ -60,8 +63,19 @@ public class AddRestRequestToMockServiceActionTest
 	{
 		ProjectListenerAdapter listener = mock( ProjectListenerAdapter.class );
 		project.addProjectListener( listener );
-		action.perform( target, param );
+		action.perform( restRequest, notUsed );
 		verify( listener, times( 1 ) ).mockServiceAdded( any( RestMockService.class ) );
+	}
+
+	@Test
+	public void shouldAddASecondResponseToAMockAction() throws SoapUIException
+	{
+		action.perform( restRequest, notUsed );
+		action.perform( restRequest, notUsed );
+
+		mockResponseCount = project.getRestMockServiceAt( 0 ).getMockOperationAt( 0 ).getMockResponseCount();
+
+		assertThat( mockResponseCount, is(2));
 	}
 
 	private void mockPromptDialog()
