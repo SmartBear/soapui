@@ -118,7 +118,7 @@ public class ProxyServlet implements Servlet
 		else if( httpRequest.getMethod().equals( "PATCH" ) )
 			method = new ExtendedPatchMethod();
 		else
-			method = new ExtendedGetMethod();
+			method = new ExtendedGenericMethod( httpRequest.getMethod() );
 
 		method.setDecompress( false );
 

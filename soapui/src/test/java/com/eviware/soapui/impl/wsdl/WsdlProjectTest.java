@@ -69,8 +69,7 @@ public class WsdlProjectTest
 		restRequest.setName( "REST Mock Action" );
 		restRequest.setPath( "Resource/path/subpath" );
 		RestMockAction restMockAction = restMockService.addNewMockAction( restRequest );
-		RESTMockResponseConfig responseConfig = restMockAction.getConfig().addNewResponse();
-		RestMockResponse mockResponse = restMockAction.addNewMockResponse( responseConfig );
+		RestMockResponse mockResponse = restMockAction.addNewMockResponse( "Response 1" );
 		mockResponse.setResponseContent( restMockResponseContent );
 		mockResponse.setName( restMockResponseName );
 	}

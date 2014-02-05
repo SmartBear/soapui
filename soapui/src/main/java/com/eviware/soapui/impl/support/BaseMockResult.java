@@ -48,8 +48,6 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 		if( actions == null )
 		{
 			actions = new DefaultActionList( "MockResult" );
-/* FIXME			actions.setDefaultAction( new ShowMessageExchangeAction(
-					new WsdlMockResultMessageExchange( this, mockResponse ), "MockResult" ) );*/
 		}
 
 		return actions;
@@ -110,7 +108,7 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 		this.responseContent = responseContent;
 	}
 
-	@SuppressWarnings( "unchecked" )
+	@SuppressWarnings("unchecked")
 	public void finish()
 	{
 		if( mockRequest.getHttpResponse() instanceof org.mortbay.jetty.Response )

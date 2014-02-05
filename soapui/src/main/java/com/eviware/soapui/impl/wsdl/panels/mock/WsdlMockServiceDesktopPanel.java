@@ -504,7 +504,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 
 		public void mockOperationAdded( MockOperation operation )
 		{
-			operations.add( ( WsdlMockOperation )operation );
+			operations.add( operation );
 			operation.addPropertyChangeListener( this );
 			fireIntervalAdded( this, operations.size() - 1, operations.size() - 1 );
 		}
