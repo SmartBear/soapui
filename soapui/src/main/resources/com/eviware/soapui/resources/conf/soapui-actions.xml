@@ -1076,6 +1076,8 @@
         <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
         <tns:actionMapping actionId="StopMockServiceAction"/>
         <tns:actionMapping actionId="RestartMockServiceAction"/>
+        <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="DeleteMockServiceAction" keyStroke="DELETE"/>
     </tns:actionGroup>
 
     <!-- RestMockResponse ActionGroup -->

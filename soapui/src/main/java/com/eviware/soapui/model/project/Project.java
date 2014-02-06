@@ -77,6 +77,8 @@ public interface Project extends TestModelItem
 
    public RestMockService addNewRestMockService( String name );
 
+	public void removeMockService( MockService service);
+
    public SaveStatus save() throws IOException;
 
 	public List<TestSuite> getTestSuiteList();
