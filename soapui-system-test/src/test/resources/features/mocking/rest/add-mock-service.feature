@@ -1,7 +1,7 @@
 @Automated @Regression
 Feature: Add rest mock service
 
-  Scenario: Add mock service option available in rest operation context
+  Scenario: Option is available from rest operation context
     Given SoapUI is started
     And a new REST project is created
     When in rest resource context
@@ -9,7 +9,7 @@ Feature: Add rest mock service
     Then “Add to REST mock service” rest option is available
     And close SoapUI
 
-  Scenario: Add mock service option available in rest request context
+  Scenario: Option is available in rest request context
     Given SoapUI is started
     And a new REST project is created
     When in rest request context
@@ -17,7 +17,7 @@ Feature: Add rest mock service
     Then “Add to REST mock service” rest option is available
     And close SoapUI
 
-  Scenario: Mock service created from rest request context menu
+  Scenario: Mock service tree node structure is created
     Given SoapUI is started
     And a new REST project is created
     When in rest request context
