@@ -1114,7 +1114,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
-	public void fireMockServiceRemoved( WsdlMockService mockService )
+	public void fireMockServiceRemoved( MockService mockService )
 	{
 		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
@@ -1371,10 +1371,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		return restMockServices.size();
 	}
 
-	public void removeMockService( WsdlMockService mockService )
+	public void removeMockService( MockService mockService )
 	{
 		int ix = mockServices.indexOf( mockService );
-		mockServices.remove( ix );
+		boolean isRestMockService = ix == -1;
+
+		if( isRestMockService )
+		{
+			ix = restMockServices.indexOf( mockService );
+		}
+		removeMockServiceFromList( ix, isRestMockService );
 
 		try
 		{
@@ -1383,6 +1389,30 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		finally
 		{
 			mockService.release();
+			removeMockServiceFromConfig( ix, isRestMockService );
+		}
+	}
+
+	private void removeMockServiceFromList( int ix, boolean isRestMockService )
+	{
+		if( isRestMockService )
+		{
+			restMockServices.remove( ix );
+		}
+		else
+		{
+			mockServices.remove( ix );
+		}
+	}
+
+	private void removeMockServiceFromConfig( int ix, boolean isRestMockService )
+	{
+		if( isRestMockService )
+		{
+			getConfig().removeRestMockService( ix );
+		}
+		else
+		{
 			getConfig().removeMockService( ix );
 		}
 	}

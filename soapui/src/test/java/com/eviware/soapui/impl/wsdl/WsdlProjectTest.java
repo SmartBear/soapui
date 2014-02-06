@@ -9,6 +9,7 @@ import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod.*;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
@@ -49,7 +50,6 @@ public class WsdlProjectTest
 	@Test
 	public void shouldSaveAndReloadRestMockResponses() throws Exception
 	{
-
 		addRestMockResponseToProject();
 
 		WsdlProject reloadedProject = saveAndReloadProject( project );
@@ -59,6 +59,30 @@ public class WsdlProjectTest
 		assertThat( reloadedMockResponse, notNullValue() );
 		assertThat( reloadedMockResponse.getName(), is( restMockResponseName ) );
 		assertThat( reloadedMockResponse.getResponseContent(), is( restMockResponseContent ) );
+	}
+
+	@Test
+	public void shouldRemoveMockServices() throws Exception
+	{
+		int mockServiceCountBefore = project.getMockServiceCount();
+		MockService mocka = project.addNewMockService( "Mocka" );
+		assertThat( project.getMockServiceCount(), is( mockServiceCountBefore + 1 ) );
+
+		project.removeMockService( mocka );
+		assertThat( project.getMockServiceCount(), is( mockServiceCountBefore ) );
+		assertThat( project.getMockServiceByName( "Mocka" ), nullValue() );
+	}
+
+	@Test
+	public void shouldRemoveRestMockServices() throws Exception
+	{
+		int restMockServiceCountBefore = project.getRestMockServiceCount();
+		MockService mocka = project.addNewRestMockService( "Mocka" );
+		assertThat( project.getRestMockServiceCount(), is( restMockServiceCountBefore + 1 ) );
+
+		project.removeMockService( mocka );
+		assertThat( project.getRestMockServiceCount(), is( restMockServiceCountBefore ) );
+		assertThat( project.getRestMockServiceByName( "Mocka" ), nullValue() );
 	}
 
 	private void addRestMockResponseToProject() throws SoapUIException

@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.actions.mockservice;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
