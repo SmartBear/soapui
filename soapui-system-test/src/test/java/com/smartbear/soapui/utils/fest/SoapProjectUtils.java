@@ -59,13 +59,18 @@ public final class SoapProjectUtils
 
 		waitForProjectToLoad();
 
-		tree.expandPath( path );
-		return tree.node( getRequestPath() );
+		tree.expandPath( getOperationPath() );
+		return tree.node( path );
 	}
 
 	public static JTreeNodeFixture findSoapOperationPopupMenu( FrameFixture rootWindow )
 	{
 		return getTreeNode( rootWindow, getOperationPath() );
+	}
+
+	public static JTreeNodeFixture findSoapRequestPopupMenu( FrameFixture rootWindow )
+	{
+		return getTreeNode( rootWindow, getRequestPath() );
 	}
 
 	private static String getOperationPath()
