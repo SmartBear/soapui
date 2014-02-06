@@ -16,7 +16,9 @@ import static com.smartbear.soapui.utils.fest.RestProjectUtils.createNewRestProj
 import static com.smartbear.soapui.utils.fest.RestProjectUtils.findRestRequestPopupMenu;
 import static com.smartbear.soapui.utils.fest.SoapProjectUtils.createNewSoapProject;
 import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapOperationPopupMenu;
+import static com.smartbear.soapui.utils.fest.RestProjectUtils.findRestRequestPopupMenu;
 import static org.junit.Assert.assertTrue;
+
 
 public class WsdlMockStepdefs
 {
@@ -32,6 +34,7 @@ public class WsdlMockStepdefs
 	@When( "^in rest (.*) context$" )
 	public void in_rest_tree_node_context(String context) throws Throwable
 	{
+
 	}
 
 	@When( "^in soap (.*) context$" )
@@ -41,12 +44,16 @@ public class WsdlMockStepdefs
 		if( "operation".equals( context ) )
 		{
 			rightClickMenu = findSoapOperationPopupMenu( getMainWindow( robot ) );
+            Thread.sleep( 2000 );
 		}
+        Thread.sleep( 200 );
 	}
 
 	@Then( "^“(.*)” option is available$" )
 	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
 	{
 		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( rightClickMenu, menuItemLabel ) );
+        Thread.sleep( 2000 );
 	}
+
 }

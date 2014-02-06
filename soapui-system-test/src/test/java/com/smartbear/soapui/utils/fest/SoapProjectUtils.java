@@ -28,8 +28,11 @@ public final class SoapProjectUtils
 	private static final String WSDL_FIELD_NAME = "Initial WSDL";
 	private static final String TEST_WSDL = ROOT_FOLDER + "wsdls/test.wsdl";
 	private static final String PROJECT_NAME = "test";
+    //private static final String PROJECT_NAME = "REST Project 1";
 	private static final String INTERFACE_NAME = "GeoCode_Binding";
+    //private static final String INTERFACE_NAME = "http://maps.googleapis.com";
 	private static final String OPERATION_NAME = "geocode";
+    //private static final String OPERATION_NAME = "xml";
 	private static final String REQUEST_NAME = "Request 1";
 	private static final int NEW_PROJECT_TIMEOUT = 2000;
 
@@ -67,7 +70,8 @@ public final class SoapProjectUtils
 
 	private static String getOperationPath()
 	{
-		return SoapUI.getWorkspace().getName() + "/" + PROJECT_NAME + "/" + INTERFACE_NAME + "/" + OPERATION_NAME;
+       // return SoapUI.getWorkspace().getName() + "/" + "REST Project 1" + "/" + "http://example.org" + "/" + "Sub-resource";
+        return SoapUI.getWorkspace().getName() + "/" + PROJECT_NAME + "/" + INTERFACE_NAME + "/" + OPERATION_NAME;
 	}
 
 	private static String getRequestPath()

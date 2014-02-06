@@ -50,7 +50,16 @@ public class RestProjectStepdefs
 		newProjectIndexInNavigationTree = findTheIndexOfCurrentProjectInNavigationTree();
 	}
 
-	@When( "^the user clicks on the Auth tab$" )
+    @When( "^context is open$" )
+    public void _add_to_mock_service_option_is_available_MB()
+    {
+        JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+        //assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
+    }
+
+
+
+    @When( "^the user clicks on the Auth tab$" )
 	public void clickOnTheAuthTab()
 	{
 		rootWindow.toggleButton( AuthInspectorFactory.INSPECTOR_ID ).click();
@@ -124,6 +133,13 @@ public class RestProjectStepdefs
 		JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
 		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
 	}
+
+    @Then( "^“(.*)” option is available on REST Resource" )
+    public void _add_to_mock_service_option_is_available_resource(String menuItemLabel) throws Throwable
+    {
+        JTreeNodeFixture popupMenu = findRestResourcePopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+        assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
+    }
 
 	private void verifyEmptyTable( JPanelFixture parentPanel )
 	{

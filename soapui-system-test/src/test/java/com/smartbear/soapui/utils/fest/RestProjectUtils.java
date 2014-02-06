@@ -32,7 +32,7 @@ import static org.fest.swing.data.TableCell.row;
 public final class RestProjectUtils
 {
 	private static final int NEW_PROJECT_TIMEOUT = 2000;
-	private static final String URI = "http://soapui.org";
+	private static final String URI = "http://example.org/resource/sub-resource?parameterA=valueA";
 	private static final String NEW_REST_PROJECT_MENU_ITEM = "New REST Project";
 	private static final String NEW_REST_PROJECT_DIALOG_NAME = "New REST Project";
 	private static final String OK_BUTTON_NAME = "OK";
@@ -69,7 +69,10 @@ public final class RestProjectUtils
 	{
 		return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE ).rightClick();
 	}
-
+    public static JTreeRowFixture findRestResourcePopupMenu( FrameFixture rootWindow, int projectIndexInTree )
+    {
+        return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_RESOURCE_POSITION_IN_TREE).rightClick();
+    }
 	public static JPanelFixture findMethodEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_METHOD_POSITION_IN_TREE, robot );
