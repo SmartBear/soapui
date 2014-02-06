@@ -19,6 +19,8 @@ import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.doesLabelExist;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.RestProjectUtils.*;
+import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapOperationPopupMenu;
+import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapRequestPopupMenu;
 import static org.fest.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -30,6 +32,7 @@ public class RestProjectStepdefs
 	private final FrameFixture rootWindow;
 	private final List<String> existingProjectNameList;
 	private int newProjectIndexInNavigationTree;
+	private JTreeNodeFixture currentTreeNode;
 
 	public RestProjectStepdefs( ScenarioRobot runner )
 	{
@@ -50,16 +53,44 @@ public class RestProjectStepdefs
 		newProjectIndexInNavigationTree = findTheIndexOfCurrentProjectInNavigationTree();
 	}
 
-    @When( "^context is open$" )
-    public void _add_to_mock_service_option_is_available_MB()
-    {
-        JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
-        //assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
-    }
+   @When( "^context is open$" )
+   public void _add_to_mock_service_option_is_available_MB()
+   {
+      JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+      //assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
+   }
+
+
+	@When( "^in rest (.*) context$" )
+	public void _in_tree_node_context(String context) throws Throwable
+	{
+		Thread.sleep( 200 );
+		if( "resource".equals( context ) )
+		{
+			currentTreeNode = findRestResourcePopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+		}
+		if( "request".equals( context ) )
+		{
+			currentTreeNode = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+		}
+		Thread.sleep( 200 );
+	}
+
+	@When( "^right clicking the current rest context")
+	public void _right_clicking_the_current_rest_context() throws Throwable
+	{
+		currentTreeNode = ( JTreeNodeFixture )currentTreeNode.rightClick();
+	}
+
+	@Then( "^“(.*)” rest option is available$" )
+	public void _rest_option_is_available(String menuItemLabel) throws Throwable
+	{
+		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( currentTreeNode, menuItemLabel ) );
+	}
 
 
 
-    @When( "^the user clicks on the Auth tab$" )
+	@When( "^the user clicks on the Auth tab$" )
 	public void clickOnTheAuthTab()
 	{
 		rootWindow.toggleButton( AuthInspectorFactory.INSPECTOR_ID ).click();
