@@ -74,4 +74,11 @@ public final class ApplicationUtils
 		}
 		return foundLabel;
 	}
+
+	public static JTreeNodeFixture findTreeNode( FrameFixture frame, String path )
+	{
+		return WorkspaceUtils.getNavigatorPanel( frame ).tree().node( path );
+	}
+
+
 }

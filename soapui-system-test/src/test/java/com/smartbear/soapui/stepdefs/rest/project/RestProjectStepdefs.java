@@ -8,10 +8,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
-import org.fest.swing.fixture.FrameFixture;
-import org.fest.swing.fixture.JPanelFixture;
-import org.fest.swing.fixture.JTableFixture;
-import org.fest.swing.fixture.JTreeNodeFixture;
+import org.fest.swing.fixture.*;
 
 import java.util.List;
 
@@ -19,8 +16,8 @@ import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.doesLabelExist;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.RestProjectUtils.*;
-import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapOperationPopupMenu;
-import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapRequestPopupMenu;
+import static com.smartbear.soapui.utils.fest.ApplicationUtils.*;
+import static junit.framework.Assert.assertNotNull;
 import static org.fest.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -192,6 +189,19 @@ public class RestProjectStepdefs
 		String projectName = projectNameListWithNewProject.get( 0 );
 
 		return WorkspaceUtils.getProjectNameList().indexOf( projectName );
+	}
+
+	@When( "^selecting \"([^\"]*)\" from rest context menu$" )
+	public void selecting_from_rest_context_menu( String menuItemLabel ) throws Throwable
+	{
+		JMenuItemFixture menuItem = currentTreeNode.showPopupMenu().menuItemWithPath( menuItemLabel );
+		menuItem.click();
+	}
+
+	@Then( "^there is a \"([^\"]*)\" rest tree node$" )
+	public void there_is_a_rest_tree_node( String treePath ) throws Throwable
+	{
+		assertNotNull( findTreeNode( rootWindow, "Projects/" + RestProjectUtils.DEFAULT_PROJECT_NAME + "/" + treePath ) );
 	}
 
 }

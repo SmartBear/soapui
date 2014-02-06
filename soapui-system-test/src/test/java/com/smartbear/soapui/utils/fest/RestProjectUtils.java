@@ -40,6 +40,7 @@ public final class RestProjectUtils
 	private static final int REST_RESOURCE_POSITION_IN_TREE = 3;
 	private static final int REST_REQUEST_POSITION_IN_TREE = 5;
 	private static final int REST_METHOD_POSITION_IN_TREE = 4;
+	public static final String DEFAULT_PROJECT_NAME = "REST Project 1";
 
 
 	private RestProjectUtils()
@@ -53,12 +54,6 @@ public final class RestProjectUtils
 		enterURIandClickOk( robot );
 	}
 
-	public static void createNewRestProject( FrameFixture rootWindow, Robot robot, String uri )
-	{
-		openCreateNewRestProjectDialog( rootWindow );
-		enterURIandClickOk( robot, uri );
-	}
-
 	public static JPanelFixture findRequestEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE, robot );
@@ -69,10 +64,12 @@ public final class RestProjectUtils
 	{
 		return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE ).rightClick();
 	}
-    public static JTreeRowFixture findRestResourcePopupMenu( FrameFixture rootWindow, int projectIndexInTree )
-    {
-        return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_RESOURCE_POSITION_IN_TREE).rightClick();
-    }
+
+   public static JTreeRowFixture findRestResourcePopupMenu( FrameFixture rootWindow, int projectIndexInTree )
+   {
+      return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_RESOURCE_POSITION_IN_TREE).rightClick();
+   }
+
 	public static JPanelFixture findMethodEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_METHOD_POSITION_IN_TREE, robot );

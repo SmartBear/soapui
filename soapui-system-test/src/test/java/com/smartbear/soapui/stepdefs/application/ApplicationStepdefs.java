@@ -4,11 +4,16 @@ import com.eviware.soapui.support.ConsoleDialogs;
 import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.ApplicationUtils;
+import com.smartbear.soapui.utils.fest.FestMatchers;
+import cucumber.api.PendingException;
 import cucumber.api.java.After;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
+import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
+import org.fest.swing.fixture.JButtonFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.closeApplicationWithoutSaving;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
@@ -62,5 +67,15 @@ public class ApplicationStepdefs
 		{
 			//Most probably SoapUI is not running.
 		}
+	}
+
+	@When( "^click \"([^\"]*)\" in \"([^\"]*)\" dialog$" )
+	public void click_in_dialog( String buttonLabel, String dialogTitle ) throws Throwable
+	{
+		DialogFixture dialog = FestMatchers.dialogWithTitle( dialogTitle ).withTimeout( 500 ).using( robot );
+		dialog.textBox().focus();
+
+		JButtonFixture button = dialog.button( FestMatchers.buttonWithText( buttonLabel ) );
+		button.click();
 	}
 }
