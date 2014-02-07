@@ -56,7 +56,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		Settings settings = project.getSettings();
 
 		dialogHandler.setDialogValues( settings );
-
+		soapMonitor = null;
 		if( dialog.show() )
 		{
 			try
