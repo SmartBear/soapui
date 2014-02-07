@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -67,7 +67,7 @@ public class WadlImporterTestCase
 		assertEquals( 1, resource.getRequestCount() );
 
 		RestRequest request = resource.getRequestAt( 0 );
-		assertEquals( RestRequestInterface.RequestMethod.GET, request.getMethod() );
+		assertEquals( HttpMethod.GET, request.getMethod() );
 		assertEquals( 9, request.getPropertyCount() );
 	}
 

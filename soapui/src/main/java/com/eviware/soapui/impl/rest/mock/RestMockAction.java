@@ -2,8 +2,8 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
@@ -130,8 +130,8 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		return getConfig().getResourcePath();
 	}
 
-	public RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
-		return RequestMethod.valueOf( getConfig().getMethod() );
+		return HttpMethod.valueOf( getConfig().getMethod() );
 	}
 }

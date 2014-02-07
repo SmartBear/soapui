@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.config.AbstractRequestConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
@@ -27,7 +27,7 @@ public interface HttpRequestInterface<T extends AbstractRequestConfig> extends A
 
 	public String getMediaType();
 
-	public void setMethod( RequestMethod method );
+	public void setMethod( HttpMethod method );
 
 	public boolean hasRequestBody();
 

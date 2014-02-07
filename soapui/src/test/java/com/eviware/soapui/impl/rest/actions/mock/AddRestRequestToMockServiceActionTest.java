@@ -1,8 +1,6 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod.*;
-import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -17,9 +15,13 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static com.eviware.soapui.impl.rest.HttpMethod.GET;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class AddRestRequestToMockServiceActionTest
 {

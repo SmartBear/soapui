@@ -12,60 +12,43 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.beans.PropertyChangeListener;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.SubmitContext;
+import org.apache.log4j.Logger;
+
+import java.beans.PropertyChangeListener;
 
 public interface RestRequestInterface extends HttpRequestInterface<RestRequestConfig>, PropertyChangeListener
 {
-
-	public enum RequestMethod
-	{
-		GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH;
-
-		public static String[] getMethodsAsStringArray()
-		{
-			return new String[] { GET.toString(), POST.toString(), PUT.toString(), DELETE.toString(), HEAD.toString(),
-					OPTIONS.toString(), TRACE.toString(), PATCH.toString() };
-		}
-
-		public static RequestMethod[] getMethods()
-		{
-			return new RequestMethod[] { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH };
-		}
-	}
 
 	public final static Logger log = Logger.getLogger( RestRequest.class );
 	public static final String DEFAULT_MEDIATYPE = "application/xml";
 	public static final String REST_XML_REQUEST = "restXmlRequest";
 
-	public abstract RestMethod getRestMethod();
+	RestMethod getRestMethod();
 
-	public abstract RestRepresentation[] getRepresentations();
+	RestRepresentation[] getRepresentations();
 
-	public abstract RestRepresentation[] getRepresentations( RestRepresentation.Type type );
+	RestRepresentation[] getRepresentations( RestRepresentation.Type type );
 
-	public abstract RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType );
+	RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType );
 
-	public abstract String getAccept();
+	String getAccept();
 
-	public abstract void setAccept( String acceptEncoding );
+	void setAccept( String acceptEncoding );
 
-	public abstract String[] getResponseMediaTypes();
+	String[] getResponseMediaTypes();
 
-	public abstract RestResource getResource();
+	RestResource getResource();
 
-	public abstract void setPath( String fullPath );
+	void setPath( String fullPath );
 
-	public abstract void setResponse( HttpResponse response, SubmitContext context );
+	void setResponse( HttpResponse response, SubmitContext context );
 
-	public abstract void release();
+	void release();
 
-	public abstract boolean hasEndpoint();
+	boolean hasEndpoint();
 
 }

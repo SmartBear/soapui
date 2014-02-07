@@ -1,11 +1,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
-
-import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod.*;
-
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
@@ -17,8 +13,11 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
+import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class WsdlProjectTest
 {

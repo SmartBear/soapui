@@ -12,15 +12,6 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestConfig;
@@ -41,6 +32,15 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implements MutableTestPropertyHolder,
 		PropertyChangeListener
@@ -188,9 +188,9 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 
 	public boolean hasRequestBody()
 	{
-		RestRequestInterface.RequestMethod method = getMethod();
-		return method == RestRequestInterface.RequestMethod.POST || method == RestRequestInterface.RequestMethod.PUT
-				|| method == RestRequestInterface.RequestMethod.PATCH;
+		HttpMethod method = getMethod();
+		return method == HttpMethod.POST || method == HttpMethod.PUT
+				|| method == HttpMethod.PATCH;
 	}
 
 	public void propertyChange( PropertyChangeEvent arg0 )
@@ -204,15 +204,15 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		return params.getPropertyExpansions();
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
 		String method = getConfig().getMethod();
-		return method == null ? null : RestRequestInterface.RequestMethod.valueOf( method );
+		return method == null ? null : HttpMethod.valueOf( method );
 	}
 
-	public void setMethod( RestRequestInterface.RequestMethod method )
+	public void setMethod( HttpMethod method )
 	{
-		RestRequestInterface.RequestMethod old = getMethod();
+		HttpMethod old = getMethod();
 		getConfig().setMethod( method.toString() );
 		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
 		notifyPropertyChanged( "method", old, method );

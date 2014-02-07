@@ -16,7 +16,7 @@ import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.config.RestParameterConfig;
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.support.RestUtils;
@@ -37,7 +37,7 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +159,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		dialog = ADialogBuilder.buildDialog( Form.class );
 		dialog.getFormField( Form.STEPNAME ).addFormFieldValidator( new RequiredValidator() );
 		dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( RestRequestInterface.RequestMethod
+		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( HttpMethod
 				.getMethods() );
 	}
 

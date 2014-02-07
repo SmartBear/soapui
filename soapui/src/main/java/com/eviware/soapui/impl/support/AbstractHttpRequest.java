@@ -12,24 +12,12 @@
 
 package com.eviware.soapui.impl.support;
 
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -60,6 +48,17 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
+
+import javax.swing.ImageIcon;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
@@ -144,7 +143,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return fileAttachment;
 	}
 
-	public abstract RestRequestInterface.RequestMethod getMethod();
+	public abstract HttpMethod getMethod();
 
 	/**
 	 * Override just to get a better return type

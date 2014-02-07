@@ -12,21 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.config.WsrmVersionTypeConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -54,6 +45,14 @@ import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Request implementation holding a SOAP request
@@ -312,9 +311,9 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
-		return RestRequestInterface.RequestMethod.POST;
+		return HttpMethod.POST;
 	}
 
 	/*

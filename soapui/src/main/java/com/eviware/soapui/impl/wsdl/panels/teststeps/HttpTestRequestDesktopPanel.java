@@ -12,28 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.ListModel;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -70,6 +50,25 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.Date;
 
 public class HttpTestRequestDesktopPanel extends
 		AbstractHttpXmlRequestDesktopPanel<HttpTestRequestStepInterface, HttpTestRequestInterface<?>>
@@ -206,7 +205,7 @@ public class HttpTestRequestDesktopPanel extends
 
 	protected void addMethodCombo( JXToolBar toolbar )
 	{
-		methodCombo = new JComboBox( RestRequestInterface.RequestMethod.getMethods() );
+		methodCombo = new JComboBox( HttpMethod.getMethods() );
 
 		methodCombo.setSelectedItem( getRequest().getMethod() );
 		methodCombo.setToolTipText( "Set desired HTTP method" );
@@ -215,7 +214,7 @@ public class HttpTestRequestDesktopPanel extends
 			public void itemStateChanged( ItemEvent e )
 			{
 				updatingRequest = true;
-				getRequest().setMethod( ( RestRequestInterface.RequestMethod )methodCombo.getSelectedItem() );
+				getRequest().setMethod( ( HttpMethod )methodCombo.getSelectedItem() );
 				updatingRequest = false;
 			}
 		} );

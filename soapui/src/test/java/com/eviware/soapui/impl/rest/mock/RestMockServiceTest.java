@@ -11,9 +11,8 @@ import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod.GET;
+import static com.eviware.soapui.impl.rest.HttpMethod.GET;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 
 public class RestMockServiceTest
 {

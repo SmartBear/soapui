@@ -2,11 +2,9 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.utils.ModelItemFactory;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.core.Is.is;
@@ -21,7 +19,7 @@ public class RestRequestStepFactoryTest
 	public void copiesRESTRequestBody() throws Exception
 	{
 		RestRequest restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setMethod( RestRequestInterface.RequestMethod.POST );
+		restRequest.setMethod( HttpMethod.POST );
 		String requestBody = "Some meaningful data";
 		restRequest.setRequestContent( requestBody );
 

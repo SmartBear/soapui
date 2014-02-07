@@ -1,8 +1,18 @@
 package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.config.RestParametersConfig;
-import com.eviware.soapui.impl.rest.*;
-import com.eviware.soapui.impl.rest.support.*;
+import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.RestURIParser;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
+import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.StringUtils;
@@ -22,7 +32,7 @@ public class RestServiceBuilder
 		}
 
 		RestResource restResource = createResource( ModelCreationStrategy.CREATE_NEW_MODEL, project, URI );
-		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource, RestRequestInterface.RequestMethod.GET ) );
+		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource, HttpMethod.GET ) );
 		copyParameters( extractParams( URI ), restResource.getParams() );
 		UISupport.select( restRequest );
 		UISupport.showDesktopPanel( restRequest );
@@ -102,7 +112,7 @@ public class RestServiceBuilder
 	}
 
 
-	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource, RestRequestInterface.RequestMethod requestMethod )
+	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource, HttpMethod requestMethod )
 	{
 		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
 		{

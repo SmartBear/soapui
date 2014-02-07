@@ -127,9 +127,9 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
 		}
 
-		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT
-				|| getMethod() == RestRequestInterface.RequestMethod.PATCH )
+		if( getMethod() == HttpMethod.POST
+				|| getMethod() == HttpMethod.PUT
+				|| getMethod() == HttpMethod.PATCH )
 		{
 			result.add( new RestContentPart() );
 		}
@@ -157,7 +157,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return new MessagePart[0];
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
 		return getRestMethod().getMethod();
 	}
@@ -187,7 +187,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return getConfig().getMediaType();
 	}
 
-	public void setMethod( RequestMethod method )
+	public void setMethod( HttpMethod method )
 	{
 		getRestMethod().setMethod( method );
 	}
