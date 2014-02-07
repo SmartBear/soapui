@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.actions.oauth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import javafx.application.Platform;
@@ -33,6 +34,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 	public void open( URL url )
 	{
 		popupWindow = new JFrame( "Browser" );
+        popupWindow.setIconImages(SoapUI.getFrameIcons());
 
 		popupWindow.getContentPane().add( browserComponent.getComponent() );
 		popupWindow.setBounds( 100, 100, 800, 600 );
