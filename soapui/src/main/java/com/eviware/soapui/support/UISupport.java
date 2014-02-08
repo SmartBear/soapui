@@ -40,22 +40,10 @@ import org.syntax.jedit.InputHandler;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -69,7 +57,7 @@ import java.util.Map;
 
 /**
  * Facade for common UI-related tasks
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -99,6 +87,9 @@ public class UISupport
 	public static final String DEFAULT_EDITOR_FONT = "Courier plain";
 	public static final int DEFAULT_EDITOR_FONT_SIZE = 11;
 	public static final Color MAC_BACKGROUND_COLOR = new Color( 229, 229, 229 );
+	public static final Color MAC_PROGRESSBAR_BACKGROUND_COLOR = new Color( 196, 196, 196 );
+	public static final Color MAC_PROGRESSBAR_MATTE_BORDER_COLOR = new Color( 238, 238, 238 );
+	public static final Color MAC_PROGRESSBAR_LINE_BORDER_COLOR = new Color( 166, 166, 166 );
 
 	static
 	{
@@ -116,7 +107,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 * 
+	 *
 	 * @param loader
 	 * @deprecated Use {@link #addResourceClassLoader(ClassLoader)} instead
 	 */
@@ -127,7 +118,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 * 
+	 *
 	 * @param loader
 	 */
 	public static void addResourceClassLoader( ClassLoader loader )
@@ -138,7 +129,7 @@ public class UISupport
 	/**
 	 * Set the main frame of this application. This is only used when running
 	 * under Swing.
-	 * 
+	 *
 	 * @param frame
 	 */
 	public static void setMainFrame( Component frame )
@@ -212,7 +203,7 @@ public class UISupport
 
 	@Deprecated
 	public static ConfigurationDialog createConfigurationDialog( String name, String helpUrl, String description,
-			ImageIcon icon )
+																					 ImageIcon icon )
 	{
 		return new SwingConfigurationDialogImpl( name, helpUrl, description, icon );
 	}
@@ -300,18 +291,51 @@ public class UISupport
 		return true;
 	}
 
+	private static class CustomProgressUI extends BasicProgressBarUI
+	{
+		private Rectangle r = new Rectangle();
+
+		@Override
+		protected void paintIndeterminate( Graphics g, JComponent c )
+		{
+			Graphics2D g2d = ( Graphics2D )g;
+			g2d.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
+			r = getBox( r );
+			g.setColor( this.progressBar.getForeground() );
+			g.fillOval( r.x, r.y, r.width, r.height );
+		}
+	}
+
 	public static JPanel createProgressBarPanel( JProgressBar progressBar, int space, boolean indeterimate )
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
+
+		if( isMac() )
+		{
+			// default native progress bar on mac ignores color settings, use a custom ui to get green/red
+			progressBar.setUI( new CustomProgressUI() );
+		}
 
 		progressBar.setValue( 0 );
 		progressBar.setStringPainted( true );
 		progressBar.setString( "" );
 		progressBar.setIndeterminate( indeterimate );
 
-		progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
-
-		panel.setBorder( BorderFactory.createEmptyBorder( space, space, space, space ) );
+		if( isMac() )
+		{
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+			Border compound = BorderFactory.createCompoundBorder(
+					BorderFactory.createMatteBorder( space, space, space, space, MAC_PROGRESSBAR_MATTE_BORDER_COLOR ),
+					BorderFactory.createLineBorder( MAC_PROGRESSBAR_LINE_BORDER_COLOR )
+			);
+			panel.setBorder( compound );
+			panel.setBackground( MAC_PROGRESSBAR_BACKGROUND_COLOR );
+		}
+		else
+		{
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+			panel.setBorder( BorderFactory.createEmptyBorder( space, space, space, space ) );
+		}
 		panel.add( progressBar, BorderLayout.CENTER );
 
 		return panel;
@@ -496,9 +520,9 @@ public class UISupport
 	public static JButton createToolbarButton( Action action )
 	{
 		JButton result = new JButton( action );
-		if(action.getValue( Action.NAME ) != null)
+		if( action.getValue( Action.NAME ) != null )
 		{
-			result.setName( String.valueOf(  action.getValue( Action.NAME ) ));
+			result.setName( String.valueOf( action.getValue( Action.NAME ) ) );
 		}
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		result.setText( "" );
