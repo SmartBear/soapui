@@ -97,7 +97,9 @@ public class ManualSAMLEntryTest
 		manualSAMLentry.process( secHeader, doc, contextMock );
 
 		assertNotNull( xpath.evaluate( "//saml1:Assertion", doc, XPathConstants.NODE ) );
-	}
+        assertEquals("1", xpath.evaluate("//saml1:Assertion/@MajorVersion", doc, XPathConstants.STRING));
+        assertEquals("1", xpath.evaluate("//saml1:Assertion/@MinorVersion", doc, XPathConstants.STRING));
+    }
 
 	private void initXpath()
 	{
