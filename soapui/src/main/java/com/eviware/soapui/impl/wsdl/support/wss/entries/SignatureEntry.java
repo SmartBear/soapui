@@ -12,24 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
-
-import org.apache.ws.security.WSConstants;
-import org.apache.ws.security.WSEncryptionPart;
-import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.message.WSSecSignature;
-import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
-import org.apache.xml.security.signature.XMLSignature;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
@@ -45,6 +27,25 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.ws.security.WSConstants;
+import org.apache.ws.security.WSEncryptionPart;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.message.DOMCallbackLookup;
+import org.apache.ws.security.message.WSSecHeader;
+import org.apache.ws.security.message.WSSecSignature;
+import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
+import org.apache.xml.security.signature.XMLSignature;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Vector;
 
 public class SignatureEntry extends WssEntryBase
 {
@@ -191,7 +192,8 @@ public class SignatureEntry extends WssEntryBase
 			writer = new StringWriter();
 			XmlUtils.serialize( doc, writer );
 
-			wssSign.build( doc, wssCrypto.getCrypto(), secHeader );
+            wssSign.setCallbackLookup(new BinarySecurityTokenDOMCallbackLookup(doc, wssSign));
+			wssSign.build(doc, wssCrypto.getCrypto(), secHeader);
 		}
 		catch( Exception e )
 		{
@@ -293,7 +295,12 @@ public class SignatureEntry extends WssEntryBase
 		saveConfig();
 	}
 
-	private final class InternalWssContainerListener extends WssContainerListenerAdapter
+    public void setParts(List<StringToStringMap> parts) {
+        this.parts = parts;
+        saveConfig();
+    }
+
+    private final class InternalWssContainerListener extends WssContainerListenerAdapter
 	{
 		@Override
 		public void cryptoUpdated( WssCrypto crypto )
@@ -302,4 +309,29 @@ public class SignatureEntry extends WssEntryBase
 				keyAliasComboBoxModel.update( crypto );
 		}
 	}
+
+    /**
+     * This callback class extends the default lookups with wsse:BinarySecurityToken
+     */
+    private static class BinarySecurityTokenDOMCallbackLookup extends DOMCallbackLookup {
+
+        private final WSSecSignature wssSign;
+
+        public BinarySecurityTokenDOMCallbackLookup(Document doc, WSSecSignature wssSign) {
+            super(doc);
+            this.wssSign = wssSign;
+        }
+
+        @Override
+        public List<Element> getElements(String localname, String namespace) throws WSSecurityException {
+            List<Element> elements = super.getElements(localname, namespace);
+            if (elements.isEmpty()) {
+                Element bst = wssSign.getBinarySecurityTokenElement();
+                if (localname.equals(bst.getLocalName()) && namespace.equals(bst.getNamespaceURI())) {
+                    return Collections.singletonList(bst);
+                }
+            }
+            return elements;
+        }
+    }
 }
