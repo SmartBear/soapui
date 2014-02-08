@@ -16,19 +16,28 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSEncryptionPart;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.message.DOMCallbackLookup;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSignature;
 import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
@@ -191,7 +200,8 @@ public class SignatureEntry extends WssEntryBase
 			writer = new StringWriter();
 			XmlUtils.serialize( doc, writer );
 
-			wssSign.build( doc, wssCrypto.getCrypto(), secHeader );
+            wssSign.setCallbackLookup(new BinarySecurityTokenDOMCallbackLookup(doc, wssSign));
+			wssSign.build(doc, wssCrypto.getCrypto(), secHeader);
 		}
 		catch( Exception e )
 		{
@@ -293,7 +303,12 @@ public class SignatureEntry extends WssEntryBase
 		saveConfig();
 	}
 
-	private final class InternalWssContainerListener extends WssContainerListenerAdapter
+    public void setParts(List<StringToStringMap> parts) {
+        this.parts = parts;
+        saveConfig();
+    }
+
+    private final class InternalWssContainerListener extends WssContainerListenerAdapter
 	{
 		@Override
 		public void cryptoUpdated( WssCrypto crypto )
@@ -302,4 +317,40 @@ public class SignatureEntry extends WssEntryBase
 				keyAliasComboBoxModel.update( crypto );
 		}
 	}
+
+    /**
+     * This callback class extends the default DOMCallbackLookup class with a hook to return the prepared
+     * wsse:BinarySecurityToken
+     */
+    private static class BinarySecurityTokenDOMCallbackLookup extends DOMCallbackLookup {
+
+        private final WSSecSignature wssSign;
+
+        public BinarySecurityTokenDOMCallbackLookup(Document doc, WSSecSignature wssSign) {
+            super(doc);
+            this.wssSign = wssSign;
+        }
+
+        @Override
+        public List<Element> getElements(String localname, String namespace) throws WSSecurityException {
+            List<Element> elements = super.getElements(localname, namespace);
+            if (elements.isEmpty()) {
+                // element was not found in DOM document
+                if (WSConstants.BINARY_TOKEN_LN.equals(localname) && WSConstants.WSSE_NS.equals(namespace)) {
+                    /* In case the element searched for is the wsse:BinarySecurityToken, return the element prepared by
+                       wsee4j. If we return the original DOM element, the digest calculation fails because the element
+                       is not yet attached to the DOM tree, so instead return a copy which includes all namespaces */
+                    try {
+                        DOMResult result = new DOMResult();
+                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                        transformer.transform(new DOMSource(wssSign.getBinarySecurityTokenElement()), result);
+                        return Collections.singletonList(((Document) result.getNode()).getDocumentElement());
+                    } catch (TransformerException e) {
+                        SoapUI.logError(e);
+                    }
+                }
+            }
+            return elements;
+        }
+    }
 }
