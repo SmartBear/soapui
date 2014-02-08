@@ -6,6 +6,7 @@
 * (Pro only) JSON converted to XML in some cases (SOAP-1219)
 * XML conversion fails for JSON value whose name starts with digit (SOAP-1405)
 * Memory log panel shows correct total memory for sizes above 2GB (SOAP-1574)
+* It is now possible to sign the BinarySecurityToken when creating a WSS signature entry (SOAPUI-4586/SOAP-1097)
 
 -------------------------------------------------------------------------------
 
