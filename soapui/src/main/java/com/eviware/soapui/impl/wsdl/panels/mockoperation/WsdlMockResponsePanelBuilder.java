@@ -15,8 +15,10 @@ package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
@@ -52,8 +54,8 @@ public class WsdlMockResponsePanelBuilder extends EmptyPanelBuilder<WsdlMockResp
 		table.addProperty( "Message Size", "contentLength", false );
 		table.addProperty( "Encoding", "encoding", new String[] { null, "UTF-8", "iso-8859-1" } );
 
-		StringList outgoingNames = new StringList( mockResponse.getMockOperation().getMockService().getProject()
-				.getWssContainer().getOutgoingWssNames() );
+		WsdlProject project = (WsdlProject)mockResponse.getMockOperation().getMockService().getProject();
+		StringList outgoingNames = new StringList( project.getWssContainer().getOutgoingWssNames() );
 		outgoingNames.add( "" );
 		table.addProperty( "Outgoing WSS", "outgoingWss", outgoingNames.toStringArray() );
 

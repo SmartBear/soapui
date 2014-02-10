@@ -106,11 +106,6 @@ public class TestOnDemandPanel extends JPanel
 		setCaller();
 
 		add( buildToolbar(), BorderLayout.NORTH );
-
-		browser = new WebViewBasedBrowserComponent( false );
-		add( browser.getComponent(), BorderLayout.CENTER );
-
-		openInInternalBrowser( FIRST_PAGE_URL );
 	}
 
 	protected void setValidator()
@@ -223,6 +218,19 @@ public class TestOnDemandPanel extends JPanel
 	private String getMoreLocationsURL()
 	{
 		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_GET_LOCATIONS_URL, GET_MORE_LOCATIONS_URL );
+	}
+
+	public void ensureBrowserIsInitialized()
+	{
+
+		if( browser == null )
+		{
+			browser = new WebViewBasedBrowserComponent( false );
+			add( browser.getComponent(), BorderLayout.CENTER );
+
+			openInInternalBrowser( FIRST_PAGE_URL );
+		}
+
 	}
 
 	private class SendTestCaseAction extends AbstractAction

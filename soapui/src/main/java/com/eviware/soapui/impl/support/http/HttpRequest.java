@@ -12,20 +12,10 @@
 
 package com.eviware.soapui.impl.support.http;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest.ParameterMessagePart;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -48,6 +38,13 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implements
 		HttpRequestInterface<HttpRequestConfig>
@@ -107,9 +104,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 	public boolean hasRequestBody()
 	{
-		RestRequestInterface.RequestMethod method = getMethod();
-		return method == RestRequestInterface.RequestMethod.POST || method == RestRequestInterface.RequestMethod.PUT
-				|| method == RestRequestInterface.RequestMethod.PATCH;
+		HttpMethod method = getMethod();
+		return method == HttpMethod.POST || method == HttpMethod.PUT
+				|| method == HttpMethod.PATCH;
 	}
 
 	@Override
@@ -182,9 +179,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		}
 	}
 
-	public void setMethod( RequestMethod method )
+	public void setMethod( HttpMethod method )
 	{
-		RestRequestInterface.RequestMethod old = getMethod();
+		HttpMethod old = getMethod();
 		getConfig().setMethod( method.toString() );
 		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
 		notifyPropertyChanged( "method", old, method );
@@ -223,10 +220,10 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	}
 
 	@Override
-	public RestRequestInterface.RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
 		String method = getConfig().getMethod();
-		return method == null ? null : RestRequestInterface.RequestMethod.valueOf( method );
+		return method == null ? null : HttpMethod.valueOf( method );
 	}
 
 	public MessagePart[] getRequestParts()
@@ -238,9 +235,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
 		}
 
-		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT
-				|| getMethod() == RestRequestInterface.RequestMethod.PATCH )
+		if( getMethod() == HttpMethod.POST
+				|| getMethod() == HttpMethod.PUT
+				|| getMethod() == HttpMethod.PATCH )
 		{
 			result.add( new HttpContentPart() );
 		}

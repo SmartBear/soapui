@@ -12,20 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import java.io.IOException;
-
-import javax.net.ssl.SSLSession;
-
+import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import org.apache.commons.httpclient.util.EncodingUtil;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPut;
 
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import javax.net.ssl.SSLSession;
+import java.io.IOException;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -131,7 +129,7 @@ public final class ExtendedPutMethod extends HttpPut implements ExtendedEntityEn
 
 	public String getMethod()
 	{
-		return RestRequestInterface.RequestMethod.PUT.toString();
+		return HttpMethod.PUT.toString();
 	}
 
 	public Throwable getFailureCause()

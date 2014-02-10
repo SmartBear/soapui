@@ -1,9 +1,8 @@
-package com.eviware.soapui.impl.support;
+	package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MockServiceConfig;
+import com.eviware.soapui.config.BaseMockServiceConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
@@ -14,6 +13,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.scripting.ScriptEnginePool;
@@ -25,7 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.swing.*;
 import java.util.*;
 
-public abstract class AbstractMockService<MockOperationType extends MockOperation> extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfig> implements MockService
+public abstract class AbstractMockService<MockOperationType extends MockOperation,
+			MockResponseType extends MockResponse,
+			MockServiceConfigType extends BaseMockServiceConfig>
+		extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfigType>
+		implements MockService
 {
 	public final static String START_SCRIPT_PROPERTY = AbstractMockService.class.getName() + "@startScript";
 	public final static String STOP_SCRIPT_PROPERTY = AbstractMockService.class.getName() + "@stopScript";
@@ -41,11 +45,12 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	private BeanPathPropertySupport docrootProperty;
 	private ScriptEnginePool onRequestScriptEnginePool;
 	private ScriptEnginePool afterRequestScriptEnginePool;
+	private String baseIcon;
 
 
-	protected AbstractMockService( MockServiceConfig config, ModelItem parent )
+	protected AbstractMockService( MockServiceConfigType config, ModelItem parent, String icon )
 	{
-		super( config, parent, "/mockService.gif" );
+		super( config, parent, icon );
 
 		if( !config.isSetPort() || config.getPort() < 1 )
 			config.setPort( 8080 );
@@ -61,9 +66,9 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 
 	// Implements MockService
 	@Override
-	public WsdlProject getProject()
+	public Project getProject()
 	{
-		return ( WsdlProject )getParent();
+		return (Project)getParent();
 	}
 
 	@Override
@@ -109,9 +114,35 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		return getConfig().getPath();
 	}
 
-	@Override
-	public abstract MockRunner start() throws Exception;
+	public String getHost()
+	{
+		return getConfig().getHost();
+	}
 
+	public void setHost( String host )
+	{
+		getConfig().setHost( host );
+	}
+
+	public abstract void setPort( int port );
+	public abstract void setPath( String path);
+
+	@Override
+	public WsdlMockRunner start() throws Exception
+	{
+		return start( null );
+	}
+
+
+	public boolean getBindToHostOnly()
+	{
+		return getConfig().getBindToHostOnly();
+	}
+
+	public void setBindToHostOnly( boolean bindToHostOnly )
+	{
+		getConfig().setBindToHostOnly( bindToHostOnly );
+	}
 
 	// TODO: think about naming - this does not start nothing.....
 	public WsdlMockRunner start( WsdlTestRunContext context ) throws Exception
@@ -172,6 +203,38 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	protected List<MockOperation> getMockOperations()
 	{
 		return mockOperations;
+	}
+
+	public void fireMockOperationAdded( MockOperation mockOperation )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockOperationAdded( mockOperation );
+		}
+	}
+
+	public void fireMockOperationRemoved( MockOperation mockOperation )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockOperationRemoved( mockOperation );
+		}
+	}
+
+	public void fireMockResponseAdded( MockResponse mockResponse )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockResponseAdded( mockResponse );
+		}
+	}
+
+	public void fireMockResponseRemoved( MockResponse mockResponse )
+	{
+		for( MockServiceListener listener : getMockServiceListeners())
+		{
+			listener.mockResponseRemoved( mockResponse );
+		}
 	}
 
 	@Override
@@ -400,20 +463,29 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		docrootProperty.resolveFile( context, "Missing MockService docroot" );
 	}
 
-	// Implements AbstractWsdlModelItem
-	@Override
-	public ImageIcon getIcon()
+	public boolean isDispatchResponseMessages()
 	{
-		return iconAnimator.getIcon();
+		return getConfig().getDispatchResponseMessages();
 	}
+
+	public void setDispatchResponseMessages( boolean dispatchResponseMessages )
+	{
+		boolean old = isDispatchResponseMessages();
+		getConfig().setDispatchResponseMessages( dispatchResponseMessages );
+		notifyPropertyChanged( "dispatchResponseMessages", old, dispatchResponseMessages );
+	}
+
+	public abstract String getIconName();
 
 	public abstract MockDispatcher createDispatcher( WsdlMockRunContext mockContext );
 
-	private class MockServiceIconAnimator extends ModelItemIconAnimator<AbstractMockService<MockOperationType>> implements MockRunListener
+	private class MockServiceIconAnimator
+			extends ModelItemIconAnimator<AbstractMockService<MockOperationType, MockResponseType, MockServiceConfigType>>
+			implements MockRunListener
 	{
 		public MockServiceIconAnimator()
 		{
-			super( AbstractMockService.this, "/mockService.gif", "/mockService", 4, "gif" );
+			super( AbstractMockService.this, getIconName(), getIconName(), 4 );
 		}
 
 		public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )

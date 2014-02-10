@@ -268,7 +268,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 
 	public boolean isBidirectional()
 	{
-		return false;
+		return true;
 	}
 
 	public boolean isNotification()
@@ -581,7 +581,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
 	}
 
 	//Helper methods
-	private String removeMatrixParams( String path )
+	public static String removeMatrixParams( String path )
 	{
 		if( path == null || path.isEmpty() )
 		{

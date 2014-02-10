@@ -1,20 +1,17 @@
 package com.eviware.soapui.impl.rest.panels.resource;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
-import org.hamcrest.core.Is;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.JTable;
 
-import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation.METHOD;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -57,7 +54,7 @@ public class RestResourceDesktopPanelTest
 			throws SoapUIException
 	{
 		RestRequest restRequest = ModelItemFactory.makeRestRequest( childResource );
-		restRequest.setMethod( RestRequestInterface.RequestMethod.GET );
+		restRequest.setMethod( HttpMethod.GET );
 		return new RestRequestDesktopPanel( restRequest );
 	}
 

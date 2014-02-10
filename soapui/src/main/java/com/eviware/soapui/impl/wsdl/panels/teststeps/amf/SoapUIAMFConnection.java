@@ -478,9 +478,6 @@ public class SoapUIAMFConnection
 
 		postMethod.setEntity( new ByteArrayEntity( outBuffer.toByteArray() ) );
 
-		ProxyUtils.initProxySettings( context.getModelItem() == null ? SoapUI.getSettings() : context.getModelItem()
-				.getSettings(), postMethod, httpState, url, context );
-
 		HttpClientSupport.execute( postMethod, httpState );
 		context.setProperty( AMFResponse.AMF_POST_METHOD, postMethod );
 

@@ -12,14 +12,6 @@
 
 package com.eviware.soapui.support.action;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ActionMappingPositionTypeConfig;
 import com.eviware.soapui.config.SoapUIActionConfig;
@@ -27,12 +19,19 @@ import com.eviware.soapui.config.SoapUIActionGroupConfig;
 import com.eviware.soapui.config.SoapUIActionMappingConfig;
 import com.eviware.soapui.config.SoapUIActionsConfig;
 import com.eviware.soapui.config.SoapuiActionsDocumentConfig;
-import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.support.DefaultActionMapping;
 import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
 import com.eviware.soapui.support.action.support.StandaloneActionMapping;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Global SoapUIAction Registry
@@ -104,13 +103,13 @@ public class SoapUIActionRegistry
 			{
 				if( mapping.isDefault() )
 				{
-					( ( SoapUIAction<T> )mapping.getAction() ).perform( target, param );
+					mapping.getAction().perform( target, param );
 				}
 			}
 		}
 	}
 
-	public <T extends ModelItem> SoapUIAction<T> getAction( String soapUIActionId )
+	public SoapUIAction getAction( String soapUIActionId )
 	{
 		SoapUIAction soapUIAction = actions.get( soapUIActionId );
 		if( soapUIAction == null )

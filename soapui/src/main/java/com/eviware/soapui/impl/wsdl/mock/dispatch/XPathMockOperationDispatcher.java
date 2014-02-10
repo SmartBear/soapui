@@ -21,6 +21,9 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
@@ -28,7 +31,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
@@ -51,7 +53,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 		super( mockOperation );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException
 	{
 		XmlObject xmlObject;
@@ -194,7 +196,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 		public void actionPerformed( ActionEvent e )
 		{
-			WsdlMockResult lastMockResult = getMockOperation().getLastMockResult();
+			MockResult lastMockResult = getMockOperation().getLastMockResult();
 			if( lastMockResult == null )
 			{
 				UISupport.showErrorMessage( "Missing last request to select from" );
@@ -203,7 +205,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 			try
 			{
-				WsdlMockResponse retVal = selectMockResponse( lastMockResult.getMockRequest(), null );
+				MockResponse retVal = selectMockResponse( lastMockResult.getMockRequest(), null );
 				UISupport.showInfoMessage( "XPath Selection returned [" + ( retVal == null ? "null" : retVal.getName() )
 						+ "]" );
 			}

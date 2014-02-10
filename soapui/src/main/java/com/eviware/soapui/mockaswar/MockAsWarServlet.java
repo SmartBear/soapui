@@ -167,8 +167,7 @@ public class MockAsWarServlet extends HttpServlet
 
 		SoapUI.ensureGroovyLog().addAppender( new GroovyLogAppender() );
 
-		String mockServiceEndpoint = getInitParameter( "mockServiceEndpoint" );
-		return mockServiceEndpoint;
+		return getInitParameter( "mockServiceEndpoint" );
 	}
 
 	public void destroy()
@@ -379,7 +378,7 @@ public class MockAsWarServlet extends HttpServlet
 		PrintWriter out = response.getWriter();
 		startHtmlPage( out, "MockService Log Table", "15" );
 
-		out.print( "<h3><img src=\"header_logo.jpg\"> SoapUI MockServices Log for project [" + project.getName()
+		out.print( "<img src=\"header_logo.png\"><h3>SoapUI MockServices Log for project [" + project.getName()
 				+ "]</h3>" + "<p style=\"text-align: left\">WSDLs:" );
 
 		for( MockRunner mockRunner : mockRunners )

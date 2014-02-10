@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.model.iface;
 
-import java.util.List;
-
 import com.eviware.soapui.model.ModelItem;
+
+import java.util.List;
 
 /**
  * Operation interface
@@ -43,4 +43,8 @@ public interface Operation extends ModelItem
 	public MessagePart[] getDefaultRequestParts();
 
 	public MessagePart[] getDefaultResponseParts();
+
+	public String createRequest( boolean b );
+
+	public String createResponse( boolean b );
 }

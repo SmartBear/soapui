@@ -13,9 +13,9 @@
 package com.eviware.soapui.impl.rest.actions.resource;
 
 import com.eviware.soapui.config.RestParametersConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
@@ -79,7 +79,7 @@ public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
 		if( dialog.show() )
 		{
 			RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
-			method.setMethod( RestRequestInterface.RequestMethod.valueOf( dialog.getValue( Form.METHOD ) ) );
+			method.setMethod( HttpMethod.valueOf( dialog.getValue( Form.METHOD ) ) );
 			paramsTable.extractParams( method.getParams(), ParamLocation.METHOD );
 			method.addPropertyChangeListener( paramsTableModel );
 			UISupport.select( method );

@@ -21,11 +21,16 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.util.HttpURLConnection;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -48,11 +53,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WebViewBasedBrowserComponent
 {
+
+	public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
+	private Pattern charsetFinderPattern = Pattern.compile( CHARSET_PATTERN );
+
 	private JPanel panel = new JPanel( new BorderLayout() );
 	private String errorPage;
 	private boolean showingErrorPage;
@@ -90,6 +106,20 @@ public class WebViewBasedBrowserComponent
 				public void run()
 				{
 					webView = new WebView();
+
+					webView.getEngine().locationProperty().addListener( new ChangeListener<String>()
+					{
+						@Override
+						public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
+													String newLocation )
+						{
+							for( BrowserStateChangeListener listener : listeners )
+							{
+								listener.locationChanged( newLocation );
+							}
+						}
+					} );
+
 					webView.getEngine().getLoadWorker().stateProperty().addListener(
 							new ChangeListener<Worker.State>()
 							{
@@ -100,12 +130,6 @@ public class WebViewBasedBrowserComponent
 									{
 										try
 										{
-											String location = getWebEngine().getLocation();
-											for( BrowserStateChangeListener listener : listeners )
-											{
-												listener.locationChanged( location );
-											}
-
 											if( getWebEngine().getDocument() != null )
 											{
 												String output = readDocumentAsString();
@@ -227,14 +251,21 @@ public class WebViewBasedBrowserComponent
 
 	public void setContent( final String contentAsString, final String contentType )
 	{
+
 		Platform.runLater( new Runnable()
 		{
 			public void run()
 			{
 
-				getWebEngine().loadContent( contentAsString, contentType);
+				getWebEngine().loadContent( contentAsString, removeCharsetFrom(contentType));
 			}
 		} );
+	}
+
+	private String removeCharsetFrom( String contentType )
+	{
+		Matcher matcher = charsetFinderPattern.matcher( contentType );
+		return matcher.matches() ? matcher.group(1) : contentType;
 	}
 
 	public void setContent( final String contentAsString )

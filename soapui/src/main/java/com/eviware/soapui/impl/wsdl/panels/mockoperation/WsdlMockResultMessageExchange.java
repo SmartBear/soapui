@@ -95,7 +95,7 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 	public WsdlOperation getOperation()
 	{
 		if( mockResult.getMockOperation() != null )
-			return mockResult.getMockOperation().getOperation();
+			return ( WsdlOperation )mockResult.getMockOperation().getOperation();
 
 		return mockResponse == null ? null : mockResponse.getMockOperation().getOperation();
 	}

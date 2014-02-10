@@ -16,12 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunListener;
-import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.*;
 
 public class SequenceMockOperationDispatcher extends AbstractMockOperationDispatcher implements MockRunListener
 {
@@ -34,7 +30,7 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
 		mockOperation.getMockService().addMockRunListener( this );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 	{
 		synchronized( result.getMockOperation() )
 		{

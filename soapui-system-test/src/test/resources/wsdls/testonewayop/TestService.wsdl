@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- testing -->
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:s="http://www.w3.org/2001/XMLSchema" 
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+xmlns:tns="http://schemas.eviware.com/TestService/v1/" 
+xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+targetNamespace="http://schemas.eviware.com/TestService/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.eviware.com/TestService/v1/">
+       <s:include schemaLocation="testservice1.xsd"/>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetDefaultPageDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultPageData" />
+  </wsdl:message>
+  
+  <wsdl:message name="GetPageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPage" />
+  </wsdl:message>
+  <wsdl:message name="GetPageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPageResponse" />
+  </wsdl:message>
+ 
+  <wsdl:portType name="TestServiceSoap">
+    <wsdl:operation name="GetDefaultPageData">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Read page data from Test</documentation>
+      <wsdl:input message="tns:GetDefaultPageDataSoapIn" />
+    </wsdl:operation>
+  
+   <wsdl:operation name="GetPage">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Read page data from Test</documentation>
+      <wsdl:input message="tns:GetPageSoapIn" />
+      <wsdl:output message="tns:GetPageSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TestServiceSoap" type="tns:TestServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="GetDefaultPageData">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/GetDefaultPageData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+    
+    </wsdl:operation>
+     <wsdl:operation name="GetPage">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/GetPage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TestService">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="TestServiceSoap" binding="tns:TestServiceSoap">
+      <soap:address location="http://localhost:8082/wsdls/testonewayop/TestService" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

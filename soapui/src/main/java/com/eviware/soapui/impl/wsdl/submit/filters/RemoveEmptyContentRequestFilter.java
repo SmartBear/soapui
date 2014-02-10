@@ -36,7 +36,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
 {
 	@SuppressWarnings( "unused" )
-	private final static Logger log = Logger.getLogger( PropertyExpansionRequestFilter.class );
+	private final static Logger log = Logger.getLogger( RemoveEmptyContentRequestFilter.class );
 
 	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
 	{

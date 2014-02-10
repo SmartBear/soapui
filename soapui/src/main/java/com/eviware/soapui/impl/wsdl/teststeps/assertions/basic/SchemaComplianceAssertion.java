@@ -12,11 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -52,6 +47,10 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import org.apache.xmlbeans.XmlObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Asserts that a request or response message complies with its related WSDL
@@ -161,7 +160,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	private String assertWsdlResponse( WsdlMessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		WsdlContext wsdlContext = null;
+		WsdlContext wsdlContext;
 		try
 		{
 			wsdlContext = ( WsdlContext )getWsdlContext( messageExchange, context );
@@ -200,7 +199,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 		if( StringUtils.isNullOrEmpty( def ) || def.equals( iface.getDefinition() ) )
 		{
 			definitionContext = ( iface ).getWsdlContext();
-			( ( WsdlContext )definitionContext ).loadIfNecessary();
+			definitionContext.loadIfNecessary();
 		}
 		else
 		{
@@ -240,7 +239,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 				|| definition.equals( PathUtils.expandPath( service.getDefinition(), service, context ) ) )
 		{
 			definitionContext = service.getWadlContext();
-			( ( WadlDefinitionContext )definitionContext ).loadIfNecessary();
+			definitionContext.loadIfNecessary();
 		}
 		else
 		{
@@ -259,29 +258,58 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 
 	public boolean configure()
 	{
-		String value = definition;
+		String definitionURL = definition;
 
 		AbstractInterface<?> iface = ( AbstractInterface<?> )getAssertable().getInterface();
 		String orgDef = iface == null ? null : iface.getDefinition();
 
-		if( StringUtils.isNullOrEmpty( value ) )
+		if( StringUtils.isNullOrEmpty( definitionURL ) )
 		{
-			value = orgDef;
+			definitionURL = orgDef;
 		}
 
-		value = UISupport
-				.prompt( "Specify definition url to validate by", "Configure Schema Compliance Assertion", value );
+		definitionURL = UISupport
+				.prompt( "Specify definition url to validate by", "Configure Schema Compliance Assertion", definitionURL );
 
-		if( value == null )
+		if( definitionURL == null )
+		{
 			return false;
+		}
 
-		if( StringUtils.isNullOrEmpty( value ) || value.equals( orgDef ) )
+		if( !canLoadDefinitionFrom( definitionURL ))
+		{
+			UISupport.showErrorMessage( "No valid definition found in " + definitionURL + ". Only WSDL and WADL are supported");
+			return false;
+		}
+
+		if( StringUtils.isNullOrEmpty( definitionURL ) || definitionURL.equals( orgDef ) )
 			definition = "";
 		else
-			definition = value;
+			definition = definitionURL;
 
 		setConfiguration( createConfiguration() );
 		return true;
+	}
+
+	private boolean canLoadDefinitionFrom( String definitionURL )
+	{
+		try
+		{
+			new WsdlContext( definitionURL ).load();
+			return true;
+		}
+		catch( Exception e )
+		{
+			try
+			{
+				new WadlDefinitionContext( definitionURL ).load();
+				return true;
+			}
+			catch( Exception e1 )
+			{
+				return false;
+			}
+		}
 	}
 
 	protected XmlObject createConfiguration()
@@ -293,7 +321,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		WsdlContext wsdlContext = null;
+		WsdlContext wsdlContext;
 		try
 		{
 			wsdlContext = ( WsdlContext )getWsdlContext( ( WsdlMessageExchange )messageExchange, context );

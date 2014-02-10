@@ -63,17 +63,23 @@ public interface Project extends TestModelItem
 
 	public int getMockServiceCount();
 
+	public int getRestMockServiceCount();
+
 	public MockService getMockServiceAt( int index );
 
-    public MockService getMockServiceByName( String mockServiceName );
+	public MockService getRestMockServiceAt( int index );
 
-    public RestMockService getRestMockServiceByName( String mockServiceName );
+   public MockService getMockServiceByName( String mockServiceName );
 
-    public MockService addNewMockService( String name );
+   public RestMockService getRestMockServiceByName( String mockServiceName );
 
-    public RestMockService addNewRestMockService( String name );
+   public MockService addNewMockService( String name );
 
-    public SaveStatus save() throws IOException;
+   public RestMockService addNewRestMockService( String name );
+
+	public void removeMockService( MockService service);
+
+   public SaveStatus save() throws IOException;
 
 	public List<TestSuite> getTestSuiteList();
 

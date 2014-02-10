@@ -48,7 +48,7 @@ public class JFormDialog extends SwingXFormDialog
 	public JFormDialog( String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
 	{
 		dialog = new JDialog( UISupport.getMainFrame(), name, true );
-
+		dialog.setName( name );
 		this.actions = actions;
 		buttons = UISupport.initDialogActions( actions, dialog );
 		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );

@@ -30,4 +30,6 @@ public interface MockRunner extends MockDispatcher
 	public MockService getMockService();
 
 	public boolean isRunning();
+
+	public MockRunContext getMockContext();
 }

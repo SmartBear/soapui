@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.impl.rest.support;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
@@ -306,7 +306,7 @@ public class WadlImporter
 
 		// add to resource
 		RestMethod restMethod = newResource.addNewMethod( name );
-		restMethod.setMethod( RestRequestInterface.RequestMethod.valueOf( method.getName() ) );
+		restMethod.setMethod( HttpMethod.valueOf( method.getName() ) );
 
 		if( method.getRequest() != null )
 		{

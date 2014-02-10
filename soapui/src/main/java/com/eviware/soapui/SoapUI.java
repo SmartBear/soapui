@@ -60,6 +60,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.monitor.TestMonitor;
+import com.eviware.soapui.settings.LoadUISettings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
@@ -234,8 +235,16 @@ public class SoapUI
 	private static Logger groovyLogger;
 	private static CmdLineRunner soapUIRunner;
 
-	static {
-		Platform.setImplicitExit( false );
+	static
+	{
+		try
+		{
+			Platform.setImplicitExit( false );
+		}
+		catch( NoClassDefFoundError e )
+		{
+			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly." );
+		}
 	}
 
 	// --------------------------- CONSTRUCTORS ---------------------------
@@ -283,6 +292,11 @@ public class SoapUI
 		{
 			return DEFAULT_MAX_THREADPOOL_SIZE;
 		}
+	}
+
+	public static boolean usingGraphicalEnvironment()
+	{
+		return !UISupport.isHeadless() && !isCommandLine();
 	}
 
 	private void buildUI()
@@ -680,7 +694,8 @@ public class SoapUI
 					} );
 				}
 
-				if( isAutoUpdateVersion() ){
+				if( isAutoUpdateVersion() )
+				{
 					new Thread( new Runnable()
 					{
 						@Override
@@ -691,12 +706,24 @@ public class SoapUI
 					} ).start();
 				}
 
-				CajoServer.getInstance().start();
+				startCajoServerIfNotOverriddenBySetting();
 			}
 			catch( Exception e )
 			{
 				e.printStackTrace();
 				System.exit( 1 );
+			}
+		}
+
+		private void startCajoServerIfNotOverriddenBySetting()
+		{
+			if( !getSettings().isSet( LoadUISettings.START_CAJO_SERVER_AT_STARTUP ) || getSettings().getBoolean( LoadUISettings.START_CAJO_SERVER_AT_STARTUP ) )
+			{
+				CajoServer.getInstance().start();
+			}
+			else
+			{
+				log.info( "Cajo server not started because setting '" + LoadUISettings.START_CAJO_SERVER_AT_STARTUP + "' is false." );
 			}
 		}
 	}
@@ -795,12 +822,7 @@ public class SoapUI
 
 		frame = new JFrame( title );
 
-		List<Image> iconList = new ArrayList<Image>();
-		for( String iconPath : FRAME_ICON.split( ";" ) )
-		{
-			iconList.add( UISupport.createImageIcon( iconPath ).getImage() );
-		}
-		frame.setIconImages( iconList );
+        frame.setIconImages(getFrameIcons());
 
 		JPopupMenu.setDefaultLightWeightPopupEnabled( false );
 		ToolTipManager.sharedInstance().setLightWeightPopupEnabled( false );
@@ -877,7 +899,16 @@ public class SoapUI
 		return soapUI;
 	}
 
-	private static boolean processCommandLineArgs( CommandLine cmd )
+    public static List<Image> getFrameIcons() {
+        List<Image> iconList = new ArrayList<Image>();
+        for( String iconPath : FRAME_ICON.split( ";" ) )
+        {
+            iconList.add( UISupport.createImageIcon(iconPath).getImage() );
+        }
+        return iconList;
+    }
+
+    private static boolean processCommandLineArgs( CommandLine cmd )
 	{
 		if( cmd.hasOption( 'w' ) )
 		{

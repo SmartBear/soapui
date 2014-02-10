@@ -12,14 +12,8 @@
 
 package com.eviware.soapui.impl.support;
 
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.config.AbstractRequestConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestIconAnimator;
 import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -33,6 +27,10 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.ImageIcon;
+import java.util.List;
 
 public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> extends Request,
 		PropertyExpansionContainer, MutableAttachmentContainer
@@ -50,7 +48,7 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public static final String MAX_SIZE = AbstractHttpRequest.class.getName() + "@max-size";
 	public static final String FOLLOW_REDIRECTS = AbstractHttpRequest.class.getName() + "@follow-redirects";
 
-	public abstract RestRequestInterface.RequestMethod getMethod();
+	public abstract HttpMethod getMethod();
 
 	public abstract void setMultipartEnabled( boolean multipartEnabled );
 

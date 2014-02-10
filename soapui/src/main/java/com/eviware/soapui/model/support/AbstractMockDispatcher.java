@@ -16,12 +16,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
+import org.apache.commons.collections.list.TreeList;
+
+import java.util.Collections;
+import java.util.List;
 
 public abstract class AbstractMockDispatcher implements MockDispatcher
 {
+
+	private final List<WsdlMockResult> mockResults = Collections.synchronizedList( new TreeList() );
+	private long maxResults = 100;
+	private int removed = 0;
+	private boolean logEnabled = true;
+
 
 	public MockResult dispatchGetRequest( HttpServletRequest request, HttpServletResponse response )
 			throws DispatchException
@@ -79,4 +90,54 @@ public abstract class AbstractMockDispatcher implements MockDispatcher
 
 		throw new DispatchException( "Unsupported HTTP Method: " + method );
 	}
+
+	public synchronized void addMockResult( WsdlMockResult mockResult )
+	{
+		if( maxResults > 0 && logEnabled )
+			mockResults.add( mockResult );
+
+		while( mockResults.size() > maxResults )
+		{
+			mockResults.remove( 0 );
+			removed++;
+		}
+	}
+
+	public MockResult getMockResultAt( int index )
+	{
+		return index <= removed ? null : mockResults.get( index - removed );
+	}
+
+	public int getMockResultCount()
+	{
+		return mockResults.size() + removed;
+	}
+
+	public synchronized void clearResults()
+	{
+		mockResults.clear();
+	}
+
+	public long getMaxResults()
+	{
+		return maxResults;
+	}
+
+	public synchronized void setMaxResults( long maxNumberOfResults )
+	{
+		this.maxResults = maxNumberOfResults;
+
+		while( mockResults.size() > maxNumberOfResults )
+		{
+			mockResults.remove( 0 );
+			removed++;
+		}
+	}
+
+	public void setLogEnabled( boolean logEnabled )
+	{
+		this.logEnabled = logEnabled;
+	}
+
+
 }

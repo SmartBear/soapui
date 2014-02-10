@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.value.AbstractValueModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,6 +23,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector
 {
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
+	public static final String ADVANCED_OPTIONS = "Advanced Options";
 
 	private final OAuth2Profile profile;
 	private final SimpleBindingForm oAuth2Form;
@@ -90,6 +92,11 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		oauth2Form.addSpace( TOP_SPACING );
 
+		AbstractValueModel valueModel = oauth2Form.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+				"getOAuth2Flow", "setOAuth2Flow" );
+		ComboBoxModel comboBoxModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
+		oauth2Form.appendComboBox( "OAuth2.0 Flow", comboBoxModel, "OAuth2.0 Authorization Flow", valueModel );
+
 		oauth2Form.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
 		oauth2Form.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
 
@@ -114,7 +121,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "", SimpleForm.LONG_TEXT_FIELD_COLUMNS );
 
-		oauth2Form.addButtonWithoutLabel( "Advanced Options", new ActionListener()
+		JButton advanceOptionsButton = oauth2Form.addButtonWithoutLabel( ADVANCED_OPTIONS, new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -122,6 +129,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				new OAuth2AdvanceOptionsDialog( profile );
 			}
 		} );
+		advanceOptionsButton.setName( ADVANCED_OPTIONS );
 	}
 
 	/**

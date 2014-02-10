@@ -16,8 +16,7 @@ public class RestMockServicePanelBuilder extends EmptyPanelBuilder<RestMockServi
 
 	public DesktopPanel buildDesktopPanel( RestMockService restMockService )
 	{
-		// TODO: implement return new WsdlMockServiceDesktopPanel( restMockService );
-		return null;
+	   return new WsdlMockServiceDesktopPanel( restMockService );
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class RestMockServicePanelBuilder extends EmptyPanelBuilder<RestMockServi
 		JPropertiesTable<RestMockService> table = new JPropertiesTable<RestMockService>( "MockService Properties" );
 		table.addProperty( "Name", "name", true );
 		table.addProperty( "Description", "description", true );
-		table.addProperty( "Path", "path" );
+		table.addProperty( "Path", "path", true );
 		table.addProperty( "Port", "port" );
 		table.addProperty( "Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS );
 		table.setPropertyObject( mockService );

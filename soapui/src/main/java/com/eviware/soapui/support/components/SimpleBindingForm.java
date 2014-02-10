@@ -17,6 +17,7 @@ import javax.swing.*;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueModel;
 
 public class SimpleBindingForm extends SimpleForm
 {
@@ -94,6 +95,14 @@ public class SimpleBindingForm extends SimpleForm
 	{
 		JComboBox comboBox = super.appendComboBox( label, values, tooltip );
 		Bindings.bind( comboBox, new SelectionInList<Object>( values, pm.getModel( propertyName ) ) );
+
+		return comboBox;
+	}
+
+	public JComboBox appendComboBox(String label, ComboBoxModel model, String tooltip, ValueModel valueModel )
+	{
+		JComboBox comboBox = super.appendComboBox( label, model, tooltip );
+		Bindings.bind( comboBox, new SelectionInList<Object>( model, valueModel) );
 
 		return comboBox;
 	}

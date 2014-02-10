@@ -12,25 +12,12 @@
 
 package com.eviware.soapui.impl.support;
 
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -62,6 +49,17 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 
+import javax.swing.ImageIcon;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
 {
@@ -78,10 +76,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		super( config, parent, icon );
 
-		if( !forLoadTest && !UISupport.isHeadless() )
+		if( !forLoadTest )
 		{
 			iconAnimator = initIconAnimator();
-			addSubmitListener( iconAnimator );
+			if( SoapUI.usingGraphicalEnvironment() )
+			{
+				addSubmitListener( iconAnimator );
+			}
 		}
 
 		initAttachments();
@@ -142,7 +143,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return fileAttachment;
 	}
 
-	public abstract RestRequestInterface.RequestMethod getMethod();
+	public abstract HttpMethod getMethod();
 
 	/**
 	 * Override just to get a better return type
@@ -237,7 +238,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/request.gif", "/exec_request", 4, "gif" );
+		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/request.gif", "/exec_request.gif", 4 );
 	}
 
 	public void addSubmitListener( SubmitListener listener )
@@ -467,7 +468,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	@Override
 	public ImageIcon getIcon()
 	{
-		return iconAnimator == null || UISupport.isHeadless() ? null : iconAnimator.getIcon();
+		return iconAnimator == null ? null : iconAnimator.getIcon();
 	}
 
 	public PropertyExpansion[] getPropertyExpansions()
@@ -691,9 +692,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public static class RequestIconAnimator<T extends AbstractHttpRequest<?>> extends ModelItemIconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
+		public RequestIconAnimator( T modelItem, String baseIcon, String animIcon, int iconCounts )
 		{
-			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
+			super( modelItem, baseIcon, animIcon, iconCounts );
 		}
 
 		public boolean beforeSubmit( Submit submit, SubmitContext context )
@@ -716,7 +717,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			removeSubmitListener( this.iconAnimator );
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener( this.iconAnimator );
+		if( SoapUI.usingGraphicalEnvironment() )
+		{
+			addSubmitListener( this.iconAnimator );
+		}
 	}
 
 	public HttpResponse getResponse()

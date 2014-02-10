@@ -548,7 +548,7 @@
         <dependency>
             <groupId>com.btr</groupId>
             <artifactId>proxy-vole</artifactId>
-            <version>20121203</version>
+            <version>20131209</version>
         </dependency>
 
 

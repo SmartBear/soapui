@@ -12,27 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.KeyStroke;
-import javax.swing.event.CaretListener;
-import javax.swing.text.Document;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rtextarea.RTextScrollPane;
-
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
@@ -47,6 +26,20 @@ import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
 import com.eviware.soapui.support.xml.actions.GoToLineAction;
 import com.eviware.soapui.ui.support.FindAndReplaceDialogView;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.swing.*;
+import javax.swing.event.CaretListener;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 
 /**
  * Groovy editor wrapper
@@ -267,7 +260,7 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( evt.getPropertyName().equals( "script" ) )
+		if( evt.getPropertyName().equals( SCRIPT_PROPERTY ) )
 		{
 			updating = true;
 			editArea.setText( String.valueOf( evt.getNewValue() ) );

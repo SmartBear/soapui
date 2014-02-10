@@ -109,8 +109,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 			try
 			{
 				fireProjectRemoved( project );
-			}
-			finally
+			} finally
 			{
 				project.release();
 			}
@@ -288,11 +287,6 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 					if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
 					{
 						return status;
-					}
-
-					if( status == SaveStatus.DONT_SAVE )
-					{
-						continue;
 					}
 				}
 				saveWorkspaceProjectConfig( projects, project );
@@ -547,8 +541,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace
 		try
 		{
 			fireProjectRemoved( project );
-		}
-		finally
+		} finally
 		{
 			project.release();
 		}

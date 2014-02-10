@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://testcase/wsdl" targetNamespace="http://testcase/wsdl">
+   <wsdl:types>
+      <xs:schema targetNamespace="http://testcase/wsdl" xmlns:one="http://testcase/one" xmlns:two="http://testcase/two" elementFormDefault="qualified">
+         <xs:import namespace="http://testcase/one" schemaLocation="one.xsd"/>
+         <xs:import namespace="http://testcase/two" schemaLocation="two.xsd"/>
+         <xs:element name="One" type="one:OneType"/>
+			<xs:element name="Two" type="two:TwoType"/>
+      </xs:schema>
+   </wsdl:types>
+   <wsdl:message name="MessageRequest">
+      <wsdl:part name="One" element="tns:One"/>
+   </wsdl:message>
+   <wsdl:message name="MessageResponse">
+      <wsdl:part name="Two" element="tns:One"/>
+   </wsdl:message>
+   <wsdl:portType name="PortType">
+      <wsdl:operation name="Operation">
+         <wsdl:input message="tns:MessageRequest"/>
+         <wsdl:output message="tns:MessageResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="Binding" type="tns:PortType">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="Operation">
+         <soap:operation soapAction="Operation"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="Service">
+      <wsdl:port name="Port" binding="tns:Binding">
+         <soap:address location="http://testcase/wsdl"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

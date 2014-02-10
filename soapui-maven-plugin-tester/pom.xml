@@ -17,6 +17,13 @@
     <name>SoapUI Maven plugin tester</name>
     <packaging>pom</packaging>
 
+    <pluginRepositories>
+        <pluginRepository>
+            <id>smartbear-sweden-plugin-repository</id>
+            <url>http://www.soapui.org/repository/maven2/</url>
+        </pluginRepository>
+    </pluginRepositories>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -28,7 +35,7 @@
             <plugin>
                 <groupId>com.smartbear.soapui</groupId>
                 <artifactId>soapui-maven-plugin</artifactId>
-                <version>${project.parent.version}</version>
+                <version>${project.version}</version>
                 <configuration>
                     <projectFile>${project.basedir}/src/test/soapui/SoapUI-Maven-Plugin-Tester-soapui-project.xml</projectFile>
                     <testSuite>ShouldRun</testSuite>

@@ -27,7 +27,7 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class StripWhitespacesRequestFilter extends AbstractRequestFilter
 {
-	private final static Logger log = Logger.getLogger( PropertyExpansionRequestFilter.class );
+	private final static Logger log = Logger.getLogger( StripWhitespacesRequestFilter.class );
 
 	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
 	{

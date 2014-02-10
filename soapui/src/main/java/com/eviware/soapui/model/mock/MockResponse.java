@@ -38,9 +38,19 @@ public interface MockResponse extends TestModelItem
 
 	public Attachment[] getAttachments();
 
+	public int getAttachmentCount();
+
 	public MockOperation getMockOperation();
 
 	public StringToStringsMap getResponseHeaders();
 
 	public MockResult getMockResult();
+
+	public void release();
+
+	public void evaluateScript( MockRequest request ) throws Exception;
+
+	public String getScript();
+
+	public void setScript(String script);
 }

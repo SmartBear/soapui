@@ -13,25 +13,24 @@
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
- * Removes a WsdlMockService from its WsdlProject
+ * Removes a MockService from its WsdlProject
  * 
  * @author Ole.Matzura
  */
 
-public class DeleteMockServiceAction extends AbstractSoapUIAction<WsdlMockService>
+public class DeleteMockServiceAction extends AbstractSoapUIAction<MockService>
 {
 	public DeleteMockServiceAction()
 	{
 		super( "Remove", "Removes this MockService from the Project" );
 	}
 
-	public void perform( WsdlMockService mockService, Object param )
+	public void perform( MockService mockService, Object param )
 	{
 		if( SoapUI.getMockEngine().hasRunningMock( mockService ) )
 		{
@@ -41,7 +40,7 @@ public class DeleteMockServiceAction extends AbstractSoapUIAction<WsdlMockServic
 
 		if( UISupport.confirm( "Remove MockService [" + mockService.getName() + "] from Project", "Remove MockService" ) )
 		{
-			( ( WsdlProject )mockService.getProject() ).removeMockService( mockService );
+			mockService.getProject().removeMockService( mockService );
 		}
 	}
 

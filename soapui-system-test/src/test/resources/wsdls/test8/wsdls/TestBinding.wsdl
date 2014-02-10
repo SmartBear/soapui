@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" 
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+xmlns:s="http://www.w3.org/2001/XMLSchema" 
+xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" 
+xmlns:tns="http://schemas.eviware.com/TestService/v1/" 
+xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" 
+xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
+targetNamespace="http://schemas.eviware.com/TestService/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.eviware.com/TestService/v1/">
+       <s:include schemaLocation="xsds/testservice1.xsd"/>
+    </s:schema>
+     <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.eviware.com/TestService/v2/">
+       <s:complexType name="TestType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Property" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ACL" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetDefaultPageDataSoapIn">
+    <wsdl:part name="parameters" element="tns:GetDefaultPageData" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultPageDataSoapOut">
+    <wsdl:part name="parameters" element="tns:GetDefaultPageDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDefaultPageDataSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetPageSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPage" />
+  </wsdl:message>
+  <wsdl:message name="GetPageSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPageResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPageSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="GetChildrenSoapIn">
+    <wsdl:part name="parameters" element="tns:GetChildren" />
+  </wsdl:message>
+  <wsdl:message name="GetChildrenSoapOut">
+    <wsdl:part name="parameters" element="tns:GetChildrenResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetChildrenSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="FindPagesWithCriteriaSoapIn">
+    <wsdl:part name="parameters" element="tns:FindPagesWithCriteria" />
+  </wsdl:message>
+  <wsdl:message name="FindPagesWithCriteriaSoapOut">
+    <wsdl:part name="parameters" element="tns:FindPagesWithCriteriaResponse" />
+  </wsdl:message>
+  <wsdl:message name="FindPagesWithCriteriaSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="SaveSoapIn">
+    <wsdl:part name="parameters" element="tns:Save" />
+  </wsdl:message>
+  <wsdl:message name="SaveSoapOut">
+    <wsdl:part name="parameters" element="tns:SaveResponse" />
+  </wsdl:message>
+  <wsdl:message name="SaveSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapIn">
+    <wsdl:part name="parameters" element="tns:Ping" />
+  </wsdl:message>
+  <wsdl:message name="PingSoapOut">
+    <wsdl:part name="parameters" element="tns:PingResponse" />
+  </wsdl:message>
+  <wsdl:message name="PingSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="DeleteVersionSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteVersion" />
+  </wsdl:message>
+  <wsdl:message name="DeleteVersionSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteVersionResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteVersionSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="DeleteSoapIn">
+    <wsdl:part name="parameters" element="tns:Delete" />
+  </wsdl:message>
+  <wsdl:message name="DeleteSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="DeleteChildrenSoapIn">
+    <wsdl:part name="parameters" element="tns:DeleteChildren" />
+  </wsdl:message>
+  <wsdl:message name="DeleteChildrenSoapOut">
+    <wsdl:part name="parameters" element="tns:DeleteChildrenResponse" />
+  </wsdl:message>
+  <wsdl:message name="DeleteChildrenSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="MoveSoapIn">
+    <wsdl:part name="parameters" element="tns:Move" />
+  </wsdl:message>
+  <wsdl:message name="MoveSoapOut">
+    <wsdl:part name="parameters" element="tns:MoveResponse" />
+  </wsdl:message>
+  <wsdl:message name="MoveSignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:message name="CopySoapIn">
+    <wsdl:part name="parameters" element="tns:Copy" />
+  </wsdl:message>
+  <wsdl:message name="CopySoapOut">
+    <wsdl:part name="parameters" element="tns:CopyResponse" />
+  </wsdl:message>
+  <wsdl:message name="CopySignatureHeader">
+    <wsdl:part name="SignatureHeader" element="tns:SignatureHeader" />
+  </wsdl:message>
+  <wsdl:portType name="TestServiceSoap">
+    <wsdl:operation name="GetDefaultPageData">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Read page data from Test</documentation>
+      <wsdl:input message="tns:GetDefaultPageDataSoapIn" />
+      <wsdl:output message="tns:GetDefaultPageDataSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPage">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Read page data from Test</documentation>
+      <wsdl:input message="tns:GetPageSoapIn" />
+      <wsdl:output message="tns:GetPageSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetChildren">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Read page children from Test</documentation>
+      <wsdl:input message="tns:GetChildrenSoapIn" />
+      <wsdl:output message="tns:GetChildrenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindPagesWithCriteria">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Find pages that has special properties</documentation>
+      <wsdl:input message="tns:FindPagesWithCriteriaSoapIn" />
+      <wsdl:output message="tns:FindPagesWithCriteriaSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Save">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Save page data to Test</documentation>
+      <wsdl:input message="tns:SaveSoapIn" />
+      <wsdl:output message="tns:SaveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Returns true for signed and authenticated messages and false for unsigned messages</documentation>
+      <wsdl:input message="tns:PingSoapIn" />
+      <wsdl:output message="tns:PingSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteVersion">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Delete a page version</documentation>
+      <wsdl:input message="tns:DeleteVersionSoapIn" />
+      <wsdl:output message="tns:DeleteVersionSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Delete a page</documentation>
+      <wsdl:input message="tns:DeleteSoapIn" />
+      <wsdl:output message="tns:DeleteSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="DeleteChildren">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Delete page children</documentation>
+      <wsdl:input message="tns:DeleteChildrenSoapIn" />
+      <wsdl:output message="tns:DeleteChildrenSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Move">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Move a page</documentation>
+      <wsdl:input message="tns:MoveSoapIn" />
+      <wsdl:output message="tns:MoveSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="Copy">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Copy a page</documentation>
+      <wsdl:input message="tns:CopySoapIn" />
+      <wsdl:output message="tns:CopySoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TestServiceSoap" type="tns:TestServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="GetDefaultPageData">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/GetDefaultPageData" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetDefaultPageDataSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetDefaultPageDataSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPage">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/GetPage" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPageSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPageSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetChildren">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/GetChildren" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetChildrenSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetChildrenSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindPagesWithCriteria">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/FindPagesWithCriteria" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:FindPagesWithCriteriaSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:FindPagesWithCriteriaSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Save">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/Save" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:SaveSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:SaveSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Ping">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/Ping" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:PingSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:PingSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteVersion">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/DeleteVersion" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeleteVersionSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeleteVersionSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Delete">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/Delete" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeleteSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeleteSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="DeleteChildren">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/DeleteChildren" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeleteChildrenSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:DeleteChildrenSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Move">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/Move" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:MoveSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:MoveSignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Copy">
+      <soap:operation soapAction="http://schemas.eviware.com/TestService/v1/Copy" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:CopySignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:CopySignatureHeader" part="SignatureHeader" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  
+</wsdl:definitions>

@@ -32,6 +32,8 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -43,12 +45,12 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 public class MockResponseScriptInspector extends AbstractXmlInspector
 {
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 	private GroovyEditor responseScriptEditor;
 	private RunScriptAction runScriptAction = new RunScriptAction();
 	private JPanel panel;
 
-	protected MockResponseScriptInspector( WsdlMockResponse mockResponse )
+	protected MockResponseScriptInspector( MockResponse mockResponse )
 	{
 		super( "Script", "Script for this MockResponse", true, ScriptInspectorFactory.INSPECTOR_ID );
 		this.mockResponse = mockResponse;
@@ -116,8 +118,8 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 		{
 			try
 			{
-				mockResponse.evaluateScript( mockResponse.getMockResult() == null ? null : mockResponse.getMockResult()
-						.getMockRequest() );
+				MockResult mockResult = mockResponse.getMockResult();
+				mockResponse.evaluateScript( mockResult == null ? null : mockResult.getMockRequest() );
 
 				StringToStringMap values = null;
 				if( mockResponse.getMockResult() != null )

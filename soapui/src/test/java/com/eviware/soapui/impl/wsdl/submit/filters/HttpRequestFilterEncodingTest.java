@@ -1,9 +1,5 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.UnsupportedEncodingException;
 
 import junit.framework.JUnit4TestAdapter;
@@ -11,6 +7,9 @@ import junit.framework.JUnit4TestAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.*;
 
 public class HttpRequestFilterEncodingTest
 {
@@ -137,4 +136,9 @@ public class HttpRequestFilterEncodingTest
 				"resource/subresource|id", "UTF-8"));
 	}
 
+	@Test
+	public void encodingNullValueReturnsEmptyString() throws Exception
+	{
+		assertThat(httpRequestFilter.getEncodedValue( null, null, false, false ), is(""));
+	}
 }

@@ -1,1 +1,0 @@
-Put features files for automated (non-GUI) SoapUI tests here.

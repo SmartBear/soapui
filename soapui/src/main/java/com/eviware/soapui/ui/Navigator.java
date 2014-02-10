@@ -12,22 +12,18 @@
 
 package com.eviware.soapui.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.dnd.Autoscroll;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.tree.SoapUITreeModel;
+import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.model.tree.SoapUITreeNodeRenderer;
+import com.eviware.soapui.model.tree.nodes.ProjectTreeNode;
+import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionListBuilder;
+import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.components.JXToolBar;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -44,20 +40,22 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.tree.SoapUITreeModel;
-import com.eviware.soapui.model.tree.SoapUITreeNode;
-import com.eviware.soapui.model.tree.SoapUITreeNodeRenderer;
-import com.eviware.soapui.model.tree.nodes.ProjectTreeNode;
-import com.eviware.soapui.model.workspace.Workspace;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.SoapUIMultiAction;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionListBuilder;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.components.JXToolBar;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.dnd.Autoscroll;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The SoapUI navigator tree
@@ -171,7 +169,7 @@ public class Navigator extends JPanel
 		if( path == null )
 			return null;
 
-		Object node = ( Object )path.getLastPathComponent();
+		Object node = path.getLastPathComponent();
 		while( node != null && !( node instanceof ProjectTreeNode ) )
 		{
 			path = path.getParentPath();
@@ -515,22 +513,4 @@ public class Navigator extends JPanel
 		}
 	}
 
-	public class MultiActionInvoker extends AbstractAction
-	{
-		private final SoapUIMultiAction action;
-		private final List<ModelItem> targets;
-
-		public MultiActionInvoker( SoapUIMultiAction action, List<ModelItem> targets )
-		{
-			super( action.getName() );
-
-			this.action = action;
-			this.targets = targets;
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			action.perform( targets.toArray( new ModelItem[targets.size()] ), null );
-		}
-	}
 }

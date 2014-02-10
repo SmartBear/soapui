@@ -49,12 +49,12 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public String getEndpoint()
 	{
-		return getModelItem().getMockResult().getMockRequest().getHttpRequest().getRequestURI();
+		return getWsdlMockResult().getMockRequest().getHttpRequest().getRequestURI();
 	}
 
 	public String getRequestContent()
 	{
-		WsdlMockResult mockResult = getModelItem().getMockResult();
+		WsdlMockResult mockResult = getWsdlMockResult();
 		WsdlMockRequest mockRequest = mockResult.getMockRequest();
 		return mockRequest.getRequestContent();
 	}
@@ -102,7 +102,7 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public Vector<?> getRequestWssResult()
 	{
-		return getModelItem().getMockResult().getRequestWssResult();
+		return getWsdlMockResult().getRequestWssResult();
 	}
 
 	public Vector<?> getResponseWssResult()
@@ -112,12 +112,12 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public int getResponseStatusCode()
 	{
-		return getModelItem().getMockResult().getResponseStatus();
+		return getWsdlMockResult().getResponseStatus();
 	}
 
 	public String getResponseContentType()
 	{
-		return getModelItem().getMockResult().getResponseContentType();
+		return getWsdlMockResult().getResponseContentType();
 	}
 
 	@Override
@@ -129,12 +129,17 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 	@Override
 	public byte[] getRawResponseData()
 	{
-		return getModelItem().getMockResult().getRawResponseData();
+		return getWsdlMockResult().getRawResponseData();
 	}
 
 	public byte[] getRawRequestData()
 	{
 		return getModelItem().getMockResult().getMockRequest().getRawRequestData();
+	}
+
+	public WsdlMockResult getWsdlMockResult()
+	{
+		return (WsdlMockResult)getModelItem().getMockResult();
 	}
 
 }

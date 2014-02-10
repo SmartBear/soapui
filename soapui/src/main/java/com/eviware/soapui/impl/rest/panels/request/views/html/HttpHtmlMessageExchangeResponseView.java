@@ -12,11 +12,13 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.html;
 
+import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
@@ -42,6 +44,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	private final MessageExchangeModelItem messageExchangeModelItem;
 	private JPanel panel;
 	private WebViewBasedBrowserComponent browser;
+	private JPanel contentPanel;
 
 	public HttpHtmlMessageExchangeResponseView( XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem )
 	{
@@ -85,14 +88,35 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 	private Component buildContent()
 	{
-		JPanel contentPanel = new JPanel( new BorderLayout() );
-		browser = new WebViewBasedBrowserComponent( false );
-		Component component = browser.getComponent();
-		component.setMinimumSize( new Dimension( 100, 100 ) );
-		contentPanel.add( new JScrollPane( component ) );
+		contentPanel = new JPanel( new BorderLayout() );
 
-		setEditorContent( messageExchangeModelItem );
 		return contentPanel;
+	}
+
+	@Override
+	public boolean activate( EditorLocation<HttpResponseDocument> location )
+	{
+		boolean activated = super.activate( location );
+		if(activated){
+			if(browser == null){
+				browser = new WebViewBasedBrowserComponent( false );
+				Component component = browser.getComponent();
+				component.setMinimumSize( new Dimension( 100, 100 ) );
+				contentPanel.add( new JScrollPane( component ) );
+					}
+			setEditorContent( messageExchangeModelItem );
+		}
+		return activated;
+	}
+
+	@Override
+	public boolean deactivate()
+	{
+		boolean deactivated = super.deactivate();
+		if(deactivated){
+			browser.setContent( "" );
+		}
+		return deactivated;
 	}
 
 	protected void setEditorContent( JProxyServletWsdlMonitorMessageExchange jproxyServletWsdlMonitorMessageExchange )
@@ -105,9 +129,8 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 			{
 				try
 				{
-
 					String content = jproxyServletWsdlMonitorMessageExchange.getResponseContent();
-					browser.setContent( content );
+					browser.setContent( content, contentType );
 				}
 				catch( Exception e )
 				{
@@ -224,7 +247,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	{
 		if( evt.getPropertyName().equals( "messageExchange" ) )
 		{
-			if( browser != null && evt.getNewValue() != null )
+			if( browser != null && evt.getNewValue() != null && isActive())
 				setEditorContent( ( ( JProxyServletWsdlMonitorMessageExchange )evt.getNewValue() ) );
 		}
 	}

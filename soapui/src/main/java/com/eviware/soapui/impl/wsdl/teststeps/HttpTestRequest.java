@@ -72,8 +72,7 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 		unknownRequestIcon = UISupport.createImageIcon( "/unknown_http_request.gif" );
 		disabledRequestIcon = UISupport.createImageIcon( "/disabled_http_request.gif" );
 
-		setIconAnimator( new RequestIconAnimator<HttpTestRequest>( this, "/http_request.gif", "/exec_http_request", 4,
-				"gif" ) );
+		setIconAnimator( new RequestIconAnimator<HttpTestRequest>( this, "/http_request.gif", "/exec_http_request.gif", 4 ) );
 	}
 
 	private void initAssertions()
@@ -142,7 +141,7 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || getIconAnimator() == null )
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

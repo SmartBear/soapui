@@ -19,7 +19,6 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
-import org.apache.commons.collections.list.TreeList;
 import org.apache.log4j.Logger;
 import org.xml.sax.InputSource;
 
@@ -30,9 +29,7 @@ import javax.wsdl.Import;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
 import java.io.*;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class WsdlMockDispatcher extends AbstractMockDispatcher
@@ -40,10 +37,6 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 
 	private WsdlMockService mockService;
 	private WsdlMockRunContext mockContext;
-	private final List<WsdlMockResult> mockResults = Collections.synchronizedList( new TreeList() );
-	private long maxResults = 100;
-	private int removed = 0;
-	private boolean logEnabled = true;
 
 	private final Map<String, StringToStringMap> wsdlCache = new HashMap<String, StringToStringMap>();
 	private final static Logger log = Logger.getLogger( WsdlMockDispatcher.class );
@@ -67,7 +60,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 			{
 				WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( ( WsdlInterface )iface );
 
-				String wsdlPrefix = getInterfacePrefix( iface ).substring( 1 );
+				String wsdlPrefix = trimLastSlash( getInterfacePrefix( iface ) );
 				StringToStringMap parts = exporter.createFilesForExport( wsdlPrefix + "&part=" );
 
 				for( Map.Entry<String, String> partEntry : parts.entrySet() )
@@ -282,7 +275,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		catch( Exception e )
 		{
 			if( e instanceof DispatchException )
-				throw ( DispatchException )e;
+				throw e;
 
 			throw new DispatchException( e );
 		}
@@ -294,7 +287,6 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		response.setStatus( HttpServletResponse.SC_OK );
 		return null;
 	}
-
 
 	protected void dispatchWsdlRequest( HttpServletRequest request, HttpServletResponse response ) throws IOException
 	{
@@ -328,59 +320,11 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		}
 	}
 
-	public synchronized void addMockResult( WsdlMockResult mockResult )
-	{
-		if( maxResults > 0 && logEnabled )
-			mockResults.add( mockResult );
-
-		while( mockResults.size() > maxResults )
-		{
-			mockResults.remove( 0 );
-			removed++;
-		}
-	}
-
-	public MockResult getMockResultAt( int index )
-	{
-		return index <= removed ? null : mockResults.get( index - removed );
-	}
-
-	public int getMockResultCount()
-	{
-		return mockResults.size() + removed;
-	}
-
-	public synchronized void clearResults()
-	{
-		mockResults.clear();
-	}
 
 	public void release()
 	{
 		clearResults();
 		mockContext.clear();
-	}
-
-
-	public long getMaxResults()
-	{
-		return maxResults;
-	}
-
-	public synchronized void setMaxResults( long maxNumberOfResults )
-	{
-		this.maxResults = maxNumberOfResults;
-
-		while( mockResults.size() > maxNumberOfResults )
-		{
-			mockResults.remove( 0 );
-			removed++;
-		}
-	}
-
-	public void setLogEnabled( boolean logEnabled )
-	{
-		this.logEnabled = logEnabled;
 	}
 
 	public void printWsdl( HttpServletResponse response ) throws IOException
@@ -422,7 +366,6 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		}
 	}
 
-
 	public void printOkXmlResult( HttpServletResponse response, String content ) throws IOException
 	{
 		response.setStatus( HttpServletResponse.SC_OK );
@@ -430,6 +373,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 		response.setCharacterEncoding( "UTF-8" );
 		response.getWriter().print( content );
 	}
+
 
 	public void printPartList( WsdlInterface iface, StringToStringMap parts, HttpServletResponse response )
 			throws IOException
@@ -491,6 +435,16 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 	public String getOverviewUrl()
 	{
 		return mockService.getPath() + "?WSDL";
+	}
+
+	private String trimLastSlash( String wsdlPrefix )
+	{
+		int lastSlash = wsdlPrefix.lastIndexOf( '/' );
+		if( lastSlash != -1 )
+		{
+			return wsdlPrefix.substring( lastSlash + 1 );
+		}
+		return wsdlPrefix;
 	}
 
 }

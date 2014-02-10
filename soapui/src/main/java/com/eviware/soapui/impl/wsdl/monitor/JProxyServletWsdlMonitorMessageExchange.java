@@ -12,24 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.http.Header;
-import org.apache.http.HttpResponse;
-import org.w3c.dom.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -48,6 +30,17 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.http.Header;
+import org.apache.http.HttpResponse;
+import org.w3c.dom.Document;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageExchange
 {
@@ -79,6 +72,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 	private Map<String, String> httpRequestParameters;
 	private int statusCode;
 	private String responseStatusLine;
+	private String queryParameters;
 
 	public JProxyServletWsdlMonitorMessageExchange( WsdlProject project )
 	{
@@ -112,6 +106,7 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		response = null;
 		request = null;
 		capture = false;
+		queryParameters = null;
 
 		discarded = true;
 	}
@@ -311,10 +306,10 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 			{
 				if( CompressionSupport.getAvailableAlgorithm( contentEncodingHeader ) == null )
 				{
-					new String( "" ).getBytes( contentEncodingHeader );
+					"".getBytes( contentEncodingHeader );
 					return contentEncodingHeader;
 				}
-			}
+		}
 			catch( Exception e )
 			{
 			}
@@ -582,6 +577,17 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return httpRequestParameters;
 	}
 
+	@Override
+	public String getQueryParameters()
+	{
+		return queryParameters;
+	}
+
+	public void setQueryParameters( String queryParameters )
+	{
+		this.queryParameters = queryParameters;
+	}
+
 	public void setResponseStatusCode( int statusCode )
 	{
 		this.statusCode = statusCode;
@@ -592,4 +598,8 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		this.responseStatusLine = responseStatusLine;
 	}
 
+	public WsdlProject getProject()
+	{
+		return project;
+	}
 }

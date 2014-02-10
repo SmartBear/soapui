@@ -23,6 +23,7 @@ import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
@@ -35,8 +36,9 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  * @author Ole.Matzura
  */
 
-public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
-		AbstractAnimatableModelItem<ModelItemConfig>
+public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
+		extends AbstractAnimatableModelItem<ModelItemConfig>
+		implements Releasable
 {
 	private XmlBeansSettingsImpl settings;
 	private T config;
@@ -153,10 +155,10 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
 		this.settings = settings;
 	}
 
-	public AbstractWsdlModelItem<?> getWsdlModelItemByName( Collection<? extends AbstractWsdlModelItem<?>> items,
+	public ModelItem getWsdlModelItemByName( Collection<? extends ModelItem> items,
 			String name )
 	{
-		for( AbstractWsdlModelItem<?> item : items )
+		for( ModelItem item : items )
 		{
 			if( item.getName() != null && item.getName().equals( name ) )
 				return item;

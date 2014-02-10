@@ -12,10 +12,10 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
+import com.eviware.soapui.support.UISupport;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -26,11 +26,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingConstants;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
-import com.eviware.soapui.support.UISupport;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.*;
 
 public class GroovyEditorComponent extends JPanel implements PropertyChangeListener
 {
@@ -170,7 +171,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
 
 	public void propertyChange( PropertyChangeEvent evt )
 	{
-		if( !evt.getPropertyName().equals( "script" ) )
+		if( !evt.getPropertyName().equals( SCRIPT_PROPERTY ) )
 		{
 			buildToolbar( editorModel, helpUrl );
 		}

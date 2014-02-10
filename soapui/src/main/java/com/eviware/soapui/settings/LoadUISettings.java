@@ -14,7 +14,7 @@ package com.eviware.soapui.settings;
 
 /**
  * Tools/Integration-related settings constants
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -25,5 +25,7 @@ public interface LoadUISettings
 	public final static String LOADUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_port";
 	public final static String LOADUI_CAJO_ITEM_NAME = LoadUISettings.class.getSimpleName() + "@" + "cajo_item_name";
 	public final static String SOAPUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_soapui_port";
+
+	public final static String START_CAJO_SERVER_AT_STARTUP = LoadUISettings.class.getSimpleName() + "@" + "start_cajo_server_at_startup";
 
 }

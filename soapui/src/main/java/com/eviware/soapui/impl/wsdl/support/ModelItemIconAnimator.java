@@ -34,17 +34,26 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 	private boolean enabled = true;
 	private ImageIcon baseIcon;
 	private ImageIcon[] animateIcons;
-	private Future<?> future;
+	private volatile Future<?> future;
 
-	public ModelItemIconAnimator( T target, String baseIcon, String animationBaseIcon, int num, String type )
+	public ModelItemIconAnimator( T target, String iconName, String animationBaseIconName, int num )
 	{
+		this.baseIcon = UISupport.createImageIcon( iconName );
 		this.target = target;
-		this.baseIcon = UISupport.createImageIcon( baseIcon );
+
+		createAnimatedIcons( animationBaseIconName, num );
+	}
+
+	private void createAnimatedIcons( String animationBaseIcon, int num )
+	{
+		String[] parts = animationBaseIcon.split( "\\.", 2 );
+		String baseName = parts[0];
+		String type = parts[1];
 
 		animateIcons = new ImageIcon[num];
 
 		for( int c = 0; c < animateIcons.length; c++ )
-			animateIcons[c] = UISupport.createImageIcon( animationBaseIcon + "_" + ( c + 1 ) + "." + type );
+			animateIcons[c] = UISupport.createImageIcon( baseName + "_" + ( c + 1 ) + "." + type );
 	}
 
 	public void stop()
@@ -66,6 +75,11 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 	{
 		if( !enabled )
 			return;
+		if( !SoapUI.usingGraphicalEnvironment() )
+		{
+			// Don't use animation if we're not in the SoapUI GUI.
+			return;
+		}
 
 		/*
 		 * mock service to be run needs to be stopped first.
@@ -77,19 +91,22 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 		 */
 		if( isStopped() )
 		{
-			if( future != null && !future.isDone() )
+
+			Future<?> localFuture = future;
+			if( future != null && !localFuture.isDone() )
 			{
-				future.cancel( true );
+				localFuture.cancel( true );
 				while( future != null )
+				{
 					try
 					{
-						Thread.sleep( 500 );
+						Thread.sleep( 1 );
 					}
 					catch( InterruptedException e )
 					{
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+				}
 			}
 			stopped = false;
 			future = SoapUI.getThreadPool().submit( this );
@@ -113,6 +130,11 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 
 	public void run()
 	{
+		if( !SoapUI.usingGraphicalEnvironment() )
+		{
+			// Don't use animation if we're not in the SoapUI GUI.
+			return;
+		}
 		if( future != null )
 		{
 			if( System.getProperty( "soapui.enablenamedthreads" ) != null )
@@ -139,6 +161,7 @@ public class ModelItemIconAnimator<T extends AbstractAnimatableModelItem<?>> imp
 
 		target.setIcon( getIcon() );
 		future = null;
+		notify();
 		// iconAnimationThread = null;
 	}
 

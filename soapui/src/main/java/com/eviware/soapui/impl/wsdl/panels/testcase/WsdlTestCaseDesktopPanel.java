@@ -360,6 +360,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			JTabbedPane pane = ( JTabbedPane )evt.getSource();
 			if( pane.getSelectedComponent().equals( testOnDemandPanel ) )
 			{
+				testOnDemandPanel.ensureBrowserIsInitialized();
 				testOnDemandPanel.initializeLocationsCache();
 			}
 		}

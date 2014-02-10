@@ -13,17 +13,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.InterfaceConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.MockServiceDocumentConfig;
-import com.eviware.soapui.config.ProjectConfig;
-import com.eviware.soapui.config.SecurityTestConfig;
-import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
-import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.config.TestStepSecurityTestConfig;
-import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.config.TestSuiteDocumentConfig;
-import com.eviware.soapui.config.TestSuiteRunTypesConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
@@ -364,6 +354,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			for( MockServiceConfig config : mockServiceConfigs )
 			{
 				mockServices.add( new WsdlMockService( this, config ) );
+			}
+
+			List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
+			for( RESTMockServiceConfig config : restMockServiceConfigs )
+			{
+				restMockServices.add( new RestMockService( this, config ) );
 			}
 
 			if( !getConfig().isSetWssContainer() )
@@ -856,13 +852,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 				FileOutputStream projectOut = new FileOutputStream( projectFile );
 				projectDocument.save( projectOut, options );
 				projectOut.close();
-				// delete tempFile here so we have it as backup in case second save
-				// fails
-				if( !tempFile.delete() )
-				{
-					SoapUI.getErrorLog().warn( "Failed to delete temporary project file; " + tempFile.getAbsolutePath() );
-					tempFile.deleteOnExit();
-				}
 			}
 
 			// delete tempFile here so we have it as backup in case second save fails
@@ -984,6 +973,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 
 		for( WsdlMockService mockService : mockServices )
+		{
+			mockService.beforeSave();
+		}
+
+		for( RestMockService mockService : restMockServices )
 		{
 			mockService.beforeSave();
 		}
@@ -1120,7 +1114,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		}
 	}
 
-	public void fireMockServiceRemoved( WsdlMockService mockService )
+	public void fireMockServiceRemoved( MockService mockService )
 	{
 		ProjectListener[] listeners = projectListeners.toArray( new ProjectListener[projectListeners.size()] );
 
@@ -1258,7 +1252,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
 		String oldPath = path;
 		path = fileName;
-		SaveStatus result = save();
+		SaveStatus result = save(); // if remote is true this won't save the file
 		if( result == SaveStatus.SUCCESS )
 		{
 			remote = false;
@@ -1288,6 +1282,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			}
 
 			for( WsdlMockService mockService : mockServices )
+			{
+				mockService.release();
+			}
+
+			for( RestMockService mockService : restMockServices )
 			{
 				mockService.release();
 			}
@@ -1322,50 +1321,66 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			beforeSaveScriptEngine.release();
 	}
 
-    public WsdlMockService addNewMockService( String name )
-    {
-        WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
-        mockService.setName( name );
-        mockServices.add( mockService );
-        fireMockServiceAdded( mockService );
+	public WsdlMockService addNewMockService( String name )
+	{
+		WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
+		mockService.setName( name );
+		mockServices.add( mockService );
+		fireMockServiceAdded( mockService );
 
-        return mockService;
-    }
+		return mockService;
+	}
 
-    public RestMockService addNewRestMockService( String name )
-    {
-        RestMockService mockService = new RestMockService( this, getConfig().addNewRestMockService() );
-        mockService.setName( name );
-        restMockServices.add( mockService );
-        fireMockServiceAdded( mockService );
+	public RestMockService addNewRestMockService( String name )
+	{
+		RestMockService mockService = new RestMockService( this, getConfig().addNewRestMockService() );
+		mockService.setName( name );
+		restMockServices.add( mockService );
+		fireMockServiceAdded( mockService );
 
-        return mockService;
-    }
+		return mockService;
+	}
 
-    public WsdlMockService getMockServiceAt( int index )
+	public WsdlMockService getMockServiceAt( int index )
 	{
 		return mockServices.get( index );
 	}
 
-    public WsdlMockService getMockServiceByName( String mockServiceName )
-    {
-        return ( WsdlMockService )getWsdlModelItemByName( mockServices, mockServiceName );
-    }
+	public WsdlMockService getMockServiceByName( String mockServiceName )
+	{
+		return ( WsdlMockService )getWsdlModelItemByName( mockServices, mockServiceName );
+	}
 
-    public RestMockService getRestMockServiceByName( String mockServiceName )
-    {
-        return ( RestMockService )getWsdlModelItemByName( restMockServices, mockServiceName );
-    }
-
-    public int getMockServiceCount()
+	public int getMockServiceCount()
 	{
 		return mockServices.size();
 	}
 
-	public void removeMockService( WsdlMockService mockService )
+	public RestMockService getRestMockServiceAt( int index )
+	{
+		return restMockServices.get( index );
+	}
+
+	public RestMockService getRestMockServiceByName( String mockServiceName )
+   {
+		return ( RestMockService )getWsdlModelItemByName( restMockServices, mockServiceName );
+   }
+
+	public int getRestMockServiceCount()
+	{
+		return restMockServices.size();
+	}
+
+	public void removeMockService( MockService mockService )
 	{
 		int ix = mockServices.indexOf( mockService );
-		mockServices.remove( ix );
+		boolean isRestMockService = ix == -1;
+
+		if( isRestMockService )
+		{
+			ix = restMockServices.indexOf( mockService );
+		}
+		removeMockServiceFromList( ix, isRestMockService );
 
 		try
 		{
@@ -1374,6 +1389,30 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		finally
 		{
 			mockService.release();
+			removeMockServiceFromConfig( ix, isRestMockService );
+		}
+	}
+
+	private void removeMockServiceFromList( int ix, boolean isRestMockService )
+	{
+		if( isRestMockService )
+		{
+			restMockServices.remove( ix );
+		}
+		else
+		{
+			mockServices.remove( ix );
+		}
+	}
+
+	private void removeMockServiceFromConfig( int ix, boolean isRestMockService )
+	{
+		if( isRestMockService )
+		{
+			getConfig().removeRestMockService( ix );
+		}
+		else
+		{
 			getConfig().removeMockService( ix );
 		}
 	}
@@ -1551,6 +1590,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 		list.addAll( getInterfaceList() );
 		list.addAll( getTestSuiteList() );
 		list.addAll( getMockServiceList() );
+		list.addAll( getRestMockServiceList() );
 		return list;
 	}
 

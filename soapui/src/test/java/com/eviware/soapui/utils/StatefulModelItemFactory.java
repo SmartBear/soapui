@@ -1,14 +1,19 @@
 package com.eviware.soapui.utils;
 
-import com.eviware.soapui.config.*;
-import com.eviware.soapui.impl.WorkspaceImpl;
-import com.eviware.soapui.impl.rest.*;
+import com.eviware.soapui.config.RestMethodConfig;
+import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.config.TestSuiteConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.workspace.WorkspaceFactory;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.types.StringToStringMap;
 
 import java.util.UUID;
 
@@ -55,9 +60,9 @@ public class StatefulModelItemFactory
 		RestMethod restMethod = new RestMethod( restResource, methodConfig )
 		{
 			@Override
-			public RestRequestInterface.RequestMethod getMethod()
+			public HttpMethod getMethod()
 			{
-				return RestRequestInterface.RequestMethod.GET;
+				return HttpMethod.GET;
 			}
 
 			@Override

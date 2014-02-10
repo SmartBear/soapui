@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.rest.panels.request;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction;
 import com.eviware.soapui.impl.rest.panels.component.RestResourceEditor;
@@ -21,8 +22,14 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 import org.apache.commons.lang.mutable.MutableBoolean;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 public class RestRequestDesktopPanel extends
 		AbstractRestRequestDesktopPanel<RestRequestInterface, RestRequestInterface>
@@ -106,7 +113,7 @@ public class RestRequestDesktopPanel extends
 	private JPanel addMethodCombo()
 	{
 		JPanel methodPanel = new JPanel( new BorderLayout() );
-		JComboBox<RestRequestInterface.RequestMethod> methodComboBox = new JComboBox<RestRequestInterface.RequestMethod>( new RestRequestMethodModel( getRequest() ) );
+		JComboBox<HttpMethod> methodComboBox = new JComboBox<HttpMethod>( new RestRequestMethodModel( getRequest() ) );
 		methodComboBox.setSelectedItem( getRequest().getMethod() );
 
 		JLabel methodLabel = new JLabel( "Method" );

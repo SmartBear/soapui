@@ -52,6 +52,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
+
 /**
  * 
  * @author nebojsa.tasic
@@ -641,7 +643,7 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
 		}
 
 		amfRequestTestStepConfig.getScript().setStringValue( script );
-		notifyPropertyChanged( "script", old, script );
+		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
 	}
 
 	public String getAmfCall()

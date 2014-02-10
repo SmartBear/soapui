@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.impl.wsdl.monitor;
 
-import java.net.URL;
-import java.util.Map;
-
 import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.model.iface.Operation;
+
+import java.net.URL;
+import java.util.Map;
 
 public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExchange<Operation>
 {
@@ -41,4 +41,6 @@ public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExch
 	public abstract String getRequestMethod();
 
 	public abstract Map<String, String> getHttpRequestParameters();
+
+	public abstract String getQueryParameters();
 }

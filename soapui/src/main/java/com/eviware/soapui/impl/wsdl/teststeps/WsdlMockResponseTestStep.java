@@ -156,7 +156,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 			}
 
 			iconAnimator = new ModelItemIconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
-					"/exec_mockResponse", 4, "gif" );
+					"/exec_mockResponse.gif", 4 );
 
 			initIcons();
 		}
@@ -194,7 +194,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		{
 			public String getValue( DefaultTestStepProperty property )
 			{
-				WsdlMockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
+				MockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
 				return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 			}
 		}, this ) );
@@ -203,7 +203,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || iconAnimator == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
@@ -985,8 +985,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 			if( getMockResponse().getMockResult() != null )
 			{
-				assertion.assertRequest( new WsdlMockResultMessageExchange( getMockResponse().getMockResult(),
-						getMockResponse() ), new WsdlSubmitContext( this ) );
+				WsdlMockResult mockResult = ( WsdlMockResult )getMockResponse().getMockResult();
+				WsdlMockResultMessageExchange messageExchange
+						= new WsdlMockResultMessageExchange( mockResult, getMockResponse() );
+				assertion.assertRequest( messageExchange, new WsdlSubmitContext( this ) );
 				notifier.notifyChange();
 			}
 
@@ -1087,7 +1089,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 	public String getAssertableContent()
 	{
-		WsdlMockResult mockResult = getMockResponse().getMockResult();
+		MockResult mockResult = getMockResponse().getMockResult();
 		return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 	}
 
@@ -1345,7 +1347,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		public AssertedWsdlMockResultMessageExchange( WsdlMockResult mockResult )
 		{
-			super( mockResult, mockResult == null ? null : mockResult.getMockResponse() );
+			super( mockResult, mockResult == null ? null : (WsdlMockResponse)mockResult.getMockResponse() );
 		}
 
 		public AssertedXPath[] getAssertedXPathsForRequest()
@@ -1422,7 +1424,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 					+ "/" + mockResponseStepConfig.getOperation() ) )
 			{
 				@SuppressWarnings( "rawtypes" )
-				PathToResolve path = context.getPath( this, "Missing Operation in Project",
+				//FIXME need to understand why this needs casting, we need to find the root cause
+				PathToResolve path = ( PathToResolve )context.getPath( this, "Missing Operation in Project",
 						mockResponseStepConfig.getInterface() + "/" + mockResponseStepConfig.getOperation() );
 				path.setSolved( true );
 			}

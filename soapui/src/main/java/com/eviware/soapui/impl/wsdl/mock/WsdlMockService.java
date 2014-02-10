@@ -45,7 +45,7 @@ import java.util.*;
  * @author ole.matzura
  */
 
-public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
+public class WsdlMockService extends AbstractMockService<WsdlMockOperation, WsdlMockResponse, MockServiceConfig>
 {
 	private static final String REQUIRE_SOAP_VERSION = WsdlMockService.class.getName() + "@require-soap-version";
 	private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
@@ -55,10 +55,11 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 
 	private WsdlMockOperation faultMockOperation;
 	private String mockServiceEndpoint;
+	private static final String ICON_NAME = "/mockService.gif";
 
 	public WsdlMockService( Project project, MockServiceConfig config )
 	{
-		super( config, project );
+		super( config, project, ICON_NAME );
 
 		List<MockOperationConfig> testStepConfigs = config.getMockOperationList();
 		for( MockOperationConfig tsc : testStepConfigs )
@@ -94,22 +95,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		{
 			faultMockOperation = ( WsdlMockOperation )getMockOperationByName( getConfig().getFaultMockOperation() );
 		}
-	}
-
-
-	public void setHost( String host )
-	{
-		getConfig().setHost( host );
-	}
-
-	public boolean getBindToHostOnly()
-	{
-		return getConfig().getBindToHostOnly();
-	}
-
-	public void setBindToHostOnly( boolean bindToHostOnly )
-	{
-		getConfig().setBindToHostOnly( bindToHostOnly );
 	}
 
 
@@ -184,6 +169,12 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	}
 
 	@Override
+	public String getIconName()
+	{
+		return ICON_NAME;
+	}
+
+	@Override
 	public MockDispatcher createDispatcher( WsdlMockRunContext mockContext )
 	{
 		return new WsdlMockDispatcher( this, mockContext );
@@ -220,38 +211,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	}
 
 
-	protected void fireMockOperationAdded( WsdlMockOperation mockOperation )
-	{
-		for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockOperationAdded( mockOperation );
-		}
-	}
-
-	protected void fireMockOperationRemoved( WsdlMockOperation mockOperation )
-	{
-        for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockOperationRemoved( mockOperation );
-		}
-	}
-
-	protected void fireMockResponseAdded( WsdlMockResponse mockResponse )
-	{
-        for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockResponseAdded( mockResponse );
-		}
-	}
-
-	protected void fireMockResponseRemoved( WsdlMockResponse mockResponse )
-	{
-        for( MockServiceListener listener : getMockServiceListeners())
-		{
-			listener.mockResponseRemoved( mockResponse );
-		}
-	}
-
 	public WsdlMockOperation getFaultMockOperation()
 	{
 		return faultMockOperation;
@@ -273,11 +232,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		}
 	}
 
-	@Override
-	public WsdlMockRunner start() throws Exception
-	{
-		return start( null );
-	}
 
 	public String getLocalEndpoint()
 	{
@@ -329,8 +283,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		getSettings().setBoolean( REQUIRE_SOAP_ACTION, requireSoapAction );
 	}
 
-
-
 	public boolean hasMockOperation( Operation operation )
 	{
 		return getMockOperation( operation ) != null;
@@ -340,8 +292,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 	{
 		return mockOperations;
 	}
-
-
 
 	public String getIncomingWss()
 	{
@@ -365,18 +315,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation>
 		String old = getOutgoingWss();
 		getConfig().setOutgoingWss( outgoingWss );
 		notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
-	}
-
-	public boolean isDispatchResponseMessages()
-	{
-		return getConfig().getDispatchResponseMessages();
-	}
-
-	public void setDispatchResponseMessages( boolean dispatchResponseMessages )
-	{
-		boolean old = isDispatchResponseMessages();
-		getConfig().setDispatchResponseMessages( dispatchResponseMessages );
-		notifyPropertyChanged( "dispatchResponseMessages", old, dispatchResponseMessages );
 	}
 
 	public List<WsdlOperation> getMockedOperations()

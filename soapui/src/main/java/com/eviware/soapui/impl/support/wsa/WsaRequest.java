@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.support.wsa;
 
 import com.eviware.soapui.config.HttpRequestConfig;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
@@ -63,9 +63,9 @@ public class WsaRequest extends HttpRequest implements WsaContainer, WsrmContain
 		return operation;
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
-		return RestRequestInterface.RequestMethod.POST;
+		return HttpMethod.POST;
 	}
 
 	public void setOperation( WsdlOperation operation )

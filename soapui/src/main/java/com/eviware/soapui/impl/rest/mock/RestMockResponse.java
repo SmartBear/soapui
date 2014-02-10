@@ -2,20 +2,21 @@ package com.eviware.soapui.impl.rest.mock;
 
 
 import com.eviware.soapui.config.RESTMockResponseConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
+import com.eviware.soapui.impl.support.AbstractMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
-import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.xmlbeans.XmlException;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -23,15 +24,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConfig> implements MockResponse,
-		MutableWsdlAttachmentContainer, PropertyExpansionContainer, TestPropertyHolder
+public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig>
 {
 
-	String responseContent;
+	private String responseContent;
+	private RestMockResult mockResult;
+	public final static String MOCKRESULT_PROPERTY = RestMockResponse.class.getName() + "@mockresult";
 
-	protected RestMockResponse( RESTMockResponseConfig config, ModelItem parent, String icon )
+	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
 	{
-		super( config, parent, icon );
+		super( config, action, "/rest_request.gif" );
 	}
 
 	@Override
@@ -83,18 +85,6 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	}
 
 	@Override
-	public String getResponseContent()
-	{
-		return null;
-	}
-
-	@Override
-	public void setResponseContent( String responseContent )
-	{
-
-	}
-
-	@Override
 	public String getEncoding()
 	{
 		return null;
@@ -133,19 +123,7 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	@Override
 	public MockOperation getMockOperation()
 	{
-		return null;
-	}
-
-	@Override
-	public StringToStringsMap getResponseHeaders()
-	{
-		return null;
-	}
-
-	@Override
-	public MockResult getMockResult()
-	{
-		return null;
+		return ( MockOperation )getParent();
 	}
 
 	@Override
@@ -167,80 +145,60 @@ public class RestMockResponse extends AbstractWsdlModelItem<RESTMockResponseConf
 	}
 
 	@Override
-	public String[] getPropertyNames()
-	{
-		return new String[0];
-	}
-
-	@Override
-	public void setPropertyValue( String name, String value )
-	{
-
-	}
-
-	@Override
-	public String getPropertyValue( String name )
+	public String getPropertiesLabel()
 	{
 		return null;
 	}
 
-	@Override
-	public TestProperty getProperty( String name )
+	protected String mockresultProperty()
 	{
-		return null;
+		return MOCKRESULT_PROPERTY;
 	}
 
 	@Override
-	public Map<String, TestProperty> getProperties()
+	protected String executeSpecifics( MockRequest request, String responseContent, WsdlMockRunContext context ) throws IOException, WSSecurityException
 	{
-		return null;
+		return responseContent;
 	}
 
 	@Override
-	public void addTestPropertyListener( TestPropertyListener listener )
+	protected String getContentType( Operation operation, String encoding )
 	{
-
+		//TODO as part of SOAP-1260
+		String contentType = "application/xml";
+		if( encoding != null && encoding.trim().length() > 0 )
+			contentType += ";charset=" + encoding;
+		return contentType;
 	}
 
 	@Override
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-
-	}
-
-	@Override
-	public boolean hasProperty( String name )
+	protected boolean isFault( String responseContent, MockRequest request ) throws XmlException
 	{
 		return false;
 	}
 
 	@Override
-	public ModelItem getModelItem()
+	protected String removeEmptyContent( String responseContent )
 	{
-		return null;
+		return responseContent;
 	}
 
 	@Override
-	public int getPropertyCount()
+	public long getResponseDelay()
 	{
 		return 0;
 	}
 
 	@Override
-	public List<TestProperty> getPropertyList()
+	public boolean isForceMtom()
 	{
-		return null;
+		return false;
 	}
 
 	@Override
-	public TestProperty getPropertyAt( int index )
+	public boolean isStripWhitespaces()
 	{
-		return null;
+		return false;
 	}
 
-	@Override
-	public String getPropertiesLabel()
-	{
-		return null;
-	}
 }

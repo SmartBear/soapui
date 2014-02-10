@@ -20,6 +20,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.http.Header;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.message.BasicHeader;
@@ -39,9 +41,9 @@ public class MimeMessageMockResponseEntity extends AbstractHttpEntity
 {
 	private final MimeMessage message;
 	private final boolean isXOP;
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public MimeMessageMockResponseEntity( MimeMessage message, boolean isXOP, WsdlMockResponse response )
+	public MimeMessageMockResponseEntity( MimeMessage message, boolean isXOP, MockResponse response )
 	{
 		this.message = message;
 		this.isXOP = isXOP;
@@ -67,20 +69,28 @@ public class MimeMessageMockResponseEntity extends AbstractHttpEntity
 	{
 		try
 		{
-			SoapVersion soapVersion = mockResponse.getSoapVersion();
-
-			if( isXOP )
+			if(mockResponse instanceof  WsdlMockResponse)
 			{
-				String header = message.getHeader( "Content-Type" )[0];
-				return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
+				SoapVersion soapVersion = (( WsdlMockResponse )mockResponse).getSoapVersion();
+
+				if( isXOP )
+				{
+					String header = message.getHeader( "Content-Type" )[0];
+					return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
+				}
+				else
+				{
+					String header = message.getHeader( "Content-Type" )[0];
+					int ix = header.indexOf( "boundary" );
+					return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
+							+ "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
+				}
 			}
 			else
 			{
-				String header = message.getHeader( "Content-Type" )[0];
-				int ix = header.indexOf( "boundary" );
-				return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
-						+ "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
+				throw new IllegalStateException( "Multipart support is only available for SOAP" );
 			}
+
 		}
 		catch( MessagingException e )
 		{

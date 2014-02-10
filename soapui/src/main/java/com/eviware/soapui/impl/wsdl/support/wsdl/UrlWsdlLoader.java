@@ -220,8 +220,6 @@ public class UrlWsdlLoader extends WsdlLoader
 				Settings soapuiSettings = SoapUI.getSettings();
 
 				HttpClientSupport.applyHttpSettings( getMethod, soapuiSettings );
-				ProxyUtils.initProxySettings( soapuiSettings, getMethod, state, getMethod.getURI().toString(),
-						contextModelItem == null ? null : new DefaultPropertyExpansionContext( contextModelItem ) );
 
 				httpResponse = httpClient.execute( getMethod, state );
 			}

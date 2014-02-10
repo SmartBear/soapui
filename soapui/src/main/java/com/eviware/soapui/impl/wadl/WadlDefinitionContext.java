@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.impl.wadl;
 
-import org.apache.xmlbeans.SchemaTypeSystem;
-
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
 import com.eviware.soapui.impl.support.definition.DefinitionCache;
@@ -25,6 +23,7 @@ import com.eviware.soapui.impl.wadl.support.GeneratedWadlDefinitionLoader;
 import com.eviware.soapui.impl.wadl.support.WadlInterfaceDefinition;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.support.StringUtils;
+import org.apache.xmlbeans.SchemaTypeSystem;
 
 public class WadlDefinitionContext extends
 		AbstractDefinitionContext<RestService, DefinitionLoader, WadlInterfaceDefinition>
@@ -53,7 +52,7 @@ public class WadlDefinitionContext extends
 	protected DefinitionLoader createDefinitionLoader( String url )
 	{
 		if( ( getInterface() != null && getInterface().isGenerated() ) || StringUtils.isNullOrEmpty( url )
-					|| getInterface().exportChanges() )
+					|| (getInterface() != null && getInterface().exportChanges() ))
 			return new GeneratedWadlDefinitionLoader( getInterface() );
 		else
 			return new UrlWsdlLoader( url, getInterface() );

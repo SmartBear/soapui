@@ -39,6 +39,10 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.eviware.soapui.impl.wsdl.mock.*;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunContext;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -46,11 +50,6 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationQueryMatchDispatchConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -215,7 +214,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 		toolBar.addFixed( extractFromCurrentButton );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public WsdlMockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException
 	{
 		Map<String, XmlCursor> cursorCache = new HashMap<String, XmlCursor>();
@@ -250,7 +249,8 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 						if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
 						{
-							request.getRequestContext().put( "usedQueryMatch", query.getName() );
+							WsdlMockRunContext requestContext = (WsdlMockRunContext)request.getRequestContext();
+							requestContext.put( "usedQueryMatch", query.getName() );
 
 							WsdlMockResponse resp = null;
 							for( MockResponse mockResponse : this.getMockOperation().getMockResponses() )
@@ -610,7 +610,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 			try
 			{
-				WsdlMockResult lastResult = getMockOperation().getLastMockResult();
+				MockResult lastResult = getMockOperation().getLastMockResult();
 				String content = null;
 				if( lastResult == null )
 				{
@@ -650,7 +650,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 		public void actionPerformed( ActionEvent e )
 		{
-			WsdlMockResult result = getMockOperation().getLastMockResult();
+			MockResult result = getMockOperation().getLastMockResult();
 			if( result != null )
 			{
 				try
@@ -684,7 +684,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 			if( selectedQuery == null )
 				return;
 
-			WsdlMockResult result = getMockOperation().getLastMockResult();
+			MockResult result = getMockOperation().getLastMockResult();
 			String content;
 
 			if( result != null && StringUtils.hasContent( result.getMockRequest().getRequestContent() ) )

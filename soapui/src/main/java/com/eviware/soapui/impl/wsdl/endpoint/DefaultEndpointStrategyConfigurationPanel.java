@@ -65,7 +65,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 {
 
 	// package protected to facilitate unit testing
-	JTable table;
+	public JTable table;
 
 	private EndpointsTableModel tableModel;
 	private JButton deleteButton;

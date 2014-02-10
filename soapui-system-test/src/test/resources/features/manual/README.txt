@@ -1,1 +1,0 @@
-Put features files for manual tests here.

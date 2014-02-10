@@ -18,8 +18,10 @@ import java.util.Set;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -41,11 +43,11 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, TestCaseRunContext, Cloneable
 {
 	private DefaultPropertyExpansionContext properties;
-	private final WsdlMockService mockService;
+	private final MockService mockService;
 	private final WsdlTestRunContext context;
-	private WsdlMockResponse mockResponse;
+	private MockResponse mockResponse;
 
-	public WsdlMockRunContext( WsdlMockService mockService, WsdlTestRunContext context )
+	public WsdlMockRunContext( MockService mockService, WsdlTestRunContext context )
 	{
 		this.mockService = mockService;
 		this.context = context;
@@ -53,7 +55,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		reset();
 	}
 
-	public WsdlMockService getMockService()
+	public MockService getMockService()
 	{
 		return mockService;
 	}
@@ -308,12 +310,12 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		return context == null ? mockService.getSettings() : context.getTestCase().getSettings();
 	}
 
-	public void setMockResponse( WsdlMockResponse mockResponse )
+	public void setMockResponse( MockResponse mockResponse )
 	{
 		this.mockResponse = mockResponse;
 	}
 
-	public WsdlMockResponse getMockResponse()
+	public MockResponse getMockResponse()
 	{
 		return mockResponse;
 	}

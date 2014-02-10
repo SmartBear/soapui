@@ -20,8 +20,8 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
-import com.eviware.soapui.support.editor.xml.XmlEditor;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -30,6 +30,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings( "unchecked" )
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
@@ -46,31 +48,49 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		httpRequest.addPropertyChangeListener( this );
 	}
 
-	public HttpHtmlResponseView( XmlEditor xmlEditor, MessageExchangeModelItem messageExchangeModelItem )
-	{
-		super( "HTML", xmlEditor, HttpHtmlResponseViewFactory.VIEW_ID );
-		this.messageExchangeModelItem = messageExchangeModelItem;
-		this.httpRequest = ( HttpRequestInterface<?> )messageExchangeModelItem;
-		messageExchangeModelItem.addPropertyChangeListener( this );
-	}
-
 	public JComponent getComponent()
 	{
 		if( panel == null )
 		{
 			panel = new JPanel( new BorderLayout() );
 
-			browser = new WebViewBasedBrowserComponent( false );
-			Component component = browser.getComponent();
-			component.setMinimumSize( new Dimension( 100, 100 ) );
-			panel.add( component, BorderLayout.CENTER );
-
-			HttpResponse response = httpRequest.getResponse();
-			if( response != null )
-				setEditorContent( response );
 		}
 
 		return panel;
+	}
+
+	@Override
+	public boolean activate( EditorLocation<HttpResponseDocument> location )
+	{
+		boolean activated = super.activate( location );
+		if (activated)
+		{
+			if( browser == null )
+			{
+				browser = new WebViewBasedBrowserComponent( false );
+				Component component = browser.getComponent();
+				component.setMinimumSize( new Dimension( 100, 100 ) );
+				panel.add( component, BorderLayout.CENTER );
+			}
+
+			HttpResponse response = httpRequest.getResponse();
+			if( response != null )
+			{
+				setEditorContent( response );
+			}
+		}
+		return activated;
+	}
+
+	@Override
+	public boolean deactivate()
+	{
+		boolean deactivated = super.deactivate();
+		if( deactivated )
+		{
+			browser.setContent( "" );
+		}
+		return deactivated;
 	}
 
 	@Override
@@ -105,7 +125,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			{
 				try
 				{
-					browser.setContent( content, contentType );
+					browser.setContent( content, contentType);
 				}
 				catch( Exception e )
 				{
@@ -122,6 +142,8 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 			browser.setContent( "<missing content>" );
 		}
 	}
+
+
 
 	private boolean isSupportedContentType( String contentType )
 	{

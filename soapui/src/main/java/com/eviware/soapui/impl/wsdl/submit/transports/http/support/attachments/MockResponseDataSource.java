@@ -12,15 +12,15 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.model.mock.MockResponse;
+
+import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import javax.activation.DataSource;
-
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 /**
  * DataSource for an existing WsdlMockResponse
@@ -32,9 +32,9 @@ public class MockResponseDataSource implements DataSource
 {
 	private final String responseContent;
 	private final boolean isXOP;
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public MockResponseDataSource( WsdlMockResponse mockResponse, String responseContent, boolean isXOP )
+	public MockResponseDataSource( MockResponse mockResponse, String responseContent, boolean isXOP )
 	{
 		this.mockResponse = mockResponse;
 		this.responseContent = responseContent;
@@ -43,15 +43,22 @@ public class MockResponseDataSource implements DataSource
 
 	public String getContentType()
 	{
-		SoapVersion soapVersion = mockResponse.getSoapVersion();
-
-		if( isXOP )
+		if(mockResponse instanceof WsdlMockResponse)
 		{
-			return AttachmentUtils.buildRootPartContentType( mockResponse.getMockOperation().getOperation().getName(),
-					soapVersion );
+			SoapVersion soapVersion = ((WsdlMockResponse)mockResponse).getSoapVersion();
+
+			if( isXOP )
+			{
+				return AttachmentUtils.buildRootPartContentType( mockResponse.getMockOperation().getOperation().getName(),
+						soapVersion );
+			}
+			else
+				return soapVersion.getContentType() + "; charset=UTF-8";
 		}
 		else
-			return soapVersion.getContentType() + "; charset=UTF-8";
+		{
+			throw new IllegalStateException( "Multipart support is only available for SOAP" );
+		}
 	}
 
 	public InputStream getInputStream() throws IOException

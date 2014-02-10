@@ -12,20 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import java.io.IOException;
-
-import javax.net.ssl.SSLSession;
-
-import org.apache.commons.httpclient.util.EncodingUtil;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-
-import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpPatch;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import org.apache.commons.httpclient.util.EncodingUtil;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+
+import javax.net.ssl.SSLSession;
+import java.io.IOException;
 
 public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEnclosingHttpMethod
 {
@@ -130,7 +128,7 @@ public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEncl
 
 	public String getMethod()
 	{
-		return RestRequestInterface.RequestMethod.PATCH.toString();
+		return HttpMethod.PATCH.toString();
 	}
 
 	public Throwable getFailureCause()
