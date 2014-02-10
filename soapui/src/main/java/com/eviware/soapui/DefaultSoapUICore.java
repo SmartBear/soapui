@@ -153,7 +153,10 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected void initPlugins()
 	{
-		File[] pluginFiles = new File( "plugins" ).listFiles();
+        String pluginDir = System.getProperty( "soapui.ext.plugins",
+                root == null ? "plugins" : root + File.separatorChar + "plugins");
+
+		File[] pluginFiles = new File( pluginDir ).listFiles();
 		if( pluginFiles != null )
 		{
 			for( File pluginFile : pluginFiles )
