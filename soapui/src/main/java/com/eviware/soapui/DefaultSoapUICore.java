@@ -153,6 +153,7 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected void initPlugins()
 	{
+        // check for system properties before defaulting to plugins folder
         String pluginsDir = System.getProperty( "soapui.ext.plugins",
                 root == null ? "plugins" : root + File.separatorChar + "plugins");
 
@@ -161,6 +162,7 @@ public class DefaultSoapUICore implements SoapUICore
 		{
 			for( File pluginFile : pluginFiles )
 			{
+                // skip files that don't end with .jar and don't contain the word "plugin"
 				if( !pluginFile.getName().toLowerCase().endsWith( ".jar" ) ||
                         !pluginFile.getName().toLowerCase().contains("plugin"))
 					continue;
@@ -218,6 +220,7 @@ public class DefaultSoapUICore implements SoapUICore
      * Extracts a library in a plugin file to a local file so it can be added to the extension classloader. Will
      * not override existing files.
      *
+     * @param pluginDir the directory to which files will be extracted to
      * @param jarFile the jarFile containing the library
      * @param entry the entry of the library in the jarFile
      * @return the created file
