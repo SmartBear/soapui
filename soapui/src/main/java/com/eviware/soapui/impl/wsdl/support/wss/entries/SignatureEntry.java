@@ -22,6 +22,7 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
@@ -318,7 +319,8 @@ public class SignatureEntry extends WssEntryBase
 	}
 
     /**
-     * This callback class extends the default DOMCallbackLookup class with a hook to return the prepared wsse:BinarySecurityToken
+     * This callback class extends the default DOMCallbackLookup class with a hook to return the prepared
+     * wsse:BinarySecurityToken
      */
     private static class BinarySecurityTokenDOMCallbackLookup extends DOMCallbackLookup {
 
@@ -333,11 +335,15 @@ public class SignatureEntry extends WssEntryBase
         public List<Element> getElements(String localname, String namespace) throws WSSecurityException {
             List<Element> elements = super.getElements(localname, namespace);
             if (elements.isEmpty()) {
-                // element was not found in document because BST was not yet added
+                // element was not found in DOM document
                 if (WSConstants.BINARY_TOKEN_LN.equals(localname) && WSConstants.WSSE_NS.equals(namespace)) {
+                    /* In case the element searched for is the wsse:BinarySecurityToken, return the element prepared by
+                       wsee4j. If we return the original DOM element, the digest calculation fails because the element
+                       is not yet attached to the DOM tree, so instead return a copy which includes all namespaces */
                     try {
                         DOMResult result = new DOMResult();
-                        TransformerFactory.newInstance().newTransformer().transform(new DOMSource(wssSign.getBinarySecurityTokenElement()), result);
+                        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                        transformer.transform(new DOMSource(wssSign.getBinarySecurityTokenElement()), result);
                         return Collections.singletonList(((Document) result.getNode()).getDocumentElement());
                     } catch (TransformerException e) {
                         SoapUI.logError(e);
