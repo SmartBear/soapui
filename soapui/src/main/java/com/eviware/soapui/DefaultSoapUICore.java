@@ -153,10 +153,10 @@ public class DefaultSoapUICore implements SoapUICore
 
 	protected void initPlugins()
 	{
-        String pluginDir = System.getProperty( "soapui.ext.plugins",
+        String pluginsDir = System.getProperty( "soapui.ext.plugins",
                 root == null ? "plugins" : root + File.separatorChar + "plugins");
 
-		File[] pluginFiles = new File( pluginDir ).listFiles();
+		File[] pluginFiles = new File( pluginsDir ).listFiles();
 		if( pluginFiles != null )
 		{
 			for( File pluginFile : pluginFiles )
@@ -197,7 +197,7 @@ public class DefaultSoapUICore implements SoapUICore
                         // library?
                         if( entry.getName().startsWith( "lib/") && entry.getName().endsWith( ".jar"))
                         {
-                            File libFile = extractPluginLibrary(jarFile, entry);
+                            File libFile = extractPluginLibrary(pluginsDir,jarFile, entry);
                             SoapUI.log.info( "Adding [" + libFile.getAbsolutePath() + "] to extensions classpath" );
                             getExtensionClassLoader().addFile(libFile);
                         }
@@ -224,10 +224,10 @@ public class DefaultSoapUICore implements SoapUICore
      * @throws IOException if anything IO-related goes wrong
      */
 
-    protected File extractPluginLibrary(JarFile jarFile, JarEntry entry) throws IOException
+    protected File extractPluginLibrary(String pluginDir, JarFile jarFile, JarEntry entry) throws IOException
     {
         // create name from plugin file name
-        File libDir = new File( jarFile.getName().substring(0, jarFile.getName().length()-4) + "-libs");
+        File libDir = new File( pluginDir, jarFile.getName().substring(0, jarFile.getName().length()-4) + "-libs");
         if( !libDir.exists())
             libDir.mkdirs();
 
