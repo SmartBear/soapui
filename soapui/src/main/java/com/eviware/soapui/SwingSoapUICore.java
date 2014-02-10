@@ -21,7 +21,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.inspectors.amfheader.AMFHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.attachments.AttachmentsInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.aut.AuthInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.header.JMSHeaderInspectorFactory;
 import com.eviware.soapui.support.editor.inspectors.jms.property.JMSHeaderAndPropertyInspectorFactory;

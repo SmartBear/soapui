@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Map;
 
 public class TunnelServlet extends ProxyServlet
 {
@@ -222,10 +224,10 @@ public class TunnelServlet extends ProxyServlet
 		StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
 		// copy headers to response
 		HttpServletResponse httpServletResponse = ( HttpServletResponse )response;
-		for( String name : responseHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
 		{
-			for( String header : responseHeaders.get( name ) )
-				httpServletResponse.addHeader( name, header );
+			for( String header : headerEntry.getValue() )
+				httpServletResponse.addHeader( headerEntry.getKey(), header );
 
 		}
 

@@ -38,7 +38,7 @@ import com.jgoodies.looks.Options;
 
 public class JInspectorPanelImpl extends JPanel implements PropertyChangeListener, JInspectorPanel
 {
-	private float defaultDividerLocation = 0.7F;
+	private float defaultDividerLocation = 0.60F;
 
 	private final JSplitPane mainSplit;
 	private JPanel inspectorPanel;
@@ -155,6 +155,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 
 		inspectorPanel.add( inspector.getComponent(), inspector.getInspectorId() );
 		JToggleButton button = new JToggleButton( new SelectInspectorAction( inspector ) );
+		button.setName( inspector.getInspectorId() );
 
 		inspectorButtons.put( inspector, button );
 		if( orientation == SwingConstants.LEFT )

@@ -21,17 +21,20 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.conn.routing.HttpRoutePlanner;
-import org.apache.http.impl.conn.ProxySelectorRoutePlanner;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URI;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.*;
 
 public class ProxyUtilsTestCase
@@ -73,7 +76,8 @@ public class ProxyUtilsTestCase
 	}
 
 	@After
-	public void teardown(){
+	public void teardown()
+	{
 		ProxyUtils.setAutoProxy( false );
 		ProxyUtils.setProxyEnabled( false );
 	}
@@ -85,9 +89,11 @@ public class ProxyUtilsTestCase
 		ProxyUtils.setAutoProxy( true );
 		setProxySystemProperties();
 
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		ProxyUtils.setGlobalProxy( manualSettings() );
+		assertGlobalProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 
-		assertProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
+		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		assertHttpClientProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 	}
 
 	@Test
@@ -97,9 +103,11 @@ public class ProxyUtilsTestCase
 		ProxyUtils.setAutoProxy( true );
 		setProxySystemProperties();
 
-		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
+		ProxyUtils.setGlobalProxy( emptySettings() );
+		assertGlobalProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 
-		assertProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
+		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
+		assertHttpClientProxyHost( SYSTEM_PROPERTY_PROXY_HOST );
 	}
 
 	@Test
@@ -109,8 +117,11 @@ public class ProxyUtilsTestCase
 		ProxyUtils.setAutoProxy( false );
 		setProxySystemProperties();
 
+		ProxyUtils.setGlobalProxy( emptySettings() );
+		assertGlobalProxyHost( null );
+
 		ProxyUtils.initProxySettings( emptySettings(), httpMethod, null, URL, null );
-		assertProxyHost( null );
+		assertHttpClientProxyHost( null );
 
 	}
 
@@ -118,37 +129,42 @@ public class ProxyUtilsTestCase
 	public void givenProxyEnabledAndManuallyConfiguredThenSetProxy()
 	{
 		ProxyUtils.setProxyEnabled( true );
-
 		ProxyUtils.setAutoProxy( false );
 
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		manualSettings();
+		ProxyUtils.setGlobalProxy( manualSettings() );
+		assertGlobalProxyHost( MANUAL_SETTING_PROXY_HOST );
 
-		assertProxyHost( MANUAL_SETTING_PROXY_HOST );
+		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		assertHttpClientProxyHost( MANUAL_SETTING_PROXY_HOST );
 	}
 
 	@Test
 	public void givenAutomaticProxyDetectionAndNoProxyAvailableThenSetDirectProxyType()
 	{
 		ProxyUtils.setProxyEnabled( true );
-
 		ProxyUtils.setAutoProxy( true );
 
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		ProxyUtils.setGlobalProxy( manualSettings() );
+		assertGlobalProxyHost( null );
 
-		assertProxyHost( null );
+		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		assertHttpClientProxyHost( null );
 	}
 
 	@Test
 	@Ignore
+	// To run this test manually set the environment variable http_proxy to "environmentshost.com"
 	public void givenAutomaticProxyDetectionAndEnvironmentProxySetThenUseTheEnvironmentProxy()
 	{
 		ProxyUtils.setProxyEnabled( true );
-
 		ProxyUtils.setAutoProxy( true );
 
-		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		ProxyUtils.setGlobalProxy( manualSettings() );
+		assertGlobalProxyHost( "environmentshost.com" );
 
-		assertProxyHost( "environmentshost.com" );
+		ProxyUtils.initProxySettings( manualSettings(), httpMethod, null, URL, null );
+		assertHttpClientProxyHost( "environmentshost.com" );
 	}
 
 	private Settings emptySettings()
@@ -176,20 +192,7 @@ public class ProxyUtilsTestCase
 		System.setProperty( "http.proxyPort", SYSTEM_PROPERTY_PROXY_PORT );
 	}
 
-	private void assertAutoProxy( Proxy.Type type )
-	{
-		HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
-
-		ProxySelectorRoutePlanner proxyRoutePlanner = ( ProxySelectorRoutePlanner )routePlanner;
-
-		ProxySelector proxySelector = proxyRoutePlanner.getProxySelector();
-
-		List<Proxy> select = proxySelector.select( URI.create( URL ) );
-
-		assertEquals( type, select.get( 0 ).type() );
-	}
-
-	private void assertProxyHost( String expectedProxyHost )
+	private void assertHttpClientProxyHost( String expectedProxyHost )
 	{
 		HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
 		HttpRoute httpRoute = null;
@@ -204,11 +207,37 @@ public class ProxyUtilsTestCase
 		}
 		if( expectedProxyHost == null )
 		{
-			assertNull( httpRoute.getProxyHost() );
+			assertThat( httpRoute.getProxyHost(), is( nullValue() ) );
 		}
 		else
 		{
-			assertEquals( expectedProxyHost, httpRoute.getProxyHost().getHostName() );
+			assertThat( expectedProxyHost, is( httpRoute.getProxyHost().getHostName() ) );
+		}
+	}
+
+	private void assertGlobalProxyHost( String expectedProxyHost )
+	{
+		ProxySelector proxySelector = ProxySelector.getDefault();
+		Proxy globalProxy = null;
+		if( proxySelector != null )
+		{
+			List<Proxy> globalProxies = proxySelector.select( URI.create( "http://soapui.org/" ) );
+			assertThat( globalProxies.size(), is( 1 ) );
+			globalProxy = globalProxies.get( 0 );
+		}
+
+		if( expectedProxyHost == null )
+		{
+			if( proxySelector != null )
+			{
+				assertThat( globalProxy.type(), is( Proxy.Type.DIRECT ) );
+			}
+		}
+		else
+		{
+			assertThat( proxySelector, is( not( nullValue() ) ) );
+			assertThat( globalProxy.type(), is( Proxy.Type.HTTP ) );
+			assertThat( expectedProxyHost, is( ( ( InetSocketAddress )globalProxy.address() ).getHostName() ) );
 		}
 	}
 }

@@ -15,6 +15,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.CheckForNull;
 
@@ -213,10 +214,10 @@ public class RestRequestStepResult extends WsdlTestStepResult implements Respons
 
 		writer.println( "\r\n---------------- Request ---------------------------" );
 		StringToStringsMap headers = response.getRequestHeaders();
-		for( String key : headers.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : headers.entrySet() )
 		{
-			if( headers.get( key ) != null )
-				writer.println( key + ": " + headers.get( key ) );
+			if( headerEntry.getValue() != null )
+				writer.println( headerEntry.getKey() + ": " + headerEntry.getValue() );
 		}
 
 		byte[] rawRequestData = response.getRawRequestData();

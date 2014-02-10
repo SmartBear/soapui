@@ -48,6 +48,10 @@ public abstract class WsdlTestStepFactory
 
 	public abstract boolean canCreate();
 
+	public boolean promptForName() {
+		return true;
+	}
+
 	public String getTestStepName()
 	{
 		return name;

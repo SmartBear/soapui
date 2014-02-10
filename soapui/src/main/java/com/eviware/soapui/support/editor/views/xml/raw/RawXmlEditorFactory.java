@@ -14,6 +14,8 @@ package com.eviware.soapui.support.editor.views.xml.raw;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -267,13 +269,13 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 		if( status != null )
 			result.append( status ).append( '\n' );
 
-		for( String header : headers.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : headers.entrySet() )
 		{
-			if( header.equals( "#status#" ) )
+			if( headerEntry.getKey().equals( "#status#" ) )
 				continue;
 
-			for( String value : headers.get( header ) )
-				result.append( header ).append( ": " ).append( value ).append( '\n' );
+			for( String value : headerEntry.getValue() )
+				result.append( headerEntry.getKey() ).append( ": " ).append( value ).append( '\n' );
 		}
 		result.append( '\n' );
 

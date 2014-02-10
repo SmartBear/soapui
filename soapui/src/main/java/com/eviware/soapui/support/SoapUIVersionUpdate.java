@@ -96,48 +96,7 @@ public class SoapUIVersionUpdate
 
 	private String fetchVersionDocumentContent( final URL versionUrl ) throws URISyntaxException, IOException
 	{
-		Proxy proxy = null;
-		if( ProxyUtils.isProxyEnabled() )
-		{
-			HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
-			HttpRoute httpRoute;
-			try
-			{
-				HttpGet request = new HttpGet( versionUrl.toURI() );
-				HttpContext httpContext = HttpClientSupport.createEmptyContext();
-				ProxyUtils.initProxySettings( SoapUI.getSettings(), request, httpContext, versionUrl.toString(), null );
-				httpRoute = routePlanner.determineRoute( new HttpHost( versionUrl.getHost() ), request, null );
-			}
-			catch( HttpException e )
-			{
-				throw new IOException( "Error detecting proxy", e );
-			}
-			HttpHost proxyHost = httpRoute.getProxyHost();
-			if( proxyHost != null )
-			{
-				proxy = new Proxy( Proxy.Type.HTTP, new InetSocketAddress( proxyHost.getHostName(), proxyHost.getPort() ) );
-				Authenticator.setDefault( new Authenticator()
-				{
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication()
-					{
-						if( !getRequestingURL().getHost().equals( versionUrl.getHost() ) )
-						{
-							return null;
-						}
-						Settings settings = SoapUI.getSettings();
-						String proxyUsername = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
-								settings.getString( ProxySettings.USERNAME, null ) );
-						String proxyPassword = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
-								settings.getString( ProxySettings.PASSWORD, null ) );
-
-						return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
-					}
-				} );
-			}
-		}
-
-		URLConnection connection = proxy == null ? versionUrl.openConnection() : versionUrl.openConnection(proxy);
+		URLConnection connection = versionUrl.openConnection();
 		String response = IOUtils.toString( connection.getInputStream() );
 		Authenticator.setDefault( null );
 		return response;

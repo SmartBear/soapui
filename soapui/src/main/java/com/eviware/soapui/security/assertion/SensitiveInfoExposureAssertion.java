@@ -125,10 +125,11 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 
 		try
 		{
-			for( String token : checkMap.keySet() )
+			for( Map.Entry<String, String> tokenEntry : checkMap.entrySet() )
 			{
+				String token = tokenEntry.getKey();
 				boolean useRegexp = token.trim().startsWith( PREFIX );
-				String description = !checkMap.get( token ).equals( "" ) ? checkMap.get( token ) : token;
+				String description = !tokenEntry.getValue().equals( "" ) ? tokenEntry.getValue() : token;
 				if( useRegexp )
 				{
 					token = token.substring( token.indexOf( PREFIX ) + 1 );
@@ -171,10 +172,11 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 
 		try
 		{
-			for( String token : checkMap.keySet() )
+			for( Map.Entry<String, String> tokenEntry : checkMap.entrySet() )
 			{
+				String token = tokenEntry.getKey();
 				boolean useRegexp = token.trim().startsWith( PREFIX );
-				String description = !checkMap.get( token ).equals( "" ) ? checkMap.get( token ) : token;
+				String description = !tokenEntry.getValue().equals( "" ) ? tokenEntry.getValue() : token;
 				if( useRegexp )
 				{
 					token = token.substring( token.indexOf( PREFIX ) + 1 );
@@ -226,9 +228,9 @@ public class SensitiveInfoExposureAssertion extends WsdlMessageAssertion impleme
 	private Map<String, String> propertyExpansionSupport( Map<String, String> checkMap, SubmitContext context )
 	{
 		Map<String, String> expanded = new HashMap<String, String>();
-		for( String key : checkMap.keySet() )
+		for( Map.Entry<String, String> entry : checkMap.entrySet() )
 		{
-			expanded.put( context.expand( key ), context.expand( checkMap.get( key ) ) );
+			expanded.put( context.expand( entry.getKey() ), context.expand( entry.getValue() ) );
 		}
 		return expanded;
 	}

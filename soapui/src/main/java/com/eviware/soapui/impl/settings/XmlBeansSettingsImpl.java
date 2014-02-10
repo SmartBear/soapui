@@ -253,9 +253,9 @@ public class XmlBeansSettingsImpl implements Settings
 			values.put( setting.getId(), setting );
 		}
 
-		for( String key : changed.keySet() )
+		for( Map.Entry<String, String> entry : changed.entrySet() )
 		{
-			notifySettingChanged( key, getString( key, null ), changed.get( key ) );
+			notifySettingChanged( entry.getKey(), getString( entry.getKey(), null ), entry.getValue() );
 		}
 		notifySettingsReloaded();
 	}

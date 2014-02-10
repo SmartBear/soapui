@@ -12,12 +12,8 @@
 
 package com.eviware.soapui.support;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-
+import com.eviware.soapui.SoapUI;
 import junit.framework.JUnit4TestAdapter;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,7 +23,9 @@ import org.mortbay.jetty.handler.DefaultHandler;
 import org.mortbay.jetty.handler.HandlerList;
 import org.mortbay.jetty.handler.ResourceHandler;
 
-import com.eviware.soapui.SoapUI;
+import java.io.File;
+
+import static org.junit.Assert.assertTrue;
 
 public class TestCaseWithJetty
 {
@@ -48,7 +46,7 @@ public class TestCaseWithJetty
 
 		server = new Server( 8082 );
 		ResourceHandler resource_handler = new ResourceHandler();
-		resource_handler.setResourceBase( "." + File.separator + "src" + File.separator + "test" + File.separator + "resources" );
+		resource_handler.setResourceBase( new File( TestCaseWithJetty.class.getResource( "/" ).toURI() ).getCanonicalPath() );
 
 		HandlerList handlers = new HandlerList();
 		handlers.setHandlers( new Handler[] { resource_handler, new DefaultHandler() } );

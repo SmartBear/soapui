@@ -274,10 +274,10 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 			context.putAll( request.getRequestContext() );
 
 			StringToStringsMap responseHeaders = getResponseHeaders();
-			for( String name : responseHeaders.keySet() )
+			for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
 			{
-				for( String value : responseHeaders.get( name ) )
-					result.addHeader( name, PropertyExpander.expandProperties( context, value ) );
+				for( String value : headerEntry.getValue() )
+					result.addHeader( headerEntry.getKey(), PropertyExpander.expandProperties( context, value ) );
 			}
 
 			responseContent = PropertyExpander.expandProperties( context, responseContent, isEntitizeProperties() );
@@ -392,12 +392,12 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 
 		getConfig().setHeaderArray( new HeaderConfig[0] );
 
-		for( String header : headers.keySet() )
+		for( Map.Entry<String, List<String>> header : headers.entrySet() )
 		{
-			for( String value : headers.get( header ) )
+			for( String value : header.getValue() )
 			{
 				HeaderConfig headerConfig = getConfig().addNewHeader();
-				headerConfig.setName( header );
+				headerConfig.setName( header.getKey() );
 				headerConfig.setValue( value );
 			}
 		}
@@ -971,11 +971,11 @@ public class WsdlMockResponse extends AbstractWsdlModelItem<MockResponseConfig> 
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "responseContent" ) );
 
 		StringToStringsMap responseHeaders = getResponseHeaders();
-		for( String key : responseHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
 		{
-			for( String value : responseHeaders.get( key ) )
-				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder( key,
-						value, this ), "value" ) );
+			for( String value : headerEntry.getValue() )
+				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this,
+						new ResponseHeaderHolder( headerEntry.getKey(), value, this ), "value" ) );
 		}
 
 		addWsaPropertyExpansions( result, getWsaConfig(), this );

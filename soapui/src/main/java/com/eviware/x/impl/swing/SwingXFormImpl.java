@@ -191,7 +191,7 @@ public class SwingXFormImpl implements XForm
 		if( type == FieldType.FOLDER || type == FieldType.FILE || type == FieldType.PROJECT_FOLDER
 				|| type == FieldType.PROJECT_FILE || type == FieldType.FILE_OR_FOLDER )
 		{
-			return ( XFormTextField )addComponent( name, new FileFormField( description, type ) );
+			return ( XFormTextField )addComponent( name, new FileFormField( description, type, name ) );
 		}
 		else if( type == FieldType.PASSWORD )
 		{
@@ -259,10 +259,9 @@ public class SwingXFormImpl implements XForm
 
 	public void setValues( StringToStringMap values )
 	{
-		for( Iterator<String> i = values.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, String> entry : values.entrySet() )
 		{
-			String key = i.next();
-			setComponentValue( key, values.get( key ) );
+			setComponentValue( entry.getKey(), entry.getValue() );
 		}
 	}
 

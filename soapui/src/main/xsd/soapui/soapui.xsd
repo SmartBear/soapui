@@ -39,6 +39,9 @@
                     <xsd:element name="mockService" type="tns:MockService"
                         maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
+                    <xsd:element name="restMockService" type="tns:RESTMockService"
+                                 maxOccurs="unbounded" minOccurs="0">
+                    </xsd:element>
                     <xsd:element name="endpointStrategy" type="tns:EndpointStrategy"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
@@ -64,6 +67,9 @@
                     </xsd:element>
                     <xsd:element name="databaseConnectionContainer" type="tns:DatabaseConnectionContainer"
                         maxOccurs="1" minOccurs="0">
+                    </xsd:element>
+                    <xsd:element name="oAuth2ProfileContainer" type="tns:OAuth2ProfileContainer"
+                                 maxOccurs="1" minOccurs="0">
                     </xsd:element>
                     <xsd:element name="reporting" type="tns:ReportingType"
                         minOccurs="0" maxOccurs="1">
@@ -562,9 +568,10 @@
         			<xsd:restriction base="xsd:string">
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
-        				<xsd:enumeration value="NTLM"></xsd:enumeration>
-        				<xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
-        			</xsd:restriction>
+                        <xsd:enumeration value="NTLM"></xsd:enumeration>
+                        <xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
+                        <xsd:enumeration value="OAuth 2"></xsd:enumeration>
+                    </xsd:restriction>
         		</xsd:simpleType>
         	</xsd:element>
         </xsd:sequence>
@@ -832,13 +839,10 @@
     </xsd:complexType>
 
 
-    <xsd:complexType name="MockService">
+    <xsd:complexType name="BaseMockService">
         <xsd:complexContent>
             <xsd:extension base="tns:ModelItem">
                 <xsd:sequence>
-                    <xsd:element name="mockOperation" type="tns:MockOperation"
-                        maxOccurs="unbounded" minOccurs="0">
-                    </xsd:element>
                     <xsd:element name="startScript" type="tns:Script"
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
@@ -856,15 +860,39 @@
                     </xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="port" type="xsd:int"></xsd:attribute>
-                <xsd:attribute name="path" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="host" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="bindToHostOnly" type="xsd:boolean">
                 </xsd:attribute>
-                <xsd:attribute name="incomingWss" type="xsd:string"></xsd:attribute>
-                <xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="path" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="docroot" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="faultMockOperation" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="dispatchResponseMessages" type="xsd:boolean"></xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="MockService">
+        <xsd:complexContent>
+            <xsd:extension base="tns:BaseMockService">
+                <xsd:sequence>
+                    <xsd:element name="mockOperation" type="tns:MockOperation"
+                                 maxOccurs="unbounded" minOccurs="0">
+                    </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="incomingWss" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="RESTMockService">
+        <xsd:complexContent>
+            <xsd:extension base="tns:BaseMockService">
+                <xsd:sequence>
+                    <xsd:element name="restMockAction" type="tns:RESTMockAction"
+                                 maxOccurs="unbounded" minOccurs="0">
+                    </xsd:element>
+                </xsd:sequence>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -895,6 +923,24 @@
         </xsd:complexContent>
     </xsd:complexType>
 
+    <xsd:complexType name="RESTMockAction">
+        <xsd:complexContent>
+            <xsd:extension base="tns:ModelItem">
+                <xsd:sequence>
+                    <xsd:element name="defaultResponse" type="xsd:string"
+                                 maxOccurs="1" minOccurs="0">
+                    </xsd:element>
+                    <xsd:element name="restMockResponse" type="tns:RESTMockResponse"
+                                 maxOccurs="unbounded" minOccurs="0">
+                    </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="resourcePath" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="method" type="xsd:string"></xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+
     <xsd:complexType name="Script">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -905,35 +951,51 @@
         </xsd:simpleContent>
     </xsd:complexType>
 
-    <xsd:complexType name="MockResponse">
+    <xsd:complexType name="BaseMockResponse">
         <xsd:complexContent>
             <xsd:extension base="tns:ModelItem">
                 <xsd:sequence>
                     <xsd:element name="script" type="tns:Script" maxOccurs="1"
-                        minOccurs="0">
+                                 minOccurs="0">
                     </xsd:element>
                     <xsd:element name="responseContent" type="tns:CompressedString">
                     </xsd:element>
                     <xsd:element name="attachment" type="tns:Attachment"
-                        maxOccurs="unbounded" minOccurs="0">
+                                 maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
                     <xsd:element name="header" type="tns:Header" maxOccurs="unbounded"
-                        minOccurs="0">
-                    </xsd:element>
-                    <xsd:element name="wsaConfig" type="tns:WsaConfig"
-                        maxOccurs="1" minOccurs="0">
+                                 minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>
-                <xsd:attribute name="encoding" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="httpResponseStatus" type="xsd:string" />
-                <xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
-                <xsd:attribute name="useWsAddressing" type="xsd:boolean">
-                </xsd:attribute>
                 <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
                 <xsd:attribute name="compression" type="xsd:string"></xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
+
+    <xsd:complexType name="MockResponse">
+        <xsd:complexContent>
+            <xsd:extension base="tns:BaseMockResponse">
+                <xsd:sequence>
+                    <xsd:element name="wsaConfig" type="tns:WsaConfig"
+                        maxOccurs="1" minOccurs="0">
+                    </xsd:element>
+                </xsd:sequence>
+                <xsd:attribute name="encoding" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="useWsAddressing" type="xsd:boolean">
+                </xsd:attribute>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <xsd:complexType name="RESTMockResponse">
+        <xsd:complexContent>
+            <xsd:extension base="tns:BaseMockResponse"></xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
 
     <xsd:complexType name="Header">
         <xsd:sequence>
@@ -1873,8 +1935,47 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="OAuth2ProfileContainer">
+        <xsd:sequence>
+            <xsd:element name="oAuth2Profile" type="tns:OAuth2Profile"
+                         maxOccurs="1" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="AccessTokenStatus">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="UPDATED_MANUALLY"></xsd:enumeration>
+            <xsd:enumeration value="PENDING"></xsd:enumeration>
+            <xsd:enumeration value="WAITING_FOR_AUTHORIZATION"></xsd:enumeration>
+            <xsd:enumeration value="RECEIVED_AUTHORIZATION_CODE"></xsd:enumeration>
+            <xsd:enumeration value="FAILED"></xsd:enumeration>
+            <xsd:enumeration value="RETRIEVED_FROM_SERVER"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
 
 
+    <xsd:complexType name="OAuth2Profile">
+        <xsd:sequence>
+            <xsd:element name="clientID" type="xsd:string"></xsd:element>
+            <xsd:element name="clientSecret" type="xsd:string"></xsd:element>
+            <xsd:element name="authorizationURI" type="xsd:string"></xsd:element>
+            <xsd:element name="accessTokenURI" type="xsd:string"></xsd:element>
+            <xsd:element name="redirectURI" type="xsd:string"></xsd:element>
+            <xsd:element name="accessToken" type="xsd:string"></xsd:element>
+            <xsd:element name="accessTokenPosition" type="tns:AccessTokenPosition"></xsd:element>
+            <xsd:element name="refreshToken" type="xsd:string"></xsd:element>
+            <xsd:element name="scope" type="xsd:string"></xsd:element>
+            <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:simpleType name="AccessTokenPosition">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="QUERY"></xsd:enumeration>
+            <xsd:enumeration value="HEADER"></xsd:enumeration>
+            <xsd:enumeration value="BODY"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="ReportLevelTypes">
         <xsd:restriction base="xsd:string">

@@ -9,10 +9,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <javafx.version>2.2</javafx.version>
+        <javafx.runtime.lib.jar>${java.home}/lib/jfxrt.jar</javafx.runtime.lib.jar>
+    </properties>
+
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>4.6.4-SNAPSHOT</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>soapui</artifactId>
@@ -38,6 +43,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.4</version>
                 <inherited>true</inherited>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <archive>
                         <manifest>
@@ -96,23 +108,6 @@
                 </configuration>
             </plugin>
 
-            <!-- TODO As noticed we are NOT using the Category annotations.
-                      This is because they cause problems when running the Cucumber tests.
-                      We are thus using the standard *Test.java suffix for unit tests and
-                     *IT.java suffix for integration tests.
-                     This should be fixed. -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
-                <configuration>
-                    <systemProperties>
-                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
-                        </soapui.log4j.config>
-                    </systemProperties>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
@@ -145,29 +140,6 @@
             <version>1.1</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- TODO We are using 1.0.8 because of issue with results not
-             being shown correctly in the json report:
-             https://github.com/cucumber/gherkin/issues/165 -->
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>1.0.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>1.0.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.easytesting</groupId>
-            <artifactId>fest-swing</artifactId>
-            <version>1.2.1</version>
-            <scope>test</scope>
-        </dependency>
-
 
         <!-- XML Beans -->
 
@@ -268,84 +240,6 @@
             <version>2.0.1</version>
         </dependency>
 
-        <!-- Team dev -->
-
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>jxbrowser</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>comfyj</artifactId>
-            <version>2.9</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>winpack</artifactId>
-            <version>3.8.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-windows</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-linux64</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-linux</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner-mac</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>MozillaInterfaces</artifactId>
-            <version>3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-gecko</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-gecko15</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-ie</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>engine-webkit</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>jniwrap</artifactId>
-            <version>3.8.4</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner15-mac</artifactId>
-            <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>teamdev</groupId>
-            <artifactId>xulrunner15-windows</artifactId>
-            <version>3.3</version>
-        </dependency>
-
         <!-- Jetty -->
 
         <dependency>
@@ -422,6 +316,18 @@
             <artifactId>httpcore-nio</artifactId>
             <version>4.1.1</version>
             <type>jar</type>
+        </dependency>
+
+        <!-- Oauth2 dependencies -->
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.client</artifactId>
+            <version>0.31</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.oltu.oauth2</groupId>
+            <artifactId>org.apache.oltu.oauth2.httpclient4</artifactId>
+            <version>0.31</version>
         </dependency>
 
         <!--              -->
@@ -582,7 +488,13 @@
             <artifactId>nekohtml</artifactId>
             <version>1.9.14</version>
         </dependency>
-
+        <dependency>
+            <groupId>javafx</groupId>
+            <artifactId>jfxrt</artifactId>
+            <version>${javafx.version}</version>
+            <scope>system</scope>
+            <systemPath>${javafx.runtime.lib.jar}</systemPath>
+        </dependency>
         <!--- Added -->
 
         <dependency>
@@ -639,14 +551,6 @@
             <version>20121203</version>
         </dependency>
 
-
-        <!-- TODO Not sure if thease are needed -->
-
-        <dependency>
-            <groupId>xml-apis</groupId>
-            <artifactId>xml-apis</artifactId>
-            <version>1.0.b2</version>
-        </dependency>
 
         <!--  old http client needed by some 3rd party components -->
 

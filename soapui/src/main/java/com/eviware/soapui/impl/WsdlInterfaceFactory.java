@@ -12,10 +12,6 @@
 
 package com.eviware.soapui.impl;
 
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
@@ -31,6 +27,12 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SoapUIException;
+import org.apache.log4j.Logger;
+
+import javax.xml.namespace.QName;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 {
@@ -116,5 +118,10 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
 		}
 
 		return result;
+	}
+
+	public static void main( String[] args ) throws URISyntaxException, IOException
+	{
+		java.awt.Desktop.getDesktop().browse(new URI("http://www.sunet.se"));
 	}
 }

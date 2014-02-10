@@ -734,8 +734,16 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 			int ix = testStepList.getTestStepList().getSelectedIndex();
 
-			String name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step",
-					factory.getTestStepName() );
+			String name;
+			if( factory.promptForName() )
+			{
+				name = UISupport.prompt( "Specify name for new step", ix == -1 ? "Add Step" : "Insert Step",
+						factory.getTestStepName() );
+			}
+			else
+			{
+				name = factory.getTestStepName();
+			}
 			if( name != null )
 			{
 				TestStepConfig newTestStepConfig = factory.createNewTestStep( getModelItem(), name );

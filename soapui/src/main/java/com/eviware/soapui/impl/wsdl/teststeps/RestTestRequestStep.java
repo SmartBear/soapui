@@ -349,15 +349,17 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 	private RestResource findRestResource()
 	{
 		Project project = ModelSupport.getModelItemProject( this );
-		RestService restService = ( RestService )project.getInterfaceByName( getRequestStepConfig().getService() );
-		if( restService != null )
+		for( Interface iface : project.getInterfaceList() )
 		{
-			// get all resources with the configured path
-			for( RestResource resource : restService.getResourcesByFullPath( getRequestStepConfig().getResourcePath() ) )
-			{
-				// try to find matching method
-				if( getWsdlModelItemByName( resource.getRestMethodList(), getRequestStepConfig().getMethodName() ) != null )
-					return resource;
+			if( iface.getName().equals( getRequestStepConfig().getService() ) && iface instanceof RestService) {
+				RestService restService = (RestService) iface;
+				// get all resources with the configured path
+				for( RestResource resource : restService.getResourcesByFullPath( getRequestStepConfig().getResourcePath() ) )
+				{
+					// try to find matching method
+					if( getWsdlModelItemByName( resource.getRestMethodList(), getRequestStepConfig().getMethodName() ) != null )
+						return resource;
+				}
 			}
 		}
 		return null;
@@ -799,10 +801,11 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 		result.extractAndAddAll( "domain" );
 
 		StringToStringsMap requestHeaders = testRequest.getRequestHeaders();
-		for( String key : requestHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : requestHeaders.entrySet() )
 		{
-			for( String value : requestHeaders.get( key ) )
-				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( key, value, testRequest ), "value" );
+			for( String value : headerEntry.getValue() )
+				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( headerEntry.getKey(), value,
+						testRequest ), "value" );
 		}
 
 		return result.toArray( new PropertyExpansion[result.size()] );

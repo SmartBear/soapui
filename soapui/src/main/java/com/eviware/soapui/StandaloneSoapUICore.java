@@ -12,20 +12,18 @@
 
 package com.eviware.soapui;
 
-import java.awt.Color;
-import java.awt.Insets;
-
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
-
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBluer;
-import com.jniwrapper.PlatformContext;
+
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import java.awt.Color;
+import java.awt.Insets;
 
 public class StandaloneSoapUICore extends SwingSoapUICore
 {
@@ -74,13 +72,9 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 				getSettings().setBoolean( UISettings.NATIVE_LAF, true );
 				log.info( "Defaulting to native L&F for Mac OS X" );
 			}
-			else if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
+			else if( !getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
-			}
-			else if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
-			{
-				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 			}
 			else
 			{

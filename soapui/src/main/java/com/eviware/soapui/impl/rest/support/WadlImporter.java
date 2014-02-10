@@ -12,41 +12,6 @@
 
 package com.eviware.soapui.impl.rest.support;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import net.java.dev.wadl.x2009.x02.ApplicationDocument;
-import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
-import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
-import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
-import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
-import net.java.dev.wadl.x2009.x02.ParamStyle;
-import net.java.dev.wadl.x2009.x02.RepresentationDocument;
-import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
-import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
-import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
-import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
-import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
-
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -61,6 +26,39 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.tools.PropertyExpansionRemover;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument;
+import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
+import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
+import net.java.dev.wadl.x2009.x02.MethodDocument.Method;
+import net.java.dev.wadl.x2009.x02.ParamDocument.Param;
+import net.java.dev.wadl.x2009.x02.ParamStyle;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument;
+import net.java.dev.wadl.x2009.x02.RepresentationDocument.Representation;
+import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
+import net.java.dev.wadl.x2009.x02.ResourceTypeDocument;
+import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
+import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import javax.xml.namespace.QName;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WadlImporter
 {
@@ -82,6 +80,7 @@ public class WadlImporter
 			// XmlObject xmlObject = XmlObject.Factory.parse( new URL( wadlUrl ) );
 			XmlObject xmlObject = XmlUtils.createXmlObject( new URL( wadlUrl ) );
 
+			String content = xmlObject.xmlText();
 			Element element = ( ( Document )xmlObject.getDomNode() ).getDocumentElement();
 
 			// try to allow older namespaces
@@ -89,18 +88,15 @@ public class WadlImporter
 					&& element.getNamespaceURI().startsWith( "http://research.sun.com/wadl" ) )
 			{
 				isWADL11 = false;
-				String content = xmlObject.xmlText();
 				content = content.replaceAll( "\"" + element.getNamespaceURI() + "\"", "\"" + Constants.WADL11_NS + "\"" );
-				xmlObject = ApplicationDocument.Factory.parse( content );
 			}
 			else if( !element.getLocalName().equals( "application" )
 					|| !element.getNamespaceURI().equals( Constants.WADL11_NS ) )
 			{
 				throw new Exception( "Document is not a WADL application with " + Constants.WADL11_NS + " namespace" );
 			}
-
-			ApplicationDocument applicationDocument = ( ApplicationDocument )xmlObject
-					.changeType( ApplicationDocument.type );
+			content = PropertyExpansionRemover.removeExpansions( content );
+			ApplicationDocument applicationDocument = ApplicationDocument.Factory.parse( content );
 			application = applicationDocument.getApplication();
 
 			resourcesList = application.getResourcesList();

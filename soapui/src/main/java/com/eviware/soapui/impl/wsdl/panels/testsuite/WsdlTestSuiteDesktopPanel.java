@@ -12,31 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.panels.testsuite;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
-import com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestSuiteRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.JTestRunLog;
 import com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLogTestRunListener;
@@ -67,6 +46,25 @@ import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JToggleButton;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * DesktopPanel for WsdlTestSuite
@@ -286,8 +284,6 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
 				AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testCase.gif" ) ) );
-		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				CreateWebTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/webTestCase.gif" ) ) );
 		toolbar.addGlue();
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITEEDITOR_HELP_URL ) ) );
 		return toolbar;

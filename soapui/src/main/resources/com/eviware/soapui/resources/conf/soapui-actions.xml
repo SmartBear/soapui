@@ -106,8 +106,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.ImportTestSuiteAction"/>
     <tns:action id="StarHermesJMS"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>
-    <tns:action id="CreateWebTestAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.project.CreateWebTestAction"/>
 
     <!-- WsdlInterface Actions -->
     <tns:action id="WSToolsRegenerateJava2WsdlAction"
@@ -178,6 +176,8 @@
     <!-- RestRequest Actions -->
     <tns:action id="AddRestRequestToTestCaseAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
+    <tns:action id="AddRestRequestToMockServiceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.mock.AddRestRequestToMockServiceAction"/>
     <tns:action id="CloneRestRequestAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.request.CloneRestRequestAction"/>
     <tns:action id="RenameRestRequestAction"
@@ -220,8 +220,6 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteDownAction"/>
     <tns:action id="MoveTestSuiteUpAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
-    <tns:action id="CreateWebTestCaseAction"
-                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.CreateWebTestCaseAction"/>
 
     <!-- TestCase Actions -->
     <tns:action id="AddNewLoadTestAction"
@@ -480,7 +478,6 @@
                            keyStroke="menu T"/>
         <tns:actionMapping actionId="AddNewMockServiceAction"
                            keyStroke="menu O"/>
-        <tns:actionMapping actionId="CreateWebTestAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameProjectAction"
                            keyStroke="F2"/>
@@ -682,6 +679,8 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddRestRequestToTestCaseAction"
                            keyStroke="menu alt A" iconPath="/addToTestCase.gif"/>
+        <tns:actionMapping actionId="AddRestRequestToMockServiceAction"
+                           keyStroke="menu alt M" iconPath="/rest_request.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="CloneRestRequestAction"
                            keyStroke="F9" iconPath="/clone_request.gif"/>
@@ -1066,6 +1065,18 @@
                            keyStroke="F1" param="mock/responses.html"/>
     </tns:actionGroup>
 
+    <!-- RestMockService ActionGroup -->
+    <tns:actionGroup name="RestMockService Actions" id="RestMockServiceActions"
+                     default="ShowDesktopPanelAction">
+        <tns:actionMapping actionId="ShowDesktopPanelAction"
+                           name="Show REST MockService Editor"
+                           description="Shows the REST MockService Editor for this MockService"
+                           keyStroke="ENTER"/>
+        <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
+        <tns:actionMapping actionId="StopMockServiceAction"/>
+        <tns:actionMapping actionId="RestartMockServiceAction"/>
+    </tns:actionGroup>
 
     <!-- MultiActions Group -->
 

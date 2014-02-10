@@ -538,9 +538,9 @@ public class PropertyExpansionUtils
 		{
 			StringToObjectMap result = new StringToObjectMap();
 			Map<String, TestProperty> props = getGlobalProperties().getProperties();
-			for( String key : props.keySet() )
+			for( Map.Entry<String, TestProperty> entry : props.entrySet() )
 			{
-				result.put( key, props.get( key ) );
+				result.put( entry.getKey(), entry.getValue() );
 			}
 
 			return result;

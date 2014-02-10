@@ -36,7 +36,6 @@ public class SoapUIScriptEngineRegistry
 	public static final String DEFAULT_SCRIPT_ENGINE_ID = GroovyScriptEngineFactory.ID;
 
 	private static Map<String, SoapUIScriptEngineFactory> factories = new HashMap<String, SoapUIScriptEngineFactory>();
-	private static final Logger log = Logger.getLogger( SoapUIScriptEngineRegistry.class );
 
 	public static void registerScriptEngine( String id, SoapUIScriptEngineFactory factory )
 	{
@@ -58,10 +57,7 @@ public class SoapUIScriptEngineRegistry
 		WsdlProject project = ( WsdlProject )ModelSupport.getModelItemProject( modelItem );
 
 		String scriptEngineId = null;
-		if( project == null )
-			log.warn( "Project is null for modelItem [" + String.valueOf( modelItem )
-					+ "], using default script language [" + DEFAULT_SCRIPT_ENGINE_ID + "]" );
-		else
+		if( project != null )
 			scriptEngineId = project.getDefaultScriptLanguage();
 
 		if( StringUtils.isNullOrEmpty( scriptEngineId ) )

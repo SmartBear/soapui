@@ -192,13 +192,13 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep
 
 					StringList returnProperties = getReturnProperties();
 					Map<String, TestProperty> props = getProperties();
-					for( String key : props.keySet() )
+					for( Map.Entry<String, TestProperty> entry : props.entrySet() )
 					{
-						if( runningTestCase.hasProperty( key ) && !returnProperties.contains( key ) )
+						if( runningTestCase.hasProperty( entry.getKey() ) && !returnProperties.contains( entry.getKey() ) )
 						{
-							String value = PropertyExpander.expandProperties( testRunContext, props.get( key ).getValue() );
+							String value = PropertyExpander.expandProperties( testRunContext, entry.getValue().getValue() );
 							if( StringUtils.hasContent( value ) || !isIgnoreEmptyProperties() )
-								runningTestCase.setPropertyValue( key, value );
+								runningTestCase.setPropertyValue( entry.getKey(), value );
 						}
 					}
 

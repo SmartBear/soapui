@@ -12,14 +12,7 @@
 
 package com.eviware.soapui.support.components;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPasswordField;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
@@ -34,11 +27,40 @@ public class SimpleBindingForm extends SimpleForm
 		this.pm = pm;
 	}
 
+	/**
+	 * Appends a label and a text field to the form
+	 *
+	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
+	 * @param label The value of the label
+	 * @param tooltip The value of the text field tool tip
+	 */
 	public JTextField appendTextField( String propertyName, String label, String tooltip )
 	{
-		JTextField textField = super.appendTextField( label, tooltip );
+		return appendTextField( propertyName, label, tooltip, SimpleForm.DEFAULT_TEXT_FIELD_COLUMNS );
+	}
+
+	/**
+	 * Appends a label and a text field to the form
+	 *
+	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
+	 * @param label The value of the label
+	 * @param tooltip The value of the text field tool tip
+	 * @param textFieldColumns The number of columns to display for the text field. Should be a constant defined in SimpleForm
+	 * @see com.eviware.soapui.support.components.SimpleForm
+	 */
+	public JTextField appendTextField( String propertyName, String label, String tooltip, int textFieldColumns )
+	{
+		JTextField textField = super.appendTextField( label, propertyName, tooltip, textFieldColumns);
 		Bindings.bind( textField, pm.getModel( propertyName ) );
 		return textField;
+	}
+
+	public JLabel appendLabel( String propertyName, String label )
+	{
+		JLabel jLabel = new JLabel(  );
+		super.append( label, jLabel, "left,bottom" );
+		Bindings.bind( jLabel, pm.getModel( propertyName ) );
+		return jLabel;
 	}
 
 	public JTextArea appendTextArea( String propertyName, String label, String tooltip )

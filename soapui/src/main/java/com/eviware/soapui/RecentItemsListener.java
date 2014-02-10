@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -156,12 +157,12 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 
 		if( history.size() > 0 )
 		{
-			for( Iterator<String> i = history.keySet().iterator(); i.hasNext(); )
+			for( Map.Entry<String, String> entry : history.entrySet() )
 			{
-				String filePath = i.next();
+				String filePath = entry.getKey();
 				DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
 						SwitchWorkspaceAction.SOAPUI_ACTION_ID, null, null, false, filePath );
-				String wsName = history.get( filePath );
+				String wsName = entry.getValue();
 
 				if( SoapUI.getWorkspace().getPath().equals( filePath ) )
 					continue;
@@ -192,12 +193,12 @@ public class RecentItemsListener extends WorkspaceListenerAdapter implements Wor
 
 		if( history.size() > 0 )
 		{
-			for( Iterator<String> i = history.keySet().iterator(); i.hasNext(); )
+			for( Map.Entry<String, String> entry : history.entrySet() )
 			{
-				String filePath = i.next();
+				String filePath = entry.getKey();
 				DefaultActionMapping<WorkspaceImpl> mapping = new DefaultActionMapping<WorkspaceImpl>(
 						ImportWsdlProjectAction.SOAPUI_ACTION_ID, null, null, false, filePath );
-				String wsName = history.get( filePath );
+				String wsName = entry.getValue();
 				mapping.setName( wsName );
 				mapping.setDescription( "Switches to the [" + wsName + "] project" );
 

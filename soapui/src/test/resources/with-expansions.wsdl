@@ -1,0 +1,70 @@
+<definitions name="ForexWSDL" targetNamespace="http://localhost:5723/Forex.wsdl"
+				xmlns="http://schemas.xmlsoap.org/wsdl/"
+				xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+				xmlns:tns="http://localhost:5723/Forex.wsdl"
+				xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <types>
+        <xsd:schema targetNamespace="http://localhost:5723/Forex.wsdl"
+                    xmlns:tns="http://localhost:5723/Forex.wsdl"
+                >
+            <xsd:import namespace="http://schemas.xmlsoap.org/soap/encoding/"
+                        schemaLocation="http://schemas.xmlsoap.org/soap/encoding/"/>
+            <xsd:element name="tradeList" type="tns:ArrayOfTrades"/>
+            <xsd:element name="trade" type="tns:tradeType"/>
+            <xsd:complexType name="tradeType">
+                <xsd:sequence/>
+                <xsd:attribute name="time" type="xsd:integer"/>
+                <xsd:attribute name="poll" type="xsd:string" default="${= new java.util.Date() }"/>
+                <xsd:attribute name="name" type="xsd:string" default="${#Project#MyValue }"/>
+            </xsd:complexType><!--
+            <xsd:complexType name="ArrayOfTrades">
+                 <xsd:complexContent>
+                    <xsd:restriction base="soapenc:Array">
+                        <xsd:attribute ref="soapenc:arrayType" soapenc:arrayType="tns:tradeType[]"/>
+                    </xsd:restriction>
+                </xsd:complexContent>
+            </xsd:complexType>-->
+            <xsd:complexType name="ArrayOfTrades">
+                 <xsd:sequence>
+                      <xsd:element name="trade" type="tns:tradeType" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+                 </xsd:sequence>
+            </xsd:complexType>
+            <xsd:element name="last_time" type="xsd:integer"/>
+            <xsd:element name="max_count" type="xsd:integer"/>
+            <xsd:element name="item_count" type="xsd:integer"/>
+        </xsd:schema>
+    </types>
+    <message name="requestTrades">
+        <part element="tns:last_time" name="last_time"/>
+        <part element="tns:max_count" name="max_count"/>
+		<part element="tns:tradeList" name="tradeList"/>
+    </message>
+    <message name="tradesResponse">
+        <part element="tns:item_count" name="count"/>
+        <part element="tns:trade" name="tradeList"/>
+    </message>
+    <portType name="Forex">
+        <operation name="requestTrades">
+            <input message="tns:requestTrades"/>
+            <output message="tns:tradesResponse"/>
+        </operation>
+    </portType>
+    <binding name="Forex" type="tns:Forex">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="requestTrades">
+            <soap:operation soapAction="?"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="Forex">
+        <documentation>Forex Trader</documentation>
+        <port binding="tns:Forex" name="Forex">
+            <soap:address location="http://localhost:5723/Forex_Service.php"/>
+        </port>
+    </service>
+</definitions>

@@ -16,6 +16,7 @@ import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;

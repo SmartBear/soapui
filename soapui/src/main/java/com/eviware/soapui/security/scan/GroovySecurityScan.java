@@ -13,6 +13,7 @@
 package com.eviware.soapui.security.scan;
 
 import java.util.List;
+import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.GroovySecurityScanConfig;
@@ -204,10 +205,10 @@ public class GroovySecurityScan extends AbstractSecurityScanWithProperties
 	private StringToStringMap clearNullValues( StringToStringMap parameters )
 	{
 		StringToStringMap params = new StringToStringMap();
-		for( String key : parameters.keySet() )
+		for( Map.Entry<String, String> entry : parameters.entrySet() )
 		{
-			if( parameters.get( key ) != null )
-				params.put( key, parameters.get( key ) );
+			if( entry.getValue() != null )
+				params.put( entry.getKey(), entry.getValue() );
 		}
 		return params;
 	}

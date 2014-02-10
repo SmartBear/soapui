@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
+import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -183,6 +184,10 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			testCase = ( ( SecurityTest )modelItem ).getTestCase();
 			testSuite = testCase.getTestSuite();
 			project = testSuite.getProject();
+		}
+		else if (modelItem instanceof OAuth2Profile)
+		{
+			project = ((WsdlProject)modelItem.getParent());
 		}
 
 		// no project -> nothing

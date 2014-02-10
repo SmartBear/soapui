@@ -12,14 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
 import com.eviware.soapui.config.CredentialsConfig.AuthType.Enum;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
-import com.eviware.soapui.impl.wsdl.support.BrowserCredentials;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.impl.wsdl.support.http.NTLMSchemeFactory;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -79,11 +76,6 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter
 		if( StringUtils.isNullOrEmpty( wssPasswordType ) )
 		{
 			initRequestCredentials( context, username, settings, password, domain, authType );
-
-			if( !SoapUI.isJXBrowserDisabled() )
-			{
-				BrowserCredentials.initBrowserCredentials( username, password );
-			}
 		}
 	}
 

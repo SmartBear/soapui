@@ -206,9 +206,9 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
 	public Map<String, TestProperty> getProperties()
 	{
 		Map<String, TestProperty> map = methodParams.getProperties();
-		for( String key : map.keySet() )
+		for( Entry<String, TestProperty> entry : map.entrySet() )
 		{
-			map.put( key, getWrapper( ( RestParamProperty )map.get( key ) ) );
+			map.put( entry.getKey(), getWrapper( ( RestParamProperty )entry.getValue() ) );
 		}
 		return map;
 	}

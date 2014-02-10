@@ -17,24 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.submit.filters.EndpointRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.EndpointStrategyRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpAuthenticationRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpCompressionRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpPackagingResponseFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpProxyRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.HttpSettingsRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.PostPackagingRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.PropertyExpansionRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.RestRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.SoapHeadersRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.StripWhitespacesRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsaRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsdlPackagingRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WsrmRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WssAuthenticationRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.filters.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -76,6 +59,7 @@ public class RequestTransportRegistry
 		httpTransport.addRequestFilter( new WsaRequestFilter() );
 		httpTransport.addRequestFilter( new WsrmRequestFilter() );
 		httpTransport.addRequestFilter( new WssRequestFilter() );
+		httpTransport.addRequestFilter( new OAuth2RequestFilter() );
 
 		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )
 		{

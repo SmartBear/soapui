@@ -16,10 +16,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -269,10 +266,10 @@ public class ProxyServlet implements Servlet
 
 			// copy headers to response
 			HttpServletResponse httpServletResponse = ( HttpServletResponse )response;
-			for( String name : responseHeaders.keySet() )
+			for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
 			{
-				for( String header : responseHeaders.get( name ) )
-					httpServletResponse.addHeader( name, header );
+				for( String header : headerEntry.getValue() )
+					httpServletResponse.addHeader( headerEntry.getKey(), header );
 			}
 
 			IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpServletResponse.getOutputStream() );

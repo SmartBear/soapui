@@ -42,6 +42,7 @@ import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.model.mock.*;
 import org.apache.commons.collections.list.TreeList;
 
 import com.eviware.soapui.SoapUI;
@@ -56,11 +57,6 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEdito
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunner;
-import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -921,7 +917,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{
@@ -962,7 +958,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{

@@ -84,10 +84,10 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 	private void initRequestPartProperties( Map<String, TestProperty> properties )
 	{
 		this.properties = new HashMap<String, TestProperty>();
-		for( String key : properties.keySet() )
+		for( Map.Entry<String, TestProperty> entry : properties.entrySet() )
 		{
-			if( properties.get( key ).isRequestPart() )
-				this.properties.put( key, properties.get( key ) );
+			if( properties.get( entry.getKey() ).isRequestPart() )
+				this.properties.put( entry.getKey(), entry.getValue() );
 		}
 	}
 
