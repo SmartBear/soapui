@@ -26,7 +26,6 @@ import static org.junit.Assert.assertTrue;
 public class RestProjectStepdefs
 {
 	private final Robot robot;
-	private final FrameFixture rootWindow;
 	private final List<String> existingProjectNameList;
 	private int newProjectIndexInNavigationTree;
 	private JTreeNodeFixture currentTreeNode;
@@ -34,7 +33,10 @@ public class RestProjectStepdefs
 	public RestProjectStepdefs( ScenarioRobot runner )
 	{
 		robot = runner.getRobot();
-		rootWindow = getMainWindow( robot );
+
+		// needs to call this to get the SoapUI.workspace setup (in order to get project names below)
+		getMainWindow( robot );
+
 		//This is required to find the name of the newly created project
 		existingProjectNameList = WorkspaceUtils.getProjectNameList();
 	}
@@ -42,7 +44,7 @@ public class RestProjectStepdefs
 	@Given( "^a new REST project is created$" )
 	public void createNewRestProject()
 	{
-		RestProjectUtils.createNewRestProject( rootWindow, robot );
+		RestProjectUtils.createNewRestProject( getMainWindow( robot ), robot );
 		/*
 		FEST doesn't handle the path when the node names include /, which is generally the case in resource name in REST
 		Project. Hence we need to use the index to traverse the new projects and it's children in the navigation tree.
@@ -90,41 +92,41 @@ public class RestProjectStepdefs
 	@When( "^the user clicks on the Auth tab$" )
 	public void clickOnTheAuthTab()
 	{
-		rootWindow.toggleButton( AuthInspectorFactory.INSPECTOR_ID ).click();
+		getMainWindow( robot ).toggleButton( AuthInspectorFactory.INSPECTOR_ID ).click();
 	}
 
 	@When( "^user adds a parameter in request editor with name (.+) and value (.+)$" )
 	public void addRestParameterInRequestEditor( String name, String value )
 	{
-		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture requestEditor = findRequestEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		addNewParameter( requestEditor, robot, name, value );
 	}
 
 	@When( "^user adds a parameter in method editor with name (.+) and value (.+)$" )
 	public void addRestParameterInMethodEditor( String name, String value )
 	{
-		JPanelFixture methodEditor = findMethodEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture methodEditor = findMethodEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		addNewParameter( methodEditor, robot, name, value );
 	}
 
 	@When( "^user adds a parameter in resource editor with name (.+) and value (.+)$" )
 	public void addRestParameterInResourceEditor( String name, String value )
 	{
-		JPanelFixture resourceEditor = findResourceEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture resourceEditor = findResourceEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		addNewParameter( resourceEditor, robot, name, value );
 	}
 
 	@When( "^user changes the level to (.+) for parameter with name (.+)$" )
 	public void changesParameterLevel( String newLevel, String parameterName )
 	{
-		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture requestEditor = findRequestEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		changeParameterLevel( requestEditor, parameterName, newLevel, robot );
 	}
 
 	@Then( "^request editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyRequestEditorShowsParameter( String parameterName, String parameterValue, Integer index )
 	{
-		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture requestEditor = findRequestEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		verifyParamValues( requestEditor, index, parameterName, parameterValue );
 	}
 
@@ -137,21 +139,21 @@ public class RestProjectStepdefs
 	@Then( "^resource editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyResourceEditorShowsTheParameter( String parameterName, String parameterValue, Integer index )
 	{
-		JPanelFixture resourceEditor = findResourceEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture resourceEditor = findResourceEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		verifyParamValues( resourceEditor, index, parameterName, parameterValue );
 	}
 
 	@Then( "^method editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyMethodEditorShowsTheParameter( String parameterName, String parameterValue, Integer index )
 	{
-		JPanelFixture methodEditor = findMethodEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture methodEditor = findMethodEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		verifyParamValues( methodEditor, index, parameterName, parameterValue );
 	}
 
 	@Then( "^method editor has no parameters$" )
 	public void verifyMethodEditorHasEmptyParameterTable()
 	{
-		JPanelFixture methodEditor = findMethodEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+		JPanelFixture methodEditor = findMethodEditor( getMainWindow( robot ), newProjectIndexInNavigationTree, robot );
 		verifyEmptyTable( methodEditor );
 	}
 
@@ -201,7 +203,7 @@ public class RestProjectStepdefs
 	@Then( "^there is a \"([^\"]*)\" rest tree node$" )
 	public void there_is_a_rest_tree_node( String treePath ) throws Throwable
 	{
-		assertNotNull( findTreeNode( rootWindow, "Projects/" + RestProjectUtils.DEFAULT_PROJECT_NAME + "/" + treePath ) );
+		assertNotNull( findTreeNode( getMainWindow( robot ), "Projects/" + RestProjectUtils.DEFAULT_PROJECT_NAME + "/" + treePath ) );
 	}
 
 }
