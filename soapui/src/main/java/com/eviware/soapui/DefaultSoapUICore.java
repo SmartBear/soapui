@@ -46,7 +46,6 @@ import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.settings.WSISettings;
-import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SecurityScanUtil;
@@ -374,22 +373,6 @@ public class DefaultSoapUICore implements SoapUICore
 			StringList list = new StringList();
 			list.add( "schema@http://www.w3.org/2001/XMLSchema" );
 			settings.setString( WsdlSettings.EXCLUDED_TYPES, list.toXml() );
-		}
-
-		if( !settings.isSet( WebRecordingSettings.EXCLUDED_HEADERS ) )
-		{
-			StringList list = new StringList();
-			list.add( "Cookie" );
-			list.add( "Set-Cookie" );
-			list.add( "Referer" );
-			list.add( "Keep-Alive" );
-			list.add( "Connection" );
-			list.add( "Proxy-Connection" );
-			list.add( "Pragma" );
-			list.add( "Cache-Control" );
-			list.add( "Transfer-Encoding" );
-			list.add( "Date" );
-			settings.setString( WebRecordingSettings.EXCLUDED_HEADERS, list.toXml() );
 		}
 
 		if( settings.getString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 ).equals(
