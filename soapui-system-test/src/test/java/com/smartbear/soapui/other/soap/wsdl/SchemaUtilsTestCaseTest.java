@@ -15,8 +15,8 @@ package com.smartbear.soapui.other.soap.wsdl;
 import com.eviware.soapui.impl.wsdl.support.UrlSchemaLoader;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
-import com.eviware.soapui.support.TestCaseWithJetty;
 import com.smartbear.soapui.utils.IntegrationTest;
+import com.smartbear.soapui.utils.jetty.JettyTestCaseBase;
 import junit.framework.JUnit4TestAdapter;
 import org.apache.xmlbeans.SchemaTypeLoader;
 import org.apache.xmlbeans.XmlObject;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @Category( IntegrationTest.class )
-public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
+public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 {
 	public static junit.framework.Test suite()
 	{
@@ -47,20 +47,20 @@ public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
 	public void testHttpImport() throws Exception
 	{
 		validatePath( "/wsdls/test1/TestService.wsdl", 3 );
-		validate( "http://localhost:8082/wsdls/test1/TestService.wsdl", 3 );
+		validate( "http://localhost:" + getPort() + "/wsdls/test1/TestService.wsdl", 3 );
 	}
 
 	@Test
 	public void testHttpImport2() throws Exception
 	{
-		validate( "http://localhost:8082/wsdls/test2/TestService.wsdl", 3 );
+		validate( "http://localhost:" + getPort() + "/wsdls/test2/TestService.wsdl", 3 );
 		validatePath( "/wsdls/test2/TestService.wsdl", 3 );
 	}
 
 	@Test
 	public void testHttpImport3() throws Exception
 	{
-		validate( "http://localhost:8082/wsdls/test3/TestService.wsdl", 3 );
+		validate( "http://localhost:" + getPort() + "/wsdls/test3/TestService.wsdl", 3 );
 		validatePath( "/wsdls/test3/TestService.wsdl", 3 );
 
 	}
@@ -68,7 +68,7 @@ public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
 	@Test
 	public void testHttpImport4() throws Exception
 	{
-		validate( "http://localhost:8082/wsdls/test4/TestService.wsdl", 3 );
+		validate( "http://localhost:" + getPort() + "/wsdls/test4/TestService.wsdl", 3 );
 		validatePath( "/wsdls/test4/TestService.wsdl", 3 );
 
 	}
@@ -76,14 +76,14 @@ public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
 	@Test
 	public void testHttpImport5() throws Exception
 	{
-		validate( "http://localhost:8082/wsdls/test5/TestService.wsdl", 4 );
+		validate( "http://localhost:" + getPort() + "/wsdls/test5/TestService.wsdl", 4 );
 		validatePath( "/wsdls/test5/TestService.wsdl", 4 );
 	}
 
 	@Test
 	public void testHttpImport6() throws Exception
 	{
-		SchemaTypeLoader schemaTypes = validate( "http://localhost:8082/wsdls/test6/TestService.wsdl", 4 );
+		SchemaTypeLoader schemaTypes = validate( "http://localhost:" + getPort() + "/wsdls/test6/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
 		schemaTypes = 		validatePath( "/wsdls/test6/TestService.wsdl", 4 );
@@ -93,7 +93,7 @@ public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
 	@Test
 	public void testHttpImport7() throws Exception
 	{
-		SchemaTypeLoader schemaTypes = validate( "http://localhost:8082/wsdls/test7/TestService.wsdl", 4 );
+		SchemaTypeLoader schemaTypes = validate( "http://localhost:" + getPort() + "/wsdls/test7/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
 		schemaTypes = 		validatePath( "/wsdls/test7/TestService.wsdl", 4 );
@@ -103,7 +103,7 @@ public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
 	@Test
 	public void testHttpImport8() throws Exception
 	{
-		SchemaTypeLoader schemaTypes = validate( "http://localhost:8082/wsdls/test8/TestService.wsdl", 4 );
+		SchemaTypeLoader schemaTypes = validate( "http://localhost:" + getPort() + "/wsdls/test8/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
 		schemaTypes = 		validatePath( "/wsdls/test8/TestService.wsdl", 4 );
@@ -113,7 +113,7 @@ public class SchemaUtilsTestCaseTest extends TestCaseWithJetty
 	@Test
 	public void testHttpImport9() throws Exception
 	{
-		String url = "http://localhost:8082/wsdls/test9/testcase.wsdl";
+		String url = "http://localhost:" + getPort() + "/wsdls/test9/testcase.wsdl";
 		SchemaTypeLoader schemaTypes = SchemaUtils.loadSchemaTypes( url, new UrlWsdlLoader( url ) );
 		assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "One" ) ) );
 		assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "Two" ) ) );
