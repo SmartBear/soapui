@@ -24,6 +24,7 @@ import junit.framework.JUnit4TestAdapter;
 import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
+import org.apache.ws.security.WSSecurityEngine;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.CredentialException;
 import org.apache.ws.security.components.crypto.Merlin;
@@ -125,17 +126,19 @@ public class SignatureEntryTest {
     }
 
     @Test
-    public void testProcessBinarySecurityToken() throws WSSecurityException, XPathExpressionException {
+    public void testProcessBinarySecurityToken() throws XPathExpressionException {
         setRequiredFields();
 
         signatureEntry.process(secHeader, doc, contextMock);
 
         assertNotNull(xpath.evaluate("//wsse:BinarySecurityToken", doc, XPathConstants.NODE));
         assertNotNull(xpath.evaluate("//ds:Signature", doc, XPathConstants.NODE));
+
+        validateSignature();
     }
 
     @Test
-    public void testProcessSignedBinarySecurityToken() throws WSSecurityException, XPathExpressionException {
+    public void testProcessSignedBinarySecurityToken() throws Exception {
         setRequiredFields();
 
         StringToStringMap entry = new StringToStringMap();
@@ -149,14 +152,24 @@ public class SignatureEntryTest {
         assertNotNull(xpath.evaluate("//ds:Signature", doc, XPathConstants.NODE));
         Element reference = (Element) xpath.evaluate("//ds:Reference", doc, XPathConstants.NODE);
         assertTrue(reference.getAttribute("URI").startsWith("#X509-"));
+
+        validateSignature();
     }
 
+    private void validateSignature() {
+        try {
+            new WSSecurityEngine().processSecurityHeader(doc, null, null, crypto);
+        } catch (WSSecurityException e) {
+            throw new AssertionError("Bad signature", e);
+        }
+    }
 
     private void setRequiredFields() {
         signatureEntry.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
         signatureEntry.setSignatureAlgorithm(XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1);
         signatureEntry.setSignatureCanonicalization(WSConstants.C14N_EXCL_OMIT_COMMENTS);
         signatureEntry.setDigestAlgorithm(MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1);
+        signatureEntry.setUseSingleCert(true);
     }
 
 

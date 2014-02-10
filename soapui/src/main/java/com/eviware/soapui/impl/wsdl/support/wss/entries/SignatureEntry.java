@@ -22,6 +22,10 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSEncryptionPart;
@@ -314,7 +318,7 @@ public class SignatureEntry extends WssEntryBase
 	}
 
     /**
-     * This callback class extends the default lookups with wsse:BinarySecurityToken
+     * This callback class extends the default DOMCallbackLookup class with a hook to return the prepared wsse:BinarySecurityToken
      */
     private static class BinarySecurityTokenDOMCallbackLookup extends DOMCallbackLookup {
 
@@ -329,9 +333,15 @@ public class SignatureEntry extends WssEntryBase
         public List<Element> getElements(String localname, String namespace) throws WSSecurityException {
             List<Element> elements = super.getElements(localname, namespace);
             if (elements.isEmpty()) {
-                Element bst = wssSign.getBinarySecurityTokenElement();
-                if (localname.equals(bst.getLocalName()) && namespace.equals(bst.getNamespaceURI())) {
-                    return Collections.singletonList(bst);
+                // element was not found in document because BST was not yet added
+                if (WSConstants.BINARY_TOKEN_LN.equals(localname) && WSConstants.WSSE_NS.equals(namespace)) {
+                    try {
+                        DOMResult result = new DOMResult();
+                        TransformerFactory.newInstance().newTransformer().transform(new DOMSource(wssSign.getBinarySecurityTokenElement()), result);
+                        return Collections.singletonList(((Document) result.getNode()).getDocumentElement());
+                    } catch (TransformerException e) {
+                        SoapUI.logError(e);
+                    }
                 }
             }
             return elements;
