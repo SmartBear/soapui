@@ -1,5 +1,10 @@
 package com.eviware.soapui.utils;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import org.apache.commons.lang.StringUtils;
+
+import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -23,19 +28,12 @@ public class ContainerWalker
 
 	public AbstractButton findButtonWithIcon( String iconFile )
 	{
-		for( Component component : containedComponents )
+		AbstractButton returnedButton = ( AbstractButton )Iterables.find( containedComponents, new ButtonWithIconPredicate( iconFile ) );
+		if( returnedButton == null )
 		{
-			if( component instanceof AbstractButton )
-			{
-				AbstractButton button = ( AbstractButton )component;
-				// Hack: this relies on the toString() method of Icon to include the URL of the icon file
-				if( String.valueOf( button.getIcon() ).endsWith( "/" + iconFile ) )
-				{
-					return button;
-				}
-			}
+			throw new NoSuchElementException( "No button found with icon file " + iconFile );
 		}
-		throw new NoSuchElementException( "No button found with icon file " + iconFile );
+		return returnedButton;
 	}
 
 	// Currently unused, but probably useful
@@ -88,4 +86,54 @@ public class ContainerWalker
 		}
 		return components;
 	}
+
+	public AbstractButton findButtonWithName( String buttonName )
+	{
+		return ( AbstractButton )Iterables.find( containedComponents,
+				new ComponentClassAndNamePredicate( AbstractButton.class, buttonName ) );
+	}
+
+	private class ComponentClassAndNamePredicate implements Predicate<Component>
+	{
+
+		private Class<? extends Component> componentClass;
+		private String name;
+
+		private ComponentClassAndNamePredicate( Class<? extends Component> componentClass, String name )
+		{
+			this.componentClass = componentClass;
+			this.name = name;
+		}
+
+		@Override
+		public boolean apply( @Nullable Component component )
+		{
+			return component != null && componentClass.isAssignableFrom( component.getClass() ) &&
+					StringUtils.equals( name, component.getName() );
+		}
+
+	}
+
+	private class ButtonWithIconPredicate implements Predicate<Component>
+	{
+
+		private String iconFile;
+
+		private ButtonWithIconPredicate( String iconFile )
+		{
+			this.iconFile = iconFile;
+		}
+
+		@Override
+		public boolean apply( @Nullable Component component )
+		{
+			if( !( component instanceof AbstractButton ) )
+			{
+				return false;
+			}
+			AbstractButton button = ( AbstractButton )component;
+			return String.valueOf( button.getIcon() ).endsWith( "/" + iconFile );
+		}
+	}
+
 }
