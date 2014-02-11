@@ -103,7 +103,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 				Component component = browser.getComponent();
 				component.setMinimumSize( new Dimension( 100, 100 ) );
 				contentPanel.add( new JScrollPane( component ) );
-					}
+			}
 			setEditorContent( messageExchangeModelItem );
 		}
 		return activated;
@@ -129,8 +129,9 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 			{
 				try
 				{
+
 					String content = jproxyServletWsdlMonitorMessageExchange.getResponseContent();
-					browser.setContent( content, contentType );
+					browser.setContent( content );
 				}
 				catch( Exception e )
 				{
@@ -247,7 +248,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	{
 		if( evt.getPropertyName().equals( "messageExchange" ) )
 		{
-			if( browser != null && evt.getNewValue() != null && isActive())
+			if( browser != null && evt.getNewValue() != null )
 				setEditorContent( ( ( JProxyServletWsdlMonitorMessageExchange )evt.getNewValue() ) );
 		}
 	}
