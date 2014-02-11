@@ -12,7 +12,32 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.*;
+import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.ComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.text.JTextComponent;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -21,17 +46,6 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.text.JTextComponent;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
-import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
 
 /**
  * Utility-class for creating forms
@@ -518,7 +532,7 @@ public class SimpleForm
 
 	public JComponent getComponent( String label )
 	{
-		return ( JComponent )components.get( label );
+		return components.get( label );
 	}
 
 	public void setBorder( Border border )

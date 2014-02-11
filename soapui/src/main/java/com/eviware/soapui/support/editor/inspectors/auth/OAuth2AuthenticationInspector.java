@@ -11,10 +11,18 @@ import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.value.AbstractValueModel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JTextField;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -27,6 +35,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 	private final OAuth2Profile profile;
 	private final SimpleBindingForm oAuth2Form;
+	private JTextField clientSecretField;
 
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
@@ -94,11 +103,27 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		AbstractValueModel valueModel = oauth2Form.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
 				"getOAuth2Flow", "setOAuth2Flow" );
-		ComboBoxModel comboBoxModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
-		oauth2Form.appendComboBox( "OAuth2.0 Flow", comboBoxModel, "OAuth2.0 Authorization Flow", valueModel );
+		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
+		JComboBox oauth2FlowComboBox = oauth2Form.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
 
 		oauth2Form.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
-		oauth2Form.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
+		clientSecretField = oauth2Form.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
+		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
+		{
+			clientSecretField.setVisible( false );
+		}
+		oauth2FlowComboBox.addItemListener( new ItemListener()
+		{
+			@Override
+			public void itemStateChanged( ItemEvent e )
+			{
+				if (e.getStateChange() == ItemEvent.SELECTED)
+				{
+					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+				}
+			}
+		} );
+
 
 		oauth2Form.addSpace( GROUP_SPACING );
 
@@ -142,9 +167,4 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		return oAuth2ProfileList.get( 0 );
 	}
 
-	private void getAccessToken( ActionEvent e )
-	{
-		GetOAuthAccessTokenAction getAccessTokenAction = new GetOAuthAccessTokenAction( profile );
-		getAccessTokenAction.actionPerformed( e );
-	}
 }
