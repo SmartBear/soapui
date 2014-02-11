@@ -17,20 +17,19 @@ import com.eviware.soapui.impl.rest.actions.oauth.BrowserStateChangeListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.util.HttpURLConnection;
+import javafx.util.Callback;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -53,12 +52,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
-import java.net.URLStreamHandlerFactory;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -117,6 +111,24 @@ public class WebViewBasedBrowserComponent
 							{
 								listener.locationChanged( newLocation );
 							}
+						}
+					} );
+
+					webView.getEngine().setCreatePopupHandler( new Callback<PopupFeatures, WebEngine>()
+					{
+						@Override
+						public WebEngine call( PopupFeatures pf )
+						{
+							final WebEngine popupWebEngine = new WebEngine();
+							popupWebEngine.locationProperty().addListener( new InvalidationListener()
+							{
+								@Override
+								public void invalidated( Observable locationProperty )
+								{
+									System.out.println( popupWebEngine.getLocation() );
+								}
+							} );
+							return popupWebEngine;
 						}
 					} );
 

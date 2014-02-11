@@ -1,45 +1,42 @@
 package com.eviware.soapui.utils;
 
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
 /**
- * @author manne
+ * A matcher for REST requests with parameters.
  */
 public class RestRequestWithParamsMatcher extends TypeSafeMatcher<RestRequest>
 {
 
+	private RestRequestParamsMatcher parametersMatcher;
 	private String parameterName;
-	private String parameterValue;
+
 
 	RestRequestWithParamsMatcher( String parameterName )
 	{
 		this.parameterName = parameterName;
+		this.parametersMatcher = new RestRequestParamsMatcher( parameterName );
 	}
 
 	public RestRequestWithParamsMatcher withValue(String value)
 	{
 		RestRequestWithParamsMatcher matcherToReturn = new RestRequestWithParamsMatcher( parameterName );
-		matcherToReturn.parameterValue = value;
+		matcherToReturn.parametersMatcher = new RestRequestParamsMatcher( parameterName ).withValue( value );
 		return matcherToReturn;
 	}
 
 	@Override
 	public boolean matchesSafely( RestRequest restRequest )
 	{
-		RestParamProperty property = restRequest.getParams().getProperty( parameterName );
-		return property != null && ( parameterValue == null || parameterValue.equals( parameterValue ) );
+		return parametersMatcher.matchesSafely( restRequest.getParams() );
 	}
 
 	@Override
 	public void describeTo( Description description )
 	{
-		description.appendText( "a REST requests having a parameter named '" + parameterName + "'" );
-		if (parameterValue != null)
-		{
-			description.appendText( " with the value '" + parameterValue + "'");
-		}
+		description.appendText( "a REST request with " );
+		parametersMatcher.describeTo( description );
 	}
 }

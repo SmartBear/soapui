@@ -1,6 +1,5 @@
 package com.eviware.soapui.utils;
 
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
@@ -60,21 +59,8 @@ public class ModelItemMatchers
 		return new RestRequestWithParamsMatcher( name );
 	}
 
-	public static Matcher<RestParamsPropertyHolder> hasParameter( final String parameterName )
+	public static RestRequestParamsMatcher hasParameter( final String parameterName )
 	{
-		return new TypeSafeMatcher<RestParamsPropertyHolder>()
-		{
-			@Override
-			public boolean matchesSafely( RestParamsPropertyHolder parameters )
-			{
-				return parameters.getProperty( parameterName ) != null;
-			}
-
-			@Override
-			public void describeTo( Description description )
-			{
-				description.appendText("a parameters object containing the parameter ").appendText( parameterName );
-			}
-		};
+		return new RestRequestParamsMatcher( parameterName );
 	}
 }
