@@ -1,9 +1,14 @@
 package com.smartbear.soapui.stepdefs.rest.project;
 
+import com.eviware.soapui.impl.rest.panels.mock.RestMockResponseDesktopPanel;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.utils.ProjectUtils;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
+import com.smartbear.soapui.utils.fest.SoapProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
+import cucumber.api.PendingException;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -20,6 +25,7 @@ import static com.smartbear.soapui.utils.fest.ApplicationUtils.*;
 import static junit.framework.Assert.assertNotNull;
 import static org.fest.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -61,17 +67,22 @@ public class RestProjectStepdefs
 
 
 	@When( "^in rest (.*) context$" )
-	public void _in_tree_node_context(String context) throws Throwable
+	public void _in_rest_tree_node_context(String context) throws Throwable
 	{
 		Thread.sleep( 200 );
 		if( "resource".equals( context ) )
 		{
 			currentTreeNode = findRestResourcePopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
 		}
-		if( "request".equals( context ) )
+		else if( "request".equals( context ) )
 		{
 			currentTreeNode = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
 		}
+		else if( "mock service response".equals( context ))
+		{
+			currentTreeNode = findMockServiceResponsePopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
+		}
+
 		Thread.sleep( 200 );
 	}
 
@@ -206,4 +217,24 @@ public class RestProjectStepdefs
 		assertNotNull( findTreeNode( getMainWindow( robot ), "Projects/" + RestProjectUtils.DEFAULT_PROJECT_NAME + "/" + treePath ) );
 	}
 
+	@And( "^double clicking the current rest context$" )
+	public void double_clicking_the_current_rest_context() throws Throwable
+	{
+		currentTreeNode.doubleClick();
+	}
+
+	@When( "^in rest project tree \"([^\"]*)\"$" )
+	public void findInRESTProjectTree( String treePath ) throws Throwable
+	{
+		// Express the Regexp above with the code you wish you had
+		currentTreeNode = ProjectUtils.getTreeNode( getMainWindow( robot ), treePath );
+	}
+
+	@Then( "^a rest mock response editor should be shown$" )
+	public void restMockResponseEditorShouldBeShown() throws Throwable
+	{
+		String panelName = RestMockResponseDesktopPanel.REST_MOCK_RESPONSE_PANEL_NAME;
+		JPanelFixture panel = getMainWindow( robot ).panel( panelName );
+		assertThat( panel, notNullValue() );
+	}
 }

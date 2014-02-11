@@ -1,19 +1,25 @@
 package com.smartbear.soapui.stepdefs.application;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.ConsoleDialogs;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.ApplicationUtils;
 import com.smartbear.soapui.utils.fest.FestMatchers;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
-import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JButtonFixture;
+
+import java.util.List;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.closeApplicationWithoutSaving;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
@@ -70,12 +76,37 @@ public class ApplicationStepdefs
 	}
 
 	@When( "^click \"([^\"]*)\" in \"([^\"]*)\" dialog$" )
-	public void click_in_dialog( String buttonLabel, String dialogTitle ) throws Throwable
+	public void clickInDialog( String buttonLabel, String dialogTitle ) throws Throwable
 	{
 		DialogFixture dialog = FestMatchers.dialogWithTitle( dialogTitle ).withTimeout( 500 ).using( robot );
 		dialog.textBox().focus();
 
 		JButtonFixture button = dialog.button( FestMatchers.buttonWithText( buttonLabel ) );
 		button.click();
+	}
+
+	@Given( "^a (.*) is imported$" )
+	public void fileIsImported( String fileName ) throws Throwable
+	{
+		String fileNameWithFullPath = ApplicationStepdefs.class.getResource( "/soapui-projects/" + fileName ).getFile();
+		getMainWindow( robot );
+
+		importOrReloadProject( fileNameWithFullPath );
+	}
+
+	private void importOrReloadProject( String fileNameWithFullPath ) throws SoapUIException
+	{
+		Workspace workspace = SoapUI.getWorkspace();
+
+		for( Project project : workspace.getProjectList() )
+		{
+			if( project.getPath().equals( fileNameWithFullPath ) )
+			{
+				((WsdlProject)project).reload( fileNameWithFullPath );
+				return;
+			}
+		}
+
+		workspace.importProject( fileNameWithFullPath );
 	}
 }

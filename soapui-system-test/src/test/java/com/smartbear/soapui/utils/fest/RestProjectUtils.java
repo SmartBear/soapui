@@ -40,6 +40,7 @@ public final class RestProjectUtils
 	private static final int REST_RESOURCE_POSITION_IN_TREE = 3;
 	private static final int REST_REQUEST_POSITION_IN_TREE = 5;
 	private static final int REST_METHOD_POSITION_IN_TREE = 4;
+	private static final int REST_MOCK_SERVICE_RESPONSE_POSITION_IN_TREE = 4;
 	public static final String DEFAULT_PROJECT_NAME = "REST Project 1";
 
 
@@ -63,6 +64,11 @@ public final class RestProjectUtils
 	public static JTreeRowFixture findRestRequestPopupMenu( FrameFixture rootWindow, int projectIndexInTree )
 	{
 		return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE ).rightClick();
+	}
+
+	public static JTreeRowFixture findMockServiceResponsePopupMenu( FrameFixture rootWindow, int projectIndexInTree )
+	{
+		return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_MOCK_SERVICE_RESPONSE_POSITION_IN_TREE ).rightClick();
 	}
 
    public static JTreeRowFixture findRestResourcePopupMenu( FrameFixture rootWindow, int projectIndexInTree )

@@ -1,5 +1,8 @@
 @Automated @Regression
 Feature: Add rest mock service
+    As Mark I would like to Mock away third party API calls
+    and therefore, I would like to create REST mock services easily
+
 
   Scenario: Option is available from rest operation context
     Given SoapUI is started
@@ -27,3 +30,11 @@ Feature: Add rest mock service
     Then there is a "MockService 1" rest tree node
     And there is a "MockService 1/Sub-resource Request 1" rest tree node
     And there is a "MockService 1/Sub-resource Request 1/Response 1" rest tree node
+
+  Scenario: View mock response editor
+    Given SoapUI is started
+    And a rest-project-with-mock-service.xml is imported
+    When in rest project tree "Projects/REST Project 1 Regression/MockService 1/Xml Request 1/Response 1"
+    And double clicking the current rest context
+    Then a rest mock response editor should be shown
+

@@ -12,6 +12,7 @@
 package com.smartbear.soapui.utils.fest;
 
 import com.eviware.soapui.SoapUI;
+import com.smartbear.soapui.utils.ProjectUtils;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.*;
 
@@ -22,6 +23,7 @@ public final class SoapProjectUtils
 {
 	public static final String ROOT_FOLDER = SoapProjectUtils.class.getResource( "/" ).getPath();
 
+	public static final int NEW_PROJECT_TIMEOUT = 2000;
 	private static final String NEW_SOAP_PROJECT_MENU_ITEM_NAME = "New SOAP Project";
 	private static final String NEW_SOAP_PROJECT_DIALOG_NAME = "New SOAP Project";
 	private static final String OK_BUTTON_NAME = "OK";
@@ -34,7 +36,6 @@ public final class SoapProjectUtils
 	private static final String OPERATION_NAME = "geocode";
     //private static final String OPERATION_NAME = "xml";
 	private static final String REQUEST_NAME = "Request 1";
-	private static final int NEW_PROJECT_TIMEOUT = 2000;
 
 	private SoapProjectUtils()
 	{
@@ -49,28 +50,18 @@ public final class SoapProjectUtils
 
 	public static void openRequestEditor( FrameFixture rootWindow )
 	{
-		JTreeNodeFixture node = getTreeNode( rootWindow, getOperationPath() );
+		JTreeNodeFixture node = ProjectUtils.getTreeNode( rootWindow, getOperationPath() );
 		node.doubleClick();
-	}
-
-	private static JTreeNodeFixture getTreeNode( FrameFixture rootWindow, String path )
-	{
-		JTreeFixture tree = WorkspaceUtils.getNavigatorPanel( rootWindow ).tree();
-
-		waitForProjectToLoad();
-
-		tree.expandPath( getOperationPath() );
-		return tree.node( path );
 	}
 
 	public static JTreeNodeFixture findSoapOperationPopupMenu( FrameFixture rootWindow )
 	{
-		return getTreeNode( rootWindow, getOperationPath() );
+		return ProjectUtils.getTreeNode( rootWindow, getOperationPath() );
 	}
 
 	public static JTreeNodeFixture findSoapRequestPopupMenu( FrameFixture rootWindow )
 	{
-		return getTreeNode( rootWindow, getRequestPath() );
+		return ProjectUtils.getTreeNode( rootWindow, getRequestPath() );
 	}
 
 	private static String getOperationPath()
@@ -100,18 +91,5 @@ public final class SoapProjectUtils
 
 		JButtonFixture buttonOK = newProjectDialog.button( FestMatchers.buttonWithText( OK_BUTTON_NAME ) );
 		buttonOK.click();
-	}
-
-	// There might be a more elegant way to wait
-	private static void waitForProjectToLoad()
-	{
-		try
-		{
-			Thread.sleep( NEW_PROJECT_TIMEOUT );
-		}
-		catch( InterruptedException e )
-		{
-			e.printStackTrace();
-		}
 	}
 }
