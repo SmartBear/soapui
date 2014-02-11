@@ -78,4 +78,10 @@ class OAuth2Parameters
 		profile.applyRetrievedAccessToken( accessToken );
 	}
 
+	public OAuth2Profile.OAuth2Flow getOAuth2Flow()
+	{
+		return profile.getOAuth2Flow();
+	}
+
+
 }
