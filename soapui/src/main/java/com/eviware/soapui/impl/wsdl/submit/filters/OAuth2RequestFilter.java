@@ -12,11 +12,14 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.TimeUtils;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.log4j.Logger;
 
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
+	protected final static Logger log = Logger.getLogger( OAuth2RequestFilter.class );
+
 	@Override
 	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
 	{
@@ -71,7 +74,11 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 	{
 		try
 		{
+			log.info( "The access token has expired, trying to refresh it." );
+
 			oAuth2Client.refreshAccessToken( profile );
+
+			log.info( "The access token has been refreshed successfully." );
 		}
 		catch( Exception e )
 		{
