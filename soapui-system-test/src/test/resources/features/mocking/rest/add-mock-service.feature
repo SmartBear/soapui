@@ -28,5 +28,3 @@ Feature: Add rest mock service
     When in rest project tree "Projects/REST Project 1 Regression/MockService 1/Xml Request 1/Response 1"
     And double clicking the current rest context
     Then a rest mock response editor should be shown
-
-cko
