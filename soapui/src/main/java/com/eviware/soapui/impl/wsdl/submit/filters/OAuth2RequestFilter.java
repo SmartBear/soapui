@@ -82,7 +82,8 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "Unable to refresh expired access token." );
+			//Propogate it up so that it is shown as a failure message in test case log
+			throw new RuntimeException( "Unable to refresh expired access token.", e );
 		}
 	}
 }
