@@ -17,7 +17,6 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.smartbear.soapui.utils.IntegrationTest;
 import com.smartbear.soapui.utils.jetty.JettyTestCaseBase;
-import junit.framework.JUnit4TestAdapter;
 import org.apache.xmlbeans.SchemaTypeLoader;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Test;
@@ -29,13 +28,9 @@ import java.util.Map;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@Category( IntegrationTest.class )
-public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
+@Category(IntegrationTest.class)
+public class SchemaUtilsTest extends JettyTestCaseBase
 {
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( SchemaUtilsTestCaseTest.class );
-	}
 
 	@Test
 	public void testFileImport() throws Exception
@@ -86,7 +81,7 @@ public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 		SchemaTypeLoader schemaTypes = validate( "http://localhost:" + getPort() + "/wsdls/test6/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
-		schemaTypes = 		validatePath( "/wsdls/test6/TestService.wsdl", 4 );
+		schemaTypes = validatePath( "/wsdls/test6/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 	}
 
@@ -96,7 +91,7 @@ public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 		SchemaTypeLoader schemaTypes = validate( "http://localhost:" + getPort() + "/wsdls/test7/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
-		schemaTypes = 		validatePath( "/wsdls/test7/TestService.wsdl", 4 );
+		schemaTypes = validatePath( "/wsdls/test7/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 	}
 
@@ -106,7 +101,7 @@ public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 		SchemaTypeLoader schemaTypes = validate( "http://localhost:" + getPort() + "/wsdls/test8/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 
-		schemaTypes = 		validatePath( "/wsdls/test8/TestService.wsdl", 4 );
+		schemaTypes = validatePath( "/wsdls/test8/TestService.wsdl", 4 );
 		assertNotNull( schemaTypes.findType( new QName( "http://schemas.eviware.com/TestService/v2/", "TestType" ) ) );
 	}
 
@@ -120,7 +115,7 @@ public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 		assertNotNull( schemaTypes.findType( new QName( "http://testcase/one", "OneType" ) ) );
 		assertNotNull( schemaTypes.findType( new QName( "http://testcase/two", "TwoType" ) ) );
 
-		url = SchemaUtilsTestCaseTest.class.getResource( "/wsdls/test9/testcase.wsdl" ).toURI().toURL().toString();
+		url = SchemaUtilsTest.class.getResource( "/wsdls/test9/testcase.wsdl" ).toURI().toURL().toString();
 		schemaTypes = SchemaUtils.loadSchemaTypes( url, new UrlWsdlLoader( url ) );
 		assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "One" ) ) );
 		assertNotNull( schemaTypes.findElement( new QName( "http://testcase/wsdl", "Two" ) ) );
@@ -129,7 +124,7 @@ public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 	@Test
 	public void testWadlImport() throws Exception
 	{
-		String file = SchemaUtilsTestCaseTest.class.getResource( "/wadl/YahooSearch.wadl" ).toURI().toURL().toString();
+		String file = SchemaUtilsTest.class.getResource( "/wadl/YahooSearch.wadl" ).toURI().toURL().toString();
 		SchemaTypeLoader types = SchemaUtils.loadSchemaTypes( file, new UrlSchemaLoader( file ) );
 
 		assertNotNull( types.findElement( new QName( "urn:yahoo:yn", "ResultSet" ) ) );
@@ -143,7 +138,7 @@ public class SchemaUtilsTestCaseTest extends JettyTestCaseBase
 
 	private SchemaTypeLoader validatePath( String wsdlPath, int count ) throws Exception
 	{
-		return validate( SchemaUtilsTestCaseTest.class.getResource( wsdlPath ).toURI().toURL().toString(), count );
+		return validate( SchemaUtilsTest.class.getResource( wsdlPath ).toURI().toURL().toString(), count );
 	}
 
 	private SchemaTypeLoader validate( String url, int cnt ) throws Exception

@@ -8,7 +8,7 @@ xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
 xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" 
 targetNamespace="http://schemas.eviware.com/TestService/v1/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
  
-   <wsdl:import namespace="http://schemas.eviware.com/TestService/v1/" location="http://localhost:8082/wsdls/test7/wsdls/TestBinding.wsdl"/>
+   <wsdl:import namespace="http://schemas.eviware.com/TestService/v1/" location="wsdls/TestBinding.wsdl"/>
  
   <wsdl:service name="TestService">
     <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
