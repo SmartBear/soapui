@@ -12,6 +12,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Hamcrest matchers for common data types.
@@ -105,6 +106,24 @@ public class CommonMatchers
 			public void describeTo( Description description )
 			{
 				description.appendText( "an empty collection" );
+			}
+		};
+	}
+
+	public static Matcher<Map> anEmptyMap()
+	{
+		return new TypeSafeMatcher<Map>()
+		{
+			@Override
+			public boolean matchesSafely( Map collection)
+			{
+				return collection.isEmpty();
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an empty map" );
 			}
 		};
 	}
