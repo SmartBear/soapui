@@ -123,10 +123,13 @@ public class SignatureEntryTest {
         when(contextMock.expand(ALIAS)).thenReturn(ALIAS);
         when(contextMock.expand(KEY_PASSWORD)).thenReturn(KEY_PASSWORD);
         when(contextMock.expand(ISSUER)).thenReturn(ISSUER);
+        when(contextMock.expand("Assertion-01")).thenReturn("Assertion-01");
+        when(contextMock.expand(WSConstants.WSS_SAML_KI_VALUE_TYPE)).thenReturn(WSConstants.WSS_SAML_KI_VALUE_TYPE);
     }
 
     @Test
     public void testProcessBinarySecurityToken() throws XPathExpressionException {
+        signatureEntry.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
         setRequiredFields();
 
         signatureEntry.process(secHeader, doc, contextMock);
@@ -139,6 +142,7 @@ public class SignatureEntryTest {
 
     @Test
     public void testProcessSignedBinarySecurityToken() throws Exception {
+        signatureEntry.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
         setRequiredFields();
 
         StringToStringMap entry = new StringToStringMap();
@@ -156,6 +160,25 @@ public class SignatureEntryTest {
         validateSignature();
     }
 
+    @Test
+    public void testProcessCustomToken() throws Exception {
+        signatureEntry.setKeyIdentifierType(WSConstants.CUSTOM_KEY_IDENTIFIER);
+        signatureEntry.setCustomTokenId("Assertion-01");
+        signatureEntry.setCustomTokenValueType(WSConstants.WSS_SAML_KI_VALUE_TYPE);
+        setRequiredFields();
+
+        // this is the only test which uses another SOAP envelope with prepared SAML assertion.
+        doc = XmlUtils.parseXml(TestUtils.SAMPLE_SOAP_MESSAGE_CUSTOM_TOKEN);
+        secHeader = new WSSecHeader();
+        secHeader.insertSecurityHeader(doc);
+
+        signatureEntry.process(secHeader, doc, contextMock);
+        System.out.println(TestUtils.SAMPLE_SOAP_MESSAGE_CUSTOM_TOKEN);
+        System.out.println(XmlUtils.serialize(doc));
+        assertNotNull(xpath.evaluate("//ds:Signature", doc, XPathConstants.NODE));
+        validateSignature();
+    }
+
     private void validateSignature() {
         try {
             new WSSecurityEngine().processSecurityHeader(doc, null, null, crypto);
@@ -165,7 +188,6 @@ public class SignatureEntryTest {
     }
 
     private void setRequiredFields() {
-        signatureEntry.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
         signatureEntry.setSignatureAlgorithm(XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1);
         signatureEntry.setSignatureCanonicalization(WSConstants.C14N_EXCL_OMIT_COMMENTS);
         signatureEntry.setDigestAlgorithm(MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1);
