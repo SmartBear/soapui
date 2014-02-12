@@ -26,7 +26,6 @@ public class CucumberFestRunner
 	public static void setUp()
 	{
 		System.out.println("Installing jvm exit protection");
-		System.setProperty( "soapui.jxbrowser.disable", "true" );
 		noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager( new ExitCallHook()
 		{
 			@Override
