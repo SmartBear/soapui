@@ -5,14 +5,5 @@ Feature: Add SOAP mock service
     Given SoapUI is started
     And a new SOAP project is created
     When in soap operation context
-    And right clicking the current soap context
-    Then “Add to MockService” soap option is available
-    And close SoapUI
-
-  Scenario: Add mock service option available in soap request context
-    Given SoapUI is started
-    And a new SOAP project is created
-    When in soap request context
-    And right clicking the current soap context
-    Then “Add to MockService” soap option is available
+    Then “Add to MockService” option is available
     And close SoapUI

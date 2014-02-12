@@ -1,7 +1,5 @@
 package com.smartbear.soapui.cucumber;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.project.Project;
 import com.smartbear.soapui.utils.IntegrationTest;
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -11,8 +9,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
-
-import java.util.List;
 
 @Category( IntegrationTest.class )
 @RunWith( Cucumber.class )
@@ -50,5 +46,4 @@ public class CucumberFestRunner
 		System.out.println( "Shuting down jvm exit protection" );
 		noExitSecurityManagerInstaller.uninstall();
 	}
-
 }
