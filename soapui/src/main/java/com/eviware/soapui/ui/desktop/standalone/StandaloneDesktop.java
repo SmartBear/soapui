@@ -738,7 +738,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		private boolean outsideDesktop( JComponent desktopPanel, int newX, int newY )
 		{
-			return newX < 0 || newY < 0 || ( newX > desktopPanel.getWidth() ) || ( newY > desktopPanel.getHeight() );
+			return newY < 0 || ( newX > desktopPanel.getWidth() ) || ( newY > desktopPanel.getHeight() );
 		}
 
 		private Point findPositionInsideDesktop( JComponent f, int newX, int newY )
