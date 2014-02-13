@@ -5,6 +5,7 @@
 * Importing WSDL protected by Basic HTTP Authentication is now possible again (SOAP-1331)
 * (Pro only) JSON converted to XML in some cases (SOAP-1219)
 * XML conversion fails for JSON value whose name starts with digit (SOAP-1405)
+* Memory log panel shows correct total memory for sizes above 2GB (SOAP-1574)
 
 -------------------------------------------------------------------------------
 
