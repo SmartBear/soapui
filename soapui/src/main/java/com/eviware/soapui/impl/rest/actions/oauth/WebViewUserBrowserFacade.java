@@ -38,20 +38,6 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		popupWindow.setBounds( 100, 100, 800, 600 );
 		popupWindow.setVisible( true );
 
-		addBrowserStateListener( new BrowserStateChangeListener()
-		{
-			@Override
-			public void locationChanged( String newLocation )
-			{
-			}
-
-			@Override
-			public void contentChanged( String newContent )
-			{
-
-			}
-		} );
-
 		browserComponent.navigate( url.toString(), null );
 	}
 
@@ -89,6 +75,12 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 			SoapUI.log.debug( "Could not close window due to unexpected error: " + e.getMessage() + "!" );
 		}
 
+	}
+
+	@Override
+	public void executeJavaScript( String script )
+	{
+		browserComponent.executeJavaScript(script);
 	}
 
 }

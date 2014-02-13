@@ -18,6 +18,8 @@ import com.eviware.soapui.support.SoapUIException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -73,6 +75,24 @@ public class OAuth2ParametersTest
 		assertThat( parameters.clientSecret, is( project.getPropertyValue( CLIENT_SECRET_PROPERTY_NAME ) ) );
 		assertThat( parameters.scope, is( project.getPropertyValue( SCOPE_PROPERTY_NAME ) ) );
 		assertThat( parameters.refreshToken, is( project.getPropertyValue( REFRESH_TOKEN_PROPERTY_NAME ) ) );
+	}
+
+	@Test
+	public void performsPropertyExpansionInJavaScripts() throws Exception
+	{
+		final String userNamePropertyName = "OAuth_User";
+		final String userName = "our.google.user";
+		WsdlProject project = profile.getContainer().getProject();
+		project.addProperty( userNamePropertyName ).setValue( userName );
+		String javaScriptWithExpansion = "document.getElementById('usr').value='${#Project#" + userNamePropertyName + "}'";
+		profile.setJavaScripts( Arrays.asList(javaScriptWithExpansion) );
+
+
+
+		OAuth2Parameters parameters = new OAuth2Parameters( profile );
+
+		String expectedExpandedJavaScript = "document.getElementById('usr').value='" + userName + "'";
+		assertThat( parameters.getJavaScripts().get(0), is(expectedExpandedJavaScript) );
 	}
 
 

@@ -12,7 +12,11 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.AccessTokenPositionConfig;
+import com.eviware.soapui.config.AccessTokenRetrievalLocationConfig;
+import com.eviware.soapui.config.AccessTokenStatusConfig;
+import com.eviware.soapui.config.OAuth2FlowConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -20,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Encapsulates values associated with an Oauth2 flow. Mostly they will be input by users, but the "accessToken" and
@@ -91,6 +97,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
 	private final OAuth2ProfileConfig configuration;
 	private final PropertyChangeSupport pcs;
+	private List<String> javaScripts = new ArrayList<String>(  );
+
 
 	public OAuth2Profile( OAuth2ProfileContainer oAuth2ProfileContainer, OAuth2ProfileConfig configuration )
 	{
@@ -383,6 +391,16 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		result.extractAndAddAll( SCOPE_PROPERTY );
 
 		return result.toArray();
+	}
+
+	public List<String> getJavaScripts()
+	{
+		return javaScripts;
+	}
+
+	public void setJavaScripts( List<String> javaScripts )
+	{
+		this.javaScripts = javaScripts;
 	}
 
 	public void addPropertyChangeListener( PropertyChangeListener listener )

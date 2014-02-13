@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.Map;
 
 import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2ParameterValidator.validateRequiredStringValue;
@@ -44,7 +45,13 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		{
 			OAuth2Parameters parameters = buildParametersFrom( profile );
 			OAuth2ParameterValidator.validate( parameters );
-
+			// Hardcoded script for Google OAuth 2 flow
+			// Enter Google user name and password in the scripts below to make this work
+			profile.setJavaScripts( Arrays.asList(
+					"document.getElementById('Email').value = '<user_name_here!>';" +
+							"document.getElementById('Passwd').value = '<password_here!>';" +
+							"document.getElementById('gaia_loginform').submit();",
+					"document.getElementById('submit_approve_access').click()") );
 			switch( profile.getOAuth2Flow() )
 			{
 				case IMPLICIT_GRANT:

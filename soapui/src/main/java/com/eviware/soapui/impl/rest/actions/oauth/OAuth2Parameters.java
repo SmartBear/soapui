@@ -1,7 +1,11 @@
 package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.google.common.collect.Lists;
+
+import java.util.List;
 
 /**
  * Wrapper class that performs property expansion on the values in an OAuth2Profile instance.
@@ -95,5 +99,10 @@ class OAuth2Parameters
 		return profile.getOAuth2Flow();
 	}
 
+	public List<String> getJavaScripts()
+	{
+		WsdlProject project = profile.getContainer().getProject();
+		return Lists.transform( profile.getJavaScripts(), new PropertyExpansionFunction( project ) );
+	}
 
 }

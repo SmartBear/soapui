@@ -18,6 +18,7 @@ import org.apache.oltu.oauth2.httpclient4.HttpClient4;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 /**
  *
@@ -35,8 +36,8 @@ public class OAuth2TokenExtractor
 	void extractAccessTokenForAuthorizationCodeGrantFlow( final OAuth2Parameters parameters ) throws URISyntaxException,
 			MalformedURLException, OAuthSystemException
 	{
-		{
-			browserFacade.addBrowserStateListener( new BrowserStateChangeListener()
+		addBrowserInteractionHandler( parameters );
+		browserFacade.addBrowserStateListener( new BrowserStateChangeListener()
 			{
 				@Override
 				public void locationChanged( String newLocation )
@@ -54,42 +55,47 @@ public class OAuth2TokenExtractor
 						getAccessTokenAndSaveToProfile( parameters, extractAuthorizationCodeFromTitle( title ) );
 					}
 				}
-
 			} );
 			parameters.startAccessTokenFlow();
 			browserFacade.open( new URI( createAuthorizationURL( parameters, CODE ) ).toURL() );
 			parameters.waitingForAuthorization();
-		}
-
 	}
 
-	void extractAccessTokenForImplicitGrantFlow(final OAuth2Parameters parameters) throws OAuthSystemException,
+	private void addBrowserInteractionHandler( OAuth2Parameters parameters )
+	{
+		if (parameters.getJavaScripts().isEmpty())
+		{
+			return;
+		}
+		browserFacade.addBrowserStateListener( new BrowserInteractionMonitor( parameters.getJavaScripts() ) );
+	}
+
+	void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
 			URISyntaxException, MalformedURLException
 	{
+		addBrowserInteractionHandler( parameters );
+		browserFacade.addBrowserStateListener( new BrowserStateChangeListener()
 		{
-			browserFacade.addBrowserStateListener( new BrowserStateChangeListener()
+			@Override
+			public void locationChanged( String newLocation )
 			{
-				@Override
-				public void locationChanged( String newLocation )
+				String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), ACCESS_TOKEN );
+				if( !StringUtils.isNullOrEmpty( accessToken ) )
 				{
-					String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), ACCESS_TOKEN );
-					if( !StringUtils.isNullOrEmpty( accessToken ))
-					{
-						parameters.setAccessTokenInProfile( accessToken );
-						browserFacade.close();
-					}
+					parameters.setAccessTokenInProfile( accessToken );
+					browserFacade.close();
 				}
+			}
 
-				@Override
-				public void contentChanged( String newContent )
-				{
-				}
+			@Override
+			public void contentChanged( String newContent )
+			{
+			}
 
-			} );
-			parameters.startAccessTokenFlow();
-			browserFacade.open( new URI( createAuthorizationURL( parameters, TOKEN ) ).toURL() );
-			parameters.waitingForAuthorization();
-		}
+		} );
+		parameters.startAccessTokenFlow();
+		browserFacade.open( new URI( createAuthorizationURL( parameters, TOKEN ) ).toURL() );
+		parameters.waitingForAuthorization();
 	}
 
 	void refreshAccessToken( OAuth2Parameters parameters ) throws OAuthProblemException, OAuthSystemException
@@ -134,9 +140,9 @@ public class OAuth2TokenExtractor
 		}
 
 		int hashIndex = url.indexOf( "#" );
-		if(hashIndex!=-1)
+		if( hashIndex != -1 )
 		{
-			return url.substring( hashIndex+1 );
+			return url.substring( hashIndex + 1 );
 		}
 		return "";
 	}
@@ -201,5 +207,32 @@ public class OAuth2TokenExtractor
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	private class BrowserInteractionMonitor implements BrowserStateChangeListener
+	{
+		private final List<String> javaScripts;
+		int pageIndex = 0;
+
+		public BrowserInteractionMonitor( List<String> javaScripts )
+		{
+			this.javaScripts = javaScripts;
+		}
+
+		@Override
+		public void locationChanged( String newLocation )
+		{
+		}
+
+		@Override
+		public void contentChanged( String newContent )
+		{
+			if( javaScripts.size() > pageIndex )
+			{
+				browserFacade.executeJavaScript( javaScripts.get( pageIndex ) );
+				pageIndex++;
+			}
+		}
+
 	}
 }

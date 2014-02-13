@@ -196,6 +196,24 @@ public class WebViewBasedBrowserComponent
 		);
 	}
 
+	public void executeJavaScript( final String script )
+	{
+		Platform.runLater( new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					webView.getEngine().executeScript( script );
+				}
+				catch( Exception e )
+				{
+					SoapUI.log.warn("Error executing JavaScript", e );
+				}
+			}
+		} );
+	}
+
 	// TODO: Evaluate whether these should be used
 	private class BackAction extends AbstractAction
 	{

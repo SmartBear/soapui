@@ -27,4 +27,6 @@ interface UserBrowserFacade
 	void removeBrowserStateListener(BrowserStateChangeListener listener);
 
 	void close();
+
+	void executeJavaScript( String script );
 }
