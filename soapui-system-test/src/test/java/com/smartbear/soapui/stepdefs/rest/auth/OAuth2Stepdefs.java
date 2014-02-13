@@ -66,13 +66,13 @@ public class OAuth2Stepdefs
 	}
 
 	@When( "^user selects access token position (.+)$" )
-	public void selectAccessTokenPosition(String accessTokenPosition)
+	public void selectAccessTokenPosition( String accessTokenPosition )
 	{
 		getAdvanceDialogFixture().radioButton( accessTokenPosition ).click();
 	}
 
 	@When( "^user selects access token retrieval location (.+)$" )
-	public void selectAccessTokenRetrievalLocation(String accessTokenRetrievalLocation)
+	public void selectAccessTokenRetrievalLocation( String accessTokenRetrievalLocation )
 	{
 		getAdvanceDialogFixture().radioButton( accessTokenRetrievalLocation ).click();
 	}
@@ -91,6 +91,23 @@ public class OAuth2Stepdefs
 		closeAdvanceOptionsDialog();
 	}
 
+	@When( "^enters the access token$" )
+	public void entersTheAccessToken()
+	{
+		rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_PROPERTY ).setText( ACCESS_TOKEN );
+	}
+
+	@When( "^clicks on the disclosure button$" )
+	public void clickOnDisclosureButton()
+	{
+		throw new UnsupportedOperationException( "Not yet implemented!!" );
+	}
+
+	@When( "clicks outside of the Get Access token form$" )
+	public void clickOutsideOfTheGetAccessTokenForm()
+	{
+		throw new UnsupportedOperationException( "Not yet implemented!!" );
+	}
 
 	@Then( "^the OAuth 2 option is not visible in the Authentication Type dropdown$" )
 	public void verifyThatOAuth2OptionIsNotShownInAuthenticationDropdown()
@@ -106,16 +123,29 @@ public class OAuth2Stepdefs
 	}
 
 	@Then( "^access token position is (.+)$" )
-	public void verifyAccessTokenPosition(String expectedAccessTokenPosition)
+	public void verifyAccessTokenPosition( String expectedAccessTokenPosition )
 	{
 		getAdvanceDialogFixture().radioButton( expectedAccessTokenPosition ).requireSelected();
 	}
 
 	@Then( "^access token retrieval location is (.+)$" )
-	public void verifyAccessTokenRetrievalLocation(String expectedAccessTokenRetrievalLocation)
+	public void verifyAccessTokenRetrievalLocation( String expectedAccessTokenRetrievalLocation )
 	{
 		getAdvanceDialogFixture().radioButton( expectedAccessTokenRetrievalLocation ).requireSelected();
 	}
+
+	@Then( "^access token is present$" )
+	public void verifyThatAccessTokenIsPresent()
+	{
+		assertThat( rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_PROPERTY ).text(), is( ACCESS_TOKEN ) );
+	}
+
+	@Then( "the Get Access token form is closed$" )
+	public void verifyThatTheAccessTokenFormIsNotVisible()
+	{
+		throw new UnsupportedOperationException( "Not yet implemented!!" );
+	}
+
 
 	private void closeAdvanceOptionsDialog()
 	{
