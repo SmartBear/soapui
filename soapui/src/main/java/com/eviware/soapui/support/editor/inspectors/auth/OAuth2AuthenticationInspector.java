@@ -110,9 +110,10 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 			{
 				JButton source = ( JButton )e.getSource();
 				Point disclosureButtonLocation = source.getLocationOnScreen();
+				accessTokenFormDialog.pack();
+				accessTokenFormDialog.setVisible( true );
 
-				accessTokenFormDialog.setVisible( !accessTokenFormDialog.isVisible() );
-				if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation ) )
+				if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation, accessTokenFormDialog.getHeight() ) )
 				{
 					setAccessTokenFormDialogBoundsBelowTheButton( disclosureButtonLocation, accessTokenFormDialog, source.getHeight() );
 				}
@@ -123,7 +124,29 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 			}
 		} );
 
-		accessTokenFormPanel.setBounds( 0, -300, 400, 400 );
+		accessTokenFormDialog.addWindowFocusListener( new WindowFocusListener()
+		{
+			@Override
+			public void windowGainedFocus( WindowEvent e )
+			{
+				disclosureButton.setEnabled( false );
+			}
+
+			@Override
+			public void windowLostFocus( WindowEvent e )
+			{
+				accessTokenFormDialog.setVisible( false );
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						disclosureButton.setEnabled( true );
+					}
+				} );
+			}
+		} );
+
 
 		oauth2Form.addSpace( GROUP_SPACING );
 
@@ -138,22 +161,22 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		advanceOptionsButton.setName( ADVANCED_OPTIONS );
 	}
 
-	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation )
+	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight )
 	{
 		Dimension rootWindowSize = SoapUI.getFrame().getSize();
-		return disclosureButtonLocation.getY() + 365 <= rootWindowSize.getHeight();
+		return disclosureButtonLocation.getY() + accessTokenDialogHeight <= rootWindowSize.getHeight();
 	}
 
 	private void setAccessTokenFormDialogBoundsBelowTheButton( Point disclosureButtonLocation, JDialog accessTokenFormDialog, int disclosureButtonHeight )
 	{
-		accessTokenFormDialog.setBounds( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET, ( int )disclosureButtonLocation.getY() + disclosureButtonHeight,
-				500, 340 );
+		accessTokenFormDialog.setLocation( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET,
+				( int )disclosureButtonLocation.getY() + disclosureButtonHeight );
 	}
 
 	private void setAccessTokenFormDialogBoundsAboveTheButton( Point disclosureButtonLocation, JDialog accessTokenFormDialog )
 	{
-		accessTokenFormDialog.setBounds( ( int )disclosureButtonLocation.getX() - 80,
-				( int )disclosureButtonLocation.getY() - 345, 500, 340 );
+		accessTokenFormDialog.setLocation( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET,
+				( int )disclosureButtonLocation.getY() - accessTokenFormDialog.getHeight() );
 	}
 
 	// TODO Make this reusable at some later point
@@ -162,21 +185,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		final JDialog accessTokenFormDialog = new JDialog();
 		accessTokenFormDialog.setUndecorated( true );
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
-		//accessTokenFormDialog.setSize( 400, 400 );
-		accessTokenFormDialog.addFocusListener( new FocusListener()
-		{
-			// FIXME Make this work
-			@Override
-			public void focusGained( FocusEvent e )
-			{
-			}
 
-			@Override
-			public void focusLost( FocusEvent e )
-			{
-				accessTokenFormDialog.setVisible( false );
-			}
-		} );
 		return accessTokenFormDialog;
 	}
 
