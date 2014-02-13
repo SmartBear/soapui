@@ -21,7 +21,6 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
-import com.eviware.soapui.ui.URLDesktopPanel;
 import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
@@ -29,6 +28,7 @@ import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.DesktopManager;
 import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
@@ -37,6 +37,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -102,6 +103,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		enableWindowActions();
 		desktop.addComponentListener( new DesktopResizeListener() );
+		desktop.setDesktopManager( new BoundsAwareDesktopManager(desktop.getDesktopManager()) );
 	}
 
 	private void enableWindowActions()
@@ -423,7 +425,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	{
 		for( DesktopPanel panel : internalFrameToDesktopPanelMap.values() )
 		{
-			if (panel.getModelItem() == modelItem)
+			if( panel.getModelItem() == modelItem )
 			{
 				return panel;
 			}
@@ -587,11 +589,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			while( iterator.hasNext() )
 			{
 				DesktopPanel nextPanel = iterator.next();
-				//Workaround: Avoid JXBrowser problems on Mac
-				if( !( UISupport.isMac() && nextPanel instanceof URLDesktopPanel ) )
-				{
-					showDesktopPanel( nextPanel );
-				}
+				showDesktopPanel( nextPanel );
 				iterator.remove();
 			}
 		}
@@ -611,6 +609,145 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		public void componentHidden( ComponentEvent e )
 		{
 
+		}
+	}
+
+	/**
+	 * Helper class that decorates the standard desktop manager and prevents it from moving desktop panels outside
+	 * the desktop.
+	 */
+	private class BoundsAwareDesktopManager implements DesktopManager
+	{
+
+		private DesktopManager delegate;
+
+		private BoundsAwareDesktopManager( DesktopManager delegate )
+		{
+			this.delegate = delegate;
+		}
+
+		/* Methods enhancing the delegate with awareness of bounds */
+
+		@Override
+		public void dragFrame( JComponent f, int newX, int newY )
+		{
+			if( outsideDesktop( f, newX, newY ) )
+			{
+				Point pointInsideDesktop = findPositionInsideDesktop( f, newX, newY );
+				delegate.dragFrame( f, pointInsideDesktop.x, pointInsideDesktop.y );
+			}
+			else
+			{
+				delegate.dragFrame( f, newX, newY );
+			}
+		}
+
+		@Override
+		public void setBoundsForFrame( JComponent desktopPanel, int newX, int newY, int newWidth, int newHeight )
+		{
+			if( outsideDesktop( desktopPanel, newX, newY ) )
+			{
+				Point pointInsideDesktop = findPositionInsideDesktop( desktopPanel, newX, newY );
+				delegate.setBoundsForFrame( desktopPanel, pointInsideDesktop.x, pointInsideDesktop.y, newWidth, newHeight );
+			}
+			else
+			{
+				delegate.setBoundsForFrame( desktopPanel, newX, newY, newWidth, newHeight );
+			}
+		}
+
+		/* Methods only delegating to the encapsulated delegate */
+
+		@Override
+		public void openFrame( JInternalFrame f )
+		{
+			delegate.openFrame( f );
+		}
+
+		@Override
+		public void closeFrame( JInternalFrame f )
+		{
+			delegate.closeFrame( f );
+		}
+
+		@Override
+		public void maximizeFrame( JInternalFrame f )
+		{
+			delegate.maximizeFrame( f );
+		}
+
+		@Override
+		public void minimizeFrame( JInternalFrame f )
+		{
+			delegate.minimizeFrame( f );
+		}
+
+		@Override
+		public void iconifyFrame( JInternalFrame f )
+		{
+			delegate.iconifyFrame( f );
+		}
+
+		@Override
+		public void deiconifyFrame( JInternalFrame f )
+		{
+			delegate.deiconifyFrame( f );
+		}
+
+		@Override
+		public void activateFrame( JInternalFrame f )
+		{
+			delegate.activateFrame( f );
+		}
+
+		@Override
+		public void deactivateFrame( JInternalFrame f )
+		{
+			delegate.deactivateFrame( f );
+		}
+
+		@Override
+		public void beginDraggingFrame( JComponent f )
+		{
+			delegate.beginDraggingFrame( f );
+		}
+
+		@Override
+		public void endDraggingFrame( JComponent f )
+		{
+			delegate.endDraggingFrame( f );
+		}
+
+		@Override
+		public void beginResizingFrame( JComponent f, int direction )
+		{
+			delegate.beginResizingFrame( f, direction );
+		}
+
+		@Override
+		public void resizeFrame( JComponent f, int newX, int newY, int newWidth, int newHeight )
+		{
+			delegate.resizeFrame( f, newX, newY, newWidth, newHeight );
+		}
+
+		@Override
+		public void endResizingFrame( JComponent f )
+		{
+			delegate.endResizingFrame( f );
+		}
+
+		private boolean outsideDesktop( JComponent desktopPanel, int newX, int newY )
+		{
+			return newY < 0 || ( newX > desktopPanel.getWidth() ) || ( newY > desktopPanel.getHeight() );
+		}
+
+		private Point findPositionInsideDesktop( JComponent f, int newX, int newY )
+		{
+			Container desktop = f.getParent();
+			Dimension desktopSize = desktop.getSize();
+			int boundedX = ( int )Math.min( Math.max( 0, newX ), desktopSize.getWidth() );
+			int boundedY = ( int )Math.min( Math.max( 0, newY ), desktopSize.getHeight() );
+			return new Point( boundedX, boundedY );
 		}
 	}
 }
