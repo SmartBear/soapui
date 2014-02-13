@@ -38,7 +38,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String SCOPE_PROPERTY = "scope";
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
-	public static final String ACCESS_TOKEN_RETRIEVAL_PROPERTY = "accessTokenRetrievalLocation";
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
 	public static final String OAUTH2_FLOW = "oAuth2Flow";
@@ -59,13 +58,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		HEADER,
 		BODY
 	}
-
-	public enum AccessTokenRetrievalLocation
-	{
-		BODY_JSON,
-		BODY_URL_ENCODED_FORM
-	}
-
 
 	public enum OAuth2Flow
 	{
@@ -150,15 +142,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return AccessTokenPosition.valueOf( configuration.getAccessTokenPosition().toString() );
 	}
 
-	public AccessTokenRetrievalLocation getAccessTokenRetrievalLocation()
-	{
-		if( configuration.getAccessTokenRetrievalLocation() == null )
-		{
-			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.BODY_JSON );
-		}
-		return AccessTokenRetrievalLocation.valueOf( configuration.getAccessTokenRetrievalLocation().toString() );
-	}
-
 	public void setAccessTokenPosition( AccessTokenPosition accessTokenPosition )
 	{
 		AccessTokenPosition oldValue = getAccessTokenPosition();
@@ -187,17 +170,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			configuration.setOAuth2Flow( OAuth2FlowConfig.AUTHORIZATION_CODE_GRANT );
 		}
 		return OAuth2Flow.valueOf( configuration.getOAuth2Flow().toString() );
-	}
-
-	public void setAccessTokenRetrievalLocation( AccessTokenRetrievalLocation retrievalLocation )
-	{
-		AccessTokenRetrievalLocation oldValue = getAccessTokenRetrievalLocation();
-		if( !retrievalLocation.equals( oldValue.toString() ) )
-		{
-			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.Enum.forString(
-					retrievalLocation.toString() ) );
-			pcs.firePropertyChange( ACCESS_TOKEN_RETRIEVAL_PROPERTY, oldValue, retrievalLocation );
-		}
 	}
 
 	public String getRefreshToken()
