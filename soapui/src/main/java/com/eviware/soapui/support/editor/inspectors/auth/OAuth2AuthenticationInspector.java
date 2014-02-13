@@ -1,5 +1,6 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -11,18 +12,9 @@ import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.value.AbstractValueModel;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -32,6 +24,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 {
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String ADVANCED_OPTIONS = "Advanced Options";
+	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 80;
 
 	private final OAuth2Profile profile;
 	private final SimpleBindingForm oAuth2Form;
@@ -100,51 +93,39 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		initForm( oauth2Form );
 
 		oauth2Form.addSpace( TOP_SPACING );
+		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "",
+				SimpleForm.LONG_TEXT_FIELD_COLUMNS );
 
-		AbstractValueModel valueModel = oauth2Form.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
-				"getOAuth2Flow", "setOAuth2Flow" );
-		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
-		JComboBox oauth2FlowComboBox = oauth2Form.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
+		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( profile ) );
+		populateGetAccessTokenForm( accessTokenForm );
 
-		oauth2Form.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
-		clientSecretField = oauth2Form.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
-		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
-		{
-			clientSecretField.setVisible( false );
-		}
-		oauth2FlowComboBox.addItemListener( new ItemListener()
+		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
+		accessTokenFormPanel.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+
+		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
+		final JButton disclosureButton = oauth2Form.addButtonWithoutLabel( "Get Token", new ActionListener()
 		{
 			@Override
-			public void itemStateChanged( ItemEvent e )
+			public void actionPerformed( ActionEvent e )
 			{
-				if (e.getStateChange() == ItemEvent.SELECTED)
+				JButton source = ( JButton )e.getSource();
+				Point disclosureButtonLocation = source.getLocationOnScreen();
+
+				accessTokenFormDialog.setVisible( !accessTokenFormDialog.isVisible() );
+				if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation ) )
 				{
-					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+					setAccessTokenFormDialogBoundsBelowTheButton( disclosureButtonLocation, accessTokenFormDialog, source.getHeight() );
+				}
+				else
+				{
+					setAccessTokenFormDialogBoundsAboveTheButton( disclosureButtonLocation, accessTokenFormDialog );
 				}
 			}
 		} );
 
+		accessTokenFormPanel.setBounds( 0, -300, 400, 400 );
 
 		oauth2Form.addSpace( GROUP_SPACING );
-
-		oauth2Form.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
-		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
-		oauth2Form.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
-
-		oauth2Form.addSpace( GROUP_SPACING );
-
-		oauth2Form.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
-
-		oauth2Form.addSpace( NORMAL_SPACING );
-
-		// TODO This should be a bit wider, but leaving it at default size for now
-		oauth2Form.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
-		oauth2Form.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
-		oauth2Form.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
-
-		oauth2Form.addSpace( GROUP_SPACING );
-
-		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "", SimpleForm.LONG_TEXT_FIELD_COLUMNS );
 
 		JButton advanceOptionsButton = oauth2Form.addButtonWithoutLabel( ADVANCED_OPTIONS, new ActionListener()
 		{
@@ -155,6 +136,94 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 			}
 		} );
 		advanceOptionsButton.setName( ADVANCED_OPTIONS );
+	}
+
+	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation )
+	{
+		Dimension rootWindowSize = SoapUI.getFrame().getSize();
+		return disclosureButtonLocation.getY() + 365 <= rootWindowSize.getHeight();
+	}
+
+	private void setAccessTokenFormDialogBoundsBelowTheButton( Point disclosureButtonLocation, JDialog accessTokenFormDialog, int disclosureButtonHeight )
+	{
+		accessTokenFormDialog.setBounds( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET, ( int )disclosureButtonLocation.getY() + disclosureButtonHeight,
+				500, 340 );
+	}
+
+	private void setAccessTokenFormDialogBoundsAboveTheButton( Point disclosureButtonLocation, JDialog accessTokenFormDialog )
+	{
+		accessTokenFormDialog.setBounds( ( int )disclosureButtonLocation.getX() - 80,
+				( int )disclosureButtonLocation.getY() - 345, 500, 340 );
+	}
+
+	// TODO Make this reusable at some later point
+	private JDialog createAccessTokenDialog( JPanel accessTokenFormPanel )
+	{
+		final JDialog accessTokenFormDialog = new JDialog();
+		accessTokenFormDialog.setUndecorated( true );
+		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
+		//accessTokenFormDialog.setSize( 400, 400 );
+		accessTokenFormDialog.addFocusListener( new FocusListener()
+		{
+			// FIXME Make this work
+			@Override
+			public void focusGained( FocusEvent e )
+			{
+			}
+
+			@Override
+			public void focusLost( FocusEvent e )
+			{
+				accessTokenFormDialog.setVisible( false );
+			}
+		} );
+		return accessTokenFormDialog;
+	}
+
+	private void populateGetAccessTokenForm( SimpleBindingForm accessTokenForm )
+	{
+		accessTokenForm.addSpace( NORMAL_SPACING );
+
+		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+				"getOAuth2Flow", "setOAuth2Flow" );
+		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
+		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
+
+		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
+		clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
+		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
+		{
+			clientSecretField.setVisible( false );
+		}
+		oauth2FlowComboBox.addItemListener( new ItemListener()
+		{
+			@Override
+			public void itemStateChanged( ItemEvent e )
+			{
+				if( e.getStateChange() == ItemEvent.SELECTED )
+				{
+					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+				}
+			}
+		} );
+
+
+		accessTokenForm.addSpace( GROUP_SPACING );
+
+		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
+
+		accessTokenForm.addSpace( GROUP_SPACING );
+
+		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
+
+		accessTokenForm.addSpace( NORMAL_SPACING );
+
+		// TODO This should be a bit wider, but leaving it at default size for now
+		accessTokenForm.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
+		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
+		accessTokenForm.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
 	}
 
 	/**
