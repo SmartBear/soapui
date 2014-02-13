@@ -36,9 +36,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		profile = getOAuth2Profile( request );
 		oAuth2Form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( profile ) );
-		addOAuth2Panel();
-		addOAuth2ToAuthTypeComboBox();
-		selectCard();
+		buildOAuth2Panel();
 	}
 
 	@Override
@@ -68,6 +66,14 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 	}
 
+	private void buildOAuth2Panel()
+	{
+		setBorderAndBackgroundColorOnCard( oAuth2Form.getPanel() );
+		addOAuth2Panel();
+		addOAuth2ToAuthTypeComboBox();
+		selectCard();
+	}
+
 	private void addOAuth2Panel()
 	{
 		populateOAuth2Form( oAuth2Form );
@@ -88,13 +94,15 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		getAuthTypeForm().setComboBoxItems( AUTH_TYPE_PROPERTY_NAME, comboBox, options );
 	}
 
-	private void populateOAuth2Form( SimpleBindingForm oauth2Form )
+	private void populateOAuth2Form( SimpleBindingForm oAuth2Form )
 	{
-		initForm( oauth2Form );
+		initForm( oAuth2Form );
 
-		oauth2Form.addSpace( TOP_SPACING );
-		oauth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "",
-				SimpleForm.LONG_TEXT_FIELD_COLUMNS );
+		oAuth2Form.addSpace( TOP_SPACING );
+		oAuth2Form.appendTextField( OAuth2Profile.ACCESS_TOKEN_PROPERTY, "Access Token", "",
+				SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
+		oAuth2Form.addInputFieldHintText( "Enter existing access token, or use \"Get Token\" below." );
+
 
 		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( profile ) );
 		populateGetAccessTokenForm( accessTokenForm );
@@ -103,7 +111,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenFormPanel.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
 
 		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
-		final JButton disclosureButton = oauth2Form.addButtonWithoutLabel( "Get Token", new ActionListener()
+		final JButton disclosureButton = oAuth2Form.addButtonWithoutLabel( "> Get Token", new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -123,6 +131,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				}
 			}
 		} );
+		disclosureButton.setContentAreaFilled( false );
+		disclosureButton.setBorderPainted( false );
 
 		accessTokenFormDialog.addWindowFocusListener( new WindowFocusListener()
 		{
@@ -148,9 +158,9 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		} );
 
 
-		oauth2Form.addSpace( GROUP_SPACING );
+		oAuth2Form.addSpace( GROUP_SPACING );
 
-		JButton advanceOptionsButton = oauth2Form.addButtonWithoutLabel( ADVANCED_OPTIONS, new ActionListener()
+		JButton advanceOptionsButton = oAuth2Form.addButtonWithoutLabel( ADVANCED_OPTIONS, new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -233,6 +243,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 		accessTokenForm.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
+		accessTokenForm.addSpace( 15 );
 	}
 
 	/**
@@ -244,5 +255,4 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		checkArgument( oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project" );
 		return oAuth2ProfileList.get( 0 );
 	}
-
 }

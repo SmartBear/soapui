@@ -37,7 +37,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -59,6 +59,7 @@ public class SimpleForm
 	public static final int MEDIUM_TEXT_FIELD_COLUMNS = 30;
 	public static final int LONG_TEXT_FIELD_COLUMNS = 50;
 	public static final int DEFAULT_TEXT_FIELD_COLUMNS = MEDIUM_TEXT_FIELD_COLUMNS;
+	public static final Color HINT_TEXT_COLOR = new Color( 113, 102, 102 );
 
 	private JPanel panel;
 	private CellConstraints cc = new CellConstraints();
@@ -162,19 +163,23 @@ public class SimpleForm
 
 	public JButton addButtonWithoutLabel( String text, ActionListener actionListener )
 	{
+		JButton button = new JButton( text );
+		button.addActionListener( actionListener );
+
+		addComponentWithoutLabel( button );
+
+		return button;
+	}
+
+	public void addComponentWithoutLabel( JComponent component )
+	{
 		if( rowSpacing > 0 && !components.isEmpty() )
 			addSpace( rowSpacing );
 
 		layout.appendRow( rowSpec );
 		int row = layout.getRowCount();
 
-		JButton button = new JButton( text );
-		button.addActionListener( actionListener );
-
-
-		panel.add( button, cc.xy( 4, row, "left,bottom" ) );
-
-		return button;
+		panel.add( component, cc.xy( 4, row, "left,bottom" ) );
 	}
 
 
@@ -551,6 +556,14 @@ public class SimpleForm
 		int row = layout.getRowCount();
 
 		panel.add( component, cc.xyw( 2, row, 4 ) );
+	}
+
+	public void addInputFieldHintText( String text )
+	{
+		JLabel label = new JLabel( text );
+		label.setForeground( HINT_TEXT_COLOR );
+
+		addComponentWithoutLabel( label );
 	}
 
 	public void removeComponent( JComponent component )

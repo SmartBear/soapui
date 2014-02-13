@@ -34,7 +34,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 {
 	public static final String COMBO_BOX_LABEL = "Authorization Type";
 
-	public static final int TOP_SPACING = 20;
+	public static final int TOP_SPACING = 10;
 	public static final int OUTERMOST_SPACING = 5;
 	public static final int NORMAL_SPACING = 10;
 	public static final int GROUP_SPACING = 20;
@@ -44,11 +44,13 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 	private static final ColumnSpec LABEL_COLUMN = new ColumnSpec( "left:72dlu" );
 	private static final ColumnSpec RIGHTMOST_COLUMN = new ColumnSpec( "5px" );
+	public static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
+	public static final Color CARD_BACKGROUND_COLOR = new Color( 228, 228, 228 );
 
 	private final JPanel outerPanel = new JPanel( new BorderLayout() );
 	private final JPanel cardPanel = new JPanel( new CardLayout() );
 	private final SimpleBindingForm authTypeForm;
-	private final SimpleBindingForm basicForm;
+	private final SimpleBindingForm card;
 
 	protected BasicAuthenticationInspector( AbstractHttpRequest<?> request )
 	{
@@ -56,7 +58,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 				true, AuthInspectorFactory.INSPECTOR_ID );
 
 		authTypeForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
-		basicForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
+		card = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
 
 		buildUI();
 	}
@@ -79,7 +81,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 		super.release();
 
 		authTypeForm.getPresentationModel().release();
-		basicForm.getPresentationModel().release();
+		card.getPresentationModel().release();
 	}
 
 	JPanel getCardPanel()
@@ -94,7 +96,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 	SimpleBindingForm getBasicForm()
 	{
-		return basicForm;
+		return card;
 	}
 
 	void selectCard()
@@ -111,11 +113,20 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 		innerPanel.add( authTypeForm.getPanel(), BorderLayout.PAGE_START );
 
-		populateLegacyForm( basicForm );
-		cardPanel.add( basicForm.getPanel(), LEGACY_FORM_LABEL );
+		setBorderAndBackgroundColorOnCard( card.getPanel() );
+		populateBasicForm( card );
+
+		cardPanel.add( card.getPanel(), LEGACY_FORM_LABEL );
+		cardPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 
 		innerPanel.add( cardPanel, BorderLayout.CENTER );
 		outerPanel.add( new JScrollPane( innerPanel ), BorderLayout.CENTER );
+	}
+
+	protected void setBorderAndBackgroundColorOnCard( JPanel card )
+	{
+		card.setBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ) );
+		card.setBackground( CARD_BACKGROUND_COLOR );
 	}
 
 	private void populateAuthTypeForm( SimpleBindingForm authTypeForm )
@@ -143,7 +154,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 		} );
 	}
 
-	private void populateLegacyForm( SimpleBindingForm legacyForm )
+	private void populateBasicForm( SimpleBindingForm legacyForm )
 	{
 		initForm( legacyForm );
 
