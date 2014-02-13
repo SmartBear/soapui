@@ -1969,7 +1969,6 @@
             <xsd:element name="redirectURI" type="xsd:string"></xsd:element>
             <xsd:element name="accessToken" type="xsd:string"></xsd:element>
             <xsd:element name="accessTokenPosition" type="tns:AccessTokenPosition"></xsd:element>
-            <xsd:element name="accessTokenRetrievalLocation" type="tns:AccessTokenRetrievalLocation"></xsd:element>
             <xsd:element name="oAuth2Flow" type="tns:OAuth2Flow"></xsd:element>
             <xsd:element name="refreshToken" type="xsd:string"></xsd:element>
             <xsd:element name="scope" type="xsd:string"></xsd:element>
@@ -1982,14 +1981,6 @@
             <xsd:enumeration value="QUERY"></xsd:enumeration>
             <xsd:enumeration value="HEADER"></xsd:enumeration>
             <xsd:enumeration value="BODY"></xsd:enumeration>
-        </xsd:restriction>
-    </xsd:simpleType>
-
-    <xsd:simpleType name="AccessTokenRetrievalLocation">
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="BODY_JSON"></xsd:enumeration>
-            <xsd:enumeration value="URL_FRAGMENT"></xsd:enumeration>
-            <xsd:enumeration value="BODY_URL_ENCODED_FORM"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
 
