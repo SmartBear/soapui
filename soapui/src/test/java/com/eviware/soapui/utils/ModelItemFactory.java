@@ -2,14 +2,8 @@ package com.eviware.soapui.utils;
 
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
-import com.eviware.soapui.impl.rest.DefaultOAuth2ProfileContainer;
-import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
-import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -43,7 +37,10 @@ public class ModelItemFactory
 
 	public static RestMethod makeRestMethod() throws SoapUIException
 	{
-		return new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance());
+
+		RestMethod restMethod = new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance() );
+		restMethod.setMethod( HttpMethod.GET );
+		return restMethod;
 	}
 
 	public static RestResource makeRestResource() throws SoapUIException
@@ -56,14 +53,9 @@ public class ModelItemFactory
 		return new RestService(makeWsdlProject(), RestServiceConfig.Factory.newInstance());
 	}
 
-	public static RestMockResponse makeRestMockResponse(RestMockService restMockService, RestMockAction restMockAction) throws SoapUIException
-	{
-		return new RestMockResponse( restMockAction, RESTMockResponseConfig.Factory.newInstance() );
-	}
-
 	public static RestMockAction makeRestMockAction(RestMockService restMockService) throws SoapUIException
 	{
-		return new RestMockAction( restMockService, RESTMockActionConfig.Factory.newInstance(), makeRestRequest() );
+		return restMockService.addNewMockAction( makeRestRequest() );
 	}
 
 	public static WsdlProject makeWsdlProject() throws SoapUIException

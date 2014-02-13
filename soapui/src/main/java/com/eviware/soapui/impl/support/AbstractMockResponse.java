@@ -120,6 +120,11 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 		return result;
 	}
 
+	public void setResponseHttpStatus( int httpStatus )
+	{
+		setResponseHttpStatus( ((Integer)httpStatus).toString() );
+	}
+
 	public void setResponseHttpStatus( String httpStatus )
 	{
 		String oldStatus = getResponseHttpStatus();

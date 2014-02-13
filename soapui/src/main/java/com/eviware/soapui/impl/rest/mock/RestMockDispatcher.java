@@ -1,18 +1,13 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.support.AbstractMockDispatcher;
-import com.eviware.soapui.support.types.StringToStringMap;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RestMockDispatcher extends AbstractMockDispatcher
 {
@@ -71,9 +66,6 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 		{
 			throw new DispatchException( e );
 		}
-
-		//TODO: it does not work now
-		result.setResponseStatus( 404 );
 
 		return result;
 
