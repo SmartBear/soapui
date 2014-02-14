@@ -38,7 +38,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		super( request );
 
 		profile = getOAuth2Profile( request );
-		oAuth2Form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( profile ) );
+		oAuth2Form = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
 		buildOAuth2Panel();
 	}
 
@@ -144,7 +144,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
 		oAuth2Form.addInputFieldHintText( "Enter existing access token, or use \"Get Token\" below." );
 
-		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( profile ) );
+		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
 		populateGetAccessTokenForm( accessTokenForm );
 
 		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
