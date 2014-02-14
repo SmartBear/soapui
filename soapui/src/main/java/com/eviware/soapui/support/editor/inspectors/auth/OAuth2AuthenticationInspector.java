@@ -7,6 +7,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
@@ -84,11 +85,11 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		JPanel centerPanel = oAuth2Form.getPanel();
 		setBackgroundColorOnPanel( centerPanel );
 
-		JPanel southPanel = new JPanel();
-		JSeparator separator = new JSeparator( JSeparator.HORIZONTAL );
-		separator.setPreferredSize( new Dimension( wrapperPanel.getWidth(), 2 ) );
-		southPanel.add( separator );
-		southPanel.add( new JLabel( "Learn about OAuth 2" ) );
+		JPanel southPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		JLabel oAuthDocumentationLink = getLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
+		southPanel.add( oAuthDocumentationLink );
+
+		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );
 		setBackgroundColorOnPanel( southPanel );
 
 		wrapperPanel.add( centerPanel, BorderLayout.CENTER );
@@ -97,6 +98,27 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBorderOnPanel( wrapperPanel );
 
 		getCardPanel().add( wrapperPanel, OAUTH_2_FORM_LABEL );
+	}
+
+	private JLabel getLabelLink( final String url, String labelText )
+	{
+		JLabel oAuthDocumentationLink = new JLabel( labelText );
+		oAuthDocumentationLink.setForeground( Color.BLUE );
+		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Tools.openURL( url );
+			}
+
+			@Override
+			public void mouseEntered( MouseEvent e )
+			{
+				e.getComponent().setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+			}
+		} );
+		return oAuthDocumentationLink;
 	}
 
 	private void addOAuth2ToAuthTypeComboBox()
@@ -126,7 +148,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		populateGetAccessTokenForm( accessTokenForm );
 
 		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
-		accessTokenFormPanel.setBorder( BorderFactory.createLineBorder( Color.BLACK ) );
+		accessTokenFormPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder( CARD_BORDER_COLOR ),BorderFactory.createEmptyBorder( 10, 10, 10, 10 )));
 
 		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
 		final JLabel disclosureButton = new JLabel( "▲ Get Token" );
@@ -186,7 +209,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				disclosureButton.setText( "▲ Get Token" );
 				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
 				// will then show the dialog directly again.
-				if(!isMouseOnDisclosureLabel)
+				if( !isMouseOnDisclosureLabel )
 				{
 					disclosureButtonDisabled = false;
 				}
@@ -235,12 +258,20 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 	private void populateGetAccessTokenForm( SimpleBindingForm accessTokenForm )
 	{
+		JLabel formTitleLabel = new JLabel( "Get Access Token from the authorization server" );
+		Font font = formTitleLabel.getFont();
+		Font fontBold = new Font( font.getName(), Font.BOLD, font.getSize() );
+		formTitleLabel.setFont( fontBold );
+		accessTokenForm.addComponent( formTitleLabel );
+
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
 		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
 				"getOAuth2Flow", "setOAuth2Flow" );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
 		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
+
+		accessTokenForm.addSpace( GROUP_SPACING );
 
 		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
 		clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
@@ -277,7 +308,11 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 		accessTokenForm.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
-		accessTokenForm.addSpace( 15 );
+		accessTokenForm.addSpace( NORMAL_SPACING );
+
+		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+				"How to get an access token from an authorization server" );
+		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}
 
 	/**
