@@ -93,4 +93,9 @@ public class ModelItemFactory
 	{
 		return new RestMockService( makeWsdlProject(), RESTMockServiceConfig.Factory.newInstance() );
 	}
+
+	public static RestMockAction makeRestMockAction() throws SoapUIException
+	{
+		return makeRestMockAction( makeRestMockService() );
+	}
 }

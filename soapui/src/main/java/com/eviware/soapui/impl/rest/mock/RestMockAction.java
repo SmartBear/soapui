@@ -101,11 +101,10 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
 			result.setMockOperation( this );
-			RestMockResponse response = getMockResponseAt( 0 ); // TODO in SOAP-1334
+			RestMockResponse response = getMockResponseAt( 0 );
 
 			if( response == null )
 			{
-				// TODO in SOAP-1334 - when there is no matchin response from the dispatcher strategy - use the default
 				throw new UnknownError( "not implemented" );
 			}
 

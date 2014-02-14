@@ -64,7 +64,7 @@ public abstract class AbstractMockRequest implements MockRequest
 		if( path == null )
 			path = "";
 
-		if( request.getMethod().equals( "POST" ) )
+		if( "POST".equals( request.getMethod() ) )
 		{
 			initPostRequest( request, context );
 		}
