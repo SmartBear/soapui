@@ -1,5 +1,5 @@
 @Manual @Acceptance
-Feature: As Mark I can get automatically refreshed access token when I send request if I have a refresh token, and see the refresh information in SoapUI log
+Feature: As Mark I can get access token automatically refreshed when I send request if I have a refresh token and access token expiration time, and see the refresh information in SoapUI log
 
   Scenario: Access token is automatically refreshed when run from SoapUI.
     Given Mark has created a REST project with the Google Tasks API
