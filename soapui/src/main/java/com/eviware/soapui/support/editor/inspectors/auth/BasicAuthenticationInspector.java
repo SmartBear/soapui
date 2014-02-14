@@ -40,7 +40,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 	public static final int GROUP_SPACING = 20;
 
 	public static final String AUTH_TYPE_PROPERTY_NAME = "authType";
-	public static final String LEGACY_FORM_LABEL = "Legacy form";
+	public static final String BASIC_FORM_LABEL = "Legacy form";
 
 	private static final ColumnSpec LABEL_COLUMN = new ColumnSpec( "left:72dlu" );
 	private static final ColumnSpec RIGHTMOST_COLUMN = new ColumnSpec( "5px" );
@@ -102,7 +102,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 	void selectCard()
 	{
 		CardLayout layout = ( CardLayout )cardPanel.getLayout();
-		layout.show( cardPanel, LEGACY_FORM_LABEL );
+		layout.show( cardPanel, BASIC_FORM_LABEL );
 	}
 
 	private void buildUI()
@@ -113,19 +113,29 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 		innerPanel.add( authTypeForm.getPanel(), BorderLayout.PAGE_START );
 
-		setBorderAndBackgroundColorOnCard( card.getPanel() );
+		setBorderAndBackgroundColorOnPanel( card.getPanel() );
 		populateBasicForm( card );
 
-		cardPanel.add( card.getPanel(), LEGACY_FORM_LABEL );
+		cardPanel.add( card.getPanel(), BASIC_FORM_LABEL );
 		cardPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 
 		innerPanel.add( cardPanel, BorderLayout.CENTER );
 		outerPanel.add( new JScrollPane( innerPanel ), BorderLayout.CENTER );
 	}
 
-	protected void setBorderAndBackgroundColorOnCard( JPanel card )
+	protected void setBorderAndBackgroundColorOnPanel( JPanel card )
 	{
 		card.setBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ) );
+		card.setBackground( CARD_BACKGROUND_COLOR );
+	}
+
+	protected void setBorderOnPanel( JPanel card )
+	{
+		card.setBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ) );
+	}
+
+	protected void setBackgroundColorOnPanel( JPanel card )
+	{
 		card.setBackground( CARD_BACKGROUND_COLOR );
 	}
 
