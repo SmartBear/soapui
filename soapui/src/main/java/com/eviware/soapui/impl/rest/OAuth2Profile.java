@@ -44,12 +44,25 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public enum AccessTokenStatus
 	{
-		UPDATED_MANUALLY,
-		PENDING,
-		WAITING_FOR_AUTHORIZATION,
-		RECEIVED_AUTHORIZATION_CODE,
-		FAILED,
-		RETRIEVED_FROM_SERVER
+		UPDATED_MANUALLY("Updated Manually"),
+		PENDING("Pending"),
+		WAITING_FOR_AUTHORIZATION("Waiting for Authorization"),
+		RECEIVED_AUTHORIZATION_CODE("Received authorzation code"),
+		FAILED("Failed to retrieve"),
+		RETRIEVED_FROM_SERVER("Retrieved from authorization server");
+
+		private String description;
+
+		AccessTokenStatus( String description )
+		{
+			this.description = description;
+		}
+
+		@Override
+		public String toString()
+		{
+			return description;
+		}
 	}
 
 	public enum AccessTokenPosition
@@ -298,7 +311,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		if( configuration.getAccessTokenStatus() != null )
 		{
-			return configuration.getAccessTokenStatus().toString();
+			return AccessTokenStatus.valueOf( configuration.getAccessTokenStatus().toString()).toString();
 		}
 		return null;
 	}
@@ -381,7 +394,9 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	private void setAccessTokenStatus( AccessTokenStatus status )
 	{
-		String oldValue = getAccessTokenStatus();
+		AccessTokenStatusConfig.Enum savedAccessTokenStatus = configuration.getAccessTokenStatus();
+		AccessTokenStatus oldValue = savedAccessTokenStatus==null ? null :
+				AccessTokenStatus.valueOf( savedAccessTokenStatus.toString() );
 
 		if( status == null && oldValue == null )
 		{
@@ -393,13 +408,14 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			{
 				return;
 			}
-			configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.toString() ) );
+			configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.name() ) );
 		}
 		else
 		{
 			configuration.setAccessTokenStatus( null );
 		}
-		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValue, status.toString() );
+		String oldValueAsString = oldValue==null ? null : oldValue.toString();
+		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status.toString() );
 	}
 
 }
