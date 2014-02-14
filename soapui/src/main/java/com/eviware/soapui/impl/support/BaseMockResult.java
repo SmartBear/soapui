@@ -94,15 +94,6 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 		mockRequest.getRequestContext().setMockResponse( mockResponse );
 	}
 
-	/**
-	 * @deprecated
-	 */
-
-	public void setReponseContent( String responseContent )
-	{
-		this.responseContent = responseContent;
-	}
-
 	public void setResponseContent( String responseContent )
 	{
 		this.responseContent = responseContent;
