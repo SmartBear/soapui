@@ -101,7 +101,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		oauth2Form.addSpace( TOP_SPACING );
 
-		AbstractValueModel valueModel = oauth2Form.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+		AbstractValueModel valueModel = oauth2Form.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW_PROPERTY,
 				"getOAuth2Flow", "setOAuth2Flow" );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
 		JComboBox oauth2FlowComboBox = oauth2Form.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
