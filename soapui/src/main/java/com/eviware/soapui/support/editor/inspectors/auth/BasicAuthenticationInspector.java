@@ -131,7 +131,8 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 	protected void setBorderOnPanel( JPanel card )
 	{
-		card.setBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ) );
+		card.setBorder(BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 1,1,1,1,CARD_BORDER_COLOR ),
+				BorderFactory.createMatteBorder(10, 10, 10, 10, CARD_BACKGROUND_COLOR)));
 	}
 
 	protected void setBackgroundColorOnPanel( JPanel card )
