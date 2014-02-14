@@ -1,5 +1,5 @@
 @Manual @Acceptance
-Feature: When we have a refresh token, and we know that the user's access token has expired (via information from the server), automatically refresh it when sending the request.
+Feature: As Mark I can get automatically refreshed access token when I send request if I have a refresh token, and see the refresh information in SoapUI log
 
   Scenario: Access token is automatically refreshed when run from SoapUI.
     Given Mark has created a REST project with the Google Tasks API
