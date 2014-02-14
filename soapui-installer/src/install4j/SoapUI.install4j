@@ -1888,50 +1888,6 @@ if (Util.isMacOS()) {
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Add disable jxbrowser" id="1788" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="false" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Disabling jxbrowser failed, you can disable it manually after the installation">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
-                      <void property="launcherId">
-                        <string>64</string>
-                      </void>
-                      <void property="vmOptions">
-                        <array class="java.lang.String" length="1">
-                          <void index="0">
-                            <string>-Dsoapui.jxbrowser.disable=true</string>
-                          </void>
-                        </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition>//for linux and unix encounter check box, but for windows never set jx browser disabled during the installation
-if (Util.isMacOS())
-return context.getBooleanVariable("disableJxBrowserAction");
-else
-return false;
-
-</condition>
-              </action>
-              <action name="Add jxbrowser install location" id="2545" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Error setting jxbrowser install dir">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
-                      <void property="launcherId">
-                        <string>64</string>
-                      </void>
-                      <void property="vmOptions">
-                        <array class="java.lang.String" length="1">
-                          <void index="0">
-                            <string>-Djxbrowser.xulrunner.dir=${installer:jxBrowserInstallLocation}</string>
-                          </void>
-                        </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
               <action name="" id="2705" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Error in setting write permissions for jxbrowser">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
