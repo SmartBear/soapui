@@ -95,7 +95,7 @@ public class OAuth2TokenExtractorTest
 	@Test
 	public void getsTheAccessTokenFromUrlEncodedFormResponse() throws Exception
 	{
-		profile.setAccessTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.BODY_URL_ENCODED_FORM );
+		profile.setOAuth2Flow( OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT);
 		oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
 
 		assertThat( profile.getAccessToken(), is( ACCESS_TOKEN ) );

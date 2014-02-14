@@ -21,8 +21,6 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenRetrievalLocation.BODY_JSON;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenRetrievalLocation.BODY_URL_ENCODED_FORM;
 
 /**
  *
@@ -37,25 +35,12 @@ public class OAuth2AdvanceOptionsDialog
 
 		setAccessTokenOptions( target, dialog );
 
-		setAccessTokenRetrievalOptions( target, dialog );
-
 		if( dialog.show() )
 		{
 			String accessTokenPosition = dialog.getValue( Form.ACCESS_TOKEN_POSITION );
 			target.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
 
-			String retrievalLocation = dialog.getValue( Form.HOW_TO_RECEIVE_ACCESS_TOKEN );
-			target.setAccessTokenRetrievalLocation( OAuth2Profile.AccessTokenRetrievalLocation.valueOf( retrievalLocation ) );
-
 		}
-	}
-
-	private void setAccessTokenRetrievalOptions( OAuth2Profile target, XFormDialog dialog )
-	{
-		XFormRadioGroup accessTokenRetrievalOptions = ( XFormRadioGroup )dialog.getFormField( Form.HOW_TO_RECEIVE_ACCESS_TOKEN );
-		String[] options = new String[] { BODY_JSON.toString(), BODY_URL_ENCODED_FORM.toString() };
-		accessTokenRetrievalOptions.setOptions( options );
-		dialog.setValue( Form.HOW_TO_RECEIVE_ACCESS_TOKEN, target.getAccessTokenRetrievalLocation().toString() );
 	}
 
 	private void setAccessTokenOptions( OAuth2Profile target, XFormDialog dialog )
@@ -74,8 +59,5 @@ public class OAuth2AdvanceOptionsDialog
 	{
 		@AField(description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP)
 		public final static String ACCESS_TOKEN_POSITION = messages.get( "Form.AccessTokenPosition.Label" );
-
-		@AField(description = "Form.HowToReceiveAccessToken.Description", type = AField.AFieldType.RADIOGROUP)
-		public final static String HOW_TO_RECEIVE_ACCESS_TOKEN = messages.get( "Form.HowToReceiveAccessToken.Label" );
 	}
 }
