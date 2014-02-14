@@ -148,12 +148,6 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 		return mockRequest.getHttpResponse().getOutputStream();
 	}
 
-	public void initResponse()
-	{
-		mockRequest.getHttpResponse().setStatus( HttpServletResponse.SC_OK );
-		responseStatus = HttpServletResponse.SC_OK;
-	}
-
 	public boolean isDiscarded()
 	{
 		return false;
@@ -201,11 +195,6 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 	public void setResponseStatus( int responseStatus )
 	{
 		this.responseStatus = responseStatus;
-	}
-
-	public void setResponseContentType( String responseContentType )
-	{
-		this.responseContentType = responseContentType;
 	}
 
 	public String toString()
