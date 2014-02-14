@@ -805,28 +805,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		notifyPropertyChanged( "match", old, s );
 	}
 
-/*
-	public boolean isForceMtom()
-	{
-		return mockResponse.isForceMtom();
-	}
-
-	public void setForceMtom( boolean forceMtom )
-	{
-		mockResponse.setForceMtom( forceMtom );
-	}
-
-	public boolean isInlineFilesEnabled()
-	{
-		return mockResponse.isInlineFilesEnabled();
-	}
-
-	public void setInlineFilesEnabled( boolean inlineFilesEnabled )
-	{
-		mockResponse.setInlineFilesEnabled( inlineFilesEnabled );
-	}
-*/
-
 	public String getStartStep()
 	{
 		return startTestStep == null ? "" : startTestStep.getName();
@@ -854,65 +832,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		notifyPropertyChanged( "startStep", old, startStep );
 	}
 
-	public boolean isMultipartEnabled()
-	{
-		return mockResponse.isMultipartEnabled();
-	}
-
-	public void setMultipartEnabled( boolean enabled )
-	{
-		mockResponse.setMultipartEnabled( enabled );
-	}
-
-	public boolean isHandleFault()
-	{
-		return mockResponseStepConfig.getHandleFault();
-	}
-
-	public void setHandleFault( boolean handleFault )
-	{
-		mockResponseStepConfig.setHandleFault( handleFault );
-		if( mockService != null )
-			mockService.setFaultMockOperation( handleFault ? mockOperation : null );
-	}
-
-	public boolean isHandleResponse()
-	{
-		return mockResponseStepConfig.getHandleResponse();
-	}
-
-	public void setHandleResponse( boolean handleResponse )
-	{
-		mockResponseStepConfig.setHandleResponse( handleResponse );
-		if( mockService != null )
-			mockService.setDispatchResponseMessages( handleResponse );
-	}
-
-	public long getResponseDelay()
-	{
-		return mockResponse.getResponseDelay();
-	}
-
-	public void setResponseDelay( long delay )
-	{
-		mockResponse.setResponseDelay( delay );
-	}
-
-	public String getResponseHttpStatus()
-	{
-		return mockResponse.getResponseHttpStatus()+"";
-	}
-
-	public void setResponseHttpStatus( String httpStatus )
-	{
-		mockResponse.setResponseHttpStatus( Integer.parseInt( httpStatus ) );
-	}
-
-	public boolean isEncodeAttachments()
-	{
-		return mockResponse.isEncodeAttachments();
-	}
-
 	public boolean isRemoveEmptyContent()
 	{
 		return mockResponse.isRemoveEmptyContent();
@@ -921,11 +840,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	public boolean isStripWhitespaces()
 	{
 		return mockResponse.isStripWhitespaces();
-	}
-
-	public void setEncodeAttachments( boolean encodeAttachments )
-	{
-		mockResponse.setEncodeAttachments( encodeAttachments );
 	}
 
 	public void setRemoveEmptyContent( boolean removeEmptyContent )
