@@ -487,7 +487,7 @@ public class TestMonitor
 	public boolean hasRunningMock( MockService mockService )
 	{
 		for( MockRunner runner : runningMockServices )
-			if( runner.getMockService() == mockService )
+			if( runner.getMockContext().getMockService() == mockService )
 				return true;
 
 		return false;

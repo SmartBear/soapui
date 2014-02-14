@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.eviware.soapui.model.mock.MockRunContext;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
@@ -214,8 +215,9 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 		public void onMockRunnerStart( MockRunner mockRunner )
 		{
-			log.info( "MockService started on port " + mockRunner.getMockService().getPort() + " at path ["
-					+ mockRunner.getMockService().getPath() + "]" );
+			MockRunContext mockContext = mockRunner.getMockContext();
+			log.info( "MockService started on port " + mockContext.getMockService().getPort() + " at path ["
+					+ mockContext.getMockService().getPath() + "]" );
 		}
 
 		public void onMockRunnerStop( MockRunner mockRunner )
