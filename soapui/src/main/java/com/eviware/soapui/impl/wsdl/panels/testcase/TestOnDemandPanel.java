@@ -268,8 +268,24 @@ public class TestOnDemandPanel extends JPanel
 				String redirectUrl = sendTestCaseWorker.getResult();
 				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
-					browser.navigate( redirectUrl, null );
+					openURLSafely( redirectUrl );
 				}
+			}
+		}
+	}
+
+	private void openURLSafely( String url )
+
+	{
+		if( SoapUI.isBrowserDisabled( ) )
+		{
+			Tools.openURL( url );
+		}
+		else
+		{
+			if( browser != null )
+			{
+				browser.navigate( url, null );
 			}
 		}
 	}
