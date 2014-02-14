@@ -805,6 +805,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		notifyPropertyChanged( "match", old, s );
 	}
 
+/*
 	public boolean isForceMtom()
 	{
 		return mockResponse.isForceMtom();
@@ -824,6 +825,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	{
 		mockResponse.setInlineFilesEnabled( inlineFilesEnabled );
 	}
+*/
 
 	public String getStartStep()
 	{
@@ -898,12 +900,12 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 	public String getResponseHttpStatus()
 	{
-		return mockResponse.getResponseHttpStatus();
+		return mockResponse.getResponseHttpStatus()+"";
 	}
 
 	public void setResponseHttpStatus( String httpStatus )
 	{
-		mockResponse.setResponseHttpStatus( httpStatus );
+		mockResponse.setResponseHttpStatus( Integer.parseInt( httpStatus ) );
 	}
 
 	public boolean isEncodeAttachments()

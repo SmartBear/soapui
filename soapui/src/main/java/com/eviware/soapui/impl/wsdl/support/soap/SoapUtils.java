@@ -63,6 +63,11 @@ public class SoapUtils
 		return false;
 	}
 
+	public static boolean isSoapFault( String responseContent ) throws XmlException
+	{
+		return isSoapFault( responseContent, SoapVersion.Soap12 ) || isSoapFault( responseContent, SoapVersion.Soap11 );
+	}
+
 	/**
 	 * Init soapversion from content-type header.. should envelope be checked
 	 * and/or override?

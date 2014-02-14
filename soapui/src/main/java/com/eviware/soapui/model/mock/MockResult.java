@@ -51,8 +51,6 @@ public interface MockResult
 
 	public void setResponseContent( String responseContent );
 
-	public void setResponseStatus( int scInternalServerError );
-
 	public void setContentType( String contentTypeHttpHeader );
 
 	public void writeRawResponseData( byte[] data ) throws IOException;

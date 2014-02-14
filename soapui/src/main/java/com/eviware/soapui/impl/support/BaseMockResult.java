@@ -30,7 +30,6 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 	private byte[] rawResponseData;
 	private MockOperationType mockOperation;
 	private String responseContentType;
-	private int responseStatus = 200;
 
 	public BaseMockResult( MockRequestType request ) throws Exception
 	{
@@ -176,16 +175,6 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 	public String getResponseContentType()
 	{
 		return responseContentType;
-	}
-
-	public int getResponseStatus()
-	{
-		return responseStatus;
-	}
-
-	public void setResponseStatus( int responseStatus )
-	{
-		this.responseStatus = responseStatus;
 	}
 
 	public String toString()

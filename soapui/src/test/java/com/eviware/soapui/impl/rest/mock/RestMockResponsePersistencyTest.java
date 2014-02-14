@@ -52,7 +52,7 @@ public class RestMockResponsePersistencyTest
 		RestMockResponse mockResponse = retrievedProject.getRestMockServiceByName( restMockServiceName ).
 				getMockOperationAt( 0 ).getMockResponseAt( 0 );
 
-		assertThat( mockResponse.getResponseHttpStatus(), is(httpStatusCode.toString()));
+		assertThat( mockResponse.getResponseHttpStatus(), is(httpStatusCode));
 
 	}
 

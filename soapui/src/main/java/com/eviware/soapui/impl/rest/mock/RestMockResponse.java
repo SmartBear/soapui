@@ -172,12 +172,6 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	}
 
 	@Override
-	protected boolean isFault( String responseContent, MockRequest request ) throws XmlException
-	{
-		return false;
-	}
-
-	@Override
 	protected String removeEmptyContent( String responseContent )
 	{
 		return responseContent;

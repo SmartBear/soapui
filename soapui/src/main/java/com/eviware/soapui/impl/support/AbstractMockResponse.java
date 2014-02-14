@@ -29,6 +29,7 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.xmlbeans.XmlException;
 
@@ -65,6 +66,11 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 		scriptEnginePool.setScript( getScript() );
 		propertyHolder = new MapTestPropertyHolder( this );
 		propertyHolder.addProperty( "Request" );
+
+		if( !config.isSetHttpResponseStatus() )
+		{
+			config.setHttpResponseStatus( "" + HttpStatus.SC_OK );
+		}
 
 	}
 
@@ -122,19 +128,12 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 
 	public void setResponseHttpStatus( int httpStatus )
 	{
-		setResponseHttpStatus( ((Integer)httpStatus).toString() );
+		getConfig().setHttpResponseStatus( "" + httpStatus );
 	}
 
-	public void setResponseHttpStatus( String httpStatus )
+	public int getResponseHttpStatus()
 	{
-		String oldStatus = getResponseHttpStatus();
-
-		getConfig().setHttpResponseStatus( httpStatus );
-	}
-
-	public String getResponseHttpStatus()
-	{
-		return getConfig().getHttpResponseStatus();
+		return Integer.valueOf( getConfig().getHttpResponseStatus() );
 	}
 
 	public String getResponseCompression()
@@ -323,35 +322,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 			responseContent = XmlUtils.stripWhitespaces( responseContent );
 		}
 
-		String status = getResponseHttpStatus();
 		MockRequest request = response.getMockRequest();
-
-		if( status == null || status.trim().length() == 0 )
-		{
-			if( isFault( responseContent, request ) )
-			{
-				request.getHttpResponse().setStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
-				response.setResponseStatus( HttpServletResponse.SC_INTERNAL_SERVER_ERROR );
-			}
-			else
-			{
-				request.getHttpResponse().setStatus( HttpServletResponse.SC_OK );
-				response.setResponseStatus( HttpServletResponse.SC_OK );
-			}
-		}
-		else
-		{
-			try
-			{
-				int statusCode = Integer.parseInt( status );
-				request.getHttpResponse().setStatus( statusCode );
-				response.setResponseStatus( statusCode );
-			}
-			catch( RuntimeException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
 
 		ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
@@ -440,8 +411,6 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 		DataHandler dataHandler = new DataHandler( new MockResponseDataSource( this, requestContent, isXOP ) );
 		rootPart.setDataHandler( dataHandler );
 	}
-
-	protected abstract boolean isFault( String responseContent, MockRequest request ) throws XmlException;
 
 	protected abstract String removeEmptyContent( String responseContent );
 

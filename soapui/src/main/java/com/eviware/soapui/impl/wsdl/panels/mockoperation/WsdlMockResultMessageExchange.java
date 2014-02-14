@@ -132,7 +132,7 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 
 	public int getResponseStatusCode()
 	{
-		return mockResult.getResponseStatus();
+		return mockResponse.getResponseHttpStatus();
 	}
 
 	public String getResponseContentType()

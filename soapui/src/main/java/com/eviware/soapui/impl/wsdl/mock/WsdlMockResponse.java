@@ -49,6 +49,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.log4j.Logger;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.xmlbeans.SchemaGlobalElement;
@@ -497,9 +498,27 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		return responseContent;
 	}
 
-	protected boolean isFault( String responseContent, MockRequest request ) throws XmlException
+	@Override
+	public void setResponseContent( String responseContent )
 	{
-		return SoapUtils.isSoapFault( responseContent, ((WsdlMockRequest)request).getSoapVersion() );
+		super.setResponseContent( responseContent );
+
+		handleFault( responseContent );
+	}
+
+	private void handleFault( String responseContent )
+	{
+		try
+		{
+			if( SoapUtils.isSoapFault( responseContent ) )
+			{
+				setResponseHttpStatus( HttpStatus.SC_INTERNAL_SERVER_ERROR );
+			}
+		}
+		catch( XmlException e )
+		{
+			SoapUI.logError( e );
+		}
 	}
 
 

@@ -16,11 +16,12 @@ import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.xmlbeans.XmlException;
 
 /**
  * A MockResponse returned by a MockOperation. An instance of this interface represents an actual response sent
  * from a MockService. It is (together with MockRequest) a part of a MockResult.
- * 
+ *
  * @author ole.matzura
  */
 
@@ -54,13 +55,20 @@ public interface MockResponse extends TestModelItem
 
 	public String getScript();
 
-	public void setScript(String script);
+	public void setScript( String script );
 
 	/**
-	 * Sets the HTTP status for this response. This should be a valid status code as documented in 
+	 * Sets the HTTP status for this response. This should be a valid status code as documented in
 	 * RFC1945 and RFC2616
 	 *
 	 * @param httpStatus a valid status code.
 	 */
 	public void setResponseHttpStatus( int httpStatus );
+
+	/**
+	 * Gets the HTTP status for this response.
+	 *
+	 * @return a valid status code.
+	 */
+	public int getResponseHttpStatus();
 }
