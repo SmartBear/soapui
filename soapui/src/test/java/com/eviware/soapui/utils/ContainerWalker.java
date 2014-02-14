@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import javax.swing.AbstractButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.text.JTextComponent;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -91,6 +92,17 @@ public class ContainerWalker
 	{
 		return ( AbstractButton )Iterables.find( containedComponents,
 				new ComponentClassAndNamePredicate( AbstractButton.class, buttonName ) );
+	}
+
+	public JTextComponent findTextComponent( String componentName)
+	{
+		JTextComponent component = ( JTextComponent )Iterables.find( containedComponents,
+				new ComponentClassAndNamePredicate( JTextComponent.class, componentName ) );
+		if (component == null)
+		{
+			throw new NoSuchElementException( "No text component with name '" + componentName + "' found");
+		}
+		return component;
 	}
 
 	private class ComponentClassAndNamePredicate implements Predicate<Component>

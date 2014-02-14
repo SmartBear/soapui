@@ -141,6 +141,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		oauth2Form.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
 		oauth2Form.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 		oauth2Form.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
+		oauth2Form.addButtonWithoutLabel( "Edit scripts", new EditScriptsAction( profile ) );
 
 		oauth2Form.addSpace( GROUP_SPACING );
 
@@ -167,4 +168,25 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		return oAuth2ProfileList.get( 0 );
 	}
 
+	private class EditScriptsAction implements ActionListener
+	{
+		private final OAuth2Profile profile;
+
+		public EditScriptsAction( OAuth2Profile profile )
+		{
+			this.profile = profile;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			OAuth2ScriptsEditor.Dialog dialog = new OAuth2ScriptsEditor.Dialog( profile.getJavaScripts() );
+			dialog.setVisible( true );
+			if (dialog.getScripts() != null)
+			{
+				profile.setJavaScripts( dialog.getScripts() );
+			}
+
+		}
+	}
 }
