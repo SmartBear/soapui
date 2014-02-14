@@ -19,7 +19,6 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-// TODO Could we use composition instead?
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector
 {
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
@@ -29,6 +28,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private final OAuth2Profile profile;
 	private final SimpleBindingForm oAuth2Form;
 	private JTextField clientSecretField;
+	private JPanel wrapperPanel;
 
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
@@ -62,13 +62,12 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 		else
 		{
-			layout.show( cardPanel, LEGACY_FORM_LABEL );
+			layout.show( cardPanel, BASIC_FORM_LABEL );
 		}
 	}
 
 	private void buildOAuth2Panel()
 	{
-		setBorderAndBackgroundColorOnCard( oAuth2Form.getPanel() );
 		addOAuth2Panel();
 		addOAuth2ToAuthTypeComboBox();
 		selectCard();
@@ -77,7 +76,25 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private void addOAuth2Panel()
 	{
 		populateOAuth2Form( oAuth2Form );
-		getCardPanel().add( oAuth2Form.getPanel(), OAUTH_2_FORM_LABEL );
+
+		wrapperPanel = new JPanel( new BorderLayout() );
+
+		JPanel centerPanel = oAuth2Form.getPanel();
+		setBackgroundColorOnPanel( centerPanel );
+
+		JPanel southPanel = new JPanel();
+		JSeparator separator = new JSeparator( JSeparator.HORIZONTAL );
+		separator.setPreferredSize( new Dimension( wrapperPanel.getWidth(), 2 ) );
+		southPanel.add( separator );
+		southPanel.add( new JLabel( "Learn about OAuth 2" ) );
+		setBackgroundColorOnPanel( southPanel );
+
+		wrapperPanel.add( centerPanel, BorderLayout.CENTER );
+		wrapperPanel.add( southPanel, BorderLayout.SOUTH );
+
+		setBorderOnPanel( wrapperPanel );
+
+		getCardPanel().add( wrapperPanel, OAUTH_2_FORM_LABEL );
 	}
 
 	private void addOAuth2ToAuthTypeComboBox()
@@ -158,9 +175,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		} );
 
 
-		oAuth2Form.addSpace( GROUP_SPACING );
-
-		JButton advanceOptionsButton = oAuth2Form.addButtonWithoutLabel( ADVANCED_OPTIONS, new ActionListener()
+		JButton advancedOptionsButton = oAuth2Form.addButtonWithoutLabelToTheRight( ADVANCED_OPTIONS, new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -168,7 +183,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				new OAuth2AdvanceOptionsDialog( profile );
 			}
 		} );
-		advanceOptionsButton.setName( ADVANCED_OPTIONS );
+		advancedOptionsButton.setName( ADVANCED_OPTIONS );
 	}
 
 	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight )
