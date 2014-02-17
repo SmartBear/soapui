@@ -254,6 +254,11 @@ public class UISupport
 		return dialogs.confirm( question, title );
 	}
 
+	public static boolean confirm( String question, String title, Component parent )
+	{
+		return dialogs.confirm( question, title, parent );
+	}
+
 	public static int yesYesToAllOrNo( String question, String title )
 	{
 		return dialogs.yesYesToAllOrNo( question, title );

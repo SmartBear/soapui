@@ -7,7 +7,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +67,12 @@ public class StubbedDialogs implements XDialogs
 			return currentConfirmationReturnValue;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean confirm( String question, String title, Component parent )
+	{
+		return confirm(question, title);
 	}
 
 	@Override

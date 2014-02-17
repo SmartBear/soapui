@@ -1,5 +1,7 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidator;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -26,6 +28,7 @@ public class OAuth2ScriptsEditor extends JPanel
 	static final String[] SCRIPT_NAMES = { "Login screen script", "Consent screen script"};
 
 	private List<RSyntaxTextArea> scriptFields = new ArrayList<RSyntaxTextArea>(  );
+	private JavaScriptValidator javaScriptValidator = new JavaScriptValidator();
 
 	public OAuth2ScriptsEditor( List<String> currentScripts )
 	{
@@ -73,6 +76,8 @@ public class OAuth2ScriptsEditor extends JPanel
 	public static class Dialog extends JDialog
 	{
 
+		static final String OK_BUTTON_NAME = "okButton";
+
 		private List<String> scriptsToReturn;
 
 
@@ -86,11 +91,18 @@ public class OAuth2ScriptsEditor extends JPanel
 			contentPane.add(inputPanel, BorderLayout.CENTER);
 			JPanel buttonsPanel = new JPanel(new FlowLayout( FlowLayout.RIGHT ));
 			JButton okButton = new JButton( "OK" );
+			okButton.setName( OK_BUTTON_NAME );
 			okButton.addActionListener( new ActionListener()
 			{
 				@Override
 				public void actionPerformed( ActionEvent e )
 				{
+					if (inputPanel.hasInvalidJavaScripts() && !UISupport.confirm(
+							"One or more of the entered scripts you've entered seems to be incorrect.\n\n" +
+									"Do you still want to apply it?", "Incorrect JavaScript", Dialog.this ))
+					{
+						return;
+					}
 					scriptsToReturn = inputPanel.getJavaScripts();
 					closeDialog();
 				}
@@ -128,4 +140,15 @@ public class OAuth2ScriptsEditor extends JPanel
 		}
 	}
 
+	private boolean hasInvalidJavaScripts()
+	{
+		for( RSyntaxTextArea scriptField : scriptFields )
+		{
+			if( !javaScriptValidator.validate( scriptField.getText() ) )
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
