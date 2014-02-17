@@ -29,6 +29,7 @@ import javafx.scene.web.WebView;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
@@ -55,7 +56,6 @@ import java.util.regex.Pattern;
 
 public class WebViewBasedBrowserComponent
 {
-
 	public static final String CHARSET_PATTERN = "(.+)(;\\s*charset=)(.+)";
 	private Pattern charsetFinderPattern = Pattern.compile( CHARSET_PATTERN );
 
@@ -63,7 +63,6 @@ public class WebViewBasedBrowserComponent
 	private String errorPage;
 	private boolean showingErrorPage;
 	public String url;
-	private final boolean addStatusBar;
 	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
 
 	private java.util.List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>();
@@ -72,13 +71,25 @@ public class WebViewBasedBrowserComponent
 
 	public WebViewBasedBrowserComponent( boolean addStatusBar )
 	{
-		this.addStatusBar = addStatusBar;
+		if( SoapUI.isBrowserDisabled() )
+		{
+			JEditorPane browserDisabledPanel = new JEditorPane();
+			browserDisabledPanel.setText( "Browser Component disabled" );
+			panel.add( browserDisabledPanel );
+		}
+		else
+		{
+			initializeWebView( addStatusBar );
+		}
 	}
 
 	public Component getComponent()
 	{
-		if( webView == null )
-		{
+		return panel;
+	}
+
+	private void initializeWebView( boolean addStatusBar )
+	{
 			if( addStatusBar )
 			{
 				JPanel statusBar = new JPanel( new BorderLayout() );
@@ -146,9 +157,6 @@ public class WebViewBasedBrowserComponent
 				}
 			} );
 
-		}
-
-		return panel;
 	}
 
 	private String readDocumentAsString() throws TransformerException
@@ -241,7 +249,10 @@ public class WebViewBasedBrowserComponent
 
 	public void setContent( final String contentAsString, final String contentType )
 	{
-
+		if( SoapUI.isBrowserDisabled() )
+		{
+			return;
+		}
 		Platform.runLater( new Runnable()
 		{
 			public void run()
@@ -260,6 +271,10 @@ public class WebViewBasedBrowserComponent
 
 	public void setContent( final String contentAsString )
 	{
+		if( SoapUI.isBrowserDisabled() )
+		{
+			return;
+		}
 		Platform.runLater( new Runnable()
 		{
 			public void run()
@@ -277,6 +292,10 @@ public class WebViewBasedBrowserComponent
 
 	public void navigate( String url, String errorPage )
 	{
+		if( SoapUI.isBrowserDisabled() )
+		{
+			return;
+		}
 		navigate( url, null, errorPage );
 	}
 

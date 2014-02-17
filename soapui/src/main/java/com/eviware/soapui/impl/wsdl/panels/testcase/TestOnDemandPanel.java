@@ -29,7 +29,7 @@ import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -71,22 +71,22 @@ public class TestOnDemandPanel extends JPanel
 	private static final String NO_SERVER_IP_ADDRESSES_MESSAGE = "<No IP addresses found>";
 
 	// FIXME This suggest using a Java 7 feature, Fix compiler level!
-	@NonNull
+	@Nonnull
 	private JComboBox locationsComboBox;
 
-	@NonNull
+	@Nonnull
 	private WebViewBasedBrowserComponent browser;
 
-	@NonNull
+	@Nonnull
 	private Action sendTestCaseAction;
 
-	@NonNull
+	@Nonnull
 	private static List<Location> locationsCache = new ArrayList<Location>();
 
-	@NonNull
+	@Nonnull
 	JLabel serverIPAddressesLabel = new JLabel();
 
-	@NonNull
+	@Nonnull
 	TestOnDemandCaller caller;
 
 	private final WsdlTestCase testCase;
@@ -120,10 +120,7 @@ public class TestOnDemandPanel extends JPanel
 
 	public void release()
 	{
-		if( browser != null )
-		{
-			browser.release();
-		}
+		browser.release();
 	}
 
 	private Component buildToolbar()
@@ -198,11 +195,12 @@ public class TestOnDemandPanel extends JPanel
 		invalidate();
 	}
 
-	// FIXME These guys should probably go in a utils class
-
 	private void openInInternalBrowser( String url )
 	{
-		browser.navigate( url, null );
+		if( !SoapUI.isBrowserDisabled() )
+		{
+			browser.navigate( url, null );
+		}
 	}
 
 	private void openInExternalBrowser( String url )
@@ -270,8 +268,24 @@ public class TestOnDemandPanel extends JPanel
 				String redirectUrl = sendTestCaseWorker.getResult();
 				if( !Strings.isNullOrEmpty( redirectUrl ) )
 				{
-					browser.navigate( redirectUrl, null );
+					openURLSafely( redirectUrl );
 				}
+			}
+		}
+	}
+
+	private void openURLSafely( String url )
+
+	{
+		if( SoapUI.isBrowserDisabled( ) )
+		{
+			Tools.openURL( url );
+		}
+		else
+		{
+			if( browser != null )
+			{
+				browser.navigate( url, null );
 			}
 		}
 	}

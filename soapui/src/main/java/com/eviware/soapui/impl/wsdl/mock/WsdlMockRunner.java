@@ -17,6 +17,7 @@ import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.mock.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -35,15 +36,12 @@ import java.util.Set;
 @SuppressWarnings( "unchecked" )
 public class WsdlMockRunner implements MockRunner
 {
-	private AbstractMockService mockService;
 	private final WsdlMockRunContext mockContext;
 	private boolean running;
 	private MockDispatcher dispatcher;
 
 	public WsdlMockRunner( AbstractMockService mockService, WsdlTestRunContext context ) throws Exception
 	{
-		this.mockService = mockService;
-
 		Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
 
 		// TODO: move this code elsewhere when the rest counterpoint is in place
@@ -62,7 +60,7 @@ public class WsdlMockRunner implements MockRunner
 		for( WsdlInterface iface : interfaces )
 			iface.getWsdlContext().loadIfNecessary();
 
-		mockContext = new WsdlMockRunContext( this.mockService, context );
+		mockContext = new WsdlMockRunContext( mockService, context );
 		dispatcher = mockService.createDispatcher(mockContext);
 
 		start();
@@ -73,7 +71,10 @@ public class WsdlMockRunner implements MockRunner
 		return mockContext;
 	}
 
-
+	private AbstractMockService getMockService()
+	{
+		return ( AbstractMockService )getMockContext().getMockService();
+	}
 
 	public boolean isRunning()
 	{
@@ -87,7 +88,7 @@ public class WsdlMockRunner implements MockRunner
 
 		SoapUI.getMockEngine().stopMockService( this );
 
-		MockRunListener[] mockRunListeners = mockService.getMockRunListeners();
+		MockRunListener[] mockRunListeners = getMockService().getMockRunListeners();
 
 		for( MockRunListener listener : mockRunListeners )
 		{
@@ -96,7 +97,7 @@ public class WsdlMockRunner implements MockRunner
 
 		try
 		{
-			mockService.runStopScript( mockContext, this );
+			getMockService().runStopScript( mockContext, this );
 			running = false;
 		}
 		catch( Exception e )
@@ -107,7 +108,6 @@ public class WsdlMockRunner implements MockRunner
 
 	public void release()
 	{
-		mockService = null;
 		mockContext.clear();
 		dispatcher = null;
 
@@ -125,16 +125,11 @@ public class WsdlMockRunner implements MockRunner
 		return dispatcher.getMockResultAt( index );
 	}
 
-	public MockService getMockService()
-	{
-		return mockService;
-	}
-
 	@Override
 	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
 			throws DispatchException
 	{
-		for( MockRunListener listener : mockService.getMockRunListeners() )
+		for( MockRunListener listener : getMockService().getMockRunListeners() )
 		{
 			Object result = listener.onMockRequest( this, request, response );
 			if( result instanceof MockResult )
@@ -205,7 +200,7 @@ public class WsdlMockRunner implements MockRunner
 
 					try
 					{
-						mockService.start();
+						getMockService().start();
 					}
 					catch( Exception e )
 					{
@@ -220,7 +215,7 @@ public class WsdlMockRunner implements MockRunner
 	// TODO remove this duplication. Look at WsdlMockDispatcher
 	public String getOverviewUrl()
 	{
-		return mockService.getPath() + "?WSDL";
+		return getMockService().getPath() + "?WSDL";
 	}
 
 
@@ -230,12 +225,12 @@ public class WsdlMockRunner implements MockRunner
 			return;
 
 		mockContext.reset();
-		mockService.runStartScript( mockContext, this );
+		getMockService().runStartScript( mockContext, this );
 
 		SoapUI.getMockEngine().startMockService( this );
 		running = true;
 
-		MockRunListener[] mockRunListeners = mockService.getMockRunListeners();
+		MockRunListener[] mockRunListeners = getMockService().getMockRunListeners();
 
 		for( MockRunListener listener : mockRunListeners )
 		{

@@ -190,6 +190,7 @@ public class SoapUI
 
 	private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
 	private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
+	private static final String BROWSER_DISABLED_SYSTEM_PROPERTY = "soapui.browser.disabled";
 
 
 	// ------------------------------ FIELDS ------------------------------
@@ -683,7 +684,7 @@ public class SoapUI
 				startSoapUI( mainArgs, "SoapUI " + SOAPUI_VERSION + " " + brandedTitleExt,
 						new StandaloneSoapUICore( true ) );
 
-				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) )
+				if( getSettings().getBoolean( UISettings.SHOW_STARTUP_PAGE ) && !isBrowserDisabled() )
 				{
 					SwingUtilities.invokeLater( new Runnable()
 					{
@@ -1139,6 +1140,11 @@ public class SoapUI
 		return groovyLogger;
 	}
 
+	public static boolean isBrowserDisabled()
+	{
+		return Boolean.valueOf( System.getProperty(BROWSER_DISABLED_SYSTEM_PROPERTY) );
+	}
+
 	public class InternalNavigatorListener implements NavigatorListener
 	{
 		private PropertyHolderTable selectedPropertyHolderTable = null;
@@ -1348,34 +1354,8 @@ public class SoapUI
 			}
 		}
 
-		DesktopPanel dp = UISupport.showDesktopPanel( urlDesktopPanel );
-		desktop.maximize( dp );
-		addAutoCloseOfStartPageOnMac();
+		UISupport.showDesktopPanel( urlDesktopPanel );
 		urlDesktopPanel.navigate( PUSH_PAGE_URL, PUSH_PAGE_ERROR_URL, true );
-	}
-
-	private static void addAutoCloseOfStartPageOnMac()
-	{
-		if( shouldAutoCloseStartPage() )
-		{
-			desktop.addDesktopListener( new DesktopListenerAdapter()
-			{
-				@Override
-				public void desktopPanelCreated( DesktopPanel desktopPanel )
-				{
-					if( desktopPanel != urlDesktopPanel && urlDesktopPanel != null )
-					{
-						desktop.closeDesktopPanel( urlDesktopPanel );
-					}
-				}
-			} );
-		}
-	}
-
-	private static boolean shouldAutoCloseStartPage()
-	{
-		return System.getProperty( "os.name" ).contains( "Mac" ) &&
-				!( desktop.getClass().getName().contains( "Tabbed" ) );
 	}
 
 	private static class AboutAction extends AbstractAction

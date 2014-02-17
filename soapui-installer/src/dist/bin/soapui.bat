@@ -28,7 +28,7 @@ if "%SOAPUI_HOME%" == "" goto START
 	set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path="%SOAPUI_HOME%\"
 	set JAVA_OPTS=%JAVA_OPTS% -Dwsi.dir="%SOAPUI_HOME%..\wsi-test-tools"
 rem uncomment to disable browser component
-rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.jxbrowser.disable="true"
+rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.browser.disabled="true"
 :START
 
 set OLDDIR=%CD%

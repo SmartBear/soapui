@@ -93,7 +93,7 @@ public class JettyMockEngine implements MockEngine
 	public boolean hasRunningMock( MockService mockService )
 	{
 		for( MockRunner runner : mockRunners )
-			if( runner.getMockService() == mockService )
+			if( runner.getMockContext().getMockService() == mockService )
 				return true;
 
 		return false;
@@ -106,7 +106,7 @@ public class JettyMockEngine implements MockEngine
 
 		synchronized( server )
 		{
-			MockService mockService = runner.getMockService();
+			MockService mockService = runner.getMockContext().getMockService();
 			int port = mockService.getPort();
 
 			if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) && !addedSslConnector )
@@ -126,7 +126,7 @@ public class JettyMockEngine implements MockEngine
 			if( !runners.containsKey( port ) )
 			{
 				SoapUIConnector connector = new SoapUIConnector();
-				PropertySupport.applySystemProperties( connector, "soapui.mock.connector", runner.getMockService() );
+				PropertySupport.applySystemProperties( connector, "soapui.mock.connector", runner.getMockContext().getMockService() );
 
 				connector.setPort( port );
 				if( sslConnector != null )
@@ -136,7 +136,7 @@ public class JettyMockEngine implements MockEngine
 
 				if( mockService.getBindToHostOnly() )
 				{
-					String host = PropertyExpander.expandProperties( (AbstractMockService)mockService, ((AbstractMockService)mockService).getHost() );
+					String host = PropertyExpander.expandProperties( mockService, ((AbstractMockService)mockService).getHost() );
 					if( StringUtils.hasContent( host ) )
 					{
 						connector.setHost( host );
@@ -218,7 +218,7 @@ public class JettyMockEngine implements MockEngine
 	{
 		synchronized( server )
 		{
-			MockService mockService = runner.getMockService();
+			MockService mockService = runner.getMockContext().getMockService();
 			final Integer port = new Integer( mockService.getPort() );
 			Map<String, List<MockRunner>> map = runners.get( port );
 
@@ -770,8 +770,8 @@ public class JettyMockEngine implements MockEngine
 			for( MockRunner mockRunner : mockRunners )
 			{
 				out.print( "<li><a href=\"" );
-				out.print( mockRunner.getMockService().getPath() + "?WSDL" );
-				out.print( "\">" + mockRunner.getMockService().getName() + "</a></li>" );
+				out.print( mockRunner.getMockContext().getMockService().getPath() + "?WSDL" );
+				out.print( "\">" + mockRunner.getMockContext().getMockService().getName() + "</a></li>" );
 			}
 
 			out.print( "</ul></p></body></html>" );

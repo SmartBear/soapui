@@ -20,12 +20,12 @@ public class RuntimeMemoryMonitorSource implements MonitorSource
 
 	private Runtime runtime = Runtime.getRuntime();
 
-	public float getTotal()
+	public long getTotal()
 	{
 		return runtime.totalMemory();
 	}
 
-	public float getUsed()
+	public long getUsed()
 	{
 		return runtime.totalMemory() - runtime.freeMemory();
 	}

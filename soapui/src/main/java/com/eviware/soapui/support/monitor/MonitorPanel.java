@@ -124,13 +124,13 @@ public class MonitorPanel extends JPanel
 			backImageGrfx.setBackground( Color.DARK_GRAY );
 			backImageGrfx.clearRect( 0, 0, w, h );
 
-			float totalMemory = monitorSource.getTotal();
-			float usedMemory = monitorSource.getUsed();
-			float freeMemory = totalMemory - usedMemory;
+			long totalMemory = monitorSource.getTotal();
+			long usedMemory = monitorSource.getUsed();
+			long freeMemory = totalMemory - usedMemory;
 
 			// Draw allocated and used strings
 			backImageGrfx.setColor( Color.green );
-			backImageGrfx.drawString( String.valueOf( ( int )totalMemory >> 10 ) + "K allocated", 4.0f,
+			backImageGrfx.drawString( String.valueOf( totalMemory >> 10 ) + "K allocated", 4.0f,
 					( float )ascent + 0.5f );
 			String usedStr = String.valueOf( ( ( int )usedMemory ) >> 10 ) + "K used";
 			backImageGrfx.drawString( usedStr, 4, h - descent );
@@ -143,9 +143,9 @@ public class MonitorPanel extends JPanel
 
 			// Memory Free
 			backImageGrfx.setColor( mfColor );
-			int MemUsage = ( int )( freeMemory / totalMemory * 10 );
+			long memUsage = freeMemory / totalMemory * 10;
 			int i = 0;
-			for( ; i < MemUsage; i++ )
+			for( ; i < memUsage; i++ )
 			{
 				mfRect.setRect( 5, ssH + i * blockHeight, blockWidth, blockHeight - 1 );
 				backImageGrfx.fill( mfRect );

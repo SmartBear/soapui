@@ -24,22 +24,22 @@ import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings("unchecked")
 public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
 {
 	private HttpRequestInterface<?> httpRequest;
-	private JPanel panel;
+	private JPanel panel= new JPanel( new BorderLayout() );
 	private WebViewBasedBrowserComponent browser;
 	private MessageExchangeModelItem messageExchangeModelItem;
+	private boolean initialized = false;
 
 	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
 	{
@@ -50,12 +50,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	public JComponent getComponent()
 	{
-		if( panel == null )
-		{
-			panel = new JPanel( new BorderLayout() );
-
-		}
-
 		return panel;
 	}
 
@@ -63,16 +57,20 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	public boolean activate( EditorLocation<HttpResponseDocument> location )
 	{
 		boolean activated = super.activate( location );
-		if (activated)
+		if (activated && !initialized)
 		{
-			if( browser == null )
+			if( SoapUI.isBrowserDisabled() )
+			{
+				panel.add( new JLabel( "Browser Component is disabled" ) );
+			}
+			else
 			{
 				browser = new WebViewBasedBrowserComponent( false );
 				Component component = browser.getComponent();
 				component.setMinimumSize( new Dimension( 100, 100 ) );
 				panel.add( component, BorderLayout.CENTER );
 			}
-
+			initialized = true;
 			HttpResponse response = httpRequest.getResponse();
 			if( response != null )
 			{

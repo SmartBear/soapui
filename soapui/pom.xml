@@ -264,7 +264,7 @@
         <dependency>
             <groupId>org.apache.ws.security</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.6.2</version>
+            <version>1.6.14</version>
         </dependency>
 
         <!-- HtmlUnit dependencies -->

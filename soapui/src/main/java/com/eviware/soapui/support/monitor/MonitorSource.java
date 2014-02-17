@@ -18,8 +18,8 @@ package com.eviware.soapui.support.monitor;
 public interface MonitorSource
 {
 
-	float getTotal();
+	long getTotal();
 
-	float getUsed();
+	long getUsed();
 
 }

@@ -255,7 +255,7 @@ public class MockAsWarServlet extends HttpServlet
 
 			for( MockRunner mockRunner : getMockRunners() )
 			{
-				if( pathInfo.equals( mockRunner.getMockService().getPath() ) )
+				if( pathInfo.equals( mockRunner.getMockContext().getMockService().getPath() ) )
 				{
 					MockResult result = mockRunner.dispatchRequest( request, response );
 
@@ -349,7 +349,7 @@ public class MockAsWarServlet extends HttpServlet
 		{
 			for( MockRunner runner : mockRunners )
 			{
-				if( runner.getMockService() == mockService )
+				if( runner.getMockContext().getMockService() == mockService )
 				{
 					return true;
 				}
@@ -389,7 +389,7 @@ public class MockAsWarServlet extends HttpServlet
 				overviewUrl = overviewUrl.substring( 1 );
 			}
 
-			out.print( " [<a target=\"new\" href=\"" + overviewUrl + "\">" + mockRunner.getMockService().getName()
+			out.print( " [<a target=\"new\" href=\"" + overviewUrl + "\">" + mockRunner.getMockContext().getMockService().getName()
 					+ "</a>]" );
 		}
 

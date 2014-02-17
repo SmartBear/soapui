@@ -18,7 +18,7 @@ import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 
 public interface WssContainer extends PropertyExpansionContainer
 {
@@ -30,11 +30,11 @@ public interface WssContainer extends PropertyExpansionContainer
 
 	public List<WssCrypto> getCryptoList();
 
-	public WssCrypto addCrypto( String source, String password, @NonNull CryptoType type );
+	public WssCrypto addCrypto( String source, String password, @Nonnull CryptoType type );
 
 	public int getCryptoCount();
 
-	public void removeCrypto( @NonNull WssCrypto crypto );
+	public void removeCrypto( @Nonnull WssCrypto crypto );
 
 	public List<IncomingWss> getIncomingWssList();
 

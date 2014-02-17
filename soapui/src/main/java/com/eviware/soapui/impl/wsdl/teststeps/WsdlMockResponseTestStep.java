@@ -367,7 +367,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				}
 				else
 				{
-					mockRunner.getMockService().addMockRunListener( mockRunListener );
+					mockRunner.getMockContext().getMockService().addMockRunListener( mockRunListener );
 				}
 			}
 		}
