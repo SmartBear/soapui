@@ -14,6 +14,8 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -28,9 +30,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 @ParametersAreNonnullByDefault
-public class BasicAuthenticationInspector extends AbstractXmlInspector
+public class BasicAuthenticationInspector<T extends AbstractHttpRequest> extends AbstractXmlInspector
 {
 	public static final String COMBO_BOX_LABEL = "Authorization Type";
 
@@ -49,18 +52,19 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 	private final JPanel outerPanel = new JPanel( new BorderLayout() );
 	private final JPanel cardPanel = new JPanel( new CardLayout() );
-	private final SimpleBindingForm authTypeForm;
-	private final SimpleBindingForm card;
+	private SimpleBindingForm authTypeForm;
+	private SimpleBindingForm basicAuthenticationForm;
+	protected T request;
 
-	protected BasicAuthenticationInspector( AbstractHttpRequest<?> request )
+	protected BasicAuthenticationInspector( T request )
 	{
 		super( AuthInspectorFactory.INSPECTOR_ID, "Authentication and Security-related settings",
 				true, AuthInspectorFactory.INSPECTOR_ID );
-
-		authTypeForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
-		card = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
+		this.request = request;
 
 		buildUI();
+
+		showFormForSelectedAuthType( request.getAuthType() );
 	}
 
 	@Override
@@ -81,7 +85,7 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 		super.release();
 
 		authTypeForm.getPresentationModel().release();
-		card.getPresentationModel().release();
+		basicAuthenticationForm.getPresentationModel().release();
 	}
 
 	JPanel getCardPanel()
@@ -96,27 +100,36 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 	SimpleBindingForm getBasicForm()
 	{
-		return card;
+		return basicAuthenticationForm;
 	}
 
-	void selectCard()
+	String getFormTypeForSelection( String selectedItem )
 	{
-		CardLayout layout = ( CardLayout )cardPanel.getLayout();
-		layout.show( cardPanel, BASIC_FORM_LABEL );
+		return BASIC_FORM_LABEL;
 	}
 
-	private void buildUI()
+	protected void buildUI()
 	{
+
+		authTypeForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
+		basicAuthenticationForm = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( request ) );
+
 		JPanel innerPanel = new JPanel( new BorderLayout() );
 
 		populateAuthTypeForm( authTypeForm );
 
-		innerPanel.add( authTypeForm.getPanel(), BorderLayout.PAGE_START );
+		JPanel formWrapperPanel = new JPanel( new BorderLayout() );
+		formWrapperPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 0, 10 ) );
+		formWrapperPanel.add(  authTypeForm.getPanel(), BorderLayout.LINE_START) ;
+		formWrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( "http://www.soapui.org" ) ),
+				BorderLayout.AFTER_LINE_ENDS );
 
-		setBorderAndBackgroundColorOnPanel( card.getPanel() );
-		populateBasicForm( card );
+		innerPanel.add( formWrapperPanel, BorderLayout.PAGE_START  );
 
-		cardPanel.add( card.getPanel(), BASIC_FORM_LABEL );
+		setBorderAndBackgroundColorOnPanel( basicAuthenticationForm.getPanel() );
+		populateBasicForm( basicAuthenticationForm );
+
+		cardPanel.add( basicAuthenticationForm.getPanel(), BASIC_FORM_LABEL );
 		cardPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 
 		innerPanel.add( cardPanel, BorderLayout.CENTER );
@@ -146,34 +159,48 @@ public class BasicAuthenticationInspector extends AbstractXmlInspector
 
 		authTypeForm.addSpace( OUTERMOST_SPACING );
 
-		String[] options = {
-				CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString(),
-				CredentialsConfig.AuthType.PREEMPTIVE.toString(),
-				CredentialsConfig.AuthType.NTLM.toString(),
-				CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(),
-		};
+		ArrayList<String> authenticationTypes = getAuthenticationTypes();
+		String[] options = authenticationTypes.toArray( new String[authenticationTypes.size()] );
 
-		JComboBox comboBox = authTypeForm.appendComboBox( AUTH_TYPE_PROPERTY_NAME, COMBO_BOX_LABEL, options, "" );
+		final JComboBox comboBox = authTypeForm.appendComboBox( AUTH_TYPE_PROPERTY_NAME, COMBO_BOX_LABEL, options, "" );
 		comboBox.setName( COMBO_BOX_LABEL );
 		comboBox.addActionListener( new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
 			{
-				selectCard();
+				showFormForSelectedAuthType(  comboBox.getSelectedItem().toString() );
 			}
 		} );
+
 	}
 
-	private void populateBasicForm( SimpleBindingForm legacyForm )
+	protected void showFormForSelectedAuthType( String selectedType )
 	{
-		initForm( legacyForm );
+		String formType = getFormTypeForSelection( selectedType);
+		CardLayout layout = ( CardLayout )cardPanel.getLayout();
+		layout.show( cardPanel, formType );
+	}
 
-		legacyForm.addSpace( TOP_SPACING );
+	protected ArrayList<String> getAuthenticationTypes()
+	{
+		ArrayList<String> options = new ArrayList<String>();
+		options.add( CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString() );
+		options.add( CredentialsConfig.AuthType.PREEMPTIVE.toString() );
+		options.add( CredentialsConfig.AuthType.NTLM.toString() );
+		options.add( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() );
+		return options;
+	}
 
-		legacyForm.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
-		legacyForm.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
-		legacyForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
+	private void populateBasicForm( SimpleBindingForm basicConfigurationForm )
+	{
+		initForm( basicConfigurationForm );
+
+		basicConfigurationForm.addSpace( TOP_SPACING );
+
+		basicConfigurationForm.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
+		basicConfigurationForm.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
+		basicConfigurationForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
 	}
 
 	void initForm( SimpleBindingForm form )

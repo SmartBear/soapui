@@ -506,6 +506,14 @@ public class UISupport
 		return result;
 	}
 
+	public static JButton createFormButton( Action action )
+	{
+		JButton helpButton = createToolbarButton( action );
+		helpButton.setContentAreaFilled( false );
+		helpButton.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return helpButton;
+	}
+
 	public static JButton createToolbarButton( Action action, boolean enabled )
 	{
 		JButton result = createToolbarButton( action );
