@@ -7,14 +7,19 @@ import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
+import org.fest.swing.exception.ComponentLookupException;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
+import org.hamcrest.CoreMatchers;
+import org.hamcrest.core.Is;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class OAuth2Stepdefs
 {
@@ -33,10 +38,11 @@ public class OAuth2Stepdefs
 	public static final String BUTTON_OK = "OK";
 
 	private FrameFixture rootWindow;
+	private final Robot robot;
 
 	public OAuth2Stepdefs( ScenarioRobot runner )
 	{
-		Robot robot = runner.getRobot();
+		robot = runner.getRobot();
 		rootWindow = getMainWindow( robot );
 	}
 
@@ -49,7 +55,13 @@ public class OAuth2Stepdefs
 	@When( "^and fills out all fields$" )
 	public void fillInAllOAuth2Fields()
 	{
-		fillInAllOAuth2Fields( rootWindow );
+		DialogFixture accessTokenFormDialog = getAccessTokenFormDialog();
+		accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_ID_PROPERTY ).setText( CLIENT_ID );
+		accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_SECRET_PROPERTY ).setText( CLIENT_SECRET );
+		accessTokenFormDialog.textBox( OAuth2Profile.AUTHORIZATION_URI_PROPERTY ).setText( AUTHORIZATION_URI );
+		accessTokenFormDialog.textBox( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY ).setText( ACCESS_TOKEN_URI );
+		accessTokenFormDialog.textBox( OAuth2Profile.REDIRECT_URI_PROPERTY ).setText( REDIRECT_URI );
+		accessTokenFormDialog.textBox( OAuth2Profile.SCOPE_PROPERTY ).setText( SCOPE );
 	}
 
 	@When( "^switches to another Authorization type and then back again$" )
@@ -70,13 +82,6 @@ public class OAuth2Stepdefs
 	{
 		getAdvanceDialogFixture().radioButton( accessTokenPosition ).click();
 	}
-
-	@When( "^user selects access token retrieval location (.+)$" )
-	public void selectAccessTokenRetrievalLocation( String accessTokenRetrievalLocation )
-	{
-		getAdvanceDialogFixture().radioButton( accessTokenRetrievalLocation ).click();
-	}
-
 
 	@When( "^closes and reopens the advance options dialog" )
 	public void closeAndReOpenAdvanceOptionsDialog()
@@ -100,13 +105,14 @@ public class OAuth2Stepdefs
 	@When( "^clicks on the disclosure button$" )
 	public void clickOnDisclosureButton()
 	{
-		throw new UnsupportedOperationException( "Not yet implemented!!" );
+		rootWindow.label( "oAuth2DisclosureButton" ).click();
 	}
 
 	@When( "clicks outside of the Get Access token form$" )
 	public void clickOutsideOfTheGetAccessTokenForm()
 	{
-		throw new UnsupportedOperationException( "Not yet implemented!!" );
+		rootWindow.focus();
+		rootWindow.click();
 	}
 
 	@Then( "^the OAuth 2 option is not visible in the Authentication Type dropdown$" )
@@ -119,19 +125,19 @@ public class OAuth2Stepdefs
 	@Then( "^the previously filled fields are still present$" )
 	public void verifyThatThePreviouslyFilledFieldsAreStillPresent()
 	{
-		verifyAllOAuth2Fields( rootWindow );
+		DialogFixture accessTokenFormDialog = getAccessTokenFormDialog();
+		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_ID_PROPERTY ).text(), is( CLIENT_ID ) );
+		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_SECRET_PROPERTY ).text(), is( CLIENT_SECRET ) );
+		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.AUTHORIZATION_URI_PROPERTY ).text(), is( AUTHORIZATION_URI ) );
+		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY ).text(), is( ACCESS_TOKEN_URI ) );
+		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.REDIRECT_URI_PROPERTY ).text(), is( REDIRECT_URI ) );
+		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.SCOPE_PROPERTY ).text(), is( SCOPE ) );
 	}
 
 	@Then( "^access token position is (.+)$" )
 	public void verifyAccessTokenPosition( String expectedAccessTokenPosition )
 	{
 		getAdvanceDialogFixture().radioButton( expectedAccessTokenPosition ).requireSelected();
-	}
-
-	@Then( "^access token retrieval location is (.+)$" )
-	public void verifyAccessTokenRetrievalLocation( String expectedAccessTokenRetrievalLocation )
-	{
-		getAdvanceDialogFixture().radioButton( expectedAccessTokenRetrievalLocation ).requireSelected();
 	}
 
 	@Then( "^access token is present$" )
@@ -143,9 +149,15 @@ public class OAuth2Stepdefs
 	@Then( "the Get Access token form is closed$" )
 	public void verifyThatTheAccessTokenFormIsNotVisible()
 	{
-		throw new UnsupportedOperationException( "Not yet implemented!!" );
+		try
+		{
+			getAccessTokenFormDialog();
+			fail("Get access token dialog is still visible");
+		}
+		catch( ComponentLookupException e )
+		{
+		}
 	}
-
 
 	private void closeAdvanceOptionsDialog()
 	{
@@ -163,25 +175,8 @@ public class OAuth2Stepdefs
 		rootWindow.comboBox( OAuth2AuthenticationInspector.COMBO_BOX_LABEL ).selectItem( itemName );
 	}
 
-	private void fillInAllOAuth2Fields( FrameFixture rootWindow )
+	private DialogFixture getAccessTokenFormDialog()
 	{
-		rootWindow.textBox( OAuth2Profile.CLIENT_ID_PROPERTY ).setText( CLIENT_ID );
-		rootWindow.textBox( OAuth2Profile.CLIENT_SECRET_PROPERTY ).setText( CLIENT_SECRET );
-		rootWindow.textBox( OAuth2Profile.AUTHORIZATION_URI_PROPERTY ).setText( AUTHORIZATION_URI );
-		rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY ).setText( ACCESS_TOKEN_URI );
-		rootWindow.textBox( OAuth2Profile.REDIRECT_URI_PROPERTY ).setText( REDIRECT_URI );
-		rootWindow.textBox( OAuth2Profile.SCOPE_PROPERTY ).setText( SCOPE );
-		rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_PROPERTY ).setText( ACCESS_TOKEN );
-	}
-
-	private void verifyAllOAuth2Fields( FrameFixture rootWindow )
-	{
-		assertThat( rootWindow.textBox( OAuth2Profile.CLIENT_ID_PROPERTY ).text(), is( CLIENT_ID ) );
-		assertThat( rootWindow.textBox( OAuth2Profile.CLIENT_SECRET_PROPERTY ).text(), is( CLIENT_SECRET ) );
-		assertThat( rootWindow.textBox( OAuth2Profile.AUTHORIZATION_URI_PROPERTY ).text(), is( AUTHORIZATION_URI ) );
-		assertThat( rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY ).text(), is( ACCESS_TOKEN_URI ) );
-		assertThat( rootWindow.textBox( OAuth2Profile.REDIRECT_URI_PROPERTY ).text(), is( REDIRECT_URI ) );
-		assertThat( rootWindow.textBox( OAuth2Profile.SCOPE_PROPERTY ).text(), is( SCOPE ) );
-		assertThat( rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_PROPERTY ).text(), is( ACCESS_TOKEN ) );
+		return new DialogFixture( robot, "getAccessTokenFormDialog" );
 	}
 }
