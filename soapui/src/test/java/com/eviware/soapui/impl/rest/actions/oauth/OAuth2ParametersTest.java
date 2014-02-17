@@ -15,7 +15,6 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.utils.OAuth2TestUtils;
 import org.junit.Before;
 import org.junit.Test;
 

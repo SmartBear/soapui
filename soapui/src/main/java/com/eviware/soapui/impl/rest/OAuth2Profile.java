@@ -12,7 +12,10 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.AccessTokenPositionConfig;
+import com.eviware.soapui.config.AccessTokenStatusConfig;
+import com.eviware.soapui.config.OAuth2FlowConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -38,8 +41,9 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String SCOPE_PROPERTY = "scope";
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
+	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
+	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
 	public static final String OAUTH2_FLOW = "oAuth2Flow";
-
 
 	public enum AccessTokenStatus
 	{
@@ -91,7 +95,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
-
 	private final OAuth2ProfileConfig configuration;
 	private final PropertyChangeSupport pcs;
 
@@ -312,6 +315,39 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			return AccessTokenStatus.valueOf( configuration.getAccessTokenStatus().toString()).toString();
 		}
 		return null;
+	}
+
+	public long getAccessTokenExpirationTime()
+	{
+		return configuration.getAccessTokenExpirationTime();
+	}
+
+	public void setAccessTokenExpirationTime( long newExpirationTime )
+	{
+		long oldExpirationTime = configuration.getAccessTokenExpirationTime();
+
+		if( oldExpirationTime != newExpirationTime )
+		{
+			configuration.setAccessTokenExpirationTime( newExpirationTime );
+			pcs.firePropertyChange( ACCESS_TOKEN_EXPIRATION_TIME, oldExpirationTime, newExpirationTime );
+		}
+	}
+
+	public long getAccessTokenIssuedTime()
+	{
+		return configuration.getAccessTokenIssuedTime();
+	}
+
+	public void setAccessTokenIssuedTime( long newIssuedTime )
+	{
+		long oldIssuedTime = configuration.getAccessTokenIssuedTime();
+
+		if( oldIssuedTime != newIssuedTime )
+		{
+			configuration.setAccessTokenIssuedTime( newIssuedTime );
+			pcs.firePropertyChange( ACCESS_TOKEN_ISSUED_TIME, oldIssuedTime, newIssuedTime );
+		}
+		configuration.setAccessTokenIssuedTime( newIssuedTime );
 	}
 
 	public OAuth2ProfileContainer getContainer()

@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.TimeUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
@@ -174,6 +175,9 @@ public class OAuth2TokenExtractor
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
 					parameters.setRefreshTokenInProfile( token.getRefreshToken() );
+					parameters.setAccessTokenExpirationTimeInProfile( token.getExpiresIn() );
+					parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
+
 					browserFacade.close();
 				}
 			}
