@@ -14,16 +14,12 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
-import com.eviware.soapui.utils.OAuth2TestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -34,7 +30,6 @@ import java.net.URISyntaxException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 
 /**
@@ -55,8 +50,7 @@ public class OltuOAuth2ClientFacadeTest
 		profileWithOnlyAccessToken = OAuth2TestUtils.getOAuth2ProfileWithOnlyAccessToken();
 		httpRequest = new ExtendedPostMethod();
 		httpRequest.setURI( new URI( "endpoint/path" ) );
-		oltuClientFacade = new OltuOAuth2ClientFacade();
-		mockOAuth2TokenExtractor();
+		oltuClientFacade = OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profile );
 	}
 
 	@Test
@@ -197,41 +191,5 @@ public class OltuOAuth2ClientFacadeTest
 		profile.setRefreshToken( "someRefreshToken" );
 		profile.setClientSecret( "" );
 		oltuClientFacade.refreshAccessToken( profile );
-	}
-
-	private void mockOAuth2TokenExtractor(  ) throws URISyntaxException,
-			MalformedURLException, OAuthSystemException, OAuthProblemException
-	{
-		OAuth2TokenExtractor oAuth2TokenExtractor = mock( OAuth2TokenExtractor.class );
-		oltuClientFacade.oAuth2TokenExtractor = oAuth2TokenExtractor;
-		doAnswer( new Answer<Object>()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
-				return profile;
-			}
-		} ).when( oAuth2TokenExtractor ).extractAccessTokenForAuthorizationCodeGrantFlow( any( OAuth2Parameters.class ) );
-
-		doAnswer( new Answer()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
-				return profile;
-			}
-		} ).when( oAuth2TokenExtractor ).extractAccessTokenForImplicitGrantFlow( any( OAuth2Parameters.class ) );
-
-		doAnswer( new Answer()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
-				return profile;
-			}
-		} ).when( oAuth2TokenExtractor ).refreshAccessToken( any( OAuth2Parameters.class ) );
 	}
 }

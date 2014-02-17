@@ -1974,6 +1974,8 @@
             <xsd:element name="refreshToken" type="xsd:string"></xsd:element>
             <xsd:element name="scope" type="xsd:string"></xsd:element>
             <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus"></xsd:element>
+            <xsd:element name="accessTokenExpirationTime" type="xsd:long"></xsd:element>
+            <xsd:element name="accessTokenIssuedTime" type="xsd:long"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 

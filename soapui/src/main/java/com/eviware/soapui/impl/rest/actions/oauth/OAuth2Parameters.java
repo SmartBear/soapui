@@ -4,8 +4,8 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
 /**
-* Wrapper class that performs property expansion on the values in an OAuth2Profile instance.
-*/
+ * Wrapper class that performs property expansion on the values in an OAuth2Profile instance.
+ */
 class OAuth2Parameters
 {
 
@@ -22,6 +22,7 @@ class OAuth2Parameters
 
 	/**
 	 * Constructs an OAuth2Parameters object
+	 *
 	 * @param profile the profile to be wrapped
 	 */
 	OAuth2Parameters( OAuth2Profile profile )
@@ -29,7 +30,7 @@ class OAuth2Parameters
 		this.profile = profile;
 		this.authorizationUri = expandProperty( profile, profile.getAuthorizationURI() );
 		this.redirectUri = expandProperty( profile, profile.getRedirectURI() );
-		this.accessTokenUri =  expandProperty( profile, profile.getAccessTokenURI() );
+		this.accessTokenUri = expandProperty( profile, profile.getAccessTokenURI() );
 		this.clientId = expandProperty( profile, profile.getClientID() );
 		this.clientSecret = expandProperty( profile, profile.getClientSecret() );
 		this.scope = expandProperty( profile, profile.getScope() );
@@ -46,6 +47,7 @@ class OAuth2Parameters
 
 	/**
 	 * Sets the accessToken property on the wrapped OAuth2Profile instance
+	 *
 	 * @param accessToken the access token String
 	 */
 	void setAccessTokenInProfile( String accessToken )
@@ -56,6 +58,16 @@ class OAuth2Parameters
 	public void setRefreshTokenInProfile( String refreshToken )
 	{
 		profile.setRefreshToken( refreshToken );
+	}
+
+	public void setAccessTokenExpirationTimeInProfile( long expirationTime )
+	{
+		profile.setAccessTokenExpirationTime( expirationTime );
+	}
+
+	public void setAccessTokenIssuedTimeInProfile( long issuedTime )
+	{
+		profile.setAccessTokenIssuedTime( issuedTime );
 	}
 
 	public void waitingForAuthorization()

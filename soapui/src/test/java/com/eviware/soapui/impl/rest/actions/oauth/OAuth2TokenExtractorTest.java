@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.utils.OAuth2TestUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.OAuthAccessTokenResponse;
@@ -34,7 +33,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.eviware.soapui.utils.OAuth2TestUtils.*;
+import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;

@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.TimeUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
 import org.apache.oltu.oauth2.client.response.GitHubTokenResponse;
@@ -169,22 +170,25 @@ public class OAuth2TokenExtractor
 						.setRedirectURI( parameters.redirectUri )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
-				OAuthToken token = null;
+				OAuthToken tokenResponse = null;
 				switch( parameters.accessTokenRetrievalLocation )
 				{
 					case BODY_URL_ENCODED_FORM:
-						token = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
+						tokenResponse = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
 						break;
 					case BODY_JSON:
 					default:
-						token = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
+						tokenResponse = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
 								.getOAuthToken();
 						break;
 				}
-				if( token != null && token.getAccessToken() != null )
+				if( tokenResponse != null && tokenResponse.getAccessToken() != null )
 				{
-					parameters.setAccessTokenInProfile( token.getAccessToken() );
-					parameters.setRefreshTokenInProfile( token.getRefreshToken() );
+					parameters.setAccessTokenInProfile( tokenResponse.getAccessToken() );
+					parameters.setRefreshTokenInProfile( tokenResponse.getRefreshToken() );
+					parameters.setAccessTokenExpirationTimeInProfile( tokenResponse.getExpiresIn() );
+					parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
+
 					browserFacade.close();
 				}
 			}
