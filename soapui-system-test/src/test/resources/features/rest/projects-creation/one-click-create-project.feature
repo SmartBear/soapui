@@ -18,7 +18,7 @@ Examples:
 |(empty nothing is in the URI field)    | "Empty URI"                                            |
 
 
-Scenario Outline: Parse a REST URI automatically
+Scenario Outline: Parse a valid REST URI automatically
   Given SoapUI is open
   When Calvin creates a new REST project from the file menu
     And enters a <Valid URI>
@@ -48,21 +48,3 @@ Examples:
 |http://www.youneverknowhowlongcouldtheybeinadomainnameandyoumusttryitinthetestscenarios.com/nowyounerverknowhowlongtheyhaveintheresourcepart/tryitbyyouself/tryitinyourtestscenarios/getItem?id=123;MATRIXpara=value1|http://www.youneverknowhowlongcouldtheybeinadomainnameandyoumusttryitinthetestscenarios.com|/nowyounerverknowhowlongtheyhaveintheresourcepart/tryitbyyouself/tryitinyourtestscenarios/getItem|GetItem|GET|id=123, MATRIXpara=value1|
 |10.10.1.230:8090/subscribers/subscriber                              |http://10.10.1.230:8090|/subscribers/subscriber          |Subscriber        |GET   |n/a                    |
 |api.soapui.com/services                                              |http://api.soapui.com  |/services                        |Services          |GET   |n/a                |
-
-Scenario Outline: Extract the REST URI by changing the advanced options
-   Given SoapUI is open
-   When Calvin creates a new REST project from the file menu
-     And enters a <Valid URI>
-     And chooses to view more options
-     And edits the endpoint to <endpoint>, the resource path to <resource path>, the method to <method> and the parameters to <parameters>
-     And clicks OK
-  Then the request editor appears displaying the edited method <method>, endpoint <endpoint>, resource path <resource path>, parameters <parameters> and a request preview.
-    And the navigator tree shows "REST Project" as the project name, <resource name> as the resource name, and <method> and <resource name> combined as the method name
-
-Examples:
-  |Valid URI                                                            |endpoint              |resource path                     |resource name     |method|parameters        |
-  |http://service.com/api/1.2/json/search/search?title=Kill me          |http://service007.org |/search/api                       |resource1         |POST  |name=killer       |
-
-# to be continue:
-# only change one
-# change the URI to invalid?
