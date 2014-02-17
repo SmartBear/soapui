@@ -6,7 +6,6 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
-import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -16,18 +15,19 @@ import com.jgoodies.binding.value.AbstractValueModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
-public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector
+public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
-	public static final String ADVANCED_OPTIONS = "Advanced Options";
+	public static final String ADVANCED_OPTIONS = "Advanced...";
 	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
 
-	private final OAuth2Profile profile;
-	private final SimpleBindingForm oAuth2Form;
+	private OAuth2Profile profile;
+	private SimpleBindingForm oAuth2Form;
 	private JTextField clientSecretField;
 	private JPanel wrapperPanel;
 	private boolean disclosureButtonDisabled;
@@ -36,10 +36,15 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
 		super( request );
+	}
 
+	@Override
+	protected void buildUI()
+	{
+		super.buildUI();
 		profile = getOAuth2Profile( request );
 		oAuth2Form = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
-		buildOAuth2Panel();
+		addOAuth2Panel();
 	}
 
 	@Override
@@ -51,29 +56,16 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	}
 
 	@Override
-	void selectCard()
+	String getFormTypeForSelection( String selectedItem )
 	{
-		SimpleForm authTypeForm = getAuthTypeForm();
-		Container cardPanel = getCardPanel();
-
-		Component component = authTypeForm.getComponent( COMBO_BOX_LABEL );
-		JComboBox comboBox = ( JComboBox )component;
-		CardLayout layout = ( CardLayout )cardPanel.getLayout();
-		if( comboBox.getSelectedItem().equals( CredentialsConfig.AuthType.O_AUTH_2.toString() ) )
+		if( selectedItem.equals( CredentialsConfig.AuthType.O_AUTH_2.toString() ) )
 		{
-			layout.show( cardPanel, OAUTH_2_FORM_LABEL );
+			return OAUTH_2_FORM_LABEL;
 		}
 		else
 		{
-			layout.show( cardPanel, BASIC_FORM_LABEL );
+			return super.getFormTypeForSelection( selectedItem );
 		}
-	}
-
-	private void buildOAuth2Panel()
-	{
-		addOAuth2Panel();
-		addOAuth2ToAuthTypeComboBox();
-		selectCard();
 	}
 
 	private void addOAuth2Panel()
@@ -111,28 +103,17 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 			{
 				Tools.openURL( url );
 			}
-
-			@Override
-			public void mouseEntered( MouseEvent e )
-			{
-				e.getComponent().setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-			}
 		} );
+		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
 		return oAuthDocumentationLink;
 	}
 
-	private void addOAuth2ToAuthTypeComboBox()
+	@Override
+	protected ArrayList<String> getAuthenticationTypes()
 	{
-		String[] options = {
-				CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString(),
-				CredentialsConfig.AuthType.PREEMPTIVE.toString(),
-				CredentialsConfig.AuthType.NTLM.toString(),
-				CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(),
-				CredentialsConfig.AuthType.O_AUTH_2.toString()
-		};
-
-		JComboBox comboBox = ( JComboBox )getAuthTypeForm().getComponent( COMBO_BOX_LABEL );
-		getAuthTypeForm().setComboBoxItems( AUTH_TYPE_PROPERTY_NAME, comboBox, options );
+		ArrayList<String> authenticationTypes = super.getAuthenticationTypes();
+		authenticationTypes.add( CredentialsConfig.AuthType.O_AUTH_2.toString() );
+		return authenticationTypes;
 	}
 
 	private void populateOAuth2Form( SimpleBindingForm oAuth2Form )
@@ -148,11 +129,11 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		populateGetAccessTokenForm( accessTokenForm );
 
 		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
-		accessTokenFormPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createLineBorder( CARD_BORDER_COLOR ),BorderFactory.createEmptyBorder( 10, 10, 10, 10 )));
+		accessTokenFormPanel.setBorder( BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder( CARD_BORDER_COLOR ), BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
 
 		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
-		final JLabel disclosureButton = new JLabel( "▲ Get Token" );
+		final JLabel disclosureButton = new JLabel( "▼ Get Token" );
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 		disclosureButton.addMouseListener( new MouseAdapter()
@@ -171,7 +152,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				Point disclosureButtonLocation = source.getLocationOnScreen();
 				accessTokenFormDialog.pack();
 				accessTokenFormDialog.setVisible( true );
-				disclosureButton.setText( "▼ Get Token" );
+				disclosureButton.setText( "▲ Get Token" );
 				if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation, accessTokenFormDialog.getHeight() ) )
 				{
 					setAccessTokenFormDialogBoundsBelowTheButton( disclosureButtonLocation, accessTokenFormDialog, source.getHeight() );
@@ -207,7 +188,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 			public void windowLostFocus( WindowEvent e )
 			{
 				accessTokenFormDialog.setVisible( false );
-				disclosureButton.setText( "▲ Get Token" );
+				disclosureButton.setText( "▼ Get Token" );
 				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
 				// will then show the dialog directly again.
 				if( !isMouseOnDisclosureLabel )
