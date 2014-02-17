@@ -32,7 +32,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.JTableFactory;
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -68,13 +68,13 @@ public class WSSTabPanel extends JPanel
 	private static final int MOVE_UP = -1;
 	private static final int MOVE_DOWN = 1;
 
-	@NonNull
+	@Nonnull
 	private JTable keystoreTable;
-	@NonNull
+	@Nonnull
 	private JTable truststoreTable;
-	@NonNull
+	@Nonnull
 	private RemoveCryptoAction removeKeystoreAction;
-	@NonNull
+	@Nonnull
 	private RemoveCryptoAction removeTruststoreAction;
 
 	private RemoveIncomingWssAction removeIncomingWssAction;

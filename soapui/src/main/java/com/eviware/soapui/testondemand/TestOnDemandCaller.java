@@ -27,7 +27,7 @@ import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.ByteArrayEntity;
@@ -98,7 +98,7 @@ public class TestOnDemandCaller
 
 	private static final Logger log = Logger.getLogger( TestOnDemandCaller.class );
 
-	@NonNull
+	@Nonnull
 	public List<Location> getLocations() throws Exception
 	{
 		Document responseDocument = makeCall( LOCATIONS_URI, generateLocationsRequestXML() );
@@ -127,8 +127,8 @@ public class TestOnDemandCaller
 	}
 
 	// FIXME We should do some performance testing of large soapUI project files.
-	@NonNull
-	public String sendTestCase( @NonNull WsdlTestCase testCase, @NonNull Location location ) throws Exception
+	@Nonnull
+	public String sendTestCase( @Nonnull WsdlTestCase testCase, @Nonnull Location location ) throws Exception
 	{
 
 		final ExtendedPostMethod post = new ExtendedPostMethod();

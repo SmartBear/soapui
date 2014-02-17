@@ -29,7 +29,7 @@ import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -71,22 +71,22 @@ public class TestOnDemandPanel extends JPanel
 	private static final String NO_SERVER_IP_ADDRESSES_MESSAGE = "<No IP addresses found>";
 
 	// FIXME This suggest using a Java 7 feature, Fix compiler level!
-	@NonNull
+	@Nonnull
 	private JComboBox locationsComboBox;
 
-	@NonNull
+	@Nonnull
 	private WebViewBasedBrowserComponent browser;
 
-	@NonNull
+	@Nonnull
 	private Action sendTestCaseAction;
 
-	@NonNull
+	@Nonnull
 	private static List<Location> locationsCache = new ArrayList<Location>();
 
-	@NonNull
+	@Nonnull
 	JLabel serverIPAddressesLabel = new JLabel();
 
-	@NonNull
+	@Nonnull
 	TestOnDemandCaller caller;
 
 	private final WsdlTestCase testCase;

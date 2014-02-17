@@ -25,7 +25,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.google.common.io.Files;
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
 import org.apache.commons.ssl.KeyStoreBuilder;
 import org.apache.commons.ssl.ProbablyBadPasswordException;
 import org.apache.commons.ssl.Util;
@@ -193,7 +193,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		}
 	}
 
-	@NonNull
+	@Nonnull
 	private String fileExtensionToKeystoreType( String fileExtension )
 	{
 		if( fileExtension.equals( PKCS12_FILE_EXTENSION ) )
@@ -356,7 +356,7 @@ public class KeyMaterialWssCrypto implements WssCrypto
 		return type;
 	}
 
-	public void setType( @NonNull CryptoType type )
+	public void setType( @Nonnull CryptoType type )
 	{
 		config.setType( type.name() );
 	}
