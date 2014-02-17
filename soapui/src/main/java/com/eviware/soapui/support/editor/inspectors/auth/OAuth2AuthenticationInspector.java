@@ -153,6 +153,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
 		final JLabel disclosureButton = new JLabel( "▲ Get Token" );
+		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 		disclosureButton.addMouseListener( new MouseAdapter()
 		{
@@ -250,6 +251,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private JDialog createAccessTokenDialog( JPanel accessTokenFormPanel )
 	{
 		final JDialog accessTokenFormDialog = new JDialog();
+		accessTokenFormDialog.setName( "getAccessTokenFormDialog" );
 		accessTokenFormDialog.setUndecorated( true );
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
 
