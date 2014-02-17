@@ -9,6 +9,9 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
@@ -97,5 +100,20 @@ public class ModelItemFactory
 	public static RestMockAction makeRestMockAction() throws SoapUIException
 	{
 		return makeRestMockAction( makeRestMockService() );
+	}
+
+	public static WsdlMockOperation makeWsdlMockOperation() throws SoapUIException
+	{
+		return new WsdlMockOperation( makeWsdlMockService(), MockOperationConfig.Factory.newInstance(), makeWsdlOperation() );
+	}
+
+	private static WsdlMockService makeWsdlMockService() throws SoapUIException
+	{
+		return new WsdlMockService( makeWsdlProject(), MockServiceConfig.Factory.newInstance() );
+	}
+
+	public static WsdlMockResponse makeWsdlMockResponse() throws SoapUIException
+	{
+		return new WsdlMockResponse( makeWsdlMockOperation(), MockResponseConfig.Factory.newInstance());
 	}
 }

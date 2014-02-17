@@ -1244,9 +1244,9 @@ public class WsdlUtils
 		}
 	}
 
-	public static void setDefaultWsaAction( WsaConfig wsaConfig, boolean b )
+	public static void setDefaultWsaAction( WsaConfig wsaConfig, boolean output )
 	{
-		String defaultAction = getDefaultWsaAction( wsaConfig.getWsaContainer().getOperation(), b );
+		String defaultAction = getDefaultWsaAction( wsaConfig.getWsaContainer().getOperation(), output );
 		if( StringUtils.hasContent( defaultAction ) )
 			wsaConfig.setAction( defaultAction );
 	}

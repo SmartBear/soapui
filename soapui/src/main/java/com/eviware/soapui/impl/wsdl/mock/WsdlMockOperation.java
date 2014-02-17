@@ -177,7 +177,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		// add ws-a action
 		WsdlUtils.setDefaultWsaAction( mockResponse.getWsaConfig(), true );
 
-		( getMockService() ).fireMockResponseAdded( mockResponse );
+		getMockService().fireMockResponseAdded( mockResponse );
 		notifyPropertyChanged( "mockResponses", null, mockResponse );
 
 		return mockResponse;
@@ -185,7 +185,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
 	public WsdlMockResponse addNewMockResponse( String name, boolean createResponse )
 	{
-		MockResponseConfig responseConfig = (MockResponseConfig)getConfig().addNewResponse();
+		MockResponseConfig responseConfig = getConfig().addNewResponse();
 		responseConfig.setName( name );
 		responseConfig.addNewResponseContent();
 
