@@ -75,8 +75,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public enum OAuth2Flow
 	{
 		AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
-		RESOURCE_OWNER_CREDENTIALS_GRANT("Resource Owner Credentials Grant"),
-		CLIENT_CREDENTIALS_GRANT("Client Credentials Grant"),
 		IMPLICIT_GRANT("Implicit Grant");
 
 		private String description;

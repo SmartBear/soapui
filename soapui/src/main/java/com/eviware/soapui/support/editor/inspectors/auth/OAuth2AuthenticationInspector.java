@@ -305,9 +305,9 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
 		// TODO This should be a bit wider, but leaving it at default size for now
-		accessTokenForm.addButtonWithoutLabel( "Get access token", new GetOAuthAccessTokenAction( profile ) );
+		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
-		accessTokenForm.addButtonWithoutLabel( "Refresh access token", new RefreshOAuthAccessTokenAction( profile ) );
+		accessTokenForm.addButtonWithoutLabel( "Refresh Access Token", new RefreshOAuthAccessTokenAction( profile ) );
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
 		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
