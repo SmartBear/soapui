@@ -1988,8 +1988,6 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="AUTHORIZATION_CODE_GRANT"></xsd:enumeration>
             <xsd:enumeration value="IMPLICIT_GRANT"></xsd:enumeration>
-            <xsd:enumeration value="RESOURCE_OWNER_CREDENTIALS_GRANT"></xsd:enumeration>
-            <xsd:enumeration value="CLIENT_CREDENTIALS_GRANT"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
 
