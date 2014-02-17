@@ -353,13 +353,13 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			List<MockServiceConfig> mockServiceConfigs = getConfig().getMockServiceList();
 			for( MockServiceConfig config : mockServiceConfigs )
 			{
-				mockServices.add( new WsdlMockService( this, config ) );
+				addWsdlMockService( new WsdlMockService( this, config ) );
 			}
 
 			List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
 			for( RESTMockServiceConfig config : restMockServiceConfigs )
 			{
-				restMockServices.add( new RestMockService( this, config ) );
+				addRestMockService( new RestMockService( this, config ) );
 			}
 
 			if( !getConfig().isSetWssContainer() )
@@ -1325,20 +1325,34 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	{
 		WsdlMockService mockService = new WsdlMockService( this, getConfig().addNewMockService() );
 		mockService.setName( name );
-		mockServices.add( mockService );
+		addWsdlMockService( mockService );
 		fireMockServiceAdded( mockService );
 
 		return mockService;
+	}
+
+	public void addWsdlMockService( WsdlMockService mockService )
+	{
+		mockServices.add( mockService );
 	}
 
 	public RestMockService addNewRestMockService( String name )
 	{
 		RestMockService mockService = new RestMockService( this, getConfig().addNewRestMockService() );
 		mockService.setName( name );
-		restMockServices.add( mockService );
+		addRestMockService( mockService );
 		fireMockServiceAdded( mockService );
 
 		return mockService;
+	}
+
+	public void addRestMockService( RestMockService mockService )
+	{
+
+		if( !mockService.getParent().equals( this ))
+			throw new IllegalStateException("In Illegal state");
+
+		restMockServices.add( mockService );
 	}
 
 	public WsdlMockService getMockServiceAt( int index )
@@ -1563,7 +1577,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			mockServiceConfig.unsetId();
 		mockService = new WsdlMockService( this, mockServiceConfig );
 		mockService.setDescription( description );
-		mockServices.add( mockService );
+		addWsdlMockService( mockService );
 		if( createCopy )
 			ModelSupport.unsetIds( mockService );
 
@@ -2174,7 +2188,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 			ModelSupport.unsetIds( mockService );
 			mockService.afterLoad();
 
-			mockServices.add( mockService );
+			addWsdlMockService( mockService );
 			fireMockServiceAdded( mockService );
 
 			resolveImportedMockService( mockService );

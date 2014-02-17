@@ -56,9 +56,12 @@ public class ModelItemFactory
 		return new RestService(makeWsdlProject(), RestServiceConfig.Factory.newInstance());
 	}
 
-	public static RestMockAction makeRestMockAction(RestMockService restMockService) throws SoapUIException
+	public static RestMockAction makeRestMockAction() throws SoapUIException
 	{
-		return restMockService.addNewMockAction( makeRestRequest() );
+		RestMockService mockService = makeRestMockService();
+		RestMockAction restMockAction = new RestMockAction( mockService, mockService.getConfig().addNewRestMockAction() );
+		mockService.addMockOperation( restMockAction );
+		return restMockAction;
 	}
 
 	public static WsdlProject makeWsdlProject() throws SoapUIException
@@ -94,12 +97,10 @@ public class ModelItemFactory
 
 	public static RestMockService makeRestMockService() throws SoapUIException
 	{
-		return new RestMockService( makeWsdlProject(), RESTMockServiceConfig.Factory.newInstance() );
-	}
-
-	public static RestMockAction makeRestMockAction() throws SoapUIException
-	{
-		return makeRestMockAction( makeRestMockService() );
+		WsdlProject project = makeWsdlProject();
+		RestMockService restMockService = new RestMockService( project, project.getConfig().addNewRestMockService() );
+		project.addRestMockService( restMockService );
+		return restMockService;
 	}
 
 	public static WsdlMockOperation makeWsdlMockOperation() throws SoapUIException

@@ -2,6 +2,8 @@
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.BaseMockServiceConfig;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
@@ -90,10 +92,19 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		return null;
 	}
 
-	public void addMockOperation( MockOperation mockOperation )
+	public void addMockOperation( MockOperationType mockOperation )
 	{
-		mockOperations.add( mockOperation );
+		if( canIAddAMockOperation( mockOperation ) )
+		{
+			mockOperations.add( mockOperation );
+		}
+		else
+		{
+			throw new IllegalStateException( mockOperation.getName() + " is not attached to service " + this.getName() );
+		}
 	}
+
+	protected abstract boolean canIAddAMockOperation( MockOperationType mockOperation );
 
 	@Override
 	public int getMockOperationCount()

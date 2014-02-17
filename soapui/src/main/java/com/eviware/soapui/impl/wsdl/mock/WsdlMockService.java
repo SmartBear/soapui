@@ -17,6 +17,7 @@ import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockOperationDocumentConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -25,7 +26,6 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockRunListener;
-import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.SSLSettings;
@@ -437,4 +437,8 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		return getProtocol() + host + ":" + port + getPath();
 	}
 
+	public boolean canIAddAMockOperation( WsdlMockOperation mockOperation )
+	{
+		return this.getConfig().getMockOperationList().contains( mockOperation.getConfig() );
+	}
 }

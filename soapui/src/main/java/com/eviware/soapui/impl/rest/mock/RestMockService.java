@@ -3,12 +3,8 @@ package com.eviware.soapui.impl.rest.mock;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
@@ -105,4 +101,8 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return null;
 	}
 
+	public boolean canIAddAMockOperation( RestMockAction mockOperation )
+	{
+		return this.getConfig().getRestMockActionList().contains( mockOperation.getConfig() );
+	}
 }

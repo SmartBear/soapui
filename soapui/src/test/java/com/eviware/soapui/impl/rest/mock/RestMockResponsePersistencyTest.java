@@ -8,6 +8,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.xmlbeans.XmlException;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -26,9 +27,9 @@ public class RestMockResponsePersistencyTest
 	@Before
 	public void setUp() throws XmlException, IOException, SoapUIException
 	{
-		WsdlProject project = new WsdlProject();
-		RestMockService restMockService = project.addNewRestMockService( restMockServiceName );
-		RestMockAction restMockAction = ModelItemFactory.makeRestMockAction( restMockService );
+		RestMockAction restMockAction = ModelItemFactory.makeRestMockAction( );
+		WsdlProject project = ( WsdlProject )restMockAction.getMockService().getProject();
+		restMockAction.getMockService().setName( restMockServiceName );
 		restMockResponse = restMockAction.addNewMockResponse( "REST Mock Response" );
 		restMockResponse.setResponseHttpStatus( httpStatusCode );
 		project.saveAs( projectFileName );
@@ -49,8 +50,8 @@ public class RestMockResponsePersistencyTest
 	public void testResponseHttpStatusIsPersisted() throws Exception
 	{
 		WsdlProject retrievedProject = new WsdlProject( projectFileName );
-		RestMockResponse mockResponse = retrievedProject.getRestMockServiceByName( restMockServiceName ).
-				getMockOperationAt( 0 ).getMockResponseAt( 0 );
+		RestMockService restMockService = retrievedProject.getRestMockServiceByName( restMockServiceName );
+		RestMockResponse mockResponse = restMockService.getMockOperationAt( 0 ).getMockResponseAt( 0 );
 
 		assertThat( mockResponse.getResponseHttpStatus(), is(httpStatusCode));
 
