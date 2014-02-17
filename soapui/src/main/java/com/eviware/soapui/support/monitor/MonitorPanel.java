@@ -243,9 +243,9 @@ public class MonitorPanel extends JPanel
 		{
 			while( thread != null )
 			{
-				long totalMemory = monitorSource.getTotal();
-				long usedMemory = monitorSource.getUsed();
-				long freeMemory = totalMemory - usedMemory;
+				float totalMemory = monitorSource.getTotal();
+				float usedMemory = monitorSource.getUsed();
+				float freeMemory = totalMemory - usedMemory;
 
 				if( points == null )
 				{
