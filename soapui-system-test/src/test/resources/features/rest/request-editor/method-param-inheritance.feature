@@ -1,1 +1,0 @@
-#in method add resource level param, create new method under same resource, the request under the new method should inherit res param, check raw view
