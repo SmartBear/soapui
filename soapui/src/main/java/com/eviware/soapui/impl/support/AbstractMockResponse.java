@@ -323,6 +323,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 		}
 
 		MockRequest request = response.getMockRequest();
+		request.getHttpResponse().setStatus( this.getResponseHttpStatus() );
 
 		ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
