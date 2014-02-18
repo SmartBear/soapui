@@ -180,7 +180,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			OAuth2ScriptsEditor.Dialog dialog = new OAuth2ScriptsEditor.Dialog( profile.getJavaScripts() );
+			OAuth2ScriptsEditor.Dialog dialog = new OAuth2ScriptsEditor.Dialog( profile );
 			dialog.setVisible( true );
 			if (dialog.getScripts() != null)
 			{

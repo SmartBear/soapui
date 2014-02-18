@@ -54,20 +54,28 @@ public class OAuth2TokenExtractorTest
 	private OAuth2Profile profile;
 	private SpyingOauthClientStub spyingOauthClientStub;
 	private List<String> executedScripts;
+	private UserBrowserFacadeStub browserFacade;
 
 	@Before
 	public void setUp() throws SoapUIException
 	{
 		spyingOauthClientStub = new SpyingOauthClientStub();
+		browserFacade = new UserBrowserFacadeStub();
 		oAuth2TokenExtractor = new OAuth2TokenExtractor()
 		{
+
 			@Override
 			protected OAuthClient getOAuthClient()
 			{
 				return spyingOauthClientStub;
 			}
+
+			@Override
+			protected UserBrowserFacade getBrowserFacade()
+			{
+				return browserFacade;
+			}
 		};
-		oAuth2TokenExtractor.browserFacade = new UserBrowserFacadeStub();
 		profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
 		parameters = new OAuth2Parameters( profile );
 		executedScripts = new ArrayList<String>(  );
@@ -94,7 +102,7 @@ public class OAuth2TokenExtractorTest
 	{
 		oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
 
-		assertThat( ( ( UserBrowserFacadeStub )oAuth2TokenExtractor.browserFacade ).browserClosed, is( true ) );
+		assertThat( browserFacade.browserClosed, is( true ) );
 	}
 
 	@Test
@@ -181,14 +189,14 @@ public class OAuth2TokenExtractorTest
 	private class UserBrowserFacadeStub implements UserBrowserFacade
 	{
 
-		private List<BrowserStateChangeListener> listeners = new ArrayList<BrowserStateChangeListener>(  );
+		private List<BrowserListener> listeners = new ArrayList<BrowserListener>(  );
 		private boolean browserClosed;
 
 		@Override
 		public void open( URL url )
 		{
 			String queryString = url.getQuery();
-			for( BrowserStateChangeListener listener : listeners )
+			for( BrowserListener listener : listeners )
 			{
 
 			listener.contentChanged( "<html><body>mock_login_screen_content</body></html>" );
@@ -231,13 +239,13 @@ public class OAuth2TokenExtractorTest
 		}
 
 		@Override
-		public void addBrowserStateListener( BrowserStateChangeListener listener )
+		public void addBrowserListener( BrowserListener listener )
 		{
 			listeners.add(listener);
 		}
 
 		@Override
-		public void removeBrowserStateListener( BrowserStateChangeListener listener )
+		public void removeBrowserStateListener( BrowserListener listener )
 		{
 			listeners.remove(listener);
 		}

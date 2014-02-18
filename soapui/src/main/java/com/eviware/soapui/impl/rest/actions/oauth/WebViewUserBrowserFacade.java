@@ -43,13 +43,13 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 
 
 	@Override
-	public void addBrowserStateListener( BrowserStateChangeListener listener )
+	public void addBrowserListener( BrowserListener listener )
 	{
 		browserComponent.addBrowserStateListener( listener );
 	}
 
 	@Override
-	public void removeBrowserStateListener( BrowserStateChangeListener listener )
+	public void removeBrowserStateListener( BrowserListener listener )
 	{
 		browserComponent.removeBrowserStateListener( listener );
 	}

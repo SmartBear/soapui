@@ -2,6 +2,8 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -10,7 +12,7 @@ import static org.junit.Assert.assertThat;
  */
 public class JavaScriptValidatorTest
 {
-	public static final String[] VALID_JAVASCRIPTS = {
+	private static final String[] VALID_JAVASCRIPTS = {
 			"document.getElementById('approveButton').click()",
 			"document.forms[0].submit()",
 			"document.getElementById('userNameField').value = 'my.user'",
@@ -23,9 +25,18 @@ public class JavaScriptValidatorTest
 
 	private final JavaScriptValidator javaScriptValidator = new JavaScriptValidator();
 
+	@Test
 	public void detectsBrokenJavaScript() throws Exception
 	{
-		assertThat( javaScriptValidator.validate( "this is not valid JavaScript" ), is( false ) );
+		assertThat( javaScriptValidator.validate( "this is not valid JavaScript" ), is( not(nullValue()) ) );
+	}
+
+	@Test
+	public void providesCorrectLineNumberForError() throws Exception
+	{
+		String threeLineScript = "alert(1)\nalert(2)\nthis is not valid JavaScript";
+		JavaScriptValidationError validationError = javaScriptValidator.validate( threeLineScript );
+		assertThat( validationError.getLineNumber(), is( 3 ) );
 	}
 
 	@Test
@@ -33,7 +44,7 @@ public class JavaScriptValidatorTest
 	{
 		for( String validJavascript : VALID_JAVASCRIPTS )
 		{
-			assertThat(javaScriptValidator.validate( validJavascript ), is(true));
+			assertThat(javaScriptValidator.validate( validJavascript ), is(nullValue()));
 		}
 	}
 }

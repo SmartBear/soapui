@@ -1,11 +1,10 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.utils.ContainerWalker;
+import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogsTestBase;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Collections;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -23,7 +22,7 @@ public class OAuth2ScriptsEditorDialogTest extends StubbedDialogsTestBase
 	@Before
 	public void setUp() throws Exception
 	{
-		editorDialog = new OAuth2ScriptsEditor.Dialog( Collections.<String>emptyList() ) {
+		editorDialog = new OAuth2ScriptsEditor.Dialog( ModelItemFactory.makeOAuth2Profile() ) {
 			@Override
 			public void setVisible( boolean b )
 			{
