@@ -52,13 +52,14 @@ public class OAuth2AdvanceOptionsDialog
 			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
 			profile.setRefreshAccessTokenMethod( valueOf( refreshAccessTokenMethod ) );
 
-			enableRefreshAccessTokenButton(refreshAccessTokenMethod, profile.getRefreshToken());
+			enableRefreshAccessTokenButton(profile);
 		}
 	}
 
-	private void enableRefreshAccessTokenButton( String refreshAccessTokenMethod, String refreshToken )
+	private void enableRefreshAccessTokenButton( OAuth2Profile profile )
 	{
-		boolean enabled = refreshAccessTokenMethod.equals( MANUAL.toString() ) && StringUtils.hasContent( refreshToken );
+		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
+				&& ( !org.apache.commons.lang.StringUtils.isEmpty( profile.getRefreshToken() ) );
 		refreshAccessTokenButton.setEnabled( enabled );
 		refreshAccessTokenButton.setVisible( enabled );
 	}

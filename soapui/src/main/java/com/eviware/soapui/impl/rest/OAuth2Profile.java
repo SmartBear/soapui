@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 /**
  * Encapsulates values associated with an Oauth2 flow. Mostly they will be input by users, but the "accessToken" and
  * "status" properties will be modified during the OAuth2 interactions.
@@ -373,6 +374,10 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
+	public boolean shouldRefreshAccessTokenAutomatically()
+	{
+		return getRefreshAccessTokenMethod().equals( AUTOMATIC ) && (!StringUtils.isEmpty( getRefreshToken() ));
+	}
 
 	public OAuth2ProfileContainer getContainer()
 	{
