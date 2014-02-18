@@ -274,7 +274,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 		}
 	}
 
-	protected String writeResponse( MockResult response, String responseContent ) throws Exception
+	protected String writeResponse( MockResult result, String responseContent ) throws Exception
 	{
 		MimeMultipart mp = null;
 
@@ -322,7 +322,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 			responseContent = XmlUtils.stripWhitespaces( responseContent );
 		}
 
-		MockRequest request = response.getMockRequest();
+		MockRequest request = result.getMockRequest();
 		request.getHttpResponse().setStatus( this.getResponseHttpStatus() );
 
 		ByteArrayOutputStream outData = new ByteArrayOutputStream();
@@ -337,22 +337,22 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 
 			byte[] content = encoding == null ? responseContent.getBytes() : responseContent.getBytes( encoding );
 
-			if( !response.getResponseHeaders().containsKeyIgnoreCase( "Content-Type" ) )
+			if( !result.getResponseHeaders().containsKeyIgnoreCase( "Content-Type" ) )
 			{
-				response.setContentType( getContentType( operation, encoding ) );
+				result.setContentType( getContentType( operation, encoding ) );
 			}
 
-			String acceptEncoding = response.getMockRequest().getRequestHeaders().get( "Accept-Encoding", "" );
+			String acceptEncoding = result.getMockRequest().getRequestHeaders().get( "Accept-Encoding", "" );
 			if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
 					&& acceptEncoding.toUpperCase().contains( "GZIP" ) )
 			{
-				response.addHeader( "Content-Encoding", "gzip" );
+				result.addHeader( "Content-Encoding", "gzip" );
 				outData.write( CompressionSupport.compress( CompressionSupport.ALG_GZIP, content ) );
 			}
 			else if( AUTO_RESPONSE_COMPRESSION.equals( responseCompression ) && acceptEncoding != null
 					&& acceptEncoding.toUpperCase().contains( "DEFLATE" ) )
 			{
-				response.addHeader( "Content-Encoding", "deflate" );
+				result.addHeader( "Content-Encoding", "deflate" );
 				outData.write( CompressionSupport.compress( CompressionSupport.ALG_DEFLATE, content ) );
 			}
 			else
@@ -379,8 +379,8 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 			MimeMessageMockResponseEntity mimeMessageRequestEntity
 					= new MimeMessageMockResponseEntity( message, isXOP, this );
 
-			response.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType().getValue() );
-			response.addHeader( "MIME-Version", "1.0" );
+			result.addHeader( "Content-Type", mimeMessageRequestEntity.getContentType().getValue() );
+			result.addHeader( "MIME-Version", "1.0" );
 			mimeMessageRequestEntity.writeTo( outData );
 		}
 
@@ -391,11 +391,11 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 			if( responseCompression.equals( CompressionSupport.ALG_DEFLATE )
 					|| responseCompression.equals( CompressionSupport.ALG_GZIP ) )
 			{
-				response.addHeader( "Content-Encoding", responseCompression );
+				result.addHeader( "Content-Encoding", responseCompression );
 				data = CompressionSupport.compress( responseCompression, data );
 			}
 
-			response.writeRawResponseData( data );
+			result.writeRawResponseData( data );
 		}
 
 		return responseContent;
