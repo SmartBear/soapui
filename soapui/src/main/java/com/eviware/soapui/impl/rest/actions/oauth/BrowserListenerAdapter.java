@@ -22,4 +22,10 @@ public class BrowserListenerAdapter implements BrowserListener
 	{
 
 	}
+
+	@Override
+	public void browserClosed()
+	{
+
+	}
 }

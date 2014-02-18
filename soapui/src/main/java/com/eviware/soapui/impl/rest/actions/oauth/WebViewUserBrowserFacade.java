@@ -69,6 +69,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 					popupWindow.dispose();
 				}
 			} );
+			browserComponent.handleClose();
 		}
 		catch( Exception e )
 		{

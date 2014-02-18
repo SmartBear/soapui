@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Wrapper class that performs property expansion on the values in an OAuth2Profile instance.
  */
-class OAuth2Parameters
+public class OAuth2Parameters
 {
 
 	private final OAuth2Profile profile;
@@ -29,7 +29,7 @@ class OAuth2Parameters
 	 *
 	 * @param profile the profile to be wrapped
 	 */
-	OAuth2Parameters( OAuth2Profile profile )
+	public OAuth2Parameters( OAuth2Profile profile )
 	{
 		this.profile = profile;
 		this.authorizationUri = expandProperty( profile, profile.getAuthorizationURI() );

@@ -22,4 +22,6 @@ public interface BrowserListener
 	void contentChanged(String newContent);
 
 	void javaScriptErrorOccurred(String script, String location, Exception error);
+
+	void browserClosed();
 }

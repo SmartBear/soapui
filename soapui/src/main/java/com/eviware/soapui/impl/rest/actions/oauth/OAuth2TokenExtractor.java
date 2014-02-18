@@ -32,10 +32,10 @@ public class OAuth2TokenExtractor
 	public static final String TOKEN = "token";
 	public static final String ACCESS_TOKEN = "access_token";
 
-	private List<BrowserListener> browserListeners = new ArrayList<BrowserListener>(  );
+	protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>(  );
 
 
-	void extractAccessTokenForAuthorizationCodeGrantFlow( final OAuth2Parameters parameters ) throws URISyntaxException,
+	public void extractAccessTokenForAuthorizationCodeGrantFlow( final OAuth2Parameters parameters ) throws URISyntaxException,
 			MalformedURLException, OAuthSystemException
 	{
 		final UserBrowserFacade browserFacade = getBrowserFacade();
@@ -65,7 +65,7 @@ public class OAuth2TokenExtractor
 			parameters.waitingForAuthorization();
 	}
 
-	void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
+	public void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
 			URISyntaxException, MalformedURLException
 	{
 		final UserBrowserFacade browserFacade = getBrowserFacade();
@@ -106,7 +106,7 @@ public class OAuth2TokenExtractor
 		parameters.applyRetrievedAccessToken( oAuthToken.getAccessToken() );
 	}
 
-	void addBrowserListener(BrowserListener listener)
+	public void addBrowserListener(BrowserListener listener)
 	{
 		browserListeners.add(listener);
 	}

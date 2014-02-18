@@ -182,11 +182,6 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		{
 			OAuth2ScriptsEditor.Dialog dialog = new OAuth2ScriptsEditor.Dialog( profile );
 			dialog.setVisible( true );
-			if (dialog.getScripts() != null)
-			{
-				profile.setJavaScripts( dialog.getScripts() );
-			}
-
 		}
 	}
 }

@@ -221,6 +221,14 @@ public class WebViewBasedBrowserComponent
 		} );
 	}
 
+	public void handleClose()
+	{
+		for( BrowserListener listener : listeners )
+		{
+			listener.browserClosed();
+		}
+	}
+
 	// TODO: Evaluate whether these should be used
 	private class BackAction extends AbstractAction
 	{
