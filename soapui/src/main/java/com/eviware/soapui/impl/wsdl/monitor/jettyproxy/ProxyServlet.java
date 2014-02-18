@@ -194,7 +194,7 @@ public class ProxyServlet implements Servlet
 			url.append( httpRequest.getServletPath() );
 			try
 			{
-				method.setURI( new java.net.URI( url.toString() ) );
+				method.setURI( new java.net.URI( url.toString().replaceAll( " ", "%20" ) ) );
 			}
 			catch( URISyntaxException e )
 			{
