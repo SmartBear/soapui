@@ -27,9 +27,13 @@ import static javax.swing.BorderFactory.createLineBorder;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
+	public static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
+
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String ADVANCED_OPTIONS = "Advanced...";
 	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
+	public static final String REFRESH_ACCESS_TOKEN_BUTTON_NAME = "refreshAccessTokenButton";
+	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
 
 	private OAuth2Profile profile;
 	private SimpleBindingForm oAuth2Form;
@@ -163,10 +167,12 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private JButton addAccessTokenFieldAndRefreshTokenButton( SimpleBindingForm oAuth2Form )
 	{
 		JTextField accessTokenField = new JTextField(  );
+		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
 		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS  );
 		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
 
 		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
+		refreshAccessTokenButton.setName( REFRESH_ACCESS_TOKEN_BUTTON_NAME );
 		refreshAccessTokenButton.addActionListener( new RefreshOAuthAccessTokenAction( profile ) );
 
 		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
@@ -203,7 +209,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private JDialog createAccessTokenDialog( JPanel accessTokenFormPanel )
 	{
 		final JDialog accessTokenFormDialog = new JDialog();
-		accessTokenFormDialog.setName( "getAccessTokenFormDialog" );
+		accessTokenFormDialog.setName( ACCESS_TOKEN_FORM_DIALOG_NAME );
 		accessTokenFormDialog.setUndecorated( true );
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
 
@@ -224,6 +230,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				"getOAuth2Flow", "setOAuth2Flow" );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
 		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
+		oauth2FlowComboBox.setName( OAUTH_2_FLOW_COMBO_BOX_NAME );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 

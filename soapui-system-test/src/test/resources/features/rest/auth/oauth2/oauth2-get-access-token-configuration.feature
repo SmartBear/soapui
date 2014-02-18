@@ -1,5 +1,5 @@
 @Automated @Acceptance
-Feature: OAuth 2 configuration
+Feature: OAuth 2 Get Access Token configuration
 
   Scenario: Request editor not supporting OAuth show not show it in the Auth dropdown
     Given SoapUI is started
@@ -39,4 +39,14 @@ Feature: OAuth 2 configuration
     And clicks on the disclosure button
     And clicks outside of the Get Access token form
     Then the Get Access token form is closed
+    And close SoapUI
+
+  Scenario: Client id field is not visible when selecting the Implicit grant flow
+    Given SoapUI is started
+    And a new REST project is created
+    When the user clicks on the Auth tab
+    And clicks on the OAuth 2 Authorization Type
+    And clicks on the disclosure button
+    And selects the OAuth 2 flow Implicit Grant
+    Then clientId field is not visible
     And close SoapUI
