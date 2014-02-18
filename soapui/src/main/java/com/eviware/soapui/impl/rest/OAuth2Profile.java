@@ -41,6 +41,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
 	public static final String OAUTH2_FLOW = "oAuth2Flow";
+	public static final String REFRESH_ACCESS_TOKEN_METHOD_PROPERTY = "refreshAccessTokenMethod";
 
 	public enum AccessTokenStatus
 	{
@@ -89,6 +90,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			return description;
 		}
+	}
+
+	public enum RefreshAccessTokenMethods
+	{
+		AUTOMATIC,
+		MANUAL;
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -344,8 +351,28 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			configuration.setAccessTokenIssuedTime( newIssuedTime );
 			pcs.firePropertyChange( ACCESS_TOKEN_ISSUED_TIME, oldIssuedTime, newIssuedTime );
 		}
-		configuration.setAccessTokenIssuedTime( newIssuedTime );
 	}
+
+	public RefreshAccessTokenMethods getRefreshAccessTokenMethod()
+	{
+		if( configuration.getRefreshAccessTokenMethod() ==null)
+		{
+			configuration.setRefreshAccessTokenMethod( RefreshAccessTokenMethodConfig.Enum
+					.forString( RefreshAccessTokenMethods.AUTOMATIC.toString() ) );
+		}
+		return RefreshAccessTokenMethods.valueOf( configuration.getRefreshAccessTokenMethod().toString() );
+	}
+
+	public void setRefreshAccessTokenMethod( RefreshAccessTokenMethods newValue )
+	{
+		RefreshAccessTokenMethods oldValue = getRefreshAccessTokenMethod();
+		if( !oldValue.equals( newValue ) )
+		{
+			configuration.setRefreshAccessTokenMethod( RefreshAccessTokenMethodConfig.Enum.forString( newValue.toString() ) );
+			pcs.firePropertyChange( REFRESH_ACCESS_TOKEN_METHOD_PROPERTY, oldValue.toString(), newValue.toString() );
+		}
+	}
+
 
 	public OAuth2ProfileContainer getContainer()
 	{

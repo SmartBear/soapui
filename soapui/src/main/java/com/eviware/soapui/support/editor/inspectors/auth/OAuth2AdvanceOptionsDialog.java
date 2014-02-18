@@ -14,13 +14,17 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
 
+import javax.swing.*;
+
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.*;
 
 /**
  *
@@ -28,19 +32,42 @@ import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
 public class OAuth2AdvanceOptionsDialog
 {
 	public static final MessageSupport messages = MessageSupport.getMessages( OAuth2AdvanceOptionsDialog.class );
+	private JButton refreshAccessTokenButton;
 
-	public OAuth2AdvanceOptionsDialog( OAuth2Profile target )
+
+	public OAuth2AdvanceOptionsDialog( OAuth2Profile profile, JButton refreshAccessTokenButton )
 	{
+		this.refreshAccessTokenButton = refreshAccessTokenButton;
 		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
 
-		setAccessTokenOptions( target, dialog );
+		setAccessTokenOptions( profile, dialog );
+
+		setRefreshAccessTokenOptions( profile, dialog );
 
 		if( dialog.show() )
 		{
 			String accessTokenPosition = dialog.getValue( Form.ACCESS_TOKEN_POSITION );
-			target.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
+			profile.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
 
+			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
+			profile.setRefreshAccessTokenMethod( valueOf( refreshAccessTokenMethod ) );
+
+			enableRefreshAccessTokenButton(refreshAccessTokenMethod, profile.getRefreshToken());
 		}
+	}
+
+	private void enableRefreshAccessTokenButton( String refreshAccessTokenMethod, String refreshToken )
+	{
+		boolean enabled = refreshAccessTokenMethod.equals( MANUAL.toString() ) && StringUtils.hasContent( refreshToken );
+		refreshAccessTokenButton.setEnabled( enabled );
+		refreshAccessTokenButton.setVisible( enabled );
+	}
+
+	private void setRefreshAccessTokenOptions( OAuth2Profile profile, XFormDialog dialog )
+	{
+		XFormRadioGroup refreshOptions = ( XFormRadioGroup )dialog.getFormField( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
+		refreshOptions.setOptions( values() );
+		refreshOptions.setValue( profile.getRefreshAccessTokenMethod().toString() );
 	}
 
 	private void setAccessTokenOptions( OAuth2Profile target, XFormDialog dialog )
@@ -57,7 +84,10 @@ public class OAuth2AdvanceOptionsDialog
 	@AForm(name = "Form.Title", description = "Form.Description")
 	public interface Form
 	{
-		@AField(description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP)
+		@AField( description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP )
 		public final static String ACCESS_TOKEN_POSITION = messages.get( "Form.AccessTokenPosition.Label" );
+
+		@AField(description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP)
+		public final static String AUTOMATIC_ACCESS_TOKEN_REFRESH = messages.get( "Form.AutomaticRefreshAccessToken.Label" );
 	}
 }
