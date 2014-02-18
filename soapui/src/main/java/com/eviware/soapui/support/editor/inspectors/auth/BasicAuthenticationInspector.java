@@ -35,7 +35,7 @@ import java.util.ArrayList;
 @ParametersAreNonnullByDefault
 public class BasicAuthenticationInspector<T extends AbstractHttpRequest> extends AbstractXmlInspector
 {
-	public static final String COMBO_BOX_LABEL = "Authorization Type";
+	public static final String AUTHORIZATION_TYPE_COMBO_BOX_NAME = "Authorization Type";
 
 	public static final int TOP_SPACING = 10;
 	public static final int OUTERMOST_SPACING = 5;
@@ -162,8 +162,8 @@ public class BasicAuthenticationInspector<T extends AbstractHttpRequest> extends
 		ArrayList<String> authenticationTypes = getAuthenticationTypes();
 		String[] options = authenticationTypes.toArray( new String[authenticationTypes.size()] );
 
-		final JComboBox comboBox = authTypeForm.appendComboBox( AUTH_TYPE_PROPERTY_NAME, COMBO_BOX_LABEL, options, "" );
-		comboBox.setName( COMBO_BOX_LABEL );
+		final JComboBox comboBox = authTypeForm.appendComboBox( AUTH_TYPE_PROPERTY_NAME, AUTHORIZATION_TYPE_COMBO_BOX_NAME, options, "" );
+		comboBox.setName( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
 		comboBox.addActionListener( new ActionListener()
 		{
 			@Override
