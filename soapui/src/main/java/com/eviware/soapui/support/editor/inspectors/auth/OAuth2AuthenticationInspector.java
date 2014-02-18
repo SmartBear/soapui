@@ -171,7 +171,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
 				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
-		refreshAccessTokenButton.setEnabled( enabled );
+		refreshAccessTokenButton.setVisible( enabled );
 
 		JPanel wrapperPanel = new JPanel( new BorderLayout( 5,5 ) );
 		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );

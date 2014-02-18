@@ -72,7 +72,7 @@ public class OAuth2RequestFilterTest
 	@Test
 	public void doNotApplyNullAccessTokenToHeader() throws Exception
 	{
-		restRequest.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 ).setAccessToken( null );
+		oAuth2Profile.setAccessToken( null );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) );
 	}
@@ -86,7 +86,7 @@ public class OAuth2RequestFilterTest
 	}
 
 	@Test
-	public void automaticallyRefreshAccessTokenIfExpired() throws SoapUIException, MalformedURLException, OAuthSystemException, OAuthProblemException, URISyntaxException
+	public void automaticallyRefreshAccessTokenIfExpired() throws Exception
 	{
 		OAuth2Profile profileWithRefreshToken = setProfileWithRefreshTokenAndExpiredAccessToken();
 		oAuth2FilterWithMockOAuth2ClientFacade( profileWithRefreshToken );
