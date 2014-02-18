@@ -103,7 +103,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		enableWindowActions();
 		desktop.addComponentListener( new DesktopResizeListener() );
-		desktop.setDesktopManager( new BoundsAwareDesktopManager( desktop.getDesktopManager() ) );
+		// maybe there should be a ui pref specifically for using the MRU desktop manager ?
+		desktop.setDesktopManager( new BoundsAwareDesktopManager( UISupport.isMac() ? new MostRecentlyUsedOrderDesktopManager( ) : desktop.getDesktopManager() ) );
 	}
 
 	private void enableWindowActions()
@@ -233,7 +234,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		String title = desktopPanel.getTitle();
 
-		JInternalFrame frame = new JInternalFrame( title, true, true, true, true );
+		JInternalFrame frame = new JInternalFrame( title, true, true, true, ! UISupport.isMac() );
 		frame.addInternalFrameListener( internalFrameListener );
 		frame.setContentPane( panel );
 		frame.setLocation( xOffset * ( openFrameCount % 10 ), yOffset * ( openFrameCount % 10 ) );
