@@ -291,21 +291,6 @@ public class UISupport
 		return true;
 	}
 
-	private static class CustomProgressUI extends BasicProgressBarUI
-	{
-		private Rectangle r = new Rectangle();
-
-		@Override
-		protected void paintIndeterminate( Graphics g, JComponent c )
-		{
-			Graphics2D g2d = ( Graphics2D )g;
-			g2d.setRenderingHint( RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON );
-			r = getBox( r );
-			g.setColor( this.progressBar.getForeground() );
-			g.fillOval( r.x, r.y, r.width, r.height );
-		}
-	}
-
 	public static JPanel createProgressBarPanel( JProgressBar progressBar, int space, boolean indeterimate )
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
@@ -313,7 +298,7 @@ public class UISupport
 		if( isMac() )
 		{
 			// default native progress bar on mac ignores color settings, use a custom ui to get green/red
-			progressBar.setUI( new CustomProgressUI() );
+			progressBar.setUI( new BasicProgressBarUI() );
 		}
 
 		progressBar.setValue( 0 );
