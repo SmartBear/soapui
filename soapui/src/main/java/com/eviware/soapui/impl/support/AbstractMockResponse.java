@@ -7,10 +7,7 @@ import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
@@ -125,6 +122,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 
 		return result;
 	}
+
 
 	public void setResponseHttpStatus( int httpStatus )
 	{
@@ -414,6 +412,25 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 	}
 
 	protected abstract String removeEmptyContent( String responseContent );
+
+	public void setResponseHeaders( StringToStringsMap headers )
+	{
+		StringToStringsMap oldHeaders = getResponseHeaders();
+
+		getConfig().setHeaderArray( new HeaderConfig[0] );
+
+		for( Map.Entry<String, List<String>> header : headers.entrySet() )
+		{
+			for( String value : header.getValue() )
+			{
+				HeaderConfig headerConfig = getConfig().addNewHeader();
+				headerConfig.setName( header.getKey() );
+				headerConfig.setValue( value );
+			}
+		}
+
+		notifyPropertyChanged( WsdlMockResponse.HEADERS_PROPERTY, oldHeaders, headers );
+	}
 
 	protected abstract String executeSpecifics( MockRequest request, String responseContent, WsdlMockRunContext context ) throws IOException, WSSecurityException;
 
