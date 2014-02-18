@@ -5,9 +5,7 @@ import com.google.common.collect.Iterables;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nullable;
-import javax.swing.AbstractButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
+import javax.swing.*;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -91,6 +89,12 @@ public class ContainerWalker
 	{
 		return ( AbstractButton )Iterables.find( containedComponents,
 				new ComponentClassAndNamePredicate( AbstractButton.class, buttonName ) );
+	}
+
+	public JLabel findLabelWithName( String labelName )
+	{
+		return (JLabel)Iterables.find(containedComponents,
+				new ComponentClassAndNamePredicate( JLabel.class, labelName ));
 	}
 
 	private class ComponentClassAndNamePredicate implements Predicate<Component>
