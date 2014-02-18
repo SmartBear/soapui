@@ -6,6 +6,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
@@ -20,36 +21,51 @@ public class RestMockActionTest
 
 
 	RestMockRequest restMockRequest;
+	RestMockAction mockAction;
+	RestMockResponse mockResponse;
+
 
 	@Before
 	public void setUp() throws Exception
 	{
 		restMockRequest = makeRestMockRequest();
+		mockAction = ModelItemFactory.makeRestMockAction( );
+		mockResponse = mockAction.addNewMockResponse( "response 1" );
 	}
 
 	@Test
-	public void testDispatchRequest() throws Exception
+	public void testDispatchRequestReturnsHttpStatus() throws Exception
 	{
-		RestMockAction mockAction = ModelItemFactory.makeRestMockAction( );
-		RestMockResponse mockResponse = mockAction.addNewMockResponse( "response 1" );
 		mockResponse.setResponseHttpStatus( HttpStatus.SC_BAD_REQUEST );
 
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 
-		assertThat(mockResult.getMockResponse().getResponseHttpStatus(), is(HttpStatus.SC_BAD_REQUEST));
+		assertThat( mockResult.getMockResponse().getResponseHttpStatus(), is( HttpStatus.SC_BAD_REQUEST ));
+	}
 
+	@Test
+	public void testDispatchRequestReturnsResponseContent() throws Exception
+	{
+		String responseContent = "response content";
+		mockResponse.setResponseContent( responseContent );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+
+		assertThat( mockResult.getMockResponse().getResponseContent(), is( responseContent ) );
 	}
 
 	private RestMockRequest makeRestMockRequest() throws Exception
 	{
 		HttpServletRequest request = mock( HttpServletRequest.class );
 		Enumeration enumeration = mock( Enumeration.class );
-		when(request.getHeaderNames()).thenReturn( enumeration );
+		when( request.getHeaderNames() ).thenReturn( enumeration );
 
 		HttpServletResponse response = mock( HttpServletResponse.class );
+		ServletOutputStream os = mock( ServletOutputStream.class );
+		when( response.getOutputStream() ).thenReturn( os );
+
 		WsdlMockRunContext context = mock( WsdlMockRunContext.class );
 
 		return new RestMockRequest( request, response, context );
-
 	}
 }

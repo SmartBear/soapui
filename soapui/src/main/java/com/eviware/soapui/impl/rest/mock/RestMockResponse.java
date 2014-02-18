@@ -27,8 +27,6 @@ import java.util.Map;
 public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig>
 {
 
-	private String responseContent;
-	private RestMockResult mockResult;
 	public final static String MOCKRESULT_PROPERTY = RestMockResponse.class.getName() + "@mockresult";
 
 	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
