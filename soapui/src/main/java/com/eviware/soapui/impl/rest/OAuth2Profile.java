@@ -52,6 +52,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String OAUTH2_FLOW_PROPERTY = "oAuth2Flow";
 	public static final String JAVA_SCRIPTS_PROPERTY = "javaScripts";
 
+
+
 	public enum AccessTokenStatus
 	{
 		UPDATED_MANUALLY,
@@ -95,19 +97,24 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			return description;
 		}
-	}
 
+	}
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
 	private final OAuth2ProfileConfig configuration;
 	private final PropertyChangeSupport pcs;
-	private List<String> javaScripts = new ArrayList<String>(  );
-
 
 	public OAuth2Profile( OAuth2ProfileContainer oAuth2ProfileContainer, OAuth2ProfileConfig configuration )
 	{
 		this.oAuth2ProfileContainer = oAuth2ProfileContainer;
 		this.configuration = configuration;
 		pcs = new PropertyChangeSupport( this );
+	}
+
+
+	public boolean hasAutomationJavaScripts()
+	{
+		List<String> javaScripts = getJavaScripts();
+		return javaScripts != null && !javaScripts.isEmpty();
 	}
 
 	public void waitingForAuthorization()
