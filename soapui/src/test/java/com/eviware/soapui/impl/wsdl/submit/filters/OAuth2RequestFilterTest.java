@@ -53,7 +53,7 @@ public class OAuth2RequestFilterTest
 		restRequest.setAuthType( O_AUTH_2.toString());
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
-		oAuth2Profile = oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
+		oAuth2Profile = oAuth2ProfileContainer.addNewOAuth2Profile("profile");
 		oAuth2Profile.setAccessToken( accessToken );
 
 

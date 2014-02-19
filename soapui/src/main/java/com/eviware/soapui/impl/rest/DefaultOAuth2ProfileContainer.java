@@ -20,14 +20,9 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		this.project = project;
 		this.configuration = configuration;
 
-		// Pre load the container with an empty profile at the project initialization rather than in the request
-		if( configuration.getOAuth2Profile() == null )
+		for( OAuth2ProfileConfig profileConfig : configuration.getOAuth2ProfileList() )
 		{
-			oAuth2ProfileList.add( new OAuth2Profile( this, configuration.addNewOAuth2Profile() ) );
-		}
-		else
-		{
-			oAuth2ProfileList.add( new OAuth2Profile( this, configuration.getOAuth2Profile() ) );
+			oAuth2ProfileList.add( new OAuth2Profile( this, profileConfig ) );
 		}
 	}
 
@@ -50,9 +45,12 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	}
 
 	@Override
-	public OAuth2Profile addNewOAuth2Profile()
+	public OAuth2Profile addNewOAuth2Profile(String profileName)
 	{
-		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, configuration.addNewOAuth2Profile() );
+		OAuth2ProfileConfig profileConfig = configuration.addNewOAuth2Profile();
+		profileConfig.setName( profileName );
+
+		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, profileConfig );
 		oAuth2ProfileList.add( oAuth2Profile );
 
 		return oAuth2Profile;

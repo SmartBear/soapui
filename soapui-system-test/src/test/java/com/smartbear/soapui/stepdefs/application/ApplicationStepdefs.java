@@ -38,7 +38,7 @@ public class ApplicationStepdefs
 		assertThat( rootWindow, not( nullValue() ) );
 	}
 
-	@Then( "^close SoapUI$" )
+	@Then( "^SoapUI is closed$" )
 	public void closeSoapUI()
 	{
 		FrameFixture rootWindow = getMainWindow( robot );

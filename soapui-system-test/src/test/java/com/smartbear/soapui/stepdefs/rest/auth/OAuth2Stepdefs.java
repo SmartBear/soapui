@@ -40,7 +40,7 @@ public class OAuth2Stepdefs
 		rootWindow = getMainWindow( robot );
 	}
 
-	@When( "^clicks on the OAuth 2 Authorization Type$" )
+	@When( "^selects the OAuth 2 Authorization Type$" )
 	public void clicksOnTheOAuth2AuthorizationType()
 	{
 		clickOnComboBoxItem( rootWindow, OAUTH_2_COMBOBOX_ITEM );

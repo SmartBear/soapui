@@ -7,7 +7,7 @@ Feature: Basic OAuth 2 configuration
     When the user opens the SOAP request editor
     And clicks on the Auth tab
     Then the OAuth 2 option is not visible in the Authentication Type dropdown
-    And close SoapUI
+    And SoapUI is closed
 
   Scenario: You are able to fill in the basic OAuth 2 configuration GUI
     Given SoapUI is started
@@ -17,4 +17,4 @@ Feature: Basic OAuth 2 configuration
     And and fills out all fields
     And switches to another Authorization type and then back again
     Then the previously filled fields are still present
-    And close SoapUI
+    And SoapUI is closed

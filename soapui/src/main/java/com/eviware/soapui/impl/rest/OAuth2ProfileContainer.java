@@ -15,7 +15,7 @@ public interface OAuth2ProfileContainer extends PropertyExpansionContainer
 
 	public void release();
 
-	public OAuth2Profile addNewOAuth2Profile();
-
 	public OAuth2ProfileContainerConfig getConfig();
+
+	public OAuth2Profile addNewOAuth2Profile( String profileName );
 }

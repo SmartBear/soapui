@@ -6,4 +6,4 @@ Feature: Add rest mock service
     And a new REST project is created
     When in rest request context
     Then “Add to REST mock service” option is available on REST Request
-    And close SoapUI
+    And SoapUI is closed

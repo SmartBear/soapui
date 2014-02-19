@@ -66,7 +66,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		BODY_URL_ENCODED_FORM
 	}
 
-
 	public enum OAuth2Flow
 	{
 		AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
@@ -97,6 +96,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		this.oAuth2ProfileContainer = oAuth2ProfileContainer;
 		this.configuration = configuration;
 		pcs = new PropertyChangeSupport( this );
+	}
+
+	public String getName()
+	{
+		return configuration.getName();
 	}
 
 	public void waitingForAuthorization()

@@ -6,4 +6,4 @@ Feature: Add SOAP mock service
     And a new SOAP project is created
     When in soap operation context
     Then “Add to MockService” option is available
-    And close SoapUI
+    And SoapUI is closed

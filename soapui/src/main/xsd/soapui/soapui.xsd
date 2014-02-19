@@ -1944,7 +1944,7 @@
     <xsd:complexType name="OAuth2ProfileContainer">
         <xsd:sequence>
             <xsd:element name="oAuth2Profile" type="tns:OAuth2Profile"
-                         maxOccurs="1" minOccurs="0"></xsd:element>
+                         maxOccurs="unbounded" minOccurs="0"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -1962,6 +1962,7 @@
 
     <xsd:complexType name="OAuth2Profile">
         <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"></xsd:element>
             <xsd:element name="clientID" type="xsd:string"></xsd:element>
             <xsd:element name="clientSecret" type="xsd:string"></xsd:element>
             <xsd:element name="authorizationURI" type="xsd:string"></xsd:element>
