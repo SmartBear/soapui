@@ -15,12 +15,10 @@ package com.eviware.soapui.support;
 
 public final class TimeUtils
 {
-	private static final int ONE_BILLION = 1000000000;
-
 	private TimeUtils() { }
 
 	public static long getCurrentTimeInSeconds()
 	{
-		return System.nanoTime() / ONE_BILLION;
+		return System.currentTimeMillis() / 1000;
 	}
 }
