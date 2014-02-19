@@ -188,10 +188,29 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		return refreshAccessTokenButton;
 	}
 
-	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight )
+	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight, int disclosureButtonHeight )
 	{
-		Dimension rootWindowSize = SoapUI.getFrame().getSize();
-		return disclosureButtonLocation.getY() + accessTokenDialogHeight <= rootWindowSize.getHeight();
+		GraphicsConfiguration currentGraphicsConfiguration = getGraphicsConfigurationForPosition( disclosureButtonLocation );
+		if( currentGraphicsConfiguration == null )
+		{
+			return true;
+		}
+		double bottomYCoordinate = disclosureButtonLocation.getY() + accessTokenDialogHeight + disclosureButtonHeight;
+		double bottomUsableYCoordinateOnScreen = currentGraphicsConfiguration.getBounds().getMaxY()
+				- Toolkit.getDefaultToolkit().getScreenInsets( currentGraphicsConfiguration ).bottom;
+		return bottomYCoordinate <= bottomUsableYCoordinateOnScreen;
+	}
+
+	private GraphicsConfiguration getGraphicsConfigurationForPosition( Point point )
+	{
+		for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
+		{
+			if( graphicsDevice.getDefaultConfiguration().getBounds().contains( point ) )
+			{
+				return graphicsDevice.getDefaultConfiguration();
+			}
+		}
+		return null;
 	}
 
 	private void setAccessTokenFormDialogBoundsBelowTheButton( Point disclosureButtonLocation, JDialog accessTokenFormDialog, int disclosureButtonHeight )
@@ -309,7 +328,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 			accessTokenFormDialog.pack();
 			accessTokenFormDialog.setVisible( true );
 			disclosureButton.setText( "▲ Get Token" );
-			if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation, accessTokenFormDialog.getHeight() ) )
+			if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation, accessTokenFormDialog.getHeight(), source.getHeight() ) )
 			{
 				setAccessTokenFormDialogBoundsBelowTheButton( disclosureButtonLocation, accessTokenFormDialog, source.getHeight() );
 			}
