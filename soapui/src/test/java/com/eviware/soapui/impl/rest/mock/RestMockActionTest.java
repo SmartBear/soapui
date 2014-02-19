@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
@@ -13,13 +14,10 @@ import java.util.Enumeration;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class RestMockActionTest
 {
-
-
 	RestMockRequest restMockRequest;
 	RestMockAction mockAction;
 	RestMockResponse mockResponse;
@@ -40,6 +38,10 @@ public class RestMockActionTest
 
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 
+		// HttpResponse is the response transferred over the wire.
+		// So here we making sure the http status is actually set on the HttpResponse.
+		verify( mockResult.getMockRequest().getHttpResponse() ).setStatus( HttpStatus.SC_BAD_REQUEST );
+
 		assertThat( mockResult.getMockResponse().getResponseHttpStatus(), is( HttpStatus.SC_BAD_REQUEST ));
 	}
 
@@ -52,6 +54,24 @@ public class RestMockActionTest
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 
 		assertThat( mockResult.getMockResponse().getResponseContent(), is( responseContent ) );
+	}
+
+	@Test
+	public void testDispatchRequestReturnsHttpHeader() throws Exception
+	{
+
+		StringToStringsMap responseHeaders = mockResponse.getResponseHeaders();
+		responseHeaders.add( "awesomekey", "awesomevalue" );
+		mockResponse.setResponseHeaders( responseHeaders );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+
+		// HttpResponse is the response transferred over the wire.
+		// So here we making sure the header is actually set on the HttpResponse.
+		verify( mockResult.getMockRequest().getHttpResponse() ).addHeader( "awesomekey", "awesomevalue" );
+
+		assertThat( mockResult.getResponseHeaders().get( "awesomekey", "" ), is( "awesomevalue" ) );
+		assertThat( mockResult.getMockResponse().getResponseHeaders().get( "awesomekey", "" ), is( "awesomevalue" ) );
 	}
 
 	private RestMockRequest makeRestMockRequest() throws Exception
