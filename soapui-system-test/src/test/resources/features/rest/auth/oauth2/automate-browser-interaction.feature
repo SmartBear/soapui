@@ -1,8 +1,12 @@
 @Manual @Acceptance
 Feature: As Mark, I can let SoapUI automatically retrieve a new access token for me, if I have added JavaScripts handling the OAuth2 browser interactions, and see information about the interactions in the SoapUI log
 
-  # NOTE: This feature is tested manually because it depends on the Google Tasks API being available.
-  # Templates for correct JavaScripts can be found in the file template-scripts-for-google.js
+  # NOTE: This feature is tested manually because it depends on a REST service being available.
+  # The file Google-tasks-project.xml in this directory contains a sample project for the Google Tasks API,
+  #    with expiration set to 1 second. User name and password will have to be entered in the Script editor
+  #    desktop pane.
+  # The JavaScripts in the project, which can be used for any Google login and consent flow,
+  #  are also found in the file template-scripts-for-google.js.
 
   Scenario: User retrieves an access token using SoapUI and its automation of browser interactions.
     Given Mark has created a REST project with the Google Tasks API
@@ -60,8 +64,7 @@ Feature: As Mark, I can let SoapUI automatically retrieve a new access token for
     And has successfully configured his OAuth settings
     But has configured incorrect JavaScripts
     And prompts SoapUI to get an access token
-    Then an error message is displayed in the GUI
-    And no access token appears in the GUI
+    Then no access token appears in the GUI
     And an error message is added to the SoapUI log
 
   Scenario: Access token is not retrieved when a test is run from the command line with incorrect automation scripts.
