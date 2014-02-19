@@ -15,18 +15,19 @@ package com.eviware.soapui.model.propertyexpansion.resolvers;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.support.AbstractMockResponse;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestMockService;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -49,9 +50,9 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			modelItem = ( ( WsdlLoadTest )modelItem ).getTestCase();
 		else if( modelItem instanceof TestRequest )
 			modelItem = ( ( TestRequest )modelItem ).getTestStep();
-		else if( modelItem instanceof WsdlMockResponse
-				&& ( ( WsdlMockResponse )modelItem ).getMockOperation().getMockService() instanceof WsdlTestMockService )
-			modelItem = ( ( WsdlTestMockService )( ( WsdlMockResponse )modelItem ).getMockOperation().getMockService() )
+		else if( modelItem instanceof AbstractMockResponse
+				&& ( ( AbstractMockResponse )modelItem ).getMockOperation().getMockService() instanceof WsdlTestMockService )
+			modelItem = ( ( WsdlTestMockService )( ( AbstractMockResponse )modelItem ).getMockOperation().getMockService() )
 					.getMockResponseStep();
 		if( modelItem instanceof SecurityTest )
 			modelItem = ( ( SecurityTest )modelItem ).getTestCase();
@@ -115,8 +116,8 @@ public class ModelItemPropertyResolver implements PropertyResolver
 		TestCase testCase = null;
 		TestSuite testSuite = null;
 		Project project = null;
-		WsdlMockService mockService = null;
-		WsdlMockResponse mockResponse = null;
+		MockService mockService = null;
+		AbstractMockResponse mockResponse = null;
 		SecurityTest securityTest = null;
 
 		if( modelItem instanceof WsdlTestStep )
@@ -172,9 +173,9 @@ public class ModelItemPropertyResolver implements PropertyResolver
 			mockService = ( ( WsdlMockOperation )modelItem ).getMockService();
 			project = mockService.getProject();
 		}
-		else if( modelItem instanceof WsdlMockResponse )
+		else if( modelItem instanceof AbstractMockResponse )
 		{
-			mockResponse = ( WsdlMockResponse )modelItem;
+			mockResponse = ( AbstractMockResponse )modelItem;
 			mockService = mockResponse.getMockOperation().getMockService();
 			project = mockService.getProject();
 		}

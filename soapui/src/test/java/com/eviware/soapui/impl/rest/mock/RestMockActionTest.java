@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -74,6 +75,30 @@ public class RestMockActionTest
 		assertThat( mockResult.getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
 		assertThat( mockResult.getMockResponse().getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
 	}
+
+	@Test
+	public void testDispatchRequestReturnsExpandedHttpHeader() throws Exception
+	{
+		String expandedValue = "application/json; charset=iso-8859-1";
+		mockResponse.getMockOperation().getMockService().setPropertyValue( "ContentType", expandedValue );
+
+		StringToStringsMap responseHeaders = mockResponse.getResponseHeaders();
+		String headerKey = "ContentType";
+		String headerValue = "${#MockService#ContentType}";
+		responseHeaders.add( headerKey, headerValue );
+		mockResponse.setResponseHeaders( responseHeaders );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+
+		// HttpResponse is the response transferred over the wire.
+		// So here we making sure the header is actually set on the HttpResponse.
+		verify( mockResult.getMockRequest().getHttpResponse() ).addHeader( headerKey, expandedValue );
+
+		assertThat( mockResult.getResponseHeaders().get( headerKey, "" ), is( expandedValue ) );
+		assertThat( mockResult.getMockResponse().getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
+
+	}
+
 
 	private RestMockRequest makeRestMockRequest() throws Exception
 	{
