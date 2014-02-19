@@ -358,14 +358,14 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 	{
 		if( this.getWsaConfig().isWsaEnabled() )
 		{
-			WsdlOperation operation = ( WsdlOperation )getMockOperation().getOperation();
+			WsdlOperation operation = getMockOperation().getOperation();
 			WsaUtils wsaUtils = new WsaUtils( responseContent, getSoapVersion(), operation, context );
 			responseContent = wsaUtils.addWSAddressingMockResponse( this, ( WsdlMockRequest )request );
 		}
 
 		String outgoingWss = getOutgoingWss();
 		if( StringUtils.isNullOrEmpty( outgoingWss ) )
-			outgoingWss = ((WsdlMockService)getMockOperation().getMockService()).getOutgoingWss();
+			outgoingWss = getMockOperation().getMockService().getOutgoingWss();
 
 		if( StringUtils.hasContent( outgoingWss ) )
 		{
