@@ -34,6 +34,12 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
 	public static final String REFRESH_ACCESS_TOKEN_BUTTON_NAME = "refreshAccessTokenButton";
 	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
+	public static final String CLIENT_IDENTIFICATION = "Client Identification";
+	public static final String CLIENT_SECRET = "Client Secret";
+	public static final String AUTHORIZATION_URI = "Authorization URI";
+	public static final String ACCESS_TOKEN_URI = "Access Token URI";
+	public static final String REDIRECT_URI = "Redirect URI";
+	public static final String SCOPE = "Scope";
 
 	private OAuth2Profile profile;
 	private SimpleBindingForm oAuth2Form;
@@ -41,6 +47,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private JPanel wrapperPanel;
 	private boolean disclosureButtonDisabled;
 	private boolean isMouseOnDisclosureLabel;
+	private JDialog accessTokenFormDialog;
 
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
@@ -139,14 +146,22 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		populateGetAccessTokenForm( accessTokenForm );
 
 		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
-		accessTokenFormPanel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
+		JPanel wrapperPanel = new JPanel( new BorderLayout(  ) );
+		wrapperPanel.add( accessTokenFormPanel, BorderLayout.NORTH );
+
+		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+				"How to get an access token from an authorization server" );
+		accessTokenDocumentationLink.setBorder( createEmptyBorder( 10, 5, 0, 0 ) );
+		wrapperPanel.add( accessTokenDocumentationLink, BorderLayout.SOUTH );
+
+		wrapperPanel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
 				createEmptyBorder( 10, 10, 10, 10 ) ) );
 
 		final JLabel disclosureButton = new JLabel( "▼ Get Token" );
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 
-		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
+		accessTokenFormDialog = createAccessTokenDialog( wrapperPanel );
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
 
 		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog,
@@ -253,8 +268,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
-		clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, CLIENT_IDENTIFICATION, null );
+		clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, CLIENT_SECRET, "" );
 		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
 			clientSecretField.setVisible( false );
@@ -267,28 +282,25 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				if( e.getStateChange() == ItemEvent.SELECTED )
 				{
 					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+					accessTokenFormDialog.pack();
 				}
 			}
 		} );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, ACCESS_TOKEN_URI, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI, "" );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, SCOPE, "" );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
 		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
-
-		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
-				"How to get an access token from an authorization server" );
-		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}
 
 	/**
