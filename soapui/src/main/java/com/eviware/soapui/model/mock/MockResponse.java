@@ -12,11 +12,10 @@
 
 package com.eviware.soapui.model.mock;
 
+import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.xmlbeans.XmlException;
 
 /**
  * A MockResponse returned by a MockOperation. An instance of this interface represents an actual response sent
@@ -25,7 +24,7 @@ import org.apache.xmlbeans.XmlException;
  * @author ole.matzura
  */
 
-public interface MockResponse extends TestModelItem
+public interface MockResponse extends TestModelItem, Releasable
 {
 	public final static String RESPONSE_CONTENT_PROPERTY = MockResponse.class.getName() + "@responsecontent";
 	public final static String ENCODING_PROPERTY = MockResponse.class.getName() + "@encoding";
@@ -45,11 +44,26 @@ public interface MockResponse extends TestModelItem
 
 	public MockOperation getMockOperation();
 
+	/**
+	 * Gets HTTP Headers for this response.
+	 *
+	 * This is the persisted set of headers for a mock response. More headers may be added when doing a real
+	 * request to a mock service.
+	 *
+	 * @return StringToStringsMap with all the headers.
+	 */
 	public StringToStringsMap getResponseHeaders();
 
-	public MockResult getMockResult();
+	/**
+	 * Sets ALL the response headers for this mock response. The headers should be persisted along with
+	 * this response when it is saved in a project.
+	 *
+	 * @param headers a StringToStringsMap containing all the headers. A current version of persisted headers can be
+	 * fetched with getResponseHeaders.
+	 */
+	public void setResponseHeaders( StringToStringsMap headers );
 
-	public void release();
+	public MockResult getMockResult();
 
 	public void evaluateScript( MockRequest request ) throws Exception;
 
