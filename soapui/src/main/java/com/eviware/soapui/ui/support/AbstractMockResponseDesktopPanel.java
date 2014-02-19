@@ -54,7 +54,7 @@ import java.beans.PropertyChangeListener;
  * @author Ole.Matzura
  */
 
-public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, MockResponseType extends MockResponse> extends
+public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, MockResponseType extends MockResponse> extends
 		ModelItemDesktopPanel<ModelItemType>
 {
 	private JEditorStatusBarWithProgress statusBar;
@@ -66,6 +66,7 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
 
 	private ModelItemXmlEditor<?, ?> requestEditor;
+	private JComponent responseEditorPanel;
 	private ModelItemXmlEditor<?, ?> responseEditor;
 
 	private JTabbedPane requestTabs;
@@ -181,10 +182,16 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 
 		JComponent component = null;
 
+		responseEditorPanel = new JPanel( );
+		responseEditorPanel.setLayout( new BoxLayout( responseEditorPanel, BoxLayout.Y_AXIS) );
+		responseEditorPanel.add( addTopEditorPanel() );
+		responseEditorPanel.add( Box.createVerticalStrut( 10 ) );
+		responseEditorPanel.add( responseEditor );
+
 		if( mockResponse.getSettings().getBoolean( UISettings.START_WITH_REQUEST_TABS ) )
 		{
 			requestTabs.addTab( "Last Request", requestEditor );
-			requestTabs.addTab( "Mock Response", responseEditor );
+			requestTabs.addTab( "Mock Response", responseEditorPanel );
 			splitButton.setEnabled( false );
 			tabsButton.setSelected( true );
 			component = requestTabPanel;
@@ -193,13 +200,18 @@ public class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, M
 		}
 		else
 		{
-			requestSplitPane.setTopComponent( requestEditor );
-			requestSplitPane.setBottomComponent( responseEditor );
+			requestSplitPane.setTopComponent( requestEditor ); // means left
+			requestSplitPane.setBottomComponent( responseEditorPanel ); // means right
 			requestSplitPane.setDividerLocation( 0.5 );
 			component = requestSplitPane;
 		}
 
 		return component;
+	}
+
+	public JComponent addTopEditorPanel( )
+	{
+		return new JPanel(  );
 	}
 
 	/**

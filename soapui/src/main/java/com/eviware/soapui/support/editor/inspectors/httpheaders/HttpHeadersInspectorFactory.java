@@ -96,9 +96,9 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
-		else if( modelItem instanceof MockResponse )
+		else if( modelItem instanceof WsdlMockResponse )
 		{
-			HttpHeadersInspector inspector = new HttpHeadersInspector( new MockResponseHeadersModel( (MockResponse)modelItem ) );
+			HttpHeadersInspector inspector = new HttpHeadersInspector( new MockResponseHeadersModel( (WsdlMockResponse)modelItem ) );
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}

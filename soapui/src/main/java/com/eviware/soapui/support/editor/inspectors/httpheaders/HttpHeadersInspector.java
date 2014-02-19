@@ -48,7 +48,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 	private JButton removeButton;
 	public boolean changing;
 
-	protected HttpHeadersInspector( HttpHeadersInspectorModel model )
+	public HttpHeadersInspector( HttpHeadersInspectorModel model )
 	{
 		super( "Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().valueCount() ) + ")",
 				"Additional HTTP Headers for this message", true, HttpHeadersInspectorFactory.INSPECTOR_ID );
