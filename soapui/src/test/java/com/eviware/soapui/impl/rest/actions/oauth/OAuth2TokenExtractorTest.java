@@ -178,7 +178,7 @@ public class OAuth2TokenExtractorTest
 	{
 		String firstScript = "document.getElementById('okButton').click()";
 		String secondScript = "document.getElementById('confirmButton').click()";
-		profile.setJavaScripts( Arrays.asList( firstScript, secondScript ) );
+		profile.setAutomationJavaScripts( Arrays.asList( firstScript, secondScript ) );
 
 		oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
 

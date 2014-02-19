@@ -113,7 +113,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public boolean hasAutomationJavaScripts()
 	{
-		List<String> javaScripts = getJavaScripts();
+		List<String> javaScripts = getAutomationJavaScripts();
 		return javaScripts != null && !javaScripts.isEmpty();
 	}
 
@@ -403,16 +403,16 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return result.toArray();
 	}
 
-	public List<String> getJavaScripts()
+	public List<String> getAutomationJavaScripts()
 	{
 		StringListConfig configurationEntry = configuration.getJavaScripts();
 		return configurationEntry == null ? Collections.<String>emptyList() :  new ArrayList<String>(
 				configurationEntry.getEntryList());
 	}
 
-	public void setJavaScripts( List<String> javaScripts )
+	public void setAutomationJavaScripts( List<String> javaScripts )
 	{
-		List<String> oldScripts = getJavaScripts();
+		List<String> oldScripts = getAutomationJavaScripts();
 		String[] scriptArray = javaScripts.toArray( new String[javaScripts.size()] );
 		StringListConfig javaScriptsConfiguration = configuration.getJavaScripts();
 		if( javaScriptsConfiguration == null )

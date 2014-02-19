@@ -12,7 +12,6 @@ import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,9 +19,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -126,10 +122,10 @@ public class OAuth2ScriptsEditor extends JPanel
 			@Override
 			public void update( Document document )
 			{
-				profile.setJavaScripts( getJavaScripts() );
+				profile.setAutomationJavaScripts( getJavaScripts() );
 			}
 		};
-		List<String> currentScripts = profile.getJavaScripts();
+		List<String> currentScripts = profile.getAutomationJavaScripts();
 		JPanel scriptsPanel = new JPanel( new GridLayout( 2, 1 ) );
 		int index = 0;
 		for( String scriptName : SCRIPT_NAMES )
@@ -148,17 +144,9 @@ public class OAuth2ScriptsEditor extends JPanel
 		return scriptsPanel;
 	}
 
-	private boolean hasInvalidJavaScripts()
-	{
-		for( RSyntaxTextArea scriptField : scriptFields )
-		{
-			if( javaScriptValidator.validate( scriptField.getText() ) != null )
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+	/*
+	Private helper classes
+	 */
 
 	private class InputAreaWithHeader extends JPanel
 	{
@@ -167,52 +155,6 @@ public class OAuth2ScriptsEditor extends JPanel
 			super( new BorderLayout() );
 			add( new JLabel( scriptName ), BorderLayout.NORTH );
 			add( new JScrollPane( scriptField ), BorderLayout.CENTER );
-		}
-	}
-
-	public static class Dialog extends JDialog
-	{
-
-		static final String OK_BUTTON_NAME = "okButton";
-
-		public Dialog( Frame owner, String title, OAuth2Profile profile )
-		{
-			super( owner, title, true );
-			Container contentPane = getContentPane();
-			final OAuth2ScriptsEditor inputPanel = new OAuth2ScriptsEditor( profile );
-			contentPane.setLayout( new BorderLayout() );
-			contentPane.add( inputPanel, BorderLayout.CENTER );
-			JPanel buttonsPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
-			JButton okButton = new JButton( "OK" );
-			okButton.setName( OK_BUTTON_NAME );
-			okButton.addActionListener( new ActionListener()
-			{
-				@Override
-				public void actionPerformed( ActionEvent e )
-				{
-					if( inputPanel.hasInvalidJavaScripts() && !UISupport.confirm(
-							"One or more of the entered scripts you've entered seems to be incorrect.\r\n\r\n" +
-									"Do you still want to close the dialog?", "Incorrect JavaScript", Dialog.this ) )
-					{
-						return;
-					}
-					closeDialog();
-				}
-			} );
-			buttonsPanel.add( okButton );
-			contentPane.add( buttonsPanel, BorderLayout.SOUTH );
-			setBounds( 500, 500, 600, 500 );
-		}
-
-		private void closeDialog()
-		{
-			setVisible( false );
-			dispose();
-		}
-
-		public Dialog( OAuth2Profile profile )
-		{
-			this( null, "OAuth2 flow JavaScripts", profile );
 		}
 	}
 

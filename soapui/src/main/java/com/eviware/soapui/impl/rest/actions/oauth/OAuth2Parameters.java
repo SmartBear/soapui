@@ -102,7 +102,7 @@ public class OAuth2Parameters
 	public List<String> getJavaScripts()
 	{
 		WsdlProject project = profile.getContainer().getProject();
-		return Lists.transform( profile.getJavaScripts(), new PropertyExpansionFunction( project ) );
+		return Lists.transform( profile.getAutomationJavaScripts(), new PropertyExpansionFunction( project ) );
 	}
 
 }

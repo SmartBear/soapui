@@ -6,6 +6,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
@@ -180,8 +181,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			OAuth2ScriptsEditor.Dialog dialog = new OAuth2ScriptsEditor.Dialog( profile );
-			dialog.setVisible( true );
+			UISupport.showDesktopPanel(new OAuth2ScriptsDesktopPanel( profile ));
 		}
 	}
 }

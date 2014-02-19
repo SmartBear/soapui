@@ -85,7 +85,7 @@ public class OAuth2ParametersTest
 		WsdlProject project = profile.getContainer().getProject();
 		project.addProperty( userNamePropertyName ).setValue( userName );
 		String javaScriptWithExpansion = "document.getElementById('usr').value='${#Project#" + userNamePropertyName + "}'";
-		profile.setJavaScripts( Arrays.asList(javaScriptWithExpansion) );
+		profile.setAutomationJavaScripts( Arrays.asList( javaScriptWithExpansion ) );
 
 
 

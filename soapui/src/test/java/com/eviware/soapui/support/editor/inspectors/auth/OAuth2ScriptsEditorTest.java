@@ -113,7 +113,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 	private OAuth2Profile createProfileWith( List<String> scripts ) throws SoapUIException
 	{
 		OAuth2Profile profile = makeOAuth2Profile();
-		profile.setJavaScripts( scripts );
+		profile.setAutomationJavaScripts( scripts );
 		return profile;
 	}
 
