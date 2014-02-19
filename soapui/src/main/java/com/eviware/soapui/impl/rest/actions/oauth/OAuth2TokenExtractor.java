@@ -75,6 +75,9 @@ public class OAuth2TokenExtractor
 					if( !StringUtils.isNullOrEmpty( accessToken ) )
 					{
 						parameters.setAccessTokenInProfile( accessToken );
+						parameters.setRefreshTokenInProfile( null );
+						parameters.setAccessTokenExpirationTimeInProfile( 0 );
+						parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
 						browserFacade.close();
 					}
 				}
@@ -105,6 +108,7 @@ public class OAuth2TokenExtractor
 
 		OAuthToken oAuthToken = oAuthClient.accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class ).getOAuthToken();
 		parameters.applyRetrievedAccessToken( oAuthToken.getAccessToken() );
+		parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
 	}
 
 	protected OAuthClient getOAuthClient()
