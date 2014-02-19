@@ -1,8 +1,8 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
@@ -296,10 +296,13 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	 */
 	private OAuth2Profile getOAuth2Profile( RestRequest request )
 	{
-		List<OAuth2Profile> oAuth2ProfileList = request.getOperation().getInterface().getProject()
-				.getOAuth2ProfileContainer().getOAuth2ProfileList();
-		checkArgument( oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project" );
-		return oAuth2ProfileList.get( 0 );
+		OAuth2ProfileContainer oAuth2ProfileContainer = request.getOperation().getInterface().getProject()
+				.getOAuth2ProfileContainer();
+		if(oAuth2ProfileContainer.getOAuth2ProfileList().isEmpty())
+		{
+			oAuth2ProfileContainer.addNewOAuth2Profile( "OAuth 2 - Profile" );
+		}
+		return oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
 	}
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
