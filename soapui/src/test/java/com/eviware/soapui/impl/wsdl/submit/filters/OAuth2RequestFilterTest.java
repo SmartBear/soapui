@@ -5,68 +5,70 @@ import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils;
-import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
-import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
+import org.apache.log4j.Logger;
 import org.apache.oltu.oauth2.common.OAuth;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.PREEMPTIVE;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class OAuth2RequestFilterTest
 {
 
+	private static final String ACCESS_TOKEN = "ACDFECDSFKJFK#SDFSD8df#ACCESS-TOKEN";
+
 	private OAuth2RequestFilter oAuth2RequestFilter;
-	private SubmitContext mockContext;
 	private RestRequest restRequest;
 	private ExtendedPostMethod httpRequest;
 	private OAuth2ProfileContainer oAuth2ProfileContainer;
-	private OAuth2Profile oAuth2Profile;
-
-	private final String accessToken = "ACDFECDSFKJFK#SDFSD8df#ACCESS-TOKEN";
+	@Mock
+	private SubmitContext mockContext;
+	@Mock
+	private Logger mockLogger;
+	private Logger realLogger;
 
 	@Before
 	public void setUp() throws SoapUIException, URISyntaxException
 	{
+		MockitoAnnotations.initMocks( this );
+
 		oAuth2RequestFilter = new OAuth2RequestFilter();
 
-		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setAuthType( O_AUTH_2.toString());
-		WsdlProject project = restRequest.getOperation().getInterface().getProject();
-		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
-		oAuth2Profile = oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
-		oAuth2Profile.setAccessToken( accessToken );
+		setupModelItems();
+		setupRequest();
+		replaceLogger();
+	}
 
-
-		httpRequest = new ExtendedPostMethod();
-		httpRequest.setURI(  new URI( "endpoint/path" ) );
-		mockContext = Mockito.mock( SubmitContext.class );
-		Mockito.when( mockContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD )).thenReturn( httpRequest );
+	@After
+	public void restoreLogger() throws Exception
+	{
+		 OAuth2RequestFilter.setLog(realLogger);
 	}
 
 	@Test
 	public void appliesAccessToken() throws URISyntaxException
 	{
-		String expectedAccessTokenValue = "Bearer " + accessToken;
+		String expectedAccessTokenValue = "Bearer " + ACCESS_TOKEN;
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
 	}
@@ -88,24 +90,119 @@ public class OAuth2RequestFilterTest
 	}
 
 	@Test
-	public void automaticallyRefreshAccessTokenIfExpired() throws SoapUIException, MalformedURLException, OAuthSystemException, OAuthProblemException, URISyntaxException
+	public void automaticallyRefreshAccessTokenIfExpired() throws Exception
 	{
-		final OAuth2Profile profileWithRefreshToken = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
-		setExpiredAccessToken( profileWithRefreshToken );
-
-		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithRefreshToken );
-		oAuth2RequestFilter = new OAuth2RequestFilter(){
-			@Override
-			protected OAuth2ClientFacade getOAuth2ClientFacade()
-			{
-				return OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profileWithRefreshToken );
-			}
-		};
+		setupProfileWithRefreshToken();
 
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 
 		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
 		assertThat( actualAccessTokenHeader, is( "Bearer " + OAuth2TestUtils.ACCESS_TOKEN ) );
+	}
+
+	@Test
+	public void automaticallyReloadsAccessTokenWhenProfileHasAutomationScripts() throws Exception
+	{
+		setupProfileWithAutomationScripts();
+
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
+		assertThat( actualAccessTokenHeader, is( "Bearer " + OAuth2TestUtils.ACCESS_TOKEN ) );
+	}
+
+	@Test
+	public void addsLogStatementsWhenRefreshingAccessToken() throws Exception
+	{
+		setupProfileWithRefreshToken();
+
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		verify( mockLogger, times(2) ).info( any( String.class ) );
+	}
+
+	@Test
+	public void addsLogStatementsWhenReloadingAccessToken() throws Exception
+	{
+		setupProfileWithAutomationScripts();
+
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		verify( mockLogger, times(2) ).info( any( String.class ) );
+	}
+
+	@Test
+	public void logsWarningWhenAutomationScriptsAreMissing() throws Exception
+	{
+		final OAuth2Profile profileWithoutAutomationScripts = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
+		setExpiredAccessToken( profileWithoutAutomationScripts );
+		injectProfile( profileWithoutAutomationScripts );
+
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		verify( mockLogger, times(1) ).warn( any( String.class ) );
+	}
+
+
+	/*
+	Setup helpers.
+	 */
+
+
+	private void setupRequest() throws URISyntaxException
+	{
+		httpRequest = new ExtendedPostMethod();
+		httpRequest.setURI( new URI( "endpoint/path" ) );
+		when( mockContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD ) ).thenReturn( httpRequest );
+	}
+
+	private void setupModelItems() throws SoapUIException
+	{
+		restRequest = ModelItemFactory.makeRestRequest();
+		restRequest.setAuthType( O_AUTH_2.toString());
+		WsdlProject project = restRequest.getOperation().getInterface().getProject();
+		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
+		OAuth2Profile oAuth2Profile = oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
+		oAuth2Profile.setAccessToken( ACCESS_TOKEN );
+	}
+
+	private void replaceLogger()
+	{
+		realLogger = OAuth2RequestFilter.getLog();
+		OAuth2RequestFilter.setLog( mockLogger );
+	}
+
+	private void setupProfileWithRefreshToken() throws SoapUIException
+	{
+		final OAuth2Profile profileWithRefreshToken = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
+		setExpiredAccessToken( profileWithRefreshToken );
+		injectProfile( profileWithRefreshToken );
+	}
+
+	private void setupProfileWithAutomationScripts() throws SoapUIException
+	{
+		final OAuth2Profile profileWithAutomationScripts = makeProfileWithAutomationScripts();
+		setExpiredAccessToken( profileWithAutomationScripts );
+		injectProfile( profileWithAutomationScripts );
+	}
+
+	private void injectProfile( final OAuth2Profile profileWithAutomationScripts )
+	{
+		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithAutomationScripts );
+		oAuth2RequestFilter = new OAuth2RequestFilter(){
+			@Override
+			protected OAuth2ClientFacade getOAuth2ClientFacade()
+			{
+				return OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profileWithAutomationScripts );
+			}
+		};
+	}
+
+	private OAuth2Profile makeProfileWithAutomationScripts() throws SoapUIException
+	{
+		final OAuth2Profile profileWithAutomationScripts = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
+		profileWithAutomationScripts.setAutomationJavaScripts( Arrays.asList( "doLoginAndConsent()" ) );
+		return profileWithAutomationScripts;
 	}
 
 	private void setExpiredAccessToken( OAuth2Profile profileWithRefreshToken )

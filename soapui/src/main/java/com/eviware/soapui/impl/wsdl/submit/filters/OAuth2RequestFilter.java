@@ -16,7 +16,21 @@ import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
-	protected final static Logger log = Logger.getLogger( OAuth2RequestFilter.class );
+	// intentionally left non-final to facilitate testing, but should not be modified in production!
+	private static Logger log = Logger.getLogger( OAuth2RequestFilter.class );
+
+
+	/* setLog() and getLog() should only be used for testing */
+
+	static void setLog(Logger newLog)
+	{
+		log = newLog;
+	}
+
+	static Logger getLog()
+	{
+		return log;
+	}
 
 	@Override
 	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
@@ -55,12 +69,8 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		long issuedTime = profile.getAccessTokenIssuedTime();
 		long expirationTime = profile.getAccessTokenExpirationTime();
 
-		if( issuedTime <= 0 || expirationTime <= 0 )
-		{
-			return false;
-		}
+		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < currentTime - issuedTime;
 
-		return expirationTime < currentTime - issuedTime;
 	}
 
 	private void reloadAccessToken( OAuth2Profile profile, OAuth2ClientFacade oAuth2Client )
@@ -70,16 +80,16 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 			if( profile.getRefreshToken() != null )
 			{
 				log.info( "The access token has expired, trying to refresh it." );
-
 				oAuth2Client.refreshAccessToken( profile );
-
 				log.info( "The access token has been refreshed successfully." );
 			}
 			else
 			{
 				if( profile.hasAutomationJavaScripts() )
 				{
+					log.info( "The access token has expired, trying to retrieve a new one with JavaScript automation." );
 					oAuth2Client.requestAccessToken( profile );
+					log.info( "A new access token has been retrieved successfully." );
 				}
 				else
 				{
