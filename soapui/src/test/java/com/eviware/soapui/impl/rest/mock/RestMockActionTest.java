@@ -59,19 +59,20 @@ public class RestMockActionTest
 	@Test
 	public void testDispatchRequestReturnsHttpHeader() throws Exception
 	{
-
 		StringToStringsMap responseHeaders = mockResponse.getResponseHeaders();
-		responseHeaders.add( "awesomekey", "awesomevalue" );
+		String headerKey = "awesomekey";
+		String headerValue = "awesomevalue";
+		responseHeaders.add( headerKey, headerValue );
 		mockResponse.setResponseHeaders( responseHeaders );
 
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 
 		// HttpResponse is the response transferred over the wire.
 		// So here we making sure the header is actually set on the HttpResponse.
-		verify( mockResult.getMockRequest().getHttpResponse() ).addHeader( "awesomekey", "awesomevalue" );
+		verify( mockResult.getMockRequest().getHttpResponse() ).addHeader( headerKey, headerValue );
 
-		assertThat( mockResult.getResponseHeaders().get( "awesomekey", "" ), is( "awesomevalue" ) );
-		assertThat( mockResult.getMockResponse().getResponseHeaders().get( "awesomekey", "" ), is( "awesomevalue" ) );
+		assertThat( mockResult.getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
+		assertThat( mockResult.getMockResponse().getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
 	}
 
 	private RestMockRequest makeRestMockRequest() throws Exception
