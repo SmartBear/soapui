@@ -6,7 +6,6 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.TimeUtils;
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.GitHubTokenResponse;
 import org.apache.oltu.oauth2.client.response.OAuthJSONAccessTokenResponse;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
@@ -63,7 +62,7 @@ public class OAuth2TokenExtractor
 
 	}
 
-	void extractAccessTokenForImplicitGrantFlow(final OAuth2Parameters parameters) throws OAuthSystemException,
+	void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
 			URISyntaxException, MalformedURLException
 	{
 		{
@@ -73,7 +72,7 @@ public class OAuth2TokenExtractor
 				public void locationChanged( String newLocation )
 				{
 					String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), ACCESS_TOKEN );
-					if( !StringUtils.isNullOrEmpty( accessToken ))
+					if( !StringUtils.isNullOrEmpty( accessToken ) )
 					{
 						parameters.setAccessTokenInProfile( accessToken );
 						browserFacade.close();
@@ -134,9 +133,9 @@ public class OAuth2TokenExtractor
 		}
 
 		int hashIndex = url.indexOf( "#" );
-		if(hashIndex!=-1)
+		if( hashIndex != -1 )
 		{
-			return url.substring( hashIndex+1 );
+			return url.substring( hashIndex + 1 );
 		}
 		return "";
 	}
@@ -170,23 +169,13 @@ public class OAuth2TokenExtractor
 						.setRedirectURI( parameters.redirectUri )
 						.setCode( authorizationCode )
 						.buildBodyMessage();
-				OAuthToken tokenResponse = null;
-				switch( parameters.accessTokenRetrievalLocation )
+				OAuthToken token = getOAuthClient().accessToken( accessTokenRequest, OAuth2AccessTokenResponse.class )
+						.getOAuthToken();
+				if( token != null && token.getAccessToken() != null )
 				{
-					case BODY_URL_ENCODED_FORM:
-						tokenResponse = getOAuthClient().accessToken( accessTokenRequest, GitHubTokenResponse.class ).getOAuthToken();
-						break;
-					case BODY_JSON:
-					default:
-						tokenResponse = getOAuthClient().accessToken( accessTokenRequest, OAuthJSONAccessTokenResponse.class )
-								.getOAuthToken();
-						break;
-				}
-				if( tokenResponse != null && tokenResponse.getAccessToken() != null )
-				{
-					parameters.setAccessTokenInProfile( tokenResponse.getAccessToken() );
-					parameters.setRefreshTokenInProfile( tokenResponse.getRefreshToken() );
-					parameters.setAccessTokenExpirationTimeInProfile( tokenResponse.getExpiresIn() );
+					parameters.setAccessTokenInProfile( token.getAccessToken() );
+					parameters.setRefreshTokenInProfile( token.getRefreshToken() );
+					parameters.setAccessTokenExpirationTimeInProfile( token.getExpiresIn() );
 					parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
 
 					browserFacade.close();

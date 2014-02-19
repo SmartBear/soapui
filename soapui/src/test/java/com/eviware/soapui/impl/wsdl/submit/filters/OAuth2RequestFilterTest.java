@@ -5,8 +5,6 @@ import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils;
-import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
-import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -17,7 +15,6 @@ import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -35,6 +32,7 @@ import static org.junit.Assert.assertThat;
 public class OAuth2RequestFilterTest
 {
 
+	public static final String EXPIRED_TOKEN = "EXPIRED#TOKEN";
 	private OAuth2RequestFilter oAuth2RequestFilter;
 	private SubmitContext mockContext;
 	private RestRequest restRequest;
@@ -50,7 +48,7 @@ public class OAuth2RequestFilterTest
 		oAuth2RequestFilter = new OAuth2RequestFilter();
 
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setAuthType( O_AUTH_2.toString());
+		restRequest.setAuthType( O_AUTH_2.toString() );
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
 		oAuth2Profile = oAuth2ProfileContainer.addNewOAuth2Profile("profile");
@@ -58,9 +56,9 @@ public class OAuth2RequestFilterTest
 
 
 		httpRequest = new ExtendedPostMethod();
-		httpRequest.setURI(  new URI( "endpoint/path" ) );
+		httpRequest.setURI( new URI( "endpoint/path" ) );
 		mockContext = Mockito.mock( SubmitContext.class );
-		Mockito.when( mockContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD )).thenReturn( httpRequest );
+		Mockito.when( mockContext.getProperty( BaseHttpRequestTransport.HTTP_METHOD ) ).thenReturn( httpRequest );
 	}
 
 	@Test
@@ -68,15 +66,15 @@ public class OAuth2RequestFilterTest
 	{
 		String expectedAccessTokenValue = "Bearer " + accessToken;
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) );
 	}
 
 	@Test
 	public void doNotApplyNullAccessTokenToHeader() throws Exception
 	{
-		restRequest.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 ).setAccessToken( null );
+		oAuth2Profile.setAccessToken( null );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) );
 	}
 
 	@Test
@@ -84,34 +82,56 @@ public class OAuth2RequestFilterTest
 	{
 		restRequest.setAuthType( PREEMPTIVE.toString() );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) ) ;
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ).length, is( 0 ) );
 	}
 
 	@Test
-	public void automaticallyRefreshAccessTokenIfExpired() throws SoapUIException, MalformedURLException, OAuthSystemException, OAuthProblemException, URISyntaxException
+	public void automaticallyRefreshAccessTokenIfExpired() throws Exception
 	{
-		final OAuth2Profile profileWithRefreshToken = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
-		setExpiredAccessToken( profileWithRefreshToken );
-
-		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithRefreshToken );
-		oAuth2RequestFilter = new OAuth2RequestFilter(){
-			@Override
-			protected OAuth2ClientFacade getOAuth2ClientFacade()
-			{
-				return OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profileWithRefreshToken );
-			}
-		};
-
+		OAuth2Profile profileWithRefreshToken = setProfileWithRefreshTokenAndExpiredAccessToken();
+		oAuth2FilterWithMockOAuth2ClientFacade( profileWithRefreshToken );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 
 		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
 		assertThat( actualAccessTokenHeader, is( "Bearer " + OAuth2TestUtils.ACCESS_TOKEN ) );
 	}
 
+	@Test
+	public void doesNotRefreshAccessTokenWhenRefreshMethodIsManual() throws SoapUIException
+	{
+		OAuth2Profile profileWithRefreshToken = setProfileWithRefreshTokenAndExpiredAccessToken();
+		profileWithRefreshToken.setRefreshAccessTokenMethod( OAuth2Profile.RefreshAccessTokenMethods.MANUAL );
+		oAuth2FilterWithMockOAuth2ClientFacade( profileWithRefreshToken );
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		assertThat( profileWithRefreshToken.getAccessToken(), is( EXPIRED_TOKEN ) );
+	}
+
+	private OAuth2Profile setProfileWithRefreshTokenAndExpiredAccessToken() throws SoapUIException
+	{
+		final OAuth2Profile profileWithRefreshToken = OAuth2TestUtils.getOAuthProfileWithRefreshToken();
+		setExpiredAccessToken( profileWithRefreshToken );
+
+		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithRefreshToken );
+		return profileWithRefreshToken;
+	}
+
+	private void oAuth2FilterWithMockOAuth2ClientFacade( final OAuth2Profile profileWithRefreshToken )
+	{
+		oAuth2RequestFilter = new OAuth2RequestFilter()
+		{
+			@Override
+			protected OAuth2ClientFacade getOAuth2ClientFacade()
+			{
+				return OAuth2TestUtils.getOltuOAuth2ClientFacadeWithMockedTokenExtractor( profileWithRefreshToken );
+			}
+		};
+	}
+
 	private void setExpiredAccessToken( OAuth2Profile profileWithRefreshToken )
 	{
-		profileWithRefreshToken.setAccessToken( "EXPIRED#TOKEN" );
-		profileWithRefreshToken.setAccessTokenIssuedTime( 1 );			//Token was issued Jan 1 1970
-		profileWithRefreshToken.setAccessTokenExpirationTime( 10 );		//and expired 10 seconds later.
+		profileWithRefreshToken.setAccessToken( EXPIRED_TOKEN );
+		profileWithRefreshToken.setAccessTokenIssuedTime( 1 );         //Token was issued Jan 1 1970
+		profileWithRefreshToken.setAccessTokenExpirationTime( 10 );      //and expired 10 seconds later.
 	}
 }

@@ -37,7 +37,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -59,6 +59,8 @@ public class SimpleForm
 	public static final int MEDIUM_TEXT_FIELD_COLUMNS = 30;
 	public static final int LONG_TEXT_FIELD_COLUMNS = 50;
 	public static final int DEFAULT_TEXT_FIELD_COLUMNS = MEDIUM_TEXT_FIELD_COLUMNS;
+	public static final Color HINT_TEXT_COLOR = new Color( 113, 102, 102 );
+	public static final String DEFAULT_COMPONENT_ALIGNMENT = "left,bottom";
 
 	private JPanel panel;
 	private CellConstraints cc = new CellConstraints();
@@ -160,23 +162,30 @@ public class SimpleForm
 		return button;
 	}
 
-	public JButton addButtonWithoutLabel( String text, ActionListener actionListener )
+	public JButton addButtonWithoutLabelToTheRight( String text, ActionListener actionListener )
 	{
-		if( rowSpacing > 0 && !components.isEmpty() )
-			addSpace( rowSpacing );
-
-		layout.appendRow( rowSpec );
-		int row = layout.getRowCount();
-
 		JButton button = new JButton( text );
 		button.addActionListener( actionListener );
 
-
-		panel.add( button, cc.xy( 4, row, "left,bottom" ) );
+		addComponentWithoutLabel( button, "right,bottom" );
 
 		return button;
 	}
 
+	public JButton addButtonWithoutLabel( String text, ActionListener actionListener )
+	{
+		JButton button = new JButton( text );
+		button.addActionListener( actionListener );
+
+		addComponentWithoutLabel( button );
+
+		return button;
+	}
+
+	public void addComponentWithoutLabel( JComponent component )
+	{
+		addComponentWithoutLabel( component, DEFAULT_COMPONENT_ALIGNMENT );
+	}
 
 	public void addSpace()
 	{
@@ -222,11 +231,11 @@ public class SimpleForm
 		return radioButton;
 	}
 
-
 	public void append( String label, JComponent component )
 	{
 		append( label, component, null );
 	}
+
 
 	public JComboBox appendComboBox( String label, Map<?, ?> values )
 	{
@@ -357,7 +366,7 @@ public class SimpleForm
 		layout.appendRow( rowSpec );
 		int row = layout.getRowCount();
 
-		panel.add( new JSeparator(), cc.xywh( 2, row, 3, 1 ) );
+		panel.add( new JSeparator(), cc.xywh( 2, row, 4, 1 ) );
 		appended = true;
 	}
 
@@ -553,6 +562,14 @@ public class SimpleForm
 		panel.add( component, cc.xyw( 2, row, 4 ) );
 	}
 
+	public void addInputFieldHintText( String text )
+	{
+		JLabel label = new JLabel( text );
+		label.setForeground( HINT_TEXT_COLOR );
+
+		addComponentWithoutLabel( label );
+	}
+
 	public void removeComponent( JComponent component )
 	{
 		panel.remove( component );
@@ -606,6 +623,7 @@ public class SimpleForm
 
 	private static class LabelEnabler implements PropertyChangeListener
 	{
+
 		private final JComponent label;
 
 		public LabelEnabler( JComponent label )
@@ -618,10 +636,12 @@ public class SimpleForm
 		{
 			label.setEnabled( ( Boolean )evt.getNewValue() );
 		}
+
 	}
 
 	private final class LabelHider extends ComponentAdapter
 	{
+
 		private final JComponent jlabel;
 		private final int rowIndex;
 
@@ -648,6 +668,7 @@ public class SimpleForm
 			if( rowIndex >= 0 && rowIndex < layout.getRowCount() )
 				layout.setRowSpec( rowIndex, new RowSpec( rowSpacing + "px" ) );
 		}
+
 	}
 
 	public <T extends JComponent> T append( String name, JLabel label, T field )
@@ -677,5 +698,16 @@ public class SimpleForm
 		panel.add( component, cc.xy( 4, row ) );
 
 		return component;
+	}
+
+	private void addComponentWithoutLabel( JComponent component, String alignment )
+	{
+		if( rowSpacing > 0 && !components.isEmpty() )
+			addSpace( rowSpacing );
+
+		layout.appendRow( rowSpec );
+		int row = layout.getRowCount();
+
+		panel.add( component, cc.xy( 4, row, alignment ) );
 	}
 }

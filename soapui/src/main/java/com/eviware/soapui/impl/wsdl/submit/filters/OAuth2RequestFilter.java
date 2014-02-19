@@ -38,7 +38,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 			}
 			OAuth2ClientFacade oAuth2Client = getOAuth2ClientFacade();
 
-			if( accessTokenIsExpired( profile ) && hasRefreshToken( profile ) )
+			if( profile.shouldRefreshAccessTokenAutomatically() && accessTokenIsExpired( profile ))
 			{
 				refreshAccessToken( profile, oAuth2Client );
 			}
@@ -63,11 +63,6 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		}
 
 		return expirationTime < currentTime - issuedTime;
-	}
-
-	private boolean hasRefreshToken( OAuth2Profile profile )
-	{
-		return profile.getRefreshToken() != null;
 	}
 
 	private void refreshAccessToken( OAuth2Profile profile, OAuth2ClientFacade oAuth2Client )

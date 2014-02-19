@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 /**
  * Encapsulates values associated with an Oauth2 flow. Mostly they will be input by users, but the "accessToken" and
  * "status" properties will be modified during the OAuth2 interactions.
@@ -38,19 +39,32 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String SCOPE_PROPERTY = "scope";
 	public static final String ACCESS_TOKEN_STATUS_PROPERTY = "accessTokenStatus";
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
-	public static final String ACCESS_TOKEN_RETRIEVAL_PROPERTY = "accessTokenRetrievalLocation";
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
 	public static final String OAUTH2_FLOW = "oAuth2Flow";
+	public static final String REFRESH_ACCESS_TOKEN_METHOD_PROPERTY = "refreshAccessTokenMethod";
 
 	public enum AccessTokenStatus
 	{
-		UPDATED_MANUALLY,
-		PENDING,
-		WAITING_FOR_AUTHORIZATION,
-		RECEIVED_AUTHORIZATION_CODE,
-		FAILED,
-		RETRIEVED_FROM_SERVER
+		UPDATED_MANUALLY("Updated Manually"),
+		PENDING("Pending"),
+		WAITING_FOR_AUTHORIZATION("Waiting for Authorization"),
+		RECEIVED_AUTHORIZATION_CODE("Received authorzation code"),
+		FAILED("Failed to retrieve"),
+		RETRIEVED_FROM_SERVER("Retrieved from authorization server");
+
+		private String description;
+
+		AccessTokenStatus( String description )
+		{
+			this.description = description;
+		}
+
+		@Override
+		public String toString()
+		{
+			return description;
+		}
 	}
 
 	public enum AccessTokenPosition
@@ -60,17 +74,9 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		BODY
 	}
 
-	public enum AccessTokenRetrievalLocation
-	{
-		BODY_JSON,
-		BODY_URL_ENCODED_FORM
-	}
-
 	public enum OAuth2Flow
 	{
 		AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
-		RESOURCE_OWNER_CREDENTIALS_GRANT("Resource Owner Credentials Grant"),
-		CLIENT_CREDENTIALS_GRANT("Client Credentials Grant"),
 		IMPLICIT_GRANT("Implicit Grant");
 
 		private String description;
@@ -85,6 +91,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			return description;
 		}
+	}
+
+	public enum RefreshAccessTokenMethods
+	{
+		AUTOMATIC,
+		MANUAL;
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -154,15 +166,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return AccessTokenPosition.valueOf( configuration.getAccessTokenPosition().toString() );
 	}
 
-	public AccessTokenRetrievalLocation getAccessTokenRetrievalLocation()
-	{
-		if( configuration.getAccessTokenRetrievalLocation() == null )
-		{
-			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.BODY_JSON );
-		}
-		return AccessTokenRetrievalLocation.valueOf( configuration.getAccessTokenRetrievalLocation().toString() );
-	}
-
 	public void setAccessTokenPosition( AccessTokenPosition accessTokenPosition )
 	{
 		AccessTokenPosition oldValue = getAccessTokenPosition();
@@ -191,17 +194,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			configuration.setOAuth2Flow( OAuth2FlowConfig.AUTHORIZATION_CODE_GRANT );
 		}
 		return OAuth2Flow.valueOf( configuration.getOAuth2Flow().toString() );
-	}
-
-	public void setAccessTokenRetrievalLocation( AccessTokenRetrievalLocation retrievalLocation )
-	{
-		AccessTokenRetrievalLocation oldValue = getAccessTokenRetrievalLocation();
-		if( !retrievalLocation.equals( oldValue.toString() ) )
-		{
-			configuration.setAccessTokenRetrievalLocation( AccessTokenRetrievalLocationConfig.Enum.forString(
-					retrievalLocation.toString() ) );
-			pcs.firePropertyChange( ACCESS_TOKEN_RETRIEVAL_PROPERTY, oldValue, retrievalLocation );
-		}
 	}
 
 	public String getRefreshToken()
@@ -330,7 +322,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		if( configuration.getAccessTokenStatus() != null )
 		{
-			return configuration.getAccessTokenStatus().toString();
+			return AccessTokenStatus.valueOf( configuration.getAccessTokenStatus().toString()).toString();
 		}
 		return null;
 	}
@@ -365,7 +357,31 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			configuration.setAccessTokenIssuedTime( newIssuedTime );
 			pcs.firePropertyChange( ACCESS_TOKEN_ISSUED_TIME, oldIssuedTime, newIssuedTime );
 		}
-		configuration.setAccessTokenIssuedTime( newIssuedTime );
+	}
+
+	public RefreshAccessTokenMethods getRefreshAccessTokenMethod()
+	{
+		if( configuration.getRefreshAccessTokenMethod() ==null)
+		{
+			configuration.setRefreshAccessTokenMethod( RefreshAccessTokenMethodConfig.Enum
+					.forString( RefreshAccessTokenMethods.AUTOMATIC.toString() ) );
+		}
+		return RefreshAccessTokenMethods.valueOf( configuration.getRefreshAccessTokenMethod().toString() );
+	}
+
+	public void setRefreshAccessTokenMethod( RefreshAccessTokenMethods newValue )
+	{
+		RefreshAccessTokenMethods oldValue = getRefreshAccessTokenMethod();
+		if( !oldValue.equals( newValue ) )
+		{
+			configuration.setRefreshAccessTokenMethod( RefreshAccessTokenMethodConfig.Enum.forString( newValue.toString() ) );
+			pcs.firePropertyChange( REFRESH_ACCESS_TOKEN_METHOD_PROPERTY, oldValue.toString(), newValue.toString() );
+		}
+	}
+
+	public boolean shouldRefreshAccessTokenAutomatically()
+	{
+		return getRefreshAccessTokenMethod().equals( AUTOMATIC ) && (!StringUtils.isEmpty( getRefreshToken() ));
 	}
 
 	public OAuth2ProfileContainer getContainer()
@@ -413,7 +429,9 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	private void setAccessTokenStatus( AccessTokenStatus status )
 	{
-		String oldValue = getAccessTokenStatus();
+		AccessTokenStatusConfig.Enum savedAccessTokenStatus = configuration.getAccessTokenStatus();
+		AccessTokenStatus oldValue = savedAccessTokenStatus==null ? null :
+				AccessTokenStatus.valueOf( savedAccessTokenStatus.toString() );
 
 		if( status == null && oldValue == null )
 		{
@@ -425,13 +443,14 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			{
 				return;
 			}
-			configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.toString() ) );
+			configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.name() ) );
 		}
 		else
 		{
 			configuration.setAccessTokenStatus( null );
 		}
-		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValue, status.toString() );
+		String oldValueAsString = oldValue==null ? null : oldValue.toString();
+		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status.toString() );
 	}
 
 }

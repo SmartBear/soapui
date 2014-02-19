@@ -1,9 +1,13 @@
 package com.smartbear.soapui.stepdefs.rest.project;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -144,7 +148,15 @@ public class RestProjectStepdefs
 		projectNameListWithNewProject.removeAll( existingProjectNameList );
 		String projectName = projectNameListWithNewProject.get( 0 );
 
-		return WorkspaceUtils.getProjectNameList().indexOf( projectName );
+		return WorkspaceUtils.getProjectNameList().indexOf( projectName ) + 1;
 	}
 
+	@And( "^there is a refresh token in the OAuth 2 profile$" )
+	public void setRefreshTokenInOAuth2Profile() throws Throwable
+	{
+		String projectName = WorkspaceUtils.getNavigatorPanel( rootWindow ).tree().node( newProjectIndexInNavigationTree).value();
+		WsdlProject project = (WsdlProject )SoapUI.getWorkspace().getProjectByName( projectName );
+		OAuth2Profile profile = project.getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 );
+		profile.setRefreshToken( "Dummy#Refresh#Token" );
+	}
 }

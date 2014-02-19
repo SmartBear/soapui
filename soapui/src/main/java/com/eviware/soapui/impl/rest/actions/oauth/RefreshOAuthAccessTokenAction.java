@@ -16,8 +16,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.UISupport;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -26,22 +25,22 @@ import java.awt.event.ActionEvent;
 public class RefreshOAuthAccessTokenAction extends AbstractAction
 {
 
-	private OAuth2Profile target;
+	private OAuth2Profile profile;
 
-	public RefreshOAuthAccessTokenAction( OAuth2Profile target )
+	public RefreshOAuthAccessTokenAction( OAuth2Profile profile )
 	{
-		super("Refresh OAuth2 access token");
-		this.target = target;
+		super( "Refresh OAuth2 access token" );
+		this.profile = profile;
 		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth2 the access token in the profile using the refresh token" );
 	}
 
-	public void actionPerformed(ActionEvent event)
+	public void actionPerformed( ActionEvent event )
 	{
 		try
 		{
-			getOAuthClientFacade().refreshAccessToken( target );
+			getOAuthClientFacade().refreshAccessToken( profile );
 		}
-		catch (InvalidOAuth2ParametersException e)
+		catch( InvalidOAuth2ParametersException e )
 		{
 			UISupport.showErrorMessage( "Invalid OAuth2 parameters: " + e.getMessage() );
 		}
@@ -50,14 +49,6 @@ public class RefreshOAuthAccessTokenAction extends AbstractAction
 			SoapUI.logError( e, "Error refreshing OAuth2 access token" );
 			UISupport.showErrorMessage( "Could not refresh access token. Check the SoapUI log for details" );
 		}
-	}
-
-	@Override
-	public boolean isEnabled()
-	{
-		return true;
-		// FIXME: Check if this condition should apply, and if so probably add PropertyChangeListener support!
-//		return StringUtils.hasContent( target.getRefreshToken());
 	}
 
 	protected OAuth2ClientFacade getOAuthClientFacade()
