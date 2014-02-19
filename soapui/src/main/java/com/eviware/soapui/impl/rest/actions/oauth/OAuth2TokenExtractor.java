@@ -34,8 +34,21 @@ public class OAuth2TokenExtractor
 
 	protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>(  );
 
+	public void extractAccessToken(final OAuth2Parameters parameters) throws OAuthSystemException, MalformedURLException, URISyntaxException
+	{
+		switch( parameters.getOAuth2Flow() )
+		{
+			case IMPLICIT_GRANT:
+				extractAccessTokenForImplicitGrantFlow( parameters );
+				break;
+			case AUTHORIZATION_CODE_GRANT:
+			default:
+				extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
+				break;
+		}
+	}
 
-	public void extractAccessTokenForAuthorizationCodeGrantFlow( final OAuth2Parameters parameters ) throws URISyntaxException,
+	void extractAccessTokenForAuthorizationCodeGrantFlow( final OAuth2Parameters parameters ) throws URISyntaxException,
 			MalformedURLException, OAuthSystemException
 	{
 		final UserBrowserFacade browserFacade = getBrowserFacade();
@@ -65,7 +78,7 @@ public class OAuth2TokenExtractor
 			parameters.waitingForAuthorization();
 	}
 
-	public void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
+	void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
 			URISyntaxException, MalformedURLException
 	{
 		final UserBrowserFacade browserFacade = getBrowserFacade();
@@ -247,9 +260,17 @@ public class OAuth2TokenExtractor
 		@Override
 		public void contentChanged( String newContent )
 		{
+			String script = javaScripts.get( pageIndex );
 			if( javaScripts.size() > pageIndex )
 			{
-				browserFacade.executeJavaScript( javaScripts.get( pageIndex ) );
+				try
+				{
+					browserFacade.executeJavaScript( script );
+				}
+				catch( Exception e )
+				{
+					SoapUI.log.warn("Error when running JavaScript [" + script + "]: " + e.getMessage());
+				}
 				pageIndex++;
 			}
 		}

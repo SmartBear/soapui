@@ -34,8 +34,9 @@ import java.util.List;
  */
 public class OAuth2ScriptsEditor extends JPanel
 {
-	static final String[] SCRIPT_NAMES = { "Login screen script", "Consent screen script" };
 	public static final String TEST_SCRIPTS_BUTTON_NAME = "testScriptsButton";
+
+	static final String[] SCRIPT_NAMES = { "Login screen script", "Consent screen script" };
 
 	private List<RSyntaxTextArea> scriptFields = new ArrayList<RSyntaxTextArea>();
 	private JavaScriptValidator javaScriptValidator = new JavaScriptValidator();
@@ -59,6 +60,16 @@ public class OAuth2ScriptsEditor extends JPanel
 		add( makeScriptsPanel( profile ), BorderLayout.CENTER );
 	}
 
+	public List<String> getJavaScripts()
+	{
+		List<String> scripts = new ArrayList<String>();
+		for( RSyntaxTextArea scriptField : scriptFields )
+		{
+			scripts.add( scriptField.getText() );
+		}
+		return scripts;
+	}
+
 	protected OAuth2TokenExtractor getExtractor()
 	{
 		return new OAuth2TokenExtractor();
@@ -73,60 +84,19 @@ public class OAuth2ScriptsEditor extends JPanel
 			JavaScriptValidationError validate = javaScriptValidator.validate( script );
 			if( validate != null )
 			{
-				UISupport.showErrorMessage( "Validation failed for script [" + script + "]: " + validate.getErrorMessage() );
+				showErrorMessage( "The following script is invalid:\r\n" + script +
+						"\r\n\r\nError:<br/>" + validate.getErrorMessage() );
 				errorsFound = true;
 			}
 		}
 		if( !errorsFound )
 		{
 			OAuth2TokenExtractor extractor = getExtractor();
-			extractor.addBrowserListener( new BrowserListenerAdapter()
-			{
-
-				private boolean hasErrors = false;
-
-				@Override
-				public void javaScriptErrorOccurred( final String script, final String location, final Exception error )
-				{
-					hasErrors = true;
-					// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
-					SwingUtilities.invokeLater( new Runnable()
-					{
-						public void run()
-						{
-							UISupport.showErrorMessage( "The script [" + script + "] failed on the page " + location + " with the error [" +
-									error.getMessage() + "]" );
-						}
-					} );
-				}
-
-				@Override
-				public void browserClosed()
-				{
-					if (!hasErrors)
-					{
-						// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
-						SwingUtilities.invokeLater( new Runnable()
-						{
-							public void run()
-							{
-								UISupport.showInfoMessage( "All scripts executed correctly." );
-							}
-						} );
-					}
-				}
-			} );
+			extractor.addBrowserListener( new JavaScriptErrorReporter() );
 			OAuth2Parameters parameters = new OAuth2Parameters( profile );
 			try
 			{
-				if( profile.getOAuth2Flow() == OAuth2Profile.OAuth2Flow.AUTHORIZATION_CODE_GRANT )
-				{
-					extractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
-				}
-				else
-				{
-					extractor.extractAccessTokenForImplicitGrantFlow( parameters );
-				}
+				extractor.extractAccessToken( parameters );
 			}
 			catch( Exception ignore )
 			{
@@ -137,17 +107,19 @@ public class OAuth2ScriptsEditor extends JPanel
 		}
 	}
 
-	public List<String> getJavaScripts()
+	private void showErrorMessage( String message )
 	{
-		List<String> scripts = new ArrayList<String>();
-		for( RSyntaxTextArea scriptField : scriptFields )
+		if( message.length() > UISupport.EXTENDED_ERROR_MESSAGE_THRESHOLD )
 		{
-			scripts.add( scriptField.getText() );
+			UISupport.showErrorMessage( message.replaceAll( "\r\n", "<br/>" ) );
 		}
-		return scripts;
+		else
+		{
+			UISupport.showErrorMessage( message );
+		}
 	}
 
-	private JPanel makeScriptsPanel( final OAuth2Profile profile)
+	private JPanel makeScriptsPanel( final OAuth2Profile profile )
 	{
 		DocumentListener scriptUpdater = new DocumentListenerAdapter()
 		{
@@ -219,7 +191,7 @@ public class OAuth2ScriptsEditor extends JPanel
 				public void actionPerformed( ActionEvent e )
 				{
 					if( inputPanel.hasInvalidJavaScripts() && !UISupport.confirm(
-							"One or more of the entered scripts you've entered seems to be incorrect.\n\n" +
+							"One or more of the entered scripts you've entered seems to be incorrect.\r\n\r\n" +
 									"Do you still want to close the dialog?", "Incorrect JavaScript", Dialog.this ) )
 					{
 						return;
@@ -245,4 +217,40 @@ public class OAuth2ScriptsEditor extends JPanel
 	}
 
 
+	private class JavaScriptErrorReporter extends BrowserListenerAdapter
+	{
+
+		private boolean hasErrors = false;
+
+		@Override
+		public void javaScriptErrorOccurred( final String script, final String location, final Exception error )
+		{
+			hasErrors = true;
+			// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				public void run()
+				{
+					showErrorMessage( "The following script failed:\r\n" + script + "\r\nPage URL: " + location + "\r\nError:\r\n" +
+							error.getMessage() + "]" );
+				}
+			} );
+		}
+
+		@Override
+		public void browserClosed()
+		{
+			if( !hasErrors )
+			{
+				// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					public void run()
+					{
+						UISupport.showInfoMessage( "All scripts executed correctly." );
+					}
+				} );
+			}
+		}
+	}
 }

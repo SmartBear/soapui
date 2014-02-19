@@ -142,13 +142,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 		boolean shouldSimulateJavaScriptErrors = false;
 
 		@Override
-		public void extractAccessTokenForAuthorizationCodeGrantFlow( OAuth2Parameters parameters ) throws URISyntaxException, MalformedURLException, OAuthSystemException
-		{
-			simulateBrowserInteraction();
-		}
-
-		@Override
-		public void extractAccessTokenForImplicitGrantFlow( OAuth2Parameters parameters ) throws OAuthSystemException, URISyntaxException, MalformedURLException
+		public void extractAccessToken( OAuth2Parameters parameters ) throws URISyntaxException, MalformedURLException, OAuthSystemException
 		{
 			simulateBrowserInteraction();
 		}

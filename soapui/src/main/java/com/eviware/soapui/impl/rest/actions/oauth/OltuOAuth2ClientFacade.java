@@ -21,7 +21,6 @@ import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.common.OAuth;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import java.io.UnsupportedEncodingException;
@@ -44,16 +43,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade
 		{
 			OAuth2Parameters parameters = buildParametersFrom( profile );
 			OAuth2ParameterValidator.validate( parameters );
-			switch( profile.getOAuth2Flow() )
-			{
-				case IMPLICIT_GRANT:
-					getOAuth2TokenExtractor().extractAccessTokenForImplicitGrantFlow( parameters );
-					break;
-				case AUTHORIZATION_CODE_GRANT:
-			   default:
-					getOAuth2TokenExtractor().extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
-					break;
-			}
+			getOAuth2TokenExtractor().extractAccessToken( parameters );
 		}
 		catch( OAuthSystemException e )
 		{
