@@ -58,7 +58,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		model.addPropertyChangeListener( this );
 	}
 
-	public JComponent getComponent( boolean shouldShowOnlineHelpIcon)
+	public JComponent getComponent()
 	{
 		if( panel != null )
 			return panel;
@@ -88,11 +88,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 			removeButton = UISupport.createToolbarButton( new RemoveAction() );
 			builder.addFixed( removeButton );
 			builder.addGlue();
-
-			if( shouldShowOnlineHelpIcon )
-			{
-				builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
-			}
+			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
 
 			panel.add( builder, BorderLayout.NORTH );
 
@@ -112,12 +108,6 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 		}
 
 		return panel;
-	}
-
-	public JComponent getComponent()
-	{
-		boolean shouldShowOnlineHelpIcon = true;
-		return getComponent( shouldShowOnlineHelpIcon );
 	}
 
 	public JTable getHeadersTable()

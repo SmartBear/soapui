@@ -83,8 +83,7 @@ public class RestMockResponseDesktopPanel extends
 		MockResponseHeadersModel model = new MockResponseHeadersModel( getModelItem() );
 		HttpHeadersInspector inspector = new HttpHeadersInspector( model );
 
-		boolean shouldShowOnlineHelpIcon = false;
-		JComponent component = inspector.getComponent( shouldShowOnlineHelpIcon );
+		JComponent component = inspector.getComponent( );
 		return component;
 	}
 
