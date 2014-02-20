@@ -41,6 +41,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	public static final String REDIRECT_URI = "Redirect URI";
 	public static final String SCOPE = "Scope";
 
+	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
+
 	private OAuth2Profile profile;
 	private SimpleBindingForm oAuth2Form;
 	private JTextField clientSecretField;
@@ -146,7 +148,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		populateGetAccessTokenForm( accessTokenForm );
 
 		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
-		JPanel wrapperPanel = new JPanel( new BorderLayout(  ) );
+		JPanel wrapperPanel = new JPanel( new BorderLayout() );
 		wrapperPanel.add( accessTokenFormPanel, BorderLayout.NORTH );
 
 		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
@@ -181,9 +183,9 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 	private JButton addAccessTokenFieldAndRefreshTokenButton( SimpleBindingForm oAuth2Form )
 	{
-		JTextField accessTokenField = new JTextField(  );
+		JTextField accessTokenField = new JTextField();
 		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
-		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS  );
+		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
 		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
 
 		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
@@ -194,7 +196,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
 		refreshAccessTokenButton.setVisible( enabled );
 
-		JPanel wrapperPanel = new JPanel( new BorderLayout( 5,5 ) );
+		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );
 		wrapperPanel.add( accessTokenField, BorderLayout.WEST );
 		wrapperPanel.add( refreshAccessTokenButton, BorderLayout.EAST );
@@ -244,6 +246,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	{
 		final JDialog accessTokenFormDialog = new JDialog();
 		accessTokenFormDialog.setName( ACCESS_TOKEN_FORM_DIALOG_NAME );
+		accessTokenFormDialog.setTitle( ACCESS_TOKEN_FORM_DIALOG_TITLE );
+		accessTokenFormDialog.setIconImages( SoapUI.getFrameIcons() );
 		accessTokenFormDialog.setUndecorated( true );
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
 
@@ -383,13 +387,17 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		@Override
 		public void windowLostFocus( WindowEvent e )
 		{
-			accessTokenFormDialog.setVisible( false );
-			disclosureButton.setText( "▼ Get Token" );
-			// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
-			// will then show the dialog directly again.
-			if( !isMouseOnDisclosureLabel )
+			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+			if( SoapUI.getFrame().contains( mouseLocation ) )
 			{
-				disclosureButtonDisabled = false;
+				accessTokenFormDialog.setVisible( false );
+				disclosureButton.setText( "▼ Get Token" );
+				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
+				// will then show the dialog directly again.
+				if( !isMouseOnDisclosureLabel )
+				{
+					disclosureButtonDisabled = false;
+				}
 			}
 		}
 	}
