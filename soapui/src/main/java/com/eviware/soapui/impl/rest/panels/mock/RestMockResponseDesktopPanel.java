@@ -12,6 +12,7 @@ import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
+import java.util.Map;
 import java.util.Vector;
 
 public class RestMockResponseDesktopPanel extends
@@ -66,13 +67,13 @@ public class RestMockResponseDesktopPanel extends
 
 		final JComboBox statusCodeCombo = new JComboBox( httpStatusCodeComboBoxModel );
 
-		statusCodeCombo.setSelectedItem( getModelItem().getResponseHttpStatus() );
+		statusCodeCombo.setSelectedItem( CompleteHttpStatus.from( getModelItem().getResponseHttpStatus() ) );
 		statusCodeCombo.setToolTipText( "Set desired HTTP status code" );
 		statusCodeCombo.addItemListener( new ItemListener()
 		{
 			public void itemStateChanged( ItemEvent e )
 			{
-				getModelItem().setResponseHttpStatus( ( Integer )statusCodeCombo.getSelectedItem() );
+				getModelItem().setResponseHttpStatus( (( CompleteHttpStatus )statusCodeCombo.getSelectedItem()).getStatusCode() );
 			}
 		} );
 		return statusCodeCombo;
@@ -90,9 +91,44 @@ public class RestMockResponseDesktopPanel extends
 
 }
 
+class CompleteHttpStatus
+{
+	private int statusCode;
+	private String description;
+
+	private CompleteHttpStatus( int statusCode )
+	{
+		this.statusCode = statusCode;
+		this.description = HttpStatus.getStatusText( statusCode );
+	}
+
+	public static CompleteHttpStatus from( int statusCode )
+	{
+		return new CompleteHttpStatus( statusCode );
+	}
+
+	public int getStatusCode()
+	{
+		return statusCode;
+	}
+
+	@Override
+	public String toString()
+	{
+	   return "" + statusCode + " - " + description;
+	}
+
+	@Override
+	public boolean equals(Object object)
+	{
+		return ((CompleteHttpStatus)object).statusCode == statusCode;
+
+	}
+}
+
 class HttpStatusCodeComboBoxModel extends DefaultComboBoxModel
 {
-	private static Vector<Integer> LIST_OF_CODES = new Vector<Integer>(  );
+	private static Vector<CompleteHttpStatus> LIST_OF_CODES = new Vector<CompleteHttpStatus>();
 
 	static
 	{
@@ -104,7 +140,7 @@ class HttpStatusCodeComboBoxModel extends DefaultComboBoxModel
 			{
 				if( statusCodeField.getName().startsWith( statusCodePrefix ) )
 				{
-					LIST_OF_CODES.add( statusCodeField.getInt( null ) );
+					LIST_OF_CODES.add( CompleteHttpStatus.from( statusCodeField.getInt( null ) ) );
 				}
 			}
 			catch( IllegalAccessException e )
