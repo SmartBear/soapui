@@ -1,22 +1,16 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.HttpMethod;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.MockResponseHeadersModel;
 import com.eviware.soapui.ui.support.AbstractMockResponseDesktopPanel;
 import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.commons.httpclient.HttpStatus;
-import sun.print.resources.serviceui_sv;
 
 import javax.swing.*;
-import javax.swing.event.ListDataListener;
-import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Field;
 import java.util.Vector;
 
@@ -36,7 +30,7 @@ public class RestMockResponseDesktopPanel extends
 		JPanel topEditorPanel = new JPanel( );
 		topEditorPanel.setLayout( new BoxLayout( topEditorPanel, BoxLayout.Y_AXIS ) );
 
-		topEditorPanel.add( new JLabel( "Headers:" ) );
+		topEditorPanel.add( createLabelPanel() );
 		topEditorPanel.add( createHeaderInspector() );
 		topEditorPanel.add( Box.createVerticalStrut( 5 ) );
 		topEditorPanel.add( createHttpStatusPanel() );
@@ -44,9 +38,21 @@ public class RestMockResponseDesktopPanel extends
 		return topEditorPanel;
 	}
 
+	private JPanel createLabelPanel()
+	{
+		JPanel labelPanel = new JPanel(  );
+		labelPanel.setLayout( new BoxLayout( labelPanel, BoxLayout.X_AXIS ) );
+
+		labelPanel.add( new JLabel( "Headers:" ) );
+		labelPanel.add( Box.createHorizontalGlue() );
+
+		return labelPanel;
+	}
+
 	private JComponent createHttpStatusPanel()
 	{
 		JPanel httpStatusPanel = new JPanel(  );
+		httpStatusPanel.setLayout( new BoxLayout(httpStatusPanel, BoxLayout.X_AXIS ) );
 
 		httpStatusPanel.add( new JLabel( "Http Status Code: " ) );
 		httpStatusPanel.add( createStatusCodeCombo() );
