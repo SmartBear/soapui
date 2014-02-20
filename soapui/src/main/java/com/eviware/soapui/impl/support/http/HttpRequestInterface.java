@@ -22,10 +22,8 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 
 public interface HttpRequestInterface<T extends AbstractRequestConfig> extends AbstractHttpRequestInterface<T>,
-		Request, MutableTestPropertyHolder, PropertyExpansionContainer, MutableAttachmentContainer
+		Request, MutableTestPropertyHolder, PropertyExpansionContainer, MutableAttachmentContainer, MediaType
 {
-
-	public String getMediaType();
 
 	public void setMethod( HttpMethod method );
 
@@ -34,8 +32,6 @@ public interface HttpRequestInterface<T extends AbstractRequestConfig> extends A
 	public RestParamsPropertyHolder getParams();
 
 	public boolean isPostQueryString();
-
-	public void setMediaType( String mediaType );
 
 	public void setPostQueryString( boolean b );
 
