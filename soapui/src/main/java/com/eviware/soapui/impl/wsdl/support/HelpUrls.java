@@ -30,14 +30,11 @@ public interface HelpUrls
 
 	// TODO option for adding help URl to page section, see
 	// buildInterfaceOverviewTab() section operations
-	public static final String OPERATION_HELP_URL = HELP_URL_ROOT + "operations.html";
 	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html";
 
 	public static final String HEADERS_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/adding-headers-and-attachments.html#1-custom-http-headers";
 	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT
 			+ "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
-	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
-	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
 	public static final String ATTACHMENTS_HELP_URL = HELP_URL_ROOT + "attachments.html";
 
 	public static final String TESTSUITE_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html";
@@ -66,8 +63,6 @@ public interface HelpUrls
 	public static final String LOADTESTEDITOR_HELP_URL = HELP_URL_ROOT + "loadtest/index.html#The_LoadTest_Editor";
 	public static final String STATISTICSGRAPH_HELP_URL = HELP_URL_ROOT
 			+ "loadtest/diagrams.html#The_Statistics_Diagram";
-	public static final String STATISTICSHISTORYGRAPH_HELP_URL = HELP_URL_ROOT
-			+ "loadtest/diagrams.html#The_Statistics_History_Diagram";
 	public static final String REQUESTEDITOR_HELP_URL = HELP_URL_ROOT + "requests.html#The_Request_Editor";
 	public static final String TESTREQUESTEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/testrequests.html#The_TestRequest_Editor";
@@ -113,7 +108,6 @@ public interface HelpUrls
 	public static final String GROOVYASSERTION_HELP_URL = HELP_URL_ROOT
 			+ "functional/response-assertions.html#Script_Assertion";
 
-	public static final String MOCKRESPONSE_HELP_URL = HELP_URL_ROOT + "mock/responses.html";
 	public static final String MOCKSERVICE_HELP_URL = HELP_URL_ROOT + "mock/services.html";
 	public static final String MOCKRESPONSE_SCRIPT_HELP_URL = HELP_URL_ROOT + "mock/responses.html#Response_Scripts";
 
@@ -129,7 +123,6 @@ public interface HelpUrls
 	public static final String XQUERYASSERTIONEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/response-assertions.html#XQuery_Match_Assertion";
 
-	public static final String REQUEST_ASSERTIONS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html";
 	public static final String LOADTEST_ASSERTIONS_URL = HELP_URL_ROOT + "loadtest/assertions.html";
 
 	public static final String UPDATE_INTERFACE_HELP_URL = HELP_URL_ROOT
@@ -144,8 +137,6 @@ public interface HelpUrls
 	public static final String CHANGEMOCKOPERATION_HELP_URL = HELP_URL_ROOT + "mock/operations.html#Change_Operation";
 
 	public static final String CLONEMOCKSERVICE_HELP_URL = HELP_URL_ROOT + "mock/services.html";
-
-	public static final String MOCKOPERATIONOPTIONS_HELP_URL = HELP_URL_ROOT + "mock/operations.html";
 
 	public static final String MOCKSERVICEOPTIONS_HELP_URL = HELP_URL_ROOT + "mock/services.html#MockService_Options";
 
@@ -169,10 +160,6 @@ public interface HelpUrls
 	public static final String INCOMINGWSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html#Incoming_WSS";
 
 	public static final String CRYPTOSWSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html#Keystores";
-
-	public static final String WSIREPORT_HELP_URL = HELP_URL_ROOT + "interfaces/wsi.html#Creating_WS-I_Reports";
-
-	public static final String RESOLVEPROJECT_HELP_URL = HELP_URL_ROOT + "projects/resolving.html";
 
 	public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/getting-started.html";
 
@@ -208,7 +195,6 @@ public interface HelpUrls
 	public static final String MANUALTESTSTEP_HELP_URL = "";
 
 	public static final String SECURITYTESTEDITOR_HELP_URL = "http://www.soapui.org/Security/working-with-security-tests.html";
-	public static final String SECURITY_HELP_ROOT = "http://www.soapui.org/Security/getting-started.html";
 
 	public static final String SECURITY_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-security-scan-assertions";
 	public static final String SECURITY_XSS_ASSERTION_HELP = "http://www.soapui.org/Security/cross-site-scripting.html";
