@@ -5,16 +5,12 @@ import com.eviware.soapui.support.UISupport;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.ApplicationUtils;
 import cucumber.api.java.After;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import cucumber.api.java.Before;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.FrameFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.closeApplicationWithoutSaving;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
 
 public class ApplicationStepdefs
 {
@@ -25,19 +21,10 @@ public class ApplicationStepdefs
 		robot = runner.getRobot();
 	}
 
-	@When( "^SoapUI is started$" )
+	@Before
 	public void startSoapUI()
 	{
 		ApplicationUtils.startSoapUI();
-	}
-
-	@Then( "^close SoapUI$" )
-	public void closeSoapUI()
-	{
-		FrameFixture rootWindow = getMainWindow( robot );
-		closeApplicationWithoutSaving(rootWindow, robot);
-		robot.cleanUp();
-		UISupport.setDialogs( new ConsoleDialogs() );
 	}
 
 	@After
@@ -55,5 +42,7 @@ public class ApplicationStepdefs
 		{
 			//Most probably SoapUI is not running.
 		}
+		robot.cleanUp();
+		UISupport.setDialogs( new ConsoleDialogs() );
 	}
 }

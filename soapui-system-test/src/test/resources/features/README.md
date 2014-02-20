@@ -39,11 +39,6 @@ Please organize it according to the following structure based on features:
 * If the test is for a upcoming version - please use the @Acceptance annotation
 * If the test is for older versions - please use the @Regression annotation
 
-#### NOTE!
-Currenly you need to use the "Given SoapUI is started" and "Then/And close SoapUI" steps in all your feature files
-to initialize and cleanup the FEST runner. We're looking in to a better way to do this.
-
-
 **That's it!**
 
 
