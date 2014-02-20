@@ -33,7 +33,7 @@ public interface HelpUrls
 	public static final String OPERATION_HELP_URL = HELP_URL_ROOT + "operations.html";
 	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html";
 
-	public static final String HEADERS_HELP_URL = HELP_URL_ROOT + "requests.html#HTTP_Headers";
+	public static final String HEADERS_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/adding-headers-and-attachments.html#1-custom-http-headers";
 	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT
 			+ "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
 	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
