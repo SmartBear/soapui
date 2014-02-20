@@ -12,7 +12,6 @@ import java.awt.*;
 public class RestMockResponseDesktopPanel extends
 		AbstractMockResponseDesktopPanel<RestMockResponse, MockResponse>
 {
-	private final int MAX_HEIGHT_TOP_PANEL = 12;
 
 	public RestMockResponseDesktopPanel( MockResponse mockResponse )
 	{
@@ -23,12 +22,21 @@ public class RestMockResponseDesktopPanel extends
 
 	public JComponent addTopEditorPanel( )
 	{
+		JPanel topEditorPanel = new JPanel( );
+		topEditorPanel.setLayout( new BoxLayout( topEditorPanel, BoxLayout.Y_AXIS ) );
 
-		HttpHeadersInspector inspector = new HttpHeadersInspector( new MockResponseHeadersModel(
-				(RestMockResponse)getModelItem() ) );
+		topEditorPanel.add( createHeaderInspector() );
 
-		JComponent component = inspector.getComponent();
-		component.setMaximumSize( new Dimension( Short.MAX_VALUE, MAX_HEIGHT_TOP_PANEL ) );
+		return topEditorPanel;
+	}
+
+	private JComponent createHeaderInspector()
+	{
+		MockResponseHeadersModel model = new MockResponseHeadersModel( getModelItem() );
+		HttpHeadersInspector inspector = new HttpHeadersInspector( model );
+
+		boolean shouldShowOnlineHelpIcon = false;
+		JComponent component = inspector.getComponent( shouldShowOnlineHelpIcon );
 		return component;
 	}
 
