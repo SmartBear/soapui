@@ -54,8 +54,8 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 		final String firstScript = "alert('first')";
 		final String secondScript = "alert('second')";
 
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.SCRIPT_NAMES[0] ).setText( firstScript );
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.SCRIPT_NAMES[1] ).setText( secondScript );
+		containerWalker.findTextComponent( "Page 1" ).setText( firstScript );
+		containerWalker.findTextComponent( "Page 2" ).setText( secondScript );
 
 		assertThat( editorWithoutScripts.getJavaScripts(), is( Arrays.asList( firstScript, secondScript ) ) );
 	}
@@ -73,7 +73,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 	{
 		final String invalidScript = "this is clearly invalid";
 
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.SCRIPT_NAMES[0] ).setText( invalidScript );
+		containerWalker.findTextComponent( "Page 1" ).setText( invalidScript );
 		containerWalker.findButtonWithName( OAuth2ScriptsEditor.TEST_SCRIPTS_BUTTON_NAME ).doClick();
 
 		List<String> errorMessages = stubbedDialogs.getErrorMessages();
@@ -87,7 +87,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 		final String validScript = "alert('valid')";
 
 		stubbedExtractor.shouldSimulateJavaScriptErrors = true;
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.SCRIPT_NAMES[0] ).setText( validScript );
+		containerWalker.findTextComponent( "Page 1" ).setText( validScript );
 		containerWalker.findButtonWithName( OAuth2ScriptsEditor.TEST_SCRIPTS_BUTTON_NAME ).doClick();
 		waitForSwingThread();
 
@@ -100,12 +100,35 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 	{
 		final String validScript = "alert('hej')";
 
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.SCRIPT_NAMES[0] ).setText( validScript );
+		containerWalker.findTextComponent( "Page 1" ).setText( validScript );
 		containerWalker.findButtonWithName( OAuth2ScriptsEditor.TEST_SCRIPTS_BUTTON_NAME ).doClick();
 		waitForSwingThread();
 
 		assertThat( stubbedDialogs.getErrorMessages(), is( anEmptyCollection() ) );
 		assertThat( stubbedDialogs.getInfoMessages(), is( aCollectionWithSize( 1 ) ) );
+	}
+
+	@Test
+	public void canAddScriptToEditor() throws Exception
+	{
+		final String newScript = "callSomeFunction();";
+		containerWalker.findButtonWithName( OAuth2ScriptsEditor.ADD_SCRIPT_BUTTON_NAME ).doClick();
+		containerWalker.rebuildIndex();
+		containerWalker.findTextComponent( "Page 3" ).setText( newScript );
+
+		List<String> javaScripts = editorWithoutScripts.getJavaScripts();
+		assertThat( javaScripts, is( aCollectionWithSize( 3 ) ) );
+		assertThat( javaScripts.get(2), is(newScript));
+	}
+
+	@Test
+	public void canRemoveScriptFromEditor() throws Exception
+	{
+		containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ).doClick();
+		containerWalker.rebuildIndex();
+
+		List<String> javaScripts = editorWithoutScripts.getJavaScripts();
+		assertThat( javaScripts, is( aCollectionWithSize( 1 ) ) );
 	}
 
 	/* Helpers */

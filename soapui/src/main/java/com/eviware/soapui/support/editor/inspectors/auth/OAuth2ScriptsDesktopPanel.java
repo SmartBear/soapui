@@ -21,7 +21,7 @@ public class OAuth2ScriptsDesktopPanel extends DefaultDesktopPanel
 				new JPanel(new BorderLayout(  )) );
 		JPanel contentPane = (JPanel )getComponent();
 		OAuth2ScriptsEditor editor = new OAuth2ScriptsEditor( profile );
-		editor.setPreferredSize( new Dimension(700, 500) );
+		editor.setPreferredSize( new Dimension(900, 700) );
 		contentPane.add( editor, BorderLayout.CENTER );
 	}
 }

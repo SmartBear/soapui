@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,16 +32,19 @@ import java.util.List;
 public class OAuth2ScriptsEditor extends JPanel
 {
 	public static final String TEST_SCRIPTS_BUTTON_NAME = "testScriptsButton";
+	public static final String ADD_SCRIPT_BUTTON_NAME = "addScriptButton";
+	public static final String REMOVE_SCRIPT_BUTTON_NAME = "removeScriptButton";
 
-	static final String[] SCRIPT_NAMES = { "Login screen script", "Consent screen script" };
+	static final String[] DEFAULT_SCRIPT_NAMES = { "Page 1 (e.g. login screen)", "Page 2 (e.g. consent screen)" };
 
 	private List<RSyntaxTextArea> scriptFields = new ArrayList<RSyntaxTextArea>();
 	private JavaScriptValidator javaScriptValidator = new JavaScriptValidator();
+	private JPanel scriptsPanel;
 
 	public OAuth2ScriptsEditor( final OAuth2Profile profile )
 	{
 		super( new BorderLayout() );
-		JPanel buttonPanel = new JPanel();
+		JPanel buttonPanel = new JPanel(new FlowLayout( FlowLayout.RIGHT ));
 		JButton testScriptsButton = new JButton( "Test scripts" );
 		testScriptsButton.setName( TEST_SCRIPTS_BUTTON_NAME );
 		testScriptsButton.addActionListener( new ActionListener()
@@ -51,9 +55,49 @@ public class OAuth2ScriptsEditor extends JPanel
 				testScripts( profile );
 			}
 		} );
+		JButton addScriptButton = new JButton( "Add script" );
+		addScriptButton.setName( ADD_SCRIPT_BUTTON_NAME );
+		addScriptButton.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				addScript();
+			}
+		} );
+		JButton removeScriptButton = new JButton( "Remove script" );
+		removeScriptButton.setName( REMOVE_SCRIPT_BUTTON_NAME );
+		removeScriptButton.addActionListener( new ActionListener()
+		{
+			@Override
+			public void actionPerformed( ActionEvent e )
+			{
+				removeScript();
+			}
+		} );
+		buttonPanel.add( addScriptButton );
+		buttonPanel.add( removeScriptButton );
 		buttonPanel.add( testScriptsButton );
 		add( buttonPanel, BorderLayout.NORTH );
-		add( makeScriptsPanel( profile ), BorderLayout.CENTER );
+		scriptsPanel = makeScriptsPanel( profile );
+		add( new JScrollPane(scriptsPanel), BorderLayout.CENTER );
+	}
+
+	private void removeScript()
+	{
+		scriptFields.remove(scriptFields.size() - 1);
+		scriptsPanel.remove(scriptsPanel.getComponentCount() - 1);
+		scriptsPanel.revalidate();
+	}
+
+	private void addScript()
+	{
+		RSyntaxTextArea scriptField = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
+		String fieldName = "Page " + ( scriptFields.size() + 1 );
+		scriptField.setName( fieldName );
+		scriptFields.add(scriptField);
+		scriptsPanel.add(new InputAreaWithHeader( fieldName, scriptField ));
+		scriptsPanel.revalidate();
 	}
 
 	public List<String> getJavaScripts()
@@ -126,11 +170,12 @@ public class OAuth2ScriptsEditor extends JPanel
 			}
 		};
 		List<String> currentScripts = profile.getAutomationJavaScripts();
-		JPanel scriptsPanel = new JPanel( new GridLayout( 2, 1 ) );
-		int index = 0;
-		for( String scriptName : SCRIPT_NAMES )
+		JPanel scriptsPanel = new JPanel( new GridLayout( 0, 1, 15, 15 ) );
+		int numberOfFields = Math.max( 2, currentScripts.size() );
+		for( int index = 0; index < numberOfFields; index++)
 		{
 			RSyntaxTextArea scriptField = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
+			String scriptName = (index < DEFAULT_SCRIPT_NAMES.length ? DEFAULT_SCRIPT_NAMES[index] : "Page " + ( index + 1 ));
 			scriptField.setName( scriptName );
 			if( currentScripts.size() > index )
 			{
@@ -139,7 +184,6 @@ public class OAuth2ScriptsEditor extends JPanel
 			scriptField.getDocument().addDocumentListener( scriptUpdater );
 			scriptFields.add( scriptField );
 			scriptsPanel.add( new InputAreaWithHeader( scriptName, scriptField ) );
-			index++;
 		}
 		return scriptsPanel;
 	}

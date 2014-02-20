@@ -20,11 +20,13 @@ import java.util.NoSuchElementException;
 public class ContainerWalker
 {
 
+	private final Container container;
 	private java.util.List<Component> containedComponents;
 
 	public ContainerWalker( Container container )
 	{
-		containedComponents = findAllComponentsIn( container );
+		this.container = container;
+		rebuildIndex();
 	}
 
 	public AbstractButton findButtonWithIcon( String iconFile )
@@ -103,6 +105,11 @@ public class ContainerWalker
 			throw new NoSuchElementException( "No text component with name '" + componentName + "' found");
 		}
 		return component;
+	}
+
+	public void rebuildIndex()
+	{
+		containedComponents = findAllComponentsIn( container );
 	}
 
 	private class ComponentClassAndNamePredicate implements Predicate<Component>
