@@ -16,6 +16,7 @@ import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
+	private static final int ACCESS_TOKEN_RETRIEVAL_TIMEOUT = 5000;
 	// intentionally left non-final to facilitate testing, but should not be modified in production!
 	private static Logger log = Logger.getLogger( OAuth2RequestFilter.class );
 
@@ -89,7 +90,16 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 				{
 					log.info( "The access token has expired, trying to retrieve a new one with JavaScript automation." );
 					oAuth2Client.requestAccessToken( profile );
-					log.info( "A new access token has been retrieved successfully." );
+					profile.waitForAccessTokenStatus( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER,
+							ACCESS_TOKEN_RETRIEVAL_TIMEOUT );
+					if( profile.getAccessTokenStatus().equals(String.valueOf( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER)) )
+					{
+						log.info( "A new access token has been retrieved successfully." );
+					}
+					else
+					{
+						log.warn("OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms");
+					}
 				}
 				else
 				{

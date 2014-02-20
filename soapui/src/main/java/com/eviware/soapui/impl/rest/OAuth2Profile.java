@@ -52,6 +52,26 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String OAUTH2_FLOW_PROPERTY = "oAuth2Flow";
 	public static final String JAVA_SCRIPTS_PROPERTY = "javaScripts";
 
+	public void waitForAccessTokenStatus( AccessTokenStatus accessTokenStatus, int timeout )
+	{
+		int timeLeft = timeout;
+		while( !String.valueOf( getAccessTokenStatus() ).equals( accessTokenStatus.toString() ) && timeLeft > 0)
+		{
+			long startTime = System.currentTimeMillis();
+			try
+			{
+				synchronized( this )
+				{
+					wait( timeLeft );
+				}
+			}
+			catch( InterruptedException ignore )
+			{
+
+			}
+			timeLeft -= (System.currentTimeMillis() - startTime);
+		}
+	}
 
 
 	public enum AccessTokenStatus
@@ -80,10 +100,10 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public enum OAuth2Flow
 	{
-		AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
-		RESOURCE_OWNER_CREDENTIALS_GRANT("Resource Owner Credentials Grant"),
-		CLIENT_CREDENTIALS_GRANT("Client Credentials Grant"),
-		IMPLICIT_GRANT("Implicit Grant");
+		AUTHORIZATION_CODE_GRANT( "Authorization Code Grant" ),
+		RESOURCE_OWNER_CREDENTIALS_GRANT( "Resource Owner Credentials Grant" ),
+		CLIENT_CREDENTIALS_GRANT( "Client Credentials Grant" ),
+		IMPLICIT_GRANT( "Implicit Grant" );
 
 		private String description;
 
@@ -99,6 +119,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 
 	}
+
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
 	private final OAuth2ProfileConfig configuration;
 	private final PropertyChangeSupport pcs;
@@ -406,8 +427,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public List<String> getAutomationJavaScripts()
 	{
 		StringListConfig configurationEntry = configuration.getJavaScripts();
-		return configurationEntry == null ? Collections.<String>emptyList() :  new ArrayList<String>(
-				configurationEntry.getEntryList());
+		return configurationEntry == null ? Collections.<String>emptyList() : new ArrayList<String>(
+				configurationEntry.getEntryList() );
 	}
 
 	public void setAutomationJavaScripts( List<String> javaScripts )
@@ -454,17 +475,22 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			return;
 		}
-		else if( status != null )
+
+		synchronized( this )
 		{
-			if( status.equals( oldValue ) )
+			if( status != null )
 			{
-				return;
+				if( status.equals( oldValue ) )
+				{
+					return;
+				}
+				configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.toString() ) );
 			}
-			configuration.setAccessTokenStatus( AccessTokenStatusConfig.Enum.forString( status.toString() ) );
-		}
-		else
-		{
-			configuration.setAccessTokenStatus( null );
+			else
+			{
+				configuration.setAccessTokenStatus( null );
+			}
+			notifyAll();
 		}
 		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValue, status.toString() );
 	}

@@ -36,6 +36,7 @@ public class OAuth2RequestFilterTest
 {
 
 	private static final String ACCESS_TOKEN = "ACDFECDSFKJFK#SDFSD8df#ACCESS-TOKEN";
+	private static final String RETRIEVED_ACCESS_TOKEN = "yyCDFECDSFKJFK#dsfsddf#28317";
 
 	private OAuth2RequestFilter oAuth2RequestFilter;
 	private RestRequest restRequest;
@@ -70,11 +71,11 @@ public class OAuth2RequestFilterTest
 	{
 		String expectedAccessTokenValue = "Bearer " + ACCESS_TOKEN;
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
-		assertThat( httpRequest.getHeaders(OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
+		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION )[0].getValue(), is( expectedAccessTokenValue ) ) ;
 	}
 
 	@Test
-	public void doNotApplyNullAccessTokenToHeader() throws Exception
+	public void doesNotApplyNullAccessTokenToHeader() throws Exception
 	{
 		restRequest.getOperation().getInterface().getProject().getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 ).setAccessToken( null );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
@@ -90,7 +91,7 @@ public class OAuth2RequestFilterTest
 	}
 
 	@Test
-	public void automaticallyRefreshAccessTokenIfExpired() throws Exception
+	public void automaticallyRefreshesAccessTokenIfExpired() throws Exception
 	{
 		setupProfileWithRefreshToken();
 
@@ -108,7 +109,7 @@ public class OAuth2RequestFilterTest
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 
 		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
-		assertThat( actualAccessTokenHeader, is( "Bearer " + OAuth2TestUtils.ACCESS_TOKEN ) );
+		assertThat( actualAccessTokenHeader, is( "Bearer " + RETRIEVED_ACCESS_TOKEN ) );
 	}
 
 	@Test
@@ -184,6 +185,22 @@ public class OAuth2RequestFilterTest
 		final OAuth2Profile profileWithAutomationScripts = makeProfileWithAutomationScripts();
 		setExpiredAccessToken( profileWithAutomationScripts );
 		injectProfile( profileWithAutomationScripts );
+		Runnable browserCallbackSimulator = new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(50);
+				}
+				catch( InterruptedException ignore )
+				{
+
+				}
+				profileWithAutomationScripts.applyRetrievedAccessToken( RETRIEVED_ACCESS_TOKEN );
+			}
+		};
+		new Thread(browserCallbackSimulator).start();
 	}
 
 	private void injectProfile( final OAuth2Profile profileWithAutomationScripts )
