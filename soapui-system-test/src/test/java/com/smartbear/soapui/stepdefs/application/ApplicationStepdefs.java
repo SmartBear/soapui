@@ -31,13 +31,6 @@ public class ApplicationStepdefs
 		ApplicationUtils.startSoapUI();
 	}
 
-	@Then( "^ensure that the main window is showing up without error$" )
-	public void ensureThatTheMainWindowsIsShowing()
-	{
-		FrameFixture rootWindow = getMainWindow( robot );
-		assertThat( rootWindow, not( nullValue() ) );
-	}
-
 	@Then( "^close SoapUI$" )
 	public void closeSoapUI()
 	{
