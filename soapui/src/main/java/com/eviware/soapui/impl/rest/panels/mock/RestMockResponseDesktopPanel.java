@@ -2,17 +2,16 @@ package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.MockResponseHeadersModel;
 import com.eviware.soapui.ui.support.AbstractMockResponseDesktopPanel;
-import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.commons.httpclient.HttpStatus;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
-import java.util.Map;
 import java.util.Vector;
 
 public class RestMockResponseDesktopPanel extends
