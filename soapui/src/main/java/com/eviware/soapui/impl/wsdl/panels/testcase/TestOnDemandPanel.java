@@ -120,7 +120,9 @@ public class TestOnDemandPanel extends JPanel
 
 	public void release()
 	{
-		browser.release();
+		if ( browser != null ) {
+			browser.release();
+		}
 	}
 
 	private Component buildToolbar()

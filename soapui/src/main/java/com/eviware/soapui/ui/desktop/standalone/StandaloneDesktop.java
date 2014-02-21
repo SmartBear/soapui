@@ -103,7 +103,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		enableWindowActions();
 		desktop.addComponentListener( new DesktopResizeListener() );
-		desktop.setDesktopManager( new BoundsAwareDesktopManager(desktop.getDesktopManager()) );
+		// maybe there should be a ui pref specifically for using the MRU desktop manager ?
+		desktop.setDesktopManager( new BoundsAwareDesktopManager( UISupport.isMac() ? new MostRecentlyUsedOrderDesktopManager( ) : desktop.getDesktopManager() ) );
 	}
 
 	private void enableWindowActions()
@@ -147,7 +148,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 				return false;
 			}
-		} finally
+		}
+		finally
 		{
 			enableWindowActions();
 		}
@@ -232,7 +234,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		String title = desktopPanel.getTitle();
 
-		JInternalFrame frame = new JInternalFrame( title, true, true, true, true );
+		JInternalFrame frame = new JInternalFrame( title, true, true, true, ! UISupport.isMac() );
 		frame.addInternalFrameListener( internalFrameListener );
 		frame.setContentPane( panel );
 		frame.setLocation( xOffset * ( openFrameCount % 10 ), yOffset * ( openFrameCount % 10 ) );
@@ -281,7 +283,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			}
 
 			return false;
-		} finally
+		}
+		finally
 		{
 			enableWindowActions();
 		}
@@ -615,15 +618,41 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 	/**
 	 * Helper class that decorates the standard desktop manager and prevents it from moving desktop panels outside
 	 * the desktop.
+	 * <p>
+	 * <emp>Implementation note</emp> : the width of internal frames includes their borders.  The size of borders
+	 * is obtained with <code>panel.getInsets()</code>.  Depending on the look and feel installed, the space occupied
+	 * by borders may not be selectable.  Furthermore, with Aqua l&f for example, there is an extra inside area on
+	 * the right of panel where mouse clicks are ignored and thus the panel cannot be dragged by a click in there.
+	 * Also, it is very difficult for us humans to notice a region on the screen that can be selected with the mouse
+	 * if that region is only a couple of pixels wide or tall.  For all these reasons, it is better to leave a
+	 * minimum of selectable-draggable portion of the panel visible in the desktop so the user does not loose its
+	 * panel outside the desktop.  That is the purpose of <code>horizontalInsetFactor</code> and <code>verticalInsetFactor</code>
+	 * fields of <code>BoundsAwareDesktopManager</code> : on windows and linux default l&f, the insets are small and
+	 * trial and error lead to a factor of 6 for computing the <emp>comfortable</emp> minimal space to leave visible
+	 * on the desktop.  On Aqua l&f (i.e. on Mac), the insets are bigger, leading to a factor of 3 as a <emp>comfortable</emp>
+	 * minimal space horizontally and a factor of 1 vertically, because the underlying UI implementation prevents
+	 * dragging the title bar beyond the desktop panel highest Y-boundaries..
+	 * </p>
 	 */
 	private class BoundsAwareDesktopManager implements DesktopManager
 	{
 
 		private DesktopManager delegate;
+		private int horizontalInsetFactor = 6;
+		private int verticalInsetFactor = 6;
+		private Dimension desktopSize;
 
 		private BoundsAwareDesktopManager( DesktopManager delegate )
 		{
 			this.delegate = delegate;
+
+			desktopSize = desktop.getSize();
+
+			if( UISupport.isMac() )
+			{
+				horizontalInsetFactor = 3;
+				verticalInsetFactor = 1;
+			}
 		}
 
 		/* Methods enhancing the delegate with awareness of bounds */
@@ -633,8 +662,8 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		{
 			if( outsideDesktop( f, newX, newY ) )
 			{
-				Point pointInsideDesktop = findPositionInsideDesktop( f, newX, newY );
-				delegate.dragFrame( f, pointInsideDesktop.x, pointInsideDesktop.y );
+				Point positionWherePanelReachable = findPositionWherePanelReachable( f, newX, newY );
+				delegate.dragFrame( f, positionWherePanelReachable.x, positionWherePanelReachable.y );
 			}
 			else
 			{
@@ -709,6 +738,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		@Override
 		public void beginDraggingFrame( JComponent f )
 		{
+			desktopSize = desktop.getSize();
 			delegate.beginDraggingFrame( f );
 		}
 
@@ -736,9 +766,51 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 			delegate.endResizingFrame( f );
 		}
 
-		private boolean outsideDesktop( JComponent desktopPanel, int newX, int newY )
+		/**
+		 * <p>
+		 * True if the coordinates (newX, newY) would put the panel outside the desktop in a manner that would make it
+		 * unreachable, false otherwise.
+		 * </p>
+		 * <p>
+		 * Parameters <code>newX</code> and <code>newY</code> are assumed to be the (left, top) origin coordinates of
+		 * <code>desktopPanel</code>, which is the <code>JInternalFrame</code> being dragged.  The panel's width includes
+		 * borders, which means that on implementations where the borders are not selectable (Mac Aqua look&feel for
+		 * example), the borders must be taken into account otherwise one can drag a panel into a position where it
+		 * would no longer be selectable, thus impossible to bring back to the visible area of the parent desktop.
+		 * </p>
+		 *
+		 * @param desktopPanel the panel being dragged
+		 * @param newX target X-coordinate of leftmost window of desktopPanel
+		 * @param newY target Y-coordinate of topmost window of desktopPanel
+		 * @return true if target coordinates would put desktopPanel out of reach, false otherwise
+		 */
+		private boolean outsideDesktop( JComponent panel, int newX, int newY )
 		{
-			return newY < 0 || ( newX > desktopPanel.getWidth() ) || ( newY > desktopPanel.getHeight() );
+			int smallestReachableX = -( panel.getWidth() - horizontalInsetFactor * panel.getInsets().right );
+			int biggestReachableX = ( ( int )desktopSize.getWidth() - horizontalInsetFactor * panel.getInsets().left );
+			int biggestReachableY = ( ( int )desktopSize.getHeight() - verticalInsetFactor * panel.getInsets().top );
+			boolean xCoordinateOutside = newX > biggestReachableX || newX < smallestReachableX;
+			boolean yCoordinateOutside = newY < 0 || newY > biggestReachableY;
+
+			return xCoordinateOutside || yCoordinateOutside;
+		}
+
+		private Point findPositionWherePanelReachable( JComponent panel, int newX, int newY )
+		{
+			// at left, smallest X is a function of panel width
+			// at right, highest X is a funtion of desktop width
+			// at top, smalest Y is 0 (we always want to see the title bar)
+			// at bottom, highest Y is a function of desktop height
+			int smallestReachableX = -( panel.getWidth() - horizontalInsetFactor * panel.getInsets().right );
+			int biggestReachableX = ( ( int )desktopSize.getWidth() - horizontalInsetFactor * panel.getInsets().left );
+			int biggestReachableY = ( ( int )desktopSize.getHeight() - verticalInsetFactor * panel.getInsets().top );
+			int boundedX, boundedY;
+
+			boundedX = ( ( newX <= 0 ) ? Math.max( smallestReachableX, newX ) : Math.min( biggestReachableX, newX ) );
+			boundedY = ( ( newY <= 0 ) ? 0 : Math.min( biggestReachableY, newY ) );
+
+			return new Point( boundedX, boundedY );
+
 		}
 
 		private Point findPositionInsideDesktop( JComponent f, int newX, int newY )
