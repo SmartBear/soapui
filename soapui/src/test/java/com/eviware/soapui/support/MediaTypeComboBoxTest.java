@@ -12,13 +12,6 @@ public class MediaTypeComboBoxTest
 	MediaType model = mock( MediaType.class );
 
 	@Test
-	public void shouldBeCreated()
-	{
-
-		new MediaTypeComboBox( model );
-	}
-
-	@Test
 	public void shouldSetSelectedItem()
 	{
 		String stuffMediaType = "application/stuff";
@@ -30,9 +23,9 @@ public class MediaTypeComboBoxTest
 	}
 
 	@Test
-	public void shouldBeEnabled()
+	public void shouldBeEditable()
 	{
-		assertThat( new MediaTypeComboBox( model ).isEnabled(), is( true ));
+		assertThat( new MediaTypeComboBox( model ).isEditable(), is( true ));
 	}
 
 	@Test
