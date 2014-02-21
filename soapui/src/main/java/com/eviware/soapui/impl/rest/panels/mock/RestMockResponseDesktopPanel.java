@@ -3,12 +3,14 @@ package com.eviware.soapui.impl.rest.panels.mock;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.MockResponseHeadersModel;
 import com.eviware.soapui.ui.support.AbstractMockResponseDesktopPanel;
 import org.apache.commons.httpclient.HttpStatus;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.lang.reflect.Field;
@@ -34,30 +36,39 @@ public class RestMockResponseDesktopPanel extends
 		topEditorPanel.add( createHeaderInspector() );
 		topEditorPanel.add( Box.createVerticalStrut( 5 ) );
 		topEditorPanel.add( createHttpStatusPanel() );
+		topEditorPanel.add( Box.createVerticalStrut( 5 ) );
+		topEditorPanel.add( createMediaTypeCombo() );
+
+
 
 		return topEditorPanel;
 	}
 
-	private JPanel createLabelPanel()
+	private JComponent createLabelPanel()
 	{
-		JPanel labelPanel = new JPanel(  );
-		labelPanel.setLayout( new BoxLayout( labelPanel, BoxLayout.X_AXIS ) );
-
-		labelPanel.add( new JLabel( "Headers:" ) );
-		labelPanel.add( Box.createHorizontalGlue() );
-
-		return labelPanel;
+		return createPanelWithLabel( "Headers: ", Box.createHorizontalGlue() );
 	}
 
 	private JComponent createHttpStatusPanel()
 	{
-		JPanel httpStatusPanel = new JPanel(  );
-		httpStatusPanel.setLayout( new BoxLayout(httpStatusPanel, BoxLayout.X_AXIS ) );
+		return createPanelWithLabel( "Http Status Code: ", createStatusCodeCombo() );
+	}
 
-		httpStatusPanel.add( new JLabel( "Http Status Code: " ) );
-		httpStatusPanel.add( createStatusCodeCombo() );
+	private JComponent createMediaTypeCombo()
+	{
+		return createPanelWithLabel( "Media type: ", new MediaTypeComboBox( this.getModelItem() ) );
+	}
 
-		return httpStatusPanel;
+	private JComponent createPanelWithLabel( String labelText, Component rightSideComponent )
+	{
+		JPanel panel = new JPanel(  );
+		panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+
+		panel.add( new JLabel( labelText ) );
+		panel.add( rightSideComponent );
+		panel.add( Box.createHorizontalGlue() );
+
+		return panel;
 	}
 
 	private JComboBox createStatusCodeCombo()

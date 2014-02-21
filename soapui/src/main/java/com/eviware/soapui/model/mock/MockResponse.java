@@ -27,12 +27,13 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 public interface MockResponse extends TestModelItem, Releasable
 {
 	public final static String RESPONSE_CONTENT_PROPERTY = MockResponse.class.getName() + "@responsecontent";
-	public final static String ENCODING_PROPERTY = MockResponse.class.getName() + "@encoding";
 	public final static String MTOM_NABLED_PROPERTY = MockResponse.class.getName() + "@mtom_enabled";
 
 	public String getResponseContent();
 
 	public void setResponseContent( String responseContent );
+
+	public String getContentType();
 
 	public String getEncoding();
 
