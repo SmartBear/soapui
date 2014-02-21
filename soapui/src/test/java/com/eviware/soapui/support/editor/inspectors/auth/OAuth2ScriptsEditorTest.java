@@ -11,6 +11,7 @@ import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.swing.AbstractButton;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.Arrays;
@@ -135,6 +136,17 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 	}
 
 	@Test
+	public void disablesRemoveButtonAfterRemoval() throws Exception
+	{
+		editorWithoutScripts.selectField( containerWalker.findComponent( "Input panel 2", OAuth2ScriptsEditor.InputPanel.class ) );
+		stubbedDialogs.mockConfirmWithReturnValue( true );
+		AbstractButton removeButton = containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME );
+		removeButton.doClick();
+
+		assertThat( removeButton, is( not(enabled() ) ));
+	}
+
+	@Test
 	public void doesNotRemoveScriptFromEditorIfActionIsCancelled() throws Exception
 	{
 		editorWithoutScripts.selectField( containerWalker.findComponent("Input panel 2", OAuth2ScriptsEditor.InputPanel.class) );
@@ -149,9 +161,9 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 	@Test
 	public void removeButtonEnabledOnlyWhenPanelIsSelected() throws Exception
 	{
-		assertThat(containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ),
-				is(not(enabled())));
-		editorWithoutScripts.selectField( containerWalker.findComponent("Input panel 2", OAuth2ScriptsEditor.InputPanel.class) );
+		assertThat( containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ),
+				is( not( enabled() ) ) );
+		editorWithoutScripts.selectField( containerWalker.findComponent( "Input panel 2", OAuth2ScriptsEditor.InputPanel.class ) );
 		assertThat(containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ),
 				is(enabled()));
 

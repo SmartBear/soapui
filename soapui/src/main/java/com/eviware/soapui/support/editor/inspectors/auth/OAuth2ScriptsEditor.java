@@ -84,34 +84,6 @@ public class OAuth2ScriptsEditor extends JPanel
 		return toolbar;
 	}
 
-	private void removeScript()
-	{
-		if( UISupport.confirm("Do you really want to remove the script '" + selectedInputField.scriptField.getName() + "'",
-				"Remove script", this) )
-		{
-			scriptFields.remove(selectedInputField.scriptField);
-			inputPanels.remove(selectedInputField);
-			scriptsPanel.remove(selectedInputField);
-			selectedInputField = null;
-			scriptsPanel.revalidate();
-		}
-	}
-
-	private void addScript()
-	{
-		RSyntaxTextArea scriptField = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
-		int index = scriptFields.size() + 1;
-		String fieldName = "Page " + index;
-		scriptField.setName( fieldName );
-		scriptFields.add(scriptField);
-		InputPanel inputPanel = new InputPanel( fieldName, scriptField );
-		inputPanel.setName( "Input panel " + index );
-		inputPanels.add(inputPanel);
-		scriptsPanel.add( inputPanel, -1 );
-		scriptsPanel.revalidate();
-		scriptsPanel.repaint();
-	}
-
 	public List<String> getJavaScripts()
 	{
 		List<String> scripts = new ArrayList<String>();
@@ -122,53 +94,30 @@ public class OAuth2ScriptsEditor extends JPanel
 		return scripts;
 	}
 
+	/*
+	Helper methods
+	 */
+
 	protected OAuth2TokenExtractor getExtractor()
 	{
 		return new OAuth2TokenExtractor();
 	}
 
-	private void testScripts( OAuth2Profile profile )
+	void selectField( InputPanel field )
 	{
-		boolean errorsFound = false;
-		for( RSyntaxTextArea scriptField : scriptFields )
+		selectedInputField = field;
+		for( InputPanel inputPanel : inputPanels )
 		{
-			String script = scriptField.getText();
-			JavaScriptValidationError validate = javaScriptValidator.validate( script );
-			if( validate != null )
+			if (inputPanel == field)
 			{
-				showErrorMessage( "The following script is invalid:\r\n" + script +
-						"\r\n\r\nError:<br/>" + validate.getErrorMessage() );
-				errorsFound = true;
+				inputPanel.highlight();
+			}
+			else
+			{
+				inputPanel.removeHighlight();
 			}
 		}
-		if( !errorsFound )
-		{
-			OAuth2TokenExtractor extractor = getExtractor();
-			extractor.addBrowserListener( new JavaScriptErrorReporter() );
-			OAuth2Parameters parameters = new OAuth2Parameters( profile );
-			try
-			{
-				extractor.extractAccessToken( parameters );
-			}
-			catch( Exception ignore )
-			{
-
-			}
-
-
-		}
-	}
-
-	private void showErrorMessage( String message )
-	{
-		if( message.length() > UISupport.EXTENDED_ERROR_MESSAGE_THRESHOLD )
-		{
-			UISupport.showErrorMessage( message.replaceAll( "\r\n", "<br/>" ) );
-		}
-		else
-		{
-			UISupport.showErrorMessage( message );
-		}
+		removeScriptButton.setEnabled( selectedInputField != null );
 	}
 
 	private JPanel makeScriptsPanel( final OAuth2Profile profile )
@@ -225,6 +174,18 @@ public class OAuth2ScriptsEditor extends JPanel
 		return oAuthDocumentationLink;
 	}
 
+	private void showErrorMessage( String message )
+	{
+		if( message.length() > UISupport.EXTENDED_ERROR_MESSAGE_THRESHOLD )
+		{
+			UISupport.showErrorMessage( message.replaceAll( "\r\n", "<br/>" ) );
+		}
+		else
+		{
+			UISupport.showErrorMessage( message );
+		}
+	}
+
 	/*
 	Private helper classes
 	 */
@@ -241,7 +202,17 @@ public class OAuth2ScriptsEditor extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			addScript();
+			RSyntaxTextArea scriptField = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
+			int index = scriptFields.size() + 1;
+			String fieldName = "Page " + index;
+			scriptField.setName( fieldName );
+			scriptFields.add(scriptField);
+			InputPanel inputPanel = new InputPanel( fieldName, scriptField );
+			inputPanel.setName( "Input panel " + index );
+			inputPanels.add(inputPanel);
+			scriptsPanel.add( inputPanel, -1 );
+			scriptsPanel.revalidate();
+			scriptsPanel.repaint();
 		}
 	}
 
@@ -257,7 +228,16 @@ public class OAuth2ScriptsEditor extends JPanel
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			removeScript();
+			if( UISupport.confirm("Do you really want to remove the script '" + selectedInputField.scriptField.getName() + "'",
+					"Remove script", OAuth2ScriptsEditor.this ) )
+			{
+				scriptFields.remove(selectedInputField.scriptField);
+				inputPanels.remove(selectedInputField);
+				scriptsPanel.remove(selectedInputField);
+				selectedInputField = null;
+				scriptsPanel.revalidate();
+				selectField( null );
+			}
 		}
 
 		@Override
@@ -281,13 +261,42 @@ public class OAuth2ScriptsEditor extends JPanel
 
 		public void actionPerformed( ActionEvent e )
 		{
-			testScripts( profile );
+			boolean errorsFound = false;
+			for( RSyntaxTextArea scriptField : scriptFields )
+			{
+				String script = scriptField.getText();
+				JavaScriptValidationError validate = javaScriptValidator.validate( script );
+				if( validate != null )
+				{
+					showErrorMessage( "The following script is invalid:\r\n" + script +
+							"\r\n\r\nError:<br/>" + validate.getErrorMessage() );
+					errorsFound = true;
+				}
+			}
+			if( !errorsFound )
+			{
+				OAuth2TokenExtractor extractor = getExtractor();
+				extractor.addBrowserListener( new JavaScriptErrorReporter() );
+				OAuth2Parameters parameters = new OAuth2Parameters( profile );
+				try
+				{
+					extractor.extractAccessToken( parameters );
+				}
+				catch( Exception ignore )
+				{
+
+				}
+
+
+			}
 		}
 	}
+
 
 	class InputPanel extends JPanel
 	{
 		private RSyntaxTextArea scriptField;
+
 		private final Color originalBackground;
 
 		public InputPanel( String scriptName, RSyntaxTextArea scriptField )
@@ -344,29 +353,12 @@ public class OAuth2ScriptsEditor extends JPanel
 			setBorder( BorderFactory.createLineBorder( Color.WHITE ) );
 			setBackground( originalBackground );
 		}
-
 		@Override
 		public void setBorder( Border border )
 		{
-			super.setBorder( new CompoundBorder(border, new EmptyBorder(20, 20, 20, 20)) );
+			super.setBorder( new CompoundBorder( border, new EmptyBorder( 20, 20, 20, 20 ) ) );
 		}
-	}
 
-	void selectField( InputPanel field )
-	{
-		selectedInputField = field;
-		for( InputPanel inputPanel : inputPanels )
-		{
-			if (inputPanel == field)
-			{
-				inputPanel.highlight();
-			}
-			else
-			{
-				inputPanel.removeHighlight();
-			}
-		}
-		removeScriptButton.setEnabled( selectedInputField != null );
 	}
 
 
