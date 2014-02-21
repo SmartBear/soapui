@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 @Automated @Acceptance
+=======
+@Automated @Regression
+>>>>>>>  revise the REST parameters scenarios
 Feature: REST request parameter synchronization across REST request, method and resource
 
 #  TODO resource and method level parameter added in the request view, see the syn between views, editors and top URI bar
@@ -34,5 +38,8 @@ Feature: REST request parameter synchronization across REST request, method and 
     And resource editor has parameter with name methodParam and value methodParamValue at row 1
 =======
     And resource editor has parameter with name methodParam and value methodParamValue at row 1
+<<<<<<< HEAD
     And close SoapUI
 >>>>>>> add two comments for the sync-parameter feature file
+=======
+>>>>>>>  revise the REST parameters scenarios

@@ -5,12 +5,10 @@ Feature: Extract the REST URI to the Request editor top URI bar
   I want to only paste the URI and create a new REST project
 
 Scenario Outline: Reject invalid REST URI
-  Given SoapUI is started
-  When Calvin creates a new REST project from the file menu
+  Given Calvin creates a new REST project from the file menu
     And enters an <invalid URI> into the 'Create new REST project' pop-up dialogue
   Then SoapUI presents a pop-up stating <error message>
     And Calvin is sent back to the 'Create new REST project' dialogue after clicking OK in the error message dialogue
-    And close SoapUI
 
 Examples:
 |invalid URI                            | error message                                          |
@@ -20,13 +18,11 @@ Examples:
 
 
 Scenario Outline: Parse a valid REST URI automatically
-  Given SoapUI is started
-  When Calvin creates a new REST project from the file menu
+  Given Calvin creates a new REST project from the file menu
     And enters a <Valid URI>
     And clicks "OK"
   Then the request editor appears displaying the method <method>, endpoint <endpoint>, resource path <resource path>, parameters <parameters> and a request preview.
     And the navigator tree shows "REST Project" as the project name, <resource name> as the resource name, and <method> and <resource name> combined as the method name
-    And close SoapUI
 
 Examples:
 |Valid URI                                                            |endpoint              |resource path                     |resource name     |method| parameters       |
