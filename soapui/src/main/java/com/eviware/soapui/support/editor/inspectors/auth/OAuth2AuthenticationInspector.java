@@ -8,6 +8,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
@@ -17,6 +18,8 @@ import com.jgoodies.binding.value.AbstractValueModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +54,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private boolean isMouseOnDisclosureLabel;
 	private JDialog accessTokenFormDialog;
 
+	private OAuth2StatusPropertyChangeListener oAuth2StatusPropertyChangeListener;
+
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
 		super( request );
@@ -71,6 +76,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		super.release();
 
 		oAuth2Form.getPresentationModel().release();
+		oAuth2StatusPropertyChangeListener.release();
 	}
 
 	@Override
@@ -188,6 +194,10 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
 		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
 
+		JLabel accessTokenStatusLabel = new JLabel();
+
+		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusLabel );
+
 		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
 		refreshAccessTokenButton.setName( REFRESH_ACCESS_TOKEN_BUTTON_NAME );
 		refreshAccessTokenButton.addActionListener( new RefreshOAuthAccessTokenAction( profile ) );
@@ -196,10 +206,13 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
 		refreshAccessTokenButton.setVisible( enabled );
 
-		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
+		JPanel wrapperPanel = new JPanel();
+		// TODO Need to add spacing between components
+		wrapperPanel.setLayout( new BoxLayout( wrapperPanel, BoxLayout.X_AXIS ) );
 		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );
-		wrapperPanel.add( accessTokenField, BorderLayout.WEST );
-		wrapperPanel.add( refreshAccessTokenButton, BorderLayout.EAST );
+		wrapperPanel.add( accessTokenField );
+		wrapperPanel.add( accessTokenStatusLabel);
+		wrapperPanel.add( refreshAccessTokenButton);
 		oAuth2Form.append( "Access Token", wrapperPanel );
 
 		return refreshAccessTokenButton;
@@ -399,6 +412,39 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 					disclosureButtonDisabled = false;
 				}
 			}
+		}
+	}
+
+	private class OAuth2StatusPropertyChangeListener implements PropertyChangeListener
+	{
+		private final JTextField accessTokenTextField;
+		private final JLabel accessTokenStatusLabel;
+
+		public OAuth2StatusPropertyChangeListener( JTextField accessTokenTextField, JLabel accessTokenStatusLabel )
+		{
+			this.accessTokenTextField = accessTokenTextField;
+			this.accessTokenStatusLabel = accessTokenStatusLabel;
+			profile.addPropertyChangeListener( this );
+		}
+
+		@Override
+		public void propertyChange( PropertyChangeEvent evt )
+		{
+			if( evt.getPropertyName().equals( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY ) )
+			{
+				String status = ( String )evt.getNewValue();
+				if( status.equals( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) )
+				{
+					accessTokenTextField.setBackground( Color.GREEN );
+					accessTokenStatusLabel.setText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() );
+					accessTokenStatusLabel.setIcon( UISupport.HELP_ICON );
+				}
+			}
+		}
+
+		public void release()
+		{
+			profile.removePropertyChangeListener( this );
 		}
 	}
 }

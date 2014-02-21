@@ -46,7 +46,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public enum AccessTokenStatus
 	{
-		UPDATED_MANUALLY("Updated Manually"),
+		ENTERED_MANUALLY("Entered Manually"),
 		PENDING("Pending"),
 		WAITING_FOR_AUTHORIZATION("Waiting for Authorization"),
 		RECEIVED_AUTHORIZATION_CODE("Received authorzation code"),
@@ -140,7 +140,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	/**
 	 * NOTE: This setter should only be used from the GUI, because it also sets the property "accessTokenStatus" to
-	 * UPDATED_MANUALLY
+	 * ENTERED_MANUALLY
 	 *
 	 * @param accessToken the access token supplied by the user
 	 */
@@ -148,7 +148,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		if( doSetAccessToken( accessToken ) )
 		{
-			setAccessTokenStatus( AccessTokenStatus.UPDATED_MANUALLY );
+			setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
 		}
 	}
 
