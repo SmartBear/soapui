@@ -112,6 +112,11 @@ public class ContainerWalker
 		containedComponents = findAllComponentsIn( container );
 	}
 
+	public <T extends Component> T findComponent( String name, Class<? extends T> componentClass)
+	{
+		return (T)Iterables.find(containedComponents, new ComponentClassAndNamePredicate( componentClass, name ));
+	}
+
 	private class ComponentClassAndNamePredicate implements Predicate<Component>
 	{
 
