@@ -21,7 +21,13 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.InflaterInputStream;
 
-import com.eviware.soapui.support.Tools;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.client.protocol.ResponseContentEncoding;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.message.BasicHttpResponse;
+import org.apache.http.message.BasicStatusLine;
 
 public class CompressionSupport
 {
@@ -31,7 +37,7 @@ public class CompressionSupport
 
 	public static String getAvailableAlgorithms( String separator )
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for( int i = 0; i < algs.length; ++i )
 		{
 			if( i > 0 )
@@ -44,9 +50,9 @@ public class CompressionSupport
 
 	public static String getAvailableAlgorithm( String httpContentEncoding )
 	{
-		for( int i = 0; i < algs.length; ++i )
-			if( httpContentEncoding.toLowerCase().endsWith( algs[i] ) )
-				return algs[i];
+		for( String alg : algs )
+			if( httpContentEncoding.toLowerCase().endsWith( alg ) )
+				return alg;
 
 		return null;
 	}
@@ -70,13 +76,13 @@ public class CompressionSupport
 
 	public static byte[] decompress( String alg, byte[] content ) throws Exception
 	{
-		checkAlg( alg );
-		if( ALG_GZIP.equals( alg ) )
-			return GZIPDecompress( content );
-		else if( ALG_DEFLATE.equals( alg ) )
-			return DeflaterDecompress( content );
-		else
-			return null;
+		// Use the excellent content encoding handling that exists in HTTP Client
+		HttpResponse response=new BasicHttpResponse(new BasicStatusLine( new HttpVersion( 1, 0 ), 0, null )) ;
+		ByteArrayEntity entity = new ByteArrayEntity( content );
+		entity.setContentEncoding( alg );
+		response.setEntity( entity );
+		new ResponseContentEncoding().process( response, null );
+		return IOUtils.toByteArray( response.getEntity().getContent() );
 	}
 
 	// createCompressionInputStream can be used in the future if
@@ -106,19 +112,6 @@ public class CompressionSupport
 		return compressedContent.toByteArray();
 	}
 
-	private static byte[] GZIPDecompress( byte[] content ) throws IOException
-	{
-		GZIPInputStream zipin;
-		InputStream in = new ByteArrayInputStream( content );
-		zipin = new GZIPInputStream( in );
-		ByteArrayOutputStream out = Tools.readAll( zipin, -1 );
-		content = out.toByteArray();
-		out.close();
-		zipin.close();
-
-		return content;
-	}
-
 	private static byte[] DeflaterCompress( byte[] requestContent ) throws IOException
 	{
 		ByteArrayOutputStream compressedContent = new ByteArrayOutputStream();
@@ -128,18 +121,5 @@ public class CompressionSupport
 
 		// get the compressed content
 		return compressedContent.toByteArray();
-	}
-
-	private static byte[] DeflaterDecompress( byte[] content ) throws IOException
-	{
-		InflaterInputStream zipin;
-		InputStream in = new ByteArrayInputStream( content );
-		zipin = new InflaterInputStream( in );
-		ByteArrayOutputStream out = Tools.readAll( zipin, -1 );
-		content = out.toByteArray();
-		out.close();
-		zipin.close();
-
-		return content;
 	}
 }
