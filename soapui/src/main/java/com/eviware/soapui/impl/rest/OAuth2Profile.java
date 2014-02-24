@@ -414,9 +414,10 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
-	public boolean shouldRefreshAccessTokenAutomatically()
+	public boolean shouldReloadAccessTokenAutomatically()
 	{
-		return getRefreshAccessTokenMethod().equals( AUTOMATIC ) && ( !StringUtils.isEmpty( getRefreshToken() ) );
+		return getRefreshAccessTokenMethod().equals( AUTOMATIC ) && ( !StringUtils.isEmpty( getRefreshToken() ) ||
+				hasAutomationJavaScripts());
 	}
 
 	public OAuth2ProfileContainer getContainer()
