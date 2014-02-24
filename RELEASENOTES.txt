@@ -17,7 +17,7 @@
 
 ### Updated libraries ###
 * proxy-vole 20131209 (SOAP-1208)
-* rsyntaxtextarea 2.0.7 (SOAP-1425)
+* rsyntaxtextarea 2.5.0 (SOAP-1425)
 
 -------------------------------------------------------------------------------
 
