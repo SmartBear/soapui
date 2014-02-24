@@ -57,10 +57,12 @@ public class OAuth2ScriptsEditor extends JPanel
 	private JavaScriptValidator javaScriptValidator = new JavaScriptValidator();
 	private JPanel scriptsPanel;
 	private JButton removeScriptButton;
+	private OAuth2Profile profile;
 
 	public OAuth2ScriptsEditor( final OAuth2Profile profile )
 	{
 		super( new BorderLayout() );
+		this.profile = profile;
 		add( buildToolbar( profile ), BorderLayout.NORTH );
 		makeScriptsPanel( profile );
 		add( new JScrollPane(scriptsPanel), BorderLayout.CENTER );
@@ -236,7 +238,9 @@ public class OAuth2ScriptsEditor extends JPanel
 				scriptsPanel.remove(selectedInputField);
 				selectedInputField = null;
 				scriptsPanel.revalidate();
+				scriptsPanel.repaint();
 				selectField( null );
+				profile.setAutomationJavaScripts( getJavaScripts() );
 			}
 		}
 
