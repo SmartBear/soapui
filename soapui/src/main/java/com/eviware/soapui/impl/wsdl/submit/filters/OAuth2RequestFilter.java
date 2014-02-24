@@ -1,11 +1,9 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
-import com.eviware.soapui.impl.rest.actions.oauth.OAuth2Exception;
 import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -18,7 +16,22 @@ import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
-	protected final static Logger log = Logger.getLogger( OAuth2RequestFilter.class );
+	private static final int ACCESS_TOKEN_RETRIEVAL_TIMEOUT = 5000;
+	// intentionally left non-final to facilitate testing, but should not be modified in production!
+	private static Logger log = Logger.getLogger( OAuth2RequestFilter.class );
+
+
+	/* setLog() and getLog() should only be used for testing */
+
+	static void setLog(Logger newLog)
+	{
+		log = newLog;
+	}
+
+	static Logger getLog()
+	{
+		return log;
+	}
 
 	@Override
 	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
@@ -38,9 +51,9 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 			}
 			OAuth2ClientFacade oAuth2Client = getOAuth2ClientFacade();
 
-			if( profile.shouldRefreshAccessTokenAutomatically() && accessTokenIsExpired( profile ))
+			if( accessTokenIsExpired( profile ) && profile.shouldReloadAccessTokenAutomatically())
 			{
-				refreshAccessToken( profile, oAuth2Client );
+				reloadAccessToken( profile, oAuth2Client );
 			}
 			oAuth2Client.applyAccessToken( profile, httpMethod, request.getRequestContent() );
 		}
@@ -57,27 +70,46 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		long issuedTime = profile.getAccessTokenIssuedTime();
 		long expirationTime = profile.getAccessTokenExpirationTime();
 
-		if( issuedTime <= 0 || expirationTime <= 0 )
-		{
-			return false;
-		}
+		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < currentTime - issuedTime;
 
-		return expirationTime < currentTime - issuedTime;
 	}
 
-	private void refreshAccessToken( OAuth2Profile profile, OAuth2ClientFacade oAuth2Client )
+	private void reloadAccessToken( OAuth2Profile profile, OAuth2ClientFacade oAuth2Client )
 	{
 		try
 		{
-			log.info( "The access token has expired, trying to refresh it." );
-
-			oAuth2Client.refreshAccessToken( profile );
-
-			log.info( "The access token has been refreshed successfully." );
+			if( profile.getRefreshToken() != null )
+			{
+				log.info( "The access token has expired, trying to refresh it." );
+				oAuth2Client.refreshAccessToken( profile );
+				log.info( "The access token has been refreshed successfully." );
+			}
+			else
+			{
+				if( profile.hasAutomationJavaScripts() )
+				{
+					log.info( "The access token has expired, trying to retrieve a new one with JavaScript automation." );
+					oAuth2Client.requestAccessToken( profile );
+					profile.waitForAccessTokenStatus( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER,
+							ACCESS_TOKEN_RETRIEVAL_TIMEOUT );
+					if( profile.getAccessTokenStatus().equals(String.valueOf( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER)) )
+					{
+						log.info( "A new access token has been retrieved successfully." );
+					}
+					else
+					{
+						log.warn("OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms");
+					}
+				}
+				else
+				{
+					log.warn( "No automation JavaScripts added to OAuth2 profile – cannot retrieve new access token" );
+				}
+			}
 		}
 		catch( Exception e )
 		{
-			//Propogate it up so that it is shown as a failure message in test case log
+			//Propagate it up so that it is shown as a failure message in test case log
 			throw new RuntimeException( "Unable to refresh expired access token.", e );
 		}
 	}

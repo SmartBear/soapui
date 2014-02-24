@@ -29,8 +29,8 @@ import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
-import javax.annotation.Nonnull;
 
+import javax.annotation.Nonnull;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComboBox;
@@ -74,7 +74,6 @@ public class TestOnDemandPanel extends JPanel
 	@Nonnull
 	private JComboBox locationsComboBox;
 
-	@Nonnull
 	private WebViewBasedBrowserComponent browser;
 
 	@Nonnull
@@ -120,7 +119,8 @@ public class TestOnDemandPanel extends JPanel
 
 	public void release()
 	{
-		if ( browser != null ) {
+		if ( browser != null )
+		{
 			browser.release();
 		}
 	}

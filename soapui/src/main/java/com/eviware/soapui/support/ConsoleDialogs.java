@@ -12,16 +12,23 @@
 
 package com.eviware.soapui.support;
 
-import java.awt.Dimension;
-
 import com.eviware.x.dialogs.XDialogs;
 import com.eviware.x.dialogs.XProgressDialog;
+
+import java.awt.Component;
+import java.awt.Dimension;
 
 public class ConsoleDialogs implements XDialogs
 {
 	public boolean confirm( String question, String title )
 	{
 		return false;
+	}
+
+	@Override
+	public boolean confirm( String question, String title, Component parent )
+	{
+		return confirm( question, title);
 	}
 
 	public Boolean confirmOrCancel( String question, String title )

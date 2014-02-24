@@ -82,17 +82,7 @@ public class OAuth2TestUtils
 				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
 				return profile;
 			}
-		} ).when( oAuth2TokenExtractor ).extractAccessTokenForAuthorizationCodeGrantFlow( any( OAuth2Parameters.class ) );
-
-		doAnswer( new Answer()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
-				return profile;
-			}
-		} ).when( oAuth2TokenExtractor ).extractAccessTokenForImplicitGrantFlow( any( OAuth2Parameters.class ) );
+		} ).when( oAuth2TokenExtractor ).extractAccessToken( any( OAuth2Parameters.class ) );
 
 		doAnswer( new Answer()
 		{

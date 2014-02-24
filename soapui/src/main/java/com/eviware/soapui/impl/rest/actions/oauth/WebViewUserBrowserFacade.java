@@ -38,32 +38,18 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		popupWindow.setBounds( 100, 100, 800, 600 );
 		popupWindow.setVisible( true );
 
-		addBrowserStateListener( new BrowserStateChangeListener()
-		{
-			@Override
-			public void locationChanged( String newLocation )
-			{
-			}
-
-			@Override
-			public void contentChanged( String newContent )
-			{
-
-			}
-		} );
-
 		browserComponent.navigate( url.toString(), null );
 	}
 
 
 	@Override
-	public void addBrowserStateListener( BrowserStateChangeListener listener )
+	public void addBrowserListener( BrowserListener listener )
 	{
 		browserComponent.addBrowserStateListener( listener );
 	}
 
 	@Override
-	public void removeBrowserStateListener( BrowserStateChangeListener listener )
+	public void removeBrowserStateListener( BrowserListener listener )
 	{
 		browserComponent.removeBrowserStateListener( listener );
 	}
@@ -83,12 +69,19 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 					popupWindow.dispose();
 				}
 			} );
+			browserComponent.handleClose();
 		}
 		catch( Exception e )
 		{
 			SoapUI.log.debug( "Could not close window due to unexpected error: " + e.getMessage() + "!" );
 		}
 
+	}
+
+	@Override
+	public void executeJavaScript( String script )
+	{
+		browserComponent.executeJavaScript(script);
 	}
 
 }

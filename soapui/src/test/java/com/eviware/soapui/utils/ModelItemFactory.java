@@ -1,8 +1,28 @@
 package com.eviware.soapui.utils;
 
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.MockOperationConfig;
+import com.eviware.soapui.config.MockResponseConfig;
+import com.eviware.soapui.config.MockServiceConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.config.OAuth2ProfileContainerConfig;
+import com.eviware.soapui.config.OperationConfig;
+import com.eviware.soapui.config.RestMethodConfig;
+import com.eviware.soapui.config.RestRequestConfig;
+import com.eviware.soapui.config.RestResourceConfig;
+import com.eviware.soapui.config.RestServiceConfig;
+import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.TestSuiteConfig;
+import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
-import com.eviware.soapui.impl.rest.*;
+import com.eviware.soapui.impl.rest.DefaultOAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
@@ -94,6 +114,14 @@ public class ModelItemFactory
 		return new DefaultOAuth2ProfileContainer( makeWsdlProject(),
 				OAuth2ProfileContainerConfig.Factory.newInstance() );
 	}
+
+	public static OAuth2Profile makeOAuth2Profile() throws SoapUIException
+	{
+		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+		return new OAuth2Profile( makeOAuth2ProfileContainer(), configuration );
+	}
+
+
 
 	public static RestMockService makeRestMockService() throws SoapUIException
 	{

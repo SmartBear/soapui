@@ -12,10 +12,12 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
+import com.eviware.soapui.support.DefaultHyperlinkListener;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.ProgressDialog;
+import com.eviware.x.dialogs.XDialogs;
+import com.eviware.x.dialogs.XProgressDialog;
+import com.jgoodies.forms.factories.ButtonBarFactory;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -31,13 +33,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-
-import com.eviware.soapui.support.DefaultHyperlinkListener;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.ProgressDialog;
-import com.eviware.x.dialogs.XDialogs;
-import com.eviware.x.dialogs.XProgressDialog;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 
 /**
  * 
@@ -60,6 +59,12 @@ public class SwingDialogs implements XDialogs
 	}
 
 	public boolean confirm( String question, String title )
+	{
+		return JOptionPane.showConfirmDialog( this.parent, question, title, JOptionPane.YES_NO_OPTION ) == JOptionPane.OK_OPTION;
+	}
+
+	@Override
+	public boolean confirm( String question, String title, Component parent )
 	{
 		return JOptionPane.showConfirmDialog( parent, question, title, JOptionPane.YES_NO_OPTION ) == JOptionPane.OK_OPTION;
 	}

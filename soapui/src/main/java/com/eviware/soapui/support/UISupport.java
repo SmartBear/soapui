@@ -78,6 +78,7 @@ public class UISupport
 	public static final String IMAGES_RESOURCE_PATH = "/com/eviware/soapui/resources/images";
 	public static final String TOOL_ICON_PATH = "/applications-system.png";
 	public static final String OPTIONS_ICON_PATH = "/preferences-system.png";
+	public static final int EXTENDED_ERROR_MESSAGE_THRESHOLD = 120;
 
 	// This is needed in Eclipse that has strict class loader constraints.
 	private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<ClassLoader>();
@@ -239,7 +240,7 @@ public class UISupport
 
 	public static void showErrorMessage( String message )
 	{
-		if( message != null && message.length() > 120 )
+		if( message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD )
 		{
 			dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
 		}
@@ -252,6 +253,11 @@ public class UISupport
 	public static boolean confirm( String question, String title )
 	{
 		return dialogs.confirm( question, title );
+	}
+
+	public static boolean confirm( String question, String title, Component parent )
+	{
+		return dialogs.confirm( question, title, parent );
 	}
 
 	public static int yesYesToAllOrNo( String question, String title )
