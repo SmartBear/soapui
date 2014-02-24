@@ -38,6 +38,7 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -67,7 +68,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
 	private ModelItemXmlEditor<?, ?> requestEditor;
 	private JComponent responseEditorPanel;
-	private ModelItemXmlEditor<?, ?> responseEditor;
+	private MockResponseMessageEditor responseEditor;
 
 	private JTabbedPane requestTabs;
 	private JPanel requestTabPanel;
@@ -133,7 +134,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 		return requestEditor;
 	}
 
-	public final ModelItemXmlEditor<?, ?> getResponseEditor()
+	public final MockResponseMessageEditor getResponseEditor()
 	{
 		return responseEditor;
 	}
@@ -224,7 +225,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 		return true;
 	}
 
-	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
+	protected MockResponseMessageEditor buildResponseEditor()
 	{
 		return new MockResponseMessageEditor( new MockResponseXmlDocument( mockResponse ) );
 	}
@@ -320,6 +321,9 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
 	public class MockResponseMessageEditor extends ResponseMessageXmlEditor<MockResponse, XmlDocument>
 	{
+
+		private RSyntaxTextArea inputArea;
+
 		public MockResponseMessageEditor( XmlDocument document )
 		{
 			super( document, mockResponse );
@@ -328,7 +332,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 			{
 				XmlSourceEditorView<?> editor = getSourceEditor();
 
-				RSyntaxTextArea inputArea = editor.getInputArea();
+				inputArea = editor.getInputArea();
 				inputArea.addFocusListener( new ResultAreaFocusListener() );
 
 				if( UISupport.isMac() )
@@ -346,6 +350,12 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 				inputPopup.insert( new JSeparator(), 2 );
 			}
 		}
+
+		public RSyntaxTextArea getInputArea()
+		{
+			return inputArea;
+		}
+
 	}
 
 	protected final class InputAreaFocusListener implements FocusListener

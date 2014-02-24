@@ -92,7 +92,7 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
 		}
 	}
 
-	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
+	protected MockResponseMessageEditor buildResponseEditor()
 	{
 		return new WsdlMockResponseMessageEditor( new MockResponseXmlDocument( getMockResponse() ) );
 	}
