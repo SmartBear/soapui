@@ -24,28 +24,16 @@ import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebHistory;
 import javafx.scene.web.WebView;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.DefaultKeyboardFocusManager;
-import java.awt.Dimension;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -68,9 +56,10 @@ public class WebViewBasedBrowserComponent
 	private java.util.List<BrowserListener> listeners = new ArrayList<BrowserListener>();
 
 	public WebView webView;
+	private WebViewNavigationBar navigationBar;
 	private String lastLocation;
 
-	public WebViewBasedBrowserComponent( boolean addStatusBar )
+	public WebViewBasedBrowserComponent( boolean addNavigationBar )
 	{
 		if( SoapUI.isBrowserDisabled() )
 		{
@@ -80,7 +69,7 @@ public class WebViewBasedBrowserComponent
 		}
 		else
 		{
-			initializeWebView( addStatusBar );
+			initializeWebView( addNavigationBar );
 		}
 	}
 
@@ -89,75 +78,77 @@ public class WebViewBasedBrowserComponent
 		return panel;
 	}
 
-	private void initializeWebView( boolean addStatusBar )
+	private void initializeWebView( boolean addNavigationBar )
 	{
-			if( addStatusBar )
-			{
-				JPanel statusBar = new JPanel( new BorderLayout() );
-				JLabel statusLabel = new JLabel();
-				UISupport.setFixedSize( statusBar, new Dimension( 20, 20 ) );
-				statusBar.add( statusLabel, BorderLayout.WEST );
-				panel.add( statusBar, BorderLayout.SOUTH );
-			}
+		if( addNavigationBar )
+		{
+			navigationBar = new WebViewNavigationBar();
+			panel.add( navigationBar.getComponent(), BorderLayout.NORTH );
+		}
 
-			final JFXPanel browserPanel = new JFXPanel();
-			panel.add( browserPanel, BorderLayout.CENTER );
+		final JFXPanel browserPanel = new JFXPanel();
+		panel.add( browserPanel, BorderLayout.CENTER );
 
-			Platform.runLater( new Runnable()
+		Platform.runLater( new Runnable()
+		{
+			public void run()
 			{
-				public void run()
+				webView = new WebView();
+
+				webView.getEngine().locationProperty().addListener( new ChangeListener<String>()
 				{
-					webView = new WebView();
-
-					webView.getEngine().locationProperty().addListener( new ChangeListener<String>()
+					@Override
+					public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
+												String newLocation )
 					{
-						@Override
-						public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
-													String newLocation )
+						lastLocation = newLocation;
+						for( BrowserListener listener : listeners )
 						{
-							lastLocation = newLocation;
-							for( BrowserListener listener : listeners )
-							{
-								listener.locationChanged( newLocation );
-							}
+							listener.locationChanged( newLocation );
 						}
-					} );
+					}
+				} );
 
-					webView.getEngine().getLoadWorker().stateProperty().addListener(
-							new ChangeListener<Worker.State>()
+				webView.getEngine().getLoadWorker().stateProperty().addListener(
+						new ChangeListener<Worker.State>()
+						{
+							@Override
+							public void changed( ObservableValue ov, Worker.State oldState, Worker.State newState )
 							{
-								@Override
-								public void changed( ObservableValue ov, Worker.State oldState, Worker.State newState )
+								if( newState == Worker.State.SUCCEEDED )
 								{
-									if( newState == Worker.State.SUCCEEDED )
+									try
 									{
-										try
+										if( getWebEngine().getDocument() != null )
 										{
-											if( getWebEngine().getDocument() != null )
+											String output = readDocumentAsString();
+											for( BrowserListener listener : listeners )
 											{
-												String output = readDocumentAsString();
-												for( BrowserListener listener : listeners )
-												{
-													listener.contentChanged( output );
-												}
+												listener.contentChanged( output );
 											}
 										}
-										catch( Exception ex )
-										{
-											SoapUI.logError( ex, "Error processing state change to " + newState );
-										}
+									}
+									catch( Exception ex )
+									{
+										SoapUI.logError( ex, "Error processing state change to " + newState );
 									}
 								}
-							} );
-					Group jfxComponentGroup = new Group();
-					Scene scene = new Scene( jfxComponentGroup );
-					webView.prefWidthProperty().bind( scene.widthProperty() );
-					webView.prefHeightProperty().bind( scene.heightProperty() );
-					jfxComponentGroup.getChildren().add( webView );
-					browserPanel.setScene( scene );
-					addKeyboardFocusManager( browserPanel );
+							}
+						} );
+
+				if( navigationBar != null )
+				{
+					navigationBar.initialize( getWebEngine(), WebViewBasedBrowserComponent.this );
 				}
-			} );
+				Group jfxComponentGroup = new Group();
+				Scene scene = new Scene( jfxComponentGroup );
+				webView.prefWidthProperty().bind( scene.widthProperty() );
+				webView.prefHeightProperty().bind( scene.heightProperty() );
+				jfxComponentGroup.getChildren().add( webView );
+				browserPanel.setScene( scene );
+				addKeyboardFocusManager( browserPanel );
+			}
+		} );
 
 	}
 
@@ -229,51 +220,6 @@ public class WebViewBasedBrowserComponent
 		}
 	}
 
-	// TODO: Evaluate whether these should be used
-	private class BackAction extends AbstractAction
-	{
-		public BackAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_left.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Navigate to previous selection" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			WebHistory history = getWebEngine().getHistory();
-			if( history.getCurrentIndex() == 0 )
-			{
-				Toolkit.getDefaultToolkit().beep();
-			}
-			else
-			{
-				history.go( history.getCurrentIndex() - 1 );
-			}
-		}
-	}
-
-	private class ForwardAction extends AbstractAction
-	{
-		public ForwardAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_right.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Navigate to next selection" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			WebHistory history = getWebEngine().getHistory();
-			if( history.getCurrentIndex() >= history.getEntries().size() - 1 )
-			{
-				Toolkit.getDefaultToolkit().beep();
-			}
-			else
-			{
-				history.go( history.getCurrentIndex() + 1 );
-			}
-		}
-	}
-
 	public void release()
 	{
 		// TODO: Check whether we need to do anything here
@@ -291,7 +237,7 @@ public class WebViewBasedBrowserComponent
 			public void run()
 			{
 
-				getWebEngine().loadContent( contentAsString, removeCharsetFrom(contentType));
+				getWebEngine().loadContent( contentAsString, removeCharsetFrom( contentType ) );
 			}
 		} );
 	}
@@ -299,7 +245,7 @@ public class WebViewBasedBrowserComponent
 	private String removeCharsetFrom( String contentType )
 	{
 		Matcher matcher = charsetFinderPattern.matcher( contentType );
-		return matcher.matches() ? matcher.group(1) : contentType;
+		return matcher.matches() ? matcher.group( 1 ) : contentType;
 	}
 
 	public void setContent( final String contentAsString )
@@ -337,27 +283,28 @@ public class WebViewBasedBrowserComponent
 		return webView == null ? null : XmlUtils.serialize( getWebEngine().getDocument() );
 	}
 
+
 	public String getUrl()
 	{
 		return url;
 	}
-
 
 	public String getErrorPage()
 	{
 		return errorPage;
 	}
 
+
 	public void setErrorPage( String errorPage )
 	{
 		this.errorPage = errorPage;
 	}
 
-
 	public void addPropertyChangeListener( PropertyChangeListener pcl )
 	{
 		pcs.addPropertyChangeListener( pcl );
 	}
+
 
 	public void removePropertyChangeListener( PropertyChangeListener pcl )
 	{
@@ -384,7 +331,6 @@ public class WebViewBasedBrowserComponent
 		if( showingErrorPage )
 			showingErrorPage = false;
 	}
-
 
 	public void addBrowserStateListener( BrowserListener listener )
 	{
