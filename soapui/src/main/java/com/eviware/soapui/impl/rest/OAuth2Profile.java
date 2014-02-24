@@ -46,7 +46,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public enum AccessTokenStatus
 	{
-		ENTERED_MANUALLY("Entered Manually"),
+		ENTERED_MANUALLY("Entered Manually and longer"),
 		PENDING("Pending"),
 		WAITING_FOR_AUTHORIZATION("Waiting for Authorization"),
 		RECEIVED_AUTHORIZATION_CODE("Received authorzation code"),
