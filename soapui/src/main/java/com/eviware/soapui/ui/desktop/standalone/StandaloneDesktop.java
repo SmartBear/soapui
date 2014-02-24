@@ -103,8 +103,12 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		enableWindowActions();
 		desktop.addComponentListener( new DesktopResizeListener() );
-		// maybe there should be a ui pref specifically for using the MRU desktop manager ?
-		desktop.setDesktopManager( new BoundsAwareDesktopManager( UISupport.isMac() ? new MostRecentlyUsedOrderDesktopManager( ) : desktop.getDesktopManager() ) );
+
+		DesktopManager originalDesktopManager = desktop.getDesktopManager();
+		boolean mruSelectionChosen = SoapUI.isSelectingMostRecentlyUsedDesktopPanelOnClose();
+		DesktopManager delegate = mruSelectionChosen ? new MostRecentlyUsedOrderDesktopManager( originalDesktopManager ) :
+				originalDesktopManager;
+		desktop.setDesktopManager( new BoundsAwareDesktopManager( delegate ));
 	}
 
 	private void enableWindowActions()
@@ -234,7 +238,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 
 		String title = desktopPanel.getTitle();
 
-		JInternalFrame frame = new JInternalFrame( title, true, true, true, ! UISupport.isMac() );
+		JInternalFrame frame = new JInternalFrame( title, true, true, true, true );
 		frame.addInternalFrameListener( internalFrameListener );
 		frame.setContentPane( panel );
 		frame.setLocation( xOffset * ( openFrameCount % 10 ), yOffset * ( openFrameCount % 10 ) );
@@ -779,7 +783,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop
 		 * would no longer be selectable, thus impossible to bring back to the visible area of the parent desktop.
 		 * </p>
 		 *
-		 * @param desktopPanel the panel being dragged
+		 * @param panel the panel being dragged
 		 * @param newX target X-coordinate of leftmost window of desktopPanel
 		 * @param newY target Y-coordinate of topmost window of desktopPanel
 		 * @return true if target coordinates would put desktopPanel out of reach, false otherwise

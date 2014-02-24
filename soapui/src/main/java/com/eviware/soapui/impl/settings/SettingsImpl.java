@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.impl.settings;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Default Settings implementation
@@ -74,9 +74,15 @@ public class SettingsImpl implements Settings
 
 	public boolean getBoolean( String id )
 	{
+		return getBoolean( id, false );
+	}
+
+	@Override
+	public boolean getBoolean( String id, boolean defaultValue )
+	{
 		if( values.containsKey( id ) )
 			return Boolean.parseBoolean( values.get( id ) );
-		return parent == null ? false : parent.getBoolean( id );
+		return parent == null ? defaultValue : parent.getBoolean( id );
 	}
 
 	public void setBoolean( String id, boolean value )

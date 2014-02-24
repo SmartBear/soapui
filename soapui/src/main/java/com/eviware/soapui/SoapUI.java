@@ -633,6 +633,11 @@ public class SoapUI
 		return logMonitor.getComponent();
 	}
 
+	public static boolean isSelectingMostRecentlyUsedDesktopPanelOnClose()
+	{
+		return getSettings().getBoolean(UISettings.MRU_PANEL_SELECTOR, true);
+	}
+
 	// -------------------------- OTHER METHODS --------------------------
 
 	public static synchronized void log( final Object msg )

@@ -12,19 +12,19 @@
 
 package com.eviware.soapui.impl.settings;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.config.SettingConfig;
 import com.eviware.soapui.config.SettingsConfig;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Settings implementation for XmlBeans generated SettingsConfig
@@ -143,12 +143,18 @@ public class XmlBeansSettingsImpl implements Settings
 
 	public boolean getBoolean( String id )
 	{
+		return getBoolean( id, false );
+	}
+
+	@Override
+	public boolean getBoolean( String id, boolean defaultValue )
+	{
 		String value = getString( id, null );
 
 		if( value != null )
 			return Boolean.parseBoolean( value );
 
-		return parent == null ? false : parent.getBoolean( id );
+		return parent == null ? defaultValue : parent.getBoolean( id );
 	}
 
 	public long getLong( String id, long defaultValue )
