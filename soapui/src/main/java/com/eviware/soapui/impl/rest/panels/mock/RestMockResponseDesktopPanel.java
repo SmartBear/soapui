@@ -135,6 +135,11 @@ public class RestMockResponseDesktopPanel extends
 		return component;
 	}
 
+	public boolean hasRequestEditor()
+	{
+		return false;
+	}
+
 }
 
 class CompleteHttpStatus

@@ -17,11 +17,9 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
-import com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockRequestXmlDocument;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockResponseXmlDocument;
-import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.RecreateMockResponseAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRequest;
@@ -30,7 +28,6 @@ import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -38,7 +35,6 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +62,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
 
 	private ModelItemXmlEditor<?, ?> requestEditor;
-	private JComponent responseEditorPanel;
 	private MockResponseMessageEditor responseEditor;
 
 	private JTabbedPane requestTabs;
@@ -101,7 +96,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 			@Override
 			public void focusGained( FocusEvent e )
 			{
-				if( requestTabs.getSelectedIndex() == 1 || responseHasFocus )
+				if( !hasRequestEditor() || requestTabs.getSelectedIndex() == 1 || responseHasFocus )
 					responseEditor.requestFocus();
 				else
 					requestEditor.requestFocus();
@@ -157,30 +152,45 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
 	protected JComponent buildContent()
 	{
+		moveFocusAction = new MoveFocusAction();
+		responseEditor = buildResponseEditor();
+
+		JComponent responseEditorPanel = createResponseEditorPanel( responseEditor );
+
+		if( hasRequestEditor() )
+		{
+			return buildEverythingPanel( responseEditorPanel );
+		}
+		else
+		{
+			return responseEditorPanel;
+		}
+	}
+
+	private JComponent createResponseEditorPanel( MockResponseMessageEditor responseEditor )
+	{
+		JComponent responseEditorPanel = new JPanel();
+		responseEditorPanel.setLayout( new BoxLayout( responseEditorPanel, BoxLayout.Y_AXIS ) );
+		responseEditorPanel.add( addTopEditorPanel() );
+		responseEditorPanel.add( Box.createVerticalStrut( 10 ) );
+		responseEditorPanel.add( responseEditor );
+		return responseEditorPanel;
+	}
+
+	private JComponent buildEverythingPanel( JComponent responseEditorPanel )
+	{
 		requestSplitPane = UISupport.createHorizontalSplit();
 		requestSplitPane.setResizeWeight( 0.5 );
 		requestSplitPane.setBorder( null );
 
 		splitButton = createActionButton( new ChangeSplitPaneOrientationAction( requestSplitPane ), true );
 
+		JComponent component;
 		tabsButton = new JToggleButton( new ChangeToTabsAction() );
 		tabsButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
-
-		moveFocusAction = new MoveFocusAction();
-
 		requestEditor = buildRequestEditor();
-		responseEditor = buildResponseEditor();
-
 		requestTabs = new JTabbedPane();
 		requestTabPanel = UISupport.createTabPanel( requestTabs, true );
-
-		JComponent component = null;
-
-		responseEditorPanel = new JPanel( );
-		responseEditorPanel.setLayout( new BoxLayout( responseEditorPanel, BoxLayout.Y_AXIS) );
-		responseEditorPanel.add( addTopEditorPanel() );
-		responseEditorPanel.add( Box.createVerticalStrut( 10 ) );
-		responseEditorPanel.add( responseEditor );
 
 		if( mockResponse.getSettings().getBoolean( UISettings.START_WITH_REQUEST_TABS ) )
 		{
@@ -199,8 +209,12 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 			requestSplitPane.setDividerLocation( 0.5 );
 			component = requestSplitPane;
 		}
-
 		return component;
+	}
+
+	public boolean hasRequestEditor()
+	{
+		return true;
 	}
 
 	public JComponent addTopEditorPanel( )
@@ -234,8 +248,11 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 		createToolbar( toolbar );
 
 		toolbar.add( Box.createHorizontalGlue() );
-		toolbar.add( tabsButton );
-		toolbar.add( splitButton );
+		if( hasRequestEditor() )
+		{
+			toolbar.add( tabsButton );
+			toolbar.add( splitButton );
+		}
 		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
 
 		return toolbar;
@@ -257,7 +274,10 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
 	public void setEnabled( boolean enabled )
 	{
-		requestEditor.getSourceEditor().setEditable( enabled );
+		if( hasRequestEditor() )
+		{
+			requestEditor.getSourceEditor().setEditable( enabled );
+		}
 		responseEditor.getSourceEditor().setEditable( enabled );
 		statusBar.setIndeterminate( !enabled );
 	}
@@ -270,7 +290,10 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 			{
 				MockResult mockResult = mockResponse.getMockResult();
 				MockRequest mockRequest = mockResult == null ? null : mockResult.getMockRequest();
-				requestEditor.getDocument().setXml( mockRequest == null ? "" : mockRequest.getRequestContent() );
+				if( hasRequestEditor() )
+				{
+					requestEditor.getDocument().setXml( mockRequest == null ? "" : mockRequest.getRequestContent() );
+				}
 			}
 		}
 	}
@@ -317,7 +340,10 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 				XmlSourceEditorView<?> editor = getSourceEditor();
 
 				inputArea = editor.getInputArea();
-				inputArea.addFocusListener( new ResultAreaFocusListener() );
+				if( hasRequestEditor() )
+				{
+					inputArea.addFocusListener( new ResultAreaFocusListener() );
+				}
 
 				if( UISupport.isMac() )
 				{
@@ -422,7 +448,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	{
 		public void actionPerformed( ActionEvent e )
 		{
-			if( requestEditor.hasFocus() )
+			if( !hasRequestEditor() || requestEditor.hasFocus() )
 			{
 				responseEditor.requestFocus();
 			}
@@ -493,13 +519,16 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	{
 		mockResponse.removePropertyChangeListener( propertyChangeListener );
 
-		requestEditor.release();
-		responseEditor.release();
+		if( hasRequestEditor() )
+		{
+			requestEditor.release();
+			requestEditor.getParent().remove( requestEditor );
+			requestEditor = null;
+		}
 
+		responseEditor.release();
 		responseEditor.getParent().remove( responseEditor );
 		responseEditor = null;
-		requestEditor.getParent().remove( requestEditor );
-		requestEditor = null;
 
 		return release();
 	}
