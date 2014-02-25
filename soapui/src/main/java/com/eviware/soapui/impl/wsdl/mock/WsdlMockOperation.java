@@ -287,6 +287,12 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		return dispatcher;
 	}
 
+	// this may seem to be unused but is actually used in the MockOperation Properties view - don't remove it
+	public String getWsdlOperationName()
+	{
+		return operation.getName();
+	}
+
 	public String getDispatchPath()
 	{
 		return getConfig().getDispatchPath();
