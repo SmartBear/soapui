@@ -104,7 +104,7 @@ class WebViewNavigationBar
 		public BackAction()
 		{
 			putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_left.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Navigate back" );
+			putValue( Action.SHORT_DESCRIPTION, "Go back" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -134,7 +134,7 @@ class WebViewNavigationBar
 		public ForwardAction()
 		{
 			putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_right.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Navigate forward" );
+			putValue( Action.SHORT_DESCRIPTION, "Go forward" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -164,7 +164,7 @@ class WebViewNavigationBar
 		public ReloadAction()
 		{
 			putValue( SMALL_ICON, UISupport.createImageIcon( "/reload_properties.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Reload" );
+			putValue( Action.SHORT_DESCRIPTION, "Reload page" );
 		}
 
 		public void actionPerformed( ActionEvent e )
@@ -187,7 +187,7 @@ class WebViewNavigationBar
 		public void actionPerformed( ActionEvent e )
 		{
 			String url = urlField.getText();
-			if( !urlField.getText().toLowerCase().startsWith( "http" ) )
+			if( !urlField.getText().contains( "://" ) )
 			{
 				url = "http://" + url;
 			}
