@@ -47,6 +47,7 @@ public class RestMockResponseDesktopPanel extends
 		JPanel bottomEditorPanel = new JPanel();
 		bottomEditorPanel.setLayout( new BoxLayout( bottomEditorPanel, BoxLayout.Y_AXIS ) );
 
+		bottomEditorPanel.add( Box.createVerticalStrut( 10 ) );
 		bottomEditorPanel.add( createMediaTypeCombo() );
 		bottomEditorPanel.add( responseEditor );
 
