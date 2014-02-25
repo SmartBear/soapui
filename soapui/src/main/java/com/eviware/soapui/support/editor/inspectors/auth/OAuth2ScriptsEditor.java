@@ -43,13 +43,13 @@ import java.util.List;
  */
 public class OAuth2ScriptsEditor extends JPanel
 {
-	public static final String TEST_SCRIPTS_BUTTON_NAME = "testScriptsButton";
-	public static final String ADD_SCRIPT_BUTTON_NAME = "addScriptButton";
-	public static final String REMOVE_SCRIPT_BUTTON_NAME = "removeScriptButton";
+	static final String TEST_SCRIPTS_BUTTON_NAME = "testScriptsButton";
+	static final String ADD_SCRIPT_BUTTON_NAME = "addScriptButton";
+	static final String REMOVE_SCRIPT_BUTTON_NAME = "removeScriptButton";
 
 	static final String[] DEFAULT_SCRIPT_NAMES = { "Page 1 (e.g. login screen)", "Page 2 (e.g. consent screen)" };
 	private static final String HELP_LINK_TEXT = "How to automate the process of getting an access token";
-	public static final String HELP_LINK_URL = "http://soapui.org";
+	private static final String HELP_LINK_URL = "http://soapui.org";
 
 	private List<InputPanel> inputPanels = new ArrayList<InputPanel>();
 	private InputPanel selectedInputField = null;
@@ -58,6 +58,7 @@ public class OAuth2ScriptsEditor extends JPanel
 	private JPanel scriptsPanel;
 	private JButton removeScriptButton;
 	private OAuth2Profile profile;
+	private DocumentListener scriptUpdater;
 
 	public OAuth2ScriptsEditor( final OAuth2Profile profile )
 	{
@@ -124,14 +125,7 @@ public class OAuth2ScriptsEditor extends JPanel
 
 	private JPanel makeScriptsPanel( final OAuth2Profile profile )
 	{
-		DocumentListener scriptUpdater = new DocumentListenerAdapter()
-		{
-			@Override
-			public void update( Document document )
-			{
-				profile.setAutomationJavaScripts( getJavaScripts() );
-			}
-		};
+		scriptUpdater = new ScriptUpdater( profile );
 		List<String> currentScripts = profile.getAutomationJavaScripts();
 		scriptsPanel = new JPanel();
 		scriptsPanel.setLayout( new BoxLayout( scriptsPanel, BoxLayout.Y_AXIS ) );
@@ -208,6 +202,7 @@ public class OAuth2ScriptsEditor extends JPanel
 			int index = scriptFields.size() + 1;
 			String fieldName = "Page " + index;
 			scriptField.setName( fieldName );
+			scriptField.getDocument().addDocumentListener( scriptUpdater );
 			scriptFields.add(scriptField);
 			InputPanel inputPanel = new InputPanel( fieldName, scriptField );
 			inputPanel.setName( "Input panel " + index );
@@ -400,6 +395,22 @@ public class OAuth2ScriptsEditor extends JPanel
 					}
 				} );
 			}
+		}
+	}
+
+	private class ScriptUpdater extends DocumentListenerAdapter
+	{
+		private final OAuth2Profile profile;
+
+		public ScriptUpdater( OAuth2Profile profile )
+		{
+			this.profile = profile;
+		}
+
+		@Override
+		public void update( Document document )
+		{
+			profile.setAutomationJavaScripts( getJavaScripts() );
 		}
 	}
 }

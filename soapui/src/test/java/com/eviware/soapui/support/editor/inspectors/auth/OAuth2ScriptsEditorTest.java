@@ -60,8 +60,8 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 		final String firstScript = "alert('first')";
 		final String secondScript = "alert('second')";
 
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.DEFAULT_SCRIPT_NAMES[0] ).setText( firstScript );
-		containerWalker.findTextComponent( OAuth2ScriptsEditor.DEFAULT_SCRIPT_NAMES[1] ).setText( secondScript );
+		enterScript( 0, firstScript );
+		enterScript( 1, secondScript );
 
 		assertThat( editor.getJavaScripts(), is( Arrays.asList( firstScript, secondScript ) ) );
 	}
@@ -130,7 +130,20 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 
 		List<String> javaScripts = editor.getJavaScripts();
 		assertThat( javaScripts, is( aCollectionWithSize( 3 ) ) );
-		assertThat( javaScripts.get(2), is(newScript));
+		assertThat( javaScripts.get( 2 ), is( newScript ) );
+	}
+
+	@Test
+	public void updatesModelWhenAddingScript() throws Exception
+	{
+		final String newScript = "callSomeFunction();";
+		containerWalker.findButtonWithName( OAuth2ScriptsEditor.ADD_SCRIPT_BUTTON_NAME ).doClick();
+		containerWalker.rebuildIndex();
+		containerWalker.findTextComponent( "Page 3" ).setText( newScript );
+
+		List<String> javaScripts = oAuth2Profile.getAutomationJavaScripts();
+		assertThat( javaScripts, is( aCollectionWithSize( 3 ) ) );
+		assertThat( javaScripts.get( 2 ), is( newScript ) );
 	}
 
 	@Test
@@ -147,7 +160,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 	{
 		final String scriptToKeep = "first()";
 		final String scriptToDiscard = "second()";
-		oAuth2Profile.setAutomationJavaScripts( Arrays.asList(scriptToKeep, scriptToDiscard) );
+		oAuth2Profile.setAutomationJavaScripts( Arrays.asList( scriptToKeep, scriptToDiscard ) );
 		editor = new TestableOAuth2ScriptsEditor( oAuth2Profile );
 		containerWalker = new ContainerWalker( editor );
 		removeInputPanel( "Input panel 2" );
@@ -171,7 +184,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 		AbstractButton removeButton = containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME );
 		removeButton.doClick();
 
-		assertThat( removeButton, is( not(enabled() ) ));
+		assertThat( removeButton, is( not( enabled() ) ) );
 	}
 
 	@Test
@@ -192,8 +205,8 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 		assertThat( containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ),
 				is( not( enabled() ) ) );
 		editor.selectField( containerWalker.findComponent( "Input panel 2", OAuth2ScriptsEditor.InputPanel.class ) );
-		assertThat(containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ),
-				is(enabled()));
+		assertThat( containerWalker.findButtonWithName( OAuth2ScriptsEditor.REMOVE_SCRIPT_BUTTON_NAME ),
+				is( enabled() ) );
 
 	}
 
@@ -208,7 +221,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 
 	private void waitForSwingThread() throws InterruptedException
 	{
-		Thread.sleep(100);
+		Thread.sleep( 100 );
 	}
 
 	private class TestableOAuth2ScriptsEditor extends OAuth2ScriptsEditor
