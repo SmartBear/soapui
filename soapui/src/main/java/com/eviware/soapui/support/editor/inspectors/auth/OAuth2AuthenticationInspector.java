@@ -15,6 +15,8 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.value.AbstractValueModel;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
@@ -328,9 +330,10 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, SCOPE, "" );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
-
-		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
-		accessTokenForm.addButtonWithoutLabel( "Edit scripts", new EditScriptsAction( profile ) );
+		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditScriptsAction( profile ) ) );
+		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 	}
 
@@ -429,18 +432,24 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 	}
 
-	private class EditScriptsAction implements ActionListener
+	private class EditScriptsAction extends AbstractAction
 	{
 		private final OAuth2Profile profile;
 
 		public EditScriptsAction( OAuth2Profile profile )
 		{
+			putValue( Action.NAME, "Edit scripts..." );
 			this.profile = profile;
 		}
 
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
+			if( accessTokenFormDialog != null )
+			{
+				accessTokenFormDialog.setVisible( false );
+				accessTokenFormDialog.dispose();
+			}
 			UISupport.showDesktopPanel(new OAuth2ScriptsDesktopPanel( profile ));
 		}
 	}
