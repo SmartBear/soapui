@@ -35,15 +35,27 @@ public class RestMockResponseDesktopPanel extends
 		JPanel topEditorPanel = new JPanel();
 		topEditorPanel.setLayout( new BoxLayout( topEditorPanel, BoxLayout.Y_AXIS ) );
 
-
 		topEditorPanel.add( createHttpStatusPanel() );
 		topEditorPanel.add( Box.createVerticalStrut( 5 ) );
 		topEditorPanel.add( createHeaderInspector() );
-		topEditorPanel.add( Box.createVerticalStrut( 5 ) );
-		topEditorPanel.add( createMediaTypeCombo() );
-
 
 		return topEditorPanel;
+	}
+
+	protected Component addBottomEditorPanel( MockResponseMessageEditor responseEditor )
+	{
+		JPanel bottomEditorPanel = new JPanel();
+		bottomEditorPanel.setLayout( new BoxLayout( bottomEditorPanel, BoxLayout.Y_AXIS ) );
+
+		bottomEditorPanel.add( createMediaTypeCombo() );
+		bottomEditorPanel.add( responseEditor );
+
+		return bottomEditorPanel;
+	}
+
+	public boolean hasTopEditorPanel( )
+	{
+		return true;
 	}
 
 	private JComponent createHttpStatusPanel()

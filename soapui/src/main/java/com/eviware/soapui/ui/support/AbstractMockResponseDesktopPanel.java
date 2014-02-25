@@ -169,12 +169,27 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
 	private JComponent createResponseEditorPanel( MockResponseMessageEditor responseEditor )
 	{
-		JComponent responseEditorPanel = new JPanel();
-		responseEditorPanel.setLayout( new BoxLayout( responseEditorPanel, BoxLayout.Y_AXIS ) );
-		responseEditorPanel.add( addTopEditorPanel() );
-		responseEditorPanel.add( Box.createVerticalStrut( 10 ) );
-		responseEditorPanel.add( responseEditor );
-		return responseEditorPanel;
+		if( hasTopEditorPanel())
+		{
+			JSplitPane responseEditorSplit = UISupport.createVerticalSplit();
+
+			responseEditorSplit.add( addTopEditorPanel() );
+			responseEditorSplit.add( addBottomEditorPanel( responseEditor ) );
+			responseEditorSplit.setDividerLocation( 200 );
+			return responseEditorSplit;
+		}
+		else
+		{
+			JComponent responseEditorPanel = new JPanel();
+			responseEditorPanel.setLayout( new BoxLayout( responseEditorPanel, BoxLayout.Y_AXIS ) );
+			responseEditorPanel.add( responseEditor );
+			return responseEditorPanel;
+		}
+	}
+
+	protected Component addBottomEditorPanel( MockResponseMessageEditor responseEditor )
+	{
+		return responseEditor;
 	}
 
 	private JComponent buildEverythingPanel( JComponent responseEditorPanel )
@@ -222,6 +237,10 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 		return new JPanel(  );
 	}
 
+	public boolean hasTopEditorPanel( )
+	{
+		return false;
+	}
 	/**
 	 * Override this method if you are not bidirectional.
 	 *
