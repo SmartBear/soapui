@@ -1,9 +1,11 @@
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
+import com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyWsdlMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultWsdlMockResponseAction;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.RecreateMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.WSIValidateResponseAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -26,6 +28,9 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
 
 	private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
 
+	private JButton openRequestButton;
+	private JButton recreateButton;
+
 	public AbstractWsdlMockResponseDesktopPanel( ModelItemType modelItem )
 	{
 		super( modelItem );
@@ -40,17 +45,27 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
 		createFaultButton = createActionButton( new CreateFaultWsdlMockResponseAction( mockResponse ), isBidirectional() );
 		wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateResponseAction(), mockResponse, "alt W" );
 
+		openRequestButton = createActionButton( SwingActionDelegate.createDelegate(
+				OpenRequestForMockResponseAction.SOAPUI_ACTION_ID, mockResponse, null, "/open_request.gif" ), true );
+
+		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), isBidirectional() );
+
 		return super.buildContent();
 	}
 
 	protected void createToolbar( JXToolBar toolbar )
 	{
+		toolbar.add( openRequestButton );
+		toolbar.addUnrelatedGap();
+		toolbar.add( recreateButton );
+
 		toolbar.add( createEmptyButton );
 		toolbar.add( createFaultButton );
 	}
 
 	public void setEnabled( boolean enabled )
 	{
+		recreateButton.setEnabled( enabled );
 		createEmptyButton.setEnabled( enabled );
 		super.setEnabled( enabled );
 	}

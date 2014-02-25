@@ -61,7 +61,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	private JEditorStatusBarWithProgress statusBar;
 	private JButton splitButton;
 	private MockRunner mockRunner;
-	private JButton recreateButton;
 	private JSplitPane requestSplitPane;
 	private MoveFocusAction moveFocusAction;
 	private ClosePanelAction closePanelAction = new ClosePanelAction();
@@ -78,7 +77,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 
 	private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
 	private MockResponseType mockResponse;
-	private JButton openRequestButton;
 
 	public AbstractMockResponseDesktopPanel( ModelItemType modelItem )
 	{
@@ -168,11 +166,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 		tabsButton = new JToggleButton( new ChangeToTabsAction() );
 		tabsButton.setPreferredSize( UISupport.TOOLBAR_BUTTON_DIMENSION );
 
-		openRequestButton = createActionButton( SwingActionDelegate.createDelegate(
-				OpenRequestForMockResponseAction.SOAPUI_ACTION_ID, mockResponse, null, "/open_request.gif" ), true );
-
-		recreateButton = createActionButton( new RecreateMockResponseAction( mockResponse ), isBidirectional() );
-
 		moveFocusAction = new MoveFocusAction();
 
 		requestEditor = buildRequestEditor();
@@ -238,11 +231,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	protected JComponent buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-
-		toolbar.add( openRequestButton );
-		toolbar.addUnrelatedGap();
-		toolbar.add( recreateButton );
-
 		createToolbar( toolbar );
 
 		toolbar.add( Box.createHorizontalGlue() );
@@ -271,7 +259,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	{
 		requestEditor.getSourceEditor().setEditable( enabled );
 		responseEditor.getSourceEditor().setEditable( enabled );
-		recreateButton.setEnabled( enabled );
 		statusBar.setIndeterminate( !enabled );
 	}
 
@@ -305,15 +292,12 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 			if( UISupport.isMac() )
 			{
 				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta TAB" ), moveFocusAction );
-				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "F5" ), recreateButton.getAction() );
-				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
 			}
 			else
 			{
 				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt TAB" ), moveFocusAction );
-				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "F5" ), recreateButton.getAction() );
-				inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
 			}
+			inputArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F4" ), closePanelAction );
 
 			return editor;
 		}
