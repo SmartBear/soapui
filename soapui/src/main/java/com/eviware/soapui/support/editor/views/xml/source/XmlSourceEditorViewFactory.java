@@ -132,7 +132,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 		else if( modelItem instanceof RestMockResponse )
 		{
 			boolean readOnly = false;
-			return new XmlSourceEditorView( ( XmlEditor )editor, modelItem, readOnly );
+			return new XmlSourceEditorView( ( XmlEditor )editor, modelItem, readOnly, "Editor" );
 		}
 
 		return null;

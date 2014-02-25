@@ -56,15 +56,20 @@ public class XmlSourceEditorViewFactoryTest
 	public void testCreateResponseEditorViewForRestMockResponse() throws Exception
 	{
 		mockResponse = mock( RestMockResponse.class );
-		EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createResponseEditorView( editor, mockResponse );
-		assertEditorView( requestEditorView );
+		EditorView<?> responseEditorView = xmlSourceEditorViewFactory.createResponseEditorView( editor, mockResponse );
+		assertEditorView( responseEditorView, "Editor" );
 	}
 
 	private void assertEditorView( EditorView<?> requestEditorView )
 	{
+		assertEditorView( requestEditorView, "XML" );
+	}
+
+	private void assertEditorView( EditorView<?> requestEditorView, String xml )
+	{
 		assertNotNull( requestEditorView );
 		assertEquals( "Source", requestEditorView.getViewId() );
-		assertEquals( "XML", requestEditorView.getTitle() );
+		assertEquals( xml, requestEditorView.getTitle() );
 	}
 
 }
