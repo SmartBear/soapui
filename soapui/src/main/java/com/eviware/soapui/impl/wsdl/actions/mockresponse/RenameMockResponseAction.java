@@ -12,7 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockresponse;
 
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -22,19 +24,19 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author ole.matzura
  */
 
-public class RenameMockResponseAction extends AbstractSoapUIAction<WsdlMockResponse>
+public class RenameMockResponseAction extends AbstractSoapUIAction<AbstractWsdlModelItem>
 {
 	public RenameMockResponseAction()
 	{
 		super( "Rename", "Renames this MockResponse" );
 	}
 
-	public void perform( WsdlMockResponse mockResponse, Object param )
+	public void perform( AbstractWsdlModelItem modelItem, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of MockResponse", getName(), mockResponse.getName() );
-		if( name == null || name.equals( mockResponse.getName() ) )
+		String name = UISupport.prompt( "Specify name of MockResponse", getName(), modelItem.getName() );
+		if( name == null || name.equals( modelItem.getName() ) )
 			return;
 
-		mockResponse.setName( name );
+		modelItem.setName( name );
 	}
 }
