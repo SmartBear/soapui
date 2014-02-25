@@ -29,7 +29,7 @@ public class MostRecentlyUsedOrderDesktopManager implements DesktopManager
 	Deque<JInternalFrame> mostRecentlyUsedFrames = new ArrayDeque<JInternalFrame>();
 
 	private DesktopManager delegate;
-	// this is used to prevent AquaInternalDesktopManager from activating another pane when we are closing one on Mac
+	// this is used to prevent AquaInternalFrameManager from activating another pane when we are closing one on Mac
 	private boolean isClosingFrame;
 
 	public MostRecentlyUsedOrderDesktopManager( DesktopManager delegate )
@@ -180,7 +180,7 @@ public class MostRecentlyUsedOrderDesktopManager implements DesktopManager
 				topFrame.setSelected( true );
 			}
 		}
-		catch( PropertyVetoException pve )
+		catch( PropertyVetoException ignore )
 		{
 		}
 	}
