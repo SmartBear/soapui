@@ -25,8 +25,18 @@ import java.net.URL;
 public class WebViewUserBrowserFacade implements UserBrowserFacade
 {
 
-	private WebViewBasedBrowserComponent browserComponent = new WebViewBasedBrowserComponent( false );
+	private WebViewBasedBrowserComponent browserComponent;
 	private JFrame popupWindow;
+
+	public WebViewUserBrowserFacade()
+	{
+		this( false );
+	}
+
+	public WebViewUserBrowserFacade(boolean addNavigationBar)
+	{
+		browserComponent = new WebViewBasedBrowserComponent( addNavigationBar );
+	}
 
 	@Override
 	public void open( URL url )
