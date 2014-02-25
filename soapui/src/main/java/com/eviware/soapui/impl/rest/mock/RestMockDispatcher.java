@@ -30,7 +30,9 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 		try
 		{
 			RestMockRequest restMockRequest = new RestMockRequest( request, response, mockContext );
-			return getMockResult( restMockRequest );
+			MockResult mockResult = getMockResult( restMockRequest );
+			mockService.runAfterRequestScript( mockContext, mockResult );
+			return mockResult;
 		}
 		catch( Exception e )
 		{
