@@ -34,7 +34,8 @@ public class AuthInspectorFactory implements RequestInspectorFactory
 	{
 		if( modelItem instanceof RestRequest )
 		{
-			return new OAuth2AuthenticationInspector( ( RestRequest )modelItem );
+//			return new OAuth2AuthenticationInspector( ( RestRequest )modelItem );
+			return new ProfileSelectionForm( ( AbstractHttpRequest )modelItem );
 		}
 		else if( modelItem instanceof WsdlRequest )
 		{
@@ -42,7 +43,8 @@ public class AuthInspectorFactory implements RequestInspectorFactory
 		}
 		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
-			return new BasicAuthenticationInspector( ( ( AbstractHttpRequest<?> )modelItem ) );
+//			return new BasicAuthenticationInspector( ( ( AbstractHttpRequest<?> )modelItem ) );
+			return new ProfileSelectionForm( ( AbstractHttpRequest )modelItem );
 		}
 		return null;
 	}

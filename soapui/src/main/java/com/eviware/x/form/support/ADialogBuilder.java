@@ -367,6 +367,9 @@ public class ADialogBuilder
 		case RADIOGROUP_TOP_BUTTON :
 			field = form.addComponent( name, new XFormRadioGroupTopButtonPosition( values ) );
 			break;
+		case COMBOBOX :
+				field = form.addComboBox( name, values,  description );
+				break;
 		default :
 			System.out.println( "Unsupported field type: " + type );
 		}

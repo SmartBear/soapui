@@ -56,10 +56,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -646,6 +643,23 @@ public class UISupport
 
 		return panel;
 	}
+
+	public static JLabel getLabelAsLink( final String url, String labelText )
+	{
+		JLabel oAuthDocumentationLink = new JLabel( labelText );
+		oAuthDocumentationLink.setForeground( Color.BLUE );
+		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Tools.openURL( url );
+			}
+		} );
+		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return oAuthDocumentationLink;
+	}
+
 
 	public static boolean isWindows()
 	{

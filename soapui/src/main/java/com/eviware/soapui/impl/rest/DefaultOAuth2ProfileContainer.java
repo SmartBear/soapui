@@ -20,10 +20,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		this.project = project;
 		this.configuration = configuration;
 
-		for( OAuth2ProfileConfig profileConfig : configuration.getOAuth2ProfileList() )
-		{
-			oAuth2ProfileList.add( new OAuth2Profile( this, profileConfig ) );
-		}
+		buildOAuth2ProfileList(  );
 	}
 
 	@Override
@@ -51,9 +48,23 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		profileConfig.setName( profileName );
 
 		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, profileConfig );
-		oAuth2ProfileList.add( oAuth2Profile );
+		buildOAuth2ProfileList( );
 
 		return oAuth2Profile;
+	}
+
+	@Override
+	public void removeProfile( String profileName )
+	{
+		for( int count = 0; count < configuration.sizeOfOAuth2ProfileArray(); count++ )
+		{
+			if( configuration.getOAuth2ProfileArray( count ).getName().equals( profileName ) )
+			{
+				configuration.removeOAuth2Profile( count );
+				break;
+			}
+		}
+		buildOAuth2ProfileList( );
 	}
 
 	@Override
@@ -61,6 +72,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	{
 		return configuration;
 	}
+
 
 	@Override
 	public PropertyExpansion[] getPropertyExpansions()
@@ -73,6 +85,15 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		}
 
 		return result.toArray();
+	}
+
+	private void buildOAuth2ProfileList( )
+	{
+		oAuth2ProfileList.clear();
+		for( OAuth2ProfileConfig profileConfig : configuration.getOAuth2ProfileList() )
+		{
+			oAuth2ProfileList.add( new OAuth2Profile( this, profileConfig ) );
+		}
 	}
 
 }

@@ -563,7 +563,9 @@
         	<xsd:element name="domain" type="xsd:string" maxOccurs="1"
         		minOccurs="0">
         	</xsd:element>
-        	<xsd:element name="authType">
+            <xsd:element  name="selectedAuthProfile" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+            <xsd:element  name="addedBasicAuthenticationTypes" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+            <xsd:element name="authType">
         		<xsd:simpleType>
         			<xsd:restriction base="xsd:string">
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
