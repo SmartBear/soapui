@@ -106,14 +106,15 @@ public class RestMockResponseDesktopPanel extends
 
 	private JComponent createPanelWithLabel( String labelText, Component rightSideComponent )
 	{
-		JPanel panel = new JPanel();
-		panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+		JPanel innerPanel = new JPanel();
 
-		panel.add( new JLabel( labelText ) );
-		panel.add( rightSideComponent );
-		panel.add( Box.createHorizontalGlue() );
+		innerPanel.add( new JLabel( labelText ) );
+		innerPanel.add( rightSideComponent );
 
-		return panel;
+		JPanel outerPanel = new JPanel( new BorderLayout(  ) );
+		outerPanel.add( innerPanel, BorderLayout.WEST );
+
+		return outerPanel;
 	}
 
 	private JComboBox createStatusCodeCombo()
