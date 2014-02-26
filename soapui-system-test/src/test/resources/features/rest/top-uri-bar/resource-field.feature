@@ -1,10 +1,15 @@
+@Manual @Regression
+Feature: User can change the resource path in top URI bar of REST request.The property expansion woks in top URI bar endpoint field.
+  Scenario: the changes of resource path in top URI bar of REST request can be synchronized to navigator tree, resource editor and raw view
+    Given a new REST project is created with URI www.example.com/resource/path/?test=01
+    When user changes the resource path to /newres/search in top URI bar of request editor
+    And submit the request
+    Then the resource path in navigator tree is changed to /newres/search
+    And the resource path in resource editor is changed to /newres/search
+    And the URI in raw view changed to www.example.com/newres/search/?test=01
 
+  Scenario:the property expansion works in top URI bar resource field
+    Given
 
-#1. change the resource to a very long resource and run it
-#2. empty the resource and run
-#3. check the property expansion works in resource and run
-#4. save the project and check if the edited resource was saved
-#5. check the navigation tree changed after editing the resource field
-#6. the resource changes should be reflected in the resource editor, vice verse
-#7. add template parameter at the end ({ para1}), it should ask for confirmation to add as a template parameter to resource. If confirmed, it should add it to paramter table and it should be added only once in the resource field
-#8. add matrix parameter at the end (;MatrixParam=value) ( to be continue)
+  Scenario: user can add template parameter through top URI bar resource field
+  #add template parameter at the end ({ para1}), it should ask for confirmation to add as a template parameter to resource. If confirmed, it should add it to paramter table and it should be added only once in the resource field
