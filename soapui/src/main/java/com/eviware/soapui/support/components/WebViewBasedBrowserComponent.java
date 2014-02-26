@@ -17,28 +17,42 @@ import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.util.Callback;
 
-import javax.swing.*;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.DefaultKeyboardFocusManager;
+import java.awt.HeadlessException;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -58,6 +72,7 @@ public class WebViewBasedBrowserComponent
 	public WebView webView;
 	private WebViewNavigationBar navigationBar;
 	private String lastLocation;
+	private Set<BrowserWindow> browserWindows = new HashSet<BrowserWindow>();
 
 	public WebViewBasedBrowserComponent( boolean addNavigationBar )
 	{
@@ -89,66 +104,15 @@ public class WebViewBasedBrowserComponent
 		final JFXPanel browserPanel = new JFXPanel();
 		panel.add( browserPanel, BorderLayout.CENTER );
 
-		Platform.runLater( new Runnable()
+		WebViewInitialization webViewInitialization = new WebViewInitialization( browserPanel );
+		if( Platform.isFxApplicationThread() )
 		{
-			public void run()
-			{
-				webView = new WebView();
-
-				webView.getEngine().locationProperty().addListener( new ChangeListener<String>()
-				{
-					@Override
-					public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
-												String newLocation )
-					{
-						lastLocation = newLocation;
-						for( BrowserListener listener : listeners )
-						{
-							listener.locationChanged( newLocation );
-						}
-					}
-				} );
-
-				webView.getEngine().getLoadWorker().stateProperty().addListener(
-						new ChangeListener<Worker.State>()
-						{
-							@Override
-							public void changed( ObservableValue ov, Worker.State oldState, Worker.State newState )
-							{
-								if( newState == Worker.State.SUCCEEDED )
-								{
-									try
-									{
-										if( getWebEngine().getDocument() != null )
-										{
-											String output = readDocumentAsString();
-											for( BrowserListener listener : listeners )
-											{
-												listener.contentChanged( output );
-											}
-										}
-									}
-									catch( Exception ex )
-									{
-										SoapUI.logError( ex, "Error processing state change to " + newState );
-									}
-								}
-							}
-						} );
-
-				if( navigationBar != null )
-				{
-					navigationBar.initialize( getWebEngine(), WebViewBasedBrowserComponent.this );
-				}
-				Group jfxComponentGroup = new Group();
-				Scene scene = new Scene( jfxComponentGroup );
-				webView.prefWidthProperty().bind( scene.widthProperty() );
-				webView.prefHeightProperty().bind( scene.heightProperty() );
-				jfxComponentGroup.getChildren().add( webView );
-				browserPanel.setScene( scene );
-				addKeyboardFocusManager( browserPanel );
-			}
-		} );
+			webViewInitialization.run();
+		}
+		else
+		{
+			Platform.runLater( webViewInitialization );
+		}
 
 	}
 
@@ -198,11 +162,11 @@ public class WebViewBasedBrowserComponent
 				try
 				{
 					Object result = webView.getEngine().executeScript( script );
-					System.out.println(result);
+					System.out.println( result );
 				}
 				catch( Exception e )
 				{
-					SoapUI.log.warn("Error executing JavaScript [" + script + "]", e );
+					SoapUI.log.warn( "Error executing JavaScript [" + script + "]", e );
 					for( BrowserListener listener : listeners )
 					{
 						listener.javaScriptErrorOccurred( script, lastLocation, e );
@@ -214,6 +178,12 @@ public class WebViewBasedBrowserComponent
 
 	public void handleClose()
 	{
+		for( Iterator<BrowserWindow> iterator = browserWindows.iterator(); iterator.hasNext(); )
+		{
+			iterator.next().close();
+			iterator.remove();
+		}
+
 		for( BrowserListener listener : listeners )
 		{
 			listener.browserClosed();
@@ -340,5 +310,144 @@ public class WebViewBasedBrowserComponent
 	public void removeBrowserStateListener( BrowserListener listener )
 	{
 		listeners.remove( listener );
+	}
+
+	/*
+	Class used to open a new browser window, used in the popup handler of the component.
+	 */
+
+	private class BrowserWindow extends JFrame
+	{
+
+		private final WebViewBasedBrowserComponent browser;
+
+		private BrowserWindow( PopupFeatures popupFeatures ) throws HeadlessException
+		{
+			browser = new WebViewBasedBrowserComponent( popupFeatures.hasToolbar() );
+			getContentPane().setLayout( new BorderLayout() );
+			getContentPane().add( browser.getComponent() );
+		}
+
+		public void close()
+		{
+			setVisible( false );
+			dispose();
+			browser.handleClose();
+			browser.release();
+		}
+
+	}
+
+	/*
+	The task to initialize the Java FX WebView component. Will be run synchronously if we're already on the
+	Java FX event thread, asynchronously if we aren't.
+	 */
+
+	private class WebViewInitialization implements Runnable
+	{
+		private final JFXPanel browserPanel;
+
+		public WebViewInitialization( JFXPanel browserPanel )
+		{
+			this.browserPanel = browserPanel;
+		}
+
+		public void run()
+		{
+			webView = new WebView();
+
+			createPopupHandler();
+			listenForLocationChanges();
+			listenForStateChanges();
+
+			if( navigationBar != null )
+			{
+				navigationBar.initialize( getWebEngine(), WebViewBasedBrowserComponent.this );
+			}
+			browserPanel.setScene( createJfxScene() );
+			addKeyboardFocusManager( browserPanel );
+		}
+
+		private void createPopupHandler()
+		{
+			webView.getEngine().setCreatePopupHandler( new Callback<PopupFeatures, WebEngine>()
+			{
+				@Override
+				public WebEngine call( PopupFeatures pf )
+				{
+					BrowserWindow popupWindow = new BrowserWindow( pf );
+					browserWindows.add( popupWindow );
+					popupWindow.setSize( 800, 600 );
+					popupWindow.setVisible( true );
+					final WebEngine webEngine = popupWindow.browser.getWebEngine();
+					webEngine.locationProperty().addListener( new InvalidationListener()
+					{
+						@Override
+						public void invalidated( Observable property )
+						{
+							System.out.println( webEngine.getLocation() );
+						}
+					} );
+					return webEngine;
+				}
+			} );
+		}
+
+		private void listenForLocationChanges()
+		{
+			webView.getEngine().locationProperty().addListener( new ChangeListener<String>()
+			{
+				@Override
+				public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
+											String newLocation )
+				{
+					lastLocation = newLocation;
+					for( BrowserListener listener : listeners )
+					{
+						listener.locationChanged( newLocation );
+					}
+				}
+			} );
+		}
+
+		private void listenForStateChanges()
+		{
+			webView.getEngine().getLoadWorker().stateProperty().addListener(
+					new ChangeListener<Worker.State>()
+					{
+						@Override
+						public void changed( ObservableValue value, Worker.State oldState, Worker.State newState )
+						{
+							if( newState == Worker.State.SUCCEEDED )
+							{
+								try
+								{
+									if( getWebEngine().getDocument() != null )
+									{
+										String output = readDocumentAsString();
+										for( BrowserListener listener : listeners )
+										{
+											listener.contentChanged( output );
+										}
+									}
+								}
+								catch( Exception ex )
+								{
+									SoapUI.logError( ex, "Error processing state change to " + newState );
+								}
+							}
+						}
+					} );
+		}
+
+		private Scene createJfxScene()
+		{
+			Group jfxComponentGroup = new Group();
+			Scene scene = new Scene( jfxComponentGroup );
+			webView.prefWidthProperty().bind( scene.widthProperty() );
+			webView.prefHeightProperty().bind( scene.heightProperty() );
+			jfxComponentGroup.getChildren().add( webView );
+			return scene;
+		}
 	}
 }
