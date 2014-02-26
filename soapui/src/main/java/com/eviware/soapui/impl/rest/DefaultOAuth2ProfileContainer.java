@@ -36,6 +36,30 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	}
 
 	@Override
+	public ArrayList<String> getOAuth2ProfileNameList()
+	{
+		ArrayList<String> profileNameList = new ArrayList<String>();
+		for( OAuth2Profile profile : getOAuth2ProfileList() )
+		{
+			profileNameList.add( profile.getName() );
+		}
+		return profileNameList;
+	}
+
+	@Override
+	public OAuth2Profile getProfileByName( String profileName )
+	{
+		for( OAuth2Profile profile : getOAuth2ProfileList() )
+		{
+			if( profile.getName().equals( profileName ) )
+			{
+				return profile;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void release()
 	{
 		//FIXME: Add implementation when we implement the GUI with listeners

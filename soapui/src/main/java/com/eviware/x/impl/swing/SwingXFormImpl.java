@@ -59,6 +59,15 @@ public class SwingXFormImpl implements XForm
 		rowSpec = new RowSpec( rowAlignment + ":pref" );
 	}
 
+	public SwingXFormImpl( String name, FormLayout layout )
+	{
+		this.name = name;
+		this.layout = layout;
+		panel = new JPanel( layout );
+		rowSpec = new RowSpec( rowAlignment + ":pref" );
+	}
+
+
 	public String getName()
 	{
 		return name;
@@ -120,7 +129,7 @@ public class SwingXFormImpl implements XForm
 
 		AbstractSwingXFormField<?> swingFormComponent = ( AbstractSwingXFormField<?> )formComponent;
 
-		if( label != null && !label.startsWith( "###" ) )
+		if( !StringUtils.isNullOrEmpty( label ) && !label.startsWith( "###" ) )
 		{
 			JLabel jlabel = null;
 			if( label.endsWith( "___" ) )
@@ -147,9 +156,9 @@ public class SwingXFormImpl implements XForm
 			swingFormComponent.getComponent().getAccessibleContext().setAccessibleDescription( label );
 		}
 
-		if( label != null && label.startsWith( "###" ) )
+		if( !StringUtils.isNullOrEmpty( label ) && label.startsWith( "###" ) )
 			panel.add( swingFormComponent.getComponent(), cc.xyw( 2, row, 4 ) );
-		else
+		else  //Keep the name/Label to empty/null to add only the component (in column 4), not the JLabel for name
 			panel.add( swingFormComponent.getComponent(), cc.xy( 4, row ) );
 
 		components.put( label, formComponent );
