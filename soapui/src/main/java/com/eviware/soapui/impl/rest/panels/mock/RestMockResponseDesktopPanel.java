@@ -101,7 +101,7 @@ public class RestMockResponseDesktopPanel extends
 				setMediaType( getResponseEditor().getInputArea(), e.getItem().toString() );
 			}
 		} );
-		return createPanelWithLabel( "Media type: ", mediaTypeComboBox );
+		return createPanelWithLabel( "Content | Media type: ", mediaTypeComboBox );
 	}
 
 	private JComponent createPanelWithLabel( String labelText, Component rightSideComponent )
