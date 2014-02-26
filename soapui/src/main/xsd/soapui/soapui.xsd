@@ -978,6 +978,7 @@
                 <xsd:attribute name="httpResponseStatus" type="xsd:string" />
                 <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
                 <xsd:attribute name="compression" type="xsd:string"></xsd:attribute>
+                <xsd:attribute name="encoding" type="xsd:string"></xsd:attribute>
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
@@ -990,7 +991,6 @@
                         maxOccurs="1" minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>
-                <xsd:attribute name="encoding" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="outgoingWss" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="useWsAddressing" type="xsd:boolean">
                 </xsd:attribute>
@@ -1000,7 +1000,9 @@
 
     <xsd:complexType name="RESTMockResponse">
         <xsd:complexContent>
-            <xsd:extension base="tns:BaseMockResponse"></xsd:extension>
+            <xsd:extension base="tns:BaseMockResponse">
+                <xsd:attribute name="mediaType" type="xsd:string"></xsd:attribute>
+            </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
 
@@ -1986,6 +1988,7 @@
             <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus"></xsd:element>
             <xsd:element name="accessTokenExpirationTime" type="xsd:long"></xsd:element>
             <xsd:element name="accessTokenIssuedTime" type="xsd:long"></xsd:element>
+            <xsd:element name="javaScripts" type="tns:StringList"/>
         </xsd:sequence>
     </xsd:complexType>
 

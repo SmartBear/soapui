@@ -12,6 +12,7 @@
 
 package com.eviware.x.dialogs;
 
+import java.awt.Component;
 import java.awt.Dimension;
 
 /**
@@ -29,6 +30,8 @@ public interface XDialogs
 	void showExtendedInfo( String title, String description, String content, Dimension size );
 
 	boolean confirm( String question, String title );
+
+	boolean confirm( String question, String title, Component parent );
 
 	Boolean confirmOrCancel( String question, String title );
 

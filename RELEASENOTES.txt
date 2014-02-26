@@ -13,9 +13,11 @@
 * Improved file chooser behavior in certain scenarios (Contribution from Marc Paquette)
 * Added missing soapui.logroot configuration to the log4j definition of the GLOBAL_GROOVY_LOG (Contribution from Michael Ottati)
 * IdleConnectionHandler now correctly stopped (Contribution from Christoph Thelen)
+* Normalize pathname for listeners, factories and root (SOAP-1424, Contribution from Marc Paquette)
 
 ### Updated libraries ###
 * proxy-vole 20131209 (SOAP-1208)
+* rsyntaxtextarea 2.5.0 (SOAP-1425)
 
 -------------------------------------------------------------------------------
 

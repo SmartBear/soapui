@@ -143,7 +143,7 @@ public class MonitorPanel extends JPanel
 
 			// Memory Free
 			backImageGrfx.setColor( mfColor );
-			long memUsage = freeMemory / totalMemory * 10;
+			float memUsage = (float)freeMemory / (float)totalMemory * 10;
 			int i = 0;
 			for( ; i < memUsage; i++ )
 			{

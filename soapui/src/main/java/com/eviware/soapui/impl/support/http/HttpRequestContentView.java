@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -217,26 +218,14 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected void addMediaTypeCombo( JXToolBar toolbar )
 	{
-		mediaTypeCombo = new JComboBox( getRequestMediaTypes() );
+		mediaTypeCombo = new MediaTypeComboBox( httpRequest );
 		mediaTypeCombo.setEnabled( httpRequest.hasRequestBody() );
-		mediaTypeCombo.setEditable( true );
-		if( httpRequest.getMediaType() != null )
-			mediaTypeCombo.setSelectedItem( httpRequest.getMediaType() );
-
-		mediaTypeCombo.addItemListener( new ItemListener()
-		{
-			public void itemStateChanged( ItemEvent e )
-			{
-				httpRequest.setMediaType( String.valueOf( mediaTypeCombo.getSelectedItem() ) );
-			}
-		} );
-
 		toolbar.addLabeledFixed( "Media Type", mediaTypeCombo );
 	}
 
 	protected Object[] getRequestMediaTypes()
 	{
-		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data" };
+		return MediaTypeComboBox.getMediaTypes();
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )

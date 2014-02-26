@@ -25,10 +25,11 @@ public interface Settings
 	public void setString( String id, String value );
 
 	/**
-	 * booleans always default to false..
+	 * Defaults to false.
 	 */
-
 	public boolean getBoolean( String id );
+
+	public boolean getBoolean( String id, boolean defaultValue );
 
 	public void setBoolean( String id, boolean value );
 

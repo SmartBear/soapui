@@ -95,7 +95,7 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 		{
 			HttpResponse response = restRequest.getResponse();
 			mockResponse.setResponseContent( response.getContentAsString() );
-
+			mockResponse.setContentType( response.getContentType() );
 		}
 	}
 

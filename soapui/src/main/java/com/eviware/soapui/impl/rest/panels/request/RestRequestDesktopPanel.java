@@ -120,7 +120,6 @@ public class RestRequestDesktopPanel extends
 		methodPanel.add( methodLabel, BorderLayout.NORTH );
 		methodPanel.add( methodComboBox, BorderLayout.SOUTH );
 		methodPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
-		//TODO: remove hard coded height adjustment
 		methodPanel.setMaximumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT + 10 ) );
 		return methodPanel;
 	}

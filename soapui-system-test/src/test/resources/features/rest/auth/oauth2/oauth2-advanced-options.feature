@@ -2,8 +2,7 @@
 Feature: OAuth2 Advanced options
 
   Scenario Outline: Changes selected in OAuth2 advanced options dialog are set to profile
-    Given SoapUI is started
-    And a new REST project is created
+    Given a new REST project is created
     And the user clicks on the Auth tab
     And selects the OAuth 2 Authorization Type
     And user clicks on Advanced options button
@@ -13,7 +12,6 @@ Feature: OAuth2 Advanced options
     Then access token position is <accessTokenPosition>
     And refresh method is <refreshMethod>
     And closes the advanced options dialog
-    And SoapUI is closed
 
   Examples:
   |accessTokenPosition  | refreshMethod |

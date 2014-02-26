@@ -1,5 +1,6 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
@@ -8,6 +9,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.jgoodies.binding.PresentationModel;
@@ -18,12 +20,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static javax.swing.BorderFactory.createCompoundBorder;
-import static javax.swing.BorderFactory.createEmptyBorder;
-import static javax.swing.BorderFactory.createLineBorder;
+import static javax.swing.BorderFactory.*;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
@@ -34,6 +32,14 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
 	public static final String REFRESH_ACCESS_TOKEN_BUTTON_NAME = "refreshAccessTokenButton";
 	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
+	public static final String CLIENT_IDENTIFICATION = "Client Identification";
+	public static final String CLIENT_SECRET = "Client Secret";
+	public static final String AUTHORIZATION_URI = "Authorization URI";
+	public static final String ACCESS_TOKEN_URI = "Access Token URI";
+	public static final String REDIRECT_URI = "Redirect URI";
+	public static final String SCOPE = "Scope";
+
+	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
 
 	private OAuth2Profile profile;
 	private SimpleBindingForm oAuth2Form;
@@ -41,6 +47,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	private JPanel wrapperPanel;
 	private boolean disclosureButtonDisabled;
 	private boolean isMouseOnDisclosureLabel;
+	private JDialog accessTokenFormDialog;
 
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
@@ -139,14 +146,22 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		populateGetAccessTokenForm( accessTokenForm );
 
 		final JPanel accessTokenFormPanel = accessTokenForm.getPanel();
-		accessTokenFormPanel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
+		JPanel wrapperPanel = new JPanel( new BorderLayout() );
+		wrapperPanel.add( accessTokenFormPanel, BorderLayout.NORTH );
+
+		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+				"How to get an access token from an authorization server" );
+		accessTokenDocumentationLink.setBorder( createEmptyBorder( 10, 5, 0, 0 ) );
+		wrapperPanel.add( accessTokenDocumentationLink, BorderLayout.SOUTH );
+
+		wrapperPanel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
 				createEmptyBorder( 10, 10, 10, 10 ) ) );
 
 		final JLabel disclosureButton = new JLabel( "▼ Get Token" );
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 
-		final JDialog accessTokenFormDialog = createAccessTokenDialog( accessTokenFormPanel );
+		accessTokenFormDialog = createAccessTokenDialog( wrapperPanel );
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
 
 		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog,
@@ -166,9 +181,9 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 	private JButton addAccessTokenFieldAndRefreshTokenButton( SimpleBindingForm oAuth2Form )
 	{
-		JTextField accessTokenField = new JTextField(  );
+		JTextField accessTokenField = new JTextField();
 		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
-		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS  );
+		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
 		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
 
 		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
@@ -179,7 +194,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
 		refreshAccessTokenButton.setVisible( enabled );
 
-		JPanel wrapperPanel = new JPanel( new BorderLayout( 5,5 ) );
+		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );
 		wrapperPanel.add( accessTokenField, BorderLayout.WEST );
 		wrapperPanel.add( refreshAccessTokenButton, BorderLayout.EAST );
@@ -229,6 +244,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	{
 		final JDialog accessTokenFormDialog = new JDialog();
 		accessTokenFormDialog.setName( ACCESS_TOKEN_FORM_DIALOG_NAME );
+		accessTokenFormDialog.setTitle( ACCESS_TOKEN_FORM_DIALOG_TITLE );
+		accessTokenFormDialog.setIconImages( SoapUI.getFrameIcons() );
 		accessTokenFormDialog.setUndecorated( true );
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
 
@@ -245,7 +262,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
-		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW_PROPERTY,
 				"getOAuth2Flow", "setOAuth2Flow" );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
 		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
@@ -253,8 +270,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
-		clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, CLIENT_IDENTIFICATION, null );
+		clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, CLIENT_SECRET, "" );
 		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
 			clientSecretField.setVisible( false );
@@ -267,23 +284,26 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 				if( e.getStateChange() == ItemEvent.SELECTED )
 				{
 					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+					accessTokenFormDialog.pack();
 				}
 			}
 		} );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, ACCESS_TOKEN_URI, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI, "" );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, SCOPE, "" );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
-
-		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditScriptsAction( profile ) ) );
+		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 
 		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
@@ -298,11 +318,12 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	{
 		OAuth2ProfileContainer oAuth2ProfileContainer = request.getOperation().getInterface().getProject()
 				.getOAuth2ProfileContainer();
-		if(oAuth2ProfileContainer.getOAuth2ProfileList().isEmpty())
+		if( oAuth2ProfileContainer.getOAuth2ProfileList().isEmpty() )
 		{
 			oAuth2ProfileContainer.addNewOAuth2Profile( "OAuth 2 - Profile" );
 		}
 		return oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
+
 	}
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
@@ -374,14 +395,40 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		@Override
 		public void windowLostFocus( WindowEvent e )
 		{
-			accessTokenFormDialog.setVisible( false );
-			disclosureButton.setText( "▼ Get Token" );
-			// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
-			// will then show the dialog directly again.
-			if( !isMouseOnDisclosureLabel )
+			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+			if( SoapUI.getFrame().contains( mouseLocation ) )
 			{
-				disclosureButtonDisabled = false;
+				accessTokenFormDialog.setVisible( false );
+				disclosureButton.setText( "▼ Get Token" );
+				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
+				// will then show the dialog directly again.
+				if( !isMouseOnDisclosureLabel )
+				{
+					disclosureButtonDisabled = false;
+				}
 			}
+		}
+	}
+
+	private class EditScriptsAction extends AbstractAction
+	{
+		private final OAuth2Profile profile;
+
+		public EditScriptsAction( OAuth2Profile profile )
+		{
+			putValue( Action.NAME, "Edit scripts..." );
+			this.profile = profile;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			if( accessTokenFormDialog != null )
+			{
+				accessTokenFormDialog.setVisible( false );
+				accessTokenFormDialog.dispose();
+			}
+			UISupport.showDesktopPanel( new OAuth2ScriptsDesktopPanel( profile ) );
 		}
 	}
 }

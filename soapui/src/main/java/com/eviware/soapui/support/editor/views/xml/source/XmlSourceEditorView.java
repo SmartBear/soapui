@@ -121,7 +121,12 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
 	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem, boolean readOnly )
 	{
-		super( "XML", xmlEditor, XmlSourceEditorViewFactory.VIEW_ID );
+		this( xmlEditor, modelItem, readOnly, "XML" );
+	}
+
+	public XmlSourceEditorView( XmlEditor<XmlDocument> xmlEditor, T modelItem, boolean readOnly, String tabTitle )
+	{
+		super( tabTitle, xmlEditor, XmlSourceEditorViewFactory.VIEW_ID );
 		this.modelItem = modelItem;
 		this.readOnly = readOnly;
 	}

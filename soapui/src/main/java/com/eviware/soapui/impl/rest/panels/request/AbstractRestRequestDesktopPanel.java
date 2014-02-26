@@ -146,7 +146,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 		else
 		{
-			//TODO: If we don't need special clause for empty resources then remove it
 			return super.buildToolbar();
 		}
 	}

@@ -5,7 +5,11 @@ import com.google.common.collect.Iterables;
 import org.apache.commons.lang.StringUtils;
 
 import javax.annotation.Nullable;
-import javax.swing.*;
+import javax.swing.AbstractButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.text.JTextComponent;
 import java.awt.Component;
 import java.awt.Container;
 import java.util.ArrayList;
@@ -17,11 +21,13 @@ import java.util.NoSuchElementException;
 public class ContainerWalker
 {
 
+	private final Container container;
 	private java.util.List<Component> containedComponents;
 
 	public ContainerWalker( Container container )
 	{
-		containedComponents = findAllComponentsIn( container );
+		this.container = container;
+		rebuildIndex();
 	}
 
 	public AbstractButton findButtonWithIcon( String iconFile )
@@ -95,6 +101,27 @@ public class ContainerWalker
 	{
 		return (JLabel)Iterables.find(containedComponents,
 				new ComponentClassAndNamePredicate( JLabel.class, labelName ));
+	}
+
+	public JTextComponent findTextComponent( String componentName)
+	{
+		JTextComponent component = ( JTextComponent )Iterables.find( containedComponents,
+				new ComponentClassAndNamePredicate( JTextComponent.class, componentName ) );
+		if (component == null)
+		{
+			throw new NoSuchElementException( "No text component with name '" + componentName + "' found");
+		}
+		return component;
+	}
+
+	public void rebuildIndex()
+	{
+		containedComponents = findAllComponentsIn( container );
+	}
+
+	public <T extends Component> T findComponent( String name, Class<? extends T> componentClass)
+	{
+		return (T)Iterables.find(containedComponents, new ComponentClassAndNamePredicate( componentClass, name ));
 	}
 
 	private class ComponentClassAndNamePredicate implements Predicate<Component>

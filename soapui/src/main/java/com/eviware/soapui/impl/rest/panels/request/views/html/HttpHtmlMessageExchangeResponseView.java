@@ -45,6 +45,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	private JPanel panel;
 	private WebViewBasedBrowserComponent browser;
 	private JPanel contentPanel;
+	private boolean initialized = false;
 
 	public HttpHtmlMessageExchangeResponseView( XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem )
 	{
@@ -89,20 +90,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	private Component buildContent()
 	{
 
-		JPanel contentPanel = new JPanel( new BorderLayout() );
-		if( SoapUI.isBrowserDisabled() )
-		{
-			contentPanel.add( new JLabel( "Browser Component is disabled" ) );
-		}
-		else
-		{
-			browser = new WebViewBasedBrowserComponent( false );
-			Component component = browser.getComponent();
-			component.setMinimumSize( new Dimension( 100, 100 ) );
-			contentPanel.add( new JScrollPane( component ) );
-
-			setEditorContent( messageExchangeModelItem );
-		}
+		contentPanel = new JPanel( new BorderLayout() );
 		return contentPanel;
 	}
 
@@ -110,14 +98,22 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	public boolean activate( EditorLocation<HttpResponseDocument> location )
 	{
 		boolean activated = super.activate( location );
-		if(activated){
-			if(browser == null){
+		if( activated && !initialized )
+		{
+			initialized = true;
+			if( SoapUI.isBrowserDisabled() )
+			{
+				contentPanel.add( new JLabel( "Browser Component is disabled" ) );
+			}
+			else
+			{
 				browser = new WebViewBasedBrowserComponent( false );
 				Component component = browser.getComponent();
 				component.setMinimumSize( new Dimension( 100, 100 ) );
 				contentPanel.add( new JScrollPane( component ) );
-					}
-			setEditorContent( messageExchangeModelItem );
+
+				setEditorContent( messageExchangeModelItem );
+			}
 		}
 		return activated;
 	}
@@ -126,7 +122,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 	public boolean deactivate()
 	{
 		boolean deactivated = super.deactivate();
-		if(deactivated){
+		if(deactivated && browser != null){
 			browser.setContent( "" );
 		}
 		return deactivated;
@@ -134,7 +130,10 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 	protected void setEditorContent( JProxyServletWsdlMonitorMessageExchange jproxyServletWsdlMonitorMessageExchange )
 	{
-
+		if( browser == null )
+		{
+			return;
+		}
 		if( jproxyServletWsdlMonitorMessageExchange != null )
 		{
 			String contentType = jproxyServletWsdlMonitorMessageExchange.getResponseContentType();
@@ -185,7 +184,10 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 
 	protected void setEditorContent( MessageExchangeModelItem messageExchangeModelItem2 )
 	{
-
+		if( browser == null )
+		{
+			return;
+		}
 		if( messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange() != null )
 		{
 			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders()

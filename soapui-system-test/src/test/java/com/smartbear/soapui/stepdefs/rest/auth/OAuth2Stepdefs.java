@@ -12,6 +12,7 @@ import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
+import org.fest.swing.fixture.JComboBoxFixture;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.FestUtils.findDialog;
@@ -166,7 +167,7 @@ public class OAuth2Stepdefs
 	@Then("the Get Access token form is closed$")
 	public void verifyThatTheAccessTokenFormIsNotVisible()
 	{
-		FestUtils.verifyDialogIsNotShowing( "getAccessTokenFormDialog", robot );
+		FestUtils.verifyDialogIsNotShowing( OAuth2AuthenticationInspector.ACCESS_TOKEN_FORM_DIALOG_NAME, robot );
 	}
 
 	private void closeAdvancedOptionsDialog()
@@ -182,7 +183,9 @@ public class OAuth2Stepdefs
 
 	private void selectAuthorizationType( FrameFixture rootWindow, String itemName )
 	{
-		rootWindow.comboBox( BasicAuthenticationInspector.AUTHORIZATION_TYPE_COMBO_BOX_NAME).selectItem( itemName );
+		JComboBoxFixture comboBox = rootWindow.comboBox( BasicAuthenticationInspector.AUTHORIZATION_TYPE_COMBO_BOX_NAME );
+		comboBox.focus();
+		comboBox.selectItem( itemName );
 	}
 
 	@Then( "^refresh button is visible$" )

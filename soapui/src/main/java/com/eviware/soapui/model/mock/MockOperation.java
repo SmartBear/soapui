@@ -39,4 +39,6 @@ public interface MockOperation extends ModelItem
 	public MockResult getLastMockResult();
 
 	public List<MockResponse> getMockResponses();
+
+	public void removeMockResponse( MockResponse mockResponse );
 }

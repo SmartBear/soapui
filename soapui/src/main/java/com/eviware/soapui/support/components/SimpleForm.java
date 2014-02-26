@@ -16,6 +16,7 @@ import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import org.apache.commons.lang.StringUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.Action;
@@ -260,7 +261,7 @@ public class SimpleForm
 	public JComboBox appendComboBox( String label, Object[] values, String tooltip )
 	{
 		JComboBox comboBox = new JComboBox( values );
-		comboBox.setToolTipText( tooltip );
+		comboBox.setToolTipText( StringUtils.defaultIfEmpty( tooltip, null ) );
 		comboBox.getAccessibleContext().setAccessibleDescription( tooltip );
 		append( label, comboBox );
 		return comboBox;
@@ -269,7 +270,7 @@ public class SimpleForm
 	public JComboBox appendComboBox( String label, ComboBoxModel model, String tooltip )
 	{
 		JComboBox comboBox = new JComboBox( model );
-		comboBox.setToolTipText( tooltip );
+		comboBox.setToolTipText( StringUtils.defaultIfEmpty( tooltip, null ) );
 		comboBox.getAccessibleContext().setAccessibleDescription( tooltip );
 		append( label, comboBox );
 		return comboBox;
@@ -278,7 +279,7 @@ public class SimpleForm
 	public JButton appendButton( String label, String tooltip )
 	{
 		JButton button = new JButton();
-		button.setToolTipText( tooltip );
+		button.setToolTipText( StringUtils.defaultIfEmpty( tooltip, null ) );
 		button.getAccessibleContext().setAccessibleDescription( tooltip );
 		append( label, button );
 		return button;
@@ -397,7 +398,7 @@ public class SimpleForm
 		JTextField textField = new JUndoableTextField();
 		textField.setName( name );
 		textField.setColumns( textFieldColumns );
-		textField.setToolTipText( tooltip );
+		setToolTip( textField, tooltip );
 		textField.getAccessibleContext().setAccessibleDescription( tooltip );
 		JTextComponentPopupMenu.add( textField );
 		append( label, textField );
@@ -411,11 +412,16 @@ public class SimpleForm
 		textArea.setRows( defaultTextAreaRows );
 		textArea.setAutoscrolls( true );
 		textArea.add( new JScrollPane() );
-		textArea.setToolTipText( tooltip );
+		setToolTip( textArea, tooltip );
 		textArea.getAccessibleContext().setAccessibleDescription( tooltip );
 		JTextComponentPopupMenu.add( textArea );
 		append( label, new JScrollPane( textArea ) );
 		return textArea;
+	}
+
+	private void setToolTip( JComponent component, String tooltip )
+	{
+		component.setToolTipText( StringUtils.defaultIfEmpty( tooltip, null ) );
 	}
 
 	public int getDefaultTextAreaColumns()
@@ -442,7 +448,7 @@ public class SimpleForm
 	{
 		JPasswordField textField = new JPasswordField();
 		textField.setColumns( defaultTextFieldColumns );
-		textField.setToolTipText( tooltip );
+		textField.setToolTipText( StringUtils.defaultIfEmpty( tooltip, null ) );
 		textField.getAccessibleContext().setAccessibleDescription( tooltip );
 		append( label, textField );
 		return textField;

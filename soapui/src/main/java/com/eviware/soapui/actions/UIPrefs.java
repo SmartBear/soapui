@@ -42,6 +42,7 @@ public class UIPrefs implements Prefs
 	public static final String CREATE_BACKUP = "Create Backup";
 	public static final String BACKUP_FOLDER = "Backup Folder";
 	public static final String DESKTOP_TYPE = "Desktop Type";
+	public static final String MRU_PANEL_SELECTOR = "Select most recently used desktop panel on close";
 	public static final String NATIVE_LAF = "Native LF";
 	public static final String ENABLE_GROOVY_LOG = "Do not disable Groovy Log";
 	public static final String SHOW_LOGS_AT_STARTUP = "Show Log Tabs";
@@ -104,6 +105,7 @@ public class UIPrefs implements Prefs
 				editorForm.appendSeparator();
 				editorForm.appendComboBox( DESKTOP_TYPE, DesktopRegistry.getInstance().getNames(),
 						"Select the type of desktop to use" );
+				editorForm.appendCheckBox( MRU_PANEL_SELECTOR, "Show most recently used panel on close (requires restart)", true );
 				JCheckBox cb = editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
 				if( UISupport.isMac() )
 				{
@@ -159,6 +161,7 @@ public class UIPrefs implements Prefs
 		{
 			settings.setString( UISettings.DESKTOP_TYPE, values.get( DESKTOP_TYPE ) );
 			settings.setBoolean( UISettings.NATIVE_LAF, values.getBoolean( NATIVE_LAF ) );
+			settings.setBoolean( UISettings.MRU_PANEL_SELECTOR, values.getBoolean( MRU_PANEL_SELECTOR ) );
 		}
 
 		settings.setBoolean( UISettings.DONT_DISABLE_GROOVY_LOG, values.getBoolean( ENABLE_GROOVY_LOG ) );
@@ -204,6 +207,7 @@ public class UIPrefs implements Prefs
 		if( SoapUI.isStandalone() )
 		{
 			values.put( DESKTOP_TYPE, settings.getString( UISettings.DESKTOP_TYPE, SoapUI.DEFAULT_DESKTOP ) );
+			values.put( MRU_PANEL_SELECTOR, settings.getBoolean( UISettings.MRU_PANEL_SELECTOR ) );
 			values.put( NATIVE_LAF, settings.getBoolean( UISettings.NATIVE_LAF ) );
 		}
 

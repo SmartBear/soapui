@@ -131,18 +131,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		return attachments.toArray( new Attachment[attachments.size()] );
 	}
 
-	public String getEncoding()
-	{
-		return getConfig().getEncoding();
-	}
-
-	public void setEncoding( String encoding )
-	{
-		String old = getEncoding();
-		getConfig().setEncoding( encoding );
-		notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
-	}
-
 	protected String getContentType( Operation operation, String encoding )
 	{
 		SoapVersion soapVersion = ((WsdlOperation)operation).getInterface().getSoapVersion();
@@ -158,26 +146,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 	public WsdlMockOperation getMockOperation()
 	{
 		return ( WsdlMockOperation )getParent();
-	}
-
-
-	public void setResponseHeaders( StringToStringsMap headers )
-	{
-		StringToStringsMap oldHeaders = getResponseHeaders();
-
-		getConfig().setHeaderArray( new HeaderConfig[0] );
-
-		for( Map.Entry<String, List<String>> header : headers.entrySet() )
-		{
-			for( String value : header.getValue() )
-			{
-				HeaderConfig headerConfig = getConfig().addNewHeader();
-				headerConfig.setName( header.getKey() );
-				headerConfig.setValue( value );
-			}
-		}
-
-		notifyPropertyChanged( HEADERS_PROPERTY, oldHeaders, headers );
 	}
 
 	public MessagePart[] getRequestParts()
@@ -361,6 +329,12 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		return result.toArray( new Attachment[result.size()] );
 	}
 
+	@Override
+	public String getContentType()
+	{
+		return getContentType( getOperation(), getEncoding() );
+	}
+
 	public boolean isMtomEnabled()
 	{
 		return getSettings().getBoolean( WsdlSettings.ENABLE_MTOM );
@@ -378,14 +352,14 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 	{
 		if( this.getWsaConfig().isWsaEnabled() )
 		{
-			WsdlOperation operation = ( WsdlOperation )getMockOperation().getOperation();
+			WsdlOperation operation = getMockOperation().getOperation();
 			WsaUtils wsaUtils = new WsaUtils( responseContent, getSoapVersion(), operation, context );
 			responseContent = wsaUtils.addWSAddressingMockResponse( this, ( WsdlMockRequest )request );
 		}
 
 		String outgoingWss = getOutgoingWss();
 		if( StringUtils.isNullOrEmpty( outgoingWss ) )
-			outgoingWss = ((WsdlMockService)getMockOperation().getMockService()).getOutgoingWss();
+			outgoingWss = getMockOperation().getMockService().getOutgoingWss();
 
 		if( StringUtils.hasContent( outgoingWss ) )
 		{

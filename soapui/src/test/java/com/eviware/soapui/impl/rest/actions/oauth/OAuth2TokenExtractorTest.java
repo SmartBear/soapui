@@ -31,9 +31,13 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils.*;
+import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils.ACCESS_TOKEN;
+import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils.AUTHORIZATION_CODE;
+import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils.OAUTH_2_OOB_URN;
+import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils.REFRESH_TOKEN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
@@ -49,22 +53,32 @@ public class OAuth2TokenExtractorTest
 	private OAuth2Parameters parameters;
 	private OAuth2Profile profile;
 	private SpyingOauthClientStub spyingOauthClientStub;
+	private List<String> executedScripts;
+	private UserBrowserFacadeStub browserFacade;
 
 	@Before
 	public void setUp() throws SoapUIException
 	{
 		spyingOauthClientStub = new SpyingOauthClientStub();
+		browserFacade = new UserBrowserFacadeStub();
 		oAuth2TokenExtractor = new OAuth2TokenExtractor()
 		{
+
 			@Override
 			protected OAuthClient getOAuthClient()
 			{
 				return spyingOauthClientStub;
 			}
+
+			@Override
+			protected UserBrowserFacade getBrowserFacade()
+			{
+				return browserFacade;
+			}
 		};
-		oAuth2TokenExtractor.browserFacade = new UserBrowserFacadeStub();
 		profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
 		parameters = new OAuth2Parameters( profile );
+		executedScripts = new ArrayList<String>(  );
 	}
 
 	@Test
@@ -88,7 +102,7 @@ public class OAuth2TokenExtractorTest
 	{
 		oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
 
-		assertThat( ( ( UserBrowserFacadeStub )oAuth2TokenExtractor.browserFacade ).browserClosed, is( true ) );
+		assertThat( browserFacade.browserClosed, is( true ) );
 	}
 
 	@Test
@@ -159,21 +173,40 @@ public class OAuth2TokenExtractorTest
 		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER.toString() ) );
 	}
 
+	@Test
+	public void executesJavaScripts() throws Exception
+	{
+		String firstScript = "document.getElementById('okButton').click()";
+		String secondScript = "document.getElementById('confirmButton').click()";
+		profile.setAutomationJavaScripts( Arrays.asList( firstScript, secondScript ) );
+
+		oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
+
+		assertThat( executedScripts, hasItem(firstScript));
+		assertThat( executedScripts, hasItem(secondScript));
+	}
+
 	private class UserBrowserFacadeStub implements UserBrowserFacade
 	{
 
-		private BrowserStateChangeListener listener;
+		private List<BrowserListener> listeners = new ArrayList<BrowserListener>(  );
 		private boolean browserClosed;
 
 		@Override
 		public void open( URL url )
 		{
 			String queryString = url.getQuery();
+			for( BrowserListener listener : listeners )
+			{
+
+			listener.contentChanged( "<html><body>mock_login_screen_content</body></html>" );
 			if( queryString.contains( "response_type=code" ) )
 			{
 				if( !queryString.contains( "redirect_uri=urn%3Aietf%3Awg%3Aoauth%3A2.0%3Aoob" ) )
 				{
 					String redirectURI = getRedirectURI( queryString );
+					listener.locationChanged( "consent_screen" );
+					listener.contentChanged( "<html><body>mock_consent_screen_content</body></html>" );
 					listener.locationChanged( redirectURI + "?code=" + AUTHORIZATION_CODE + "&state=foo" );
 				}
 				else
@@ -187,6 +220,8 @@ public class OAuth2TokenExtractorTest
 				listener.locationChanged( redirectURI + "#access_token=" + ACCESS_TOKEN + "&refresh_token=" + REFRESH_TOKEN
 						+ "&expires_in=3600" );
 			}
+			}
+
 		}
 
 		private String getRedirectURI( String queryString )
@@ -204,21 +239,27 @@ public class OAuth2TokenExtractorTest
 		}
 
 		@Override
-		public void addBrowserStateListener( BrowserStateChangeListener listener )
+		public void addBrowserListener( BrowserListener listener )
 		{
-			this.listener = listener;
+			listeners.add(listener);
 		}
 
 		@Override
-		public void removeBrowserStateListener( BrowserStateChangeListener listener )
+		public void removeBrowserStateListener( BrowserListener listener )
 		{
-			this.listener = null;
+			listeners.remove(listener);
 		}
 
 		@Override
 		public void close()
 		{
 			browserClosed = true;
+		}
+
+		@Override
+		public void executeJavaScript( String script )
+		{
+			executedScripts.add( script);
 		}
 	}
 

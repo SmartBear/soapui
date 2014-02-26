@@ -1081,21 +1081,13 @@
     </tns:actionGroup>
 
     <!-- RestMockResponse ActionGroup -->
-    <tns:actionGroup name="MockResponse Actions" id="RestMockResponseActions"
+    <tns:actionGroup name="RestMockResponse Actions" id="RestMockResponseActions"
                      default="ShowDesktopPanelAction">
         <tns:actionMapping actionId="ShowDesktopPanelAction"
                            name="Show MockResponse Editor"
                            description="Shows the MockResponse Editor for this MockResponse"
                            keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="OpenRequestForMockResponseAction"
-                           iconPath="/open_request.gif"/>
-        <tns:actionMapping actionId="AddMockResponseToTestCaseAction"/>
-        <tns:actionMapping actionId="CreateTestRequestForMockResponseAction"
-                           iconPath="/open_request.gif"/>
-        <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="CloneMockResponseAction"
-                           keyStroke="F9"/>
         <tns:actionMapping actionId="RenameMockResponseAction"
                            keyStroke="F2"/>
         <tns:actionMapping actionId="DeleteMockResponseAction"
