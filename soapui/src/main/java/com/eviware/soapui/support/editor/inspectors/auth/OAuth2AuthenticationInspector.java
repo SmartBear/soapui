@@ -472,6 +472,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 					accessTokenStatusText.setText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() );
 					accessTokenStatusText.setVisible( true );
+
+					setIcon( SUCCESS_ICON );
 				}
 			}
 		}

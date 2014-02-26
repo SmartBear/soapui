@@ -17,6 +17,7 @@ import java.beans.PropertyChangeSupport;
 
 import javax.swing.ImageIcon;
 
+import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorView;
@@ -26,7 +27,7 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
 
 /**
  * Abstract base-class to be extended by XmlInspectors
- * 
+ *
  * @author ole.matzura
  */
 
@@ -39,6 +40,7 @@ public abstract class AbstractXmlInspector implements XmlInspector
 	private XmlEditor editor;
 	private final String inspectorId;
 	private boolean active;
+	private ImageIcon imageIcon;
 
 	protected AbstractXmlInspector( String title, String description, boolean enabled, String inspectorId )
 	{
@@ -62,7 +64,14 @@ public abstract class AbstractXmlInspector implements XmlInspector
 
 	public ImageIcon getIcon()
 	{
-		return null;
+		return this.imageIcon;
+	}
+
+	public void setIcon( ImageIcon imageIcon )
+	{
+		ImageIcon old = this.imageIcon;
+		this.imageIcon = imageIcon;
+		propertySupport.firePropertyChange( Inspector.ICON_PROPERTY, old, imageIcon );
 	}
 
 	public void addPropertyChangeListener( PropertyChangeListener listener )
