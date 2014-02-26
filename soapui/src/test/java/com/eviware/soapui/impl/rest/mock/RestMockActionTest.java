@@ -7,6 +7,7 @@ import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Spy;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +22,7 @@ public class RestMockActionTest
 {
 	RestMockRequest restMockRequest;
 	RestMockAction mockAction;
+
 	RestMockResponse mockResponse;
 
 
@@ -28,7 +30,7 @@ public class RestMockActionTest
 	public void setUp() throws Exception
 	{
 		restMockRequest = makeRestMockRequest();
-		mockAction = ModelItemFactory.makeRestMockAction( );
+		mockAction = ModelItemFactory.makeRestMockAction();
 		mockResponse = mockAction.addNewMockResponse( "response 1" );
 	}
 
@@ -43,7 +45,7 @@ public class RestMockActionTest
 		// So here we making sure the http status is actually set on the HttpResponse.
 		verify( mockResult.getMockRequest().getHttpResponse() ).setStatus( HttpStatus.SC_BAD_REQUEST );
 
-		assertThat( mockResult.getMockResponse().getResponseHttpStatus(), is( HttpStatus.SC_BAD_REQUEST ));
+		assertThat( mockResult.getMockResponse().getResponseHttpStatus(), is( HttpStatus.SC_BAD_REQUEST ) );
 	}
 
 	@Test
@@ -97,6 +99,19 @@ public class RestMockActionTest
 		assertThat( mockResult.getResponseHeaders().get( headerKey, "" ), is( expandedValue ) );
 		assertThat( mockResult.getMockResponse().getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
 
+	}
+
+	@Test
+	public void testScriptIsExecuted() throws Exception
+	{
+		String mockServiceName = "RenamedFromScript";
+
+		mockResponse.setName( "MockResponse" );
+		mockResponse.setScript( "mockResponse.setName('" + mockServiceName + "')" );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+
+		assertThat( mockResult.getMockResponse().getName(), is( mockServiceName ) );
 	}
 
 
