@@ -29,24 +29,28 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
 	{
 		RestMockRequest restMockRequest = new RestMockRequest( request, response, mockContext );
+
+		Object result = null;
 		try
 		{
-			Object result = mockService.runOnRequestScript( mockContext, restMockRequest );
+			result = mockService.runOnRequestScript( mockContext, restMockRequest );
 
 			if( !( result instanceof MockResult ) )
 			{
 				result = getMockResult( restMockRequest );
 			}
 
-			MockResult mockResult = ( MockResult )result;
-			mockService.runAfterRequestScript( mockContext, mockResult );
-			return mockResult;
+			mockService.runAfterRequestScript( mockContext, ( MockResult )result );
+			return ( MockResult )result;
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e, "got an exception while dispatching - returning a default 500 response" );
 			return createServerErrorMockResult( restMockRequest );
-
+		}
+		finally
+		{
+			mockService.fireOnMockResult( result );
 		}
 	}
 
@@ -70,7 +74,6 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 		}
 
 	}
-
 
 
 	private RestMockResult getDefaultResponse( RestMockRequest restMockRequest ) throws DispatchException

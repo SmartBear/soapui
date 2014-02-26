@@ -115,15 +115,10 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 				throw ( DispatchException )e;
 			else
 				throw new DispatchException( e );
-		} finally
+		}
+		finally
 		{
-			if( result != null && result instanceof MockResult )
-			{
-				for( MockRunListener listener : mockService.getMockRunListeners() )
-				{
-					listener.onMockResult( ( MockResult )result );
-				}
-			}
+			mockService.fireOnMockResult( result );
 		}
 	}
 
