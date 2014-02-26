@@ -14,6 +14,7 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
+import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -23,26 +24,30 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicHTML;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.LinkedList;
 
 import static javax.swing.BorderFactory.createEmptyBorder;
 
 public class OAuth2Form extends AbstractAuthenticationForm
 {
-	public static final String ADVANCED_OPTIONS = "Advanced...";
-	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
+	public static final String ADVANCED_OPTIONS_BUTTON_NAME = "Advanced...";
 	public static final String REFRESH_ACCESS_TOKEN_BUTTON_NAME = "refreshAccessTokenButton";
 
+	private static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
+
+	private static final Dimension HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW = new Dimension( 5, 0 );
 	private static final String ACCESS_TOKEN_LABEL = "Access Token";
-
-	public static final Dimension HORIZONAL_COMPONENT_SPACING = new Dimension( 5, 0 );
 	private static final Insets ACCESS_TOKEN_FIELD_INSETS = new Insets( 5, 5, 5, 5 );
-	private static final float ACCESS_TOKEN_STATUS_FONT_SCALE = 0.96f;
-	private final AbstractXmlInspector inspector;
+	private static final float ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE = 0.95f;
+	private static final int ACCESS_TOKEN_STATUS_TEXT_WIDTH = 100;
 
+	private final AbstractXmlInspector inspector;
 	private OAuth2Profile profile;
 	private JPanel formPanel;
 	private boolean disclosureButtonDisabled;
@@ -100,9 +105,9 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 		oAuth2Form.addSpace( TOP_SPACING );
 
-		JTextField accessTokenField = createAccessTokenField(  );
+		JTextField accessTokenField = createAccessTokenField();
 		JLabel accessTokenStatusIcon = createAccessTokenStatusIcon();
-		JTextArea accessTokenStatusText = createAccessTokenStatusText();
+		JLabel accessTokenStatusText = createAccessTokenStatusText();
 
 		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
 		profile.addPropertyChangeListener( oAuth2StatusPropertyChangeListener );
@@ -126,7 +131,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog,
 				disclosureButton ) );
 
-		JButton advancedOptionsButton = oAuth2Form.addButtonWithoutLabelToTheRight( ADVANCED_OPTIONS, new ActionListener()
+		JButton advancedOptionsButton = oAuth2Form.addButtonWithoutLabelToTheRight( ADVANCED_OPTIONS_BUTTON_NAME, new ActionListener()
 		{
 			@Override
 			public void actionPerformed( ActionEvent e )
@@ -134,10 +139,10 @@ public class OAuth2Form extends AbstractAuthenticationForm
 				new OAuth2AdvanceOptionsDialog( profile, refreshAccessTokenButton );
 			}
 		} );
-		advancedOptionsButton.setName( ADVANCED_OPTIONS );
+		advancedOptionsButton.setName( ADVANCED_OPTIONS_BUTTON_NAME );
 	}
 
-	private JTextField createAccessTokenField( )
+	private JTextField createAccessTokenField()
 	{
 		JTextField accessTokenField = new JTextField();
 		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
@@ -154,15 +159,13 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		return accessTokenStatusIcon;
 	}
 
-	private JTextArea createAccessTokenStatusText()
+	private JLabel createAccessTokenStatusText()
 	{
-		JTextArea accessTokenStatusText = new JTextArea();
-		accessTokenStatusText.setFont( scaledFont( accessTokenStatusText, ACCESS_TOKEN_STATUS_FONT_SCALE ) );
-		accessTokenStatusText.setLineWrap( true );
-		accessTokenStatusText.setColumns( 10 );
-		accessTokenStatusText.setBackground( CARD_BACKGROUND_COLOR );
-		accessTokenStatusText.setBorder( createEmptyBorder() );
+		JLabel accessTokenStatusText = new JLabel();
+		accessTokenStatusText.setFont( scaledFont( accessTokenStatusText, ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE ) );
 		accessTokenStatusText.setVisible( false );
+		accessTokenStatusText.setAlignmentX( Component.CENTER_ALIGNMENT );
+
 		return accessTokenStatusText;
 	}
 
@@ -177,17 +180,17 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		return refreshAccessTokenButton;
 	}
 
-	private JPanel createAccessTokenRowPanel( JTextField accessTokenField, JLabel accessTokenStatusIcon, JTextArea accessTokenStatusText, JButton refreshAccessTokenButton )
+	private JPanel createAccessTokenRowPanel( JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText, JButton refreshAccessTokenButton )
 	{
 		JPanel panel = new JPanel();
 		panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
 		panel.setBackground( CARD_BACKGROUND_COLOR );
 		panel.add( accessTokenField );
-		panel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
+		panel.add( Box.createRigidArea( HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW ) );
 		panel.add( accessTokenStatusIcon );
-		panel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
+		panel.add( Box.createRigidArea( HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW ) );
 		panel.add( accessTokenStatusText );
-		panel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
+		panel.add( Box.createRigidArea( HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW ) );
 		panel.add( refreshAccessTokenButton );
 		return panel;
 	}
@@ -319,14 +322,14 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	{
 		private final Color SUCCESS_COLOR = new Color( 0xccffcb );
 		// FIXME This need to be changed to the real icon
-		private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/testCase.gif" );
+		private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.gif" );
 
 
 		private final JTextField accessTokenField;
 		private final JLabel accessTokenStatusIcon;
-		private final JTextArea accessTokenStatusText;
+		private final JLabel accessTokenStatusText;
 
-		public OAuth2StatusPropertyChangeListener( JTextField accessTokenField, JLabel accessTokenStatusIcon, JTextArea accessTokenStatusText )
+		public OAuth2StatusPropertyChangeListener( JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
 		{
 			this.accessTokenField = accessTokenField;
 			this.accessTokenStatusIcon = accessTokenStatusIcon;
@@ -346,7 +349,8 @@ public class OAuth2Form extends AbstractAuthenticationForm
 					accessTokenStatusIcon.setIcon( SUCCESS_ICON );
 					accessTokenStatusIcon.setVisible( true );
 
-					accessTokenStatusText.setText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() );
+					accessTokenStatusText.setText( setWrappedText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) );
+
 					accessTokenStatusText.setVisible( true );
 
 					inspector.setIcon( SUCCESS_ICON );
@@ -358,5 +362,10 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		{
 			profile.removePropertyChangeListener( this );
 		}
+	}
+
+	private String setWrappedText( String text )
+	{
+		return String.format( "<html><div WIDTH=%d>%s</div><html>", OAuth2Form.ACCESS_TOKEN_STATUS_TEXT_WIDTH, text );
 	}
 }
