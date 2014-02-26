@@ -21,7 +21,7 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -34,6 +34,7 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JComboBoxFormField;
+import com.eviware.x.impl.swing.JFormDialog;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -90,7 +91,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	@Override
 	public JComponent getComponent()
 	{
-		profileSelectionComboBox.setSelectedItem( request.getSelectedAuthProfile() );
+		String selectedAuthProfile = request.getSelectedAuthProfile() == null ? NO_AUTHORIZATION :
+				request.getSelectedAuthProfile();
+		profileSelectionComboBox.setSelectedItem( selectedAuthProfile );
 		return outerPanel;
 	}
 
@@ -141,7 +144,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void createProfileSelectionComboBox( SimpleBindingForm authTypeForm )
 	{
-		String[] existingProfiles = createOptionsForAuthorizationCombo();
+		String[] existingProfiles = createOptionsForAuthorizationCombo( request.getSelectedAuthProfile() );
 
 		profileSelectionComboBox = new JComboBox<String>( existingProfiles );
 		profileSelectionComboBox.setName( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
@@ -153,6 +156,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		if( getAddEditOptions().contains( selectedOption ) )
 		{
 			performAddEditOperation( request.getSelectedAuthProfile(), selectedOption );
+			return;
 		}
 		request.setSelectedAuthProfile( selectedOption );
 		if( createOAuth2ProfileNameList().contains( selectedOption ) )
@@ -174,27 +178,66 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 	}
 
-	private void performAddEditOperation( String currentProfile, String selectedOption )
+	private void performAddEditOperation( final String currentProfile, String selectedOption )
 	{
 		AddEditOptions addEditOption = getAddEditOptionForDescription( selectedOption );
 		switch( addEditOption )
 		{
 			case ADD:
-				showSelectAuthorizationTypeForm();
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						showSelectAuthorizationTypeForm();
+					}
+				} );
 				break;
 			case DELETE:
-				deleteCurrentProfile( currentProfile );
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						deleteCurrentProfile( currentProfile );
+					}
+				} );
 				break;
 			case RENAME:
-				renameCurrentProfile( currentProfile );
+				SwingUtilities.invokeLater( new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						renameCurrentProfile( currentProfile );
+					}
+				} );
 				break;
 			default:
 				break;
 		}
 	}
 
-	private void renameCurrentProfile( String profileName )
+	private void renameCurrentProfile( String profileOldName )
 	{
+		String newName = UISupport.prompt( "Specify name of Profile", "Rename Profile", profileOldName );
+		if( newName == null || profileOldName.equals( newName ))
+		{
+			profileSelectionComboBox.setSelectedItem( profileOldName );
+			return;
+		}
+
+		if( newName.trim().equals( "" ) )
+		{
+			UISupport.showErrorMessage( "New name can't be empty." );
+			profileSelectionComboBox.setSelectedItem( profileOldName );
+			return;
+		}
+
+		OAuth2Profile profile = getProfileForName( profileOldName );
+		profile.setName( newName );
+		request.setSelectedAuthProfile( newName );
+		refreshProfileSelectionComboBox( newName );
 	}
 
 	private void deleteCurrentProfile( String profileName )
@@ -213,7 +256,6 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void showSelectAuthorizationTypeForm()
 	{
-		DefaultActionList actions = new DefaultActionList( "Actions" );
 		final XFormDialog dialog = ADialogBuilder.buildDialog( AuthorizationTypeForm.class );
 
 		ArrayList<String> options = new ArrayList<String>();
@@ -230,27 +272,41 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		options.removeAll( request.getBasicAuthenticationProfiles() );
 
 		final JTextFieldFormField profileNameField = ( JTextFieldFormField )dialog.getFormField( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
+		int nextProfileIndex = createOAuth2ProfileNameList().size() + 1;
+		profileNameField.setValue( "OAuth 2 - Profile " + nextProfileIndex );
 		profileNameField.getComponent().setVisible( false );
 		profileNameField.addFormFieldListener( new XFormFieldListener()
 		{
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
-				if( StringUtils.isNullOrEmpty( newValue ) )
+				ActionList actionsList = dialog.getActionsList();
+				for( int actionIndex = 0; actionIndex < actionsList.getActionCount(); actionIndex++ )
 				{
-					//TODO: disable Ok button
+					Action action = actionsList.getActionAt( actionIndex );
+					if( action.getValue( Action.NAME ).equals( "OK" ) )
+					{
+						if( StringUtils.isNullOrEmpty( newValue ) )
+						{
+							action.setEnabled( false );
+						}
+						else
+						{
+							action.setEnabled( true );
+						}
+					}
 				}
 			}
 		} );
 
-		JComboBoxFormField accessTokenPositionField = ( JComboBoxFormField )dialog.getFormField( AuthorizationTypeForm.AUTHORIZATION_TYPE );
-		accessTokenPositionField.setOptions( options.toArray( new String[options.size()] ) );
-		accessTokenPositionField.addFormFieldListener( new XFormFieldListener()
+		JComboBoxFormField authorizationTypesComboBox = ( JComboBoxFormField )dialog.getFormField( AuthorizationTypeForm.AUTHORIZATION_TYPE );
+		authorizationTypesComboBox.setOptions( options.toArray( new String[options.size()] ) );
+		authorizationTypesComboBox.addFormFieldListener( new XFormFieldListener()
 		{
 			@Override
 			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
 			{
-				if( newValue.equals( CredentialsConfig.AuthType.O_AUTH_2.toString()) )
+				if( newValue.equals( CredentialsConfig.AuthType.O_AUTH_2.toString() ) )
 				{
 					profileNameField.getComponent().setVisible( true );
 				}
@@ -298,7 +354,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void refreshProfileSelectionComboBox( String selectedProfile )
 	{
-		profileSelectionComboBox.setModel( new DefaultComboBoxModel( createOptionsForAuthorizationCombo() ) );
+		profileSelectionComboBox.setModel( new DefaultComboBoxModel( createOptionsForAuthorizationCombo( selectedProfile ) ) );
 		profileSelectionComboBox.removeActionListener( profileSelectionComboBox.getActionListeners()[0] );
 		profileSelectionComboBox.addActionListener( new ProfileSelectionListener() );
 		profileSelectionComboBox.setSelectedItem( selectedProfile );
@@ -352,15 +408,28 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		return options;
 	}
 
-	private String[] createOptionsForAuthorizationCombo()
+	private String[] createOptionsForAuthorizationCombo( String selectedAuthProfile )
 	{
 		ArrayList<String> options = new ArrayList<String>();
 		options.add( NO_AUTHORIZATION );
 		ArrayList<String> oAuth2Profiles = createOAuth2ProfileNameList();
 		options.addAll( oAuth2Profiles );
 		options.addAll( request.getBasicAuthenticationProfiles() );
+
+		ArrayList<String> addEditOptions = getAddEditOptions();
+		if( !oAuth2Profiles.contains( selectedAuthProfile ) )
+		{
+			addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
+		}
+
+		if( options.size() <= 1 )
+		{
+			addEditOptions.remove( AddEditOptions.DELETE.getDescription() );
+		}
+
 		options.add( "------------------" );
-		options.addAll( getAddEditOptions() );
+		options.addAll( addEditOptions );
+
 		return options.toArray( new String[oAuth2Profiles.size()] );
 	}
 
@@ -410,11 +479,11 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	{
 		public static final MessageSupport messages = MessageSupport.getMessages( ProfileSelectionForm.class );
 
-		@AField( description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.COMBOBOX )
-		public final static String AUTHORIZATION_TYPE = messages.get( "Form.AccessTokenPosition.Label" );
+		@AField( description = "AuthorizationTypeForm.AuthorizationType.Description", type = AField.AFieldType.COMBOBOX )
+		public final static String AUTHORIZATION_TYPE = messages.get( "AuthorizationTypeForm.AuthorizationType.Label" );
 
-		@AField( description = "Form.OAuth2ProfileName.Description", type = AField.AFieldType.STRING )
-		public final static String OAUTH2_PROFILE_NAME_FIELD = messages.get( "Form.OAuth2ProfileName.Label" );
+		@AField( description = "AuthorizationTypeForm.OAuth2ProfileName.Description", type = AField.AFieldType.STRING )
+		public final static String OAUTH2_PROFILE_NAME_FIELD = messages.get( "AuthorizationTypeForm.OAuth2ProfileName.Label" );
 
 	}
 
