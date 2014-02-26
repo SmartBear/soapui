@@ -3,6 +3,7 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
@@ -18,21 +19,17 @@ import com.jgoodies.binding.value.AbstractValueModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.List;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static javax.swing.BorderFactory.createCompoundBorder;
-import static javax.swing.BorderFactory.createEmptyBorder;
-import static javax.swing.BorderFactory.createLineBorder;
+import static javax.swing.BorderFactory.*;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
 	public static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
 
+	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String ADVANCED_OPTIONS = "Advanced...";
+	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
 	public static final String REFRESH_ACCESS_TOKEN_BUTTON_NAME = "refreshAccessTokenButton";
 	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
 	public static final String CLIENT_IDENTIFICATION = "Client Identification";
@@ -41,26 +38,16 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	public static final String ACCESS_TOKEN_URI = "Access Token URI";
 	public static final String REDIRECT_URI = "Redirect URI";
 	public static final String SCOPE = "Scope";
-	public static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
 
 	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
-	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
-	private static final String ACCESS_TOKEN_LABEL = "Access Token";
-	private static final Color SUCCESS_COLOR = new Color( 0xccffcb );
-	// FIXME Using nonsence icon for now
-	private static final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/export.gif" );
-	public static final Dimension HORIZONAL_COMPONENT_SPACING = new Dimension( 5, 0 );
-	private static final Insets ACCESS_TOKEN_FIELD_INSETS = new Insets( 5, 5, 5, 5 );
-	private static final float ACCESS_TOKEN_STATUS_FONT_SCALE = 0.96f;
 
 	private OAuth2Profile profile;
 	private SimpleBindingForm oAuth2Form;
 	private JTextField clientSecretField;
+	private JPanel wrapperPanel;
 	private boolean disclosureButtonDisabled;
 	private boolean isMouseOnDisclosureLabel;
 	private JDialog accessTokenFormDialog;
-
-	private OAuth2StatusPropertyChangeListener oAuth2StatusPropertyChangeListener;
 
 	protected OAuth2AuthenticationInspector( RestRequest request )
 	{
@@ -82,7 +69,6 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		super.release();
 
 		oAuth2Form.getPresentationModel().release();
-		oAuth2StatusPropertyChangeListener.release();
 	}
 
 	@Override
@@ -102,6 +88,8 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	{
 		populateOAuth2Form( oAuth2Form );
 
+		wrapperPanel = new JPanel( new BorderLayout() );
+
 		JPanel centerPanel = oAuth2Form.getPanel();
 		setBackgroundColorOnPanel( centerPanel );
 
@@ -112,7 +100,6 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );
 		setBackgroundColorOnPanel( southPanel );
 
-		JPanel wrapperPanel = new JPanel( new BorderLayout() );
 		wrapperPanel.add( centerPanel, BorderLayout.CENTER );
 		wrapperPanel.add( southPanel, BorderLayout.SOUTH );
 
@@ -192,58 +179,28 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		advancedOptionsButton.setName( ADVANCED_OPTIONS );
 	}
 
-	// Weird that we return the refresh button, but this will be refactored anyway
 	private JButton addAccessTokenFieldAndRefreshTokenButton( SimpleBindingForm oAuth2Form )
 	{
-		// Access token field
 		JTextField accessTokenField = new JTextField();
 		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
 		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
-		accessTokenField.setMargin( ACCESS_TOKEN_FIELD_INSETS );
 		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
 
-		// Access token icon
-		JLabel accessTokenStatusIcon = new JLabel();
-		accessTokenStatusIcon.setVisible( false );
-
-		// Access token status
-		JTextArea accessTokenStatusText = new JTextArea();
-		accessTokenStatusText.setFont( scaledFont( accessTokenStatusText, ACCESS_TOKEN_STATUS_FONT_SCALE ) );
-		accessTokenStatusText.setLineWrap( true );
-		accessTokenStatusText.setColumns( 10 );
-		accessTokenStatusText.setBackground( CARD_BACKGROUND_COLOR );
-		accessTokenStatusText.setBorder( createEmptyBorder() );
-		accessTokenStatusText.setVisible( false );
-
-		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
-
-		// Refresh button
 		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
 		refreshAccessTokenButton.setName( REFRESH_ACCESS_TOKEN_BUTTON_NAME );
 		refreshAccessTokenButton.addActionListener( new RefreshOAuthAccessTokenAction( profile ) );
+
 		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
 				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
 		refreshAccessTokenButton.setVisible( enabled );
 
-		JPanel wrapperPanel = new JPanel();
-		wrapperPanel.setLayout( new BoxLayout( wrapperPanel, BoxLayout.X_AXIS ) );
+		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );
-		wrapperPanel.add( accessTokenField );
-		wrapperPanel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
-		wrapperPanel.add( accessTokenStatusIcon );
-		wrapperPanel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
-		wrapperPanel.add( accessTokenStatusText );
-		wrapperPanel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
-		wrapperPanel.add( refreshAccessTokenButton );
-		oAuth2Form.append( ACCESS_TOKEN_LABEL, wrapperPanel );
+		wrapperPanel.add( accessTokenField, BorderLayout.WEST );
+		wrapperPanel.add( refreshAccessTokenButton, BorderLayout.EAST );
+		oAuth2Form.append( "Access Token", wrapperPanel );
 
 		return refreshAccessTokenButton;
-	}
-
-	private Font scaledFont( JComponent component, float scale )
-	{
-		Font currentFont = component.getFont();
-		return currentFont.deriveFont( ( float )currentFont.getSize() * scale );
 	}
 
 	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight, int disclosureButtonHeight )
@@ -305,7 +262,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
-		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW_PROPERTY,
 				"getOAuth2Flow", "setOAuth2Flow" );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
 		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
@@ -343,9 +300,15 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, SCOPE, "" );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
-
-		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditScriptsAction( profile ) ) );
+		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
+
+		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+				"How to get an access token from an authorization server" );
+		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}
 
 	/**
@@ -353,10 +316,14 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	 */
 	private OAuth2Profile getOAuth2Profile( RestRequest request )
 	{
-		List<OAuth2Profile> oAuth2ProfileList = request.getOperation().getInterface().getProject()
-				.getOAuth2ProfileContainer().getOAuth2ProfileList();
-		checkArgument( oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project" );
-		return oAuth2ProfileList.get( 0 );
+		OAuth2ProfileContainer oAuth2ProfileContainer = request.getOperation().getInterface().getProject()
+				.getOAuth2ProfileContainer();
+		if( oAuth2ProfileContainer.getOAuth2ProfileList().isEmpty() )
+		{
+			oAuth2ProfileContainer.addNewOAuth2Profile( "OAuth 2 - Profile" );
+		}
+		return oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
+
 	}
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
@@ -443,44 +410,25 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 	}
 
-	private class OAuth2StatusPropertyChangeListener implements PropertyChangeListener
+	private class EditScriptsAction extends AbstractAction
 	{
-		private final JTextField accessTokenField;
-		private final JLabel accessTokenStatusIcon;
-		private final JTextArea accessTokenStatusText;
+		private final OAuth2Profile profile;
 
-		public OAuth2StatusPropertyChangeListener( JTextField accessTokenField, JLabel accessTokenStatusIcon, JTextArea accessTokenStatusText )
+		public EditScriptsAction( OAuth2Profile profile )
 		{
-			this.accessTokenField = accessTokenField;
-			this.accessTokenStatusIcon = accessTokenStatusIcon;
-			this.accessTokenStatusText = accessTokenStatusText;
-			profile.addPropertyChangeListener( this );
+			putValue( Action.NAME, "Edit scripts..." );
+			this.profile = profile;
 		}
 
 		@Override
-		public void propertyChange( PropertyChangeEvent evt )
+		public void actionPerformed( ActionEvent e )
 		{
-			if( evt.getPropertyName().equals( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY ) )
+			if( accessTokenFormDialog != null )
 			{
-				String status = ( String )evt.getNewValue();
-				if( status.equals( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) )
-				{
-					accessTokenField.setBackground( SUCCESS_COLOR );
-
-					accessTokenStatusIcon.setIcon( SUCCESS_ICON );
-					accessTokenStatusIcon.setVisible( true );
-
-					accessTokenStatusText.setText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() );
-					accessTokenStatusText.setVisible( true );
-
-					setIcon( SUCCESS_ICON );
-				}
+				accessTokenFormDialog.setVisible( false );
+				accessTokenFormDialog.dispose();
 			}
-		}
-
-		public void release()
-		{
-			profile.removePropertyChangeListener( this );
+			UISupport.showDesktopPanel( new OAuth2ScriptsDesktopPanel( profile ) );
 		}
 	}
 }

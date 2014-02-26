@@ -56,10 +56,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -78,6 +75,7 @@ public class UISupport
 	public static final String IMAGES_RESOURCE_PATH = "/com/eviware/soapui/resources/images";
 	public static final String TOOL_ICON_PATH = "/applications-system.png";
 	public static final String OPTIONS_ICON_PATH = "/preferences-system.png";
+	public static final int EXTENDED_ERROR_MESSAGE_THRESHOLD = 120;
 
 	// This is needed in Eclipse that has strict class loader constraints.
 	private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<ClassLoader>();
@@ -239,7 +237,7 @@ public class UISupport
 
 	public static void showErrorMessage( String message )
 	{
-		if( message != null && message.length() > 120 )
+		if( message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD )
 		{
 			dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
 		}
@@ -252,6 +250,11 @@ public class UISupport
 	public static boolean confirm( String question, String title )
 	{
 		return dialogs.confirm( question, title );
+	}
+
+	public static boolean confirm( String question, String title, Component parent )
+	{
+		return dialogs.confirm( question, title, parent );
 	}
 
 	public static int yesYesToAllOrNo( String question, String title )
@@ -646,6 +649,23 @@ public class UISupport
 
 		return panel;
 	}
+
+	public static JLabel getLabelAsLink( final String url, String labelText )
+	{
+		JLabel oAuthDocumentationLink = new JLabel( labelText );
+		oAuthDocumentationLink.setForeground( Color.BLUE );
+		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Tools.openURL( url );
+			}
+		} );
+		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return oAuthDocumentationLink;
+	}
+
 
 	public static boolean isWindows()
 	{

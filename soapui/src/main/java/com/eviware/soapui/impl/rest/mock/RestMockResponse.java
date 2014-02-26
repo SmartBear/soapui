@@ -2,7 +2,10 @@ package com.eviware.soapui.impl.rest.mock;
 
 
 import com.eviware.soapui.config.RESTMockResponseConfig;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.AbstractMockResponse;
+import com.eviware.soapui.impl.support.http.MediaType;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.ModelItem;
@@ -24,9 +27,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig>
+public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig> implements MediaType
 {
-
 	public final static String MOCKRESULT_PROPERTY = RestMockResponse.class.getName() + "@mockresult";
 
 	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
@@ -80,12 +82,6 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	public boolean isMultipartEnabled()
 	{
 		return false;
-	}
-
-	@Override
-	public String getEncoding()
-	{
-		return null;
 	}
 
 	@Override
@@ -160,13 +156,11 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	}
 
 	@Override
-	protected String getContentType( Operation operation, String encoding )
+	public String getContentType( )
 	{
-		//TODO as part of SOAP-1260
-		String contentType = "application/xml";
-		if( encoding != null && encoding.trim().length() > 0 )
-			contentType += ";charset=" + encoding;
-		return contentType;
+		if( getEncoding() != null)
+			return getMediaType() + "; " + getEncoding();
+		return getMediaType();
 	}
 
 	@Override
@@ -191,6 +185,34 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	public boolean isStripWhitespaces()
 	{
 		return false;
+	}
+
+	@Override
+	public String getMediaType()
+	{
+		return getConfig().isSetMediaType() ? getConfig().getMediaType() : RestRequestInterface.DEFAULT_MEDIATYPE;
+	}
+
+	@Override
+	public void setMediaType( String mediaType )
+	{
+		getConfig().setMediaType( mediaType );
+	}
+
+
+	public void setContentType( String contentType )
+	{
+		String[] parts = contentType.split( ";", 2 );
+		getConfig().setMediaType( parts[0] );
+
+		if( parts.length > 1 && parts[1].trim().startsWith( "charset=" ))
+		{
+			String[] encodingParts = parts[1].split( "=" );
+			if( encodingParts.length > 1)
+			{
+				setEncoding( encodingParts[1] );
+			}
+		}
 	}
 
 }

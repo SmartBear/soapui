@@ -3,7 +3,6 @@ package com.eviware.soapui.impl.support;
 import com.eviware.soapui.config.BaseMockOperationConfig;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -78,7 +77,7 @@ public abstract class AbstractMockOperation
 		return result;
 	}
 
-	public void removeMockResponse( MockResponseType mockResponse )
+	public void removeMockResponse( MockResponse mockResponse )
 	{
 		int ix = responses.indexOf( mockResponse );
 		responses.remove( ix );

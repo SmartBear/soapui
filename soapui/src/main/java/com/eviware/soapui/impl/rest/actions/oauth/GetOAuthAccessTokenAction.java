@@ -31,6 +31,7 @@ public class GetOAuthAccessTokenAction extends AbstractAction
 	public GetOAuthAccessTokenAction( OAuth2Profile target )
 	{
 		this.target = target;
+		putValue(Action.NAME, "Get Access Token");
 		putValue( Action.SHORT_DESCRIPTION, "Gets an OAuth2 access token and stores it in this profile" );
 	}
 

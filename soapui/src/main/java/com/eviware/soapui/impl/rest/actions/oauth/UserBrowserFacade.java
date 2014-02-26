@@ -22,9 +22,11 @@ interface UserBrowserFacade
 	
 	void open(URL url);
 
-	void addBrowserStateListener(BrowserStateChangeListener listener);
+	void addBrowserListener( BrowserListener listener );
 
-	void removeBrowserStateListener(BrowserStateChangeListener listener);
+	void removeBrowserStateListener(BrowserListener listener);
 
 	void close();
+
+	void executeJavaScript( String script );
 }

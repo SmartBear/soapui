@@ -18,9 +18,11 @@ import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.FestUtils.findDialog;
 import static com.smartbear.soapui.utils.fest.FestUtils.verifyButtonIsNotShowing;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItemInArray;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class OAuth2Stepdefs
 {
@@ -47,7 +49,7 @@ public class OAuth2Stepdefs
 		rootWindow = getMainWindow( robot );
 	}
 
-	@When("^clicks on the OAuth 2 Authorization Type$")
+	@When( "^selects the OAuth 2 Authorization Type$" )
 	public void clicksOnTheOAuth2AuthorizationType()
 	{
 		selectAuthorizationType( rootWindow, OAUTH_2_COMBOBOX_ITEM );

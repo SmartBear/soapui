@@ -10,7 +10,7 @@ Feature: OAuth 2 Get Access Token configuration
   Scenario: You are able to fill in Access Token field
     Given a new REST project is created
     When the user clicks on the Auth tab
-    And clicks on the OAuth 2 Authorization Type
+    And selects the OAuth 2 Authorization Type
     And enters the access token
     And switches to another Authorization type and then back again
     Then access token is present
@@ -18,7 +18,7 @@ Feature: OAuth 2 Get Access Token configuration
   Scenario: You are able to fill in the Get Access Token form
     Given a new REST project is created
     When the user clicks on the Auth tab
-    And clicks on the OAuth 2 Authorization Type
+    And selects the OAuth 2 Authorization Type
     And clicks on the disclosure button
     And and fills out all fields
     And switches to another Authorization type and then back again
@@ -28,7 +28,7 @@ Feature: OAuth 2 Get Access Token configuration
   Scenario: Get Access Token form is closed on lost focus
     Given a new REST project is created
     When the user clicks on the Auth tab
-    And clicks on the OAuth 2 Authorization Type
+    And selects the OAuth 2 Authorization Type
     And clicks on the disclosure button
     And clicks outside of the Get Access token form
     Then the Get Access token form is closed
@@ -36,7 +36,7 @@ Feature: OAuth 2 Get Access Token configuration
   Scenario: Client id field is not visible when selecting the Implicit grant flow
     Given a new REST project is created
     When the user clicks on the Auth tab
-    And clicks on the OAuth 2 Authorization Type
+    And selects the OAuth 2 Authorization Type
     And clicks on the disclosure button
     And selects the OAuth 2 flow Implicit Grant
     Then clientId field is not visible

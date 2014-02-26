@@ -39,6 +39,7 @@ Please organize it according to the following structure based on features:
 * If the test is for a upcoming version - please use the @Acceptance annotation
 * If the test is for older versions - please use the @Regression annotation
 
+
 **That's it!**
 
 

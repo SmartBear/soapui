@@ -62,12 +62,12 @@ public interface UISettings
 
 	public static final String DESKTOP_TYPE = UISettings.class.getSimpleName() + "@desktop-type";
 
+	@Setting( name = "MRU Panel Selection", description = "Activate the most recently used desktop panel when closing a panel",
+			type = SettingType.BOOLEAN, defaultValue = "true")
+	public static final String MRU_PANEL_SELECTOR = UISettings.class.getSimpleName() + "@mru_panel_selector";
+
 	@Setting( name = "Native LF", description = "(use native Look & Feel - requires restart)", type = SettingType.BOOLEAN )
 	public static final String NATIVE_LAF = UISettings.class.getSimpleName() + "@native-laf";
-
-	@Setting( name = "Disable Browser", description = "(disables integrated browser component)", type = SettingType.BOOLEAN )
-	public static final String DISABLE_BROWSER = UISettings.class.getSimpleName() + "@disable-browser";
-	public static final String DISABLE_BROWSER_PLUGINS = UISettings.class.getSimpleName() + "@disable-browser-plugins";
 
 	public final static String NO_RESIZE_REQUEST_EDITOR = UISettings.class.getSimpleName() + "@no_resize_request_editor";
 	public final static String START_WITH_REQUEST_TABS = UISettings.class.getSimpleName() + "@start_with_request_tabs";

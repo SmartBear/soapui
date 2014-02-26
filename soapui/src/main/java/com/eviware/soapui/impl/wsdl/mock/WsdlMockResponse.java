@@ -131,18 +131,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		return attachments.toArray( new Attachment[attachments.size()] );
 	}
 
-	public String getEncoding()
-	{
-		return getConfig().getEncoding();
-	}
-
-	public void setEncoding( String encoding )
-	{
-		String old = getEncoding();
-		getConfig().setEncoding( encoding );
-		notifyPropertyChanged( ENCODING_PROPERTY, old, encoding );
-	}
-
 	protected String getContentType( Operation operation, String encoding )
 	{
 		SoapVersion soapVersion = ((WsdlOperation)operation).getInterface().getSoapVersion();
@@ -339,6 +327,12 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		}
 
 		return result.toArray( new Attachment[result.size()] );
+	}
+
+	@Override
+	public String getContentType()
+	{
+		return getContentType( getOperation(), getEncoding() );
 	}
 
 	public boolean isMtomEnabled()

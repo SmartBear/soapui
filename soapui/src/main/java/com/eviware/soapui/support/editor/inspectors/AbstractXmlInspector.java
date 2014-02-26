@@ -62,6 +62,7 @@ public abstract class AbstractXmlInspector implements XmlInspector
 		active = false;
 	}
 
+	@Override
 	public ImageIcon getIcon()
 	{
 		return this.imageIcon;
