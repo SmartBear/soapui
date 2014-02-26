@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockRequest;
+import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -56,11 +57,25 @@ public class RestMockDispatcherTest
 		RestMockResult  restMockResult = mock(RestMockResult.class );
 		when( restMockService.runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ))).thenReturn( restMockResult );
 
-		RestMockResult mockResult = ( RestMockResult )restMockDispatcher.dispatchRequest( request, response );
+		restMockDispatcher.dispatchRequest( request, response );
 
 		// we would like to verify that dispatchRequest is never called but it is hard so we verify on this instead
 		verify( restMockService, never() ).findOperationMatchingPath( anyString() );
 	}
+
+
+	@Test
+	public void returnsErrorOnrequestScriptException() throws Exception
+	{
+		createRestMockDispatcher();
+		Exception runTimeException = new IllegalStateException( "wrong state" );
+		when( restMockService.runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ))).thenThrow( runTimeException );
+
+		restMockDispatcher.dispatchRequest( request, response );
+
+		verify( response ).setStatus( HttpStatus.SC_INTERNAL_SERVER_ERROR );
+	}
+
 
 	private void createRestMockDispatcher()
 	{

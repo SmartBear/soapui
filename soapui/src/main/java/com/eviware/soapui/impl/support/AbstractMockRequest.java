@@ -34,7 +34,6 @@ public abstract class AbstractMockRequest implements MockRequest
 	private XmlObject requestXmlObject;
 
 	public AbstractMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context )
-			throws Exception
 	{
 		this.request = request;
 		this.response = response;
@@ -63,14 +62,7 @@ public abstract class AbstractMockRequest implements MockRequest
 		path = request.getPathInfo();
 		if( path == null )
 			path = "";
-
-		if( "POST".equals( request.getMethod() ) )
-		{
-			initPostRequest( request, context );
-		}
 	}
-
-	protected abstract void initPostRequest( HttpServletRequest request, WsdlMockRunContext context ) throws Exception;
 
 	public String getProtocol()
 	{
