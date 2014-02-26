@@ -100,7 +100,17 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 		oAuth2Form.addSpace( TOP_SPACING );
 
-		final JButton refreshAccessTokenButton = addAccessTokenFieldAndRefreshTokenButton( oAuth2Form );
+		JTextField accessTokenField = createAccessTokenField(  );
+		JLabel accessTokenStatusIcon = createAccessTokenStatusIcon();
+		JTextArea accessTokenStatusText = createAccessTokenStatusText();
+
+		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
+		profile.addPropertyChangeListener( oAuth2StatusPropertyChangeListener );
+
+		final JButton refreshAccessTokenButton = createRefreshButton();
+
+		JPanel accessTokenRowPanel = createAccessTokenRowPanel( accessTokenField, accessTokenStatusIcon, accessTokenStatusText, refreshAccessTokenButton );
+		oAuth2Form.append( ACCESS_TOKEN_LABEL, accessTokenRowPanel );
 
 		oAuth2Form.addInputFieldHintText( "Enter existing access token, or use \"Get Token\" below." );
 
@@ -116,7 +126,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog,
 				disclosureButton ) );
 
-
 		JButton advancedOptionsButton = oAuth2Form.addButtonWithoutLabelToTheRight( ADVANCED_OPTIONS, new ActionListener()
 		{
 			@Override
@@ -128,44 +137,24 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		advancedOptionsButton.setName( ADVANCED_OPTIONS );
 	}
 
-	private JButton addAccessTokenFieldAndRefreshTokenButton( SimpleBindingForm oAuth2Form )
+	private JTextField createAccessTokenField( )
 	{
-		JTextField accessTokenField = addAccessTokenField( oAuth2Form );
-		JLabel accessTokenStatusIcon = addAccessTokenStatusIcon();
-		JTextArea accessTokenStatusText = addAccessTokenStatusText();
-
-		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
-		profile.addPropertyChangeListener( oAuth2StatusPropertyChangeListener );
-
-		final JButton refreshAccessTokenButton = addRefreshButton();
-
-		JPanel wrapperPanel = new JPanel();
-		wrapperPanel.setLayout( new BoxLayout( wrapperPanel, BoxLayout.X_AXIS ) );
-		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );
-		wrapperPanel.add( accessTokenField );
-		wrapperPanel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
-		wrapperPanel.add( accessTokenStatusIcon );
-		wrapperPanel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
-		wrapperPanel.add( accessTokenStatusText );
-		wrapperPanel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
-		wrapperPanel.add( refreshAccessTokenButton );
-		oAuth2Form.append( ACCESS_TOKEN_LABEL, wrapperPanel );
-
-		return refreshAccessTokenButton;
+		JTextField accessTokenField = new JTextField();
+		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
+		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
+		accessTokenField.setMargin( ACCESS_TOKEN_FIELD_INSETS );
+		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
+		return accessTokenField;
 	}
 
-	private JButton addRefreshButton()
+	private JLabel createAccessTokenStatusIcon()
 	{
-		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
-		refreshAccessTokenButton.setName( REFRESH_ACCESS_TOKEN_BUTTON_NAME );
-		refreshAccessTokenButton.addActionListener( new RefreshOAuthAccessTokenAction( profile ) );
-		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
-				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
-		refreshAccessTokenButton.setVisible( enabled );
-		return refreshAccessTokenButton;
+		JLabel accessTokenStatusIcon = new JLabel();
+		accessTokenStatusIcon.setVisible( false );
+		return accessTokenStatusIcon;
 	}
 
-	private JTextArea addAccessTokenStatusText()
+	private JTextArea createAccessTokenStatusText()
 	{
 		JTextArea accessTokenStatusText = new JTextArea();
 		accessTokenStatusText.setFont( scaledFont( accessTokenStatusText, ACCESS_TOKEN_STATUS_FONT_SCALE ) );
@@ -177,21 +166,30 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		return accessTokenStatusText;
 	}
 
-	private JLabel addAccessTokenStatusIcon()
+	private JButton createRefreshButton()
 	{
-		JLabel accessTokenStatusIcon = new JLabel();
-		accessTokenStatusIcon.setVisible( false );
-		return accessTokenStatusIcon;
+		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
+		refreshAccessTokenButton.setName( REFRESH_ACCESS_TOKEN_BUTTON_NAME );
+		refreshAccessTokenButton.addActionListener( new RefreshOAuthAccessTokenAction( profile ) );
+		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
+				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
+		refreshAccessTokenButton.setVisible( enabled );
+		return refreshAccessTokenButton;
 	}
 
-	private JTextField addAccessTokenField( SimpleBindingForm oAuth2Form )
+	private JPanel createAccessTokenRowPanel( JTextField accessTokenField, JLabel accessTokenStatusIcon, JTextArea accessTokenStatusText, JButton refreshAccessTokenButton )
 	{
-		JTextField accessTokenField = new JTextField();
-		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
-		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
-		accessTokenField.setMargin( ACCESS_TOKEN_FIELD_INSETS );
-		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
-		return accessTokenField;
+		JPanel panel = new JPanel();
+		panel.setLayout( new BoxLayout( panel, BoxLayout.X_AXIS ) );
+		panel.setBackground( CARD_BACKGROUND_COLOR );
+		panel.add( accessTokenField );
+		panel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
+		panel.add( accessTokenStatusIcon );
+		panel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
+		panel.add( accessTokenStatusText );
+		panel.add( Box.createRigidArea( HORIZONAL_COMPONENT_SPACING ) );
+		panel.add( refreshAccessTokenButton );
+		return panel;
 	}
 
 	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight, int disclosureButtonHeight )
