@@ -20,6 +20,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
+import com.google.common.base.Strings;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 
@@ -41,6 +42,13 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	private static final Insets ACCESS_TOKEN_FIELD_INSETS = new Insets( 5, 5, 5, 5 );
 	private static final float ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE = 0.95f;
 	private static final int ACCESS_TOKEN_STATUS_TEXT_WIDTH = 100;
+
+	private final Color SUCCESS_COLOR = new Color( 0xccffcb );
+	private final Color DEFAULT_COLOR = Color.WHITE;
+
+	// FIXME This need to be changed to the real icons
+	private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
+	private final ImageIcon WAITING_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
 
 	private final AbstractXmlInspector inspector;
 	private OAuth2Profile profile;
@@ -104,6 +112,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		JLabel accessTokenStatusIcon = createAccessTokenStatusIcon();
 		JLabel accessTokenStatusText = createAccessTokenStatusText();
 
+		setAccessTokenStatusFeedback( profile.getAccessTokenStatus(), accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
 		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
 		profile.addPropertyChangeListener( oAuth2StatusPropertyChangeListener );
 
@@ -123,8 +132,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
 
-		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog,
-				disclosureButton ) );
+		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog, disclosureButton ) );
 
 		JButton advancedOptionsButton = oAuth2Form.addButtonWithoutLabelToTheRight( ADVANCED_OPTIONS_BUTTON_NAME, new ActionListener()
 		{
@@ -190,6 +198,47 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		return panel;
 	}
 
+	private void setAccessTokenStatusFeedback( String status, JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
+	{
+		// TODO Wouldn't it be nice with a enum swich instead?
+		if( status.equals( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) )
+		{
+			accessTokenField.setBackground( SUCCESS_COLOR );
+
+			accessTokenStatusIcon.setIcon( SUCCESS_ICON );
+			accessTokenStatusIcon.setVisible( true );
+
+			accessTokenStatusText.setText( setWrappedText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) );
+			accessTokenStatusText.setVisible( true );
+
+			inspector.setIcon( SUCCESS_ICON );
+		}
+
+		if( status.equals( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString() ) )
+		{
+			accessTokenField.setBackground( DEFAULT_COLOR );
+
+			accessTokenStatusIcon.setIcon( null );
+			accessTokenStatusIcon.setVisible( false );
+
+			accessTokenStatusText.setText( "" );
+			accessTokenStatusText.setVisible( false );
+
+			inspector.setIcon( WAITING_ICON );
+		}
+	}
+
+	private Font scaledFont( JComponent component, float scale )
+	{
+		Font currentFont = component.getFont();
+		return currentFont.deriveFont( ( float )currentFont.getSize() * scale );
+	}
+
+	private String setWrappedText( String text )
+	{
+		return String.format( "<html><div WIDTH=%d>%s</div><html>", OAuth2Form.ACCESS_TOKEN_STATUS_TEXT_WIDTH, text );
+	}
+
 	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight, int disclosureButtonHeight )
 	{
 		GraphicsConfiguration currentGraphicsConfiguration = getGraphicsConfigurationForPosition( disclosureButtonLocation );
@@ -225,12 +274,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	{
 		accessTokenFormDialog.setLocation( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET,
 				( int )disclosureButtonLocation.getY() - accessTokenFormDialog.getHeight() );
-	}
-
-	private Font scaledFont( JComponent component, float scale )
-	{
-		Font currentFont = component.getFont();
-		return currentFont.deriveFont( ( float )currentFont.getSize() * scale );
 	}
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
@@ -293,7 +336,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 			this.disclosureButton = disclosureButton;
 		}
 
-
 		@Override
 		public void windowGainedFocus( WindowEvent e )
 		{
@@ -316,6 +358,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 			}
 		}
 
+		// TODO This might be extracted to a common utils class
 		private boolean isMouseOnComponent( Component component )
 		{
 			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
@@ -326,19 +369,11 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 	private class OAuth2StatusPropertyChangeListener implements PropertyChangeListener
 	{
-		private final Color SUCCESS_COLOR = new Color( 0xccffcb );
-		private final Color DEFAULT_COLOR = Color.WHITE;
+		private JTextField accessTokenField;
+		private JLabel accessTokenStatusIcon;
+		private JLabel accessTokenStatusText;
 
-		// FIXME This need to be changed to the real icons
-		private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
-		private final ImageIcon WAITING_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
-
-
-		private final JTextField accessTokenField;
-		private final JLabel accessTokenStatusIcon;
-		private final JLabel accessTokenStatusText;
-
-		public OAuth2StatusPropertyChangeListener( JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
+		private OAuth2StatusPropertyChangeListener( JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
 		{
 			this.accessTokenField = accessTokenField;
 			this.accessTokenStatusIcon = accessTokenStatusIcon;
@@ -348,45 +383,13 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			if( evt.getPropertyName().equals( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY ) )
-			{
-				// TODO Could we avoid working with strings?
-				String status = ( String )evt.getNewValue();
-				if( status.equals( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) )
-				{
-					accessTokenField.setBackground( SUCCESS_COLOR );
-
-					accessTokenStatusIcon.setIcon( SUCCESS_ICON );
-					accessTokenStatusIcon.setVisible( true );
-
-					accessTokenStatusText.setText( setWrappedText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) );
-					accessTokenStatusText.setVisible( true );
-
-					inspector.setIcon( SUCCESS_ICON );
-				}
-				else if( status.equals( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString() ) )
-				{
-					accessTokenField.setBackground( DEFAULT_COLOR );
-
-					accessTokenStatusIcon.setIcon( null );
-					accessTokenStatusIcon.setVisible( false );
-
-					accessTokenStatusText.setText( "" );
-					accessTokenStatusText.setVisible( false );
-
-					inspector.setIcon( WAITING_ICON );
-				}
-			}
+			String newStatusValue = Strings.nullToEmpty( ( String )evt.getNewValue() );
+			setAccessTokenStatusFeedback( newStatusValue, accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
 		}
 
 		public void release()
 		{
 			profile.removePropertyChangeListener( this );
 		}
-	}
-
-	private String setWrappedText( String text )
-	{
-		return String.format( "<html><div WIDTH=%d>%s</div><html>", OAuth2Form.ACCESS_TOKEN_STATUS_TEXT_WIDTH, text );
 	}
 }
