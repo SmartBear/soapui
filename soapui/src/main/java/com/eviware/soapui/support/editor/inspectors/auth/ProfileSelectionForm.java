@@ -232,6 +232,13 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			return;
 		}
 
+		if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( newName ) )
+		{
+			UISupport.showErrorMessage( "There is already a profile named '" + newName + "'" );
+			profileSelectionComboBox.setSelectedItem( profileOldName );
+			return;
+		}
+
 		OAuth2Profile profile = getOAuth2ProfileContainer().getProfileByName( profileOldName );
 		profile.setName( newName );
 		request.setSelectedAuthProfile( newName );

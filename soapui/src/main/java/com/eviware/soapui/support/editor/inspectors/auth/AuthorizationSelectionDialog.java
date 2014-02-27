@@ -84,7 +84,6 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 				UISupport.showErrorMessage( "There is already a profile named '" + profileName + "'" );
 				return;
 			}
-			//TODO: check for unique profileName
 			final OAuth2Profile profile = getOAuth2ProfileContainer().addNewOAuth2Profile( profileName );
 
 			request.setSelectedAuthProfile( profile.getName() );
