@@ -30,8 +30,8 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 
 /**
@@ -90,7 +90,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		cardPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 
-		cardPanel.add( new JPanel(), EMPTY_PANEL );
+		cardPanel.add( createEmptyPanel(), EMPTY_PANEL );
 		innerPanel.add( cardPanel, BorderLayout.CENTER );
 
 		BasicAuthenticationForm<T> authenticationForm = new BasicAuthenticationForm<T>( request );
@@ -103,6 +103,21 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 
 		outerPanel.add( new JScrollPane( innerPanel ), BorderLayout.CENTER );
+	}
+
+	private JPanel createEmptyPanel()
+	{
+		JPanel panelWithText = new JPanel( new BorderLayout() );
+		String helpText = "<html><body><div style=\"text-align:center\">This request currently has no authorization configuration associated with it." +
+				"<br>If you need to access a protected service, just add your " +
+				"<br>configuration here, using the drop down above.</div></body></html>";
+		JLabel label = new JLabel( helpText );
+		label.setHorizontalAlignment( SwingConstants.CENTER );
+		panelWithText.add( label, BorderLayout.CENTER );
+		panelWithText.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( AbstractAuthenticationForm.CARD_BORDER_COLOR ),
+				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
+		panelWithText.setBackground( AbstractAuthenticationForm.CARD_BACKGROUND_COLOR );
+		return panelWithText;
 	}
 
 	private boolean isSoapRequest( T request )
@@ -138,7 +153,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		profileSelectionComboBox = new JComboBox<String>( existingProfiles );
 		profileSelectionComboBox.setName( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
-		profileSelectionComboBox.addActionListener( new ProfileSelectionListener() );
+		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
 	}
 
 	private void setAuthenticationTypeAndShowCard( String selectedOption )
@@ -248,6 +263,13 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void deleteCurrentProfile( String profileName )
 	{
+		boolean confirmedDeletion = UISupport.confirm( "Do you really want to delete profile '" + profileName + "' ?", "Delete Profile" );
+		if( !confirmedDeletion )
+		{
+			refreshProfileSelectionComboBox( profileName );
+			return;
+		}
+
 		if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( profileName ) )
 		{
 			getOAuth2ProfileContainer().removeProfile( profileName );
@@ -256,15 +278,16 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			request.removeBasicAuthenticationProfile( profileName );
 		}
-
 		refreshProfileSelectionComboBox( NO_AUTHORIZATION );
 	}
 
 	private void refreshProfileSelectionComboBox( String selectedProfile )
 	{
 		profileSelectionComboBox.setModel( new DefaultComboBoxModel( createOptionsForAuthorizationCombo( selectedProfile ) ) );
-		profileSelectionComboBox.removeActionListener( profileSelectionComboBox.getActionListeners()[0] );
-		profileSelectionComboBox.addActionListener( new ProfileSelectionListener() );
+
+		profileSelectionComboBox.removeItemListener( profileSelectionComboBox.getItemListeners()[0] );
+		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
+
 		profileSelectionComboBox.setSelectedItem( selectedProfile );
 	}
 
@@ -308,7 +331,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			}
 		}
 
-		if( options.size() <= 1 )
+		if( options.size() <= 1 || NO_AUTHORIZATION.equals( selectedAuthProfile ) )
 		{
 			addEditOptions.remove( AddEditOptions.DELETE.getDescription() );
 		}
@@ -364,16 +387,23 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 	}
 
-
-	private class ProfileSelectionListener implements ActionListener
+	private class ProfileSelectionListener implements ItemListener
 	{
 		@Override
-		public void actionPerformed( ActionEvent e )
+		public void itemStateChanged( ItemEvent e )
 		{
-			Object selectedItem = profileSelectionComboBox.getSelectedItem();
-			if( selectedItem != null )
+			if( e.getStateChange() == ItemEvent.SELECTED )
 			{
-				setAuthenticationTypeAndShowCard( selectedItem.toString() );
+				String selectedProfile = ( String )e.getItem();
+
+				setAuthenticationTypeAndShowCard( selectedProfile );
+				if( !getAddEditOptions().contains( selectedProfile ) )
+				{
+					DefaultComboBoxModel profileComboBoXModel = new DefaultComboBoxModel(
+							createOptionsForAuthorizationCombo( selectedProfile ) );
+					profileComboBoXModel.setSelectedItem( selectedProfile );
+					profileSelectionComboBox.setModel( profileComboBoXModel );
+				}
 			}
 		}
 	}
