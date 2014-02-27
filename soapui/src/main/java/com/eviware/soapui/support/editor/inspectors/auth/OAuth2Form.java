@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
-import com.eviware.soapui.impl.wsdl.support.Constants;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -24,15 +24,10 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicHTML;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.LinkedList;
-
-import static javax.swing.BorderFactory.createEmptyBorder;
 
 public class OAuth2Form extends AbstractAuthenticationForm
 {
@@ -298,6 +293,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 			this.disclosureButton = disclosureButton;
 		}
 
+
 		@Override
 		public void windowGainedFocus( WindowEvent e )
 		{
@@ -307,22 +303,35 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		@Override
 		public void windowLostFocus( WindowEvent e )
 		{
-			accessTokenFormDialog.setVisible( false );
-			disclosureButton.setText( "▼ Get Token" );
-			// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
-			// will then show the dialog directly again.
-			if( !isMouseOnDisclosureLabel )
+			if( isMouseOnComponent( SoapUI.getFrame() ) && !isMouseOnComponent( accessTokenFormDialog ) )
 			{
-				disclosureButtonDisabled = false;
+				accessTokenFormDialog.setVisible( false );
+				disclosureButton.setText( "▼ Get Token" );
+				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
+				// will then show the dialog directly again.
+				if( !isMouseOnDisclosureLabel )
+				{
+					disclosureButtonDisabled = false;
+				}
 			}
+		}
+
+		private boolean isMouseOnComponent( Component component )
+		{
+			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
+			Point componentLocationOnScreen = component.getLocationOnScreen();
+			return component.contains( mouseLocation.x - componentLocationOnScreen.x, mouseLocation.y - componentLocationOnScreen.y );
 		}
 	}
 
 	private class OAuth2StatusPropertyChangeListener implements PropertyChangeListener
 	{
 		private final Color SUCCESS_COLOR = new Color( 0xccffcb );
-		// FIXME This need to be changed to the real icon
-		private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.gif" );
+		private final Color DEFAULT_COLOR = Color.WHITE;
+
+		// FIXME This need to be changed to the real icons
+		private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
+		private final ImageIcon WAITING_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
 
 
 		private final JTextField accessTokenField;
@@ -341,6 +350,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		{
 			if( evt.getPropertyName().equals( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY ) )
 			{
+				// TODO Could we avoid working with strings?
 				String status = ( String )evt.getNewValue();
 				if( status.equals( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) )
 				{
@@ -350,10 +360,21 @@ public class OAuth2Form extends AbstractAuthenticationForm
 					accessTokenStatusIcon.setVisible( true );
 
 					accessTokenStatusText.setText( setWrappedText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) );
-
 					accessTokenStatusText.setVisible( true );
 
 					inspector.setIcon( SUCCESS_ICON );
+				}
+				else if( status.equals( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString() ) )
+				{
+					accessTokenField.setBackground( DEFAULT_COLOR );
+
+					accessTokenStatusIcon.setIcon( null );
+					accessTokenStatusIcon.setVisible( false );
+
+					accessTokenStatusText.setText( "" );
+					accessTokenStatusText.setVisible( false );
+
+					inspector.setIcon( WAITING_ICON );
 				}
 			}
 		}

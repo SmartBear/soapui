@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.support.UISupport;
@@ -26,17 +27,16 @@ import java.awt.event.ItemListener;
 
 import static javax.swing.BorderFactory.*;
 
-/**
- *
- */
 public class OAuth2AccessTokenForm
 {
 
-	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
-	public static final int NORMAL_SPACING = 10;
-	public static final int GROUP_SPACING = 20;
-	public static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
-	public static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
+	private static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
+	private static final String GET_ACCESS_TOKEN_BUTTON_NAME = "getAccessTokenButtonName";
+	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
+	private static final int NORMAL_SPACING = 10;
+	private static final int GROUP_SPACING = 20;
+	private static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
+	private static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
 
 	private OAuth2Profile profile;
 
@@ -101,7 +101,8 @@ public class OAuth2AccessTokenForm
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
-		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		JButton getAccessTokenButton = accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		getAccessTokenButton.setName( GET_ACCESS_TOKEN_BUTTON_NAME );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 
 		JLabel accessTokenDocumentationLink = UISupport.getLabelAsLink( "http://www.soapui.org",
@@ -113,6 +114,8 @@ public class OAuth2AccessTokenForm
 	{
 		final JDialog accessTokenFormDialog = new JDialog();
 		accessTokenFormDialog.setName( ACCESS_TOKEN_FORM_DIALOG_NAME );
+		accessTokenFormDialog.setTitle( ACCESS_TOKEN_FORM_DIALOG_TITLE );
+		accessTokenFormDialog.setIconImages( SoapUI.getFrameIcons() );
 		accessTokenFormDialog.setUndecorated( true );
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
 
