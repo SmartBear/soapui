@@ -90,7 +90,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		for( MockOperation operation : getMockOperationList() )
 		{
 
-			String path = ( ( RestMockAction )operation ).getPath();
+			String path = ( ( RestMockAction )operation ).getResourcePath();
 
 			if( path.equals( requestPath ) )
 			{

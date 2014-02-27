@@ -5,7 +5,10 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.commons.httpclient.HttpStatus;
+import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Spy;
 
@@ -15,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -114,6 +119,16 @@ public class RestMockActionTest
 		assertThat( mockResult.getMockResponse().getName(), is( mockServiceName ) );
 	}
 
+	@Test
+	public void shouldSetPath()
+	{
+		String updatedPath = "an/updatedpath";
+		assertNotSame( updatedPath, mockAction.getResourcePath() );
+
+		mockAction.setResourcePath( updatedPath );
+
+		assertThat( mockAction.getResourcePath(), is( updatedPath ) );
+	}
 
 	private RestMockRequest makeRestMockRequest() throws Exception
 	{

@@ -20,8 +20,10 @@ public class RestMockActionPanelBuilder  extends EmptyPanelBuilder<RestMockActio
 	{
 		JPropertiesTable<RestMockAction> table = new JPropertiesTable<RestMockAction>( "Mock Action" );
 		table = new JPropertiesTable<RestMockAction>( "MockAction Properties" );
-		table.addProperty( "Name", "name", true );
-		table.addProperty( "Description", "description", true );
+		boolean editable = true;
+		table.addProperty( "Name", "name", editable );
+		table.addProperty( "Description", "description", editable );
+		table.addProperty( "Resource path", "resourcePath", editable );
 		table.setPropertyObject( mockAction );
 
 		return table;
