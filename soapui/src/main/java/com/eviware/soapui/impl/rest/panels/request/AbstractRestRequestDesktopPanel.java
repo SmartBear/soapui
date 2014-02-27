@@ -107,7 +107,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JComponent submitButton = super.getSubmitButton();
 			topToolBar.add( submitButton );
-			topToolBar.add( cancelButton );
+			topToolBar.add( getCancelButton() );
 
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
 			insertButtons( topToolBar );
@@ -115,13 +115,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
 
-			JComponent endpointCombo = buildEndpointComponent();
-			super.setEndpointComponent( endpointCombo );
+			JPanel comboBoxPanel = buildEndpointPanel();
 
 			JLabel endPointLabel = new JLabel( "Endpoint" );
 
 			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
-			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
+			endpointPanel.add( comboBoxPanel, BorderLayout.SOUTH );
 
 			topToolBar.add( Box.createHorizontalStrut( 4 ) );
 			topToolBar.addWithOnlyMinimumHeight( endpointPanel );
@@ -131,8 +130,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			addTopToolbarComponents( topToolBar );
 
 			topToolBar.add( Box.createHorizontalGlue() );
-			topToolBar.add( tabsButton );
-			topToolBar.add( splitButton );
+			topToolBar.add( getTabsButton() );
+			topToolBar.add( getSplitButton() );
 			topToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
 			int maximumPreferredHeight = findMaximumPreferredHeight( topToolBar ) + 6;
 			topToolBar.setPreferredSize( new Dimension( 600, Math.max( maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
@@ -295,10 +294,10 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			if( evt.getPropertyName().equals( Interface.ENDPOINT_PROPERTY ) )
 			{
-				Object currentEndpoint = endpointsModel.getSelectedItem();
+				Object currentEndpoint = getEndpointsModel().getSelectedItem();
 				if( currentEndpoint != null && currentEndpoint.equals( evt.getOldValue() ) )
 				{
-					endpointsModel.setSelectedItem( evt.getNewValue() );
+					getEndpointsModel().setSelectedItem( evt.getNewValue() );
 				}
 			}
 		}

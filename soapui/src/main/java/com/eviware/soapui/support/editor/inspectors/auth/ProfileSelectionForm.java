@@ -21,7 +21,6 @@ import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -37,12 +36,19 @@ import com.eviware.x.impl.swing.JComboBoxFormField;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -92,7 +98,10 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public void release()
 	{
 		super.release();
-		oAuth2Form.release();
+		if( oAuth2Form != null )
+		{
+			oAuth2Form.release();
+		}
 	}
 
 	protected void buildUI()
@@ -208,7 +217,6 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void showSelectAuthorizationTypeForm()
 	{
-		DefaultActionList actions = new DefaultActionList( "Actions" );
 		final XFormDialog dialog = ADialogBuilder.buildDialog( AuthorizationTypeForm.class );
 
 		ArrayList<String> options = new ArrayList<String>();
@@ -319,7 +327,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	{
 		for( OAuth2Profile profile : getOAuth2ProfileList() )
 		{
-			if( profile.getName().equals( profileName ) )
+			if( profile.getName() != null && profile.getName().equals( profileName ) )
 			{
 				return profile;
 			}

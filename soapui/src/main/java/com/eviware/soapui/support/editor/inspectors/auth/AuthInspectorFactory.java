@@ -12,7 +12,6 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
-import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -32,13 +31,7 @@ public class AuthInspectorFactory implements RequestInspectorFactory
 
 	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		// FIXME No need for this if check
-		if( modelItem instanceof RestRequest )
-		{
-//			return new OAuth2AuthenticationInspector( ( RestRequest )modelItem );
-			return new ProfileSelectionForm( ( AbstractHttpRequest )modelItem );
-		}
-		else if( modelItem instanceof WsdlRequest )
+		if( modelItem instanceof WsdlRequest )
 		{
 			return new WSSAuthenticationInspector( ( WsdlRequest )modelItem );
 		}

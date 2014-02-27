@@ -34,8 +34,12 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.actions.ChangeSplitPaneOrientationAction;
+import com.eviware.soapui.support.components.Inspector;
 import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
+import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
+import com.eviware.soapui.support.editor.inspectors.auth.ProfileSelectionForm;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView.JEditorStatusBarTargetProxy;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -52,6 +56,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -63,12 +68,16 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Abstract DesktopPanel for HttpRequests
@@ -81,13 +90,14 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 {
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
 
+	protected  EndpointsComboBoxModel endpointsModel;
 
-	private JComponent endpointComponent;
 	private JButton submitButton;
-	protected JButton cancelButton;
-	protected EndpointsComboBoxModel endpointsModel;
+	private JButton cancelButton;
+	private JLabel lockIcon;
+	private JComponent endpointComponent;
 	private JEditorStatusBarWithProgress statusBar;
-	protected JButton splitButton;
+	private JButton splitButton;
 	private Submit submit;
 	private JSplitPane requestSplitPane;
 	private MoveFocusAction moveFocusAction;
@@ -99,7 +109,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	private JTabbedPane requestTabs;
 	private JPanel requestTabPanel;
-	protected JToggleButton tabsButton;
+	private JToggleButton tabsButton;
 
 	private boolean responseHasFocus;
 	private SubmitAction submitAction;
@@ -137,9 +147,25 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		return endpointsModel;
 	}
 
+
 	public void setEndpointComponent( JComponent endpointComponent )
 	{
 		this.endpointComponent = endpointComponent;
+	}
+
+	public JButton getCancelButton()
+	{
+		return cancelButton;
+	}
+
+	public JButton getSplitButton()
+	{
+		return splitButton;
+	}
+
+	public JToggleButton getTabsButton()
+	{
+		return tabsButton;
 	}
 
 	protected void init( T2 request )
@@ -283,7 +309,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 
 	protected JComponent buildToolbar()
 	{
-		endpointComponent = buildEndpointComponent();
+		JPanel endpointPanel = buildEndpointPanel();
 
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( submitButton );
@@ -295,7 +321,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		if( endpointComponent != null )
 		{
 			toolbar.addSeparator();
-			toolbar.add( endpointComponent );
+
+			toolbar.add( endpointPanel);
 		}
 
 		toolbar.add( Box.createHorizontalGlue() );
@@ -358,6 +385,52 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		statusBar.setIndeterminate( !enabled );
 	}
 
+	protected void buildLockIcon()
+	{
+		lockIcon = new JLabel( UISupport.createImageIcon( "/lock.png" ) );
+		lockIcon.setVisible( isAuthActivated( getRequest().getAuthType() ) );
+		lockIcon.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		lockIcon.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Inspector inspector = getRequestEditor().getInspector( AuthInspectorFactory.INSPECTOR_ID );
+				if( inspector != null)
+				{
+					(( AbstractXmlInspector )inspector).showInPanel();
+				}
+			}
+		}
+		);
+		getRequest().addPropertyChangeListener( AbstractHttpRequest.SELECTED_AUTH_PROFILE_PROPERTY_NAME, new PropertyChangeListener()
+		{
+			@Override
+			public void propertyChange( PropertyChangeEvent evt )
+			{
+				lockIcon.setVisible( isAuthActivated( ( String )evt.getNewValue() ) );
+			}
+		} );
+
+	}
+
+	protected boolean isAuthActivated( String authType )
+	{
+		return authType != null && !( authType.equals( ProfileSelectionForm.NO_AUTHORIZATION ) );
+	}
+
+	protected JPanel buildEndpointPanel()
+	{
+		JComponent endpointCombo = buildEndpointComponent();
+		setEndpointComponent( endpointCombo );
+
+		JPanel comboBoxPanel = new JPanel( new BorderLayout( 0, 0 ) );
+		buildLockIcon();
+		comboBoxPanel.add( lockIcon, BorderLayout.WEST );
+		comboBoxPanel.add( endpointCombo, BorderLayout.CENTER );
+		return comboBoxPanel;
+	}
+
 	public abstract class AbstractHttpRequestMessageEditor<T3 extends XmlDocument> extends
 			RequestMessageXmlEditor<T2, T3>
 	{
@@ -402,6 +475,8 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				inputArea.removeFocusListener( inputAreaFocusListener );
 			}
 		}
+
+
 	}
 
 	public abstract class AbstractHttpResponseMessageEditor<T3 extends XmlDocument> extends
