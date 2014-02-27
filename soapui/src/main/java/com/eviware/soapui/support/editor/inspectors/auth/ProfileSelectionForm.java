@@ -82,6 +82,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	protected void buildUI()
 	{
 		JPanel innerPanel = new JPanel( new BorderLayout() );
+		innerPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
 
 		JPanel comboBoxPanel = createAuthorizationLabelAndComboBox();
 
@@ -111,9 +112,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private JPanel createAuthorizationLabelAndComboBox()
 	{
-		FormLayout formLayout = new FormLayout( "5px:none,left:pref,10px,left:default,5px:grow(1.0)" );
+		FormLayout formLayout = new FormLayout( "5px:none,left:pref,40px,left:default,5px:grow(1.0)" );
 		JPanel comboBoxPanel = new JPanel( formLayout );
-		comboBoxPanel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 0, 10 ) );
+		comboBoxPanel.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
 
 		JLabel authorizationLabel = new JLabel( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
 		authorizationLabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
@@ -124,7 +125,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		createProfileSelectionComboBox();
 		comboBoxPanel.add( profileSelectionComboBox, cc.xy( 4, 1 ) );
 
-		JPanel wrapperPanel = new JPanel( new BorderLayout() );
+		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.add( comboBoxPanel, BorderLayout.LINE_START );
 		wrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( "http://www.soapui.org" ) ),
 				BorderLayout.AFTER_LINE_ENDS );
@@ -163,7 +164,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
 		{
-			request.setAuthType( CredentialsConfig.AuthType.O_AUTH_2.toString() );
+			request.setAuthType( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 			OAuth2Form oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ) );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
 			showCard( OAUTH_2_FORM_LABEL );

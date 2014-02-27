@@ -572,7 +572,7 @@
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
                         <xsd:enumeration value="NTLM"></xsd:enumeration>
                         <xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
-                        <xsd:enumeration value="OAuth 2"></xsd:enumeration>
+                        <xsd:enumeration value="OAuth 2.0"></xsd:enumeration>
                     </xsd:restriction>
         		</xsd:simpleType>
         	</xsd:element>

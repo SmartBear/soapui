@@ -57,10 +57,10 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 		authTypes.removeAll( request.getBasicAuthenticationProfiles() );
 		if( request instanceof RestRequest )
 		{
-			authTypes.add( CredentialsConfig.AuthType.O_AUTH_2.toString() );
+			authTypes.add( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 
 			int nextProfileIndex = getOAuth2ProfileContainer().getOAuth2ProfileList().size() + 1;
-			profileNameField.setValue( "OAuth 2 - Profile " + nextProfileIndex );
+			profileNameField.setValue( "OAuth 2.0 - Profile " + nextProfileIndex );
 		}
 
 		setAuthTypeComboBoxOptions( dialog, authTypes );
@@ -76,7 +76,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 	{
 		final String authType = dialog.getValue( AuthorizationTypeForm.AUTHORIZATION_TYPE );
 
-		if( CredentialsConfig.AuthType.O_AUTH_2.toString().equals( authType ) )
+		if( CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType ) )
 		{
 			final String profileName = dialog.getValue( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
 			if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( profileName ) )
@@ -126,7 +126,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 
 	private void setProfileNameAndHintTextVisibility( String authorizationType )
 	{
-		if( authorizationType.equals( CredentialsConfig.AuthType.O_AUTH_2.toString() ) )
+		if( authorizationType.equals( CredentialsConfig.AuthType.O_AUTH_2_0.toString() ) )
 		{
 			( ( JLabel )profileNameField.getComponent().getClientProperty( "labeledBy" ) ).setVisible( true );
 			profileNameField.getComponent().setVisible( true );

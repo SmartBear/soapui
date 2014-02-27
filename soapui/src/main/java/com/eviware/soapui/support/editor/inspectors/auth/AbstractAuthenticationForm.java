@@ -52,7 +52,8 @@ public abstract class AbstractAuthenticationForm
 
 	protected void setBorderAndBackgroundColorOnPanel( JPanel panel )
 	{
-		panel.setBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ) );
+		panel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ),
+				BorderFactory.createEmptyBorder( 10, 10, 10, 10 )) );
 		setBackgroundColorOnPanel( panel );
 	}
 

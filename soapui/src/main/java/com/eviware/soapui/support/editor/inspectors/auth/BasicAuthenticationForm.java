@@ -34,10 +34,12 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 	protected JPanel buildUI()
 	{
 		SimpleBindingForm basicAuthenticationForm = new SimpleBindingForm( new PresentationModel<T>( request ) );
-		setBorderAndBackgroundColorOnPanel( basicAuthenticationForm.getPanel() );
 		populateBasicForm( basicAuthenticationForm );
 
-		return basicAuthenticationForm.getPanel();
+		JPanel panel = basicAuthenticationForm.getPanel();
+		setBorderAndBackgroundColorOnPanel( panel );
+
+		return panel;
 	}
 
 	protected void populateBasicForm( SimpleBindingForm basicConfigurationForm )
