@@ -801,6 +801,7 @@ public class SoapUI
 		public void windowClosed( WindowEvent e )
 		{
 			System.out.println( "exiting.." );
+			SoapUI.getSoapUITimer().cancel();
 			System.exit( 0 );
 		}
 	}
