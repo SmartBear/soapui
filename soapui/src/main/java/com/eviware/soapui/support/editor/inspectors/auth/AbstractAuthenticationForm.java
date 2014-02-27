@@ -29,6 +29,7 @@ public abstract class AbstractAuthenticationForm
 	public static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
 	public static final Color CARD_BACKGROUND_COLOR = new Color( 228, 228, 228 );
 	public static final int TOP_SPACING = 10;
+	public static final int GROUP_SPACING = 20;
 
 	public JPanel getComponent()
 	{

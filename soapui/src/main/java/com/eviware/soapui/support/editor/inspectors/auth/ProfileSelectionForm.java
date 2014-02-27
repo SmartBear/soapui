@@ -15,8 +15,10 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -41,6 +43,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public static final String AUTHORIZATION_TYPE_COMBO_BOX_NAME = "Authorization:";
 
 	public static final String BASIC_FORM_LABEL = "Legacy form";
+	public static final String WSS_FORM_LABEL = "WSS form";
 
 	public static final String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
@@ -92,7 +95,18 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		BasicAuthenticationForm<T> authenticationForm = new BasicAuthenticationForm<T>( request );
 		cardPanel.add( authenticationForm.getComponent(), BASIC_FORM_LABEL );
 
+		if( isSoapRequest( request ) )
+		{
+			WSSAuthenticationForm wssAuthenticationForm = new WSSAuthenticationForm( ( WsdlRequest )request );
+			cardPanel.add( wssAuthenticationForm.getComponent(), WSS_FORM_LABEL );
+		}
+
 		outerPanel.add( new JScrollPane( innerPanel ), BorderLayout.CENTER );
+	}
+
+	private boolean isSoapRequest( T request )
+	{
+		return request instanceof WsdlRequest;
 	}
 
 	private JPanel createAuthorizationLabelAndComboBox()
@@ -107,7 +121,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		formLayout.appendRow( new RowSpec( "top:pref" ) );
 		comboBoxPanel.add( authorizationLabel, cc.xy( 2, 1 ) );
 
-		createProfileSelectionComboBox(  );
+		createProfileSelectionComboBox();
 		comboBoxPanel.add( profileSelectionComboBox, cc.xy( 4, 1 ) );
 
 		JPanel wrapperPanel = new JPanel( new BorderLayout() );
@@ -117,7 +131,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		return wrapperPanel;
 	}
 
-	private void createProfileSelectionComboBox(  )
+	private void createProfileSelectionComboBox()
 	{
 		String[] existingProfiles = createOptionsForAuthorizationCombo( request.getSelectedAuthProfile() );
 
@@ -134,19 +148,27 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			return;
 		}
 		request.setSelectedAuthProfile( selectedOption );
-		if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
+
+		if( getBasicAuthenticationTypes().contains( selectedOption ) )
+		{
+			request.setAuthType( selectedOption );
+			if( isSoapRequest( request ) )
+			{
+				showCard( WSS_FORM_LABEL );
+			}
+			else
+			{
+				showCard( BASIC_FORM_LABEL );
+			}
+		}
+		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
 		{
 			request.setAuthType( CredentialsConfig.AuthType.O_AUTH_2.toString() );
 			OAuth2Form oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ) );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
 			showCard( OAUTH_2_FORM_LABEL );
 		}
-		else if( getBasicAuthenticationTypes().contains( selectedOption ) )
-		{
-			request.setAuthType( selectedOption );
-			showCard( BASIC_FORM_LABEL );
-		}
-		else
+		else    //selectedItem : No Authorization
 		{
 			request.setAuthType( null );
 			showCard( EMPTY_PANEL );
@@ -197,7 +219,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private void renameCurrentProfile( String profileOldName )
 	{
 		String newName = UISupport.prompt( "Specify name of Profile", "Rename Profile", profileOldName );
-		if( newName == null || profileOldName.equals( newName ))
+		if( newName == null || profileOldName.equals( newName ) )
 		{
 			profileSelectionComboBox.setSelectedItem( profileOldName );
 			return;
@@ -218,7 +240,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void deleteCurrentProfile( String profileName )
 	{
-		if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( profileName ) )
+		if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( profileName ) )
 		{
 			getOAuth2ProfileContainer().removeProfile( profileName );
 		}
@@ -264,14 +286,18 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	{
 		ArrayList<String> options = new ArrayList<String>();
 		options.add( NO_AUTHORIZATION );
-		ArrayList<String> oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
-		options.addAll( oAuth2Profiles );
 		options.addAll( request.getBasicAuthenticationProfiles() );
 
 		ArrayList<String> addEditOptions = getAddEditOptions();
-		if( !oAuth2Profiles.contains( selectedAuthProfile ) )
+		if( isRestRequest( request ) )
 		{
-			addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
+			ArrayList<String> oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
+			options.addAll( oAuth2Profiles );
+
+			if( !oAuth2Profiles.contains( selectedAuthProfile ) )
+			{
+				addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
+			}
 		}
 
 		if( options.size() <= 1 )
@@ -282,7 +308,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		options.add( "------------------" );
 		options.addAll( addEditOptions );
 
-		return options.toArray( new String[oAuth2Profiles.size()] );
+		return options.toArray( new String[options.size()] );
+	}
+
+	private boolean isRestRequest( T request )
+	{
+		return request instanceof RestRequest;
 	}
 
 	private ArrayList<String> getAddEditOptions()

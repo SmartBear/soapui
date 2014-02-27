@@ -23,7 +23,7 @@ import javax.swing.*;
  */
 public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
 {
-	private T request;
+	protected T request;
 
 	public BasicAuthenticationForm(T request)
 	{
@@ -40,7 +40,7 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		return basicAuthenticationForm.getPanel();
 	}
 
-	private void populateBasicForm( SimpleBindingForm basicConfigurationForm )
+	protected void populateBasicForm( SimpleBindingForm basicConfigurationForm )
 	{
 		initForm( basicConfigurationForm );
 

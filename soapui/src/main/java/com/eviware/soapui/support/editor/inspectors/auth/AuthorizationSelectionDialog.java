@@ -7,6 +7,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.x.form.XFormDialog;
@@ -30,6 +31,8 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 {
 
 	private T request;
+	private JTextFieldFormField profileNameField;
+	private JLabelFormField hintTextLabel;
 
 	public AuthorizationSelectionDialog( T request )
 	{
@@ -39,100 +42,100 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 
 	private void buildAndShowDialog()
 	{
-		FormLayout layout = new FormLayout( "5px,100px,5px,left:default,5px:grow(1.0)"  );
+		FormLayout layout = new FormLayout( "5px,100px,5px,left:default,5px:grow(1.0)" );
 		final XFormDialog dialog = ADialogBuilder.buildDialog( AuthorizationTypeForm.class, null, layout );
 
+		profileNameField = ( JTextFieldFormField )dialog.getFormField( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
+		profileNameField.addFormFieldListener( new ProfileNameFieldListener( dialog ) );
+
+		hintTextLabel = ( JLabelFormField )dialog.getFormField( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL );
+		setHintTextColor();
+
+		setProfileNameAndHintTextVisibility( request.getAuthType() );
+
+		ArrayList<String> authTypes = getBasicAuthenticationTypes();
+		authTypes.removeAll( request.getBasicAuthenticationProfiles() );
+		if( request instanceof RestRequest )
+		{
+			authTypes.add( CredentialsConfig.AuthType.O_AUTH_2.toString() );
+
+			int nextProfileIndex = getOAuth2ProfileContainer().getOAuth2ProfileList().size() + 1;
+			profileNameField.setValue( "OAuth 2 - Profile " + nextProfileIndex );
+		}
+
+		setAuthTypeComboBoxOptions( dialog, authTypes );
+
+		dialog.setValue( AuthorizationTypeForm.AUTHORIZATION_TYPE, request.getAuthType() );
+		if( dialog.show() )
+		{
+			createProfileForSelectedAuthType( dialog );
+		}
+	}
+
+	private void createProfileForSelectedAuthType( XFormDialog dialog )
+	{
+		final String authType = dialog.getValue( AuthorizationTypeForm.AUTHORIZATION_TYPE );
+
+		if( CredentialsConfig.AuthType.O_AUTH_2.toString().equals( authType ) )
+		{
+			final String profileName = dialog.getValue( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
+			if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( profileName ) )
+			{
+				UISupport.showErrorMessage( "There is already a profile named '" + profileName + "'" );
+				return;
+			}
+			//TODO: check for unique profileName
+			final OAuth2Profile profile = getOAuth2ProfileContainer().addNewOAuth2Profile( profileName );
+
+			request.setSelectedAuthProfile( profile.getName() );
+		}
+		else
+		{
+			request.addBasicAuthenticationProfile( authType );
+			request.setSelectedAuthProfile( authType );
+		}
+	}
+
+	private void setAuthTypeComboBoxOptions( XFormDialog dialog, ArrayList<String> options )
+	{
+		JComboBoxFormField authTypesComboBox = ( JComboBoxFormField )dialog.getFormField( AuthorizationTypeForm.AUTHORIZATION_TYPE );
+		authTypesComboBox.setOptions( options.toArray( new String[options.size()] ) );
+		authTypesComboBox.addFormFieldListener( new XFormFieldListener()
+		{
+			@Override
+			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+			{
+				setProfileNameAndHintTextVisibility( newValue );
+			}
+		} );
+	}
+
+	private ArrayList<String> getBasicAuthenticationTypes()
+	{
 		ArrayList<String> options = new ArrayList<String>();
 		options.add( CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString() );
 		options.add( CredentialsConfig.AuthType.PREEMPTIVE.toString() );
 		options.add( CredentialsConfig.AuthType.NTLM.toString() );
 		options.add( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() );
-
-		if( request instanceof RestRequest )
-		{
-			options.add( CredentialsConfig.AuthType.O_AUTH_2.toString() );
-		}
-
-		options.removeAll( request.getBasicAuthenticationProfiles() );
-
-		final JLabelFormField hintTextLabel = ( JLabelFormField )dialog.getFormField( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL );
-		hintTextLabel.getComponent().setForeground( SimpleForm.HINT_TEXT_COLOR );
-
-		final JTextFieldFormField profileNameField = ( JTextFieldFormField )dialog.getFormField( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
-		int nextProfileIndex = getOAuth2ProfileContainer().getOAuth2ProfileList().size() + 1;
-		profileNameField.setValue( "OAuth 2 - Profile " + nextProfileIndex );
-		profileNameField.getComponent().setVisible( false );
-		profileNameField.addFormFieldListener( new XFormFieldListener()
-		{
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				ActionList actionsList = dialog.getActionsList();
-				for( int actionIndex = 0; actionIndex < actionsList.getActionCount(); actionIndex++ )
-				{
-					Action action = actionsList.getActionAt( actionIndex );
-					if( action.getValue( Action.NAME ).equals( "OK" ) )
-					{
-						if( StringUtils.isNullOrEmpty( newValue ) )
-						{
-							action.setEnabled( false );
-						}
-						else
-						{
-							action.setEnabled( true );
-						}
-					}
-				}
-			}
-		} );
-
-		JComboBoxFormField authorizationTypesComboBox = ( JComboBoxFormField )dialog.getFormField( AuthorizationTypeForm.AUTHORIZATION_TYPE );
-		authorizationTypesComboBox.setOptions( options.toArray( new String[options.size()] ) );
-		authorizationTypesComboBox.addFormFieldListener( new XFormFieldListener()
-		{
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				showProfileNameField( newValue, profileNameField, hintTextLabel );
-			}
-		} );
-
-
-
-		showProfileNameField( request.getAuthType(), profileNameField, hintTextLabel );
-
-		dialog.setValue( AuthorizationTypeForm.AUTHORIZATION_TYPE, request.getAuthType() );
-		if( dialog.show() )
-		{
-			final String authType = dialog.getValue( AuthorizationTypeForm.AUTHORIZATION_TYPE );
-
-			if( CredentialsConfig.AuthType.O_AUTH_2.toString().equals( authType ) )
-			{
-				final String profileName = dialog.getValue( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
-				//TODO: check for unique profileName
-				final OAuth2Profile profile = getOAuth2ProfileContainer().addNewOAuth2Profile( profileName );
-
-				request.setSelectedAuthProfile( profile.getName() );
-			}
-			else
-			{
-				request.addBasicAuthenticationProfile( authType );
-				request.setSelectedAuthProfile( authType );
-			}
-		}
+		return options;
 	}
 
-	private void showProfileNameField( String authorizationType, JTextFieldFormField profileNameField, JLabelFormField hintTextLabel )
+	private void setHintTextColor()
+	{
+		hintTextLabel.getComponent().setForeground( SimpleForm.HINT_TEXT_COLOR );
+	}
+
+	private void setProfileNameAndHintTextVisibility( String authorizationType )
 	{
 		if( authorizationType.equals( CredentialsConfig.AuthType.O_AUTH_2.toString() ) )
 		{
-			((JLabel )profileNameField.getComponent().getClientProperty( "labeledBy" )).setVisible( true );
+			( ( JLabel )profileNameField.getComponent().getClientProperty( "labeledBy" ) ).setVisible( true );
 			profileNameField.getComponent().setVisible( true );
 			hintTextLabel.getComponent().setVisible( true );
 		}
 		else
 		{
-			((JLabel)profileNameField.getComponent().getClientProperty( "labeledBy" )).setVisible( false );
+			( ( JLabel )profileNameField.getComponent().getClientProperty( "labeledBy" ) ).setVisible( false );
 			profileNameField.getComponent().setVisible( false );
 			hintTextLabel.getComponent().setVisible( false );
 		}
@@ -141,6 +144,37 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 	private OAuth2ProfileContainer getOAuth2ProfileContainer()
 	{
 		return request.getOperation().getInterface().getProject().getOAuth2ProfileContainer();
+	}
+
+	private static class ProfileNameFieldListener implements XFormFieldListener
+	{
+		private final XFormDialog dialog;
+
+		public ProfileNameFieldListener( XFormDialog dialog )
+		{
+			this.dialog = dialog;
+		}
+
+		@Override
+		public void valueChanged( XFormField sourceField, String newValue, String oldValue )
+		{
+			ActionList actionsList = dialog.getActionsList();
+			for( int actionIndex = 0; actionIndex < actionsList.getActionCount(); actionIndex++ )
+			{
+				Action action = actionsList.getActionAt( actionIndex );
+				if( action.getValue( Action.NAME ).equals( "OK" ) )
+				{
+					if( StringUtils.isNullOrEmpty( newValue ) )
+					{
+						action.setEnabled( false );
+					}
+					else
+					{
+						action.setEnabled( true );
+					}
+				}
+			}
+		}
 	}
 
 	@AForm( name = "AuthorizationTypeForm.Title", description = "AuthorizationTypeForm.Description" )

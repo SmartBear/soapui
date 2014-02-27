@@ -4,22 +4,20 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.types.StringList;
 
-// TODO Could we use composition instead?
-public class WSSAuthenticationInspector extends BasicAuthenticationInspector
+public class WSSAuthenticationForm extends BasicAuthenticationForm<WsdlRequest>
 {
-	protected WSSAuthenticationInspector( WsdlRequest request )
+	protected WSSAuthenticationForm( WsdlRequest request )
 	{
 		super( request );
+	}
 
+	@Override
+	protected void populateBasicForm( SimpleBindingForm basicForm )
+	{
+		super.populateBasicForm( basicForm );
 		StringList outgoingNames = getOutgoingNames( request );
 		StringList incomingNames = getIncomingNames( request );
 
-		addWSSPanel( outgoingNames, incomingNames );
-	}
-
-	private void addWSSPanel( StringList outgoingNames, StringList incomingNames )
-	{
-		SimpleBindingForm basicForm = getBasicForm();
 		basicForm.addSpace( GROUP_SPACING );
 		basicForm.appendComboBox( "outgoingWss", "Outgoing WSS", outgoingNames.toStringArray(),
 				"The outgoing WS-Security configuration to use" );
