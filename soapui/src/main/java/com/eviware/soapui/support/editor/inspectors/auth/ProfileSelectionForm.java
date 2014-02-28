@@ -44,8 +44,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	public static final String BASIC_FORM_LABEL = "Legacy form";
 	public static final String WSS_FORM_LABEL = "WSS form";
+	public static final String OPTIONS_SEPARATOR = "------------------";
 
-	public static final String NO_AUTHORIZATION = "No Authorization";
+	public String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String EMPTY_PANEL = "EmptyPanel";
 
@@ -283,7 +284,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void refreshProfileSelectionComboBox( String selectedProfile )
 	{
-		profileSelectionComboBox.setModel( new DefaultComboBoxModel( createOptionsForAuthorizationCombo( selectedProfile ) ) );
+		DefaultComboBoxModel model = new DefaultComboBoxModel( createOptionsForAuthorizationCombo( selectedProfile ) );
+		model.setSelectedItem( OPTIONS_SEPARATOR );
+		profileSelectionComboBox.setModel( model );
 
 		profileSelectionComboBox.removeItemListener( profileSelectionComboBox.getItemListeners()[0] );
 		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
@@ -336,7 +339,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			addEditOptions.remove( AddEditOptions.DELETE.getDescription() );
 		}
 
-		options.add( "------------------" );
+		options.add( OPTIONS_SEPARATOR );
 		options.addAll( addEditOptions );
 
 		return options.toArray( new String[options.size()] );
