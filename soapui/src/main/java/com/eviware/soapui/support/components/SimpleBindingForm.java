@@ -28,6 +28,17 @@ public class SimpleBindingForm extends SimpleForm
 		this.pm = pm;
 	}
 
+	public SimpleBindingForm( PresentationModel<?> pm, String layoutString )
+	{
+		super( layoutString );
+		this.pm = pm;
+	}
+
+	public PresentationModel<?> getPresentationModel()
+	{
+		return pm;
+	}
+
 	/**
 	 * Appends a label and a text field to the form
 	 *
@@ -51,14 +62,14 @@ public class SimpleBindingForm extends SimpleForm
 	 */
 	public JTextField appendTextField( String propertyName, String label, String tooltip, int textFieldColumns )
 	{
-		JTextField textField = super.appendTextField( label, propertyName, tooltip, textFieldColumns);
+		JTextField textField = super.appendTextField( label, propertyName, tooltip, textFieldColumns );
 		Bindings.bind( textField, pm.getModel( propertyName ) );
 		return textField;
 	}
 
 	public JLabel appendLabel( String propertyName, String label )
 	{
-		JLabel jLabel = new JLabel(  );
+		JLabel jLabel = new JLabel();
 		super.append( label, jLabel, "left,bottom" );
 		Bindings.bind( jLabel, pm.getModel( propertyName ) );
 		return jLabel;
@@ -85,12 +96,6 @@ public class SimpleBindingForm extends SimpleForm
 		return checkBox;
 	}
 
-	public void appendComponent( String propertyName, String label, JComponent component )
-	{
-		super.append( label, component );
-		Bindings.bind( component, propertyName, pm.getModel( propertyName ) );
-	}
-
 	public JComboBox appendComboBox( String propertyName, String label, Object[] values, String tooltip )
 	{
 		JComboBox comboBox = super.appendComboBox( label, values, tooltip );
@@ -99,10 +104,10 @@ public class SimpleBindingForm extends SimpleForm
 		return comboBox;
 	}
 
-	public JComboBox appendComboBox(String label, ComboBoxModel model, String tooltip, ValueModel valueModel )
+	public JComboBox appendComboBox( String label, ComboBoxModel model, String tooltip, ValueModel valueModel )
 	{
 		JComboBox comboBox = super.appendComboBox( label, model, tooltip );
-		Bindings.bind( comboBox, new SelectionInList<Object>( model, valueModel) );
+		Bindings.bind( comboBox, new SelectionInList<Object>( model, valueModel ) );
 
 		return comboBox;
 	}
@@ -119,9 +124,32 @@ public class SimpleBindingForm extends SimpleForm
 		Bindings.bind( comboBox, new SelectionInList<Object>( values, pm.getModel( propertyName ) ) );
 	}
 
-	public PresentationModel<?> getPresentationModel()
+	public void appendComponent( String propertyName, String label, JComponent component )
 	{
-		return pm;
+		super.append( label, component );
+		Bindings.bind( component, propertyName, pm.getModel( propertyName ) );
 	}
 
+	public void appendComponentsInOneRow( PropertyComponent... propertyComponents )
+	{
+		for( PropertyComponent propertyComponent : propertyComponents )
+		{
+			if( propertyComponent.hasProperty() )
+			{
+				// TODO Add support for more components
+				if( propertyComponent.getComponent() instanceof JLabel )
+				{
+					Bindings.bind( ( JLabel )propertyComponent.getComponent(), pm.getModel( propertyComponent.getProperty() ) );
+				}
+				else
+				{
+					throw new RuntimeException( "Components of type " + propertyComponent.getComponent().getClass() + " is not supported" );
+				}
+			}
+		}
+		super.appendInOneRow( propertyComponents );
+	}
 }
+
+
+

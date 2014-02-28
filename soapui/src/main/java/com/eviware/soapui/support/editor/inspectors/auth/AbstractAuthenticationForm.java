@@ -58,6 +58,7 @@ public abstract class AbstractAuthenticationForm
 
 	void initForm( SimpleBindingForm form )
 	{
+		// TODO We should pass the encodedCellConstrains string instead
 		FormLayout formLayout = ( FormLayout )form.getPanel().getLayout();
 		formLayout.setColumnSpec( 2, LABEL_COLUMN );
 		formLayout.setColumnSpec( 5, RIGHTMOST_COLUMN );

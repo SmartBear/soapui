@@ -16,6 +16,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.PropertyComponent;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.value.AbstractValueModel;
@@ -27,9 +28,8 @@ import java.awt.event.ItemListener;
 
 import static javax.swing.BorderFactory.*;
 
-public class OAuth2AccessTokenForm
+public class OAuth2GetAccessTokenForm
 {
-
 	private static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
 	private static final String GET_ACCESS_TOKEN_BUTTON_NAME = "getAccessTokenButtonName";
 	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
@@ -37,19 +37,20 @@ public class OAuth2AccessTokenForm
 	private static final int GROUP_SPACING = 20;
 	private static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
 	private static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
+	public static final String GET_ACCESS_TOKEN_FORM_LAYOUT = "5px:none,left:pref,10px,left:default,10px,left:default,5px:grow(1.0)";
 
 	private OAuth2Profile profile;
 
 	public JDialog getComponent( OAuth2Profile profile )
 	{
 		this.profile = profile;
-		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
+		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ), GET_ACCESS_TOKEN_FORM_LAYOUT );
 		populateGetAccessTokenForm( accessTokenForm );
 
 		JPanel panel = accessTokenForm.getPanel();
 		panel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
 				createEmptyBorder( 10, 10, 10, 10 ) ) );
-		return createAccessTokenDialog( panel );
+		return createGetAccessTokenDialog( panel );
 	}
 
 	private void populateGetAccessTokenForm( SimpleBindingForm accessTokenForm )
@@ -101,16 +102,22 @@ public class OAuth2AccessTokenForm
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
-		JButton getAccessTokenButton = accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		//JButton getAccessTokenButton = accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		JButton getAccessTokenButton = new JButton( new GetOAuthAccessTokenAction( profile ) );
 		getAccessTokenButton.setName( GET_ACCESS_TOKEN_BUTTON_NAME );
-		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
+		PropertyComponent getAccesTokenButtonPropertyComponent = new PropertyComponent( getAccessTokenButton );
+
+		JLabel accessTokenStatusText = new JLabel();
+		PropertyComponent accessTokenStatusTextPropertyComponent = new PropertyComponent( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, accessTokenStatusText );
+
+		accessTokenForm.appendComponentsInOneRow( getAccesTokenButtonPropertyComponent, accessTokenStatusTextPropertyComponent );
 
 		JLabel accessTokenDocumentationLink = UISupport.getLabelAsLink( "http://www.soapui.org",
 				"How to get an access token from an authorization server" );
 		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}
 
-	private JDialog createAccessTokenDialog( JPanel accessTokenFormPanel )
+	private JDialog createGetAccessTokenDialog( JPanel accessTokenFormPanel )
 	{
 		final JDialog accessTokenFormDialog = new JDialog();
 		accessTokenFormDialog.setName( ACCESS_TOKEN_FORM_DIALOG_NAME );

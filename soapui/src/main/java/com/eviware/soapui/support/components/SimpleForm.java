@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
+import com.google.common.base.Preconditions;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
@@ -49,19 +50,27 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * Utility-class for creating forms
+ * Utility-class for creating JGoodies forms
  */
 
 public class SimpleForm
 {
-	public static final String ENABLED_PROPERTY_NAME = "enabled";
-
 	public static final int SHORT_TEXT_FIELD_COLUMNS = 20;
 	public static final int MEDIUM_TEXT_FIELD_COLUMNS = 30;
 	public static final int LONG_TEXT_FIELD_COLUMNS = 50;
-	public static final int DEFAULT_TEXT_FIELD_COLUMNS = MEDIUM_TEXT_FIELD_COLUMNS;
 	public static final Color HINT_TEXT_COLOR = new Color( 113, 102, 102 );
-	public static final String DEFAULT_COMPONENT_ALIGNMENT = "left,bottom";
+
+	protected static final String DEFAULT_COMPONENT_ALIGNMENT = "left,bottom";
+	protected static final int DEFAULT_TEXT_FIELD_COLUMNS = MEDIUM_TEXT_FIELD_COLUMNS;
+	protected static final String ENABLED_PROPERTY_NAME = "enabled";
+	protected static final int DEFAULT_COMPONENT_COLUMN = 4;
+	protected static final int DEFAULT_LABEL_COLUMN = 2;
+
+	private static final int DEFAULT_COLUMN_SPAN = 1;
+
+	private static final String DEFAULT_INITIAL_INDENT = "5";
+	private static final String DEFAULT_LAYOUT_STRING_WITHOUT_INITIAL_INDENT = "px:none,left:pref,10px,left:default,5px:grow(1.0)";
+	private static final String DEFAULT_LAYOUT_STRING = DEFAULT_INITIAL_INDENT + DEFAULT_LAYOUT_STRING_WITHOUT_INITIAL_INDENT;
 
 	private JPanel panel;
 	private CellConstraints cc = new CellConstraints();
@@ -77,10 +86,12 @@ public class SimpleForm
 	private int defaultTextAreaColumns = 30;
 	private int defaultTextAreaRows = 3;
 	private int defaultTextFieldColumns = DEFAULT_TEXT_FIELD_COLUMNS;
+	private boolean hasDefaultLayout = false;
 
 	public SimpleForm()
 	{
-		this( 5 );
+		this( DEFAULT_LAYOUT_STRING );
+		this.hasDefaultLayout = true;
 	}
 
 	public SimpleForm( String layout )
@@ -97,7 +108,7 @@ public class SimpleForm
 
 	public SimpleForm( int indent )
 	{
-		this( indent + "px:none,left:pref,10px,left:default,5px:grow(1.0)" );
+		this( String.valueOf( indent ) + DEFAULT_LAYOUT_STRING_WITHOUT_INITIAL_INDENT );
 	}
 
 	public JPanel getPanel()
@@ -150,6 +161,15 @@ public class SimpleForm
 		hiddenValues.put( name, value );
 	}
 
+	/**
+	 * @param defaultTextFieldColumns Should be a constant defined in SimpleForm
+	 * @see com.eviware.soapui.support.components.SimpleForm
+	 */
+	public void setDefaultTextFieldColumns( int defaultTextFieldColumns )
+	{
+		this.defaultTextFieldColumns = defaultTextFieldColumns;
+	}
+
 	public JButton addRightButton( Action action )
 	{
 		if( rowSpacing > 0 && !components.isEmpty() )
@@ -159,7 +179,7 @@ public class SimpleForm
 		int row = layout.getRowCount();
 
 		JButton button = new JButton( action );
-		panel.add( button, cc.xy( 4, row, "right,bottom" ) );
+		panel.add( button, cc.xy( DEFAULT_COMPONENT_COLUMN, row, "right,bottom" ) );
 		return button;
 	}
 
@@ -207,7 +227,7 @@ public class SimpleForm
 		layout.appendRow( rowSpec );
 
 		int row = layout.getRowCount();
-		panel.add( component, cc.xy( 4, row, "right,bottom" ) );
+		panel.add( component, cc.xy( DEFAULT_COMPONENT_COLUMN, row, "right,bottom" ) );
 	}
 
 	public JCheckBox appendCheckBox( String caption, String label, boolean selected )
@@ -230,11 +250,6 @@ public class SimpleForm
 		components.put( caption, radioButton );
 		append( caption, radioButton );
 		return radioButton;
-	}
-
-	public void append( String label, JComponent component )
-	{
-		append( label, component, null );
 	}
 
 
@@ -288,70 +303,6 @@ public class SimpleForm
 	public void appendFixed( String label, JComponent component )
 	{
 		append( label, component, "left:pref" );
-	}
-
-	public <T extends JComponent> T append( String label, T component, String alignments )
-	{
-		JLabel jlabel = null;
-		if( label != null )
-		{
-			jlabel = new JLabel( label.endsWith( ":" ) || label.isEmpty() ? label : label + ":" );
-			jlabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
-			if( labelFont != null )
-				jlabel.setFont( labelFont );
-		}
-
-		return append( label, jlabel, component, alignments );
-	}
-
-	public <T extends JComponent> T append( String name, JComponent label, T component, String alignments )
-	{
-		int spaceRowIndex = -1;
-
-		if( rowSpacing > 0 && appended )
-		{
-			addSpace( rowSpacing );
-			spaceRowIndex = layout.getRowCount();
-		}
-
-		layout.appendRow( rowSpec );
-		int row = layout.getRowCount();
-
-		if( label != null )
-		{
-			panel.add( label, cc.xy( 2, row ) );
-			component.addComponentListener( new LabelHider( label, spaceRowIndex ) );
-			component.addPropertyChangeListener( ENABLED_PROPERTY_NAME, new LabelEnabler( label ) );
-
-			if( label instanceof JLabel )
-			{
-				JLabel jl = ( ( JLabel )label );
-				jl.setLabelFor( component );
-				String text = jl.getText();
-				int ix = text.indexOf( '&' );
-				if( ix >= 0 )
-				{
-					jl.setText( text.substring( 0, ix ) + text.substring( ix + 1 ) );
-					jl.setDisplayedMnemonicIndex( ix );
-					jl.setDisplayedMnemonic( text.charAt( ix + 1 ) );
-				}
-
-				if( component.getAccessibleContext() != null )
-					component.getAccessibleContext().setAccessibleName( text );
-			}
-		}
-		else
-			component.addComponentListener( new LabelHider( null, spaceRowIndex ) );
-
-		if( alignments == null )
-			panel.add( component, cc.xy( 4, row ) );
-		else
-			panel.add( component, cc.xy( 4, row, alignments ) );
-
-		components.put( name, component );
-		appended = true;
-
-		return component;
 	}
 
 	public boolean hasComponents()
@@ -560,20 +511,20 @@ public class SimpleForm
 		return layout.getRowCount();
 	}
 
-	public void addComponent( JComponent component )
-	{
-		layout.appendRow( rowSpec );
-		int row = layout.getRowCount();
-
-		panel.add( component, cc.xyw( 2, row, 4 ) );
-	}
-
 	public void addInputFieldHintText( String text )
 	{
 		JLabel label = new JLabel( text );
 		label.setForeground( HINT_TEXT_COLOR );
 
 		addComponentWithoutLabel( label );
+	}
+
+	public void addComponent( JComponent component )
+	{
+		layout.appendRow( rowSpec );
+		int row = layout.getRowCount();
+
+		panel.add( component, cc.xyw( 2, row, 4 ) );
 	}
 
 	public void removeComponent( JComponent component )
@@ -598,35 +549,6 @@ public class SimpleForm
 		}
 	}
 
-	public void append( JComponent component )
-	{
-		int spaceRowIndex = -1;
-
-		if( rowSpacing > 0 && appended )
-		{
-			addSpace( rowSpacing );
-			spaceRowIndex = layout.getRowCount();
-		}
-
-		layout.appendRow( rowSpec );
-		int row = layout.getRowCount();
-
-		panel.add( component, cc.xyw( 2, row, 4 ) );
-
-		component.addComponentListener( new LabelHider( null, spaceRowIndex ) );
-
-		appended = true;
-	}
-
-	/**
-	 * @param defaultTextFieldColumns Should be a constant defined in SimpleForm
-	 * @see com.eviware.soapui.support.components.SimpleForm
-	 */
-	public void setDefaultTextFieldColumns( int defaultTextFieldColumns )
-	{
-		this.defaultTextFieldColumns = defaultTextFieldColumns;
-	}
-
 	private static class LabelEnabler implements PropertyChangeListener
 	{
 
@@ -647,7 +569,6 @@ public class SimpleForm
 
 	private final class LabelHider extends ComponentAdapter
 	{
-
 		private final JComponent jlabel;
 		private final int rowIndex;
 
@@ -674,12 +595,6 @@ public class SimpleForm
 			if( rowIndex >= 0 && rowIndex < layout.getRowCount() )
 				layout.setRowSpec( rowIndex, new RowSpec( rowSpacing + "px" ) );
 		}
-
-	}
-
-	public <T extends JComponent> T append( String name, JLabel label, T field )
-	{
-		return append( name, label, field, null );
 	}
 
 	public void setEnabled( boolean b )
@@ -701,7 +616,7 @@ public class SimpleForm
 		layout.appendRow( rowSpec );
 
 		int row = layout.getRowCount();
-		panel.add( component, cc.xy( 4, row ) );
+		panel.add( component, cc.xy( DEFAULT_COMPONENT_COLUMN, row ) );
 
 		return component;
 	}
@@ -714,6 +629,133 @@ public class SimpleForm
 		layout.appendRow( rowSpec );
 		int row = layout.getRowCount();
 
-		panel.add( component, cc.xy( 4, row, alignment ) );
+		panel.add( component, cc.xy( DEFAULT_COMPONENT_COLUMN, row, alignment ) );
+	}
+
+	public void append( JComponent component )
+	{
+		int spaceRowIndex = -1;
+
+		if( rowSpacing > 0 && appended )
+		{
+			addSpace( rowSpacing );
+			spaceRowIndex = layout.getRowCount();
+		}
+
+		layout.appendRow( rowSpec );
+		int row = layout.getRowCount();
+
+		panel.add( component, cc.xyw( 2, row, 4 ) );
+
+		component.addComponentListener( new LabelHider( null, spaceRowIndex ) );
+
+		appended = true;
+	}
+
+
+	public void append( String label, JComponent component )
+	{
+		append( label, component, null );
+	}
+
+	public <T extends JComponent> T append( String label, T component, String alignments )
+	{
+		JLabel jlabel = null;
+		if( label != null )
+		{
+			jlabel = new JLabel( label.endsWith( ":" ) || label.isEmpty() ? label : label + ":" );
+			jlabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
+			if( labelFont != null )
+				jlabel.setFont( labelFont );
+		}
+
+		return append( label, jlabel, component, alignments, DEFAULT_COMPONENT_COLUMN, layout.getRowCount(), getColumnSpan() );
+	}
+
+	public <T extends JComponent> T append( String name, JLabel label, T field )
+	{
+		return append( name, label, field, null, DEFAULT_COMPONENT_COLUMN, layout.getRowCount(), getColumnSpan() );
+	}
+
+	/**
+	 * Appends a vararg of PropertyComponents to a single row in the form. The forms is assumed to start with a spacing column
+	 * and then have every other column as a "component column" and the others as spacing columns.
+	 *
+	 * @param propertyComponents The PropertyComponents to be added
+	 */
+	public void appendInOneRow( PropertyComponent... propertyComponents )
+	{
+		Preconditions.checkArgument( propertyComponents.length * 2 <= layout.getColumnCount() - 1, "There is not enough room for the components to be added" );
+
+		int currentRow = getRowCount();
+		int currentColumn = DEFAULT_COMPONENT_COLUMN;
+		for( PropertyComponent propertyComponent : propertyComponents )
+		{
+			append( null, null, propertyComponent.getComponent(), null, currentColumn, currentRow, DEFAULT_COLUMN_SPAN );
+			currentColumn += 2;
+		}
+	}
+
+	public <T extends JComponent> T append( String name, JComponent label, T component, String alignments, int column, int row, int columnSpan )
+	{
+		int spaceRowIndex = -1;
+
+		if( rowSpacing > 0 && appended )
+		{
+			addSpace( rowSpacing );
+			spaceRowIndex = layout.getRowCount();
+		}
+
+		layout.appendRow( rowSpec );
+
+		if( label != null )
+		{
+			panel.add( label, cc.xy( DEFAULT_LABEL_COLUMN, row ) );
+			component.addComponentListener( new LabelHider( label, spaceRowIndex ) );
+			component.addPropertyChangeListener( ENABLED_PROPERTY_NAME, new LabelEnabler( label ) );
+
+			if( label instanceof JLabel )
+			{
+				JLabel jl = ( ( JLabel )label );
+				jl.setLabelFor( component );
+				String text = jl.getText();
+				int ix = text.indexOf( '&' );
+				if( ix >= 0 )
+				{
+					jl.setText( text.substring( 0, ix ) + text.substring( ix + 1 ) );
+					jl.setDisplayedMnemonicIndex( ix );
+					jl.setDisplayedMnemonic( text.charAt( ix + 1 ) );
+				}
+
+				if( component.getAccessibleContext() != null )
+					component.getAccessibleContext().setAccessibleName( text );
+			}
+		}
+		else
+			component.addComponentListener( new LabelHider( null, spaceRowIndex ) );
+
+		if( alignments == null )
+			panel.add( component, cc.xyw( column, row, columnSpan ) );
+		else
+			panel.add( component, cc.xyw( column, row, columnSpan, alignments ) );
+
+		components.put( name, component );
+		appended = true;
+
+		return component;
+	}
+
+	/* *
+		Returns the default column span when using default layout and a column span that stretched to the last component
+		column if using a custom layout
+	 */
+	private int getColumnSpan()
+	{
+		int columnSpan = DEFAULT_COLUMN_SPAN;
+		if( !hasDefaultLayout )
+		{
+			columnSpan = layout.getColumnCount() - 4;
+		}
+		return columnSpan;
 	}
 }

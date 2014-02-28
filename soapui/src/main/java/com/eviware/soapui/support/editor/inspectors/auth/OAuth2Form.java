@@ -127,7 +127,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 
-		OAuth2AccessTokenForm accessTokenForm = new OAuth2AccessTokenForm();
+		OAuth2GetAccessTokenForm accessTokenForm = new OAuth2GetAccessTokenForm();
 		final JDialog accessTokenFormDialog = accessTokenForm.getComponent( profile );
 
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
