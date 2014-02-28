@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -99,8 +100,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 			result = mockService.runOnRequestScript( mockContext, mockRequest );
 			if( !( result instanceof MockResult ) )
 			{
-				String method = mockRequest.getMethod();
-				if( method.equals( "POST" ) )
+				if( mockRequest.getMethod() == HttpMethod.POST )
 					result = dispatchPostRequest( mockRequest );
 				else
 					result = super.dispatchRequest( request, response );

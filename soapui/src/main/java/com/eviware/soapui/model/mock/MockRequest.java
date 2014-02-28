@@ -12,12 +12,11 @@
 
 package com.eviware.soapui.model.mock;
 
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -39,7 +38,7 @@ public interface MockRequest
 
 	public MockRunContext getRequestContext();
 
-	public String getMethod();
+	public HttpMethod getMethod();
 
 	public XmlObject getContentElement() throws XmlException;
 
