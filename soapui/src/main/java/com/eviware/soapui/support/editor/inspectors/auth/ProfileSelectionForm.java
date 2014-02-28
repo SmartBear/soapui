@@ -52,6 +52,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private final JPanel cardPanel = new JPanel( new CardLayout() );
 	private JComboBox profileSelectionComboBox;
 	private CellConstraints cc = new CellConstraints();
+	private OAuth2Form oAuth2Form;
 
 	protected ProfileSelectionForm( T request )
 	{
@@ -170,7 +171,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
 		{
 			request.setAuthType( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
-			OAuth2Form oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ) );
+			oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ), this );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
 			showCard( OAUTH_2_FORM_LABEL );
 		}

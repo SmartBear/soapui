@@ -200,8 +200,21 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 	private void setAccessTokenStatusFeedback( String status, JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
 	{
+		if( Strings.isNullOrEmpty( status ) )
+		{
+			accessTokenField.setBackground( DEFAULT_COLOR );
+
+			accessTokenStatusIcon.setIcon( null );
+			accessTokenStatusIcon.setVisible( false );
+
+			accessTokenStatusText.setText( "" );
+			accessTokenStatusText.setVisible( false );
+
+			inspector.setIcon( null );
+		}
+
 		// TODO Wouldn't it be nice with a enum swich instead?
-		if( status.equals( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) )
+		if( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString().equals( status ) )
 		{
 			accessTokenField.setBackground( SUCCESS_COLOR );
 
@@ -214,11 +227,11 @@ public class OAuth2Form extends AbstractAuthenticationForm
 			inspector.setIcon( SUCCESS_ICON );
 		}
 
-		if( status.equals( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString() ) )
+		if( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString().equals( status ) )
 		{
 			accessTokenField.setBackground( DEFAULT_COLOR );
 
-			accessTokenStatusIcon.setIcon( null );
+			accessTokenStatusIcon.setIcon( WAITING_ICON );
 			accessTokenStatusIcon.setVisible( false );
 
 			accessTokenStatusText.setText( "" );
@@ -383,8 +396,11 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		@Override
 		public void propertyChange( PropertyChangeEvent evt )
 		{
-			String newStatusValue = Strings.nullToEmpty( ( String )evt.getNewValue() );
-			setAccessTokenStatusFeedback( newStatusValue, accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
+			if( evt.getPropertyName().equals( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY ) )
+			{
+				String newStatusValue = Strings.nullToEmpty( ( String )evt.getNewValue() );
+				setAccessTokenStatusFeedback( newStatusValue, accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
+			}
 		}
 
 		public void release()
