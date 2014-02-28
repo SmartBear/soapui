@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -129,6 +130,15 @@ public class RestMockActionTest
 
 		assertThat( mockAction.getResourcePath(), is( updatedPath ) );
 	}
+
+	@Test
+	public void shouldSetMethod()
+	{
+		mockAction.setMethod( HttpMethod.TRACE );
+
+		assertThat( mockAction.getMethod(), is( HttpMethod.TRACE ) );
+	}
+
 
 	private RestMockRequest makeRestMockRequest() throws Exception
 	{
