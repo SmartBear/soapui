@@ -12,7 +12,7 @@ import com.eviware.soapui.support.TimeUtils;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.log4j.Logger;
 
-import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2_0;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
@@ -42,7 +42,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
 				.getOAuth2ProfileContainer();
 
-		if( !profileContainer.getOAuth2ProfileList().isEmpty() && O_AUTH_2.toString().equals( request.getAuthType() ) )
+		if( !profileContainer.getOAuth2ProfileList().isEmpty() && O_AUTH_2_0.toString().equals( request.getAuthType() ) )
 		{
 			OAuth2Profile profile = profileContainer.getOAuth2ProfileList().get( 0 );
 			if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )

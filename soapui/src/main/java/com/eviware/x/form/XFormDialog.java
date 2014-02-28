@@ -14,6 +14,7 @@ package com.eviware.x.form;
 
 import javax.swing.Action;
 
+import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 public interface XFormDialog
@@ -64,4 +65,6 @@ public interface XFormDialog
 	public XForm[] getForms();
 
 	public void setSize( int i, int j );
+
+	ActionList getActionsList();
 }

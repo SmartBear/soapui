@@ -23,7 +23,7 @@ import javax.swing.*;
  */
 public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
 {
-	private T request;
+	protected T request;
 
 	public BasicAuthenticationForm(T request)
 	{
@@ -34,13 +34,15 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 	protected JPanel buildUI()
 	{
 		SimpleBindingForm basicAuthenticationForm = new SimpleBindingForm( new PresentationModel<T>( request ) );
-		setBorderAndBackgroundColorOnPanel( basicAuthenticationForm.getPanel() );
 		populateBasicForm( basicAuthenticationForm );
 
-		return basicAuthenticationForm.getPanel();
+		JPanel panel = basicAuthenticationForm.getPanel();
+		setBorderAndBackgroundColorOnPanel( panel );
+
+		return panel;
 	}
 
-	private void populateBasicForm( SimpleBindingForm basicConfigurationForm )
+	protected void populateBasicForm( SimpleBindingForm basicConfigurationForm )
 	{
 		initForm( basicConfigurationForm );
 

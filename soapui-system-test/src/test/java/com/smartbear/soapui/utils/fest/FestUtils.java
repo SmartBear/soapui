@@ -12,7 +12,6 @@
 
 package com.smartbear.soapui.utils.fest;
 
-import com.eviware.soapui.support.editor.inspectors.auth.OAuth2AuthenticationInspector;
 import org.fest.swing.core.Robot;
 import org.fest.swing.exception.ComponentLookupException;
 import org.fest.swing.fixture.DialogFixture;

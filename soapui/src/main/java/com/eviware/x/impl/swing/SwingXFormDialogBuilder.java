@@ -27,6 +27,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
+import com.jgoodies.forms.layout.FormLayout;
 
 public class SwingXFormDialogBuilder extends XFormDialogBuilder
 {
@@ -42,6 +43,15 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder
 	public XForm createForm( String name )
 	{
 		XForm form = new SwingXFormImpl( name );
+		( ( SwingXFormImpl )form ).addSpace( 5 );
+		addForm( form );
+		return form;
+	}
+
+	@Override
+	public XForm createForm( String name, FormLayout layout )
+	{
+		XForm form = new SwingXFormImpl( name, layout );
 		( ( SwingXFormImpl )form ).addSpace( 5 );
 		addForm( form );
 		return form;

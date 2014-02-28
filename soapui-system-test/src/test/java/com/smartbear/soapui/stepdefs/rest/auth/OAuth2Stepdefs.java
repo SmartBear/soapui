@@ -36,7 +36,7 @@ public class OAuth2Stepdefs
 
 	private static final String ADVANCED_OPTIONS_DIALOG_NAME = "OAuth2.0 Advanced options";
 
-	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2.toString();
+	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2_0.toString();
 	private static final String GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
 	public static final String BUTTON_OK = "OK";
 

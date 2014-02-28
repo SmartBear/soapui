@@ -74,7 +74,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	@Override
 	String getFormTypeForSelection( String selectedItem )
 	{
-		if( selectedItem.equals( CredentialsConfig.AuthType.O_AUTH_2.toString() ) )
+		if( selectedItem.equals( CredentialsConfig.AuthType.O_AUTH_2_0.toString() ) )
 		{
 			return OAUTH_2_FORM_LABEL;
 		}
@@ -128,7 +128,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	protected ArrayList<String> getAuthenticationTypes()
 	{
 		ArrayList<String> authenticationTypes = super.getAuthenticationTypes();
-		authenticationTypes.add( CredentialsConfig.AuthType.O_AUTH_2.toString() );
+		authenticationTypes.add( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 		return authenticationTypes;
 	}
 

@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2_0;
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.PREEMPTIVE;
 import static com.eviware.soapui.utils.CommonMatchers.anEmptyArray;
 import static org.hamcrest.CoreMatchers.is;
@@ -181,7 +181,7 @@ public class OAuth2RequestFilterTest
 	private void setupModelItems() throws SoapUIException
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setAuthType( O_AUTH_2.toString() );
+		restRequest.setAuthType( O_AUTH_2_0.toString() );
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
 		List<OAuth2Profile> oAuth2ProfileList = oAuth2ProfileContainer.getOAuth2ProfileList();

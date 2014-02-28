@@ -12,6 +12,7 @@
 
 package com.eviware.x.impl.swing;
 
+import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.x.form.XFormDialog;
 
@@ -68,5 +69,11 @@ public abstract class SwingXFormDialog implements XFormDialog
 	public void setIntValue( String name, int value )
 	{
 		setValue( name, Integer.toString( value ) );
+	}
+
+	@Override
+	public ActionList getActionsList()
+	{
+		return null;
 	}
 }

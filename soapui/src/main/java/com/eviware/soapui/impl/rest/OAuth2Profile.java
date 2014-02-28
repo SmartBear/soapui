@@ -149,6 +149,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return configuration.getName();
 	}
 
+	public void setName( String newName )
+	{
+		configuration.setName( newName );
+	}
+
 	public boolean hasAutomationJavaScripts()
 	{
 		List<String> javaScripts = getAutomationJavaScripts();

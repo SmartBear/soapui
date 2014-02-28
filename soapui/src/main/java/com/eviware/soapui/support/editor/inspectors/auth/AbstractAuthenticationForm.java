@@ -24,11 +24,12 @@ import java.awt.*;
  */
 public abstract class AbstractAuthenticationForm
 {
-	protected static final int TOP_SPACING = 10;
 	protected static final ColumnSpec LABEL_COLUMN = new ColumnSpec( "left:72dlu" );
 	protected static final ColumnSpec RIGHTMOST_COLUMN = new ColumnSpec( "5px" );
 	protected static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
 	protected static final Color CARD_BACKGROUND_COLOR = new Color( 228, 228, 228 );
+	protected static final int TOP_SPACING = 10;
+	protected static final int GROUP_SPACING = 20;
 
 	public JPanel getComponent()
 	{
@@ -50,7 +51,8 @@ public abstract class AbstractAuthenticationForm
 
 	protected void setBorderAndBackgroundColorOnPanel( JPanel panel )
 	{
-		panel.setBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ) );
+		panel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ),
+				BorderFactory.createEmptyBorder( 10, 10, 10, 10 )) );
 		setBackgroundColorOnPanel( panel );
 	}
 
