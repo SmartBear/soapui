@@ -64,6 +64,8 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
 {
 
+	public static final String SELECTED_AUTH_PROFILE_PROPERTY_NAME = "selectedAuthProfile";
+
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
 	private String requestContent;
 	private RequestIconAnimator<?> iconAnimator;
@@ -325,7 +327,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			return newAttachment;
 		}
 		else
-			log.error( "Unkown attachment type: " + attachment );
+			log.error( "Unknown attachment type: " + attachment );
 
 		return null;
 	}
@@ -617,7 +619,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		CredentialsConfig credentialsConfig = getCredentialsConfig();
 
 		credentialsConfig.setSelectedAuthProfile( authProfile );
-		notifyPropertyChanged( "selectedAuthProfile", old, authProfile );
+		notifyPropertyChanged( SELECTED_AUTH_PROFILE_PROPERTY_NAME, old, authProfile );
 	}
 
 	public void setAuthType( String authType )

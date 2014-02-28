@@ -56,7 +56,12 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -461,19 +466,6 @@ public class UISupport
 		return isHeadless.booleanValue();
 	}
 
-	private static URL loadFromSecondaryLoader( String path )
-	{
-		for( ClassLoader loader : secondaryResourceLoaders )
-		{
-			URL url = loader.getResource( path );
-			if( url != null )
-			{
-				return url;
-			}
-		}
-		return null;
-	}
-
 	public static void showInfoMessage( String message )
 	{
 		dialogs.showInfoMessage( message );
@@ -789,42 +781,6 @@ public class UISupport
 		return initWindowActions( actions, frame.getRootPane(), frame );
 	}
 
-	private static JButtonBar initWindowActions( ActionList actions, JRootPane rootPane, final Window dialog )
-	{
-		rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
-		rootPane.getActionMap().put( "ESCAPE", new AbstractAction()
-		{
-			public void actionPerformed( ActionEvent e )
-			{
-				dialog.setVisible( false );
-			}
-		} );
-
-		if( actions != null )
-		{
-			JButtonBar buttons = new JButtonBar();
-			buttons.addActions( actions );
-			rootPane.setDefaultButton( buttons.getDefaultButton() );
-
-			for( int c = 0; c < actions.getActionCount(); c++ )
-			{
-				Action action = actions.getActionAt( c );
-				if( action instanceof HelpActionMarker )
-				{
-					rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-							KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
-					rootPane.getActionMap().put( "HELP", action );
-					break;
-				}
-			}
-
-			return buttons;
-		}
-
-		return null;
-	}
-
 	public static void initDialogActions( final JDialog dialog, Action helpAction, JButton defaultButton )
 	{
 		dialog.getRootPane().getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT )
@@ -1024,6 +980,80 @@ public class UISupport
 		return dialogs.promptPassword( question, title );
 	}
 
+	public static <T> T findParentWithClass( Component startComponent, Class<T> expectedClass )
+	{
+		Component currentComponent = startComponent;
+		while ( currentComponent !=  null && !( expectedClass.isAssignableFrom( currentComponent.getClass() )))
+		{
+			currentComponent = currentComponent.getParent();
+		}
+		return ( T )currentComponent;
+	}
+
+	public static boolean isIdePlugin()
+	{
+		return SoapUI.getSoapUICore() instanceof SwingPluginSoapUICore;
+	}
+
+	public static JPanel createEmptyPanel( int top, int left, int bottom, int right )
+	{
+		JPanel panel = new JPanel( new BorderLayout() );
+		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
+		return panel;
+	}
+
+	/*
+	Helpers
+	 */
+	private static URL loadFromSecondaryLoader( String path )
+	{
+		for( ClassLoader loader : secondaryResourceLoaders )
+		{
+			URL url = loader.getResource( path );
+			if( url != null )
+			{
+				return url;
+			}
+		}
+		return null;
+	}
+
+	private static JButtonBar initWindowActions( ActionList actions, JRootPane rootPane, final Window dialog )
+	{
+		rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
+				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
+		rootPane.getActionMap().put( "ESCAPE", new AbstractAction()
+		{
+			public void actionPerformed( ActionEvent e )
+			{
+				dialog.setVisible( false );
+			}
+		} );
+
+		if( actions != null )
+		{
+			JButtonBar buttons = new JButtonBar();
+			buttons.addActions( actions );
+			rootPane.setDefaultButton( buttons.getDefaultButton() );
+
+			for( int c = 0; c < actions.getActionCount(); c++ )
+			{
+				Action action = actions.getActionAt( c );
+				if( action instanceof HelpActionMarker )
+				{
+					rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
+							KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
+					rootPane.getActionMap().put( "HELP", action );
+					break;
+				}
+			}
+
+			return buttons;
+		}
+
+		return null;
+	}
+
 	private static final class ItemListenerImplementation implements ItemListener
 	{
 		private final JComboBox combo;
@@ -1055,17 +1085,5 @@ public class UISupport
 				combo.setToolTipText( selectedItem );
 			}
 		}
-	}
-
-	public static boolean isIdePlugin()
-	{
-		return SoapUI.getSoapUICore() instanceof SwingPluginSoapUICore;
-	}
-
-	public static JPanel createEmptyPanel( int top, int left, int bottom, int right )
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
-		return panel;
 	}
 }
