@@ -103,11 +103,20 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 		{
 			server.start();
 		}
+		catch( BindException e )
+		{
+			UISupport.showErrorMessage( "Error starting " + getProxyOrTunnelString() + ": Could not open port " + localPort + ".\nTry a different port number." );
+		}
 		catch( Exception e )
 		{
-			UISupport.showErrorMessage( "Error starting monitor: " + e.getMessage() );
+			UISupport.showErrorMessage( "Error starting " + getProxyOrTunnelString() + ": " + e.getMessage() );
 		}
 
+	}
+
+	private String getProxyOrTunnelString()
+	{
+		return proxyOrTunnel ? "proxy" : "tunnel";
 	}
 
 	public void stop()
