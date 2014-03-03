@@ -13,19 +13,20 @@
 package com.eviware.soapui.impl.wsdl.monitor;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.JettyServer;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
+import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.monitor.SoapUIJettyThreadPool;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 
-import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
-import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.ProxyServlet;
-import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.JettyServer;
-import com.eviware.soapui.impl.wsdl.monitor.jettyproxy.TunnelServlet;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.monitor.SoapUIJettyThreadPool;
-import com.eviware.soapui.support.UISupport;
+import java.net.BindException;
 
 public class SoapMonitorEngineImpl implements SoapMonitorEngine
 {
@@ -38,8 +39,9 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 	private SslSocketConnector sslConnector;
 	private final String sslEndpoint;
 	private boolean proxyOrTunnel = true;
+	private ContentTypes includedContentTypes = SoapMonitorAction.defaultContentTypes();
 
-	public SoapMonitorEngineImpl(final String sslEndpoint)
+	public SoapMonitorEngineImpl( final String sslEndpoint )
 	{
 		this.sslEndpoint = sslEndpoint;
 	}
@@ -55,7 +57,7 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 		server.setThreadPool( new SoapUIJettyThreadPool() );
 		Context context = new Context( server, ROOT, 0 );
 
-		if( !StringUtils.isNullOrEmpty(  sslEndpoint ))
+		if( !StringUtils.isNullOrEmpty( sslEndpoint ) )
 		{
 			if( sslEndpoint.startsWith( HTTPS ) )
 			{
@@ -74,7 +76,9 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 				sslConnector.setPort( localPort );
 
 				server.addConnector( sslConnector );
-				context.addServlet( new ServletHolder( new TunnelServlet( project, sslEndpoint, listenerCallBack ) ), ROOT );
+				TunnelServlet tunnelServlet = new TunnelServlet( project, sslEndpoint, listenerCallBack );
+				tunnelServlet.setIncludedContentTypes( includedContentTypes );
+				context.addServlet( new ServletHolder( tunnelServlet ), ROOT );
 			}
 			else
 			{
@@ -82,7 +86,9 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 				{
 					connector.setPort( localPort );
 					server.addConnector( connector );
-					context.addServlet( new ServletHolder( new TunnelServlet( project, sslEndpoint, listenerCallBack ) ), ROOT );
+					TunnelServlet tunnelServlet = new TunnelServlet( project, sslEndpoint, listenerCallBack );
+					tunnelServlet.setIncludedContentTypes( includedContentTypes );
+					context.addServlet( new ServletHolder( tunnelServlet ), ROOT );
 				}
 				else
 				{
@@ -97,7 +103,9 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 			proxyOrTunnel = true;
 			connector.setPort( localPort );
 			server.addConnector( connector );
-			context.addServlet( new ServletHolder( new ProxyServlet( project, listenerCallBack ) ), ROOT );
+			ProxyServlet proxyServlet = new ProxyServlet( project, listenerCallBack );
+			proxyServlet.setIncludedContentTypes( includedContentTypes );
+			context.addServlet( new ServletHolder( proxyServlet ), ROOT );
 		}
 		try
 		{
@@ -143,11 +151,17 @@ public class SoapMonitorEngineImpl implements SoapMonitorEngine
 
 	}
 
+	@Override
+	public void setIncludedContentTypes( ContentTypes includedContentTypes )
+	{
+		this.includedContentTypes = includedContentTypes;
+	}
+
 	/*
-	 * @return true if proxy, false if ssl tunnel (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.impl.wsdl.monitor.SoapMonitorEngine#isProxy()
-	 */
+		 * @return true if proxy, false if ssl tunnel (non-Javadoc)
+		 *
+		 * @see com.eviware.soapui.impl.wsdl.monitor.SoapMonitorEngine#isProxy()
+		 */
 	public boolean isProxy()
 	{
 		return proxyOrTunnel;
