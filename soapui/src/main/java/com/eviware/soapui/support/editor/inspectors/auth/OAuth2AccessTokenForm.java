@@ -104,7 +104,7 @@ public class OAuth2AccessTokenForm
 		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 
-		JLabel accessTokenDocumentationLink = UISupport.getLabelAsLink( "http://www.soapui.org",
+		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
 				"How to get an access token from an authorization server" );
 		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}

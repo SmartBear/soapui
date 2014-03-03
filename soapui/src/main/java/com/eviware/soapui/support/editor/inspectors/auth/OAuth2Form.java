@@ -66,7 +66,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		setBackgroundColorOnPanel( centerPanel );
 
 		JPanel southPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		JLabel oAuthDocumentationLink = UISupport.getLabelAsLink( "http://www.soapui.org", "Learn about OAuth 2" );
+		JLabel oAuthDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
 		southPanel.add( oAuthDocumentationLink );
 
 		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );

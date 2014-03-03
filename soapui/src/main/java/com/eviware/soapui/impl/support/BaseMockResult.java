@@ -31,7 +31,7 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 	private MockOperationType mockOperation;
 	private String responseContentType;
 
-	public BaseMockResult( MockRequestType request ) throws Exception
+	public BaseMockResult( MockRequestType request )
 	{
 		timestamp = System.currentTimeMillis();
 		mockRequest = request;

@@ -14,6 +14,7 @@ package com.eviware.soapui.support.editor.inspectors.script;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
@@ -29,8 +30,8 @@ public class ScriptInspectorFactory implements ResponseInspectorFactory
 
 	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
 	{
-		if( modelItem instanceof WsdlMockResponse )
-			return new MockResponseScriptInspector( ( WsdlMockResponse )modelItem );
+		if( modelItem instanceof MockResponse )
+			return new MockResponseScriptInspector( ( MockResponse )modelItem );
 
 		return null;
 	}

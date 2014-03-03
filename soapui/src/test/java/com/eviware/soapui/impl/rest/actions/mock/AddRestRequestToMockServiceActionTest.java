@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -18,13 +19,11 @@ import java.util.List;
 import static com.eviware.soapui.impl.rest.HttpMethod.GET;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 public class AddRestRequestToMockServiceActionTest
 {
+	private final String requestPath = "somepath";
 	AddRestRequestToMockServiceAction action = new AddRestRequestToMockServiceAction();
 	RestRequest restRequest;
 	Object notUsed = null;
@@ -38,7 +37,7 @@ public class AddRestRequestToMockServiceActionTest
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
 		restRequest.setMethod( GET );
-		restRequest.setPath( "somepath" );
+		restRequest.setPath( requestPath );
 		mockPromptDialog();
 		project = restRequest.getRestMethod().getInterface().getProject();
 	}
@@ -91,6 +90,19 @@ public class AddRestRequestToMockServiceActionTest
 
 		assertThat( mockResponseCount, is(1));
 		assertThat( project.getRestMockServiceAt( 0 ).getMockOperationCount(), is(2) );
+	}
+
+	@Test
+	public void shouldCreateNewOperationForDifferentVerb()
+	{
+		action.perform( restRequest, notUsed );
+		int mockOperationCount = project.getRestMockServiceAt( 0 ).getMockOperationCount();
+		assertThat( mockOperationCount, is(1));
+
+		restRequest.setMethod( HttpMethod.TRACE );
+		action.perform( restRequest, notUsed );
+		mockOperationCount = project.getRestMockServiceAt( 0 ).getMockOperationCount();
+		assertThat( mockOperationCount, is( 2 ) );
 	}
 
 	private void mockPromptDialog()

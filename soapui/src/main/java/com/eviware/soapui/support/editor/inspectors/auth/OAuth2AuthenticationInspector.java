@@ -8,7 +8,6 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -21,6 +20,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import static javax.swing.BorderFactory.*;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
@@ -94,7 +94,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBackgroundColorOnPanel( centerPanel );
 
 		JPanel southPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		JLabel oAuthDocumentationLink = getLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
+		JLabel oAuthDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
 		southPanel.add( oAuthDocumentationLink );
 
 		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );
@@ -106,22 +106,6 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBorderOnPanel( wrapperPanel );
 
 		getCardPanel().add( wrapperPanel, OAUTH_2_FORM_LABEL );
-	}
-
-	private JLabel getLabelLink( final String url, String labelText )
-	{
-		JLabel oAuthDocumentationLink = new JLabel( labelText );
-		oAuthDocumentationLink.setForeground( Color.BLUE );
-		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				Tools.openURL( url );
-			}
-		} );
-		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-		return oAuthDocumentationLink;
 	}
 
 	@Override
@@ -149,7 +133,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		JPanel wrapperPanel = new JPanel( new BorderLayout() );
 		wrapperPanel.add( accessTokenFormPanel, BorderLayout.NORTH );
 
-		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
 				"How to get an access token from an authorization server" );
 		accessTokenDocumentationLink.setBorder( createEmptyBorder( 10, 5, 0, 0 ) );
 		wrapperPanel.add( accessTokenDocumentationLink, BorderLayout.SOUTH );
@@ -306,7 +290,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 
-		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
 				"How to get an access token from an authorization server" );
 		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}

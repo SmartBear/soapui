@@ -20,11 +20,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.ConfigurationDialog;
-import com.eviware.soapui.support.components.JButtonBar;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.PreviewCorner;
-import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.GradientPanel;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.swing.SwingUtils;
@@ -42,20 +38,7 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
@@ -650,23 +633,6 @@ public class UISupport
 		return panel;
 	}
 
-	public static JLabel getLabelAsLink( final String url, String labelText )
-	{
-		JLabel oAuthDocumentationLink = new JLabel( labelText );
-		oAuthDocumentationLink.setForeground( Color.BLUE );
-		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				Tools.openURL( url );
-			}
-		} );
-		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-		return oAuthDocumentationLink;
-	}
-
-
 	public static boolean isWindows()
 	{
 		return isWindows;
@@ -1067,5 +1033,21 @@ public class UISupport
 		JPanel panel = new JPanel( new BorderLayout() );
 		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
 		return panel;
+	}
+
+	public static JLabel createLabelLink( final String url, String labelText )
+	{
+		JLabel label = new JLabel( labelText );
+		label.setForeground( Color.BLUE );
+		label.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Tools.openURL( url );
+			}
+		} );
+		label.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return label;
 	}
 }

@@ -124,13 +124,23 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		}
 	}
 
-	public String getPath()
+	public String getResourcePath()
 	{
 		return getConfig().getResourcePath();
+	}
+
+	public void setMethod( HttpMethod method)
+	{
+		getConfig().setMethod( method.name() );
 	}
 
 	public HttpMethod getMethod()
 	{
 		return HttpMethod.valueOf( getConfig().getMethod() );
+	}
+
+	public void setResourcePath( String path )
+	{
+		getConfig().setResourcePath( path );
 	}
 }

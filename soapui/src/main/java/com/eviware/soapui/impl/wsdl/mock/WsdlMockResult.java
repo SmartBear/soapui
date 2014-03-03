@@ -28,7 +28,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 public class WsdlMockResult extends BaseMockResult<WsdlMockRequest, WsdlMockOperation, WsdlMockResponse>
 {
-	public WsdlMockResult( WsdlMockRequest request ) throws Exception
+	public WsdlMockResult( WsdlMockRequest request )
 	{
 		super(request);
 	}
