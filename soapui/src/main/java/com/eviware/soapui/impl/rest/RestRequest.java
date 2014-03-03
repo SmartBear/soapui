@@ -92,6 +92,15 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		cleanUpAcceptEncoding();
 	}
 
+	private void setOriginalUriInConfig()
+	{
+		if (getConfig().getOriginalUri() == null &&
+				(StringUtils.hasContent(getEndpoint()) || StringUtils.hasContent(getPath())))
+		{
+			getConfig().setOriginalUri( getEndpoint() + getPath());
+		}
+	}
+
 	private void cleanUpAcceptEncoding()
 	{
 		if (StringUtils.hasContent( getAccept() ))
@@ -218,6 +227,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			WsdlSubmit<RestRequest> submitter = new WsdlSubmit<RestRequest>( this, getSubmitListeners(),
 					RequestTransportRegistry.getTransport( endpoint, submitContext ) );
 			submitter.submitRequest( submitContext, async );
+			setOriginalUriInConfig();
 			return submitter;
 		}
 		catch( Exception e )
