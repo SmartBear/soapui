@@ -7,7 +7,6 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -15,43 +14,14 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.value.AbstractValueModel;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static javax.swing.BorderFactory.createCompoundBorder;
-import static javax.swing.BorderFactory.createEmptyBorder;
-import static javax.swing.BorderFactory.createLineBorder;
+import static javax.swing.BorderFactory.*;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
@@ -124,7 +94,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBackgroundColorOnPanel( centerPanel );
 
 		JPanel southPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		JLabel oAuthDocumentationLink = getLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
+		JLabel oAuthDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
 		southPanel.add( oAuthDocumentationLink );
 
 		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );
@@ -136,22 +106,6 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBorderOnPanel( wrapperPanel );
 
 		getCardPanel().add( wrapperPanel, OAUTH_2_FORM_LABEL );
-	}
-
-	private JLabel getLabelLink( final String url, String labelText )
-	{
-		JLabel oAuthDocumentationLink = new JLabel( labelText );
-		oAuthDocumentationLink.setForeground( Color.BLUE );
-		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				Tools.openURL( url );
-			}
-		} );
-		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-		return oAuthDocumentationLink;
 	}
 
 	@Override
@@ -179,7 +133,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		JPanel wrapperPanel = new JPanel( new BorderLayout() );
 		wrapperPanel.add( accessTokenFormPanel, BorderLayout.NORTH );
 
-		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
 				"How to get an access token from an authorization server" );
 		accessTokenDocumentationLink.setBorder( createEmptyBorder( 10, 5, 0, 0 ) );
 		wrapperPanel.add( accessTokenDocumentationLink, BorderLayout.SOUTH );
