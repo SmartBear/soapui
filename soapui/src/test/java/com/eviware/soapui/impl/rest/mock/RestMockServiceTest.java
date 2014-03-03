@@ -34,7 +34,7 @@ public class RestMockServiceTest
 		restMockService.addNewMockAction( restRequest );
 
 		RestMockAction restMockAction = restMockService.getMockOperationAt( 0 );
-		assertEquals( "aNicePath", restMockAction.getPath() );
+		assertEquals( "aNicePath", restMockAction.getResourcePath() );
 		assertEquals( GET, restMockAction.getMethod() );
 	}
 
