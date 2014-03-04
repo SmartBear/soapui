@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
@@ -142,5 +143,10 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setResourcePath( String path )
 	{
 		getConfig().setResourcePath( path );
+	}
+
+	public String getDispatchStyle()
+	{
+		return String.valueOf( MockOperationDispatchStyleConfig.SEQUENCE );
 	}
 }

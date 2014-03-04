@@ -1,7 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.rest.panels.request.TextPanelWithTopLabel;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
@@ -12,15 +12,14 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockServiceListener;
-import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
-import com.eviware.soapui.model.util.ModelItemNames;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.ExtendedComboBoxModel;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
@@ -29,6 +28,8 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -38,9 +39,9 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	private JList responseList;
 	private JComboBox defaultResponseCombo;
 	private ResponseListModel responseListModel;
-	private JComponentInspector<JComponent> dispatchInspector;
 	private MockOperationDispatcher dispatcher;
 	private InternalProjectListener projectListener = new InternalProjectListener();
+	private JInspectorPanel inspectorPanel;
 
 	public RestMockActionDesktopPanel( RestMockAction mockOperation )
 	{
@@ -53,6 +54,11 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	private void buildUI()
 	{
 		add( buildToolbar(), BorderLayout.NORTH );
+
+
+		inspectorPanel = JInspectorPanelFactory.build( buildResponseList() );
+		inspectorPanel.setDefaultDividerLocation( 0.5F );
+		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
 	}
 
 	private JComponent buildResponseList()
@@ -131,16 +137,18 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.addSpace( 3 );
 
-		toolbar.addFixed( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/addToMockService.gif" ) ) );
-		toolbar.addFixed( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif" ) ) );
-		toolbar.addUnrelatedGap();
-
-		ModelItemNames<WsdlInterface> names = new ModelItemNames<WsdlInterface>( ModelSupport.getChildren( getModelItem()
-				.getMockService().getProject(), WsdlInterface.class ) );
+		final JTextField resourcePathEditor = new JTextField(  );
+		resourcePathEditor.addKeyListener( new KeyAdapter()
+		{
+			@Override
+			public void keyReleased( KeyEvent e )
+			{
+				getModelItem().setResourcePath( resourcePathEditor.getText() );
+			}
+		} );
+		TextPanelWithTopLabel resourcePanel = new TextPanelWithTopLabel( "Resource", getModelItem().getResourcePath(), resourcePathEditor );
+		toolbar.addWithOnlyMinimumHeight( resourcePanel );
 
 
 		return toolbar;
