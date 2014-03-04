@@ -170,7 +170,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
 			request.setSelectedAuthProfileAndAuthType( selectedOption,selectedOption );
-			authenticationForm.setPreemptiveCheckboxVisibility( selectedOption.equals( BASIC_AUTH_PROFILE ) );
+			authenticationForm.setButtonGroupVisibility( selectedOption.equals( BASIC_AUTH_PROFILE ) );
 			if( isSoapRequest( request ) )
 			{
 				showCard( WSS_FORM_LABEL );
