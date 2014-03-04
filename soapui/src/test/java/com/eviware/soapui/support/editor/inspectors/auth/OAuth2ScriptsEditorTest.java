@@ -255,7 +255,7 @@ public class OAuth2ScriptsEditorTest extends StubbedDialogsTestBase
 			{
 				for( BrowserListener browserListener : browserListeners )
 				{
-					browserListener.javaScriptErrorOccurred( "document.usr.value = 'kalle'",
+					browserListener.javaScriptExecuted( "document.usr.value = 'kalle'",
 							"http://mock.com", new RuntimeException( "Mock error" ) );
 				}
 			}

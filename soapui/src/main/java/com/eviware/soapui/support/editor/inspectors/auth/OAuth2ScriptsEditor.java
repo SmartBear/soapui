@@ -7,6 +7,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidator;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2Parameters;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -275,7 +276,7 @@ public class OAuth2ScriptsEditor extends JPanel
 			if( !errorsFound )
 			{
 				OAuth2TokenExtractor extractor = getExtractor();
-				extractor.addBrowserListener( new JavaScriptErrorReporter() );
+				extractor.addBrowserListener( new JavaScriptErrorReporter(profile.getAutomationJavaScripts()) );
 				OAuth2Parameters parameters = new OAuth2Parameters( profile );
 				try
 				{
@@ -364,21 +365,45 @@ public class OAuth2ScriptsEditor extends JPanel
 	private class JavaScriptErrorReporter extends BrowserListenerAdapter
 	{
 
+		private final List<String> expectedScripts;
 		private boolean hasErrors = false;
+		private List<String> executedScripts = new ArrayList<String>(  );
+
+		public JavaScriptErrorReporter( List<String> automationJavaScripts )
+		{
+			this.expectedScripts = nonEmptyScriptsIn(automationJavaScripts);
+		}
+
+		private List<String> nonEmptyScriptsIn( List<String> scriptList )
+		{
+			List<String> filteredList = new ArrayList<String>(  );
+			for( String script : scriptList )
+			{
+				if ( StringUtils.hasContent( script ))
+				{
+					filteredList.add(script);
+				}
+			}
+			return filteredList;
+		}
 
 		@Override
-		public void javaScriptErrorOccurred( final String script, final String location, final Exception error )
+		public void javaScriptExecuted( final String script, final String errorLocation, final Exception error )
 		{
-			hasErrors = true;
-			// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
-			SwingUtilities.invokeLater( new Runnable()
+			executedScripts.add(script);
+			if( error != null )
 			{
-				public void run()
+				hasErrors = true;
+				// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
+				SwingUtilities.invokeLater( new Runnable()
 				{
-					showErrorMessage( "The following script failed:\r\n" + script + "\r\nPage URL: " + location + "\r\nError:\r\n" +
-							error.getMessage() + "]" );
-				}
-			} );
+					public void run()
+					{
+						showErrorMessage( "The following script failed:\r\n" + script + "\r\nPage URL: " + errorLocation + "\r\nError:\r\n" +
+								error.getMessage() + "]" );
+					}
+				} );
+			}
 		}
 
 		@Override
@@ -387,13 +412,29 @@ public class OAuth2ScriptsEditor extends JPanel
 			if( !hasErrors )
 			{
 				// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
-				SwingUtilities.invokeLater( new Runnable()
+					if( executedScripts.containsAll( expectedScripts ) )
 				{
-					public void run()
+					SwingUtilities.invokeLater( new Runnable()
 					{
-						UISupport.showInfoMessage( "All scripts executed correctly." );
-					}
-				} );
+						public void run()
+						{
+							UISupport.showInfoMessage( "All scripts executed correctly." );
+						}
+					} );
+				}
+				else
+				{
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							UISupport.showInfoMessage( "The scripts could only be partially validated, because all scripts " +
+									"weren't executed in the OAuth2 flow.\n" +
+									"Maybe you already have an active session in the authorization server?",
+									"Scripts not fully validated" );
+						}
+					} );
+				}
 			}
 		}
 	}

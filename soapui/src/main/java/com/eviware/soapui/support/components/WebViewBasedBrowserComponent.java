@@ -14,7 +14,6 @@ package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -163,15 +162,18 @@ public class WebViewBasedBrowserComponent
 			{
 				try
 				{
-					Object result = webView.getEngine().executeScript( script );
-					System.out.println( result );
+					webView.getEngine().executeScript( script );
+					for( BrowserListener listener : listeners )
+					{
+						listener.javaScriptExecuted( script, null, null );
+					}
 				}
 				catch( Exception e )
 				{
 					SoapUI.log.warn( "Error executing JavaScript [" + script + "]", e );
 					for( BrowserListener listener : listeners )
 					{
-						listener.javaScriptErrorOccurred( script, lastLocation, e );
+						listener.javaScriptExecuted( script, lastLocation, e );
 					}
 				}
 			}
