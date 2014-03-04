@@ -1,11 +1,10 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.panels.request.TextPanelWithTopLabel;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -28,6 +27,8 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
@@ -137,7 +138,20 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
+		toolbar.setLayout( new BorderLayout() );
 
+		Box methodBox = Box.createHorizontalBox();
+		methodBox.add( createMethodComboBox() );
+		methodBox.add ( Box.createHorizontalStrut( 10 ));
+		toolbar.add( methodBox, BorderLayout.WEST );
+
+		toolbar.add( createResourcePathTextField(), BorderLayout.CENTER );
+
+		return toolbar;
+	}
+
+	private JComponent createResourcePathTextField()
+	{
 		final JTextField resourcePathEditor = new JTextField(  );
 		resourcePathEditor.addKeyListener( new KeyAdapter()
 		{
@@ -147,11 +161,30 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 				getModelItem().setResourcePath( resourcePathEditor.getText() );
 			}
 		} );
-		TextPanelWithTopLabel resourcePanel = new TextPanelWithTopLabel( "Resource", getModelItem().getResourcePath(), resourcePathEditor );
-		toolbar.addWithOnlyMinimumHeight( resourcePanel );
+		return new TextPanelWithTopLabel( "Resource", getModelItem().getResourcePath(), resourcePathEditor );
+	}
 
+	private JComponent createMethodComboBox()
+	{
+		JPanel comboPanel = new JPanel( new BorderLayout(  ) );
 
-		return toolbar;
+		comboPanel.add( new JLabel( "Method" ), BorderLayout.NORTH );
+
+		final JComboBox methodCombo = new JComboBox( HttpMethod.getMethods() );
+
+		methodCombo.setSelectedItem( getModelItem().getMethod() );
+		methodCombo.setToolTipText( "Set desired HTTP method" );
+		methodCombo.addItemListener( new ItemListener()
+		{
+			public void itemStateChanged( ItemEvent e )
+			{
+				getModelItem().setMethod( ( HttpMethod )methodCombo.getSelectedItem() );
+			}
+		} );
+
+		comboPanel.add( methodCombo, BorderLayout.SOUTH );
+
+		return comboPanel;
 	}
 
 	public boolean onClose( boolean canCancel )
@@ -215,7 +248,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 			if( response.getMockOperation() != getModelItem() )
 				return;
 
-			responses.add( ( WsdlMockResponse )response );
+			responses.add( response );
 			response.addPropertyChangeListener( this );
 			fireIntervalAdded( this, responses.size() - 1, responses.size() - 1 );
 
@@ -237,7 +270,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 
 		public void propertyChange( PropertyChangeEvent arg0 )
 		{
-			if( arg0.getPropertyName().equals( WsdlMockOperation.NAME_PROPERTY ) )
+			if( arg0.getPropertyName().equals( RestMockAction.NAME_PROPERTY ) )
 			{
 				int ix = responses.indexOf( arg0.getSource() );
 				fireContentsChanged( this, ix, ix );
