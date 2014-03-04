@@ -97,7 +97,9 @@ public class SoapUIVersionUpdate
 	private String fetchVersionDocumentContent( final URL versionUrl ) throws URISyntaxException, IOException
 	{
 		URLConnection connection = versionUrl.openConnection();
-		String response = IOUtils.toString( connection.getInputStream() );
+		InputStream inputStream = connection.getInputStream();
+		String response = IOUtils.toString( inputStream );
+		inputStream.close();
 		Authenticator.setDefault( null );
 		return response;
 	}

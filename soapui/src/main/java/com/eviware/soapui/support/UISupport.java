@@ -71,7 +71,7 @@ import java.util.Map;
 
 /**
  * Facade for common UI-related tasks
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -119,7 +119,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 * 
+	 *
 	 * @param loader
 	 * @deprecated Use {@link #addResourceClassLoader(ClassLoader)} instead
 	 */
@@ -130,7 +130,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 * 
+	 *
 	 * @param loader
 	 */
 	public static void addResourceClassLoader( ClassLoader loader )
@@ -141,7 +141,7 @@ public class UISupport
 	/**
 	 * Set the main frame of this application. This is only used when running
 	 * under Swing.
-	 * 
+	 *
 	 * @param frame
 	 */
 	public static void setMainFrame( Component frame )
@@ -215,7 +215,7 @@ public class UISupport
 
 	@Deprecated
 	public static ConfigurationDialog createConfigurationDialog( String name, String helpUrl, String description,
-			ImageIcon icon )
+																					 ImageIcon icon )
 	{
 		return new SwingConfigurationDialogImpl( name, helpUrl, description, icon );
 	}
@@ -274,7 +274,7 @@ public class UISupport
 
 	/**
 	 * @deprecated use prompt(String question, String title, String value)
-	 *             instead
+	 * instead
 	 */
 
 	@Deprecated
@@ -466,6 +466,19 @@ public class UISupport
 		return isHeadless.booleanValue();
 	}
 
+	private static URL loadFromSecondaryLoader( String path )
+	{
+		for( ClassLoader loader : secondaryResourceLoaders )
+		{
+			URL url = loader.getResource( path );
+			if( url != null )
+			{
+				return url;
+			}
+		}
+		return null;
+	}
+
 	public static void showInfoMessage( String message )
 	{
 		dialogs.showInfoMessage( message );
@@ -491,9 +504,9 @@ public class UISupport
 	public static JButton createToolbarButton( Action action )
 	{
 		JButton result = new JButton( action );
-		if(action.getValue( Action.NAME ) != null)
+		if( action.getValue( Action.NAME ) != null )
 		{
-			result.setName( String.valueOf(  action.getValue( Action.NAME ) ));
+			result.setName( String.valueOf( action.getValue( Action.NAME ) ) );
 		}
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		result.setText( "" );
@@ -568,8 +581,7 @@ public class UISupport
 			UISupport.setHourglassCursor();
 			SoapUIDesktop desktop = SoapUI.getDesktop();
 			return desktop == null ? null : desktop.showDesktopPanel( modelItem );
-		}
-		finally
+		} finally
 		{
 			UISupport.resetCursor();
 		}
@@ -582,8 +594,7 @@ public class UISupport
 			UISupport.setHourglassCursor();
 			SoapUIDesktop desktop = SoapUI.getDesktop();
 			return desktop == null ? null : desktop.showDesktopPanel( desktopPanel );
-		}
-		finally
+		} finally
 		{
 			UISupport.resetCursor();
 		}
@@ -641,23 +652,6 @@ public class UISupport
 
 		return panel;
 	}
-
-	public static JLabel getLabelAsLink( final String url, String labelText )
-	{
-		JLabel oAuthDocumentationLink = new JLabel( labelText );
-		oAuthDocumentationLink.setForeground( Color.BLUE );
-		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				Tools.openURL( url );
-			}
-		} );
-		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-		return oAuthDocumentationLink;
-	}
-
 
 	public static boolean isWindows()
 	{
@@ -779,6 +773,42 @@ public class UISupport
 	public static JButtonBar initFrameActions( ActionList actions, final JFrame frame )
 	{
 		return initWindowActions( actions, frame.getRootPane(), frame );
+	}
+
+	private static JButtonBar initWindowActions( ActionList actions, JRootPane rootPane, final Window dialog )
+	{
+		rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
+				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
+		rootPane.getActionMap().put( "ESCAPE", new AbstractAction()
+		{
+			public void actionPerformed( ActionEvent e )
+			{
+				dialog.setVisible( false );
+			}
+		} );
+
+		if( actions != null )
+		{
+			JButtonBar buttons = new JButtonBar();
+			buttons.addActions( actions );
+			rootPane.setDefaultButton( buttons.getDefaultButton() );
+
+			for( int c = 0; c < actions.getActionCount(); c++ )
+			{
+				Action action = actions.getActionAt( c );
+				if( action instanceof HelpActionMarker )
+				{
+					rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
+							KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
+					rootPane.getActionMap().put( "HELP", action );
+					break;
+				}
+			}
+
+			return buttons;
+		}
+
+		return null;
 	}
 
 	public static void initDialogActions( final JDialog dialog, Action helpAction, JButton defaultButton )
@@ -975,83 +1005,19 @@ public class UISupport
 		return Font.decode( DEFAULT_EDITOR_FONT + " " + fontSize );
 	}
 
-	public static char[] promptPassword( String question, String title )
-	{
-		return dialogs.promptPassword( question, title );
-	}
-
 	public static <T> T findParentWithClass( Component startComponent, Class<T> expectedClass )
 	{
 		Component currentComponent = startComponent;
-		while ( currentComponent !=  null && !( expectedClass.isAssignableFrom( currentComponent.getClass() )))
+		while( currentComponent != null && !( expectedClass.isAssignableFrom( currentComponent.getClass() ) ) )
 		{
 			currentComponent = currentComponent.getParent();
 		}
 		return ( T )currentComponent;
 	}
 
-	public static boolean isIdePlugin()
+	public static char[] promptPassword( String question, String title )
 	{
-		return SoapUI.getSoapUICore() instanceof SwingPluginSoapUICore;
-	}
-
-	public static JPanel createEmptyPanel( int top, int left, int bottom, int right )
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
-		return panel;
-	}
-
-	/*
-	Helpers
-	 */
-	private static URL loadFromSecondaryLoader( String path )
-	{
-		for( ClassLoader loader : secondaryResourceLoaders )
-		{
-			URL url = loader.getResource( path );
-			if( url != null )
-			{
-				return url;
-			}
-		}
-		return null;
-	}
-
-	private static JButtonBar initWindowActions( ActionList actions, JRootPane rootPane, final Window dialog )
-	{
-		rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-				KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "ESCAPE" );
-		rootPane.getActionMap().put( "ESCAPE", new AbstractAction()
-		{
-			public void actionPerformed( ActionEvent e )
-			{
-				dialog.setVisible( false );
-			}
-		} );
-
-		if( actions != null )
-		{
-			JButtonBar buttons = new JButtonBar();
-			buttons.addActions( actions );
-			rootPane.setDefaultButton( buttons.getDefaultButton() );
-
-			for( int c = 0; c < actions.getActionCount(); c++ )
-			{
-				Action action = actions.getActionAt( c );
-				if( action instanceof HelpActionMarker )
-				{
-					rootPane.getInputMap( JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT ).put(
-							KeyStroke.getKeyStroke( KeyEvent.VK_F1, 0 ), "HELP" );
-					rootPane.getActionMap().put( "HELP", action );
-					break;
-				}
-			}
-
-			return buttons;
-		}
-
-		return null;
+		return dialogs.promptPassword( question, title );
 	}
 
 	private static final class ItemListenerImplementation implements ItemListener
@@ -1085,5 +1051,33 @@ public class UISupport
 				combo.setToolTipText( selectedItem );
 			}
 		}
+	}
+
+	public static boolean isIdePlugin()
+	{
+		return SoapUI.getSoapUICore() instanceof SwingPluginSoapUICore;
+	}
+
+	public static JPanel createEmptyPanel( int top, int left, int bottom, int right )
+	{
+		JPanel panel = new JPanel( new BorderLayout() );
+		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
+		return panel;
+	}
+
+	public static JLabel createLabelLink( final String url, String labelText )
+	{
+		JLabel label = new JLabel( labelText );
+		label.setForeground( Color.BLUE );
+		label.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Tools.openURL( url );
+			}
+		} );
+		label.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return label;
 	}
 }

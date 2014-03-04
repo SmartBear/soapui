@@ -12,7 +12,10 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockoperation;
 
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -22,7 +25,7 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author ole.matzura
  */
 
-public class NewMockResponseAction extends AbstractSoapUIAction<WsdlMockOperation>
+public class NewMockResponseAction extends AbstractSoapUIAction<AbstractMockOperation>
 {
 	public static final String SOAPUI_ACTION_ID = "NewMockResponseAction";
 
@@ -31,14 +34,22 @@ public class NewMockResponseAction extends AbstractSoapUIAction<WsdlMockOperatio
 		super( "New MockResponse", "Creates a new MockResponse for this MockOperation" );
 	}
 
-	public void perform( WsdlMockOperation mockOperation, Object param )
+	public void perform( AbstractMockOperation mockOperation, Object param )
 	{
 		String name = UISupport.prompt( "Enter name of new MockResponse", getName(),
 				"Response " + ( mockOperation.getMockResponseCount() + 1 ) );
 
 		if( name != null )
 		{
-			UISupport.showDesktopPanel( mockOperation.addNewMockResponse( name, true ) );
+			if( mockOperation instanceof WsdlMockOperation )
+			{
+				boolean shouldCreateResponse = true;
+				UISupport.showDesktopPanel( ((WsdlMockOperation)mockOperation).addNewMockResponse( name, shouldCreateResponse ) );
+			}
+			else if( mockOperation instanceof RestMockAction )
+			{
+				UISupport.showDesktopPanel( ((RestMockAction)mockOperation).addNewMockResponse( name ) );
+			}
 		}
 	}
 }

@@ -6,6 +6,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
+/**
+ * A wrapper class to accociate
+ */
 public final class PropertyComponent
 {
 	@Nullable

@@ -10,15 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class RestMockRequest extends AbstractMockRequest
 {
-	public RestMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context ) throws Exception
+	public RestMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context )
 	{
 		super( request, response, context );
-	}
-
-	@Override
-	protected void initPostRequest( HttpServletRequest request, WsdlMockRunContext context ) throws Exception
-	{
-
 	}
 
 	@Override

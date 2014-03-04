@@ -143,6 +143,7 @@ public class OAuth2GetAccessTokenForm
 	{
 		JLabel accessTokenStatusText = new JLabel();
 		return new PropertyComponent( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, accessTokenStatusText );
+
 	}
 
 	private JDialog createGetAccessTokenDialog( JPanel accessTokenFormPanel )

@@ -8,7 +8,7 @@ import com.eviware.soapui.model.mock.MockRequest;
 
 public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockAction, RestMockResponse>
 {
-	public RestMockResult( RestMockRequest request ) throws Exception
+	public RestMockResult( RestMockRequest request )
 	{
 		super( request );
 	}

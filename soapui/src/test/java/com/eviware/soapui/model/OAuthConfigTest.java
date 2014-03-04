@@ -98,7 +98,6 @@ public class OAuthConfigTest
 		OAuth2Profile savedOAuth2Profile = retrievedProject.getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 );
 
 		assertOAuth2ProfileFields( savedOAuth2Profile );
-
 	}
 
 	private void assertOAuth2ProfileFields( OAuth2Profile savedOAuth2Profile )

@@ -1,9 +1,11 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.support.AbstractMockDispatcher;
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,22 +27,42 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 
 	@Override
 	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
-			throws DispatchException
 	{
+		RestMockRequest restMockRequest = new RestMockRequest( request, response, mockContext );
+
+		Object result = null;
 		try
 		{
-			RestMockRequest restMockRequest = new RestMockRequest( request, response, mockContext );
-			return getMockResult( restMockRequest );
+			result = mockService.runOnRequestScript( mockContext, restMockRequest );
+
+			if( !( result instanceof MockResult ) )
+			{
+				result = getMockResult( restMockRequest );
+			}
+
+			mockService.runAfterRequestScript( mockContext, ( MockResult )result );
+			return ( MockResult )result;
 		}
 		catch( Exception e )
 		{
-			throw new DispatchException( e );
+			SoapUI.logError( e, "got an exception while dispatching - returning a default 500 response" );
+			return createServerErrorMockResult( restMockRequest );
 		}
+		finally
+		{
+			mockService.fireOnMockResult( result );
+		}
+	}
+
+	private MockResult createServerErrorMockResult( RestMockRequest restMockRequest )
+	{
+		restMockRequest.getHttpResponse().setStatus( HttpStatus.SC_INTERNAL_SERVER_ERROR );
+		return new RestMockResult( restMockRequest );
 	}
 
 	private MockResult getMockResult( RestMockRequest restMockRequest ) throws DispatchException
 	{
-		RestMockAction mockAction = ( RestMockAction )mockService.findOperationMatchingPath( restMockRequest.getPath() );
+		RestMockAction mockAction = ( RestMockAction )mockService.findMatchingOperation( restMockRequest.getPath(), restMockRequest.getMethod() );
 
 		if( mockAction != null )
 		{
@@ -52,7 +74,6 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 		}
 
 	}
-
 
 
 	private RestMockResult getDefaultResponse( RestMockRequest restMockRequest ) throws DispatchException

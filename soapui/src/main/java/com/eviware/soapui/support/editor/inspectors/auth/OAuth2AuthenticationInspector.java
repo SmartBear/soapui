@@ -3,12 +3,10 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
@@ -16,12 +14,41 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.value.AbstractValueModel;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
+import java.util.List;
 
-import static javax.swing.BorderFactory.*;
+import static com.google.common.base.Preconditions.checkArgument;
+import static javax.swing.BorderFactory.createCompoundBorder;
+import static javax.swing.BorderFactory.createEmptyBorder;
+import static javax.swing.BorderFactory.createLineBorder;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
@@ -94,7 +121,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBackgroundColorOnPanel( centerPanel );
 
 		JPanel southPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		JLabel oAuthDocumentationLink = getLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
+		JLabel oAuthDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn about OAuth 2" );
 		southPanel.add( oAuthDocumentationLink );
 
 		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );
@@ -106,22 +133,6 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		setBorderOnPanel( wrapperPanel );
 
 		getCardPanel().add( wrapperPanel, OAUTH_2_FORM_LABEL );
-	}
-
-	private JLabel getLabelLink( final String url, String labelText )
-	{
-		JLabel oAuthDocumentationLink = new JLabel( labelText );
-		oAuthDocumentationLink.setForeground( Color.BLUE );
-		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				Tools.openURL( url );
-			}
-		} );
-		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-		return oAuthDocumentationLink;
 	}
 
 	@Override
@@ -149,7 +160,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		JPanel wrapperPanel = new JPanel( new BorderLayout() );
 		wrapperPanel.add( accessTokenFormPanel, BorderLayout.NORTH );
 
-		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
+		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
 				"How to get an access token from an authorization server" );
 		accessTokenDocumentationLink.setBorder( createEmptyBorder( 10, 5, 0, 0 ) );
 		wrapperPanel.add( accessTokenDocumentationLink, BorderLayout.SOUTH );
@@ -302,13 +313,9 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addSpace( NORMAL_SPACING );
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
 		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
-		buttonPanel.add( new JButton( new EditScriptsAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditAutomationScriptsAction( profile ) ) );
 		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
-
-		JLabel accessTokenDocumentationLink = getLabelLink( "http://www.soapui.org",
-				"How to get an access token from an authorization server" );
-		accessTokenForm.addComponent( accessTokenDocumentationLink );
 	}
 
 	/**
@@ -316,14 +323,10 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 	 */
 	private OAuth2Profile getOAuth2Profile( RestRequest request )
 	{
-		OAuth2ProfileContainer oAuth2ProfileContainer = request.getOperation().getInterface().getProject()
-				.getOAuth2ProfileContainer();
-		if( oAuth2ProfileContainer.getOAuth2ProfileList().isEmpty() )
-		{
-			oAuth2ProfileContainer.addNewOAuth2Profile( "OAuth 2 - Profile" );
-		}
-		return oAuth2ProfileContainer.getOAuth2ProfileList().get( 0 );
-
+		List<OAuth2Profile> oAuth2ProfileList = request.getOperation().getInterface().getProject()
+				.getOAuth2ProfileContainer().getOAuth2ProfileList();
+		checkArgument( oAuth2ProfileList.size() == 1, "There should be one OAuth 2 profile configured on the project" );
+		return oAuth2ProfileList.get( 0 );
 	}
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
@@ -410,13 +413,13 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 	}
 
-	private class EditScriptsAction extends AbstractAction
+	private class EditAutomationScriptsAction extends AbstractAction
 	{
 		private final OAuth2Profile profile;
 
-		public EditScriptsAction( OAuth2Profile profile )
+		public EditAutomationScriptsAction( OAuth2Profile profile )
 		{
-			putValue( Action.NAME, "Edit scripts..." );
+			putValue( Action.NAME, "Automation..." );
 			this.profile = profile;
 		}
 

@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockOperationDesktopPanel;
@@ -18,10 +19,12 @@ public class RestMockActionPanelBuilder  extends EmptyPanelBuilder<RestMockActio
 
 	public Component buildOverviewPanel( RestMockAction mockAction )
 	{
-		JPropertiesTable<RestMockAction> table = new JPropertiesTable<RestMockAction>( "Mock Action" );
-		table = new JPropertiesTable<RestMockAction>( "MockAction Properties" );
-		table.addProperty( "Name", "name", true );
-		table.addProperty( "Description", "description", true );
+		JPropertiesTable<RestMockAction> table = new JPropertiesTable<RestMockAction>( "MockAction Properties" );
+		boolean editable = true;
+		table.addProperty( "Name", "name", editable );
+		table.addProperty( "Description", "description", editable );
+		table.addProperty( "Resource path", "resourcePath", editable );
+		table.addProperty( "Method", "method", HttpMethod.values() );
 		table.setPropertyObject( mockAction );
 
 		return table;

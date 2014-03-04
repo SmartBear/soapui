@@ -392,7 +392,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		return getConfig().isSetAfterRequestScript() ? getConfig().getAfterRequestScript().getStringValue() : null;
 	}
 
-	public Object runOnRequestScript( WsdlMockRunContext runContext, WsdlMockRequest mockRequest )
+	public Object runOnRequestScript( WsdlMockRunContext runContext, MockRequest mockRequest )
 			throws Exception
 	{
 		String script = getOnRequestScript();
@@ -489,6 +489,17 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public abstract String getIconName();
 
 	public abstract MockDispatcher createDispatcher( WsdlMockRunContext mockContext );
+
+	public void fireOnMockResult( Object result )
+	{
+		if( result != null && result instanceof MockResult )
+		{
+			for( MockRunListener listener : getMockRunListeners() )
+			{
+				listener.onMockResult( ( MockResult )result );
+			}
+		}
+	}
 
 	private class MockServiceIconAnimator
 			extends ModelItemIconAnimator<AbstractMockService<MockOperationType, MockResponseType, MockServiceConfigType>>

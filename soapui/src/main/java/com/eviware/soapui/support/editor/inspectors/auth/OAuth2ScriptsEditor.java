@@ -7,7 +7,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidator;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2Parameters;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
 import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
@@ -29,7 +29,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -68,7 +67,7 @@ public class OAuth2ScriptsEditor extends JPanel
 		makeScriptsPanel( profile );
 		add( new JScrollPane(scriptsPanel), BorderLayout.CENTER );
 		JPanel linkPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		linkPanel.add( makeLabelLink( HELP_LINK_URL, HELP_LINK_TEXT));
+		linkPanel.add( UISupport.createLabelLink( HELP_LINK_URL, HELP_LINK_TEXT ));
 		add( linkPanel, BorderLayout.SOUTH );
 	}
 
@@ -148,26 +147,9 @@ public class OAuth2ScriptsEditor extends JPanel
 			scriptsPanel.add( inputPanel );
 		}
 		JPanel parentPanel = new JPanel(new BorderLayout(  ));
-		parentPanel.setBorder(new CompoundBorder(new LineBorder( Color.BLACK ),new EmptyBorder( 15, 15, 15, 15 )));
-		parentPanel.add(scriptsPanel, BorderLayout.CENTER);
+		parentPanel.setBorder( new CompoundBorder( new LineBorder( Color.BLACK ), new EmptyBorder( 15, 15, 15, 15 ) ) );
+		parentPanel.add( scriptsPanel, BorderLayout.CENTER );
 		return parentPanel;
-	}
-
-	// TODO: create a common utility method for this after merging to next
-	private JLabel makeLabelLink( final String url, String labelText )
-	{
-		JLabel oAuthDocumentationLink = new JLabel( labelText );
-		oAuthDocumentationLink.setForeground( Color.BLUE );
-		oAuthDocumentationLink.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				Tools.openURL( url );
-			}
-		} );
-		oAuthDocumentationLink.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
-		return oAuthDocumentationLink;
 	}
 
 	private void showErrorMessage( String message )
@@ -275,7 +257,7 @@ public class OAuth2ScriptsEditor extends JPanel
 			if( !errorsFound )
 			{
 				OAuth2TokenExtractor extractor = getExtractor();
-				extractor.addBrowserListener( new JavaScriptErrorReporter() );
+				extractor.addBrowserListener( new JavaScriptErrorReporter(profile.getAutomationJavaScripts()) );
 				OAuth2Parameters parameters = new OAuth2Parameters( profile );
 				try
 				{
@@ -364,21 +346,45 @@ public class OAuth2ScriptsEditor extends JPanel
 	private class JavaScriptErrorReporter extends BrowserListenerAdapter
 	{
 
+		private final List<String> expectedScripts;
 		private boolean hasErrors = false;
+		private List<String> executedScripts = new ArrayList<String>(  );
+
+		public JavaScriptErrorReporter( List<String> automationJavaScripts )
+		{
+			this.expectedScripts = nonEmptyScriptsIn(automationJavaScripts);
+		}
+
+		private List<String> nonEmptyScriptsIn( List<String> scriptList )
+		{
+			List<String> filteredList = new ArrayList<String>(  );
+			for( String script : scriptList )
+			{
+				if ( StringUtils.hasContent( script ))
+				{
+					filteredList.add(script);
+				}
+			}
+			return filteredList;
+		}
 
 		@Override
-		public void javaScriptErrorOccurred( final String script, final String location, final Exception error )
+		public void javaScriptExecuted( final String script, final String errorLocation, final Exception error )
 		{
-			hasErrors = true;
-			// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
-			SwingUtilities.invokeLater( new Runnable()
+			executedScripts.add(script);
+			if( error != null )
 			{
-				public void run()
+				hasErrors = true;
+				// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
+				SwingUtilities.invokeLater( new Runnable()
 				{
-					showErrorMessage( "The following script failed:\r\n" + script + "\r\nPage URL: " + location + "\r\nError:\r\n" +
-							error.getMessage() + "]" );
-				}
-			} );
+					public void run()
+					{
+						showErrorMessage( "The following script failed:\r\n" + script + "\r\nPage URL: " + errorLocation + "\r\nError:\r\n" +
+								error.getMessage() + "]" );
+					}
+				} );
+			}
 		}
 
 		@Override
@@ -387,13 +393,29 @@ public class OAuth2ScriptsEditor extends JPanel
 			if( !hasErrors )
 			{
 				// invokeLater() is necessary, because the call comes from the JavaFX invoker thread
-				SwingUtilities.invokeLater( new Runnable()
+					if( executedScripts.containsAll( expectedScripts ) )
 				{
-					public void run()
+					SwingUtilities.invokeLater( new Runnable()
 					{
-						UISupport.showInfoMessage( "All scripts executed correctly." );
-					}
-				} );
+						public void run()
+						{
+							UISupport.showInfoMessage( "All scripts executed correctly." );
+						}
+					} );
+				}
+				else
+				{
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							UISupport.showInfoMessage( "The scripts could only be partially validated, because all scripts " +
+									"weren't executed in the OAuth2 flow.\n" +
+									"Maybe you already have an active session in the authorization server?",
+									"Scripts not fully validated" );
+						}
+					} );
+				}
 			}
 		}
 	}

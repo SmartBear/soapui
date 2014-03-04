@@ -2,6 +2,7 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
@@ -76,7 +77,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public MockOperation findOrCreateNewOperation( RestRequest restRequest )
 	{
-		MockOperation matchedOperation = findOperationMatchingPath( restRequest.getPath() );
+		MockOperation matchedOperation = findMatchingOperation( restRequest.getPath(), restRequest.getMethod() );
 
 		if( matchedOperation == null)
 		{
@@ -85,14 +86,17 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return matchedOperation;
 	}
 
-	protected MockOperation findOperationMatchingPath( String requestPath )
+	protected MockOperation findMatchingOperation( String pathToFind, HttpMethod verbToFind )
 	{
 		for( MockOperation operation : getMockOperationList() )
 		{
+			String operationPath = ( ( RestMockAction )operation ).getResourcePath();
+			HttpMethod operationVerb = ( ( RestMockAction )operation ).getMethod();
 
-			String path = ( ( RestMockAction )operation ).getPath();
+			boolean matchesPath = operationPath.equals( pathToFind );
+			boolean matchesVerb = verbToFind == operationVerb;
 
-			if( path.equals( requestPath ) )
+			if( matchesPath && matchesVerb )
 			{
 				return operation;
 			}

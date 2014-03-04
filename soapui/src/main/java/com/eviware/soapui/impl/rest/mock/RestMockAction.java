@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
@@ -9,6 +10,7 @@ import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -124,13 +126,32 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		}
 	}
 
-	public String getPath()
+	public String getResourcePath()
 	{
 		return getConfig().getResourcePath();
+	}
+
+	public void setMethod( HttpMethod method)
+	{
+		getConfig().setMethod( method.name() );
+		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
+
+		notifyPropertyChanged( "httpMethod", null, this );
 	}
 
 	public HttpMethod getMethod()
 	{
 		return HttpMethod.valueOf( getConfig().getMethod() );
+	}
+
+	public void setResourcePath( String path )
+	{
+		getConfig().setResourcePath( path );
+		notifyPropertyChanged( "resourcePath", null, this );
+	}
+
+	public String getDispatchStyle()
+	{
+		return String.valueOf( MockOperationDispatchStyleConfig.SEQUENCE );
 	}
 }

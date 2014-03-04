@@ -1,12 +1,17 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.commons.httpclient.HttpStatus;
+import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Spy;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -21,6 +28,7 @@ public class RestMockActionTest
 {
 	RestMockRequest restMockRequest;
 	RestMockAction mockAction;
+
 	RestMockResponse mockResponse;
 
 
@@ -28,7 +36,7 @@ public class RestMockActionTest
 	public void setUp() throws Exception
 	{
 		restMockRequest = makeRestMockRequest();
-		mockAction = ModelItemFactory.makeRestMockAction( );
+		mockAction = ModelItemFactory.makeRestMockAction();
 		mockResponse = mockAction.addNewMockResponse( "response 1" );
 	}
 
@@ -43,7 +51,7 @@ public class RestMockActionTest
 		// So here we making sure the http status is actually set on the HttpResponse.
 		verify( mockResult.getMockRequest().getHttpResponse() ).setStatus( HttpStatus.SC_BAD_REQUEST );
 
-		assertThat( mockResult.getMockResponse().getResponseHttpStatus(), is( HttpStatus.SC_BAD_REQUEST ));
+		assertThat( mockResult.getMockResponse().getResponseHttpStatus(), is( HttpStatus.SC_BAD_REQUEST ) );
 	}
 
 	@Test
@@ -97,6 +105,38 @@ public class RestMockActionTest
 		assertThat( mockResult.getResponseHeaders().get( headerKey, "" ), is( expandedValue ) );
 		assertThat( mockResult.getMockResponse().getResponseHeaders().get( headerKey, "" ), is( headerValue ) );
 
+	}
+
+	@Test
+	public void testScriptIsExecuted() throws Exception
+	{
+		String mockServiceName = "RenamedFromScript";
+
+		mockResponse.setName( "MockResponse" );
+		mockResponse.setScript( "mockResponse.setName('" + mockServiceName + "')" );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+
+		assertThat( mockResult.getMockResponse().getName(), is( mockServiceName ) );
+	}
+
+	@Test
+	public void shouldSetPath()
+	{
+		String updatedPath = "an/updatedpath";
+		assertNotSame( updatedPath, mockAction.getResourcePath() );
+
+		mockAction.setResourcePath( updatedPath );
+
+		assertThat( mockAction.getResourcePath(), is( updatedPath ) );
+	}
+
+	@Test
+	public void shouldSetMethod()
+	{
+		mockAction.setMethod( HttpMethod.TRACE );
+
+		assertThat( mockAction.getMethod(), is( HttpMethod.TRACE ) );
 	}
 
 

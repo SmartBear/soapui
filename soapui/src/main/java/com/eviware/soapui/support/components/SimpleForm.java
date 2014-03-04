@@ -336,7 +336,7 @@ public class SimpleForm
 	 */
 	public void appendLabelAsLink( String url, String text )
 	{
-		JLabel label = UISupport.getLabelAsLink( url, text );
+		JLabel label = UISupport.createLabelLink( url, text );
 		append( null, null, label, null, DEFAULT_LABEL_COLUMN, getColumnSpanToTheEnd( DEFAULT_LABEL_COLUMN ) );
 	}
 
