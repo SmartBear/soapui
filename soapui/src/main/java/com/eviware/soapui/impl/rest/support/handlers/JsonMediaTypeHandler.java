@@ -60,7 +60,7 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			serializer.setRootName( HttpUtils.isErrorStatus( response.getStatusCode() ) ? "Fault" : "Response" );
 			URL url = response.getURL();
 			String originalUri = readOriginalUriFrom( response.getRequest() );
-			String namespaceUri = originalUri != null ? originalUri : url.getProtocol() + "://" + url.getHost() + url.getPath();
+			String namespaceUri = originalUri != null ? originalUri : makeUrlString( url );
 			serializer.setNamespace( "",  namespaceUri);
 			content = serializer.write( json );
 			content = XmlUtils.prettyPrintXml( content );
@@ -89,5 +89,10 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 		{
 			return null;
 		}
+	}
+
+	private String makeUrlString( URL url )
+	{
+		return url.getProtocol() + "://" + url.getHost() + url.getPath();
 	}
 }
