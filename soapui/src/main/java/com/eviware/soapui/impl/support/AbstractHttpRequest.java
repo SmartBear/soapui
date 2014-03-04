@@ -640,6 +640,18 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( "authType", old, authType );
 	}
 
+	public boolean getPreemptive()
+	{
+		return getCredentialsConfig().getPreemptive();
+	}
+
+	public void setPreemptive( boolean preemptive )
+	{
+		boolean old = getPreemptive();
+		getCredentialsConfig().setPreemptive( preemptive );
+		notifyPropertyChanged( "preemptive", old, preemptive );
+	}
+
 	public String getSslKeystore()
 	{
 		return getConfig().getSslKeystore();

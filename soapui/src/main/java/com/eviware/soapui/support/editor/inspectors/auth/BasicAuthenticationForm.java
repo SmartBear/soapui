@@ -12,11 +12,14 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.jgoodies.binding.PresentationModel;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -24,6 +27,8 @@ import javax.swing.*;
 public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
 {
 	protected T request;
+	private JRadioButton globalButton;
+	private JRadioButton preemptiveButton;
 
 	public BasicAuthenticationForm(T request)
 	{
@@ -42,6 +47,12 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		return panel;
 	}
 
+	public void setButtonGroupVisibility( boolean visible )
+	{
+		globalButton.setVisible( visible );
+		preemptiveButton.setVisible( visible );
+	}
+
 	protected void populateBasicForm( SimpleBindingForm basicConfigurationForm )
 	{
 		initForm( basicConfigurationForm );
@@ -51,5 +62,52 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		basicConfigurationForm.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
 		basicConfigurationForm.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
 		basicConfigurationForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
+
+		ButtonGroup buttonGroup = new ButtonGroup();
+		globalButton = basicConfigurationForm.appendRadioButton( "Pre-emptive auth", "Use global preference", buttonGroup, true);
+		preemptiveButton = basicConfigurationForm.appendRadioButton( "", "Authenticate pre-emptively", buttonGroup, false );
+
+		globalButton.addActionListener( new UseGlobalSettingsRadioButtonListener( globalButton ) );
+		preemptiveButton.addActionListener( new PreemptiveRadioButtonListener( preemptiveButton ) );
+	}
+
+	private class PreemptiveRadioButtonListener implements ActionListener
+	{
+		private final JRadioButton preemptiveButton;
+
+		public PreemptiveRadioButtonListener( JRadioButton preemptiveButton )
+		{
+			this.preemptiveButton = preemptiveButton;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			if ( preemptiveButton.isSelected())
+			{
+				String authType = CredentialsConfig.AuthType.PREEMPTIVE.toString();
+				request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+			}
+		}
+	}
+
+	private class UseGlobalSettingsRadioButtonListener implements ActionListener
+	{
+		private final JRadioButton globalButton;
+
+		public UseGlobalSettingsRadioButtonListener( JRadioButton globalButton )
+		{
+			this.globalButton = globalButton;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			if ( globalButton.isSelected())
+			{
+				String authType = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
+				request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+			}
+		}
 	}
 }

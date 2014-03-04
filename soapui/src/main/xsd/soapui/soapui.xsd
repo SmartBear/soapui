@@ -565,6 +565,7 @@
         	</xsd:element>
             <xsd:element  name="selectedAuthProfile" type="xsd:string" maxOccurs="1" minOccurs="0"/>
             <xsd:element  name="addedBasicAuthenticationTypes" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+            <xsd:element  name="preemptive" type = "xsd:boolean" maxOccurs="1" minOccurs="0"/>
             <xsd:element name="authType">
         		<xsd:simpleType>
         			<xsd:restriction base="xsd:string">
@@ -1757,8 +1758,8 @@
             <xsd:attribute name="timeStamp" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
-    
-    
+
+
     <xsd:element name="TestOnDemandLocationsRequest">
         <xsd:complexType>
             <xsd:sequence>
@@ -1770,11 +1771,11 @@
                         </xsd:sequence>
                         <xsd:attribute name="api_version" type="xsd:string"/>
                     </xsd:complexType>
-                </xsd:element>            
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    
+
       <xsd:element name="TestOnDemandUploadRequest">
         <xsd:complexType>
             <xsd:sequence>
@@ -1786,7 +1787,7 @@
                         </xsd:sequence>
                         <xsd:attribute name="api_version" type="xsd:string"/>
                     </xsd:complexType>
-                </xsd:element>            
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -1796,13 +1797,13 @@
             <xsd:element name="UserAgent" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandLocationBody">
         <xsd:sequence>
             <xsd:element name="Command" type="tns:TestOnDemandCommand"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandUploadBody">
         <xsd:sequence>
             <xsd:element name="Command" type="tns:TestOnDemandCommand"/>
@@ -1810,23 +1811,23 @@
             <xsd:element name="Keystore" type="tns:TestOnDemandKeystore"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandCommand">
         <xsd:sequence>
             <xsd:element name="Name" type="xsd:string"/>
             <xsd:element name="Parameters" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandTxn">
         <xsd:sequence>
             <xsd:element name="TestSuite" type="tns:TestOnDemandTestSuite"/>
             <xsd:element name="TestCase" type="tns:TestOnDemandTestCase"/>
             <xsd:element name="Content" type="tns:TestOnDemandContent"/>
-            <xsd:element name="Password" type="tns:TestOnDemandProjectPassword"/>            
+            <xsd:element name="Password" type="tns:TestOnDemandProjectPassword"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
    <xsd:complexType name="TestOnDemandTestSuite">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1842,7 +1843,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandContent">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1859,14 +1860,14 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandKeystore">
         <xsd:sequence>
             <xsd:element name="File" type="tns:TestOnDemandFile"/>
             <xsd:element name="Password" type="tns:TestOnDemandKeystorePassword"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandFile">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1874,7 +1875,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandKeystorePassword">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">

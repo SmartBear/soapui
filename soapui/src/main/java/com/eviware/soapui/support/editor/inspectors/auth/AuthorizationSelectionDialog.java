@@ -22,6 +22,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -30,12 +31,14 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 {
 
 	private T request;
+	private List<String> basicAuthTypes;
 	private JTextFieldFormField profileNameField;
 	private JLabelFormField hintTextLabel;
 
-	public AuthorizationSelectionDialog( T request )
+	public AuthorizationSelectionDialog( T request, List<String> basicAuthTypes )
 	{
 		this.request = request;
+		this.basicAuthTypes = basicAuthTypes;
 		buildAndShowDialog();
 	}
 
@@ -52,7 +55,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 
 		setProfileNameAndHintTextVisibility( request.getAuthType() );
 
-		ArrayList<String> authTypes = getBasicAuthenticationTypes();
+		List<String> authTypes = getBasicAuthenticationTypes();
 		authTypes.removeAll( request.getBasicAuthenticationProfiles() );
 		if( request instanceof RestRequest )
 		{
@@ -89,7 +92,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 		request.setSelectedAuthProfileAndAuthType( profileName, authType );
 	}
 
-	private void setAuthTypeComboBoxOptions( XFormDialog dialog, ArrayList<String> options )
+	private void setAuthTypeComboBoxOptions( XFormDialog dialog, List<String> options )
 	{
 		JComboBoxFormField authTypesComboBox = ( JComboBoxFormField )dialog.getFormField( AuthorizationTypeForm.AUTHORIZATION_TYPE );
 		authTypesComboBox.setOptions( options.toArray( new String[options.size()] ) );
@@ -101,16 +104,6 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 				setProfileNameAndHintTextVisibility( newValue );
 			}
 		} );
-	}
-
-	private ArrayList<String> getBasicAuthenticationTypes()
-	{
-		ArrayList<String> options = new ArrayList<String>();
-		options.add( CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString() );
-		options.add( CredentialsConfig.AuthType.PREEMPTIVE.toString() );
-		options.add( CredentialsConfig.AuthType.NTLM.toString() );
-		options.add( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() );
-		return options;
 	}
 
 	private void setHintTextColor()
@@ -137,6 +130,11 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 	private OAuth2ProfileContainer getOAuth2ProfileContainer()
 	{
 		return request.getOperation().getInterface().getProject().getOAuth2ProfileContainer();
+	}
+
+	public List<String> getBasicAuthenticationTypes()
+	{
+		return basicAuthTypes;
 	}
 
 	private static class ProfileNameFieldListener implements XFormFieldListener
