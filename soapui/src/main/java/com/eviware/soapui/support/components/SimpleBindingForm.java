@@ -13,6 +13,7 @@
 package com.eviware.soapui.support.components;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
@@ -28,65 +29,21 @@ public class SimpleBindingForm extends SimpleForm
 		this.pm = pm;
 	}
 
-	public SimpleBindingForm( PresentationModel<?> pm, String layoutString )
+	public SimpleBindingForm( PresentationModel<?> pm, String columnSpecs)
 	{
-		super( layoutString );
+		super( columnSpecs );
+		this.pm = pm;
+	}
+
+	public SimpleBindingForm( PresentationModel<?> pm, String columnSpecs, Border border)
+	{
+		super( columnSpecs, border );
 		this.pm = pm;
 	}
 
 	public PresentationModel<?> getPresentationModel()
 	{
 		return pm;
-	}
-
-	/**
-	 * Appends a label and a text field to the form
-	 *
-	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
-	 * @param label The value of the label
-	 * @param tooltip The value of the text field tool tip
-	 */
-	public JTextField appendTextField( String propertyName, String label, String tooltip )
-	{
-		return appendTextField( propertyName, label, tooltip, SimpleForm.DEFAULT_TEXT_FIELD_COLUMNS );
-	}
-
-	/**
-	 * Appends a label and a text field to the form
-	 *
-	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
-	 * @param label The value of the label
-	 * @param tooltip The value of the text field tool tip
-	 * @param textFieldColumns The number of columns to display for the text field. Should be a constant defined in SimpleForm
-	 * @see com.eviware.soapui.support.components.SimpleForm
-	 */
-	public JTextField appendTextField( String propertyName, String label, String tooltip, int textFieldColumns )
-	{
-		JTextField textField = super.appendTextField( label, propertyName, tooltip, textFieldColumns );
-		Bindings.bind( textField, pm.getModel( propertyName ) );
-		return textField;
-	}
-
-	public JLabel appendLabel( String propertyName, String label )
-	{
-		JLabel jLabel = new JLabel();
-		super.append( label, jLabel, "left,bottom" );
-		Bindings.bind( jLabel, pm.getModel( propertyName ) );
-		return jLabel;
-	}
-
-	public JTextArea appendTextArea( String propertyName, String label, String tooltip )
-	{
-		JTextArea textArea = super.appendTextArea( label, tooltip );
-		Bindings.bind( textArea, pm.getModel( propertyName ) );
-		return textArea;
-	}
-
-	public JPasswordField appendPasswordField( String propertyName, String label, String tooltip )
-	{
-		JPasswordField textField = super.appendPasswordField( label, tooltip );
-		Bindings.bind( textField, pm.getModel( propertyName ) );
-		return textField;
 	}
 
 	public JCheckBox appendCheckBox( String propertyName, String label, String tooltip )
@@ -124,10 +81,54 @@ public class SimpleBindingForm extends SimpleForm
 		Bindings.bind( comboBox, new SelectionInList<Object>( values, pm.getModel( propertyName ) ) );
 	}
 
-	public void appendComponent( String propertyName, String label, JComponent component )
+	public JLabel appendLabel( String propertyName, String label )
 	{
-		super.append( label, component );
-		Bindings.bind( component, propertyName, pm.getModel( propertyName ) );
+		JLabel jLabel = new JLabel();
+		super.append( label, jLabel, "left,bottom" );
+		Bindings.bind( jLabel, pm.getModel( propertyName ) );
+		return jLabel;
+	}
+
+	public JPasswordField appendPasswordField( String propertyName, String label, String tooltip )
+	{
+		JPasswordField textField = super.appendPasswordField( label, tooltip );
+		Bindings.bind( textField, pm.getModel( propertyName ) );
+		return textField;
+	}
+
+	public JTextArea appendTextArea( String propertyName, String label, String tooltip )
+	{
+		JTextArea textArea = super.appendTextArea( label, tooltip );
+		Bindings.bind( textArea, pm.getModel( propertyName ) );
+		return textArea;
+	}
+
+	/**
+	 * Appends a label and a text field to the form
+	 *
+	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
+	 * @param label The value of the label
+	 * @param tooltip The value of the text field tool tip
+	 */
+	public JTextField appendTextField( String propertyName, String label, String tooltip )
+	{
+		return appendTextField( propertyName, label, tooltip, SimpleForm.DEFAULT_TEXT_FIELD_COLUMNS );
+	}
+
+	/**
+	 * Appends a label and a text field to the form
+	 *
+	 * @param propertyName The name of the property the field should be bound to. Will also be the name of the text field.
+	 * @param label The value of the label
+	 * @param tooltip The value of the text field tool tip
+	 * @param textFieldColumns The number of columns to display for the text field. Should be a constant defined in SimpleForm
+	 * @see com.eviware.soapui.support.components.SimpleForm
+	 */
+	public JTextField appendTextField( String propertyName, String label, String tooltip, int textFieldColumns )
+	{
+		JTextField textField = super.appendTextField( label, propertyName, tooltip, textFieldColumns );
+			Bindings.bind( textField, pm.getModel( propertyName ) );
+		return textField;
 	}
 
 	public void appendComponentsInOneRow( PropertyComponent... propertyComponents )
@@ -136,7 +137,7 @@ public class SimpleBindingForm extends SimpleForm
 		{
 			if( propertyComponent.hasProperty() )
 			{
-				// TODO Add support for more components
+				// TODO Add support for more components if there is a need for it
 				if( propertyComponent.getComponent() instanceof JLabel )
 				{
 					Bindings.bind( ( JLabel )propertyComponent.getComponent(), pm.getModel( propertyComponent.getProperty() ) );
@@ -149,7 +150,10 @@ public class SimpleBindingForm extends SimpleForm
 		}
 		super.appendInOneRow( propertyComponents );
 	}
+
+	public void appendComponent( String propertyName, String label, JComponent component )
+	{
+		super.append( label, component );
+		Bindings.bind( component, propertyName, pm.getModel( propertyName ) );
+	}
 }
-
-
-

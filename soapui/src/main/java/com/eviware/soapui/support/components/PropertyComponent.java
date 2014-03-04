@@ -6,7 +6,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.swing.*;
 
-public class PropertyComponent
+public final class PropertyComponent
 {
 	@Nullable
 	private final String property;
