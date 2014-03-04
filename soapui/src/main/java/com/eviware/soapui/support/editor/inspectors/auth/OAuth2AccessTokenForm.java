@@ -37,6 +37,12 @@ public class OAuth2AccessTokenForm
 	public static final int GROUP_SPACING = 20;
 	public static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
 	public static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
+	public static final String CLIENT_IDENTIFICATION = "Client Identification";
+	public static final String CLIENT_SECRET = "Client Secret";
+	public static final String AUTHORIZATION_URI = "Authorization URI";
+	public static final String ACCESS_TOKEN_URI = "Access Token URI";
+	public static final String REDIRECT_URI = "Redirect URI";
+	public static final String SCOPE = "Scope";
 
 	private OAuth2Profile profile;
 
@@ -70,9 +76,9 @@ public class OAuth2AccessTokenForm
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, CLIENT_IDENTIFICATION, "" );
 		final JTextField clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY,
-				"Client Secret", "" );
+				CLIENT_SECRET, "" );
 		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
 			clientSecretField.setVisible( false );
@@ -91,13 +97,13 @@ public class OAuth2AccessTokenForm
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, ACCESS_TOKEN_URI, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI, "" );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, SCOPE, "" );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 

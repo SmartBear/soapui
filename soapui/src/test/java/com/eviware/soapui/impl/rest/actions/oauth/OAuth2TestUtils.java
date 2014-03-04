@@ -43,6 +43,7 @@ public class OAuth2TestUtils
 	{
 		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
 		OAuth2Profile profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
+		profile.setName( "OAuth 2 -Profile" );
 		profile.setAuthorizationURI( "http://localhost:8080/authorize" );
 		profile.setAccessTokenURI( "http://localhost:8080/accesstoken" );
 		profile.setRedirectURI( "http://localhost:8080/redirect" );

@@ -40,11 +40,12 @@ import java.util.ArrayList;
 public class ProfileSelectionForm<T extends AbstractHttpRequest> extends AbstractXmlInspector
 {
 
-	public static final String AUTHORIZATION_TYPE_COMBO_BOX_NAME = "Authorization:";
+	public static final String PROFILE_COMBO_BOX = "Authorization:";
 
 	public static final String BASIC_FORM_LABEL = "Legacy form";
 	public static final String WSS_FORM_LABEL = "WSS form";
 	public static final String OPTIONS_SEPARATOR = "------------------";
+	public static final String DELETE_PROFILE_DIALOG_TITLE = "Delete Profile";
 
 	public String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
@@ -132,7 +133,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		JPanel comboBoxPanel = new JPanel( formLayout );
 		comboBoxPanel.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
 
-		JLabel authorizationLabel = new JLabel( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
+		JLabel authorizationLabel = new JLabel( PROFILE_COMBO_BOX );
 		authorizationLabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
 
 		formLayout.appendRow( new RowSpec( "top:pref" ) );
@@ -153,7 +154,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		String[] existingProfiles = createOptionsForAuthorizationCombo( request.getSelectedAuthProfile() );
 
 		profileSelectionComboBox = new JComboBox<String>( existingProfiles );
-		profileSelectionComboBox.setName( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
+		profileSelectionComboBox.setName( PROFILE_COMBO_BOX );
 		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
 	}
 
@@ -167,7 +168,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
-			request.setSelectedAuthProfileAndAuthType( selectedOption,selectedOption );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, selectedOption );
 			if( isSoapRequest( request ) )
 			{
 				showCard( WSS_FORM_LABEL );
@@ -263,7 +264,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void deleteCurrentProfile( String profileName )
 	{
-		boolean confirmedDeletion = UISupport.confirm( "Do you really want to delete profile '" + profileName + "' ?", "Delete Profile" );
+		boolean confirmedDeletion = UISupport.confirm( "Do you really want to delete profile '" + profileName + "' ?",
+				DELETE_PROFILE_DIALOG_TITLE );
 		if( !confirmedDeletion )
 		{
 			refreshProfileSelectionComboBox( profileName );
@@ -373,7 +375,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		return null;
 	}
 
-	private enum AddEditOptions
+	public enum AddEditOptions
 	{
 		ADD( "Add New Authorization..." ),
 		RENAME( "Rename current..." ),
@@ -385,7 +387,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			this.description = description;
 		}
 
-		private String getDescription()
+		public String getDescription()
 		{
 			return description;
 		}
