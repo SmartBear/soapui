@@ -64,7 +64,7 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		basicConfigurationForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
 
 		ButtonGroup buttonGroup = new ButtonGroup();
-		globalButton = basicConfigurationForm.appendRadioButton( "", "Use global preference", buttonGroup, true);
+		globalButton = basicConfigurationForm.appendRadioButton( "Pre-emptive auth", "Use global preference", buttonGroup, true);
 		preemptiveButton = basicConfigurationForm.appendRadioButton( "", "Authenticate pre-emptively", buttonGroup, false );
 
 		globalButton.addActionListener( new UseGlobalSettingsRadioButtonListener( globalButton ) );
