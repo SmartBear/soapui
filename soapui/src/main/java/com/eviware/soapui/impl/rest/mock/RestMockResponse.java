@@ -33,7 +33,7 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 
 	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
 	{
-		super( config, action, "/rest_request.gif" );
+		super( config, action, "/restMockResponse.gif" );
 	}
 
 	@Override
