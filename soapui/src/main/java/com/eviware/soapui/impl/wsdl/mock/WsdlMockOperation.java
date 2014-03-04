@@ -55,6 +55,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	public final static String DISPATCH_STYLE_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchstyle";
 	public final static String DISPATCH_PATH_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchpath";
 	public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
+	public static final String ICON_NAME = "/mockOperation.gif";
 
 	private WsdlOperation operation;
 	private MockOperationDispatcher dispatcher;
@@ -66,7 +67,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
 	public WsdlMockOperation( WsdlMockService mockService, MockOperationConfig config )
 	{
-		super( config, mockService, "/mockOperation.gif" );
+		super( config, mockService, ICON_NAME );
 
 		Interface iface = mockService.getProject().getInterfaceByName( config.getInterface() );
 		if( iface == null )
@@ -91,7 +92,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
 	public WsdlMockOperation( WsdlMockService mockService, MockOperationConfig config, WsdlOperation operation )
 	{
-		super( config, mockService, "/mockOperation.gif" );
+		super( config, mockService, ICON_NAME );
 		this.operation = operation;
 
 		config.setInterface( operation.getInterface().getName() );

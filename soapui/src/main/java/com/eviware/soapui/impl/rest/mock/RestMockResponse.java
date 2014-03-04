@@ -30,10 +30,11 @@ import java.util.Map;
 public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig> implements MediaType
 {
 	public final static String MOCKRESULT_PROPERTY = RestMockResponse.class.getName() + "@mockresult";
+	public static final String ICON_NAME = "/restMockResponse.gif";
 
 	public RestMockResponse( RestMockAction action, RESTMockResponseConfig config )
 	{
-		super( config, action, "/restMockResponse.gif" );
+		super( config, action, ICON_NAME );
 	}
 
 	@Override

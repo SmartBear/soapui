@@ -44,13 +44,21 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 	public static String getIconName( RESTMockActionConfig methodConfig )
 	{
-		String method = StringUtils.isNullOrEmpty( methodConfig.getMethod() ) ? "get" : methodConfig.getMethod().toLowerCase();
-		return getIconName( method );
+		if( methodConfig.isSetMethod() )
+		{
+			return getIconName( methodConfig.getMethod() );
+		}
+		return getDefaultIcon();
 	}
 
 	private static String getIconName( String method )
 	{
-		return "/mock_" + method + "_method.gif";
+		return "/mock_" + method.toLowerCase() + "_method.gif";
+	}
+
+	public static String getDefaultIcon()
+	{
+		return getIconName( HttpMethod.GET.name() );
 	}
 
 	@Override

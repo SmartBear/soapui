@@ -61,6 +61,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 {
 	public final static String SETUP_SCRIPT_PROPERTY = WsdlTestSuite.class.getName() + "@setupScript";
 	public final static String TEARDOWN_SCRIPT_PROPERTY = WsdlTestSuite.class.getName() + "@tearDownScript";
+	public static final String ICON_NAME = "/testSuite.gif";
 
 	private final WsdlProject project;
 	private List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
@@ -71,7 +72,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
 	public WsdlTestSuite( WsdlProject project, TestSuiteConfig config )
 	{
-		super( config, project, "/testSuite.gif" );
+		super( config, project, ICON_NAME );
 		this.project = project;
 
 		if( !config.isSetProperties() )
