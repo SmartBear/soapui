@@ -7,6 +7,7 @@ import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -53,6 +54,13 @@ public class RestProjectStepdefs
 		 */
 		newProjectIndexInNavigationTree = findTheIndexOfCurrentProjectInNavigationTree();
 	}
+
+    @Given("^a new REST project is created with URI (.+)$")
+    public void createNewRestProjectWithUri( String uri)
+    {
+        RestProjectUtils.createNewRestProjectWithUri( rootWindow, robot, uri );
+        newProjectIndexInNavigationTree = findTheIndexOfCurrentProjectInNavigationTree();
+    }
 
 	@When( "^the user clicks on the Auth tab$" )
 	public void clickOnTheAuthTab()
@@ -115,6 +123,19 @@ public class RestProjectStepdefs
 		verifyParamValues( methodEditor, index, parameterName, parameterValue );
 	}
 
+    @Then( "^request editor has no parameters$" )
+    public void verifyRequestEditorHasEmptyParameterTable()
+    {
+        JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        verifyEmptyTable( requestEditor );
+    }
+     @Then( "^resource editor has no parameters$" )
+    public void verifyResourceEditorHasEmptyParameterTable()
+    {
+        JPanelFixture resourceEditor = findResourceEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        verifyEmptyTable( resourceEditor );
+    }
+
 	@Then( "^method editor has no parameters$" )
 	public void verifyMethodEditorHasEmptyParameterTable()
 	{
@@ -164,4 +185,6 @@ public class RestProjectStepdefs
 			}
 		}
 	}
+
+
 }

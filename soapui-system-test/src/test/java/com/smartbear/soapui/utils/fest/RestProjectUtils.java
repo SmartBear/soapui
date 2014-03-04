@@ -53,7 +53,7 @@ public final class RestProjectUtils
 		enterURIandClickOk( robot );
 	}
 
-	public static void createNewRestProject( FrameFixture rootWindow, Robot robot, String uri )
+	public static void createNewRestProjectWithUri( FrameFixture rootWindow, Robot robot, String uri )
 	{
 		openCreateNewRestProjectDialog( rootWindow );
 		enterURIandClickOk( robot, uri );

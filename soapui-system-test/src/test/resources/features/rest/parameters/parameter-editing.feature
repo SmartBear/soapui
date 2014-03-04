@@ -3,34 +3,36 @@ Feature:User can manage the parameters in request view, form view, method editor
 
 Scenario: add parameters in request view, the value will be blank in resource editor
   Given a new REST project is created
-  When user adds a new parameter named param01 with value value01 in request view
-  Then the new parameter with correct name and value is saved in the parameter list
+  When user adds a parameter in request editor with name param01 and value value01
+  Then request editor has parameter with name param01 and value param01 at row 0
   And the same parameter is showed in Parameters field of top URI bar
-  And the same parameter is showed in resource editor but the value is blank
+  And resource editor has parameter with name param01 and with empty value at row 0
 
 Scenario: add parameters in method or resource editor, the value will be added as well in request view
   Given a new REST project is created
-  When user adds a new parameter named param01 with value value01 in method editor
-  And user adds a new parameter named param02 with value value02 in resource editor
-  Then the new parameters with correct names and values are saved in the resource editor and method editor
+  When user adds a parameter in method editor with name param01 and value value01
+  And user adds a parameter in resource editor with name param02 and value value02
+  Then method editor has parameter with name param01 and value value01 at row 0
+  And resource editor has parameter with name param02 and value value02 at row 0
   And the same parameters are showed in Parameters field of top URI bar
-  And the same parameters are showed in request view
+  And request editor has parameter with name param01 and value value01 at row 0
+  And request editor has parameter with name param02 and value value02 at row 1
 
 Scenario: delete parameters in request view, it will synchronize in resource editor and top URI bar
   Given a new REST project is created with URI www.tryit.com/resource/method;matrix=param1?query=param2
   When user deletes the two parameters in request view
-  Then the parameters list is blank in request view
-  And the parameters list is blank in resource editor
-  And the parameters list is blank in Parameters field of top URI bar
+  Then request editor has no parameters
+  And resource editor has no parameters
+  And it is blank in Parameters field of top URI bar
 
 Scenario: delete parameters in method or resource editor, it will synchronize in request view and top URI bar
   Given a new REST project is created with URI www.tryit.com/resource/method;matrix=param1?query=param2
   And user changes the level to method for parameter with name matrix
   When user deletes the parameter named query in resource editor
   And user deleted the parameter named matrix in method editor
-  Then the parameter list is blank in resource editor
-  And the parameter list is blank in method editor
-  And the parameters list is blank in request view
+  Then resource editor has no parameters
+  And method editor has no parameters
+  And request editor has no parameters
   And the parameters list is blank in Parameters field of top URI bar
 
 Scenario: reorder parameters in request view, it will only change the order in request view
