@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockRequest;
 import org.apache.commons.httpclient.HttpStatus;
@@ -60,7 +61,7 @@ public class RestMockDispatcherTest
 		restMockDispatcher.dispatchRequest( request, response );
 
 		// we would like to verify that dispatchRequest is never called but it is hard so we verify on this instead
-		verify( restMockService, never() ).findOperationMatchingPath( anyString() );
+		verify( restMockService, never() ).findMatchingOperation( anyString(), any( HttpMethod.class ) );
 	}
 
 
@@ -82,6 +83,7 @@ public class RestMockDispatcherTest
 		request = mock( HttpServletRequest.class );
 		Enumeration enumeration = mock( Enumeration.class );
 		when( request.getHeaderNames() ).thenReturn( enumeration );
+		when( request.getMethod() ).thenReturn( HttpMethod.DELETE.name() );
 
 		response = mock( HttpServletResponse.class );
 		restMockService = mock( RestMockService.class );

@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.support;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockRequestDataSource;
@@ -29,7 +30,6 @@ public abstract class AbstractMockRequest implements MockRequest
 	private final HttpServletRequest request;
 	private MockRequestDataSource mockRequestDataSource;
 	private String actualRequestContent;
-	private String method;
 	private boolean responseMessage;
 	private XmlObject requestXmlObject;
 
@@ -96,16 +96,10 @@ public abstract class AbstractMockRequest implements MockRequest
 		return request;
 	}
 
-	public String getMethod()
+	public HttpMethod getMethod()
 	{
-		return method == null ? request.getMethod() : method;
+		return HttpMethod.valueOf( request.getMethod() );
 	}
-
-	public void setMethod( String method )
-	{
-		this.method = method;
-	}
-
 
 	public String getPath()
 	{
