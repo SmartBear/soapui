@@ -45,6 +45,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public static final String BASIC_FORM_LABEL = "Legacy form";
 	public static final String WSS_FORM_LABEL = "WSS form";
 	public static final String OPTIONS_SEPARATOR = "------------------";
+	public static final String BASIC_AUTH_PROFILE = "Basic";
 
 	public String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
@@ -55,6 +56,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private final JPanel cardPanel = new JPanel( new CardLayout() );
 	private JComboBox profileSelectionComboBox;
 	private CellConstraints cc = new CellConstraints();
+	private BasicAuthenticationForm<T> authenticationForm;
 
 	protected ProfileSelectionForm( T request )
 	{
@@ -94,7 +96,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		cardPanel.add( createEmptyPanel(), EMPTY_PANEL );
 		innerPanel.add( cardPanel, BorderLayout.CENTER );
 
-		BasicAuthenticationForm<T> authenticationForm = new BasicAuthenticationForm<T>( request );
+		authenticationForm = new BasicAuthenticationForm<T>( request );
 		cardPanel.add( authenticationForm.getComponent(), BASIC_FORM_LABEL );
 
 		if( isSoapRequest( request ) )
@@ -168,6 +170,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
 			request.setSelectedAuthProfileAndAuthType( selectedOption,selectedOption );
+			authenticationForm.setPreemptiveCheckboxVisibility( selectedOption.equals( BASIC_AUTH_PROFILE ) );
 			if( isSoapRequest( request ) )
 			{
 				showCard( WSS_FORM_LABEL );
@@ -202,7 +205,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 					@Override
 					public void run()
 					{
-						new AuthorizationSelectionDialog<T>( request );
+						new AuthorizationSelectionDialog<T>( request, getBasicAuthenticationTypes() );
 						refreshProfileSelectionComboBox( request.getSelectedAuthProfile() );
 					}
 				} );
@@ -308,8 +311,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	protected ArrayList<String> getBasicAuthenticationTypes()
 	{
 		ArrayList<String> options = new ArrayList<String>();
-		options.add( CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString() );
-		options.add( CredentialsConfig.AuthType.PREEMPTIVE.toString() );
+		options.add( BASIC_AUTH_PROFILE );
 		options.add( CredentialsConfig.AuthType.NTLM.toString() );
 		options.add( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() );
 		return options;

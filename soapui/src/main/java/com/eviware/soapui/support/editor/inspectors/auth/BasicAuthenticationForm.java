@@ -12,11 +12,14 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.jgoodies.binding.PresentationModel;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -24,6 +27,7 @@ import javax.swing.*;
 public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
 {
 	protected T request;
+	private JCheckBox preemptiveBox;
 
 	public BasicAuthenticationForm(T request)
 	{
@@ -42,6 +46,32 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		return panel;
 	}
 
+	public void setPreemptiveCheckboxVisibility(boolean visible)
+	{
+		preemptiveBox.setVisible( visible );
+	}
+
+	private class PreemptiveCheckboxListener implements ActionListener
+	{
+		private final JCheckBox preemptiveBox;
+
+		public PreemptiveCheckboxListener( JCheckBox preemptiveBox )
+		{
+			this.preemptiveBox = preemptiveBox;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			String authType = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
+			if ( preemptiveBox.isSelected() )
+			{
+				authType = CredentialsConfig.AuthType.PREEMPTIVE.toString();
+			}
+			request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+		}
+	}
+
 	protected void populateBasicForm( SimpleBindingForm basicConfigurationForm )
 	{
 		initForm( basicConfigurationForm );
@@ -51,5 +81,7 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		basicConfigurationForm.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
 		basicConfigurationForm.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
 		basicConfigurationForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
+		preemptiveBox = basicConfigurationForm.appendCheckBox( "preemptive", "Pre-emptive auth", "Adds authentication information to the outgoing request " );
+		preemptiveBox.addActionListener( new PreemptiveCheckboxListener( preemptiveBox ) );
 	}
 }
