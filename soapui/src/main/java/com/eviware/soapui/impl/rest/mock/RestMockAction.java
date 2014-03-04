@@ -10,6 +10,7 @@ import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -133,6 +134,9 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setMethod( HttpMethod method)
 	{
 		getConfig().setMethod( method.name() );
+		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
+
+		notifyPropertyChanged( "httpMethod", null, this );
 	}
 
 	public HttpMethod getMethod()
@@ -143,6 +147,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setResourcePath( String path )
 	{
 		getConfig().setResourcePath( path );
+		notifyPropertyChanged( "resourcePath", null, this );
 	}
 
 	public String getDispatchStyle()
