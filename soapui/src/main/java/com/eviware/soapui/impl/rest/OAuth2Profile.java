@@ -148,6 +148,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public String getName()
 	{
+		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
+		if(StringUtils.isEmpty( configuration.getName()))
+		{
+			return "OAuth 2.0 - Profile 1";
+		}
+
 		return configuration.getName();
 	}
 

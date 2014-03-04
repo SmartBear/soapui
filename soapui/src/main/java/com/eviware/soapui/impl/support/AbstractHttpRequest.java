@@ -611,7 +611,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( "domain", old, domain );
 	}
 
-	public void setSelectedAuthProfile( String authProfile )
+	public void setSelectedAuthProfileAndAuthType( String authProfile, String authType )
+	{
+		setSelectedAuthProfile( authProfile );
+		setAuthType( authType );
+	}
+
+	private void setSelectedAuthProfile( String authProfile )
 	{
 		String old = getSelectedAuthProfile();
 		CredentialsConfig credentialsConfig = getCredentialsConfig();
@@ -620,8 +626,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( "selectedAuthProfile", old, authProfile );
 	}
 
-	public void setAuthType( String authType )
+	private void setAuthType( String authType )
 	{
+		if( authType!= null && (!CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType )))
+		{
+			addBasicAuthenticationProfile( authType );
+		}
+
 		String old = getAuthType();
 		CredentialsConfig credentialsConfig = getCredentialsConfig();
 

@@ -88,7 +88,7 @@ public class OAuth2RequestFilterTest
 	@Test
 	public void doesNotApplyAccessTokenIfOAuthTypeIsNotOAuth2()
 	{
-		restRequest.setAuthType( PREEMPTIVE.toString() );
+		restRequest.setSelectedAuthProfileAndAuthType( PREEMPTIVE.toString(),PREEMPTIVE.toString() );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ), is( anEmptyArray() ) );
 	}
@@ -181,7 +181,7 @@ public class OAuth2RequestFilterTest
 	private void setupModelItems() throws SoapUIException
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setAuthType( O_AUTH_2_0.toString() );
+
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
 		List<OAuth2Profile> oAuth2ProfileList = oAuth2ProfileContainer.getOAuth2ProfileList();
@@ -193,6 +193,7 @@ public class OAuth2RequestFilterTest
 		{
 			oAuth2Profile = oAuth2ProfileList.get( 0 );
 		}
+		restRequest.setSelectedAuthProfileAndAuthType(oAuth2Profile.getName(),  O_AUTH_2_0.toString() );
 		oAuth2Profile.setAccessToken( ACCESS_TOKEN );
 	}
 

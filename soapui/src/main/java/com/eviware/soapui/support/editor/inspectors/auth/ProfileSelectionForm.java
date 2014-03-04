@@ -164,11 +164,10 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			performAddEditOperation( request.getSelectedAuthProfile(), selectedOption );
 			return;
 		}
-		request.setSelectedAuthProfile( selectedOption );
 
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
-			request.setAuthType( selectedOption );
+			request.setSelectedAuthProfileAndAuthType( selectedOption,selectedOption );
 			if( isSoapRequest( request ) )
 			{
 				showCard( WSS_FORM_LABEL );
@@ -180,14 +179,14 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
 		{
-			request.setAuthType( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 			OAuth2Form oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ) );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
 			showCard( OAUTH_2_FORM_LABEL );
 		}
 		else    //selectedItem : No Authorization
 		{
-			request.setAuthType( null );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, null );
 			showCard( EMPTY_PANEL );
 		}
 	}
@@ -258,7 +257,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		OAuth2Profile profile = getOAuth2ProfileContainer().getProfileByName( profileOldName );
 		profile.setName( newName );
-		request.setSelectedAuthProfile( newName );
+		request.setSelectedAuthProfileAndAuthType( newName, request.getAuthType() );
 		refreshProfileSelectionComboBox( newName );
 	}
 
@@ -323,15 +322,17 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		options.addAll( request.getBasicAuthenticationProfiles() );
 
 		ArrayList<String> addEditOptions = getAddEditOptions();
+
+		ArrayList<String> oAuth2Profiles = null;
 		if( isRestRequest( request ) )
 		{
-			ArrayList<String> oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
+			oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
 			options.addAll( oAuth2Profiles );
 
-			if( !oAuth2Profiles.contains( selectedAuthProfile ) )
-			{
-				addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
-			}
+		}
+		if( oAuth2Profiles==null || !oAuth2Profiles.contains( selectedAuthProfile ) )
+		{
+			addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
 		}
 
 		if( options.size() <= 1 || NO_AUTHORIZATION.equals( selectedAuthProfile ) )
