@@ -286,7 +286,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addSpace( NORMAL_SPACING );
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
 		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
-		buttonPanel.add( new JButton( new EditScriptsAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditAutomationScriptsAction( profile ) ) );
 		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 	}
@@ -386,13 +386,13 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 	}
 
-	private class EditScriptsAction extends AbstractAction
+	private class EditAutomationScriptsAction extends AbstractAction
 	{
 		private final OAuth2Profile profile;
 
-		public EditScriptsAction( OAuth2Profile profile )
+		public EditAutomationScriptsAction( OAuth2Profile profile )
 		{
-			putValue( Action.NAME, "Edit scripts..." );
+			putValue( Action.NAME, "Automation..." );
 			this.profile = profile;
 		}
 

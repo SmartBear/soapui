@@ -15,9 +15,8 @@ public class OAuth2ScriptsDesktopPanel extends DefaultDesktopPanel
 {
 	public OAuth2ScriptsDesktopPanel( OAuth2Profile profile )
 	{
-		//TODO: More descriptive title and name
-		super( "Scripts for OAuth2 profile",
-				"A panel used to edit JavaScript fragments that automate login and consent in OAuth2 flows",
+		super( "Automation scripts for OAuth2 profile",
+				"A panel used to edit JavaScript fragments that automate user interactions in an OAuth2 flow",
 				new JPanel(new BorderLayout(  )) );
 		JPanel contentPane = (JPanel )getComponent();
 		OAuth2ScriptsEditor editor = new OAuth2ScriptsEditor( profile );
