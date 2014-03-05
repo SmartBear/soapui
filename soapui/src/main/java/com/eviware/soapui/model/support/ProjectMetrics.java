@@ -114,4 +114,27 @@ public class ProjectMetrics
 
 		return result;
 	}
+
+	public int getRestMockActionCount()
+	{
+		int restMockActionCount = 0;
+		for( MockService mockService : project.getRestMockServiceList())
+		{
+			restMockActionCount += mockService.getMockOperationCount();
+		}
+		return restMockActionCount;
+	}
+
+	public int getRestMockResponseCount()
+	{
+		int restMockResponseCount = 0;
+		for( MockService mockService : project.getRestMockServiceList())
+		{
+			for( MockOperation mockOperation : mockService.getMockOperationList() )
+			{
+				restMockResponseCount += mockOperation.getMockResponseCount();
+			}
+		}
+		return restMockResponseCount;
+	}
 }
