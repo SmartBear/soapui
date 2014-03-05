@@ -1050,4 +1050,29 @@ public class UISupport
 		label.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
 		return label;
 	}
+
+	public static boolean isEnoughSpaceAvailableBelowComponent( Point componentLocation, int expandableDialogHeight, int componentHeight )
+	{
+		GraphicsConfiguration currentGraphicsConfiguration = getGraphicsConfigurationForPosition( componentLocation );
+		if( currentGraphicsConfiguration == null )
+		{
+			return true;
+		}
+		double bottomYCoordinate = componentLocation.getY() + expandableDialogHeight + componentHeight;
+		double bottomUsableYCoordinateOnScreen = currentGraphicsConfiguration.getBounds().getMaxY()
+				- Toolkit.getDefaultToolkit().getScreenInsets( currentGraphicsConfiguration ).bottom;
+		return bottomYCoordinate <= bottomUsableYCoordinateOnScreen;
+	}
+
+	private static GraphicsConfiguration getGraphicsConfigurationForPosition( Point point )
+	{
+		for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
+		{
+			if( graphicsDevice.getDefaultConfiguration().getBounds().contains( point ) )
+			{
+				return graphicsDevice.getDefaultConfiguration();
+			}
+		}
+		return null;
+	}
 }
