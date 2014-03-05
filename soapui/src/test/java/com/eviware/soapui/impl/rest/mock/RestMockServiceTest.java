@@ -11,11 +11,15 @@ import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.HttpMethod.*;
 import static junit.framework.Assert.assertEquals;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertThat;
 
 public class RestMockServiceTest
 {
+	public static final String PATH = "aNicePath";
 	private RestMockService restMockService;
 	private RestRequest restRequest;
 
@@ -24,7 +28,7 @@ public class RestMockServiceTest
 	{
 		restMockService = ModelItemFactory.makeRestMockService();
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setPath( "aNicePath" );
+		restRequest.setPath( PATH );
 		restRequest.setMethod( GET );
 	}
 
@@ -34,7 +38,7 @@ public class RestMockServiceTest
 		restMockService.addNewMockAction( restRequest );
 
 		RestMockAction restMockAction = restMockService.getMockOperationAt( 0 );
-		assertEquals( "aNicePath", restMockAction.getResourcePath() );
+		assertEquals( PATH, restMockAction.getResourcePath() );
 		assertEquals( GET, restMockAction.getMethod() );
 	}
 
@@ -50,6 +54,29 @@ public class RestMockServiceTest
 		RestMockAction mockOperation = mockService.getMockOperationAt( 0 );
 		RestMockResponse mockResponse = mockOperation.getMockResponseAt( 0 );
 		assertEquals( "Some content", mockResponse.getResponseContent() );
+	}
+
+
+	@Test
+	public void shouldFindMatchingOperation() throws SoapUIException
+	{
+		restRequest.setMethod( TRACE );
+		restMockService.addNewMockAction( restRequest );
+		RestMockAction restMockAction = restMockService.getMockOperationAt( 0 );
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findMatchingOperation( PATH, TRACE );
+
+		assertThat( matchingAction, is( restMockAction ) );
+		assertEquals( PATH, matchingAction.getResourcePath() );
+	}
+
+	@Test
+	public void shouldNotFindMatchingOperation() throws SoapUIException
+	{
+		restRequest.setMethod( TRACE );
+		restMockService.addNewMockAction( restRequest );
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findMatchingOperation( PATH, GET );
+
+		assertThat( matchingAction, is( nullValue() ) );
 	}
 
 	private RESTMockServiceConfig createRestMockServiceConfig()
