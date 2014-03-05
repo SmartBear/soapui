@@ -12,7 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockoperation;
 
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
+import com.eviware.soapui.impl.support.AbstractMockOperation;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -22,16 +26,17 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author Ole.Matzura
  */
 
-public class RenameMockOperationAction extends AbstractSoapUIAction<WsdlMockOperation>
+public class RenameMockOperationAction extends AbstractSoapUIAction<AbstractMockOperation>
 {
 	public RenameMockOperationAction()
 	{
-		super( "Rename", "Renames this MockOperation" );
+		super( "Rename", "Renames this node" );
 	}
 
-	public void perform( WsdlMockOperation mockOperation, Object param )
+	public void perform( AbstractMockOperation mockOperation, Object param )
 	{
-		String name = UISupport.prompt( "Specify name of MockOperation", "Rename MockOperation", mockOperation.getName() );
+		String nodeName = mockOperation instanceof RestMockAction ? "RestMockAction" : "MockOperation";
+		String name = UISupport.prompt( "Specify name of " + nodeName, "Rename " + nodeName, mockOperation.getName() );
 		if( name == null || name.equals( mockOperation.getName() ) )
 			return;
 
