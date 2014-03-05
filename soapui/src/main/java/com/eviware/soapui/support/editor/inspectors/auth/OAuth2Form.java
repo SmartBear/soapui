@@ -20,17 +20,15 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
-import com.google.common.base.Strings;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
-public class OAuth2Form extends AbstractAuthenticationForm
+public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2AccessTokenStatusChangeListener
 {
 	public static final String ADVANCED_OPTIONS_BUTTON_NAME = "Advanced...";
 	public static final String REFRESH_ACCESS_TOKEN_BUTTON_NAME = "refreshAccessTokenButton";
@@ -43,33 +41,56 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	private static final float ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE = 0.95f;
 	private static final int ACCESS_TOKEN_STATUS_TEXT_WIDTH = 100;
 
-	private final Color SUCCESS_COLOR = new Color( 0xccffcb );
 	private final Color DEFAULT_COLOR = Color.WHITE;
+	private final Color SUCCESS_COLOR = new Color( 0xccffcb );
+	private final Color FAIL_COLOR = new Color( 0xffcccc );
 
 	// FIXME This need to be changed to the real icons
-	private final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
-	private final ImageIcon WAITING_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
+	static final ImageIcon DEFAULT_ICON = null;
+	static final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
+	static final ImageIcon WAIT_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
+	static final ImageIcon FAIL_ICON = UISupport.createImageIcon( "/exclamation-dummy.png" );
 
 	private final AbstractXmlInspector inspector;
+	private final OAuth2AccessTokenStatusChangeManager statusChangeManager;
 	private OAuth2Profile profile;
 	private JPanel formPanel;
 	private boolean disclosureButtonDisabled;
 	private boolean isMouseOnDisclosureLabel;
 
-	private OAuth2StatusPropertyChangeListener oAuth2StatusPropertyChangeListener;
 	private SimpleBindingForm oAuth2Form;
+
+	private JTextField accessTokenField;
+	private JLabel accessTokenStatusIcon;
+	private JLabel accessTokenStatusText;
+	private OAuth2GetAccessTokenForm accessTokenForm;
 
 	public OAuth2Form( OAuth2Profile profile, AbstractXmlInspector inspector )
 	{
 		super();
 		this.profile = profile;
 		this.inspector = inspector;
+		statusChangeManager = new OAuth2AccessTokenStatusChangeManager( this );
 	}
 
-	protected void release()
+	void release()
 	{
+		accessTokenForm.release();
 		oAuth2Form.getPresentationModel().release();
-		oAuth2StatusPropertyChangeListener.release();
+		statusChangeManager.unregister();
+	}
+
+	@Override
+	public void onAccessTokenStatusChanged( OAuth2Profile.AccessTokenStatus status )
+	{
+		setAccessTokenStatusFeedback( status );
+	}
+
+	@Nonnull
+	@Override
+	public OAuth2Profile getProfile()
+	{
+		return profile;
 	}
 
 	@Override
@@ -77,9 +98,12 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	{
 		oAuth2Form = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
 		addOAuth2Panel( oAuth2Form );
+		statusChangeManager.register();
+		setAccessTokenStatusFeedback( profile.getAccesTokenStatusAsEnum() );
 		return formPanel;
 	}
 
+	// TODO Use the refactored SimpleBidningsForm instead
 	private void addOAuth2Panel( SimpleBindingForm oAuth2Form )
 	{
 		populateOAuth2Form( oAuth2Form );
@@ -112,10 +136,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		JLabel accessTokenStatusIcon = createAccessTokenStatusIcon();
 		JLabel accessTokenStatusText = createAccessTokenStatusText();
 
-		setAccessTokenStatusFeedback( profile.getAccessTokenStatus(), accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
-		oAuth2StatusPropertyChangeListener = new OAuth2StatusPropertyChangeListener( accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
-		profile.addPropertyChangeListener( oAuth2StatusPropertyChangeListener );
-
 		final JButton refreshAccessTokenButton = createRefreshButton();
 
 		JPanel accessTokenRowPanel = createAccessTokenRowPanel( accessTokenField, accessTokenStatusIcon, accessTokenStatusText, refreshAccessTokenButton );
@@ -127,7 +147,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 
-		OAuth2GetAccessTokenForm accessTokenForm = new OAuth2GetAccessTokenForm();
+		accessTokenForm = new OAuth2GetAccessTokenForm();
 		final JDialog accessTokenFormDialog = accessTokenForm.getComponent( profile );
 
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
@@ -147,7 +167,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 	private JTextField createAccessTokenField()
 	{
-		JTextField accessTokenField = new JTextField();
+		accessTokenField = new JTextField();
 		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
 		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
 		accessTokenField.setMargin( ACCESS_TOKEN_FIELD_INSETS );
@@ -157,14 +177,14 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 	private JLabel createAccessTokenStatusIcon()
 	{
-		JLabel accessTokenStatusIcon = new JLabel();
+		accessTokenStatusIcon = new JLabel();
 		accessTokenStatusIcon.setVisible( false );
 		return accessTokenStatusIcon;
 	}
 
 	private JLabel createAccessTokenStatusText()
 	{
-		JLabel accessTokenStatusText = new JLabel();
+		accessTokenStatusText = new JLabel();
 		accessTokenStatusText.setFont( scaledFont( accessTokenStatusText, ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE ) );
 		accessTokenStatusText.setVisible( false );
 		accessTokenStatusText.setAlignmentX( Component.CENTER_ALIGNMENT );
@@ -196,49 +216,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		panel.add( Box.createRigidArea( HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW ) );
 		panel.add( refreshAccessTokenButton );
 		return panel;
-	}
-
-	private void setAccessTokenStatusFeedback( String status, JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
-	{
-		if( Strings.isNullOrEmpty( status ) )
-		{
-			accessTokenField.setBackground( DEFAULT_COLOR );
-
-			accessTokenStatusIcon.setIcon( null );
-			accessTokenStatusIcon.setVisible( false );
-
-			accessTokenStatusText.setText( "" );
-			accessTokenStatusText.setVisible( false );
-
-			inspector.setIcon( null );
-		}
-
-		// TODO Wouldn't it be nice with a enum swich instead?
-		if( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString().equals( status ) )
-		{
-			accessTokenField.setBackground( SUCCESS_COLOR );
-
-			accessTokenStatusIcon.setIcon( SUCCESS_ICON );
-			accessTokenStatusIcon.setVisible( true );
-
-			accessTokenStatusText.setText( setWrappedText( OAuth2Profile.AccessTokenStatus.ENTERED_MANUALLY.toString() ) );
-			accessTokenStatusText.setVisible( true );
-
-			inspector.setIcon( SUCCESS_ICON );
-		}
-
-		if( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString().equals( status ) )
-		{
-			accessTokenField.setBackground( DEFAULT_COLOR );
-
-			accessTokenStatusIcon.setIcon( WAITING_ICON );
-			accessTokenStatusIcon.setVisible( false );
-
-			accessTokenStatusText.setText( "" );
-			accessTokenStatusText.setVisible( false );
-
-			inspector.setIcon( WAITING_ICON );
-		}
 	}
 
 	private Font scaledFont( JComponent component, float scale )
@@ -288,6 +265,84 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		accessTokenFormDialog.setLocation( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET,
 				( int )disclosureButtonLocation.getY() - accessTokenFormDialog.getHeight() );
 	}
+
+	private void setAccessTokenStatusFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		if( status != null )
+		{
+			switch( status )
+			{
+				case ENTERED_MANUALLY:
+				case RETRIEVED_FROM_SERVER:
+					setSucessfullFeedback( status );
+					break;
+				case PENDING:
+				case WAITING_FOR_AUTHORIZATION:
+				case RECEIVED_AUTHORIZATION_CODE:
+					setWaitingFeedback();
+					break;
+				case FAILED:
+					setFailedFeedback( status );
+					break;
+				default:
+					setDefaultFeedback();
+					break;
+			}
+		}
+	}
+
+	private void setSucessfullFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenField.setBackground( SUCCESS_COLOR );
+
+		accessTokenStatusIcon.setIcon( SUCCESS_ICON );
+		accessTokenStatusIcon.setVisible( true );
+
+		accessTokenStatusText.setText( status.toString() );
+		accessTokenStatusText.setVisible( true );
+
+		inspector.setIcon( SUCCESS_ICON );
+	}
+
+	private void setWaitingFeedback()
+	{
+		accessTokenField.setBackground( DEFAULT_COLOR );
+
+		accessTokenStatusIcon.setIcon( null );
+		accessTokenStatusIcon.setVisible( false );
+
+		accessTokenStatusText.setText( "" );
+		accessTokenStatusText.setVisible( false );
+
+		inspector.setIcon( WAIT_ICON );
+	}
+
+	private void setFailedFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenField.setBackground( FAIL_COLOR );
+
+		accessTokenStatusIcon.setIcon( FAIL_ICON );
+		accessTokenStatusIcon.setVisible( true );
+
+		accessTokenStatusText.setText( status.toString() );
+		accessTokenStatusText.setVisible( true );
+
+		inspector.setIcon( FAIL_ICON );
+	}
+
+	private void setDefaultFeedback()
+	{
+		accessTokenField.setBackground( DEFAULT_COLOR );
+
+		accessTokenStatusIcon.setIcon( null );
+		accessTokenStatusIcon.setVisible( false );
+
+		accessTokenStatusText.setText( "" );
+		accessTokenStatusText.setVisible( false );
+
+		inspector.setIcon( DEFAULT_ICON );
+	}
+
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
 	{
@@ -377,35 +432,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
 			Point componentLocationOnScreen = component.getLocationOnScreen();
 			return component.contains( mouseLocation.x - componentLocationOnScreen.x, mouseLocation.y - componentLocationOnScreen.y );
-		}
-	}
-
-	private class OAuth2StatusPropertyChangeListener implements PropertyChangeListener
-	{
-		private JTextField accessTokenField;
-		private JLabel accessTokenStatusIcon;
-		private JLabel accessTokenStatusText;
-
-		private OAuth2StatusPropertyChangeListener( JTextField accessTokenField, JLabel accessTokenStatusIcon, JLabel accessTokenStatusText )
-		{
-			this.accessTokenField = accessTokenField;
-			this.accessTokenStatusIcon = accessTokenStatusIcon;
-			this.accessTokenStatusText = accessTokenStatusText;
-		}
-
-		@Override
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			if( evt.getPropertyName().equals( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY ) )
-			{
-				String newStatusValue = Strings.nullToEmpty( ( String )evt.getNewValue() );
-				setAccessTokenStatusFeedback( newStatusValue, accessTokenField, accessTokenStatusIcon, accessTokenStatusText );
-			}
-		}
-
-		public void release()
-		{
-			profile.removePropertyChangeListener( this );
 		}
 	}
 }

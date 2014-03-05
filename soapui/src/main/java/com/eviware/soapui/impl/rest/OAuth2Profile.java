@@ -21,13 +21,12 @@ import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
@@ -87,6 +86,16 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		RETRIEVED_FROM_SERVER( "Retrieved from server" );
 
 		private String description;
+		private static final Map<String, AccessTokenStatus> lookups;
+
+		static
+		{
+			lookups = new HashMap<String, AccessTokenStatus>();
+			for( AccessTokenStatus status : AccessTokenStatus.values() )
+			{
+				lookups.put( status.toString(), status );
+			}
+		}
 
 		AccessTokenStatus( String description )
 		{
@@ -97,6 +106,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		public String toString()
 		{
 			return description;
+		}
+
+		public static AccessTokenStatus byDescription( String description )
+		{
+			return lookups.get( description );
 		}
 	}
 
@@ -363,6 +377,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
+	// FIXME We should try to make this and the fired property event into an enum
 	public String getAccessTokenStatus()
 	{
 		if( configuration.getAccessTokenStatus() != null )
@@ -370,6 +385,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			return AccessTokenStatus.valueOf( configuration.getAccessTokenStatus().toString() ).toString();
 		}
 		return null;
+	}
+
+	public AccessTokenStatus getAccesTokenStatusAsEnum()
+	{
+		return AccessTokenStatus.byDescription( getAccessTokenStatus() );
 	}
 
 	public long getAccessTokenExpirationTime()
@@ -427,7 +447,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public boolean shouldReloadAccessTokenAutomatically()
 	{
 		return getRefreshAccessTokenMethod().equals( AUTOMATIC ) && ( !StringUtils.isEmpty( getRefreshToken() ) ||
-				hasAutomationJavaScripts());
+				hasAutomationJavaScripts() );
 	}
 
 	public OAuth2ProfileContainer getContainer()

@@ -20,20 +20,21 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.value.AbstractValueModel;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class OAuth2GetAccessTokenForm
+public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeListener
 {
 	private static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
 	private static final String GET_ACCESS_TOKEN_BUTTON_NAME = "getAccessTokenButtonName";
 	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
 	private static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
 
-	private static final String GET_ACCESS_TOKEN_FORM_LAYOUT = "7dlu:none,left:pref,10dlu,left:pref,10dlu,left:MAX(100dlu;pref),7dlu";
+	private static final String GET_ACCESS_TOKEN_FORM_LAYOUT = "7dlu:none,left:pref,10dlu,left:pref,10dlu,left:MAX(112dlu;pref),7dlu";
 
 	private static final int BOARDER_SPACING = 15;
 	private static final int NORMAL_SPACING = 10;
@@ -42,13 +43,37 @@ public class OAuth2GetAccessTokenForm
 	private static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
 
 	private OAuth2Profile profile;
+	private JLabel accessTokenStatusText;
+	private OAuth2AccessTokenStatusChangeManager statusChangeManager;
 
+	// FIXME Why not a constructor?
 	public JDialog getComponent( OAuth2Profile profile )
 	{
 		this.profile = profile;
 		SimpleBindingForm accessTokenForm = createSimpleBindingForm( profile );
+		statusChangeManager = new OAuth2AccessTokenStatusChangeManager( this );
 		populateGetAccessTokenForm( accessTokenForm );
+		statusChangeManager.register();
+		setOAuth2StatusFeedback( profile.getAccesTokenStatusAsEnum() );
 		return createGetAccessTokenDialog( accessTokenForm.getPanel() );
+	}
+
+	@Override
+	public void onAccessTokenStatusChanged( OAuth2Profile.AccessTokenStatus status )
+	{
+		setOAuth2StatusFeedback( status );
+	}
+
+	@Nonnull
+	@Override
+	public OAuth2Profile getProfile()
+	{
+		return profile;
+	}
+
+	void release()
+	{
+		statusChangeManager.unregister();
 	}
 
 	private SimpleBindingForm createSimpleBindingForm( OAuth2Profile profile )
@@ -141,9 +166,8 @@ public class OAuth2GetAccessTokenForm
 
 	private PropertyComponent createAccessTokenStatusText()
 	{
-		JLabel accessTokenStatusText = new JLabel();
-		return new PropertyComponent( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, accessTokenStatusText );
-
+		accessTokenStatusText = new JLabel();
+		return new PropertyComponent( accessTokenStatusText );
 	}
 
 	private JDialog createGetAccessTokenDialog( JPanel accessTokenFormPanel )
@@ -156,5 +180,38 @@ public class OAuth2GetAccessTokenForm
 		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
 
 		return accessTokenFormDialog;
+	}
+
+	private void setOAuth2StatusFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		if( status != null )
+		{
+			switch( status )
+			{
+				case PENDING:
+				case WAITING_FOR_AUTHORIZATION:
+				case RECEIVED_AUTHORIZATION_CODE:
+					setWaitingFeedback( status );
+					break;
+				case ENTERED_MANUALLY:
+				case RETRIEVED_FROM_SERVER:
+				case FAILED:
+				default:
+					setDefaultFeedback();
+					break;
+			}
+		}
+	}
+
+	private void setWaitingFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenStatusText.setText( status.toString() );
+		accessTokenStatusText.setIcon( OAuth2Form.WAIT_ICON );
+	}
+
+	private void setDefaultFeedback()
+	{
+		accessTokenStatusText.setText( "" );
+		accessTokenStatusText.setIcon( OAuth2Form.DEFAULT_ICON );
 	}
 }

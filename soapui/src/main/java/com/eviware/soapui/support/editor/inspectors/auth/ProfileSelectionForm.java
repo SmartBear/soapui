@@ -78,6 +78,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
 	}
 
+	// FIXME Needed?
 	@Override
 	public void release()
 	{
