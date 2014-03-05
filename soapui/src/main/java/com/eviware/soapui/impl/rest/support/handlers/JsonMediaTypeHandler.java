@@ -13,7 +13,10 @@
 package com.eviware.soapui.impl.rest.support.handlers;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.AbstractRequestConfig;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
@@ -49,7 +52,6 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			String content = response.getContentAsString().trim();
 			if( !StringUtils.hasContent( content ) )
 				return null;
-
 			// remove nulls - workaround for bug in xmlserializer!?
 			content = content.replaceAll( "\\\\u0000", "" );
 			JSON json = JSONSerializer.toJSON( content );
@@ -57,7 +59,9 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			serializer.setTypeHintsEnabled( false );
 			serializer.setRootName( HttpUtils.isErrorStatus( response.getStatusCode() ) ? "Fault" : "Response" );
 			URL url = response.getURL();
-			serializer.setNamespace( "", url.getProtocol() + "://" + url.getHost() + url.getPath() );
+			String originalUri = readOriginalUriFrom( response.getRequest() );
+			String namespaceUri = originalUri != null ? originalUri : makeUrlString( url );
+			serializer.setNamespace( "",  namespaceUri);
 			content = serializer.write( json );
 			content = XmlUtils.prettyPrintXml( content );
 
@@ -72,5 +76,23 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			SoapUI.logError(e);
 		}
 		return "<xml/>";
+	}
+
+	private String readOriginalUriFrom( AbstractHttpRequestInterface<?> request )
+	{
+		if (request instanceof RestRequest )
+		{
+			AbstractRequestConfig config = ( ( RestRequest )request ).getConfig();
+			return config.getOriginalUri();
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	private String makeUrlString( URL url )
+	{
+		return url.getProtocol() + "://" + url.getHost() + url.getPath();
 	}
 }

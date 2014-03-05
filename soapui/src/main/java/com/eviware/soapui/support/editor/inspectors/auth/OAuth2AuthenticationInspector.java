@@ -15,13 +15,40 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.Bindings;
 import com.jgoodies.binding.value.AbstractValueModel;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowFocusListener;
 import java.util.ArrayList;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static javax.swing.BorderFactory.*;
+import static javax.swing.BorderFactory.createCompoundBorder;
+import static javax.swing.BorderFactory.createEmptyBorder;
+import static javax.swing.BorderFactory.createLineBorder;
 
 public final class OAuth2AuthenticationInspector extends BasicAuthenticationInspector<RestRequest>
 {
@@ -286,7 +313,7 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		accessTokenForm.addSpace( NORMAL_SPACING );
 		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
 		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
-		buttonPanel.add( new JButton( new EditScriptsAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditAutomationScriptsAction( profile ) ) );
 		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 
@@ -394,13 +421,13 @@ public final class OAuth2AuthenticationInspector extends BasicAuthenticationInsp
 		}
 	}
 
-	private class EditScriptsAction extends AbstractAction
+	private class EditAutomationScriptsAction extends AbstractAction
 	{
 		private final OAuth2Profile profile;
 
-		public EditScriptsAction( OAuth2Profile profile )
+		public EditAutomationScriptsAction( OAuth2Profile profile )
 		{
-			putValue( Action.NAME, "Edit scripts..." );
+			putValue( Action.NAME, "Automation..." );
 			this.profile = profile;
 		}
 

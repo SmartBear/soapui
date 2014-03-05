@@ -91,6 +91,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 	public static final String REMOVE_EMPTY_CONTENT = WsdlMockResponse.class.getName() + "@remove_empty_content";
 	public static final String ENCODE_ATTACHMENTS = WsdlMockResponse.class.getName() + "@encode_attachments";
 	public static final String OUGOING_WSS = WsdlMockResponse.class.getName() + "@outgoing-wss";
+	public static final String ICON_NAME = "/mockResponse.gif";
 
 	protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
 	private List<HttpAttachmentPart> definedAttachmentParts;
@@ -99,7 +100,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 
 	public WsdlMockResponse( WsdlMockOperation operation, MockResponseConfig config )
 	{
-		super( config, operation, "/mockResponse.gif" );
+		super( config, operation, ICON_NAME );
 
 		for( AttachmentConfig ac : getConfig().getAttachmentList() )
 		{

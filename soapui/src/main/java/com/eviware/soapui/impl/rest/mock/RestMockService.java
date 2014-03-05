@@ -15,7 +15,7 @@ import java.util.List;
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
 {
 
-	private final static String ICON_NAME = "/restMockService.gif";
+	public final static String ICON_NAME = "/restMockService.gif";
 
 	public RestMockService( Project project, RESTMockServiceConfig config )
 	{

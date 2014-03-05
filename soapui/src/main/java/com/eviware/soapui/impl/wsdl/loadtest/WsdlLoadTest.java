@@ -89,6 +89,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 
 	private final static Logger logger = Logger.getLogger( WsdlLoadTest.class );
 	public static final int DEFAULT_STRATEGY_INTERVAL = 500;
+	public static final String ICON_NAME = "/loadTest.gif";
 
 	private InternalTestRunListener internalTestRunListener = new InternalTestRunListener();
 
@@ -113,7 +114,7 @@ public class WsdlLoadTest extends AbstractWsdlModelItem<LoadTestConfig> implemen
 
 	public WsdlLoadTest( WsdlTestCase testCase, LoadTestConfig config )
 	{
-		super( config, testCase, "/loadTest.gif" );
+		super( config, testCase, ICON_NAME );
 
 		this.testCase = testCase;
 

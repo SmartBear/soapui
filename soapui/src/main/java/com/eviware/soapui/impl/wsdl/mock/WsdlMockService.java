@@ -55,7 +55,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 
 	private WsdlMockOperation faultMockOperation;
 	private String mockServiceEndpoint;
-	private static final String ICON_NAME = "/mockService.gif";
+	public static final String ICON_NAME = "/mockService.gif";
 
 	public WsdlMockService( Project project, MockServiceConfig config )
 	{

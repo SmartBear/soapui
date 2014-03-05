@@ -1080,6 +1080,23 @@
         <tns:actionMapping actionId="DeleteMockServiceAction" keyStroke="DELETE"/>
     </tns:actionGroup>
 
+    <!-- RestMockAction ActionGroup -->
+    <tns:actionGroup name="RestMockAction Actions" id="RestMockActionActions"
+                     default="ShowDesktopPanelAction">
+        <tns:actionMapping actionId="ShowDesktopPanelAction"
+                           name="Show MockAction Editor"
+                           description="Shows the MockAction Editor for this MockAction"
+                           keyStroke="ENTER"/>
+        <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="NewMockResponseAction"
+                           keyStroke="menu N" iconPath="/addToMockService.gif"/>
+        <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="RenameMockOperationAction"
+                           keyStroke="F2"/>
+        <tns:actionMapping actionId="DeleteMockOperationAction"
+                           keyStroke="DELETE"/>
+    </tns:actionGroup>
+
     <!-- RestMockResponse ActionGroup -->
     <tns:actionGroup name="RestMockResponse Actions" id="RestMockResponseActions"
                      default="ShowDesktopPanelAction">
