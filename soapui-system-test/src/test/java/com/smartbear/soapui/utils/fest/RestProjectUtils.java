@@ -13,16 +13,22 @@ package com.smartbear.soapui.utils.fest;
 
 import com.eviware.soapui.impl.rest.panels.method.RestMethodDesktopPanel;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
+import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourceDesktopPanel;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyDownAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyUpAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.RemovePropertyAction;
 import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
 import org.fest.swing.driver.JTableComboBoxEditorCellWriter;
+import org.fest.swing.driver.JTableTextComponentEditorCellWriter;
 import org.fest.swing.fixture.*;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 
 import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_PARAMS_TABLE;
+import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REVERT_PARAMETER_VALUES;
 import static com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction.ADD_PARAM_ACTION_NAME;
 import static org.fest.swing.data.TableCell.row;
 
@@ -94,7 +100,65 @@ public final class RestProjectUtils
 		editTableCell( paramValue, restParamsTable, robot, rowNumToEdit, 1 );
 	}
 
-	public static void changeParameterLevel( JPanelFixture parentPanel, String parameterName, String newLevel,
+    public static void deleteParameter(JPanelFixture parentPanel, int rowNum)
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        restParamsTable.cell(row(rowNum).column(0)).click();
+        parentPanel.button(RemovePropertyAction.DELETE_PARAM_ACTON_NAME).click();
+    }
+
+    public static void deleteParameter(JPanelFixture parentPanel, String paramName)
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        for (int rowNum=0; rowNum < restParamsTable.rowCount(); rowNum++)
+        {
+            JTableCellFixture cell = restParamsTable.cell(row(rowNum).column(0));
+            if(cell.value().equals(paramName))
+            {
+                cell.click();
+                break;
+            }
+        }
+        parentPanel.button(RemovePropertyAction.DELETE_PARAM_ACTON_NAME).click();
+    }
+
+    public static void moveUpParameter(JPanelFixture parentPanel, String paramName)
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        for (int rowNum=0; rowNum < restParamsTable.rowCount(); rowNum++)
+        {
+            JTableCellFixture cell = restParamsTable.cell(row(rowNum).column(0));
+            if(cell.value().equals(paramName))
+            {
+                cell.click();
+                break;
+            }
+        }
+        parentPanel.button(MovePropertyUpAction.MOVE_PROPERTY_UP_ACTION_NAME).click();
+    }
+
+    public static void moveDownParameter(JPanelFixture parentPanel, String paramName)
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        for (int rowNum=0; rowNum < restParamsTable.rowCount(); rowNum++)
+        {
+            JTableCellFixture cell = restParamsTable.cell(row(rowNum).column(0));
+            if(cell.value().equals(paramName))
+            {
+                cell.click();
+                break;
+            }
+        }
+        parentPanel.button(MovePropertyDownAction.MOVE_PROPERTY_DOWN_ACTION_NAME).click();
+    }
+
+    public static void revertParameterValue(JPanelFixture parentPanel)
+    {
+        parentPanel.button(REVERT_PARAMETER_VALUES).click();
+
+    }
+
+    public static void changeParameterLevel( JPanelFixture parentPanel, String parameterName, String newLevel,
 														  Robot robot )
 	{
 		JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
@@ -111,6 +175,40 @@ public final class RestProjectUtils
 			}
 		}
 	}
+
+    public static void changeParameterValue( JPanelFixture parentPanel, String parameterValue, String newValue,
+                                             Robot robot )
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        for( int rowCounter = 0; rowCounter < restParamsTable.rowCount(); rowCounter++ )
+        {
+            JTableCellFixture cell = restParamsTable.cell(row(rowCounter).column(1));
+            String paramNameAtIndex = cell.value();
+            if( paramNameAtIndex.equals( parameterValue ) )
+            {
+                cell.doubleClick();
+                editTableCell(newValue, restParamsTable, robot, rowCounter, 1);
+                return;
+            }
+        }
+    }
+
+    public static void changeParameterName( JPanelFixture parentPanel, String parameterName, String newName,
+                                             Robot robot )
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        for( int rowCounter = 0; rowCounter < restParamsTable.rowCount(); rowCounter++ )
+        {
+            JTableCellFixture cell = restParamsTable.cell( row( rowCounter ).column( 0 ) );
+            String paramNameAtIndex = cell.value();
+            if( paramNameAtIndex.equals( parameterName ) )
+            {
+                cell.doubleClick();
+                editTableCell(newName, restParamsTable, robot, rowCounter, 0);
+                return;
+            }
+        }
+    }
 
 	private static void enterURIandClickOk( Robot robot )
 	{

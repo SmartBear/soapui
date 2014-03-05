@@ -37,7 +37,8 @@ import java.beans.PropertyChangeListener;
 class ParametersField extends JPanel
 {
 
-	private final RestRequestInterface request;
+    public static final String PARAMETERS_FIELD = "ParametersField";
+    private final RestRequestInterface request;
 	private final JLabel textLabel;
 	private final JTextField textField;
 	private int lastSelectedPosition;
@@ -46,12 +47,14 @@ class ParametersField extends JPanel
 	{
 		this.request = request;
 		textLabel = new JLabel( "Parameters" );
+
 		String paramsString = RestUtils.makeSuffixParameterString( request );
 		textField = new JTextField( paramsString );
 		textField.setEditable( false );
 		textField.setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
 		textField.setBackground( Color.WHITE );
-		setToolTipText( paramsString );
+        textField.setName(PARAMETERS_FIELD);
+		setToolTipText(paramsString);
 		super.setLayout( new BorderLayout() );
 		super.add( textLabel, BorderLayout.NORTH );
 		super.add( textField, BorderLayout.SOUTH );

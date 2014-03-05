@@ -1,11 +1,11 @@
-@Manual @Regression
+@Automated @Regression
 Feature:User can manage the parameters in request view, form view, method editor, resource editor and top URI bar
 
 Scenario: add parameters in request view, the value will be blank in resource editor
   Given a new REST project is created
   When user adds a parameter in request editor with name param01 and value value01
-  Then request editor has parameter with name param01 and value param01 at row 0
-  And the same parameter is showed in Parameters field of top URI bar
+  Then request editor has parameter with name param01 and value value01 at row 0
+  And  Parameters field in top URI bar has value ?param01=value01
   And resource editor has parameter with name param01 and with empty value at row 0
 
 Scenario: add parameters in method or resource editor, the value will be added as well in request view
@@ -14,69 +14,87 @@ Scenario: add parameters in method or resource editor, the value will be added a
   And user adds a parameter in resource editor with name param02 and value value02
   Then method editor has parameter with name param01 and value value01 at row 0
   And resource editor has parameter with name param02 and value value02 at row 0
-  And the same parameters are showed in Parameters field of top URI bar
+  And Parameters field in top URI bar has value ?param01=value01&param02=value02
   And request editor has parameter with name param01 and value value01 at row 0
   And request editor has parameter with name param02 and value value02 at row 1
 
 Scenario: delete parameters in request view, it will synchronize in resource editor and top URI bar
   Given a new REST project is created with URI www.tryit.com/resource/method;matrix=param1?query=param2
-  When user deletes the two parameters in request view
+  When user deletes the parameter in request editor at row 1
+  And  user deletes the parameter in request editor at row 0
   Then request editor has no parameters
   And resource editor has no parameters
-  And it is blank in Parameters field of top URI bar
+  And Parameters field is empty in top URI bar
 
 Scenario: delete parameters in method or resource editor, it will synchronize in request view and top URI bar
   Given a new REST project is created with URI www.tryit.com/resource/method;matrix=param1?query=param2
   And user changes the level to method for parameter with name matrix
-  When user deletes the parameter named query in resource editor
-  And user deleted the parameter named matrix in method editor
+  When user deletes the parameter in resource editor with name query
+  And user deletes the parameter in method editor with name matrix
   Then resource editor has no parameters
   And method editor has no parameters
   And request editor has no parameters
-  And the parameters list is blank in Parameters field of top URI bar
+  And Parameters field is empty in top URI bar
 
 Scenario: reorder parameters in request view, it will only change the order in request view
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2&query3=param3
-  When user changes the order of the parameters
-  Then the changed order is saved in parameters list even when reopen the request view
+  When user move up the parameter in request editor with name query2
+  And user move down the parameter in request editor with name query1
+  Then request editor has parameter with name query2 and value param2 at row 0
+  And request editor has parameter with name query3 and value param3 at row 1
+  And request editor has parameter with name query1 and value param1 at row 2
+  And resource editor has parameter with name query1 and value param1 at row 0
+  And resource editor has parameter with name query2 and value param2 at row 1
+  And resource editor has parameter with name query3 and value param3 at row 2
 
 Scenario: reorder parameters in method or resource editor, it will only change the order in method or resource editor
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2&query3=param3&query4=param4
-  And user changes the level to method for parameter with name query3
-  And user changes the level to method for parameter with name query4
-  When user changes the order of the parameters in resource editor
-  And user changes the order of the parameters in method editor
-  Then the changed order is saved even when reopen the method or resource editor
+  And user changes the level to METHOD for parameter with name query3
+  And user changes the level to METHOD for parameter with name query4
+  When user move up the parameter in resource editor with name query2
+  And user move down the parameter in method editor with name query3
+  Then resource editor has parameter with name query2 and value param2 at row 0
+  And resource editor has parameter with name query1 and value param1 at row 1
+  And method editor has parameter with name query4 and value param4 at row 0
+  And method editor has parameter with name query3 and value param3 at row 1
+  And request editor has parameter with name query1 and value param1 at row 0
+  And request editor has parameter with name query2 and value param2 at row 1
+  And request editor has parameter with name query3 and value param3 at row 2
+  And request editor has parameter with name query4 and value param4 at row 3
 
 Scenario: edit parameters name and their value in request view, the value not changed in resource editor
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-  When user changes the parameter name query1 to change1
-  And user changes the parameter value param2 to 002
-  Then the changed parameters are saved in the request view
-  And the changed parameter name change1 is saved in the resource editor, but the changed value still keeps as param2
-  And the changed parameters saved in Parameters field of top URI bar
+  When user changes the name to change1 for parameter with name query1
+  And user changes the value to 002 for parameter with value param2
+  Then request editor has parameter with name change1 and value param1 at row 0
+  And request editor has parameter with name query2 and value 002 at row 1
+  And resource editor has parameter with name change1 and value param1 at row 0
+  And resource editor has parameter with name query2 and value param2 at row 1
+  And Parameters field in top URI bar has value ?change1=param1&query2=002
 
 Scenario: edit parameters name and their value in method or resource editor, the value are also changed in request view
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-  And user changes the level to method for parameter with name query2
-  When user changes the parameter name query1 to change1 in resource editor
-  And user changes the parameter value param2 to 002 in method editor
-  Then the changed parameters are saved in the resource editor
-  And the changed parameters are saved in the method editor
-  And the changed parameters are saved in the request view
-  And the changed parameters are saved in Parameters field of top URI bar
+  And user changes the level to METHOD for parameter with name query2
+  When in resource editor user changes the name to change1 for parameter with name query1
+  And in method editor user changes the value to 002 for parameter with value param2
+  Then resource editor has parameter with name change1 and value param1 at row 0
+  And method editor has parameter with name query2 and value 002 at row 0
+  And request editor has parameter with name change1 and value param1 at row 0
+  And request editor has parameter with name query2 and value 002 at row 1
+  And Parameters field in top URI bar has value ?change1=param1&query2=002
 
 Scenario: revert the parameter value to default in request view
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-  And user changes the parameters value to 01 and 02
+  And user changes the value to 01 for parameter with value param1
+  And user changes the value to 02 for parameter with value param2
   When user clicks the revert all parameters values button
-  And verify the action
-  Then all the parameters value will be change back to param1 and param2
+  Then request editor has parameter with name query1 and value param1 at row 0
+  And request editor has parameter with name query2 and value param2 at row 1
 
 Scenario: parameters value could be property expansion
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
   And user adds a project custom property named prop1 with value 001
-  When user changes the value of parameter query2 to ${#Project#prop1}
+  When user changes the value to ${#Project#prop1} for parameter with value param2
   And run the REST request
   Then the value of parameter query2 changes to 001 in the raw view
 
@@ -94,13 +112,13 @@ Scenario: two requests under the same resource and method inherit the same resou
   Then the query1 parameter will show up in method editor
   And the query1 parameter still keeps in request1 and request2 as method level
 
-  Scenario: User can edit parameters in top URI bar
+  Scenario: User can edit query parameters in top URI bar
     Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
     When user clicks on the Parameters field of top URI bar
     And user deletes the current two parameters in the popup window
     And user add a new parameter newparam with value 001
-    Then user will get only one query parameter named newparam with value 001 in the request view
-    And the parameter will show up in the resource editor but the value is blank
+    Then request editor has parameter with name newparam and value 001 at row 0
+    And resource editor has parameter with name newparam and with empty value at row 0
 
 
 

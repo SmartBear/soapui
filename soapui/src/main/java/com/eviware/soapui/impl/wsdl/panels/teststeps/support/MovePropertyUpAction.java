@@ -25,11 +25,13 @@ import java.awt.event.ActionEvent;
  */
 public class MovePropertyUpAction extends AbstractAction
 {
-	private final JTable propertyTable;
+    public static final String MOVE_PROPERTY_UP_ACTION_NAME = "Move Property up";
+    private final JTable propertyTable;
 	private final MutableTestPropertyHolder propertyHolder;
 
 	public MovePropertyUpAction( JTable propertyTable, MutableTestPropertyHolder propertyHolder, String description )
 	{
+        super(MOVE_PROPERTY_UP_ACTION_NAME);
 		this.propertyTable = propertyTable;
 		this.propertyHolder = propertyHolder;
 		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/up_arrow.gif" ) );

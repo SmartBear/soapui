@@ -50,6 +50,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 public class RestParamsTable extends JPanel
 {
 	public static final String REST_PARAMS_TABLE = "RestParamsTable";
+    public static final String REVERT_PARAMETER_VALUES = "Revert Parameter Values";
 	protected RestParamsPropertyHolder params;
 	protected RestParamsTableModel paramsTableModel;
 	protected JTable paramsTable;
@@ -428,10 +429,11 @@ public class RestParamsTable extends JPanel
 	}
 
 	private class UseDefaultParamsAction extends AbstractAction
-	{
-		public UseDefaultParamsAction()
+    {
+        public UseDefaultParamsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/default_properties.gif" ) );
+			super(REVERT_PARAMETER_VALUES);
+            putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/default_properties.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Reverts all current parameters to default values" );
 			setEnabled( false );
 		}

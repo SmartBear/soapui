@@ -86,8 +86,22 @@ public class RestProjectStepdefs
 	public void addRestParameterInResourceEditor( String name, String value )
 	{
 		JPanelFixture resourceEditor = findResourceEditor( rootWindow, newProjectIndexInNavigationTree, robot );
-		addNewParameter( resourceEditor, robot, name, value );
+		addNewParameter(resourceEditor, robot, name, value);
 	}
+
+    @When("^user changes the name to (.+) for parameter with name (.+)$")
+    public void changesParameterName(String newName, String parameterName) throws Throwable
+    {
+        JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+        changeParameterName(requestEditor, parameterName, newName, robot);
+    }
+
+    @And("^user changes the value to (.+) for parameter with value (.+)$")
+    public void changesParameterValue(String newValue, String parameterValue) throws Throwable
+    {
+        JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+        changeParameterValue(requestEditor, parameterValue, newValue, robot);
+    }
 
 	@When( "^user changes the level to (.+) for parameter with name (.+)$" )
 	public void changesParameterLevel( String newLevel, String parameterName )
@@ -96,27 +110,39 @@ public class RestProjectStepdefs
 		changeParameterLevel( requestEditor, parameterName, newLevel, robot );
 	}
 
+    @When("^in resource editor user changes the name to (.+) for parameter with name (.+)$")
+    public void changesParameterNameInResourceEditor(String newName, String parameterName) throws Throwable
+    {
+        JPanelFixture resourceEditor = findResourceEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        changeParameterName(resourceEditor, parameterName, newName, robot);
+    }
+
+    @And("^in method editor user changes the value to (.+) for parameter with value (.+)$")
+    public void changesParameterValueInMethodEditor(String newValue, String parameterValue) throws Throwable {
+        JPanelFixture methodEditor = findMethodEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        changeParameterValue(methodEditor, parameterValue, newValue, robot);
+    }
+
 	@Then( "^request editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyRequestEditorShowsParameter( String parameterName, String parameterValue, Integer index )
 	{
 		JPanelFixture requestEditor = findRequestEditor( rootWindow, newProjectIndexInNavigationTree, robot );
 		verifyParamValues( requestEditor, index, parameterName, parameterValue );
 	}
-
-	@Then( "^resource editor has parameter with name (.+) and with empty value at row (.+)$" )
+    @Then( "^resource editor has parameter with name (.+) and with empty value at row (.+)$" )
 	public void verifyResourceEditorShowsTheParameterWithEmptyValue( String parameterName, Integer index )
 	{
 		verifyResourceEditorShowsTheParameter( parameterName, "", index );
 	}
 
-	@Then( "^resource editor has parameter with name (.+) and value (.+) at row (.+)$" )
+    @Then( "^resource editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyResourceEditorShowsTheParameter( String parameterName, String parameterValue, Integer index )
 	{
 		JPanelFixture resourceEditor = findResourceEditor( rootWindow, newProjectIndexInNavigationTree, robot );
 		verifyParamValues( resourceEditor, index, parameterName, parameterValue );
 	}
 
-	@Then( "^method editor has parameter with name (.+) and value (.+) at row (.+)$" )
+    @Then( "^method editor has parameter with name (.+) and value (.+) at row (.+)$" )
 	public void verifyMethodEditorShowsTheParameter( String parameterName, String parameterValue, Integer index )
 	{
 		JPanelFixture methodEditor = findMethodEditor( rootWindow, newProjectIndexInNavigationTree, robot );
@@ -129,6 +155,7 @@ public class RestProjectStepdefs
         JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
         verifyEmptyTable( requestEditor );
     }
+
      @Then( "^resource editor has no parameters$" )
     public void verifyResourceEditorHasEmptyParameterTable()
     {
@@ -149,6 +176,7 @@ public class RestProjectStepdefs
 		JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
 		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );
 	}
+
 
 	private void verifyEmptyTable( JPanelFixture parentPanel )
 	{
@@ -186,5 +214,66 @@ public class RestProjectStepdefs
 		}
 	}
 
+    @When("^user deletes the parameter in request editor at row (\\d+)$")
+    public void deleteParameterInRequestEditor(int rowNum) throws Throwable {
+       JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+       RestProjectUtils.deleteParameter(requestEditor, rowNum );
+   }
 
+    @When("^user deletes the parameter in resource editor with name (.+)$")
+    public void deleteParameterInResourceEditor(String paramName) throws Throwable {
+        JPanelFixture resourceEditor = findResourceEditor( rootWindow, newProjectIndexInNavigationTree, robot );
+        RestProjectUtils.deleteParameter(resourceEditor, paramName);
+    }
+
+    @And("^user deletes the parameter in method editor with name (.+)$")
+    public void deleteParameterInMethodEditor(String paramName) throws Throwable {
+        JPanelFixture methodEditor = findMethodEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        RestProjectUtils.deleteParameter(methodEditor, paramName);
+    }
+
+    @And("^Parameters field is empty in top URI bar$")
+    public void verifyParametersFieldIsEmpty() throws Throwable {
+        rootWindow.textBox("ParametersField").requireEmpty();
+    }
+
+    @And("^Parameters field in top URI bar has value (.+)$")
+    public void verifyParametersFieldValue(String expectedValue) {
+        rootWindow.textBox("ParametersField").requireText(expectedValue);
+    }
+
+    @When("^user move up the parameter in request editor with name (.+)$")
+    public void moveUpParameterInRequestEditor(String paramName) throws Throwable
+    {
+        JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        RestProjectUtils.moveUpParameter(requestEditor, paramName);
+    }
+
+    @And("^user move down the parameter in request editor with name (.+)$")
+    public void moveDownParameterInRequestEditor(String paramName) throws Throwable
+    {
+        JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        RestProjectUtils.moveDownParameter(requestEditor, paramName);
+    }
+
+    @When("^user move up the parameter in resource editor with name (.+)$")
+    public void moveUpParameterInResourceEditor(String paramName) throws Throwable
+    {
+        JPanelFixture resourceEditor = findResourceEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        RestProjectUtils.moveUpParameter(resourceEditor, paramName);
+    }
+
+    @And("^user move down the parameter in method editor with name (.+)$")
+    public void moveDownParameterInMethodEditor(String paramName) throws Throwable
+    {
+        JPanelFixture methodEditor = findMethodEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        RestProjectUtils.moveDownParameter(methodEditor, paramName);
+    }
+
+    @When("^user clicks the revert all parameters values button$")
+    public void revertParameterValue() throws Throwable
+    {
+        JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
+        RestProjectUtils.revertParameterValue(requestEditor);
+    }
 }
