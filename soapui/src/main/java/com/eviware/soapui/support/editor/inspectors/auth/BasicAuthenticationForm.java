@@ -86,7 +86,7 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 			if ( preemptiveButton.isSelected())
 			{
 				String authType = CredentialsConfig.AuthType.PREEMPTIVE.toString();
-				request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+				request.setSelectedAuthProfileAndAuthType( AbstractHttpRequest.BASIC_AUTH_PROFILE, authType );
 			}
 		}
 	}
@@ -106,7 +106,7 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 			if ( globalButton.isSelected())
 			{
 				String authType = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
-				request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+				request.setSelectedAuthProfileAndAuthType( AbstractHttpRequest.BASIC_AUTH_PROFILE, authType );
 			}
 		}
 	}

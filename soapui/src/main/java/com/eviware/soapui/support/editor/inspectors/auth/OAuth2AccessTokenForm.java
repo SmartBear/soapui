@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.support.UISupport;
@@ -21,6 +22,7 @@ import com.jgoodies.binding.value.AbstractValueModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -33,6 +35,8 @@ public class OAuth2AccessTokenForm
 {
 
 	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
+	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
+
 	public static final int NORMAL_SPACING = 10;
 	public static final int GROUP_SPACING = 20;
 	public static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
@@ -45,21 +49,36 @@ public class OAuth2AccessTokenForm
 	public static final String SCOPE = "Scope";
 
 	private OAuth2Profile profile;
+	private JDialog accessTokenFormDialog;
 
-	public JDialog getComponent( OAuth2Profile profile )
+	public OAuth2AccessTokenForm( OAuth2Profile profile )
 	{
 		this.profile = profile;
-		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
-		populateGetAccessTokenForm( accessTokenForm );
 
-		JPanel panel = accessTokenForm.getPanel();
-		panel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
-				createEmptyBorder( 10, 10, 10, 10 ) ) );
-		return createAccessTokenDialog( panel );
 	}
 
-	private void populateGetAccessTokenForm( SimpleBindingForm accessTokenForm )
+	public JDialog getComponent()
 	{
+		createAccessTokenDialog();
+
+		JPanel wrapperPanel = new JPanel( new BorderLayout() );
+		wrapperPanel.add( createAccessTokenFormPanel(), BorderLayout.NORTH );
+		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
+				"How to get an access token from an authorization server" );
+		accessTokenDocumentationLink.setBorder( createEmptyBorder( 10, 5, 0, 0 ) );
+		wrapperPanel.add( accessTokenDocumentationLink, BorderLayout.SOUTH );
+
+		wrapperPanel.setBorder( createCompoundBorder( createLineBorder( CARD_BORDER_COLOR ),
+				createEmptyBorder( 10, 10, 10, 10 ) ) );
+
+		accessTokenFormDialog.getContentPane().add( wrapperPanel );
+		return accessTokenFormDialog;
+	}
+
+	private JPanel createAccessTokenFormPanel()
+	{
+		SimpleBindingForm accessTokenForm = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
+
 		JLabel formTitleLabel = new JLabel( "Get Access Token from the authorization server" );
 		Font font = formTitleLabel.getFont();
 		Font fontBold = new Font( font.getName(), Font.BOLD, font.getSize() );
@@ -68,7 +87,7 @@ public class OAuth2AccessTokenForm
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
-		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW,
+		AbstractValueModel valueModel = accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW_PROPERTY,
 				"getOAuth2Flow", "setOAuth2Flow" );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel<OAuth2Profile.OAuth2Flow>( OAuth2Profile.OAuth2Flow.values() );
 		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
@@ -91,6 +110,7 @@ public class OAuth2AccessTokenForm
 				if( e.getStateChange() == ItemEvent.SELECTED )
 				{
 					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+					accessTokenFormDialog.pack();
 				}
 			}
 		} );
@@ -107,21 +127,43 @@ public class OAuth2AccessTokenForm
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
-		accessTokenForm.addButtonWithoutLabel( "Get Access Token", new GetOAuthAccessTokenAction( profile ) );
+		JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
+		buttonPanel.add( new JButton( new GetOAuthAccessTokenAction( profile ) ) );
+		buttonPanel.add( new JButton( new EditAutomationScriptsAction( profile ) ) );
+		accessTokenForm.addComponent( buttonPanel );
 		accessTokenForm.appendLabel( OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, "Access token status" );
 
-		JLabel accessTokenDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org",
-				"How to get an access token from an authorization server" );
-		accessTokenForm.addComponent( accessTokenDocumentationLink );
+		return accessTokenForm.getPanel();
 	}
 
-	private JDialog createAccessTokenDialog( JPanel accessTokenFormPanel )
+	private void createAccessTokenDialog()
 	{
-		final JDialog accessTokenFormDialog = new JDialog();
+		this.accessTokenFormDialog = new JDialog();
 		accessTokenFormDialog.setName( ACCESS_TOKEN_FORM_DIALOG_NAME );
+		accessTokenFormDialog.setTitle( ACCESS_TOKEN_FORM_DIALOG_TITLE );
+		accessTokenFormDialog.setIconImages( SoapUI.getFrameIcons() );
 		accessTokenFormDialog.setUndecorated( true );
-		accessTokenFormDialog.getContentPane().add( accessTokenFormPanel );
+	}
 
-		return accessTokenFormDialog;
+	private class EditAutomationScriptsAction extends AbstractAction
+	{
+		private final OAuth2Profile profile;
+
+		public EditAutomationScriptsAction( OAuth2Profile profile )
+		{
+			putValue( Action.NAME, "Automation..." );
+			this.profile = profile;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			if( accessTokenFormDialog != null )
+			{
+				accessTokenFormDialog.setVisible( false );
+				accessTokenFormDialog.dispose();
+			}
+			UISupport.showDesktopPanel( new OAuth2ScriptsDesktopPanel( profile ) );
+		}
 	}
 }

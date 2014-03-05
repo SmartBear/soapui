@@ -46,7 +46,6 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public static final String WSS_FORM_LABEL = "WSS form";
 	public static final String OPTIONS_SEPARATOR = "------------------";
 	public static final String DELETE_PROFILE_DIALOG_TITLE = "Delete Profile";
-	public static final String BASIC_AUTH_PROFILE = "Basic";
 	public static final String RENAME_PROFILE_DIALOG_TITLE = "Rename Profile";
 
 	public static final String NO_AUTHORIZATION = "No Authorization";
@@ -172,7 +171,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
 			request.setSelectedAuthProfileAndAuthType( selectedOption, selectedOption );
-			authenticationForm.setButtonGroupVisibility( selectedOption.equals( BASIC_AUTH_PROFILE ) );
+			authenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
 			if( isSoapRequest( request ) )
 			{
 				showCard( WSS_FORM_LABEL );
@@ -314,7 +313,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	protected ArrayList<String> getBasicAuthenticationTypes()
 	{
 		ArrayList<String> options = new ArrayList<String>();
-		options.add( BASIC_AUTH_PROFILE );
+		options.add( AbstractHttpRequest.BASIC_AUTH_PROFILE );
 		options.add( CredentialsConfig.AuthType.NTLM.toString() );
 		options.add( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() );
 		return options;

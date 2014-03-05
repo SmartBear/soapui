@@ -42,7 +42,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	private boolean disclosureButtonDisabled;
 	private boolean isMouseOnDisclosureLabel;
 
-	public OAuth2Form(OAuth2Profile profile)
+	public OAuth2Form( OAuth2Profile profile )
 	{
 		super();
 		this.profile = profile;
@@ -52,7 +52,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 	protected JPanel buildUI()
 	{
 		SimpleBindingForm oAuth2Form = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
-		addOAuth2Panel(oAuth2Form);
+		addOAuth2Panel( oAuth2Form );
 		return formPanel;
 	}
 
@@ -92,8 +92,8 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 
-		OAuth2AccessTokenForm  accessTokenForm = new OAuth2AccessTokenForm();
-		final JDialog accessTokenFormDialog =accessTokenForm.getComponent( profile );
+		OAuth2AccessTokenForm accessTokenForm = new OAuth2AccessTokenForm( profile );
+		final JDialog accessTokenFormDialog = accessTokenForm.getComponent();
 
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
 
@@ -114,9 +114,9 @@ public class OAuth2Form extends AbstractAuthenticationForm
 
 	private JButton addAccessTokenFieldAndRefreshTokenButton( SimpleBindingForm oAuth2Form )
 	{
-		JTextField accessTokenField = new JTextField(  );
+		JTextField accessTokenField = new JTextField();
 		accessTokenField.setName( OAuth2Profile.ACCESS_TOKEN_PROPERTY );
-		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS  );
+		accessTokenField.setColumns( SimpleForm.MEDIUM_TEXT_FIELD_COLUMNS );
 		Bindings.bind( accessTokenField, oAuth2Form.getPresentationModel().getModel( OAuth2Profile.ACCESS_TOKEN_PROPERTY ) );
 
 		final JButton refreshAccessTokenButton = new JButton( "Refresh" );
@@ -127,7 +127,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 				&& ( !StringUtils.isNullOrEmpty( profile.getRefreshToken() ) );
 		refreshAccessTokenButton.setVisible( enabled );
 
-		JPanel wrapperPanel = new JPanel( new BorderLayout( 5,5 ) );
+		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.setBackground( CARD_BACKGROUND_COLOR );
 		wrapperPanel.add( accessTokenField, BorderLayout.WEST );
 		wrapperPanel.add( refreshAccessTokenButton, BorderLayout.EAST );
