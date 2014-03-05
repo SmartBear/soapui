@@ -170,6 +170,7 @@ public class SwingXFormImpl implements XForm
 	{
 		JComboBoxFormField comboBox = new JComboBoxFormField( values );
 		comboBox.setToolTip( description );
+		comboBox.getComponent().setName( name );
 		addComponent( name, comboBox );
 		return comboBox;
 	}
@@ -223,6 +224,7 @@ public class SwingXFormImpl implements XForm
 		{
 			JTextFieldFormField textField = new JTextFieldFormField();
 			textField.getComponent().setColumns( 40 );
+			textField.getComponent().setName( name );
 			textField.setToolTip( description );
 			addComponent( name, textField );
 			return textField;

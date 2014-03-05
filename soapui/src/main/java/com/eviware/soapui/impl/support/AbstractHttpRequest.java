@@ -64,6 +64,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
 {
 
+	public static final String BASIC_AUTH_PROFILE = "Basic";
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
 	private String requestContent;
 	private RequestIconAnimator<?> iconAnimator;
@@ -630,7 +631,14 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		if( authType!= null && (!CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType )))
 		{
-			addBasicAuthenticationProfile( authType );
+			if(authType.equals( AuthType.PREEMPTIVE.toString() ) || authType.equals( AuthType.GLOBAL_HTTP_SETTINGS.toString() ))
+			{
+				addBasicAuthenticationProfile( BASIC_AUTH_PROFILE );
+			}
+			else
+			{
+				addBasicAuthenticationProfile( authType );
+			}
 		}
 
 		String old = getAuthType();

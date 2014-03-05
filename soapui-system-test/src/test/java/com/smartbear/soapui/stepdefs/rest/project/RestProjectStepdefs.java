@@ -151,12 +151,17 @@ public class RestProjectStepdefs
 		return WorkspaceUtils.getProjectNameList().indexOf( projectName ) + 1;
 	}
 
-	@And( "^there is a refresh token in the OAuth 2 profile$" )
-	public void setRefreshTokenInOAuth2Profile() throws Throwable
+	@And( "^there is a refresh token in the profile with name (.+)$" )
+	public void setRefreshTokenInOAuth2Profile(String profileName) throws Throwable
 	{
 		String projectName = WorkspaceUtils.getNavigatorPanel( rootWindow ).tree().node( newProjectIndexInNavigationTree).value();
 		WsdlProject project = (WsdlProject )SoapUI.getWorkspace().getProjectByName( projectName );
-		OAuth2Profile profile = project.getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 );
-		profile.setRefreshToken( "Dummy#Refresh#Token" );
+		for( OAuth2Profile profile : project.getOAuth2ProfileContainer().getOAuth2ProfileList())
+		{
+			if(profile.getName().equals( profileName ))
+			{
+				profile.setRefreshToken( "Dummy#Refresh#Token" );
+			}
+		}
 	}
 }

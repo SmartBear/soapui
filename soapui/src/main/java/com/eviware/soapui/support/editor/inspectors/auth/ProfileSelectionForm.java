@@ -40,14 +40,15 @@ import java.util.ArrayList;
 public class ProfileSelectionForm<T extends AbstractHttpRequest> extends AbstractXmlInspector
 {
 
-	public static final String AUTHORIZATION_TYPE_COMBO_BOX_NAME = "Authorization:";
+	public static final String PROFILE_COMBO_BOX = "Authorization:";
 
 	public static final String BASIC_FORM_LABEL = "Legacy form";
 	public static final String WSS_FORM_LABEL = "WSS form";
 	public static final String OPTIONS_SEPARATOR = "------------------";
-	public static final String BASIC_AUTH_PROFILE = "Basic";
+	public static final String DELETE_PROFILE_DIALOG_TITLE = "Delete Profile";
+	public static final String RENAME_PROFILE_DIALOG_TITLE = "Rename Profile";
 
-	public String NO_AUTHORIZATION = "No Authorization";
+	public static final String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String EMPTY_PANEL = "EmptyPanel";
 
@@ -134,7 +135,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		JPanel comboBoxPanel = new JPanel( formLayout );
 		comboBoxPanel.setBorder( BorderFactory.createEmptyBorder( 0, 10, 0, 10 ) );
 
-		JLabel authorizationLabel = new JLabel( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
+		JLabel authorizationLabel = new JLabel( PROFILE_COMBO_BOX );
 		authorizationLabel.setBorder( BorderFactory.createEmptyBorder( 3, 0, 0, 0 ) );
 
 		formLayout.appendRow( new RowSpec( "top:pref" ) );
@@ -155,7 +156,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		String[] existingProfiles = createOptionsForAuthorizationCombo( request.getSelectedAuthProfile() );
 
 		profileSelectionComboBox = new JComboBox<String>( existingProfiles );
-		profileSelectionComboBox.setName( AUTHORIZATION_TYPE_COMBO_BOX_NAME );
+		profileSelectionComboBox.setName( PROFILE_COMBO_BOX );
 		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
 	}
 
@@ -169,8 +170,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
-			request.setSelectedAuthProfileAndAuthType( selectedOption,selectedOption );
-			authenticationForm.setButtonGroupVisibility( selectedOption.equals( BASIC_AUTH_PROFILE ) );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, selectedOption );
+			authenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
 			if( isSoapRequest( request ) )
 			{
 				showCard( WSS_FORM_LABEL );
@@ -237,7 +238,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void renameCurrentProfile( String profileOldName )
 	{
-		String newName = UISupport.prompt( "Specify name of Profile", "Rename Profile", profileOldName );
+		String newName = UISupport.prompt( "Specify name of Profile", RENAME_PROFILE_DIALOG_TITLE, profileOldName );
 		if( newName == null || profileOldName.equals( newName ) )
 		{
 			profileSelectionComboBox.setSelectedItem( profileOldName );
@@ -266,7 +267,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void deleteCurrentProfile( String profileName )
 	{
-		boolean confirmedDeletion = UISupport.confirm( "Do you really want to delete profile '" + profileName + "' ?", "Delete Profile" );
+		boolean confirmedDeletion = UISupport.confirm( "Do you really want to delete profile '" + profileName + "' ?",
+				DELETE_PROFILE_DIALOG_TITLE );
 		if( !confirmedDeletion )
 		{
 			refreshProfileSelectionComboBox( profileName );
@@ -311,7 +313,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	protected ArrayList<String> getBasicAuthenticationTypes()
 	{
 		ArrayList<String> options = new ArrayList<String>();
-		options.add( BASIC_AUTH_PROFILE );
+		options.add( AbstractHttpRequest.BASIC_AUTH_PROFILE );
 		options.add( CredentialsConfig.AuthType.NTLM.toString() );
 		options.add( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() );
 		return options;
@@ -375,7 +377,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		return null;
 	}
 
-	private enum AddEditOptions
+	public enum AddEditOptions
 	{
 		ADD( "Add New Authorization..." ),
 		RENAME( "Rename current..." ),
@@ -387,7 +389,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			this.description = description;
 		}
 
-		private String getDescription()
+		public String getDescription()
 		{
 			return description;
 		}

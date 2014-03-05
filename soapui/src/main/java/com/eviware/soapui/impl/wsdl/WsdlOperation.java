@@ -70,6 +70,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 	public static final String SOLICIT_RESPONSE = "Solicit-Response";
 
 	public final static Logger log = Logger.getLogger( WsdlOperation.class );
+	public static final String ICON_NAME = "/operation.gif";
 	private List<WsdlRequest> requests = new ArrayList<WsdlRequest>();
 	private WsdlInterface iface;
 	private ImageIcon oneWayIcon;
@@ -80,7 +81,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
 
 	public WsdlOperation( WsdlInterface iface, OperationConfig operationConfig )
 	{
-		super( operationConfig, iface, "/operation.gif" );
+		super( operationConfig, iface, ICON_NAME );
 		this.iface = iface;
 
 		if( !operationConfig.isSetIsOneWay() )
