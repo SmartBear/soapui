@@ -15,6 +15,7 @@ package com.eviware.soapui.model.mock;
 import java.util.List;
 
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.iface.Operation;
 
 /**
@@ -24,7 +25,7 @@ import com.eviware.soapui.model.iface.Operation;
  * @author ole.matzura
  */
 
-public interface MockOperation extends ModelItem
+public interface MockOperation extends ModelItem, Releasable
 {
 	public MockService getMockService();
 

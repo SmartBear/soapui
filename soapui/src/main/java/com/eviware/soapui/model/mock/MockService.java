@@ -33,11 +33,15 @@ public interface MockService extends TestModelItem, Releasable
 
 	public Project getProject();
 
+	public List<MockOperation> getMockOperationList();
+
 	public int getMockOperationCount();
 
 	public MockOperation getMockOperationAt( int index );
 
 	public MockOperation getMockOperationByName( String name );
+
+	public void removeMockOperation( MockOperation mockOperation );
 
 	public String getPath();
 
@@ -63,7 +67,6 @@ public interface MockService extends TestModelItem, Releasable
 
 	public void fireMockResponseRemoved( MockResponse mockResponse );
 
-	public List<MockOperation> getMockOperationList();
-
 	public boolean getBindToHostOnly();
+
 }

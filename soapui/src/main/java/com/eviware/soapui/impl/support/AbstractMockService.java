@@ -5,9 +5,7 @@ import com.eviware.soapui.config.BaseMockServiceConfig;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -123,6 +121,27 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public String getPath()
 	{
 		return getConfig().getPath();
+	}
+
+	@Override
+	public void removeMockOperation( MockOperation mockOperation )
+	{
+		int ix = mockOperations.indexOf( mockOperation );
+		if( ix == -1 )
+			throw new RuntimeException( "Unknown MockOperation specified to removeMockOperation" );
+
+		mockOperations.remove( ix );
+		fireMockOperationRemoved( mockOperation );
+		mockOperation.release();
+
+		if( this instanceof WsdlMockService )
+		{
+			((WsdlMockService)this).getConfig().removeMockOperation( ix );
+		}
+		else if( this instanceof RestMockService )
+		{
+			((RestMockService )this).getConfig().removeRestMockAction( ix );
+		}
 	}
 
 	public String getHost()
