@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import org.apache.commons.httpclient.util.EncodingUtil;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -188,6 +189,12 @@ public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHt
 	public SoapUIMetrics getMetrics()
 	{
 		return httpMethodSupport.getMetrics();
+	}
+
+	@Override
+	public Header[] getAllResponseHeaders()
+	{
+		return httpMethodSupport.getAllResponseHeaders();
 	}
 
 }

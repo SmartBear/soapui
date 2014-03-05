@@ -12,72 +12,73 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.IOException;
-import java.net.URI;
-
-import javax.net.ssl.SSLSession;
-
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
 import org.apache.http.client.methods.HttpUriRequest;
 
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import javax.net.ssl.SSLSession;
+import java.io.IOException;
+import java.net.URI;
 
 public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 {
-	public long getMaxSize();
+	long getMaxSize();
 
-	public void setMaxSize( long maxSize );
+	void setMaxSize( long maxSize );
 
-	public long getResponseReadTime();
+	long getResponseReadTime();
 
-	public long getResponseReadTimeNanos();
+	long getResponseReadTimeNanos();
 
-	public void initStartTime();
+	void initStartTime();
 
-	public long getTimeTaken();
+	long getTimeTaken();
 
-	public long getStartTime();
+	long getStartTime();
 
-	public SSLInfo getSSLInfo();
+	SSLInfo getSSLInfo();
 
-	public String getResponseCharSet();
+	String getResponseCharSet();
 
-	public String getResponseContentType();
+	String getResponseContentType();
 
-	public String getMethod();
+	String getMethod();
 
-	public void setDumpFile( String dumpFile );
+	void setDumpFile( String dumpFile );
 
-	public void setFailed( Throwable t );
+	void setFailed( Throwable t );
 
-	public boolean isFailed();
+	boolean isFailed();
 
-	public Throwable getFailureCause();
+	Throwable getFailureCause();
 
-	public boolean hasResponse();
+	boolean hasResponse();
 
-	public byte[] getDecompressedResponseBody() throws IOException;
+	byte[] getDecompressedResponseBody() throws IOException;
 
-	public void setDecompress( boolean decompress );
+	void setDecompress( boolean decompress );
 
-	public void setURI( URI uri );
+	void setURI( URI uri );
 
-	public void setHttpResponse( org.apache.http.HttpResponse httpResponse );
+	void setHttpResponse( org.apache.http.HttpResponse httpResponse );
 
-	public org.apache.http.HttpResponse getHttpResponse();
+	org.apache.http.HttpResponse getHttpResponse();
 
-	public boolean hasHttpResponse();
+	boolean hasHttpResponse();
 
-	public byte[] getResponseBody() throws IOException;
+	byte[] getResponseBody() throws IOException;
 
-	public String getResponseBodyAsString() throws IOException;
+	String getResponseBodyAsString() throws IOException;
 
-	public HttpEntity getRequestEntity();
+	HttpEntity getRequestEntity();
 
-	public void afterReadResponse( SSLSession session );
+	void afterReadResponse( SSLSession session );
 
-	public void afterWriteRequest();
+	void afterWriteRequest();
 
-	public SoapUIMetrics getMetrics();
+	SoapUIMetrics getMetrics();
+
+	Header[] getAllResponseHeaders();
 }
