@@ -24,13 +24,13 @@ import java.awt.event.ActionListener;
 /**
  *
  */
-public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
+public class BasicAuthenticationForm<T extends AbstractHttpRequest> extends AbstractAuthenticationForm
 {
 	protected T request;
 	private JRadioButton globalButton;
 	private JRadioButton preemptiveButton;
 
-	public BasicAuthenticationForm(T request)
+	public BasicAuthenticationForm( T request )
 	{
 		this.request = request;
 	}
@@ -64,11 +64,25 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		basicConfigurationForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
 
 		ButtonGroup buttonGroup = new ButtonGroup();
-		globalButton = basicConfigurationForm.appendRadioButton( "Pre-emptive auth", "Use global preference", buttonGroup, true);
+		globalButton = basicConfigurationForm.appendRadioButton( "Pre-emptive auth", "Use global preference", buttonGroup, false );
 		preemptiveButton = basicConfigurationForm.appendRadioButton( "", "Authenticate pre-emptively", buttonGroup, false );
+
+		selectCorrectRadioButton();
 
 		globalButton.addActionListener( new UseGlobalSettingsRadioButtonListener( globalButton ) );
 		preemptiveButton.addActionListener( new PreemptiveRadioButtonListener( preemptiveButton ) );
+	}
+
+	private void selectCorrectRadioButton()
+	{
+		if( request.getPreemptive() )
+		{
+			preemptiveButton.setSelected( true );
+		}
+		else
+		{
+			globalButton.setSelected( true );
+		}
 	}
 
 	private class PreemptiveRadioButtonListener implements ActionListener
@@ -83,10 +97,11 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if ( preemptiveButton.isSelected())
+			if( preemptiveButton.isSelected() )
 			{
 				String authType = CredentialsConfig.AuthType.PREEMPTIVE.toString();
 				request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+				request.setPreemptive( true );
 			}
 		}
 	}
@@ -103,10 +118,11 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends Abs
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if ( globalButton.isSelected())
+			if( globalButton.isSelected() )
 			{
 				String authType = CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString();
 				request.setSelectedAuthProfileAndAuthType( ProfileSelectionForm.BASIC_AUTH_PROFILE, authType );
+				request.setPreemptive( false );
 			}
 		}
 	}
