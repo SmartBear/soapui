@@ -369,4 +369,8 @@ public class HttpMethodSupport
 		return metrics;
 	}
 
+	public Header[] getAllResponseHeaders()
+	{
+		return getHttpResponse() == null ? new Header[0] : httpResponse.getAllHeaders();
+	}
 }

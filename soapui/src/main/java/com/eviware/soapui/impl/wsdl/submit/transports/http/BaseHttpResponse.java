@@ -12,14 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.util.List;
-
-import org.apache.http.Header;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
@@ -36,6 +28,13 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.http.Header;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.List;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
@@ -108,15 +107,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 			{
 				this.timestamp = System.currentTimeMillis();
 				this.contentType = httpMethod.getResponseContentType();
-				this.statusCode = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getStatusLine()
-						.getStatusCode() : 0;
+				this.statusCode = extractStatusCode( httpMethod );
 				this.sslInfo = httpMethod.getSSLInfo();
 				this.url = httpMethod.getURI().toURL();
 
 				metrics.setTimestamp( getTimestamp() );
 				metrics.setHttpStatus( getStatusCode() );
 			}
-			catch( Throwable e )
+			catch( Exception e )
 			{
 				e.printStackTrace();
 			}
@@ -136,7 +134,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 		if( this.httpRequest.get() instanceof HttpRequest )
 		{
-			downloadIncludedResources = ( HttpRequest )this.httpRequest.get() != null ? ( ( HttpRequest )this.httpRequest
+			downloadIncludedResources = this.httpRequest.get() != null ? ( ( HttpRequest )this.httpRequest
 					.get() ).getDownloadIncludedResources() : false;
 
 			if( downloadIncludedResources )
@@ -148,6 +146,20 @@ public abstract class BaseHttpResponse implements HttpResponse
 				metrics.getTotalTimer().add( afterNanos - beforeNanos );
 				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
+		}
+	}
+
+	private int extractStatusCode( ExtendedHttpMethod httpMethod )
+	{
+		if (httpMethod instanceof HttpStatusHolder)
+		{
+			return ((HttpStatusHolder)httpMethod).getResponseStatusCode();
+		}
+		else
+		{
+			return httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getStatusLine()
+					.getStatusCode() : 0;
+
 		}
 	}
 
@@ -189,7 +201,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 			{
 				try
 				{
-					rawResponse.write( String.valueOf( httpMethod.getHttpResponse().getStatusLine() ).getBytes() );
+					rawResponse.write( extractStatusLine( httpMethod ).getBytes() );
 					rawResponse.write( "\r\n".getBytes() );
 				}
 				catch( Throwable e )
@@ -212,14 +224,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			if( !httpMethod.isFailed() && httpMethod.hasHttpResponse() )
 			{
-				headers = httpMethod.getHttpResponse().getAllHeaders();
+				headers = httpMethod.getAllResponseHeaders();
 				for( Header header : headers )
 				{
 					responseHeaders.put( header.getName(), header.getValue() );
 					rawResponse.write( toExternalForm( header ).getBytes() );
 				}
 
-				responseHeaders.put( "#status#", String.valueOf( httpMethod.getHttpResponse().getStatusLine() ) );
+				responseHeaders.put( "#status#", extractStatusLine( httpMethod ) );
 			}
 
 			if( httpMethod.getRequestEntity() != null )
@@ -246,9 +258,21 @@ public abstract class BaseHttpResponse implements HttpResponse
 			rawResponseData = rawResponse.toByteArray();
 			rawRequestData = rawRequest.toByteArray();
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
 			e.printStackTrace();
+		}
+	}
+
+	private String extractStatusLine( ExtendedHttpMethod httpMethod )
+	{
+		if( httpMethod instanceof HttpStatusHolder )
+		{
+			return ((HttpStatusHolder)httpMethod).getResponseStatusLine();
+		}
+		else
+		{
+			return String.valueOf( httpMethod.getHttpResponse().getStatusLine() );
 		}
 	}
 
@@ -314,7 +338,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					responseHeaders.put( header.getName(), header.getValue() );
 				}
 
-				responseHeaders.put( "#status#", String.valueOf( httpMethod.getHttpResponse().getStatusLine() ) );
+				responseHeaders.put( "#status#", extractStatusLine( httpMethod ) );
 			}
 		}
 		catch( Throwable e )
