@@ -47,8 +47,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public static final String OPTIONS_SEPARATOR = "------------------";
 	public static final String DELETE_PROFILE_DIALOG_TITLE = "Delete Profile";
 	public static final String BASIC_AUTH_PROFILE = "Basic";
+	public static final String RENAME_PROFILE_DIALOG_TITLE = "Rename Profile";
 
-	public String NO_AUTHORIZATION = "No Authorization";
+	public static final String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String EMPTY_PANEL = "EmptyPanel";
 
@@ -238,7 +239,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private void renameCurrentProfile( String profileOldName )
 	{
-		String newName = UISupport.prompt( "Specify name of Profile", "Rename Profile", profileOldName );
+		String newName = UISupport.prompt( "Specify name of Profile", RENAME_PROFILE_DIALOG_TITLE, profileOldName );
 		if( newName == null || profileOldName.equals( newName ) )
 		{
 			profileSelectionComboBox.setSelectedItem( profileOldName );

@@ -15,10 +15,14 @@ import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JComboBoxFixture;
 import org.hamcrest.Matchers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.FestMatchers.buttonWithText;
 import static com.smartbear.soapui.utils.fest.FestUtils.findDialog;
 import static com.smartbear.soapui.utils.fest.FestUtils.verifyButtonIsNotShowing;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItemInArray;
@@ -51,12 +55,6 @@ public class OAuth2Stepdefs
 		rootWindow = getMainWindow( robot );
 	}
 
-	@When("^selects the OAuth 2 Authorization Type$")
-	public void clicksOnTheOAuth2AuthorizationType()
-	{
-		selectItemInProfileSelectionComboBox( OAUTH_2_COMBOBOX_ITEM );
-	}
-
 	@When("^and fills out all fields$")
 	public void fillInAllOAuth2Fields()
 	{
@@ -69,11 +67,11 @@ public class OAuth2Stepdefs
 		accessTokenFormDialog.textBox( OAuth2Profile.SCOPE_PROPERTY ).setText( SCOPE );
 	}
 
-	@When("^switches to another Authorization type and then back again$")
-	public void switchToAnotherAuthorizationTypeAndThenBackAgain()
+	@When("^switches to another Authorization type and then back again to (.+)$")
+	public void switchToAnotherAuthorizationTypeAndThenBackAgain(String profileName)
 	{
-		selectItemInProfileSelectionComboBox( GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM );
-		selectItemInProfileSelectionComboBox( OAUTH_2_COMBOBOX_ITEM );
+		selectItemInProfileSelectionComboBox( ProfileSelectionForm.NO_AUTHORIZATION );
+		selectItemInProfileSelectionComboBox( profileName );
 	}
 
 	@When("^user clicks on Advanced options button$")
@@ -129,8 +127,7 @@ public class OAuth2Stepdefs
 	@Then("^the OAuth 2 option is not visible in the Authentication Type dropdown$")
 	public void verifyThatOAuth2OptionIsNotShownInAuthenticationDropdown()
 	{
-		assertThat( rootWindow.comboBox( "Type" )
-				.contents(), not( hasItemInArray( OAUTH_2_COMBOBOX_ITEM ) ) );
+		assertThat( getAuthorizationTypeComboBox().contents(), not( hasItemInArray( OAUTH_2_COMBOBOX_ITEM ) ) );
 	}
 
 	@Then("^the previously filled fields are still present$")
@@ -158,10 +155,10 @@ public class OAuth2Stepdefs
 		getAdvancedDialogFixture().radioButton( expectedRefreshMethod ).requireSelected();
 	}
 
-
 	@Then("^access token is present$")
 	public void verifyThatAccessTokenIsPresent()
 	{
+		robot.waitForIdle();
 		assertThat( rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_PROPERTY ).text(), is( ACCESS_TOKEN ) );
 	}
 
@@ -171,29 +168,11 @@ public class OAuth2Stepdefs
 		FestUtils.verifyDialogIsNotShowing( OAuth2AccessTokenForm.ACCESS_TOKEN_FORM_DIALOG_NAME, robot );
 	}
 
-	private void closeAdvancedOptionsDialog()
-	{
-		DialogFixture dialogFixture = getAdvancedDialogFixture();
-		dialogFixture.button( BUTTON_OK ).click();
-	}
-
-	private DialogFixture getAdvancedDialogFixture()
-	{
-		return rootWindow.dialog( ADVANCED_OPTIONS_DIALOG_NAME );
-	}
-
 	@When( "^the user selects (.+) in the authorization drop down$" )
 	public void selectItemInProfileSelectionComboBox( String itemName )
 	{
 		JComboBoxFixture comboBox = getProfileSelectionComboBox();
 		comboBox.selectItem( itemName );
-	}
-
-	private JComboBoxFixture getProfileSelectionComboBox()
-	{
-		JComboBoxFixture comboBox = rootWindow.comboBox( ProfileSelectionForm.PROFILE_COMBO_BOX );
-		comboBox.focus();
-		return comboBox;
 	}
 
 	@Then("^refresh button is visible$")
@@ -247,29 +226,6 @@ public class OAuth2Stepdefs
 		clickOk( getAuthorizationSelectionDialog() );
 	}
 
-	private void setProfileNameAndClickOk( String profileName )
-	{
-		DialogFixture authorizationSelectionDialog = getAuthorizationSelectionDialog();
-		authorizationSelectionDialog.textBox( "Profile name" ).setText( profileName );
-		clickOk( authorizationSelectionDialog );
-	}
-
-	private void clickOk( DialogFixture authorizationSelectionDialog )
-	{
-		authorizationSelectionDialog.button( "OK" ).click();
-	}
-
-	private void selectAuthType( String authType )
-	{
-		getAuthorizationSelectionDialog().comboBox( "Type" ).selectItem( authType );
-	}
-
-	private DialogFixture getAuthorizationSelectionDialog()
-	{
-		return findDialog( "Add Authorization", robot );
-	}
-
-
 	@Then( "^new profile selected with name (.+)$" )
 	public void verifyTheProfileIsSelected( String profileName ) throws Throwable
 	{
@@ -292,4 +248,85 @@ public class OAuth2Stepdefs
 			assertThat( profileName, is( Matchers.not( profile ) ) );
 		}
 	}
+
+	@And( "^the changes the name to (.+)$" )
+	public void setNewProfileName(String newName) throws Throwable
+	{
+		DialogFixture renameProfileDialog = FestMatchers.dialogWithTitle( ProfileSelectionForm.RENAME_PROFILE_DIALOG_TITLE )
+				.using( robot );
+		renameProfileDialog.textBox().setText( newName );
+		renameProfileDialog.button( buttonWithText( "OK" ) ).click();
+	}
+
+	@Then( "^available options in authorization drop down are (.+)$" )
+	public void verifyAddEditOptionsInProfileSelectionComboBox(String values) throws Throwable
+	{
+		String[] expectedAddEditOptions = (values + "," +ProfileSelectionForm.OPTIONS_SEPARATOR).split( "," );
+		List<String> expectedOptionsList = Arrays.asList(expectedAddEditOptions);
+		String[] actualOptions = getProfileSelectionComboBox().contents();
+
+		for( String actualOption : actualOptions )
+		{
+			assertThat( expectedOptionsList, hasItem( actualOption ) );
+		}
+	}
+
+	@And( "^user selects to add new profile$" )
+	public void selectAddNewAuthorizationInProfileSelectionComboBox() throws Throwable
+	{
+		selectItemInProfileSelectionComboBox( ProfileSelectionForm.AddEditOptions.ADD.getDescription() );
+	}
+
+	@And( "^closes the authorization type selection dialog$" )
+	public void closeAuthorizationSelectionDialog() throws Throwable
+	{
+		getAuthorizationSelectionDialog().close();
+	}
+
+
+	private void closeAdvancedOptionsDialog()
+	{
+		DialogFixture dialogFixture = getAdvancedDialogFixture();
+		dialogFixture.button( BUTTON_OK ).click();
+	}
+
+	private DialogFixture getAdvancedDialogFixture()
+	{
+		return rootWindow.dialog( ADVANCED_OPTIONS_DIALOG_NAME );
+	}
+	private void setProfileNameAndClickOk( String profileName )
+	{
+		DialogFixture authorizationSelectionDialog = getAuthorizationSelectionDialog();
+		authorizationSelectionDialog.textBox( "Profile name" ).setText( profileName );
+		clickOk( authorizationSelectionDialog );
+	}
+
+	private void clickOk( DialogFixture authorizationSelectionDialog )
+	{
+		authorizationSelectionDialog.button( "OK" ).click();
+	}
+
+	private void selectAuthType( String authType )
+	{
+		getAuthorizationTypeComboBox().selectItem( authType );
+	}
+
+	private JComboBoxFixture getAuthorizationTypeComboBox()
+	{
+		return getAuthorizationSelectionDialog().comboBox( "Type" );
+	}
+
+	private DialogFixture getAuthorizationSelectionDialog()
+	{
+		return findDialog( "Add Authorization", robot );
+	}
+
+
+	private JComboBoxFixture getProfileSelectionComboBox()
+	{
+		JComboBoxFixture comboBox = rootWindow.comboBox( ProfileSelectionForm.PROFILE_COMBO_BOX );
+		comboBox.focus();
+		return comboBox;
+	}
+
 }
