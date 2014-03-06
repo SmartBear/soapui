@@ -62,7 +62,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 			authTypes.add( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 
 			int nextProfileIndex = getOAuth2ProfileContainer().getOAuth2ProfileList().size() + 1;
-			profileNameField.setValue( "OAuth 2.0 - Profile " + nextProfileIndex );
+			profileNameField.setValue( "Profile " + nextProfileIndex );
 		}
 
 		setAuthTypeComboBoxOptions( dialog, authTypes );

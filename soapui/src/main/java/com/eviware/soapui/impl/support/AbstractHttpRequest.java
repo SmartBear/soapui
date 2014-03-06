@@ -520,9 +520,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public String getSelectedAuthProfile()
 	{
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null || credentialsConfig.getSelectedAuthProfile()==null)
+		if( credentialsConfig == null || credentialsConfig.getSelectedAuthProfile() == null )
 		{
-			return CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() ;
+			return CredentialsConfig.AuthType.NO_AUTHORIZATION.toString();
 		}
 
 		return credentialsConfig.getSelectedAuthProfile();
@@ -631,7 +631,8 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	private void setAuthType( String authType )
 	{
-		if( !CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType ) )
+		if( !AuthType.O_AUTH_2_0.toString().equals( authType )
+				&& ( !AuthType.NO_AUTHORIZATION.toString().equals( authType ) ) )
 		{
 			if( authType.equals( AuthType.PREEMPTIVE.toString() ) || authType.equals( AuthType.GLOBAL_HTTP_SETTINGS.toString() ) )
 			{
