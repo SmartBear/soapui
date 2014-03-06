@@ -18,6 +18,7 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -29,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 public interface MockRequest
 {
 	public Attachment[] getRequestAttachments();
+
+	public HttpServletRequest getHttpRequest();
 
 	public StringToStringsMap getRequestHeaders();
 
