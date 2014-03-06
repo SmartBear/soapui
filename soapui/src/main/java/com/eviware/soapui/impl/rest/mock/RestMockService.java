@@ -4,12 +4,15 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestURIParser;
+import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
 
+import java.net.MalformedURLException;
 import java.util.List;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
@@ -50,7 +53,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
 
-		String mockActionName = restRequest.getResource().getName() + " " + restRequest.getName();
+		String mockActionName = restRequest.getResource().getName() + " " + restRequest.getPath();
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
 		config.setName( mockActionName );
 		config.setResourcePath( restRequest.getPath() );
