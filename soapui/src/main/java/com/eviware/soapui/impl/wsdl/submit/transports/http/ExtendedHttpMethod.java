@@ -20,7 +20,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
 public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 {
@@ -81,4 +83,6 @@ public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
 	SoapUIMetrics getMetrics();
 
 	Header[] getAllResponseHeaders();
+
+	URL getURL() throws MalformedURLException;
 }

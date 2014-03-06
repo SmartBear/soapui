@@ -109,7 +109,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 				this.contentType = httpMethod.getResponseContentType();
 				this.statusCode = extractStatusCode( httpMethod );
 				this.sslInfo = httpMethod.getSSLInfo();
-				this.url = httpMethod.getURI().toURL();
+				this.url = httpMethod.getURL();
 
 				metrics.setTimestamp( getTimestamp() );
 				metrics.setHttpStatus( getStatusCode() );

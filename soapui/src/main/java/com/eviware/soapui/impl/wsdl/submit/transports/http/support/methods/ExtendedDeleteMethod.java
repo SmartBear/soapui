@@ -25,6 +25,8 @@ import org.apache.http.client.methods.HttpDelete;
 
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -195,6 +197,12 @@ public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHt
 	public Header[] getAllResponseHeaders()
 	{
 		return httpMethodSupport.getAllResponseHeaders();
+	}
+
+	@Override
+	public URL getURL() throws MalformedURLException
+	{
+		return getURI().toURL();
 	}
 
 }

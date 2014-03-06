@@ -25,6 +25,8 @@ import org.apache.http.client.methods.HttpOptions;
 
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -203,5 +205,11 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 	public Header[] getAllResponseHeaders()
 	{
 		return httpMethodSupport.getAllResponseHeaders();
+	}
+
+	@Override
+	public URL getURL() throws MalformedURLException
+	{
+		return getURI().toURL();
 	}
 }
