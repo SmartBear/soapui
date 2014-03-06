@@ -156,12 +156,16 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 
 	public void setPort( int port )
 	{
+		int oldPort = getPort();
 		getConfig().setPort( port );
+		notifyPropertyChanged( PORT_PROPERTY, oldPort, port );
 	}
 
 	public void setPath( String path)
 	{
+		String oldPath = getPath();
 		getConfig().setPath( path );
+		notifyPropertyChanged( PATH_PROPERTY, oldPath, path );
 	}
 
 	@Override
