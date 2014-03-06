@@ -71,7 +71,8 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		long issuedTime = profile.getAccessTokenIssuedTime();
 		long expirationTime = profile.getAccessTokenExpirationTime();
 
-		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < currentTime - issuedTime;
+		//10 second buffer to make sure that it doesn't expire by the time request is sent
+		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < (currentTime +10) - issuedTime;
 
 	}
 
