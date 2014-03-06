@@ -198,19 +198,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		}
 	}
 
-	public void removeMockOperation( WsdlMockOperation mockOperation )
-	{
-		int ix = mockOperations.indexOf( mockOperation );
-		if( ix == -1 )
-			throw new RuntimeException( "Unkonws MockOperation specified to removeMockOperation" );
-
-		mockOperations.remove( ix );
-		fireMockOperationRemoved( mockOperation );
-		mockOperation.release();
-		getConfig().removeMockOperation( ix );
-	}
-
-
 	public WsdlMockOperation getFaultMockOperation()
 	{
 		return faultMockOperation;

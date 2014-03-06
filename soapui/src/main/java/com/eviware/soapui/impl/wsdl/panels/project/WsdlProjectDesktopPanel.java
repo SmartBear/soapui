@@ -12,24 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
@@ -47,31 +29,28 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.LoadTest;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestSuite;
+import com.eviware.soapui.model.support.ProjectMetrics;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.util.ModelItemIconFactory;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JFocusableComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.MetricsPanel;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.eviware.x.impl.swing.JFormDialog;
+
+import javax.swing.*;
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 {
@@ -81,7 +60,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 	protected static final String MOCKOPERATIONS_STATISTICS = "WsdlMockOperations";
 	protected static final String MOCKSERVICES_STATISTICS = "WsdlMockServices";
 	protected static final String REST_MOCKRESPONSES_STATISTICS = "RestMockResponses";
-	protected static final String REST_MOCKOPERATIONS_STATISTICS = "RestMockActions";
+	protected static final String REST_MOCKACTIONS_STATISTICS = "RestMockActions";
 	protected static final String REST_MOCKSERVICES_STATISTICS = "RestMockServices";
 	protected static final String LOADTESTS_STATISTICS = "LoadTests";
 	protected static final String ASSERTIONS_STATISTICS = "Assertions";
@@ -185,6 +164,8 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 	private void updateStatistics()
 	{
+		ProjectMetrics projectMetrics = new ProjectMetrics( getModelItem() );
+
 		metrics.setMetric( "File Path", getModelItem().getPath() );
 
 		Set<String> newNames = new HashSet<String>();
@@ -216,70 +197,18 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 		metrics.setMetric( TESTSUITES_STATISTICS, getModelItem().getTestSuiteCount() );
 
-		int testCaseCount = 0;
-		int testStepsCount = 0;
-		int assertionsCount = 0;
-		int loadTestsCount = 0;
-
-		for( TestSuite testSuite : getModelItem().getTestSuiteList() )
-		{
-			testCaseCount += testSuite.getTestCaseCount();
-
-			for( TestCase testCase : testSuite.getTestCaseList() )
-			{
-				testStepsCount += testCase.getTestStepCount();
-				loadTestsCount += testCase.getLoadTestCount();
-
-				for( TestStep testStep : testCase.getTestStepList() )
-				{
-					if( testStep instanceof Assertable )
-					{
-						assertionsCount += ( ( Assertable )testStep ).getAssertionCount();
-					}
-				}
-			}
-		}
-
-		metrics.setMetric( TESTCASES_STATISTICS, testCaseCount );
-		metrics.setMetric( TESTSTEPS_STATISTICS, testStepsCount );
-		metrics.setMetric( ASSERTIONS_STATISTICS, assertionsCount );
-		metrics.setMetric( LOADTESTS_STATISTICS, loadTestsCount );
-
-		int mockOperationCount = 0;
-		int mockResponseCount = 0;
-
-		for( MockService mockService : getModelItem().getMockServiceList() )
-		{
-			mockOperationCount += mockService.getMockOperationCount();
-			mockResponseCount += countMockResponses( mockService );
-		}
+		metrics.setMetric( TESTCASES_STATISTICS, projectMetrics.getTestCaseCount() );
+		metrics.setMetric( TESTSTEPS_STATISTICS, projectMetrics.getTestStepCount() );
+		metrics.setMetric( ASSERTIONS_STATISTICS, projectMetrics.getAssertionCount() );
+		metrics.setMetric( LOADTESTS_STATISTICS, projectMetrics.getLoadTestCount() );
 
 		metrics.setMetric( MOCKSERVICES_STATISTICS, getModelItem().getMockServiceCount() );
-		metrics.setMetric( MOCKOPERATIONS_STATISTICS, mockOperationCount );
-		metrics.setMetric( MOCKRESPONSES_STATISTICS, mockResponseCount );
-
-		int restMockOperationCount = 0;
-		int restMockResponseCount = 0;
-
-		for( MockService mockService : getModelItem().getRestMockServiceList() )
-		{
-			restMockOperationCount += mockService.getMockOperationCount();
-			restMockResponseCount += countMockResponses( mockService );
-		}
+		metrics.setMetric( MOCKOPERATIONS_STATISTICS, projectMetrics.getMockOperationCount() );
+		metrics.setMetric( MOCKRESPONSES_STATISTICS, projectMetrics.getMockResponseCount() );
 
 		metrics.setMetric( REST_MOCKSERVICES_STATISTICS, getModelItem().getRestMockServiceCount() );
-		metrics.setMetric( REST_MOCKOPERATIONS_STATISTICS, restMockOperationCount );
-		metrics.setMetric( REST_MOCKRESPONSES_STATISTICS, restMockResponseCount );
-	}
-
-	private int countMockResponses( MockService mockService )
-	{
-		int restMockResponseCount = 0;
-		for( MockOperation mockOperation : mockService.getMockOperationList() )
-		{
-			restMockResponseCount += mockOperation.getMockResponseCount();
-		}
-		return restMockResponseCount;
+		metrics.setMetric( REST_MOCKACTIONS_STATISTICS, projectMetrics.getRestMockActionCount() );
+		metrics.setMetric( REST_MOCKRESPONSES_STATISTICS, projectMetrics.getRestMockResponseCount() );
 	}
 
 	private JComponent buildProjectOverview()
@@ -312,7 +241,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject>
 
 		section = metrics.addSection( "REST Mock Summary" );
 		section.addMetric( ModelItemIconFactory.getIcon( RestMockService.class ), REST_MOCKSERVICES_STATISTICS );
-		section.addMetric( ModelItemIconFactory.getIcon( RestMockAction.class ), REST_MOCKOPERATIONS_STATISTICS );
+		section.addMetric( ModelItemIconFactory.getIcon( RestMockAction.class ), REST_MOCKACTIONS_STATISTICS );
 		section.addMetric( ModelItemIconFactory.getIcon( RestMockResponse.class ), REST_MOCKRESPONSES_STATISTICS );
 		section.finish();
 		return new JScrollPane( metrics );
