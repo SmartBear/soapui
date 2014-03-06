@@ -27,6 +27,7 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import org.apache.http.auth.AUTH;
 
 import javax.swing.*;
 import java.awt.*;
@@ -46,6 +47,9 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public static final String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String EMPTY_PANEL = "EmptyPanel";
+
+	static final ImageIcon AUTH_ENABLED_ICON = UISupport.createImageIcon( "/lock.png" );
+	private static final ImageIcon AUTH_NOT_ENABLED_ICON = null;
 
 	private T request;
 	private final JPanel outerPanel = new JPanel( new BorderLayout() );
@@ -159,6 +163,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		if( getBasicAuthenticationTypes().contains( selectedOption ) )
 		{
+			setIcon( AUTH_ENABLED_ICON );
+			setTitle( AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")" );
 			request.setAuthType( selectedOption );
 			if( isSoapRequest( request ) )
 			{
@@ -171,6 +177,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
 		{
+			setTitle( AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")" );
 			request.setAuthType( CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 			oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ), this );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
@@ -178,6 +185,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 		else    //selectedItem : No Authorization
 		{
+			setTitle( AuthInspectorFactory.INSPECTOR_ID );
+			setIcon( AUTH_NOT_ENABLED_ICON );
 			request.setAuthType( null );
 			showCard( EMPTY_PANEL );
 		}

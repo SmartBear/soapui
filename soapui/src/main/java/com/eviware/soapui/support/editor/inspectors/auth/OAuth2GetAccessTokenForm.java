@@ -42,6 +42,8 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 	private static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
 
+	static final ImageIcon DEFAULT_ICON = null;
+
 	private OAuth2Profile profile;
 	private JLabel accessTokenStatusText;
 	private OAuth2AccessTokenStatusChangeManager statusChangeManager;
@@ -184,18 +186,21 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 	private void setOAuth2StatusFeedback( OAuth2Profile.AccessTokenStatus status )
 	{
-		if( status != null )
+		// There are no auth profile selected
+		if( status == null )
+		{
+			setDefaultFeedback();
+		}
+		else
 		{
 			switch( status )
 			{
-				case PENDING:
 				case WAITING_FOR_AUTHORIZATION:
 				case RECEIVED_AUTHORIZATION_CODE:
 					setWaitingFeedback( status );
 					break;
 				case ENTERED_MANUALLY:
 				case RETRIEVED_FROM_SERVER:
-				case FAILED:
 				default:
 					setDefaultFeedback();
 					break;
@@ -212,6 +217,6 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	private void setDefaultFeedback()
 	{
 		accessTokenStatusText.setText( "" );
-		accessTokenStatusText.setIcon( OAuth2Form.DEFAULT_ICON );
+		accessTokenStatusText.setIcon( DEFAULT_ICON );
 	}
 }

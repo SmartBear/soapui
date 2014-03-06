@@ -18,9 +18,6 @@ import com.jgoodies.binding.PresentationModel;
 
 import javax.swing.*;
 
-/**
- *
- */
 public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
 {
 	protected T request;

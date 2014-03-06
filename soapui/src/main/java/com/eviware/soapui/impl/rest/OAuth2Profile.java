@@ -79,10 +79,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public enum AccessTokenStatus
 	{
 		ENTERED_MANUALLY( "Entered Manually" ),
-		PENDING( "Pending" ),
 		WAITING_FOR_AUTHORIZATION( "Waiting for Authorization" ),
 		RECEIVED_AUTHORIZATION_CODE( "Received authorization code" ),
-		FAILED( "Failed to retrieve" ),
 		RETRIEVED_FROM_SERVER( "Retrieved from server" );
 
 		private String description;
@@ -182,11 +180,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public void receivedAuthorizationCode()
 	{
 		setAccessTokenStatus( AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE );
-	}
-
-	public void startAccessTokenFlow()
-	{
-		setAccessTokenStatus( AccessTokenStatus.PENDING );
 	}
 
 	public void applyRetrievedAccessToken( String accessToken )

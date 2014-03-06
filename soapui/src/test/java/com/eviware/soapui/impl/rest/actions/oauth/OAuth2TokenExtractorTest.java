@@ -166,8 +166,7 @@ public class OAuth2TokenExtractorTest
 
 		oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow( parameters );
 
-		assertThat( statusValues.size(), is( 4 ) );
-		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.PENDING.toString() ) );
+		assertThat( statusValues.size(), is( 3 ) );
 		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString() ) );
 		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE.toString() ) );
 		assertThat( statusValues, hasItem( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER.toString() ) );
