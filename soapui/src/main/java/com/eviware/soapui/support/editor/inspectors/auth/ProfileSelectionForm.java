@@ -109,9 +109,15 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private JPanel createEmptyPanel()
 	{
 		JPanel panelWithText = new JPanel( new BorderLayout() );
-		String helpText = "<html><body><div style=\"text-align:center\">This request currently has no authorization configuration associated with it." +
-				"<br>If you need to access a protected service, just add your " +
-				"<br>configuration here, using the drop down above.</div></body></html>";
+		String helpText = "<html>\n" +
+				"<body>" +
+				"</div>" +
+				"<div style=\"text-align:center\"><b>Not Yet Configured</b>" +
+				"<br>Authorization has not been set for protected services." +
+				"<br>Use the <i>Authorization</i> drop down to configure." +
+				"</div>" +
+				"</body>" +
+				"</html>" ;
 		JLabel label = new JLabel( helpText );
 		label.setHorizontalAlignment( SwingConstants.CENTER );
 		panelWithText.add( label, BorderLayout.CENTER );
