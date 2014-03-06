@@ -9,7 +9,6 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 import java.beans.PropertyChangeEvent;
@@ -18,6 +17,7 @@ import java.util.List;
 public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
 {
 	private RestResource resource = null;
+	private int currentResponseIndex = 0;
 
 	public RestMockAction( RestMockService mockService, RESTMockActionConfig config )
 	{
@@ -116,7 +116,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
 			result.setMockOperation( this );
-			RestMockResponse response = getMockResponseAt( 0 );
+			RestMockResponse response = getMockResponseAt( getCurrentResponseIndexAndIncrementIndex() );
 
 			if( response == null )
 			{
@@ -167,4 +167,18 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	{
 		return String.valueOf( MockOperationDispatchStyleConfig.SEQUENCE );
 	}
+
+	private int getCurrentResponseIndexAndIncrementIndex()
+	{
+		int currentIndex = currentResponseIndex % getMockResponseCount();
+		incrementCurrentResponseIndex();
+
+		return currentIndex;
+	}
+
+	private void incrementCurrentResponseIndex()
+	{
+		currentResponseIndex++;
+	}
+
 }

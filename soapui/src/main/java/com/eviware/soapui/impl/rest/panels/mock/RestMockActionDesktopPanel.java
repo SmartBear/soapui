@@ -56,6 +56,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 		inspectorPanel = JInspectorPanelFactory.build( buildResponseList() );
 		inspectorPanel.setDefaultDividerLocation( 0.5F );
 		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+		add( new JLabel( "Responses are dispatched sequentially" ), BorderLayout.SOUTH );
 	}
 
 	private JComponent buildResponseList()
@@ -125,12 +126,6 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 		return toolbar;
 	}
 
-	private JComponent buildDispatchEditor()
-	{
-		// TODO: implement
-		return null;
-	}
-
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -157,7 +152,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 				getModelItem().setResourcePath( resourcePathEditor.getText() );
 			}
 		} );
-		return new TextPanelWithTopLabel( "Resource", getModelItem().getResourcePath(), resourcePathEditor );
+		return new TextPanelWithTopLabel( "Resource Path", getModelItem().getResourcePath(), resourcePathEditor );
 	}
 
 	private JComponent createMethodComboBox()
