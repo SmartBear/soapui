@@ -138,7 +138,6 @@ public class OAuth2RequestFilterTest
 		return profileWithRefreshToken;
 	}
 
-	@Ignore
 	@Test
 	public void automaticallyReloadsAccessTokenWhenProfileHasAutomationScripts() throws Exception
 	{
