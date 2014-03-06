@@ -73,7 +73,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 		try
 		{
-			this.url = httpMethod.getURI().toURL();
+			this.url = httpMethod.getURL();
 		}
 		catch( Exception e1 )
 		{
