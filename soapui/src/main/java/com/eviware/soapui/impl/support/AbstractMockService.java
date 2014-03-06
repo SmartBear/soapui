@@ -154,8 +154,19 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		getConfig().setHost( host );
 	}
 
-	public abstract void setPort( int port );
-	public abstract void setPath( String path);
+	public void setPort( int port )
+	{
+		int oldPort = getPort();
+		getConfig().setPort( port );
+		notifyPropertyChanged( PORT_PROPERTY, oldPort, port );
+	}
+
+	public void setPath( String path)
+	{
+		String oldPath = getPath();
+		getConfig().setPath( path );
+		notifyPropertyChanged( PATH_PROPERTY, oldPath, path );
+	}
 
 	@Override
 	public WsdlMockRunner start() throws Exception

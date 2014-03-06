@@ -79,6 +79,20 @@ public class RestMockServiceTest
 		assertThat( matchingAction, is( nullValue() ) );
 	}
 
+	@Test
+	public void shouldSetPort()
+	{
+		restMockService.setPort( 1234 );
+		assertThat( restMockService.getPort(), is( 1234 ) );
+	}
+
+	@Test
+	public void shouldSetPath()
+	{
+		restMockService.setPath( "myPath" );
+		assertThat( restMockService.getPath(), is( "myPath" ) );
+	}
+
 	private RESTMockServiceConfig createRestMockServiceConfig()
 	{
 		RESTMockServiceConfig config = RESTMockServiceConfig.Factory.newInstance();

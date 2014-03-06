@@ -17,7 +17,6 @@ import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockOperationDocumentConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.TestCaseConfig;
-import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -51,7 +50,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 	private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
 
 	public static final String INCOMING_WSS = WsdlMockService.class.getName() + "@incoming-wss";
-	public static final String OUGOING_WSS = WsdlMockService.class.getName() + "@outgoing-wss";
+	public static final String OUTGOING_WSS = WsdlMockService.class.getName() + "@outgoing-wss";
 
 	private WsdlMockOperation faultMockOperation;
 	private String mockServiceEndpoint;
@@ -132,8 +131,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		int oldPort = getPort();
 		if( port != oldPort )
 		{
-			getConfig().setPort( port );
-			notifyPropertyChanged( PORT_PROPERTY, oldPort, port );
+			super.setPort( port );
 
 			for( WsdlInterface iface : getMockedInterfaces() )
 			{
@@ -164,7 +162,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 
 		for( MockOperation operation : getMockOperationList() )
 		{
-			((WsdlMockOperation)operation).release();
+			operation.release();
 		}
 	}
 
@@ -187,8 +185,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		String oldPath = getPath();
 		if( !path.equals( oldPath ) )
 		{
-			getConfig().setPath( path );
-			notifyPropertyChanged( PATH_PROPERTY, oldPath, path );
+			super.setPath( path );
 
 			for( WsdlInterface iface : getMockedInterfaces() )
 			{
@@ -301,7 +298,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 	{
 		String old = getOutgoingWss();
 		getConfig().setOutgoingWss( outgoingWss );
-		notifyPropertyChanged( OUGOING_WSS, old, outgoingWss );
+		notifyPropertyChanged( OUTGOING_WSS, old, outgoingWss );
 	}
 
 	public List<WsdlOperation> getMockedOperations()

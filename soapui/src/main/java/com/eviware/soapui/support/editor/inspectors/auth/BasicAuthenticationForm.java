@@ -65,7 +65,9 @@ public class BasicAuthenticationForm<T extends AbstractHttpRequest> extends Abst
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 		globalButton = basicConfigurationForm.appendRadioButton( "Pre-emptive auth", "Use global preference", buttonGroup, false );
+		globalButton.setBackground( CARD_BACKGROUND_COLOR );
 		preemptiveButton = basicConfigurationForm.appendRadioButton( "", "Authenticate pre-emptively", buttonGroup, false );
+		preemptiveButton.setBackground( CARD_BACKGROUND_COLOR );
 
 		selectCorrectRadioButton();
 

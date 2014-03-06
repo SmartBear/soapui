@@ -28,7 +28,7 @@ import com.eviware.soapui.model.project.Project;
 // TODO: some things in AbstractMockRunner that is inherited from far above should probably makes its way in here
 public interface MockService extends TestModelItem, Releasable
 {
-	public final static String PATH_PROPERTY = WsdlMockService.class.getName() + "@path";
+	public final static String PATH_PROPERTY = MockService.class.getName() + "@path";
 	public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
 
 	public Project getProject();
