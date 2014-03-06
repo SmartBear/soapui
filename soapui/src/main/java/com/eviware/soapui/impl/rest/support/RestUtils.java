@@ -335,7 +335,8 @@ public class RestUtils
 
 	private static boolean isRequestWithoutQueryString( RestRequestInterface request )
 	{
-		return request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() );
+		return request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() )
+				||  "multipart/mixed".equals( request.getMediaType() );
 	}
 
 

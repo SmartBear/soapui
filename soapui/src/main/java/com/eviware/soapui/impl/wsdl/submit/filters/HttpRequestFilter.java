@@ -59,7 +59,7 @@ import java.util.List;
 
 /**
  * RequestFilter that adds SOAP specific headers
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -78,8 +78,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		StringToStringMap responseProperties = ( StringToStringMap )context
 				.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
-		MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() )
-				&& httpMethod instanceof HttpEntityEnclosingRequestBase ? new MimeMultipart() : null;
+		MimeMultipart formMp = ( "multipart/form-data".equals( request.getMediaType() )
+				|| "multipart/mixed".equals( request.getMediaType() ))
+		&& httpMethod instanceof HttpEntityEnclosingRequestBase ? new MimeMultipart() : null;
 
 		RestParamsPropertyHolder params = request.getParams();
 
@@ -136,78 +137,78 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 			switch( param.getStyle() )
 			{
-			case HEADER :
-				for( String valuePart : valueParts )
-					httpMethod.addHeader( param.getName(), valuePart );
-				break;
-			case QUERY :
-				if( formMp == null || !request.isPostQueryString() )
-				{
+				case HEADER:
 					for( String valuePart : valueParts )
+						httpMethod.addHeader( param.getName(), valuePart );
+					break;
+				case QUERY:
+					if( formMp == null || !request.isPostQueryString() )
 					{
-						if( query.length() > 0 )
-							query.append( '&' );
+						for( String valuePart : valueParts )
+						{
+							if( query.length() > 0 )
+								query.append( '&' );
 
-						query.append( URLEncoder.encode( param.getName() ) );
-						query.append( '=' );
-						if( StringUtils.hasContent( valuePart ) )
-							query.append( valuePart );
+							query.append( URLEncoder.encode( param.getName() ) );
+							query.append( '=' );
+							if( StringUtils.hasContent( valuePart ) )
+								query.append( valuePart );
+						}
 					}
-				}
-				else
-				{
+					else
+					{
+						try
+						{
+							addFormMultipart( request, formMp, param.getName(), responseProperties.get( param.getName() ) );
+						}
+						catch( MessagingException e )
+						{
+							SoapUI.logError( e );
+						}
+					}
+
+					break;
+				case TEMPLATE:
 					try
 					{
-						addFormMultipart( request, formMp, param.getName(), responseProperties.get( param.getName() ) );
+						value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
+								.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+						path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
 					}
-					catch( MessagingException e )
+					catch( UnsupportedEncodingException e )
 					{
 						SoapUI.logError( e );
 					}
-				}
+					break;
+				case MATRIX:
+					try
+					{
+						value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
+								.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+					}
+					catch( UnsupportedEncodingException e )
+					{
+						SoapUI.logError( e );
+					}
 
-				break;
-			case TEMPLATE :
-				try
-				{
-					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
-							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
-					path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
-				}
-				catch( UnsupportedEncodingException e )
-				{
-					SoapUI.logError( e );
-				}
-				break;
-			case MATRIX :
-				try
-				{
-					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
-							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
-				}
-				catch( UnsupportedEncodingException e )
-				{
-					SoapUI.logError( e );
-				}
-
-				if( param.getType().equals( XmlBoolean.type.getName() ) )
-				{
-					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
+					if( param.getType().equals( XmlBoolean.type.getName() ) )
+					{
+						if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
+						{
+							path += ";" + param.getName();
+						}
+					}
+					else
 					{
 						path += ";" + param.getName();
+						if( StringUtils.hasContent( value ) )
+						{
+							path += "=" + value;
+						}
 					}
-				}
-				else
-				{
-					path += ";" + param.getName();
-					if( StringUtils.hasContent( value ) )
-					{
-						path += "=" + value;
-					}
-				}
-				break;
-			case PLAIN :
-				break;
+					break;
+				case PLAIN:
+					break;
 			}
 		}
 
@@ -462,21 +463,22 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		DataHandler dataHandler = new DataHandler( new RestRequestDataSource( wsdlRequest, requestContent ) );
 		rootPart.setDataHandler( dataHandler );
 	}
-	
+
 	protected String getEncodedValue( String value, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
 	{
 
-		if(value == null) {
+		if( value == null )
+		{
 			return "";
 		}
 
 		// get default encoding if there is no encoding set
-		if(!StringUtils.hasContent( encoding ))
+		if( !StringUtils.hasContent( encoding ) )
 		{
-			encoding = System.getProperty("file.encoding");
+			encoding = System.getProperty( "file.encoding" );
 		}
-		
-		if(isAlreadyEncoded(value, encoding ))
+
+		if( isAlreadyEncoded( value, encoding ) )
 		{
 			// Already encoded so we don't do anything
 			return value;
@@ -489,18 +491,18 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		else
 		{
 			// encoding NOT disabled neither it is pre-encoded, so we encode here
-			String encodedValue =  URLEncoder.encode(value, encoding );
+			String encodedValue = URLEncoder.encode( value, encoding );
 			// URLEncoder replaces space with "+", but we want "%20".
 			return encodedValue.replaceAll( "\\+", "%20" );
 		}
 
 	}
-	
+
 	protected boolean isAlreadyEncoded( String path, String encoding ) throws UnsupportedEncodingException
 	{
-		String decodedPath = java.net.URLDecoder.decode(path, encoding);
-		return !path.equals(decodedPath);
-				
+		String decodedPath = java.net.URLDecoder.decode( path, encoding );
+		return !path.equals( decodedPath );
+
 	}
 
 }
