@@ -45,7 +45,11 @@ public interface MockService extends TestModelItem, Releasable
 
 	public String getPath();
 
+	public void setPath( String path );
+
 	public int getPort();
+
+	public void setPort( int i );
 
 	public MockRunner getMockRunner();
 
@@ -68,5 +72,4 @@ public interface MockService extends TestModelItem, Releasable
 	public void fireMockResponseRemoved( MockResponse mockResponse );
 
 	public boolean getBindToHostOnly();
-
 }

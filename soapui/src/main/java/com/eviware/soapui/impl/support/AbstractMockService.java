@@ -225,6 +225,11 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		return mockRunner;
 	}
 
+	public void setMockRunner( WsdlMockRunner mockRunner )
+	{
+		this.mockRunner = mockRunner;
+	}
+
 	public MockRunListener[] getMockRunListeners()
     {
         return mockRunListeners.toArray( new MockRunListener[mockRunListeners.size()] );
