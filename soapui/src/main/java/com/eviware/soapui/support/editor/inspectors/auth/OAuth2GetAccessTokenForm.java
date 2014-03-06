@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.PropertyComponent;
 import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.jgoodies.binding.PresentationModel;
@@ -24,15 +25,24 @@ import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeListener
 {
-	private static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
+	public static final String CLIENT_ID_TITLE = "Client Identification";
+	public static final String CLIENT_SECRET_TITLE = "Client Secret";
+	public static final String AUTHORIZATION_URI_TITLE = "Authorization URI";
+	public static final String ACCESS_TOKEN_URI_TITLE = "Access Token URI";
+	public static final String REDIRECT_URI_TITLE = "Redirect URI";
+	public static final String SCOPE_TITLE = "Scope";
+	public static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
+	public static final String ACCESS_TOKEN_FORM_DIALOG_NAME = "getAccessTokenFormDialog";
+
 	private static final String GET_ACCESS_TOKEN_BUTTON_NAME = "getAccessTokenButtonName";
 	private static final String ACCESS_TOKEN_FORM_DIALOG_TITLE = "Get Access Token";
-	private static final String OAUTH_2_FLOW_COMBO_BOX_NAME = "OAuth2Flow";
+	private static final String AUTOMATION_BUTTON_TITLE = "Automation...";
 
 	private static final String GET_ACCESS_TOKEN_FORM_LAYOUT = "7dlu:none,left:pref,10dlu,left:pref,10dlu,left:MAX(112dlu;pref),7dlu";
 
@@ -44,9 +54,11 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 	static final ImageIcon DEFAULT_ICON = null;
 
+
 	private OAuth2Profile profile;
 	private JLabel accessTokenStatusText;
 	private OAuth2AccessTokenStatusChangeManager statusChangeManager;
+	private JDialog accessTokenDialog;
 
 	// FIXME Why not a constructor?
 	public JDialog getComponent( OAuth2Profile profile )
@@ -57,7 +69,8 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 		populateGetAccessTokenForm( accessTokenForm );
 		statusChangeManager.register();
 		setOAuth2StatusFeedback( profile.getAccesTokenStatusAsEnum() );
-		return createGetAccessTokenDialog( accessTokenForm.getPanel() );
+		accessTokenDialog = createGetAccessTokenDialog( accessTokenForm.getPanel() );
+		return accessTokenDialog;
 	}
 
 	@Override
@@ -98,23 +111,24 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, "Client Identification", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.CLIENT_ID_PROPERTY, CLIENT_ID_TITLE, "" );
 
 		final JTextField clientSecretField = appendClientSecretField( accessTokenForm, getOAuth2FlowValueModel( accessTokenForm ) );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, "Authorization URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, "Access Token URI", "" );
-		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, "Redirect URI", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI_TITLE, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, ACCESS_TOKEN_URI_TITLE, "" );
+		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI_TITLE, "" );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, "Scope", "" );
+		accessTokenForm.appendTextField( OAuth2Profile.SCOPE_PROPERTY, SCOPE_TITLE, "" );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
 		accessTokenForm.appendComponentsInOneRow( createGetAccessTokenButton(), createAccessTokenStatusText() );
+		accessTokenForm.appendButtonWithoutLabel( AUTOMATION_BUTTON_TITLE, new EditAutomationScriptsAction( profile ) );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
@@ -137,7 +151,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 	private AbstractValueModel getOAuth2FlowValueModel( SimpleBindingForm accessTokenForm )
 	{
-		return accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW, "getOAuth2Flow", "setOAuth2Flow" );
+		return accessTokenForm.getPresentationModel().getModel( OAuth2Profile.OAUTH2_FLOW_PROPERTY, "getOAuth2Flow", "setOAuth2Flow" );
 	}
 
 	private JComboBox appendOAuth2ComboBox( SimpleBindingForm accessTokenForm )
@@ -151,7 +165,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 	private JTextField appendClientSecretField( SimpleBindingForm accessTokenForm, AbstractValueModel valueModel )
 	{
-		final JTextField clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, "Client Secret", "" );
+		final JTextField clientSecretField = accessTokenForm.appendTextField( OAuth2Profile.CLIENT_SECRET_PROPERTY, CLIENT_SECRET_TITLE, "" );
 		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
 			clientSecretField.setVisible( false );
@@ -218,5 +232,27 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	{
 		accessTokenStatusText.setText( "" );
 		accessTokenStatusText.setIcon( DEFAULT_ICON );
+	}
+
+	private class EditAutomationScriptsAction extends AbstractAction
+	{
+		private final OAuth2Profile profile;
+
+		public EditAutomationScriptsAction( OAuth2Profile profile )
+		{
+			putValue( Action.NAME, AUTOMATION_BUTTON_TITLE );
+			this.profile = profile;
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent e )
+		{
+			if( accessTokenDialog != null )
+			{
+				accessTokenDialog.setVisible( false );
+				accessTokenDialog.dispose();
+			}
+			UISupport.showDesktopPanel( new OAuth2ScriptsDesktopPanel( profile ) );
+		}
 	}
 }

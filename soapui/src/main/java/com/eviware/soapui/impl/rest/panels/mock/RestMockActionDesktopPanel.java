@@ -82,7 +82,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 				ActionList actions = super.getActionsForRow( list, row );
 
 				actions.insertAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-						getModelItem(), null, "/addToRestMockService.gif" ), 0 );
+						getModelItem(), null, "/addToRestMockAction.gif" ), 0 );
 
 				actions.insertAction( SwingActionDelegate.createDelegate(
 						OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif" ), 1 );
@@ -100,7 +100,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 				{
 					defaultActions = new DefaultActionList();
 					defaultActions.addAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-							getModelItem(), null, "/addToRestMockService.gif" ) );
+							getModelItem(), null, "/addToRestMockAction.gif" ) );
 				}
 
 				return defaultActions;
@@ -120,7 +120,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/addToRestMockService.gif" ) ) );
+				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/addToRestMockAction.gif" ) ) );
 
 		return toolbar;
 	}

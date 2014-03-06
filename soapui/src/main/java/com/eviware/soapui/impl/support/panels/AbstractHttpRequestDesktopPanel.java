@@ -147,7 +147,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		return endpointsModel;
 	}
 
-
 	public void setEndpointComponent( JComponent endpointComponent )
 	{
 		this.endpointComponent = endpointComponent;
@@ -475,8 +474,6 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 				inputArea.removeFocusListener( inputAreaFocusListener );
 			}
 		}
-
-
 	}
 
 	public abstract class AbstractHttpResponseMessageEditor<T3 extends XmlDocument> extends

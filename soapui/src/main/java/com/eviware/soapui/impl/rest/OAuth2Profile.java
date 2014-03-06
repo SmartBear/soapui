@@ -21,7 +21,6 @@ import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
-import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyChangeListener;
@@ -36,6 +35,7 @@ import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMetho
  */
 public class OAuth2Profile implements PropertyExpansionContainer
 {
+
 	public static final String CLIENT_ID_PROPERTY = "clientID";
 	public static final String CLIENT_SECRET_PROPERTY = "clientSecret";
 	public static final String AUTHORIZATION_URI_PROPERTY = "authorizationURI";
@@ -48,7 +48,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
-	public static final String OAUTH2_FLOW = "oAuth2Flow";
 
 	public static final String REFRESH_ACCESS_TOKEN_METHOD_PROPERTY = "refreshAccessTokenMethod";
 	public static final String OAUTH2_FLOW_PROPERTY = "oAuth2Flow";
@@ -158,6 +157,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public String getName()
 	{
+		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
+		if(StringUtils.isEmpty( configuration.getName()))
+		{
+			return "OAuth 2.0 - Profile 1";
+		}
+
 		return configuration.getName();
 	}
 

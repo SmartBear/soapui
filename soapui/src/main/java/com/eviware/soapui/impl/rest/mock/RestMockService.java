@@ -15,7 +15,7 @@ import java.util.List;
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
 {
 
-	private final static String ICON_NAME = "/restMockService.gif";
+	public final static String ICON_NAME = "/restMockService.gif";
 
 	public RestMockService( Project project, RESTMockServiceConfig config )
 	{
@@ -32,18 +32,6 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 			getConfig().addNewProperties();
 
 		setPropertiesConfig( config.getProperties() );
-
-	}
-
-	@Override
-	public void setPort( int port )
-	{
-
-	}
-
-	@Override
-	public void setPath( String path )
-	{
 
 	}
 

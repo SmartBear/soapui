@@ -21,23 +21,7 @@ import com.jgoodies.forms.layout.RowSpec;
 import org.apache.commons.lang.StringUtils;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.text.JTextComponent;
 import java.awt.*;
@@ -429,7 +413,7 @@ public class SimpleForm
 		return button;
 	}
 
-	public JButton addButtonWithoutLabel( String text, ActionListener actionListener )
+	public JButton appendButtonWithoutLabel( String text, ActionListener actionListener )
 	{
 		JButton button = new JButton( text );
 		button.addActionListener( actionListener );

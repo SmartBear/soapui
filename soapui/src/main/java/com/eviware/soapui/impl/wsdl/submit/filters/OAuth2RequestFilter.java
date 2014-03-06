@@ -5,6 +5,7 @@ import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
@@ -42,10 +43,10 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
 				.getOAuth2ProfileContainer();
 
-		if( !profileContainer.getOAuth2ProfileList().isEmpty() && O_AUTH_2_0.toString().equals( request.getAuthType() ) )
+		if(O_AUTH_2_0.toString().equals( request.getAuthType() ) )
 		{
-			OAuth2Profile profile = profileContainer.getOAuth2ProfileList().get( 0 );
-			if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
+			OAuth2Profile profile = profileContainer.getProfileByName( (( AbstractHttpRequest ) request).getSelectedAuthProfile() );
+			if( profile==null || StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
 			{
 				return;
 			}

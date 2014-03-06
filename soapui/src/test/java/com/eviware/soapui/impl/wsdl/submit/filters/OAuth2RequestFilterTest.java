@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -15,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.apache.oltu.oauth2.common.OAuth;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -88,7 +90,7 @@ public class OAuth2RequestFilterTest
 	@Test
 	public void doesNotApplyAccessTokenIfOAuthTypeIsNotOAuth2()
 	{
-		restRequest.setAuthType( PREEMPTIVE.toString() );
+		restRequest.setSelectedAuthProfileAndAuthType( PREEMPTIVE.toString(),PREEMPTIVE.toString() );
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ), is( anEmptyArray() ) );
 	}
@@ -132,6 +134,7 @@ public class OAuth2RequestFilterTest
 		setExpiredAccessToken( profileWithRefreshToken );
 
 		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithRefreshToken );
+		restRequest.setSelectedAuthProfileAndAuthType(profileWithRefreshToken.getName(),  O_AUTH_2_0.toString() );
 		return profileWithRefreshToken;
 	}
 
@@ -181,7 +184,7 @@ public class OAuth2RequestFilterTest
 	private void setupModelItems() throws SoapUIException
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setAuthType( O_AUTH_2_0.toString() );
+
 		WsdlProject project = restRequest.getOperation().getInterface().getProject();
 		oAuth2ProfileContainer = project.getOAuth2ProfileContainer();
 		List<OAuth2Profile> oAuth2ProfileList = oAuth2ProfileContainer.getOAuth2ProfileList();
@@ -193,6 +196,7 @@ public class OAuth2RequestFilterTest
 		{
 			oAuth2Profile = oAuth2ProfileList.get( 0 );
 		}
+		restRequest.setSelectedAuthProfileAndAuthType(oAuth2Profile.getName(),  O_AUTH_2_0.toString() );
 		oAuth2Profile.setAccessToken( ACCESS_TOKEN );
 	}
 
@@ -252,12 +256,14 @@ public class OAuth2RequestFilterTest
 	private void injectProfile( final OAuth2Profile profileWithAutomationScripts )
 	{
 		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithAutomationScripts );
+		restRequest.setSelectedAuthProfileAndAuthType( profileWithAutomationScripts.getName(),
+				CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
 		oAuth2Profile = profileWithAutomationScripts;
 	}
 
 	private OAuth2Profile makeProfileWithAutomationScripts() throws SoapUIException
 	{
-		final OAuth2Profile profileWithAutomationScripts = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
+		final OAuth2Profile profileWithAutomationScripts = OAuth2TestUtils.getOAuthProfileWithDefaultValues( );
 		profileWithAutomationScripts.setAutomationJavaScripts( Arrays.asList( "doLoginAndConsent()" ) );
 		return profileWithAutomationScripts;
 	}

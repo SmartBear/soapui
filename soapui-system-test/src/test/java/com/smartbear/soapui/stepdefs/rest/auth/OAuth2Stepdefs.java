@@ -2,9 +2,9 @@ package com.smartbear.soapui.stepdefs.rest.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.support.editor.inspectors.auth.BasicAuthenticationInspector;
-import com.eviware.soapui.support.editor.inspectors.auth.OAuth2AuthenticationInspector;
+import com.eviware.soapui.support.editor.inspectors.auth.*;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.utils.fest.FestMatchers;
 import com.smartbear.soapui.utils.fest.FestUtils;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
@@ -13,10 +13,16 @@ import org.fest.swing.core.Robot;
 import org.fest.swing.fixture.DialogFixture;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JComboBoxFixture;
+import org.hamcrest.Matchers;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
+import static com.smartbear.soapui.utils.fest.FestMatchers.buttonWithText;
 import static com.smartbear.soapui.utils.fest.FestUtils.findDialog;
 import static com.smartbear.soapui.utils.fest.FestUtils.verifyButtonIsNotShowing;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.hasItemInArray;
@@ -49,17 +55,10 @@ public class OAuth2Stepdefs
 		rootWindow = getMainWindow( robot );
 	}
 
-	@When( "^selects the OAuth 2 Authorization Type$" )
-	public void clicksOnTheOAuth2AuthorizationType()
-	{
-		selectAuthorizationType( rootWindow, OAUTH_2_COMBOBOX_ITEM );
-	}
-
 	@When("^and fills out all fields$")
 	public void fillInAllOAuth2Fields()
 	{
-		DialogFixture accessTokenFormDialog = findDialog( OAuth2AuthenticationInspector.ACCESS_TOKEN_FORM_DIALOG_NAME,
-				robot );
+		DialogFixture accessTokenFormDialog = findDialog( OAuth2GetAccessTokenForm.ACCESS_TOKEN_FORM_DIALOG_NAME, robot );
 		accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_ID_PROPERTY ).setText( CLIENT_ID );
 		accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_SECRET_PROPERTY ).setText( CLIENT_SECRET );
 		accessTokenFormDialog.textBox( OAuth2Profile.AUTHORIZATION_URI_PROPERTY ).setText( AUTHORIZATION_URI );
@@ -68,17 +67,17 @@ public class OAuth2Stepdefs
 		accessTokenFormDialog.textBox( OAuth2Profile.SCOPE_PROPERTY ).setText( SCOPE );
 	}
 
-	@When("^switches to another Authorization type and then back again$")
-	public void switchToAnotherAuthorizationTypeAndThenBackAgain()
+	@When("^switches to another Authorization type and then back again to (.+)$")
+	public void switchToAnotherAuthorizationTypeAndThenBackAgain( String profileName )
 	{
-		selectAuthorizationType( rootWindow, GLOBAL_HTTP_SETTINGS_COMBOBOX_ITEM );
-		selectAuthorizationType( rootWindow, OAUTH_2_COMBOBOX_ITEM );
+		selectItemInProfileSelectionComboBox( ProfileSelectionForm.NO_AUTHORIZATION );
+		selectItemInProfileSelectionComboBox( profileName );
 	}
 
-	@When( "^user clicks on Advanced options button$" )
+	@When("^user clicks on Advanced options button$")
 	public void clickOnAdvancedOptionsButton()
 	{
-		rootWindow.button( OAuth2AuthenticationInspector.ADVANCED_OPTIONS ).click();
+		rootWindow.button( OAuth2Form.ADVANCED_OPTIONS_BUTTON_NAME ).click();
 	}
 
 	@When("^user selects access token position (.+)$")
@@ -87,20 +86,20 @@ public class OAuth2Stepdefs
 		getAdvancedDialogFixture().radioButton( accessTokenPosition ).click();
 	}
 
-	@When( "^selects refresh method (.+)$" )
+	@When("^selects refresh method (.+)$")
 	public void selectRefreshMethod( String methodName )
 	{
 		getAdvancedDialogFixture().radioButton( methodName ).click();
 	}
 
-	@When( "^closes and reopens the advanced options dialog" )
+	@When("^closes and reopens the advanced options dialog")
 	public void closeAndReOpenAdvancedOptionsDialog()
 	{
 		closeAdvancedOptionsDialog();
 		clickOnAdvancedOptionsButton();
 	}
 
-	@When( "^closes the advanced options dialog" )
+	@When("^closes the advanced options dialog")
 	public void closesAdvancedOptionsDialog()
 	{
 		closeAdvancedOptionsDialog();
@@ -128,14 +127,13 @@ public class OAuth2Stepdefs
 	@Then("^the OAuth 2 option is not visible in the Authentication Type dropdown$")
 	public void verifyThatOAuth2OptionIsNotShownInAuthenticationDropdown()
 	{
-		assertThat( rootWindow.comboBox( BasicAuthenticationInspector.AUTHORIZATION_TYPE_COMBO_BOX_NAME)
-				.contents(), not( hasItemInArray( OAUTH_2_COMBOBOX_ITEM ) ) );
+		assertThat( getAuthorizationTypeComboBox().contents(), not( hasItemInArray( OAUTH_2_COMBOBOX_ITEM ) ) );
 	}
 
 	@Then("^the previously filled fields are still present$")
 	public void verifyThatThePreviouslyFilledFieldsAreStillPresent()
 	{
-		DialogFixture accessTokenFormDialog = findDialog( OAuth2AuthenticationInspector.ACCESS_TOKEN_FORM_DIALOG_NAME,
+		DialogFixture accessTokenFormDialog = findDialog( OAuth2GetAccessTokenForm.ACCESS_TOKEN_FORM_DIALOG_NAME,
 				robot );
 		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_ID_PROPERTY ).text(), is( CLIENT_ID ) );
 		assertThat( accessTokenFormDialog.textBox( OAuth2Profile.CLIENT_SECRET_PROPERTY ).text(), is( CLIENT_SECRET ) );
@@ -151,24 +149,140 @@ public class OAuth2Stepdefs
 		getAdvancedDialogFixture().radioButton( expectedAccessTokenPosition ).requireSelected();
 	}
 
-	@Then( "^refresh method is (.+)$" )
+	@Then("^refresh method is (.+)$")
 	public void verifyRefreshMethod( String expectedRefreshMethod )
 	{
 		getAdvancedDialogFixture().radioButton( expectedRefreshMethod ).requireSelected();
 	}
 
-
 	@Then("^access token is present$")
 	public void verifyThatAccessTokenIsPresent()
 	{
+		robot.waitForIdle();
 		assertThat( rootWindow.textBox( OAuth2Profile.ACCESS_TOKEN_PROPERTY ).text(), is( ACCESS_TOKEN ) );
 	}
 
 	@Then("the Get Access token form is closed$")
 	public void verifyThatTheAccessTokenFormIsNotVisible()
 	{
-		FestUtils.verifyDialogIsNotShowing( OAuth2AuthenticationInspector.ACCESS_TOKEN_FORM_DIALOG_NAME, robot );
+		FestUtils.verifyDialogIsNotShowing( OAuth2GetAccessTokenForm.ACCESS_TOKEN_FORM_DIALOG_NAME, robot );
 	}
+
+	@When("^the user selects (.+) in the authorization drop down$")
+	public void selectItemInProfileSelectionComboBox( String itemName )
+	{
+		JComboBoxFixture comboBox = getProfileSelectionComboBox();
+		comboBox.selectItem( itemName );
+	}
+
+	@Then("^refresh button is visible$")
+	public void verifyThatRefreshButtonIsVisible() throws Throwable
+	{
+		rootWindow.button( OAuth2Form.REFRESH_ACCESS_TOKEN_BUTTON_NAME ).requireVisible();
+	}
+
+	@Then("^refresh button is not visible$")
+	public void verifyThatRefreshButtonIsNotVisible() throws Throwable
+	{
+		verifyButtonIsNotShowing( rootWindow, OAuth2Form.REFRESH_ACCESS_TOKEN_BUTTON_NAME );
+	}
+
+	@And("^sets refresh method to (.+)$")
+	public void setRefreshMethod( String methodName ) throws Throwable
+	{
+		clickOnAdvancedOptionsButton();
+		selectRefreshMethod( methodName );
+		closeAdvancedOptionsDialog();
+	}
+
+	@And("^selects the OAuth 2 flow (.+)$")
+	public void selectOAuth2Flow( String flowName ) throws Throwable
+	{
+		DialogFixture accessTokenFormDialog = findDialog( OAuth2GetAccessTokenForm.ACCESS_TOKEN_FORM_DIALOG_NAME,
+				robot );
+		accessTokenFormDialog.comboBox( OAuth2GetAccessTokenForm.OAUTH_2_FLOW_COMBO_BOX_NAME ).selectItem( flowName );
+	}
+
+	@Then("^(.+) field is not visible$")
+	public void verifyClientIdFieldIsNotVisible( String fieldName ) throws Throwable
+	{
+		DialogFixture accessTokenFormDialog = findDialog( OAuth2GetAccessTokenForm.ACCESS_TOKEN_FORM_DIALOG_NAME, robot );
+		FestUtils.verifyTextFieldIsNotShowingInDialog( accessTokenFormDialog, fieldName );
+	}
+
+	@When("^the user creates an OAuth 2.0 profile with name (.+)$")
+	public void createOAuth2Profile( String profileName ) throws Throwable
+	{
+		selectItemInProfileSelectionComboBox( ProfileSelectionForm.AddEditOptions.ADD.getDescription() );
+		selectAuthType( "OAuth 2.0" );
+		setProfileNameAndClickOk( profileName );
+	}
+
+	@When("^the user creates basic authentication profile for authentication type (.+)$")
+	public void createBasicAuthProfileWithName( String profileName ) throws Throwable
+	{
+		selectItemInProfileSelectionComboBox( ProfileSelectionForm.AddEditOptions.ADD.getDescription() );
+		selectAuthType( profileName );
+		clickOk( getAuthorizationSelectionDialog() );
+	}
+
+	@Then("^new profile selected with name (.+)$")
+	public void verifyTheProfileIsSelected( String profileName ) throws Throwable
+	{
+		getProfileSelectionComboBox().requireSelection( profileName );
+	}
+
+	@And("^user confirms for deletion$")
+	public void confirmDeletion() throws Throwable
+	{
+
+		FestMatchers.dialogWithTitle( ProfileSelectionForm.DELETE_PROFILE_DIALOG_TITLE )
+				.using( robot ).button( buttonWithText( "Yes" ) ).click();
+	}
+
+	@Then("^the profile with name (.+) is deleted$")
+	public void verifyProfileDoesNotExist( String profileName ) throws Throwable
+	{
+		for( String profile : getProfileSelectionComboBox().contents() )
+		{
+			assertThat( profileName, is( Matchers.not( profile ) ) );
+		}
+	}
+
+	@And("^the changes the name to (.+)$")
+	public void setNewProfileName( String newName ) throws Throwable
+	{
+		DialogFixture renameProfileDialog = FestMatchers.dialogWithTitle( ProfileSelectionForm.RENAME_PROFILE_DIALOG_TITLE )
+				.using( robot );
+		renameProfileDialog.textBox().setText( newName );
+		renameProfileDialog.button( buttonWithText( "OK" ) ).click();
+	}
+
+	@Then("^available options in authorization drop down are (.+)$")
+	public void verifyAddEditOptionsInProfileSelectionComboBox( String values ) throws Throwable
+	{
+		String[] expectedAddEditOptions = ( values + "," + ProfileSelectionForm.OPTIONS_SEPARATOR ).split( "," );
+		List<String> expectedOptionsList = Arrays.asList( expectedAddEditOptions );
+		String[] actualOptions = getProfileSelectionComboBox().contents();
+
+		for( String actualOption : actualOptions )
+		{
+			assertThat( expectedOptionsList, hasItem( actualOption ) );
+		}
+	}
+
+	@And("^user selects to add new profile$")
+	public void selectAddNewAuthorizationInProfileSelectionComboBox() throws Throwable
+	{
+		selectItemInProfileSelectionComboBox( ProfileSelectionForm.AddEditOptions.ADD.getDescription() );
+	}
+
+	@And("^closes the authorization type selection dialog$")
+	public void closeAuthorizationSelectionDialog() throws Throwable
+	{
+		getAuthorizationSelectionDialog().close();
+	}
+
 
 	private void closeAdvancedOptionsDialog()
 	{
@@ -181,46 +295,39 @@ public class OAuth2Stepdefs
 		return rootWindow.dialog( ADVANCED_OPTIONS_DIALOG_NAME );
 	}
 
-	private void selectAuthorizationType( FrameFixture rootWindow, String itemName )
+	private void setProfileNameAndClickOk( String profileName )
 	{
-		JComboBoxFixture comboBox = rootWindow.comboBox( BasicAuthenticationInspector.AUTHORIZATION_TYPE_COMBO_BOX_NAME );
+		DialogFixture authorizationSelectionDialog = getAuthorizationSelectionDialog();
+		authorizationSelectionDialog.textBox( "Profile name" ).setText( profileName );
+		clickOk( authorizationSelectionDialog );
+	}
+
+	private void clickOk( DialogFixture authorizationSelectionDialog )
+	{
+		authorizationSelectionDialog.button( "OK" ).click();
+	}
+
+	private void selectAuthType( String authType )
+	{
+		getAuthorizationTypeComboBox().selectItem( authType );
+	}
+
+	private JComboBoxFixture getAuthorizationTypeComboBox()
+	{
+		return getAuthorizationSelectionDialog().comboBox( "Type" );
+	}
+
+	private DialogFixture getAuthorizationSelectionDialog()
+	{
+		return findDialog( "Add Authorization", robot );
+	}
+
+
+	private JComboBoxFixture getProfileSelectionComboBox()
+	{
+		JComboBoxFixture comboBox = rootWindow.comboBox( ProfileSelectionForm.PROFILE_COMBO_BOX );
 		comboBox.focus();
-		comboBox.selectItem( itemName );
+		return comboBox;
 	}
 
-	@Then( "^refresh button is visible$" )
-	public void verifyThatRefreshButtonIsVisible() throws Throwable
-	{
-		rootWindow.button( OAuth2AuthenticationInspector.REFRESH_ACCESS_TOKEN_BUTTON_NAME ).requireVisible();
-	}
-
-	@Then( "^refresh button is not visible$" )
-	public void verifyThatRefreshButtonIsNotVisible() throws Throwable
-	{
-		verifyButtonIsNotShowing( rootWindow, OAuth2AuthenticationInspector.REFRESH_ACCESS_TOKEN_BUTTON_NAME );
-	}
-
-	@And( "^sets refresh method to (.+)$" )
-	public void setRefreshMethod( String methodName ) throws Throwable
-	{
-		clickOnAdvancedOptionsButton();
-		selectRefreshMethod( methodName );
-		closeAdvancedOptionsDialog();
-	}
-
-	@And( "^selects the OAuth 2 flow (.+)$" )
-	public void selectOAuth2Flow( String flowName ) throws Throwable
-	{
-		DialogFixture accessTokenFormDialog = findDialog( OAuth2AuthenticationInspector.ACCESS_TOKEN_FORM_DIALOG_NAME,
-				robot );
-		accessTokenFormDialog.comboBox( OAuth2AuthenticationInspector.OAUTH_2_FLOW_COMBO_BOX_NAME ).selectItem( flowName );
-	}
-
-	@Then( "^(.+) field is not visible$" )
-	public void verifyClientIdFieldIsNotVisible( String fieldName ) throws Throwable
-	{
-		DialogFixture accessTokenFormDialog = findDialog( OAuth2AuthenticationInspector.ACCESS_TOKEN_FORM_DIALOG_NAME,
-				robot );
-		FestUtils.verifyTextFieldIsNotShowingInDialog( accessTokenFormDialog, fieldName );
-	}
 }

@@ -63,7 +63,7 @@ import java.util.Set;
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
 {
-
+	public static final String BASIC_AUTH_PROFILE = "Basic";
 	public static final String SELECTED_AUTH_PROFILE_PROPERTY_NAME = "selectedAuthProfile";
 
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
@@ -613,7 +613,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( "domain", old, domain );
 	}
 
-	public void setSelectedAuthProfile( String authProfile )
+	public void setSelectedAuthProfileAndAuthType( String authProfile, String authType )
+	{
+		setSelectedAuthProfile( authProfile );
+		setAuthType( authType );
+	}
+
+	private void setSelectedAuthProfile( String authProfile )
 	{
 		String old = getSelectedAuthProfile();
 		CredentialsConfig credentialsConfig = getCredentialsConfig();
@@ -622,13 +628,37 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		notifyPropertyChanged( SELECTED_AUTH_PROFILE_PROPERTY_NAME, old, authProfile );
 	}
 
-	public void setAuthType( String authType )
+	private void setAuthType( String authType )
 	{
+		if( authType!= null && (!CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType )))
+		{
+			if(authType.equals( AuthType.PREEMPTIVE.toString() ) || authType.equals( AuthType.GLOBAL_HTTP_SETTINGS.toString() ))
+			{
+				addBasicAuthenticationProfile( BASIC_AUTH_PROFILE );
+			}
+			else
+			{
+				addBasicAuthenticationProfile( authType );
+			}
+		}
+
 		String old = getAuthType();
 		CredentialsConfig credentialsConfig = getCredentialsConfig();
 
 		credentialsConfig.setAuthType( AuthType.Enum.forString( authType ) );
 		notifyPropertyChanged( "authType", old, authType );
+	}
+
+	public boolean getPreemptive()
+	{
+		return getCredentialsConfig().getPreemptive();
+	}
+
+	public void setPreemptive( boolean preemptive )
+	{
+		boolean old = getPreemptive();
+		getCredentialsConfig().setPreemptive( preemptive );
+		notifyPropertyChanged( "preemptive", old, preemptive );
 	}
 
 	public String getSslKeystore()

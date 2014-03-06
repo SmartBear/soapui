@@ -2,7 +2,7 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.editor.inspectors.auth.OAuth2AuthenticationInspector;
+import com.eviware.soapui.support.editor.inspectors.auth.OAuth2GetAccessTokenForm;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -17,13 +17,13 @@ public class OAuth2ParameterValidator
 
 	static void validate( OAuth2Parameters parameters )
 	{
-		validateHttpUrl( parameters.authorizationUri, OAuth2AuthenticationInspector.AUTHORIZATION_URI );
-		validateUri( parameters.redirectUri, OAuth2AuthenticationInspector.REDIRECT_URI );
-		validateHttpUrl( parameters.accessTokenUri, OAuth2AuthenticationInspector.ACCESS_TOKEN_URI );
-		validateRequiredStringValue( parameters.clientId, OAuth2AuthenticationInspector.CLIENT_IDENTIFICATION );
+		validateHttpUrl( parameters.authorizationUri, OAuth2GetAccessTokenForm.AUTHORIZATION_URI_TITLE );
+		validateUri( parameters.redirectUri, OAuth2GetAccessTokenForm.REDIRECT_URI_TITLE );
+		validateHttpUrl( parameters.accessTokenUri, OAuth2GetAccessTokenForm.ACCESS_TOKEN_URI_TITLE );
+		validateRequiredStringValue( parameters.clientId, OAuth2GetAccessTokenForm.CLIENT_ID_TITLE );
 		if( parameters.getOAuth2Flow() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
-			validateRequiredStringValue( parameters.clientSecret, OAuth2AuthenticationInspector.CLIENT_SECRET );
+			validateRequiredStringValue( parameters.clientSecret, OAuth2GetAccessTokenForm.CLIENT_SECRET_TITLE );
 		}
 	}
 

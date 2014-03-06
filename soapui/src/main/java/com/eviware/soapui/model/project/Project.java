@@ -85,6 +85,8 @@ public interface Project extends TestModelItem
 
 	public List<WsdlMockService> getMockServiceList();
 
+	public List<RestMockService> getRestMockServiceList();
+
 	public List<Interface> getInterfaceList();
 
 	public boolean hasNature( String natureId );

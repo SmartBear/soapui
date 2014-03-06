@@ -20,11 +20,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.ConfigurationDialog;
-import com.eviware.soapui.support.components.JButtonBar;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.PreviewCorner;
-import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.GradientPanel;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.swing.SwingUtils;
@@ -40,28 +36,11 @@ import org.syntax.jedit.InputHandler;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -71,7 +50,7 @@ import java.util.Map;
 
 /**
  * Facade for common UI-related tasks
- *
+ * 
  * @author Ole.Matzura
  */
 
@@ -102,6 +81,9 @@ public class UISupport
 	public static final String DEFAULT_EDITOR_FONT = "Courier plain";
 	public static final int DEFAULT_EDITOR_FONT_SIZE = 11;
 	public static final Color MAC_BACKGROUND_COLOR = new Color( 229, 229, 229 );
+	public static final Color MAC_PROGRESSBAR_BACKGROUND_COLOR = new Color( 196, 196, 196 );
+	public static final Color MAC_PROGRESSBAR_MATTE_BORDER_COLOR = new Color( 238, 238, 238 );
+	public static final Color MAC_PROGRESSBAR_LINE_BORDER_COLOR = new Color( 166, 166, 166 );
 
 	static
 	{
@@ -119,7 +101,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 *
+	 * 
 	 * @param loader
 	 * @deprecated Use {@link #addResourceClassLoader(ClassLoader)} instead
 	 */
@@ -130,7 +112,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 *
+	 * 
 	 * @param loader
 	 */
 	public static void addResourceClassLoader( ClassLoader loader )
@@ -141,7 +123,7 @@ public class UISupport
 	/**
 	 * Set the main frame of this application. This is only used when running
 	 * under Swing.
-	 *
+	 * 
 	 * @param frame
 	 */
 	public static void setMainFrame( Component frame )
@@ -274,7 +256,7 @@ public class UISupport
 
 	/**
 	 * @deprecated use prompt(String question, String title, String value)
-	 * instead
+	 *             instead
 	 */
 
 	@Deprecated
@@ -312,14 +294,32 @@ public class UISupport
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
+		if( isMac() )
+		{
+			// default native progress bar on mac ignores color settings, use a custom ui to get green/red
+			progressBar.setUI( new BasicProgressBarUI() );
+		}
+
 		progressBar.setValue( 0 );
 		progressBar.setStringPainted( true );
 		progressBar.setString( "" );
 		progressBar.setIndeterminate( indeterimate );
 
-		progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
-
-		panel.setBorder( BorderFactory.createEmptyBorder( space, space, space, space ) );
+		if( isMac() )
+		{
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+			Border compound = BorderFactory.createCompoundBorder(
+					BorderFactory.createMatteBorder( space, space, space, space, MAC_PROGRESSBAR_MATTE_BORDER_COLOR ),
+					BorderFactory.createLineBorder( MAC_PROGRESSBAR_LINE_BORDER_COLOR )
+			);
+			panel.setBorder( compound );
+			panel.setBackground( MAC_PROGRESSBAR_BACKGROUND_COLOR );
+		}
+		else
+		{
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+			panel.setBorder( BorderFactory.createEmptyBorder( space, space, space, space ) );
+		}
 		panel.add( progressBar, BorderLayout.CENTER );
 
 		return panel;
@@ -581,7 +581,8 @@ public class UISupport
 			UISupport.setHourglassCursor();
 			SoapUIDesktop desktop = SoapUI.getDesktop();
 			return desktop == null ? null : desktop.showDesktopPanel( modelItem );
-		} finally
+		}
+		finally
 		{
 			UISupport.resetCursor();
 		}
@@ -594,7 +595,8 @@ public class UISupport
 			UISupport.setHourglassCursor();
 			SoapUIDesktop desktop = SoapUI.getDesktop();
 			return desktop == null ? null : desktop.showDesktopPanel( desktopPanel );
-		} finally
+		}
+		finally
 		{
 			UISupport.resetCursor();
 		}

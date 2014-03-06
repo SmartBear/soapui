@@ -43,12 +43,10 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 	private final Color DEFAULT_COLOR = Color.WHITE;
 	private final Color SUCCESS_COLOR = new Color( 0xccffcb );
-	private final Color FAIL_COLOR = new Color( 0xffcccc );
 
 	// FIXME This need to be changed to the real icons
 	static final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
 	static final ImageIcon WAIT_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
-	static final ImageIcon FAIL_ICON = UISupport.createImageIcon( "/exclamation-dummy.png" );
 
 	private final AbstractXmlInspector inspector;
 	private final OAuth2AccessTokenStatusChangeManager statusChangeManager;

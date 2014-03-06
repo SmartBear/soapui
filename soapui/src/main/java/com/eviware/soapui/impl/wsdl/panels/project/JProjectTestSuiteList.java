@@ -12,13 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.dnd.Autoscroll;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -39,6 +33,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -59,7 +54,7 @@ import com.eviware.soapui.support.swing.AutoscrollSupport;
 
 /**
  * A panel showing a scrollable list of TestSuites in a Project.
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -218,6 +213,13 @@ public class JProjectTestSuiteList extends JPanel
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 			label.setInheritsPopupMenu( true );
 			label.setEnabled( !testSuite.isDisabled() );
+
+			if( UISupport.isMac() )
+			{
+				Font oldFont = label.getFont();
+				Font newFont = new Font( oldFont.getName(), Font.BOLD, oldFont.getSize() );
+				label.setFont( newFont );
+			}
 
 			add( progressPanel, BorderLayout.CENTER );
 			add( label, BorderLayout.NORTH );

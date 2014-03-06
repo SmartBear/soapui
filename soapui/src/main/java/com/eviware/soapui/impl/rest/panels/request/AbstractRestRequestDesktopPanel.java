@@ -302,6 +302,4 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			}
 		}
 	}
-
-
 }
