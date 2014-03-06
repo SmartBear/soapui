@@ -48,7 +48,6 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	public static final String DELETE_PROFILE_DIALOG_TITLE = "Delete Profile";
 	public static final String RENAME_PROFILE_DIALOG_TITLE = "Rename Profile";
 
-	public static final String NO_AUTHORIZATION = "No Authorization";
 	private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
 	public static final String EMPTY_PANEL = "EmptyPanel";
 
@@ -71,9 +70,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	@Override
 	public JComponent getComponent()
 	{
-		String selectedAuthProfile = request.getSelectedAuthProfile() == null ? NO_AUTHORIZATION :
-				request.getSelectedAuthProfile();
-		profileSelectionComboBox.setSelectedItem( selectedAuthProfile );
+		profileSelectionComboBox.setSelectedItem( request.getSelectedAuthProfile() );
 		return outerPanel;
 	}
 
@@ -190,7 +187,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		}
 		else    //selectedItem : No Authorization
 		{
-			request.setSelectedAuthProfileAndAuthType( selectedOption, null );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() );
 			showCard( EMPTY_PANEL );
 		}
 	}
@@ -283,7 +280,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			request.removeBasicAuthenticationProfile( profileName );
 		}
-		refreshProfileSelectionComboBox( NO_AUTHORIZATION );
+		refreshProfileSelectionComboBox( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() );
 	}
 
 	private void refreshProfileSelectionComboBox( String selectedProfile )
@@ -322,7 +319,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private String[] createOptionsForAuthorizationCombo( String selectedAuthProfile )
 	{
 		ArrayList<String> options = new ArrayList<String>();
-		options.add( NO_AUTHORIZATION );
+		options.add( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() );
 		options.addAll( request.getBasicAuthenticationProfiles() );
 
 		ArrayList<String> addEditOptions = getAddEditOptions();
@@ -339,7 +336,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
 		}
 
-		if( options.size() <= 1 || NO_AUTHORIZATION.equals( selectedAuthProfile ) )
+		if( options.size() <= 1 || CredentialsConfig.AuthType.NO_AUTHORIZATION.toString().equals( selectedAuthProfile ) )
 		{
 			addEditOptions.remove( AddEditOptions.DELETE.getDescription() );
 		}

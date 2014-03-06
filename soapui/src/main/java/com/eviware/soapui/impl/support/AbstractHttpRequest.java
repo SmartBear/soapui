@@ -174,7 +174,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return attachments.get( index );
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings( "rawtypes" )
 	public void setAttachmentAt( int index, Attachment attachment )
 	{
 		if( attachments.size() > index )
@@ -520,8 +520,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public String getSelectedAuthProfile()
 	{
 		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
-			return null;
+		if( credentialsConfig == null || credentialsConfig.getSelectedAuthProfile()==null)
+		{
+			return CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() ;
+		}
 
 		return credentialsConfig.getSelectedAuthProfile();
 	}
@@ -554,7 +556,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		try
 		{
 			if( credentialsConfig.getAuthType() == null )
-				credentialsConfig.setAuthType( AuthType.GLOBAL_HTTP_SETTINGS );
+				credentialsConfig.setAuthType( CredentialsConfig.AuthType.NO_AUTHORIZATION );
 		}
 		catch( XmlValueOutOfRangeException e )
 		{
@@ -629,9 +631,9 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	private void setAuthType( String authType )
 	{
-		if( authType!= null && (!CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType )))
+		if( !CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType ) )
 		{
-			if(authType.equals( AuthType.PREEMPTIVE.toString() ) || authType.equals( AuthType.GLOBAL_HTTP_SETTINGS.toString() ))
+			if( authType.equals( AuthType.PREEMPTIVE.toString() ) || authType.equals( AuthType.GLOBAL_HTTP_SETTINGS.toString() ) )
 			{
 				addBasicAuthenticationProfile( BASIC_AUTH_PROFILE );
 			}

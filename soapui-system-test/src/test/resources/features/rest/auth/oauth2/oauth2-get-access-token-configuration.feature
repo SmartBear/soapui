@@ -1,4 +1,4 @@
-@Manual-temp @Acceptance
+@Automated @Acceptance
 Feature: OAuth 2 Get Access Token configuration
 
   Scenario: Request editor not supporting OAuth show not show it in the Auth dropdown

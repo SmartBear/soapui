@@ -70,7 +70,7 @@ public class OAuth2Stepdefs
 	@When("^switches to another Authorization type and then back again to (.+)$")
 	public void switchToAnotherAuthorizationTypeAndThenBackAgain(String profileName)
 	{
-		selectItemInProfileSelectionComboBox( ProfileSelectionForm.NO_AUTHORIZATION );
+		selectItemInProfileSelectionComboBox( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() );
 		selectItemInProfileSelectionComboBox( profileName );
 	}
 
