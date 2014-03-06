@@ -14,9 +14,11 @@ package com.eviware.x.dialogs;
 
 public interface XProgressDialog
 {
-	public void setVisible( boolean visible );
+	void setVisible( boolean visible );
 
-	public void run( Worker worker ) throws Exception;
+	void run( Worker worker ) throws Exception;
 
-	public void setCancelLabel( String label );
+	void setCancelLabel( String label );
+
+	void setDeterminate();
 }

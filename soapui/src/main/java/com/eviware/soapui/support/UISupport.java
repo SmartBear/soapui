@@ -685,6 +685,10 @@ public class UISupport
 		uiUtils.invokeAndWait( runnable );
 	}
 
+	public static void invokeAndWaitIfNotInEDT( Runnable runnable){
+		uiUtils.invokeAndWaitIfNotInEDT( runnable );
+	}
+
 	public static JXToolBar createToolbar()
 	{
 		JXToolBar toolbar = new JXToolBar();

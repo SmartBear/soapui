@@ -19,6 +19,7 @@ import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
+import com.eviware.soapui.support.UISupport;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -27,7 +28,7 @@ import java.util.List;
 
 /**
  * SoapUITreeNode for Operation implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -153,13 +154,20 @@ public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource
 	 * node.requestRemoved(request); } } }
 	 */
 
-	public void methodAdded( RestMethod method )
+	public void methodAdded( final RestMethod method )
 	{
-		RestMethodTreeNode methodTreeNode = new RestMethodTreeNode( method, getTreeModel() );
-		methodNodes.add( methodTreeNode );
-		reorder( false );
-		method.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
-		getTreeModel().notifyNodeInserted( methodTreeNode );
+		UISupport.invokeAndWaitIfNotInEDT( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				RestMethodTreeNode methodTreeNode = new RestMethodTreeNode( method, getTreeModel() );
+				methodNodes.add( methodTreeNode );
+				reorder( false );
+				method.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
+				getTreeModel().notifyNodeInserted( methodTreeNode );
+			}
+		} );
 	}
 
 	public void methodRemoved( RestMethod method )
@@ -189,7 +197,7 @@ public class RestResourceTreeNode extends AbstractModelItemTreeNode<RestResource
 				methodRemoved( ( RestMethod )evt.getOldValue() );
 			}
 		}
-		else if( evt.getPropertyName().equals( RestResource.PATH_PROPERTY  ) )
+		else if( evt.getPropertyName().equals( RestResource.PATH_PROPERTY ) )
 		{
 			getTreeModel().notifyNodeChanged( this );
 		}

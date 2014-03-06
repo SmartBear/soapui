@@ -12,20 +12,21 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.support.UISupport;
+
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for RestRequest implementations
- * 
+ *
  * @author dain.nilsson
  */
 
@@ -96,19 +97,26 @@ public class RestMethodTreeNode extends AbstractModelItemTreeNode<RestMethod>
 		}
 	}
 
-	public void propertyChange( PropertyChangeEvent evt )
+	public void propertyChange( final PropertyChangeEvent evt )
 	{
-		super.propertyChange( evt );
-		if( evt.getPropertyName().equals( "childRequests" ) )
+		UISupport.invokeAndWaitIfNotInEDT( new Runnable()
 		{
-			if( evt.getNewValue() != null )
+			@Override
+			public void run()
 			{
-				requestAdded( ( RestRequest )evt.getNewValue() );
+				RestMethodTreeNode.super.propertyChange( evt );
+				if( evt.getPropertyName().equals( "childRequests" ) )
+				{
+					if( evt.getNewValue() != null )
+					{
+						requestAdded( ( RestRequest )evt.getNewValue() );
+					}
+					else
+					{
+						requestRemoved( ( RestRequest )evt.getOldValue() );
+					}
+				}
 			}
-			else
-			{
-				requestRemoved( ( RestRequest )evt.getOldValue() );
-			}
-		}
+		} );
 	}
 }
