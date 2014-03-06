@@ -139,6 +139,38 @@ public class RestMockActionTest
 		assertThat( mockAction.getMethod(), is( HttpMethod.TRACE ) );
 	}
 
+	@Test
+	public void testResponsesAreDispatchedSequentially() throws Exception
+	{
+		RestMockResult mockResult;
+		mockAction.addNewMockResponse( "response 2" );
+
+		mockResult= mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
+
+		mockResult= mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
+
+		mockResult= mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
+
+		mockResult= mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
+	}
+
+	@Test
+	public void testResponsesAreDispatchedSequentiallyForSingleResponse() throws Exception
+	{
+		RestMockResult mockResult;
+
+		mockResult= mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
+
+		mockResult= mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
+
+	}
+
 
 	private RestMockRequest makeRestMockRequest() throws Exception
 	{
