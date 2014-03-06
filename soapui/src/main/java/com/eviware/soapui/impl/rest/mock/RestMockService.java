@@ -36,18 +36,6 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	}
 
 	@Override
-	public void setPort( int port )
-	{
-
-	}
-
-	@Override
-	public void setPath( String path )
-	{
-
-	}
-
-	@Override
 	public String getIconName()
 	{
 		return ICON_NAME;

@@ -164,7 +164,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 
 		for( MockOperation operation : getMockOperationList() )
 		{
-			((WsdlMockOperation)operation).release();
+			operation.release();
 		}
 	}
 
