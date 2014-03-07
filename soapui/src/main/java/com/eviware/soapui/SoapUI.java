@@ -673,7 +673,7 @@ public class SoapUI
 	{
 		public void run()
 		{
-			boolean isFirstLaunch = !new File(SoapUICore.DEFAULT_SETTINGS_FILE).exists();
+			boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
 			Properties props = new Properties();
 			try
 			{

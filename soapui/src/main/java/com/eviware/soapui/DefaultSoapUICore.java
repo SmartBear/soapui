@@ -699,6 +699,14 @@ public class DefaultSoapUICore implements SoapUICore
 		}
 	}
 
+	public static boolean settingsFileExists()
+	{
+		DefaultSoapUICore soapUICore = new DefaultSoapUICore(  );
+		return new File(DEFAULT_SETTINGS_FILE).exists() ||
+				new File(new File(soapUICore.getRoot()), DEFAULT_SETTINGS_FILE).exists() ||
+				new File( System.getProperty( "user.home", "." )).exists();
+	}
+
 	private class SettingsWatcher extends TimerTask
 	{
 		@Override
