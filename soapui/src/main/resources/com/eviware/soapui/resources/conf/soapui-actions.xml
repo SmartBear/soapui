@@ -88,6 +88,8 @@
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewTestSuiteAction"/>
     <tns:action id="AddNewWSDLMockServiceAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewMockServiceAction"/>
+    <tns:action id="AddNewRestMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewRestMockServiceAction"/>
     <tns:action id="SaveProjectAction"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.project.SaveProjectAction"/>
     <tns:action id="SaveProjectAsAction"
@@ -478,6 +480,8 @@
                            keyStroke="menu T"/>
         <tns:actionMapping actionId="AddNewWSDLMockServiceAction"
                            keyStroke="menu O"/>
+        <tns:actionMapping actionId="AddNewRestMockServiceAction"
+                           keyStroke="menu R"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameProjectAction"
                            keyStroke="F2"/>

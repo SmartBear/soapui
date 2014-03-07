@@ -29,7 +29,7 @@ public class AddNewMockServiceAction extends AbstractSoapUIAction<WsdlProject>
 
 	public AddNewMockServiceAction()
 	{
-		super( "New SOAP MockService", "Creates a new MockService in this project" );
+		super( "New SOAP MockService", "Creates a new SOAP MockService in this project" );
 		// putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu O" ));
 	}
 
