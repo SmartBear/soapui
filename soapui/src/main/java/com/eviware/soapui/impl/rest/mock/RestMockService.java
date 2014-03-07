@@ -11,6 +11,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
+import org.apache.commons.httpclient.HttpStatus;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -52,13 +53,20 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
-
 		String mockActionName = restRequest.getResource().getName() + " " + restRequest.getPath();
+		RestMockAction mockAction = addEmptyMockAction( mockActionName, restRequest.getMethod(), restRequest.getPath() );
+		mockAction.setResource( restRequest.getResource() );
+
+		return mockAction;
+	}
+
+	public RestMockAction addEmptyMockAction( String name, HttpMethod method, String path )
+	{
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
-		config.setName( mockActionName );
-		config.setResourcePath( restRequest.getPath() );
-		config.setMethod( restRequest.getMethod().name() );
-		RestMockAction restMockAction = new RestMockAction( this, config, restRequest );
+		config.setName( name );
+		config.setMethod( method.name() );
+		config.setResourcePath( path );
+		RestMockAction restMockAction = new RestMockAction( this, config );
 
 		addMockOperation( restMockAction );
 		fireMockOperationAdded( restMockAction );
