@@ -14,7 +14,6 @@ package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
@@ -194,7 +193,8 @@ public class WebViewBasedBrowserComponent
 
 	public void release()
 	{
-		// TODO: Check whether we need to do anything here
+		setContent( "" );
+		//TODO: Really dispose the actual webView
 	}
 
 
