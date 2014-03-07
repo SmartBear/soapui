@@ -53,7 +53,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
 
 	public final static String DISPATCH_STYLE_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchstyle";
-	public final static String DISPATCH_PATH_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchpath";
 	public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
 	public static final String ICON_NAME = "/mockOperation.gif";
 
@@ -292,18 +291,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	public String getWsdlOperationName()
 	{
 		return operation.getName();
-	}
-
-	public String getDispatchPath()
-	{
-		return getConfig().getDispatchPath();
-	}
-
-	public void setDispatchPath( String dispatchPath )
-	{
-		String old = getDispatchPath();
-		getConfig().setDispatchPath( dispatchPath );
-		notifyPropertyChanged( DISPATCH_PATH_PROPERTY, old, dispatchPath );
 	}
 
 	public void propertyChange( PropertyChangeEvent arg0 )

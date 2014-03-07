@@ -42,4 +42,16 @@ public interface MockOperation extends ModelItem, Releasable
 	public List<MockResponse> getMockResponses();
 
 	public void removeMockResponse( MockResponse mockResponse );
+
+	/**
+	 * This is a container used by dispatcher to save script, xpath expressions etc
+	 *
+	 * @return script or xpath
+	 */
+	public String getScript();
+
+	/**
+	 * @param script this is a String that might be needed by the dispatch style used in this mock operation.
+	 */
+	public void setScript( String script );
 }

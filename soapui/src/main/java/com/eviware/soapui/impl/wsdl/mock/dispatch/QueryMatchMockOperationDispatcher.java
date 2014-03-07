@@ -42,7 +42,6 @@ import javax.swing.event.ListSelectionListener;
 import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunContext;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -84,7 +83,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 		try
 		{
-			conf = MockOperationQueryMatchDispatchConfig.Factory.parse( getConfig().xmlText() );
+			conf = MockOperationQueryMatchDispatchConfig.Factory.parse( mockOperation.getConfig().getDispatchConfig().xmlText() );
 
 			for( MockOperationQueryMatchDispatchConfig.Query query : conf.getQueryList() )
 			{
@@ -267,7 +266,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 								return resp;
 							}
 
-							return getMockOperation().getMockResponseByName( query.getResponse() );
+							return ((WsdlMockOperation)getMockOperation()).getMockResponseByName( query.getResponse() );
 						}
 					}
 
@@ -440,7 +439,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 	private void saveConfig()
 	{
-		saveConfig( conf );
+		((WsdlMockOperation)getMockOperation()).getConfig().getDispatchConfig().set( conf );
 	}
 
 	private class QueryItemListModel extends AbstractListModel

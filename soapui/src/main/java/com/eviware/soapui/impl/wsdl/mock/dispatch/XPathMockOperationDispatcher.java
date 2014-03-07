@@ -66,14 +66,14 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 			throw new DispatchException( "Error getting XmlObject for request: " + e );
 		}
 
-		String path = getMockOperation().getDispatchPath();
+		String path = getMockOperation().getScript();
 		if( StringUtils.isNullOrEmpty( path ) )
 			throw new DispatchException( "Missing dispatch XPath expression" );
 
 		String[] values = XmlUtils.selectNodeValues( xmlObject, path );
 		for( String value : values )
 		{
-			WsdlMockResponse mockResponse = getMockOperation().getMockResponseByName( value );
+			MockResponse mockResponse = getMockOperation().getMockResponseByName( value );
 			if( mockResponse != null )
 				return mockResponse;
 		}
@@ -154,7 +154,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 		public String getScript()
 		{
-			return getMockOperation().getDispatchPath();
+			return getMockOperation().getScript();
 		}
 
 		public Settings getSettings()
@@ -164,7 +164,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 		public void setScript( String text )
 		{
-			getMockOperation().setDispatchPath( text );
+			getMockOperation().setScript( text );
 		}
 
 		public String getScriptName()

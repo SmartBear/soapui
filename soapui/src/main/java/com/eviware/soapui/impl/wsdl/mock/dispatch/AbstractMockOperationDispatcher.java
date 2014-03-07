@@ -18,6 +18,7 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.eviware.soapui.model.mock.MockOperation;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
@@ -25,10 +26,10 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 
 public abstract class AbstractMockOperationDispatcher implements PropertyChangeNotifier, MockOperationDispatcher
 {
-	private WsdlMockOperation mockOperation;
+	private MockOperation mockOperation;
 	private PropertyChangeSupport propertyChangeSupport;
 
-	protected AbstractMockOperationDispatcher( WsdlMockOperation mockOperation )
+	protected AbstractMockOperationDispatcher( MockOperation mockOperation )
 	{
 		this.mockOperation = mockOperation;
 		propertyChangeSupport = new PropertyChangeSupport( this );
@@ -48,17 +49,7 @@ public abstract class AbstractMockOperationDispatcher implements PropertyChangeN
 		mockOperation = null;
 	}
 
-	public XmlObject getConfig()
-	{
-		return mockOperation.getConfig().getDispatchConfig();
-	}
-
-	protected void saveConfig( XmlObject xmlObject )
-	{
-		mockOperation.getConfig().getDispatchConfig().set( xmlObject );
-	}
-
-	public WsdlMockOperation getMockOperation()
+	public MockOperation getMockOperation()
 	{
 		return mockOperation;
 	}

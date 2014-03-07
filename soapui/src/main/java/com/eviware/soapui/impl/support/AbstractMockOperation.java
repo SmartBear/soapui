@@ -1,7 +1,6 @@
 package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.config.BaseMockOperationConfig;
-import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
@@ -13,18 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractMockOperation
-		<ModelItemConfigType extends ModelItemConfig, MockResponseType extends MockResponse>
-		extends AbstractWsdlModelItem<ModelItemConfigType>
+		<BaseMockOperationConfigType extends BaseMockOperationConfig, MockResponseType extends MockResponse>
+		extends AbstractWsdlModelItem<BaseMockOperationConfigType>
 		implements MockOperation, PropertyChangeListener
 {
+	public final static String DISPATCH_PATH_PROPERTY = MockOperation.class.getName() + "@dispatchpath";
+
 	private List<MockResponseType> responses = new ArrayList<MockResponseType>();
 
-	protected AbstractMockOperation( ModelItemConfigType config, AbstractMockService parent, String icon )
+	protected AbstractMockOperation( BaseMockOperationConfigType config, AbstractMockService parent, String icon )
 	{
 		super( config, parent, icon );
 	}
 
-	protected void setupConfig( ModelItemConfigType config )
+	protected void setupConfig( BaseMockOperationConfigType config )
 	{
 		BaseMockOperationConfig baseConfig = (BaseMockOperationConfig)config;
 		Operation operation = getOperation();
@@ -106,6 +107,20 @@ public abstract class AbstractMockOperation
 		String old = getDefaultResponse();
 		((BaseMockOperationConfig)getConfig()).setDefaultResponse( defaultResponse );
 		// noone is listening? notifyPropertyChanged( WsdlMockOperation.DEFAULT_RESPONSE_PROPERTY, old, defaultResponse );
+	}
+
+	@Override
+	public String getScript()
+	{
+		return getConfig().getDispatchPath();
+	}
+
+	@Override
+	public void setScript( String dispatchPath )
+	{
+		String old = getScript();
+		getConfig().setDispatchPath( dispatchPath );
+		notifyPropertyChanged( DISPATCH_PATH_PROPERTY, old, dispatchPath );
 	}
 
 

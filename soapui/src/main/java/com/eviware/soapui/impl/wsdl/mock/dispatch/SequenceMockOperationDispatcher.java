@@ -37,7 +37,7 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
 			if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
 				currentDispatchIndex = 0;
 
-			WsdlMockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
+			MockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
 
 			currentDispatchIndex++ ;
 			return mockResponse;
