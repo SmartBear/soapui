@@ -12,30 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
-import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.config.MockResponseStepConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.config.*;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
@@ -43,7 +22,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
@@ -61,25 +40,9 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.DefaultTestStepProperty;
-import com.eviware.soapui.model.support.InterfaceListenerAdapter;
-import com.eviware.soapui.model.support.MockRunListenerAdapter;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.support.ProjectListenerAdapter;
-import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.AssertedXPath;
+import com.eviware.soapui.model.support.*;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.OperationTestStep;
-import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.StringUtils;
@@ -90,6 +53,12 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
 public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties implements OperationTestStep,
 		PropertyChangeListener, Assertable, PropertyExpansionContainer
@@ -117,7 +86,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	private WsdlInterface iface;
 	private AssertionStatus oldStatus;
 
-	private ModelItemIconAnimator<WsdlMockResponseTestStep> iconAnimator;
+	private IconAnimator<WsdlMockResponseTestStep> iconAnimator;
 	private ImageIcon validRequestIcon;
 	private ImageIcon failedRequestIcon;
 	private ImageIcon disabledRequestIcon;
@@ -155,7 +124,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				iface.addInterfaceListener( interfaceListener );
 			}
 
-			iconAnimator = new ModelItemIconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
+			iconAnimator = new IconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
 					"/exec_mockResponse.gif", 4 );
 
 			initIcons();

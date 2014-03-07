@@ -12,40 +12,32 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.ModelItemConfig;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Submit;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.model.iface.*;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
+import com.eviware.soapui.model.support.AbstractModelItem;
+import com.eviware.soapui.model.support.AnimatableItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.UISupport;
+import org.apache.log4j.Logger;
 
-public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
+import javax.swing.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+public class JdbcRequest extends AbstractModelItem implements Assertable, TestRequest, AnimatableItem
 {
 	private final JdbcRequestTestStep testStep;
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
@@ -329,7 +321,7 @@ public class JdbcRequest extends AbstractAnimatableModelItem<ModelItemConfig> im
 		return new RequestIconAnimator<JdbcRequest>( this, "/jdbc_request.gif", "/exec_jdbc_request", 4 );
 	}
 
-	public static class RequestIconAnimator<T extends JdbcRequest> extends ModelItemIconAnimator<T> implements
+	public static class RequestIconAnimator<T extends JdbcRequest> extends IconAnimator<T> implements
 			SubmitListener
 	{
 		public RequestIconAnimator( T modelItem, String baseIcon, String baseAnimateIcon, int iconCount )
