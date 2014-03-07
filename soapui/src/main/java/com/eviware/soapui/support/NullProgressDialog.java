@@ -34,6 +34,11 @@ public class NullProgressDialog implements XProgressDialog
 	{
 	}
 
+	@Override
+	public void setDeterminate()
+	{
+	}
+
 	private final static class NullProgressMonitor implements XProgressMonitor
 	{
 		public void setProgress( int value, String string )

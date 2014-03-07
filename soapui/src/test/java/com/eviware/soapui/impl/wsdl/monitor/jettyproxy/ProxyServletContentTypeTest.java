@@ -12,6 +12,7 @@
 package com.eviware.soapui.impl.wsdl.monitor.jettyproxy;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.monitor.ContentTypes;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import org.apache.http.Header;
@@ -50,97 +51,9 @@ public class ProxyServletContentTypeTest
 	@Test
 	public void noContentTypeMatchesRequestWithNoContentType()
 	{
-		String[] contentTypeMonitor = new String[]{};
+		proxyServlet.setIncludedContentTypes( ContentTypes.of( "" ) );
 		ExtendedHttpMethod request = createRequestWithContentTypes( );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is(true));
-	}
-
-	@Test
-	public void noContentTypeDoNotMatchRequestWithContentType()
-	{
-		String[] contentTypeMonitor = new String[]{};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( false ) );
-	}
-
-	@Test
-	public void fullWildCardMatchesRequestWithContentType()
-	{
-		String[] contentTypeMonitor = new String[]{"*/*"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( true ) );
-	}
-
-	@Test
-	public void fullWildCardMatchesRequestWithContentTypeAndParameters()
-	{
-		String[] contentTypeMonitor = new String[]{"*/*"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain; charset=utf-8" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( true ) );
-	}
-
-	@Test
-	public void wildCardPrimaryTypeMatchesRequestWithContentType()
-	{
-		String[] contentTypeMonitor = new String[]{"*/plain"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( true ) );
-	}
-
-	@Test
-	public void wildCardPrimaryTypeDoesNotMatchRequestWithOtherSubtype()
-	{
-		String[] contentTypeMonitor = new String[]{"*/xml"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( false ) );
-	}
-
-	@Test
-	public void wildCardSubTypeMatchesRequestWithContentType()
-	{
-		String[] contentTypeMonitor = new String[]{"text/*"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( true ) );
-	}
-
-	@Test
-	public void wildCardSubTypeDoesNotMatchRequestWithOtherPrimaryType()
-	{
-		String[] contentTypeMonitor = new String[]{"application/*"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( false ) );
-	}
-
-	@Test
-	public void equalContentTypesMatches()
-	{
-		String[] contentTypeMonitor = new String[]{"text/plain"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( true ) );
-	}
-
-	@Test
-	public void equalContentTypesMatchesEvenWithParameters()
-	{
-		String[] contentTypeMonitor = new String[]{"text/plain"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "text/plain; charset=utf-8" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( true ) );
-	}
-
-	@Test
-	public void invalidContentTypeIsSilentlyIgnoredAndDoesNotMatch()
-	{
-		String[] contentTypeMonitor = new String[]{"hejhopp"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "hejhopp/hejhopp" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( false ) );
-	}
-
-	@Test
-	public void invalidRetrievedContentTypeIsSilentlyIgnoredAndDoesNotMatch()
-	{
-		String[] contentTypeMonitor = new String[]{"*/*"};
-		ExtendedHttpMethod request = createRequestWithContentTypes( "hejhopp" );
-		assertThat( proxyServlet.contentTypeMatches( contentTypeMonitor, request ), is( false ) );
+		assertThat( proxyServlet.contentTypeMatches( request ), is(true));
 	}
 
 	private ExtendedHttpMethod createRequestWithContentTypes( String... contentTypes )

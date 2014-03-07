@@ -136,31 +136,6 @@ public class OAuth2Form extends AbstractAuthenticationForm
 		return refreshAccessTokenButton;
 	}
 
-	private boolean isEnoughSpaceAvailableBelowTheButton( Point disclosureButtonLocation, int accessTokenDialogHeight, int disclosureButtonHeight )
-	{
-		GraphicsConfiguration currentGraphicsConfiguration = getGraphicsConfigurationForPosition( disclosureButtonLocation );
-		if( currentGraphicsConfiguration == null )
-		{
-			return true;
-		}
-		double bottomYCoordinate = disclosureButtonLocation.getY() + accessTokenDialogHeight + disclosureButtonHeight;
-		double bottomUsableYCoordinateOnScreen = currentGraphicsConfiguration.getBounds().getMaxY()
-				- Toolkit.getDefaultToolkit().getScreenInsets( currentGraphicsConfiguration ).bottom;
-		return bottomYCoordinate <= bottomUsableYCoordinateOnScreen;
-	}
-
-	private GraphicsConfiguration getGraphicsConfigurationForPosition( Point point )
-	{
-		for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
-		{
-			if( graphicsDevice.getDefaultConfiguration().getBounds().contains( point ) )
-			{
-				return graphicsDevice.getDefaultConfiguration();
-			}
-		}
-		return null;
-	}
-
 	private void setAccessTokenFormDialogBoundsBelowTheButton( Point disclosureButtonLocation, JDialog accessTokenFormDialog, int disclosureButtonHeight )
 	{
 		accessTokenFormDialog.setLocation( ( int )disclosureButtonLocation.getX() - ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET,
@@ -199,7 +174,7 @@ public class OAuth2Form extends AbstractAuthenticationForm
 			accessTokenFormDialog.pack();
 			accessTokenFormDialog.setVisible( true );
 			disclosureButton.setText( "▲ Get Token" );
-			if( isEnoughSpaceAvailableBelowTheButton( disclosureButtonLocation, accessTokenFormDialog.getHeight(), source.getHeight() ) )
+			if( UISupport.isEnoughSpaceAvailableBelowComponent( disclosureButtonLocation, accessTokenFormDialog.getHeight(), source.getHeight() ) )
 			{
 				setAccessTokenFormDialogBoundsBelowTheButton( disclosureButtonLocation, accessTokenFormDialog, source.getHeight() );
 			}

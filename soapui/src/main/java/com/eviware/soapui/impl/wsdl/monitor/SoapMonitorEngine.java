@@ -23,4 +23,6 @@ public interface SoapMonitorEngine
 	boolean isRunning();
 
 	boolean isProxy();
+
+	void setIncludedContentTypes( ContentTypes includedContentTypes );
 }

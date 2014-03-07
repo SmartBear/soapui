@@ -16,6 +16,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction;
 import com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction.LaunchForm;
+import com.eviware.soapui.impl.wsdl.monitor.ContentTypes;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitorListenerCallBack;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
@@ -35,8 +36,6 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.mortbay.util.IO;
 
-import javax.mail.internet.ContentType;
-import javax.mail.internet.ParseException;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -44,7 +43,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 public class ProxyServlet implements Servlet
 {
@@ -54,6 +56,7 @@ public class ProxyServlet implements Servlet
 	protected HttpContext httpState = new BasicHttpContext();
 	protected Settings settings;
 	protected final SoapMonitorListenerCallBack listenerCallBack;
+	private ContentTypes includedContentTypes = SoapMonitorAction.defaultContentTypes();
 	static HashSet<String> dontProxyHeaders = new HashSet<String>();
 	static {
 		dontProxyHeaders.add( "proxy-connection" );
@@ -67,8 +70,6 @@ public class ProxyServlet implements Servlet
 		dontProxyHeaders.add( "upgrade" );
 		dontProxyHeaders.add( "content-length" );
 	}
-
-
 
 	public ProxyServlet( final WsdlProject project, final SoapMonitorListenerCallBack listenerCallBack )
 	{
@@ -89,6 +90,13 @@ public class ProxyServlet implements Servlet
 	public String getServletInfo()
 	{
 		return "SoapUI Monitor";
+	}
+
+	public void setIncludedContentTypes( ContentTypes includedContentTypes )
+	{
+		this.includedContentTypes = includedContentTypes != null
+				? includedContentTypes
+				: SoapMonitorAction.defaultContentTypes();
 	}
 
 	public void init( ServletConfig config ) throws ServletException
@@ -272,34 +280,14 @@ public class ProxyServlet implements Servlet
 
 		synchronized( this )
 		{
-			if( checkContentType( method ) )
+			if( contentTypeMatches( method ) )
 			{
 				listenerCallBack.fireAddMessageExchange( capturedData );
 			}
 		}
 	}
 
-	private boolean checkContentType( ExtendedHttpMethod method )
-	{
-		String[] contentTypes = settings
-				.getString( LaunchForm.SET_CONTENT_TYPES, SoapMonitorAction.defaultContentTypes() ).split( "," );
-		return contentTypeMatches(contentTypes, method);
-	}
-
-	protected boolean contentTypeMatches(String[] contentTypes, ExtendedHttpMethod method) {
-		List<ContentType> contentTypelist = new ArrayList<ContentType>();
-		for( String ct : contentTypes )
-		{
-			try
-			{
-				contentTypelist.add( new ContentType(ct.trim()) );
-			}
-			catch( ParseException e )
-			{
-				//ignore
-			}
-		}
-
+	protected boolean contentTypeMatches( ExtendedHttpMethod method) {
 		if( method.hasHttpResponse() )
 		{
 			Header[] headers = method.getHttpResponse().getHeaders( "Content-Type" );
@@ -308,35 +296,12 @@ public class ProxyServlet implements Servlet
 
 			for( Header header : headers )
 			{
-				for( ContentType contentType : contentTypelist )
-				{
-					try
-					{
-						ContentType respondedContentType = new ContentType( header.getValue() );
-						if( contentTypeMatches( contentType, respondedContentType ) )
-						{
-							return true;
-						}
-					}
-					catch( ParseException e )
-					{
-						//ignore
-					}
+				if(includedContentTypes.matches(header.getValue())){
+					return true;
 				}
 			}
 		}
 		return false;
-	}
-
-	private boolean contentTypeMatches( ContentType contentType, ContentType respondedContentType )
-	{
-		// ContentType doesn't take wildcards into account for the primary type, but we want to do that
-		return contentType.match( respondedContentType ) ||
-				( ( contentType.getPrimaryType().charAt( 0 ) == '*'
-						|| respondedContentType.getPrimaryType().charAt( 0 ) == '*' )
-						&& ( contentType.getSubType().charAt( 0 ) == '*'
-						|| respondedContentType.getSubType().charAt( 0 ) == '*'
-						|| contentType.getSubType().equalsIgnoreCase( respondedContentType.getSubType() ) ) );
 	}
 
 	private byte[] getResponseToBytes( ExtendedHttpMethod method, byte[] res )

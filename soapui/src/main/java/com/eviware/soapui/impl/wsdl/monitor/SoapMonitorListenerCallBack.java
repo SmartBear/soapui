@@ -2,7 +2,6 @@ package com.eviware.soapui.impl.wsdl.monitor;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.model.settings.Settings;
 import org.apache.http.HttpRequest;
 
 import javax.servlet.ServletRequest;
@@ -18,10 +17,10 @@ public class SoapMonitorListenerCallBack
 {
 	private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>(
 			MonitorListener.class );
-	private Settings settings;
 
 	public void fireAddMessageExchange( WsdlMonitorMessageExchange messageExchange )
 	{
+		fireOnMessageExchange( messageExchange );
 	}
 
 	public void fireOnMessageExchange( WsdlMonitorMessageExchange messageExchange )
@@ -95,7 +94,7 @@ public class SoapMonitorListenerCallBack
 		listeners.remove( listener );
 	}
 
-	public static class SoapUIListenerSupport<T extends Object>
+	public static class SoapUIListenerSupport<T>
 	{
 		private Set<T> listeners = new HashSet<T>();
 		@SuppressWarnings( "unused" )

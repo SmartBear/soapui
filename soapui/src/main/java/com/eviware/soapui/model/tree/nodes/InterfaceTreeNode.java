@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.model.tree.nodes;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.InterfaceListener;
@@ -24,10 +21,14 @@ import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
 import com.eviware.soapui.model.tree.TreeNodeFactory;
+import com.eviware.soapui.support.UISupport;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for Interface implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -83,11 +84,18 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 
 	private class InternalInterfaceListener implements InterfaceListener
 	{
-		public void requestAdded( Request request )
+		public void requestAdded( final Request request )
 		{
-			SoapUITreeNode operationTreeNode = getTreeModel().getTreeNode( request.getOperation() );
-			if( operationTreeNode != null && operationTreeNode instanceof OperationTreeNode )
-				( ( OperationTreeNode )operationTreeNode ).requestAdded( request );
+			UISupport.invokeAndWaitIfNotInEDT( new Runnable()
+			{
+				@Override
+				public void run()
+				{
+					SoapUITreeNode operationTreeNode = getTreeModel().getTreeNode( request.getOperation() );
+					if( operationTreeNode != null && operationTreeNode instanceof OperationTreeNode )
+						( ( OperationTreeNode )operationTreeNode ).requestAdded( request );
+				}
+			} );
 		}
 
 		public void requestRemoved( Request request )
@@ -97,24 +105,31 @@ public class InterfaceTreeNode extends AbstractModelItemTreeNode<Interface>
 				( ( OperationTreeNode )operationTreeNode ).requestRemoved( request );
 		}
 
-		public void operationAdded( Operation operation )
+		public void operationAdded( final Operation operation )
 		{
-			if( operation instanceof RestResource )
+			UISupport.invokeAndWaitIfNotInEDT( new Runnable()
 			{
-				RestResource restResource = ( RestResource )operation;
-				if( restResource.getParentResource() != null )
+				@Override
+				public void run()
 				{
-					RestResourceTreeNode treeNode = ( RestResourceTreeNode )getTreeModel().getTreeNode(
-							restResource.getParentResource() );
-					treeNode.addChildResource( restResource );
-					return;
+					if( operation instanceof RestResource )
+					{
+						RestResource restResource = ( RestResource )operation;
+						if( restResource.getParentResource() != null )
+						{
+							RestResourceTreeNode treeNode = ( RestResourceTreeNode )getTreeModel().getTreeNode(
+									restResource.getParentResource() );
+							treeNode.addChildResource( restResource );
+							return;
+						}
+					}
+
+					SoapUITreeNode operationTreeNode = TreeNodeFactory.createTreeNode( operation, getTreeModel() );
+
+					operationNodes.add( operationTreeNode );
+					getTreeModel().notifyNodeInserted( operationTreeNode );
 				}
-			}
-
-			SoapUITreeNode operationTreeNode = TreeNodeFactory.createTreeNode( operation, getTreeModel() );
-
-			operationNodes.add( operationTreeNode );
-			getTreeModel().notifyNodeInserted( operationTreeNode );
+			} );
 		}
 
 		public void operationRemoved( Operation operation )

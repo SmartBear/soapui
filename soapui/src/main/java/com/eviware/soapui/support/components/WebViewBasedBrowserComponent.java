@@ -196,7 +196,8 @@ public class WebViewBasedBrowserComponent
 
 	public void release()
 	{
-		// TODO: Check whether we need to do anything here
+		setContent( "" );
+		//TODO: Really dispose the actual webView
 	}
 
 
@@ -327,6 +328,7 @@ public class WebViewBasedBrowserComponent
 
 		private BrowserWindow( PopupFeatures popupFeatures ) throws HeadlessException
 		{
+			setIconImages( SoapUI.getFrameIcons() );
 			browser = new WebViewBasedBrowserComponent( popupFeatures.hasToolbar() );
 			getContentPane().setLayout( new BorderLayout() );
 			getContentPane().add( browser.getComponent() );
