@@ -168,6 +168,11 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		return String.valueOf( MockOperationDispatchStyleConfig.SEQUENCE );
 	}
 
+	public void setResource( RestResource resource )
+	{
+		this.resource = resource;
+	}
+
 	private int getCurrentResponseIndexAndIncrementIndex()
 	{
 		int currentIndex = currentResponseIndex % getMockResponseCount();

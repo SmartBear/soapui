@@ -336,6 +336,8 @@
     <tns:action id="ImportMockService"
                 actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ImportMockService"/>
     <tns:action id="MockAsWar" actionClass="com.eviware.soapui.actions.MockAsWarAction"/>
+    <tns:action id="AddEmptyRestMockResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction"/>
 
     <!-- MockOperation Actions -->
     <tns:action id="OpenRequestForMockOperationAction"
@@ -1080,6 +1082,8 @@
         <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
         <tns:actionMapping actionId="StopMockServiceAction"/>
         <tns:actionMapping actionId="RestartMockServiceAction"/>
+        <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="AddEmptyRestMockResourceAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="DeleteMockServiceAction" keyStroke="DELETE"/>
     </tns:actionGroup>
