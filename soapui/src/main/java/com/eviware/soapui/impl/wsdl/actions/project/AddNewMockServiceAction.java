@@ -25,11 +25,11 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class AddNewMockServiceAction extends AbstractSoapUIAction<WsdlProject>
 {
-	public static final String SOAPUI_ACTION_ID = "AddNewMockServiceAction";
+	public static final String SOAPUI_ACTION_ID = "AddNewWSDLMockServiceAction";
 
 	public AddNewMockServiceAction()
 	{
-		super( "New MockService", "Creates a new MockService in this project" );
+		super( "New SOAP MockService", "Creates a new MockService in this project" );
 		// putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu O" ));
 	}
 
