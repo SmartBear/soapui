@@ -14,7 +14,6 @@ package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
-import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.impl.support.AbstractMockResponse;
 import com.eviware.soapui.impl.wsdl.*;
@@ -36,12 +35,9 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Attachment.AttachmentEncoding;
 import com.eviware.soapui.model.iface.MessagePart;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.settings.CommonSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.StringUtils;
@@ -95,7 +91,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 
 	protected List<FileAttachment<WsdlMockResponse>> attachments = new ArrayList<FileAttachment<WsdlMockResponse>>();
 	private List<HttpAttachmentPart> definedAttachmentParts;
-	private ModelItemIconAnimator<WsdlMockResponse> iconAnimator;
+	private IconAnimator<WsdlMockResponse> iconAnimator;
 	private WsaConfig wsaConfig;
 
 	public WsdlMockResponse( WsdlMockOperation operation, MockResponseConfig config )
@@ -110,7 +106,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		if( !config.isSetEncoding() )
 			config.setEncoding( "UTF-8" );
 
-		iconAnimator = new ModelItemIconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request.gif", 4 );
+		iconAnimator = new IconAnimator<WsdlMockResponse>( this, "/mockResponse.gif", "/exec_request.gif", 4 );
 	}
 
 	@Override

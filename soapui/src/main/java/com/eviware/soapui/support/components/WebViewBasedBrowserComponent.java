@@ -75,6 +75,8 @@ public class WebViewBasedBrowserComponent
 	private String lastLocation;
 	private Set<BrowserWindow> browserWindows = new HashSet<BrowserWindow>();
 
+	private JFXPanel browserPanel;
+
 	public WebViewBasedBrowserComponent( boolean addNavigationBar )
 	{
 		if( SoapUI.isBrowserDisabled() )
@@ -180,12 +182,15 @@ public class WebViewBasedBrowserComponent
 		} );
 	}
 
-	public void handleClose()
+	public void handleClose( boolean cascade )
 	{
-		for( Iterator<BrowserWindow> iterator = browserWindows.iterator(); iterator.hasNext(); )
+		if( cascade )
 		{
-			iterator.next().close();
-			iterator.remove();
+			for( Iterator<BrowserWindow> iterator = browserWindows.iterator(); iterator.hasNext(); )
+			{
+				iterator.next().close();
+				iterator.remove();
+			}
 		}
 
 		for( BrowserListener listener : listeners )
@@ -197,7 +202,7 @@ public class WebViewBasedBrowserComponent
 	public void release()
 	{
 		setContent( "" );
-		//TODO: Really dispose the actual webView
+		browserPanel.setScene(null);
 	}
 
 
@@ -337,7 +342,7 @@ public class WebViewBasedBrowserComponent
 				@Override
 				public void windowClosing( WindowEvent e )
 				{
-					browser.handleClose();
+					browser.handleClose( false );
 				}
 			} );
 		}
@@ -346,7 +351,7 @@ public class WebViewBasedBrowserComponent
 		{
 			setVisible( false );
 			dispose();
-			browser.handleClose();
+			browser.handleClose( true );
 			browser.release();
 		}
 
@@ -359,11 +364,10 @@ public class WebViewBasedBrowserComponent
 
 	private class WebViewInitialization implements Runnable
 	{
-		private final JFXPanel browserPanel;
 
 		public WebViewInitialization( JFXPanel browserPanel )
 		{
-			this.browserPanel = browserPanel;
+			WebViewBasedBrowserComponent.this.browserPanel = browserPanel;
 		}
 
 		public void run()
