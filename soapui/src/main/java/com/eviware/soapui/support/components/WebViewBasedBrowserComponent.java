@@ -325,6 +325,7 @@ public class WebViewBasedBrowserComponent
 
 		private BrowserWindow( PopupFeatures popupFeatures ) throws HeadlessException
 		{
+			setIconImages( SoapUI.getFrameIcons() );
 			browser = new WebViewBasedBrowserComponent( popupFeatures.hasToolbar() );
 			getContentPane().setLayout( new BorderLayout() );
 			getContentPane().add( browser.getComponent() );
