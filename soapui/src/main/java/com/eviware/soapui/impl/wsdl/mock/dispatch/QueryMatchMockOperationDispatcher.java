@@ -12,45 +12,18 @@
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.Action;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import com.eviware.soapui.impl.wsdl.mock.*;
-import com.eviware.soapui.model.mock.MockRequest;
-import com.eviware.soapui.model.mock.MockResult;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationQueryMatchDispatchConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.AbstractPropertyChangeNotifier;
 import com.eviware.soapui.support.StringUtils;
@@ -60,6 +33,21 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDispatcher implements
 		PropertyChangeListener
@@ -77,13 +65,13 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 	private JButton declareNsButton = new JButton( new DeclareNamespacesAction() );
 	private JButton extractFromCurrentButton = new JButton( new ExtractFromCurrentAction() );
 
-	public QueryMatchMockOperationDispatcher( WsdlMockOperation mockOperation )
+	public QueryMatchMockOperationDispatcher( MockOperation mockOperation )
 	{
 		super( mockOperation );
 
 		try
 		{
-			conf = MockOperationQueryMatchDispatchConfig.Factory.parse( mockOperation.getConfig().getDispatchConfig().xmlText() );
+			conf = MockOperationQueryMatchDispatchConfig.Factory.parse( ((WsdlMockOperation)mockOperation).getConfig().getDispatchConfig().xmlText() );
 
 			for( MockOperationQueryMatchDispatchConfig.Query query : conf.getQueryList() )
 			{
@@ -353,7 +341,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 	public static class Factory implements MockOperationDispatchFactory
 	{
-		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		public MockOperationDispatcher build( MockOperation mockOperation )
 		{
 			return new QueryMatchMockOperationDispatcher( mockOperation );
 		}

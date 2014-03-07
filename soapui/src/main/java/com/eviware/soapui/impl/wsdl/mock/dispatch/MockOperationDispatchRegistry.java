@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
+import com.eviware.soapui.model.mock.MockOperation;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 
 public class MockOperationDispatchRegistry
 {
@@ -42,7 +42,7 @@ public class MockOperationDispatchRegistry
 		return factories.keySet().toArray( new String[factories.size()] );
 	}
 
-	public static MockOperationDispatcher buildDispatcher( String type, WsdlMockOperation mockOperation )
+	public static MockOperationDispatcher buildDispatcher( String type, MockOperation mockOperation )
 	{
 		return factories.get( type ).build( mockOperation );
 	}

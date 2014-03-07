@@ -12,14 +12,14 @@
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 
 public class RandomMockOperationDispatcher extends AbstractMockOperationDispatcher
 {
-	public RandomMockOperationDispatcher( WsdlMockOperation mockOperation )
+	public RandomMockOperationDispatcher( MockOperation mockOperation )
 	{
 		super( mockOperation );
 	}
@@ -42,7 +42,7 @@ public class RandomMockOperationDispatcher extends AbstractMockOperationDispatch
 
 	public static class Factory implements MockOperationDispatchFactory
 	{
-		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		public MockOperationDispatcher build( MockOperation mockOperation )
 		{
 			return new RandomMockOperationDispatcher( mockOperation );
 		}

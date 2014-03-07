@@ -1,7 +1,10 @@
 package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.config.BaseMockOperationConfig;
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -17,6 +20,8 @@ public abstract class AbstractMockOperation
 		implements MockOperation, PropertyChangeListener
 {
 	public final static String DISPATCH_PATH_PROPERTY = MockOperation.class.getName() + "@dispatchpath";
+
+	private MockOperationDispatcher dispatcher;
 
 	private List<MockResponseType> responses = new ArrayList<MockResponseType>();
 
@@ -34,6 +39,11 @@ public abstract class AbstractMockOperation
 
 		if( !baseConfig.isSetDefaultResponse() && getMockResponseCount() > 0 )
 			setDefaultResponse( getMockResponseAt( 0 ).getName() );
+
+		if( !config.isSetDispatchStyle() )
+			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
+
+		dispatcher = MockOperationDispatchRegistry.buildDispatcher( getConfig().getDispatchStyle().toString(), this );
 	}
 
 	public void addMockResponse(MockResponseType response)
@@ -123,5 +133,14 @@ public abstract class AbstractMockOperation
 		notifyPropertyChanged( DISPATCH_PATH_PROPERTY, old, dispatchPath );
 	}
 
+	public MockOperationDispatcher getDispatcher()
+	{
+		return dispatcher;
+	}
+
+	public void setDispatcher( MockOperationDispatcher dispatcher )
+	{
+		this.dispatcher = dispatcher;
+	}
 
 }

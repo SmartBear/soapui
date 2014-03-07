@@ -57,7 +57,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	public static final String ICON_NAME = "/mockOperation.gif";
 
 	private WsdlOperation operation;
-	private MockOperationDispatcher dispatcher;
 	private InterfaceListener interfaceListener = new InternalInterfaceListener();
 	private ProjectListener projectListener = new InternalProjectListener();
 	private ImageIcon oneWayIcon;
@@ -104,13 +103,8 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	{
 		super.setupConfig( config );
 
-		if( !config.isSetDispatchStyle() )
-			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
-
 		if( !getConfig().isSetDispatchConfig() )
 			getConfig().addNewDispatchConfig();
-
-		dispatcher = MockOperationDispatchRegistry.buildDispatcher( config.getDispatchStyle().toString(), this );
 
 		createIcons();
 		addListeners();
@@ -211,7 +205,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
 			result.setMockOperation( this );
-			WsdlMockResponse response = ( WsdlMockResponse )dispatcher.selectMockResponse( request, result );
+			WsdlMockResponse response = ( WsdlMockResponse )getDispatcher().selectMockResponse( request, result );
 			if( response == null )
 			{
 				response = getMockResponseByName( getDefaultResponse() );
@@ -241,8 +235,8 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	{
 		super.release();
 
-		if( dispatcher != null )
-			dispatcher.release();
+		if( getDispatcher() != null )
+			getDispatcher().release();
 
 		for( MockResponse response : getMockResponses() )
 		{
@@ -267,6 +261,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
 	{
 		String old = getDispatchStyle();
+		MockOperationDispatcher dispatcher = getDispatcher();
 		if( dispatcher != null && dispatchStyle.equals( old ) )
 			return dispatcher;
 
@@ -280,7 +275,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		if( !getConfig().isSetDispatchConfig() )
 			getConfig().addNewDispatchConfig();
 
-		dispatcher = MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this );
+		setDispatcher( MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this ));
 
 		notifyPropertyChanged( DISPATCH_STYLE_PROPERTY, old, dispatchStyle );
 
@@ -324,11 +319,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 		this.operation = operation;
 
 		notifyPropertyChanged( OPERATION_PROPERTY, oldOperation, operation );
-	}
-
-	public MockOperationDispatcher getMockOperationDispatcher()
-	{
-		return dispatcher;
 	}
 
 	@Override
