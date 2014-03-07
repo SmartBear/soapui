@@ -232,7 +232,18 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	{
 		accessTokenStatusText.setText( "" );
 		accessTokenStatusText.setIcon( DEFAULT_ICON );
+		closeGetAccessTokenDialog();
 	}
+
+	private void closeGetAccessTokenDialog()
+	{
+		if( accessTokenDialog != null )
+		{
+			accessTokenDialog.setVisible( false );
+			accessTokenDialog.dispose();
+		}
+	}
+
 
 	private class EditAutomationScriptsAction extends AbstractAction
 	{
@@ -247,11 +258,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 		@Override
 		public void actionPerformed( ActionEvent e )
 		{
-			if( accessTokenDialog != null )
-			{
-				accessTokenDialog.setVisible( false );
-				accessTokenDialog.dispose();
-			}
+			closeGetAccessTokenDialog();
 			UISupport.showDesktopPanel( new OAuth2ScriptsDesktopPanel( profile ) );
 		}
 	}
