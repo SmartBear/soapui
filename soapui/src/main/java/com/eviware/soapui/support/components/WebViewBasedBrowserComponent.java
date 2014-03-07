@@ -16,8 +16,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -409,14 +407,6 @@ public class WebViewBasedBrowserComponent
 					popupWindow.setSize( 800, 600 );
 					popupWindow.setVisible( true );
 					final WebEngine webEngine = popupWindow.browser.getWebEngine();
-					webEngine.locationProperty().addListener( new InvalidationListener()
-					{
-						@Override
-						public void invalidated( Observable property )
-						{
-							System.out.println( webEngine.getLocation() );
-						}
-					} );
 					return webEngine;
 				}
 			} );
