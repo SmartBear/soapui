@@ -37,4 +37,6 @@ public abstract class XmlEditor<T extends XmlDocument> extends Editor<T>
 
 	@SuppressWarnings( "unchecked" )
 	public abstract XmlSourceEditorView getSourceEditor();
+
+
 }

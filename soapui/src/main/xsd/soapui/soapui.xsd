@@ -1964,11 +1964,9 @@
 
     <xsd:simpleType name="AccessTokenStatus">
         <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="UPDATED_MANUALLY"></xsd:enumeration>
-            <xsd:enumeration value="PENDING"></xsd:enumeration>
+            <xsd:enumeration value="ENTERED_MANUALLY"></xsd:enumeration>
             <xsd:enumeration value="WAITING_FOR_AUTHORIZATION"></xsd:enumeration>
             <xsd:enumeration value="RECEIVED_AUTHORIZATION_CODE"></xsd:enumeration>
-            <xsd:enumeration value="FAILED"></xsd:enumeration>
             <xsd:enumeration value="RETRIEVED_FROM_SERVER"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>

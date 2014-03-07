@@ -12,26 +12,31 @@
 
 package com.eviware.soapui.support.editor.inspectors;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
-import javax.swing.ImageIcon;
-
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.Inspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
+import org.apache.log4j.Logger;
+
+import javax.swing.ImageIcon;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Abstract base-class to be extended by XmlInspectors
- * 
+ *
  * @author ole.matzura
  */
 
 public abstract class AbstractXmlInspector implements XmlInspector
 {
+	public static final Logger log = Logger.getLogger( AbstractXmlInspector.class );
+
 	private final PropertyChangeSupport propertySupport;
 	private String title;
 	private String description;
@@ -39,6 +44,7 @@ public abstract class AbstractXmlInspector implements XmlInspector
 	private XmlEditor editor;
 	private final String inspectorId;
 	private boolean active;
+	private ImageIcon imageIcon;
 
 	protected AbstractXmlInspector( String title, String description, boolean enabled, String inspectorId )
 	{
@@ -60,9 +66,17 @@ public abstract class AbstractXmlInspector implements XmlInspector
 		active = false;
 	}
 
+	@Override
 	public ImageIcon getIcon()
 	{
-		return null;
+		return this.imageIcon;
+	}
+
+	public void setIcon( ImageIcon imageIcon )
+	{
+		ImageIcon old = this.imageIcon;
+		this.imageIcon = imageIcon;
+		propertySupport.firePropertyChange( Inspector.ICON_PROPERTY, old, imageIcon );
 	}
 
 	public void addPropertyChangeListener( PropertyChangeListener listener )
@@ -149,4 +163,22 @@ public abstract class AbstractXmlInspector implements XmlInspector
 	{
 		return false;
 	}
+
+	/**
+	 * Make this inspector visible in the enclosing inspector panel. Obviously, this will only work if the inspector
+	 * is in an inspector panel.
+	 */
+	public void showInPanel()
+	{
+		JInspectorPanel parentPanel = UISupport.findParentWithClass( getComponent(), JInspectorPanel.class );
+		if( parentPanel != null )
+		{
+			parentPanel.activate( this );
+		}
+		else
+		{
+			log.debug("showInPanel() called, but the inspector " + getClass().getSimpleName() + "isn't in a panel");
+		}
+	}
+
 }

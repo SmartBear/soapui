@@ -20,11 +20,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.ConfigurationDialog;
-import com.eviware.soapui.support.components.JButtonBar;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.PreviewCorner;
-import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.GradientPanel;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.swing.SwingUtils;
@@ -44,12 +40,7 @@ import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -1018,6 +1009,16 @@ public class UISupport
 		}
 
 		return Font.decode( DEFAULT_EDITOR_FONT + " " + fontSize );
+	}
+
+	public static <T> T findParentWithClass( Component startComponent, Class<T> expectedClass )
+	{
+		Component currentComponent = startComponent;
+		while( currentComponent != null && !( expectedClass.isAssignableFrom( currentComponent.getClass() ) ) )
+		{
+			currentComponent = currentComponent.getParent();
+		}
+		return ( T )currentComponent;
 	}
 
 	public static char[] promptPassword( String question, String title )

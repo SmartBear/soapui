@@ -25,13 +25,10 @@ import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
-import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 /**
  * Encapsulates values associated with an Oauth2 flow. Mostly they will be input by users, but the "accessToken" and
  * "status" properties will be modified during the OAuth2 interactions.
@@ -80,14 +77,22 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public enum AccessTokenStatus
 	{
-		UPDATED_MANUALLY( "Updated Manually" ),
-		PENDING( "Pending" ),
+		ENTERED_MANUALLY( "Entered Manually" ),
 		WAITING_FOR_AUTHORIZATION( "Waiting for Authorization" ),
 		RECEIVED_AUTHORIZATION_CODE( "Received authorization code" ),
-		FAILED( "Failed to retrieve" ),
-		RETRIEVED_FROM_SERVER( "Retrieved from authorization server" );
+		RETRIEVED_FROM_SERVER( "Retrieved from server" );
 
 		private String description;
+		private static final Map<String, AccessTokenStatus> lookups;
+
+		static
+		{
+			lookups = new HashMap<String, AccessTokenStatus>();
+			for( AccessTokenStatus status : AccessTokenStatus.values() )
+			{
+				lookups.put( status.toString(), status );
+			}
+		}
 
 		AccessTokenStatus( String description )
 		{
@@ -98,6 +103,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		public String toString()
 		{
 			return description;
+		}
+
+		public static AccessTokenStatus byDescription( String description )
+		{
+			return lookups.get( description );
 		}
 	}
 
@@ -177,11 +187,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		setAccessTokenStatus( AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE );
 	}
 
-	public void startAccessTokenFlow()
-	{
-		setAccessTokenStatus( AccessTokenStatus.PENDING );
-	}
-
 	public void applyRetrievedAccessToken( String accessToken )
 	{
 		// Ignore return value in this case: even if it is not a change, it is important to know that a token has been
@@ -197,7 +202,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	/**
 	 * NOTE: This setter should only be used from the GUI, because it also sets the property "accessTokenStatus" to
-	 * UPDATED_MANUALLY
+	 * ENTERED_MANUALLY
 	 *
 	 * @param accessToken the access token supplied by the user
 	 */
@@ -205,7 +210,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		if( doSetAccessToken( accessToken ) )
 		{
-			setAccessTokenStatus( AccessTokenStatus.UPDATED_MANUALLY );
+			setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
 		}
 	}
 
@@ -370,6 +375,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
+	// FIXME We should try to make this and the fired property event into an enum
 	public String getAccessTokenStatus()
 	{
 		if( configuration.getAccessTokenStatus() != null )
@@ -377,6 +383,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			return AccessTokenStatus.valueOf( configuration.getAccessTokenStatus().toString() ).toString();
 		}
 		return null;
+	}
+
+	public AccessTokenStatus getAccesTokenStatusAsEnum()
+	{
+		return AccessTokenStatus.byDescription( getAccessTokenStatus() );
 	}
 
 	public long getAccessTokenExpirationTime()
@@ -434,7 +445,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public boolean shouldReloadAccessTokenAutomatically()
 	{
 		return getRefreshAccessTokenMethod().equals( AUTOMATIC ) && ( !StringUtils.isEmpty( getRefreshToken() ) ||
-				hasAutomationJavaScripts());
+				hasAutomationJavaScripts() );
 	}
 
 	public OAuth2ProfileContainer getContainer()

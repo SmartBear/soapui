@@ -38,7 +38,7 @@ import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Utility for creating simple configuration dialogs
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -61,7 +61,7 @@ public class SwingConfigurationDialogImpl implements ConfigurationDialog
 		this.title = title;
 		this.description = description;
 		this.icon = icon;
-		form = new SimpleForm( new FormLayout( "10px,left:pref,10px,left:pref,5px" ) );
+		form = new SimpleForm( "10px,left:pref,10px,left:pref,5px" );
 
 		actions = new DefaultActionList( "Actions" );
 		if( helpUrl != null )
@@ -224,7 +224,7 @@ public class SwingConfigurationDialogImpl implements ConfigurationDialog
 
 	public void addComboBox( String label, String tooltip )
 	{
-		form.appendComboBox( label, new String[] {}, tooltip );
+		form.appendComboBox( label, new String[] { }, tooltip );
 	}
 
 	public void addComponent( JComponent component )

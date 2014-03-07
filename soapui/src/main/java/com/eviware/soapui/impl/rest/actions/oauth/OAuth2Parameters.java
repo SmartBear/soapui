@@ -40,13 +40,6 @@ public class OAuth2Parameters
 		this.refreshToken = expandProperty( profile, profile.getRefreshToken() );
 	}
 
-
-	public void startAccessTokenFlow()
-	{
-		profile.startAccessTokenFlow();
-	}
-
-
 	/**
 	 * Sets the accessToken property on the wrapped OAuth2Profile instance
 	 *
