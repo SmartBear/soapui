@@ -54,16 +54,18 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 	static final ImageIcon DEFAULT_ICON = null;
 
-
 	private OAuth2Profile profile;
 	private JLabel accessTokenStatusText;
 	private OAuth2AccessTokenStatusChangeManager statusChangeManager;
 	private JDialog accessTokenDialog;
 
-	// FIXME Why not a constructor?
-	public JDialog getComponent( OAuth2Profile profile )
+	public OAuth2GetAccessTokenForm( OAuth2Profile profile )
 	{
 		this.profile = profile;
+	}
+
+	public JDialog getComponent()
+	{
 		SimpleBindingForm accessTokenForm = createSimpleBindingForm( profile );
 		statusChangeManager = new OAuth2AccessTokenStatusChangeManager( this );
 		populateGetAccessTokenForm( accessTokenForm );
