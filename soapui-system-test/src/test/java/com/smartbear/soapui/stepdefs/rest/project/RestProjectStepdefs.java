@@ -122,8 +122,8 @@ public class RestProjectStepdefs
 		verifyEmptyTable( methodEditor );
 	}
 
-	@Then( "Add to REST mock service option is available on REST Request$" )
-	public void addToMockServiceOptionIsAvailable( String menuItemLabel ) throws Throwable
+	@Then( "^“(.*)” option is available on REST Request$" )
+	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
 	{
 		JTreeNodeFixture popupMenu = findRestRequestPopupMenu( getMainWindow( robot ), newProjectIndexInNavigationTree );
 		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( popupMenu, menuItemLabel ) );

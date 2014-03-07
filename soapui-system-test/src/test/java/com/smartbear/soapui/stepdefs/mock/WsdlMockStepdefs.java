@@ -38,8 +38,8 @@ public class WsdlMockStepdefs
 		}
 	}
 
-	@Then( "^Add to MockService option is available$" )
-	public void addToMockServiceOptionIsAvailable( String menuItemLabel ) throws Throwable
+	@Then( "^“(.*)” option is available$" )
+	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
 	{
 		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( rightClickMenu, menuItemLabel ) );
 	}
