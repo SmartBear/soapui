@@ -18,10 +18,21 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author joel.jonsson
@@ -36,6 +47,7 @@ class WebViewNavigationBar
 	private JTextField urlField;
 	private ForwardAction forwardAction;
 	private BackAction backAction;
+	private Color originalFontColor;
 
 	WebViewNavigationBar( )
 	{
@@ -68,14 +80,28 @@ class WebViewNavigationBar
 		{
 			@Override
 			public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
-										String newLocation )
+										final String newLocation )
 			{
 				if( urlField != null )
 				{
-					urlField.setText( newLocation );
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							urlField.setText( newLocation );
+							resetTextFieldDefaults();
+							urlField.setFocusable( false );
+							urlField.setFocusable( true );
+						}
+					} );
 				}
 			}
 		} );
+	}
+
+	public void focusUrlField()
+	{
+		urlField.requestFocus();
 	}
 
 	private JComponent createNavigationBar()
@@ -91,7 +117,42 @@ class WebViewNavigationBar
 		toolbar.add( new ReloadAction() );
 		toolbar.add( urlField );
 		urlField.addActionListener( new UrlEnteredActionListener() );
+		urlField.setText( "Enter URL here" );
+		urlField.setFont( urlField.getFont().deriveFont( Font.ITALIC ) );
+		originalFontColor = urlField.getForeground();
+		urlField.setForeground( new Color( 170, 170, 170 ) );
+		urlField.addKeyListener( new KeyAdapter()
+		{
+			@Override
+			public void keyTyped( KeyEvent e )
+			{
+				removeHintText();
+			}
+		} );
+		urlField.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				removeHintText();
+			}
+		} );
 		return toolbar;
+	}
+
+	private void removeHintText()
+	{
+		if (urlField.getText().equals("Enter URL here"))
+		{
+			urlField.setText("");
+			resetTextFieldDefaults();
+		}
+	}
+
+	private void resetTextFieldDefaults()
+	{
+		urlField.setFont(urlField.getFont().deriveFont( Font.PLAIN ));
+		urlField.setForeground( originalFontColor );
 	}
 
 	Component getComponent()

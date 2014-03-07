@@ -32,6 +32,7 @@ import javafx.util.Callback;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -116,7 +117,22 @@ public class WebViewBasedBrowserComponent
 		{
 			Platform.runLater( webViewInitialization );
 		}
+		Runnable runnable = new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(500);
+				}
+				catch( InterruptedException ignore )
+				{
 
+				}
+				navigationBar.focusUrlField();
+			}
+		};
+		SwingUtilities.invokeLater( runnable );
 	}
 
 	private String readDocumentAsString() throws TransformerException
