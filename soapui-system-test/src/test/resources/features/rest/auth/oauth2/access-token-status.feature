@@ -14,8 +14,8 @@ Feature: Access token status
     And not clicked the Get Access Token button
     Then there is no status icon in the Get Access Token dialog
     And there is no status label in the Get Access Token dialog
-    And there is no status icon besides the the access token field
-    And there is no status label besides the the access token field
+    And there is no status icon besides the access token field
+    And there is no status label besides the access token field
     And the access token input field background color is set to white
     And there is a lock icon on the Auth tab
 
@@ -25,7 +25,7 @@ Feature: Access token status
     Then there is no status icon in the Get Access Token dialog
     And there is no status label in the Get Access Token dialog
     And there is a tick mark status icon besides the the access token field
-    And the status label besides the the access token field is set to Entered Manuallly
+    And the status label besides the the access token field is set to Entered Manually
     And the access token input field background color is set to green
     And there is a tick mark icon on the Auth tab
 
@@ -36,21 +36,21 @@ Feature: Access token status
     And not types or clicks in the browser window
     Then there is a waiting status icon in the Get Access Token dialog
     And the status label in the Get Access Token dialog is set to Waiting for Authorization
-    And there is a waiting status icon besides the the access token field
+    And there is a waiting status icon besides the access token field
     And the status label besides the the access token field is set to Waiting for Authorization
     And the access token input field background color is set to white
     And there is a waiting status icon on the Auth tab
 
-  Scenario: Access token status is set to Recived authorization code when the the authorization code has been recived
+  Scenario: Access token status is set to Received authorization code when the the authorization code has been recived
     Given the user has created a REST project with the Google Tasks API
     And the user has successfully configured its OAuth settings, but entered the wrong Access token URI
     When user clicks on Get access token button in the Get Access Token dialog
     And the user successfully authenticate on the login screen
     And clicks OK on the consent screen
     Then there is a waiting status icon in the Get Access Token dialog
-    And the status label in the Get Access Token dialog is set to Recived authorization code
-    And there is a waiting status icon besides the the access token field
-    And the status label besides the the access token field is set to Recived authorization code
+    And the status label in the Get Access Token dialog is set to Received authorization code
+    And there is a waiting status icon besides the access token field
+    And the status label besides the the access token field is set to Received authorization code
     And the access token input field background color is set to white
     And there is a waiting status icon on the Auth tab
 
