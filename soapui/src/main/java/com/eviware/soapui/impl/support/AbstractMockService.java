@@ -5,9 +5,7 @@ import com.eviware.soapui.config.BaseMockServiceConfig;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
@@ -125,6 +123,27 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		return getConfig().getPath();
 	}
 
+	@Override
+	public void removeMockOperation( MockOperation mockOperation )
+	{
+		int ix = mockOperations.indexOf( mockOperation );
+		if( ix == -1 )
+			throw new RuntimeException( "Unknown MockOperation specified to removeMockOperation" );
+
+		mockOperations.remove( ix );
+		fireMockOperationRemoved( mockOperation );
+		mockOperation.release();
+
+		if( this instanceof WsdlMockService )
+		{
+			((WsdlMockService)this).getConfig().removeMockOperation( ix );
+		}
+		else if( this instanceof RestMockService )
+		{
+			((RestMockService )this).getConfig().removeRestMockAction( ix );
+		}
+	}
+
 	public String getHost()
 	{
 		return getConfig().getHost();
@@ -135,8 +154,19 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		getConfig().setHost( host );
 	}
 
-	public abstract void setPort( int port );
-	public abstract void setPath( String path);
+	public void setPort( int port )
+	{
+		int oldPort = getPort();
+		getConfig().setPort( port );
+		notifyPropertyChanged( PORT_PROPERTY, oldPort, port );
+	}
+
+	public void setPath( String path)
+	{
+		String oldPath = getPath();
+		getConfig().setPath( path );
+		notifyPropertyChanged( PATH_PROPERTY, oldPath, path );
+	}
 
 	@Override
 	public WsdlMockRunner start() throws Exception
@@ -193,6 +223,11 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public WsdlMockRunner getMockRunner()
 	{
 		return mockRunner;
+	}
+
+	public void setMockRunner( WsdlMockRunner mockRunner )
+	{
+		this.mockRunner = mockRunner;
 	}
 
 	public MockRunListener[] getMockRunListeners()

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 import com.eviware.soapui.support.action.swing.ActionList;
+import com.jgoodies.forms.layout.FormLayout;
 
 public abstract class XFormDialogBuilder
 {
@@ -47,4 +48,9 @@ public abstract class XFormDialogBuilder
 	public abstract ActionList buildOkCancelHelpActions( String url );
 
 	public abstract ActionList buildHelpActions( String url );
+
+	public XForm createForm( String name, FormLayout layout )
+	{
+		return createForm( name );
+	}
 }

@@ -18,7 +18,7 @@ public class BrowserListenerAdapter implements BrowserListener
 	}
 
 	@Override
-	public void javaScriptErrorOccurred( String script, String location, Exception error )
+	public void javaScriptExecuted( String script, String errorLocation, Exception error )
 	{
 
 	}

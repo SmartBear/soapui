@@ -60,6 +60,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String FAIL_ON_SCANS_ERRORS_PROPERTY = SecurityTest.class.getName() + "@failOnScansErrors";
 	public final static String FAIL_ON_ERROR_PROPERTY = SecurityTest.class.getName() + "@failOnError";
 	public final static String SKIP_DATASOURCE_LOOP_PROPERTY = SecurityTest.class.getName() + "@skipDataSourceLoop";
+	public static final String ICON_NAME = "/security_test.gif";
 	private WsdlTestCase testCase;
 	private Set<SecurityTestRunListener> securityTestRunListeners = Collections
 			.synchronizedSet( new HashSet<SecurityTestRunListener>() );
@@ -75,7 +76,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
 	{
-		super( config, testCase, "/security_test.gif" );
+		super( config, testCase, ICON_NAME );
 		this.testCase = testCase;
 		if( !getConfig().isSetProperties() )
 			getConfig().addNewProperties();

@@ -5,6 +5,7 @@ import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
@@ -12,7 +13,7 @@ import com.eviware.soapui.support.TimeUtils;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.log4j.Logger;
 
-import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2;
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2_0;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter
 {
@@ -23,7 +24,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 
 	/* setLog() and getLog() should only be used for testing */
 
-	static void setLog(Logger newLog)
+	static void setLog( Logger newLog )
 	{
 		log = newLog;
 	}
@@ -42,16 +43,16 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
 				.getOAuth2ProfileContainer();
 
-		if( !profileContainer.getOAuth2ProfileList().isEmpty() && O_AUTH_2.toString().equals( request.getAuthType() ) )
+		if(O_AUTH_2_0.toString().equals( request.getAuthType() ) )
 		{
-			OAuth2Profile profile = profileContainer.getOAuth2ProfileList().get( 0 );
-			if( StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
+			OAuth2Profile profile = profileContainer.getProfileByName( (( AbstractHttpRequest ) request).getSelectedAuthProfile() );
+			if( profile==null || StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
 			{
 				return;
 			}
 			OAuth2ClientFacade oAuth2Client = getOAuth2ClientFacade();
 
-			if( accessTokenIsExpired( profile ) && profile.shouldReloadAccessTokenAutomatically())
+			if( accessTokenIsExpired( profile ) && profile.shouldReloadAccessTokenAutomatically() )
 			{
 				reloadAccessToken( profile, oAuth2Client );
 			}
@@ -70,7 +71,8 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		long issuedTime = profile.getAccessTokenIssuedTime();
 		long expirationTime = profile.getAccessTokenExpirationTime();
 
-		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < currentTime - issuedTime;
+		//10 second buffer to make sure that it doesn't expire by the time request is sent
+		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < (currentTime +10) - issuedTime;
 
 	}
 
@@ -92,13 +94,13 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 					oAuth2Client.requestAccessToken( profile );
 					profile.waitForAccessTokenStatus( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER,
 							ACCESS_TOKEN_RETRIEVAL_TIMEOUT );
-					if( profile.getAccessTokenStatus().equals(String.valueOf( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER)) )
+					if( profile.getAccessTokenStatus().equals( String.valueOf( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER ) ) )
 					{
 						log.info( "A new access token has been retrieved successfully." );
 					}
 					else
 					{
-						log.warn("OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms");
+						log.warn( "OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms" );
 					}
 				}
 				else

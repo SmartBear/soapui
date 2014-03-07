@@ -28,7 +28,7 @@ public class MediaTypeComboBox extends JComboBox
 
 	public static Object[] getMediaTypes()
 	{
-		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data" };
+		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data", "multipart/mixed" };
 	}
 
 }

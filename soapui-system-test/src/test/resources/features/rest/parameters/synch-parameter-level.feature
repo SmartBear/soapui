@@ -1,8 +1,7 @@
 @Automated @Regression
 Feature: REST request parameter synchronization across REST request, method and resource
 
-  Scenario: By default a parameter is added to RESOURCE level and it is synchronized between request editor and
-  resource editor
+  Scenario: By default a parameter is added to RESOURCE level and it is synchronized between request and resource editors
     Given a new REST project is created
     When user adds a parameter in request editor with name reqParam and value reqParamValue
     Then request editor has parameter with name reqParam and value reqParamValue at row 0
@@ -20,8 +19,7 @@ Feature: REST request parameter synchronization across REST request, method and 
     Then method editor has parameter with name methodParam and value methodParamValue at row 0
     And request editor has parameter with name methodParam and value methodParamValue at row 0
 
-  Scenario: A parameter is moved from method to resource when the level is changed from METHOD to RESOURCE in request
-  editor
+  Scenario: A parameter is moved from method to resource when the level is changed from METHOD to RESOURCE in request editor
     Given a new REST project is created
     When user adds a parameter in method editor with name methodParam and value methodParamValue
     And  user adds a parameter in request editor with name reqParam and value reqParamValue

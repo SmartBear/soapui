@@ -31,6 +31,7 @@ import java.util.List;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 /**
  * Encapsulates values associated with an Oauth2 flow. Mostly they will be input by users, but the "accessToken" and
  * "status" properties will be modified during the OAuth2 interactions.
@@ -50,6 +51,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
+
 	public static final String REFRESH_ACCESS_TOKEN_METHOD_PROPERTY = "refreshAccessTokenMethod";
 	public static final String OAUTH2_FLOW_PROPERTY = "oAuth2Flow";
 	public static final String JAVA_SCRIPTS_PROPERTY = "javaScripts";
@@ -81,7 +83,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		UPDATED_MANUALLY( "Updated Manually" ),
 		PENDING( "Pending" ),
 		WAITING_FOR_AUTHORIZATION( "Waiting for Authorization" ),
-		RECEIVED_AUTHORIZATION_CODE( "Received authorzation code" ),
+		RECEIVED_AUTHORIZATION_CODE( "Received authorization code" ),
 		FAILED( "Failed to retrieve" ),
 		RETRIEVED_FROM_SERVER( "Retrieved from authorization server" );
 
@@ -129,7 +131,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public enum RefreshAccessTokenMethods
 	{
 		AUTOMATIC,
-		MANUAL;
+		MANUAL
 	}
 
 	private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -143,6 +145,21 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		pcs = new PropertyChangeSupport( this );
 	}
 
+	public String getName()
+	{
+		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
+		if(StringUtils.isEmpty( configuration.getName()))
+		{
+			return "OAuth 2.0 - Profile 1";
+		}
+
+		return configuration.getName();
+	}
+
+	public void setName( String newName )
+	{
+		configuration.setName( newName );
+	}
 
 	public boolean hasAutomationJavaScripts()
 	{
@@ -513,7 +530,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			notifyAll();
 		}
-
 		String oldValueAsString = oldValue == null ? null : oldValue.toString();
 		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status.toString() );
 	}

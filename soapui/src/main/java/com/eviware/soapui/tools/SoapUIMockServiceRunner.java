@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.model.mock.MockRunContext;
 import org.apache.commons.cli.CommandLine;
 
@@ -118,9 +119,16 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 		for( int c = 0; c < project.getMockServiceCount(); c++ )
 		{
-			MockService ms = project.getMockServiceAt( c );
-			if( mockService == null || ms.getName().equals( mockService ) )
-				runMockService( ( WsdlMockService )ms );
+			MockService mockService = project.getMockServiceAt( c );
+			if( this.mockService == null || mockService.getName().equals( this.mockService ) )
+				runMockService( mockService );
+		}
+
+		for( int c = 0; c < project.getRestMockServiceCount(); c++ )
+		{
+			MockService mockService = project.getRestMockServiceAt( c );
+			if( this.mockService == null || mockService.getName().equals( this.mockService ) )
+				runMockService( mockService );
 		}
 
 		log.info( "Started " + runners.size() + " runner" + ( ( runners.size() == 1 ) ? "" : "s" ) );
@@ -188,7 +196,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	 * @param mockService
 	 */
 
-	public void runMockService( WsdlMockService mockService )
+	public void runMockService( MockService mockService )
 	{
 		try
 		{
@@ -199,7 +207,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 				mockService.setPort( Integer.parseInt( port ) );
 
 			mockService.addMockRunListener( new LogListener() );
-			WsdlMockRunner runner = mockService.start();
+			MockRunner runner = mockService.start();
 			runner.setLogEnabled( false );
 			runners.add( runner );
 		}

@@ -26,25 +26,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class OAuthConfigTest
 {
+	public static final String PROFILE_NAME = "Profile";
 	private OAuth2Profile oAuth2Profile;
 	private String projectFileName = "OAuthTestProject.xml";
 
 	@Before
 	public void setUp() throws XmlException, IOException, SoapUIException
 	{
-		WsdlProject project = new WsdlProject();
+		WsdlProject project = createNewProjectWithRESTInterface();
 
-		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
-		restService.addNewResource( "Resource", "/test" );
-
-		List<OAuth2Profile> oAuth2Profiles = project.getOAuth2ProfileContainer().getOAuth2ProfileList();
-		assertThat( oAuth2Profiles.size(), is( 1 ) );
-		oAuth2Profile = oAuth2Profiles.get( 0 );
+		oAuth2Profile =  project.getOAuth2ProfileContainer().addNewOAuth2Profile( PROFILE_NAME );
 		oAuth2Profile.setClientID( "google" );
 		oAuth2Profile.setAccessTokenURI( "http://google.com/accessTokenURI" );
 		oAuth2Profile.setAuthorizationURI( "http://google.com/auth" );
@@ -64,6 +61,21 @@ public class OAuthConfigTest
 			file.delete();
 		}
 	}
+
+	@Test
+	public void theProfileListIsEmptyByDefault() throws XmlException, IOException, SoapUIException
+	{
+		WsdlProject project = createNewProjectWithRESTInterface();
+
+		assertThat( project.getOAuth2ProfileContainer().getOAuth2ProfileList(), is( empty() ));
+	}
+
+	@Test
+	public void savesProfileWithName()
+	{
+		assertThat( oAuth2Profile.getName(), is( PROFILE_NAME ) );
+	}
+
 
 	@Test
 	public void basicOAuthConfigIsProjectSpecific() throws Exception
@@ -91,11 +103,21 @@ public class OAuthConfigTest
 
 	private void assertOAuth2ProfileFields( OAuth2Profile savedOAuth2Profile )
 	{
+		assertThat( savedOAuth2Profile.getName(), is( oAuth2Profile.getName() ) );
 		assertThat( savedOAuth2Profile.getClientID(), is( oAuth2Profile.getClientID() ) );
 		assertThat( savedOAuth2Profile.getAccessTokenURI(), is( oAuth2Profile.getAccessTokenURI() ) );
 		assertThat( savedOAuth2Profile.getAuthorizationURI(), is( oAuth2Profile.getAuthorizationURI() ) );
 		assertThat( savedOAuth2Profile.getClientSecret(), is( oAuth2Profile.getClientSecret() ) );
 		assertThat( savedOAuth2Profile.getAccessToken(), is( oAuth2Profile.getAccessToken() ) );
 		assertThat( savedOAuth2Profile.getScope(), is( oAuth2Profile.getScope() ) );
+	}
+
+	private WsdlProject createNewProjectWithRESTInterface() throws XmlException, IOException, SoapUIException
+	{
+		WsdlProject project = new WsdlProject();
+
+		RestService restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
+		restService.addNewResource( "Resource", "/test" );
+		return project;
 	}
 }

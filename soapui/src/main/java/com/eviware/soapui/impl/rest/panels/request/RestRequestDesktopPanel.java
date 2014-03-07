@@ -124,44 +124,6 @@ public class RestRequestDesktopPanel extends
 		return methodPanel;
 	}
 
-	protected class TextPanelWithTopLabel extends JPanel
-	{
-
-		JLabel textLabel;
-		JTextField textField;
-
-
-		TextPanelWithTopLabel( String label, String text, JTextField textField )
-		{
-			textLabel = new JLabel( label );
-			this.textField = textField;
-			textField.setText( text );
-			setToolTipText( text );
-			super.setLayout( new BorderLayout() );
-			super.add( textLabel, BorderLayout.NORTH );
-			super.add( textField, BorderLayout.SOUTH );
-		}
-
-		public String getText()
-		{
-			return textField.getText();
-		}
-
-		public void setText( String text )
-		{
-			textField.setText( text );
-			setToolTipText( text );
-		}
-
-		@Override
-		public void setToolTipText( String text )
-		{
-			super.setToolTipText( text );
-			textLabel.setToolTipText( text );
-			textField.setToolTipText( text );
-		}
-	}
-
 	private void addResourceAndQueryField( JXToolBar toolbar )
 	{
 		if( !( getRequest() instanceof RestTestRequestInterface ) )

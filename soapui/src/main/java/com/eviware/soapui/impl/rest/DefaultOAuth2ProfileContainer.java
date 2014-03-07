@@ -20,15 +20,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		this.project = project;
 		this.configuration = configuration;
 
-		// Pre load the container with an empty profile at the project initialization rather than in the request
-		if( configuration.getOAuth2Profile() == null )
-		{
-			oAuth2ProfileList.add( new OAuth2Profile( this, configuration.addNewOAuth2Profile() ) );
-		}
-		else
-		{
-			oAuth2ProfileList.add( new OAuth2Profile( this, configuration.getOAuth2Profile() ) );
-		}
+		buildOAuth2ProfileList(  );
 	}
 
 	@Override
@@ -44,18 +36,59 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	}
 
 	@Override
+	public ArrayList<String> getOAuth2ProfileNameList()
+	{
+		ArrayList<String> profileNameList = new ArrayList<String>();
+		for( OAuth2Profile profile : getOAuth2ProfileList() )
+		{
+			profileNameList.add( profile.getName() );
+		}
+		return profileNameList;
+	}
+
+	@Override
+	public OAuth2Profile getProfileByName( String profileName )
+	{
+		for( OAuth2Profile profile : getOAuth2ProfileList() )
+		{
+			if( profile.getName().equals( profileName ) )
+			{
+				return profile;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public void release()
 	{
 		//FIXME: Add implementation when we implement the GUI with listeners
 	}
 
 	@Override
-	public OAuth2Profile addNewOAuth2Profile()
+	public OAuth2Profile addNewOAuth2Profile(String profileName)
 	{
-		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, configuration.addNewOAuth2Profile() );
-		oAuth2ProfileList.add( oAuth2Profile );
+		OAuth2ProfileConfig profileConfig = configuration.addNewOAuth2Profile();
+		profileConfig.setName( profileName );
+
+		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, profileConfig );
+		buildOAuth2ProfileList( );
 
 		return oAuth2Profile;
+	}
+
+	@Override
+	public void removeProfile( String profileName )
+	{
+		for( int count = 0; count < configuration.sizeOfOAuth2ProfileArray(); count++ )
+		{
+			if( configuration.getOAuth2ProfileArray( count ).getName().equals( profileName ) )
+			{
+				configuration.removeOAuth2Profile( count );
+				break;
+			}
+		}
+		buildOAuth2ProfileList( );
 	}
 
 	@Override
@@ -63,6 +96,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	{
 		return configuration;
 	}
+
 
 	@Override
 	public PropertyExpansion[] getPropertyExpansions()
@@ -75,6 +109,15 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		}
 
 		return result.toArray();
+	}
+
+	private void buildOAuth2ProfileList( )
+	{
+		oAuth2ProfileList.clear();
+		for( OAuth2ProfileConfig profileConfig : configuration.getOAuth2ProfileList() )
+		{
+			oAuth2ProfileList.add( new OAuth2Profile( this, profileConfig ) );
+		}
 	}
 
 }

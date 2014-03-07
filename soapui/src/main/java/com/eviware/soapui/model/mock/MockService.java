@@ -28,10 +28,12 @@ import com.eviware.soapui.model.project.Project;
 // TODO: some things in AbstractMockRunner that is inherited from far above should probably makes its way in here
 public interface MockService extends TestModelItem, Releasable
 {
-	public final static String PATH_PROPERTY = WsdlMockService.class.getName() + "@path";
+	public final static String PATH_PROPERTY = MockService.class.getName() + "@path";
 	public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
 
 	public Project getProject();
+
+	public List<MockOperation> getMockOperationList();
 
 	public int getMockOperationCount();
 
@@ -39,9 +41,15 @@ public interface MockService extends TestModelItem, Releasable
 
 	public MockOperation getMockOperationByName( String name );
 
+	public void removeMockOperation( MockOperation mockOperation );
+
 	public String getPath();
 
+	public void setPath( String path );
+
 	public int getPort();
+
+	public void setPort( int i );
 
 	public MockRunner getMockRunner();
 
@@ -62,8 +70,6 @@ public interface MockService extends TestModelItem, Releasable
 	public void fireMockResponseAdded( MockResponse mockResponse );
 
 	public void fireMockResponseRemoved( MockResponse mockResponse );
-
-	public List<MockOperation> getMockOperationList();
 
 	public boolean getBindToHostOnly();
 }

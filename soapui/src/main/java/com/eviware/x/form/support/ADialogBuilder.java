@@ -33,6 +33,7 @@ import com.eviware.x.impl.swing.JMultilineLabelTextField;
 import com.eviware.x.impl.swing.JPasswordFieldFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
 import com.eviware.x.impl.swing.JTableFormField;
+import com.jgoodies.forms.layout.FormLayout;
 
 /**
  * Builds XFormDialogs from AForm/AField annotated classes/interfaces
@@ -44,10 +45,14 @@ public class ADialogBuilder
 {
 	public static XFormDialog buildDialog( Class<? extends Object> formClass )
 	{
-		return buildDialog( formClass, null );
+		return buildDialog( formClass, null, null );
 	}
 
 	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions )
+	{
+		return buildDialog( formClass, actions, null ) ;
+	}
+	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions, FormLayout layout )
 	{
 		AForm formAnnotation = formClass.getAnnotation( AForm.class );
 		if( formAnnotation == null )
@@ -58,7 +63,7 @@ public class ADialogBuilder
 		MessageSupport messages = MessageSupport.getMessages( formClass );
 
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
-		XForm form = builder.createForm( "Basic" );
+		XForm form = createForm( builder, layout );
 
 		for( Field field : formClass.getFields() )
 		{
@@ -90,14 +95,26 @@ public class ADialogBuilder
 		return dialog;
 	}
 
+	private static XForm createForm( XFormDialogBuilder builder, FormLayout layout )
+	{
+		if(layout==null)
+		{
+			return builder.createForm( "Basic" );
+		}
+		else
+		{
+			return builder.createForm( "Basic",  layout );
+		}
+	}
+
 	/**
 	 * Allow to use custom Ok, Cancel buttons...
-	 * 
+	 *
 	 * This means user have to add control for closing dialog.
-	 * 
+	 *
 	 * @param formClass
 	 * @param actions
-	 * @param okCancel
+	 * @param useDefaultOkCancel
 	 * @return
 	 */
 	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions,
@@ -115,7 +132,7 @@ public class ADialogBuilder
 		MessageSupport messages = MessageSupport.getMessages( formClass );
 
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
-		XForm form = builder.createForm( "Basic" );
+		XForm form = createForm( builder, null );
 
 		for( Field field : formClass.getFields() )
 		{
@@ -367,6 +384,9 @@ public class ADialogBuilder
 		case RADIOGROUP_TOP_BUTTON :
 			field = form.addComponent( name, new XFormRadioGroupTopButtonPosition( values ) );
 			break;
+		case COMBOBOX :
+				field = form.addComboBox( name, values,  description );
+				break;
 		default :
 			System.out.println( "Unsupported field type: " + type );
 		}

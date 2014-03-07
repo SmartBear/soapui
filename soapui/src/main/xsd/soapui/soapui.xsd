@@ -235,6 +235,7 @@
                     <xsd:element name="request" type="tns:CompressedString"
                         minOccurs="1" maxOccurs="1">
                     </xsd:element>
+                    <xsd:element name="originalUri" type="xsd:string" minOccurs="0" maxOccurs="1"></xsd:element>
                     <xsd:element name="assertion" type="tns:TestAssertion"
                         maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
@@ -563,14 +564,18 @@
         	<xsd:element name="domain" type="xsd:string" maxOccurs="1"
         		minOccurs="0">
         	</xsd:element>
-        	<xsd:element name="authType">
+            <xsd:element  name="selectedAuthProfile" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+            <xsd:element  name="addedBasicAuthenticationTypes" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+            <xsd:element  name="preemptive" type = "xsd:boolean" maxOccurs="1" minOccurs="0"/>
+            <xsd:element name="authType">
         		<xsd:simpleType>
         			<xsd:restriction base="xsd:string">
         				<xsd:enumeration value="Global HTTP Settings"></xsd:enumeration>
         				<xsd:enumeration value="Preemptive"></xsd:enumeration>
                         <xsd:enumeration value="NTLM"></xsd:enumeration>
                         <xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
-                        <xsd:enumeration value="OAuth 2"></xsd:enumeration>
+                        <xsd:enumeration value="OAuth 2.0"></xsd:enumeration>
+                        <xsd:enumeration value="No Authorization"></xsd:enumeration>
                     </xsd:restriction>
         		</xsd:simpleType>
         	</xsd:element>
@@ -1755,8 +1760,8 @@
             <xsd:attribute name="timeStamp" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
-    
-    
+
+
     <xsd:element name="TestOnDemandLocationsRequest">
         <xsd:complexType>
             <xsd:sequence>
@@ -1768,11 +1773,11 @@
                         </xsd:sequence>
                         <xsd:attribute name="api_version" type="xsd:string"/>
                     </xsd:complexType>
-                </xsd:element>            
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
-    
+
       <xsd:element name="TestOnDemandUploadRequest">
         <xsd:complexType>
             <xsd:sequence>
@@ -1784,7 +1789,7 @@
                         </xsd:sequence>
                         <xsd:attribute name="api_version" type="xsd:string"/>
                     </xsd:complexType>
-                </xsd:element>            
+                </xsd:element>
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
@@ -1794,13 +1799,13 @@
             <xsd:element name="UserAgent" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandLocationBody">
         <xsd:sequence>
             <xsd:element name="Command" type="tns:TestOnDemandCommand"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandUploadBody">
         <xsd:sequence>
             <xsd:element name="Command" type="tns:TestOnDemandCommand"/>
@@ -1808,23 +1813,23 @@
             <xsd:element name="Keystore" type="tns:TestOnDemandKeystore"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandCommand">
         <xsd:sequence>
             <xsd:element name="Name" type="xsd:string"/>
             <xsd:element name="Parameters" type="xsd:string"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandTxn">
         <xsd:sequence>
             <xsd:element name="TestSuite" type="tns:TestOnDemandTestSuite"/>
             <xsd:element name="TestCase" type="tns:TestOnDemandTestCase"/>
             <xsd:element name="Content" type="tns:TestOnDemandContent"/>
-            <xsd:element name="Password" type="tns:TestOnDemandProjectPassword"/>            
+            <xsd:element name="Password" type="tns:TestOnDemandProjectPassword"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
    <xsd:complexType name="TestOnDemandTestSuite">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1840,7 +1845,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandContent">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1857,14 +1862,14 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandKeystore">
         <xsd:sequence>
             <xsd:element name="File" type="tns:TestOnDemandFile"/>
             <xsd:element name="Password" type="tns:TestOnDemandKeystorePassword"/>
         </xsd:sequence>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandFile">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1872,7 +1877,7 @@
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
-    
+
     <xsd:complexType name="TestOnDemandKeystorePassword">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
@@ -1946,7 +1951,7 @@
     <xsd:complexType name="OAuth2ProfileContainer">
         <xsd:sequence>
             <xsd:element name="oAuth2Profile" type="tns:OAuth2Profile"
-                         maxOccurs="1" minOccurs="0"></xsd:element>
+                         maxOccurs="unbounded" minOccurs="0"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -1971,6 +1976,7 @@
 
     <xsd:complexType name="OAuth2Profile">
         <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"></xsd:element>
             <xsd:element name="clientID" type="xsd:string"></xsd:element>
             <xsd:element name="clientSecret" type="xsd:string"></xsd:element>
             <xsd:element name="authorizationURI" type="xsd:string"></xsd:element>

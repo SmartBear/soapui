@@ -12,8 +12,8 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockoperation;
 
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -23,19 +23,19 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author Ole.Matzura
  */
 
-public class DeleteMockOperationAction extends AbstractSoapUIAction<WsdlMockOperation>
+public class DeleteMockOperationAction extends AbstractSoapUIAction<MockOperation>
 {
 	public DeleteMockOperationAction()
 	{
-		super( "Remove", "Removes this MockOperation" );
+		super( "Remove", "Removes this node" );
 	}
 
-	public void perform( WsdlMockOperation mockOperation, Object param )
+	public void perform( MockOperation mockOperation, Object param )
 	{
 		if( UISupport.confirm( "Remove MockOperation [" + mockOperation.getName() + "] from MockService ["
 				+ mockOperation.getMockService().getName() + "]", "Remove MockOperation" ) )
 		{
-			WsdlMockService mockService = mockOperation.getMockService();
+			MockService mockService = mockOperation.getMockService();
 			mockService.removeMockOperation( mockOperation );
 		}
 	}

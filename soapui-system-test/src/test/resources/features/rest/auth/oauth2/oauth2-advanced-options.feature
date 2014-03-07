@@ -4,7 +4,7 @@ Feature: OAuth2 Advanced options
   Scenario Outline: Changes selected in OAuth2 advanced options dialog are set to profile
     Given a new REST project is created
     And the user clicks on the Auth tab
-    And clicks on the OAuth 2 Authorization Type
+    And the user creates an OAuth 2.0 profile with name OAuth 2.0 - Profile
     And user clicks on Advanced options button
     When user selects access token position <accessTokenPosition>
     And selects refresh method <refreshMethod>

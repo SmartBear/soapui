@@ -1,26 +1,22 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.rest.panels.request.TextPanelWithTopLabel;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockServiceListener;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.support.ProjectListenerAdapter;
-import com.eviware.soapui.model.util.ModelItemNames;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.ExtendedComboBoxModel;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
@@ -29,6 +25,10 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -36,11 +36,9 @@ import java.util.ArrayList;
 public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAction>
 {
 	private JList responseList;
-	private JComboBox defaultResponseCombo;
 	private ResponseListModel responseListModel;
-	private JComponentInspector<JComponent> dispatchInspector;
 	private MockOperationDispatcher dispatcher;
-	private InternalProjectListener projectListener = new InternalProjectListener();
+	private JInspectorPanel inspectorPanel;
 
 	public RestMockActionDesktopPanel( RestMockAction mockOperation )
 	{
@@ -53,6 +51,12 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	private void buildUI()
 	{
 		add( buildToolbar(), BorderLayout.NORTH );
+
+
+		inspectorPanel = JInspectorPanelFactory.build( buildResponseList() );
+		inspectorPanel.setDefaultDividerLocation( 0.5F );
+		add( inspectorPanel.getComponent(), BorderLayout.CENTER );
+		add( new JLabel( "Responses are dispatched sequentially" ), BorderLayout.SOUTH );
 	}
 
 	private JComponent buildResponseList()
@@ -79,7 +83,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 				ActionList actions = super.getActionsForRow( list, row );
 
 				actions.insertAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-						getModelItem(), null, "/addToMockService.gif" ), 0 );
+						getModelItem(), null, "/addToRestMockAction.gif" ), 0 );
 
 				actions.insertAction( SwingActionDelegate.createDelegate(
 						OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif" ), 1 );
@@ -97,7 +101,7 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 				{
 					defaultActions = new DefaultActionList();
 					defaultActions.addAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-							getModelItem(), null, "/addToMockService.gif" ) );
+							getModelItem(), null, "/addToRestMockAction.gif" ) );
 				}
 
 				return defaultActions;
@@ -117,39 +121,66 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/mockResponse.gif" ) ) );
+				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/addToRestMockAction.gif" ) ) );
 
 		return toolbar;
-	}
-
-	private JComponent buildDispatchEditor()
-	{
-		// TODO: implement
-		return null;
 	}
 
 	private Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.addSpace( 3 );
+		toolbar.setLayout( new BorderLayout() );
 
-		toolbar.addFixed( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/addToMockService.gif" ) ) );
-		toolbar.addFixed( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif" ) ) );
-		toolbar.addUnrelatedGap();
+		Box methodBox = Box.createHorizontalBox();
+		methodBox.add( createMethodComboBox() );
+		methodBox.add ( Box.createHorizontalStrut( 10 ));
+		toolbar.add( methodBox, BorderLayout.WEST );
 
-		ModelItemNames<WsdlInterface> names = new ModelItemNames<WsdlInterface>( ModelSupport.getChildren( getModelItem()
-				.getMockService().getProject(), WsdlInterface.class ) );
-
+		toolbar.add( createResourcePathTextField(), BorderLayout.CENTER );
 
 		return toolbar;
+	}
+
+	private JComponent createResourcePathTextField()
+	{
+		final JTextField resourcePathEditor = new JTextField(  );
+		resourcePathEditor.addKeyListener( new KeyAdapter()
+		{
+			@Override
+			public void keyReleased( KeyEvent e )
+			{
+				getModelItem().setResourcePath( resourcePathEditor.getText() );
+			}
+		} );
+		return new TextPanelWithTopLabel( "Resource Path", getModelItem().getResourcePath(), resourcePathEditor );
+	}
+
+	private JComponent createMethodComboBox()
+	{
+		JPanel comboPanel = new JPanel( new BorderLayout(  ) );
+
+		comboPanel.add( new JLabel( "Method" ), BorderLayout.NORTH );
+
+		final JComboBox methodCombo = new JComboBox( HttpMethod.getMethods() );
+
+		methodCombo.setSelectedItem( getModelItem().getMethod() );
+		methodCombo.setToolTipText( "Set desired HTTP method" );
+		methodCombo.addItemListener( new ItemListener()
+		{
+			public void itemStateChanged( ItemEvent e )
+			{
+				getModelItem().setMethod( ( HttpMethod )methodCombo.getSelectedItem() );
+			}
+		} );
+
+		comboPanel.add( methodCombo, BorderLayout.SOUTH );
+
+		return comboPanel;
 	}
 
 	public boolean onClose( boolean canCancel )
 	{
 
-		getModelItem().getMockService().getProject().removeProjectListener( projectListener );
 		responseListModel.release();
 
 		if( dispatcher != null )
@@ -207,11 +238,10 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 			if( response.getMockOperation() != getModelItem() )
 				return;
 
-			responses.add( ( WsdlMockResponse )response );
+			responses.add( response );
 			response.addPropertyChangeListener( this );
 			fireIntervalAdded( this, responses.size() - 1, responses.size() - 1 );
 
-			defaultResponseCombo.addItem( response.getName() );
 		}
 
 		public void mockResponseRemoved( MockResponse response )
@@ -224,21 +254,15 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 			response.removePropertyChangeListener( this );
 			fireIntervalRemoved( this, ix, ix );
 
-			defaultResponseCombo.removeItem( response.getName() );
 		}
 
 		public void propertyChange( PropertyChangeEvent arg0 )
 		{
-			if( arg0.getPropertyName().equals( WsdlMockOperation.NAME_PROPERTY ) )
+			if( arg0.getPropertyName().equals( RestMockAction.NAME_PROPERTY ) )
 			{
 				int ix = responses.indexOf( arg0.getSource() );
 				fireContentsChanged( this, ix, ix );
 
-				ExtendedComboBoxModel model = ( ExtendedComboBoxModel )defaultResponseCombo.getModel();
-				model.setElementAt( arg0.getNewValue(), ix );
-
-				if( model.getSelectedItem().equals( arg0.getOldValue() ) )
-					model.setSelectedItem( arg0.getNewValue() );
 			}
 		}
 
@@ -282,20 +306,6 @@ public class RestMockActionDesktopPanel extends ModelItemDesktopPanel<RestMockAc
 		}
 	}
 
-	private final class InternalProjectListener extends ProjectListenerAdapter
-	{
-		@Override
-		public void interfaceAdded( Interface iface )
-		{
-			//TODO: implement
-		}
-
-		@Override
-		public void interfaceRemoved( Interface iface )
-		{
-		 // TODO: implement
-		}
-	}
 
 }
 

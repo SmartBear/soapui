@@ -105,6 +105,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public final static String RESOURCE_ROOT_PROPERTY = WsdlProject.class.getName() + "@resourceRoot";
 	private static final String XML_FILE_TYPE = "XML Files (*.xml)";
 	private static final String XML_EXTENSION = ".xml";
+	public static final String ICON_NAME = "/project.gif";
 
 	private WorkspaceImpl workspace;
 	protected String path;
@@ -185,7 +186,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 	public WsdlProject( String path, WorkspaceImpl workspace, boolean create, boolean open, String tempName,
 							  String projectPassword )
 	{
-		super( null, workspace, "/project.gif" );
+		super( null, workspace, ICON_NAME );
 
 		this.workspace = workspace;
 		this.path = path;

@@ -56,7 +56,6 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private byte[] rawResponseBody;
 	private int requestContentPos = -1;
 	private String xmlContent;
-	private boolean downloadIncludedResources;
 	private Attachment[] attachments = new Attachment[0];
 	protected HTMLPageSourceDownloader downloader;
 	private int statusCode;
@@ -132,10 +131,10 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 		initHeaders( httpMethod );
 
-		if( this.httpRequest.get() instanceof HttpRequest )
+		AbstractHttpRequestInterface<?> requestInterface = this.httpRequest.get();
+		if( requestInterface instanceof HttpRequest )
 		{
-			downloadIncludedResources = this.httpRequest.get() != null ? ( ( HttpRequest )this.httpRequest
-					.get() ).getDownloadIncludedResources() : false;
+			boolean downloadIncludedResources = ( ( HttpRequest )requestInterface ).getDownloadIncludedResources();
 
 			if( downloadIncludedResources )
 			{
@@ -177,7 +176,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 			attachments = new Attachment[1];
 			try
 			{
-				attachments[0] = downloader.createAttachment( rawResponseData, url, ( HttpRequest )httpRequest.get() );
+				attachments[0] = downloader.createAttachment( rawResponseData, url, httpRequest.get() );
 			}
 			catch( IOException e )
 			{
@@ -204,7 +203,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					rawResponse.write( extractStatusLine( httpMethod ).getBytes() );
 					rawResponse.write( "\r\n".getBytes() );
 				}
-				catch( Throwable e )
+				catch( Exception ignore )
 				{
 				}
 			}

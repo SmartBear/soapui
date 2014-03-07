@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
@@ -8,7 +9,7 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
 public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
 {
 	private RestResource resource = null;
+	private int currentResponseIndex = 0;
 
 	public RestMockAction( RestMockService mockService, RESTMockActionConfig config )
 	{
@@ -40,10 +42,23 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		resource = request.getResource();
 	}
 
-	public static String getIconName(RESTMockActionConfig methodConfig)
+	public static String getIconName( RESTMockActionConfig methodConfig )
 	{
-		String method = StringUtils.isNullOrEmpty( methodConfig.getMethod() ) ? "get" : methodConfig.getMethod().toLowerCase();
-		return "/" + method + "_method.gif";
+		if( methodConfig.isSetMethod() )
+		{
+			return getIconName( methodConfig.getMethod() );
+		}
+		return getDefaultIcon();
+	}
+
+	private static String getIconName( String method )
+	{
+		return "/mock_" + method.toLowerCase() + "_method.gif";
+	}
+
+	public static String getDefaultIcon()
+	{
+		return getIconName( HttpMethod.GET.name() );
 	}
 
 	@Override
@@ -101,7 +116,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
 
 			result.setMockOperation( this );
-			RestMockResponse response = getMockResponseAt( 0 );
+			RestMockResponse response = getMockResponseAt( getCurrentResponseIndexAndIncrementIndex() );
 
 			if( response == null )
 			{
@@ -132,6 +147,9 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setMethod( HttpMethod method)
 	{
 		getConfig().setMethod( method.name() );
+		setIcon( UISupport.createImageIcon( getIconName( method.name() ) ));
+
+		notifyPropertyChanged( "httpMethod", null, this );
 	}
 
 	public HttpMethod getMethod()
@@ -142,5 +160,25 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setResourcePath( String path )
 	{
 		getConfig().setResourcePath( path );
+		notifyPropertyChanged( "resourcePath", null, this );
 	}
+
+	public String getDispatchStyle()
+	{
+		return String.valueOf( MockOperationDispatchStyleConfig.SEQUENCE );
+	}
+
+	private int getCurrentResponseIndexAndIncrementIndex()
+	{
+		int currentIndex = currentResponseIndex % getMockResponseCount();
+		incrementCurrentResponseIndex();
+
+		return currentIndex;
+	}
+
+	private void incrementCurrentResponseIndex()
+	{
+		currentResponseIndex++;
+	}
+
 }

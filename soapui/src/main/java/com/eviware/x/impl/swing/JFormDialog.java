@@ -88,6 +88,12 @@ public class JFormDialog extends SwingXFormDialog
 		resized = true;
 	}
 
+	@Override
+	public ActionList getActionsList()
+	{
+		return actions;
+	}
+
 	public XForm[] getForms()
 	{
 		return new XForm[] { form };
