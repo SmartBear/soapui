@@ -29,22 +29,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.DefaultKeyboardFocusManager;
-import java.awt.HeadlessException;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -129,7 +121,10 @@ public class WebViewBasedBrowserComponent
 				{
 
 				}
-				navigationBar.focusUrlField();
+				if( navigationBar != null )
+				{
+					navigationBar.focusUrlField();
+				}
 			}
 		};
 		SwingUtilities.invokeLater( runnable );
