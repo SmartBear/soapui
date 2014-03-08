@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.mock;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.ScriptMockOperationDispatcher;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.commons.httpclient.HttpStatus;
@@ -145,16 +146,16 @@ public class RestMockActionTest
 		RestMockResult mockResult;
 		mockAction.addNewMockResponse( "response 2" );
 
-		mockResult= mockAction.dispatchRequest( restMockRequest );
+		mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
 
-		mockResult= mockAction.dispatchRequest( restMockRequest );
+		mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
 
-		mockResult= mockAction.dispatchRequest( restMockRequest );
+		mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
 
-		mockResult= mockAction.dispatchRequest( restMockRequest );
+		mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
 	}
 
@@ -163,12 +164,23 @@ public class RestMockActionTest
 	{
 		RestMockResult mockResult;
 
-		mockResult= mockAction.dispatchRequest( restMockRequest );
+		mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
 
-		mockResult= mockAction.dispatchRequest( restMockRequest );
+		mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 1" ) );
+	}
 
+	@Test
+	public void testResponsesAreDispatchedWithScript() throws Exception
+	{
+		mockAction.addNewMockResponse( "response 2" );
+
+		mockAction.setDispatcher( new ScriptMockOperationDispatcher( mockAction ) );
+		mockAction.setScript( "return 'response 2'" );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
 	}
 
 

@@ -16,11 +16,9 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Enumeration;
 
-public class BaseMockResult<MockRequestType extends MockRequest,
-		MockOperationType extends MockOperation,
-		MockResponseType extends MockResponse> implements MockResult
+public class BaseMockResult<MockRequestType extends MockRequest, MockOperationType extends MockOperation> implements MockResult
 {
-	private MockResponseType mockResponse;
+	private MockResponse mockResponse;
 	private String responseContent;
 	private long timeTaken;
 	private long timestamp;
@@ -87,7 +85,7 @@ public class BaseMockResult<MockRequestType extends MockRequest,
 		return responseHeaders;
 	}
 
-	public void setMockResponse( MockResponseType mockResponse )
+	public void setMockResponse( MockResponse mockResponse )
 	{
 		this.mockResponse = mockResponse;
 		mockRequest.getRequestContext().setMockResponse( mockResponse );

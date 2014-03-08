@@ -9,6 +9,7 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.UISupport;
 
 import java.beans.PropertyChangeEvent;
@@ -108,32 +109,31 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 	public RestMockResult dispatchRequest( RestMockRequest request ) throws DispatchException
 	{
+		if( getMockResponseCount() == 0 )
+			throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
+
 		try
 		{
 			RestMockResult result = new RestMockResult( request );
 
-			if( getMockResponseCount() == 0 )
-				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
+			MockResponse mockResponse = getDispatcher().selectMockResponse( request, result );
+
+			result.setMockResponse( mockResponse );
 
 			result.setMockOperation( this );
-			RestMockResponse response = getMockResponseAt( getCurrentResponseIndexAndIncrementIndex() );
+			//RestMockResponse response = getMockResponseAt( getCurrentResponseIndexAndIncrementIndex() );
 
-			if( response == null )
-			{
-				throw new UnknownError( "not implemented" );
-			}
-
-			if( response == null )
+			if( mockResponse == null )
 			{
 				throw new DispatchException( "Failed to find MockResponse" );
 			}
 
-			result.setMockResponse( response );
-			response.execute( request, result );
+			result.setMockResponse( mockResponse );
+			mockResponse.execute( request, result );
 
 			return result;
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
 			throw new DispatchException( e );
 		}

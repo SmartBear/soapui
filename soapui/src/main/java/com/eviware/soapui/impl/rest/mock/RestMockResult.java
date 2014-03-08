@@ -6,7 +6,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.model.mock.MockRequest;
 
-public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockAction, RestMockResponse>
+public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockAction>
 {
 	public RestMockResult( RestMockRequest request )
 	{

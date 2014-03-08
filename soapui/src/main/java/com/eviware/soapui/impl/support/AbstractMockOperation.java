@@ -32,12 +32,11 @@ public abstract class AbstractMockOperation
 
 	protected void setupConfig( BaseMockOperationConfigType config )
 	{
-		BaseMockOperationConfig baseConfig = (BaseMockOperationConfig)config;
 		Operation operation = getOperation();
 		if( !config.isSetName() )
 			config.setName( operation == null ? "<missing operation>" : operation.getName() );
 
-		if( !baseConfig.isSetDefaultResponse() && getMockResponseCount() > 0 )
+		if( !config.isSetDefaultResponse() && getMockResponseCount() > 0 )
 			setDefaultResponse( getMockResponseAt( 0 ).getName() );
 
 		if( !config.isSetDispatchStyle() )
@@ -101,7 +100,7 @@ public abstract class AbstractMockOperation
 		finally
 		{
 			mockResponse.release();
-			removeResponseFromConfig( ix ); // wow - do we really know that the ordering is the same.....
+			removeResponseFromConfig( ix );
 		}
 	}
 
@@ -109,13 +108,13 @@ public abstract class AbstractMockOperation
 
 	public String getDefaultResponse()
 	{
-		return ((BaseMockOperationConfig)getConfig()).getDefaultResponse();
+		return getConfig().getDefaultResponse();
 	}
 
 	public void setDefaultResponse( String defaultResponse )
 	{
 		String old = getDefaultResponse();
-		((BaseMockOperationConfig)getConfig()).setDefaultResponse( defaultResponse );
+		getConfig().setDefaultResponse( defaultResponse );
 		// noone is listening? notifyPropertyChanged( WsdlMockOperation.DEFAULT_RESPONSE_PROPERTY, old, defaultResponse );
 	}
 

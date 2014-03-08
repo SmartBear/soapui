@@ -30,16 +30,13 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
 
 	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 	{
-		synchronized( result.getMockOperation() )
-		{
-			if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
-				currentDispatchIndex = 0;
+		if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
+			currentDispatchIndex = 0;
 
-			MockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
+		MockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
 
-			currentDispatchIndex++ ;
-			return mockResponse;
-		}
+		currentDispatchIndex++ ;
+		return mockResponse;
 	}
 
 	@Override

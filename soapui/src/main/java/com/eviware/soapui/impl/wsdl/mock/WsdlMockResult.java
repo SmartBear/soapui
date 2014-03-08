@@ -26,7 +26,7 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
  * @author ole.matzura
  */
 
-public class WsdlMockResult extends BaseMockResult<WsdlMockRequest, WsdlMockOperation, WsdlMockResponse>
+public class WsdlMockResult extends BaseMockResult<WsdlMockRequest, WsdlMockOperation>
 {
 	public WsdlMockResult( WsdlMockRequest request )
 	{
