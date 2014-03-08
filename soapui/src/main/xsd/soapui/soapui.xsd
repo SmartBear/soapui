@@ -909,8 +909,11 @@
                   <xsd:element name="defaultResponse" type="xsd:string"
                              maxOccurs="1" minOccurs="0">
                   </xsd:element>
-                   <xsd:element name="dispatchStyle" type="tns:MockOperationDispatchStyle"
+                  <xsd:element name="dispatchStyle" type="tns:MockOperationDispatchStyle"
                                 minOccurs="0">
+                  </xsd:element>
+                  <xsd:element name="dispatchConfig" type="xsd:anyType"
+                                maxOccurs="1" minOccurs="0">
                   </xsd:element>
                   <!--
                   please note that dispatchPath is used to store the script for the script dispatcher
@@ -928,8 +931,6 @@
         <xsd:complexContent>
             <xsd:extension base="tns:BaseMockOperation">
                 <xsd:sequence>
-                    <xsd:element name="dispatchConfig" type="xsd:anyType"
-                                 maxOccurs="1" minOccurs="0"></xsd:element>
                     <xsd:element name="response" type="tns:MockResponse"
                         maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>

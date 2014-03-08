@@ -20,6 +20,7 @@ public abstract class AbstractMockOperation
 		implements MockOperation, PropertyChangeListener
 {
 	public final static String DISPATCH_PATH_PROPERTY = MockOperation.class.getName() + "@dispatchpath";
+	public final static String DISPATCH_STYLE_PROPERTY = MockOperation.class.getName() + "@dispatchstyle";
 
 	private MockOperationDispatcher dispatcher;
 
@@ -140,6 +141,36 @@ public abstract class AbstractMockOperation
 	public void setDispatcher( MockOperationDispatcher dispatcher )
 	{
 		this.dispatcher = dispatcher;
+	}
+
+	public String getDispatchStyle()
+	{
+		return String.valueOf( getConfig().isSetDispatchStyle() ? getConfig().getDispatchStyle()
+				: MockOperationDispatchStyleConfig.SEQUENCE );
+	}
+
+	public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
+	{
+		String old = getDispatchStyle();
+		MockOperationDispatcher dispatcher = getDispatcher();
+		if( dispatcher != null && dispatchStyle.equals( old ) )
+			return dispatcher;
+
+		getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ) );
+
+		if( dispatcher != null )
+		{
+			dispatcher.release();
+		}
+
+		if( !getConfig().isSetDispatchConfig() )
+			getConfig().addNewDispatchConfig();
+
+		setDispatcher( MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this ));
+
+		notifyPropertyChanged( DISPATCH_STYLE_PROPERTY, old, dispatchStyle );
+
+		return dispatcher;
 	}
 
 }

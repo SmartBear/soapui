@@ -28,8 +28,6 @@ import org.apache.log4j.Logger;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
-import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.ModelItem;
@@ -52,7 +50,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	@SuppressWarnings( "unused" )
 	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
 
-	public final static String DISPATCH_STYLE_PROPERTY = WsdlMockOperation.class.getName() + "@dispatchstyle";
 	public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
 	public static final String ICON_NAME = "/mockOperation.gif";
 
@@ -250,36 +247,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 			operation.getInterface().removeInterfaceListener( interfaceListener );
 			operation.getInterface().removePropertyChangeListener( WsdlInterface.NAME_PROPERTY, this );
 		}
-	}
-
-	public String getDispatchStyle()
-	{
-		return String.valueOf( getConfig().isSetDispatchStyle() ? getConfig().getDispatchStyle()
-				: MockOperationDispatchStyleConfig.SEQUENCE );
-	}
-
-	public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
-	{
-		String old = getDispatchStyle();
-		MockOperationDispatcher dispatcher = getDispatcher();
-		if( dispatcher != null && dispatchStyle.equals( old ) )
-			return dispatcher;
-
-		getConfig().setDispatchStyle( MockOperationDispatchStyleConfig.Enum.forString( dispatchStyle ) );
-
-		if( dispatcher != null )
-		{
-			dispatcher.release();
-		}
-
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
-
-		setDispatcher( MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this ));
-
-		notifyPropertyChanged( DISPATCH_STYLE_PROPERTY, old, dispatchStyle );
-
-		return dispatcher;
 	}
 
 	// this may seem to be unused but is actually used in the MockOperation Properties view - don't remove it
