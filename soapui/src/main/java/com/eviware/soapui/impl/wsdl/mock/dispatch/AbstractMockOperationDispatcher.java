@@ -46,7 +46,7 @@ public abstract class AbstractMockOperationDispatcher implements PropertyChangeN
 
 	public void release()
 	{
-		mockOperation = null;
+		//mockOperation = null;
 	}
 
 	public MockOperation getMockOperation()

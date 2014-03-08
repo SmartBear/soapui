@@ -43,6 +43,9 @@ public abstract class AbstractMockOperation
 		if( !config.isSetDispatchStyle() )
 			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
 
+		if( !getConfig().isSetDispatchConfig() )
+			getConfig().addNewDispatchConfig();
+
 		dispatcher = MockOperationDispatchRegistry.buildDispatcher( getConfig().getDispatchStyle().toString(), this );
 	}
 

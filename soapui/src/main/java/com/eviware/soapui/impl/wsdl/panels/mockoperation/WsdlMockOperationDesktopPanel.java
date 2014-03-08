@@ -65,6 +65,12 @@ public class WsdlMockOperationDesktopPanel extends AbstractMockOperationDesktopP
 		mockOperation.getMockService().getProject().addProjectListener( projectListener );
 	}
 
+	@Override
+	protected String getAddToMockOperationIconPath()
+	{
+		return "/addToMockService.gif";
+	}
+
 	protected Component buildToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();

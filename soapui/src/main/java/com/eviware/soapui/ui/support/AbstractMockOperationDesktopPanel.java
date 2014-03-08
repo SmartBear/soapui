@@ -4,7 +4,6 @@ import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.ModelItem;
@@ -92,7 +91,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 				ActionList actions = super.getActionsForRow( list, row );
 
 				actions.insertAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-						getModelItem(), null, "/addToMockService.gif" ), 0 );
+						getModelItem(), null, getAddToMockOperationIconPath() ), 0 );
 
 				actions.insertAction( SwingActionDelegate.createDelegate(
 						OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif" ), 1 );
@@ -110,7 +109,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 				{
 					defaultActions = new DefaultActionList();
 					defaultActions.addAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-							getModelItem(), null, "/addToMockService.gif" ) );
+							getModelItem(), null, getAddToMockOperationIconPath() ) );
 				}
 
 				return defaultActions;
@@ -126,11 +125,13 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 		return UISupport.createTabPanel( tabs, true );
 	}
 
+	protected abstract String getAddToMockOperationIconPath();
+
 	private JComponent buildMockResponseListToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/mockResponse.gif" ) ) );
+				NewMockResponseAction.SOAPUI_ACTION_ID, getModelItem(), null, getAddToMockOperationIconPath() ) ) );
 
 		return toolbar;
 	}
@@ -219,13 +220,13 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 	public class ResponseListModel extends AbstractListModel implements ListModel, MockServiceListener,
 			PropertyChangeListener
 	{
-		private java.util.List<WsdlMockResponse> responses = new ArrayList<WsdlMockResponse>();
+		private java.util.List<MockResponse> responses = new ArrayList<MockResponse>();
 
 		public ResponseListModel()
 		{
 			for( int c = 0; c < getModelItem().getMockResponseCount(); c++ )
 			{
-				WsdlMockResponse mockResponse = ( WsdlMockResponse )getModelItem().getMockResponseAt( c );
+				MockResponse mockResponse = getModelItem().getMockResponseAt( c );
 				mockResponse.addPropertyChangeListener( this );
 
 				responses.add( mockResponse );
@@ -259,7 +260,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 			if( response.getMockOperation() != getModelItem() )
 				return;
 
-			responses.add( ( WsdlMockResponse )response );
+			responses.add( response );
 			response.addPropertyChangeListener( this );
 			fireIntervalAdded( this, responses.size() - 1, responses.size() - 1 );
 
@@ -296,9 +297,9 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 
 		public void release()
 		{
-			for( WsdlMockResponse operation : responses )
+			for( MockResponse response : responses )
 			{
-				operation.removePropertyChangeListener( this );
+				response.removePropertyChangeListener( this );
 			}
 
 			getModelItem().getMockService().removeMockServiceListener( this );

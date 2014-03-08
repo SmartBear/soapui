@@ -100,9 +100,6 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	{
 		super.setupConfig( config );
 
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
-
 		createIcons();
 		addListeners();
 	}
