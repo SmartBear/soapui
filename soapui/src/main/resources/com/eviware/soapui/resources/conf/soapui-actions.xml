@@ -710,7 +710,6 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddNewTestCaseAction"
                            keyStroke="menu N" iconPath="/testCase.gif"/>
-        <tns:actionMapping actionId="CreateWebTestCaseAction"/>
         <tns:actionMapping actionId="CloneTestSuiteAction"
                            keyStroke="F9"/>
         <tns:actionMapping actionId="SeperatorAction"/>
