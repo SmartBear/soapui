@@ -35,17 +35,22 @@ public abstract class AbstractMockOperationDispatcher implements PropertyChangeN
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
 
+	@Override
 	public JComponent getEditorComponent()
 	{
 		return new JPanel();
 	}
 
+	@Override
 	public void releaseEditorComponent()
 	{
 	}
 
+	@Override
 	public void release()
 	{
+		// TODO : the following line causes NullPointerException when getSettings
+		// TODO : will removing it cause a memory leak?
 		//mockOperation = null;
 	}
 

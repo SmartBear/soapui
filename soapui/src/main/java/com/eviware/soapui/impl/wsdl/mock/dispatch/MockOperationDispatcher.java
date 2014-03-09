@@ -15,11 +15,12 @@ package com.eviware.soapui.impl.wsdl.mock.dispatch;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 
-public interface MockOperationDispatcher
+public interface MockOperationDispatcher extends Releasable
 {
 	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException;
@@ -27,6 +28,4 @@ public interface MockOperationDispatcher
 	public JComponent getEditorComponent();
 
 	public void releaseEditorComponent();
-
-	public void release();
 }
