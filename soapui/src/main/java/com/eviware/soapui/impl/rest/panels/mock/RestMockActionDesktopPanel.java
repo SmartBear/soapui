@@ -1,11 +1,13 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.panels.request.TextPanelWithTopLabel;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockOperation;
@@ -99,6 +101,14 @@ public class RestMockActionDesktopPanel extends AbstractMockOperationDesktopPane
 		comboPanel.add( methodCombo, BorderLayout.SOUTH );
 
 		return comboPanel;
+	}
+
+	protected String[] getAvailableDispatchTypes()
+	{
+		return new String[]{
+			MockOperationDispatchStyleConfig.SEQUENCE.toString(),
+			MockOperationDispatchStyleConfig.SCRIPT.toString()
+		};
 	}
 
 }

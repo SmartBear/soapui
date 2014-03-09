@@ -143,7 +143,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 		ButtonBarBuilder builder = new ButtonBarBuilder();
 		builder.addFixed( new JLabel( "Dispatch: " ) );
 		builder.addRelatedGap();
-		dispatchCombo = new JComboBox( MockOperationDispatchRegistry.getDispatchTypes() );
+		dispatchCombo = new JComboBox( getAvailableDispatchTypes() );
 		dispatchCombo.setSelectedItem( null );
 
 		dispatchCombo.addItemListener( new ItemListener()
@@ -195,6 +195,11 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 		dispatchCombo.setSelectedItem( getModelItem().getDispatchStyle() );
 
 		return dispatchPanel;
+	}
+
+	protected String[] getAvailableDispatchTypes()
+	{
+		return MockOperationDispatchRegistry.getDispatchTypes();
 	}
 
 	protected abstract Component buildToolbar();
