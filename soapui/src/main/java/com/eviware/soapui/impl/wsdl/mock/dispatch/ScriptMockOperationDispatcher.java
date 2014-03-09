@@ -13,9 +13,9 @@
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
@@ -49,7 +49,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 		scriptEnginePool = new ScriptEnginePool( mockOperation );
 		scriptEnginePool.setScript( mockOperation.getScript() );
 
-		mockOperation.addPropertyChangeListener( WsdlMockOperation.DISPATCH_PATH_PROPERTY, this );
+		mockOperation.addPropertyChangeListener( AbstractMockOperation.DISPATCH_PATH_PROPERTY, this );
 	}
 
 	public MockResponse selectMockResponse( MockRequest request, MockResult result )
@@ -98,7 +98,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 		releaseEditorComponent();
 
-		getMockOperation().removePropertyChangeListener( WsdlMockOperation.DISPATCH_PATH_PROPERTY, this );
+		getMockOperation().removePropertyChangeListener( AbstractMockOperation.DISPATCH_PATH_PROPERTY, this );
 
 		super.release();
 	}

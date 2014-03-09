@@ -1,9 +1,9 @@
 package com.eviware.soapui.ui.support;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.ModelItem;
@@ -282,7 +282,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 
 		public void propertyChange( PropertyChangeEvent arg0 )
 		{
-			if( arg0.getPropertyName().equals( WsdlMockOperation.NAME_PROPERTY ) )
+			if( arg0.getPropertyName().equals( ModelItem.NAME_PROPERTY ) )
 			{
 				int ix = responses.indexOf( arg0.getSource() );
 				fireContentsChanged( this, ix, ix );

@@ -121,7 +121,6 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 			result.setMockResponse( mockResponse );
 
 			result.setMockOperation( this );
-			//RestMockResponse response = getMockResponseAt( getCurrentResponseIndexAndIncrementIndex() );
 
 			if( mockResponse == null )
 			{
@@ -163,22 +162,9 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		notifyPropertyChanged( "resourcePath", null, this );
 	}
 
-	public String getDispatchStyle()
-	{
-		return String.valueOf( MockOperationDispatchStyleConfig.SEQUENCE );
-	}
-
 	public void setResource( RestResource resource )
 	{
 		this.resource = resource;
-	}
-
-	private int getCurrentResponseIndexAndIncrementIndex()
-	{
-		int currentIndex = currentResponseIndex % getMockResponseCount();
-		incrementCurrentResponseIndex();
-
-		return currentIndex;
 	}
 
 	private void incrementCurrentResponseIndex()
