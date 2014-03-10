@@ -43,9 +43,6 @@ public abstract class AbstractMockOperation
 		if( !config.isSetDispatchStyle() )
 			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
 
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
-
 		dispatcher = MockOperationDispatchRegistry.buildDispatcher( getConfig().getDispatchStyle().toString(), this );
 	}
 
@@ -165,9 +162,6 @@ public abstract class AbstractMockOperation
 		{
 			dispatcher.release();
 		}
-
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
 
 		setDispatcher( MockOperationDispatchRegistry.buildDispatcher( dispatchStyle, this ));
 
