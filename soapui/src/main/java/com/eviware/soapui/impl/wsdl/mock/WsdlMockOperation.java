@@ -21,6 +21,8 @@ import javax.swing.ImageIcon;
 
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.iface.InterfaceListener;
 import com.eviware.soapui.model.project.ProjectListener;
 import org.apache.log4j.Logger;
@@ -98,6 +100,9 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
 	protected void setupConfig( MockOperationConfig config )
 	{
+		if( !getConfig().isSetDispatchConfig() )
+			getConfig().addNewDispatchConfig();
+
 		super.setupConfig( config );
 
 		createIcons();
@@ -222,6 +227,15 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 			else
 				throw new DispatchException( e );
 		}
+	}
+
+	@Override
+	public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
+	{
+		if( !getConfig().isSetDispatchConfig() )
+			getConfig().addNewDispatchConfig();
+
+		return super.setDispatchStyle( dispatchStyle );
 	}
 
 	@Override

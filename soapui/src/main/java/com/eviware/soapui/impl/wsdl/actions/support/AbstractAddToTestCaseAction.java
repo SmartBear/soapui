@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.support;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -23,6 +20,9 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Base class for actions that add TestSteps to a TestCase
@@ -37,7 +37,7 @@ public abstract class AbstractAddToTestCaseAction<T extends ModelItem> extends A
 		super( name, description );
 	}
 
-	protected WsdlTestCase getTargetTestCase( WsdlProject project )
+	public static WsdlTestCase getTargetTestCase( WsdlProject project )
 	{
 		List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
 		List<WsdlTestSuite> testSuites = new ArrayList<WsdlTestSuite>();
@@ -139,7 +139,7 @@ public abstract class AbstractAddToTestCaseAction<T extends ModelItem> extends A
 		return testCase;
 	}
 
-	protected WsdlTestCase addNewTestSuiteAndTestCase( WsdlProject project )
+	protected static WsdlTestCase addNewTestSuiteAndTestCase( WsdlProject project )
 	{
 		String testSuiteName = UISupport.prompt( "Missing TestSuite in project, enter name to create",
 				"Create TestSuite", "TestSuite " + ( project.getTestSuiteCount() + 1 ) );

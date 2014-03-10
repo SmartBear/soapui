@@ -73,7 +73,7 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 
 	private String promptForServiceName( String title, WsdlProject project )
 	{
-		String defaultName = "MockService " + ( project.getRestMockServiceCount() + 1 );
+		String defaultName = "REST MockService " + ( project.getRestMockServiceCount() + 1 );
 		return UISupport.prompt( "Enter name of new MockService", title, defaultName );
 	}
 
