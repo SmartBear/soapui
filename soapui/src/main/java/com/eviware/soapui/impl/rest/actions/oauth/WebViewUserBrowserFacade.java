@@ -48,7 +48,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		popupWindow.setBounds( 100, 100, 800, 600 );
 		popupWindow.setVisible( true );
 
-		browserComponent.navigate( url.toString(), null );
+		browserComponent.navigate( url.toString() );
 	}
 
 

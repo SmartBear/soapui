@@ -12,38 +12,14 @@
 
 package com.eviware.soapui.support.xml;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringMap;
 import net.sf.saxon.expr.Token;
 import net.sf.saxon.expr.Tokenizer;
-
 import org.apache.log4j.Logger;
 import org.apache.xerces.util.SecurityManager;
 import org.apache.xml.serialize.OutputFormat;
@@ -69,12 +45,32 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.support.Constants;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringMap;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.StringTokenizer;
 
 /**
  * General XML-related utilities
@@ -539,16 +535,6 @@ public final class XmlUtils
 		return parse( new InputSource( new StringReader( xmlString ) ) );
 	}
 
-	public static void dumpParserErrors( XmlObject xmlObject )
-	{
-		List<?> errors = new ArrayList<Object>();
-		xmlObject.validate( new XmlOptions().setErrorListener( errors ) );
-		for( Iterator<?> i = errors.iterator(); i.hasNext(); )
-		{
-			System.out.println( i.next() );
-		}
-	}
-
 	public static String transferValues( String source, String dest )
 	{
 		if( StringUtils.isNullOrEmpty( source ) || StringUtils.isNullOrEmpty( dest ) )
@@ -701,10 +687,12 @@ public final class XmlUtils
 
 	public static synchronized String prettyPrintXml( XmlObject xml )
 	{
+		if( xml == null )
+		{
+			return null;
+		}
 		try
 		{
-			if( xml == null )
-				return null;
 
 			StringWriter writer = new StringWriter();
 			XmlUtils.serializePretty( xml, writer );
@@ -719,7 +707,7 @@ public final class XmlUtils
 
 	public static String declareXPathNamespaces( WsdlInterface iface )
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		buf.append( "declare namespace soap='" );
 		buf.append( iface.getSoapVersion().getEnvelopeNamespace() );
 		buf.append( "';\n" );
@@ -728,12 +716,12 @@ public final class XmlUtils
 		{
 			Collection<String> namespaces = iface.getWsdlContext().getInterfaceDefinition().getDefinedNamespaces();
 			int c = 1;
-			for( Iterator<String> i = namespaces.iterator(); i.hasNext(); )
+			for( String namespace : namespaces )
 			{
 				buf.append( "declare namespace ns" );
 				buf.append( c++ );
 				buf.append( "='" );
-				buf.append( i.next() );
+				buf.append( namespace );
 				buf.append( "';\n" );
 			}
 		}
@@ -794,10 +782,6 @@ public final class XmlUtils
 		int nsCnt = 1;
 
 		String namespaceURI = node.getNamespaceURI();
-		// if( node.getNodeType() == Node.TEXT_NODE )
-		// {
-		// node = node.getParentNode();
-		// }
 		if( node.getNodeType() == Node.ATTRIBUTE_NODE )
 		{
 			if( namespaceURI != null && namespaceURI.length() > 0 )
@@ -819,17 +803,12 @@ public final class XmlUtils
 		{
 			node = ( ( Document )node ).getDocumentElement();
 		}
-		// else if( node.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )
-		// {
-		// node =
-		// ((DocumentFragment)node).getOwnerDocument().getDocumentElement();
-		// }
 
 		if( node.getNodeType() == Node.ELEMENT_NODE )
 		{
 			int index = anonymous ? 0 : findNodeIndex( node );
 
-			String pc = null;
+			String pc;
 
 			namespaceURI = node.getNamespaceURI();
 			if( namespaceURI != null && namespaceURI.length() > 0 )
@@ -880,7 +859,7 @@ public final class XmlUtils
 			int index = anonymous ? 0 : findNodeIndex( node );
 
 			String ns = nsMap.get( namespaceURI );
-			String pc = null;
+			String pc;
 
 			if( ns == null && namespaceURI != null && namespaceURI.length() > 0 )
 			{
@@ -894,8 +873,6 @@ public final class XmlUtils
 				}
 
 				nsMap.put( namespaceURI, prefix );
-				ns = nsMap.get( namespaceURI );
-
 				pc = prefix + ":" + node.getLocalName();
 			}
 			else if( ns != null )
@@ -999,7 +976,7 @@ public final class XmlUtils
 
 		int nsCnt = 0;
 
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		Set<String> prefixes = new HashSet<String>();
 		Set<String> usedPrefixes = new HashSet<String>();
 
@@ -1141,7 +1118,7 @@ public final class XmlUtils
 			if( item.getParentNode() == elm
 					&& item.getNodeType() == Node.ELEMENT_NODE
 					&& ( ( Element )item ).getAttributeNS( Constants.XSI_NS, "type" ).endsWith(
-							":" + schemaType.getName().getLocalPart() ) )
+					":" + schemaType.getName().getLocalPart() ) )
 			{
 				list.add( ( Element )item );
 			}
@@ -1470,26 +1447,9 @@ public final class XmlUtils
 				return false;
 
 			XmlObject.Factory.parse( str );
-
-			// SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-			// saxParserFactory.setNamespaceAware( true );
-			// saxParserFactory.setValidating( false );
-			// saxParserFactory.setFeature( XMLConstants.FEATURE_SECURE_PROCESSING,
-			// true );
-			// SAXParser p = saxParserFactory.newSAXParser();
-			// p.parse( new StringInputStream( str ), new HandlerBase()
-			// {
-			//
-			// @Override
-			// public InputSource resolveEntity( String arg0, String arg1 ) throws
-			// SAXException
-			// {
-			// return null;
-			// }
-			// } );
 			return true;
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
 			return false;
 		}
@@ -1528,7 +1488,7 @@ public final class XmlUtils
 		if( StringUtils.isNullOrEmpty( xml ) )
 			return xml;
 
-		XmlObject xmlObject = null;
+		XmlObject xmlObject;
 		XmlCursor cursor = null;
 		try
 		{
@@ -1690,8 +1650,6 @@ public final class XmlUtils
 	public static Document addResultSetXmlPart( Element resultsElement, ResultSet rs, Document xmlDocumentResult )
 			throws SQLException
 	{
-		// resultSet = statement.getResultSet();
-		// connection to an ACCESS MDB
 		ResultSetMetaData rsmd = rs.getMetaData();
 		Element resultSetElement = xmlDocumentResult.createElement( "ResultSet" );
 
@@ -1717,7 +1675,7 @@ public final class XmlUtils
 				Element node = xmlDocumentResult.createElement( StringUtils.createXmlName( columnName ) );
 				if( !StringUtils.isNullOrEmpty( value ) )
 				{
-					Text textNode = xmlDocumentResult.createTextNode( value.toString() );
+					Text textNode = xmlDocumentResult.createTextNode( value );
 					node.appendChild( textNode );
 				}
 				rowElement.appendChild( node );

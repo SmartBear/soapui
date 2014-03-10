@@ -201,7 +201,7 @@ public class TestOnDemandPanel extends JPanel
 	{
 		if( !SoapUI.isBrowserDisabled() )
 		{
-			browser.navigate( url, null );
+			browser.navigate( url );
 		}
 	}
 
@@ -287,7 +287,7 @@ public class TestOnDemandPanel extends JPanel
 		{
 			if( browser != null )
 			{
-				browser.navigate( url, null );
+				browser.navigate( url );
 			}
 		}
 	}
