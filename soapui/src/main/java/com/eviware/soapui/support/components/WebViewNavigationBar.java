@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -88,7 +89,10 @@ class WebViewNavigationBar
 					{
 						public void run()
 						{
-							urlField.setText( newLocation );
+							if( StringUtils.hasContent(newLocation) )
+							{
+								urlField.setText( newLocation );
+							}
 							resetTextFieldDefaults();
 							urlField.setFocusable( false );
 							urlField.setFocusable( true );
