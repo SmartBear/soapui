@@ -175,6 +175,9 @@ public class RestMockActionTest
 
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
+
+		mockResult = mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
 	}
 
 	@Test
