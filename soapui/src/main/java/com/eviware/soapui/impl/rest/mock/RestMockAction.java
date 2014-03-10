@@ -1,6 +1,5 @@
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
@@ -18,7 +17,6 @@ import java.util.List;
 public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
 {
 	private RestResource resource = null;
-	private int currentResponseIndex = 0;
 
 	public RestMockAction( RestMockService mockService, RESTMockActionConfig config )
 	{
@@ -122,6 +120,11 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 			result.setMockOperation( this );
 
+			if( mockResponse == null)
+			{
+				mockResponse = getMockResponseByName( this.getDefaultResponse() );
+			}
+
 			if( mockResponse == null )
 			{
 				throw new DispatchException( "Failed to find MockResponse" );
@@ -165,11 +168,6 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setResource( RestResource resource )
 	{
 		this.resource = resource;
-	}
-
-	private void incrementCurrentResponseIndex()
-	{
-		currentResponseIndex++;
 	}
 
 }

@@ -1,18 +1,13 @@
 package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.rest.HttpMethod;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.ScriptMockOperationDispatcher;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.apache.commons.httpclient.HttpStatus;
-import org.hamcrest.Matcher;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Spy;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +16,6 @@ import java.util.Enumeration;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -178,6 +172,19 @@ public class RestMockActionTest
 
 		mockAction.setDispatcher( new ScriptMockOperationDispatcher( mockAction ) );
 		mockAction.setScript( "return 'response 2'" );
+
+		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
+		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
+	}
+
+	@Test
+	public void testResponsesScriptDispatchingHasDefaultResponse() throws Exception
+	{
+		mockAction.addNewMockResponse( "response 2" );
+
+		mockAction.setDispatcher( new ScriptMockOperationDispatcher( mockAction ) );
+		mockAction.setDefaultResponse( "response 2" );
+		mockAction.setScript( "return 'absent response'" );
 
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
