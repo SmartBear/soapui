@@ -37,10 +37,11 @@ Feature: OAuth 2 Get Access Token configuration
     #And clicks outside of the Get Access token form
     #Then the Get Access token form is closed
 
-  Scenario: Client id field is not visible when selecting the Implicit grant flow
-    Given a new REST project is created
-    When the user clicks on the Auth tab
-    And the user creates an OAuth 2.0 profile with name OAuth 2.0 - Profile
-    And clicks on the disclosure button
-    And selects the OAuth 2 flow Implicit Grant
-    Then clientId field is not visible
+# TODO We need to run this manually for now since FEST is not ablt to find Get Access Token Form dialog
+  #Scenario: Client id field is not visible when selecting the Implicit grant flow
+    #Given a new REST project is created
+    #When the user clicks on the Auth tab
+    #And the user creates an OAuth 2.0 profile with name OAuth 2.0 - Profile
+    #And clicks on the disclosure button
+    #And selects the OAuth 2 flow Implicit Grant
+    #Then clientId field is not visible
