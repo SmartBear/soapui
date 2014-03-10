@@ -12,15 +12,13 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.net.ssl.SSLSession;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -29,17 +27,16 @@ import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.impl.io.HttpTransportMetricsImpl;
 import org.apache.http.util.EntityUtils;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
-import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
+import javax.net.ssl.SSLSession;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Extended PostMethod that supports limiting of response size and detailed
- * timestamps
+ * Helper class used by implementations of ExtendedHttpMethod.
  *
  * @author Ole.Matzura
  */
@@ -372,4 +369,8 @@ public class HttpMethodSupport
 		return metrics;
 	}
 
+	public Header[] getAllResponseHeaders()
+	{
+		return getHttpResponse() == null ? new Header[0] : httpResponse.getAllHeaders();
+	}
 }

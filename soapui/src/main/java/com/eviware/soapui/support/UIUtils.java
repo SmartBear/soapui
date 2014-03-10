@@ -14,9 +14,11 @@ package com.eviware.soapui.support;
 
 public interface UIUtils
 {
-	public void invokeLater( Runnable runnable );
+	void invokeLater( Runnable runnable );
 
-	public void invokeAndWait( Runnable runnable ) throws Exception;
+	void invokeAndWait( Runnable runnable ) throws Exception;
 
-	public void runInUIThreadIfSWT( Runnable runnable );
+	void runInUIThreadIfSWT( Runnable runnable );
+
+	void invokeAndWaitIfNotInEDT( Runnable runnable );
 }

@@ -6,6 +6,7 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import javax.mail.internet.ContentType;
 import javax.xml.XMLConstants;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
@@ -187,6 +188,23 @@ public class CommonMatchers
 			public void describeTo( Description description )
 			{
 				description.appendText( "an XML node compliant with the XML schema at " + schemaPath );
+			}
+		};
+	}
+
+	public static Matcher<ContentType> sameBaseContentType( final String contentType ){
+		return new TypeSafeMatcher<ContentType>()
+		{
+			@Override
+			public boolean matchesSafely( ContentType item )
+			{
+				return contentType.equals( item.getBaseType());
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "the content type " + contentType );
 			}
 		};
 	}

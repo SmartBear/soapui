@@ -1,29 +1,29 @@
 	package com.eviware.soapui.impl.support;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.BaseMockServiceConfig;
-import com.eviware.soapui.impl.rest.mock.RestMockAction;
-import com.eviware.soapui.impl.rest.mock.RestMockService;
-import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.mock.*;
-import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
-import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.*;
-import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.scripting.ScriptEnginePool;
-import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
-import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
+	import com.eviware.soapui.SoapUI;
+	import com.eviware.soapui.config.BaseMockServiceConfig;
+	import com.eviware.soapui.impl.rest.mock.RestMockService;
+	import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
+	import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+	import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+	import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+	import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+	import com.eviware.soapui.impl.wsdl.support.IconAnimator;
+	import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
+	import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
+	import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
+	import com.eviware.soapui.model.ModelItem;
+	import com.eviware.soapui.model.mock.*;
+	import com.eviware.soapui.model.project.Project;
+	import com.eviware.soapui.support.StringUtils;
+	import com.eviware.soapui.support.resolver.ResolveContext;
+	import com.eviware.soapui.support.scripting.ScriptEnginePool;
+	import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
+	import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
-import java.util.*;
+	import javax.servlet.http.HttpServletRequest;
+	import javax.servlet.http.HttpServletResponse;
+	import java.util.*;
 
 public abstract class AbstractMockService<MockOperationType extends MockOperation,
 			MockResponseType extends MockResponse,
@@ -537,7 +537,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	}
 
 	private class MockServiceIconAnimator
-			extends ModelItemIconAnimator<AbstractMockService<MockOperationType, MockResponseType, MockServiceConfigType>>
+			extends IconAnimator<AbstractMockService<MockOperationType, MockResponseType, MockServiceConfigType>>
 			implements MockRunListener
 	{
 		public MockServiceIconAnimator()

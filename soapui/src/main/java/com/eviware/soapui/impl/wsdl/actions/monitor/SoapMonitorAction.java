@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.wsdl.actions.monitor;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.monitor.ContentTypes;
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 import com.eviware.soapui.impl.wsdl.panels.monitor.SoapMonitorContainer;
 import com.eviware.soapui.impl.wsdl.panels.monitor.SoapMonitorDesktopPanel;
@@ -92,9 +93,9 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		return new FullMonitorDialogHandler(project);
 	}
 
-	public static String defaultContentTypes()
+	public static ContentTypes defaultContentTypes()
 	{
-		return "*/html, */xml, */soap+xml, */json, */x-json, */javascript, */x-amf, */http";
+		return ContentTypes.of("*/html, */xml, */soap+xml, */json, */x-json, */javascript, */x-amf, */http");
 	}
 
 	public SoapMonitor getSoapMonitor()
@@ -298,7 +299,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 					settings.getString( SecurityTabForm.SSLTUNNEL_TRUSTSTORE_PASSWORD, "" ) );
 			dialog.setBooleanValue( LaunchForm.SSLTUNNEL_REUSESTATE, settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) );
 			dialog.setValue( LaunchForm.SET_CONTENT_TYPES,
-					settings.getString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() ) );
+					settings.getString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes().toString() ) );
 			dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH,
 					settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) );
 			dialog.setValue( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD,
@@ -342,7 +343,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 			if( dialog.getValue( LaunchForm.SET_CONTENT_TYPES ) != null
 					&& dialog.getValue( LaunchForm.SET_CONTENT_TYPES ).trim().equals( "" ) )
 			{
-				settings.setString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes() );
+				settings.setString( LaunchForm.SET_CONTENT_TYPES, defaultContentTypes().toString() );
 			}
 			else
 			{

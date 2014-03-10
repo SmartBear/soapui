@@ -31,9 +31,9 @@ public class OAuth2TokenExtractor
 	public static final String TOKEN = "token";
 	public static final String ACCESS_TOKEN = "access_token";
 
-	protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>(  );
+	protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>();
 
-	public void extractAccessToken(final OAuth2Parameters parameters) throws OAuthSystemException, MalformedURLException, URISyntaxException
+	public void extractAccessToken( final OAuth2Parameters parameters ) throws OAuthSystemException, MalformedURLException, URISyntaxException
 	{
 		switch( parameters.getOAuth2Flow() )
 		{
@@ -72,9 +72,8 @@ public class OAuth2TokenExtractor
 				}
 			}
 		} );
-			parameters.startAccessTokenFlow();
-			browserFacade.open( new URI( createAuthorizationURL( parameters, CODE ) ).toURL() );
-			parameters.waitingForAuthorization();
+		browserFacade.open( new URI( createAuthorizationURL( parameters, CODE ) ).toURL() );
+		parameters.waitingForAuthorization();
 	}
 
 	void extractAccessTokenForImplicitGrantFlow( final OAuth2Parameters parameters ) throws OAuthSystemException,
@@ -88,18 +87,17 @@ public class OAuth2TokenExtractor
 			@Override
 			public void locationChanged( String newLocation )
 			{
-					String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), ACCESS_TOKEN );
-					if( !StringUtils.isNullOrEmpty( accessToken ) )
-					{
-						parameters.setAccessTokenInProfile( accessToken );
-						parameters.setRefreshTokenInProfile( null );
-						parameters.setAccessTokenExpirationTimeInProfile( 0 );
-						parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
-						browserFacade.close();
-					}
+				String accessToken = extractAuthorizationCodeFromForm( extractFormData( newLocation ), ACCESS_TOKEN );
+				if( !StringUtils.isNullOrEmpty( accessToken ) )
+				{
+					parameters.setAccessTokenInProfile( accessToken );
+					parameters.setRefreshTokenInProfile( null );
+					parameters.setAccessTokenExpirationTimeInProfile( 0 );
+					parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
+					browserFacade.close();
 				}
+			}
 		} );
-		parameters.startAccessTokenFlow();
 		browserFacade.open( new URI( createAuthorizationURL( parameters, TOKEN ) ).toURL() );
 		parameters.waitingForAuthorization();
 	}
@@ -121,9 +119,9 @@ public class OAuth2TokenExtractor
 		parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
 	}
 
-	public void addBrowserListener(BrowserListener listener)
+	public void addBrowserListener( BrowserListener listener )
 	{
-		browserListeners.add(listener);
+		browserListeners.add( listener );
 	}
 
 	protected OAuthClient getOAuthClient()
@@ -148,7 +146,7 @@ public class OAuth2TokenExtractor
 
 	private void addBrowserInteractionHandler( UserBrowserFacade browserFacade, OAuth2Parameters parameters )
 	{
-		if (parameters.getJavaScripts().isEmpty())
+		if( parameters.getJavaScripts().isEmpty() )
 		{
 			return;
 		}
@@ -261,7 +259,7 @@ public class OAuth2TokenExtractor
 				}
 				catch( Exception e )
 				{
-					SoapUI.log.warn("Error when running JavaScript [" + script + "]: " + e.getMessage());
+					SoapUI.log.warn( "Error when running JavaScript [" + script + "]: " + e.getMessage() );
 				}
 				pageIndex++;
 			}

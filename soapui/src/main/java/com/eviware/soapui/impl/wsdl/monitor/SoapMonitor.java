@@ -63,22 +63,11 @@ import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
 import org.jdesktop.swingx.decorator.PatternFilter;
 
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -488,6 +477,8 @@ public class SoapMonitor extends JPanel
 			}
 		};
 		monitorEngine = new SoapMonitorEngineImpl( sslEndpoint );
+		monitorEngine.setIncludedContentTypes( ContentTypes.of( project.getSettings()
+				.getString( SoapMonitorAction.LaunchForm.SET_CONTENT_TYPES, SoapMonitorAction.defaultContentTypes().toString() ) ) );
 		monitorEngine.start( this.getProject(), localPort, listenerCallBack );
 
 		if( monitorEngine.isRunning() )
@@ -1248,7 +1239,7 @@ public class SoapMonitor extends JPanel
 					.setValue(
 							LaunchForm.SET_CONTENT_TYPES,
 							project.getSettings().getString( LaunchForm.SET_CONTENT_TYPES,
-									SoapMonitorAction.defaultContentTypes() ) );
+									SoapMonitorAction.defaultContentTypes().toString() ) );
 
 			if( optionsDialog.show() )
 			{

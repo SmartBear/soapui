@@ -12,23 +12,23 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.Releasable;
-import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
+import com.eviware.soapui.model.support.AbstractModelItem;
+import com.eviware.soapui.model.support.AnimatableItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Abstract base class for WSDL-implementation classes
@@ -37,8 +37,8 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  */
 
 public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
-		extends AbstractAnimatableModelItem<ModelItemConfig>
-		implements Releasable
+		extends AbstractModelItem
+		implements Releasable, AnimatableItem
 {
 	private XmlBeansSettingsImpl settings;
 	private T config;

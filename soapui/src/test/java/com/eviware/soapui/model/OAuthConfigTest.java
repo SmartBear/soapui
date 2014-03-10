@@ -24,7 +24,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.core.Is.is;
@@ -98,7 +97,6 @@ public class OAuthConfigTest
 		OAuth2Profile savedOAuth2Profile = retrievedProject.getOAuth2ProfileContainer().getOAuth2ProfileList().get( 0 );
 
 		assertOAuth2ProfileFields( savedOAuth2Profile );
-
 	}
 
 	private void assertOAuth2ProfileFields( OAuth2Profile savedOAuth2Profile )

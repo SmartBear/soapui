@@ -12,18 +12,6 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.swing.SwingWorkerDelegator;
 import com.eviware.x.dialogs.Worker;
@@ -31,9 +19,13 @@ import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
 /**
  * Dialog for creating progress-dialogs
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -106,6 +98,11 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 		progressBar.setString( string );
 
 		pack();
+	}
+
+	public void setDeterminate()
+	{
+		progressBar.setIndeterminate( false );
 	}
 
 	/*

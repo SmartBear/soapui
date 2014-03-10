@@ -21,10 +21,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-/**
- *
- */
-public class BasicAuthenticationForm<T extends AbstractHttpRequest> extends AbstractAuthenticationForm
+public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
 {
 	protected T request;
 	private JRadioButton globalButton;

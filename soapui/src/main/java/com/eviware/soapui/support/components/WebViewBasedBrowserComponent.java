@@ -16,8 +16,6 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -29,21 +27,14 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
 
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.DefaultKeyboardFocusManager;
-import java.awt.HeadlessException;
-import java.awt.KeyEventDispatcher;
-import java.awt.KeyboardFocusManager;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -74,6 +65,8 @@ public class WebViewBasedBrowserComponent
 	private WebViewNavigationBar navigationBar;
 	private String lastLocation;
 	private Set<BrowserWindow> browserWindows = new HashSet<BrowserWindow>();
+
+	private JFXPanel browserPanel;
 
 	public WebViewBasedBrowserComponent( boolean addNavigationBar )
 	{
@@ -114,7 +107,25 @@ public class WebViewBasedBrowserComponent
 		{
 			Platform.runLater( webViewInitialization );
 		}
+		Runnable runnable = new Runnable()
+		{
+			public void run()
+			{
+				try
+				{
+					Thread.sleep(500);
+				}
+				catch( InterruptedException ignore )
+				{
 
+				}
+				if( navigationBar != null )
+				{
+					navigationBar.focusUrlField();
+				}
+			}
+		};
+		SwingUtilities.invokeLater( runnable );
 	}
 
 	private String readDocumentAsString() throws TransformerException
@@ -180,12 +191,15 @@ public class WebViewBasedBrowserComponent
 		} );
 	}
 
-	public void handleClose()
+	public void handleClose( boolean cascade )
 	{
-		for( Iterator<BrowserWindow> iterator = browserWindows.iterator(); iterator.hasNext(); )
+		if( cascade )
 		{
-			iterator.next().close();
-			iterator.remove();
+			for( Iterator<BrowserWindow> iterator = browserWindows.iterator(); iterator.hasNext(); )
+			{
+				iterator.next().close();
+				iterator.remove();
+			}
 		}
 
 		for( BrowserListener listener : listeners )
@@ -196,7 +210,8 @@ public class WebViewBasedBrowserComponent
 
 	public void release()
 	{
-		// TODO: Check whether we need to do anything here
+		setContent( "" );
+		browserPanel.setScene(null);
 	}
 
 
@@ -327,6 +342,7 @@ public class WebViewBasedBrowserComponent
 
 		private BrowserWindow( PopupFeatures popupFeatures ) throws HeadlessException
 		{
+			setIconImages( SoapUI.getFrameIcons() );
 			browser = new WebViewBasedBrowserComponent( popupFeatures.hasToolbar() );
 			getContentPane().setLayout( new BorderLayout() );
 			getContentPane().add( browser.getComponent() );
@@ -335,7 +351,7 @@ public class WebViewBasedBrowserComponent
 				@Override
 				public void windowClosing( WindowEvent e )
 				{
-					browser.handleClose();
+					browser.handleClose( false );
 				}
 			} );
 		}
@@ -344,7 +360,7 @@ public class WebViewBasedBrowserComponent
 		{
 			setVisible( false );
 			dispose();
-			browser.handleClose();
+			browser.handleClose( true );
 			browser.release();
 		}
 
@@ -357,11 +373,10 @@ public class WebViewBasedBrowserComponent
 
 	private class WebViewInitialization implements Runnable
 	{
-		private final JFXPanel browserPanel;
 
 		public WebViewInitialization( JFXPanel browserPanel )
 		{
-			this.browserPanel = browserPanel;
+			WebViewBasedBrowserComponent.this.browserPanel = browserPanel;
 		}
 
 		public void run()
@@ -392,14 +407,6 @@ public class WebViewBasedBrowserComponent
 					popupWindow.setSize( 800, 600 );
 					popupWindow.setVisible( true );
 					final WebEngine webEngine = popupWindow.browser.getWebEngine();
-					webEngine.locationProperty().addListener( new InvalidationListener()
-					{
-						@Override
-						public void invalidated( Observable property )
-						{
-							System.out.println( webEngine.getLocation() );
-						}
-					} );
 					return webEngine;
 				}
 			} );
