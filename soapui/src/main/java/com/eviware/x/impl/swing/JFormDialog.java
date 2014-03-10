@@ -12,18 +12,6 @@
 
 package com.eviware.x.impl.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
-import java.util.concurrent.CountDownLatch;
-
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -35,6 +23,11 @@ import com.eviware.x.form.ValidationMessage;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.Dialog.ModalityType;
+import java.util.concurrent.CountDownLatch;
 
 public class JFormDialog extends SwingXFormDialog
 {
@@ -117,14 +110,14 @@ public class JFormDialog extends SwingXFormDialog
 		if( !resized && visible )
 		{
 			dialog.pack();
-			if( dialog.getHeight() < 270 )
+			if( dialog.getHeight() < 210 )
 			{
-				dialog.setSize( new Dimension( dialog.getWidth(), 270 ) );
+				dialog.setSize( new Dimension( dialog.getWidth(), 210 ) );
 			}
 
-			if( dialog.getWidth() < 450 )
+			if( dialog.getWidth() < 320 )
 			{
-				dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
+				dialog.setSize( new Dimension( 320, dialog.getHeight() ) );
 			}
 		}
 
