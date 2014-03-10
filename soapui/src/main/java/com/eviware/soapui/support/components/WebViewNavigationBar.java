@@ -252,7 +252,7 @@ class WebViewNavigationBar
 			{
 				url = "http://" + url;
 			}
-			webViewBasedBrowserComponent.navigate( url, null );
+			webViewBasedBrowserComponent.navigate( url );
 		}
 	}
 }

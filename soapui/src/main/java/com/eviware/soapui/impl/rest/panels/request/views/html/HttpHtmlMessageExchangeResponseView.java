@@ -158,7 +158,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 					FileOutputStream fileOutputStream = new FileOutputStream( temp );
 					writeHttpBody( jproxyServletWsdlMonitorMessageExchange.getRawResponseData(), fileOutputStream );
 					fileOutputStream.close();
-					browser.navigate( temp.toURI().toURL().toString(), null );
+					browser.navigate( temp.toURI().toURL().toString() );
 					temp.deleteOnExit();
 				}
 				catch( Exception e )
@@ -214,7 +214,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 					FileOutputStream fileOutputStream = new FileOutputStream( temp );
 					writeHttpBody( messageExchangeModelItem2.getMessageExchange().getRawResponseData(), fileOutputStream );
 					fileOutputStream.close();
-					browser.navigate( temp.toURI().toURL().toString(), null );
+					browser.navigate( temp.toURI().toURL().toString() );
 					temp.deleteOnExit();
 				}
 				catch( Exception e )

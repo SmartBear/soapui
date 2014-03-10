@@ -12,15 +12,14 @@
 
 package com.eviware.soapui.ui;
 
-import java.awt.BorderLayout;
-import java.lang.reflect.InvocationTargetException;
-
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.BorderLayout;
+import java.lang.reflect.InvocationTargetException;
 
 public class URLDesktopPanel extends DefaultDesktopPanel
 {
@@ -49,7 +48,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 		}
 		else
 		{
-			browser.navigate( url, errorUrl );
+			browser.navigate( url );
 		}
 	}
 
@@ -79,7 +78,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 		public void run()
 		{
 
-			browser.navigate( url, errorUrl );
+			browser.navigate( url );
 
 		}
 	}
