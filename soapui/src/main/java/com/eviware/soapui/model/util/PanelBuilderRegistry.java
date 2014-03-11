@@ -97,14 +97,7 @@ public class PanelBuilderRegistry
 	@SuppressWarnings( "unchecked" )
 	public static <T extends ModelItem> PanelBuilder<T> getPanelBuilder( T modelItem )
 	{
-		PanelBuilder<T> panelBuilder = ( PanelBuilder<T> )builders.get( modelItem.getClass() );
-
-		if( panelBuilder == null)
-		{
-			SoapUI.logError( new SoapUIException( "No mapping panel builder found for: " + modelItem.getClass().getName() ) );
-		}
-
-		return panelBuilder;
+		return ( PanelBuilder<T> )builders.get( modelItem.getClass() );
 	}
 
 	public static <T extends ModelItem> void register( Class<T> modelItemClass, PanelBuilder<T> panelBuilder )

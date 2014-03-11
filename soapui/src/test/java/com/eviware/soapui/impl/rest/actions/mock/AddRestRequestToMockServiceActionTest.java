@@ -2,11 +2,15 @@ package com.eviware.soapui.impl.rest.actions.mock;
 
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.soapui.utils.StubbedDialogs;
 import com.eviware.x.dialogs.XDialogs;
@@ -40,6 +44,22 @@ public class AddRestRequestToMockServiceActionTest
 		restRequest.setPath( requestPath );
 		mockPromptDialog();
 		project = restRequest.getRestMethod().getInterface().getProject();
+
+		setUpResponse();
+	}
+
+	public void setUpResponse()
+	{
+		HttpResponse response = mock( HttpResponse.class );
+
+		StringToStringsMap headers = new StringToStringsMap(  );
+		headers.add( "oneHeader", "oneValue" );
+		headers.add( "anotherHeader", "anotherValue" );
+
+		when( response.getResponseHeaders() ).thenReturn( headers );
+		when( response.getContentType() ).thenReturn( "application/xml" );
+
+		restRequest.setResponse( response, null );
 	}
 
 	@After
@@ -74,7 +94,7 @@ public class AddRestRequestToMockServiceActionTest
 		action.perform( restRequest, notUsed );
 		action.perform( restRequest, notUsed );
 
-		mockResponseCount = project.getRestMockServiceAt( 0 ).getMockOperationAt( 0 ).getMockResponseCount();
+		mockResponseCount = getFirstMockOperation().getMockResponseCount();
 
 		assertThat( mockResponseCount, is(2));
 	}
@@ -86,23 +106,44 @@ public class AddRestRequestToMockServiceActionTest
 		restRequest.setPath( "someotherpath" );
 		action.perform( restRequest, notUsed );
 
-		mockResponseCount = project.getRestMockServiceAt( 0 ).getMockOperationAt( 0 ).getMockResponseCount();
+		mockResponseCount = getFirstMockOperation().getMockResponseCount();
 
 		assertThat( mockResponseCount, is(1));
-		assertThat( project.getRestMockServiceAt( 0 ).getMockOperationCount(), is(2) );
+		assertThat( getFirstRestMockService().getMockOperationCount(), is(2) );
+	}
+
+	public RestMockAction getFirstMockOperation()
+	{
+		return getFirstRestMockService().getMockOperationAt( 0 );
+	}
+
+	public RestMockService getFirstRestMockService()
+	{
+		return project.getRestMockServiceAt( 0 );
 	}
 
 	@Test
 	public void shouldCreateNewOperationForDifferentVerb()
 	{
 		action.perform( restRequest, notUsed );
-		int mockOperationCount = project.getRestMockServiceAt( 0 ).getMockOperationCount();
+		int mockOperationCount = getFirstRestMockService().getMockOperationCount();
 		assertThat( mockOperationCount, is(1));
 
 		restRequest.setMethod( HttpMethod.TRACE );
 		action.perform( restRequest, notUsed );
-		mockOperationCount = project.getRestMockServiceAt( 0 ).getMockOperationCount();
+		mockOperationCount = getFirstRestMockService().getMockOperationCount();
 		assertThat( mockOperationCount, is( 2 ) );
+	}
+
+	@Test
+	public void shouldSaveHeadersOnMockResponse()
+	{
+
+		action.perform( restRequest, notUsed );
+
+		StringToStringsMap responseHeaders = getFirstMockOperation().getMockResponseAt( 0 ).getResponseHeaders();
+		assertThat( responseHeaders.get( "oneHeader" ).get(0), is( "oneValue" ) );
+		assertThat( responseHeaders.get( "anotherHeader" ).get(0), is( "anotherValue" ) );
 	}
 
 	private void mockPromptDialog()

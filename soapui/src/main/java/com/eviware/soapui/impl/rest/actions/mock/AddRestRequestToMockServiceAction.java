@@ -11,6 +11,7 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<RestRequest>
 {
@@ -86,6 +87,13 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 
 		RestMockResponse mockResponse = ((RestMockAction )matchedOperation).addNewMockResponse( responseName );
 		copyResponseContent( restRequest, mockResponse );
+		copyHeaders( restRequest, mockResponse );
+	}
+
+	private void copyHeaders( RestRequest restRequest, RestMockResponse mockResponse )
+	{
+		StringToStringsMap requestHeaders = restRequest.getResponse().getResponseHeaders();
+		mockResponse.setResponseHeaders( requestHeaders );
 	}
 
 	private void copyResponseContent( RestRequest restRequest, RestMockResponse mockResponse )
