@@ -267,8 +267,10 @@ public class HttpTestRequestDesktopPanel extends
 				}
 			}
 		} );
-
-		toolbar.addLabeledFixed( "Request URL:", pathTextField );
+		JPanel pathPanel = new JPanel(new BorderLayout( 0, 0 ));
+		pathPanel.add(getLockIcon(), BorderLayout.WEST);
+		pathPanel.add(pathTextField, BorderLayout.CENTER);
+		toolbar.addLabeledFixed( "Request URL:", pathPanel );
 
 		toolbar.addSeparator();
 		addCheckBox( toolbar );
@@ -279,7 +281,7 @@ public class HttpTestRequestDesktopPanel extends
 		downloadResources = new JCheckBox();
 		try
 		{
-			downloadResources.setSelected( ( ( HttpRequest )( ( HttpTestRequestStep )getModelItem() ).getHttpRequest() )
+			downloadResources.setSelected( ( ( HttpRequest )getModelItem().getHttpRequest() )
 					.getDownloadIncludedResources() );
 		}
 		catch( Exception cce )
@@ -296,7 +298,7 @@ public class HttpTestRequestDesktopPanel extends
 				{
 					if( 1001 == e.getID() && getModelItem() instanceof HttpTestRequestStep )
 					{
-						( ( HttpRequest )( ( HttpTestRequestStep )getModelItem() ).getHttpRequest() )
+						( ( HttpRequest )getModelItem().getHttpRequest() )
 								.setDownloadIncludedResources( ( ( JCheckBox )e.getSource() ).isSelected() );
 					}
 				}

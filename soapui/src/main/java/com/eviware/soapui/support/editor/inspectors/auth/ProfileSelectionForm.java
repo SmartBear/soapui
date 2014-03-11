@@ -130,7 +130,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 				"<br>Use the <i>Authorization</i> drop down to configure." +
 				"</div>" +
 				"</body>" +
-				"</html>" ;
+				"</html>";
 		JLabel label = new JLabel( helpText );
 		label.setHorizontalAlignment( SwingConstants.CENTER );
 		panelWithText.add( label, BorderLayout.CENTER );
@@ -188,7 +188,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			setIcon( AUTH_ENABLED_ICON );
 			setTitle( AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")" );
-			request.setSelectedAuthProfileAndAuthType( selectedOption, selectedOption );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, request.getBasicAuthType( selectedOption ) );
 			authenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
 			if( isSoapRequest( request ) )
 			{
@@ -202,7 +202,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
 		{
 			setTitle( AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")" );
-			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0 );
 			oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ), this );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
 			showCard( OAUTH_2_FORM_LABEL );
@@ -211,7 +211,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			setIcon( AUTH_NOT_ENABLED_ICON );
 			setTitle( AuthInspectorFactory.INSPECTOR_ID );
-			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() );
+			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.NO_AUTHORIZATION );
 			showCard( EMPTY_PANEL );
 		}
 	}
@@ -282,7 +282,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		OAuth2Profile profile = getOAuth2ProfileContainer().getProfileByName( profileOldName );
 		profile.setName( newName );
-		request.setSelectedAuthProfileAndAuthType( newName, request.getAuthType() );
+		request.setSelectedAuthProfileAndAuthType( newName,
+				CredentialsConfig.AuthType.Enum.forString( request.getAuthType()) );
 		refreshProfileSelectionComboBox( newName );
 	}
 
@@ -356,7 +357,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		}
 		if( oAuth2Profiles == null || !oAuth2Profiles.contains( selectedAuthProfile ) )
-	{
+		{
 			addEditOptions.remove( AddEditOptions.RENAME.getDescription() );
 		}
 
