@@ -42,6 +42,7 @@ import javax.swing.ListModel;
 import javax.swing.SwingConstants;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction;
 import com.eviware.soapui.impl.rest.actions.mock.RestMockServiceOptionsAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.support.AbstractMockService;
@@ -231,8 +232,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 				if( defaultActions == null )
 				{
 					defaultActions = new DefaultActionList();
-					defaultActions.addAction( SwingActionDelegate.createDelegate(
-							AddNewMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, null ) );
+					defaultActions.addAction( createAddMockOperationDelegate() );
 				}
 
 				return defaultActions;
@@ -256,10 +256,24 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 	private JComponent buildMockOperationListToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				AddNewMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/mockOperation.gif" ) ) );
+
+		toolbar.add( UISupport.createToolbarButton( createAddMockOperationDelegate() ) );
 
 		return toolbar;
+	}
+
+	private SwingActionDelegate<?> createAddMockOperationDelegate()
+	{
+		String actionId = AddNewMockOperationAction.SOAPUI_ACTION_ID;
+		String icon = "/mockOperation.gif";
+
+		if( getModelItem() instanceof RestMockService )
+		{
+			actionId = AddEmptyRestMockResourceAction.SOAPUI_ACTION_ID;
+			icon = "/addToRestMockAction.gif";
+		}
+
+		return SwingActionDelegate.createDelegate( actionId, getModelItem(), null, icon );
 	}
 
 	protected JComponent buildPropertiesPanel()
