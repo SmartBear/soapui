@@ -17,18 +17,24 @@ public class OAuth2ParameterValidator
 
 	static void validate( OAuth2Parameters parameters )
 	{
-		validateHttpUrl( parameters.authorizationUri, OAuth2GetAccessTokenForm.AUTHORIZATION_URI_TITLE );
-		validateUri( parameters.redirectUri, OAuth2GetAccessTokenForm.REDIRECT_URI_TITLE );
-		validateHttpUrl( parameters.accessTokenUri, OAuth2GetAccessTokenForm.ACCESS_TOKEN_URI_TITLE );
 		validateRequiredStringValue( parameters.clientId, OAuth2GetAccessTokenForm.CLIENT_ID_TITLE );
 		if( parameters.getOAuth2Flow() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
 			validateRequiredStringValue( parameters.clientSecret, OAuth2GetAccessTokenForm.CLIENT_SECRET_TITLE );
 		}
+		validateHttpUrl( parameters.authorizationUri, OAuth2GetAccessTokenForm.AUTHORIZATION_URI_TITLE );
+		validateHttpUrl( parameters.accessTokenUri, OAuth2GetAccessTokenForm.ACCESS_TOKEN_URI_TITLE );
+		validateUri( parameters.redirectUri, OAuth2GetAccessTokenForm.REDIRECT_URI_TITLE );
+
 	}
 
 	private static void validateUri( String uri, String uriName )
 	{
+		if( !StringUtils.hasContent( uri ) )
+		{
+			throw new InvalidOAuth2ParametersException( uri + " is not a valid " + uriName );
+		}
+
 		try
 		{
 			new URI( uri );
