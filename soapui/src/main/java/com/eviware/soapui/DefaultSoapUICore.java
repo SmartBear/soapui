@@ -704,7 +704,7 @@ public class DefaultSoapUICore implements SoapUICore
 		DefaultSoapUICore soapUICore = new DefaultSoapUICore(  );
 		return new File(DEFAULT_SETTINGS_FILE).exists() ||
 				new File(new File(soapUICore.getRoot()), DEFAULT_SETTINGS_FILE).exists() ||
-				new File( System.getProperty( "user.home", "." )).exists();
+				new File( System.getProperty( "user.home", "." ) + File.separator + DEFAULT_SETTINGS_FILE).exists();
 	}
 
 	private class SettingsWatcher extends TimerTask
