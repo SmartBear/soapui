@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 public class AddRestRequestToMockServiceActionTest
 {
-	private final String requestPath = "somepath";
+	private final String requestPath = "/somepath";
 	AddRestRequestToMockServiceAction action = new AddRestRequestToMockServiceAction();
 	RestRequest restRequest;
 	Object notUsed = null;
