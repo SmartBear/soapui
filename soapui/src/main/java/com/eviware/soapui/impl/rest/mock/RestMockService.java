@@ -53,25 +53,41 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
-		String mockActionName = restRequest.getResource().getName() + " " + restRequest.getPath();
-		RestMockAction mockAction = addEmptyMockAction( mockActionName, restRequest.getMethod(), restRequest.getPath() );
+		RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(), restRequest.getPath() );
 		mockAction.setResource( restRequest.getResource() );
 
 		return mockAction;
 	}
 
-	public RestMockAction addEmptyMockAction( String name, HttpMethod method, String path )
+	public RestMockAction addEmptyMockAction( HttpMethod method, String path )
 	{
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
+
+		String slashifiedPath = slashify(path);
+		String name = lastPartOf( path );
+
 		config.setName( name );
 		config.setMethod( method.name() );
-		config.setResourcePath( path );
+		config.setResourcePath( slashifiedPath );
 		RestMockAction restMockAction = new RestMockAction( this, config );
 
 		addMockOperation( restMockAction );
 		fireMockOperationAdded( restMockAction );
 
 		return restMockAction;
+	}
+
+	private String lastPartOf( String path )
+	{
+		String[] parts = path.split( "/" );
+		return parts[parts.length - 1];
+	}
+
+	private String slashify( String path )
+	{
+		if( !path.startsWith( "/" ))
+			return "/" + path;
+		return path;
 	}
 
 	public MockOperation findOrCreateNewOperation( RestRequest restRequest )

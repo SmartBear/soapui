@@ -19,7 +19,7 @@ import static org.junit.Assert.assertThat;
 
 public class RestMockServiceTest
 {
-	public static final String PATH = "aNicePath";
+	public static final String PATH = "/aNicePath";
 	private RestMockService restMockService;
 	private RestRequest restRequest;
 

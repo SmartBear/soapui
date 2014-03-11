@@ -216,7 +216,10 @@ public class OAuth2TokenExtractor
 				{
 					parameters.setAccessTokenInProfile( token.getAccessToken() );
 					parameters.setRefreshTokenInProfile( token.getRefreshToken() );
-					parameters.setAccessTokenExpirationTimeInProfile( token.getExpiresIn() );
+					if( token.getExpiresIn() != null )
+					{
+						parameters.setAccessTokenExpirationTimeInProfile( token.getExpiresIn() );
+					}
 					parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
 
 					browserFacade.close();

@@ -90,7 +90,7 @@ public class OAuth2RequestFilterTest
 	@Test
 	public void doesNotApplyAccessTokenIfOAuthTypeIsNotOAuth2()
 	{
-		restRequest.setSelectedAuthProfileAndAuthType( PREEMPTIVE.toString(),PREEMPTIVE.toString() );
+		restRequest.setSelectedAuthProfileAndAuthType( PREEMPTIVE.toString(),PREEMPTIVE);
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
 		assertThat( httpRequest.getHeaders( OAuth.HeaderType.AUTHORIZATION ), is( anEmptyArray() ) );
 	}
@@ -134,7 +134,7 @@ public class OAuth2RequestFilterTest
 		setExpiredAccessToken( profileWithRefreshToken );
 
 		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithRefreshToken );
-		restRequest.setSelectedAuthProfileAndAuthType(profileWithRefreshToken.getName(),  O_AUTH_2_0.toString() );
+		restRequest.setSelectedAuthProfileAndAuthType(profileWithRefreshToken.getName(),  O_AUTH_2_0 );
 		return profileWithRefreshToken;
 	}
 
@@ -196,7 +196,7 @@ public class OAuth2RequestFilterTest
 		{
 			oAuth2Profile = oAuth2ProfileList.get( 0 );
 		}
-		restRequest.setSelectedAuthProfileAndAuthType(oAuth2Profile.getName(),  O_AUTH_2_0.toString() );
+		restRequest.setSelectedAuthProfileAndAuthType(oAuth2Profile.getName(),  O_AUTH_2_0 );
 		oAuth2Profile.setAccessToken( ACCESS_TOKEN );
 	}
 
@@ -257,7 +257,7 @@ public class OAuth2RequestFilterTest
 	{
 		oAuth2ProfileContainer.getOAuth2ProfileList().set( 0, profileWithAutomationScripts );
 		restRequest.setSelectedAuthProfileAndAuthType( profileWithAutomationScripts.getName(),
-				CredentialsConfig.AuthType.O_AUTH_2_0.toString() );
+				CredentialsConfig.AuthType.O_AUTH_2_0 );
 		oAuth2Profile = profileWithAutomationScripts;
 	}
 

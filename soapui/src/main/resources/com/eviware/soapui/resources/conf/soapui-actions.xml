@@ -1096,7 +1096,7 @@
                            keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="NewMockResponseAction"
-                           keyStroke="menu N" iconPath="/addToMockService.gif"/>
+                           keyStroke="menu N" iconPath="/addToRestMockAction.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameMockOperationAction"
                            keyStroke="F2"/>

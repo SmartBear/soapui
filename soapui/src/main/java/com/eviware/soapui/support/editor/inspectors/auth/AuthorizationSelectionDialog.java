@@ -76,7 +76,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 
 	private void createProfileForSelectedAuthType( XFormDialog dialog )
 	{
-		final String authType = dialog.getValue( AuthorizationTypeForm.AUTHORIZATION_TYPE );
+		String authType = dialog.getValue( AuthorizationTypeForm.AUTHORIZATION_TYPE );
 		String profileName = authType;
 		if( CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType ) )
 		{
@@ -88,8 +88,12 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 			}
 			getOAuth2ProfileContainer().addNewOAuth2Profile( profileName );
 		}
-
-		request.setSelectedAuthProfileAndAuthType( profileName, authType );
+		CredentialsConfig.AuthType.Enum authTypeEnum = CredentialsConfig.AuthType.O_AUTH_2_0;
+		 if(!CredentialsConfig.AuthType.O_AUTH_2_0.equals( authType ))
+		 {
+			 authTypeEnum = request.getBasicAuthType( authType );
+		 }
+		request.setSelectedAuthProfileAndAuthType( profileName, authTypeEnum );
 	}
 
 	private void setAuthTypeComboBoxOptions( XFormDialog dialog, List<String> options )
