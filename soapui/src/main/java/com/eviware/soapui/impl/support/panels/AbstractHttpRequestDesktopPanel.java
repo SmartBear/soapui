@@ -40,7 +40,6 @@ import com.eviware.soapui.support.components.JEditorStatusBarWithProgress;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
-import com.eviware.soapui.support.editor.inspectors.auth.ProfileSelectionForm;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView.JEditorStatusBarTargetProxy;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -432,6 +431,11 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 			comboBoxPanel.add( endpointCombo, BorderLayout.CENTER );
 		}
 		return comboBoxPanel;
+	}
+
+	protected JLabel getLockIcon()
+	{
+		return lockIcon;
 	}
 
 	public abstract class AbstractHttpRequestMessageEditor<T3 extends XmlDocument> extends
