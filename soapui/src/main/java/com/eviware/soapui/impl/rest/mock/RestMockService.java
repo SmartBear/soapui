@@ -4,16 +4,12 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestURIParser;
-import com.eviware.soapui.impl.rest.support.RestURIParserImpl;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
-import org.apache.commons.httpclient.HttpStatus;
 
-import java.net.MalformedURLException;
 import java.util.List;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
@@ -80,6 +76,10 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	private String lastPartOf( String path )
 	{
 		String[] parts = path.split( "/" );
+		if( parts.length == 0 )
+		{
+			return "";
+		}
 		return parts[parts.length - 1];
 	}
 

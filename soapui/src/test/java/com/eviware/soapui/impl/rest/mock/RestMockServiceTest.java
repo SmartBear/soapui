@@ -43,6 +43,18 @@ public class RestMockServiceTest
 	}
 
 	@Test
+	public void shouldAddNewMockActionWithEmptyPath() throws SoapUIException
+	{
+		restRequest.setPath( "/" );
+
+		restMockService.addNewMockAction( restRequest );
+
+		RestMockAction restMockAction = restMockService.getMockOperationAt( 0 );
+		assertEquals( "/", restMockAction.getResourcePath() );
+		assertEquals( GET, restMockAction.getMethod() );
+	}
+
+	@Test
 	public void isConstructedWithActionsAndResponses() throws SoapUIException
 	{
 		Project project = ModelItemFactory.makeWsdlProject();
