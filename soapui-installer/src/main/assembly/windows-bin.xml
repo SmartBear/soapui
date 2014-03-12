@@ -16,6 +16,14 @@
             </excludes>
         </dependencySet>
         <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
+            <scope>system</scope>
+            <excludes>
+                <exclude>${project.groupId}:${project.src.artifactId}:jar:${project.version}</exclude>
+            </excludes>
+        </dependencySet>
+        <dependencySet>
             <outputDirectory>bin</outputDirectory>
             <useProjectArtifact>false</useProjectArtifact>
             <useStrictFiltering>true</useStrictFiltering>

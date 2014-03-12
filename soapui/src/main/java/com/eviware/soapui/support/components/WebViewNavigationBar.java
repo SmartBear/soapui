@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import javafx.application.Platform;
@@ -19,19 +20,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebHistory;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.Toolkit;
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -125,12 +118,13 @@ class WebViewNavigationBar
 		urlField.setFont( urlField.getFont().deriveFont( Font.ITALIC ) );
 		originalFontColor = urlField.getForeground();
 		urlField.setForeground( new Color( 170, 170, 170 ) );
-		urlField.addKeyListener( new KeyAdapter()
+		urlField.getDocument().addDocumentListener( new DocumentListenerAdapter()
 		{
 			@Override
-			public void keyTyped( KeyEvent e )
+			public void update( Document document )
 			{
 				removeHintText();
+				urlField.getDocument().removeDocumentListener( this );
 			}
 		} );
 		urlField.addMouseListener( new MouseAdapter()
@@ -139,6 +133,7 @@ class WebViewNavigationBar
 			public void mouseClicked( MouseEvent e )
 			{
 				removeHintText();
+				urlField.removeMouseListener( this );
 			}
 		} );
 		return toolbar;
@@ -148,9 +143,9 @@ class WebViewNavigationBar
 	{
 		if (urlField.getText().equals("Enter URL here"))
 		{
-			urlField.setText("");
-			resetTextFieldDefaults();
+			urlField.setText( "" );
 		}
+		resetTextFieldDefaults();
 	}
 
 	private void resetTextFieldDefaults()
