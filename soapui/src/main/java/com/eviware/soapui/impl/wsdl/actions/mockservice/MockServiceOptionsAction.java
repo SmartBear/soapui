@@ -71,7 +71,7 @@ public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockServi
 		}
 	}
 
-	@AForm( name = "MockService Options", description = "Set options for this MockService", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
+	@AForm( name = "SOAP MockService Options", description = "Set options for this SOAP mock service", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
 	private class OptionsForm
 	{
 		@AField( name = "Path", description = "The path this MockService will mount on" )

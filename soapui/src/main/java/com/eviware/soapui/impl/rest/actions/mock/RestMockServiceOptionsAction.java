@@ -51,7 +51,7 @@ public class RestMockServiceOptionsAction extends AbstractSoapUIAction<RestMockS
 		}
 	}
 
-	@AForm( name = "MockService Options", description = "Set options for this MockService", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
+	@AForm( name = "REST MockService Options", description = "Set options for this REST mock service", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
 	private class OptionsForm
 	{
 		@AField( name = "Path", description = "The path this MockService will mount on" )
