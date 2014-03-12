@@ -23,6 +23,8 @@
 
 	import javax.servlet.http.HttpServletRequest;
 	import javax.servlet.http.HttpServletResponse;
+	import java.net.InetAddress;
+	import java.net.UnknownHostException;
 	import java.util.*;
 
 public abstract class AbstractMockService<MockOperationType extends MockOperation,
@@ -45,7 +47,6 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	private BeanPathPropertySupport docrootProperty;
 	private ScriptEnginePool onRequestScriptEnginePool;
 	private ScriptEnginePool afterRequestScriptEnginePool;
-	private String baseIcon;
 
 
 	protected AbstractMockService( MockServiceConfigType config, ModelItem parent, String icon )
@@ -58,10 +59,25 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		if( !config.isSetPath() )
 			config.setPath( "/" );
 
+		initHost( config );
+
 		docrootProperty = new BeanPathPropertySupport( this, "docroot" );
 
 		iconAnimator = new MockServiceIconAnimator();
 		addMockRunListener( iconAnimator );
+	}
+
+	private void initHost( MockServiceConfigType config )
+	{
+		try
+		{
+			if( !config.isSetHost() || !StringUtils.hasContent( config.getHost() ) )
+				config.setHost( InetAddress.getLocalHost().getHostName() );
+		}
+		catch( UnknownHostException e )
+		{
+			SoapUI.logError( e );
+		}
 	}
 
 	// Implements MockService

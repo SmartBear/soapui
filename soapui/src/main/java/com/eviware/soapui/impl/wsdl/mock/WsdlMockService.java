@@ -70,16 +70,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		if( !getSettings().isSet( REQUIRE_SOAP_ACTION ) )
 			setRequireSoapAction( false );
 
-		try
-		{
-			if( !config.isSetHost() || !StringUtils.hasContent( config.getHost() ) )
-				config.setHost( InetAddress.getLocalHost().getHostName() );
-		}
-		catch( UnknownHostException e )
-		{
-			SoapUI.logError( e );
-		}
-
 		for( MockRunListener listener : SoapUI.getListenerRegistry().getListeners( MockRunListener.class ) )
 		{
 			addMockRunListener( listener );
@@ -226,11 +216,6 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		}
 
 		return getProtocol() + host + ":" + getPort() + getPath();
-	}
-
-	public String getHost()
-	{
-		return getConfig().getHost();
 	}
 
 	private String getProtocol()
