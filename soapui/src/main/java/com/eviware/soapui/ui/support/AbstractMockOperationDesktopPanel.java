@@ -86,23 +86,6 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 			private DefaultActionList defaultActions;
 
 			@Override
-			protected ActionList getActionsForRow( JList list, int row )
-			{
-				ActionList actions = super.getActionsForRow( list, row );
-
-				actions.insertAction( SwingActionDelegate.createDelegate( NewMockResponseAction.SOAPUI_ACTION_ID,
-						getModelItem(), null, getAddToMockOperationIconPath() ), 0 );
-
-				actions.insertAction( SwingActionDelegate.createDelegate(
-						OpenRequestForMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/open_request.gif" ), 1 );
-
-				if( actions.getActionCount() > 2 )
-					actions.insertAction( ActionSupport.SEPARATOR_ACTION, 2 );
-
-				return actions;
-			}
-
-			@Override
 			protected ActionList getDefaultActions()
 			{
 				if( defaultActions == null )
