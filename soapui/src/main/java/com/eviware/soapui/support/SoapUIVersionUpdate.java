@@ -120,6 +120,14 @@ public class SoapUIVersionUpdate
 			currentSoapuiVersion = currentSoapuiVersion.substring( 0, snapshotIndex - 1 );
 		}
 
+		int betaIndex = currentSoapuiVersion.toUpperCase().indexOf( "BETA" );
+		boolean isBeta = betaIndex > 0;
+		//if version is snapshot strip BETA
+		if( isBeta )
+		{
+			currentSoapuiVersion = currentSoapuiVersion.substring( 0, betaIndex - 1 );
+		}
+
 		String latestVersion = getLatestVersion();
 
 		if( StringUtils.isNullOrEmpty( latestVersion ) )
@@ -129,6 +137,11 @@ public class SoapUIVersionUpdate
 
 		// user has to be notified when SNAPSHOT version became OFFICIAL 
 		if( isSnapshot && currentSoapuiVersion.equals( latestVersion ) )
+		{
+			return true;
+		}
+		// user has to be notified when BETA version became OFFICIAL
+		if( isBeta && currentSoapuiVersion.equals( latestVersion ) )
 		{
 			return true;
 		}
