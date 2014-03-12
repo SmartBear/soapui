@@ -1372,7 +1372,7 @@ public class SoapUI
 
 	private static class AboutAction extends AbstractAction
 	{
-		private static final String COPYRIGHT = "2004-2013 smartbear.com";
+		private static final String COPYRIGHT = "2004-2014 smartbear.com";
 		private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
 		private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
 
