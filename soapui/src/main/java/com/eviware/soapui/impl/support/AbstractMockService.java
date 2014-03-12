@@ -15,6 +15,7 @@
 	import com.eviware.soapui.model.ModelItem;
 	import com.eviware.soapui.model.mock.*;
 	import com.eviware.soapui.model.project.Project;
+	import com.eviware.soapui.settings.SSLSettings;
 	import com.eviware.soapui.support.StringUtils;
 	import com.eviware.soapui.support.resolver.ResolveContext;
 	import com.eviware.soapui.support.scripting.ScriptEnginePool;
@@ -118,6 +119,20 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		}
 	}
 
+	protected String getProtocol()
+	{
+		try
+		{
+			boolean sslEnabled = SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL );
+			String protocol = sslEnabled ? "https://" : "http://";
+			return protocol;
+		}
+		catch( Exception e )
+		{
+			return "http://";
+		}
+	}
+
 	protected abstract boolean canIAddAMockOperation( MockOperationType mockOperation );
 
 	@Override
@@ -158,6 +173,17 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 		{
 			((RestMockService )this).getConfig().removeRestMockAction( ix );
 		}
+	}
+
+	public String getLocalEndpoint()
+	{
+		String host = getHost();
+		if( StringUtils.isNullOrEmpty( host ) )
+		{
+			host = "127.0.0.1";
+		}
+
+		return getProtocol() + host + ":" + getPort() + getPath();
 	}
 
 	public String getHost()

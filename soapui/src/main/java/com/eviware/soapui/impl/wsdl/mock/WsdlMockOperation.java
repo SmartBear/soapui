@@ -12,34 +12,32 @@
 
 package com.eviware.soapui.impl.wsdl.mock;
 
-import java.beans.PropertyChangeEvent;
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
-import com.eviware.soapui.config.*;
-import com.eviware.soapui.impl.support.AbstractMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
-import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
-import com.eviware.soapui.model.iface.InterfaceListener;
-import com.eviware.soapui.model.project.ProjectListener;
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.MockOperationConfig;
+import com.eviware.soapui.config.MockResponseConfig;
+import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.InterfaceListener;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.project.ProjectListener;
 import com.eviware.soapui.model.support.InterfaceListenerAdapter;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * A WsdlMockOperation in a WsdlMockService
@@ -157,6 +155,12 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 	public WsdlOperation getOperation()
 	{
 		return operation;
+	}
+
+	@Override
+	public MockResponse addNewMockResponse( String name )
+	{
+		return this.addNewMockResponse( name, true );
 	}
 
 	public WsdlMockResponse addNewMockResponse( MockResponseConfig responseConfig )

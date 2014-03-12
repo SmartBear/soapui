@@ -12,9 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -23,9 +20,11 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adds a new WsdlMockOperation to a WsdlMockService
@@ -67,8 +66,8 @@ public class AddNewMockOperationAction extends AbstractSoapUIAction<WsdlMockServ
 		Object result = UISupport.prompt( "Select Operation to Mock", "New MockOperation", operations.toArray() );
 		if( result != null )
 		{
-			WsdlMockOperation mockOperation = mockService.addNewMockOperation( ( ( OperationWrapper )result )
-					.getOperation() );
+			WsdlOperation operation = (( OperationWrapper )result ).getOperation();
+			WsdlMockOperation mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( operation );
 			WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response 1", true );
 			UISupport.selectAndShow( mockResponse );
 		}

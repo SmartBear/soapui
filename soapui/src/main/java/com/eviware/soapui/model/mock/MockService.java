@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.model.mock;
 
-import java.util.List;
-
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.TestModelItem;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.project.Project;
+
+import java.util.List;
 
 /**
  * ModelItem for mocking a number of Interfaces and their Operations
@@ -40,6 +40,8 @@ public interface MockService extends TestModelItem, Releasable
 	public MockOperation getMockOperationAt( int index );
 
 	public MockOperation getMockOperationByName( String name );
+
+	public MockOperation addNewMockOperation( Operation operation );
 
 	public void removeMockOperation( MockOperation mockOperation );
 
@@ -72,4 +74,6 @@ public interface MockService extends TestModelItem, Releasable
 	public void fireMockResponseRemoved( MockResponse mockResponse );
 
 	public boolean getBindToHostOnly();
+
+	public String getLocalEndpoint();
 }

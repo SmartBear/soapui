@@ -99,14 +99,15 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 		return null;
 	}
 
-	public WsdlMockOperation addNewMockOperation( WsdlOperation operation )
+	@Override
+	public MockOperation addNewMockOperation( Operation operation )
 	{
 		if( getMockOperation( operation ) != null )
 			return null;
 
 		MockOperationConfig config = getConfig().addNewMockOperation();
 		config.setName( operation.getName() );
-		WsdlMockOperation mockOperation = new WsdlMockOperation( this, config, operation );
+		WsdlMockOperation mockOperation = new WsdlMockOperation( this, config, (WsdlOperation)operation );
 
 		addMockOperation( mockOperation );
 		fireMockOperationAdded( mockOperation );
@@ -207,29 +208,9 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 	}
 
 
-	public String getLocalEndpoint()
+	public String getHost()
 	{
-		String host = getHost();
-		if( StringUtils.isNullOrEmpty( host ) )
-		{
-			host = "127.0.0.1";
-		}
-
-		return getProtocol() + host + ":" + getPort() + getPath();
-	}
-
-	private String getProtocol()
-	{
-		try
-		{
-			boolean sslEnabled = SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL );
-			String protocol = sslEnabled ? "https://" : "http://";
-			return protocol;
-		}
-		catch( Exception e )
-		{
-			return "http://";
-		}
+		return getConfig().getHost();
 	}
 
 	public boolean isRequireSoapVersion()

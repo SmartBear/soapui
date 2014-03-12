@@ -4,8 +4,10 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
@@ -124,4 +126,23 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	{
 		return this.getConfig().getRestMockActionList().contains( mockOperation.getConfig() );
 	}
+
+	@Override
+	public MockOperation addNewMockOperation( Operation operation )
+	{
+		RestResource restResource = (RestResource)operation;
+
+		HttpMethod httpMethod = HttpMethod.GET;
+		String path = restResource.getPath();
+
+		if( restResource.getRequestCount() > 0 )
+		{
+			RestRequest request = restResource.getRequestAt( 0 );
+			httpMethod = request.getMethod();
+			path = path + request.getPath();
+		}
+
+		return addEmptyMockAction( httpMethod, path );
+	}
+
 }

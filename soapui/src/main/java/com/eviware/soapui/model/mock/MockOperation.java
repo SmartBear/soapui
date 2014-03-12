@@ -12,11 +12,11 @@
 
 package com.eviware.soapui.model.mock;
 
-import java.util.List;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.iface.Operation;
+
+import java.util.List;
 
 /**
  * A MockOperation for mocking an Interfaces Operation and returning a
@@ -34,6 +34,8 @@ public interface MockOperation extends ModelItem, Releasable
 	public MockResponse getMockResponseAt( int index );
 
 	public MockResponse getMockResponseByName( String name );
+
+	public MockResponse addNewMockResponse( String name );
 
 	public Operation getOperation();
 
@@ -54,4 +56,5 @@ public interface MockOperation extends ModelItem, Releasable
 	 * @param script this is a String that might be needed by the dispatch style used in this mock operation.
 	 */
 	public void setScript( String script );
+
 }

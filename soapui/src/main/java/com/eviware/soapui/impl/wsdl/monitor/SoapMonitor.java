@@ -618,7 +618,7 @@ public class SoapMonitor extends JPanel
 
 					WsdlMockOperation mockOperation = mockService.getMockOperation( me.getOperation() );
 					if( mockOperation == null )
-						mockOperation = mockService.addNewMockOperation( me.getOperation() );
+						mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( me.getOperation() );
 
 					WsdlMockResponse mockResponse = mockOperation
 							.addNewMockResponse( "Monitor Response " + ( ++cnt ), false );
