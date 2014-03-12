@@ -51,8 +51,6 @@ public class MockServiceTreeNode extends AbstractModelItemTreeNode<MockService>
 			mockOperationNodes.add( new MockOperationTreeNode( mockOperation, getTreeModel() ) );
 		}
 
-		initOrdering( mockOperationNodes, UISettings.ORDER_MOCKOPERATION );
-
 		getTreeModel().mapModelItems( mockOperationNodes );
 
 		propertiesTreeNode = PropertiesTreeNode.createDefaultPropertiesNode( mockService, getTreeModel() );
@@ -76,7 +74,7 @@ public class MockServiceTreeNode extends AbstractModelItemTreeNode<MockService>
 
 	public MockService getMockService()
 	{
-		return ( MockService )getModelItem();
+		return getModelItem();
 	}
 
 	public int getChildCount()
