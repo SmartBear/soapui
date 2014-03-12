@@ -86,8 +86,12 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 		String responseName = "Response " + responseCount;
 
 		RestMockResponse mockResponse = ((RestMockAction )matchedOperation).addNewMockResponse( responseName );
-		copyResponseContent( restRequest, mockResponse );
-		copyHeaders( restRequest, mockResponse );
+		// add expected response if available
+		if( restRequest != null && restRequest.getResponse() != null )
+		{
+			copyResponseContent( restRequest, mockResponse );
+			copyHeaders( restRequest, mockResponse );
+		}
 	}
 
 	private void copyHeaders( RestRequest restRequest, RestMockResponse mockResponse )
@@ -98,13 +102,9 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 
 	private void copyResponseContent( RestRequest restRequest, RestMockResponse mockResponse )
 	{
-		// add expected response if available
-		if( restRequest != null && restRequest.getResponse() != null )
-		{
-			HttpResponse response = restRequest.getResponse();
-			mockResponse.setResponseContent( response.getContentAsString() );
-			mockResponse.setContentType( response.getContentType() );
-		}
+		HttpResponse response = restRequest.getResponse();
+		mockResponse.setResponseContent( response.getContentAsString() );
+		mockResponse.setContentType( response.getContentType() );
 	}
 
 }

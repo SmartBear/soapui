@@ -6,7 +6,6 @@ import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
-import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
@@ -34,7 +33,6 @@ public class AddRestRequestToMockServiceActionTest
 	String mockServiceName = "Mock Service1 1";
 	private XDialogs originalDialogs;
 	private WsdlProject project;
-	private int mockResponseCount;
 
 	@Before
 	public void setUp() throws Exception
@@ -94,7 +92,7 @@ public class AddRestRequestToMockServiceActionTest
 		action.perform( restRequest, notUsed );
 		action.perform( restRequest, notUsed );
 
-		mockResponseCount = getFirstMockOperation().getMockResponseCount();
+		int mockResponseCount = getFirstMockOperation().getMockResponseCount();
 
 		assertThat( mockResponseCount, is(2));
 	}
@@ -106,7 +104,7 @@ public class AddRestRequestToMockServiceActionTest
 		restRequest.setPath( "someotherpath" );
 		action.perform( restRequest, notUsed );
 
-		mockResponseCount = getFirstMockOperation().getMockResponseCount();
+		int mockResponseCount = getFirstMockOperation().getMockResponseCount();
 
 		assertThat( mockResponseCount, is(1));
 		assertThat( getFirstRestMockService().getMockOperationCount(), is(2) );
@@ -138,12 +136,20 @@ public class AddRestRequestToMockServiceActionTest
 	@Test
 	public void shouldSaveHeadersOnMockResponse()
 	{
-
 		action.perform( restRequest, notUsed );
 
 		StringToStringsMap responseHeaders = getFirstMockOperation().getMockResponseAt( 0 ).getResponseHeaders();
 		assertThat( responseHeaders.get( "oneHeader" ).get(0), is( "oneValue" ) );
 		assertThat( responseHeaders.get( "anotherHeader" ).get(0), is( "anotherValue" ) );
+	}
+
+	@Test
+	public void shouldAddEmptyResponses()
+	{
+		restRequest.setResponse( null, null );
+		action.perform( restRequest, notUsed );
+
+		assertThat( getFirstMockOperation().getMockResponseCount(), is(1));
 	}
 
 	private void mockPromptDialog()
