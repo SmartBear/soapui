@@ -55,7 +55,7 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory
 
 	public WsdlMockResponseStepFactory()
 	{
-		super( MOCKRESPONSE_TYPE, "Mock Response", "Waits for a request and returns the specified response",
+		super( MOCKRESPONSE_TYPE, "SOAP Mock Response", "Waits for a request and returns the specified response",
 				"/mockResponseStep.gif" );
 	}
 
