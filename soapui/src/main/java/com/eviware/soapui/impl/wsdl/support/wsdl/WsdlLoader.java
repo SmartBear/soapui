@@ -28,7 +28,6 @@ import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.xml.sax.InputSource;
 
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -111,7 +110,7 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
 
 			options.setLoadLineNumbers();
 			String content = readCleanWsdlFrom( url );
-			return XmlUtils.createXmlObject( new ByteArrayInputStream( content.getBytes() ), options );
+			return XmlUtils.createXmlObject( content, options );
 		}
 		catch (XmlException e)
 		{
