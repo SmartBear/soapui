@@ -12,12 +12,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.util.Date;
-
-import javax.swing.*;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -50,6 +44,22 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
+
+import javax.swing.AbstractListModel;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.ListModel;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
+import java.util.Date;
 
 public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel<RestTestRequestStep, RestTestRequest>
 {
@@ -291,7 +301,6 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 			assertionsPanel.release();
 			inspectorPanel.release();
 			SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
-			logArea.release();
 			getModelItem().getTestRequest().removeAssertionsListener( assertionsListener );
 			return true;
 		}

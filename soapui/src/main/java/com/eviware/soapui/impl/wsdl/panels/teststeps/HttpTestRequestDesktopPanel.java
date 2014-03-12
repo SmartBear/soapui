@@ -413,7 +413,6 @@ public class HttpTestRequestDesktopPanel extends
 			assertionsPanel.release();
 			inspectorPanel.release();
 			SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
-			logArea.release();
 			getModelItem().getTestRequest().removeAssertionsListener( assertionsListener );
 			return true;
 		}
@@ -495,7 +494,6 @@ public class HttpTestRequestDesktopPanel extends
 			pathTextField.setText( String.valueOf( evt.getNewValue() ) );
 			updating = false;
 		}
-
 		super.propertyChange( evt );
 	}
 

@@ -12,31 +12,9 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
@@ -71,6 +49,25 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JSplitPane;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Assertion performed by a custom Grooy Script
@@ -202,7 +199,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		private Logger logger;
 		private JButton okButton;
 		private ShowOnlineHelpAction showOnlineHelpAction;
-		public String oldscriptText;
 
 		public GroovyScriptAssertionPanel()
 		{
@@ -222,7 +218,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
 		public void release()
 		{
-			logArea.release();
 			editor.release();
 			logger = null;
 		}
@@ -362,7 +357,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 						"Runs this assertion script against the last messageExchange with a mock testContext" );
 			}
 
-			public void actionPerformed( ActionEvent e )
+			public void actionPerformed( ActionEvent event )
 			{
 				TestStep testStep = getAssertable().getTestStep();
 				MessageExchange exchange = null;
@@ -378,7 +373,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					RestTestRequestStepInterface testRequestStep = ( RestTestRequestStepInterface )testStep;
 					exchange = new RestResponseMessageExchange( ( RestRequestInterface )testRequestStep.getTestRequest() );
 					( ( RestResponseMessageExchange )exchange )
-							.setResponse( ( ( AbstractHttpRequestInterface<?> )testRequestStep.getTestRequest() )
+							.setResponse( testRequestStep.getTestRequest()
 									.getResponse() );
 				}
 				else if( testStep instanceof HttpTestRequestStepInterface )
@@ -386,7 +381,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					HttpTestRequestStepInterface testRequestStep = ( HttpTestRequestStepInterface )testStep;
 					exchange = new HttpResponseMessageExchange( testRequestStep.getTestRequest() );
 					( ( HttpResponseMessageExchange )exchange )
-							.setResponse( ( ( AbstractHttpRequestInterface<?> )testRequestStep.getTestRequest() )
+							.setResponse( testRequestStep.getTestRequest()
 									.getResponse() );
 				}
 				else if( testStep instanceof WsdlMockResponseTestStep )
@@ -402,14 +397,14 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					UISupport
 							.showInfoMessage( "Script Assertion Passed" + ( ( result == null ) ? "" : ": [" + result + "]" ) );
 				}
-				catch( AssertionException e1 )
+				catch( AssertionException e )
 				{
-					UISupport.showErrorMessage( e1.getMessage() );
+					UISupport.showErrorMessage( e.getMessage() );
 				}
-				catch( Throwable t )
+				catch( Exception e )
 				{
-					SoapUI.logError( t );
-					UISupport.showErrorMessage( t.getMessage() );
+					SoapUI.logError( e );
+					UISupport.showErrorMessage( e.getMessage() );
 				}
 
 				editor.requestFocusInWindow();
@@ -424,7 +419,9 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 		scriptEngine.release();
 
 		if( groovyScriptAssertionPanel != null )
+		{
 			groovyScriptAssertionPanel.release();
+		}
 	}
 
 	public static class Factory extends AbstractTestAssertionFactory
