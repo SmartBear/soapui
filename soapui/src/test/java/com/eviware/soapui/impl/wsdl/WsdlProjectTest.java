@@ -1,6 +1,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
@@ -82,6 +83,24 @@ public class WsdlProjectTest
 		project.removeMockService( mocka );
 		assertThat( project.getRestMockServiceCount(), is( restMockServiceCountBefore ) );
 		assertThat( project.getRestMockServiceByName( "Mocka" ), nullValue() );
+	}
+
+	@Test
+	public void shouldNotResortMockOperationsOnReload() throws Exception
+	{
+		RestMockService restMockService = project.addNewRestMockService( "x" );
+		restMockService.addEmptyMockAction( HttpMethod.GET, "b" );
+		restMockService.addEmptyMockAction( HttpMethod.GET, "a" );
+
+		WsdlProject reloadedProject = saveAndReloadProject( project );
+
+		assertThat( getFirstRestMockService( reloadedProject ).getMockOperationAt( 0 ).getName(), is( "b" ) );
+		assertThat( getFirstRestMockService( reloadedProject ).getMockOperationAt( 1 ).getName(), is( "a" ) );
+	}
+
+	public RestMockService getFirstRestMockService( WsdlProject reloadedProject )
+	{
+		return reloadedProject.getRestMockServiceAt( 0 );
 	}
 
 	private void addRestMockResponseToProject() throws SoapUIException
