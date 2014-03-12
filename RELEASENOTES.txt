@@ -9,18 +9,14 @@
 * (Pro only) REST Discovery + REST Mocking - Seamlessly create REST Mocks using responses from REST Discovery recordings.
 
 ### Bugs fixed ###
-* SOAP request calls no longer take 500 ms longer in Data Driven tests than in single calls (SOAP-769)
 * XSDs now exposed correctly for MockServices in subdirectories (SOAP-1313)
 * Memory log panel now shows correct total memory for sizes above 2GB (SOAP-1574)
 * It is now possible to sign the BinarySecurityToken when creating a WSS signature entry (SOAPUI-4586/SOAP-1097, contribution from Willem Salembier)
-* Fixed unnecessary delay in data-driven tests (SOAP-769)
-* Fixed issue where data-driven REST tests sometimes picked up the wrong data (SOAP-769)
 * The resource editor and request editor views are now better synced (SOAP-830)
 * Improved the behavior of the request view's pop-up parameter table (SOAP-845)
 * Added missing hint text from the "New REST Resource" dialog (SOAP-1102)
 * Removed some duplicate library archives. (SOAP-1195)
 * Importing WSDL protected by Basic HTTP Authentication is now possible again (SOAP-1331)
-* (Pro only) JSON is no longer converted to XML in some cases (SOAP-1219)
 * XML conversion no longer fails for JSON value whose name starts with digit (SOAP-1405)
 * Starter page now resizes correctly also on Mac OS X (SOAP-1212)
 * Redirect requests no longer ignore manually configured proxy settings (SOAP-1208)
@@ -32,6 +28,9 @@
 * Improved compatibility with MTOM and WCF (SOAP-1316)
 * Fixed the maven plugin crashing when executing a project containing a Message Content Assertion (SOAP-1348)
 * Removed unnecessary "Failed to delete temporary project file" warnings. (SOAP-1338)
+* (Pro only) Fixed unnecessary 500 ms delay in data-driven tests (SOAP-769)
+* (Pro only) Fixed issue where data-driven REST tests sometimes picked up the wrong data (SOAP-769)
+* (Pro only) JSON is no longer converted to XML in some cases (SOAP-1219)
 
 ### Improvements
 * Introduced Script class for internal grouping of constants (Contribution from Marc Paquette)
