@@ -18,6 +18,8 @@ import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.net.URL;
 
 /**
@@ -48,6 +50,14 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		popupWindow.getContentPane().add( browserComponent.getComponent() );
 		popupWindow.setBounds( 100, 100, 800, 600 );
 		popupWindow.setVisible( true );
+		popupWindow.addWindowListener( new WindowAdapter()
+		{
+			@Override
+			public void windowClosing( WindowEvent e )
+			{
+				browserComponent.handleClose( true );
+			}
+		} );
 
 		browserComponent.navigate( url.toString() );
 	}
