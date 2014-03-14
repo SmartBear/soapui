@@ -130,6 +130,12 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 		super.releaseEditorComponent();
 	}
 
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return true;
+	}
+
 	protected JXToolBar buildGroovyEditorToolbar( DispatchScriptGroovyEditorModel editorModel )
 	{
 		JXToolBar toolbar = UISupport.createToolbar();

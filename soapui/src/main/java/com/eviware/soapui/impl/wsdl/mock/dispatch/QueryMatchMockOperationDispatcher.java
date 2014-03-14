@@ -102,6 +102,12 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 		return splitPane;
 	}
 
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return true;
+	}
+
 	protected Component buildQueryListComponent()
 	{
 		JPanel panel = new JPanel( new BorderLayout() );

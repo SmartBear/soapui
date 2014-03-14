@@ -28,4 +28,6 @@ public interface MockOperationDispatcher extends Releasable
 	public JComponent getEditorComponent();
 
 	public void releaseEditorComponent();
+
+	public boolean hasDefaultResponse();
 }
