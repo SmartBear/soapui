@@ -40,6 +40,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 	private ResponseListModel responseListModel;
 	private JComponentInspector<JComponent> dispatchInspector;
 	private JInspectorPanel inspectorPanel;
+	private JPanel defaultResponsePanel;
 
 	public AbstractMockOperationDesktopPanel( MockOperationType mockOperation )
 	{
@@ -143,14 +144,16 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 				{
 					dispatchInspector.setTitle( "Dispatch (" + item + ")" );
 				}
+
+				defaultResponsePanel.setVisible( getModelItem().getDispatcher().hasDefaultResponse() );
 			}
 		} );
 
 		builder.addFixed( dispatchCombo );
 
-		builder.addUnrelatedGap();
-		builder.addFixed( new JLabel( "Default Response: " ) );
-		builder.addRelatedGap();
+		defaultResponsePanel = new JPanel( new BorderLayout() );
+
+		defaultResponsePanel.add( new JLabel( "Default Response: " ), BorderLayout.WEST );
 
 		ModelItemNames<MockResponse> names = new ModelItemNames<MockResponse>( getModelItem().getMockResponses() );
 		defaultResponseCombo = new JComboBox( new ExtendedComboBoxModel( names.getNames() ) );
@@ -164,8 +167,10 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 			}
 		} );
 
-		builder.addFixed( defaultResponseCombo );
-		builder.setBorder( BorderFactory.createEmptyBorder( 2, 3, 3, 3 ) );
+		defaultResponsePanel.add( defaultResponseCombo, BorderLayout.CENTER );
+
+		builder.addUnrelatedGap();
+		builder.addFixed( defaultResponsePanel );
 
 		dispatchPanel.add( builder.getPanel(), BorderLayout.NORTH );
 
