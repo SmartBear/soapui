@@ -13,9 +13,9 @@
 package com.eviware.soapui.impl.support.definition.support;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.SchemaTypeLoader;
@@ -54,8 +54,10 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 	private T2 currentLoader;
 	private T iface;
 
-	private static Map<String, InterfaceDefinition<?>> definitionCache = new HashMap<String, InterfaceDefinition<?>>();
-	private static Map<String, Integer> urlReferences = new HashMap<String, Integer>();
+	private static Map<String, InterfaceDefinition<?>> definitionCache = new ConcurrentHashMap<String, InterfaceDefinition<?>>();
+	private static Map<String, Integer> urlReferences = new ConcurrentHashMap<String, Integer>();
+
+	private static final Object cacheLock = new Object();
 
 	public AbstractDefinitionContext( String url, T iface )
 	{
@@ -221,39 +223,46 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 
 		public Object construct( XProgressMonitor monitor )
 		{
-			try
+			// this is necessary because multiple threads will share a static object
+			// (_schemaType) in the DefinitionCacheConfigImpl. This ends up causing
+			// '[Schema Compliance] null' failures to show up in test cases running
+			// concurrently.
+			synchronized ( cacheLock )
 			{
-				DefinitionCache cache = iface == null ? new StandaloneDefinitionCache<T>()
-						: new InterfaceConfigDefinitionCache<T>( iface );
-
-				if( !cache.validate() )
+				try
 				{
-					monitor.setProgress( 1, "Caching Definition from url [" + url + "]" );
-
-					currentLoader = getDefinitionLoader();
-					currentLoader.setProgressMonitor( monitor, 2 );
-
-					cache.update( currentLoader );
-
-					if( currentLoader.isAborted() )
-						throw new Exception( "Loading of Definition from [" + url + "] was aborted" );
+					DefinitionCache cache = iface == null ? new StandaloneDefinitionCache<T>()
+							: new InterfaceConfigDefinitionCache<T>( iface );
+	
+					if( !cache.validate() )
+					{
+						monitor.setProgress( 1, "Caching Definition from url [" + url + "]" );
+	
+						currentLoader = getDefinitionLoader();
+						currentLoader.setProgressMonitor( monitor, 2 );
+	
+						cache.update( currentLoader );
+	
+						if( currentLoader.isAborted() )
+							throw new Exception( "Loading of Definition from [" + url + "] was aborted" );
+					}
+	
+					monitor.setProgress( 1, "Loading Definition from " + ( iface == null ? "url" : "cache" ) );
+	
+					log.debug( "Loading Definition..." );
+					cacheDefinition( cache );
+					return null;
 				}
-
-				monitor.setProgress( 1, "Loading Definition from " + ( iface == null ? "url" : "cache" ) );
-
-				log.debug( "Loading Definition..." );
-				cacheDefinition( cache );
-				return null;
-			}
-			catch( Throwable e )
-			{
-				SoapUI.logError( e );
-				this.error = e;
-				return e;
-			}
-			finally
-			{
-				currentLoader = null;
+				catch( Throwable e )
+				{
+					SoapUI.logError( e );
+					this.error = e;
+					return e;
+				}
+				finally
+				{
+					currentLoader = null;
+				}
 			}
 		}
 
@@ -262,6 +271,7 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 			return error;
 		}
 
+		@Override
 		public boolean onCancel()
 		{
 			if( currentLoader == null )
@@ -273,31 +283,31 @@ public abstract class AbstractDefinitionContext<T extends AbstractInterface<?>, 
 
 	private void cacheDefinition( DefinitionCache cache ) throws Exception
 	{
-		currentLoader = createDefinitionLoader( cache );
-		currentLoader.setProgressInfo( "Loading Definition" );
-		definition = loadDefinition( currentLoader );
-		if( definition != null )
-			definition.setDefinitionCache( cache );
-
-		log.debug( "Loaded Definition: " + ( definition != null ? "ok" : "null" ) );
-
-		if( !currentLoader.isAborted() && iface != null && iface.isDefinitionShareble() )
-		{
-			definitionCache.put( url, definition );
-			if( urlReferences.containsKey( url ) )
+			currentLoader = createDefinitionLoader( cache );
+			currentLoader.setProgressInfo( "Loading Definition" );
+			definition = loadDefinition( currentLoader );
+			if( definition != null )
+				definition.setDefinitionCache( cache );
+	
+			log.debug( "Loaded Definition: " + ( definition != null ? "ok" : "null" ) );
+	
+			if( !currentLoader.isAborted() && iface != null && iface.isDefinitionShareble() )
 			{
-				urlReferences.put( url, urlReferences.get( url ) + 1 );
+				definitionCache.put( url, definition );
+				if( urlReferences.containsKey( url ) )
+				{
+					urlReferences.put( url, urlReferences.get( url ) + 1 );
+				}
+				else
+				{
+					urlReferences.put( url, 1 );
+				}
 			}
-			else
-			{
-				urlReferences.put( url, 1 );
-			}
-		}
-
-		if( currentLoader.isAborted() )
-			throw new Exception( "Loading of Definition from [" + url + "] was aborted" );
-
-		loaded = true;
+	
+			if( currentLoader.isAborted() )
+				throw new Exception( "Loading of Definition from [" + url + "] was aborted" );
+	
+			loaded = true;
 	}
 
 	protected abstract T2 createDefinitionLoader( DefinitionCache definitionCache );
