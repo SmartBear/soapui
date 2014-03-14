@@ -104,14 +104,6 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 		{
 			public void run()
 			{
-				try
-				{
-					Thread.sleep( 500 );
-				}
-				catch( InterruptedException ignore )
-				{
-
-				}
 				if( navigationBar != null )
 				{
 					navigationBar.focusUrlField();
