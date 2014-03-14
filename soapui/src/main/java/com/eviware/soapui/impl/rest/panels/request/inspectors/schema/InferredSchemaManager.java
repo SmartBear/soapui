@@ -18,8 +18,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wadl.inference.InferredSchema;
@@ -37,10 +37,10 @@ public class InferredSchemaManager
 
 	static
 	{
-		schemas = new HashMap<RestService, InferredSchema>();
-		propertyChangeSupports = new HashMap<RestService, PropertyChangeSupport>();
-		filenames = new HashMap<String, String>();
-		rFilenames = new HashMap<String, String>();
+		schemas = new ConcurrentHashMap<RestService, InferredSchema>();
+		propertyChangeSupports = new ConcurrentHashMap<RestService, PropertyChangeSupport>();
+		filenames = new ConcurrentHashMap<String, String>();
+		rFilenames = new ConcurrentHashMap<String, String>();
 	}
 
 	public static String filenameForNamespace( String namespace )
