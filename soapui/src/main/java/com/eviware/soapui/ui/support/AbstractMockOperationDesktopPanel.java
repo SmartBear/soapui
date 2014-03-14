@@ -1,9 +1,7 @@
 package com.eviware.soapui.ui.support;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
-import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.model.ModelItem;
@@ -13,7 +11,6 @@ import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.util.ModelItemNames;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JComponentInspector;
@@ -43,7 +40,6 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 	private ResponseListModel responseListModel;
 	private JComponentInspector<JComponent> dispatchInspector;
 	private JInspectorPanel inspectorPanel;
-	private MockOperationDispatcher dispatcher;
 
 	public AbstractMockOperationDesktopPanel( MockOperationType mockOperation )
 	{
@@ -137,7 +133,7 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 					dispatchPanel.remove( 1 );
 
 				String item = ( String )dispatchCombo.getSelectedItem();
-				dispatcher = getModelItem().setDispatchStyle( item );
+				MockOperationDispatcher dispatcher = getModelItem().setDispatchStyle( item );
 
 				dispatchPanel.add( dispatcher.getEditorComponent(), BorderLayout.CENTER );
 				dispatchPanel.revalidate();
@@ -193,8 +189,8 @@ public abstract class AbstractMockOperationDesktopPanel<MockOperationType extend
 
 		inspectorPanel.release();
 
-		if( dispatcher != null )
-			dispatcher.releaseEditorComponent();
+		if( getModelItem().getDispatcher() != null )
+			getModelItem().getDispatcher().releaseEditorComponent();
 
 		return release();
 	}
