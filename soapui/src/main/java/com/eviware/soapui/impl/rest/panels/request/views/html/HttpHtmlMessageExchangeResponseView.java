@@ -18,6 +18,7 @@ import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExcha
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -75,7 +76,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 		super.release();
 
 		if( browser != null )
-			browser.release();
+			browser.close( true );
 
 		messageExchangeModelItem.removePropertyChangeListener( this );
 	}
@@ -107,7 +108,7 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
 			}
 			else
 			{
-				browser = new WebViewBasedBrowserComponent( false );
+				browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
 				Component component = browser.getComponent();
 				component.setMinimumSize( new Dimension( 100, 100 ) );
 				contentPanel.add( new JScrollPane( component ) );

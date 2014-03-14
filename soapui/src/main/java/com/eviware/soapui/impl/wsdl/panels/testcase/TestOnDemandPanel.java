@@ -21,6 +21,7 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 import com.eviware.soapui.testondemand.DependencyValidator;
 import com.eviware.soapui.testondemand.Location;
 import com.eviware.soapui.testondemand.TestOnDemandCaller;
@@ -121,7 +122,7 @@ public class TestOnDemandPanel extends JPanel
 	{
 		if ( browser != null )
 		{
-			browser.release();
+			browser.close( true );
 		}
 	}
 
@@ -225,7 +226,7 @@ public class TestOnDemandPanel extends JPanel
 
 		if( browser == null )
 		{
-			browser = new WebViewBasedBrowserComponent( false );
+			browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
 			add( browser.getComponent(), BorderLayout.CENTER );
 
 			openInInternalBrowser( FIRST_PAGE_URL );

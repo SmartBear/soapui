@@ -14,6 +14,7 @@ package com.eviware.soapui.ui;
 
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 import javax.swing.JPanel;
@@ -33,7 +34,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 		JPanel panel = ( JPanel )getComponent();
 
-		browser = new WebViewBasedBrowserComponent( false );
+		browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 
 		if( StringUtils.hasContent( url ) )
@@ -54,7 +55,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 	public boolean onClose( boolean canCancel )
 	{
-		browser.release();
+		browser.close( true );
 		closed = true;
 		return super.onClose( canCancel );
 	}
