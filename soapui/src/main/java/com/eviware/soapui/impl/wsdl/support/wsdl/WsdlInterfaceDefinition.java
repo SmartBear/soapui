@@ -31,6 +31,8 @@ public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<W
 	private static WSDLReader wsdlReader;
 	private Logger log = Logger.getLogger( WsdlInterfaceDefinition.class );
 
+	private static final Object loadLock = new Object();
+
 	public WsdlInterfaceDefinition( WsdlInterface iface )
 	{
 		super( iface );
@@ -38,32 +40,35 @@ public class WsdlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<W
 
 	public WsdlInterfaceDefinition load( WsdlDefinitionLoader loader ) throws Exception
 	{
-		if( factory == null )
+		synchronized ( loadLock )
 		{
-			factory = WSDLFactory.newInstance();
-			wsdlReader = factory.newWSDLReader();
-			wsdlReader.setFeature( "javax.wsdl.verbose", true );
-			wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
+			if( factory == null )
+			{
+				factory = WSDLFactory.newInstance();
+				wsdlReader = factory.newWSDLReader();
+				wsdlReader.setFeature( "javax.wsdl.verbose", true );
+				wsdlReader.setFeature( "javax.wsdl.importDocuments", true );
+			}
+	
+			log.debug( "Loading WSDL: " + loader.getBaseURI() );
+			try
+			{
+					definition = wsdlReader.readWSDL( loader );
+			}
+			catch( WSDLException e )
+			{
+				throw new InvalidDefinitionException( e );
+			}
+	
+			if( !loader.isAborted() )
+			{
+				super.loadSchemaTypes( loader );
+			}
+			else
+				throw new Exception( "Loading of WSDL from [" + loader.getBaseURI() + "] was aborted" );
+	
+			return this;
 		}
-
-		log.debug( "Loading WSDL: " + loader.getBaseURI() );
-		try
-		{
-		definition = wsdlReader.readWSDL( loader );
-		}
-		catch( WSDLException e )
-		{
-			throw new InvalidDefinitionException( e );
-		}
-
-		if( !loader.isAborted() )
-		{
-			super.loadSchemaTypes( loader );
-		}
-		else
-			throw new Exception( "Loading of WSDL from [" + loader.getBaseURI() + "] was aborted" );
-
-		return this;
 	}
 
 	public String getTargetNamespace()
