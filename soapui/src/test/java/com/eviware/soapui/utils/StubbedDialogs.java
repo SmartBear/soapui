@@ -302,7 +302,7 @@ public class StubbedDialogs implements XDialogs
 		};
 	}
 
-	public static Matcher<List<Confirmation>> hasConfirmationWithQuestion( final Matcher<String> stringMatcher )
+	public static Matcher<List<Confirmation>> hasConfirmationWithQuestionThat( final Matcher<String> stringMatcher )
 	{
 		return new TypeSafeMatcher<List<Confirmation>>()
 		{
