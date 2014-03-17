@@ -301,4 +301,30 @@ public class StubbedDialogs implements XDialogs
 			}
 		};
 	}
+
+	public static Matcher<List<Confirmation>> hasConfirmationWithQuestion( final Matcher<String> stringMatcher )
+	{
+		return new TypeSafeMatcher<List<Confirmation>>()
+		{
+			@Override
+			public boolean matchesSafely( List<Confirmation> confirmations )
+			{
+				for( Confirmation confirmation : confirmations )
+				{
+					if( stringMatcher.matches( confirmation.question) )
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "a confirmation with a question that ");
+				stringMatcher.describeTo( description );
+			}
+		};
+	}
 }
