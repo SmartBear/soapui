@@ -140,7 +140,8 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		oAuth2Form.addInputFieldHintText( "Enter existing access token, or use \"Get Token\" below." );
 
-		final JLabel disclosureButton = new JLabel( "▼ Get Token" );
+		final JLabel disclosureButton = new JLabel( "Get Token" );
+		disclosureButton.setIcon( UISupport.createImageIcon( "/pop-down-open.png" ) );
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
 
@@ -329,7 +330,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 			Point disclosureButtonLocation = source.getLocationOnScreen();
 			accessTokenFormDialog.pack();
 			accessTokenFormDialog.setVisible( true );
-			disclosureButton.setText( "▲ Get Token" );
+			disclosureButton.setIcon( UISupport.createImageIcon( "/pop-down-close.png" ) );
 			if( UISupport.isEnoughSpaceAvailableBelowComponent( disclosureButtonLocation, accessTokenFormDialog.getHeight(), source.getHeight() ) )
 			{
 				setAccessTokenFormDialogBoundsBelowTheButton( disclosureButtonLocation, accessTokenFormDialog, source.getHeight() );
@@ -376,7 +377,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 			if( isMouseOnComponent( SoapUI.getFrame() ) && !isMouseOnComponent( accessTokenFormDialog ) )
 			{
 				accessTokenFormDialog.setVisible( false );
-				disclosureButton.setText( "▼ Get Token" );
+				disclosureButton.setIcon( UISupport.createImageIcon( "/pop-down-open.png" ) );
 				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
 				// will then show the dialog directly again.
 				if( !isMouseOnDisclosureLabel )
