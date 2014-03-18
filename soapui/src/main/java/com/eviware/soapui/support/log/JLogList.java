@@ -43,6 +43,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -456,10 +457,10 @@ public class JLogList extends JPanel
 	 */
 
 	@SuppressWarnings( "unchecked" )
-	private final class LogListModel extends AbstractListModel implements Runnable
+	private final class LogListModel extends AbstractListModel
 	{
 		private final List<Object> lines = Collections.synchronizedList( new TreeList() );
-		private volatile boolean updating = false;
+		private ListUpdater updater = new ListUpdater();
 
 		public int getSize()
 		{
@@ -489,89 +490,107 @@ public class JLogList extends JPanel
 			} );
 		}
 
-		public void run()
+		public void ensureUpdateIsStarted()
 		{
-			String originalThreadName = Thread.currentThread().getName();
-			Thread.currentThread().setName( "LogList Updater for " + title );
-			setUpdating( true );
-			try
-			{
-				Object line;
-				while( ( line = getNextLine() ) != null )
-				{
-					try
-					{
-						int oldSize = lines.size();
-						lines.add( line );
-						updateJList( oldSize );
-					}
-					catch( Exception e )
-					{
-						SoapUI.logError( e );
-					}
-				}
-			} finally
-			{
-				synchronized( this )
-				{
-					updating = false;
-					if( !linesToAdd.isEmpty() )
-					{
-						ensureUpdateIsStarted();
-					}
-				}
-				Thread.currentThread().setName( originalThreadName );
-			}
+			updater.ensureUpdateIsStarted();
 		}
 
-		public synchronized void ensureUpdateIsStarted()
-		{
-			if( !updating )
+		private class ListUpdater implements Runnable {
+			private volatile boolean updating;
+
+			public void run()
 			{
+				String originalThreadName = Thread.currentThread().getName();
+				Thread.currentThread().setName( "LogList Updater for " + title );
 				setUpdating( true );
-				SoapUI.getThreadPool().submit( this );
-			}
-		}
-
-		private Object getNextLine()
-		{
-			try
-			{
-				return linesToAdd.poll( 500, TimeUnit.MILLISECONDS );
-			}
-			catch( InterruptedException e )
-			{
-				//shouldn't really happen
-				return null;
-			}
-		}
-
-
-		private void updateJList( final int size )
-		{
-			SwingUtilities.invokeLater( new Runnable()
-			{
-				public void run()
+				try
 				{
-					fireIntervalAdded( LogListModel.this, size, 1 );
-					if( lines.size() > maxRows )
+					Object line;
+					while( ( line = getNextLine() ) != null )
 					{
-						lines.remove( 0 );
-						fireIntervalRemoved( LogListModel.this, 0, 1 );
+						try
+						{
+							int oldSize = lines.size();
+							lines.add( line );
+							updateJList( oldSize );
+						}
+						catch( Exception e )
+						{
+							SoapUI.logError( e );
+						}
 					}
-					if( tailing )
+				} finally
+				{
+					synchronized( this )
 					{
-						logList.ensureIndexIsVisible( lines.size() - 1 );
+						updating = false;
+						if( !linesToAdd.isEmpty() )
+						{
+							ensureUpdateIsStarted();
+						}
 					}
+					Thread.currentThread().setName( originalThreadName );
 				}
-			} );
-		}
+			}
+
+			public synchronized void ensureUpdateIsStarted()
+			{
+				if( !updating )
+				{
+					setUpdating( true );
+					SoapUI.getThreadPool().submit( this );
+				}
+			}
+
+			private Object getNextLine()
+			{
+				try
+				{
+					return linesToAdd.poll( 500, TimeUnit.MILLISECONDS );
+				}
+				catch( InterruptedException e )
+				{
+					//shouldn't really happen
+					return null;
+				}
+			}
 
 
-		private synchronized void setUpdating( boolean updating )
-		{
-			this.updating = updating;
+			private void updateJList( final int size )
+			{
+				try
+				{
+					SwingUtilities.invokeAndWait( new Runnable()
+					{
+						public void run()
+						{
+							fireIntervalAdded( LogListModel.this, size, 1 );
+							if( lines.size() > maxRows )
+							{
+								lines.remove( 0 );
+								fireIntervalRemoved( LogListModel.this, 0, 1 );
+							}
+							if( tailing )
+							{
+								logList.ensureIndexIsVisible( lines.size() - 1 );
+							}
+						}
+					} );
+				}
+				catch( InterruptedException e )
+				{
+					e.printStackTrace();
+				}
+				catch( InvocationTargetException e )
+				{
+					e.printStackTrace();
+				}
+			}
+
+			private synchronized void setUpdating( boolean updating )
+			{
+				this.updating = updating;
+			}
 		}
 	}
-
 }
