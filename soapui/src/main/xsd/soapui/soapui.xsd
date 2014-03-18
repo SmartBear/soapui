@@ -949,6 +949,9 @@
                     <xsd:element name="response" type="tns:RESTMockResponse"
                                  maxOccurs="unbounded" minOccurs="0">
                     </xsd:element>
+                    <xsd:element name="property" type="tns:Property"
+                                 minOccurs="0" maxOccurs="unbounded">
+                    </xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="resourcePath" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="method" type="xsd:string"></xsd:attribute>
