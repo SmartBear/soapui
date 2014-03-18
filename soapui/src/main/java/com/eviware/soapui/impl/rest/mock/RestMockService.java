@@ -1,10 +1,13 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.iface.Operation;
@@ -12,7 +15,10 @@ import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
 {
@@ -51,17 +57,28 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
-		RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(), restRequest.getPath() );
+        Map<String, String> pathParametersMap = getPathParametersMap(restRequest.getResource(), restRequest.getPath());
+        RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(), restRequest.getPath(), pathParametersMap );
 		mockAction.setResource( restRequest.getResource() );
 
 		return mockAction;
 	}
 
-	public RestMockAction addEmptyMockAction( HttpMethod method, String path )
+    public RestMockAction addEmptyMockAction( HttpMethod method, String path )
+    {
+        return addEmptyMockAction( method, path, null );
+    }
+
+    protected RestMockAction addEmptyMockAction( HttpMethod method, String path, Map<String, String> pathParams )
 	{
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
 
-		String slashifiedPath = slashify(path);
+        if( pathParams != null )
+        {
+            addPathParamsToProperty(pathParams, config);
+        }
+
+        String slashifiedPath = slashify(path);
 		String name = lastPartOf( path );
 
 		config.setName( name );
@@ -75,7 +92,20 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return restMockAction;
 	}
 
-	private String lastPartOf( String path )
+    private void addPathParamsToProperty(Map<String, String> pathParams, RESTMockActionConfig config)
+    {
+        Iterator<Map.Entry<String,String>> iterator = pathParams.entrySet().iterator();
+
+        while ( iterator.hasNext() )
+        {
+            Map.Entry<String, String> pathParamEntry = iterator.next();
+            PropertyConfig propertyConfig = config.addNewProperty();
+            propertyConfig.setName( pathParamEntry.getKey() );
+            propertyConfig.setValue( pathParamEntry.getValue() );
+        }
+    }
+
+    private String lastPartOf( String path )
 	{
 		String[] parts = path.split( "/" );
 		if( parts.length == 0 )
@@ -142,7 +172,21 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 			path = path + request.getPath();
 		}
 
-		return addEmptyMockAction( httpMethod, path );
+
+        Map<String, String> pathParametersMap = getPathParametersMap(restResource, path);
+
+        return addEmptyMockAction( httpMethod, path, pathParametersMap );
 	}
+
+    private Map<String, String> getPathParametersMap(RestResource restResource, String path) {
+        Map<String, String> pathParameters = new HashMap<String, String>();
+        for(String pathParam: RestUtils.extractTemplateParams(path))
+        {
+            String pathParamValue = restResource.getParams().getPropertyValue( pathParam );
+            pathParameters.put( pathParam, pathParamValue );
+
+        }
+        return pathParameters;
+    }
 
 }
