@@ -1,6 +1,7 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.support.UISupport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,6 +42,8 @@ class ExpirationTimeChooser extends JPanel
 		centerPanel.add( label, BorderLayout.NORTH );
 		add( centerPanel, BorderLayout.CENTER );
 
+		JLabel helpLink = UISupport.createLabelLink("http://www.soapui.org", "Learn how to use the token expiration time ");
+		add( helpLink, BorderLayout.SOUTH );
 	}
 
 	public long getAccessTokenExpirationTimeInSeconds()
