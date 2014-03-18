@@ -16,6 +16,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
+import com.eviware.soapui.impl.support.http.HttpRequest;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessageExchange;
@@ -373,7 +374,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					RestTestRequestStepInterface testRequestStep = ( RestTestRequestStepInterface )testStep;
 					exchange = new RestResponseMessageExchange( ( RestRequestInterface )testRequestStep.getTestRequest() );
 					( ( RestResponseMessageExchange )exchange )
-							.setResponse( testRequestStep.getTestRequest()
+							.setResponse( ((HttpRequest )testRequestStep.getTestRequest()) /* cast makes code compile with Java 6 */
 									.getResponse() );
 				}
 				else if( testStep instanceof HttpTestRequestStepInterface )
@@ -381,7 +382,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 					HttpTestRequestStepInterface testRequestStep = ( HttpTestRequestStepInterface )testStep;
 					exchange = new HttpResponseMessageExchange( testRequestStep.getTestRequest() );
 					( ( HttpResponseMessageExchange )exchange )
-							.setResponse( testRequestStep.getTestRequest()
+							.setResponse( ((HttpRequest )testRequestStep.getTestRequest()) /* cast makes code compile with Java 6 */
 									.getResponse() );
 				}
 				else if( testStep instanceof WsdlMockResponseTestStep )

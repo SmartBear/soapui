@@ -19,7 +19,7 @@ import java.beans.PropertyChangeListener;
  * See the GNU Lesser General Public License for more details at gnu.org.
  *
  */
-public class RestRequestMethodModel extends DefaultComboBoxModel<HttpMethod> implements PropertyChangeListener
+public class RestRequestMethodModel extends DefaultComboBoxModel implements PropertyChangeListener
 {
 	private RestRequestInterface request;
 

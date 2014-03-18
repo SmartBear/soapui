@@ -188,7 +188,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
 		if( getRequest().getResource() != null  )
 		{
 			JXToolBar toolbar = UISupport.createToolbar();
-			methodResourceCombo = new JComboBox<ComboBoxModel>( new PathComboBoxModel() );
+			methodResourceCombo = new JComboBox( new PathComboBoxModel() );
 			methodResourceCombo.setRenderer( new RestMethodListCellRenderer() );
 			methodResourceCombo.setPreferredSize( new Dimension( 200, 20 ) );
 			methodResourceCombo.setSelectedItem( getRequest().getRestMethod() );

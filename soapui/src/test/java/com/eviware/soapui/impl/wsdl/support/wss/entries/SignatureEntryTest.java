@@ -160,7 +160,7 @@ public class SignatureEntryTest {
         try {
             new WSSecurityEngine().processSecurityHeader(doc, null, null, crypto);
         } catch (WSSecurityException e) {
-            throw new AssertionError("Bad signature", e);
+            throw new AssertionError("Bad signature: " + e);
         }
     }
 

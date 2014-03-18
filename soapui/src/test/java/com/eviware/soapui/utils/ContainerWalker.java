@@ -41,13 +41,13 @@ public class ContainerWalker
 	}
 
 	// Currently unused, but probably useful
-	public <T> JComboBox<T> findComboBoxWithValue( T value )
+public <T> JComboBox findComboBoxWithValue( T value )
 	{
 		for( Component component : containedComponents )
 		{
 			if( component instanceof JComboBox )
 			{
-				JComboBox<T> comboBox = ( JComboBox<T> )component;
+				JComboBox comboBox = ( JComboBox )component;
 				for( int i = 0; i < comboBox.getItemCount(); i++ )
 				{
 					if( comboBox.getItemAt( i ).equals( value ) )

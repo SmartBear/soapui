@@ -113,7 +113,7 @@ public class RestRequestDesktopPanel extends
 	private JPanel addMethodCombo()
 	{
 		JPanel methodPanel = new JPanel( new BorderLayout() );
-		JComboBox<HttpMethod> methodComboBox = new JComboBox<HttpMethod>( new RestRequestMethodModel( getRequest() ) );
+		JComboBox methodComboBox = new JComboBox( new RestRequestMethodModel( getRequest() ) );
 		methodComboBox.setSelectedItem( getRequest().getMethod() );
 
 		JLabel methodLabel = new JLabel( "Method" );

@@ -93,7 +93,7 @@ public class RestParamsTableTest
 	{
 		paramTable.editCellAt( 0, RestParamsTableModel.STYLE_COLUMN_INDEX );
 		DefaultCellEditor cellEditor = ( DefaultCellEditor )paramTable.getCellEditor( 0, RestParamsTableModel.STYLE_COLUMN_INDEX );
-		JComboBox<RestParamsPropertyHolder.ParameterStyle> comboBox = ( JComboBox )cellEditor.getComponent();
+		JComboBox comboBox = ( JComboBox )cellEditor.getComponent();
 		return getSelectableValues( comboBox );
 	}
 
@@ -101,16 +101,16 @@ public class RestParamsTableTest
 	{
 		paramTable.editCellAt( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX );
 		DefaultCellEditor cellEditor = ( DefaultCellEditor )paramTable.getCellEditor( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX );
-		JComboBox<NewRestResourceActionBase.ParamLocation> comboBox = ( JComboBox )cellEditor.getComponent();
+		JComboBox comboBox = ( JComboBox )cellEditor.getComponent();
 		return getSelectableValues( comboBox );
 	}
 
-	private <T> List<T> getSelectableValues( JComboBox<T> comboBox )
+	private <T> List<T> getSelectableValues( JComboBox comboBox )
 	{
 		List<T> availableStyles = new ArrayList<T>();
 		for( int i = 0; i < comboBox.getItemCount(); i++ )
 		{
-			availableStyles.add( comboBox.getItemAt( i ) );
+			availableStyles.add( ( T )comboBox.getItemAt( i ) );
 		}
 		return availableStyles;
 	}

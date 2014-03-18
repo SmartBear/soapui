@@ -171,7 +171,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	{
 		String[] existingProfiles = createOptionsForAuthorizationCombo( request.getSelectedAuthProfile() );
 
-		profileSelectionComboBox = new JComboBox<String>( existingProfiles );
+		profileSelectionComboBox = new JComboBox( existingProfiles );
 		profileSelectionComboBox.setName( PROFILE_COMBO_BOX );
 		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
 	}
