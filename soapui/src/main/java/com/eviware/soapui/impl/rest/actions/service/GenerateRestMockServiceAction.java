@@ -6,6 +6,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -15,20 +16,22 @@ import com.eviware.x.form.support.AForm;
 
 public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestService>
 {
+	XFormDialog dialog = null;
+
 	public GenerateRestMockServiceAction()
 	{
-		super( "Generate REST Mock Service", "Generates a REST mock service containing this REST services all resources" );
+		super( "Generate REST Mock Service", "Generates a REST mock service containing all resources of this REST service" );
 	}
 
 	@Override
-	public void perform( RestService target, Object param )
+	public void perform( RestService restService, Object param )
 	{
-		generateMockService( target );
-	}
-
-	public void generateMockService( RestService restService )
-	{
-		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
+		if( dialog == null)
+		{
+			dialog = ADialogBuilder.buildDialog( Form.class );
+		}
+		String nextMockServiceName = nextMockServiceName( restService );
+		dialog.setValue( Form.MOCKSERVICENAME, nextMockServiceName );
 
 		MockService mockService = null;
 
@@ -43,6 +46,12 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		UISupport.showDesktopPanel( mockService );
 	}
 
+	public String nextMockServiceName( RestService restService )
+	{
+		int nextMockServiceCount = restService.getProject().getRestMockServiceCount() + 1;
+		return "REST MockService " + nextMockServiceCount;
+	}
+
 	public void populateMockService( RestService restService, MockService mockService )
 	{
 		mockService.setPath( "/" );
@@ -52,6 +61,11 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 
 	public MockService getMockService( String mockServiceName, WsdlProject project )
 	{
+		if( StringUtils.isNullOrEmpty( mockServiceName ) )
+		{
+			UISupport.showInfoMessage( "The mock service name can not be empty" );
+			return null;
+		}
 
 		if( project.getRestMockServiceByName( mockServiceName ) == null )
 		{
@@ -76,10 +90,15 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		}
 	}
 
-	@AForm( name = "Generate REST Mock Service", description = "Set name for the new REST Mock Service", helpUrl = HelpUrls.GENERATE_MOCKSERVICE_HELP_URL )
-	private interface Form
+	protected void setFormDialog( XFormDialog dialog )
 	{
-		@AField( name = "Mock Service name", description = "The Mock Service name", type = AField.AFieldType.STRING )
+		this.dialog = dialog;
+	}
+
+	@AForm( name = "Generate REST Mock Service", description = "Set name for the new REST Mock Service", helpUrl = HelpUrls.GENERATE_MOCKSERVICE_HELP_URL )
+	protected interface Form
+	{
+		@AField( name = "MockServiceName", description = "The Mock Service name", type = AField.AFieldType.STRING )
 		public final static String MOCKSERVICENAME = "MockServiceName";
 	}
 }

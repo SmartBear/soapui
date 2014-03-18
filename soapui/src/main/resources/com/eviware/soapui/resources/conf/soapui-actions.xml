@@ -138,7 +138,7 @@
                 actionClass="com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction"/>
     <tns:action id="GenerateWadlTestSuiteAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction"/>
-    <tns:action id="GenerateMockServiceAction"
+    <tns:action id="GenerateRestMockServiceAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestMockServiceAction"/>
     <tns:action id="Wadl2JavaAction"
                 actionClass="com.eviware.soapui.impl.rest.actions.service.Wadl2JavaAction"/>
@@ -582,7 +582,7 @@
                            keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="GenerateWadlTestSuiteAction"/>
-        <tns:actionMapping actionId="GenerateMockServiceAction"/>
+        <tns:actionMapping actionId="GenerateRestMockServiceAction"/>
         <tns:actionMapping actionId="CreateWadlDocumentationAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="Wadl2JavaAction"/>
