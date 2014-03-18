@@ -1,11 +1,11 @@
 @Manual @Acceptance
 Feature: Access token status
 
-  Background: When the user wants to retrive an OAuth 2 access token, SoapUI will help the user with showing the status of
+  Background: When the user wants to retrieve an OAuth 2 access token, SoapUI will help the user with showing the status of
   the authorization process using the statuses in the following order:
-  Pending -> Waiting for Authorization -> Recived authorization code -> Retrived from server
+  Pending -> Waiting for Authorization -> Received authorization code -> Retrieved from server
   Entered manually
-  -> Failed to retrive
+  -> Failed to retrieve
   -> Expired
 
   Scenario: No status is shown when the Get Access Button hasn't been pressed
