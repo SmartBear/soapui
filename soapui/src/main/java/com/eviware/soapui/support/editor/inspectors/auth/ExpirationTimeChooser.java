@@ -4,6 +4,10 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.UISupport;
 
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,6 +21,7 @@ class ExpirationTimeChooser extends JPanel
 	static final String TIME_UNIT_COMBO_NAME = "timeUnitCombo";
 	private static final TimeUnitOption[] TIME_UNIT_OPTIONS = new TimeUnitOption[] {
 			new TimeUnitOption( 1, "Seconds" ), new TimeUnitOption( 60, "Minutes" ), new TimeUnitOption( 3600, "Hours" ) };
+	private static final int TIME_FIELD_CHARACTER_LIMIT = 9;
 
 	private JRadioButton serverExpirationTimeOption;
 	private JRadioButton manualExpirationTimeOption;
@@ -42,7 +47,7 @@ class ExpirationTimeChooser extends JPanel
 		centerPanel.add( label, BorderLayout.NORTH );
 		add( centerPanel, BorderLayout.CENTER );
 
-		JLabel helpLink = UISupport.createLabelLink("http://www.soapui.org", "Learn how to use the token expiration time ");
+		JLabel helpLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn how to use the token expiration time " );
 		add( helpLink, BorderLayout.SOUTH );
 	}
 
@@ -70,6 +75,7 @@ class ExpirationTimeChooser extends JPanel
 		timeUnitCombo.setEnabled( enableManualTimeControls );
 
 		timeTextField = new JTextField( 5 );
+		configureInputSanitationOnTextField( timeTextField );
 		timeTextField.setName( TIME_FIELD_NAME );
 		timeTextField.setHorizontalAlignment( JTextField.RIGHT );
 
@@ -90,6 +96,33 @@ class ExpirationTimeChooser extends JPanel
 		timeSelectionPanel.add( timeUnitCombo );
 
 		return timeSelectionPanel;
+	}
+
+	private void configureInputSanitationOnTextField( JTextField textField )
+	{
+		final PlainDocument doc = new PlainDocument();
+		doc.setDocumentFilter( new DocumentFilter()
+		{
+			@Override
+			public void insertString( FilterBypass fb, int offset, String string, AttributeSet attr ) throws BadLocationException
+			{
+				if( doc.getLength() + string.length() < TIME_FIELD_CHARACTER_LIMIT )
+				{
+					fb.insertString( offset, string.replaceAll( "\\D++", "" ), attr );
+				}
+			}
+
+			@Override
+			public void replace( FilterBypass fb, int offset, int length, String text, AttributeSet attrs ) throws BadLocationException
+			{
+				if( doc.getLength() + text.length() < TIME_FIELD_CHARACTER_LIMIT )
+				{
+					fb.replace( offset, length, text.replaceAll( "\\D++", "" ), attrs );
+				}
+			}
+		} );
+
+		textField.setDocument( doc );
 	}
 
 	private TimeUnitOption getAppropriateTimeUnitOption( long seconds )
