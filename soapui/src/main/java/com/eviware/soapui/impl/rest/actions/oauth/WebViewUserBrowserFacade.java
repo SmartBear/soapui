@@ -14,6 +14,7 @@ package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -35,7 +36,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 
 	public WebViewUserBrowserFacade(boolean addNavigationBar)
 	{
-		browserComponent = new WebViewBasedBrowserComponent( addNavigationBar );
+		browserComponent = WebViewBasedBrowserComponentFactory.createBrowserComponent( addNavigationBar );
 	}
 
 	@Override
@@ -79,7 +80,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 					popupWindow.dispose();
 				}
 			} );
-			browserComponent.handleClose( true );
+			browserComponent.close( true );
 		}
 		catch( Exception e )
 		{

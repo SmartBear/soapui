@@ -103,7 +103,7 @@ public class AddRequestToMockServiceAction extends AbstractSoapUIAction<WsdlRequ
 
 		// add mockoperation
 		if( mockOperation == null )
-			mockOperation = mockService.addNewMockOperation( request.getOperation() );
+			mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( request.getOperation() );
 
 		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse(
 				"Response " + ( 1 + mockOperation.getMockResponseCount() ), false );

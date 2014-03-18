@@ -40,6 +40,12 @@ public class RandomMockOperationDispatcher extends AbstractMockOperationDispatch
 		}
 	}
 
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return false;
+	}
+
 	public static class Factory implements MockOperationDispatchFactory
 	{
 		public MockOperationDispatcher build( MockOperation mockOperation )

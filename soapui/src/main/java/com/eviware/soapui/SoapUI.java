@@ -245,7 +245,8 @@ public class SoapUI
 		}
 		catch( NoClassDefFoundError e )
 		{
-			log.warn( "Could not find jfxrt.jar. If you are running from the GUI, make sure your classpath is set correctly." );
+			log.warn( "Could not find jfxrt.jar. Internal browser will be disabled." );
+			System.setProperty( BROWSER_DISABLED_SYSTEM_PROPERTY, Boolean.TRUE.toString() );
 		}
 	}
 
@@ -1305,7 +1306,7 @@ public class SoapUI
 		applyProxyButton.setSelected( ProxyUtils.isProxyEnabled() );
 	}
 
-	private class ShowPushPageAction extends AbstractAction
+	private static class ShowPushPageAction extends AbstractAction
 	{
 		public ShowPushPageAction()
 		{

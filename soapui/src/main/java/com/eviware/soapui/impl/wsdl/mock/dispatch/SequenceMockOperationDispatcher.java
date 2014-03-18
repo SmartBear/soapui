@@ -40,6 +40,12 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
 	}
 
 	@Override
+	public boolean hasDefaultResponse()
+	{
+		return false;
+	}
+
+	@Override
 	public void release()
 	{
 		getMockOperation().getMockService().removeMockRunListener( this );

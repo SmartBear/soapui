@@ -36,7 +36,7 @@ class WebViewNavigationBar
 	private final JComponent toolbar;
 
 	private WebEngine webEngine;
-	private WebViewBasedBrowserComponent webViewBasedBrowserComponent;
+	private EnabledWebViewBasedBrowserComponent webViewBasedBrowserComponent;
 
 	private JTextField urlField;
 	private ForwardAction forwardAction;
@@ -48,7 +48,7 @@ class WebViewNavigationBar
 		this.toolbar = createNavigationBar();
 	}
 
-	void initialize( final WebEngine webEngine, WebViewBasedBrowserComponent webViewBasedBrowserComponent )
+	void initialize( final WebEngine webEngine, EnabledWebViewBasedBrowserComponent webViewBasedBrowserComponent )
 	{
 		this.webEngine = webEngine;
 		this.webViewBasedBrowserComponent = webViewBasedBrowserComponent;

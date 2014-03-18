@@ -259,7 +259,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		{
 			iface.addInterfaceListener( interfaceListener );
 
-			mockOperation = mockService.addNewMockOperation( iface.getOperationByName( mockResponseStepConfig
+			mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( iface.getOperationByName( mockResponseStepConfig
 					.getOperation() ) );
 
 			if( mockResponseStepConfig.getHandleFault() )

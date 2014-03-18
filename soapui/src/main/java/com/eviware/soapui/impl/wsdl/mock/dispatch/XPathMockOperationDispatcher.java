@@ -108,6 +108,12 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 		super.releaseEditorComponent();
 	}
 
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return true;
+	}
+
 	protected JXToolBar buildXPathEditorToolbar( DispatchXPathGroovyEditorModel editorModel )
 	{
 		JXToolBar toolbar = UISupport.createToolbar();

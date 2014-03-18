@@ -92,7 +92,7 @@ public class AddOperationToMockServiceAction extends AbstractSoapUIAction<WsdlOp
 			return false;
 		}
 
-		WsdlMockOperation mockOperation = mockService.addNewMockOperation( operation );
+		WsdlMockOperation mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( operation );
 		WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response 1", false );
 
 		if( operation.isBidirectional() )

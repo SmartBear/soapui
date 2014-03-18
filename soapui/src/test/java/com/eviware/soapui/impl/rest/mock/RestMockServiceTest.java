@@ -5,17 +5,22 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.HttpMethod.*;
+import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.HttpMethod.TRACE;
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class RestMockServiceTest
 {
@@ -103,6 +108,20 @@ public class RestMockServiceTest
 	{
 		restMockService.setPath( "myPath" );
 		assertThat( restMockService.getPath(), is( "myPath" ) );
+	}
+
+	@Test
+	public void shouldAddOperationToMockServiceAction() throws SoapUIException
+	{
+		RestResource operation = mock( RestResource.class );
+		when( operation.getRequestCount() ).thenReturn( 1 );
+		when( operation.getRequestAt( 0 )).thenReturn( restRequest );
+
+		restMockService.addNewMockOperation( operation );
+
+		RestMockAction mockOperation = restMockService.getMockOperationAt( 0 );
+		assertThat( mockOperation.getMethod(), is( restRequest.getMethod() ) );
+		assertTrue( mockOperation.getResourcePath().contains( restRequest.getPath() ) );
 	}
 
 	private RESTMockServiceConfig createRestMockServiceConfig()

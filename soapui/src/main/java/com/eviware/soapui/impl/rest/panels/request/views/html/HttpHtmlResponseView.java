@@ -20,6 +20,7 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 
@@ -61,11 +62,11 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			if( SoapUI.isBrowserDisabled() )
 			{
-				panel.add( new JLabel( "Browser Component is disabled" ) );
+				panel.add( new JLabel( "Browser component is disabled." ) );
 			}
 			else
 			{
-				browser = new WebViewBasedBrowserComponent( false );
+				browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
 				Component component = browser.getComponent();
 				component.setMinimumSize( new Dimension( 100, 100 ) );
 				panel.add( component, BorderLayout.CENTER );
@@ -97,7 +98,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		super.release();
 
 		if( browser != null )
-			browser.release();
+			browser.close( true );
 
 		if( messageExchangeModelItem != null )
 			messageExchangeModelItem.removePropertyChangeListener( this );
