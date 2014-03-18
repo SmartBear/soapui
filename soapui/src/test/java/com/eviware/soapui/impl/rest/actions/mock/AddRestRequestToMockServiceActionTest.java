@@ -1,9 +1,9 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -180,6 +180,27 @@ public class AddRestRequestToMockServiceActionTest
 		action.perform( restRequest, notUsed );
 
 		assertThat( getFirstMockOperation().getMockResponseCount(), is(1));
+	}
+
+	@Test
+	public void shouldExpandPathTemplateParameters() throws SoapUIException
+	{
+		RestService restService = (RestService)project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
+
+		RestResource restResource = restService.addNewResource( "resource", "http://some.path.example.com" );
+		restResource.setPropertyValue( "id", "42" );
+		restResource.getProperty( "id" ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
+
+		RestMethod restMethod = restResource.addNewMethod( "get" );
+
+		RestRequest anotherRestRequest = restMethod.addNewRequest( "another" );
+		anotherRestRequest.setPath( "/template/{id}/path" );
+		anotherRestRequest.setPropertyValue( "id", "42" );
+		anotherRestRequest.setMethod( HttpMethod.GET );
+
+		action.perform( anotherRestRequest, notUsed );
+
+		assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path" ) );
 	}
 
 	private void mockPromptDialog()
