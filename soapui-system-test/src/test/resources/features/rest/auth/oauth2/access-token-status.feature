@@ -29,6 +29,17 @@ Feature: Access token status
     And the access token input field background color is set to green
     And there is a tick mark icon on the Auth tab
 
+  Scenario: No status is shown when the access token is removed
+    Given the user has created a REST project with the Google Tasks API
+    When the user enters a access token manually in the access token text box
+    And removes the access token
+    Then there is no status icon in the Get Access Token dialog
+    And there is no status label in the Get Access Token dialog
+    And there is no status icon besides the access token field
+    And there is no status label besides the access token field
+    And the access token input field background color is set to white
+    And there is a lock icon on the Auth tab
+
   Scenario: Access token status is set to Waiting for Authorization when the browser windows is showing, but the user has not logged in
     Given the user has created a REST project with the Google Tasks API
     And the user has successfully configured its OAuth settings

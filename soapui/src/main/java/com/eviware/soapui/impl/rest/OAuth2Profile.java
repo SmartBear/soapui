@@ -210,7 +210,14 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		if( doSetAccessToken( accessToken ) )
 		{
-			setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
+			if( StringUtils.isEmpty( accessToken ) )
+			{
+				setAccessTokenStatus( null );
+			}
+			else
+			{
+				setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
+			}
 		}
 	}
 
@@ -542,7 +549,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			notifyAll();
 		}
 		String oldValueAsString = oldValue == null ? null : oldValue.toString();
-		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status.toString() );
+		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status != null ? status.toString() : null);
 	}
 
 }
