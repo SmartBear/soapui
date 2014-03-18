@@ -26,7 +26,8 @@ class DisabledWebViewBasedBrowserComponent implements WebViewBasedBrowserCompone
 	DisabledWebViewBasedBrowserComponent()
 	{
 		JEditorPane browserDisabledPanel = new JEditorPane();
-		browserDisabledPanel.setText( "Browser Component disabled" );
+		browserDisabledPanel.setText( "Browser component is disabled." );
+		browserDisabledPanel.setEditable( false );
 		panel.add( browserDisabledPanel );
 		panel.setPreferredSize( new Dimension( 300, 200 ) );
 	}

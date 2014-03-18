@@ -62,7 +62,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 		{
 			if( SoapUI.isBrowserDisabled() )
 			{
-				panel.add( new JLabel( "Browser Component is disabled" ) );
+				panel.add( new JLabel( "Browser component is disabled." ) );
 			}
 			else
 			{
