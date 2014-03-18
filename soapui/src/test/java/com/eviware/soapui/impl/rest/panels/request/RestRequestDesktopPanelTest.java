@@ -55,7 +55,7 @@ public class RestRequestDesktopPanelTest
 	private RestRequest restRequest;
 	private StubbedDialogs dialogs;
 	private XDialogs originalDialogs;
-	private JComboBox<String> endpointsCombo;
+	private JComboBox endpointsCombo;
 
 	@Before
 	public void setUp() throws Exception
@@ -329,7 +329,7 @@ public class RestRequestDesktopPanelTest
 	@Test
 	public void keepsEnteredEndpointValueWhenEditingEndpoint() throws Exception
 	{
-		JComboBox<String> endpointsCombo = findEndpointsComboBox();
+		JComboBox endpointsCombo = findEndpointsComboBox();
 		String otherValue = "http://dn.se";
 		setComboTextFieldValue( endpointsCombo, otherValue );
 		endpointsCombo.setSelectedItem( EndpointsComboBoxModel.EDIT_ENDPOINT );
@@ -392,13 +392,13 @@ public class RestRequestDesktopPanelTest
 		return document.getText( 0, document.getLength() );
 	}
 
-	private JComboBox<String> findEndpointsComboBox()
+	private JComboBox findEndpointsComboBox()
 	{
 		ContainerWalker finder = new ContainerWalker( requestDesktopPanel );
 		return finder.findComboBoxWithValue( ENDPOINT );
 	}
 
-	private void setComboTextFieldValue( JComboBox<String> endpointsCombo, String otherValue )
+	private void setComboTextFieldValue( JComboBox endpointsCombo, String otherValue )
 	{
 		( ( JTextComponent )endpointsCombo.getEditor().getEditorComponent() ).setText( otherValue );
 	}
