@@ -63,6 +63,10 @@ public class OAuth2AdvancedOptionsDialog
 				profile.setUseManualAccessTokenExpirationTime( true );
 				profile.setManualAccessTokenExpirationTime( manualExpirationTime );
 			}
+			else
+			{
+				profile.setUseManualAccessTokenExpirationTime( false );
+			}
 
 			enableRefreshAccessTokenButton( profile );
 		}
