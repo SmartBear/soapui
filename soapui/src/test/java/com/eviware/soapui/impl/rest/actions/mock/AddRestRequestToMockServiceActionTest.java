@@ -16,6 +16,8 @@ import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.internal.matchers.NotNull;
+import org.mockito.internal.matchers.Null;
 
 import java.util.List;
 
@@ -26,6 +28,11 @@ import static org.mockito.Mockito.*;
 
 public class AddRestRequestToMockServiceActionTest
 {
+	private static final String ONE_HEADER = "oneHeader";
+	private static final String ANOTHER_HEADER = "anotherHeader";
+	private static final String HEADER_STATUS = "#status#";
+	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
+	private static final String HEADER_CONTENT_TYPE = "Content-Type";
 	private final String requestPath = "/somepath";
 	AddRestRequestToMockServiceAction action = new AddRestRequestToMockServiceAction();
 	RestRequest restRequest;
@@ -51,8 +58,11 @@ public class AddRestRequestToMockServiceActionTest
 		HttpResponse response = mock( HttpResponse.class );
 
 		StringToStringsMap headers = new StringToStringsMap(  );
-		headers.add( "oneHeader", "oneValue" );
-		headers.add( "anotherHeader", "anotherValue" );
+		headers.add( ONE_HEADER, "oneValue" );
+		headers.add( ANOTHER_HEADER, "anotherValue" );
+		headers.add( HEADER_STATUS, "HTTP/1.1 200 OK" );
+		headers.add( HEADER_CONTENT_LENGTH, "456" );
+		headers.add( HEADER_CONTENT_TYPE, "application/xml" );
 
 		when( response.getResponseHeaders() ).thenReturn( headers );
 		when( response.getContentType() ).thenReturn( "application/xml" );
@@ -138,9 +148,29 @@ public class AddRestRequestToMockServiceActionTest
 	{
 		action.perform( restRequest, notUsed );
 
-		StringToStringsMap responseHeaders = getFirstMockOperation().getMockResponseAt( 0 ).getResponseHeaders();
-		assertThat( responseHeaders.get( "oneHeader" ).get(0), is( "oneValue" ) );
-		assertThat( responseHeaders.get( "anotherHeader" ).get(0), is( "anotherValue" ) );
+		StringToStringsMap responseHeaders = getActualResponseHeaders();
+		assertThat( responseHeaders.get( ONE_HEADER ).get(0), is( "oneValue" ) );
+		assertThat( responseHeaders.get( ANOTHER_HEADER ).get( 0 ), is( "anotherValue" ) );
+	}
+
+	public StringToStringsMap getActualResponseHeaders()
+	{
+		return getFirstMockOperation().getMockResponseAt( 0 ).getResponseHeaders();
+	}
+
+	@Test
+	public void shouldNotSaveSomeHeaders()
+	{
+		String[] headersNotToSave = new String[]{ HEADER_STATUS, HEADER_CONTENT_TYPE, HEADER_CONTENT_LENGTH };
+
+		action.perform( restRequest, notUsed );
+
+		StringToStringsMap responseHeaders = getActualResponseHeaders();
+
+		for( String header : headersNotToSave)
+		{
+			assertThat( responseHeaders.get( header ), is( Null.NULL ) );
+		}
 	}
 
 	@Test

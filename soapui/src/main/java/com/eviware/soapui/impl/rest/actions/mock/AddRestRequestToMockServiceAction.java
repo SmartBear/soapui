@@ -13,12 +13,23 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<RestRequest>
 {
 
 	private static final String SELECT_MOCKSERVICE_OPTION = "Create new..";
 	public static final String SOAPUI_ACTION_ID = "AddRestRequestToMockServiceAction";
 	private static final MessageSupport messages = MessageSupport.getMessages( AddRestRequestToMockServiceAction.class );
+	private static List<String> HEADERS_TO_IGNORE = new ArrayList<String>(  );
+
+	static
+	{
+		HEADERS_TO_IGNORE.add( "#status#" );
+		HEADERS_TO_IGNORE.add( "Content-Type" );
+		HEADERS_TO_IGNORE.add( "Content-Length" );
+	}
 
 
 	public AddRestRequestToMockServiceAction()
@@ -97,6 +108,10 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 	private void copyHeaders( RestRequest restRequest, RestMockResponse mockResponse )
 	{
 		StringToStringsMap requestHeaders = restRequest.getResponse().getResponseHeaders();
+		for( String header : HEADERS_TO_IGNORE )
+		{
+			requestHeaders.remove( header );
+		}
 		mockResponse.setResponseHeaders( requestHeaders );
 	}
 
