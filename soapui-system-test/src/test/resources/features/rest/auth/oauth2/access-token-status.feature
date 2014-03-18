@@ -1,11 +1,11 @@
 @Manual @Acceptance
 Feature: Access token status
 
-  Background: When the user wants to retrive an OAuth 2 access token, SoapUI will help the user with showing the status of
+  Background: When the user wants to retrieve an OAuth 2 access token, SoapUI will help the user with showing the status of
   the authorization process using the statuses in the following order:
-  Pending -> Waiting for Authorization -> Recived authorization code -> Retrived from server
+  Pending -> Waiting for Authorization -> Received authorization code -> Retrieved from server
   Entered manually
-  -> Failed to retrive
+  -> Failed to retrieve
   -> Expired
 
   Scenario: No status is shown when the Get Access Button hasn't been pressed
@@ -29,6 +29,17 @@ Feature: Access token status
     And the access token input field background color is set to green
     And there is a tick mark icon on the Auth tab
 
+  Scenario: No status is shown when the access token is removed
+    Given the user has created a REST project with the Google Tasks API
+    When the user enters a access token manually in the access token text box
+    And removes the access token
+    Then there is no status icon in the Get Access Token dialog
+    And there is no status label in the Get Access Token dialog
+    And there is no status icon besides the access token field
+    And there is no status label besides the access token field
+    And the access token input field background color is set to white
+    And there is a lock icon on the Auth tab
+
   Scenario: Access token status is set to Waiting for Authorization when the browser windows is showing, but the user has not logged in
     Given the user has created a REST project with the Google Tasks API
     And the user has successfully configured its OAuth settings
@@ -41,7 +52,7 @@ Feature: Access token status
     And the access token input field background color is set to white
     And there is a waiting status icon on the Auth tab
 
-  Scenario: Access token status is set to Received authorization code when the the authorization code has been recived
+  Scenario: Access token status is set to Received authorization code when the the authorization code has been received
     Given the user has created a REST project with the Google Tasks API
     And the user has successfully configured its OAuth settings, but entered the wrong Access token URI
     When user clicks on Get access token button in the Get Access Token dialog
