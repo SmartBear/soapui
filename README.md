@@ -13,7 +13,7 @@
 ### Prerequisite
 
 * [JDK (version 1.6 or higher)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-* [Maven (version 3.0.5 or higher)](http://maven.apache.org/)
+* [Maven (version 3.0.0 or higher)](http://maven.apache.org/)
 * [Git (version 1.8 or higher)](http://git-scm.com)
 
 ### Getting the source code for the first time
