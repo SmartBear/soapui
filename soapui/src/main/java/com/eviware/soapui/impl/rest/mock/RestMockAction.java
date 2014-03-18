@@ -1,10 +1,12 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
@@ -146,6 +148,21 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		return getConfig().getResourcePath();
 	}
 
+    public String getExpandedResourcePath()
+    {
+        String resourcePath = getResourcePath();
+        String[] pathParam = RestUtils.extractTemplateParams(getResourcePath());
+
+        for ( int i = 0; pathParam.length > i; i++ )
+        {
+            String param = pathParam[i];
+            String value = getPropertyValue( param );
+            resourcePath = resourcePath.replaceAll( "\\{" + param + "\\}", value );
+        }
+
+        return resourcePath;
+    }
+
 	public void setMethod( HttpMethod method)
 	{
 		getConfig().setMethod( method.name() );
@@ -168,6 +185,19 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	public void setResource( RestResource resource )
 	{
 		this.resource = resource;
+
 	}
+
+    private String getPropertyValue( String name )
+    {
+        for(PropertyConfig propertyConfig: getConfig().getPropertyList())
+        {
+            if( propertyConfig.getName().equals(name))
+            {
+                return propertyConfig.getValue();
+            }
+        }
+        return "";
+    }
 
 }

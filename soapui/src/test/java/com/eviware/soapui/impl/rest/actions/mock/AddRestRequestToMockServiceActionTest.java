@@ -200,7 +200,7 @@ public class AddRestRequestToMockServiceActionTest
 
 		action.perform( anotherRestRequest, notUsed );
 
-		assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path" ) );
+		assertThat( getFirstMockOperation().getExpandedResourcePath(), is( "/template/42/path" ) );
 	}
 
 	private void mockPromptDialog()
