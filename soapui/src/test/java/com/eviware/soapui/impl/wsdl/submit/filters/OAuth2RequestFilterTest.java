@@ -169,10 +169,39 @@ public class OAuth2RequestFilterTest
 		verify( mockLogger, times( 2 ) ).info( any( String.class ) );
 	}
 
+	@Test
+	public void refreshAccessTokenIfManualExpirationTimeIsSetAndManualExpirationTimeHasPassed() throws Exception
+	{
+		setupProfileWithRefreshToken();
+		oAuth2Profile.setAccessTokenExpirationTime( 3600 );
+		oAuth2Profile.setManualAccessTokenExpirationTime( 1 );
+		oAuth2Profile.setUseManualAccessTokenExpirationTime( true );
+
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		String actualAccessTokenHeader = httpRequest.getHeaders( ( OAuth.HeaderType.AUTHORIZATION ) )[0].getValue();
+		assertThat( actualAccessTokenHeader, is( "Bearer " + OAuth2TestUtils.ACCESS_TOKEN ) );
+	}
+
+	@Test
+	public void doesNotRefreshAccessTokenEvenIfExpiredWhenManualExpirationTimeIsSelected() throws Exception
+	{
+		setupProfileWithRefreshToken();
+		oAuth2Profile.setAccessTokenIssuedTime( System.currentTimeMillis() );
+		oAuth2Profile.setAccessTokenExpirationTime( 1 );		//We use a 10 second buffer when checking for expiration, so this will count as expired.
+		oAuth2Profile.setUseManualAccessTokenExpirationTime( true );
+		oAuth2Profile.setManualAccessTokenExpirationTime( 3600 );
+
+		String originalAccessToken = oAuth2Profile.getAccessToken();
+
+		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
+
+		assertThat( oAuth2Profile.getAccessToken(), is( originalAccessToken ) );
+	}
+
 	/*
 	Setup helpers.
 	 */
-
 
 	private void setupRequest() throws URISyntaxException
 	{
