@@ -41,7 +41,7 @@ Feature: Access token status
     And the access token input field background color is set to white
     And there is a waiting status icon on the Auth tab
 
-  Scenario: Access token status is set to Received authorization code when the the authorization code has been recived
+  Scenario: Access token status is set to Received authorization code when the the authorization code has been received
     Given the user has created a REST project with the Google Tasks API
     And the user has successfully configured its OAuth settings, but entered the wrong Access token URI
     When user clicks on Get access token button in the Get Access Token dialog
