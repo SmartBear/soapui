@@ -145,7 +145,7 @@ public class StubbedDialogs implements XDialogs
 	@Override
 	public boolean confirmExtendedInfo( String title, String description, String content, Dimension size )
 	{
-		return false;
+		return confirm( content, title );
 	}
 
 	@Override
