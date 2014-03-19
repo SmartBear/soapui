@@ -1,19 +1,24 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
 {
@@ -120,13 +125,13 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		RestResource restResource = (RestResource)operation;
 
 		RestRequestInterface.HttpMethod httpMethod = RestRequestInterface.HttpMethod.GET;
-		String path = restResource.getPath();
+		String path = restResource.getFullPath();
 
 		if( restResource.getRequestCount() > 0 )
 		{
 			RestRequest request = restResource.getRequestAt( 0 );
 			httpMethod = request.getMethod();
-			path = path + request.getPath();
+			path = request.getPath();
 		}
 
         return addEmptyMockAction( httpMethod, path );

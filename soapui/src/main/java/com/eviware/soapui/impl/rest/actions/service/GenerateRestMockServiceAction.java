@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.actions.service;
 
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -80,11 +81,9 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 
 	public void addMockOperations( RestService restService, MockService mockService )
 	{
-		for( int i = 0; i < restService.getOperationCount(); i++ )
+		for( RestResource oneResource : restService.getAllResources() )
 		{
-			Operation operation = restService.getOperationAt( i );
-
-			MockOperation mockOperation = mockService.addNewMockOperation( operation );
+			MockOperation mockOperation = mockService.addNewMockOperation( oneResource );
 			if( mockOperation != null )
 				mockOperation.addNewMockResponse( "Response 1" );
 		}

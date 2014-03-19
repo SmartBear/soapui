@@ -1,6 +1,9 @@
 package com.eviware.soapui.impl.rest.actions.service;
 
+import com.eviware.soapui.config.RestResourceConfig;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.support.SoapUIException;
@@ -12,6 +15,7 @@ import org.mockito.internal.matchers.NotNull;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -73,4 +77,45 @@ public class GenerateRestMockServiceActionTest
 			assertThat( mockAction.getMockResponseCount(), is( 1 ) );
 		}
 	}
+
+	@Test
+	public void shouldGenerateRestMockServiceForNestedResources()
+	{
+		RestResource one = restService.addNewResource( "one", "/one" );
+
+		RestResourceConfig nestedResourceConfig = one.getConfig().addNewResource();
+		nestedResourceConfig.setPath( "/path/again" );
+
+		RestResource three = one.addNewChildResource( "three", "/will/be/overwritten" );
+		three.setConfig( nestedResourceConfig );
+
+		restService.addNewResource( "two", "/two" );
+
+		action.perform( restService, null );
+
+		RestMockService restMockService = getResultingRestMockService();
+		assertThat( restMockService.getMockOperationCount(), is( 3 ));
+		assertMockActionWithPath( restMockService, "/one" );
+		assertMockActionWithPath( restMockService, "/one/path/again" );
+		assertMockActionWithPath( restMockService, "/two" );
+	}
+
+	private void assertMockActionWithPath( RestMockService restMockService, String expectedPath )
+	{
+		boolean foundMatch = false;
+
+		for( MockOperation mockOperation : restMockService.getMockOperationList() )
+		{
+			RestMockAction mockAction = ( RestMockAction )mockOperation;
+
+			if( mockAction.getResourcePath().equals( expectedPath ))
+			{
+				foundMatch = true;
+				break;
+			}
+		}
+		assertTrue( "Did not find a match for " + expectedPath, foundMatch );
+	}
+
+
 }
