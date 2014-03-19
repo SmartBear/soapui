@@ -308,8 +308,8 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenStatusIcon.setIcon( null );
 		accessTokenStatusIcon.setVisible( false );
 
-		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
-		accessTokenStatusText.setVisible( true );
+		accessTokenStatusText.setText( "" );
+		accessTokenStatusText.setVisible( false );
 
 		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
 
@@ -328,7 +328,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
 
-		inspector.setIcon( SUCCESS_ICON );
+		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
 	private void setWaitingFeedback( OAuth2Profile.AccessTokenStatus status )
@@ -343,7 +343,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
 
-		inspector.setIcon( WAIT_ICON );
+		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
 	private void setFailedFeedback( OAuth2Profile.AccessTokenStatus status )
@@ -366,7 +366,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenField.setBackground( DEFAULT_COLOR );
 
 		accessTokenStatusIcon.setIcon( null );
-		accessTokenStatusIcon.setVisible( false);
+		accessTokenStatusIcon.setVisible( false );
 
 		accessTokenStatusText.setText( "" );
 		accessTokenStatusText.setVisible( false );
