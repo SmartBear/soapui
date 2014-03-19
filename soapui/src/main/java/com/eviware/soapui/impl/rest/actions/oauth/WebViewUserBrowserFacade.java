@@ -55,7 +55,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 			@Override
 			public void windowClosing( WindowEvent e )
 			{
-				browserComponent.handleClose( true );
+				browserComponent.close( true );
 			}
 		} );
 
