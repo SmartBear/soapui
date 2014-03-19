@@ -34,7 +34,7 @@ public class URLDesktopPanel extends DefaultDesktopPanel
 
 		JPanel panel = ( JPanel )getComponent();
 
-		browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
+		browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER );
 		panel.add( browser.getComponent(), BorderLayout.CENTER );
 
 		if( StringUtils.hasContent( url ) )

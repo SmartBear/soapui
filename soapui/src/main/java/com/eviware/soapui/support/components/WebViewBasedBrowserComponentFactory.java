@@ -24,14 +24,18 @@ public class WebViewBasedBrowserComponentFactory
 	 */
 	public static WebViewBasedBrowserComponent createBrowserComponent( boolean addNavigationBar )
 	{
+		return createBrowserComponent( addNavigationBar, WebViewBasedBrowserComponent.PopupStrategy.INTERNAL_BROWSER_NEW_WINDOW );
+	}
+
+	public static WebViewBasedBrowserComponent createBrowserComponent( boolean addNavigationBar, WebViewBasedBrowserComponent.PopupStrategy popupStrategy )
+	{
 		if( SoapUI.isBrowserDisabled() )
 		{
 			return new DisabledWebViewBasedBrowserComponent();
 		}
 		else
 		{
-			return new EnabledWebViewBasedBrowserComponent( addNavigationBar );
+			return new EnabledWebViewBasedBrowserComponent( addNavigationBar, popupStrategy );
 		}
-
 	}
 }

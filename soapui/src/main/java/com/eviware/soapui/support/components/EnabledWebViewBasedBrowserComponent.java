@@ -40,7 +40,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -68,9 +71,11 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 	private Set<BrowserWindow> browserWindows = new HashSet<BrowserWindow>();
 
 	private JFXPanel browserPanel;
+	private PopupStrategy popupStrategy;
 
-	EnabledWebViewBasedBrowserComponent( boolean addNavigationBar )
+	EnabledWebViewBasedBrowserComponent( boolean addNavigationBar, PopupStrategy popupStrategy )
 	{
+		this.popupStrategy = popupStrategy;
 		initializeWebView( addNavigationBar );
 	}
 
@@ -324,8 +329,9 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
 		private BrowserWindow( PopupFeatures popupFeatures ) throws HeadlessException
 		{
+			super( "Browser" );
 			setIconImages( SoapUI.getFrameIcons() );
-			browser = new EnabledWebViewBasedBrowserComponent( popupFeatures.hasToolbar() );
+			browser = new EnabledWebViewBasedBrowserComponent( popupFeatures.hasToolbar(), popupStrategy );
 			getContentPane().setLayout( new BorderLayout() );
 			getContentPane().add( browser.getComponent() );
 			addWindowListener( new WindowAdapter()
@@ -389,18 +395,75 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 
 		private void createPopupHandler()
 		{
-			webView.getEngine().setCreatePopupHandler( new Callback<PopupFeatures, WebEngine>()
+			switch( popupStrategy )
 			{
-				@Override
-				public WebEngine call( PopupFeatures pf )
-				{
-					BrowserWindow popupWindow = new BrowserWindow( pf );
-					browserWindows.add( popupWindow );
-					popupWindow.setSize( 800, 600 );
-					popupWindow.setVisible( true );
-					return popupWindow.browser.getWebEngine();
-				}
-			} );
+				case INTERNAL_BROWSER_NEW_WINDOW:
+					webView.getEngine().setCreatePopupHandler( new Callback<PopupFeatures, WebEngine>()
+					{
+						@Override
+						public WebEngine call( PopupFeatures pf )
+						{
+							BrowserWindow popupWindow = new BrowserWindow( pf );
+							browserWindows.add( popupWindow );
+							popupWindow.setSize( 800, 600 );
+							popupWindow.setVisible( true );
+							return popupWindow.browser.getWebEngine();
+						}
+					} );
+					break;
+				case EXTERNAL_BROWSER:
+					webView.getEngine().setCreatePopupHandler( new Callback<PopupFeatures, WebEngine>()
+					{
+						@Override
+						public WebEngine call( PopupFeatures pf )
+						{
+							final WebEngine webEngine = new WebEngine();
+							webEngine.locationProperty().addListener( new ChangeListener<String>()
+							{
+								@Override
+								public void changed( ObservableValue<? extends String> observableValue, String oldValue, String newValue )
+								{
+									observableValue.removeListener( this );
+									Platform.runLater( new Runnable()
+									{
+										@Override
+										public void run()
+										{
+											webEngine.loadContent( "" );
+										}
+									} );
+									try
+									{
+										Desktop.getDesktop().browse( new URI( newValue ) );
+									}
+									catch( IOException e )
+									{
+										SoapUI.logError( e, "Error opening popup in external browser" );
+									}
+									catch( URISyntaxException e )
+									{
+										SoapUI.logError( e, "Error opening popup in external browser" );
+									}
+								}
+							} );
+							return webEngine;
+						}
+					} );
+					break;
+				case DISABLED:
+					webView.getEngine().setCreatePopupHandler( new Callback<PopupFeatures, WebEngine>()
+					{
+						@Override
+						public WebEngine call( PopupFeatures pf )
+						{
+							return null;
+						}
+					} );
+					break;
+				case INTERNAL_BROWSER_REUSE_WINDOW:
+				default:
+					break;
+			}
 		}
 
 		private void listenForLocationChanges()

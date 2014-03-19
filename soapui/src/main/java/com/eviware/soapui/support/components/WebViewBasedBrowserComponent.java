@@ -9,6 +9,10 @@ import java.awt.*;
  */
 public interface WebViewBasedBrowserComponent
 {
+	public enum PopupStrategy {
+		INTERNAL_BROWSER_NEW_WINDOW, INTERNAL_BROWSER_REUSE_WINDOW, EXTERNAL_BROWSER, DISABLED
+	}
+
 	Component getComponent();
 
 	void navigate( String url );
