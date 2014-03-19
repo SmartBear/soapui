@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<application xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:html="http://www.w3.org/1999/xhtml"
+             xmlns="http://research.sun.com/wadl/2006/10">
+  <doc xmlns:smartbear="http://www.smartbear.com/" />  
+  <resources base="http://localhost:8080/">
+    <resource path="accountcreation">
+		<method name="GET" id="viewAccountRegistration">
+	      <doc xml:lang="en" title="Register a new account">
+	        The account register service can be used to fill in account registration forms.
+	      </doc>
+	      <response>
+	         <representation mediaType="text/html"/>
+	      </response>
+	    </method>
+ 		<method name="POST" id="createUserAccount">
+	        <doc xml:lang="en" title="Register a new account">
+	          Creating the account after having filled in the registration form.
+	        </doc>
+		  <request>	
+	        <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query" name="username">
+			  <doc>The username</doc>
+		    </param>
+		    <param xmlns:xs="http://www.w3.org/2001/XMLSchema" type="xs:string" style="query" name="password">
+			  <doc>The password</doc>
+		    </param>
+		    <representation mediaType="application/json"/>
+		  </request>
+	      <response>
+	         <representation mediaType="text/html"/>
+	      </response>
+	    </method>
+   </resource>
+  </resources>  
+</application>
