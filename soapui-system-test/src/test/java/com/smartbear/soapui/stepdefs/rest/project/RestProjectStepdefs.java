@@ -157,7 +157,7 @@ public class RestProjectStepdefs {
     @Then("^request editor has parameter with name (.+) and style (.+) at row (\\d+)$")
     public void verifyRequestEditorParameterStyle(String parameterName, String parameterStyle, Integer index) {
         JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
-        verifyParamValues(requestEditor, index, parameterName, parameterStyle);
+        verifyParamStyles(requestEditor, index, parameterName, parameterStyle);
     }
 
     @Then("^request editor has no parameters$")
@@ -190,10 +190,16 @@ public class RestProjectStepdefs {
         assertThat(restParamsTable.target.getRowCount(), is(0));
     }
 
-    private void verifyParamValues(JPanelFixture parentPanel, int rowNum, String paramName, String paramValue,String paramStyle) {
+    private void verifyParamValues(JPanelFixture parentPanel, int rowNum, String paramName, String paramValue) {
         JTableFixture paramTableInResourceEditor = parentPanel.table(REST_PARAMS_TABLE);
         assertThat(paramTableInResourceEditor.cell(row(rowNum).column(0)).value(), is(paramName));
         assertThat(paramTableInResourceEditor.cell(row(rowNum).column(1)).value(), is(paramValue));
+
+    }
+
+    private void verifyParamStyles(JPanelFixture parentPanel, int rowNum, String paramName,String paramStyle) {
+        JTableFixture paramTableInResourceEditor = parentPanel.table(REST_PARAMS_TABLE);
+        assertThat(paramTableInResourceEditor.cell(row(rowNum).column(0)).value(), is(paramName));
         assertThat(paramTableInResourceEditor.cell(row(rowNum).column(2)).value(), is(paramStyle));
     }
 
