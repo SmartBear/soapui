@@ -34,6 +34,7 @@ import com.eviware.x.impl.swing.JPasswordFieldFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
 import com.eviware.x.impl.swing.JTableFormField;
 import com.jgoodies.forms.layout.FormLayout;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Builds XFormDialogs from AForm/AField annotated classes/interfaces
@@ -81,7 +82,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl() == null ? builder.buildOkCancelActions() : builder
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? builder.buildOkCancelActions() : builder
 				.buildOkCancelHelpActions( formAnnotation.helpUrl() );
 
 		if( actions == null )
@@ -150,7 +151,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl() == null ? null : builder.buildHelpActions( formAnnotation
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? null : builder.buildHelpActions( formAnnotation
 				.helpUrl() );
 
 		if( actions == null )
@@ -200,7 +201,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl().length() == 0 ? builder.buildOkCancelActions() : builder
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? builder.buildOkCancelActions() : builder
 				.buildOkCancelHelpActions( formAnnotation.helpUrl() );
 
 		if( actions == null )
@@ -249,7 +250,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl().length() == 0 ? null : builder
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? null : builder
 				.buildHelpActions( formAnnotation.helpUrl() );
 
 		if( actions == null )
