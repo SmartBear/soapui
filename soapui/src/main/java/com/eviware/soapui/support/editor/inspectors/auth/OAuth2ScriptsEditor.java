@@ -48,7 +48,7 @@ public class OAuth2ScriptsEditor extends JPanel
 
 	static final String[] DEFAULT_SCRIPT_NAMES = { "Page 1 (e.g. login screen)", "Page 2 (e.g. consent screen)" };
 	private static final String HELP_LINK_TEXT = "How to automate the process of getting an access token";
-	private static final String HELP_LINK_URL = "http://soapui.org";
+	private static final String HELP_LINK_URL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
 
 	private List<InputPanel> inputPanels = new ArrayList<InputPanel>();
 	private InputPanel selectedInputField = null;

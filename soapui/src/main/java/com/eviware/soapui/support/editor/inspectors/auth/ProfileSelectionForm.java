@@ -30,8 +30,6 @@ import com.jgoodies.forms.layout.RowSpec;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -162,7 +160,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.add( comboBoxPanel, BorderLayout.LINE_START );
-		wrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( "http://www.soapui.org" ) ),
+		wrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( "http://www.soapui.org/OAuth/automated-token-profile-editor.html" ) ),
 				BorderLayout.AFTER_LINE_ENDS );
 		return wrapperPanel;
 	}

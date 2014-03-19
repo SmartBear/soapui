@@ -146,7 +146,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendLabelAsLink( "http://www.soapui.org", "How to get an access token from an authorization server" );
+		accessTokenForm.appendLabelAsLink( "http://www.soapui.org/OAuth/access-token-from-server.html", "How to get an access token from an authorization server" );
 
 		accessTokenForm.addSpace( BOARDER_SPACING );
 
