@@ -67,8 +67,8 @@ Feature: REST parameter style could be synchronized across REST request, method,
  Given a new REST project is created
  And user adds a parameter in request editor with name param01 and value value01
  When  user changes the style to <new style> for parameter with name param01
- Then Parameters field in top URI bar has <value in resource field>
- And Resource field in top URI bar has <value in parameter field>
+ Then Parameters field in top URI bar has value <value in resource field>
+ And Resource field in top URI bar has value <value in parameter field>
  And resource editor has parameter with name param01 and style <changed style> at row 0
 
  Examples:

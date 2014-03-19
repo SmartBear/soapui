@@ -5,10 +5,10 @@ Feature: Extract the REST URI to the Request editor top URI bar
   I want to only paste the URI and create a new REST project
 
 Scenario Outline: Reject invalid REST URI
-  Given Calvin creates a new REST project from the file menu
-    And enters an <invalid URI> into the 'Create new REST project' pop-up dialogue
-  Then SoapUI presents a pop-up stating <error message>
-    And Calvin is sent back to the 'Create new REST project' dialogue after clicking OK in the error message dialogue
+  Given a new REST project is created with URI <invalid URI>
+  When SoapUI presents the error message dialogue stating <error message>
+  And user clicks OK in the error message dialogue
+  Then user is sent back to the 'Create new REST project' dialogue
 
 Examples:
 |invalid URI                            | error message                                          |
@@ -18,14 +18,17 @@ Examples:
 
 
 Scenario Outline: Parse a valid REST URI automatically
-  Given Calvin creates a new REST project from the file menu
-    And enters a <Valid URI>
-    And clicks "OK"
-  Then the request editor appears displaying the method <method>, endpoint <endpoint>, resource path <resource path>, parameters <parameters> and a request preview.
-    And the navigator tree shows "REST Project" as the project name, <resource name> as the resource name, and <method> and <resource name> combined as the method name
+  When a new REST project is created with URI <Valid URI>
+  Then Method option in top URI bar shows <method>
+  And Endpoint field in top URI bar has value <endpoint>
+  And Resource field in top URI bar has value <resource path>
+  And Parameters field in top URI bar has value <parameters>
+  And the navigator tree shows project named REST Project
+  And the navigator tree shows resource named combining <method name> and <resource path>
+  And the navigator tree shows method named <method name>
 
 Examples:
-|Valid URI                                                            |endpoint              |resource path                     |resource name     |method| parameters       |
+|Valid URI                                                            |endpoint              |resource path                     |method name     |method| parameters       |
 |http://service.com/api/1.2/json/search/search?title=Kill%20me        |http://service.com    |/api/1.2/json/search/search       |Search            |GET   |title=Kill me     |
 |http://service.com/api/1.2/json/search/search?title=Kill me          |http://service.com    |/api/1.2/json/search/search       |Search            |GET   |title=Kill me     |
 |http://service.com/rest/                                             |http://service.com    |/rest/                            |Rest              |GET   |n/a               |
