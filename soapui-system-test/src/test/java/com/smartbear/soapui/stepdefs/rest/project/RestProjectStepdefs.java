@@ -101,19 +101,19 @@ public class RestProjectStepdefs {
         changeParameterLevel(requestEditor, parameterName, newLevel, robot);
     }
 
-    @And("^in resource editor user changes the style to (.+) for parameter with name (.+))$")
+    @And("^in resource editor user changes the style to (.+) for parameter with name (.+)$")
     public void changesParameterStyleInResourceEditor(String newStyle, String parameterName) {
         JPanelFixture resourceEditor = findResourceEditor(rootWindow, newProjectIndexInNavigationTree, robot);
         changeParameterStyle(resourceEditor, parameterName, newStyle, robot);
     }
 
-    @And("^in method editor user changes the style to (.+) for parameter with name (.+))$")
+    @And("^in method editor user changes the style to (.+) for parameter with name (.+)$")
     public void changesParameterStyleInMethodEditor(String newStyle, String parameterName) {
         JPanelFixture methodEditor = findMethodEditor(rootWindow, newProjectIndexInNavigationTree, robot);
         changeParameterStyle(methodEditor, parameterName, newStyle, robot);
     }
 
-    @And("^user changes the style to (.+) for parameter with name (.+))$")
+    @And("^user changes the style to (.+) for parameter with name (.+)$")
     public void changesParameterStyleInRequestEditor(String newStyle, String parameterName) {
         JPanelFixture requestEditor = findRequestEditor(rootWindow, newProjectIndexInNavigationTree, robot);
         changeParameterStyle(requestEditor, parameterName, newStyle, robot);
