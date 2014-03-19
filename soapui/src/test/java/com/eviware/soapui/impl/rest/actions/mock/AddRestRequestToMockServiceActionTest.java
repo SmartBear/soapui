@@ -182,27 +182,46 @@ public class AddRestRequestToMockServiceActionTest
 	}
 
     @Test
-	public void shouldExpandPathTemplateParameters() throws SoapUIException
+	public void shouldExpandPathParameters() throws SoapUIException
 	{
 		RestService restService = (RestService)project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
 
 		RestResource restResource = restService.addNewResource( "resource", "http://some.path.example.com" );
-		restResource.setPropertyValue( "id", "42" );
-		restResource.getProperty( "id" ).setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
 
-		RestMethod restMethod = restResource.addNewMethod( "get" );
-
-		RestRequest anotherRestRequest = restMethod.addNewRequest( "another" );
-		anotherRestRequest.setPath( "/template/{id}/path" );
+		RestMethod restMethod = restResource.addNewMethod("get");
+        RestRequest anotherRestRequest = createRestRequest(restMethod, "/template/{id}/path");
 		anotherRestRequest.setPropertyValue( "id", "42" );
-		anotherRestRequest.setMethod( HttpMethod.GET );
 
 		action.perform( anotherRestRequest, notUsed );
 
 		assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path" ) );
 	}
 
-	private void mockPromptDialog()
+    @Test
+    public void shouldExpandMultiplePathParameters() throws SoapUIException
+    {
+        RestService restService = (RestService)project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
+
+        RestResource restResource = restService.addNewResource( "resource", "http://some.path.example.com" );
+
+        RestMethod restMethod = restResource.addNewMethod( "get" );
+        RestRequest anotherRestRequest = createRestRequest(restMethod, "/template/{id}/path/{version}");
+        anotherRestRequest.setPropertyValue( "id", "42" );
+        anotherRestRequest.setPropertyValue( "version", "3.1" );
+
+        action.perform( anotherRestRequest, notUsed );
+
+        assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path/3.1" ) );
+    }
+
+    private RestRequest createRestRequest(RestMethod restMethod, String path ) {
+        RestRequest anotherRestRequest = restMethod.addNewRequest( "another" );
+        anotherRestRequest.setPath( path );
+        anotherRestRequest.setMethod(HttpMethod.GET);
+        return anotherRestRequest;
+    }
+
+    private void mockPromptDialog()
 	{
 		originalDialogs = UISupport.getDialogs();
 		StubbedDialogs dialogs = new StubbedDialogs();
