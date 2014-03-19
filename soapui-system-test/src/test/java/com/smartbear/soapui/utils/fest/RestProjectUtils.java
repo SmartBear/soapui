@@ -176,6 +176,22 @@ public final class RestProjectUtils
 		}
 	}
 
+    public static void changeParameterStyle( JPanelFixture parentPanel, String parameterName, String newStyle,
+                                             Robot robot )
+    {
+        JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
+        for( int rowCounter = 0; rowCounter < restParamsTable.rowCount(); rowCounter++ )
+        {
+            String paramNameAtIndex = restParamsTable.cell( row( rowCounter ).column( 0 ) ).value();
+            if( paramNameAtIndex.equals( parameterName ) )
+            {
+                JTableComboBoxEditorCellWriter cellWriter = new JTableComboBoxEditorCellWriter( robot );
+                cellWriter.enterValue( restParamsTable.target, rowCounter,2, newStyle );
+                return;
+            }
+        }
+    }
+
     public static void changeParameterValue( JPanelFixture parentPanel, String parameterValue, String newValue,
                                              Robot robot )
     {

@@ -93,24 +93,29 @@ Scenario: revert the parameter value to default in request view
 
 Scenario: parameters value could be property expansion
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-  And user adds a project custom property named prop1 with value 001
+#TODO  And user adds a project custom property named prop1 with value 001
   When user changes the value to ${#Project#prop1} for parameter with value param2
   And run the REST request
-  Then the value of parameter query2 changes to 001 in the raw view
+  Then in the raw view the submitted URI is www.tryit.com/resource/method/?query1=param1&query2=001
 
 Scenario: two requests under the same resource but different method only inherit the same resource level parameters
-  Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-  And user creates a new method method1 under the same resource
-  When user changes the query1 as a method level parameter in method1 method
-  Then the query1 parameter will show up in method1 method editor and its request view
-  And the query1 parameter will be deleted in the other request, only the query2 parameter is left
+  Given a new REST project is created with URI www.tryit.com/backlog/search/?query1=param1&query2=param2
+#TODO  And user creates a method named List under the resource named Search
+  When under method named Search request editor user changes the level to METHOD for parameter with name query1
+  Then under method named Search request editor user has parameter with name query1 and value param1 at row 0
+  And under method named Search method editor user has parameter with name query1 and value param1 at row 0
+  And under method named List request editor user has parameter with name query2 and value param2 at row 0
+  And under method named List method editor user has no parameters
 
 Scenario: two requests under the same resource and method inherit the same resource level and method level parameters
-  Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-  And user creates a new request request2 under the same method
-  When user changes the query1 as a method level parameter in request1
-  Then the query1 parameter will show up in method editor
-  And the query1 parameter still keeps in request1 and request2 as method level
+  Given a new REST project is created with URI www.tryit.com/backlog/search/?query1=param1&query2=param2
+  And user creates a new request Request2 under the same method
+  When user changes the query1 as a method level parameter in Request1
+  Then in method editor user has parameter with name query1 and value param1 at row 0
+  And in Request1 request editor user has parameter with name query1 and value param1 at row 0
+  And in Request1 request editor user has parameter with name query2 and value param2 at row 1
+  And in Request2 request editor user has parameter with name query1 and value param1 at row 0
+  And in Request2 request editor user has parameter with name query2 and value param2 at row 1
 
   Scenario: User can edit query parameters in top URI bar
     Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
