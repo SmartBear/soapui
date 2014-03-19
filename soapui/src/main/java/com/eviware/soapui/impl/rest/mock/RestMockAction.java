@@ -1,12 +1,10 @@
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
@@ -43,7 +41,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		resource = request.getResource();
 	}
 
-	public static String getIconName( RESTMockActionConfig methodConfig )
+    public static String getIconName( RESTMockActionConfig methodConfig )
 	{
 		if( methodConfig.isSetMethod() )
 		{
@@ -148,21 +146,6 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		return getConfig().getResourcePath();
 	}
 
-    public String getExpandedResourcePath()
-    {
-        String resourcePath = getResourcePath();
-        String[] pathParam = RestUtils.extractTemplateParams(getResourcePath());
-
-        for ( int i = 0; pathParam.length > i; i++ )
-        {
-            String param = pathParam[i];
-            String value = getPropertyValue( param );
-            resourcePath = resourcePath.replaceAll( "\\{" + param + "\\}", value );
-        }
-
-        return resourcePath;
-    }
-
 	public void setMethod( HttpMethod method)
 	{
 		getConfig().setMethod( method.name() );
@@ -178,7 +161,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 	public void setResourcePath( String path )
 	{
-		getConfig().setResourcePath( path );
+        getConfig().setResourcePath( path );
 		notifyPropertyChanged( "resourcePath", null, this );
 	}
 
@@ -188,16 +171,5 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 	}
 
-    private String getPropertyValue( String name )
-    {
-        for(PropertyConfig propertyConfig: getConfig().getPropertyList())
-        {
-            if( propertyConfig.getName().equals(name))
-            {
-                return propertyConfig.getValue();
-            }
-        }
-        return "";
-    }
 
 }

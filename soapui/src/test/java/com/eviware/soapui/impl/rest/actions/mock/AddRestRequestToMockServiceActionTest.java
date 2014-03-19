@@ -16,7 +16,6 @@ import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.NotNull;
 import org.mockito.internal.matchers.Null;
 
 import java.util.List;
@@ -182,7 +181,7 @@ public class AddRestRequestToMockServiceActionTest
 		assertThat( getFirstMockOperation().getMockResponseCount(), is(1));
 	}
 
-	@Test
+    @Test
 	public void shouldExpandPathTemplateParameters() throws SoapUIException
 	{
 		RestService restService = (RestService)project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
@@ -200,7 +199,7 @@ public class AddRestRequestToMockServiceActionTest
 
 		action.perform( anotherRestRequest, notUsed );
 
-		assertThat( getFirstMockOperation().getExpandedResourcePath(), is( "/template/42/path" ) );
+		assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path" ) );
 	}
 
 	private void mockPromptDialog()

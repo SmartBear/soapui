@@ -57,26 +57,17 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
-        Map<String, String> pathParametersMap = getPathParametersMap(restRequest.getResource(), restRequest.getPath());
-        RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(), restRequest.getPath(), pathParametersMap );
+        RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(),
+                                                        restRequest.getTemplateParamExpandedPath() );
 		mockAction.setResource( restRequest.getResource() );
 
 		return mockAction;
 	}
 
-    public RestMockAction addEmptyMockAction( HttpMethod method, String path )
-    {
-        return addEmptyMockAction( method, path, null );
-    }
 
-    protected RestMockAction addEmptyMockAction( HttpMethod method, String path, Map<String, String> pathParams )
+    public RestMockAction addEmptyMockAction(HttpMethod method, String path)
 	{
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
-
-        if( pathParams != null )
-        {
-            addPathParamsToProperty(pathParams, config);
-        }
 
         String slashifiedPath = slashify(path);
 		String name = lastPartOf( path );
@@ -92,35 +83,6 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return restMockAction;
 	}
 
-    private void addPathParamsToProperty(Map<String, String> pathParams, RESTMockActionConfig config)
-    {
-        Iterator<Map.Entry<String,String>> iterator = pathParams.entrySet().iterator();
-
-        while ( iterator.hasNext() )
-        {
-            Map.Entry<String, String> pathParamEntry = iterator.next();
-            PropertyConfig propertyConfig = config.addNewProperty();
-            propertyConfig.setName( pathParamEntry.getKey() );
-            propertyConfig.setValue( pathParamEntry.getValue() );
-        }
-    }
-
-    private String lastPartOf( String path )
-	{
-		String[] parts = path.split( "/" );
-		if( parts.length == 0 )
-		{
-			return "";
-		}
-		return parts[parts.length - 1];
-	}
-
-	private String slashify( String path )
-	{
-		if( !path.startsWith( "/" ))
-			return "/" + path;
-		return path;
-	}
 
 	public MockOperation findOrCreateNewOperation( RestRequest restRequest )
 	{
@@ -172,21 +134,24 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 			path = path + request.getPath();
 		}
 
-
-        Map<String, String> pathParametersMap = getPathParametersMap(restResource, path);
-
-        return addEmptyMockAction( httpMethod, path, pathParametersMap );
+        return addEmptyMockAction( httpMethod, path );
 	}
 
-    private Map<String, String> getPathParametersMap(RestResource restResource, String path) {
-        Map<String, String> pathParameters = new HashMap<String, String>();
-        for(String pathParam: RestUtils.extractTemplateParams(path))
+    private String lastPartOf( String path )
+    {
+        String[] parts = path.split( "/" );
+        if( parts.length == 0 )
         {
-            String pathParamValue = restResource.getParams().getPropertyValue( pathParam );
-            pathParameters.put( pathParam, pathParamValue );
-
+            return "";
         }
-        return pathParameters;
+        return parts[parts.length - 1];
+    }
+
+    private String slashify( String path )
+    {
+        if( !path.startsWith( "/" ))
+            return "/" + path;
+        return path;
     }
 
 }

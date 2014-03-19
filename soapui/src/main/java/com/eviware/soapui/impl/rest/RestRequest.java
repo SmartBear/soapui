@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
@@ -495,7 +496,21 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			return getResource().getFullPath();
 	}
 
-	public void setPath( String fullPath )
+    public String getTemplateParamExpandedPath( )
+    {
+        String expandedPath = getPath();
+
+        for(String pathParam: RestUtils.extractTemplateParams(expandedPath))
+        {
+            String pathParamValue = getParams().getPropertyValue( pathParam );
+            expandedPath = expandedPath.replaceAll( "\\{" + pathParam + "\\}", pathParamValue == null ? "" : pathParamValue );
+        }
+
+        return expandedPath;
+
+    }
+
+    public void setPath( String fullPath )
 	{
 		String old = getPath();
 
