@@ -31,6 +31,7 @@
         <project.src.artifactId>soapui</project.src.artifactId>
 
         <javafx.version>2.2</javafx.version>
+        <!-- Set this property to the location of your JavaFX runtime jar if you want to compile with Java 6 -->
         <javafx.runtime.lib.jar>${java.home}/lib/jfxrt.jar</javafx.runtime.lib.jar>
     </properties>
 

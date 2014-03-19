@@ -3,6 +3,7 @@
 ## Structure and submodules
 
 * *[soapui](soapui)* - The core module that creates the SoapUI jar
+* *[soapui-system-test](soapui-system-test)* - Integration and system tests for SoapUI
 * *[soapui-installer](soapui-installer)* - Creates the SoapUI distributions, such as installers and archives
 * *[soapui-maven-plugin](soapui-maven-plugin)* – Maven plugin used for running SoapUI in a Continuous integration environment (such as [Jenkins](http://jenkins-ci.org)).
 * *[soapui-maven-plugin-tester](soapui-maven-plugin-tester)* - Small test `pom.xml` used for testing the *soapui-maven-plugin*.
@@ -12,7 +13,8 @@
 ### Prerequisite
 
 * [JDK (version 1.6 or higher)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-* [Maven (version 2.0 or higher)](http://maven.apache.org/)
+    * If you're using Java 1.6 you have download the [standalone Java FX runtime ](http://www.oracle.com/technetwork/java/javase/downloads/javafxjdk6-1728173.html) and set the `javafx.runtime.lib.jar` property in the root `pom.xml` file to the path of the `jfxrt.jar` file
+* [Maven (version 3.0.0 or higher)](http://maven.apache.org/)
 * [Git (version 1.8 or higher)](http://git-scm.com)
 
 ### Getting the source code for the first time
@@ -40,13 +42,13 @@ When you have decided that you want to take a more active part in improving Soap
 
 As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an IDE is usually very straight forward, as long as the IDE has good Maven support.
 
-**Getting started using Intellij IDEA (version 12)**
+**Getting started using Intellij IDEA (version 13)**
 
 * [Clone the project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3#getting-the-source-code-for-the-first-time)
 * In the main menu select *File* 
 * Then click *Import project* 
 * At *Root directory* enter the path to the root folder of the SoapUI project
-* A the next screen make sure that *Maven* is selected and click *Next*
+* In the dialog window select *Import project from external model* and select *Maven*
 * Finish the wizard by just clicking *Next* and then finally *Finish*
 * After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run*. 
 * To get the latest changes right click on the root folder in the *Project* view and select *Git* -> *Repository* -> *Pull...*
