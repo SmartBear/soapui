@@ -88,7 +88,7 @@ public class GenerateRestMockServiceActionTest
 
 		RestMockService restMockService = getResultingRestMockService();
 		assertThat( restMockService.getMockOperationCount(), is( 2 ));
-		assertThat( restMockService.getMockOperationAt( 1 ).getName(), is( "two" ) );
+		assertThat( restMockService.getMockOperationAt( 1 ).getName(), is( "/two" ) );
 
 		for( MockOperation mockAction : restMockService.getMockOperationList() )
 		{

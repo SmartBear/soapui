@@ -69,8 +69,8 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	{
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
 
-        String slashifiedPath = slashify(path);
-		String name = lastPartOf( path );
+      String slashifiedPath = slashify(path);
+		String name = path ;
 
 		config.setName( name );
 		config.setMethod( method.name() );
@@ -134,18 +134,8 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 			path = request.getPath();
 		}
 
-        return addEmptyMockAction( httpMethod, path );
+		return addEmptyMockAction( httpMethod, path );
 	}
-
-    private String lastPartOf( String path )
-    {
-        String[] parts = path.split( "/" );
-        if( parts.length == 0 )
-        {
-            return "";
-        }
-        return parts[parts.length - 1];
-    }
 
     private String slashify( String path )
     {
@@ -154,9 +144,4 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
         return path;
     }
 
-	@Override
-	public String getHelpUrl()
-	{
-		return HelpUrls.REST_MOCKSERVICE_HELP_URL;
-	}
 }

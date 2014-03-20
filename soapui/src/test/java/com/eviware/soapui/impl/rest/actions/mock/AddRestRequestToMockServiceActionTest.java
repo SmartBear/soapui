@@ -1,12 +1,13 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
+import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -16,14 +17,16 @@ import com.eviware.x.dialogs.XDialogs;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.internal.matchers.Null;
 
 import java.util.List;
 
-import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static org.mockito.internal.matchers.NotNull.NOT_NULL;
+import static org.mockito.internal.matchers.Null.NULL;
 
 public class AddRestRequestToMockServiceActionTest
 {
@@ -32,7 +35,7 @@ public class AddRestRequestToMockServiceActionTest
 	private static final String HEADER_STATUS = "#status#";
 	private static final String HEADER_CONTENT_LENGTH = "Content-Length";
 	private static final String HEADER_CONTENT_TYPE = "Content-Type";
-	private final String requestPath = "/somepath";
+	private final String requestPath = "/some/path";
 	AddRestRequestToMockServiceAction action = new AddRestRequestToMockServiceAction();
 	RestRequest restRequest;
 	Object notUsed = null;
@@ -87,6 +90,15 @@ public class AddRestRequestToMockServiceActionTest
 		RestMockService service = project.getRestMockServiceByName( mockServiceName );
 		assertThat( service.getName(), is( mockServiceName ) );
 		assertThat( service.getMockRunner().isRunning(), is( TRUE ));
+	}
+
+	@Test
+	public void shouldSetAGoodNameOnTheRestMockAction()
+	{
+		action.perform( restRequest, notUsed );
+
+		RestMockService service = project.getRestMockServiceByName( mockServiceName );
+		assertThat( service.getMockOperationByName( requestPath ), is( NOT_NULL ) );
 	}
 
 	@Test
@@ -214,7 +226,8 @@ public class AddRestRequestToMockServiceActionTest
 
         action.perform( anotherRestRequest, notUsed );
 
-        assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path/3.1" ) );
+		 assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path/3.1" ) );
+		 assertThat( getFirstMockOperation().getName(), is( "/template/42/path/3.1" ) );
     }
 
     private RestRequest createRestRequest(RestMethod restMethod, String path ) {
