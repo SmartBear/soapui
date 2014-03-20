@@ -61,7 +61,7 @@ public class AddRestRequestToMockServiceActionTest
 	{
 		HttpResponse response = mock( HttpResponse.class );
 
-		StringToStringsMap headers = new StringToStringsMap(  );
+		StringToStringsMap headers = new StringToStringsMap();
 		headers.add( ONE_HEADER, "oneValue" );
 		headers.add( ANOTHER_HEADER, "anotherValue" );
 		headers.add( HEADER_STATUS, "HTTP/1.1 200 OK" );
@@ -118,7 +118,7 @@ public class AddRestRequestToMockServiceActionTest
 
 		int mockResponseCount = getFirstMockOperation().getMockResponseCount();
 
-		assertThat( mockResponseCount, is(2));
+		assertThat( mockResponseCount, is( 2 ) );
 	}
 
 	@Test
@@ -130,8 +130,8 @@ public class AddRestRequestToMockServiceActionTest
 
 		int mockResponseCount = getFirstMockOperation().getMockResponseCount();
 
-		assertThat( mockResponseCount, is(1));
-		assertThat( getFirstRestMockService().getMockOperationCount(), is(2) );
+		assertThat( mockResponseCount, is( 1 ) );
+		assertThat( getFirstRestMockService().getMockOperationCount(), is( 2 ) );
 	}
 
 	public RestMockAction getFirstMockOperation()
@@ -149,7 +149,7 @@ public class AddRestRequestToMockServiceActionTest
 	{
 		action.perform( restRequest, notUsed );
 		int mockOperationCount = getFirstRestMockService().getMockOperationCount();
-		assertThat( mockOperationCount, is(1));
+		assertThat( mockOperationCount, is( 1 ) );
 
 		restRequest.setMethod( RestRequestInterface.HttpMethod.TRACE );
 		action.perform( restRequest, notUsed );
@@ -163,7 +163,7 @@ public class AddRestRequestToMockServiceActionTest
 		action.perform( restRequest, notUsed );
 
 		StringToStringsMap responseHeaders = getActualResponseHeaders();
-		assertThat( responseHeaders.get( ONE_HEADER ).get(0), is( "oneValue" ) );
+		assertThat( responseHeaders.get( ONE_HEADER ).get( 0 ), is( "oneValue" ) );
 		assertThat( responseHeaders.get( ANOTHER_HEADER ).get( 0 ), is( "anotherValue" ) );
 	}
 
@@ -175,15 +175,15 @@ public class AddRestRequestToMockServiceActionTest
 	@Test
 	public void shouldNotSaveSomeHeaders()
 	{
-		String[] headersNotToSave = new String[]{ HEADER_STATUS, HEADER_CONTENT_TYPE, HEADER_CONTENT_LENGTH };
+		String[] headersNotToSave = new String[] { HEADER_STATUS, HEADER_CONTENT_TYPE, HEADER_CONTENT_LENGTH };
 
 		action.perform( restRequest, notUsed );
 
 		StringToStringsMap responseHeaders = getActualResponseHeaders();
 
-		for( String header : headersNotToSave)
+		for( String header : headersNotToSave )
 		{
-			assertThat( responseHeaders.get( header ), is( NULL) );
+			assertThat( responseHeaders.get( header ), is( NULL ) );
 		}
 	}
 
@@ -193,18 +193,18 @@ public class AddRestRequestToMockServiceActionTest
 		restRequest.setResponse( null, null );
 		action.perform( restRequest, notUsed );
 
-		assertThat( getFirstMockOperation().getMockResponseCount(), is(1));
+		assertThat( getFirstMockOperation().getMockResponseCount(), is( 1 ) );
 	}
 
-    @Test
+	@Test
 	public void shouldExpandPathParameters() throws SoapUIException
 	{
-		RestService restService = (RestService)project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
+		RestService restService = ( RestService )project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
 
 		RestResource restResource = restService.addNewResource( "resource", "http://some.path.example.com" );
 
-		RestMethod restMethod = restResource.addNewMethod("get");
-        RestRequest anotherRestRequest = createRestRequest(restMethod, "/template/{id}/path");
+		RestMethod restMethod = restResource.addNewMethod( "get" );
+		RestRequest anotherRestRequest = createRestRequest( restMethod, "/template/{id}/path" );
 		anotherRestRequest.setPropertyValue( "id", "42" );
 
 		action.perform( anotherRestRequest, notUsed );
@@ -212,23 +212,23 @@ public class AddRestRequestToMockServiceActionTest
 		assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path" ) );
 	}
 
-    @Test
-    public void shouldExpandMultiplePathParameters() throws SoapUIException
-    {
-        RestService restService = (RestService)project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
+	@Test
+	public void shouldExpandMultiplePathParameters() throws SoapUIException
+	{
+		RestService restService = ( RestService )project.addNewInterface( "a rest resource", RestServiceFactory.REST_TYPE );
 
-        RestResource restResource = restService.addNewResource( "resource", "http://some.path.example.com" );
+		RestResource restResource = restService.addNewResource( "resource", "http://some.path.example.com" );
 
-        RestMethod restMethod = restResource.addNewMethod( "get" );
-        RestRequest anotherRestRequest = createRestRequest(restMethod, "/template/{id}/path/{version}");
-        anotherRestRequest.setPropertyValue( "id", "42" );
-        anotherRestRequest.setPropertyValue( "version", "3.1" );
+		RestMethod restMethod = restResource.addNewMethod( "get" );
+		RestRequest anotherRestRequest = createRestRequest( restMethod, "/template/{id}/path/{version}" );
+		anotherRestRequest.setPropertyValue( "id", "42" );
+		anotherRestRequest.setPropertyValue( "version", "3.1" );
 
-        action.perform( anotherRestRequest, notUsed );
+		action.perform( anotherRestRequest, notUsed );
 
-		 assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path/3.1" ) );
-		 assertThat( getFirstMockOperation().getName(), is( "/template/42/path/3.1" ) );
-    }
+		assertThat( getFirstMockOperation().getResourcePath(), is( "/template/42/path/3.1" ) );
+		assertThat( getFirstMockOperation().getName(), is( "/template/42/path/3.1" ) );
+	}
 
     private RestRequest createRestRequest(RestMethod restMethod, String path ) {
         RestRequest anotherRestRequest = restMethod.addNewRequest( "another" );
@@ -237,7 +237,7 @@ public class AddRestRequestToMockServiceActionTest
         return anotherRestRequest;
     }
 
-    private void mockPromptDialog()
+	private void mockPromptDialog()
 	{
 		originalDialogs = UISupport.getDialogs();
 		StubbedDialogs dialogs = new StubbedDialogs();
