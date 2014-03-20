@@ -354,6 +354,7 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, true );
 		setIfNotSet( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true );
 		setIfNotSet( HttpSettings.LEAVE_MOCKENGINE, true );
+		setIfNotSet( HttpSettings.START_MOCK_SERVICE, true );
 		setIfNotSet( UISettings.AUTO_SAVE_INTERVAL, "0" );
 		setIfNotSet( UISettings.GC_INTERVAL, "60" );
 		setIfNotSet( UISettings.SHOW_STARTUP_PAGE, true );

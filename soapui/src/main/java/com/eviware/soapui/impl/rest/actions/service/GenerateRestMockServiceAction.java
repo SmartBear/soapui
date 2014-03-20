@@ -5,9 +5,9 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -28,16 +28,12 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 	@Override
 	public void perform( RestService restService, Object param )
 	{
-		if( dialog == null)
-		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
-		}
-		String nextMockServiceName = nextMockServiceName( restService );
-		dialog.setValue( Form.MOCKSERVICENAME, nextMockServiceName );
+		createDialog( restService );
 
 		if( dialog.show() )
 		{
-			MockService mockService = getMockService( dialog.getValue( Form.MOCKSERVICENAME ), restService.getProject() );
+			String mockServiceName = dialog.getValue( Form.MOCKSERVICENAME );
+			MockService mockService = getMockService( mockServiceName, restService.getProject() );
 
 			if( mockService != null )
 			{
@@ -45,16 +41,29 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 				restService.addEndpoint( mockService.getLocalEndpoint() );
 
 				UISupport.showDesktopPanel( mockService );
-				start( mockService );
+				maybeStart( mockService );
 			}
 		}
 	}
 
-	public void start( MockService mockService )
+	private void createDialog( RestService restService )
+	{
+		if( dialog == null)
+		{
+			dialog = ADialogBuilder.buildDialog( Form.class );
+		}
+		String nextMockServiceName = nextMockServiceName( restService );
+		dialog.setValue( Form.MOCKSERVICENAME, nextMockServiceName );
+	}
+
+	private void maybeStart( MockService mockService )
 	{
 		try
 		{
-			mockService.start();
+			if( SoapUI.getSettings().getBoolean( HttpSettings.START_MOCK_SERVICE ))
+			{
+				mockService.start();
+			}
 		}
 		catch( Exception e )
 		{
@@ -62,20 +71,20 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		}
 	}
 
-	public String nextMockServiceName( RestService restService )
+	private String nextMockServiceName( RestService restService )
 	{
 		int nextMockServiceCount = restService.getProject().getRestMockServiceCount() + 1;
 		return "REST MockService " + nextMockServiceCount;
 	}
 
-	public void populateMockService( RestService restService, MockService mockService )
+	private void populateMockService( RestService restService, MockService mockService )
 	{
 		mockService.setPath( "/" );
 		mockService.setPort( 8080 );
 		addMockOperations( restService, mockService );
 	}
 
-	public MockService getMockService( String mockServiceName, WsdlProject project )
+	private MockService getMockService( String mockServiceName, WsdlProject project )
 	{
 		if( StringUtils.isNullOrEmpty( mockServiceName ) )
 		{
@@ -94,16 +103,21 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		}
 	}
 
-	public void addMockOperations( RestService restService, MockService mockService )
+	private void addMockOperations( RestService restService, MockService mockService )
 	{
 		for( RestResource oneResource : restService.getAllResources() )
 		{
 			MockOperation mockOperation = mockService.addNewMockOperation( oneResource );
 			if( mockOperation != null )
+			{
 				mockOperation.addNewMockResponse( "Response 1" );
+			}
 		}
 	}
 
+	/*
+	 * only for injacting the dialog when testing
+	 */
 	protected void setFormDialog( XFormDialog dialog )
 	{
 		this.dialog = dialog;
