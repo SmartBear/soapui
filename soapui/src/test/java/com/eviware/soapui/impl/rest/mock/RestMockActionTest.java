@@ -19,6 +19,8 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
+import static java.lang.Boolean.*;
+
 public class RestMockActionTest
 {
 	RestMockRequest restMockRequest;
@@ -191,6 +193,14 @@ public class RestMockActionTest
 
 		RestMockResult mockResult = mockAction.dispatchRequest( restMockRequest );
 		assertThat( mockResult.getMockResponse().getName(), is( "response 2" ) );
+	}
+
+	@Test
+	public void testSetsDefaultDispatchScriptUponLoad()
+	{
+		String actualScript = mockAction.getScript().trim();
+		assertThat( actualScript.startsWith( "/*" ), is(TRUE) );
+		assertThat( actualScript.endsWith( "*/" ), is(TRUE) );
 	}
 
 

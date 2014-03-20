@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
@@ -10,8 +11,12 @@ import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.UISupport;
+import com.google.common.io.CharStreams;
 
 import java.beans.PropertyChangeEvent;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 
 public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
@@ -177,7 +182,19 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	{
 		if ( getScript() == null )
 		{
-			setScript( "//Sample Script from property file" );
+			try
+			{
+				String groovyScriptName = "com/eviware/soapui/impl/rest/mock/dispatching-script-sample.groovy";
+				InputStream groovyStream = getClass().getClassLoader().getResourceAsStream( groovyScriptName );
+				InputStreamReader groovyReader = new InputStreamReader( groovyStream );
+				String groovyScript = CharStreams.toString( groovyReader );
+
+				setScript( groovyScript );
+			}
+			catch(IOException e)
+			{
+				SoapUI.logError( e );
+			}
 		}
 	}
 }
