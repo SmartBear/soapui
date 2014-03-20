@@ -15,14 +15,6 @@
     <description>Creates the SoapUI distributions, such as installers and archives</description>
     <packaging>jar</packaging>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>googlecode-maven-install4j</id>
-            <name>googlecode-maven-install4j</name>
-            <url>http://maven-install4j.googlecode.com/svn/m2-repo</url>
-        </pluginRepository>
-    </pluginRepositories>
-
     <build>
         <resources>
             <resource>
@@ -55,18 +47,16 @@
             </plugin>
 
             <plugin>
-                <groupId>com.google.code.maven-install4j</groupId>
-                <artifactId>maven-install4j-plugin</artifactId>
-                <version>0.1.1</version>
+                <groupId>org.sonatype.install4j</groupId>
+                <artifactId>install4j-maven-plugin</artifactId>
+                <version>1.0.6</version>
                 <configuration>
-                    <executable>${devenv.install4jc}</executable>
-                    <releaseId>${project.version}</releaseId>
+                    <installDir>${install4j.home}</installDir>
+                    <release>${project.version}</release>
                     <attach>true</attach>
-                    <skipOnMissingExecutable>true</skipOnMissingExecutable>
-                    <!-- FIXME  Move this to src/main/install4j -->
-                    <!-- FIXME Decide what goes here and what goes in he *.install4j and what goes in Jenkins -->
-                    <configFile>${project.basedir}/src/install4j/SoapUI.install4j</configFile>
-                    <compilerVariables>
+                    <destination>${project.build.directory}/install4j</destination>
+                    <projectFile>${project.basedir}/src/install4j/SoapUI.install4j</projectFile>
+                    <variables>
                         <property>
                             <name>VERSION_NUMBER</name>
                             <value>${project.version}</value>
@@ -96,6 +86,10 @@
                             <value>${maven.install4j.signtool}</value>
                         </property>
                         <property>
+                            <name>MAC_CERT_PATH</name>
+                            <value>${maven.install4j.maccert}</value>
+                        </property>
+                        <property>
                             <name>CERT_PATH</name>
                             <value>${maven.install4j.cert}</value>
                         </property>
@@ -112,10 +106,6 @@
                             <value>${maven.hermes.installer}</value>
                         </property>
                         <property>
-                            <name>WIN_DLLS_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
                             <name>LOADUI_DOWNLOADER</name>
                             <value>${maven.loadUI.downloader}</value>
                         </property>
@@ -123,7 +113,7 @@
                             <name>LOADUI_INSTALLER_URL_BASE</name>
                             <value>http://dl.eviware.com/loadui/os/version/LoadUI-version</value>
                         </property>
-                    </compilerVariables>
+                    </variables>
                 </configuration>
             </plugin>
 
