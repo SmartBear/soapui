@@ -41,7 +41,11 @@ public abstract class AbstractMockOperation
 			setDefaultResponse( getMockResponseAt( 0 ).getName() );
 
 		if( !config.isSetDispatchStyle() )
+		{
 			config.setDispatchStyle( MockOperationDispatchStyleConfig.SEQUENCE );
+			setExampleScript();
+
+		}
 
 		dispatcher = MockOperationDispatchRegistry.buildDispatcher( getConfig().getDispatchStyle().toString(), this );
 	}
@@ -131,6 +135,11 @@ public abstract class AbstractMockOperation
 		String old = getScript();
 		getConfig().setDispatchPath( dispatchPath );
 		notifyPropertyChanged( DISPATCH_PATH_PROPERTY, old, dispatchPath );
+	}
+
+	// Hook for subclasses
+	public void setExampleScript()
+	{
 	}
 
 	public MockOperationDispatcher getDispatcher()

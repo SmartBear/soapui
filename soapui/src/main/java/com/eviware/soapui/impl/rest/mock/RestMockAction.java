@@ -172,4 +172,12 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 	}
 
 
+	@Override
+	public void setExampleScript()
+	{
+		if ( getScript() == null )
+		{
+			setScript( "//Sample Script from property file" );
+		}
+	}
 }
