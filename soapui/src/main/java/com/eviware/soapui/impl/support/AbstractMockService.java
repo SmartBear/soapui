@@ -15,6 +15,7 @@
 	import com.eviware.soapui.model.ModelItem;
 	import com.eviware.soapui.model.mock.*;
 	import com.eviware.soapui.model.project.Project;
+	import com.eviware.soapui.settings.HttpSettings;
 	import com.eviware.soapui.settings.SSLSettings;
 	import com.eviware.soapui.support.StringUtils;
 	import com.eviware.soapui.support.resolver.ResolveContext;
@@ -214,6 +215,15 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public WsdlMockRunner start() throws Exception
 	{
 		return start( null );
+	}
+
+	@Override
+	public void startIfConfigured() throws Exception
+	{
+		if( SoapUI.getSettings().getBoolean( HttpSettings.START_MOCK_SERVICE ))
+		{
+			start();
+		}
 	}
 
 

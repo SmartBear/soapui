@@ -57,6 +57,13 @@ public interface MockService extends TestModelItem, Releasable
 
 	public MockRunner start() throws Exception;
 
+	/**
+	 * Start this mock service if HttpSetting.START_MOCK_SERVICE is true.
+	 *
+	 * @throws Exception if the start fails for some reason. One case may be that the port is occupied already.
+	 */
+	public void startIfConfigured() throws Exception;
+
 	public void addMockRunListener( MockRunListener listener );
 
 	public void removeMockRunListener( MockRunListener listener );

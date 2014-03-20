@@ -7,7 +7,6 @@ import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockService;
-import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
@@ -60,14 +59,12 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 	{
 		try
 		{
-			if( SoapUI.getSettings().getBoolean( HttpSettings.START_MOCK_SERVICE ))
-			{
-				mockService.start();
-			}
+			mockService.startIfConfigured();
 		}
 		catch( Exception e )
 		{
 			SoapUI.logError( e );
+			UISupport.showErrorMessage( e.getMessage() );
 		}
 	}
 
@@ -116,7 +113,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 	}
 
 	/*
-	 * only for injacting the dialog when testing
+	 * only for injecting the dialog when testing
 	 */
 	protected void setFormDialog( XFormDialog dialog )
 	{

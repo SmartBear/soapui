@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
@@ -7,6 +8,7 @@ import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.UISupport;
@@ -61,12 +63,29 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 			if( mockService == null )
 			{
 				mockService = createNewMockService( title, project );
+				UISupport.showDesktopPanel( mockService );
+				maybeStart( mockService );
 			}
 		}
 
 		addRequestToMockService( restRequest, mockService );
-
 	}
+
+
+	private void maybeStart( MockService mockService )
+	{
+		try
+		{
+			mockService.startIfConfigured();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
+			UISupport.showErrorMessage( e.getMessage() );
+		}
+	}
+
+
 
 	private String promptForMockServiceSelection( String title, WsdlProject project )
 	{

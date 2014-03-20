@@ -1,13 +1,9 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
-import com.eviware.soapui.impl.rest.RestMethod;
-import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.RestService;
-import com.eviware.soapui.impl.rest.RestServiceFactory;
+import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -54,6 +50,8 @@ public class AddRestRequestToMockServiceActionTest
 		project = restRequest.getRestMethod().getInterface().getProject();
 
 		setUpResponse();
+
+		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, TRUE );
 	}
 
 	public void setUpResponse()
@@ -88,6 +86,7 @@ public class AddRestRequestToMockServiceActionTest
 
 		RestMockService service = project.getRestMockServiceByName( mockServiceName );
 		assertThat( service.getName(), is( mockServiceName ) );
+		assertThat( service.getMockRunner().isRunning(), is( TRUE ));
 	}
 
 	@Test
@@ -172,7 +171,7 @@ public class AddRestRequestToMockServiceActionTest
 
 		for( String header : headersNotToSave)
 		{
-			assertThat( responseHeaders.get( header ), is( Null.NULL ) );
+			assertThat( responseHeaders.get( header ), is( NULL) );
 		}
 	}
 
