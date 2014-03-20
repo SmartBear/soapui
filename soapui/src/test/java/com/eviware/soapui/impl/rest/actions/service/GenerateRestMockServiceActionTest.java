@@ -18,6 +18,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static java.lang.Boolean.*;
 
 public class GenerateRestMockServiceActionTest
 {
@@ -53,6 +54,7 @@ public class GenerateRestMockServiceActionTest
 		RestMockService restMockService = getResultingRestMockService();
 		assertThat( restMockService, is( NotNull.NOT_NULL ) );
 		assertThat( restMockService.getName(), is( restMockServiceName ));
+		assertThat( restMockService.getMockRunner().isRunning(), is( TRUE ) );
 	}
 
 	public RestMockService getResultingRestMockService()

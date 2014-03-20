@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.rest.actions.service;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -44,7 +45,20 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 				restService.addEndpoint( mockService.getLocalEndpoint() );
 
 				UISupport.showDesktopPanel( mockService );
+				start( mockService );
 			}
+		}
+	}
+
+	public void start( MockService mockService )
+	{
+		try
+		{
+			mockService.start();
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e );
 		}
 	}
 
