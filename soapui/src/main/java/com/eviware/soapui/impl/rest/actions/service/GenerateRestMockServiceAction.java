@@ -34,17 +34,18 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		String nextMockServiceName = nextMockServiceName( restService );
 		dialog.setValue( Form.MOCKSERVICENAME, nextMockServiceName );
 
-		MockService mockService = null;
-
-		while( mockService == null && dialog.show() )
+		if( dialog.show() )
 		{
-			mockService = getMockService( dialog.getValue( Form.MOCKSERVICENAME ), restService.getProject() );
+			MockService mockService = getMockService( dialog.getValue( Form.MOCKSERVICENAME ), restService.getProject() );
+
+			if( mockService != null )
+			{
+				populateMockService( restService, mockService );
+				restService.addEndpoint( mockService.getLocalEndpoint() );
+
+				UISupport.showDesktopPanel( mockService );
+			}
 		}
-
-		populateMockService( restService, mockService );
-		restService.addEndpoint( mockService.getLocalEndpoint() );
-
-		UISupport.showDesktopPanel( mockService );
 	}
 
 	public String nextMockServiceName( RestService restService )
