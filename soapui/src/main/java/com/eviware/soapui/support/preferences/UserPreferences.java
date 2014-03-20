@@ -2,7 +2,8 @@ package com.eviware.soapui.support.preferences;
 
 import com.eviware.soapui.SoapUI;
 
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.Rectangle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -21,6 +22,7 @@ public class UserPreferences
 	static final String WINDOW_WIDTH = "SoapUIWindowWidth";
 	static final String WINDOW_HEIGHT = "SoapUIWindowHeight";
 	static final String EXTENDED_STATE = "SoapUIExtendedState";
+	static final String INSTALLATION_TYPE = "SoapUIInstallationType";
 
 	private Preferences preferences = Preferences.userRoot().node( ROOT_NODE_NAME );
 
@@ -66,6 +68,24 @@ public class UserPreferences
 			else
 			{
 				return Frame.NORMAL;
+			}
+	}
+
+	public void setInstallationType( int type ) throws BackingStoreException
+	{
+		preferences.putInt( INSTALLATION_TYPE, type );
+		preferences.flush();
+	}
+
+	public int getInstallationType()
+	{
+			if ( hasAllIntProperties( INSTALLATION_TYPE ) )
+			{
+				 return preferences.getInt( INSTALLATION_TYPE, -1 );
+			}
+			else
+			{
+				return -1;
 			}
 	}
 
