@@ -57,6 +57,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+
 /**
  * RequestFilter that adds SOAP specific headers
  *
@@ -65,7 +67,6 @@ import java.util.List;
 
 public class HttpRequestFilter extends AbstractRequestFilter
 {
-	@SuppressWarnings( "deprecation" )
 	@Override
 	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
@@ -111,17 +112,17 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					}
 					else
 					{
-						value = URLEncoder.encode( value );
+						value = urlEncodeWithUtf8( value );
 						for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
+							valueParts.set( i, urlEncodeWithUtf8( valueParts.get( i ) ) );
 					}
 				}
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
-					value = URLEncoder.encode( value );
+					value = urlEncodeWithUtf8( value );
 					for( int i = 0; i < valueParts.size(); i++ )
-						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
+						valueParts.set( i, urlEncodeWithUtf8( valueParts.get( i ) ) );
 				}
 				// URLEncoder replaces space with "+", but we want "%20".
 				value = value.replaceAll( "\\+", "%20" );
@@ -149,7 +150,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 							if( query.length() > 0 )
 								query.append( '&' );
 
-							query.append( URLEncoder.encode( param.getName() ) );
+							query.append( urlEncodeWithUtf8( param.getName() ) );
 							query.append( '=' );
 							if( StringUtils.hasContent( valuePart ) )
 								query.append( valuePart );

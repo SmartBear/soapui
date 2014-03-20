@@ -12,13 +12,15 @@
 
 package com.eviware.soapui.impl.support;
 
-import java.net.InetAddress;
-import java.net.URISyntaxException;
-
 import com.eviware.soapui.support.StringUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
 import org.apache.http.client.utils.URIUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 public class HttpUtils
 {
@@ -59,25 +61,34 @@ public class HttpUtils
 
 	public static boolean ping( String host, int timeout )
 	{
-		boolean result = false;
 		pingErrorMessage = "No Error";
 		try
 		{
 			InetAddress address = InetAddress.getByName( host );
-			result = address.isReachable( timeout );
+			return address.isReachable( timeout );
 		}
 		catch( Exception e )
 		{
-			result = false;
 			pingErrorMessage = e.getMessage();
-		}
-		finally
-		{
-			return result;
+			return false;
 		}
 	}
-	
-	public static String getPingErrorMessage() {
+
+	public static String urlEncodeWithUtf8( String input )
+	{
+		try
+		{
+			return URLEncoder.encode( input, "UTF-8" );
+		}
+		catch( UnsupportedEncodingException e )
+		{
+			// if UTF-8 isn't available we might as well die ...
+			throw new Error( "Unexpected error: charset UTF-8 not available", e );
+		}
+	}
+
+	public static String getPingErrorMessage()
+	{
 		return pingErrorMessage;
 	}
 

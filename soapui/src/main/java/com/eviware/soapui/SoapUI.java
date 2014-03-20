@@ -153,7 +153,6 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -162,6 +161,8 @@ import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.prefs.BackingStoreException;
+
+import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 
 /**
  * Main SoapUI entry point.
@@ -181,9 +182,8 @@ public class SoapUI
 	private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
 	public static final String SOAPUI_WELCOME_PAGE = "http://www.soapui.org/Downloads/thank-you-for-downloading-soapui.html";
-	@SuppressWarnings( "deprecation" )
 	public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
-			+ URLEncoder.encode( SOAPUI_VERSION );
+			+ urlEncodeWithUtf8( SOAPUI_VERSION );
 	public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 
 	public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty( "soapui.home", "." )
@@ -409,7 +409,7 @@ public class SoapUI
 
 		if( StringUtils.hasContent( text ) )
 		{
-			Tools.openURL( HelpUrls.FORUMS_HELP_URL + "search.php?keywords=" + URLEncoder.encode( text.trim() ) );
+			Tools.openURL( HelpUrls.FORUMS_HELP_URL + "search.php?keywords=" + urlEncodeWithUtf8( text.trim() ) );
 		}
 		else
 		{

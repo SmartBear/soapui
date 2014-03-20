@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+
 public class RestUtils
 {
 
@@ -217,7 +219,6 @@ public class RestUtils
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String expandPath( String path, RestParamsPropertyHolder params, RestRequestInterface request )
 	{
 		DefaultPropertyExpansionContext context = new DefaultPropertyExpansionContext( request );
@@ -241,7 +242,7 @@ public class RestUtils
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
-					value = URLEncoder.encode( value );
+					value = urlEncodeWithUtf8( value );
 				}
 			}
 
