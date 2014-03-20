@@ -16,6 +16,7 @@ import com.eviware.soapui.model.project.Project;
 import org.fest.swing.fixture.FrameFixture;
 import org.fest.swing.fixture.JPanelFixture;
 import org.fest.swing.fixture.JPopupMenuFixture;
+import org.fest.swing.fixture.JTreeFixture;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +27,7 @@ import java.util.List;
  */
 public final class WorkspaceUtils
 {
+	public static final String NAVIGATION_TREE_PATH_SEPARATOR = "##";
 	private static final String NAVIGATOR = "navigator";
 
 	private WorkspaceUtils()
@@ -52,5 +54,18 @@ public final class WorkspaceUtils
 		}
 		Collections.sort( projectNameList );
 		return projectNameList;
+	}
+
+	public static JTreeFixture getNavigationTree( FrameFixture rootWindow )
+	{
+		JTreeFixture navigationTree = getNavigatorPanel( rootWindow ).tree();
+		navigationTree.separator( "##" );
+		return navigationTree;
+	}
+
+	public static String getProjectNavigationPath( String projectName )
+	{
+		return SoapUI.getWorkspace().getName() + NAVIGATION_TREE_PATH_SEPARATOR + projectName
+				+ NAVIGATION_TREE_PATH_SEPARATOR;
 	}
 }

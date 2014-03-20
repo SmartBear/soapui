@@ -14,7 +14,6 @@ package com.smartbear.soapui.utils.fest;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.method.RestMethodDesktopPanel;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
-import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourceDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyDownAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyUpAction;
@@ -23,11 +22,9 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.RemovePropertyActio
 import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
 import org.fest.swing.driver.JTableComboBoxEditorCellWriter;
-import org.fest.swing.driver.JTableTextComponentEditorCellWriter;
 import org.fest.swing.fixture.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_PARAMS_TABLE;
@@ -299,5 +296,21 @@ public final class RestProjectUtils
 		editTableCell( propertyName, table, robot, rowNumToEdit, 0 );
 		editTableCell( propertyValue, table, robot, rowNumToEdit, 1 );
 
+	}
+
+	public static void createNewRESTMethod( Robot robot, String methodName )
+	{
+		DialogFixture newMethodDialog = FestMatchers.dialogWithTitle( "New REST Method" ).using( robot );
+		newMethodDialog.textBox().setText( methodName );
+		newMethodDialog.button( FestMatchers.buttonWithText( "OK" ) ).click();
+	}
+
+	public static void addNewRESTMethodAtPath( Robot robot, FrameFixture rootWindow, String methodName, String path )
+	{
+		JTreeFixture navigationTree = WorkspaceUtils.getNavigationTree( rootWindow );
+		JPopupMenuFixture popupMenuFixture = navigationTree.showPopupMenuAt( path );
+		popupMenuFixture.menuItem( FestMatchers.menuItemWithText( "New Method" )).click();
+
+		createNewRESTMethod( robot, methodName );
 	}
 }

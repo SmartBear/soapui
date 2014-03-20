@@ -100,7 +100,8 @@ Scenario: parameters value could be property expansion
 
 Scenario: two requests under the same resource but different method only inherit the same resource level parameters
   Given a new REST project is created with URI www.tryit.com/backlog/search/?query1=param1&query2=param2
-#TODO  And user creates a method named List under the resource named Search
+  And user creates a method with name List under the resource with name Search [/backlog/search/] for interface http://www.tryit.com
+  And user open the request at path http://www.tryit.com##Search [/backlog/search/]##List##Request 1
   When under method named Search request editor user changes the level to METHOD for parameter with name query1
   Then under method named Search request editor user has parameter with name query1 and value param1 at row 0
   And under method named Search method editor user has parameter with name query1 and value param1 at row 0
