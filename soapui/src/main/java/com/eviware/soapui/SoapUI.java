@@ -178,6 +178,7 @@ public class SoapUI
 	public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
 	public static final String SOAPUI_SPLASH = "soapui-splash.png";
 	public static final String SOAPUI_TITLE = "/branded/branded.properties";
+	public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
 	private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
 	private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
 	public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
@@ -1210,6 +1211,7 @@ public class SoapUI
 					if( selectedPropertyHolderTable != null )
 					{
 						JTabbedPane tabs = new JTabbedPane();
+						tabs.setName( PROPERTIES_TAB_PANEL_NAME );
 						if( overviewPanel instanceof JPropertiesTable<?> )
 						{
 							JPropertiesTable<?> t = ( JPropertiesTable<?> )overviewPanel;

@@ -5,11 +5,8 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
-import com.smartbear.soapui.utils.fest.ApplicationUtils;
-import com.smartbear.soapui.utils.fest.FestMatchers;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -106,6 +103,12 @@ public class RestProjectStepdefs {
         JPanelFixture resourceEditor = findResourceEditor(rootWindow, newProjectIndexInNavigationTree, robot);
         changeParameterStyle(resourceEditor, parameterName, newStyle, robot);
     }
+
+	@And( "^user adds a custom property to project with name (.+) and value (.+)$" )
+	public void user_adds_a_custom_property_to_project_with_name_prop_and_value( String propertyName, String propValue )
+	{
+		RestProjectUtils.addCustomProperty(newProjectIndexInNavigationTree, rootWindow, propertyName, propValue, robot );
+	}
 
     @And("^in method editor user changes the style to (.+) for parameter with name (.+)$")
     public void changesParameterStyleInMethodEditor(String newStyle, String parameterName) {

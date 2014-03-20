@@ -93,7 +93,7 @@ Scenario: revert the parameter value to default in request view
 
 Scenario: parameters value could be property expansion
   Given a new REST project is created with URI www.tryit.com/resource/method/?query1=param1&query2=param2
-#TODO  And user adds a project custom property named prop1 with value 001
+  And user adds a custom property to project with name prop1 and value 001
   When user changes the value to ${#Project#prop1} for parameter with value param2
   And run the REST request
   Then in the raw view the submitted URI is www.tryit.com/resource/method/?query1=param1&query2=001

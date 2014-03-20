@@ -11,12 +11,14 @@
  */
 package com.smartbear.soapui.utils.fest;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.method.RestMethodDesktopPanel;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourceDesktopPanel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyDownAction;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.MovePropertyUpAction;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.RemovePropertyAction;
 import org.fest.swing.core.KeyPressInfo;
 import org.fest.swing.core.Robot;
@@ -25,6 +27,7 @@ import org.fest.swing.driver.JTableTextComponentEditorCellWriter;
 import org.fest.swing.fixture.*;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_PARAMS_TABLE;
@@ -275,5 +278,26 @@ public final class RestProjectUtils
 		new JTextComponentFixture( robot, tableCellEditor )
 				.setText( paramValue )
 				.pressAndReleaseKey( KeyPressInfo.keyCode( KeyEvent.VK_ENTER ) );
+	}
+
+	public static void addCustomProperty( int newProjectIndexInNavigationTree, FrameFixture rootWindow,
+													  String propertyName, String propertyValue, Robot robot )
+	{
+		findTreeNode( newProjectIndexInNavigationTree, rootWindow, 0 ).click();
+		JTabbedPaneFixture propertiesPaneFixture = new JTabbedPaneFixture( robot, SoapUI.PROPERTIES_TAB_PANEL_NAME );
+		propertiesPaneFixture.selectTab( "Custom Properties" );
+
+		JPanel tablePanel = (JPanel)propertiesPaneFixture.target.getComponent( 1 );
+
+		JPanelFixture panelFixture = new JPanelFixture( robot, tablePanel );
+		panelFixture.button( ADD_PARAM_ACTION_NAME ).click();
+
+		JTableFixture table = panelFixture.table( PropertyHolderTable.PROPERTIES_HOLDER_TABLE_NAME );
+
+		robot.waitForIdle();
+		int rowNumToEdit = table.target.getRowCount() - 1;
+		editTableCell( propertyName, table, robot, rowNumToEdit, 0 );
+		editTableCell( propertyValue, table, robot, rowNumToEdit, 1 );
+
 	}
 }

@@ -85,6 +85,7 @@ import java.util.Set;
 @SuppressWarnings("serial")
 public class PropertyHolderTable extends JPanel
 {
+	public static final String PROPERTIES_HOLDER_TABLE_NAME = "PropertiesHolderTable";
 	protected final TestPropertyHolder holder;
 	protected DefaultPropertyHolderTableModel propertiesModel;
 	protected RemovePropertyAction removePropertyAction;
@@ -127,7 +128,7 @@ public class PropertyHolderTable extends JPanel
 	{
 		propertiesModel = getPropertyHolderTableModel();
 		propertiesTable = new PropertiesHolderJTable();
-
+		propertiesTable.setName( PROPERTIES_HOLDER_TABLE_NAME );
 		propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
 		propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
