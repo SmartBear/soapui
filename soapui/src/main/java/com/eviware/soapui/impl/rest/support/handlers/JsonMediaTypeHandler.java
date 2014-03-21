@@ -60,7 +60,7 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 			serializer.setRootName( HttpUtils.isErrorStatus( response.getStatusCode() ) ? "Fault" : "Response" );
 			URL url = response.getURL();
 			String originalUri = readOriginalUriFrom( response.getRequest() );
-			String namespaceUri = originalUri != null ? originalUri : makeUrlString( url );
+			String namespaceUri = originalUri != null ? originalUri : makeNamespaceUriFrom( url );
 			serializer.setNamespace( "",  namespaceUri);
 			content = serializer.write( json );
 			content = XmlUtils.prettyPrintXml( content );
@@ -83,7 +83,13 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 		if (request instanceof RestRequest )
 		{
 			AbstractRequestConfig config = ( ( RestRequest )request ).getConfig();
-			return config.getOriginalUri();
+			String originalUri = config.getOriginalUri();
+			// if URI contains unexpanded template parameters
+			if (originalUri != null && originalUri.contains("{"))
+			{
+				return null;
+			}
+			return originalUri;
 		}
 		else
 		{
@@ -91,7 +97,7 @@ public class JsonMediaTypeHandler implements MediaTypeHandler
 		}
 	}
 
-	private String makeUrlString( URL url )
+	public static String makeNamespaceUriFrom( URL url )
 	{
 		return url.getProtocol() + "://" + url.getHost() + url.getPath();
 	}
