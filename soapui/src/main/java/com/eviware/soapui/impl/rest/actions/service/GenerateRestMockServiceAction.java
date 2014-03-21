@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.actions.service;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.mock.MockOperation;
@@ -14,6 +15,8 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
+
+import java.util.List;
 
 public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestService>
 {
@@ -32,7 +35,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		if( dialog.show() )
 		{
 			String mockServiceName = dialog.getValue( Form.MOCKSERVICENAME );
-			MockService mockService = getMockService( mockServiceName, restService.getProject() );
+			RestMockService mockService = getMockService( mockServiceName, restService.getProject() );
 
 			if( mockService != null )
 			{
@@ -74,14 +77,14 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		return "REST MockService " + nextMockServiceCount;
 	}
 
-	private void populateMockService( RestService restService, MockService mockService )
+	private void populateMockService( RestService restService, RestMockService mockService )
 	{
 		mockService.setPath( "/" );
 		mockService.setPort( 8080 );
 		addMockOperations( restService, mockService );
 	}
 
-	private MockService getMockService( String mockServiceName, WsdlProject project )
+	private RestMockService getMockService( String mockServiceName, WsdlProject project )
 	{
 		if( StringUtils.isNullOrEmpty( mockServiceName ) )
 		{
@@ -100,14 +103,18 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 		}
 	}
 
-	private void addMockOperations( RestService restService, MockService mockService )
+	private void addMockOperations( RestService restService, RestMockService mockService )
 	{
 		for( RestResource oneResource : restService.getAllResources() )
 		{
-			MockOperation mockOperation = mockService.addNewMockOperation( oneResource );
-			if( mockOperation != null )
+			List<MockOperation> listOfOperations = mockService.addNewMockOperationFromService( oneResource );
+
+			for( MockOperation mockOperation : listOfOperations )
 			{
-				mockOperation.addNewMockResponse( "Response 1" );
+				if( mockOperation != null )
+				{
+					mockOperation.addNewMockResponse( "Response 1" );
+				}
 			}
 		}
 	}
