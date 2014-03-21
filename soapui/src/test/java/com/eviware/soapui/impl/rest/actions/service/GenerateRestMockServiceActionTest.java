@@ -2,6 +2,8 @@ package com.eviware.soapui.impl.rest.actions.service;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceConfig;
+import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
@@ -89,7 +91,7 @@ public class GenerateRestMockServiceActionTest
 		action.perform( restService, null );
 
 		RestMockService restMockService = getResultingRestMockService();
-		assertThat( restMockService.getMockOperationCount(), is( 2 ));
+		assertThat( restMockService.getMockOperationCount(), is( 2 ) );
 		assertThat( restMockService.getMockOperationAt( 1 ).getName(), is( "/two" ) );
 
 		for( MockOperation mockAction : restMockService.getMockOperationList() )
@@ -121,6 +123,35 @@ public class GenerateRestMockServiceActionTest
 		assertMockActionWithPath( restMockService, "/onev1" );
 		assertMockActionWithPath( restMockService, "/one/path/again" );
 		assertMockActionWithPath( restMockService, "/two" );
+	}
+
+	@Test
+	public void shouldGenerateRestMockServiceForResourceWithSeveralMethods()
+	{
+		RestResource one = restService.addNewResource( "one", "/one" );
+
+		addMethod( one, HttpMethod.GET );
+		addMethod( one, HttpMethod.POST );
+
+		action.perform( restService, null );
+
+		RestMockService restMockService = getResultingRestMockService();
+		assertThat( restMockService.getMockOperationCount(), is( 2 ));
+
+		assertMockAction( HttpMethod.GET, "/one", restMockService.getMockOperationAt( 0 ) );
+		assertMockAction( HttpMethod.POST, "/one", restMockService.getMockOperationAt( 1 ) );
+	}
+
+	private void assertMockAction( HttpMethod method, String path, RestMockAction mockAction )
+	{
+		assertThat( mockAction.getMethod(), is( method ) );
+		assertThat( mockAction.getResourcePath(), is( path ) );
+	}
+
+	private void addMethod( RestResource one, HttpMethod method )
+	{
+		RestMethod restMethod = one.addNewMethod( method.name() );
+		restMethod.setMethod( method );
 	}
 
 	private void assertMockActionWithPath( RestMockService restMockService, String expectedPath )
