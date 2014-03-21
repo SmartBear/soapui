@@ -6,6 +6,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidationError;
 import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidator;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2Parameters;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -48,7 +49,6 @@ public class OAuth2ScriptsEditor extends JPanel
 
 	static final String[] DEFAULT_SCRIPT_NAMES = { "Page 1 (e.g. login screen)", "Page 2 (e.g. consent screen)" };
 	private static final String HELP_LINK_TEXT = "How to automate the process of getting an access token";
-	private static final String HELP_LINK_URL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
 
 	private List<InputPanel> inputPanels = new ArrayList<InputPanel>();
 	private InputPanel selectedInputField = null;
@@ -67,7 +67,7 @@ public class OAuth2ScriptsEditor extends JPanel
 		makeScriptsPanel( profile );
 		add( new JScrollPane(scriptsPanel), BorderLayout.CENTER );
 		JPanel linkPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		linkPanel.add( UISupport.createLabelLink( HELP_LINK_URL, HELP_LINK_TEXT ));
+		linkPanel.add( UISupport.createLabelLink( HelpUrls.OAUTH_AUTOMATING_ACCES_TOKEN_RETRIEVAL, HELP_LINK_TEXT ));
 		add( linkPanel, BorderLayout.SOUTH );
 	}
 

@@ -145,6 +145,12 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
 		return ( WsdlMockOperation )getParent();
 	}
 
+	@Override
+	public String getScriptHelpUrl()
+	{
+		return HelpUrls.MOCKRESPONSE_SCRIPT_HELP_URL;
+	}
+
 	public MessagePart[] getRequestParts()
 	{
 		try

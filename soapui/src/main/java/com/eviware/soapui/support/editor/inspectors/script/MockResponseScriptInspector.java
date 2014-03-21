@@ -12,25 +12,10 @@
 
 package com.eviware.soapui.support.editor.inspectors.script;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
@@ -42,6 +27,11 @@ import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 
 public class MockResponseScriptInspector extends AbstractXmlInspector
 {
@@ -93,7 +83,7 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 		toolBar.add( label );
 		toolBar.addUnrelatedGap();
 		toolBar.addFixed( UISupport.createActionButton(
-				new ShowOnlineHelpAction( HelpUrls.MOCKRESPONSE_SCRIPT_HELP_URL ), true ) );
+				new ShowOnlineHelpAction( mockResponse.getScriptHelpUrl() ), true ) );
 
 		return toolBar;
 	}

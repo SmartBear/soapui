@@ -38,7 +38,7 @@ public class OAuth2Stepdefs
 	private static final String SCOPE = "scope";
 	private static final String ACCESS_TOKEN = "access-token";
 
-	private static final String ADVANCED_OPTIONS_DIALOG_NAME = "OAuth2.0 Advanced options";
+	private static final String ADVANCED_OPTIONS_DIALOG_NAME = "OAuth 2.0 Advanced options";
 
 	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2_0.toString();
 	public static final String BUTTON_OK = "OK";

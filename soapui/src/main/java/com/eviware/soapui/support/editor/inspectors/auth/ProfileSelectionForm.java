@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -160,7 +161,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.add( comboBoxPanel, BorderLayout.LINE_START );
-		wrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( "http://www.soapui.org/OAuth/automated-token-profile-editor.html" ) ),
+		wrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( HelpUrls.OAUTH_AUTHORIZATION ) ),
 				BorderLayout.AFTER_LINE_ENDS );
 		return wrapperPanel;
 	}

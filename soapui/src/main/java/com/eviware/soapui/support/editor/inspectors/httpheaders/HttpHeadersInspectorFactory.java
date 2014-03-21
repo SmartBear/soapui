@@ -311,7 +311,6 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			getModelItem().setResponseHeaders( headers );
 		}
-
 	}
 
 	private class WsdlRequestResponseHeadersModel extends AbstractHeadersModel<AbstractHttpRequest<?>>

@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.PropertyComponent;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -146,7 +147,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
 		accessTokenForm.addSpace( GROUP_SPACING );
 
-		accessTokenForm.appendLabelAsLink( "http://www.soapui.org/OAuth/access-token-from-server.html", "How to get an access token from an authorization server" );
+		accessTokenForm.appendLabelAsLink( HelpUrls.OAUTH_ACCESS_TOKEN_FROM_SERVER, "How to get an access token from an authorization server" );
 
 		accessTokenForm.addSpace( BOARDER_SPACING );
 
@@ -172,7 +173,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	{
 		AbstractValueModel valueModel = getOAuth2FlowValueModel( accessTokenForm );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel( OAuth2Profile.OAuth2Flow.values() );
-		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth2.0 Flow", oauth2FlowsModel, "OAuth2.0 Authorization Flow", valueModel );
+		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth 2.0 Flow", oauth2FlowsModel, "OAuth 2.0 Authorization Flow", valueModel );
 		oauth2FlowComboBox.setName( OAUTH_2_FLOW_COMBO_BOX_NAME );
 		return oauth2FlowComboBox;
 	}

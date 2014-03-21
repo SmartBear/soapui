@@ -1,12 +1,12 @@
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
-import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateEmptyWsdlMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.CreateFaultWsdlMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.RecreateMockResponseAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.actions.WSIValidateResponseAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
@@ -73,6 +73,12 @@ public class AbstractWsdlMockResponseDesktopPanel<ModelItemType extends ModelIte
 	protected boolean isBidirectional()
 	{
 		return getMockResponse().getMockOperation().getOperation().isBidirectional();
+	}
+
+	@Override
+	public String getHelpUrl()
+	{
+		return HelpUrls.REQUESTEDITOR_HELP_URL;
 	}
 
 	private final class InternalPropertyChangeListener implements PropertyChangeListener

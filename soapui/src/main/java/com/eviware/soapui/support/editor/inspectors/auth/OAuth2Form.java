@@ -15,6 +15,7 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.RefreshOAuthAccessTokenAction;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleBindingForm;
@@ -111,7 +112,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		setBackgroundColorOnPanel( centerPanel );
 
 		JPanel southPanel = new JPanel( new FlowLayout( FlowLayout.LEFT ) );
-		JLabel oAuthDocumentationLink = UISupport.createLabelLink( "http://www.soapui.org/OAuth/oauth2-overview.html", "Learn about OAuth 2" );
+		JLabel oAuthDocumentationLink = UISupport.createLabelLink( HelpUrls.OAUTH_OVERVIEW, "Learn about OAuth 2" );
 		southPanel.add( oAuthDocumentationLink );
 
 		southPanel.setBorder( BorderFactory.createMatteBorder( 1, 0, 0, 0, CARD_BORDER_COLOR ) );

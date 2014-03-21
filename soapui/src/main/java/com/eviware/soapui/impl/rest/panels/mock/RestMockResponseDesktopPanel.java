@@ -3,6 +3,7 @@ package com.eviware.soapui.impl.rest.panels.mock;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockResponseXmlDocument;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspector;
@@ -143,6 +144,12 @@ public class RestMockResponseDesktopPanel extends
 	public boolean hasRequestEditor()
 	{
 		return false;
+	}
+
+	@Override
+	public String getHelpUrl()
+	{
+		return HelpUrls.REST_MOCK_RESPONSE_EDITOR;
 	}
 
 }

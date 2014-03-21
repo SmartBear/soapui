@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
+import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.request.StringToStringsMapTableModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -23,18 +24,12 @@ import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.swing.JTableFactory;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -88,7 +83,8 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
 			removeButton = UISupport.createToolbarButton( new RemoveAction() );
 			builder.addFixed( removeButton );
 			builder.addGlue();
-			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
+			String helpUrl = model instanceof HasHelpUrl ? ((HasHelpUrl)model).getHelpUrl() : HelpUrls.HEADERS_HELP_URL;
+			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( helpUrl ) ) );
 
 			panel.add( builder, BorderLayout.NORTH );
 

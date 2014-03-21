@@ -20,6 +20,7 @@ import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
@@ -34,8 +35,6 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.*;
 
 /**
@@ -390,5 +389,11 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
 	public boolean canIAddAMockOperation( WsdlMockOperation mockOperation )
 	{
 		return this.getConfig().getMockOperationList().contains( mockOperation.getConfig() );
+	}
+
+	@Override
+	public String getHelpUrl()
+	{
+		return HelpUrls.MOCKSERVICE_HELP_URL;
 	}
 }

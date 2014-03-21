@@ -4,28 +4,10 @@ import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.panels.request.TextPanelWithTopLabel;
-import com.eviware.soapui.impl.support.AbstractMockOperation;
-import com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction;
-import com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction;
-import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatchRegistry;
-import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockServiceListener;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.swing.ExtendedComboBoxModel;
-import com.eviware.soapui.support.swing.ModelItemListKeyListener;
-import com.eviware.soapui.support.swing.ModelItemListMouseListener;
 import com.eviware.soapui.ui.support.AbstractMockOperationDesktopPanel;
-import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,9 +15,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 
 public class RestMockActionDesktopPanel extends AbstractMockOperationDesktopPanel<RestMockAction>
 {
@@ -62,6 +41,8 @@ public class RestMockActionDesktopPanel extends AbstractMockOperationDesktopPane
 		toolbar.add( methodBox, BorderLayout.WEST );
 
 		toolbar.add( createResourcePathTextField(), BorderLayout.CENTER );
+
+		toolbar.add( createActionButton( new ShowOnlineHelpAction( getModelItem().getHelpUrl() ), true ), BorderLayout.EAST );
 
 		return toolbar;
 	}

@@ -12,8 +12,6 @@
 
 package com.eviware.soapui.model.mock;
 
-import com.eviware.soapui.impl.rest.mock.RestMockRequest;
-import com.eviware.soapui.impl.rest.mock.RestMockResult;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.TestModelItem;
@@ -91,4 +89,6 @@ public interface MockResponse extends TestModelItem, Releasable
 	public int getResponseHttpStatus();
 
 	public MockResult execute( MockRequest request, MockResult result ) throws DispatchException;
+
+	String getScriptHelpUrl();
 }

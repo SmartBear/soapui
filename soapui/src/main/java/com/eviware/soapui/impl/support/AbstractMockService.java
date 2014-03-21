@@ -32,7 +32,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 			MockResponseType extends MockResponse,
 			MockServiceConfigType extends BaseMockServiceConfig>
 		extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfigType>
-		implements MockService
+		implements MockService, HasHelpUrl
 {
 	public final static String START_SCRIPT_PROPERTY = AbstractMockService.class.getName() + "@startScript";
 	public final static String STOP_SCRIPT_PROPERTY = AbstractMockService.class.getName() + "@stopScript";

@@ -3,29 +3,20 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.AbstractMockResponse;
 import com.eviware.soapui.impl.support.http.MediaType;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockRequest;
-import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import org.apache.ws.security.WSSecurityException;
-import org.apache.xmlbeans.XmlException;
 
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 
 public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfig> implements MediaType
 {
@@ -119,6 +110,12 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 	public MockOperation getMockOperation()
 	{
 		return ( MockOperation )getParent();
+	}
+
+	@Override
+	public String getScriptHelpUrl()
+	{
+		return HelpUrls.REST_MOCK_RESPONSE_SCRIPT;
 	}
 
 	@Override

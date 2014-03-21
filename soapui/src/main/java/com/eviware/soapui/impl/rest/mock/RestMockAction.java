@@ -7,7 +7,9 @@ import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
+import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.UISupport;
@@ -19,7 +21,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse>
+public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, RestMockResponse> implements HasHelpUrl
 {
 	private RestResource resource = null;
 
@@ -196,5 +198,10 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 				SoapUI.logError( e );
 			}
 		}
+	}
+
+	public String getHelpUrl()
+	{
+		return HelpUrls.REST_MOCKSERVICE_ACTION;
 	}
 }

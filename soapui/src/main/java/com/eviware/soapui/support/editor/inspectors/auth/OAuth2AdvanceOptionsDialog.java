@@ -13,8 +13,8 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
@@ -82,7 +82,7 @@ public class OAuth2AdvanceOptionsDialog
 		dialog.setValue( Form.ACCESS_TOKEN_POSITION, target.getAccessTokenPosition().toString() );
 	}
 
-	@AForm(name = "Form.Title", description = "Form.Description")
+	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.OAUTH_ADVANCED_OPTIONS)
 	public interface Form
 	{
 		@AField( description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP )

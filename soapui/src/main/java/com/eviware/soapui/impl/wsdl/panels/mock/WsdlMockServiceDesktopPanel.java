@@ -12,45 +12,11 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mock;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
-import javax.swing.text.Document;
-
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction;
 import com.eviware.soapui.impl.rest.actions.mock.RestMockServiceOptionsAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.support.AbstractMockService;
-import com.eviware.soapui.model.mock.*;
-import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
-import org.apache.commons.collections.list.TreeList;
-
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.AddNewMockOperationAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction;
@@ -60,29 +26,35 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JFocusableComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.AbstractListMouseListener;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
+import org.apache.commons.collections.list.TreeList;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * DesktopPanel for WsdlMockServices
@@ -419,7 +391,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 		toolbar.addFixed( progressBarPanel );
 		toolbar.addRelatedGap();
 
-		toolbar.addFixed( createActionButton( new ShowOnlineHelpAction( HelpUrls.MOCKSERVICE_HELP_URL ), true ) );
+		toolbar.addFixed( createActionButton( new ShowOnlineHelpAction( getModelItem().getHelpUrl()), true ) );
 
 		return toolbar;
 	}

@@ -13,6 +13,7 @@
 package com.eviware.soapui.ui.support;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestMessageXmlEditor;
@@ -20,7 +21,6 @@ import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockRequestXmlDocument;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockResponseXmlDocument;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -52,7 +52,7 @@ import java.beans.PropertyChangeListener;
  */
 
 public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends ModelItem, MockResponseType extends MockResponse> extends
-		ModelItemDesktopPanel<ModelItemType>
+		ModelItemDesktopPanel<ModelItemType>  implements HasHelpUrl
 {
 	private JEditorStatusBarWithProgress statusBar;
 	private JButton splitButton;
@@ -284,11 +284,6 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
 	 */
 	protected void createToolbar( JXToolBar toolbar )
 	{
-	}
-
-	protected String getHelpUrl()
-	{
-		return HelpUrls.REQUESTEDITOR_HELP_URL;
 	}
 
 	public void setEnabled( boolean enabled )

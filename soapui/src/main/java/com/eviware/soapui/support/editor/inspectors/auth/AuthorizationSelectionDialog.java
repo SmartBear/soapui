@@ -4,6 +4,7 @@ import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -172,7 +173,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 		}
 	}
 
-	@AForm(name = "AuthorizationTypeForm.Title", description = "AuthorizationTypeForm.Description")
+	@AForm(name = "AuthorizationTypeForm.Title", description = "AuthorizationTypeForm.Description", helpUrl = HelpUrls.ADD_AUTHORIZATION)
 	public interface AuthorizationTypeForm
 	{
 		public static final MessageSupport messages = MessageSupport.getMessages( AuthorizationTypeForm.class );
