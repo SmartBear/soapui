@@ -167,9 +167,9 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	private String slashify( String path )
     {
-        if( !path.startsWith( "/" ))
-            return "/" + path;
-        return path;
+       if( !path.startsWith( "/" ))
+          return "/" + path;
+       return path;
     }
 
 }

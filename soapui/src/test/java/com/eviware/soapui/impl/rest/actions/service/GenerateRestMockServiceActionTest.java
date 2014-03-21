@@ -6,6 +6,8 @@ import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.SoapUIException;
@@ -99,7 +101,10 @@ public class GenerateRestMockServiceActionTest
 	@Test
 	public void shouldGenerateRestMockServiceForNestedResources()
 	{
-		RestResource one = restService.addNewResource( "one", "/one" );
+		RestResource one = restService.addNewResource( "one", "/one{version}" );
+
+		RestParamProperty path = one.addProperty( "version" );
+		path.setValue( "v1" );
 
 		RestResourceConfig nestedResourceConfig = one.getConfig().addNewResource();
 		nestedResourceConfig.setPath( "/path/again" );
@@ -113,7 +118,7 @@ public class GenerateRestMockServiceActionTest
 
 		RestMockService restMockService = getResultingRestMockService();
 		assertThat( restMockService.getMockOperationCount(), is( 3 ));
-		assertMockActionWithPath( restMockService, "/one" );
+		assertMockActionWithPath( restMockService, "/onev1" );
 		assertMockActionWithPath( restMockService, "/one/path/again" );
 		assertMockActionWithPath( restMockService, "/two" );
 	}
