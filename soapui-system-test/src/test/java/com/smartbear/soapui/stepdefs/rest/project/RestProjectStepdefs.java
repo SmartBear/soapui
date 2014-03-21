@@ -7,6 +7,7 @@ import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -20,6 +21,7 @@ import static com.eviware.soapui.impl.rest.panels.resource.RestParamsTable.REST_
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.doesLabelExist;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.RestProjectUtils.*;
+import static com.smartbear.soapui.utils.fest.RestProjectUtils.changeParameterLevel;
 import static org.fest.swing.data.TableCell.row;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -343,9 +345,17 @@ public class RestProjectStepdefs
 	}
 
 	@And( "^user open the request at path (.+)$" )
-	public void openTreeItemWithPath( String path ) throws Throwable
+	public void openTreeItemWithPath( String path )
 	{
 		String fullPath = WorkspaceUtils.getProjectNavigationPath(projectName) + path;
 		WorkspaceUtils.getNavigationTree( rootWindow ).node( fullPath ).doubleClick();
 	}
+
+    @When("^user changes the parameter level to (.+) for parameter with name (.+) in request editor for request with path (.+)$")
+    public void changeParameterLevelInRequestEditor(String newLevel, String paramName, String reqPath)
+    {
+        openTreeItemWithPath(reqPath);
+        JPanelFixture requestEditor = locateRequestEditor(rootWindow);
+        changeParameterLevel(requestEditor, paramName, newLevel, robot);
+    }
 }

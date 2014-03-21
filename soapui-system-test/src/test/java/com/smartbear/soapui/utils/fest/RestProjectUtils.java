@@ -57,21 +57,35 @@ public final class RestProjectUtils
 	{
 		openCreateNewRestProjectDialog( rootWindow );
 		enterURIandClickOk( robot );
+        closeRequestEditor(rootWindow);
 	}
 
-	public static void createNewRestProjectWithUri( FrameFixture rootWindow, Robot robot, String uri )
+    public static void closeRequestEditor(FrameFixture rootWindow) {
+         JPanelFixture requestEditor = locateRequestEditor(rootWindow);
+
+        JFrame rootFrame = (JFrame) SwingUtilities.getWindowAncestor(requestEditor.target);
+        rootFrame.setVisible(false);
+        rootFrame.dispose();
+    }
+
+    public static void createNewRestProjectWithUri( FrameFixture rootWindow, Robot robot, String uri )
 	{
 		openCreateNewRestProjectDialog( rootWindow );
 		enterURIandClickOk( robot, uri );
+        closeRequestEditor(rootWindow);
 	}
 
 	public static JPanelFixture findRequestEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE, robot );
-		return rootWindow.panel( RestRequestDesktopPanel.REST_REQUEST_EDITOR );
+		return locateRequestEditor(rootWindow);
 	}
 
-	public static JTreeRowFixture findRestRequestPopupMenu( FrameFixture rootWindow, int projectIndexInTree )
+    public static JPanelFixture locateRequestEditor(FrameFixture rootWindow) {
+        return rootWindow.panel( RestRequestDesktopPanel.REST_REQUEST_EDITOR );
+    }
+
+    public static JTreeRowFixture findRestRequestPopupMenu( FrameFixture rootWindow, int projectIndexInTree )
 	{
 		return ( JTreeRowFixture )findTreeNode( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE ).rightClick();
 	}
@@ -79,17 +93,25 @@ public final class RestProjectUtils
 	public static JPanelFixture findMethodEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_METHOD_POSITION_IN_TREE, robot );
-		return rootWindow.panel( RestMethodDesktopPanel.REST_METHOD_EDITOR );
-	}
+        return locateMethodEditor(rootWindow);
+    }
+
+    public static JPanelFixture locateMethodEditor(FrameFixture rootWindow) {
+        return rootWindow.panel( RestMethodDesktopPanel.REST_METHOD_EDITOR );
+    }
 
 
-	public static JPanelFixture findResourceEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
+    public static JPanelFixture findResourceEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_RESOURCE_POSITION_IN_TREE, robot );
-		return rootWindow.panel( RestResourceDesktopPanel.REST_RESOURCE_EDITOR );
-	}
+        return locateResourceEditor(rootWindow);
+    }
 
-	public static void addNewParameter( JPanelFixture parentPanel, Robot robot, String paramName, String paramValue )
+    public static JPanelFixture locateResourceEditor(FrameFixture rootWindow) {
+        return rootWindow.panel( RestResourceDesktopPanel.REST_RESOURCE_EDITOR );
+    }
+
+    public static void addNewParameter( JPanelFixture parentPanel, Robot robot, String paramName, String paramValue )
 	{
 		parentPanel.button( ADD_PARAM_ACTION_NAME ).click();
 		JTableFixture restParamsTable = parentPanel.table( REST_PARAMS_TABLE );
