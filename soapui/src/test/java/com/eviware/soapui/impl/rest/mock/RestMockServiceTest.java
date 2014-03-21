@@ -112,22 +112,23 @@ public class RestMockServiceTest
 		assertThat( restMockService.getPath(), is( "myPath" ) );
 	}
 
-	@Ignore
 	@Test
 	public void shouldAddOperationToMockServiceAction() throws SoapUIException
 	{
-		RestResource operation = mock( RestResource.class );
-		when( operation.getRequestCount() ).thenReturn( 1 );
-		when( operation.getRestMethodCount() ).thenReturn( 1 );
 		RestMethod restMethod = mock( RestMethod.class );
-		when( operation.getRestMethodAt( 0 )).thenReturn( restMethod );
 		when( restMethod.getRequestAt( 0 ) ).thenReturn( restRequest );
 
-		restMockService.addNewMockOperation( operation );
+		RestResource restResource = mock( RestResource.class );
+		when( restResource.getRestMethodCount() ).thenReturn( 1 );
+		when( restResource.getFullPath() ).thenReturn( "/full/path" );
+		when( restResource.getRestMethodAt( 0 )).thenReturn( restMethod );
+
+
+		restMockService.addNewMockOperation( restResource );
 
 		RestMockAction mockOperation = restMockService.getMockOperationAt( 0 );
 		assertThat( mockOperation.getMethod(), is( restRequest.getMethod() ) );
-		assertTrue( mockOperation.getResourcePath().contains( restRequest.getPath() ) );
+		assertTrue( mockOperation.getResourcePath().contains( "/full/path" ) );
 	}
 
 	private RESTMockServiceConfig createRestMockServiceConfig()

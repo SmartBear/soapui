@@ -133,11 +133,9 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return addEmptyMockAction( httpMethod, path );
 	}
 
-	public List<MockOperation> addNewMockOperationFromService( Operation operation )
+	public List<MockOperation> addNewMockOperationFromService( RestResource restResource )
 	{
 		List<MockOperation> actions = new ArrayList<MockOperation>();
-
-		RestResource restResource = (RestResource)operation;
 
 		if( restResource.getRestMethodCount() < 1)
 		{
