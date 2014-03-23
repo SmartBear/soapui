@@ -21,21 +21,22 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
 
-import javax.swing.*;
+import javax.swing.JButton;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.*;
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.valueOf;
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.values;
 
 /**
  *
  */
-public class OAuth2AdvanceOptionsDialog
+public class OAuth2AdvancedOptionsDialog
 {
-	public static final MessageSupport messages = MessageSupport.getMessages( OAuth2AdvanceOptionsDialog.class );
+	public static final MessageSupport messages = MessageSupport.getMessages( OAuth2AdvancedOptionsDialog.class );
 	private JButton refreshAccessTokenButton;
 
 
-	public OAuth2AdvanceOptionsDialog( OAuth2Profile profile, JButton refreshAccessTokenButton )
+	public OAuth2AdvancedOptionsDialog( OAuth2Profile profile, JButton refreshAccessTokenButton )
 	{
 		this.refreshAccessTokenButton = refreshAccessTokenButton;
 		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
