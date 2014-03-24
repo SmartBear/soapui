@@ -209,6 +209,19 @@ public class StringToStringsMap extends HashMap<String, List<String>>
 
 	}
 
+	public String getCaseInsensitive( String key, String defaultValue )
+	{
+		for( Map.Entry<String, List<String>> stringListEntry : entrySet() )
+		{
+			if(key.equalsIgnoreCase( stringListEntry.getKey() ) && !stringListEntry.getValue().isEmpty())
+			{
+				return stringListEntry.getValue().get( 0 );
+			}
+		}
+		return defaultValue;
+
+	}
+
 	public StringToStringMap toStringToStringMap()
 	{
 		StringToStringMap result = new StringToStringMap();
@@ -257,7 +270,7 @@ public class StringToStringsMap extends HashMap<String, List<String>>
 
 	public String toString()
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		for( String key : keySet() )
 		{
