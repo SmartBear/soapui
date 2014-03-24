@@ -47,6 +47,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class ProfileSelectionForm<T extends AbstractHttpRequest> extends AbstractXmlInspector
 {
@@ -383,7 +384,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	{
 		ArrayList<String> options = new ArrayList<String>();
 		options.add( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() );
-		options.addAll( request.getBasicAuthenticationProfiles() );
+		Set<String> basicAuthenticationProfiles = request.getBasicAuthenticationProfiles();
+		options.addAll( basicAuthenticationProfiles );
 
 		ArrayList<String> addEditOptions = getAddEditOptions();
 
@@ -392,7 +394,13 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
 			options.addAll( oAuth2Profiles );
-
+		}
+		if( isSoapRequest( request ) )
+		{
+			if( basicAuthenticationProfiles.size() >= getBasicAuthenticationTypes().size() )
+			{
+				addEditOptions.remove( AddEditOptions.ADD.getDescription() );
+			}
 		}
 		if( oAuth2Profiles == null || !oAuth2Profiles.contains( selectedAuthProfile ) )
 		{
@@ -404,8 +412,11 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			addEditOptions.remove( AddEditOptions.DELETE.getDescription() );
 		}
 
-		options.add( OPTIONS_SEPARATOR );
-		options.addAll( addEditOptions );
+		if( !addEditOptions.isEmpty() )
+		{
+			options.add( OPTIONS_SEPARATOR );
+			options.addAll( addEditOptions );
+		}
 
 		return options.toArray( new String[options.size()] );
 	}
