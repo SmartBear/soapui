@@ -82,6 +82,11 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest>
 		if( CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals( authType ) )
 		{
 			profileName = dialog.getValue( AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD );
+			if( getBasicAuthenticationTypes().contains( profileName ) )
+			{
+				UISupport.showErrorMessage( "'" + profileName + "' is a reserved profile name." );
+				return;
+			}
 			if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( profileName ) )
 			{
 				UISupport.showErrorMessage( "There is already a profile named '" + profileName + "'" );
