@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.*;
+import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -55,6 +56,7 @@ public class AddRestRequestToMockServiceActionTest
 		setUpResponse();
 
 		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, TRUE );
+		SoapUI.getSettings().setBoolean( HttpSettings.LEAVE_MOCKENGINE, FALSE );
 	}
 
 	public void setUpResponse()
@@ -78,6 +80,13 @@ public class AddRestRequestToMockServiceActionTest
 	public void tearDown()
 	{
 		UISupport.setDialogs( originalDialogs );
+		RestMockService restMockService = project.getRestMockServiceByName( mockServiceName );
+
+		if( restMockService != null && restMockService.getMockRunner() != null )
+		{
+			restMockService.getMockRunner().stop();
+		}
+
 	}
 
 	@Test

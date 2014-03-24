@@ -13,6 +13,7 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
 import com.eviware.x.form.XFormDialog;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.internal.matchers.NotNull;
@@ -45,6 +46,18 @@ public class GenerateRestMockServiceActionTest
 		mockFormDialog();
 
 		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, TRUE );
+		SoapUI.getSettings().setBoolean( HttpSettings.LEAVE_MOCKENGINE, FALSE );
+	}
+
+	@After
+	public void tearDown()
+	{
+		RestMockService restMockService = getResultingRestMockService();
+
+		if( restMockService != null && restMockService.getMockRunner() != null )
+		{
+			restMockService.getMockRunner().stop();
+		}
 	}
 
 	public void mockFormDialog()
