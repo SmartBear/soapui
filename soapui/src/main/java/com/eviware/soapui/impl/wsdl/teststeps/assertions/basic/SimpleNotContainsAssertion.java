@@ -14,6 +14,8 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.xmlbeans.XmlObject;
 
@@ -108,8 +110,10 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
 
 			if( useRegEx )
 			{
-				if( content.matches( replToken ) )
-					ix = 0;
+                Pattern p = Pattern. compile (replToken, Pattern.DOTALL);
+                Matcher m = p. matcher (content);
+                if (m.find()) 
+                    ix = 0;
 			}
 			else
 			{
