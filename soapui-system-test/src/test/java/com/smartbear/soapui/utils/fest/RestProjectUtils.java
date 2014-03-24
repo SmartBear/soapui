@@ -57,31 +57,43 @@ public final class RestProjectUtils
 	{
 		openCreateNewRestProjectDialog( rootWindow );
 		enterURIandClickOk( robot );
-        closeRequestEditor(rootWindow);
 	}
-
-    public static void closeRequestEditor(FrameFixture rootWindow) {
-         JPanelFixture requestEditor = locateRequestEditor(rootWindow);
-
-        JFrame rootFrame = (JFrame) SwingUtilities.getWindowAncestor(requestEditor.target);
-        rootFrame.setVisible(false);
-        rootFrame.dispose();
-    }
 
     public static void createNewRestProjectWithUri( FrameFixture rootWindow, Robot robot, String uri )
 	{
 		openCreateNewRestProjectDialog( rootWindow );
 		enterURIandClickOk( robot, uri );
-        closeRequestEditor(rootWindow);
 	}
 
 	public static JPanelFixture findRequestEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
+		closeAlreadyOpenedDesktopEditors( rootWindow, RestRequestDesktopPanel.REST_REQUEST_EDITOR );
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_REQUEST_POSITION_IN_TREE, robot );
 		return locateRequestEditor(rootWindow);
 	}
 
-    public static JPanelFixture locateRequestEditor(FrameFixture rootWindow) {
+	public static void closeAlreadyOpenedDesktopEditors( FrameFixture rootWindow, String panelName)
+	{
+		JPanelFixture panel = null;
+		try
+		{
+			panel = rootWindow.panel( panelName );
+
+		} catch( Exception ex )
+		{
+			//There is no open editors
+		}
+
+		if( panel==null )
+		{
+			return;
+		}
+
+		JInternalFrame  fixture = (JInternalFrame) panel.target.getParent().getParent().getParent();
+		fixture.doDefaultCloseAction();
+	}
+
+	public static JPanelFixture locateRequestEditor(FrameFixture rootWindow) {
         return rootWindow.panel( RestRequestDesktopPanel.REST_REQUEST_EDITOR );
     }
 
@@ -92,6 +104,7 @@ public final class RestProjectUtils
 
 	public static JPanelFixture findMethodEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
+		closeAlreadyOpenedDesktopEditors( rootWindow,  RestMethodDesktopPanel.REST_METHOD_EDITOR);
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_METHOD_POSITION_IN_TREE, robot );
         return locateMethodEditor(rootWindow);
     }
@@ -103,6 +116,7 @@ public final class RestProjectUtils
 
     public static JPanelFixture findResourceEditor( FrameFixture rootWindow, int projectIndexInTree, Robot robot )
 	{
+		closeAlreadyOpenedDesktopEditors( rootWindow,  RestResourceDesktopPanel.REST_RESOURCE_EDITOR);
 		openPanelByClickingOnTheNavigationElement( projectIndexInTree, rootWindow, REST_RESOURCE_POSITION_IN_TREE, robot );
         return locateResourceEditor(rootWindow);
     }

@@ -2,6 +2,7 @@ package com.smartbear.soapui.stepdefs.rest.project;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
@@ -354,6 +355,7 @@ public class RestProjectStepdefs
     @When("^user changes the parameter level to (.+) for parameter with name (.+) in request editor for request with path (.+)$")
     public void changeParameterLevelInRequestEditor(String newLevel, String paramName, String reqPath)
     {
+		 closeAlreadyOpenedDesktopEditors( rootWindow, RestRequestDesktopPanel.REST_REQUEST_EDITOR  );
         openTreeItemWithPath(reqPath);
         JPanelFixture requestEditor = locateRequestEditor(rootWindow);
         changeParameterLevel(requestEditor, paramName, newLevel, robot);
