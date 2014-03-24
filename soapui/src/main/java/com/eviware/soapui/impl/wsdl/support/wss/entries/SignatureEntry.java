@@ -16,19 +16,27 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
 
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
+import javax.swing.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSEncryptionPart;
+import org.apache.ws.security.WSSecurityException;
+import org.apache.ws.security.message.DOMCallbackLookup;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSignature;
 import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.WSSEntryConfig;
@@ -56,9 +64,14 @@ public class SignatureEntry extends WssEntryBase
 	private boolean useSingleCert;
 	private String signatureCanonicalization;
 	private String digestAlgorithm;
+	private String customTokenValueType;
+	private String customTokenId;
 	private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
 	private com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry.InternalWssContainerListener wssContainerListener;
+
+	private JTextField customTokenValueTypeField;
+	private JTextField customTokenIdField;
 
 	public void init( WSSEntryConfig config, OutgoingWss container )
 	{
@@ -89,8 +102,16 @@ public class SignatureEntry extends WssEntryBase
 
 		form.appendPasswordField( "password", "Password", "The certificate password" );
 
-		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 3, 4 },
-				"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
+		JComboBox keyIdentifierTypeComboBox =  form.appendComboBox("keyIdentifierType", "Key Identifier Type", new Integer[]{0, 1, 3, 4, 12},
+				"Sets which key identifier to use");
+		keyIdentifierTypeComboBox.setRenderer(new KeyIdentifierTypeRenderer());
+		keyIdentifierTypeComboBox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				initCustomTokenState();
+			}
+		});
+
 		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { DEFAULT_OPTION, WSConstants.RSA,
 				WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
 				XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512,
@@ -111,9 +132,19 @@ public class SignatureEntry extends WssEntryBase
 
 		form.appendCheckBox( "useSingleCert", "Use Single Certificate", "Use single certificate for signing" );
 
+        customTokenIdField = form.appendTextField("customTokenId", "Custom Key Identifier", "Use a custom key identifier for signing");
+		customTokenValueTypeField = form.appendTextField("customTokenValueType", "Custom Key Identifier ValueType", "Specify the custom key identifier value type");
+		initCustomTokenState();
+
 		form.append( "Parts", new WSPartsTable( parts, this ) );
 
 		return new JScrollPane( form.getPanel() );
+	}
+
+	private void initCustomTokenState() {
+		boolean enabled = keyIdentifierType == WSConstants.CUSTOM_KEY_IDENTIFIER;
+		customTokenValueTypeField.setEnabled(enabled);
+		customTokenIdField.setEnabled(enabled);
 	}
 
 	@Override
@@ -134,6 +165,9 @@ public class SignatureEntry extends WssEntryBase
 
 		digestAlgorithm = reader.readString( "digestAlgorithm", null );
 
+		customTokenValueType = reader.readString( "customTokenValueType", null );
+		customTokenId = reader.readString("customTokenId", null);
+
 		parts = readTableValues( reader, "signaturePart" );
 	}
 
@@ -148,6 +182,8 @@ public class SignatureEntry extends WssEntryBase
 
 		builder.add( "digestAlgorithm", digestAlgorithm );
 
+		builder.add( "customTokenValueType", customTokenValueType );
+		builder.add( "customTokenId", customTokenId );
 		saveTableValues( builder, parts, "signaturePart" );
 	}
 
@@ -182,6 +218,14 @@ public class SignatureEntry extends WssEntryBase
 			if( StringUtils.hasContent( digestAlgorithm ) )
 				wssSign.setDigestAlgo( digestAlgorithm );
 
+			if (keyIdentifierType == WSConstants.CUSTOM_KEY_IDENTIFIER)   {
+				if( StringUtils.hasContent( customTokenId ) )
+					wssSign.setCustomTokenId( context.expand(customTokenId) );
+
+				if( StringUtils.hasContent( customTokenValueType ) )
+					wssSign.setCustomTokenValueType( context.expand(customTokenValueType) );
+			}
+
 			Vector<WSEncryptionPart> wsParts = createWSParts( parts );
 			if( !wsParts.isEmpty() )
 			{
@@ -191,7 +235,8 @@ public class SignatureEntry extends WssEntryBase
 			writer = new StringWriter();
 			XmlUtils.serialize( doc, writer );
 
-			wssSign.build( doc, wssCrypto.getCrypto(), secHeader );
+			wssSign.setCallbackLookup(new BinarySecurityTokenDOMCallbackLookup(doc, wssSign));
+			wssSign.build(doc, wssCrypto.getCrypto(), secHeader);
 		}
 		catch( Exception e )
 		{
@@ -293,6 +338,29 @@ public class SignatureEntry extends WssEntryBase
 		saveConfig();
 	}
 
+	public String getCustomTokenId() {
+		return customTokenId;
+	}
+
+	public void setCustomTokenId(String customTokenId) {
+		this.customTokenId = customTokenId;
+		saveConfig();
+	}
+
+	public String getCustomTokenValueType() {
+		return customTokenValueType;
+	}
+
+	public void setCustomTokenValueType(String customTokenValueType) {
+		this.customTokenValueType = customTokenValueType;
+		saveConfig();
+	}
+
+	public void setParts(List<StringToStringMap> parts) {
+		this.parts = parts;
+		saveConfig();
+	}
+
 	private final class InternalWssContainerListener extends WssContainerListenerAdapter
 	{
 		@Override
@@ -300,6 +368,42 @@ public class SignatureEntry extends WssEntryBase
 		{
 			if( crypto.getLabel().equals( getCrypto() ) )
 				keyAliasComboBoxModel.update( crypto );
+		}
+	}
+
+	/**
+	 * This callback class extends the default DOMCallbackLookup class with a hook to return the prepared
+	 * wsse:BinarySecurityToken
+	 */
+	private static class BinarySecurityTokenDOMCallbackLookup extends DOMCallbackLookup {
+
+		private final WSSecSignature wssSign;
+
+		public BinarySecurityTokenDOMCallbackLookup(Document doc, WSSecSignature wssSign) {
+			super(doc);
+			this.wssSign = wssSign;
+		}
+
+		@Override
+		public List<Element> getElements(String localname, String namespace) throws WSSecurityException {
+			List<Element> elements = super.getElements(localname, namespace);
+			if (elements.isEmpty()) {
+				// element was not found in DOM document
+				if (WSConstants.BINARY_TOKEN_LN.equals(localname) && WSConstants.WSSE_NS.equals(namespace)) {
+					/* In case the element searched for is the wsse:BinarySecurityToken, return the element prepared by
+					   wsee4j. If we return the original DOM element, the digest calculation fails because the element
+					   is not yet attached to the DOM tree, so instead return a copy which includes all namespaces */
+					try {
+						DOMResult result = new DOMResult();
+						Transformer transformer = TransformerFactory.newInstance().newTransformer();
+						transformer.transform(new DOMSource(wssSign.getBinarySecurityTokenElement()), result);
+						return Collections.singletonList(((Document) result.getNode()).getDocumentElement());
+					} catch (TransformerException e) {
+						SoapUI.logError(e);
+					}
+				}
+			}
+			return elements;
 		}
 	}
 }
