@@ -1110,7 +1110,7 @@
                            keyStroke="DELETE"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ShowOnlineSoapUIHelp"
-                           keyStroke="F1" param="http://www.soapui.org/REST-Service-Mocking/mock-action.html"/>
+                           keyStroke="F1" param="http://www.soapui.org/REST-Service-Mocking/mock-action-editor.html"/>
     </tns:actionGroup>
 
     <!-- RestMockResponse ActionGroup -->
@@ -1127,7 +1127,7 @@
                            keyStroke="DELETE"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ShowOnlineSoapUIHelp"
-                           keyStroke="F1" param="http://www.soapui.org/REST-Service-Mocking/mock-response-editor.html"/>
+                           keyStroke="F1" param="mock/responses.html"/>
     </tns:actionGroup>
 
     <!-- MultiActions Group -->
