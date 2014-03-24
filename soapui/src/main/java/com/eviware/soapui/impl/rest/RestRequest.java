@@ -19,7 +19,7 @@ import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
-import com.eviware.soapui.impl.rest.support.RestUtils;
+import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
@@ -51,6 +51,7 @@ import org.apache.xmlbeans.XmlString;
 
 import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -217,7 +218,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 				{
 					if( evt.getNewValue() != null )
 					{
-						setOriginalUriInConfig((HttpResponse)evt.getNewValue());
+						setOriginalUriInConfig( ( HttpResponse )evt.getNewValue() );
 					}
 				}
 			} );

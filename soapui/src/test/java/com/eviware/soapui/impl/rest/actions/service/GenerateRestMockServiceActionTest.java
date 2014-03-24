@@ -2,17 +2,13 @@ package com.eviware.soapui.impl.rest.actions.service;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -22,12 +18,14 @@ import org.junit.Test;
 import org.mockito.internal.matchers.NotNull;
 import org.mockito.internal.matchers.Null;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static java.lang.Boolean.*;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 
 public class GenerateRestMockServiceActionTest
 {

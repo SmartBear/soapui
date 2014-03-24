@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.*;
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

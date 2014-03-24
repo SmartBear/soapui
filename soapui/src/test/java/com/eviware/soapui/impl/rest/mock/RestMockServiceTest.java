@@ -6,6 +6,7 @@ import com.eviware.soapui.config.RESTMockResponseConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.SoapUIException;
@@ -14,8 +15,10 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
-import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.TRACE;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.*;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
@@ -117,7 +120,7 @@ public class RestMockServiceTest
 	{
 		RestMethod restMethod = mock( RestMethod.class );
 		when( restMethod.getRequestAt( 0 ) ).thenReturn( restRequest );
-		when( restMethod.getMethod() ).thenReturn( HttpMethod.GET );
+		when( restMethod.getMethod() ).thenReturn( RestRequestInterface.HttpMethod.GET );
 
 		RestResource restResource = mock( RestResource.class );
 		when( restResource.getRestMethodCount() ).thenReturn( 1 );
