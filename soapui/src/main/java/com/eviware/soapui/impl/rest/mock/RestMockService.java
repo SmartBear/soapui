@@ -143,7 +143,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		for( RestMethod restMethod: restResource.getRestMethodList())
 		{
 			HttpMethod httpMethod = restMethod.getMethod();
-			String path = restResource.getFullPath();
+			String path = RestUtils.getTemplateParamExpandedPath( restResource.getFullPath(), restResource.getParams() );
 
 			RestMockAction mockAction = addNewMockOperationFromRestMethod( restMethod, httpMethod, path );
 

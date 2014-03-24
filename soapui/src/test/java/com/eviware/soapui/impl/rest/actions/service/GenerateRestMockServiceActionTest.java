@@ -142,6 +142,20 @@ public class GenerateRestMockServiceActionTest
 		assertMockAction( HttpMethod.POST, "/one", restMockService.getMockOperationAt( 1 ) );
 	}
 
+	@Test
+	public void shouldExpandPathParamForEmptyRestMethod()
+	{
+		RestResource one = restService.addNewResource( "one", "/one{version}" );
+		RestParamProperty path = one.addProperty( "version" );
+		path.setValue( "v1" );
+
+		addMethod( one, HttpMethod.GET );
+
+		action.perform( restService, null );
+
+		assertMockAction( HttpMethod.GET, "/onev1", getResultingRestMockService().getMockOperationAt( 0 ) );
+	}
+
 	private void assertMockAction( HttpMethod method, String path, RestMockAction mockAction )
 	{
 		assertThat( mockAction.getMethod(), is( method ) );
