@@ -47,7 +47,6 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 	private ImageIcon disabledRequestIcon;
 	private ImageIcon unknownRequestIcon;
 
-	private AssertionStatus currentStatus;
 	private RestTestRequestStep testStep;
 
 	private AssertionsSupport assertionsSupport;
@@ -242,35 +241,19 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
 
 	public AssertionStatus getAssertionStatus()
 	{
-		currentStatus = AssertionStatus.UNKNOWN;
-
-		if( messageExchange != null )
+		if( messageExchange == null || getAssertionCount() == 0)
 		{
-			if( !messageExchange.hasResponse() && getOperation() != null && getOperation().isBidirectional() )
-			{
-				currentStatus = AssertionStatus.FAILED;
-			}
+			return AssertionStatus.UNKNOWN;
 		}
-		else
-			return currentStatus;
 
-		int cnt = getAssertionCount();
-		if( cnt == 0 )
-			return currentStatus;
-
-		for( int c = 0; c < cnt; c++ )
+		for( int c = 0; c < getAssertionCount(); c++ )
 		{
 			if( getAssertionAt( c ).getStatus() == AssertionStatus.FAILED )
 			{
-				currentStatus = AssertionStatus.FAILED;
-				break;
+				return AssertionStatus.FAILED;
 			}
 		}
-
-		if( currentStatus == AssertionStatus.UNKNOWN )
-			currentStatus = AssertionStatus.VALID;
-
-		return currentStatus;
+		return AssertionStatus.VALID;
 	}
 
 	@Override

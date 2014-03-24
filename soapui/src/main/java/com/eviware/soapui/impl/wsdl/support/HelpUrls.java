@@ -211,12 +211,20 @@ public interface HelpUrls
 	public static final String OAUTH_OVERVIEW = "http://www.soapui.org/OAuth/oauth2-overview.html";
 	public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "http://www.soapui.org/OAuth/access-token-from-server.html";
 	public static final String OAUTH_AUTOMATING_ACCES_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
-	public static final String OAUTH_AUTHORIZATION = "http://www.soapui.org/OAuth/authorization.html";
 	public static final String OAUTH_ADVANCED_OPTIONS = "http://www.soapui.org/OAuth/advanced-options.html";
+	public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/access-token-retrieval.html";
+	public static final String OAUTH_AUTOMATED_TOKEN_PROFILE_EDITOR = "http://www.soapui.org/OAuth/automated-token-profile-editor.html";
+
+	public static final String AUTHORIZATION = "http://www.soapui.org/OAuth/authorization.html";
+	public static final String AUTHORIZATION_BASIC = "http://www.soapui.org/OAuth/Basic.html";
+	public static final String AUTHORIZATION_NTLM = "http://www.soapui.org/OAuth/NTLM.html";
+	public static final String AUTHORIZATION_SPNEGO_KERBEROS = "http://www.soapui.org/OAuth/SPNEGO-Kerberos.html";
+	public static final String AUTHORIZATION_OAUTH2 = "http://www.soapui.org/OAuth/OAuth2.html";
 
 	public static final String REST_MOCKSERVICE_HELP_URL = "http://www.soapui.org/REST-Service-Mocking/mock-service-editor.html";
 	public static final String REST_MOCKSERVICE_ACTION = "http://www.soapui.org/REST-Service-Mocking/mock-action.html";
 	public static final String REST_MOCK_RESPONSE_EDITOR = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor.html";
 	public static final String REST_MOCK_RESPONSE_EDITOR_HEADER = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-header.html";
 	public static final String REST_MOCK_RESPONSE_SCRIPT = "http://www.soapui.org/REST-Service-Mocking/mock-response-script.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
 }

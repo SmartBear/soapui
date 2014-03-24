@@ -1,11 +1,8 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.actions.oauth.BrowserListenerAdapter;
-import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidationError;
-import com.eviware.soapui.impl.rest.actions.oauth.JavaScriptValidator;
-import com.eviware.soapui.impl.rest.actions.oauth.OAuth2Parameters;
-import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TokenExtractor;
+import com.eviware.soapui.impl.rest.actions.oauth.*;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
@@ -14,24 +11,14 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -83,6 +70,8 @@ public class OAuth2ScriptsEditor extends JPanel
 		removeScriptButton = UISupport.createToolbarButton( new RemoveScriptAction() );
 		removeScriptButton.setName( REMOVE_SCRIPT_BUTTON_NAME );
 		toolbar.addFixed( removeScriptButton );
+		toolbar.addGlue();
+		toolbar.add(UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.OAUTH_AUTOMATED_TOKEN_PROFILE_EDITOR ) ));
 		return toolbar;
 	}
 

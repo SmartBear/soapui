@@ -23,21 +23,9 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.value.AbstractValueModel;
 
 import javax.annotation.Nonnull;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.Border;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -118,7 +106,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	{
 		accessTokenForm.addSpace( BOARDER_SPACING );
 
-		accessTokenForm.appendHeading( "Get Access Token from the authorization server" );
+		accessTokenForm.appendHeadingAndHelpButton( "Get Access Token from the authorization server", HelpUrls.OAUTH_ACCESS_TOKEN_RETRIEVAL );
 
 		accessTokenForm.addSpace( NORMAL_SPACING );
 
@@ -173,7 +161,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	{
 		AbstractValueModel valueModel = getOAuth2FlowValueModel( accessTokenForm );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel( OAuth2Profile.OAuth2Flow.values() );
-		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth 2.0 Flow", oauth2FlowsModel, "OAuth 2.0 Authorization Flow", valueModel );
+		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth 2 Flow", oauth2FlowsModel, "OAuth 2 Authorization Flow", valueModel );
 		oauth2FlowComboBox.setName( OAUTH_2_FLOW_COMBO_BOX_NAME );
 		return oauth2FlowComboBox;
 	}
