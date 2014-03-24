@@ -84,7 +84,9 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public MockOperation findOrCreateNewOperation( RestRequest restRequest )
 	{
-		MockOperation matchedOperation = findMatchingOperation( restRequest.getPath(), restRequest.getMethod() );
+		String expandedPath = RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest );
+
+		MockOperation matchedOperation = findMatchingOperation( expandedPath, restRequest.getMethod() );
 
 		if( matchedOperation == null)
 		{

@@ -398,8 +398,9 @@ public class RestUtils
 		return resources;
 	}
 
-	public static String getTemplateParamExpandedPath( String expandedPath, RestParamsPropertyHolder params, ModelItem context )
+	public static String getTemplateParamExpandedPath( String path, RestParamsPropertyHolder params, ModelItem context )
 	{
+		String expandedPath = path;
 		for(String pathParam: RestUtils.extractTemplateParams( expandedPath ))
 		{
 			String pathParamValue = params.getPropertyValue( pathParam );
