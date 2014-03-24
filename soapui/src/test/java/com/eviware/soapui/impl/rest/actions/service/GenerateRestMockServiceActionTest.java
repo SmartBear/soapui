@@ -11,6 +11,8 @@ import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
@@ -128,10 +130,10 @@ public class GenerateRestMockServiceActionTest
 	@Test
 	public void shouldGenerateRestMockServiceForResourceWithSeveralMethods()
 	{
-		RestResource one = restService.addNewResource( "one", "/one" );
+		RestResource resource = restService.addNewResource( "one", "/one" );
 
-		addMethod( one, HttpMethod.GET );
-		addMethod( one, HttpMethod.POST );
+		addMethod( resource, HttpMethod.GET );
+		addMethod( resource, HttpMethod.POST );
 
 		action.perform( restService, null );
 
@@ -145,11 +147,11 @@ public class GenerateRestMockServiceActionTest
 	@Test
 	public void shouldExpandPathParamForEmptyRestMethod()
 	{
-		RestResource one = restService.addNewResource( "one", "/one{version}" );
-		RestParamProperty path = one.addProperty( "version" );
+		RestResource resource = restService.addNewResource( "one", "/one{version}" );
+		RestParamProperty path = resource.addProperty( "version" );
 		path.setValue( "v1" );
 
-		addMethod( one, HttpMethod.GET );
+		addMethod( resource, HttpMethod.GET );
 
 		action.perform( restService, null );
 

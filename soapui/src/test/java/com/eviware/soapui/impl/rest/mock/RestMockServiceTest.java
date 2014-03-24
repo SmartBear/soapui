@@ -117,11 +117,14 @@ public class RestMockServiceTest
 	{
 		RestMethod restMethod = mock( RestMethod.class );
 		when( restMethod.getRequestAt( 0 ) ).thenReturn( restRequest );
+		when( restMethod.getMethod() ).thenReturn( HttpMethod.GET );
 
 		RestResource restResource = mock( RestResource.class );
 		when( restResource.getRestMethodCount() ).thenReturn( 1 );
 		when( restResource.getFullPath() ).thenReturn( "/full/path" );
-		when( restResource.getRestMethodAt( 0 )).thenReturn( restMethod );
+		List<RestMethod> restMethodList = new ArrayList<RestMethod>(  );
+		restMethodList.add( restMethod );
+		when( restResource.getRestMethodList() ).thenReturn( restMethodList );
 
 
 		restMockService.addNewMockOperation( restResource );

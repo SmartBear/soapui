@@ -16,6 +16,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
@@ -396,11 +398,12 @@ public class RestUtils
 		return resources;
 	}
 
-	public static String getTemplateParamExpandedPath( String expandedPath, RestParamsPropertyHolder params )
+	public static String getTemplateParamExpandedPath( String expandedPath, RestParamsPropertyHolder params, ModelItem context )
 	{
 		for(String pathParam: RestUtils.extractTemplateParams( expandedPath ))
 		{
 			String pathParamValue = params.getPropertyValue( pathParam );
+			pathParamValue = PropertyExpander.expandProperties( context, pathParamValue );
 			expandedPath = expandedPath.replaceAll( "\\{" + pathParam + "\\}", pathParamValue == null ? "" : pathParamValue );
 		}
 

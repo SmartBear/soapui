@@ -14,7 +14,8 @@ import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig>
 {
@@ -54,7 +55,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
 		RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(),
-				RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams() ) );
+				RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest ) );
 		mockAction.setResource( restRequest.getResource() );
 
 		return mockAction;
@@ -118,49 +119,25 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	@Override
 	public MockOperation addNewMockOperation( Operation operation )
 	{
-		RestResource restResource = (RestResource)operation;
-
-		RestRequestInterface.HttpMethod httpMethod = RestRequestInterface.HttpMethod.GET;
-		String path = RestUtils.getTemplateParamExpandedPath( restResource.getFullPath(), restResource.getParams() );
-
-		if(restResource.getRestMethodCount() > 0 )
-		{
-			return addNewMockOperationFromRestMethod( restResource.getRestMethodAt( 0 ), httpMethod, path );
-		}
-
-		return addEmptyMockAction( httpMethod, path );
+		return addNewMockOperationsFromResource( ( RestResource )operation ).get( 0 );
 	}
 
-	public List<MockOperation> addNewMockOperationFromService( RestResource restResource )
+	public List<MockOperation> addNewMockOperationsFromResource( RestResource restResource )
 	{
 		List<MockOperation> actions = new ArrayList<MockOperation>();
+		String path = RestUtils.getTemplateParamExpandedPath( restResource.getFullPath(), restResource.getParams(), restResource );
 
 		if( restResource.getRestMethodCount() < 1)
 		{
-			actions.add( addNewMockOperation( restResource ) );
+			actions.add( addEmptyMockAction( HttpMethod.GET, path ) );
 		}
 
 		for( RestMethod restMethod: restResource.getRestMethodList())
 		{
-			HttpMethod httpMethod = restMethod.getMethod();
-			String path = RestUtils.getTemplateParamExpandedPath( restResource.getFullPath(), restResource.getParams() );
-
-			RestMockAction mockAction = addNewMockOperationFromRestMethod( restMethod, httpMethod, path );
-
-			actions.add( mockAction );
+			actions.add( addEmptyMockAction( restMethod.getMethod(), path ) );
 		}
 
 		return actions;
-	}
-
-	private RestMockAction addNewMockOperationFromRestMethod( RestMethod restMethod, HttpMethod defaultHttpMethod, String defaultPath )
-	{
-		if( restMethod.getRequestCount() > 0 )
-		{
-			RestRequest request = restMethod.getRequestAt( 0 );
-			return addEmptyMockAction( request.getMethod(), RestUtils.getTemplateParamExpandedPath( request.getPath(), request.getParams() ) );
-		}
-		return addEmptyMockAction( defaultHttpMethod, defaultPath );
 	}
 
 	private String slashify( String path )

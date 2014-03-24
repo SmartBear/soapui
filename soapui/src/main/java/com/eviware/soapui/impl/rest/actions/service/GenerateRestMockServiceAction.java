@@ -107,7 +107,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 	{
 		for( RestResource oneResource : restService.getAllResources() )
 		{
-			List<MockOperation> listOfOperations = mockService.addNewMockOperationFromService( oneResource );
+			List<MockOperation> listOfOperations = mockService.addNewMockOperationsFromResource( oneResource );
 
 			for( MockOperation mockOperation : listOfOperations )
 			{
