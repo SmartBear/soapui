@@ -16,8 +16,10 @@ import com.eviware.soapui.config.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.google.common.base.Preconditions;
 import org.apache.commons.lang.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.*;
@@ -30,7 +32,6 @@ import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMetho
  */
 public class OAuth2Profile implements PropertyExpansionContainer
 {
-
 	public static final String CLIENT_ID_PROPERTY = "clientID";
 	public static final String CLIENT_SECRET_PROPERTY = "clientSecret";
 	public static final String AUTHORIZATION_URI_PROPERTY = "authorizationURI";
@@ -159,7 +160,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
 		if( StringUtils.isEmpty( configuration.getName() ) )
 		{
-			configuration.setName( "OAuth 2.0 - Profile 1");
+			configuration.setName( "OAuth 2.0 - Profile 1" );
 		}
 
 		return configuration.getName();
@@ -189,6 +190,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public void expired()
 	{
 		setAccessTokenStatus( AccessTokenStatus.EXPIRED );
+		setAccessTokenStartingStatus( AccessTokenStatus.EXPIRED );
+
 	}
 
 	public void retrivalCanceled()
@@ -202,6 +205,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		// retrieved from the server
 		doSetAccessToken( accessToken );
 		setAccessTokenStatus( AccessTokenStatus.RETRIEVED_FROM_SERVER );
+		setAccessTokenStartingStatus( AccessTokenStatus.RETRIEVED_FROM_SERVER );
 	}
 
 	public String getAccessToken()
@@ -226,6 +230,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			else
 			{
 				setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
+				setAccessTokenStartingStatus( AccessTokenStatus.ENTERED_MANUALLY );
+
 			}
 		}
 	}
@@ -404,6 +410,15 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public AccessTokenStatus getAccesTokenStatusAsEnum()
 	{
 		return AccessTokenStatus.byDescription( getAccessTokenStatus() );
+	}
+
+	public AccessTokenStatus getAccessTokenStartingStatus()
+	{
+		if( configuration.getAccessTokenStartingStatus() != null )
+		{
+			return AccessTokenStatus.valueOf( configuration.getAccessTokenStartingStatus().toString() );
+		}
+		return null;
 	}
 
 	public long getAccessTokenExpirationTime()
@@ -611,7 +626,12 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			notifyAll();
 		}
 		String oldValueAsString = oldValue == null ? null : oldValue.toString();
-		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status != null ? status.toString() : null);
+		pcs.firePropertyChange( ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status != null ? status.toString() : null );
 	}
 
+	private void setAccessTokenStartingStatus( @Nonnull AccessTokenStatus startingStatus )
+	{
+		Preconditions.checkNotNull( startingStatus );
+		configuration.setAccessTokenStartingStatus( AccessTokenStatusConfig.Enum.forString( startingStatus.name() ) );
+	}
 }

@@ -284,18 +284,11 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 				case RETRIEVED_FROM_SERVER:
 					setSucessfullFeedback( status );
 					break;
-				case WAITING_FOR_AUTHORIZATION:
-				case RECEIVED_AUTHORIZATION_CODE:
-					setWaitingFeedback( status );
-					break;
 				case RETRIEVAL_CANCELED:
-					setCanceledFeedback( status );
+					setCanceledFeedback();
 					break;
 				case EXPIRED:
 					setFailedFeedback( status );
-					break;
-				default:
-					setDefaultFeedback();
 					break;
 			}
 		}
@@ -310,8 +303,6 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		accessTokenStatusText.setText( "" );
 		accessTokenStatusText.setVisible( false );
-
-		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
 
 		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
@@ -331,21 +322,6 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
-	private void setWaitingFeedback( OAuth2Profile.AccessTokenStatus status )
-	{
-		accessTokenField.setBackground( DEFAULT_COLOR );
-
-		accessTokenStatusIcon.setIcon( null );
-		accessTokenStatusIcon.setVisible( false );
-
-		accessTokenStatusText.setText( "" );
-		accessTokenStatusText.setVisible( false );
-
-		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
-
-		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
-	}
-
 	private void setFailedFeedback( OAuth2Profile.AccessTokenStatus status )
 	{
 		accessTokenField.setBackground( FAIL_COLOR );
@@ -356,24 +332,13 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
 		accessTokenStatusText.setVisible( true );
 
-		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
-
 		inspector.setIcon( FAIL_ICON );
 	}
 
-	private void setCanceledFeedback( OAuth2Profile.AccessTokenStatus status )
+	private void setCanceledFeedback()
 	{
-		accessTokenField.setBackground( DEFAULT_COLOR );
-
-		accessTokenStatusIcon.setIcon( null );
-		accessTokenStatusIcon.setVisible( false );
-
-		accessTokenStatusText.setText( "" );
-		accessTokenStatusText.setVisible( false );
-
+		setAccessTokenStatusFeedback( profile.getAccessTokenStartingStatus() );
 		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
-
-		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
 	private void setDefaultFeedback()
