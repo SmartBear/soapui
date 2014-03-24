@@ -161,7 +161,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	{
 		AbstractValueModel valueModel = getOAuth2FlowValueModel( accessTokenForm );
 		ComboBoxModel oauth2FlowsModel = new DefaultComboBoxModel( OAuth2Profile.OAuth2Flow.values() );
-		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth 2.0 Flow", oauth2FlowsModel, "OAuth 2.0 Authorization Flow", valueModel );
+		JComboBox oauth2FlowComboBox = accessTokenForm.appendComboBox( "OAuth 2 Flow", oauth2FlowsModel, "OAuth 2 Authorization Flow", valueModel );
 		oauth2FlowComboBox.setName( OAUTH_2_FLOW_COMBO_BOX_NAME );
 		return oauth2FlowComboBox;
 	}

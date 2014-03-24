@@ -12,12 +12,7 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.AccessTokenPositionConfig;
-import com.eviware.soapui.config.AccessTokenStatusConfig;
-import com.eviware.soapui.config.OAuth2FlowConfig;
-import com.eviware.soapui.config.OAuth2ProfileConfig;
-import com.eviware.soapui.config.RefreshAccessTokenMethodConfig;
-import com.eviware.soapui.config.StringListConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -160,7 +155,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
 		if(StringUtils.isEmpty( configuration.getName()))
 		{
-			configuration.setName( "OAuth 2.0 - Profile 1");
+			configuration.setName( "OAuth 2 - Profile 1");
 		}
 
 		return configuration.getName();
