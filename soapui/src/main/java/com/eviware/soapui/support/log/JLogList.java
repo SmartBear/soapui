@@ -20,23 +20,10 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -44,13 +31,8 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -506,12 +488,18 @@ public class JLogList extends JPanel
 				try
 				{
 					Object line;
-					while( ( line = getNextLine() ) != null )
+					while( ( line = getNextLine( ) ) != null )
 					{
 						try
 						{
+							List<Object> linesToAddNow = new ArrayList<Object>(  );
+							linesToAddNow.add( line );
+							while((line = linesToAdd.poll()) != null)
+							{
+								linesToAddNow.add( line );
+							}
 							int oldSize = lines.size();
-							lines.add( line );
+							lines.addAll( linesToAddNow );
 							updateJList( oldSize );
 						}
 						catch( Exception e )
@@ -542,7 +530,7 @@ public class JLogList extends JPanel
 				}
 			}
 
-			private Object getNextLine()
+			private Object getNextLine( )
 			{
 				try
 				{
@@ -556,7 +544,7 @@ public class JLogList extends JPanel
 			}
 
 
-			private void updateJList( final int size )
+			private void updateJList( final int oldSize )
 			{
 				try
 				{
@@ -564,11 +552,15 @@ public class JLogList extends JPanel
 					{
 						public void run()
 						{
-							fireIntervalAdded( LogListModel.this, size, 1 );
-							if( lines.size() > maxRows )
+							fireIntervalAdded( LogListModel.this, oldSize, lines.size() - 1 );
+							int linesToRemove = lines.size() - ( ( int )maxRows );
+							if( linesToRemove > 0 )
 							{
-								lines.remove( 0 );
-								fireIntervalRemoved( LogListModel.this, 0, 1 );
+								for( int i = 0; i < linesToRemove; i++ )
+								{
+									lines.remove( 0 );
+								}
+								fireIntervalRemoved( LogListModel.this, 0, linesToRemove );
 							}
 							if( tailing )
 							{
