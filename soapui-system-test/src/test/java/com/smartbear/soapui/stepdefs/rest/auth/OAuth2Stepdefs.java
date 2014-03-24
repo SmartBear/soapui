@@ -2,7 +2,9 @@ package com.smartbear.soapui.stepdefs.rest.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.support.editor.inspectors.auth.*;
+import com.eviware.soapui.support.editor.inspectors.auth.OAuth2Form;
+import com.eviware.soapui.support.editor.inspectors.auth.OAuth2GetAccessTokenForm;
+import com.eviware.soapui.support.editor.inspectors.auth.ProfileSelectionForm;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.FestMatchers;
 import com.smartbear.soapui.utils.fest.FestUtils;
@@ -38,7 +40,7 @@ public class OAuth2Stepdefs
 	private static final String SCOPE = "scope";
 	private static final String ACCESS_TOKEN = "access-token";
 
-	private static final String ADVANCED_OPTIONS_DIALOG_NAME = "OAuth 2.0 Advanced options";
+	private static final String ADVANCED_OPTIONS_DIALOG_NAME = "OAuth 2 Advanced options";
 
 	private static final String OAUTH_2_COMBOBOX_ITEM = CredentialsConfig.AuthType.O_AUTH_2_0.toString();
 	public static final String BUTTON_OK = "OK";
