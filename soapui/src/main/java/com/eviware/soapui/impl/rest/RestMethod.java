@@ -188,9 +188,9 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 
 	public boolean hasRequestBody()
 	{
-		HttpMethod method = getMethod();
-		return method == HttpMethod.POST || method == HttpMethod.PUT
-				|| method == HttpMethod.PATCH;
+		RestRequestInterface.HttpMethod method = getMethod();
+		return method == RestRequestInterface.HttpMethod.POST || method == RestRequestInterface.HttpMethod.PUT
+				|| method == RestRequestInterface.HttpMethod.PATCH;
 	}
 
 	public void propertyChange( PropertyChangeEvent arg0 )
@@ -204,15 +204,15 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 		return params.getPropertyExpansions();
 	}
 
-	public HttpMethod getMethod()
+	public RestRequestInterface.HttpMethod getMethod()
 	{
 		String method = getConfig().getMethod();
-		return method == null ? null : HttpMethod.valueOf( method );
+		return method == null ? null : RestRequestInterface.HttpMethod.valueOf( method );
 	}
 
-	public void setMethod( HttpMethod method )
+	public void setMethod( RestRequestInterface.HttpMethod method )
 	{
-		HttpMethod old = getMethod();
+		RestRequestInterface.HttpMethod old = getMethod();
 		getConfig().setMethod( method.toString() );
 		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
 		notifyPropertyChanged( "method", old, method );

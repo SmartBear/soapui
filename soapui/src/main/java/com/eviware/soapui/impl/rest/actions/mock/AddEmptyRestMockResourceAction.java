@@ -1,22 +1,16 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
-import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.XFormField;
 import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JTextFieldFormField;
-
-import java.io.File;
 
 public class AddEmptyRestMockResourceAction extends AbstractSoapUIAction<RestMockService>
 {
@@ -32,8 +26,8 @@ public class AddEmptyRestMockResourceAction extends AbstractSoapUIAction<RestMoc
 	public void perform( RestMockService mockService, Object param )
 	{
 		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
-		dialog.setOptions( Form.HTTP_METHOD, HttpMethod.getMethodsAsStringArray() );
-		dialog.setValue( Form.HTTP_METHOD, HttpMethod.GET.name() );
+		dialog.setOptions( Form.HTTP_METHOD, RestRequestInterface.HttpMethod.getMethodsAsStringArray() );
+		dialog.setValue( Form.HTTP_METHOD, RestRequestInterface.HttpMethod.GET.name() );
 
 		JTextFieldFormField formField = (JTextFieldFormField)dialog.getFormField( Form.RESOURCE_PATH );
 		formField.getComponent().requestFocus();
@@ -45,7 +39,7 @@ public class AddEmptyRestMockResourceAction extends AbstractSoapUIAction<RestMoc
 
 			if( StringUtils.hasContent( resourcePath ))
 			{
-				mockService.addEmptyMockAction( HttpMethod.valueOf( httpMethod ), resourcePath );
+				mockService.addEmptyMockAction( RestRequestInterface.HttpMethod.valueOf( httpMethod ), resourcePath );
 				break;
 			}
 			UISupport.showInfoMessage( "The resource path can not be empty" );

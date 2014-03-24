@@ -13,8 +13,8 @@
 package com.eviware.soapui.impl.rest.panels.method;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.support.components.JPropertiesTable;
 
 import java.awt.Component;
@@ -46,7 +46,7 @@ public class RestMethodPanelBuilder extends EmptyPanelBuilder<RestMethod>
 		JPropertiesTable<RestMethod> table = new JPropertiesTable<RestMethod>( "Method Properties" );
 		table.addProperty( "Name", "name", true );
 		table.addProperty( "Description", "description", true );
-		table.addProperty( "HTTP Method", "method", HttpMethod.getMethods() );
+		table.addProperty( "HTTP Method", "method", RestRequestInterface.HttpMethod.getMethods() );
 
 		table.setPropertyObject( method );
 

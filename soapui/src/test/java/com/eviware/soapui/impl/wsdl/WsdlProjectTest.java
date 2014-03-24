@@ -1,8 +1,8 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -89,8 +89,8 @@ public class WsdlProjectTest
 	public void shouldNotResortMockOperationsOnReload() throws Exception
 	{
 		RestMockService restMockService = project.addNewRestMockService( "x" );
-		restMockService.addEmptyMockAction( HttpMethod.GET, "b" );
-		restMockService.addEmptyMockAction( HttpMethod.GET, "a" );
+		restMockService.addEmptyMockAction( RestRequestInterface.HttpMethod.GET, "b" );
+		restMockService.addEmptyMockAction( RestRequestInterface.HttpMethod.GET, "a" );
 
 		WsdlProject reloadedProject = saveAndReloadProject( project );
 

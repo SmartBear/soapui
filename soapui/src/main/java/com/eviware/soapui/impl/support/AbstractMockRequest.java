@@ -1,6 +1,6 @@
 package com.eviware.soapui.impl.support;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockRequestDataSource;
@@ -96,9 +96,9 @@ public abstract class AbstractMockRequest implements MockRequest
 		return request;
 	}
 
-	public HttpMethod getMethod()
+	public RestRequestInterface.HttpMethod getMethod()
 	{
-		return HttpMethod.valueOf( request.getMethod() );
+		return RestRequestInterface.HttpMethod.valueOf( request.getMethod() );
 	}
 
 	public String getPath()

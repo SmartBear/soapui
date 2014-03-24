@@ -14,9 +14,9 @@ package com.eviware.soapui.impl.rest.actions.support;
 
 import com.eviware.soapui.config.RestParametersConfig;
 import com.eviware.soapui.impl.actions.RestUriDialogHandler;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -174,7 +174,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 	private void createMethodAndRequestFor( RestResource resource )
 	{
 		RestMethod method = resource.addNewMethod( "Method " + (resource.getRestMethodCount() + 1) );
-		method.setMethod( HttpMethod.GET );
+		method.setMethod( RestRequestInterface.HttpMethod.GET );
 		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
 		UISupport.select( request );
 		UISupport.showDesktopPanel( request );

@@ -17,7 +17,7 @@ import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.WsaVersionTypeConfig;
 import com.eviware.soapui.config.WsdlRequestConfig;
 import com.eviware.soapui.config.WsrmVersionTypeConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.RequestTransportRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
@@ -311,9 +311,9 @@ public class WsdlRequest extends AbstractHttpRequest<WsdlRequestConfig> implemen
 		return definedAttachmentParts.toArray( new HttpAttachmentPart[definedAttachmentParts.size()] );
 	}
 
-	public HttpMethod getMethod()
+	public RestRequestInterface.HttpMethod getMethod()
 	{
-		return HttpMethod.POST;
+		return RestRequestInterface.HttpMethod.POST;
 	}
 
 	/*

@@ -1,7 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
@@ -61,7 +61,7 @@ public class RestRequestDesktopPanelTest
 	public void setUp() throws Exception
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setMethod( HttpMethod.GET );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.GET );
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
 		restRequest.getResource().setPath( RESOURCE_PATH );
 		restService().addEndpoint( ENDPOINT );
@@ -150,7 +150,7 @@ public class RestRequestDesktopPanelTest
 		String expectedChildPath = expectedParentPath + childPath ;
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( HttpMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
 
@@ -179,7 +179,7 @@ public class RestRequestDesktopPanelTest
 
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( HttpMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
 
@@ -203,7 +203,7 @@ public class RestRequestDesktopPanelTest
 		childResource.setPropertyValue( childParamName, "childValue" );
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( HttpMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel origDesktopPanel = requestDesktopPanel;
 		requestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
@@ -232,7 +232,7 @@ public class RestRequestDesktopPanelTest
 		childResource.setPropertyValue( childParamName, "childValue" );
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( HttpMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel origDesktopPanel = requestDesktopPanel;
 		requestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
@@ -288,7 +288,7 @@ public class RestRequestDesktopPanelTest
 		String expectedChildPath = parentResource.getPath() + "{" + PARAMETER_NAME + "}"+ childResource.getPath()  ;
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( HttpMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
 

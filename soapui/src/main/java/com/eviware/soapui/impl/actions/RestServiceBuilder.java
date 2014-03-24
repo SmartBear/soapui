@@ -1,9 +1,9 @@
 package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.config.RestParametersConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -32,7 +32,7 @@ public class RestServiceBuilder
 		}
 
 		RestResource restResource = createResource( ModelCreationStrategy.CREATE_NEW_MODEL, project, URI );
-		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource, HttpMethod.GET ) );
+		RestRequest restRequest = addNewRequest( addNewMethod( ModelCreationStrategy.CREATE_NEW_MODEL, restResource, RestRequestInterface.HttpMethod.GET ) );
 		copyParameters( extractParams( URI ), restResource.getParams() );
 		UISupport.select( restRequest );
 		UISupport.showDesktopPanel( restRequest );
@@ -112,7 +112,7 @@ public class RestServiceBuilder
 	}
 
 
-	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource, HttpMethod requestMethod )
+	protected RestMethod addNewMethod( ModelCreationStrategy creationStrategy, RestResource restResource, RestRequestInterface.HttpMethod requestMethod )
 	{
 		if( creationStrategy == ModelCreationStrategy.REUSE_MODEL )
 		{

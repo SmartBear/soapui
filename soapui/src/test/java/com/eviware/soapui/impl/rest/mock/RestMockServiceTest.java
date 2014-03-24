@@ -12,8 +12,8 @@ import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.HttpMethod.GET;
-import static com.eviware.soapui.impl.rest.HttpMethod.TRACE;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.TRACE;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;

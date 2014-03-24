@@ -14,8 +14,8 @@ package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest.ParameterMessagePart;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -104,9 +104,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 	public boolean hasRequestBody()
 	{
-		HttpMethod method = getMethod();
-		return method == HttpMethod.POST || method == HttpMethod.PUT
-				|| method == HttpMethod.PATCH;
+		RestRequestInterface.HttpMethod method = getMethod();
+		return method == RestRequestInterface.HttpMethod.POST || method == RestRequestInterface.HttpMethod.PUT
+				|| method == RestRequestInterface.HttpMethod.PATCH;
 	}
 
 	@Override
@@ -179,9 +179,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		}
 	}
 
-	public void setMethod( HttpMethod method )
+	public void setMethod( RestRequestInterface.HttpMethod method )
 	{
-		HttpMethod old = getMethod();
+		RestRequestInterface.HttpMethod old = getMethod();
 		getConfig().setMethod( method.toString() );
 		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
 		notifyPropertyChanged( "method", old, method );
@@ -220,10 +220,10 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	}
 
 	@Override
-	public HttpMethod getMethod()
+	public RestRequestInterface.HttpMethod getMethod()
 	{
 		String method = getConfig().getMethod();
-		return method == null ? null : HttpMethod.valueOf( method );
+		return method == null ? null : RestRequestInterface.HttpMethod.valueOf( method );
 	}
 
 	public MessagePart[] getRequestParts()
@@ -235,9 +235,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
 		}
 
-		if( getMethod() == HttpMethod.POST
-				|| getMethod() == HttpMethod.PUT
-				|| getMethod() == HttpMethod.PATCH )
+		if( getMethod() == RestRequestInterface.HttpMethod.POST
+				|| getMethod() == RestRequestInterface.HttpMethod.PUT
+				|| getMethod() == RestRequestInterface.HttpMethod.PATCH )
 		{
 			result.add( new HttpContentPart() );
 		}

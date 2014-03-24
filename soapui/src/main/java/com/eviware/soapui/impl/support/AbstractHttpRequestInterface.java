@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.config.AbstractRequestConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest.RequestIconAnimator;
 import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
@@ -48,7 +48,7 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public static final String MAX_SIZE = AbstractHttpRequest.class.getName() + "@max-size";
 	public static final String FOLLOW_REDIRECTS = AbstractHttpRequest.class.getName() + "@follow-redirects";
 
-	public abstract HttpMethod getMethod();
+	public abstract RestRequestInterface.HttpMethod getMethod();
 
 	public abstract void setMultipartEnabled( boolean multipartEnabled );
 

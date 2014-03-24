@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpPatch;
@@ -131,7 +131,7 @@ public class ExtendedPatchMethod extends HttpPatch implements ExtendedEntityEncl
 
 	public String getMethod()
 	{
-		return HttpMethod.PATCH.toString();
+		return RestRequestInterface.HttpMethod.PATCH.toString();
 	}
 
 	public Throwable getFailureCause()

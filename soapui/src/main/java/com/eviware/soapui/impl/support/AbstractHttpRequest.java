@@ -17,18 +17,26 @@ import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.CredentialsConfig.AuthType;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.IAfterRequestInjection;
-import com.eviware.soapui.impl.wsdl.support.*;
+import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
+import com.eviware.soapui.impl.wsdl.support.FileAttachment;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
+import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderContainer;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertyContainer;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep.RequestHeaderHolder;
 import com.eviware.soapui.impl.wsdl.teststeps.SettingPathPropertySupport;
-import com.eviware.soapui.model.iface.*;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.model.iface.Submit;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -41,7 +49,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -137,7 +145,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return fileAttachment;
 	}
 
-	public abstract HttpMethod getMethod();
+	public abstract RestRequestInterface.HttpMethod getMethod();
 
 	/**
 	 * Override just to get a better return type

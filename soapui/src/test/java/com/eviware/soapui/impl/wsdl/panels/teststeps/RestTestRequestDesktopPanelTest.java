@@ -15,8 +15,8 @@ import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -124,7 +124,7 @@ public class RestTestRequestDesktopPanelTest
 	private RestResource createRestRequestModel( StatefulModelItemFactory modelItemFactory ) throws SoapUIException
 	{
 		restRequest = modelItemFactory.makeRestRequest();
-		restRequest.setMethod( HttpMethod.GET );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.GET );
 		RestResource restResource = restRequest.getResource();
 		restResource.getParams().addProperty( PARAMETER_NAME );
 		restResource.addNewMethod( restRequest.getRestMethod().getName() );

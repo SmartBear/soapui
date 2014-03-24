@@ -1,6 +1,6 @@
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.ScriptMockOperationDispatcher;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -14,12 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
+import static java.lang.Boolean.TRUE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
-
-import static java.lang.Boolean.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class RestMockActionTest
 {
@@ -131,9 +132,9 @@ public class RestMockActionTest
 	@Test
 	public void shouldSetMethod()
 	{
-		mockAction.setMethod( HttpMethod.TRACE );
+		mockAction.setMethod( RestRequestInterface.HttpMethod.TRACE );
 
-		assertThat( mockAction.getMethod(), is( HttpMethod.TRACE ) );
+		assertThat( mockAction.getMethod(), is( RestRequestInterface.HttpMethod.TRACE ) );
 	}
 
 	@Test

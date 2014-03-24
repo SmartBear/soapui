@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -205,7 +205,7 @@ public class HttpTestRequestDesktopPanel extends
 
 	protected void addMethodCombo( JXToolBar toolbar )
 	{
-		methodCombo = new JComboBox( HttpMethod.getMethods() );
+		methodCombo = new JComboBox( RestRequestInterface.HttpMethod.getMethods() );
 
 		methodCombo.setSelectedItem( getRequest().getMethod() );
 		methodCombo.setToolTipText( "Set desired HTTP method" );
@@ -214,7 +214,7 @@ public class HttpTestRequestDesktopPanel extends
 			public void itemStateChanged( ItemEvent e )
 			{
 				updatingRequest = true;
-				getRequest().setMethod( ( HttpMethod )methodCombo.getSelectedItem() );
+				getRequest().setMethod( ( RestRequestInterface.HttpMethod )methodCombo.getSelectedItem() );
 				updatingRequest = false;
 			}
 		} );

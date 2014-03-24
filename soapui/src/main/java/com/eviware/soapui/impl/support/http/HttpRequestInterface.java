@@ -13,7 +13,7 @@
 package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.config.AbstractRequestConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableAttachmentContainer;
@@ -25,7 +25,7 @@ public interface HttpRequestInterface<T extends AbstractRequestConfig> extends A
 		Request, MutableTestPropertyHolder, PropertyExpansionContainer, MutableAttachmentContainer, MediaType
 {
 
-	public void setMethod( HttpMethod method );
+	public void setMethod( RestRequestInterface.HttpMethod method );
 
 	public boolean hasRequestBody();
 

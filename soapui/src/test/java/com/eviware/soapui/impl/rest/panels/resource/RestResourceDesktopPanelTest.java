@@ -1,7 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.resource;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -54,7 +54,7 @@ public class RestResourceDesktopPanelTest
 			throws SoapUIException
 	{
 		RestRequest restRequest = ModelItemFactory.makeRestRequest( childResource );
-		restRequest.setMethod( HttpMethod.GET );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.GET );
 		return new RestRequestDesktopPanel( restRequest );
 	}
 

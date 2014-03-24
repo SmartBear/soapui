@@ -1,9 +1,13 @@
 package com.eviware.soapui.impl.rest.actions.mock;
 
-import com.eviware.soapui.impl.rest.*;
+import com.eviware.soapui.impl.rest.RestMethod;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
@@ -20,7 +24,7 @@ import org.mockito.internal.matchers.Null;
 
 import java.util.List;
 
-import static com.eviware.soapui.impl.rest.HttpMethod.GET;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
@@ -136,7 +140,7 @@ public class AddRestRequestToMockServiceActionTest
 		int mockOperationCount = getFirstRestMockService().getMockOperationCount();
 		assertThat( mockOperationCount, is(1));
 
-		restRequest.setMethod( HttpMethod.TRACE );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.TRACE );
 		action.perform( restRequest, notUsed );
 		mockOperationCount = getFirstRestMockService().getMockOperationCount();
 		assertThat( mockOperationCount, is( 2 ) );
@@ -217,7 +221,7 @@ public class AddRestRequestToMockServiceActionTest
     private RestRequest createRestRequest(RestMethod restMethod, String path ) {
         RestRequest anotherRestRequest = restMethod.addNewRequest( "another" );
         anotherRestRequest.setPath( path );
-        anotherRestRequest.setMethod(HttpMethod.GET);
+        anotherRestRequest.setMethod( RestRequestInterface.HttpMethod.GET);
         return anotherRestRequest;
     }
 

@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -141,7 +141,7 @@ public final class ExtendedPostMethod extends HttpPost implements ExtendedEntity
 
 	public String getMethod()
 	{
-		return HttpMethod.POST.toString();
+		return RestRequestInterface.HttpMethod.POST.toString();
 	}
 
 	public void setAfterRequestInjection( IAfterRequestInjection injection )

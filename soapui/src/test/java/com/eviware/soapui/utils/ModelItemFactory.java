@@ -16,11 +16,11 @@ import com.eviware.soapui.config.TestSuiteConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.DefaultOAuth2ProfileContainer;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
@@ -62,7 +62,7 @@ public class ModelItemFactory
 	{
 
 		RestMethod restMethod = new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance() );
-		restMethod.setMethod( HttpMethod.GET );
+		restMethod.setMethod( RestRequestInterface.HttpMethod.GET );
 		return restMethod;
 	}
 

@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.model.mock;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.XmlException;
@@ -41,7 +41,7 @@ public interface MockRequest
 
 	public MockRunContext getRequestContext();
 
-	public HttpMethod getMethod();
+	public RestRequestInterface.HttpMethod getMethod();
 
 	public XmlObject getContentElement() throws XmlException;
 

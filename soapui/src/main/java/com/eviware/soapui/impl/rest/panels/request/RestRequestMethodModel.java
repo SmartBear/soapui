@@ -1,6 +1,5 @@
 package com.eviware.soapui.impl.rest.panels.request;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 
 import javax.swing.DefaultComboBoxModel;
@@ -25,7 +24,7 @@ public class RestRequestMethodModel extends DefaultComboBoxModel implements Prop
 
 	public RestRequestMethodModel( RestRequestInterface request )
 	{
-		super( HttpMethod.values() );
+		super( RestRequestInterface.HttpMethod.values() );
 		this.request = request;
 		request.addPropertyChangeListener( this );
 	}
@@ -34,7 +33,7 @@ public class RestRequestMethodModel extends DefaultComboBoxModel implements Prop
 	public void setSelectedItem( Object anItem )
 	{
 		super.setSelectedItem( anItem );
-		request.setMethod( ( HttpMethod )anItem );
+		request.setMethod( ( RestRequestInterface.HttpMethod )anItem );
 	}
 
 	@Override

@@ -12,9 +12,9 @@
 
 package com.eviware.soapui.impl.rest.panels.method;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.actions.method.NewRestRequestAction;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -102,7 +102,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		methodCombo = new JComboBox( HttpMethod.getMethods() );
+		methodCombo = new JComboBox( RestRequestInterface.HttpMethod.getMethods() );
 
 		methodCombo.setSelectedItem( getModelItem().getMethod() );
 		methodCombo.setToolTipText( "Set desired HTTP method" );
@@ -111,7 +111,7 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
 			public void itemStateChanged( ItemEvent e )
 			{
 				updatingRequest = true;
-				getModelItem().setMethod( ( HttpMethod )methodCombo.getSelectedItem() );
+				getModelItem().setMethod( ( RestRequestInterface.HttpMethod )methodCombo.getSelectedItem() );
 				updatingRequest = false;
 			}
 		} );

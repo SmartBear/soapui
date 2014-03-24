@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -130,7 +130,7 @@ public final class ExtendedOptionsMethod extends HttpOptions implements Extended
 
 	public String getMethod()
 	{
-		return HttpMethod.OPTIONS.toString();
+		return RestRequestInterface.HttpMethod.OPTIONS.toString();
 	}
 
 	public void setAfterRequestInjection( IAfterRequestInjection injection )

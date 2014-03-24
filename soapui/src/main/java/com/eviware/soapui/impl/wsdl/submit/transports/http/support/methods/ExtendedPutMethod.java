@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -132,7 +132,7 @@ public final class ExtendedPutMethod extends HttpPut implements ExtendedEntityEn
 
 	public String getMethod()
 	{
-		return HttpMethod.PUT.toString();
+		return RestRequestInterface.HttpMethod.PUT.toString();
 	}
 
 	public Throwable getFailureCause()

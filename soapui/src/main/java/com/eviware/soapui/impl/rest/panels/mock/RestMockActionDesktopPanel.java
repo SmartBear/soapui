@@ -1,7 +1,7 @@
 package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.panels.request.TextPanelWithTopLabel;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -9,8 +9,14 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.AbstractMockOperationDesktopPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
@@ -67,7 +73,7 @@ public class RestMockActionDesktopPanel extends AbstractMockOperationDesktopPane
 
 		comboPanel.add( new JLabel( "Method" ), BorderLayout.NORTH );
 
-		final JComboBox methodCombo = new JComboBox( HttpMethod.getMethods() );
+		final JComboBox methodCombo = new JComboBox( RestRequestInterface.HttpMethod.getMethods() );
 
 		methodCombo.setSelectedItem( getModelItem().getMethod() );
 		methodCombo.setToolTipText( "Set desired HTTP method" );
@@ -75,7 +81,7 @@ public class RestMockActionDesktopPanel extends AbstractMockOperationDesktopPane
 		{
 			public void itemStateChanged( ItemEvent e )
 			{
-				getModelItem().setMethod( ( HttpMethod )methodCombo.getSelectedItem() );
+				getModelItem().setMethod( ( RestRequestInterface.HttpMethod )methodCombo.getSelectedItem() );
 			}
 		} );
 

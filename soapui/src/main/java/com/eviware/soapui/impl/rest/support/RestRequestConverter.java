@@ -27,10 +27,10 @@ import com.eviware.soapui.config.SettingsConfig;
 import com.eviware.soapui.config.StringToStringMapConfig;
 import com.eviware.soapui.config.StringToStringMapConfig.Entry;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRepresentation;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -104,7 +104,7 @@ public class RestRequestConverter
 			else
 			{
 				method = resource.addNewMethod( methodType + " Method" );
-				method.setMethod( HttpMethod.valueOf( methodType ) );
+				method.setMethod( RestRequestInterface.HttpMethod.valueOf( methodType ) );
 				log.info( "Created new Method for Resource '" + resource.getName() + "'." );
 			}
 		}
@@ -132,7 +132,7 @@ public class RestRequestConverter
 				if( name == null )
 					throw new RestConversionException( "Cannot get name for RestMethod!" );
 				method = resource.addNewMethod( name );
-				method.setMethod( HttpMethod.valueOf( methodType ) );
+				method.setMethod( RestRequestInterface.HttpMethod.valueOf( methodType ) );
 			}
 		}
 		return method;

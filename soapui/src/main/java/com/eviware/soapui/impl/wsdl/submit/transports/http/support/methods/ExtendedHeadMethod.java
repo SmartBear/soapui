@@ -12,7 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -127,7 +127,7 @@ public final class ExtendedHeadMethod extends HttpHead implements ExtendedHttpMe
 
 	public String getMethod()
 	{
-		return HttpMethod.HEAD.toString();
+		return RestRequestInterface.HttpMethod.HEAD.toString();
 	}
 
 	public Throwable getFailureCause()

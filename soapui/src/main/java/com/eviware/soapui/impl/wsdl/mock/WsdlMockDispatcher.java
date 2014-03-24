@@ -2,7 +2,7 @@ package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
-import com.eviware.soapui.impl.rest.HttpMethod;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
@@ -11,7 +11,6 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.AbstractMockDispatcher;
 import com.eviware.soapui.model.support.ModelSupport;
@@ -29,7 +28,12 @@ import javax.wsdl.Definition;
 import javax.wsdl.Import;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLWriter;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,7 +104,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 			result = mockService.runOnRequestScript( mockContext, mockRequest );
 			if( !( result instanceof MockResult ) )
 			{
-				if( mockRequest.getMethod() == HttpMethod.POST )
+				if( mockRequest.getMethod() == RestRequestInterface.HttpMethod.POST )
 					result = dispatchPostRequest( mockRequest );
 				else
 					result = super.dispatchRequest( request, response );

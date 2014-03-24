@@ -3,8 +3,8 @@ package com.eviware.soapui.impl.rest.mock;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockResponseConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.HasHelpUrl;
@@ -64,7 +64,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 
 	public static String getDefaultIcon()
 	{
-		return getIconName( HttpMethod.GET.name() );
+		return getIconName( RestRequestInterface.HttpMethod.GET.name() );
 	}
 
 	@Override
@@ -153,7 +153,7 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		return getConfig().getResourcePath();
 	}
 
-	public void setMethod( HttpMethod method)
+	public void setMethod( RestRequestInterface.HttpMethod method)
 	{
 		getConfig().setMethod( method.name() );
 		setIcon( UISupport.createImageIcon( getIconName( method.name() ) ));
@@ -161,9 +161,9 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
 		notifyPropertyChanged( "httpMethod", null, this );
 	}
 
-	public HttpMethod getMethod()
+	public RestRequestInterface.HttpMethod getMethod()
 	{
-		return HttpMethod.valueOf( getConfig().getMethod() );
+		return RestRequestInterface.HttpMethod.valueOf( getConfig().getMethod() );
 	}
 
 	public void setResourcePath( String path )

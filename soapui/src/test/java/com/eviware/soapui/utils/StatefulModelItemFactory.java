@@ -4,9 +4,9 @@ import com.eviware.soapui.config.RestMethodConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
 import com.eviware.soapui.config.TestSuiteConfig;
-import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -60,9 +60,9 @@ public class StatefulModelItemFactory
 		RestMethod restMethod = new RestMethod( restResource, methodConfig )
 		{
 			@Override
-			public HttpMethod getMethod()
+			public RestRequestInterface.HttpMethod getMethod()
 			{
-				return HttpMethod.GET;
+				return RestRequestInterface.HttpMethod.GET;
 			}
 
 			@Override
