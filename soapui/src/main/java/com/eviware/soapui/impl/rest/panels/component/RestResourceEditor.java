@@ -42,6 +42,7 @@ import java.awt.event.MouseListener;
  */
 public class RestResourceEditor extends JTextField
 {
+	public static final String REST_RESOURCE_EDITOR_TEXT_FIELD = "RestResourceEditorTextField";
 	MouseListener mouseListener;
 
 	private RestResource editingRestResource;
@@ -53,6 +54,7 @@ public class RestResourceEditor extends JTextField
 		super( editingRestResource.getFullPath() );
 		this.editingRestResource = editingRestResource;
 		this.updating = updating;
+		setName( REST_RESOURCE_EDITOR_TEXT_FIELD );
 
 		if( isResourceLonely( editingRestResource ) )
 		{

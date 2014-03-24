@@ -89,6 +89,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 		extends ModelItemDesktopPanel<T> implements SubmitListener
 {
 	private final static Logger log = Logger.getLogger( AbstractHttpRequestDesktopPanel.class );
+	public static final String END_POINT_COMBO_BOX = "EndPointComboBox";
 
 	protected  EndpointsComboBoxModel endpointsModel;
 
@@ -336,6 +337,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
 	{
 		final JComboBox endpointCombo = new JComboBox( endpointsModel );
 		endpointCombo.setEditable( true );
+		endpointCombo.setName( END_POINT_COMBO_BOX );
 		Document textFieldDocument = ( ( JTextComponent )endpointCombo.getEditor().getEditorComponent() ).getDocument();
 		endpointsModel.listenToChangesIn( textFieldDocument );
 		endpointCombo.addPropertyChangeListener( this );
