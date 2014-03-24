@@ -1,13 +1,11 @@
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.config.PropertyConfig;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.HttpMethod;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
@@ -55,8 +53,8 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
-        RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(),
-                                                        restRequest.getTemplateParamExpandedPath() );
+		RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(),
+				RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams() ) );
 		mockAction.setResource( restRequest.getResource() );
 
 		return mockAction;
@@ -123,7 +121,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		RestResource restResource = (RestResource)operation;
 
 		RestRequestInterface.HttpMethod httpMethod = RestRequestInterface.HttpMethod.GET;
-		String path = restResource.getFullPath();
+		String path = RestUtils.getTemplateParamExpandedPath( restResource.getFullPath(), restResource.getParams() );
 
 		if(restResource.getRestMethodCount() > 0 )
 		{
@@ -160,7 +158,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		if( restMethod.getRequestCount() > 0 )
 		{
 			RestRequest request = restMethod.getRequestAt( 0 );
-			return addEmptyMockAction( request.getMethod(), request.getTemplateParamExpandedPath() );
+			return addEmptyMockAction( request.getMethod(), RestUtils.getTemplateParamExpandedPath( request.getPath(), request.getParams() ) );
 		}
 		return addEmptyMockAction( defaultHttpMethod, defaultPath );
 	}

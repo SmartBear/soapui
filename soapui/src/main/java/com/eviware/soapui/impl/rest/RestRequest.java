@@ -506,25 +506,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			return getResource().getFullPath();
 	}
 
-    public String getTemplateParamExpandedPath( )
-    {
-       String expandedPath = getPath();
-		 RestParamsPropertyHolder params = getParams();
-
-		 return getTemplateParamExpandedPath( expandedPath, params );
-    }
-
-	public static String getTemplateParamExpandedPath( String expandedPath, RestParamsPropertyHolder params )
-	{
-		for(String pathParam: RestUtils.extractTemplateParams( expandedPath ))
-		{
-			String pathParamValue = params.getPropertyValue( pathParam );
-			expandedPath = expandedPath.replaceAll( "\\{" + pathParam + "\\}", pathParamValue == null ? "" : pathParamValue );
-		}
-
-		return expandedPath;
-	}
-
 	public void setPath( String fullPath )
 	{
 		String old = getPath();

@@ -395,4 +395,15 @@ public class RestUtils
 		Collections.reverse( resources );
 		return resources;
 	}
+
+	public static String getTemplateParamExpandedPath( String expandedPath, RestParamsPropertyHolder params )
+	{
+		for(String pathParam: RestUtils.extractTemplateParams( expandedPath ))
+		{
+			String pathParamValue = params.getPropertyValue( pathParam );
+			expandedPath = expandedPath.replaceAll( "\\{" + pathParam + "\\}", pathParamValue == null ? "" : pathParamValue );
+		}
+
+		return expandedPath;
+	}
 }
