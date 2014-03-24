@@ -3,8 +3,9 @@ package com.eviware.soapui.support.editor.inspectors.auth;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 /**
  * A simple desktop panel wrapping the OAuth2ScriptsEditor component.

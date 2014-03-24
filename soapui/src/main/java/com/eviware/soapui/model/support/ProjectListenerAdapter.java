@@ -81,7 +81,7 @@ public class ProjectListenerAdapter implements ProjectListener
 	}
 
 	@Override
-	public void environmentRenamed( Environment enviroment, String oldName, String newName )
+	public void environmentRenamed( Environment environment, String oldName, String newName )
 	{
 		// TODO Auto-generated method stub
 		

@@ -12,7 +12,12 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.AccessTokenPositionConfig;
+import com.eviware.soapui.config.AccessTokenStatusConfig;
+import com.eviware.soapui.config.OAuth2FlowConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.config.RefreshAccessTokenMethodConfig;
+import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -20,7 +25,11 @@ import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
