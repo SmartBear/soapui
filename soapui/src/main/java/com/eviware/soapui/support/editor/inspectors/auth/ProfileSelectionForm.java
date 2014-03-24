@@ -230,6 +230,10 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
 			changeAuthorizationType( OAUTH_2_FORM_LABEL, selectedOption );
 		}
+		else if( selectedOption.equals( OPTIONS_SEPARATOR ) )
+		{
+			profileSelectionComboBox.setSelectedIndex( 0 );
+		}
 		else    //selectedItem : No Authorization
 		{
 			setIcon( AUTH_NOT_ENABLED_ICON );
@@ -461,7 +465,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 				String selectedProfile = ( String )e.getItem();
 
 				setAuthenticationTypeAndShowCard( selectedProfile );
-				if( !getAddEditOptions().contains( selectedProfile ) )
+				if( !getAddEditOptions().contains( selectedProfile ) && !selectedProfile.equals( OPTIONS_SEPARATOR ) )
 				{
 					DefaultComboBoxModel profileComboBoXModel = new DefaultComboBoxModel(
 							createOptionsForAuthorizationCombo( selectedProfile ) );
