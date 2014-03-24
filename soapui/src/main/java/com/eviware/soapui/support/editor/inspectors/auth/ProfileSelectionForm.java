@@ -301,6 +301,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			return;
 		}
 
+		if( getBasicAuthenticationTypes().contains( newName ) )
+		{
+			UISupport.showErrorMessage( "'" + newName + "' is a reserved profile name." );
+			profileSelectionComboBox.setSelectedItem( profileOldName );
+			return;
+		}
 		if( getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( newName ) )
 		{
 			UISupport.showErrorMessage( "There is already a profile named '" + newName + "'" );
