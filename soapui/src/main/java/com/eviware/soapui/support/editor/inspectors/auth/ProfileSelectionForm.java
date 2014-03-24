@@ -34,6 +34,8 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileSelectionForm<T extends AbstractHttpRequest> extends AbstractXmlInspector
 {
@@ -52,6 +54,16 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	static final ImageIcon AUTH_ENABLED_ICON = UISupport.createImageIcon( "/lock.png" );
 	private static final ImageIcon AUTH_NOT_ENABLED_ICON = null;
 
+	private static final Map<String, ShowOnlineHelpAction> helpActions = new HashMap<String, ShowOnlineHelpAction>(  );
+	static
+	{
+		helpActions.put( EMPTY_PANEL, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION) );
+		helpActions.put( AbstractHttpRequest.BASIC_AUTH_PROFILE, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_BASIC) );
+		helpActions.put( CredentialsConfig.AuthType.NTLM.toString(), new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_NTLM) );
+		helpActions.put( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(), new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_SPNEGO_KERBEROS) );
+		helpActions.put( OAUTH_2_FORM_LABEL, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_OAUTH2) );
+	}
+
 	private T request;
 	private final JPanel outerPanel = new JPanel( new BorderLayout() );
 	private final JPanel cardPanel = new JPanel( new CardLayout() );
@@ -59,6 +71,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private CellConstraints cc = new CellConstraints();
 	private BasicAuthenticationForm<T> authenticationForm;
 	private OAuth2Form oAuth2Form;
+	private JButton helpButton;
 
 	protected ProfileSelectionForm( T request )
 	{
@@ -161,8 +174,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		JPanel wrapperPanel = new JPanel( new BorderLayout( 5, 5 ) );
 		wrapperPanel.add( comboBoxPanel, BorderLayout.LINE_START );
-		wrapperPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( HelpUrls.OAUTH_AUTHORIZATION ) ),
-				BorderLayout.AFTER_LINE_ENDS );
+		helpButton = UISupport.createFormButton( helpActions.get( EMPTY_PANEL ) );
+		wrapperPanel.add( helpButton, BorderLayout.AFTER_LINE_ENDS );
 		return wrapperPanel;
 	}
 
@@ -191,11 +204,11 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			authenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
 			if( isSoapRequest( request ) )
 			{
-				showCard( WSS_FORM_LABEL );
+				changeAuthorizationType( WSS_FORM_LABEL, selectedOption );
 			}
 			else
 			{
-				showCard( BASIC_FORM_LABEL );
+				changeAuthorizationType( BASIC_FORM_LABEL, selectedOption );
 			}
 		}
 		else if( isRestRequest( request ) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains( selectedOption ) )
@@ -204,14 +217,14 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0 );
 			oAuth2Form = new OAuth2Form( getOAuth2ProfileContainer().getProfileByName( selectedOption ), this );
 			cardPanel.add( oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL );
-			showCard( OAUTH_2_FORM_LABEL );
+			changeAuthorizationType( OAUTH_2_FORM_LABEL, selectedOption );
 		}
 		else    //selectedItem : No Authorization
 		{
 			setIcon( AUTH_NOT_ENABLED_ICON );
 			setTitle( AuthInspectorFactory.INSPECTOR_ID );
 			request.setSelectedAuthProfileAndAuthType( selectedOption, CredentialsConfig.AuthType.NO_AUTHORIZATION );
-			showCard( EMPTY_PANEL );
+			changeAuthorizationType( EMPTY_PANEL, selectedOption );
 		}
 	}
 
@@ -282,7 +295,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		OAuth2Profile profile = getOAuth2ProfileContainer().getProfileByName( profileOldName );
 		profile.setName( newName );
 		request.setSelectedAuthProfileAndAuthType( newName,
-				CredentialsConfig.AuthType.Enum.forString( request.getAuthType()) );
+				CredentialsConfig.AuthType.Enum.forString( request.getAuthType() ) );
 		refreshProfileSelectionComboBox( newName );
 	}
 
@@ -317,6 +330,17 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		profileSelectionComboBox.addItemListener( new ProfileSelectionListener() );
 
 		profileSelectionComboBox.setSelectedItem( selectedProfile );
+	}
+
+	private void changeAuthorizationType( String cardName, String selectedOption )
+	{
+		showCard( cardName );
+		String helpKey = cardName;
+		if(cardName.equals( BASIC_FORM_LABEL ) || cardName.equals( WSS_FORM_LABEL )) {
+			helpKey = selectedOption;
+		}
+		helpButton.setAction( helpActions.get( helpKey ) );
+
 	}
 
 	private void showCard( String cardName )

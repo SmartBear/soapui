@@ -2,10 +2,12 @@ package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockResponseXmlDocument;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.MediaTypeComboBox;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.MockResponseHeadersModel;
 import com.eviware.soapui.ui.support.AbstractMockResponseDesktopPanel;
@@ -98,20 +100,25 @@ public class RestMockResponseDesktopPanel extends
 				setMediaType( getResponseEditor().getInputArea(), e.getItem().toString() );
 			}
 		} );
-		return createPanelWithLabel( "Content | Media type: ", mediaTypeComboBox );
+		JComponent innerPanel = createPanelWithLabel( "Content | Media type: ", mediaTypeComboBox );
+
+		JPanel outerPanel = new JPanel( );
+		outerPanel.setLayout( new BoxLayout( outerPanel, BoxLayout.X_AXIS ) );
+		outerPanel.add( innerPanel );
+		outerPanel.add( Box.createHorizontalGlue() );
+		outerPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( HelpUrls.REST_MOCK_RESPONSE_EDITOR_BODY ) ));
+
+		return outerPanel;
 	}
 
 	private JComponent createPanelWithLabel( String labelText, Component rightSideComponent )
 	{
-		JPanel innerPanel = new JPanel();
+		JPanel innerPanel = new JPanel(new FlowLayout( FlowLayout.LEFT ));
 
 		innerPanel.add( new JLabel( labelText ) );
 		innerPanel.add( rightSideComponent );
 
-		JPanel outerPanel = new JPanel( new BorderLayout(  ) );
-		outerPanel.add( innerPanel, BorderLayout.WEST );
-
-		return outerPanel;
+		return innerPanel;
 	}
 
 	private JComboBox createStatusCodeCombo()
