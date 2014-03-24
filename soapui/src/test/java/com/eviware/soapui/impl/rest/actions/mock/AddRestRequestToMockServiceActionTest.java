@@ -55,7 +55,7 @@ public class AddRestRequestToMockServiceActionTest
 
 		setUpResponse();
 
-		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, TRUE );
+		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, FALSE );
 		SoapUI.getSettings().setBoolean( HttpSettings.LEAVE_MOCKENGINE, FALSE );
 	}
 
@@ -98,7 +98,6 @@ public class AddRestRequestToMockServiceActionTest
 
 		RestMockService service = project.getRestMockServiceByName( mockServiceName );
 		assertThat( service.getName(), is( mockServiceName ) );
-		assertThat( service.getMockRunner().isRunning(), is( TRUE ));
 	}
 
 	@Test

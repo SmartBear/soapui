@@ -45,7 +45,7 @@ public class GenerateRestMockServiceActionTest
 
 		mockFormDialog();
 
-		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, TRUE );
+		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, FALSE );
 		SoapUI.getSettings().setBoolean( HttpSettings.LEAVE_MOCKENGINE, FALSE );
 	}
 
@@ -76,7 +76,6 @@ public class GenerateRestMockServiceActionTest
 		RestMockService restMockService = getResultingRestMockService();
 		assertThat( restMockService, is( NotNull.NOT_NULL ) );
 		assertThat( restMockService.getName(), is( restMockServiceName ) );
-		assertThat( restMockService.getMockRunner().isRunning(), is( TRUE ) );
 	}
 
 	@Test
