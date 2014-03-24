@@ -19,7 +19,7 @@
           <con:element xsi:nil="true"/>
           <con:description xsi:nil="true"/>
         </con:representation>
-        <con:request name="Request 1" mediaType="application/json">
+        <con:request name="Registration Form" mediaType="application/json">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -62,7 +62,7 @@
           <con:element xsi:nil="true"/>
           <con:description xsi:nil="true"/>
         </con:representation>
-        <con:request name="Request 1" mediaType="application/json" postQueryString="false">
+        <con:request name="Submit Registration Form" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
