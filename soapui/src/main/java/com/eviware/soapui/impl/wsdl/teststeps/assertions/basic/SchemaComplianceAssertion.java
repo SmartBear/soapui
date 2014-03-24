@@ -128,7 +128,6 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 	private String assertWadlResponse( RestMessageExchange messageExchange, SubmitContext context )
 			throws AssertionException
 	{
-		WadlDefinitionContext wadlContext = null;
 		try
 		{
 			definitionContext = getWadlContext( messageExchange, context );
@@ -138,7 +137,7 @@ public class SchemaComplianceAssertion extends WsdlMessageAssertion implements R
 			throw new AssertionException( new AssertionError( e1.getMessage() ) );
 		}
 
-		WadlValidator validator = new WadlValidator( wadlContext );
+		WadlValidator validator = new WadlValidator( (WadlDefinitionContext) definitionContext );
 
 		try
 		{
