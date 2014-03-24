@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
 import com.google.common.base.Preconditions;
@@ -336,6 +337,20 @@ public class SimpleForm
 		Font fontBold = new Font( font.getName(), Font.BOLD, font.getSize() );
 		label.setFont( fontBold );
 		append( null, null, label, null, DEFAULT_LABEL_COLUMN, getColumnSpanToTheEnd( DEFAULT_LABEL_COLUMN ) );
+	}
+
+	public void appendHeadingAndHelpButton( String text, String helpUrl )
+	{
+		JLabel label = new JLabel( text );
+		Font font = label.getFont();
+		Font fontBold = new Font( font.getName(), Font.BOLD, font.getSize() );
+		label.setFont( fontBold );
+		JPanel innerPanel = new JPanel(  );
+		innerPanel.setLayout( new BoxLayout( innerPanel, BoxLayout.X_AXIS ) );
+		innerPanel.add( label );
+		innerPanel.add( Box.createHorizontalGlue() );
+		innerPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( helpUrl ) ) );
+		append( null, null, innerPanel, null, DEFAULT_LABEL_COLUMN, getColumnSpanToTheEnd( DEFAULT_LABEL_COLUMN ) );
 	}
 
 	// -- Standard components -- //

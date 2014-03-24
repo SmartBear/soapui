@@ -213,6 +213,7 @@ public interface HelpUrls
 	public static final String OAUTH_AUTOMATING_ACCES_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
 	public static final String OAUTH_AUTHORIZATION = "http://www.soapui.org/OAuth/authorization.html";
 	public static final String OAUTH_ADVANCED_OPTIONS = "http://www.soapui.org/OAuth/advanced-options.html";
+	public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/access-token-retrieval.html";
 
 	public static final String REST_MOCKSERVICE_HELP_URL = "http://www.soapui.org/REST-Service-Mocking/mock-service-editor.html";
 	public static final String REST_MOCKSERVICE_ACTION = "http://www.soapui.org/REST-Service-Mocking/mock-action.html";
