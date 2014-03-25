@@ -124,7 +124,13 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		oAuth2Form = new SimpleBindingForm( new PresentationModel<OAuth2Profile>( profile ) );
 		addOAuth2Panel( oAuth2Form );
 		statusChangeManager.register();
-		setAccessTokenStatusFeedback( profile.getAccesTokenStatusAsEnum() );
+
+		if( profile.getAccessTokenStatusAsEnum() != OAuth2Profile.AccessTokenStatus.RETRIEVAL_CANCELED )
+		{
+			profile.resetAccessTokenStatusToStartingStatus();
+		}
+		setAccessTokenStatusFeedback( profile.getAccessTokenStatusAsEnum() );
+
 		return formPanel;
 	}
 
@@ -303,6 +309,8 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		accessTokenStatusText.setText( "" );
 		accessTokenStatusText.setVisible( false );
+
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
 
 		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}

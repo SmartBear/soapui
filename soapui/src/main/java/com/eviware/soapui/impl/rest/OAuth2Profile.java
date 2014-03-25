@@ -407,7 +407,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		return null;
 	}
 
-	public AccessTokenStatus getAccesTokenStatusAsEnum()
+	public AccessTokenStatus getAccessTokenStatusAsEnum()
 	{
 		return AccessTokenStatus.byDescription( getAccessTokenStatus() );
 	}
@@ -419,6 +419,11 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			return AccessTokenStatus.valueOf( configuration.getAccessTokenStartingStatus().toString() );
 		}
 		return null;
+	}
+
+	public void resetAccessTokenStatusToStartingStatus()
+	{
+		setAccessTokenStatus( getAccessTokenStartingStatus() );
 	}
 
 	public long getAccessTokenExpirationTime()
