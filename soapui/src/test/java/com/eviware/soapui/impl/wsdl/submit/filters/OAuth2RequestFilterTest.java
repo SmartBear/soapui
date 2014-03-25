@@ -219,7 +219,7 @@ public class OAuth2RequestFilterTest
 		List<OAuth2Profile> oAuth2ProfileList = oAuth2ProfileContainer.getOAuth2ProfileList();
 		if(oAuth2ProfileList.isEmpty())
 		{
-			oAuth2Profile = oAuth2ProfileContainer.addNewOAuth2Profile( "OAuth 2.0 - Profile" );
+			oAuth2Profile = oAuth2ProfileContainer.addNewOAuth2Profile( "OAuth 2 - Profile" );
 		}
 		else
 		{

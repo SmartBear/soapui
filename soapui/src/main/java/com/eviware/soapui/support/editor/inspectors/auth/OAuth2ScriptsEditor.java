@@ -413,7 +413,7 @@ public class OAuth2ScriptsEditor extends JPanel
 						public void run()
 						{
 							UISupport.showInfoMessage( "The scripts could only be partially validated, because all scripts " +
-									"weren't executed in the OAuth 2.0 flow.\n" +
+									"weren't executed in the OAuth 2 flow.\n" +
 									"Maybe you already have an active session in the authorization server?",
 									"Scripts not fully validated" );
 						}

@@ -2,7 +2,9 @@ package com.smartbear.soapui.stepdefs.rest.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.support.editor.inspectors.auth.*;
+import com.eviware.soapui.support.editor.inspectors.auth.OAuth2Form;
+import com.eviware.soapui.support.editor.inspectors.auth.OAuth2GetAccessTokenForm;
+import com.eviware.soapui.support.editor.inspectors.auth.ProfileSelectionForm;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.FestMatchers;
 import com.smartbear.soapui.utils.fest.FestUtils;

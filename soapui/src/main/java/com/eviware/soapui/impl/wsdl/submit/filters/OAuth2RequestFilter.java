@@ -138,7 +138,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 					}
 					else
 					{
-						log.warn( "OAuth 2.0 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms" );
+						log.warn( "OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms" );
 					}
 				}
 				else
