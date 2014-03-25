@@ -4,7 +4,6 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
@@ -14,6 +13,7 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.project.Project;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	}
 
 
-    public RestMockAction addEmptyMockAction(RestRequestInterface.HttpMethod method, String path)
+    public RestMockAction addEmptyMockAction(HttpMethod method, String path)
 	{
 		RESTMockActionConfig config = getConfig().addNewRestMockAction();
 
@@ -95,12 +95,12 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return matchedOperation;
 	}
 
-	protected MockOperation findMatchingOperation( String pathToFind, RestRequestInterface.HttpMethod verbToFind )
+	protected MockOperation findMatchingOperation( String pathToFind, HttpMethod verbToFind )
 	{
 		for( MockOperation operation : getMockOperationList() )
 		{
 			String operationPath = ( ( RestMockAction )operation ).getResourcePath();
-			RestRequestInterface.HttpMethod operationVerb = ( ( RestMockAction )operation ).getMethod();
+			HttpMethod operationVerb = ( ( RestMockAction )operation ).getMethod();
 
 			boolean matchesPath = operationPath.equals( pathToFind );
 			boolean matchesVerb = verbToFind == operationVerb;
@@ -132,7 +132,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 		if( restResource.getRestMethodCount() < 1)
 		{
-			actions.add( addEmptyMockAction( RestRequestInterface.HttpMethod.GET, path ) );
+			actions.add( addEmptyMockAction( HttpMethod.GET, path ) );
 		}
 
 		for( RestMethod restMethod: restResource.getRestMethodList())
@@ -158,4 +158,6 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	{
 		return HelpUrls.REST_MOCKSERVICE_HELP_URL;
 	}
+
+
 }
