@@ -1,5 +1,6 @@
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
+import com.eviware.soapui.config.TimeUnitConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -8,6 +9,7 @@ import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.TimeUtils;
 import org.apache.http.client.methods.HttpRequestBase;
@@ -43,10 +45,10 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
 				.getOAuth2ProfileContainer();
 
-		if(O_AUTH_2_0.toString().equals( request.getAuthType() ) )
+		if( O_AUTH_2_0.toString().equals( request.getAuthType() ) )
 		{
-			OAuth2Profile profile = profileContainer.getProfileByName( (( AbstractHttpRequest ) request).getSelectedAuthProfile() );
-			if( profile==null || StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
+			OAuth2Profile profile = profileContainer.getProfileByName( ( ( AbstractHttpRequest )request ).getSelectedAuthProfile() );
+			if( profile == null || StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
 			{
 				return;
 			}
@@ -69,11 +71,47 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 	{
 		long currentTime = TimeUtils.getCurrentTimeInSeconds();
 		long issuedTime = profile.getAccessTokenIssuedTime();
-		long expirationTime = profile.getAccessTokenExpirationTime();
+		long expirationTime;
 
-		//10 second buffer to make sure that it doesn't expire by the time request is sent
-		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < (currentTime +10) - issuedTime;
+		if( profile.useManualAccessTokenExpirationTime() )
+		{
+			String expirationTimeString = profile.getManualAccessTokenExpirationTime() == null ? "" : profile.getManualAccessTokenExpirationTime().toString();
+			String expandedValue = PropertyExpander.expandProperties( profile.getContainer().getProject(), expirationTimeString );
+			expirationTime = convertExpirationTimeToSeconds( expandedValue, profile.getManualAccessTokenExpirationTimeUnit() );
+		}
+		else
+		{
+			expirationTime = profile.getAccessTokenExpirationTime();
+		}
 
+		//10 second buffer to make sure that the access token doesn't expire by the time request is sent
+		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < ( currentTime + 10 ) - issuedTime;
+	}
+
+	private long convertExpirationTimeToSeconds( String expirationTimeString, TimeUnitConfig.Enum timeUnit ) throws IllegalArgumentException
+	{
+		long expirationTime;
+		try
+		{
+			expirationTime = Long.valueOf( expirationTimeString.trim() );
+		}
+		catch( NumberFormatException e )
+		{
+			throw new IllegalArgumentException( "Manual expiration time cannot be parsed due to invalid characters." +
+					"Please review it and make sure it is set correctly.", e );
+		}
+		if( timeUnit.equals( TimeUnitConfig.HOURS ) )
+		{
+			return expirationTime * 3600;
+		}
+		else if( timeUnit.equals( TimeUnitConfig.MINUTES ) )
+		{
+			return expirationTime * 60;
+		}
+		else
+		{
+			return expirationTime;
+		}
 	}
 
 	private void reloadAccessToken( OAuth2Profile profile, OAuth2ClientFacade oAuth2Client )

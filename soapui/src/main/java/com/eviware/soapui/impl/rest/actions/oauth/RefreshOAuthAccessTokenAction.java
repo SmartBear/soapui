@@ -29,9 +29,9 @@ public class RefreshOAuthAccessTokenAction extends AbstractAction
 
 	public RefreshOAuthAccessTokenAction( OAuth2Profile profile )
 	{
-		super( "Refresh OAuth2 access token" );
+		super( "Refresh OAuth 2 access token" );
 		this.profile = profile;
-		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth2 the access token in the profile using the refresh token" );
+		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth 2 the access token in the profile using the refresh token" );
 	}
 
 	public void actionPerformed( ActionEvent event )
@@ -46,7 +46,7 @@ public class RefreshOAuthAccessTokenAction extends AbstractAction
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "Error refreshing OAuth2 access token" );
+			SoapUI.logError( e, "Error refreshing OAuth 2 access token" );
 			UISupport.showErrorMessage( "Could not refresh access token. Check the SoapUI log for details" );
 		}
 	}

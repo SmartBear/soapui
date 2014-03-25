@@ -32,7 +32,7 @@ public class GetOAuthAccessTokenAction extends AbstractAction
 	{
 		this.target = target;
 		putValue(Action.NAME, "Get Access Token");
-		putValue( Action.SHORT_DESCRIPTION, "Gets an OAuth2 access token and stores it in this profile" );
+		putValue( Action.SHORT_DESCRIPTION, "Gets an OAuth 2 access token and stores it in this profile" );
 	}
 
 	public void actionPerformed(ActionEvent event)
@@ -43,11 +43,11 @@ public class GetOAuthAccessTokenAction extends AbstractAction
 		}
 		catch (InvalidOAuth2ParametersException e)
 		{
-			UISupport.showErrorMessage( "Invalid OAuth2 parameters: " + e.getMessage() );
+			UISupport.showErrorMessage( "Invalid OAuth 2 parameters: " + e.getMessage() );
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "Error retrieving OAuth2 access token" );
+			SoapUI.logError( e, "Error retrieving OAuth 2 access token" );
 			UISupport.showErrorMessage( "Could not retrieve access token. Check the SoapUI log for details" );
 		}
 	}

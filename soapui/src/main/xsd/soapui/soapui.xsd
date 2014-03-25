@@ -1995,8 +1995,19 @@
             <xsd:element name="accessTokenExpirationTime" type="xsd:long"></xsd:element>
             <xsd:element name="accessTokenIssuedTime" type="xsd:long"></xsd:element>
             <xsd:element name="javaScripts" type="tns:StringList"/>
+            <xsd:element name="manualAccessTokenExpirationTime" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="useManualAccessTokenExpirationTime" type="xsd:boolean"/>
+            <xsd:element name="manualAccessTokenExpirationTimeUnit" type="tns:TimeUnit"/>
         </xsd:sequence>
     </xsd:complexType>
+
+    <xsd:simpleType name="TimeUnit">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="SECONDS"></xsd:enumeration>
+            <xsd:enumeration value="MINUTES"></xsd:enumeration>
+            <xsd:enumeration value="HOURS"></xsd:enumeration>
+        </xsd:restriction>
+    </xsd:simpleType>
 
     <xsd:simpleType name="AccessTokenPosition">
         <xsd:restriction base="xsd:string">
@@ -2716,4 +2727,5 @@
             <xsd:element name="assertion" type="tns:TestAssertion"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
+
 </xsd:schema>
