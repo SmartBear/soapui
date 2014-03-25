@@ -12,12 +12,7 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.AccessTokenPositionConfig;
-import com.eviware.soapui.config.AccessTokenStatusConfig;
-import com.eviware.soapui.config.OAuth2FlowConfig;
-import com.eviware.soapui.config.OAuth2ProfileConfig;
-import com.eviware.soapui.config.RefreshAccessTokenMethodConfig;
-import com.eviware.soapui.config.StringListConfig;
+import com.eviware.soapui.config.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -54,6 +49,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String REFRESH_ACCESS_TOKEN_METHOD_PROPERTY = "refreshAccessTokenMethod";
 	public static final String OAUTH2_FLOW_PROPERTY = "oAuth2Flow";
 	public static final String JAVA_SCRIPTS_PROPERTY = "javaScripts";
+	public static final String MANUAL_ACCESS_TOKEN_EXPIRATION_TIME_UNIT_PROPERTY = "manualAccessTokenExpirationTimeUnit";
 
 	public void waitForAccessTokenStatus( AccessTokenStatus accessTokenStatus, int timeout )
 	{
@@ -75,7 +71,6 @@ public class OAuth2Profile implements PropertyExpansionContainer
 			timeLeft -= ( System.currentTimeMillis() - startTime );
 		}
 	}
-
 
 	public enum AccessTokenStatus
 	{
@@ -431,15 +426,14 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		}
 	}
 
-	public Long getManualAccessTokenExpirationTime()
+	public String getManualAccessTokenExpirationTime()
 	{
-		return configuration.isSetManualAccessTokenExpirationTime() ?
-				configuration.getManualAccessTokenExpirationTime() : null;
+		return configuration.getManualAccessTokenExpirationTime();
 	}
 
-	public void setManualAccessTokenExpirationTime( long newExpirationTime )
+	public void setManualAccessTokenExpirationTime( String newExpirationTime )
 	{
-		long oldExpirationTime = configuration.getManualAccessTokenExpirationTime();
+		String oldExpirationTime = configuration.getManualAccessTokenExpirationTime();
 
 		if( oldExpirationTime != newExpirationTime )
 		{
@@ -461,6 +455,26 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			configuration.setUseManualAccessTokenExpirationTime( useManual );
 			pcs.firePropertyChange( USE_MANUAL_ACCESS_TOKEN_EXPIRATION_TIME, oldValue, useManual );
+		}
+	}
+
+	public TimeUnitConfig.Enum getManualAccessTokenExpirationTimeUnit()
+	{
+		if( configuration.getManualAccessTokenExpirationTimeUnit() == null)
+		{
+			configuration.setManualAccessTokenExpirationTimeUnit( TimeUnitConfig.SECONDS );
+		}
+		return configuration.getManualAccessTokenExpirationTimeUnit();
+	}
+
+	public void setManualAccessTokenExpirationTimeUnit( TimeUnitConfig.Enum newValue )
+	{
+		TimeUnitConfig.Enum oldValue = getManualAccessTokenExpirationTimeUnit();
+
+		if( !oldValue.equals( newValue ))
+		{
+			configuration.setManualAccessTokenExpirationTimeUnit( newValue );
+			pcs.firePropertyChange( MANUAL_ACCESS_TOKEN_EXPIRATION_TIME_UNIT_PROPERTY, oldValue.toString(), newValue.toString() );
 		}
 	}
 
@@ -507,6 +521,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		result.extractAndAddAll( REDIRECT_URI_PROPERTY );
 		result.extractAndAddAll( ACCESS_TOKEN_PROPERTY );
 		result.extractAndAddAll( SCOPE_PROPERTY );
+		result.extractAndAddAll( MANUAL_ACCESS_TOKEN_EXPIRATION_TIME );
 
 		return result.toArray();
 	}

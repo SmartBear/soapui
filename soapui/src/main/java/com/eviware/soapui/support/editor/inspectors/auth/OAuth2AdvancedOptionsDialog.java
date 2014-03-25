@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.config.TimeUnitConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -20,6 +21,7 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
+import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
 
@@ -55,13 +57,16 @@ public class OAuth2AdvancedOptionsDialog
 			profile.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
 
 			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
-			profile.setRefreshAccessTokenMethod( valueOf( refreshAccessTokenMethod ) );
+			profile.setRefreshAccessTokenMethod( RefreshAccessTokenMethods.valueOf( refreshAccessTokenMethod.toUpperCase() ) );
 
-			long manualExpirationTime = expirationTimeComponent.getAccessTokenExpirationTimeInSeconds();
-			if( manualExpirationTime != -1 )
+			String manualExpirationTime = expirationTimeComponent.getAccessTokenExpirationTime();
+			TimeUnitConfig.Enum expirationTimeUnit = expirationTimeComponent.getAccessTokenExpirationTimeUnit();
+			profile.setManualAccessTokenExpirationTime( manualExpirationTime );
+			profile.setManualAccessTokenExpirationTimeUnit( expirationTimeUnit );
+
+			if( expirationTimeComponent.manualExpirationTimeIsSelected() )
 			{
 				profile.setUseManualAccessTokenExpirationTime( true );
-				profile.setManualAccessTokenExpirationTime( manualExpirationTime );
 			}
 			else
 			{
@@ -83,7 +88,7 @@ public class OAuth2AdvancedOptionsDialog
 	private void setRefreshAccessTokenOptions( OAuth2Profile profile, XFormDialog dialog )
 	{
 		XFormRadioGroup refreshOptions = ( XFormRadioGroup )dialog.getFormField( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
-		refreshOptions.setOptions( values() );
+		refreshOptions.setOptions( RefreshAccessTokenMethods.values() );
 		refreshOptions.setValue( profile.getRefreshAccessTokenMethod().toString() );
 	}
 
@@ -101,13 +106,13 @@ public class OAuth2AdvancedOptionsDialog
 	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.OAUTH_ADVANCED_OPTIONS)
 	public interface Form
 	{
-		@AField( description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP )
+		@AField(description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP)
 		public final static String ACCESS_TOKEN_POSITION = messages.get( "Form.AccessTokenPosition.Label" );
 
-		@AField( description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP )
+		@AField(description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP)
 		public final static String AUTOMATIC_ACCESS_TOKEN_REFRESH = messages.get( "Form.AutomaticRefreshAccessToken.Label" );
 
-		@AField( description = "Form.AccessTokenExpirationTime.Description", type = AField.AFieldType.COMPONENT )
+		@AField(description = "Form.AccessTokenExpirationTime.Description", type = AField.AFieldType.COMPONENT)
 		public final static String ACCESS_TOKEN_EXPIRATION_TIME = messages.get( "Form.AccessTokenExpirationTime.Label" );
 	}
 }

@@ -174,7 +174,7 @@ public class OAuth2RequestFilterTest
 	{
 		setupProfileWithRefreshToken();
 		oAuth2Profile.setAccessTokenExpirationTime( 3600 );
-		oAuth2Profile.setManualAccessTokenExpirationTime( 1 );
+		oAuth2Profile.setManualAccessTokenExpirationTime( "1" );
 		oAuth2Profile.setUseManualAccessTokenExpirationTime( true );
 
 		oAuth2RequestFilter.filterRestRequest( mockContext, restRequest );
@@ -190,7 +190,7 @@ public class OAuth2RequestFilterTest
 		oAuth2Profile.setAccessTokenIssuedTime( System.currentTimeMillis() );
 		oAuth2Profile.setAccessTokenExpirationTime( 1 );		//We use a 10 second buffer when checking for expiration, so this will count as expired.
 		oAuth2Profile.setUseManualAccessTokenExpirationTime( true );
-		oAuth2Profile.setManualAccessTokenExpirationTime( 3600 );
+		oAuth2Profile.setManualAccessTokenExpirationTime( "3600" );
 
 		String originalAccessToken = oAuth2Profile.getAccessToken();
 

@@ -82,53 +82,13 @@ public class ExpirationTimeChooserTest
 		walker.findComponent( ExpirationTimeChooser.MANUAL_EXPIRATION_RADIO_NAME, JRadioButton.class ).doClick();
 		assertThat( walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class ), is( enabled() ) );
 		assertThat( walker.findComponent( ExpirationTimeChooser.TIME_UNIT_COMBO_NAME, JComboBox.class ), is( enabled() ) );
-
-	}
-
-	@Test
-	public void getsEnteredSecondsCorrectly() throws Exception
-	{
-		walker.findComponent( ExpirationTimeChooser.MANUAL_EXPIRATION_RADIO_NAME, JRadioButton.class ).doClick();
-		walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class ).setText( "1234" );
-
-		assertThat( chooser.getAccessTokenExpirationTimeInSeconds(), is( 1234l ) );
-
-	}
-
-	@Test
-	public void getsEnteredMinutesCorrectly() throws Exception
-	{
-		walker.findComponent( ExpirationTimeChooser.MANUAL_EXPIRATION_RADIO_NAME, JRadioButton.class ).doClick();
-		walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class ).setText( "3" );
-		walker.findComponent( ExpirationTimeChooser.TIME_UNIT_COMBO_NAME, JComboBox.class ).setSelectedIndex( 1 ); //minutes
-
-		assertThat( chooser.getAccessTokenExpirationTimeInSeconds(), is( 180l ) );
-	}
-
-	@Test
-	public void getsEnteredHoursCorrectly() throws Exception
-	{
-		walker.findComponent( ExpirationTimeChooser.MANUAL_EXPIRATION_RADIO_NAME, JRadioButton.class ).doClick();
-		walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class ).setText( "2" );
-		walker.findComponent( ExpirationTimeChooser.TIME_UNIT_COMBO_NAME, JComboBox.class ).setSelectedIndex( 2 ); //minutes
-
-		assertThat( chooser.getAccessTokenExpirationTimeInSeconds(), is( 7200l ) );
-	}
-
-	@Test
-	public void returnsDefaultValueWhenNonNumberEntered() throws Exception
-	{
-		walker.findComponent( ExpirationTimeChooser.MANUAL_EXPIRATION_RADIO_NAME, JRadioButton.class ).doClick();
-		walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class ).setText( "smurf" );
-
-		assertThat( chooser.getAccessTokenExpirationTimeInSeconds(), is( -1l ) );
 	}
 
 	@Test
 	public void populatesTimeTextFieldFromProfile() throws Exception
 	{
 		OAuth2Profile profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
-		profile.setManualAccessTokenExpirationTime( 90 );
+		profile.setManualAccessTokenExpirationTime( "90" );
 		initializeChooserFromProfile( profile );
 
 		JTextField timeField = walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class );
@@ -140,32 +100,6 @@ public class ExpirationTimeChooserTest
 	{
 		JTextField timeField = walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class );
 		assertThat( timeField.getText(), is( "" ) );
-	}
-
-	@Test
-	public void manualTimeIsConvertedToMinutesWhenDivisibleBy60() throws Exception
-	{
-		OAuth2Profile profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
-		profile.setManualAccessTokenExpirationTime( 600 );
-		initializeChooserFromProfile( profile );
-
-		JTextField timeField = walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class );
-		JComboBox timeUnitCombo = walker.findComponent( ExpirationTimeChooser.TIME_UNIT_COMBO_NAME, JComboBox.class );
-		assertThat( timeField.getText(), is( "10" ) );
-		assertThat( timeUnitCombo.getSelectedItem().toString(), is( "Minutes" ) );
-	}
-
-	@Test
-	public void manualTimeIsConvertedToHoursWhenDivisibleBy3600() throws Exception
-	{
-		OAuth2Profile profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
-		profile.setManualAccessTokenExpirationTime( 7200 );
-		initializeChooserFromProfile( profile );
-
-		JTextField timeField = walker.findComponent( ExpirationTimeChooser.TIME_FIELD_NAME, JTextField.class );
-		JComboBox timeUnitCombo = walker.findComponent( ExpirationTimeChooser.TIME_UNIT_COMBO_NAME, JComboBox.class );
-		assertThat( timeField.getText(), is( "2" ) );
-		assertThat( timeUnitCombo.getSelectedItem().toString(), is( "Hours" ) );
 	}
 
 	private Matcher<AbstractButton> selected()

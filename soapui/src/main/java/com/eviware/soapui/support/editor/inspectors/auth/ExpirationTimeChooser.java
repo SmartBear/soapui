@@ -1,7 +1,9 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
+import com.eviware.soapui.config.TimeUnitConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.UISupport;
+import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
@@ -19,8 +21,8 @@ class ExpirationTimeChooser extends JPanel
 	static final String MANUAL_EXPIRATION_RADIO_NAME = "manualExpirationRadio";
 	static final String TIME_FIELD_NAME = "timeField";
 	static final String TIME_UNIT_COMBO_NAME = "timeUnitCombo";
-	private static final TimeUnitOption[] TIME_UNIT_OPTIONS = new TimeUnitOption[] {
-			new TimeUnitOption( 1, "Seconds" ), new TimeUnitOption( 60, "Minutes" ), new TimeUnitOption( 3600, "Hours" ) };
+	private static final String[] TIME_UNIT_OPTIONS = new String[] { "Seconds",
+			"Minutes", "Hours" };
 	private static final int TIME_FIELD_CHARACTER_LIMIT = 9;
 
 	private JRadioButton serverExpirationTimeOption;
@@ -51,17 +53,20 @@ class ExpirationTimeChooser extends JPanel
 		add( helpLink, BorderLayout.SOUTH );
 	}
 
-	public long getAccessTokenExpirationTimeInSeconds()
+	public String getAccessTokenExpirationTime()
 	{
-		TimeUnitOption unit = ( TimeUnitOption )timeUnitCombo.getSelectedItem();
-		try
-		{
-			return serverExpirationTimeOption.isSelected() ? -1 : Integer.parseInt( timeTextField.getText() ) * unit.seconds;
-		}
-		catch( NumberFormatException e )
-		{
-			return -1;
-		}
+		return timeTextField.getText();
+	}
+
+	public TimeUnitConfig.Enum getAccessTokenExpirationTimeUnit()
+	{
+		String timeUnitString = timeUnitCombo.getSelectedItem().toString().toUpperCase();
+		return TimeUnitConfig.Enum.forString( timeUnitString );
+	}
+
+	public boolean manualExpirationTimeIsSelected()
+	{
+		return manualExpirationTimeOption.isSelected();
 	}
 
 	private JPanel createTimeSelectionPanel()
@@ -70,27 +75,8 @@ class ExpirationTimeChooser extends JPanel
 
 		boolean enableManualTimeControls = profile.useManualAccessTokenExpirationTime();
 
-		timeUnitCombo = new JComboBox( TIME_UNIT_OPTIONS );
-		timeUnitCombo.setName( TIME_UNIT_COMBO_NAME );
-		timeUnitCombo.setEnabled( enableManualTimeControls );
-
-		timeTextField = new JTextField( 5 );
-		configureInputSanitationOnTextField( timeTextField );
-		timeTextField.setName( TIME_FIELD_NAME );
-		timeTextField.setHorizontalAlignment( JTextField.RIGHT );
-
-		Long manualAccessTokenExpirationTime = profile.getManualAccessTokenExpirationTime();
-		if( manualAccessTokenExpirationTime == null )
-		{
-			timeTextField.setText( "" );
-		}
-		else
-		{
-			TimeUnitOption appropriateUnit = getAppropriateTimeUnitOption( manualAccessTokenExpirationTime );
-			timeTextField.setText( String.valueOf( manualAccessTokenExpirationTime / appropriateUnit.seconds ) );
-			timeUnitCombo.setSelectedItem( appropriateUnit );
-		}
-		timeTextField.setEnabled( enableManualTimeControls );
+		timeTextField = createTimeTextField( enableManualTimeControls );
+		timeUnitCombo = createTimeUnitCombo( enableManualTimeControls );
 
 		timeSelectionPanel.add( timeTextField );
 		timeSelectionPanel.add( timeUnitCombo );
@@ -98,47 +84,37 @@ class ExpirationTimeChooser extends JPanel
 		return timeSelectionPanel;
 	}
 
-	private void configureInputSanitationOnTextField( JTextField textField )
+	private JTextField createTimeTextField( boolean enableManualTimeControls )
 	{
-		final PlainDocument doc = new PlainDocument();
-		doc.setDocumentFilter( new DocumentFilter()
-		{
-			@Override
-			public void insertString( FilterBypass fb, int offset, String string, AttributeSet attr ) throws BadLocationException
-			{
-				if( doc.getLength() + string.length() < TIME_FIELD_CHARACTER_LIMIT )
-				{
-					fb.insertString( offset, string.replaceAll( "\\D++", "" ), attr );
-				}
-			}
+		JTextField timeTextField = new JTextField( 5 );
+		timeTextField.setName( TIME_FIELD_NAME );
+		timeTextField.setHorizontalAlignment( JTextField.RIGHT );
 
-			@Override
-			public void replace( FilterBypass fb, int offset, int length, String text, AttributeSet attrs ) throws BadLocationException
-			{
-				if( doc.getLength() + text.length() < TIME_FIELD_CHARACTER_LIMIT )
-				{
-					fb.replace( offset, length, text.replaceAll( "\\D++", "" ), attrs );
-				}
-			}
-		} );
-
-		textField.setDocument( doc );
-	}
-
-	private TimeUnitOption getAppropriateTimeUnitOption( long seconds )
-	{
-		if( seconds % 3600 == 0 )
+		String manualAccessTokenExpirationTime = profile.getManualAccessTokenExpirationTime();
+		if( manualAccessTokenExpirationTime == null )
 		{
-			return TIME_UNIT_OPTIONS[2]; // hours
-		}
-		else if( seconds % 60 == 0 )
-		{
-			return TIME_UNIT_OPTIONS[1]; // minutes
+			timeTextField.setText( "" );
 		}
 		else
 		{
-			return TIME_UNIT_OPTIONS[0]; // seconds
+			timeTextField.setText( manualAccessTokenExpirationTime );
+			timeTextField.setEnabled( enableManualTimeControls );
 		}
+
+		return timeTextField;
+	}
+
+	private JComboBox createTimeUnitCombo( boolean enableManualTimeControls )
+	{
+		JComboBox timeUnitCombo = new JComboBox( TIME_UNIT_OPTIONS );
+		timeUnitCombo.setName( TIME_UNIT_COMBO_NAME );
+		timeUnitCombo.setEnabled( enableManualTimeControls );
+
+
+		TimeUnitConfig.Enum timeUnit = profile.getManualAccessTokenExpirationTimeUnit();
+		timeUnitCombo.setSelectedItem( WordUtils.capitalize( timeUnit.toString().toLowerCase() ) );
+
+		return timeUnitCombo;
 	}
 
 	private void initializeRadioButtons()
@@ -154,7 +130,7 @@ class ExpirationTimeChooser extends JPanel
 			serverIssuedExpirationTimeLabel = "No expiration";
 		}
 
-		serverExpirationTimeOption = new JRadioButton( "Use expiration time from access token: " + serverIssuedExpirationTimeLabel );
+		serverExpirationTimeOption = new JRadioButton( "Use expiration time from authorization server: " + serverIssuedExpirationTimeLabel );
 		serverExpirationTimeOption.setName( SERVER_EXPIRATION_RADIO_NAME );
 		ActionListener checkBoxMonitor = new ActionListener()
 		{
@@ -198,40 +174,6 @@ class ExpirationTimeChooser extends JPanel
 		else
 		{
 			return seconds + " second(s)";
-		}
-	}
-
-	private static class TimeUnitOption
-	{
-		public final int seconds;
-		public final String name;
-
-		private TimeUnitOption( int seconds, String name )
-		{
-			this.seconds = seconds;
-			this.name = name;
-		}
-
-		@Override
-		public String toString()
-		{
-			return name;
-		}
-
-		public int getValue()
-		{
-			if( name.equals( "Hours" ) )
-			{
-				return seconds / 3600;
-			}
-			else if( name.equals( "Minutes" ) )
-			{
-				return seconds / 60;
-			}
-			else
-			{
-				return seconds;
-			}
 		}
 	}
 }
