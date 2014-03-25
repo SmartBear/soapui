@@ -200,17 +200,36 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
 
 	public void setContentType( String contentType )
 	{
-		String[] parts = contentType.split( ";", 2 );
+		String[] parts = contentType.split( ";" );
 		getConfig().setMediaType( parts[0] );
 
-		if( parts.length > 1 && parts[1].trim().startsWith( "charset=" ))
+		String encodingValue = getEncodingValue( parts );
+		if( encodingValue != null  )
 		{
-			String[] encodingParts = parts[1].split( "=" );
-			if( encodingParts.length > 1)
-			{
-				setEncoding( encodingParts[1] );
-			}
+				setEncoding( encodingValue );
 		}
+	}
+
+	protected String getEncodingValue( String[] parameters)
+	{
+		String encoding = null;
+
+		for( int i = 0; i < parameters.length; i++)
+		{
+			if( parameters[i].trim().startsWith( "charset=" ))
+			{
+				String[] encodingParts = parameters[i].split( "=" );
+
+				if( encodingParts.length > 1)
+				{
+					encoding = encodingParts[1];
+					return encoding;
+				}
+			}
+
+		}
+
+		return encoding;
 	}
 
 }
