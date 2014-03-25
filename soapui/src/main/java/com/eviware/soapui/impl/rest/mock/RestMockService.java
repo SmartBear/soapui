@@ -4,7 +4,6 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
@@ -87,7 +86,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	{
 		String expandedPath = RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest );
 
-		MockOperation matchedOperation = findBestMatchingOperation( expandedPath, restRequest.getMethod(), false );
+		MockOperation matchedOperation = findMatchingOperationWithExactPath( expandedPath, restRequest.getMethod() );
 
 		if( matchedOperation == null)
 		{
@@ -96,7 +95,19 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return matchedOperation;
 	}
 
-	protected MockOperation findBestMatchingOperation( String pathToFind, HttpMethod verbToFind, boolean includePartialMatch )
+	protected MockOperation findBestMatchedOperation( String pathToFind, HttpMethod verbToFind )
+	{
+		boolean includePartialMatch = true;
+		return findMatchedOperation( pathToFind, verbToFind, includePartialMatch );
+	}
+
+	protected MockOperation findMatchingOperationWithExactPath( String pathToFind, HttpMethod verbToFind )
+	{
+		boolean dontIncludePartialMatch = false;
+		return findMatchedOperation( pathToFind, verbToFind, dontIncludePartialMatch );
+	}
+
+	private MockOperation findMatchedOperation( String pathToFind, HttpMethod verbToFind, boolean includePartialMatch )
 	{
 		MockOperation bestMatchedOperation = null;
 
@@ -115,14 +126,27 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 			}
 			else if ( includePartialMatch && matchesPathPartially && matchesVerb )
 			{
-				if( bestMatchedOperation == null ||  (( RestMockAction )bestMatchedOperation).getResourcePath().length() < operationPath.length()  )
-				{
-					bestMatchedOperation = operation;
-				}
+				bestMatchedOperation = getBestMatchedOperation( bestMatchedOperation, operation, operationPath );
 			}
 		}
 
 		return bestMatchedOperation;
+	}
+
+	private MockOperation getBestMatchedOperation( MockOperation currentBestMatchedOperation, MockOperation operation, String operationPath )
+	{
+		MockOperation bestMatchedOperation = currentBestMatchedOperation;
+
+		if( bestMatchedOperation == null || foundBetterMatch( ( RestMockAction )bestMatchedOperation, operationPath ) )
+		{
+			bestMatchedOperation = operation;
+		}
+		return bestMatchedOperation;
+	}
+
+	private boolean foundBetterMatch( RestMockAction bestMatchedOperation, String operationPath )
+	{
+		return bestMatchedOperation.getResourcePath().length() < operationPath.length();
 	}
 
 	public boolean canIAddAMockOperation( RestMockAction mockOperation )
