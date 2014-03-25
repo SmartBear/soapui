@@ -142,6 +142,17 @@ public class RestMockServiceTest
 	}
 
 	@Test
+	public void partialPathMatchingShouldBeDoneOnPrefix() throws SoapUIException
+	{
+		restMockService.addNewMockAction( restRequest );
+
+		String requestPath = "/123" + PATH ;
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findBestMatchedOperation( requestPath, GET );
+
+		assertThat( matchingAction, is( nullValue() ) );
+	}
+
+	@Test
 	public void shouldNotFindMatchingOperationForDifferentMethod() throws SoapUIException
 	{
 		restRequest.setMethod( TRACE );

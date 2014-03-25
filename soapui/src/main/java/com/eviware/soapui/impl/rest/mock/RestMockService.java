@@ -118,7 +118,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 			boolean matchesPath = operationPath.equals( pathToFind );
 			boolean matchesVerb = verbToFind == operationVerb;
-			boolean matchesPathPartially = pathToFind.contains( operationPath );
+			boolean matchesPathPartially = pathToFind.startsWith( operationPath );
 
 			if( matchesPath && matchesVerb )
 			{
