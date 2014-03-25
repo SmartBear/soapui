@@ -1,4 +1,4 @@
-@Automated @Regression
+@Manual @Regression
 Feature:User can manage the parameters in request view, form view, method editor, resource editor and top URI bar
 
 Scenario: add parameters in request view, the value will be blank in resource editor
@@ -101,7 +101,6 @@ Scenario: parameters value could be property expansion
 Scenario: two requests under the same resource but different method only inherit the same resource level parameters
   Given a new REST project is created with URI www.tryit.com/backlog/search/?query1=param1&query2=param2
   And user creates a method with name List under the resource with name Search [/backlog/search/] for interface http://www.tryit.com
-  And user open the request at path http://www.tryit.com##Search [/backlog/search/]##List##Request 1
   When user changes the parameter level to METHOD for parameter with name query1 in request editor for request with path http://www.tryit.com##Search [/backlog/search/]##List##Request 1
   Then under method named Search request editor user has parameter with name query1 and value param1 at row 0
   And under method named Search method editor user has parameter with name query1 and value param1 at row 0

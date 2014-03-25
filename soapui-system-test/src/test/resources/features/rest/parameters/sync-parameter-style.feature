@@ -1,4 +1,4 @@
-@Automated @Regression
+@Manual @Regression
 
 Feature: REST parameter style could be synchronized across REST request, method,resource and top URI bar
 
@@ -13,7 +13,7 @@ Feature: REST parameter style could be synchronized across REST request, method,
   And in resource editor user changes the style to MATRIX for parameter with name param04
   And user adds a parameter in resource editor with name param05 and value value05
   And in resource editor user changes the style to PLAIN for parameter with name param05
-#TODO  Then request editor has parameter with name param01 and style QUERY at row 0
+  Then request editor has parameter with name param01 and style QUERY at row 0
   And request editor has parameter with name param02 and style TEMPLATE at row 1
   And request editor has parameter with name param03 and style HEADER at row 2
   And request editor has parameter with name param04 and style MATRIX at row 3
