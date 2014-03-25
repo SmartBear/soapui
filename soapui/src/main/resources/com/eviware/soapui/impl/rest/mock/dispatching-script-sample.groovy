@@ -1,4 +1,5 @@
 /*
+// Examples showing how to match based on path, query param and header
 // Match based on path
 def requestPath = mockRequest.getPath()
 log.info "Path: "+ requestPath
