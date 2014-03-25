@@ -228,6 +228,9 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 				case RECEIVED_AUTHORIZATION_CODE:
 					setWaitingFeedback( status );
 					break;
+				case RETRIEVAL_CANCELED:
+					setCanceledFeedback(status);
+					break;
 				case ENTERED_MANUALLY:
 				case RETRIEVED_FROM_SERVER:
 				default:
@@ -235,6 +238,12 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 					break;
 			}
 		}
+	}
+
+	private void setCanceledFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenStatusText.setText( status.toString() );
+		accessTokenStatusText.setIcon( OAuth2Form.FAIL_ICON );
 	}
 
 	private void setWaitingFeedback( OAuth2Profile.AccessTokenStatus status )

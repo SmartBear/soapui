@@ -64,14 +64,16 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 	private static final float ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE = 0.95f;
 	private static final int ACCESS_TOKEN_STATUS_TEXT_WIDTH = 100;
 
+	private static final String GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL = "Get Token";
+	private static final String GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL = GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL + " (Resume)";
+
 	private final Color DEFAULT_COLOR = Color.WHITE;
 	private final Color SUCCESS_COLOR = new Color( 0xccffcb );
 	private final Color FAIL_COLOR = new Color( 0xffcccc );
 
-	// FIXME This need to be changed to the real icons
-	static final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
-	static final ImageIcon WAIT_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
-	static final ImageIcon FAIL_ICON = UISupport.createImageIcon( "/exclamation-dummy.png" );
+	static final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/check.png" );
+	static final ImageIcon WAIT_ICON = UISupport.createImageIcon( "/waiting-spinner.gif" );
+	static final ImageIcon FAIL_ICON = UISupport.createImageIcon( "/alert.png" );
 
 	private final AbstractXmlInspector inspector;
 	private final OAuth2AccessTokenStatusChangeManager statusChangeManager;
@@ -85,6 +87,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 	private JTextField accessTokenField;
 	private JLabel accessTokenStatusIcon;
 	private JLabel accessTokenStatusText;
+	private JLabel disclosureButton;
 	private OAuth2GetAccessTokenForm accessTokenForm;
 
 	public OAuth2Form( OAuth2Profile profile, AbstractXmlInspector inspector )
@@ -165,7 +168,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		oAuth2Form.addInputFieldHintText( "Enter existing access token, or use \"Get Token\" below." );
 
-		final JLabel disclosureButton = new JLabel( "Get Token" );
+		disclosureButton = new JLabel( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
 		disclosureButton.setIcon( UISupport.createImageIcon( "/pop-down-open.png" ) );
 		disclosureButton.setName( "oAuth2DisclosureButton" );
 		oAuth2Form.addComponentWithoutLabel( disclosureButton );
@@ -276,12 +279,17 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 			switch( status )
 			{
 				case ENTERED_MANUALLY:
+					setEnteredManuallyFeedback( status );
+					break;
 				case RETRIEVED_FROM_SERVER:
 					setSucessfullFeedback( status );
 					break;
 				case WAITING_FOR_AUTHORIZATION:
 				case RECEIVED_AUTHORIZATION_CODE:
 					setWaitingFeedback( status );
+					break;
+				case RETRIEVAL_CANCELED:
+					setCanceledFeedback( status );
 					break;
 				case EXPIRED:
 					setFailedFeedback( status );
@@ -291,6 +299,21 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 					break;
 			}
 		}
+	}
+
+	private void setEnteredManuallyFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenField.setBackground( DEFAULT_COLOR );
+
+		accessTokenStatusIcon.setIcon( null );
+		accessTokenStatusIcon.setVisible( false );
+
+		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
+		accessTokenStatusText.setVisible( true );
+
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
+
+		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
 	private void setSucessfullFeedback( OAuth2Profile.AccessTokenStatus status )
@@ -303,6 +326,8 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
 		accessTokenStatusText.setVisible( true );
 
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
+
 		inspector.setIcon( SUCCESS_ICON );
 	}
 
@@ -310,11 +335,13 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 	{
 		accessTokenField.setBackground( DEFAULT_COLOR );
 
-		accessTokenStatusIcon.setIcon( WAIT_ICON );
-		accessTokenStatusIcon.setVisible( true );
+		accessTokenStatusIcon.setIcon( null );
+		accessTokenStatusIcon.setVisible( false );
 
-		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
-		accessTokenStatusText.setVisible( true );
+		accessTokenStatusText.setText( "" );
+		accessTokenStatusText.setVisible( false );
+
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
 
 		inspector.setIcon( WAIT_ICON );
 	}
@@ -329,7 +356,24 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
 		accessTokenStatusText.setVisible( true );
 
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
+
 		inspector.setIcon( FAIL_ICON );
+	}
+
+	private void setCanceledFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenField.setBackground( DEFAULT_COLOR );
+
+		accessTokenStatusIcon.setIcon( null );
+		accessTokenStatusIcon.setVisible( false);
+
+		accessTokenStatusText.setText( "" );
+		accessTokenStatusText.setVisible( false );
+
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_RESUME_LABEL );
+
+		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
 	private void setDefaultFeedback()
@@ -341,6 +385,8 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		accessTokenStatusText.setText( "" );
 		accessTokenStatusText.setVisible( false );
+
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
 
 		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}

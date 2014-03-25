@@ -564,9 +564,9 @@
             <xsd:element name="domain" type="xsd:string" maxOccurs="1"
                          minOccurs="0">
             </xsd:element>
-            <xsd:element name="selectedAuthProfile" type="xsd:string" maxOccurs="1" minOccurs="0"/>
-            <xsd:element name="addedBasicAuthenticationTypes" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
-            <xsd:element name="preemptive" type="xsd:boolean" maxOccurs="1" minOccurs="0"/>
+            <xsd:element  name="selectedAuthProfile" type="xsd:string" maxOccurs="1" minOccurs="0"/>
+            <xsd:element  name="addedBasicAuthenticationTypes" type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+            <xsd:element  name="preemptive" type = "xsd:boolean" maxOccurs="1" minOccurs="0"/>
             <xsd:element name="authType">
                 <xsd:simpleType>
                     <xsd:restriction base="xsd:string">
@@ -672,7 +672,7 @@
         </xsd:restriction>
     </xsd:simpleType>
 
-    <xsd:element name="soapui-settings" type="tns:Settings"/>
+    <xsd:element name="soapui-settings" type="tns:Settings" />
 
     <xsd:complexType name="Settings">
         <xsd:sequence>
@@ -752,7 +752,7 @@
     <xsd:complexType name="StringList">
         <xsd:sequence>
             <xsd:element name="entry" maxOccurs="unbounded"
-                         minOccurs="0" type="xsd:string"/>
+                         minOccurs="0" type="xsd:string" />
         </xsd:sequence>
     </xsd:complexType>
 
@@ -983,7 +983,7 @@
                                  minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>
-                <xsd:attribute name="httpResponseStatus" type="xsd:string"/>
+                <xsd:attribute name="httpResponseStatus" type="xsd:string" />
                 <xsd:attribute name="disabled" type="xsd:boolean"></xsd:attribute>
                 <xsd:attribute name="compression" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="encoding" type="xsd:string"></xsd:attribute>
@@ -1194,19 +1194,19 @@
         </xsd:complexContent>
     </xsd:complexType>
 
-    <xsd:element name="soapui-listeners" type="tns:SoapUIListeners"/>
+    <xsd:element name="soapui-listeners" type="tns:SoapUIListeners" />
 
     <xsd:complexType name="SoapUIListeners">
         <xsd:sequence>
             <xsd:element name="listener" type="tns:SoapUIListener"
-                         minOccurs="0" maxOccurs="unbounded"/>
+                         minOccurs="0" maxOccurs="unbounded" />
         </xsd:sequence>
     </xsd:complexType>
 
     <xsd:complexType name="SoapUIListener">
-        <xsd:attribute name="id" type="xsd:string"/>
-        <xsd:attribute name="listenerClass" type="xsd:string"/>
-        <xsd:attribute name="listenerInterface" type="xsd:string"/>
+        <xsd:attribute name="id" type="xsd:string" />
+        <xsd:attribute name="listenerClass" type="xsd:string" />
+        <xsd:attribute name="listenerInterface" type="xsd:string" />
         <xsd:attribute name="singleton" type="xsd:boolean"></xsd:attribute>
     </xsd:complexType>
     <xsd:complexType name="PropertiesType">
@@ -1625,11 +1625,11 @@
             <xsd:element name="query" minOccurs="0" maxOccurs="unbounded">
                 <xsd:complexType>
                     <xsd:sequence>
-                        <xsd:element name="name" type="xsd:string"/>
-                        <xsd:element name="query" type="xsd:string"/>
-                        <xsd:element name="match" type="xsd:string"/>
-                        <xsd:element name="response" type="xsd:string"/>
-                        <xsd:element name="disabled" type="xsd:boolean"/>
+                        <xsd:element name="name" type="xsd:string" />
+                        <xsd:element name="query" type="xsd:string" />
+                        <xsd:element name="match" type="xsd:string" />
+                        <xsd:element name="response" type="xsd:string" />
+                        <xsd:element name="disabled" type="xsd:boolean" />
                     </xsd:sequence>
                 </xsd:complexType>
             </xsd:element>
@@ -1708,15 +1708,15 @@
                     <xsd:complexType>
                         <xsd:sequence>
                             <xsd:element name="message"
-                                         type="xsd:string" maxOccurs="unbounded" minOccurs="0"/>
+                                         type="xsd:string" maxOccurs="unbounded" minOccurs="0" />
                             <xsd:element name="errorMessage"
-                                         type="xsd:string"/>
+                                         type="xsd:string" />
                         </xsd:sequence>
-                        <xsd:attribute name="name" type="xsd:string"/>
+                        <xsd:attribute name="name" type="xsd:string" />
                         <xsd:attribute name="timeTaken"
-                                       type="xsd:string"/>
+                                       type="xsd:string" />
                         <!-- TODO Should this be an enum? -->
-                        <xsd:attribute name="status" type="xsd:string"/>
+                        <xsd:attribute name="status" type="xsd:string" />
                         <xsd:attribute name="timestamp"
                                        type="xsd:string">
                         </xsd:attribute>
@@ -1756,10 +1756,10 @@
                     </xsd:complexType>
                 </xsd:element>
             </xsd:sequence>
-            <xsd:attribute name="testCase" type="xsd:string"/>
-            <xsd:attribute name="timeTaken" type="xsd:string"/>
+            <xsd:attribute name="testCase" type="xsd:string" />
+            <xsd:attribute name="timeTaken" type="xsd:string" />
             <!-- TODO Should this be an enum? -->
-            <xsd:attribute name="status" type="xsd:string"/>
+            <xsd:attribute name="status" type="xsd:string" />
             <xsd:attribute name="timeStamp" type="xsd:string"></xsd:attribute>
         </xsd:complexType>
     </xsd:element>
@@ -1836,7 +1836,7 @@
     <xsd:complexType name="TestOnDemandTestSuite">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="enctype" type="xsd:string"/>
+                <xsd:attribute name="enctype" type="xsd:string" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -1844,7 +1844,7 @@
     <xsd:complexType name="TestOnDemandTestCase">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="enctype" type="xsd:string"/>
+                <xsd:attribute name="enctype" type="xsd:string" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -1852,8 +1852,8 @@
     <xsd:complexType name="TestOnDemandContent">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="enctype" type="xsd:string"/>
-                <xsd:attribute name="type" type="xsd:string"/>
+                <xsd:attribute name="enctype" type="xsd:string" />
+                <xsd:attribute name="type" type="xsd:string" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -1861,7 +1861,7 @@
     <xsd:complexType name="TestOnDemandProjectPassword">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="enctype" type="xsd:string"/>
+                <xsd:attribute name="enctype" type="xsd:string" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -1876,7 +1876,7 @@
     <xsd:complexType name="TestOnDemandFile">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="enctype" type="xsd:string"/>
+                <xsd:attribute name="enctype" type="xsd:string" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -1884,7 +1884,7 @@
     <xsd:complexType name="TestOnDemandKeystorePassword">
         <xsd:simpleContent>
             <xsd:extension base="xsd:string">
-                <xsd:attribute name="enctype" type="xsd:string"/>
+                <xsd:attribute name="enctype" type="xsd:string" />
             </xsd:extension>
         </xsd:simpleContent>
     </xsd:complexType>
@@ -1968,6 +1968,7 @@
             <xsd:enumeration value="RECEIVED_AUTHORIZATION_CODE"></xsd:enumeration>
             <xsd:enumeration value="RETRIEVED_FROM_SERVER"></xsd:enumeration>
             <xsd:enumeration value="EXPIRED"></xsd:enumeration>
+            <xsd:enumeration value="RETRIEVAL_CANCELED"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
 
@@ -2103,7 +2104,6 @@
             </xsd:extension>
         </xsd:complexContent>
     </xsd:complexType>
-
 
     <xsd:element name="reportTemplate" type="tns:ReportTemplate"></xsd:element>
 
@@ -2615,6 +2615,8 @@
         </xsd:sequence>
         <xsd:attribute name="name" type="xsd:string"></xsd:attribute>
     </xsd:complexType>
+
+
 
 
     <xsd:complexType name="EnvironmentEndpoint">

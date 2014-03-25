@@ -71,6 +71,16 @@ public class OAuth2TokenExtractor
 					getAccessTokenAndSaveToProfile( browserFacade, parameters, extractAuthorizationCodeFromTitle( title ) );
 				}
 			}
+
+			@Override
+			public void browserClosed()
+			{
+				super.browserClosed();
+				if( !parameters.isAccessTokenRetrivedFromServer() )
+				{
+					setRetrievedCanceledStatus( parameters );
+				}
+			}
 		} );
 		browserFacade.open( new URI( createAuthorizationURL( parameters, CODE ) ).toURL() );
 		parameters.waitingForAuthorization();
@@ -96,6 +106,13 @@ public class OAuth2TokenExtractor
 					parameters.setAccessTokenIssuedTimeInProfile( TimeUtils.getCurrentTimeInSeconds() );
 					browserFacade.close();
 				}
+			}
+
+			@Override
+			public void browserClosed()
+			{
+				super.browserClosed();
+				setRetrievedCanceledStatus( parameters );
 			}
 		} );
 		browserFacade.open( new URI( createAuthorizationURL( parameters, TOKEN ) ).toURL() );
@@ -135,6 +152,11 @@ public class OAuth2TokenExtractor
 	}
 
 	/* Helper methods */
+
+	private void setRetrievedCanceledStatus( OAuth2Parameters parameters )
+	{
+		parameters.retrivalCanceled();
+	}
 
 	private void addExternalListeners( UserBrowserFacade browserFacade )
 	{

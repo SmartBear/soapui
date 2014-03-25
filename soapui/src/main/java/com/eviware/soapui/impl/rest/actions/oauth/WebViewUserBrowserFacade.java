@@ -36,7 +36,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 		this( false );
 	}
 
-	public WebViewUserBrowserFacade(boolean addNavigationBar)
+	public WebViewUserBrowserFacade( boolean addNavigationBar )
 	{
 		browserComponent = WebViewBasedBrowserComponentFactory.createBrowserComponent( addNavigationBar );
 	}
@@ -45,7 +45,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 	public void open( URL url )
 	{
 		popupWindow = new JFrame( "Browser" );
-        popupWindow.setIconImages(SoapUI.getFrameIcons());
+		popupWindow.setIconImages( SoapUI.getFrameIcons() );
 
 		popupWindow.getContentPane().add( browserComponent.getComponent() );
 		popupWindow.setBounds( 100, 100, 800, 600 );
@@ -61,7 +61,6 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 
 		browserComponent.navigate( url.toString() );
 	}
-
 
 	@Override
 	public void addBrowserListener( BrowserListener listener )
@@ -102,7 +101,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade
 	@Override
 	public void executeJavaScript( String script )
 	{
-		browserComponent.executeJavaScript(script);
+		browserComponent.executeJavaScript( script );
 	}
 
 }

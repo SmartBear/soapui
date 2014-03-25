@@ -80,6 +80,11 @@ public class OAuth2Parameters
 		profile.receivedAuthorizationCode();
 	}
 
+	public void retrivalCanceled()
+	{
+		profile.retrivalCanceled();
+	}
+
 	public void applyRetrievedAccessToken( String accessToken )
 	{
 		profile.applyRetrievedAccessToken( accessToken );
@@ -96,4 +101,8 @@ public class OAuth2Parameters
 		return Lists.transform( profile.getAutomationJavaScripts(), new PropertyExpansionFunction( project ) );
 	}
 
+	public boolean isAccessTokenRetrivedFromServer()
+	{
+		return profile.getAccesTokenStatusAsEnum() == OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER;
+	}
 }
