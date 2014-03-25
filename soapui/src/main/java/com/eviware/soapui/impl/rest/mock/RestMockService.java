@@ -56,7 +56,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	public RestMockAction addNewMockAction( RestRequest restRequest )
 	{
 		RestMockAction mockAction = addEmptyMockAction( restRequest.getMethod(),
-				RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest ) );
+				RestUtils.getExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest ) );
 		mockAction.setResource( restRequest.getResource() );
 
 		return mockAction;
@@ -84,7 +84,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 	public MockOperation findOrCreateNewOperation( RestRequest restRequest )
 	{
-		String expandedPath = RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest );
+		String expandedPath = RestUtils.getExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest );
 
 		MockOperation matchedOperation = findMatchingOperationWithExactPath( expandedPath, restRequest.getMethod() );
 
@@ -163,7 +163,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	public List<MockOperation> addNewMockOperationsFromResource( RestResource restResource )
 	{
 		List<MockOperation> actions = new ArrayList<MockOperation>();
-		String path = RestUtils.getTemplateParamExpandedPath( restResource.getFullPath(), restResource.getParams(), restResource );
+		String path = RestUtils.getExpandedPath( restResource.getFullPath(), restResource.getParams(), restResource );
 
 		if( restResource.getRestMethodCount() < 1)
 		{

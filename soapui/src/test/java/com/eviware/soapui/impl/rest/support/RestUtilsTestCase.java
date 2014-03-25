@@ -13,13 +13,12 @@
 package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.utils.ModelItemFactory;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.MATRIX;
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.TEMPLATE;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.*;
 import static com.eviware.soapui.impl.rest.support.RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS;
 import static com.eviware.soapui.impl.rest.support.RestUtils.TemplateExtractionOption.IGNORE_TEMPLATE_PARAMETERS;
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
@@ -124,7 +123,21 @@ public class RestUtilsTestCase
 				is( "/the/" + templateParameterValue + "/path" ));
 	}
 
-	private void addParameter( RestRequest restRequest, RestParamsPropertyHolder.ParameterStyle style, String name, String value )
+	@Test
+	public void expandsPathWithPropertyExpansionOnPathAndTemplateParameter() throws Exception
+	{
+		RestRequest restRequest = makeRestRequest();
+		restRequest.getProject().setPropertyValue( "version", "xml" );
+		String templateParameterName = "templateName";
+		String templateParameterValue = "templateValue";
+		restRequest.getResource().setPath( "/the/{" + templateParameterName + "}/path/${#Project#version}" );
+		addParameter( restRequest, TEMPLATE, templateParameterName, templateParameterValue );
+
+		assertThat(RestUtils.getExpandedPath( restRequest.getResource().getFullPath(), restRequest.getParams(), restRequest ),
+				is( "/the/" + templateParameterValue + "/path/xml" ));
+	}
+
+	private void addParameter( RestRequestInterface restRequest, RestParamsPropertyHolder.ParameterStyle style, String name, String value )
 	{
 		RestParamsPropertyHolder params = restRequest.getParams();
 		RestParamProperty restParamProperty = params.addProperty( name );
