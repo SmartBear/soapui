@@ -295,7 +295,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			return;
 		}
 
-		if( getBasicAuthenticationTypes().contains( newName ) )
+		if( isReservedProfileName( newName ) )
 		{
 			UISupport.showErrorMessage( "'" + newName + "' is a reserved profile name." );
 			profileSelectionComboBox.setSelectedItem( profileOldName );
@@ -312,6 +312,11 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		profile.setName( newName );
 		updateProfileForAllRequests( profileOldName, newName );
 		refreshProfileSelectionComboBox( newName );
+	}
+
+	protected static boolean isReservedProfileName( String newName )
+	{
+		return getBasicAuthenticationTypes().contains( newName ) || newName.equals( OPTIONS_SEPARATOR );
 	}
 
 	private void updateProfileForAllRequests( String profileOldName, String newName )
@@ -409,7 +414,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		return request.getOperation().getInterface().getProject().getOAuth2ProfileContainer();
 	}
 
-	protected ArrayList<String> getBasicAuthenticationTypes()
+	protected static ArrayList<String> getBasicAuthenticationTypes()
 	{
 		ArrayList<String> options = new ArrayList<String>();
 		options.add( AbstractHttpRequest.BASIC_AUTH_PROFILE );
