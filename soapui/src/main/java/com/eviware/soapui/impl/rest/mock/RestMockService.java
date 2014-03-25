@@ -4,6 +4,7 @@ import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
@@ -86,7 +87,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 	{
 		String expandedPath = RestUtils.getTemplateParamExpandedPath( restRequest.getPath(), restRequest.getParams(), restRequest );
 
-		MockOperation matchedOperation = findMatchingOperation( expandedPath, restRequest.getMethod() );
+		MockOperation matchedOperation = findBestMatchingOperation( expandedPath, restRequest.getMethod(), false );
 
 		if( matchedOperation == null)
 		{
@@ -95,8 +96,10 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 		return matchedOperation;
 	}
 
-	protected MockOperation findMatchingOperation( String pathToFind, HttpMethod verbToFind )
+	protected MockOperation findBestMatchingOperation( String pathToFind, HttpMethod verbToFind, boolean includePartialMatch )
 	{
+		MockOperation bestMatchedOperation = null;
+
 		for( MockOperation operation : getMockOperationList() )
 		{
 			String operationPath = ( ( RestMockAction )operation ).getResourcePath();
@@ -104,14 +107,22 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
 
 			boolean matchesPath = operationPath.equals( pathToFind );
 			boolean matchesVerb = verbToFind == operationVerb;
+			boolean matchesPathPartially = pathToFind.contains( operationPath );
 
 			if( matchesPath && matchesVerb )
 			{
 				return operation;
 			}
+			else if ( includePartialMatch && matchesPathPartially && matchesVerb )
+			{
+				if( bestMatchedOperation == null ||  (( RestMockAction )bestMatchedOperation).getResourcePath().length() < operationPath.length()  )
+				{
+					bestMatchedOperation = operation;
+				}
+			}
 		}
 
-		return null;
+		return bestMatchedOperation;
 	}
 
 	public boolean canIAddAMockOperation( RestMockAction mockOperation )

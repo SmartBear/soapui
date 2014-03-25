@@ -61,7 +61,7 @@ public class RestMockDispatcherTest
 		restMockDispatcher.dispatchRequest( request, response );
 
 		// we would like to verify that dispatchRequest is never called but it is hard so we verify on this instead
-		verify( restMockService, never() ).findMatchingOperation( anyString(), any( RestRequestInterface.HttpMethod.class ) );
+		verify( restMockService, never() ).findBestMatchingOperation( anyString(), any( RestRequestInterface.HttpMethod.class ), anyBoolean() );
 	}
 
 

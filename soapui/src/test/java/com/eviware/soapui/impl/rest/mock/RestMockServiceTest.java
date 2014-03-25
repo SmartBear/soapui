@@ -85,10 +85,36 @@ public class RestMockServiceTest
 		restRequest.setMethod( TRACE );
 		restMockService.addNewMockAction( restRequest );
 		RestMockAction restMockAction = restMockService.getMockOperationAt( 0 );
-		RestMockAction matchingAction = ( RestMockAction )restMockService.findMatchingOperation( PATH, TRACE );
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findBestMatchingOperation( PATH, TRACE, true );
 
 		assertThat( matchingAction, is( restMockAction ) );
 		assertEquals( PATH, matchingAction.getResourcePath() );
+	}
+
+	@Test
+	public void shouldFindPartiallyMatchingOperation() throws SoapUIException
+	{
+		restRequest.setMethod( TRACE );
+		restMockService.addNewMockAction( restRequest );
+		RestMockAction restMockAction = restMockService.getMockOperationAt( 0 );
+
+		String requestPath = PATH + "/123";
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findBestMatchingOperation( requestPath, TRACE, true );
+
+		assertThat( matchingAction, is( restMockAction ) );
+		assertEquals( PATH, matchingAction.getResourcePath() );
+	}
+
+	@Test
+	public void shouldNotFindPartiallyMatchingOperation() throws SoapUIException
+	{
+		restRequest.setMethod( TRACE );
+		restMockService.addNewMockAction( restRequest );
+
+		String requestPath = PATH + "/123";
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findBestMatchingOperation( requestPath, TRACE, false );
+
+		assertThat( matchingAction, is( nullValue() ) );
 	}
 
 	@Test
@@ -96,7 +122,7 @@ public class RestMockServiceTest
 	{
 		restRequest.setMethod( TRACE );
 		restMockService.addNewMockAction( restRequest );
-		RestMockAction matchingAction = ( RestMockAction )restMockService.findMatchingOperation( PATH, GET );
+		RestMockAction matchingAction = ( RestMockAction )restMockService.findBestMatchingOperation( PATH, GET, true );
 
 		assertThat( matchingAction, is( nullValue() ) );
 	}

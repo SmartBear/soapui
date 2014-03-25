@@ -62,7 +62,7 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 
 	private MockResult getMockResult( RestMockRequest restMockRequest ) throws DispatchException
 	{
-		RestMockAction mockAction = ( RestMockAction )mockService.findMatchingOperation( restMockRequest.getPath(), restMockRequest.getMethod() );
+		RestMockAction mockAction = ( RestMockAction )mockService.findBestMatchingOperation( restMockRequest.getPath(), restMockRequest.getMethod(), true );
 
 		if( mockAction != null )
 		{
