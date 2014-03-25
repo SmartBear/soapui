@@ -21,11 +21,10 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
 
-import javax.swing.JButton;
+import javax.swing.*;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.valueOf;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.values;
+import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.*;
 
 /**
  *
@@ -33,13 +32,18 @@ import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMetho
 public class OAuth2AdvancedOptionsDialog
 {
 	public static final MessageSupport messages = MessageSupport.getMessages( OAuth2AdvancedOptionsDialog.class );
+	private ExpirationTimeChooser expirationTimeComponent;
 	private JButton refreshAccessTokenButton;
 
 
 	public OAuth2AdvancedOptionsDialog( OAuth2Profile profile, JButton refreshAccessTokenButton )
 	{
 		this.refreshAccessTokenButton = refreshAccessTokenButton;
+		expirationTimeComponent = new ExpirationTimeChooser( profile );
 		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
+
+		dialog.getFormField( Form.ACCESS_TOKEN_EXPIRATION_TIME ).setProperty( "component", expirationTimeComponent );
+
 
 		setAccessTokenOptions( profile, dialog );
 
@@ -53,8 +57,12 @@ public class OAuth2AdvancedOptionsDialog
 			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
 			profile.setRefreshAccessTokenMethod( valueOf( refreshAccessTokenMethod ) );
 
-			enableRefreshAccessTokenButton(profile);
+			enableRefreshAccessTokenButton( profile );
 		}
+	}
+
+	public int getValue() {
+		return expirationTimeComponent.getAccessTokenExpirationTimeInSeconds();
 	}
 
 	private void enableRefreshAccessTokenButton( OAuth2Profile profile )
@@ -89,7 +97,11 @@ public class OAuth2AdvancedOptionsDialog
 		@AField( description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP )
 		public final static String ACCESS_TOKEN_POSITION = messages.get( "Form.AccessTokenPosition.Label" );
 
-		@AField(description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP)
+		@AField( description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP )
 		public final static String AUTOMATIC_ACCESS_TOKEN_REFRESH = messages.get( "Form.AutomaticRefreshAccessToken.Label" );
+
+		@AField( description = "Form.AccessTokenExpirationTime.Description", type = AField.AFieldType.COMPONENT )
+		public final static String ACCESS_TOKEN_EXPIRATION_TIME = messages.get( "Form.AccessTokenExpirationTime.Label" );
+
 	}
 }
