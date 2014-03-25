@@ -31,7 +31,7 @@ public class RefreshOAuthAccessTokenAction extends AbstractAction
 	{
 		super( "Refresh OAuth2 access token" );
 		this.profile = profile;
-		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth2 the access token in the profile using the refresh token" );
+		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth 2.0 the access token in the profile using the refresh token" );
 	}
 
 	public void actionPerformed( ActionEvent event )
@@ -42,11 +42,11 @@ public class RefreshOAuthAccessTokenAction extends AbstractAction
 		}
 		catch( InvalidOAuth2ParametersException e )
 		{
-			UISupport.showErrorMessage( "Invalid OAuth2 parameters: " + e.getMessage() );
+			UISupport.showErrorMessage( "Invalid OAuth 2.0 parameters: " + e.getMessage() );
 		}
 		catch( Exception e )
 		{
-			SoapUI.logError( e, "Error refreshing OAuth2 access token" );
+			SoapUI.logError( e, "Error refreshing OAuth 2.0 access token" );
 			UISupport.showErrorMessage( "Could not refresh access token. Check the SoapUI log for details" );
 		}
 	}
