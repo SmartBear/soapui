@@ -25,11 +25,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
@@ -52,6 +48,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public static final String ACCESS_TOKEN_POSITION_PROPERTY = "accessTokenPosition";
 	public static final String ACCESS_TOKEN_EXPIRATION_TIME = "accessTokenExpirationTime";
 	public static final String ACCESS_TOKEN_ISSUED_TIME = "accessTokenIssuedTime";
+	public static final String MANUAL_ACCESS_TOKEN_EXPIRATION_TIME = "manualAccessTokenExpirationTime";
+	public static final String USE_MANUAL_ACCESS_TOKEN_EXPIRATION_TIME = "useManualAccessTokenExpirationTime";
 
 	public static final String REFRESH_ACCESS_TOKEN_METHOD_PROPERTY = "refreshAccessTokenMethod";
 	public static final String OAUTH2_FLOW_PROPERTY = "oAuth2Flow";
@@ -162,7 +160,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	public String getName()
 	{
 		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
-		if(StringUtils.isEmpty( configuration.getName()))
+		if( StringUtils.isEmpty( configuration.getName() ) )
 		{
 			configuration.setName( "OAuth 2 - Profile 1");
 		}
@@ -430,6 +428,39 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		{
 			configuration.setAccessTokenIssuedTime( newIssuedTime );
 			pcs.firePropertyChange( ACCESS_TOKEN_ISSUED_TIME, oldIssuedTime, newIssuedTime );
+		}
+	}
+
+	public Long getManualAccessTokenExpirationTime()
+	{
+		return configuration.isSetManualAccessTokenExpirationTime() ?
+				configuration.getManualAccessTokenExpirationTime() : null;
+	}
+
+	public void setManualAccessTokenExpirationTime( long newExpirationTime )
+	{
+		long oldExpirationTime = configuration.getManualAccessTokenExpirationTime();
+
+		if( oldExpirationTime != newExpirationTime )
+		{
+			configuration.setManualAccessTokenExpirationTime( newExpirationTime );
+			pcs.firePropertyChange( MANUAL_ACCESS_TOKEN_EXPIRATION_TIME, oldExpirationTime, newExpirationTime );
+		}
+	}
+
+	public boolean useManualAccessTokenExpirationTime()
+	{
+		return configuration.getUseManualAccessTokenExpirationTime();
+	}
+
+	public void setUseManualAccessTokenExpirationTime( boolean useManual )
+	{
+		boolean oldValue = configuration.getUseManualAccessTokenExpirationTime();
+
+		if( oldValue != useManual )
+		{
+			configuration.setUseManualAccessTokenExpirationTime( useManual );
+			pcs.firePropertyChange( USE_MANUAL_ACCESS_TOKEN_EXPIRATION_TIME, oldValue, useManual );
 		}
 	}
 

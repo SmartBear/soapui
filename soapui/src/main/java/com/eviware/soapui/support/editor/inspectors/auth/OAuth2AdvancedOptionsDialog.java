@@ -57,12 +57,15 @@ public class OAuth2AdvancedOptionsDialog
 			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
 			profile.setRefreshAccessTokenMethod( valueOf( refreshAccessTokenMethod ) );
 
+			long manualExpirationTime = expirationTimeComponent.getAccessTokenExpirationTimeInSeconds();
+			if( manualExpirationTime != -1 )
+			{
+				profile.setUseManualAccessTokenExpirationTime( true );
+				profile.setManualAccessTokenExpirationTime( manualExpirationTime );
+			}
+
 			enableRefreshAccessTokenButton( profile );
 		}
-	}
-
-	public int getValue() {
-		return expirationTimeComponent.getAccessTokenExpirationTimeInSeconds();
 	}
 
 	private void enableRefreshAccessTokenButton( OAuth2Profile profile )
@@ -102,6 +105,5 @@ public class OAuth2AdvancedOptionsDialog
 
 		@AField( description = "Form.AccessTokenExpirationTime.Description", type = AField.AFieldType.COMPONENT )
 		public final static String ACCESS_TOKEN_EXPIRATION_TIME = messages.get( "Form.AccessTokenExpirationTime.Label" );
-
 	}
 }

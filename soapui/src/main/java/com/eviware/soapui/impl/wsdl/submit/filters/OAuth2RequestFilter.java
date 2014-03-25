@@ -43,10 +43,10 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 		OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
 				.getOAuth2ProfileContainer();
 
-		if(O_AUTH_2_0.toString().equals( request.getAuthType() ) )
+		if( O_AUTH_2_0.toString().equals( request.getAuthType() ) )
 		{
-			OAuth2Profile profile = profileContainer.getProfileByName( (( AbstractHttpRequest ) request).getSelectedAuthProfile() );
-			if( profile==null || StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
+			OAuth2Profile profile = profileContainer.getProfileByName( ( ( AbstractHttpRequest )request ).getSelectedAuthProfile() );
+			if( profile == null || StringUtils.isNullOrEmpty( profile.getAccessToken() ) )
 			{
 				return;
 			}
@@ -69,11 +69,19 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 	{
 		long currentTime = TimeUtils.getCurrentTimeInSeconds();
 		long issuedTime = profile.getAccessTokenIssuedTime();
-		long expirationTime = profile.getAccessTokenExpirationTime();
+		long expirationTime;
 
-		//10 second buffer to make sure that it doesn't expire by the time request is sent
-		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < (currentTime +10) - issuedTime;
+		if( profile.useManualAccessTokenExpirationTime() )
+		{
+			expirationTime = profile.getManualAccessTokenExpirationTime();
+		}
+		else
+		{
+			expirationTime = profile.getAccessTokenExpirationTime();
+		}
 
+		//10 second buffer to make sure that the access token doesn't expire by the time request is sent
+		return !( issuedTime <= 0 || expirationTime <= 0 ) && expirationTime < ( currentTime + 10 ) - issuedTime;
 	}
 
 	private void reloadAccessToken( OAuth2Profile profile, OAuth2ClientFacade oAuth2Client )
