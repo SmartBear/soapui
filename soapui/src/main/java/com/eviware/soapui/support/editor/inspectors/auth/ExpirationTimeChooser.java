@@ -44,7 +44,7 @@ class ExpirationTimeChooser extends JPanel
 		add( northPanel, BorderLayout.NORTH );
 
 		JPanel centerPanel = new JPanel( new BorderLayout( 0, 0 ) );
-		JLabel label = new JLabel( "<html>Here you can set an expiry time if the OAuth 2.0 server doesn't,<br/>so that the token retrieval can be automated.</html>" );
+		JLabel label = new JLabel( "<html>Here you can set an expiry time if the OAuth 2 server doesn't,<br/>so that the token retrieval can be automated.</html>" );
 		label.setForeground( new Color( 143, 143, 143 ) );
 		centerPanel.add( label, BorderLayout.NORTH );
 		add( centerPanel, BorderLayout.CENTER );
@@ -90,6 +90,8 @@ class ExpirationTimeChooser extends JPanel
 		timeTextField.setName( TIME_FIELD_NAME );
 		timeTextField.setHorizontalAlignment( JTextField.RIGHT );
 
+		timeTextField.setEnabled( enableManualTimeControls );
+
 		String manualAccessTokenExpirationTime = profile.getManualAccessTokenExpirationTime();
 		if( manualAccessTokenExpirationTime == null )
 		{
@@ -98,9 +100,7 @@ class ExpirationTimeChooser extends JPanel
 		else
 		{
 			timeTextField.setText( manualAccessTokenExpirationTime );
-			timeTextField.setEnabled( enableManualTimeControls );
 		}
-
 		return timeTextField;
 	}
 
