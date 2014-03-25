@@ -70,7 +70,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 	private JButton runButton;
 	private WsdlMockRunner mockRunner;
 	private JButton stopButton;
-	private JProgressBar progressBar;
+	private JProgressBarWrapper progressBarWrapper = new JProgressBarWrapper();
 	private LogListModel logListModel;
 	private JList testLogList;
 	private JCheckBox enableLogCheckBox;
@@ -381,14 +381,11 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 		toolbar.addGlue();
 
 		runInfoLabel = new JLabel( "", SwingConstants.RIGHT );
-		toolbar.addFixed( UISupport.setFixedSize( runInfoLabel, 200, 20 ) );
+		runInfoLabel.setBorder( BorderFactory.createEmptyBorder( 0, 0, 0, 3 ) );
+		toolbar.addFixed( UISupport.setFixedSize( runInfoLabel, 205, 20 ) );
 		toolbar.addRelatedGap();
 
-		progressBar = new JProgressBar();
-		JPanel progressBarPanel = UISupport.createProgressBarPanel( progressBar, 2, false );
-		progressBarPanel.setPreferredSize( new Dimension( 60, 20 ) );
-
-		toolbar.addFixed( progressBarPanel );
+		progressBarWrapper.addToToolBar( toolbar );
 		toolbar.addRelatedGap();
 
 		toolbar.addFixed( createActionButton( new ShowOnlineHelpAction( getModelItem().getHelpUrl()), true ) );
@@ -428,7 +425,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 			mockRunner.setMaxResults( logListModel.getMaxSize() );
 			mockRunner.setLogEnabled( enableLogCheckBox.isSelected() );
 
-			progressBar.setIndeterminate( true );
+			progressBarWrapper.setIndeterminate( true );
 
 			runButton.setEnabled( false );
 			stopButton.setEnabled( true );
@@ -441,7 +438,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 		@Override
 		public void onMockRunnerStop( MockRunner mockRunner )
 		{
-			progressBar.setIndeterminate( false );
+			progressBarWrapper.setIndeterminate( false );
 
 			runButton.setEnabled( true );
 			stopButton.setEnabled( false );
@@ -979,5 +976,30 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 	protected void cloneModelItem()
 	{
 		SoapUI.getActionRegistry().performAction( "CloneMockServiceAction", getModelItem(), null );
+	}
+
+	class JProgressBarWrapper {
+
+
+		private JProgressBar progressBar;
+
+		public void setIndeterminate( boolean b )
+		{
+			if( progressBar != null )
+			{
+				progressBar.setIndeterminate( b );
+			}
+		}
+
+
+		public void addToToolBar( JXToolBar toolbar )
+		{
+			if(!UISupport.isMac()) {
+				progressBar = new JProgressBar(  );
+				JPanel progressBarPanel = UISupport.createProgressBarPanel( progressBar, 2, false );
+				progressBarPanel.setPreferredSize( new Dimension(60, 20 ));
+				toolbar.add(progressBarPanel);
+			}
+		}
 	}
 }
