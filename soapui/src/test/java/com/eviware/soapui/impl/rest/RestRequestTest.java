@@ -1,9 +1,11 @@
 package com.eviware.soapui.impl.rest;
 
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,10 +79,88 @@ public class RestRequestTest
 		assertThat(parameterOrder.getEntryArray( 0 ), is(lastParameterName));
 	}
 
+	@Test
+	public void selectedProfileIsNoAuthorizationWhenAuthTypeIsNotSet()
+	{
+		assertThat( request.getSelectedAuthProfile(), is( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() ) );
+	}
+
+	@Test
+	public void selectedProfileIsAdded()
+	{
+		assertThat( request.getSelectedAuthProfile(), is( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString() ) );
+	}
+
+
+	/* Backward compatibility tests */
+	@Test
+	public void selectedProfileIsBasicWhenAuthTypeIsPreemptive()
+	{
+		setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.PREEMPTIVE, null );
+		assertThat( request.getSelectedAuthProfile(), is( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
+		assertThat( request.getPreemptive(), is( true ) );
+	}
+
+	@Test
+	public void selectedProfileIsBasicWhenAuthTypeIsGlobalHttpSettings()
+	{
+		setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS, null );
+		assertThat( request.getSelectedAuthProfile(), is( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
+		assertThat( request.getPreemptive(), is( false ) );
+	}
+
+	@Test
+	public void selectedProfileIsBasicWhenAuthTypeAndSelectedProfileArePreemptive()
+	{
+		setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.PREEMPTIVE,
+				CredentialsConfig.AuthType.PREEMPTIVE.toString());
+		assertThat( request.getSelectedAuthProfile(), is( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
+		assertThat( request.getPreemptive(), is( true ) );
+	}
+
+	@Test
+	public void selectedProfileIsBasicWhenAuthTypeAndSelectedProfileAreGlobalHttpSettings()
+	{
+		setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS,
+				CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS.toString() );
+		assertThat( request.getSelectedAuthProfile(), is( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
+		assertThat( request.getPreemptive(), is( false ) );
+	}
+
+	@Test
+	public void selectedProfileIsNTLMWhenAuthTypeIsNTLM()
+	{
+		setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.NTLM, null );
+		assertThat( request.getSelectedAuthProfile(), is( CredentialsConfig.AuthType.NTLM.toString() ) );
+	}
+
+	@Test
+	public void selectedProfileIsSpnegoWhenAuthTypeIsSpnegoKerberos()
+	{
+		setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.SPNEGO_KERBEROS, null );
+		assertThat( request.getSelectedAuthProfile(), is( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString() ) );
+	}
+
+
+	/* Backward compatibility tests end */
+
 	private RestParamProperty addRequestParameter( String name, String value )
 	{
 		RestParamProperty parameter = request.getParams().addProperty( name );
 		parameter.setValue( value );
 		return parameter;
+	}
+
+	private void setAuthTypeAndSelectedProfile( CredentialsConfig.AuthType.Enum authType, String selectedProfile )
+	{
+		if(selectedProfile!=null)
+		{
+			request.setSelectedAuthProfileAndAuthType( selectedProfile, authType );
+		}
+		else
+		{
+			request.getConfig().addNewCredentials();
+			request.getConfig().getCredentials().setAuthType( authType );
+		}
 	}
 }

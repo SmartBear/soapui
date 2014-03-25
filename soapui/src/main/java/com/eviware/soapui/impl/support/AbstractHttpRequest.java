@@ -524,29 +524,37 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		String selectedAuthProfile = credentialsConfig.getSelectedAuthProfile();
 		if( selectedAuthProfile == null )
 		{
+			//For backward compatibility (4.6.4 or earlier projects)
 			String authType = getAuthType();
 
 			if( AuthType.PREEMPTIVE.toString().equals( authType )
 					|| AuthType.GLOBAL_HTTP_SETTINGS.toString().equals( authType ))
 			{
-				addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive();
+				addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive( BASIC_AUTH_PROFILE );
 				return BASIC_AUTH_PROFILE;
 			}
+			else if(AuthType.NTLM.toString().equals( authType ) || AuthType.SPNEGO_KERBEROS.toString().equals( authType ))
+			{
+				addBasicAuthenticationProfile( authType );
+				return authType;
+			}
+
 			return CredentialsConfig.AuthType.NO_AUTHORIZATION.toString();
 		}
+		//For 5.0 Alpha backward compatibility, where we still supported these types before merging them into one 'Basic'
 		else if(AuthType.PREEMPTIVE.toString().equals( selectedAuthProfile )
 				|| AuthType.GLOBAL_HTTP_SETTINGS.toString().equals( selectedAuthProfile ))
 		{
-			addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive();
+			addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive( BASIC_AUTH_PROFILE );
 			return BASIC_AUTH_PROFILE;
 		}
 
 		return selectedAuthProfile;
 	}
 
-	private void addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive()
+	private void addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive( String authType )
 	{
-		addBasicAuthenticationProfile( BASIC_AUTH_PROFILE );
+		addBasicAuthenticationProfile( authType );
 		removeGlobalHttpSettingsAndPreEmptiveProfiles();
 	}
 
@@ -712,7 +720,12 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	public boolean getPreemptive()
 	{
-		return getCredentialsConfig().getPreemptive();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
+		if( AuthType.PREEMPTIVE.toString().equals( getAuthType() ) && !credentialsConfig.getPreemptive())
+		{
+			credentialsConfig.setPreemptive( true );
+		}
+		return credentialsConfig.getPreemptive();
 	}
 
 	public void setPreemptive( boolean preemptive )
