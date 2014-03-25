@@ -340,6 +340,8 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
 		accessTokenStatusText.setVisible( true );
 
+		disclosureButton.setText( GET_ACCESS_TOKEN_BUTTON_DEFAULT_LABEL );
+
 		inspector.setIcon( FAIL_ICON );
 	}
 
