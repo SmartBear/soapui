@@ -12,12 +12,12 @@
 
 package com.eviware.soapui.model;
 
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.PropertyChangeNotifier;
+
+import javax.swing.ImageIcon;
+import java.util.List;
 
 /**
  * General behaviour for all soapui model items
@@ -42,7 +42,17 @@ public interface ModelItem extends PropertyChangeNotifier
 
 	public Settings getSettings();
 
+
 	public List<? extends ModelItem> getChildren();
 
 	public ModelItem getParent();
+
+	/**
+	 * Gets the project that this ModelItem object is part of. If this model item is not part of a project,
+	 * e.g. if this is a {@code Workspace} object, an {@code UnsupportedOperationException} is thrown.
+	 *
+	 * @return The Project object that this ModelItem is a descendant of
+	 * @throws UnsupportedOperationException If this model item is not the descendant of a project
+	 */
+	public Project getProject();
 }

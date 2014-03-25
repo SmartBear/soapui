@@ -12,13 +12,14 @@
 
 package com.eviware.soapui.model.support;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.ModelItem;
 
 /**
  * Base-class for ModelItem implementations
@@ -168,4 +169,14 @@ public abstract class AbstractModelItem implements ModelItem
 		return Collections.EMPTY_LIST;
 	}
 
+	@Override
+	public Project getProject()
+	{
+		Project project = ModelSupport.getModelItemProject( this );
+		if (project == null)
+		{
+			throw new UnsupportedOperationException( this + " is not associated with a project" );
+		}
+		return project;
+	}
 }
