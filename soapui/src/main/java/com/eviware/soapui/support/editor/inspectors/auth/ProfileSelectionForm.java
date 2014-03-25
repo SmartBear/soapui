@@ -13,13 +13,17 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.impl.rest.OAuth2Profile;
-import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
-import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.*;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -28,20 +32,10 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
+import org.apache.commons.lang.ObjectUtils;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -316,9 +310,47 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		OAuth2Profile profile = getOAuth2ProfileContainer().getProfileByName( profileOldName );
 		profile.setName( newName );
-		request.setSelectedAuthProfileAndAuthType( newName,
-				CredentialsConfig.AuthType.Enum.forString( request.getAuthType() ) );
+		updateProfileForAllRequests( profileOldName, newName );
 		refreshProfileSelectionComboBox( newName );
+	}
+
+	private void updateProfileForAllRequests( String profileOldName, String newName )
+	{
+		Project project = ModelSupport.getModelItemProject( request );
+		CredentialsConfig.AuthType.Enum authType = CredentialsConfig.AuthType.Enum.forString( request.getAuthType() );
+		for( Interface iface : project.getInterfaceList() )
+		{
+		  if(iface instanceof RestService){
+			  for( RestResource restResource : ( ( RestService )iface ).getAllResources() )
+			  {
+				  for( RestMethod restMethod : restResource.getRestMethodList() )
+				  {
+					  for( RestRequest restRequest : restMethod.getRequestList() )
+					  {
+						  if( ObjectUtils.equals( restRequest.getAuthType(), request.getAuthType() )
+								  && ObjectUtils.equals( restRequest.getSelectedAuthProfile(), profileOldName ) )
+						  {
+							  restRequest.setSelectedAuthProfileAndAuthType( newName, authType );
+						  }
+					  }
+				  }
+			  }
+		  }
+		}
+		for( TestSuite testSuite : project.getTestSuiteList() )
+		{
+			for( TestCase testCase : testSuite.getTestCaseList() )
+			{
+				for( RestTestRequestStep restTestRequestStep : testCase.getTestStepsOfType( RestTestRequestStep.class ) )
+				{
+					if( ObjectUtils.equals( restTestRequestStep.getTestRequest().getAuthType(), request.getAuthType() )
+							&& ObjectUtils.equals( restTestRequestStep.getTestRequest().getSelectedAuthProfile(), profileOldName ) )
+					{
+						restTestRequestStep.getTestRequest().setSelectedAuthProfileAndAuthType( newName, authType );
+					}
+				}
+			}
+		}
 	}
 
 	private void deleteCurrentProfile( String profileName )
