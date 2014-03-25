@@ -57,7 +57,7 @@ public class OAuth2AdvancedOptionsDialog
 			profile.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
 
 			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
-			profile.setRefreshAccessTokenMethod( RefreshAccessTokenMethods.valueOf( refreshAccessTokenMethod.toUpperCase() ) );
+			profile.setRefreshAccessTokenMethod( OAuth2Profile.RefreshAccessTokenMethods.valueOf( refreshAccessTokenMethod.toUpperCase() ) );
 
 			String manualExpirationTime = expirationTimeComponent.getAccessTokenExpirationTime();
 			TimeUnitConfig.Enum expirationTimeUnit = expirationTimeComponent.getAccessTokenExpirationTimeUnit();
@@ -88,7 +88,7 @@ public class OAuth2AdvancedOptionsDialog
 	private void setRefreshAccessTokenOptions( OAuth2Profile profile, XFormDialog dialog )
 	{
 		XFormRadioGroup refreshOptions = ( XFormRadioGroup )dialog.getFormField( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
-		refreshOptions.setOptions( RefreshAccessTokenMethods.values() );
+		refreshOptions.setOptions( OAuth2Profile.RefreshAccessTokenMethods.values() );
 		refreshOptions.setValue( profile.getRefreshAccessTokenMethod().toString() );
 	}
 
