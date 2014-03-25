@@ -275,9 +275,9 @@ public class OAuth2TokenExtractor
 		@Override
 		public void contentChanged( String newContent )
 		{
-			String script = javaScripts.get( pageIndex );
 			if( javaScripts.size() > pageIndex )
 			{
+				String script = javaScripts.get( pageIndex );
 				try
 				{
 					browserFacade.executeJavaScript( script );
