@@ -1,26 +1,34 @@
 package com.eviware.soapui.impl.rest;
 
+import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.config.OAuth2ProfileContainerConfig;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestSuite;
+import org.apache.commons.lang.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 {
 	private final WsdlProject project;
 	private final OAuth2ProfileContainerConfig configuration;
-	List<OAuth2Profile> oAuth2ProfileList = new ArrayList<OAuth2Profile>();
+	private List<OAuth2Profile> oAuth2ProfileList = new ArrayList<OAuth2Profile>();
+	private List<OAuth2ProfileListener> listeners = new CopyOnWriteArrayList<OAuth2ProfileListener>();
 
 	public DefaultOAuth2ProfileContainer( WsdlProject project, OAuth2ProfileContainerConfig configuration )
 	{
 		this.project = project;
 		this.configuration = configuration;
 
-		buildOAuth2ProfileList(  );
+		buildOAuth2ProfileList();
 	}
 
 	@Override
@@ -60,25 +68,34 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 	}
 
 	@Override
+	public void renameProfile( String profileOldName, String newName )
+	{
+		getProfileByName( profileOldName ).setName( newName );
+		updateProfileForAllRequests( profileOldName, newName );
+		fireOAuth2ProfileRenamed( profileOldName, newName );
+	}
+
+	@Override
 	public void release()
 	{
 		//FIXME: Add implementation when we implement the GUI with listeners
 	}
 
 	@Override
-	public OAuth2Profile addNewOAuth2Profile(String profileName)
+	public OAuth2Profile addNewOAuth2Profile( String profileName )
 	{
 		OAuth2ProfileConfig profileConfig = configuration.addNewOAuth2Profile();
 		profileConfig.setName( profileName );
 
 		OAuth2Profile oAuth2Profile = new OAuth2Profile( this, profileConfig );
-		buildOAuth2ProfileList( );
+		buildOAuth2ProfileList();
+		fireOAuth2ProfileAdded( oAuth2Profile );
 
 		return oAuth2Profile;
 	}
 
 	@Override
-	public void removeProfile( String profileName )
+	public void removeProfile( final String profileName )
 	{
 		for( int count = 0; count < configuration.sizeOfOAuth2ProfileArray(); count++ )
 		{
@@ -88,7 +105,19 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 				break;
 			}
 		}
-		buildOAuth2ProfileList( );
+		buildOAuth2ProfileList();
+		doForAllRestRequests( new RestRequestCallback()
+		{
+			@Override
+			public void doit( RestRequest restRequest )
+			{
+				if( ObjectUtils.equals( restRequest.getSelectedAuthProfile(), profileName ) )
+				{
+					restRequest.setSelectedAuthProfileAndAuthType( CredentialsConfig.AuthType.NO_AUTHORIZATION.toString(), CredentialsConfig.AuthType.NO_AUTHORIZATION );
+				}
+			}
+		} );
+		fireOAuth2ProfileRemoved( profileName );
 	}
 
 	@Override
@@ -111,7 +140,7 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		return result.toArray();
 	}
 
-	private void buildOAuth2ProfileList( )
+	private void buildOAuth2ProfileList()
 	{
 		oAuth2ProfileList.clear();
 		for( OAuth2ProfileConfig profileConfig : configuration.getOAuth2ProfileList() )
@@ -120,4 +149,91 @@ public class DefaultOAuth2ProfileContainer implements OAuth2ProfileContainer
 		}
 	}
 
+	private void updateProfileForAllRequests( final String profileOldName, final String newName )
+	{
+		doForAllRestRequests( new RestRequestCallback()
+		{
+			@Override
+			public void doit( RestRequest restRequest )
+			{
+				if( ObjectUtils.equals( restRequest.getSelectedAuthProfile(), profileOldName ) )
+				{
+					restRequest.setSelectedAuthProfileAndAuthType( newName, CredentialsConfig.AuthType.Enum.forString( restRequest.getAuthType() ) );
+				}
+			}
+		} );
+	}
+
+	private void doForAllRestRequests( RestRequestCallback callback )
+	{
+		for( Interface iface : project.getInterfaceList() )
+		{
+			if( iface instanceof RestService )
+			{
+				for( RestResource restResource : ( ( RestService )iface ).getAllResources() )
+				{
+					for( RestMethod restMethod : restResource.getRestMethodList() )
+					{
+						for( RestRequest restRequest : restMethod.getRequestList() )
+						{
+							callback.doit( restRequest );
+						}
+					}
+				}
+			}
+		}
+		for( TestSuite testSuite : project.getTestSuiteList() )
+		{
+			for( TestCase testCase : testSuite.getTestCaseList() )
+			{
+				for( RestTestRequestStep restTestRequestStep : testCase.getTestStepsOfType( RestTestRequestStep.class ) )
+				{
+					callback.doit( restTestRequestStep.getTestRequest() );
+				}
+			}
+		}
+	}
+
+	@Override
+	public void addOAuth2ProfileListener( OAuth2ProfileListener listener )
+	{
+		listeners.add( listener );
+	}
+
+	@Override
+	public void removeOAuth2ProfileListener( OAuth2ProfileListener listener )
+	{
+		listeners.remove( listener );
+	}
+
+	private void fireOAuth2ProfileAdded( OAuth2Profile oAuth2Profile )
+	{
+		for( OAuth2ProfileListener listener : listeners )
+		{
+			listener.profileAdded( oAuth2Profile );
+		}
+	}
+
+	private void fireOAuth2ProfileRenamed( String profileOldName, String newName )
+	{
+		for( OAuth2ProfileListener listener : listeners )
+		{
+			listener.profileRenamed( profileOldName, newName );
+		}
+	}
+
+	private void fireOAuth2ProfileRemoved( String profileName )
+	{
+		for( OAuth2ProfileListener listener : listeners )
+		{
+			listener.profileRemoved( profileName );
+		}
+	}
+
+	private interface RestRequestCallback
+	{
+
+		void doit( RestRequest restRequest );
+
+	}
 }

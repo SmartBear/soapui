@@ -13,17 +13,14 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.impl.rest.*;
+import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.OAuth2ProfileListener;
+import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -32,7 +29,6 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.RowSpec;
-import org.apache.commons.lang.ObjectUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -60,14 +56,15 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	static final ImageIcon AUTH_ENABLED_ICON = UISupport.createImageIcon( "/lock.png" );
 	private static final ImageIcon AUTH_NOT_ENABLED_ICON = null;
 
-	private static final Map<String, ShowOnlineHelpAction> helpActions = new HashMap<String, ShowOnlineHelpAction>(  );
+	private static final Map<String, ShowOnlineHelpAction> helpActions = new HashMap<String, ShowOnlineHelpAction>();
+
 	static
 	{
-		helpActions.put( EMPTY_PANEL, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION) );
-		helpActions.put( AbstractHttpRequest.BASIC_AUTH_PROFILE, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_BASIC) );
-		helpActions.put( CredentialsConfig.AuthType.NTLM.toString(), new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_NTLM) );
-		helpActions.put( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(), new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_SPNEGO_KERBEROS) );
-		helpActions.put( OAUTH_2_FORM_LABEL, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_OAUTH2) );
+		helpActions.put( EMPTY_PANEL, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION ) );
+		helpActions.put( AbstractHttpRequest.BASIC_AUTH_PROFILE, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_BASIC ) );
+		helpActions.put( CredentialsConfig.AuthType.NTLM.toString(), new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_NTLM ) );
+		helpActions.put( CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(), new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_SPNEGO_KERBEROS ) );
+		helpActions.put( OAUTH_2_FORM_LABEL, new ShowOnlineHelpAction( null, HelpUrls.AUTHORIZATION_OAUTH2 ) );
 	}
 
 	private T request;
@@ -78,6 +75,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private BasicAuthenticationForm<T> authenticationForm;
 	private OAuth2Form oAuth2Form;
 	private JButton helpButton;
+	private OAuth2ProfileListener profileListener;
 
 	protected ProfileSelectionForm( T request )
 	{
@@ -86,6 +84,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		this.request = request;
 
 		buildUI();
+		profileListener = new ProfileListener();
+		request.getOperation().getInterface().getProject().getOAuth2ProfileContainer().addOAuth2ProfileListener( profileListener );
 	}
 
 	@Override
@@ -109,6 +109,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			oAuth2Form.release();
 		}
+		request.getOperation().getInterface().getProject().getOAuth2ProfileContainer().removeOAuth2ProfileListener( profileListener );
 	}
 
 	protected void buildUI()
@@ -308,54 +309,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			return;
 		}
 
-		OAuth2Profile profile = getOAuth2ProfileContainer().getProfileByName( profileOldName );
-		profile.setName( newName );
-		updateProfileForAllRequests( profileOldName, newName );
-		refreshProfileSelectionComboBox( newName );
+		getOAuth2ProfileContainer().renameProfile( profileOldName, newName );
 	}
 
 	protected static boolean isReservedProfileName( String newName )
 	{
 		return getBasicAuthenticationTypes().contains( newName ) || newName.equals( OPTIONS_SEPARATOR );
-	}
-
-	private void updateProfileForAllRequests( String profileOldName, String newName )
-	{
-		Project project = ModelSupport.getModelItemProject( request );
-		CredentialsConfig.AuthType.Enum authType = CredentialsConfig.AuthType.Enum.forString( request.getAuthType() );
-		for( Interface iface : project.getInterfaceList() )
-		{
-		  if(iface instanceof RestService){
-			  for( RestResource restResource : ( ( RestService )iface ).getAllResources() )
-			  {
-				  for( RestMethod restMethod : restResource.getRestMethodList() )
-				  {
-					  for( RestRequest restRequest : restMethod.getRequestList() )
-					  {
-						  if( ObjectUtils.equals( restRequest.getAuthType(), request.getAuthType() )
-								  && ObjectUtils.equals( restRequest.getSelectedAuthProfile(), profileOldName ) )
-						  {
-							  restRequest.setSelectedAuthProfileAndAuthType( newName, authType );
-						  }
-					  }
-				  }
-			  }
-		  }
-		}
-		for( TestSuite testSuite : project.getTestSuiteList() )
-		{
-			for( TestCase testCase : testSuite.getTestCaseList() )
-			{
-				for( RestTestRequestStep restTestRequestStep : testCase.getTestStepsOfType( RestTestRequestStep.class ) )
-				{
-					if( ObjectUtils.equals( restTestRequestStep.getTestRequest().getAuthType(), request.getAuthType() )
-							&& ObjectUtils.equals( restTestRequestStep.getTestRequest().getSelectedAuthProfile(), profileOldName ) )
-					{
-						restTestRequestStep.getTestRequest().setSelectedAuthProfileAndAuthType( newName, authType );
-					}
-				}
-			}
-		}
 	}
 
 	private void deleteCurrentProfile( String profileName )
@@ -395,7 +354,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	{
 		showCard( cardName );
 		String helpKey = cardName;
-		if(cardName.equals( BASIC_FORM_LABEL ) || cardName.equals( WSS_FORM_LABEL )) {
+		if( cardName.equals( BASIC_FORM_LABEL ) || cardName.equals( WSS_FORM_LABEL ) )
+		{
 			helpKey = selectedOption;
 		}
 		helpButton.setAction( helpActions.get( helpKey ) );
@@ -527,6 +487,27 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 					profileSelectionComboBox.setModel( profileComboBoXModel );
 				}
 			}
+		}
+	}
+
+	private class ProfileListener implements OAuth2ProfileListener
+	{
+		@Override
+		public void profileAdded( OAuth2Profile profile )
+		{
+			refreshProfileSelectionComboBox( request.getSelectedAuthProfile() );
+		}
+
+		@Override
+		public void profileRemoved( String profileName )
+		{
+			refreshProfileSelectionComboBox( request.getSelectedAuthProfile() );
+		}
+
+		@Override
+		public void profileRenamed( String profileOldName, String newName )
+		{
+			refreshProfileSelectionComboBox( request.getSelectedAuthProfile() );
 		}
 	}
 }
