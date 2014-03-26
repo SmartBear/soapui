@@ -19,7 +19,6 @@ import java.util.Map;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.StringToStringMapConfig;
-import com.eviware.soapui.config.StringToStringMapConfig.Entry;
 
 /**
  * HashMap&lt;String,String&gt;
@@ -77,7 +76,7 @@ public class StringToStringsMap extends HashMap<String, List<String>>
 		{
 			for( String value : get( key ) )
 			{
-				Entry entry = xmlConfig.addNewEntry();
+				StringToStringMapConfig.Entry entry = xmlConfig.addNewEntry();
 				entry.setKey( key );
 				entry.setValue( value );
 			}
@@ -108,7 +107,7 @@ public class StringToStringsMap extends HashMap<String, List<String>>
 	public static StringToStringsMap fromXml( StringToStringMapConfig nsMapping )
 	{
 		StringToStringsMap result = new StringToStringsMap();
-		for( Entry entry : nsMapping.getEntryList() )
+		for( StringToStringMapConfig.Entry entry : nsMapping.getEntryList() )
 		{
 			result.add( entry.getKey(), entry.getValue() );
 		}
