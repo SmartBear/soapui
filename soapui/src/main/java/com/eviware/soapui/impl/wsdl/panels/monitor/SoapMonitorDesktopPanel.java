@@ -46,7 +46,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel implements Soap
 
 		tabs.add( soapMonitor, "Traffic Log" );
 
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
+		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_MONITOR ) ) );
 
 		p.add( toolbar, BorderLayout.NORTH );
 		p.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
