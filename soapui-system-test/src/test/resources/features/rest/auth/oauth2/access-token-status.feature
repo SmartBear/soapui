@@ -78,6 +78,17 @@ Feature: Access token status
     And the access token input field background color is set to green
     And there is a tick mark icon on the Auth tab
 
+  Scenario: Access token status is set to Expired when sending an expired token
+    Given the user has created a REST project with the Google Tasks API
+    And has successfully configured its OAuth settings
+    And has a expired access token
+    And has set the Refresh access token option to manual
+    When the user sends the request
+    Then status label besides the the access token field is set to Expired
+    And there is a red exclamation mark besides the access token input field
+    And the access token input field background color is set to red
+    And there is a red exclamation mark in the Auth tab
+
   Scenario: The access token status is saved between sessions
     Given the user has created a REST project with the Google Tasks API
     And the user enters a access token manually in the access token text box

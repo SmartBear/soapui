@@ -66,10 +66,12 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 	private final Color DEFAULT_COLOR = Color.WHITE;
 	private final Color SUCCESS_COLOR = new Color( 0xccffcb );
+	private final Color FAIL_COLOR = new Color( 0xffcccc );
 
 	// FIXME This need to be changed to the real icons
 	static final ImageIcon SUCCESS_ICON = UISupport.createImageIcon( "/checkmark-dummy.png" );
 	static final ImageIcon WAIT_ICON = UISupport.createImageIcon( "/refresh-dummy.png" );
+	static final ImageIcon FAIL_ICON = UISupport.createImageIcon( "/exclamation-dummy.png" );
 
 	private final AbstractXmlInspector inspector;
 	private final OAuth2AccessTokenStatusChangeManager statusChangeManager;
@@ -264,7 +266,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 	private void setAccessTokenStatusFeedback( OAuth2Profile.AccessTokenStatus status )
 	{
-		// These are no auth profile selected
+		// These is no auth profile selected
 		if( status == null )
 		{
 			setDefaultFeedback();
@@ -280,6 +282,9 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 				case WAITING_FOR_AUTHORIZATION:
 				case RECEIVED_AUTHORIZATION_CODE:
 					setWaitingFeedback( status );
+					break;
+				case EXPIRED:
+					setFailedFeedback( status );
 					break;
 				default:
 					setDefaultFeedback();
@@ -312,6 +317,19 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		accessTokenStatusText.setVisible( true );
 
 		inspector.setIcon( WAIT_ICON );
+	}
+
+	private void setFailedFeedback( OAuth2Profile.AccessTokenStatus status )
+	{
+		accessTokenField.setBackground( FAIL_COLOR );
+
+		accessTokenStatusIcon.setIcon( FAIL_ICON );
+		accessTokenStatusIcon.setVisible( true );
+
+		accessTokenStatusText.setText( setWrappedText( status.toString() ) );
+		accessTokenStatusText.setVisible( true );
+
+		inspector.setIcon( FAIL_ICON );
 	}
 
 	private void setDefaultFeedback()
