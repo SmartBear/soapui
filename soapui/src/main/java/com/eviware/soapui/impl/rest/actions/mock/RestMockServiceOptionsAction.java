@@ -32,14 +32,12 @@ public class RestMockServiceOptionsAction extends AbstractSoapUIAction<RestMockS
 		if( dialog == null )
 			dialog = ADialogBuilder.buildDialog( OptionsForm.class );
 
-		dialog.setValue( OptionsForm.PATH, mockService.getPath() );
 		dialog.setValue( OptionsForm.HOST, mockService.getHost() );
 		dialog.setIntValue( OptionsForm.PORT, mockService.getPort() );
 		dialog.setValue( OptionsForm.DOCROOT, mockService.getDocroot() );
 
 		if( dialog.show() )
 		{
-			mockService.setPath( dialog.getValue( OptionsForm.PATH ) );
 			mockService.setPort( dialog.getIntValue( OptionsForm.PORT, mockService.getPort() ) );
 			mockService.setHost( dialog.getValue( OptionsForm.HOST ) );
 			mockService.setDocroot( dialog.getValue( OptionsForm.DOCROOT ) );
@@ -49,9 +47,6 @@ public class RestMockServiceOptionsAction extends AbstractSoapUIAction<RestMockS
 	@AForm( name = "REST MockService Options", description = "Set options for this REST mock service", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
 	private class OptionsForm
 	{
-		@AField( name = "Path", description = "The path this MockService will mount on" )
-		public final static String PATH = "Path";
-
 		@AField( name = "Port", description = "The port this MockService will mount on", type = AField.AFieldType.INT )
 		public final static String PORT = "Port";
 
