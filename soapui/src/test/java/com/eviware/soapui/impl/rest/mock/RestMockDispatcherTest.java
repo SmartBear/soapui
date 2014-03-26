@@ -1,8 +1,8 @@
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResult;
 import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.*;
+
 
 public class RestMockDispatcherTest
 {
@@ -61,7 +65,18 @@ public class RestMockDispatcherTest
 		restMockDispatcher.dispatchRequest( request, response );
 
 		// we would like to verify that dispatchRequest is never called but it is hard so we verify on this instead
-		verify( restMockService, never() ).findBestMatchedOperation( anyString(), any( RestRequestInterface.HttpMethod.class ) );
+		verify( restMockService, never() ).findBestMatchedOperation( anyString(), any( HttpMethod.class ) );
+	}
+
+	@Test
+	public void shouldReturnNoResponseFoundWhenThereIsNoMatchingAction() throws Exception
+	{
+		createRestMockDispatcher();
+		when( restMockService.findBestMatchedOperation( anyString(), any( HttpMethod.class ) ) ).thenReturn( null );
+
+		restMockDispatcher.dispatchRequest( request, response );
+
+		verify( response ).setStatus( HttpStatus.SC_NOT_FOUND );
 	}
 
 
@@ -83,7 +98,7 @@ public class RestMockDispatcherTest
 		request = mock( HttpServletRequest.class );
 		Enumeration enumeration = mock( Enumeration.class );
 		when( request.getHeaderNames() ).thenReturn( enumeration );
-		when( request.getMethod() ).thenReturn( RestRequestInterface.HttpMethod.DELETE.name() );
+		when( request.getMethod() ).thenReturn( HttpMethod.DELETE.name() );
 
 		response = mock( HttpServletResponse.class );
 		restMockService = mock( RestMockService.class );

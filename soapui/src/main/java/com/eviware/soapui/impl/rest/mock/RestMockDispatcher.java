@@ -70,25 +70,14 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 		}
 		else
 		{
-			return getDefaultResponse( restMockRequest );
+			return createNotFoundResponse( restMockRequest );
 		}
 
 	}
 
-
-	private RestMockResult getDefaultResponse( RestMockRequest restMockRequest ) throws DispatchException
+	private RestMockResult createNotFoundResponse( RestMockRequest restMockRequest )
 	{
-		RestMockResult result = null;
-		try
-		{
-			result = new RestMockResult( restMockRequest );
-		}
-		catch( Exception e )
-		{
-			throw new DispatchException( e );
-		}
-
-		return result;
-
+		restMockRequest.getHttpResponse().setStatus( HttpStatus.SC_NOT_FOUND );
+		return new RestMockResult( restMockRequest );
 	}
 }
