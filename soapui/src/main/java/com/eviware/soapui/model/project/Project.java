@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.model.project;
 
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.TestModelItem;
@@ -111,4 +112,5 @@ public interface Project extends TestModelItem
 
 	public int getIndexOfTestSuite( TestSuite testSuite );
 
+	OAuth2ProfileContainer getOAuth2ProfileContainer();
 }

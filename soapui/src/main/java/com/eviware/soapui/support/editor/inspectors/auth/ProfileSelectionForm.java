@@ -85,7 +85,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		buildUI();
 		profileListener = new ProfileListener();
-		request.getOperation().getInterface().getProject().getOAuth2ProfileContainer().addOAuth2ProfileListener( profileListener );
+		getOAuth2ProfileContainer().addOAuth2ProfileListener( profileListener );
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 		{
 			oAuth2Form.release();
 		}
-		request.getOperation().getInterface().getProject().getOAuth2ProfileContainer().removeOAuth2ProfileListener( profileListener );
+		getOAuth2ProfileContainer().removeOAuth2ProfileListener( profileListener );
 	}
 
 	protected void buildUI()
@@ -371,7 +371,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 	private OAuth2ProfileContainer getOAuth2ProfileContainer()
 	{
-		return request.getOperation().getInterface().getProject().getOAuth2ProfileContainer();
+		return request.getProject().getOAuth2ProfileContainer();
 	}
 
 	protected static ArrayList<String> getBasicAuthenticationTypes()
