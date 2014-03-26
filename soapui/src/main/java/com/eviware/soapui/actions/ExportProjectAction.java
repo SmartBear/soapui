@@ -13,6 +13,7 @@ package com.eviware.soapui.actions;
 
 import java.io.File;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.integration.exporter.ProjectExporter;
 import com.eviware.soapui.support.UISupport;
@@ -54,6 +55,7 @@ public class ExportProjectAction extends AbstractSoapUIAction<WsdlProject>
 		}
 		catch( Exception e1 )
 		{
+			SoapUI.logError( e1, "Failed to export project" );
 			UISupport.showErrorMessage( "Failed to export project; " + e1 );
 		}
 

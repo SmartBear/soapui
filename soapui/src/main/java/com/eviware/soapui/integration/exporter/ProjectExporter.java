@@ -134,6 +134,7 @@ public class ProjectExporter
 		{
 			// TODO: handle exception
 			result = false;
+			SoapUI.logError( e, "Error packaging export" );
 		}
 		return result;
 	}
