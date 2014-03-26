@@ -476,13 +476,7 @@
             <artifactId>nekohtml</artifactId>
             <version>1.9.14</version>
         </dependency>
-        <dependency>
-            <groupId>javafx</groupId>
-            <artifactId>jfxrt</artifactId>
-            <version>${javafx.version}</version>
-            <scope>system</scope>
-            <systemPath>${javafx.runtime.lib.jar}</systemPath>
-        </dependency>
+
         <!--- Added -->
 
         <dependency>
@@ -548,4 +542,22 @@
             <version>3.1</version>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>javafx.dependency</id>
+            <activation>
+                <jdk>[1.6,1.8)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javafx</groupId>
+                    <artifactId>jfxrt</artifactId>
+                    <version>${javafx.version}</version>
+                    <scope>system</scope>
+                    <systemPath>${javafx.runtime.lib.jar}</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
