@@ -42,6 +42,7 @@ import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.AbstractListMouseListener;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
+import com.eviware.soapui.ui.support.JProgressBarWrapper;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 import org.apache.commons.collections.list.TreeList;
 
@@ -978,28 +979,4 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 		SoapUI.getActionRegistry().performAction( "CloneMockServiceAction", getModelItem(), null );
 	}
 
-	class JProgressBarWrapper {
-
-
-		private JProgressBar progressBar;
-
-		public void setIndeterminate( boolean b )
-		{
-			if( progressBar != null )
-			{
-				progressBar.setIndeterminate( b );
-			}
-		}
-
-
-		public void addToToolBar( JXToolBar toolbar )
-		{
-			if(!UISupport.isMac()) {
-				progressBar = new JProgressBar(  );
-				JPanel progressBarPanel = UISupport.createProgressBarPanel( progressBar, 2, false );
-				progressBarPanel.setPreferredSize( new Dimension(60, 20 ));
-				toolbar.add(progressBarPanel);
-			}
-		}
-	}
 }
