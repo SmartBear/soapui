@@ -165,7 +165,8 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 		JTabbedPane tabs = new JTabbedPane();
 		inspectorPanel = JInspectorPanelFactory.build( buildOperationList() );
 
-		tabs.addTab( "Operations", inspectorPanel.getComponent() );
+		String title = getModelItem() instanceof RestMockService ? "Resources" : "Operations";
+		tabs.addTab( title, inspectorPanel.getComponent() );
 		addTabs( tabs, inspectorPanel );
 
 		if( StringUtils.hasContent( getModelItem().getDescription() )
