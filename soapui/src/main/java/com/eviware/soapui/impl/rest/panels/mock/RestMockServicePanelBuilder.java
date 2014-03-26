@@ -32,7 +32,6 @@ public class RestMockServicePanelBuilder extends EmptyPanelBuilder<RestMockServi
 		table.addProperty( "Name", "name", editable );
 		table.addProperty( "Description", "description", editable );
 		table.addProperty( "Port", "port", !editable );
-		table.addProperty( "Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS );
 		table.setPropertyObject( mockService );
 
 		return table;
