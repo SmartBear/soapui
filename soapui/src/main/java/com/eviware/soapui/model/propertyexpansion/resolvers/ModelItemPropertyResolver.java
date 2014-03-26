@@ -13,6 +13,7 @@
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
+import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.AbstractMockResponse;
@@ -167,6 +168,10 @@ public class ModelItemPropertyResolver implements PropertyResolver
 		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
 		{
 			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
+		}
+		else if( modelItem instanceof RestResource )
+		{
+			project = modelItem.getProject();
 		}
 		else if( modelItem instanceof WsdlMockOperation )
 		{
