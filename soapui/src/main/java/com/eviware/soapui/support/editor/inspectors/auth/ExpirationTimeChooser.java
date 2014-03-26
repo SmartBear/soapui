@@ -49,8 +49,8 @@ class ExpirationTimeChooser extends JPanel
 		centerPanel.add( label, BorderLayout.NORTH );
 		add( centerPanel, BorderLayout.CENTER );
 
-		JLabel helpLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn how to use the token expiration time " );
-		add( helpLink, BorderLayout.SOUTH );
+//		JLabel helpLink = UISupport.createLabelLink( "http://www.soapui.org", "Learn how to use the token expiration time " );
+//		add( helpLink, BorderLayout.SOUTH );
 	}
 
 	public String getAccessTokenExpirationTime()
