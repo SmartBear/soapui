@@ -25,4 +25,10 @@ public interface OAuth2ProfileContainer extends PropertyExpansionContainer
 	ArrayList<String> getOAuth2ProfileNameList();
 
 	OAuth2Profile getProfileByName( String profileName );
+
+	void addOAuth2ProfileListener(OAuth2ProfileListener listener);
+
+	void removeOAuth2ProfileListener(OAuth2ProfileListener listener);
+
+	void renameProfile( String profileOldName, String newName );
 }
