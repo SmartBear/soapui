@@ -12,9 +12,6 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 
-/**
- * Created by ruben on 2014-01-17.
- */
 public class RestMockServiceOptionsAction extends AbstractSoapUIAction<RestMockService>
 {
 	private XFormDialog dialog;
@@ -39,8 +36,6 @@ public class RestMockServiceOptionsAction extends AbstractSoapUIAction<RestMockS
 		dialog.setValue( OptionsForm.HOST, mockService.getHost() );
 		dialog.setIntValue( OptionsForm.PORT, mockService.getPort() );
 		dialog.setValue( OptionsForm.DOCROOT, mockService.getDocroot() );
-		dialog.setOptions( OptionsForm.FAULT_OPERATION,
-				ModelSupport.getNames( new String[] { "- none -" }, mockService.getMockOperationList() ) );
 
 		if( dialog.show() )
 		{
@@ -68,9 +63,6 @@ public class RestMockServiceOptionsAction extends AbstractSoapUIAction<RestMockS
 
 		@AField( name = "Docroot", description = "The document root to serve (empty = none)", type = AField.AFieldType.FOLDER )
 		public final static String DOCROOT = "Docroot";
-
-		@AField( name = "Fault Operation", description = "The MockOperation that should handle incoming SOAP Faults", type = AField.AFieldType.ENUMERATION )
-		public final static String FAULT_OPERATION = "Fault Operation";
 	}
 
 }
