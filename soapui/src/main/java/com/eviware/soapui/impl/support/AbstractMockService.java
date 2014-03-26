@@ -551,7 +551,8 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 	public void addExternalDependencies( List<ExternalDependency> dependencies )
 	{
 		super.addExternalDependencies( dependencies );
-		dependencies.add( new MockServiceExternalDependency( docrootProperty ) );
+		//Disable since ProjectExporter.packageAll doesn't seem to handle folders
+		//dependencies.add( new MockServiceExternalDependency( docrootProperty ) );
 	}
 
 	@Override
