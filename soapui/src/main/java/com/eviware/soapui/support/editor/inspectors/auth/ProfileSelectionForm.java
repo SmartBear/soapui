@@ -76,6 +76,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 	private OAuth2Form oAuth2Form;
 	private JButton helpButton;
 	private OAuth2ProfileListener profileListener;
+	private WSSAuthenticationForm wssAuthenticationForm;
 
 	protected ProfileSelectionForm( T request )
 	{
@@ -131,7 +132,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
 		if( isSoapRequest( request ) )
 		{
-			WSSAuthenticationForm wssAuthenticationForm = new WSSAuthenticationForm( ( WsdlRequest )request );
+			wssAuthenticationForm = new WSSAuthenticationForm( ( WsdlRequest )request );
 			cardPanel.add( wssAuthenticationForm.getComponent(), WSS_FORM_LABEL );
 		}
 
@@ -208,13 +209,15 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 			setIcon( AUTH_ENABLED_ICON );
 			setTitle( AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")" );
 			request.setSelectedAuthProfileAndAuthType( selectedOption, request.getBasicAuthType( selectedOption ) );
-			authenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
+
 			if( isSoapRequest( request ) )
 			{
+				wssAuthenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
 				changeAuthorizationType( WSS_FORM_LABEL, selectedOption );
 			}
 			else
 			{
+				authenticationForm.setButtonGroupVisibility( selectedOption.equals( AbstractHttpRequest.BASIC_AUTH_PROFILE ) );
 				changeAuthorizationType( BASIC_FORM_LABEL, selectedOption );
 			}
 		}
