@@ -73,7 +73,6 @@ public class LoadTestRunnerAction extends AbstractToolsAction<WsdlProject>
 	private static final String SAVEPROJECT = "Save Project";
 	private static final String ADDSETTINGS = "Add Settings";
 	private static final String PROJECTPASSWORD = "Project Password";
-	private static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
 	private static final String SAVEAFTER = "Save After";
 	protected static final String WSSTYPE = "WSS Password Type";
 	private static final String OPEN_REPORT = "Open Report";

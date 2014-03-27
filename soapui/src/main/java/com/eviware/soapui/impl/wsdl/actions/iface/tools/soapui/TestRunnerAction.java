@@ -76,7 +76,6 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject>
 	protected static final String OPEN_REPORT = "Open Report";
 	protected static final String COVERAGE = "Coverage Report";
 	protected static final String PROJECTPASSWORD = "Project Password";
-	protected static final String SOAPUISETTINGSPASSWORD = "soapui-setings.xml Password";
 	protected static final String IGNOREERRORS = "Ignore Errors";
 	protected static final String GENERATEREPORTSEACHTESTCASE = "Select Report Type";
 	protected static final String REPORTFORMAT = "Report Format(s)";

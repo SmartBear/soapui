@@ -58,6 +58,7 @@ public abstract class AbstractToolsAction<T extends ModelItem> extends AbstractS
 	protected static final String CACHED_WSDL = "Use cached WSDL";
 	protected static final String JAVA_ARGS = "Java Args";
 	protected static final String TOOL_ARGS = "Tool Args";
+	protected static final String SOAPUISETTINGSPASSWORD = "user-settings.xml Password";
 
 	private XFormDialog dialog;
 	protected String valuesSettingID;
