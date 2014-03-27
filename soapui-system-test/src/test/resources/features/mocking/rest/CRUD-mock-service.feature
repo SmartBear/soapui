@@ -1,6 +1,5 @@
 @Manual @Acceptance
-# create from project, from test request without response, from test request with response , change the name or settings
-Feature: As Mark I can create,rename and delete REST Mock service
+Feature: As Mark I can create and delete REST Mock service
 
   Scenario: Create REST MockService from a blank project
 
@@ -20,4 +19,3 @@ Feature: As Mark I can create,rename and delete REST Mock service
 
   Scenario: Set REST MockService options
 
-  Scenario: Add more mock resources in REST Mock service

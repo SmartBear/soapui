@@ -1,5 +1,14 @@
 @Manual @Acceptance
-# create from project, from test request without response, from test request with response , change the name or settings
-Feature: As Mark I can create,rename and delete REST Mock response
+Feature: As Mark I can create,edit,rename and delete REST Mock resource
 
-Scenario: Create
+  Scenario: Add more mock resources in REST Mock service
+
+  Scenario: Add more mock resources from different REST resource
+
+  Scenario: Change the REST mock resource path
+
+  Scenario: Change the REST mock resource method
+
+  Scenario: Rename the REST mock resource, different resource can have the same name
+
+  Scenario: Delete the REST mock resource
