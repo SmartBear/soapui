@@ -152,7 +152,8 @@ public interface HelpUrls
 	public static final String RUNTESTCASESTEP_HELP_URL = HELP_URL_ROOT + "functional/runtestcasestep.html";
 
 	public static final String SOAPMONITOR_HELP_URL = HELP_URL_ROOT + "monitor/index.html";
-	public static final String SOAPMONITOR_RECORDING_SETTINGS = "http://www.soapui.org/HTTP-Recording/recording-settings.html";
+	public static final String SOAPMONITOR_GENERAL_OPTIONS = "http://www.soapui.org/HTTP-Recording/general-options.html";
+	public static final String SOAPMONITOR_MONITOR_OPTIONS = "http://www.soapui.org/HTTP-Recording/monitor-options.html";
 	public static final String SOAPMONITOR_MONITOR = "http://www.soapui.org/HTTP-Recording/monitor.html";
 
 	public static final String WSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html";

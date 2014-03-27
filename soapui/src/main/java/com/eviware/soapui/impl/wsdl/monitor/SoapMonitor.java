@@ -1256,7 +1256,7 @@ public class SoapMonitor extends JPanel
 			}
 		}
 
-		@AForm( name = "HTTP Monitor Options", description = "Set options for HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_RECORDING_SETTINGS, icon = UISupport.OPTIONS_ICON_PATH )
+		@AForm( name = "HTTP Monitor Options", description = "Set options for HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_MONITOR_OPTIONS, icon = UISupport.OPTIONS_ICON_PATH )
 		private class OptionsForm
 		{
 			@AField( description = "The local port to listen on", name = "Port", type = AFieldType.INT )

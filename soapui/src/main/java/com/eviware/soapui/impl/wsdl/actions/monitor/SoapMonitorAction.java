@@ -192,7 +192,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		}
 	}
 
-	@AForm( description = "Specify HTTP Monitor settings", name = "General Options", helpUrl = HelpUrls.SOAPMONITOR_RECORDING_SETTINGS, icon = UISupport.TOOL_ICON_PATH )
+	@AForm( description = "Specify HTTP Monitor settings", name = "General Options", helpUrl = HelpUrls.SOAPMONITOR_GENERAL_OPTIONS, icon = UISupport.TOOL_ICON_PATH )
 	private interface WizardForm
 	{
 		@APage( name = "General" )
@@ -202,7 +202,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 		public final static SecurityTabForm security = null;
 	}
 
-	@AForm( description = "Specify HTTP Monitor settings", name = "Launch HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_RECORDING_SETTINGS )
+	@AForm( description = "Specify HTTP Monitor settings", name = "Launch HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_GENERAL_OPTIONS )
 	public interface LaunchForm
 	{
 		@AField( description = "SSL tunnel or HTTP proxy", name = "Choose one:", type = AFieldType.RADIOGROUP )
@@ -231,7 +231,7 @@ public class SoapMonitorAction extends AbstractSoapUIAction<WsdlProject>
 
 	}
 
-	@AForm( description = "Specify HTTP tunnel security settings", name = "HTTP tunnel security", helpUrl = HelpUrls.SOAPMONITOR_RECORDING_SETTINGS )
+	@AForm( description = "Specify HTTP tunnel security settings", name = "HTTP tunnel security", helpUrl = HelpUrls.SOAPMONITOR_GENERAL_OPTIONS )
 	public interface SecurityTabForm
 	{
 		@AField( description = "Set SSL Tunnel KeyStore", name = "HTTP tunnel - KeyStore", type = AFieldType.FILE )
