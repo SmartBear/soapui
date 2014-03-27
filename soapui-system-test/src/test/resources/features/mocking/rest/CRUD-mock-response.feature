@@ -10,3 +10,7 @@ Scenario: Create REST Mock response under an exist Mock resource from same REST 
 Scenario: Create REST Mock response under a new Mock resource from different REST request
 
 Scenario: Create REST Mock response under a new Mock resource from the same REST request but changing the resource path
+
+Scenario: Rename the REST mock response, different response can have the same name
+
+Scenario: Delete the REST mock response
