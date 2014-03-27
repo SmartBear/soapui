@@ -1,9 +1,7 @@
 @Manual @Acceptance
 Feature: As Mark I can create,edit,rename and delete REST Mock resource
 
-  Scenario: Add more mock resources in REST Mock service
-
-  Scenario: Add more mock resources from different REST resource
+  Scenario: Add new mock resources in REST Mock service
 
   Scenario: Change the REST mock resource path
 

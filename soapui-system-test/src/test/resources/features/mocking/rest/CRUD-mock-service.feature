@@ -17,5 +17,5 @@ Feature: As Mark I can create and delete REST Mock service
 
   Scenario: Delete REST MockService from a project
 
-  Scenario: Set REST MockService options
+  Scenario: Edit REST MockService configuration
 
