@@ -58,7 +58,21 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 	public boolean activate( EditorLocation<HttpResponseDocument> location )
 	{
 		boolean activated = super.activate( location );
-		if (activated && !initialized)
+		if (activated)
+		{
+			ensureComponentIsInitialized();
+			HttpResponse response = httpRequest.getResponse();
+			if( response != null )
+			{
+				setEditorContent( response );
+			}
+		}
+		return activated;
+	}
+
+	private void ensureComponentIsInitialized()
+	{
+		if( !initialized )
 		{
 			if( SoapUI.isBrowserDisabled() )
 			{
@@ -72,13 +86,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 				panel.add( component, BorderLayout.CENTER );
 			}
 			initialized = true;
-			HttpResponse response = httpRequest.getResponse();
-			if( response != null )
-			{
-				setEditorContent( response );
-			}
 		}
-		return activated;
 	}
 
 	@Override
@@ -111,7 +119,7 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
 
 	protected void setEditorContent( HttpResponse httpResponse )
 	{
-		if( httpResponse == null )
+		if( httpResponse == null || SoapUI.isBrowserDisabled())
 		{
 			return;
 		}
