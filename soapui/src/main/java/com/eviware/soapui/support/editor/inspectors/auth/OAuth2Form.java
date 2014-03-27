@@ -44,12 +44,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.MouseInfo;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowFocusListener;
+import java.awt.event.*;
 
 public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2AccessTokenStatusChangeListener
 {
@@ -89,6 +84,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 	private JLabel accessTokenStatusText;
 	private JLabel disclosureButton;
 	private OAuth2GetAccessTokenForm accessTokenForm;
+	private SoapUIMainWindowFocusListener mainWindowFocusListener;
 
 	public OAuth2Form( OAuth2Profile profile, AbstractXmlInspector inspector )
 	{
@@ -100,6 +96,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 	void release()
 	{
+		SoapUI.getFrame().removeWindowFocusListener( mainWindowFocusListener );
 		accessTokenForm.release();
 		oAuth2Form.getPresentationModel().release();
 		statusChangeManager.unregister();
@@ -184,7 +181,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
 		disclosureButton.addMouseListener( new DisclosureButtonMouseListener( accessTokenFormDialog, disclosureButton ) );
 
-		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog, disclosureButton ) );
+		accessTokenFormDialog.addWindowFocusListener( new AccessTokenFormDialogWindowListener( accessTokenFormDialog ) );
 
 		JButton advancedOptionsButton = oAuth2Form.addButtonWithoutLabelToTheRight( ADVANCED_OPTIONS_BUTTON_NAME, new ActionListener()
 		{
@@ -195,6 +192,9 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 			}
 		} );
 		advancedOptionsButton.setName( ADVANCED_OPTIONS_BUTTON_NAME );
+
+		mainWindowFocusListener = new SoapUIMainWindowFocusListener( accessTokenFormDialog );
+		SoapUI.getFrame().addWindowFocusListener( mainWindowFocusListener );
 	}
 
 	private JTextField createAccessTokenField()
@@ -366,6 +366,18 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		inspector.setIcon( ProfileSelectionForm.AUTH_ENABLED_ICON );
 	}
 
+	private void hideAccessTokenFormDialogAndEnableDisclosureButton(JDialog accessTokenFormDialog)
+	{
+		accessTokenFormDialog.setVisible( false );
+		disclosureButton.setIcon( UISupport.createImageIcon( "/pop-down-open.png" ) );
+		// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
+		// will then show the dialog directly again.
+		if( !isMouseOnDisclosureLabel )
+		{
+			disclosureButtonDisabled = false;
+		}
+	}
+
 
 	private class DisclosureButtonMouseListener extends MouseAdapter
 	{
@@ -419,12 +431,10 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 	private class AccessTokenFormDialogWindowListener implements WindowFocusListener
 	{
 		private final JDialog accessTokenFormDialog;
-		private final JLabel disclosureButton;
 
-		public AccessTokenFormDialogWindowListener( JDialog accessTokenFormDialog, JLabel disclosureButton )
+		public AccessTokenFormDialogWindowListener( JDialog accessTokenFormDialog )
 		{
 			this.accessTokenFormDialog = accessTokenFormDialog;
-			this.disclosureButton = disclosureButton;
 		}
 
 		@Override
@@ -438,14 +448,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		{
 			if( isMouseOnComponent( SoapUI.getFrame() ) && !isMouseOnComponent( accessTokenFormDialog ) )
 			{
-				accessTokenFormDialog.setVisible( false );
-				disclosureButton.setIcon( UISupport.createImageIcon( "/pop-down-open.png" ) );
-				// If the focus is lost due to click on the disclosure button then don't enable it yet, since it
-				// will then show the dialog directly again.
-				if( !isMouseOnDisclosureLabel )
-				{
-					disclosureButtonDisabled = false;
-				}
+				hideAccessTokenFormDialogAndEnableDisclosureButton(accessTokenFormDialog);
 			}
 		}
 
@@ -455,6 +458,25 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
 			Point componentLocationOnScreen = component.getLocationOnScreen();
 			return component.contains( mouseLocation.x - componentLocationOnScreen.x, mouseLocation.y - componentLocationOnScreen.y );
+		}
+	}
+
+	private class SoapUIMainWindowFocusListener extends WindowAdapter
+	{
+		private final JDialog accessTokenFormDialog;
+
+		public SoapUIMainWindowFocusListener( JDialog accessTokenFormDialog )
+		{
+			this.accessTokenFormDialog = accessTokenFormDialog;
+		}
+
+		@Override
+		public void windowGainedFocus( WindowEvent e )
+		{
+		  if( accessTokenFormDialog.isVisible())
+		  {
+			  hideAccessTokenFormDialogAndEnableDisclosureButton( accessTokenFormDialog );
+		  }
 		}
 	}
 }
