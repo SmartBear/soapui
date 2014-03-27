@@ -24,17 +24,6 @@ Feature: Access token status
     When the user enters a access token manually in the access token text box
     Then there is no status icon in the Get Access Token dialog
     And there is no status label in the Get Access Token dialog
-    And there is a tick mark status icon besides the the access token field
-    And the status label besides the the access token field is set to Entered Manually
-    And the access token input field background color is set to green
-    And there is a tick mark icon on the Auth tab
-
-  Scenario: No status is shown when the access token is removed
-    Given the user has created a REST project with the Google Tasks API
-    When the user enters a access token manually in the access token text box
-    And removes the access token
-    Then there is no status icon in the Get Access Token dialog
-    And there is no status label in the Get Access Token dialog
     And there is no status icon besides the access token field
     And there is no status label besides the access token field
     And the access token input field background color is set to white
@@ -47,10 +36,7 @@ Feature: Access token status
     And not types or clicks in the browser window
     Then there is a waiting status icon in the Get Access Token dialog
     And the status label in the Get Access Token dialog is set to Waiting for Authorization
-    And there is a waiting status icon besides the access token field
-    And the status label besides the the access token field is set to Waiting for Authorization
-    And the access token input field background color is set to white
-    And there is a waiting status icon on the Auth tab
+    And the OAuth 2 form has the same content as before clicking on the Get Token button
 
   Scenario: Access token status is set to Received authorization code when the the authorization code has been received
     Given the user has created a REST project with the Google Tasks API
@@ -60,10 +46,7 @@ Feature: Access token status
     And clicks OK on the consent screen
     Then there is a waiting status icon in the Get Access Token dialog
     And the status label in the Get Access Token dialog is set to Received authorization code
-    And there is a waiting status icon besides the access token field
-    And the status label besides the the access token field is set to Received authorization code
-    And the access token input field background color is set to white
-    And there is a waiting status icon on the Auth tab
+    And the OAuth 2 form has the same content as before clicking on the Get Token button
 
   Scenario: Access token status is set to Retrieved from server
     Given the user has created a REST project with the Google Tasks API
@@ -76,7 +59,7 @@ Feature: Access token status
     And there is a tick mark status icon besides the the access token field
     And the status label besides the the access token field is set to Retrieved from server
     And the access token input field background color is set to green
-    And there is a tick mark icon on the Auth tab
+    And there is a lock icon on the Auth tab
 
   Scenario: Access token status is set to Expired when sending an expired token
     Given the user has created a REST project with the Google Tasks API
@@ -85,8 +68,22 @@ Feature: Access token status
     And has set the Refresh access token option to manual
     When the user sends the request
     Then status label besides the the access token field is set to Expired
+    And there is no status icon in the Get Access Token dialog
+    And there is no status label in the Get Access Token dialog
     And there is a red exclamation mark besides the access token input field
     And the access token input field background color is set to red
+    And the status label besides the the access token field is set to Expired
+    And there is a red exclamation mark in the Auth tab
+
+  Scenario: Acess token status is set to canceled when closing the browser without getting an access token
+    Given the user has created a REST project with the Google Tasks API
+    And the user has successfully configured its OAuth settings
+    When user clicks on Get access token button in the Get Access Token dialog
+    And the user closes the browser window without entering anything in it
+    Then there is a red exclamation mark icon in the Get Access Token dialog
+    And the status label in the Get Access Token dialog is set to Retrieval canceled, continue?
+    And the OAuth 2 form has the same content as before clicking on the Get Token button
+    And the Get Access token button has the suffix (Resume)
     And there is a red exclamation mark in the Auth tab
 
   Scenario: The access token status is saved between sessions
