@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<con:soapui-project activeEnvironment="Default" name="Sample REST Project-soapui-project.xml" resourceRoot="" soapui-version="5.0.0" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
+<con:soapui-project activeEnvironment="Default" name="Sample REST Project" resourceRoot="" soapui-version="5.0.0-SNAPSHOT" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config">
   <con:settings/>
-  <con:interface xsi:type="con:RestService" wadlVersion="http://research.sun.com/wadl/2006/10" name="Sample REST project" type="rest" basePath="/" definitionUrl="WSDL-WADL/sample-service.wadl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <con:interface xsi:type="con:RestService" wadlVersion="http://research.sun.com/wadl/2006/10" name="Account creation" type="rest" basePath="/" definitionUrl="WSDL-WADL/sample-service.wadl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
-    <con:definitionCache type="TEXT"/>
-    <con:endpoints>
+    
+    <con:definitionCache type="TEXT"/><con:endpoints>
       <con:endpoint>http://localhost:8080</con:endpoint>
     </con:endpoints>
     <con:resource name="accountcreation" path="accountcreation">
@@ -86,13 +86,13 @@
     <con:description>TestSuite generated for REST Service [Sample REST project (5.0)]</con:description>
     <con:settings/>
     <con:runType>SEQUENTIAL</con:runType>
-    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="accountcreation TestCase" searchProperties="true">
+    <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="accountcreation TestCase" searchProperties="true" id="3923f7a8-171b-45cc-9b5d-a50bfa715f0a">
       <con:description>TestCase generated for REST Resource [accountcreation] located at [/accountcreation]</con:description>
       <con:settings/>
-      <con:testStep type="restrequest" name="View form">
+      <con:testStep type="restrequest" name="View Form">
         <con:settings/>
-        <con:config service="Sample REST project (5.0)" resourcePath="/accountcreation" methodName="Register a new account - viewAccountRegistration" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:restRequest name="View form" mediaType="application/json">
+        <con:config service="Account creation" resourcePath="/accountcreation" methodName="Register a new account - viewAccountRegistration" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:restRequest name="View Form" mediaType="application/json">
             <con:settings/>
             <con:endpoint>http://localhost:8080</con:endpoint>
             <con:request/>
@@ -105,10 +105,10 @@
           </con:restRequest>
         </con:config>
       </con:testStep>
-      <con:testStep type="restrequest" name="Submit account details">
+      <con:testStep type="restrequest" name="Submit Account Details">
         <con:settings/>
-        <con:config service="Sample REST project (5.0)" resourcePath="/accountcreation" methodName="Register a new account - createUserAccount" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-          <con:restRequest name="Submit account details" mediaType="application/json" postQueryString="false">
+        <con:config service="Account creation" resourcePath="/accountcreation" methodName="Register a new account - createUserAccount" xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <con:restRequest name="Submit Account Details" mediaType="application/json" postQueryString="false">
             <con:settings/>
             <con:endpoint>http://localhost:8080</con:endpoint>
             <con:request/>
@@ -122,17 +122,17 @@
         </con:config>
       </con:testStep>
       <con:properties/>
-    </con:testCase>
+    <con:reportParameters/></con:testCase>
     <con:properties/>
-  </con:testSuite>
-  <con:restMockService port="8080" path="/" name="Account creation mock">
+  <con:reportParameters/></con:testSuite>
+  <con:restMockService port="8080" path="/" name="Account creation mock" host="LPTWRK-ANDREAS">
     <con:settings/>
     <con:properties/>
     <con:restMockAction name="accountcreation" method="GET" resourcePath="/accountcreation">
       <con:settings/>
       <con:defaultResponse>Form view</con:defaultResponse>
       <con:dispatchStyle>SEQUENCE</con:dispatchStyle>
-      <con:response name="Form view" httpResponseStatus="200" mediaType="text/html">
+      <con:response name="Form View" httpResponseStatus="200" mediaType="text/html">
         <con:settings/>
         <con:responseContent><![CDATA[<html>
 	<head>
@@ -171,7 +171,7 @@
 	</body>
 </html>]]></con:responseContent>
       </con:response>
-      <con:response name="Already existing user" httpResponseStatus="200" mediaType="text/html">
+      <con:response name="Already Existing User" httpResponseStatus="200" mediaType="text/html">
         <con:settings/>
         <con:responseContent><![CDATA[<html>
 	<head>
@@ -203,8 +203,8 @@
       </con:response>
     </con:restMockAction>
   </con:restMockService>
-  <con:properties/>
+  <con:requirements/><con:properties/>
   <con:wssContainer/>
-  <con:oAuth2ProfileContainer/>
-  <con:sensitiveInformation/>
+  <con:databaseConnectionContainer/><con:oAuth2ProfileContainer/>
+  <con:reporting><con:xmlTemplates/><con:parameters/></con:reporting><con:sensitiveInformation/>
 </con:soapui-project>
