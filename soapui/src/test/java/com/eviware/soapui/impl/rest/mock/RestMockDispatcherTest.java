@@ -2,7 +2,6 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockRequest;
-import com.eviware.soapui.model.mock.MockResult;
 import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,10 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 import static org.mockito.Mockito.*;
-import static com.eviware.soapui.impl.rest.RestRequestInterface.*;
 
 
 public class RestMockDispatcherTest
@@ -33,8 +30,10 @@ public class RestMockDispatcherTest
 	}
 
 	@Test
-	public void aferRequestScriptIsCalled() throws Exception
+	public void afterRequestScriptIsCalled() throws Exception
 	{
+		when( restMockService.getPath()).thenReturn( "/" );
+		when( request.getPathInfo() ).thenReturn( "/" );
 		RestMockResult mockResult = ( RestMockResult )restMockDispatcher.dispatchRequest( request, response );
 
 		verify( restMockService ).runAfterRequestScript( context, mockResult );
@@ -43,7 +42,6 @@ public class RestMockDispatcherTest
 	@Test
 	public void onRequestScriptIsCalled() throws Exception
 	{
-		createRestMockDispatcher();
 		RestMockResult mockResult = ( RestMockResult )restMockDispatcher.dispatchRequest( request, response );
 
 		verify( restMockService ).runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ) );
@@ -58,7 +56,6 @@ public class RestMockDispatcherTest
 
 		 */
 
-		createRestMockDispatcher();
 		RestMockResult  restMockResult = mock(RestMockResult.class );
 		when( restMockService.runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ))).thenReturn( restMockResult );
 
@@ -71,8 +68,9 @@ public class RestMockDispatcherTest
 	@Test
 	public void shouldReturnNoResponseFoundWhenThereIsNoMatchingAction() throws Exception
 	{
-		createRestMockDispatcher();
 		when( restMockService.findBestMatchedOperation( anyString(), any( HttpMethod.class ) ) ).thenReturn( null );
+		when( restMockService.getPath()).thenReturn( "/" );
+		when( request.getPathInfo() ).thenReturn( "/" );
 
 		restMockDispatcher.dispatchRequest( request, response );
 
@@ -81,9 +79,34 @@ public class RestMockDispatcherTest
 
 
 	@Test
+	public void shouldResponseWhenServicePathMatches() throws Exception
+	{
+		RestMockAction action = mock(RestMockAction.class);
+		when( restMockService.findBestMatchedOperation( "/api", HttpMethod.DELETE ) ).thenReturn( action );
+		when( restMockService.getPath()).thenReturn( "/sweden" );
+		when( request.getPathInfo() ).thenReturn( "/sweden/api" );
+
+		restMockDispatcher.dispatchRequest( request, response );
+
+		verify( action ).dispatchRequest( any(RestMockRequest.class) );
+	}
+
+	@Test
+	public void shouldResponseWhenPathMatches() throws Exception
+	{
+		RestMockAction action = mock(RestMockAction.class);
+		when( restMockService.findBestMatchedOperation( "api", HttpMethod.DELETE ) ).thenReturn( action );
+		when( restMockService.getPath()).thenReturn( "/" );
+		when( request.getPathInfo() ).thenReturn( "/api" );
+
+		restMockDispatcher.dispatchRequest( request, response );
+
+		verify( action ).dispatchRequest( any(RestMockRequest.class) );
+	}
+
+	@Test
 	public void returnsErrorOnrequestScriptException() throws Exception
 	{
-		createRestMockDispatcher();
 		Exception runTimeException = new IllegalStateException( "wrong state" );
 		when( restMockService.runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ))).thenThrow( runTimeException );
 

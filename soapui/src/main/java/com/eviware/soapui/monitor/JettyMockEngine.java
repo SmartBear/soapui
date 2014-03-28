@@ -683,10 +683,13 @@ public class JettyMockEngine implements MockEngine
 				List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
 				if( wsdlMockRunners == null )
 				{
+					String bestMatchedRootPath = "";
+
 					for( String root : map.keySet() )
 					{
-						if( request.getPathInfo().startsWith( root ) )
+						if( request.getPathInfo().startsWith( root ) && root.length() > bestMatchedRootPath.length() )
 						{
+							bestMatchedRootPath = root;
 							wsdlMockRunners = map.get( root );
 						}
 					}
