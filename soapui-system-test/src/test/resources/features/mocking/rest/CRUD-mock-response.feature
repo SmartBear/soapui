@@ -1,6 +1,8 @@
 @Manual @Acceptance
 Feature: As Mark I can create,rename and delete REST Mock response
 
+Scenario: Create REST Mock response from the REST MockService
+
 Scenario: Create REST Mock response under a new MockService from REST request
 
 Scenario: Create REST Mock response under an existing Mock resource from same REST request
