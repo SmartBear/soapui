@@ -131,7 +131,7 @@ public class RestResponseRepresentationsInspector extends AbstractRestRepresenta
 
 			String xmlContent = response.getContentAsXml();
 
-			if( !xmlContent.equals( "<xml/>" ) )
+			if( xmlContent != null && !xmlContent.equals( "<xml/>" ) )
 			{
 				// if(response.getContentType().equals("text/xml") ||
 				// response.getContentType().equals("application/xml")) {
