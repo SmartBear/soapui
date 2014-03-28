@@ -95,7 +95,7 @@ public class RestMockDispatcherTest
 	public void shouldResponseWhenPathMatches() throws Exception
 	{
 		RestMockAction action = mock(RestMockAction.class);
-		when( restMockService.findBestMatchedOperation( "api", HttpMethod.DELETE ) ).thenReturn( action );
+		when( restMockService.findBestMatchedOperation( "/api", HttpMethod.DELETE ) ).thenReturn( action );
 		when( restMockService.getPath()).thenReturn( "/" );
 		when( request.getPathInfo() ).thenReturn( "/api" );
 

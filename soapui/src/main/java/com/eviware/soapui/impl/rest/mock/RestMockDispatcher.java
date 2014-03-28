@@ -63,7 +63,8 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 	private MockResult getMockResult( RestMockRequest restMockRequest ) throws DispatchException
 	{
 
-		String pathToFind = restMockRequest.getPath().substring( mockService.getPath().length() );
+		String pathToFind = getPathRemainder( restMockRequest );
+
 		RestMockAction mockAction = ( RestMockAction )mockService.findBestMatchedOperation( pathToFind, restMockRequest.getMethod() );
 
 		if( mockAction != null )
@@ -75,6 +76,17 @@ public class RestMockDispatcher extends AbstractMockDispatcher
 			return createNotFoundResponse( restMockRequest );
 		}
 
+	}
+
+	private String getPathRemainder( RestMockRequest restMockRequest )
+	{
+		String pathToFind = restMockRequest.getPath();
+
+		if( !mockService.getPath().equals( "/" ) )
+		{
+			pathToFind = restMockRequest.getPath().substring( mockService.getPath().length() );
+		}
+		return pathToFind;
 	}
 
 	private RestMockResult createNotFoundResponse( RestMockRequest restMockRequest )
