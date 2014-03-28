@@ -465,6 +465,11 @@ public class JProxyServletWsdlMonitorMessageExchange extends WsdlMonitorMessageE
 		return capture;
 	}
 
+	public byte[] getRawRequestBody()
+	{
+		return request;
+	}
+
 	public void setRequest( byte[] request )
 	{
 		this.request = request;
