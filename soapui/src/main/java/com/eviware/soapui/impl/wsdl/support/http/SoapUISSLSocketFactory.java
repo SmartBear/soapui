@@ -47,7 +47,8 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory
 {
 	// a cache of factories for custom certificates/Keystores at the project level - never cleared
 	private static final Map<String, SSLSocketFactory> factoryMap = new ConcurrentHashMap<String, SSLSocketFactory>();
-	private final SSLContext sslContext = SSLContext.getInstance( "TLS" );
+	private final String sslContextAlgorithm = System.getProperty("soapui.sslcontext.algorithm", "TLS");
+	private final SSLContext sslContext = SSLContext.getInstance( sslContextAlgorithm );
 	private final static Logger log = Logger.getLogger( SoapUISSLSocketFactory.class );
 
 	@SuppressWarnings( "deprecation" )
