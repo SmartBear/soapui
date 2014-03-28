@@ -31,6 +31,7 @@ public class RestMockServicePanelBuilder extends EmptyPanelBuilder<RestMockServi
 		boolean editable = true;
 		table.addProperty( "Name", "name", editable );
 		table.addProperty( "Description", "description", editable );
+		table.addProperty( "Path", "path", !editable );
 		table.addProperty( "Port", "port", !editable );
 		table.setPropertyObject( mockService );
 
