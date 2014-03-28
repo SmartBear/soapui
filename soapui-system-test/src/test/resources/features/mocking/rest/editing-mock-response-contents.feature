@@ -11,7 +11,7 @@ Scenario: Execute the request with different response type and response contents
 
 Scenario: execute with script both SEQUENCE and script 
 
-Scenario: write custom script for the mock service respose, eg script to delay
+Scenario: write custom script for the mock service response, eg script to delay
 
 Scenario: The editor view in mock service response should change depending on the media type 
 
