@@ -582,7 +582,7 @@ public class AttachmentUtils
 	 */
 
 	public static void addMimeParts( AttachmentContainer container, List<Attachment> attachments, MimeMultipart mp,
-			StringToStringMap contentIds ) throws MessagingException
+			StringToStringMap contentIds, boolean isXOP ) throws MessagingException
 	{
 		// no multipart handling?
 		if( !container.isMultipartEnabled() )
@@ -592,7 +592,7 @@ public class AttachmentUtils
 				Attachment att = attachments.get( c );
 				if( att.getAttachmentType() != Attachment.AttachmentType.CONTENT )
 				{
-					addSingleAttachment( mp, contentIds, att );
+					addSingleAttachment( mp, contentIds, att, isXOP );
 				}
 			}
 		}
@@ -623,13 +623,13 @@ public class AttachmentUtils
 				if( attachments.size() == 1 )
 				{
 					Attachment att = attachments.get( 0 );
-					addSingleAttachment( mp, contentIds, att );
+					addSingleAttachment( mp, contentIds, att, isXOP );
 				}
 				// more than one attachment with the same part -> create multipart
 				// attachment
 				else if( attachments.size() > 1 )
 				{
-					addMultipartAttachment( mp, contentIds, attachments );
+					addMultipartAttachment( mp, contentIds, attachments, isXOP );
 				}
 			}
 		}
@@ -640,7 +640,7 @@ public class AttachmentUtils
 	 */
 
 	public static void addMultipartAttachment( MimeMultipart mp, StringToStringMap contentIds,
-			List<Attachment> attachments ) throws MessagingException
+			List<Attachment> attachments, boolean isXOP ) throws MessagingException
 	{
 		MimeMultipart multipart = new MimeMultipart( "mixed" );
 		long totalSize = 0;
@@ -651,7 +651,7 @@ public class AttachmentUtils
 			String contentType = att.getContentType();
 			totalSize += att.getSize();
 
-			MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart() : new PreencodedMimeBodyPart(
+			MimeBodyPart part = contentType.startsWith( "text/" ) && !isXOP ? new MimeBodyPart() : new PreencodedMimeBodyPart(
 					"binary" );
 
 			part.setDataHandler( new DataHandler( new AttachmentDataSource( att ) ) );
@@ -736,11 +736,11 @@ public class AttachmentUtils
 	 * Adds a simple MimeBodyPart from an attachment
 	 */
 
-	public static void addSingleAttachment( MimeMultipart mp, StringToStringMap contentIds, Attachment att )
+	public static void addSingleAttachment( MimeMultipart mp, StringToStringMap contentIds, Attachment att, boolean isXOP )
 			throws MessagingException
 	{
 		String contentType = att.getContentType();
-		MimeBodyPart part = contentType.startsWith( "text/" ) ? new MimeBodyPart()
+		MimeBodyPart part = contentType.startsWith( "text/" ) && !isXOP ? new MimeBodyPart()
 				: new PreencodedMimeBodyPart( "binary" );
 
 		part.setDataHandler( new DataHandler( new AttachmentDataSource( att ) ) );

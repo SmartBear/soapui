@@ -382,7 +382,7 @@ public class HttpRequestFilter extends AbstractRequestFilter
 								mp = new MimeMultipart();
 
 							// init mimeparts
-							AttachmentUtils.addMimeParts( request, attachments, mp, new StringToStringMap() );
+							AttachmentUtils.addMimeParts( request, attachments, mp, new StringToStringMap(), false );
 
 							// create request message
 							MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );

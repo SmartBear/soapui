@@ -108,7 +108,7 @@ public class WsdlPackagingRequestFilter extends AbstractRequestFilter
 			initRootPart( wsdlRequest, requestContent, mp, isXOP );
 
 			// init mimeparts
-			AttachmentUtils.addMimeParts( wsdlRequest, Arrays.asList( wsdlRequest.getAttachments() ), mp, contentIds );
+			AttachmentUtils.addMimeParts( wsdlRequest, Arrays.asList( wsdlRequest.getAttachments() ), mp, contentIds, isXOP );
 
 			// create request message
 			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
