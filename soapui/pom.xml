@@ -533,6 +533,11 @@
             <artifactId>json-path</artifactId>
             <version>0.9.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+        </dependency>
 
 
         <!--  old http client needed by some 3rd party components -->
