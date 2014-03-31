@@ -32,7 +32,6 @@ import java.awt.event.ActionEvent;
 public class ProgressDialog extends JDialog implements XProgressDialog, XProgressMonitor
 {
 	private JProgressBar progressBar;
-	private JLabel progressLabel;
 	private JButton cancelButton;
 	private Worker worker;
 
@@ -48,7 +47,7 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 		progressBar.setString( initialValue );
 
 		getContentPane().setLayout( new BorderLayout() );
-		progressLabel = new JLabel( label );
+		JLabel progressLabel = new JLabel( label );
 		progressLabel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 0, 10 ) );
 
 		getContentPane().add( progressLabel, BorderLayout.NORTH );
@@ -92,12 +91,17 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 	 * com.eviware.soapui.support.components.XProgressMonitor#setProgress(int,
 	 * java.lang.String)
 	 */
-	public void setProgress( int value, String string )
+	public void setProgress( final int value, final String string )
 	{
-		progressBar.setValue( value );
-		progressBar.setString( string );
-
-		pack();
+		SwingUtilities.invokeLater( new Runnable()
+		{
+			public void run()
+			{
+				progressBar.setValue( value );
+				progressBar.setString( string );
+				pack();
+			}
+		} );
 	}
 
 	public void setDeterminate()
@@ -113,11 +117,10 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 	 */
 	public void setVisible( boolean visible )
 	{
-		if( visible == true )
+		if( visible )
 		{
 			UISupport.centerDialog( this );
 		}
-
 		super.setVisible( visible );
 	}
 
