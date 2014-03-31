@@ -112,7 +112,10 @@ public class OAuth2TokenExtractor
 			public void browserClosed()
 			{
 				super.browserClosed();
-				setRetrievedCanceledStatus( parameters );
+				if( !parameters.isAccessTokenRetrivedFromServer() )
+				{
+					setRetrievedCanceledStatus( parameters );
+				}
 			}
 		} );
 		browserFacade.open( new URI( createAuthorizationURL( parameters, TOKEN ) ).toURL() );
