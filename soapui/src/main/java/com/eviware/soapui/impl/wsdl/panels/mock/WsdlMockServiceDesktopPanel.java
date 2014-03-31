@@ -377,7 +377,11 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
 
 		toolbar.addFixed( runButton );
 		toolbar.addFixed( stopButton );
-		toolbar.addFixed( showWsdlButton );
+
+		if( modelItem instanceof  WsdlMockService )
+		{
+			toolbar.addFixed( showWsdlButton );
+		}
 		toolbar.addFixed( optionsButton );
 
 		toolbar.addGlue();
