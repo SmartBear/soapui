@@ -40,15 +40,16 @@ public interface PluginConfiguration
 
 	/**
 	 * This method is invoked by SoapUI when the plugin is loaded and should ensure that the plugin is fully initialized.
-	 * If the plugin cannot be initialized properly, the method is should indicate this by throwing an appropriate
+	 * If the plugin cannot be initialized properly, the method should indicate this by throwing an appropriate
 	 * RuntimeException.
 	 */
 	void initialize();
 
 	/**
-	 * Gets all the listeners provided by this plugin. SoapUI will use reflection to ensure that Classes can be annotated with ListenerConfiguration to provide
-	 * additional information.  The order of the list controls the order in which listeners are invoked.
-	 * @return as an unordered collection of listener classes
+	 * Gets all the listeners provided by this plugin. SoapUI will use reflection to ensure that Classes can be annotated
+	 * with ListenerConfiguration to provide additional information.  The order of the list controls the order in which
+	 * listeners are invoked.
+	 * @return an ordered list of listener classes
 	 */
 	List<Class<?>> getListeners();
 
