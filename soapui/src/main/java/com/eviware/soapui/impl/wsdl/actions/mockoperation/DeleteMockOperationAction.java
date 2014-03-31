@@ -12,6 +12,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockoperation;
 
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.UISupport;
@@ -32,8 +33,11 @@ public class DeleteMockOperationAction extends AbstractSoapUIAction<MockOperatio
 
 	public void perform( MockOperation mockOperation, Object param )
 	{
-		if( UISupport.confirm( "Remove MockOperation [" + mockOperation.getName() + "] from MockService ["
-				+ mockOperation.getMockService().getName() + "]", "Remove MockOperation" ) )
+
+		String opEquivalentName = mockOperation instanceof RestMockAction ? "Mock Action" : "Mock Operation";
+
+		if( UISupport.confirm( "Remove "+ opEquivalentName +" [" + mockOperation.getName() + "] from MockService ["
+				+ mockOperation.getMockService().getName() + "]", "Remove "+ opEquivalentName ) )
 		{
 			MockService mockService = mockOperation.getMockService();
 			mockService.removeMockOperation( mockOperation );

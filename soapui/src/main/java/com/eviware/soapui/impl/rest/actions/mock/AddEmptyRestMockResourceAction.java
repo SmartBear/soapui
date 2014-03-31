@@ -18,7 +18,7 @@ public class AddEmptyRestMockResourceAction extends AbstractSoapUIAction<RestMoc
 
 	public AddEmptyRestMockResourceAction()
 	{
-		super( "Add new mock resource", "Add a new REST mock resource to this mock service" );
+		super( "Add new mock action", "Add a new REST mock action to this mock service" );
 	}
 
 
@@ -46,8 +46,8 @@ public class AddEmptyRestMockResourceAction extends AbstractSoapUIAction<RestMoc
 		}
 	}
 
-	@AForm( name = "Add new mock resource",
-			description = "Enter path and HTTP method for your new mock resource",
+	@AForm( name = "Add new mock action",
+			description = "Enter path and HTTP method for your new mock action",
 			helpUrl = HelpUrls.MOCKOPERATION_HELP_URL )
 	public interface Form
 	{
