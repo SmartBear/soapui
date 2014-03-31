@@ -21,9 +21,9 @@ public class OAuth2ParameterValidator
 		if( parameters.getOAuth2Flow() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
 		{
 			validateRequiredStringValue( parameters.clientSecret, OAuth2GetAccessTokenForm.CLIENT_SECRET_TITLE );
+			validateHttpUrl( parameters.accessTokenUri, OAuth2GetAccessTokenForm.ACCESS_TOKEN_URI_TITLE );
 		}
 		validateHttpUrl( parameters.authorizationUri, OAuth2GetAccessTokenForm.AUTHORIZATION_URI_TITLE );
-		validateHttpUrl( parameters.accessTokenUri, OAuth2GetAccessTokenForm.ACCESS_TOKEN_URI_TITLE );
 		validateUri( parameters.redirectUri, OAuth2GetAccessTokenForm.REDIRECT_URI_TITLE );
 
 	}

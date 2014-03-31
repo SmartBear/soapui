@@ -140,7 +140,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 		accessTokenForm.addSpace( GROUP_SPACING );
 
 		accessTokenForm.appendTextField( OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI_TITLE, "" );
-		accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, ACCESS_TOKEN_URI_TITLE, "" );
+		final JTextField accessTokenUriField = appendAccessTokenUriField( accessTokenForm, getOAuth2FlowValueModel( accessTokenForm ) );
 		accessTokenForm.appendTextField( OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI_TITLE, "" );
 
 		accessTokenForm.addSpace( GROUP_SPACING );
@@ -166,6 +166,15 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 				if( e.getStateChange() == ItemEvent.SELECTED )
 				{
 					clientSecretField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+					accessTokenUriField.setVisible( e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT );
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						@Override
+						public void run()
+						{
+							accessTokenDialog.pack();
+						}
+					} );
 				}
 			}
 		} );
@@ -193,6 +202,16 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 			clientSecretField.setVisible( false );
 		}
 		return clientSecretField;
+	}
+
+	private JTextField appendAccessTokenUriField( SimpleBindingForm accessTokenForm, AbstractValueModel valueModel )
+	{
+		final JTextField accessTokenUriField = accessTokenForm.appendTextField( OAuth2Profile.ACCESS_TOKEN_URI_PROPERTY, ACCESS_TOKEN_URI_TITLE, "" );
+		if( valueModel.getValue() == OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT )
+		{
+			accessTokenUriField.setVisible( false );
+		}
+		return accessTokenUriField;
 	}
 
 	private PropertyComponent createGetAccessTokenButton()
