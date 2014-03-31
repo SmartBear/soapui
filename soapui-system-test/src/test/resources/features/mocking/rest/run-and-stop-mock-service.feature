@@ -19,16 +19,17 @@ Scenario:Run Mock service with customize response ( scripting)
 
 Scenario: Run Mock service from Command line with different parameter( m,p,a,b,s,x,v,D,G,P,D,f)
 
-Scenario: Run multiple mock services for the different requests/resources
+Scenario: Run multiple mock services for the different mock service path and verify that the best match path is choosen.
 
-Scenario: Run multiple mock services for the different requests/resources in different projects 
+Scenario: Run multiple mock services for the different mock service path in differend projcts  and verify that the best match path is choosen different projects 
 
-Scenario: Run Mock service for nested projects
+Scenario: Run Mock service for nested resources
 
 Scenario: Run Mock service with multiple resource, children resource, request etc, eg. use GitHub-soapui-project.xml
 
+Scenario: Execute a test step with mock service running and verify the response
 
-#TODO suggestion: 1. check the test steps response during the running
+
 
 
 
