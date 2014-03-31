@@ -160,7 +160,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		//TODO: this is only for backward compatibility where we had only one profile without name, should be removed in 5.1
 		if( StringUtils.isEmpty( configuration.getName() ) )
 		{
-			configuration.setName( "OAuth 2 - Profile 1");
+			configuration.setName( "OAuth 2 - Profile 1" );
 		}
 
 		return configuration.getName();
@@ -223,16 +223,8 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		if( doSetAccessToken( accessToken ) )
 		{
-			if( StringUtils.isEmpty( accessToken ) )
-			{
-				setAccessTokenStatus( null );
-			}
-			else
-			{
-				setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
-				setAccessTokenStartingStatus( AccessTokenStatus.ENTERED_MANUALLY );
-
-			}
+			setAccessTokenStatus( AccessTokenStatus.ENTERED_MANUALLY );
+			setAccessTokenStartingStatus( AccessTokenStatus.ENTERED_MANUALLY );
 		}
 	}
 
@@ -492,7 +484,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 
 	public TimeUnitConfig.Enum getManualAccessTokenExpirationTimeUnit()
 	{
-		if( configuration.getManualAccessTokenExpirationTimeUnit() == null)
+		if( configuration.getManualAccessTokenExpirationTimeUnit() == null )
 		{
 			configuration.setManualAccessTokenExpirationTimeUnit( TimeUnitConfig.SECONDS );
 		}
@@ -503,7 +495,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 	{
 		TimeUnitConfig.Enum oldValue = getManualAccessTokenExpirationTimeUnit();
 
-		if( !oldValue.equals( newValue ))
+		if( !oldValue.equals( newValue ) )
 		{
 			configuration.setManualAccessTokenExpirationTimeUnit( newValue );
 			pcs.firePropertyChange( MANUAL_ACCESS_TOKEN_EXPIRATION_TIME_UNIT_PROPERTY, oldValue.toString(), newValue.toString() );
