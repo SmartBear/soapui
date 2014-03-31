@@ -183,8 +183,8 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 
 	protected void notifyContentsChanged()
 	{
-		Iterator<ListDataListener> iterator = listeners.iterator();
 		ListDataEvent e = new ListDataEvent( this, ListDataEvent.CONTENTS_CHANGED, 0, getSize() );
+		Iterator<ListDataListener> iterator = listeners.iterator();
 		while( iterator.hasNext() )
 		{
 			iterator.next().contentsChanged( e );
