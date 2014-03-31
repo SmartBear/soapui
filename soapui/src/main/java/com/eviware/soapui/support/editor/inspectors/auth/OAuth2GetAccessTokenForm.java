@@ -71,6 +71,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 	private JLabel accessTokenStatusText;
 	private OAuth2AccessTokenStatusChangeManager statusChangeManager;
 	private JDialog accessTokenDialog;
+	private OAuth2ScriptsDesktopPanel scriptEditorPanel;
 
 	public OAuth2GetAccessTokenForm( OAuth2Profile profile )
 	{
@@ -295,7 +296,11 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 		public void actionPerformed( ActionEvent e )
 		{
 			closeGetAccessTokenDialog();
-			UISupport.showDesktopPanel( new OAuth2ScriptsDesktopPanel( profile ) );
+			if( scriptEditorPanel == null )
+			{
+				scriptEditorPanel = new OAuth2ScriptsDesktopPanel( profile );
+			}
+			UISupport.showDesktopPanel( scriptEditorPanel );
 		}
 	}
 }
