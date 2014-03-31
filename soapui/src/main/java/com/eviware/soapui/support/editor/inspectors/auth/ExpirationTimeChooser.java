@@ -143,7 +143,7 @@ class ExpirationTimeChooser extends JPanel
 		};
 		serverExpirationTimeOption.addActionListener( checkBoxMonitor );
 
-		manualExpirationTimeOption = new JRadioButton( "Manual" );
+		manualExpirationTimeOption = new JRadioButton( "Custom" );
 		manualExpirationTimeOption.setName( MANUAL_EXPIRATION_RADIO_NAME );
 		manualExpirationTimeOption.addActionListener( checkBoxMonitor );
 
