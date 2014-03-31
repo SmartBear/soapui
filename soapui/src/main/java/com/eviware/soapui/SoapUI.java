@@ -461,7 +461,7 @@ public class SoapUI
 
 		helpMenu.add( new ShowPushPageAction() );
 		helpMenu.addSeparator();
-		helpMenu.add( new ShowOnlineHelpAction( "User Guide", HelpUrls.USERGUIDE_HELP_URL ) );
+		helpMenu.add( new ShowOnlineHelpAction( "API Testing Dojo", HelpUrls.API_TESTING_DOJO_HELP_URL) );
 		helpMenu.add( new ShowOnlineHelpAction( "Getting Started", HelpUrls.GETTINGSTARTED_HELP_URL ) );
 		helpMenu.add( new SearchForumAction() );
 		helpMenu.addSeparator();

@@ -230,4 +230,5 @@ public interface HelpUrls
 	public static final String REST_MOCK_RESPONSE_EDITOR_HEADER = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-header.html";
 	public static final String REST_MOCK_RESPONSE_SCRIPT = "http://www.soapui.org/REST-Service-Mocking/mock-response-script.html";
 	public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
+	public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
 }
