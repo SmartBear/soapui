@@ -238,6 +238,18 @@ public class AddRestRequestToMockServiceActionTest
 		assertThat( getFirstMockOperation().getName(), is( "/template/42/path/3.1" ) );
 	}
 
+	@Test
+	public void shouldAddEndPointToRestService() throws SoapUIException
+	{
+
+		int endPointCount = restRequest.getOperation().getService().getEndpoints().length;
+		int expectedEndPointCount = endPointCount + 1;
+
+		action.perform( restRequest, notUsed );
+
+		assertThat( restRequest.getOperation().getService().getEndpoints().length, is( expectedEndPointCount ) );
+	}
+
     private RestRequest createRestRequest(RestMethod restMethod, String path ) {
         RestRequest anotherRestRequest = restMethod.addNewRequest( "another" );
         anotherRestRequest.setPath( path );

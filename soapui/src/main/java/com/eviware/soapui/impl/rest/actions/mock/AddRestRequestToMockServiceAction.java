@@ -69,6 +69,7 @@ public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<Rest
 		}
 
 		addRequestToMockService( restRequest, mockService );
+		restRequest.getOperation().getService().addEndpoint( mockService.getLocalEndpoint() );
 	}
 
 
