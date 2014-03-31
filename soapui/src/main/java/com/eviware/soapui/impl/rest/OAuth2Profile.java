@@ -79,7 +79,7 @@ public class OAuth2Profile implements PropertyExpansionContainer
 		WAITING_FOR_AUTHORIZATION( "Waiting for Authorization" ),
 		RECEIVED_AUTHORIZATION_CODE( "Received authorization code" ),
 		RETRIEVED_FROM_SERVER( "Retrieved from server" ),
-		RETRIEVAL_CANCELED( "Retrieval canceled, continue?" ),
+		RETRIEVAL_CANCELED( "Retrieval canceled" ),
 		EXPIRED( "Expired" );
 
 		private String description;

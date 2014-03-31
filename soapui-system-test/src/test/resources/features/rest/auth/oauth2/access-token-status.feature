@@ -40,7 +40,7 @@ Feature: Access token status
 
   Scenario: Access token status is set to Received authorization code when the the authorization code has been received
     Given the user has created a REST project with the Google Tasks API
-    And the user has successfully configured its OAuth settings, but entered the wrong Access token URI
+    And the user has successfully configured its Authorization Code Grant OAuth settings, but entered the wrong Access token URI
     When user clicks on Get access token button in the Get Access Token dialog
     And the user successfully authenticate on the login screen
     And clicks OK on the consent screen
@@ -72,16 +72,15 @@ Feature: Access token status
     And there is no status label in the Get Access Token dialog
     And there is a red exclamation mark besides the access token input field
     And the access token input field background color is set to red
-    And the status label besides the the access token field is set to Expired
     And there is a red exclamation mark in the Auth tab
 
-  Scenario: Acess token status is set to canceled when closing the browser without getting an access token
+  Scenario: Access token status is set to canceled when closing the browser without getting an access token
     Given the user has created a REST project with the Google Tasks API
     And the user has successfully configured its OAuth settings
     When user clicks on Get access token button in the Get Access Token dialog
     And the user closes the browser window without entering anything in it
     Then there is a red exclamation mark icon in the Get Access Token dialog
-    And the status label in the Get Access Token dialog is set to Retrieval canceled, continue?
+    And the status label in the Get Access Token dialog is set to Retrieval canceled
     And the OAuth 2 form has the same content as before clicking on the Get Token button
     And the Get Access token button has the suffix (Resume)
     And there is a red exclamation mark in the Auth tab
@@ -89,7 +88,7 @@ Feature: Access token status
   Scenario: The access token status is saved between sessions
     Given the user has created a REST project with the Google Tasks API
     And the user enters a access token manually in the access token text box
-    And the status is set to Entered manually
+    And the status label besides the the access token field is empty
     When the user saves the project and restarts SoapUI
     And open the saved projects
-    Then the status is still Entered manually
+    Then the status label besides the the access token field is still empty
