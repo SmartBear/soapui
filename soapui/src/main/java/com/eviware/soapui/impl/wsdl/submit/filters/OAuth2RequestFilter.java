@@ -82,7 +82,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 
 		if( profile.useManualAccessTokenExpirationTime() )
 		{
-			String expirationTimeString = profile.getManualAccessTokenExpirationTime() == null ? "" : profile.getManualAccessTokenExpirationTime().toString();
+			String expirationTimeString = profile.getManualAccessTokenExpirationTime() == null ? "" : profile.getManualAccessTokenExpirationTime();
 			String expandedValue = PropertyExpander.expandProperties( profile.getContainer().getProject(), expirationTimeString );
 			expirationTime = convertExpirationTimeToSeconds( expandedValue, profile.getManualAccessTokenExpirationTimeUnit() );
 		}
@@ -146,11 +146,13 @@ public class OAuth2RequestFilter extends AbstractRequestFilter
 					else
 					{
 						log.warn( "OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms" );
+						throw new RuntimeException( "OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms" );
 					}
 				}
 				else
 				{
 					log.warn( "No automation JavaScripts added to OAuth2 profile – cannot retrieve new access token" );
+					throw new RuntimeException( "No automation JavaScripts added to OAuth2 profile – cannot retrieve new access token" );
 				}
 			}
 		}
