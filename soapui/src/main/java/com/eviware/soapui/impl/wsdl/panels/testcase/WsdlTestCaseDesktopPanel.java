@@ -502,13 +502,19 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		}
 
 		@Override
-		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult stepResult )
+		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, final TestStepResult stepResult )
 		{
 			if( SoapUI.getTestMonitor().hasRunningLoadTest( getModelItem() )
 					|| SoapUI.getTestMonitor().hasRunningSecurityTest( getModelItem() ) )
 				return;
 
-			testCaseLog.addTestStepResult( stepResult );
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				public void run()
+				{
+					testCaseLog.addTestStepResult( stepResult );
+				}
+			} );
 		}
 	}
 
