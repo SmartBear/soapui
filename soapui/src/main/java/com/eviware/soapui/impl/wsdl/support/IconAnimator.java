@@ -29,7 +29,7 @@ public class IconAnimator<T extends AnimatableItem> implements Runnable
 {
 	private final T target;
 	private int index = 0;
-	private boolean stopped = true;
+	private volatile boolean stopped = true;
 	private boolean enabled = true;
 	private ImageIcon baseIcon;
 	private ImageIcon[] animateIcons;
@@ -150,7 +150,13 @@ public class IconAnimator<T extends AnimatableItem> implements Runnable
 						break;
 
 					index = index >= animateIcons.length - 1 ? 0 : index + 1;
-					target.setIcon( getIcon() );
+					SwingUtilities.invokeLater( new Runnable()
+					{
+						public void run()
+						{
+							target.setIcon( getIcon() );
+						}
+					});
 					Thread.sleep( 500 );
 				}
 				catch( InterruptedException e )
