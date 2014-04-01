@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
@@ -21,6 +25,8 @@ import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Response;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
@@ -31,10 +37,10 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 
 public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<ModelItem>
 {
-	private final WsdlMockResult mockResult;
-	private WsdlMockResponse mockResponse;
+	private final MockResult mockResult;
+	private MockResponse mockResponse;
 
-	public WsdlMockResultMessageExchange( WsdlMockResult mockResult, WsdlMockResponse mockResponse )
+	public WsdlMockResultMessageExchange( MockResult mockResult, MockResponse mockResponse )
 	{
 		super( mockResponse );
 
@@ -94,10 +100,17 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 
 	public WsdlOperation getOperation()
 	{
-		if( mockResult.getMockOperation() != null )
-			return mockResult.getMockOperation().getOperation();
+		if( mockResponse != null && mockResponse instanceof WsdlMockResponse )
+		{
+			WsdlMockResponse wsdlMockResponse = (WsdlMockResponse)mockResponse;
+			if( mockResult.getMockOperation() != null )
+			{
+				return ( WsdlOperation )mockResult.getMockOperation().getOperation();
+			}
 
-		return mockResponse == null ? null : mockResponse.getMockOperation().getOperation();
+			return wsdlMockResponse.getMockOperation().getOperation();
+		}
+		return null;
 	}
 
 	public long getTimeTaken()
@@ -122,7 +135,11 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 
 	public Vector<?> getRequestWssResult()
 	{
-		return mockResult == null ? null : mockResult.getRequestWssResult();
+		if( mockResult != null && mockResult instanceof WsdlMockResult )
+		{
+			return ((WsdlMockResult)mockResult).getRequestWssResult();
+		}
+		return null;
 	}
 
 	public Vector<?> getResponseWssResult()
@@ -132,12 +149,12 @@ public class WsdlMockResultMessageExchange extends AbstractWsdlMessageExchange<M
 
 	public int getResponseStatusCode()
 	{
-		return mockResult.getResponseStatus();
+		return mockResponse.getResponseHttpStatus();
 	}
 
 	public String getResponseContentType()
 	{
-		return mockResult.getResponseContentType();
+		return mockResult.getMockResponse().getContentType();
 	}
 
 	@Override

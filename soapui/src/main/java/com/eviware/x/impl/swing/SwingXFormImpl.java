@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.x.impl.swing;
 
@@ -58,6 +62,15 @@ public class SwingXFormImpl implements XForm
 		panel = new JPanel( layout );
 		rowSpec = new RowSpec( rowAlignment + ":pref" );
 	}
+
+	public SwingXFormImpl( String name, FormLayout layout )
+	{
+		this.name = name;
+		this.layout = layout;
+		panel = new JPanel( layout );
+		rowSpec = new RowSpec( rowAlignment + ":pref" );
+	}
+
 
 	public String getName()
 	{
@@ -120,7 +133,7 @@ public class SwingXFormImpl implements XForm
 
 		AbstractSwingXFormField<?> swingFormComponent = ( AbstractSwingXFormField<?> )formComponent;
 
-		if( label != null && !label.startsWith( "###" ) )
+		if( !StringUtils.isNullOrEmpty( label ) && !label.startsWith( "###" ) )
 		{
 			JLabel jlabel = null;
 			if( label.endsWith( "___" ) )
@@ -147,9 +160,9 @@ public class SwingXFormImpl implements XForm
 			swingFormComponent.getComponent().getAccessibleContext().setAccessibleDescription( label );
 		}
 
-		if( label != null && label.startsWith( "###" ) )
+		if( !StringUtils.isNullOrEmpty( label ) && label.startsWith( "###" ) )
 			panel.add( swingFormComponent.getComponent(), cc.xyw( 2, row, 4 ) );
-		else
+		else  //Keep the name/Label to empty/null to add only the component (in column 4), not the JLabel for name
 			panel.add( swingFormComponent.getComponent(), cc.xy( 4, row ) );
 
 		components.put( label, formComponent );
@@ -161,6 +174,7 @@ public class SwingXFormImpl implements XForm
 	{
 		JComboBoxFormField comboBox = new JComboBoxFormField( values );
 		comboBox.setToolTip( description );
+		comboBox.getComponent().setName( name );
 		addComponent( name, comboBox );
 		return comboBox;
 	}
@@ -191,7 +205,7 @@ public class SwingXFormImpl implements XForm
 		if( type == FieldType.FOLDER || type == FieldType.FILE || type == FieldType.PROJECT_FOLDER
 				|| type == FieldType.PROJECT_FILE || type == FieldType.FILE_OR_FOLDER )
 		{
-			return ( XFormTextField )addComponent( name, new FileFormField( description, type ) );
+			return ( XFormTextField )addComponent( name, new FileFormField( description, type, name ) );
 		}
 		else if( type == FieldType.PASSWORD )
 		{
@@ -214,6 +228,7 @@ public class SwingXFormImpl implements XForm
 		{
 			JTextFieldFormField textField = new JTextFieldFormField();
 			textField.getComponent().setColumns( 40 );
+			textField.getComponent().setName( name );
 			textField.setToolTip( description );
 			addComponent( name, textField );
 			return textField;
@@ -259,10 +274,9 @@ public class SwingXFormImpl implements XForm
 
 	public void setValues( StringToStringMap values )
 	{
-		for( Iterator<String> i = values.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, String> entry : values.entrySet() )
 		{
-			String key = i.next();
-			setComponentValue( key, values.get( key ) );
+			setComponentValue( entry.getKey(), entry.getValue() );
 		}
 	}
 

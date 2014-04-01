@@ -1,45 +1,34 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.ModelItemConfig;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStepWithProperties;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.model.iface.MessagePart;
-import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.iface.Submit;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.iface.SubmitListener;
+import com.eviware.soapui.model.iface.*;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
+import com.eviware.soapui.model.support.AbstractModelItem;
+import com.eviware.soapui.model.support.AnimatableItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
@@ -52,7 +41,10 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> implements Assertable, TestRequest
+import javax.swing.*;
+import java.util.*;
+
+public class AMFRequest extends AbstractModelItem implements Assertable, TestRequest, AnimatableItem
 {
 	public static final String AMF_SCRIPT_HEADERS = "AMF_SCRIPT_HEADERS";
 	public static final String AMF_SCRIPT_PARAMETERS = "AMF_SCRIPT_PARAMETERS";
@@ -267,20 +259,20 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 		if( disabledRequestIcon == null )
 			disabledRequestIcon = UISupport.createImageIcon( "/disabled_amf_request.gif" );
 
-		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 3, "gif" ) );
+		setIconAnimator( new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request.gif", 3 ) );
 	}
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request", 3, "gif" );
+		return new RequestIconAnimator<AMFRequest>( this, "/amf_request.gif", "/exec_amf_request.gif", 3 );
 	}
 
-	public static class RequestIconAnimator<T extends AMFRequest> extends ModelItemIconAnimator<T> implements
+	public static class RequestIconAnimator<T extends AMFRequest> extends IconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
+		public RequestIconAnimator( T modelItem, String baseIcon, String baseAnimateIcon, int iconCount )
 		{
-			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
+			super( modelItem, baseIcon, baseAnimateIcon, iconCount );
 		}
 
 		public boolean beforeSubmit( Submit submit, SubmitContext context )
@@ -313,7 +305,7 @@ public class AMFRequest extends AbstractAnimatableModelItem<ModelItemConfig> imp
 
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() || getIconAnimator() == null )
+		if( forLoadTest || getIconAnimator() == null )
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();

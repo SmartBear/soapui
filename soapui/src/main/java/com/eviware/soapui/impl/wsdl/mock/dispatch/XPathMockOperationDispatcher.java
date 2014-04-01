@@ -1,57 +1,57 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
-
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
 
 public class XPathMockOperationDispatcher extends AbstractMockOperationDispatcher
 {
 	private GroovyEditor xpathEditor;
 
-	public XPathMockOperationDispatcher( WsdlMockOperation mockOperation )
+	public XPathMockOperationDispatcher( MockOperation mockOperation )
 	{
 		super( mockOperation );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException
 	{
 		XmlObject xmlObject;
@@ -64,14 +64,14 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 			throw new DispatchException( "Error getting XmlObject for request: " + e );
 		}
 
-		String path = getMockOperation().getDispatchPath();
+		String path = getMockOperation().getScript();
 		if( StringUtils.isNullOrEmpty( path ) )
 			throw new DispatchException( "Missing dispatch XPath expression" );
 
 		String[] values = XmlUtils.selectNodeValues( xmlObject, path );
 		for( String value : values )
 		{
-			WsdlMockResponse mockResponse = getMockOperation().getMockResponseByName( value );
+			MockResponse mockResponse = getMockOperation().getMockResponseByName( value );
 			if( mockResponse != null )
 				return mockResponse;
 		}
@@ -112,6 +112,12 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 		super.releaseEditorComponent();
 	}
 
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return true;
+	}
+
 	protected JXToolBar buildXPathEditorToolbar( DispatchXPathGroovyEditorModel editorModel )
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -130,7 +136,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 	public static class Factory implements MockOperationDispatchFactory
 	{
-		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		public MockOperationDispatcher build( MockOperation mockOperation )
 		{
 			return new XPathMockOperationDispatcher( mockOperation );
 		}
@@ -152,7 +158,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 		public String getScript()
 		{
-			return getMockOperation().getDispatchPath();
+			return getMockOperation().getScript();
 		}
 
 		public Settings getSettings()
@@ -162,7 +168,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 		public void setScript( String text )
 		{
-			getMockOperation().setDispatchPath( text );
+			getMockOperation().setScript( text );
 		}
 
 		public String getScriptName()
@@ -194,7 +200,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 		public void actionPerformed( ActionEvent e )
 		{
-			WsdlMockResult lastMockResult = getMockOperation().getLastMockResult();
+			MockResult lastMockResult = getMockOperation().getLastMockResult();
 			if( lastMockResult == null )
 			{
 				UISupport.showErrorMessage( "Missing last request to select from" );
@@ -203,7 +209,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
 			try
 			{
-				WsdlMockResponse retVal = selectMockResponse( lastMockResult.getMockRequest(), null );
+				MockResponse retVal = selectMockResponse( lastMockResult.getMockRequest(), null );
 				UISupport.showInfoMessage( "XPath Selection returned [" + ( retVal == null ? "null" : retVal.getName() )
 						+ "]" );
 			}

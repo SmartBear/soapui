@@ -1,33 +1,38 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.ModelItemConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.support.AbstractAnimatableModelItem;
+import com.eviware.soapui.model.Releasable;
+import com.eviware.soapui.model.support.AbstractModelItem;
+import com.eviware.soapui.model.support.AnimatableItem;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Abstract base class for WSDL-implementation classes
@@ -35,8 +40,9 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  * @author Ole.Matzura
  */
 
-public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
-		AbstractAnimatableModelItem<ModelItemConfig>
+public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
+		extends AbstractModelItem
+		implements Releasable, AnimatableItem
 {
 	private XmlBeansSettingsImpl settings;
 	private T config;
@@ -153,10 +159,10 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig> extends
 		this.settings = settings;
 	}
 
-	public AbstractWsdlModelItem<?> getWsdlModelItemByName( Collection<? extends AbstractWsdlModelItem<?>> items,
+	public ModelItem getWsdlModelItemByName( Collection<? extends ModelItem> items,
 			String name )
 	{
-		for( AbstractWsdlModelItem<?> item : items )
+		for( ModelItem item : items )
 		{
 			if( item.getName() != null && item.getName().equals( name ) )
 				return item;

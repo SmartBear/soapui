@@ -1,28 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.x.impl.swing;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dialog.ModalityType;
-import java.awt.Dimension;
-import java.util.concurrent.CountDownLatch;
-
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.StringUtils;
@@ -36,6 +28,11 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.Dialog.ModalityType;
+import java.util.concurrent.CountDownLatch;
+
 public class JFormDialog extends SwingXFormDialog
 {
 	private JDialog dialog;
@@ -48,7 +45,7 @@ public class JFormDialog extends SwingXFormDialog
 	public JFormDialog( String name, SwingXFormImpl form, ActionList actions, String description, ImageIcon icon )
 	{
 		dialog = new JDialog( UISupport.getMainFrame(), name, true );
-
+		dialog.setName( name );
 		this.actions = actions;
 		buttons = UISupport.initDialogActions( actions, dialog );
 		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
@@ -88,6 +85,12 @@ public class JFormDialog extends SwingXFormDialog
 		resized = true;
 	}
 
+	@Override
+	public ActionList getActionsList()
+	{
+		return actions;
+	}
+
 	public XForm[] getForms()
 	{
 		return new XForm[] { form };
@@ -111,14 +114,14 @@ public class JFormDialog extends SwingXFormDialog
 		if( !resized && visible )
 		{
 			dialog.pack();
-			if( dialog.getHeight() < 270 )
+			if( dialog.getHeight() < 210 )
 			{
-				dialog.setSize( new Dimension( dialog.getWidth(), 270 ) );
+				dialog.setSize( new Dimension( dialog.getWidth(), 210 ) );
 			}
 
-			if( dialog.getWidth() < 450 )
+			if( dialog.getWidth() < 320 )
 			{
-				dialog.setSize( new Dimension( 450, dialog.getHeight() ) );
+				dialog.setSize( new Dimension( 320, dialog.getHeight() ) );
 			}
 		}
 

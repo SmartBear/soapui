@@ -1,41 +1,24 @@
 /*
- *  SoapUI, copyright (C) 2004-2011 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
-import com.eviware.soapui.config.MockResponseConfig;
-import com.eviware.soapui.config.MockResponseStepConfig;
-import com.eviware.soapui.config.MockServiceConfig;
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
-import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.config.*;
+import com.eviware.soapui.impl.wsdl.*;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
@@ -43,7 +26,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.QueryMatchMockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResultMessageExchange;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertableConfig;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertionsSupport;
@@ -61,25 +44,9 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.DefaultTestStepProperty;
-import com.eviware.soapui.model.support.InterfaceListenerAdapter;
-import com.eviware.soapui.model.support.MockRunListenerAdapter;
-import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.support.ProjectListenerAdapter;
-import com.eviware.soapui.model.support.TestRunListenerAdapter;
-import com.eviware.soapui.model.support.TestStepBeanProperty;
-import com.eviware.soapui.model.testsuite.Assertable;
-import com.eviware.soapui.model.testsuite.AssertedXPath;
+import com.eviware.soapui.model.support.*;
+import com.eviware.soapui.model.testsuite.*;
 import com.eviware.soapui.model.testsuite.AssertionError;
-import com.eviware.soapui.model.testsuite.AssertionsListener;
-import com.eviware.soapui.model.testsuite.LoadTestRunner;
-import com.eviware.soapui.model.testsuite.OperationTestStep;
-import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
-import com.eviware.soapui.model.testsuite.TestAssertion;
-import com.eviware.soapui.model.testsuite.TestCaseRunContext;
-import com.eviware.soapui.model.testsuite.TestCaseRunner;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.StringUtils;
@@ -90,6 +57,12 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.*;
 
 public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties implements OperationTestStep,
 		PropertyChangeListener, Assertable, PropertyExpansionContainer
@@ -117,7 +90,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	private WsdlInterface iface;
 	private AssertionStatus oldStatus;
 
-	private ModelItemIconAnimator<WsdlMockResponseTestStep> iconAnimator;
+	private IconAnimator<WsdlMockResponseTestStep> iconAnimator;
 	private ImageIcon validRequestIcon;
 	private ImageIcon failedRequestIcon;
 	private ImageIcon disabledRequestIcon;
@@ -155,8 +128,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				iface.addInterfaceListener( interfaceListener );
 			}
 
-			iconAnimator = new ModelItemIconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
-					"/exec_mockResponse", 4, "gif" );
+			iconAnimator = new IconAnimator<WsdlMockResponseTestStep>( this, "/mockResponseStep.gif",
+					"/exec_mockResponse.gif", 4 );
 
 			initIcons();
 		}
@@ -194,7 +167,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		{
 			public String getValue( DefaultTestStepProperty property )
 			{
-				WsdlMockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
+				MockResult mockResult = mockResponse == null ? null : mockResponse.getMockResult();
 				return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 			}
 		}, this ) );
@@ -203,7 +176,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	@Override
 	public ImageIcon getIcon()
 	{
-		if( forLoadTest || UISupport.isHeadless() )
+		if( forLoadTest || iconAnimator == null)
 			return null;
 
 		TestMonitor testMonitor = SoapUI.getTestMonitor();
@@ -290,7 +263,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		{
 			iface.addInterfaceListener( interfaceListener );
 
-			mockOperation = mockService.addNewMockOperation( iface.getOperationByName( mockResponseStepConfig
+			mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( iface.getOperationByName( mockResponseStepConfig
 					.getOperation() ) );
 
 			if( mockResponseStepConfig.getHandleFault() )
@@ -367,7 +340,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 				}
 				else
 				{
-					mockRunner.getMockService().addMockRunListener( mockRunListener );
+					mockRunner.getMockContext().getMockService().addMockRunListener( mockRunListener );
 				}
 			}
 		}
@@ -805,26 +778,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		notifyPropertyChanged( "match", old, s );
 	}
 
-	public boolean isForceMtom()
-	{
-		return mockResponse.isForceMtom();
-	}
-
-	public void setForceMtom( boolean forceMtom )
-	{
-		mockResponse.setForceMtom( forceMtom );
-	}
-
-	public boolean isInlineFilesEnabled()
-	{
-		return mockResponse.isInlineFilesEnabled();
-	}
-
-	public void setInlineFilesEnabled( boolean inlineFilesEnabled )
-	{
-		mockResponse.setInlineFilesEnabled( inlineFilesEnabled );
-	}
-
 	public String getStartStep()
 	{
 		return startTestStep == null ? "" : startTestStep.getName();
@@ -852,65 +805,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		notifyPropertyChanged( "startStep", old, startStep );
 	}
 
-	public boolean isMultipartEnabled()
-	{
-		return mockResponse.isMultipartEnabled();
-	}
-
-	public void setMultipartEnabled( boolean enabled )
-	{
-		mockResponse.setMultipartEnabled( enabled );
-	}
-
-	public boolean isHandleFault()
-	{
-		return mockResponseStepConfig.getHandleFault();
-	}
-
-	public void setHandleFault( boolean handleFault )
-	{
-		mockResponseStepConfig.setHandleFault( handleFault );
-		if( mockService != null )
-			mockService.setFaultMockOperation( handleFault ? mockOperation : null );
-	}
-
-	public boolean isHandleResponse()
-	{
-		return mockResponseStepConfig.getHandleResponse();
-	}
-
-	public void setHandleResponse( boolean handleResponse )
-	{
-		mockResponseStepConfig.setHandleResponse( handleResponse );
-		if( mockService != null )
-			mockService.setDispatchResponseMessages( handleResponse );
-	}
-
-	public long getResponseDelay()
-	{
-		return mockResponse.getResponseDelay();
-	}
-
-	public void setResponseDelay( long delay )
-	{
-		mockResponse.setResponseDelay( delay );
-	}
-
-	public String getResponseHttpStatus()
-	{
-		return mockResponse.getResponseHttpStatus();
-	}
-
-	public void setResponseHttpStatus( String httpStatus )
-	{
-		mockResponse.setResponseHttpStatus( httpStatus );
-	}
-
-	public boolean isEncodeAttachments()
-	{
-		return mockResponse.isEncodeAttachments();
-	}
-
 	public boolean isRemoveEmptyContent()
 	{
 		return mockResponse.isRemoveEmptyContent();
@@ -919,11 +813,6 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 	public boolean isStripWhitespaces()
 	{
 		return mockResponse.isStripWhitespaces();
-	}
-
-	public void setEncodeAttachments( boolean encodeAttachments )
-	{
-		mockResponse.setEncodeAttachments( encodeAttachments );
 	}
 
 	public void setRemoveEmptyContent( boolean removeEmptyContent )
@@ -985,8 +874,10 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 			if( getMockResponse().getMockResult() != null )
 			{
-				assertion.assertRequest( new WsdlMockResultMessageExchange( getMockResponse().getMockResult(),
-						getMockResponse() ), new WsdlSubmitContext( this ) );
+				WsdlMockResult mockResult = ( WsdlMockResult )getMockResponse().getMockResult();
+				WsdlMockResultMessageExchange messageExchange
+						= new WsdlMockResultMessageExchange( mockResult, getMockResponse() );
+				assertion.assertRequest( messageExchange, new WsdlSubmitContext( this ) );
 				notifier.notifyChange();
 			}
 
@@ -1087,7 +978,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 	public String getAssertableContent()
 	{
-		WsdlMockResult mockResult = getMockResponse().getMockResult();
+		MockResult mockResult = getMockResponse().getMockResult();
 		return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
 	}
 
@@ -1312,11 +1203,11 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, mockResponse, "responseContent" ) );
 
 		StringToStringsMap responseHeaders = mockResponse.getResponseHeaders();
-		for( String key : responseHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
 		{
-			for( String value : responseHeaders.get( key ) )
-				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, new ResponseHeaderHolder( key,
-						value, mockResponse ), "value" ) );
+			for( String value : headerEntry.getValue() )
+				result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this,
+						new ResponseHeaderHolder( headerEntry.getKey(), value, mockResponse ), "value" ) );
 		}
 		mockResponse.addWsaPropertyExpansions( result, mockResponse.getWsaConfig(), this );
 
@@ -1345,7 +1236,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
 		public AssertedWsdlMockResultMessageExchange( WsdlMockResult mockResult )
 		{
-			super( mockResult, mockResult == null ? null : mockResult.getMockResponse() );
+			super( mockResult, mockResult == null ? null : (WsdlMockResponse)mockResult.getMockResponse() );
 		}
 
 		public AssertedXPath[] getAssertedXPathsForRequest()
@@ -1422,7 +1313,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 					+ "/" + mockResponseStepConfig.getOperation() ) )
 			{
 				@SuppressWarnings( "rawtypes" )
-				PathToResolve path = context.getPath( this, "Missing Operation in Project",
+				//FIXME need to understand why this needs casting, we need to find the root cause
+				PathToResolve path = ( PathToResolve )context.getPath( this, "Missing Operation in Project",
 						mockResponseStepConfig.getInterface() + "/" + mockResponseStepConfig.getOperation() );
 				path.setSolved( true );
 			}

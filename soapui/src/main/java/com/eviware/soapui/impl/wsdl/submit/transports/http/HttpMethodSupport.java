@@ -1,33 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.net.ssl.SSLSession;
-
-import org.apache.http.Header;
-import org.apache.http.HeaderElement;
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.entity.BufferedHttpEntity;
-import org.apache.http.impl.io.HttpTransportMetricsImpl;
-import org.apache.http.util.EntityUtils;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
@@ -36,10 +23,24 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
+import org.apache.http.Header;
+import org.apache.http.HeaderElement;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.impl.io.HttpTransportMetricsImpl;
+import org.apache.http.util.EntityUtils;
+
+import javax.net.ssl.SSLSession;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Extended PostMethod that supports limiting of response size and detailed
- * timestamps
+ * Helper class used by implementations of ExtendedHttpMethod.
  *
  * @author Ole.Matzura
  */
@@ -372,4 +373,8 @@ public class HttpMethodSupport
 		return metrics;
 	}
 
+	public Header[] getAllResponseHeaders()
+	{
+		return getHttpResponse() == null ? new Header[0] : httpResponse.getAllHeaders();
+	}
 }

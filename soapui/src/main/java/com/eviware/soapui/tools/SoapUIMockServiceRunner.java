@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.tools;
 
@@ -16,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.eviware.soapui.impl.support.AbstractMockService;
+import com.eviware.soapui.model.mock.MockRunContext;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
@@ -117,9 +123,16 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 		for( int c = 0; c < project.getMockServiceCount(); c++ )
 		{
-			MockService ms = project.getMockServiceAt( c );
-			if( mockService == null || ms.getName().equals( mockService ) )
-				runMockService( ( WsdlMockService )ms );
+			MockService mockService = project.getMockServiceAt( c );
+			if( this.mockService == null || mockService.getName().equals( this.mockService ) )
+				runMockService( mockService );
+		}
+
+		for( int c = 0; c < project.getRestMockServiceCount(); c++ )
+		{
+			MockService mockService = project.getRestMockServiceAt( c );
+			if( this.mockService == null || mockService.getName().equals( this.mockService ) )
+				runMockService( mockService );
 		}
 
 		log.info( "Started " + runners.size() + " runner" + ( ( runners.size() == 1 ) ? "" : "s" ) );
@@ -187,7 +200,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 	 * @param mockService
 	 */
 
-	public void runMockService( WsdlMockService mockService )
+	public void runMockService( MockService mockService )
 	{
 		try
 		{
@@ -198,7 +211,7 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 				mockService.setPort( Integer.parseInt( port ) );
 
 			mockService.addMockRunListener( new LogListener() );
-			WsdlMockRunner runner = mockService.start();
+			MockRunner runner = mockService.start();
 			runner.setLogEnabled( false );
 			runners.add( runner );
 		}
@@ -214,8 +227,9 @@ public class SoapUIMockServiceRunner extends AbstractSoapUIRunner
 
 		public void onMockRunnerStart( MockRunner mockRunner )
 		{
-			log.info( "MockService started on port " + mockRunner.getMockService().getPort() + " at path ["
-					+ mockRunner.getMockService().getPath() + "]" );
+			MockRunContext mockContext = mockRunner.getMockContext();
+			log.info( "MockService started on port " + mockContext.getMockService().getPort() + " at path ["
+					+ mockContext.getMockService().getPath() + "]" );
 		}
 
 		public void onMockRunnerStop( MockRunner mockRunner )

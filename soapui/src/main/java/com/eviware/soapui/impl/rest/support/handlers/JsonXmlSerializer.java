@@ -1,4 +1,18 @@
 /*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*//*
  * Copyright 2002-2009 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,21 +33,7 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-
+import com.eviware.soapui.SoapUI;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
@@ -50,11 +50,25 @@ import nu.xom.Elements;
 import nu.xom.Node;
 import nu.xom.Serializer;
 import nu.xom.Text;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Utility class for transforming JSON to XML an back.<br>
@@ -1578,7 +1592,14 @@ public class JsonXmlSerializer
 				}
 				catch( NumberFormatException e )
 				{
-					setOrAccumulate( jsonObject, key, Double.valueOf( element.getValue() ) );
+					try
+					{
+						setOrAccumulate( jsonObject, key, Double.valueOf( element.getValue() ) );
+					}
+					catch( NumberFormatException e1 )
+					{
+						SoapUI.log.debug( "Unable to parse element " + elementName + " as number: " + element.getValue() );
+					}
 				}
 			}
 			else if( type.compareToIgnoreCase( JSONTypes.INTEGER ) == 0 )

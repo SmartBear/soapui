@@ -1,24 +1,22 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.dnd.Autoscroll;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
@@ -39,6 +37,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -59,7 +58,7 @@ import com.eviware.soapui.support.swing.AutoscrollSupport;
 
 /**
  * A panel showing a scrollable list of TestSuites in a Project.
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -218,6 +217,13 @@ public class JProjectTestSuiteList extends JPanel
 			label.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
 			label.setInheritsPopupMenu( true );
 			label.setEnabled( !testSuite.isDisabled() );
+
+			if( UISupport.isMac() )
+			{
+				Font oldFont = label.getFont();
+				Font newFont = new Font( oldFont.getName(), Font.BOLD, oldFont.getSize() );
+				label.setFont( newFont );
+			}
 
 			add( progressPanel, BorderLayout.CENTER );
 			add( label, BorderLayout.NORTH );

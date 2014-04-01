@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.panels.request;
 
@@ -21,8 +25,13 @@ import com.eviware.soapui.support.action.swing.SwingActionDelegate;
 import com.eviware.soapui.support.components.JXToolBar;
 import org.apache.commons.lang.mutable.MutableBoolean;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 
 public class RestRequestDesktopPanel extends
 		AbstractRestRequestDesktopPanel<RestRequestInterface, RestRequestInterface>
@@ -106,54 +115,15 @@ public class RestRequestDesktopPanel extends
 	private JPanel addMethodCombo()
 	{
 		JPanel methodPanel = new JPanel( new BorderLayout() );
-		JComboBox<RestRequestInterface.RequestMethod> methodComboBox = new JComboBox<RestRequestInterface.RequestMethod>( new RestRequestMethodModel( getRequest() ) );
+		JComboBox methodComboBox = new JComboBox( new RestRequestMethodModel( getRequest() ) );
 		methodComboBox.setSelectedItem( getRequest().getMethod() );
 
 		JLabel methodLabel = new JLabel( "Method" );
 		methodPanel.add( methodLabel, BorderLayout.NORTH );
 		methodPanel.add( methodComboBox, BorderLayout.SOUTH );
 		methodPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
-		//TODO: remove hard coded height adjustment
 		methodPanel.setMaximumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT + 10 ) );
 		return methodPanel;
-	}
-
-	protected class TextPanelWithTopLabel extends JPanel
-	{
-
-		JLabel textLabel;
-		JTextField textField;
-
-
-		TextPanelWithTopLabel( String label, String text, JTextField textField )
-		{
-			textLabel = new JLabel( label );
-			this.textField = textField;
-			textField.setText( text );
-			setToolTipText( text );
-			super.setLayout( new BorderLayout() );
-			super.add( textLabel, BorderLayout.NORTH );
-			super.add( textField, BorderLayout.SOUTH );
-		}
-
-		public String getText()
-		{
-			return textField.getText();
-		}
-
-		public void setText( String text )
-		{
-			textField.setText( text );
-			setToolTipText( text );
-		}
-
-		@Override
-		public void setToolTipText( String text )
-		{
-			super.setToolTipText( text );
-			textLabel.setToolTipText( text );
-			textField.setToolTipText( text );
-		}
 	}
 
 	private void addResourceAndQueryField( JXToolBar toolbar )

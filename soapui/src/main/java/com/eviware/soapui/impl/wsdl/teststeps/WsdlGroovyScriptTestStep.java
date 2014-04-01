@@ -1,20 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.teststeps;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
@@ -35,9 +35,14 @@ import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.*;
 
 /**
- * TestStep that executes an arbitraty Groovy script
+ * TestStep that executes an arbitrary Groovy script
  * 
  * @author ole.matzura
  */
@@ -72,7 +77,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 			readConfig( config );
 		}
 
-		addProperty( new DefaultTestStepProperty( "result", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
+        addProperty( new DefaultTestStepProperty( RESULT_PROPERTY, true, new DefaultTestStepProperty.PropertyHandlerAdapter()
 		{
 
 			public String getValue( DefaultTestStepProperty property )
@@ -81,7 +86,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 			}
 		}, this ) );
 
-		addProperty( new TestStepBeanProperty( "script", false, this, "script", this ) );
+		addProperty( new TestStepBeanProperty( SCRIPT_PROPERTY, false, this, SCRIPT_PROPERTY, this ) );
 
 		scriptEngine = SoapUIScriptEngineRegistry.create( this );
 		scriptEngine.setScript( getScript() );
@@ -105,13 +110,13 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 	private void readConfig( TestStepConfig config )
 	{
 		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( config.getConfig() );
-		scriptText = reader.readString( "script", "" );
+		scriptText = reader.readString( SCRIPT_PROPERTY, "" );
 	}
 
 	private void saveScript( TestStepConfig config )
 	{
 		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( "script", scriptText );
+		builder.add( SCRIPT_PROPERTY, scriptText );
 		config.setConfig( builder.finish() );
 	}
 
@@ -123,7 +128,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 
 	public String getDefaultSourcePropertyName()
 	{
-		return "result";
+		return RESULT_PROPERTY;
 	}
 
 	public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext context )
@@ -153,7 +158,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 					{
 						result.addMessage( "Script-result: " + scriptResult.toString() );
 						// FIXME The property should not me hard coded
-						firePropertyValueChanged( "result", null, String.valueOf( result ) );
+						firePropertyValueChanged( RESULT_PROPERTY, null, String.valueOf( result ) );
 					}
 
 				}
@@ -206,7 +211,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 		scriptEngine.setScript( scriptText );
 		saveScript( getConfig() );
 
-		notifyPropertyChanged( "script", oldScript, scriptText );
+		notifyPropertyChanged( SCRIPT_PROPERTY, oldScript, scriptText );
 	}
 
 	@Override
@@ -220,7 +225,7 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
 	{
 		PropertyExpansionsResult result = new PropertyExpansionsResult( this );
 
-		result.extractAndAddAll( "script" );
+		result.extractAndAddAll( SCRIPT_PROPERTY );
 
 		return result.toArray();
 	}

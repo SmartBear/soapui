@@ -1,14 +1,18 @@
 /*
- * SoapUI, copyright (C) 2004-2013 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- * SoapUI is free software; you can redistribute it and/or modify it under the
- * terms of version 2.1 of the GNU Lesser General Public License as published by
- * the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- * SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.support;
 
@@ -83,19 +87,15 @@ public class RestURIParserImpl implements RestURIParser
 	private boolean validateScheme() throws MalformedURLException
 	{
 		String scheme = getScheme();
-		if( scheme.isEmpty() )
-			return true;
+		return scheme.isEmpty() || scheme.matches( "(HTTP|http).*" );
 
-		return scheme.matches( "(HTTP|http).*" );
 	}
 
 	private boolean validateAuthority() throws MalformedURLException
 	{
 		String endpoint = getEndpoint();
-		if( endpoint.isEmpty() )
-			return true;
+		return endpoint.isEmpty() || !endpoint.matches( ".*[\\\\]+.*" );
 
-		return !endpoint.matches( ".*[\\\\]+.*" );
 	}
 
 	@Override
@@ -129,16 +129,21 @@ public class RestURIParserImpl implements RestURIParser
 
 		String[] splitResourcePath = path.split( "/" );
 		if(splitResourcePath.length == 0)
+		{
 			return "";
+		}
 		String resourceName = splitResourcePath[splitResourcePath.length - 1];
+		if (resourceName.startsWith( ";" ))
+		{
+			return "";
+		}
 		resourceName = resourceName.replaceAll( "\\{", "" ).replaceAll( "\\}", ""  );
 		if( resourceName.contains( ";" ) )
 		{
 			resourceName = resourceName.substring( 0, resourceName.indexOf(";" ) );
 		}
-		String capitalizedResourceName = resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 
-		return capitalizedResourceName;
+		return resourceName.substring( 0, 1 ).toUpperCase() + resourceName.substring( 1 );
 	}
 
 	@Override
@@ -196,7 +201,7 @@ public class RestURIParserImpl implements RestURIParser
 
 	private void parseWithURL( String uriString ) throws MalformedURLException
 	{
-		URL url = null;
+		URL url;
 		try
 		{
 			url = new URL( uriString );

@@ -1,26 +1,32 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 
-import javax.swing.*;
+import javax.swing.JCheckBox;
+import javax.swing.JTextField;
+import javax.swing.ToolTipManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -40,6 +46,7 @@ public class UIPrefs implements Prefs
 	public static final String CREATE_BACKUP = "Create Backup";
 	public static final String BACKUP_FOLDER = "Backup Folder";
 	public static final String DESKTOP_TYPE = "Desktop Type";
+	public static final String MRU_PANEL_SELECTOR = "Select most recently used desktop panel on close";
 	public static final String NATIVE_LAF = "Native LF";
 	public static final String ENABLE_GROOVY_LOG = "Do not disable Groovy Log";
 	public static final String SHOW_LOGS_AT_STARTUP = "Show Log Tabs";
@@ -52,8 +59,6 @@ public class UIPrefs implements Prefs
 	public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
 	public static final String WRAP_RAW_MESSAGES = "Wrap content in Raw Message Viewers";
 	public static final String DISABLE_TOOLTIPS = "Disable Tooltips";
-	public static final String DISABLE_BROWSER = "Disable Browser";
-	public static final String DISABLE_BROWSER_PLUGINS = "Disable Plugins in Browser";
 
 	private SimpleForm editorForm;
 	private final String title;
@@ -104,8 +109,9 @@ public class UIPrefs implements Prefs
 				editorForm.appendSeparator();
 				editorForm.appendComboBox( DESKTOP_TYPE, DesktopRegistry.getInstance().getNames(),
 						"Select the type of desktop to use" );
+				editorForm.appendCheckBox( MRU_PANEL_SELECTOR, "Show most recently used panel on close (requires restart)", true );
 				JCheckBox cb = editorForm.appendCheckBox( NATIVE_LAF, "Use native Look & Feel (requires restart)", true );
-				if( Tools.isMac() )
+				if( UISupport.isMac() )
 				{
 					cb.setSelected( true );
 				}
@@ -130,9 +136,6 @@ public class UIPrefs implements Prefs
 			editorForm.appendTextField( RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response mesage to show." );
 			editorForm.appendTextField( RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request mesage to show." );
 			editorForm.appendCheckBox( WRAP_RAW_MESSAGES, "Wraps content in Raw Message Viewers", false );
-			editorForm.appendSeparator();
-			editorForm.appendCheckBox( DISABLE_BROWSER, "Disables integrated Browser component", false );
-			editorForm.appendCheckBox( DISABLE_BROWSER_PLUGINS, "Disables plugins in Browser component", false );
 		}
 
 		return editorForm;
@@ -162,6 +165,7 @@ public class UIPrefs implements Prefs
 		{
 			settings.setString( UISettings.DESKTOP_TYPE, values.get( DESKTOP_TYPE ) );
 			settings.setBoolean( UISettings.NATIVE_LAF, values.getBoolean( NATIVE_LAF ) );
+			settings.setBoolean( UISettings.MRU_PANEL_SELECTOR, values.getBoolean( MRU_PANEL_SELECTOR ) );
 		}
 
 		settings.setBoolean( UISettings.DONT_DISABLE_GROOVY_LOG, values.getBoolean( ENABLE_GROOVY_LOG ) );
@@ -179,8 +183,6 @@ public class UIPrefs implements Prefs
 		settings.setString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get( RAW_RESPONSE_MESSAGE_SIZE ) );
 		settings.setString( UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get( RAW_REQUEST_MESSAGE_SIZE ) );
 		settings.setBoolean( UISettings.WRAP_RAW_MESSAGES, values.getBoolean( WRAP_RAW_MESSAGES ) );
-		settings.setBoolean( UISettings.DISABLE_BROWSER, values.getBoolean( DISABLE_BROWSER ) );
-		settings.setBoolean( UISettings.DISABLE_BROWSER_PLUGINS, values.getBoolean( DISABLE_BROWSER_PLUGINS ) );
 
 		SoapUI.initAutoSaveTimer();
 		SoapUI.initGCTimer();
@@ -209,6 +211,7 @@ public class UIPrefs implements Prefs
 		if( SoapUI.isStandalone() )
 		{
 			values.put( DESKTOP_TYPE, settings.getString( UISettings.DESKTOP_TYPE, SoapUI.DEFAULT_DESKTOP ) );
+			values.put( MRU_PANEL_SELECTOR, settings.getBoolean( UISettings.MRU_PANEL_SELECTOR ) );
 			values.put( NATIVE_LAF, settings.getBoolean( UISettings.NATIVE_LAF ) );
 		}
 
@@ -224,8 +227,6 @@ public class UIPrefs implements Prefs
 		values.put( RAW_RESPONSE_MESSAGE_SIZE, settings.getString( UISettings.RAW_RESPONSE_MESSAGE_SIZE, "10000" ) );
 		values.put( RAW_REQUEST_MESSAGE_SIZE, settings.getString( UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000" ) );
 		values.put( WRAP_RAW_MESSAGES, settings.getBoolean( UISettings.WRAP_RAW_MESSAGES ) );
-		values.put( DISABLE_BROWSER, settings.getBoolean( UISettings.DISABLE_BROWSER ) );
-		values.put( DISABLE_BROWSER_PLUGINS, settings.getBoolean( UISettings.DISABLE_BROWSER_PLUGINS ) );
 
 		return values;
 	}

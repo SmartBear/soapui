@@ -1,47 +1,64 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
 import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
+import com.eviware.soapui.support.xml.XmlUtils;
+import net.sf.json.JSON;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
-import javax.swing.*;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.Document;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
+import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
 @SuppressWarnings( "unchecked" )
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements
 		PropertyChangeListener
 {
 	private final HttpRequestInterface<?> httpRequest;
-	private JPanel contentPanel;
 	private RSyntaxTextArea contentEditor;
 	private boolean updatingRequest;
 	private JComponent panel;
@@ -134,7 +151,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected Component buildContent()
 	{
-		contentPanel = new JPanel( new BorderLayout() );
+		JPanel contentPanel = new JPanel( new BorderLayout() );
 
 		// Add popup!
 		contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
@@ -205,26 +222,14 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
 	protected void addMediaTypeCombo( JXToolBar toolbar )
 	{
-		mediaTypeCombo = new JComboBox( getRequestMediaTypes() );
+		mediaTypeCombo = new MediaTypeComboBox( httpRequest );
 		mediaTypeCombo.setEnabled( httpRequest.hasRequestBody() );
-		mediaTypeCombo.setEditable( true );
-		if( httpRequest.getMediaType() != null )
-			mediaTypeCombo.setSelectedItem( httpRequest.getMediaType() );
-
-		mediaTypeCombo.addItemListener( new ItemListener()
-		{
-			public void itemStateChanged( ItemEvent e )
-			{
-				httpRequest.setMediaType( String.valueOf( mediaTypeCombo.getSelectedItem() ) );
-			}
-		} );
-
 		toolbar.addLabeledFixed( "Media Type", mediaTypeCombo );
 	}
 
 	protected Object[] getRequestMediaTypes()
 	{
-		return new String[] { "application/json", "application/xml", "text/xml", "multipart/form-data" };
+		return MediaTypeComboBox.getMediaTypes();
 	}
 
 	public void propertyChange( PropertyChangeEvent evt )
@@ -232,7 +237,18 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 		if( evt.getPropertyName().equals( AbstractHttpRequest.REQUEST_PROPERTY ) && !updatingRequest )
 		{
 			updatingRequest = true;
-			contentEditor.setText( ( String )evt.getNewValue() );
+			String requestBodyAsXml = ( String )evt.getNewValue();
+			String mediaType = ( String )mediaTypeCombo.getSelectedItem();
+			if( XmlUtils.seemsToBeXml( requestBodyAsXml ) &&
+					seemsToBeJsonContentType(mediaType))
+			{
+				JSON jsonObject = new JsonXmlSerializer().read( requestBodyAsXml );
+				contentEditor.setText( jsonObject.toString( 3, 0 ) );
+			}
+			else
+			{
+				contentEditor.setText( requestBodyAsXml );
+			}
 			updatingRequest = false;
 		}
 		else if( evt.getPropertyName().equals( "method" ) )

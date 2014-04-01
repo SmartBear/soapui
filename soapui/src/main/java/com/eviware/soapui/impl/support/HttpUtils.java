@@ -1,24 +1,30 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support;
-
-import java.net.InetAddress;
-import java.net.URISyntaxException;
 
 import com.eviware.soapui.support.StringUtils;
 import org.apache.commons.httpclient.URI;
 import org.apache.commons.httpclient.URIException;
 import org.apache.http.client.utils.URIUtils;
+
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
 
 public class HttpUtils
 {
@@ -59,25 +65,34 @@ public class HttpUtils
 
 	public static boolean ping( String host, int timeout )
 	{
-		boolean result = false;
 		pingErrorMessage = "No Error";
 		try
 		{
 			InetAddress address = InetAddress.getByName( host );
-			result = address.isReachable( timeout );
+			return address.isReachable( timeout );
 		}
 		catch( Exception e )
 		{
-			result = false;
 			pingErrorMessage = e.getMessage();
-		}
-		finally
-		{
-			return result;
+			return false;
 		}
 	}
-	
-	public static String getPingErrorMessage() {
+
+	public static String urlEncodeWithUtf8( String input )
+	{
+		try
+		{
+			return URLEncoder.encode( input, "UTF-8" );
+		}
+		catch( UnsupportedEncodingException e )
+		{
+			// if UTF-8 isn't available we might as well die ...
+			throw new Error( "Unexpected error: charset UTF-8 not available", e );
+		}
+	}
+
+	public static String getPingErrorMessage()
+	{
 		return pingErrorMessage;
 	}
 

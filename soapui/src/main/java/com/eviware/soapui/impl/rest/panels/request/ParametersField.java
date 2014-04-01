@@ -1,4 +1,18 @@
-package com.eviware.soapui.impl.rest.panels.request;
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -37,7 +51,8 @@ import java.beans.PropertyChangeListener;
 class ParametersField extends JPanel
 {
 
-	private final RestRequestInterface request;
+    public static final String PARAMETERS_FIELD = "ParametersField";
+    private final RestRequestInterface request;
 	private final JLabel textLabel;
 	private final JTextField textField;
 	private int lastSelectedPosition;
@@ -46,12 +61,14 @@ class ParametersField extends JPanel
 	{
 		this.request = request;
 		textLabel = new JLabel( "Parameters" );
+
 		String paramsString = RestUtils.makeSuffixParameterString( request );
 		textField = new JTextField( paramsString );
 		textField.setEditable( false );
 		textField.setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
 		textField.setBackground( Color.WHITE );
-		setToolTipText( paramsString );
+        textField.setName(PARAMETERS_FIELD);
+		setToolTipText(paramsString);
 		super.setLayout( new BorderLayout() );
 		super.add( textLabel, BorderLayout.NORTH );
 		super.add( textField, BorderLayout.SOUTH );

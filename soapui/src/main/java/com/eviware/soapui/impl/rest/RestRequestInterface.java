@@ -1,30 +1,36 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest;
-
-import java.beans.PropertyChangeListener;
-
-import org.apache.log4j.Logger;
 
 import com.eviware.soapui.config.RestRequestConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.SubmitContext;
+import org.apache.log4j.Logger;
+
+import java.beans.PropertyChangeListener;
 
 public interface RestRequestInterface extends HttpRequestInterface<RestRequestConfig>, PropertyChangeListener
 {
 
-	public enum RequestMethod
+	/**
+	 * Each value in this enumeration represents an officially supported HTTP method ("verb").
+	 */
+	enum HttpMethod
 	{
 		GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH;
 
@@ -34,9 +40,9 @@ public interface RestRequestInterface extends HttpRequestInterface<RestRequestCo
 					OPTIONS.toString(), TRACE.toString(), PATCH.toString() };
 		}
 
-		public static RequestMethod[] getMethods()
+		public static HttpMethod[] getMethods()
 		{
-			return new RequestMethod[] { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH };
+			return new HttpMethod[] { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH };
 		}
 	}
 
@@ -44,28 +50,28 @@ public interface RestRequestInterface extends HttpRequestInterface<RestRequestCo
 	public static final String DEFAULT_MEDIATYPE = "application/xml";
 	public static final String REST_XML_REQUEST = "restXmlRequest";
 
-	public abstract RestMethod getRestMethod();
+	RestMethod getRestMethod();
 
-	public abstract RestRepresentation[] getRepresentations();
+	RestRepresentation[] getRepresentations();
 
-	public abstract RestRepresentation[] getRepresentations( RestRepresentation.Type type );
+	RestRepresentation[] getRepresentations( RestRepresentation.Type type );
 
-	public abstract RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType );
+	RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType );
 
-	public abstract String getAccept();
+	String getAccept();
 
-	public abstract void setAccept( String acceptEncoding );
+	void setAccept( String acceptEncoding );
 
-	public abstract String[] getResponseMediaTypes();
+	String[] getResponseMediaTypes();
 
-	public abstract RestResource getResource();
+	RestResource getResource();
 
-	public abstract void setPath( String fullPath );
+	void setPath( String fullPath );
 
-	public abstract void setResponse( HttpResponse response, SubmitContext context );
+	void setResponse( HttpResponse response, SubmitContext context );
 
-	public abstract void release();
+	void release();
 
-	public abstract boolean hasEndpoint();
+	boolean hasEndpoint();
 
 }

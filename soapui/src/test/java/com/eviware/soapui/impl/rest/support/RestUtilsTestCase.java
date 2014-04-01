@@ -1,25 +1,28 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.utils.ModelItemFactory;
 import junit.framework.JUnit4TestAdapter;
 import org.junit.Test;
 
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.MATRIX;
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.QUERY;
-import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.TEMPLATE;
+import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle.*;
 import static com.eviware.soapui.impl.rest.support.RestUtils.TemplateExtractionOption.EXTRACT_TEMPLATE_PARAMETERS;
 import static com.eviware.soapui.impl.rest.support.RestUtils.TemplateExtractionOption.IGNORE_TEMPLATE_PARAMETERS;
 import static com.eviware.soapui.utils.ModelItemFactory.makeRestRequest;
@@ -124,7 +127,21 @@ public class RestUtilsTestCase
 				is( "/the/" + templateParameterValue + "/path" ));
 	}
 
-	private void addParameter( RestRequest restRequest, RestParamsPropertyHolder.ParameterStyle style, String name, String value )
+	@Test
+	public void expandsPathWithPropertyExpansionOnPathAndTemplateParameter() throws Exception
+	{
+		RestRequest restRequest = makeRestRequest();
+		restRequest.getProject().setPropertyValue( "version", "xml" );
+		String templateParameterName = "templateName";
+		String templateParameterValue = "templateValue";
+		restRequest.getResource().setPath( "/the/{" + templateParameterName + "}/path/${#Project#version}" );
+		addParameter( restRequest, TEMPLATE, templateParameterName, templateParameterValue );
+
+		assertThat(RestUtils.getExpandedPath( restRequest.getResource().getFullPath(), restRequest.getParams(), restRequest ),
+				is( "/the/" + templateParameterValue + "/path/xml" ));
+	}
+
+	private void addParameter( RestRequestInterface restRequest, RestParamsPropertyHolder.ParameterStyle style, String name, String value )
 	{
 		RestParamsPropertyHolder params = restRequest.getParams();
 		RestParamProperty restParamProperty = params.addProperty( name );

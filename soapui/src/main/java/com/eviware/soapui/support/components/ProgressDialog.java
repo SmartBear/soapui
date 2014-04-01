@@ -1,28 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.support.components;
-
-import java.awt.BorderLayout;
-import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.swing.SwingWorkerDelegator;
@@ -31,16 +23,19 @@ import com.eviware.x.dialogs.XProgressDialog;
 import com.eviware.x.dialogs.XProgressMonitor;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+
 /**
  * Dialog for creating progress-dialogs
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class ProgressDialog extends JDialog implements XProgressDialog, XProgressMonitor
 {
 	private JProgressBar progressBar;
-	private JLabel progressLabel;
 	private JButton cancelButton;
 	private Worker worker;
 
@@ -56,7 +51,7 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 		progressBar.setString( initialValue );
 
 		getContentPane().setLayout( new BorderLayout() );
-		progressLabel = new JLabel( label );
+		JLabel progressLabel = new JLabel( label );
 		progressLabel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 0, 10 ) );
 
 		getContentPane().add( progressLabel, BorderLayout.NORTH );
@@ -100,12 +95,22 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 	 * com.eviware.soapui.support.components.XProgressMonitor#setProgress(int,
 	 * java.lang.String)
 	 */
-	public void setProgress( int value, String string )
+	public void setProgress( final int value, final String string )
 	{
-		progressBar.setValue( value );
-		progressBar.setString( string );
+		SwingUtilities.invokeLater( new Runnable()
+		{
+			public void run()
+			{
+				progressBar.setValue( value );
+				progressBar.setString( string );
+				pack();
+			}
+		} );
+	}
 
-		pack();
+	public void setDeterminate()
+	{
+		progressBar.setIndeterminate( false );
 	}
 
 	/*
@@ -116,11 +121,10 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
 	 */
 	public void setVisible( boolean visible )
 	{
-		if( visible == true )
+		if( visible )
 		{
 			UISupport.centerDialog( this );
 		}
-
 		super.setVisible( visible );
 	}
 

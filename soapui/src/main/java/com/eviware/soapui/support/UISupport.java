@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2011 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.support;
 
@@ -20,11 +24,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.ConfigurationDialog;
-import com.eviware.soapui.support.components.JButtonBar;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.PreviewCorner;
-import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.GradientPanel;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.swing.SwingUtils;
@@ -40,26 +40,11 @@ import org.syntax.jedit.InputHandler;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Event;
-import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GraphicsEnvironment;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,7 +54,7 @@ import java.util.Map;
 
 /**
  * Facade for common UI-related tasks
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -78,6 +63,7 @@ public class UISupport
 	public static final String IMAGES_RESOURCE_PATH = "/com/eviware/soapui/resources/images";
 	public static final String TOOL_ICON_PATH = "/applications-system.png";
 	public static final String OPTIONS_ICON_PATH = "/preferences-system.png";
+	public static final int EXTENDED_ERROR_MESSAGE_THRESHOLD = 120;
 
 	// This is needed in Eclipse that has strict class loader constraints.
 	private static List<ClassLoader> secondaryResourceLoaders = new ArrayList<ClassLoader>();
@@ -85,8 +71,8 @@ public class UISupport
 	private static Component frame;
 	private static Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
 	public static Dimension TOOLBAR_BUTTON_DIMENSION;
-	private static Boolean isWindows;
-	private static Boolean isMac;
+	private static boolean isWindows = System.getProperty( "os.name" ).contains( "Windows" );
+	private static boolean isMac = System.getProperty( "os.name" ).contains( "Mac" );
 
 	private static XDialogs dialogs;
 	private static XFileDialogs fileDialogs;
@@ -99,6 +85,9 @@ public class UISupport
 	public static final String DEFAULT_EDITOR_FONT = "Courier plain";
 	public static final int DEFAULT_EDITOR_FONT_SIZE = 11;
 	public static final Color MAC_BACKGROUND_COLOR = new Color( 229, 229, 229 );
+	public static final Color MAC_PROGRESSBAR_BACKGROUND_COLOR = new Color( 196, 196, 196 );
+	public static final Color MAC_PROGRESSBAR_MATTE_BORDER_COLOR = new Color( 238, 238, 238 );
+	public static final Color MAC_PROGRESSBAR_LINE_BORDER_COLOR = new Color( 166, 166, 166 );
 
 	static
 	{
@@ -116,7 +105,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 * 
+	 *
 	 * @param loader
 	 * @deprecated Use {@link #addResourceClassLoader(ClassLoader)} instead
 	 */
@@ -127,7 +116,7 @@ public class UISupport
 
 	/**
 	 * Add a classloader to find resources.
-	 * 
+	 *
 	 * @param loader
 	 */
 	public static void addResourceClassLoader( ClassLoader loader )
@@ -138,7 +127,7 @@ public class UISupport
 	/**
 	 * Set the main frame of this application. This is only used when running
 	 * under Swing.
-	 * 
+	 *
 	 * @param frame
 	 */
 	public static void setMainFrame( Component frame )
@@ -212,7 +201,7 @@ public class UISupport
 
 	@Deprecated
 	public static ConfigurationDialog createConfigurationDialog( String name, String helpUrl, String description,
-			ImageIcon icon )
+																					 ImageIcon icon )
 	{
 		return new SwingConfigurationDialogImpl( name, helpUrl, description, icon );
 	}
@@ -239,7 +228,7 @@ public class UISupport
 
 	public static void showErrorMessage( String message )
 	{
-		if( message != null && message.length() > 120 )
+		if( message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD )
 		{
 			dialogs.showExtendedInfo( "Error", "An error occurred", message, null );
 		}
@@ -252,6 +241,11 @@ public class UISupport
 	public static boolean confirm( String question, String title )
 	{
 		return dialogs.confirm( question, title );
+	}
+
+	public static boolean confirm( String question, String title, Component parent )
+	{
+		return dialogs.confirm( question, title, parent );
 	}
 
 	public static int yesYesToAllOrNo( String question, String title )
@@ -304,14 +298,32 @@ public class UISupport
 	{
 		JPanel panel = new JPanel( new BorderLayout() );
 
+		if( isMac() )
+		{
+			// default native progress bar on mac ignores color settings, use a custom ui to get green/red
+			progressBar.setUI( new BasicProgressBarUI() );
+		}
+
 		progressBar.setValue( 0 );
 		progressBar.setStringPainted( true );
 		progressBar.setString( "" );
 		progressBar.setIndeterminate( indeterimate );
 
-		progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
-
-		panel.setBorder( BorderFactory.createEmptyBorder( space, space, space, space ) );
+		if( isMac() )
+		{
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+			Border compound = BorderFactory.createCompoundBorder(
+					BorderFactory.createMatteBorder( space, space, space, space, MAC_PROGRESSBAR_MATTE_BORDER_COLOR ),
+					BorderFactory.createLineBorder( MAC_PROGRESSBAR_LINE_BORDER_COLOR )
+			);
+			panel.setBorder( compound );
+			panel.setBackground( MAC_PROGRESSBAR_BACKGROUND_COLOR );
+		}
+		else
+		{
+			progressBar.setBorder( BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) );
+			panel.setBorder( BorderFactory.createEmptyBorder( space, space, space, space ) );
+		}
 		panel.add( progressBar, BorderLayout.CENTER );
 
 		return panel;
@@ -387,9 +399,6 @@ public class UISupport
 	public static ImageIcon createImageIcon( String path )
 	{
 		if( StringUtils.isNullOrEmpty( path ) )
-			return null;
-
-		if( isHeadless() )
 			return null;
 
 		if( iconCache.containsKey( path ) )
@@ -499,14 +508,22 @@ public class UISupport
 	public static JButton createToolbarButton( Action action )
 	{
 		JButton result = new JButton( action );
-		if(action.getValue( Action.NAME ) != null)
+		if( action.getValue( Action.NAME ) != null )
 		{
-			result.setName( String.valueOf(  action.getValue( Action.NAME ) ));
+			result.setName( String.valueOf( action.getValue( Action.NAME ) ) );
 		}
 		result.setPreferredSize( TOOLBAR_BUTTON_DIMENSION );
 		result.setText( "" );
 		result.setBorder( BorderFactory.createEmptyBorder( 4, 2, 4, 2 ) );
 		return result;
+	}
+
+	public static JButton createFormButton( Action action )
+	{
+		JButton helpButton = createToolbarButton( action );
+		helpButton.setContentAreaFilled( false );
+		helpButton.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return helpButton;
 	}
 
 	public static JButton createToolbarButton( Action action, boolean enabled )
@@ -644,18 +661,12 @@ public class UISupport
 
 	public static boolean isWindows()
 	{
-		if( isWindows == null )
-			isWindows = new Boolean( System.getProperty( "os.name" ).indexOf( "Windows" ) >= 0 );
-
-		return isWindows.booleanValue();
+		return isWindows;
 	}
 
 	public static boolean isMac()
 	{
-		if( isMac == null )
-			isMac = new Boolean( System.getProperty( "os.name" ).indexOf( "Mac" ) >= 0 );
-
-		return isMac.booleanValue();
+		return isMac;
 	}
 
 	public static void setHourglassCursor()
@@ -698,6 +709,10 @@ public class UISupport
 	public static void invokeAndWait( Runnable runnable ) throws Exception
 	{
 		uiUtils.invokeAndWait( runnable );
+	}
+
+	public static void invokeAndWaitIfNotInEDT( Runnable runnable){
+		uiUtils.invokeAndWaitIfNotInEDT( runnable );
 	}
 
 	public static JXToolBar createToolbar()
@@ -1000,6 +1015,16 @@ public class UISupport
 		return Font.decode( DEFAULT_EDITOR_FONT + " " + fontSize );
 	}
 
+	public static <T> T findParentWithClass( Component startComponent, Class<T> expectedClass )
+	{
+		Component currentComponent = startComponent;
+		while( currentComponent != null && !( expectedClass.isAssignableFrom( currentComponent.getClass() ) ) )
+		{
+			currentComponent = currentComponent.getParent();
+		}
+		return ( T )currentComponent;
+	}
+
 	public static char[] promptPassword( String question, String title )
 	{
 		return dialogs.promptPassword( question, title );
@@ -1048,5 +1073,46 @@ public class UISupport
 		JPanel panel = new JPanel( new BorderLayout() );
 		panel.setBorder( BorderFactory.createEmptyBorder( top, left, bottom, right ) );
 		return panel;
+	}
+
+	public static JLabel createLabelLink( final String url, String labelText )
+	{
+		JLabel label = new JLabel( labelText );
+		label.setForeground( Color.BLUE );
+		label.addMouseListener( new MouseAdapter()
+		{
+			@Override
+			public void mouseClicked( MouseEvent e )
+			{
+				Tools.openURL( url );
+			}
+		} );
+		label.setCursor( Cursor.getPredefinedCursor( Cursor.HAND_CURSOR ) );
+		return label;
+	}
+
+	public static boolean isEnoughSpaceAvailableBelowComponent( Point componentLocation, int expandableDialogHeight, int componentHeight )
+	{
+		GraphicsConfiguration currentGraphicsConfiguration = getGraphicsConfigurationForPosition( componentLocation );
+		if( currentGraphicsConfiguration == null )
+		{
+			return true;
+		}
+		double bottomYCoordinate = componentLocation.getY() + expandableDialogHeight + componentHeight;
+		double bottomUsableYCoordinateOnScreen = currentGraphicsConfiguration.getBounds().getMaxY()
+				- Toolkit.getDefaultToolkit().getScreenInsets( currentGraphicsConfiguration ).bottom;
+		return bottomYCoordinate <= bottomUsableYCoordinateOnScreen;
+	}
+
+	private static GraphicsConfiguration getGraphicsConfigurationForPosition( Point point )
+	{
+		for( GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices() )
+		{
+			if( graphicsDevice.getDefaultConfiguration().getBounds().contains( point ) )
+			{
+				return graphicsDevice.getDefaultConfiguration();
+			}
+		}
+		return null;
 	}
 }

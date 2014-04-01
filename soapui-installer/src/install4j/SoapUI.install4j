@@ -19,7 +19,7 @@
       <variable name="OS_EXT" value="" description="" category="" />
     </variables>
     <mergedProjects />
-    <codeSigning macEnabled="false" macPkcs12File="" windowsEnabled="false" windowsKeySource="pvkAndSpc" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="" />
+    <codeSigning macEnabled="true" macPkcs12File="${compiler:MAC_CERT_PATH}" windowsEnabled="false" windowsKeySource="pvkAndSpc" windowsPvkFile="" windowsSpcFile="" windowsPkcs12File="" />
   </application>
   <files keepModificationTimes="false" missingFilesStrategy="warn" globalExcludeSuffixes="" defaultOverwriteMode="4" defaultUninstallMode="0" launcherOverwriteMode="3" defaultFileMode="644" defaultDirMode="755">
     <filesets>
@@ -689,7 +689,7 @@ return component.isSelected();</string>
                     <boolean>true</boolean>
                   </void>
                   <void property="infoText">
-                    <string>Please select the target directory for unpacking the Integrated Browser component. 
+                    <string>Please select the target directory for unpacking the Integrated Browser component.
 Be sure to have write permissions for this directory. </string>
                   </void>
                   <void property="initialDirectory">
@@ -841,7 +841,7 @@ else return false;
     return  "bat";
 } else {
     return "sh";
-} 
+}
 </string>
                           </void>
                         </object>
@@ -881,7 +881,7 @@ else return false;
     return  context.getVariable("sys.contentDir");
 } else {
     return context.getVariable("sys.installationDir");
-} 
+}
 </string>
                           </void>
                         </object>
@@ -1561,6 +1561,37 @@ else return "";</string>
                 </serializedBean>
                 <condition />
               </action>
+              <action name="Set jre lib folder" id="4804" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>String jre = String.format("%s%s",
+    (String)context.getVariable("sys.preferredJre"),
+    (String)context.getVariable("sys.fileSeparator"));
+if (Util.isMacOS()) {
+    return String.format("%s%sContents%sHome%sjre%slib",
+        jre,
+        (String)context.getVariable("sys.fileSeparator"),
+        (String)context.getVariable("sys.fileSeparator"),
+        (String)context.getVariable("sys.fileSeparator"),
+        (String)context.getVariable("sys.fileSeparator"));
+} else {
+    return jre + "lib";
+}</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>JreLib</string>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
               <action name="" id="470" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateProgramGroupAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -1857,50 +1888,6 @@ else return "";</string>
                 </serializedBean>
                 <condition />
               </action>
-              <action name="Add disable jxbrowser" id="1788" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="false" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Disabling jxbrowser failed, you can disable it manually after the installation">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
-                      <void property="launcherId">
-                        <string>64</string>
-                      </void>
-                      <void property="vmOptions">
-                        <array class="java.lang.String" length="1">
-                          <void index="0">
-                            <string>-Dsoapui.jxbrowser.disable=true</string>
-                          </void>
-                        </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition>//for linux and unix encounter check box, but for windows never set jx browser disabled during the installation
-if (Util.isMacOS())
-return context.getBooleanVariable("disableJxBrowserAction");
-else
-return false;
-
-</condition>
-              </action>
-              <action name="Add jxbrowser install location" id="2545" customizedId="" beanClass="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Error setting jxbrowser install dir">
-                <serializedBean>
-                  <java class="java.beans.XMLDecoder">
-                    <object class="com.install4j.runtime.beans.actions.misc.AddVmOptionsAction">
-                      <void property="launcherId">
-                        <string>64</string>
-                      </void>
-                      <void property="vmOptions">
-                        <array class="java.lang.String" length="1">
-                          <void index="0">
-                            <string>-Djxbrowser.xulrunner.dir=${installer:jxBrowserInstallLocation}</string>
-                          </void>
-                        </array>
-                      </void>
-                    </object>
-                  </java>
-                </serializedBean>
-                <condition />
-              </action>
               <action name="" id="2705" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.AddWindowsFileRightsAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="Error in setting write permissions for jxbrowser">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
@@ -2041,7 +2028,7 @@ return false;</condition>
                 <condition>return context.getInstallationComponentById("1263").isSelected();
 </condition>
               </action>
-              <action name="" id="566" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="Could not install icon">
+              <action name="" id="566" customizedId="" beanClass="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
                 <serializedBean>
                   <java class="java.beans.XMLDecoder">
                     <object class="com.install4j.runtime.beans.actions.desktop.CreateDesktopLinkAction">
@@ -2201,6 +2188,32 @@ return installTutorials;</condition>
                   </action>
                 </beans>
               </group>
+              <action name="Put the JavaFX jar in the correct folder" id="4757" customizedId="" beanClass="com.install4j.runtime.beans.actions.files.CopyFileAction" enabled="true" commentSet="false" comment="" actionElevationType="elevated" rollbackBarrier="false" multiExec="false" failureStrategy="3" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.files.CopyFileAction">
+                      <void property="destinationFile">
+                        <object class="java.io.File">
+                          <string>${installer:JreLib}${installer:sys.fileSeparator}ext</string>
+                        </object>
+                      </void>
+                      <void property="files">
+                        <array class="java.io.File" length="1">
+                          <void index="0">
+                            <object class="java.io.File">
+                              <string>${installer:JreLib}${installer:sys.fileSeparator}jfxrt.jar</string>
+                            </object>
+                          </void>
+                        </array>
+                      </void>
+                      <void property="overwriteMode">
+                        <object class="com.install4j.api.context.OverwriteMode" field="ALWAYS" />
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
             </actions>
             <formComponents />
           </screen>
@@ -2588,7 +2601,7 @@ return installTutorials;</condition>
         <content />
       </installerScript>
     </unixInstaller>
-    <macos name="Mac OS X Single Bundle" id="198" customizedId="" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="false" launcherId="64">
+    <macos name="Mac OS X Single Bundle" id="198" customizedId="" mediaFileName="SoapUI-${compiler:VERSION_NUMBER}" installDir="SoapUI-${compiler:VERSION_NUMBER}" overridePrincipalLanguage="false" jreBitType="32" runPostProcessor="false" postProcessor="" failOnPostProcessorError="false" useLegacyMediaFileIds="false" legacyMediaFileIds="" includedJRE="macosx-amd64-1.7.0_40" manualJREEntry="false" bundleType="1" jreURL="" jreShared="false" directDownload="false" installOnlyIfNecessary="false" appleJre="false" customInstallBaseDir="" contentFilesType="1" downloadURL="" signLaunchers="true" launcherId="64">
       <excludedBeans />
       <overriddenPrincipalLanguage id="en" customLocalizationFile="" />
       <exclude>

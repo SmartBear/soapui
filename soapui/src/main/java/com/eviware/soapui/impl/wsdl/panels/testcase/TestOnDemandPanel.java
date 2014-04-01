@@ -1,32 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.testcase;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUISystemProperties;
@@ -36,7 +24,8 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.components.NativeBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
+import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 import com.eviware.soapui.testondemand.DependencyValidator;
 import com.eviware.soapui.testondemand.Location;
 import com.eviware.soapui.testondemand.TestOnDemandCaller;
@@ -46,12 +35,23 @@ import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
+import javax.annotation.Nonnull;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * 
  * Panel for displaying a Test On Demand report
- * 
  */
 public class TestOnDemandPanel extends JPanel
 {
@@ -76,22 +76,21 @@ public class TestOnDemandPanel extends JPanel
 	private static final String NO_SERVER_IP_ADDRESSES_MESSAGE = "<No IP addresses found>";
 
 	// FIXME This suggest using a Java 7 feature, Fix compiler level!
-	@NonNull
+	@Nonnull
 	private JComboBox locationsComboBox;
 
-	@NonNull
-	private CustomNativeBrowserComponent browser;
+	private WebViewBasedBrowserComponent browser;
 
-	@NonNull
+	@Nonnull
 	private Action sendTestCaseAction;
 
-	@NonNull
+	@Nonnull
 	private static List<Location> locationsCache = new ArrayList<Location>();
 
-	@NonNull
+	@Nonnull
 	JLabel serverIPAddressesLabel = new JLabel();
 
-	@NonNull
+	@Nonnull
 	TestOnDemandCaller caller;
 
 	private final WsdlTestCase testCase;
@@ -111,20 +110,6 @@ public class TestOnDemandPanel extends JPanel
 		setCaller();
 
 		add( buildToolbar(), BorderLayout.NORTH );
-
-		if( !SoapUI.isJXBrowserDisabled( true ) )
-		{
-			browser = new CustomNativeBrowserComponent( true, false );
-			add( browser.getComponent(), BorderLayout.CENTER );
-		}
-		else
-		{
-			JEditorPane jxbrowserDisabledPanel = new JEditorPane();
-			jxbrowserDisabledPanel.setText( "Browser component disabled or not available on this platform" );
-			add( jxbrowserDisabledPanel, BorderLayout.CENTER );
-		}
-
-		openInInternalBrowser( FIRST_PAGE_URL );
 	}
 
 	protected void setValidator()
@@ -139,9 +124,9 @@ public class TestOnDemandPanel extends JPanel
 
 	public void release()
 	{
-		if( browser != null )
+		if ( browser != null )
 		{
-			browser.release();
+			browser.close( true );
 		}
 	}
 
@@ -217,29 +202,11 @@ public class TestOnDemandPanel extends JPanel
 		invalidate();
 	}
 
-	// FIXME These guys should probably go in a utils class
-
-	private void openURLSafely( String url )
-
-	{
-		if( SoapUI.isJXBrowserDisabled( true ) )
-		{
-			Tools.openURL( url );
-		}
-		else
-		{
-			if( browser != null )
-			{
-				browser.navigate( url, null );
-			}
-		}
-	}
-
 	private void openInInternalBrowser( String url )
 	{
-		if( !SoapUI.isJXBrowserDisabled( true ) && browser != null )
+		if( !SoapUI.isBrowserDisabled() )
 		{
-			browser.navigate( url, null );
+			browser.navigate( url );
 		}
 	}
 
@@ -256,6 +223,19 @@ public class TestOnDemandPanel extends JPanel
 	private String getMoreLocationsURL()
 	{
 		return System.getProperty( SoapUISystemProperties.TEST_ON_DEMAND_GET_LOCATIONS_URL, GET_MORE_LOCATIONS_URL );
+	}
+
+	public void ensureBrowserIsInitialized()
+	{
+
+		if( browser == null )
+		{
+			browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
+			add( browser.getComponent(), BorderLayout.CENTER );
+
+			openInInternalBrowser( FIRST_PAGE_URL );
+		}
+
 	}
 
 	private class SendTestCaseAction extends AbstractAction
@@ -297,6 +277,22 @@ public class TestOnDemandPanel extends JPanel
 				{
 					openURLSafely( redirectUrl );
 				}
+			}
+		}
+	}
+
+	private void openURLSafely( String url )
+
+	{
+		if( SoapUI.isBrowserDisabled( ) )
+		{
+			Tools.openURL( url );
+		}
+		else
+		{
+			if( browser != null )
+			{
+				browser.navigate( url );
 			}
 		}
 	}
@@ -345,16 +341,6 @@ public class TestOnDemandPanel extends JPanel
 		}
 	}
 
-	private class CustomNativeBrowserComponent extends NativeBrowserComponent
-	{
-		public CustomNativeBrowserComponent( boolean addToolbar, boolean addStatusBar )
-		{
-			super( addToolbar, addStatusBar );
-		}
-
-		// TODO check if clicking a link opens a new window
-	}
-
 	private class SendTestCaseWorker extends WorkerAdapter
 	{
 		private final WsdlTestCase testCase;
@@ -400,8 +386,7 @@ public class TestOnDemandPanel extends JPanel
 			catch( Exception e )
 			{
 				SoapUI.logError( e, COULD_NOT_GET_LOCATIONS_MESSAGE );
-			}
-			finally
+			} finally
 			{
 				populateLocationsComboBox();
 			}

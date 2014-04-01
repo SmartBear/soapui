@@ -1,23 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.settings;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.eviware.soapui.config.SettingConfig;
 import com.eviware.soapui.config.SettingsConfig;
@@ -25,6 +22,13 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Settings implementation for XmlBeans generated SettingsConfig
@@ -143,12 +147,18 @@ public class XmlBeansSettingsImpl implements Settings
 
 	public boolean getBoolean( String id )
 	{
+		return getBoolean( id, false );
+	}
+
+	@Override
+	public boolean getBoolean( String id, boolean defaultValue )
+	{
 		String value = getString( id, null );
 
 		if( value != null )
 			return Boolean.parseBoolean( value );
 
-		return parent == null ? false : parent.getBoolean( id );
+		return parent == null ? defaultValue : parent.getBoolean( id );
 	}
 
 	public long getLong( String id, long defaultValue )
@@ -253,9 +263,9 @@ public class XmlBeansSettingsImpl implements Settings
 			values.put( setting.getId(), setting );
 		}
 
-		for( String key : changed.keySet() )
+		for( Map.Entry<String, String> entry : changed.entrySet() )
 		{
-			notifySettingChanged( key, getString( key, null ), changed.get( key ) );
+			notifySettingChanged( entry.getKey(), getString( entry.getKey(), null ), entry.getValue() );
 		}
 		notifySettingsReloaded();
 	}

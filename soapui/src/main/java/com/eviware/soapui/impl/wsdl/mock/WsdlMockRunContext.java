@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.mock;
 
@@ -18,8 +22,10 @@ import java.util.Set;
 
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
@@ -41,11 +47,11 @@ import com.eviware.soapui.support.types.StringToStringMap;
 public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, TestCaseRunContext, Cloneable
 {
 	private DefaultPropertyExpansionContext properties;
-	private final WsdlMockService mockService;
+	private final MockService mockService;
 	private final WsdlTestRunContext context;
-	private WsdlMockResponse mockResponse;
+	private MockResponse mockResponse;
 
-	public WsdlMockRunContext( WsdlMockService mockService, WsdlTestRunContext context )
+	public WsdlMockRunContext( MockService mockService, WsdlTestRunContext context )
 	{
 		this.mockService = mockService;
 		this.context = context;
@@ -53,7 +59,7 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		reset();
 	}
 
-	public WsdlMockService getMockService()
+	public MockService getMockService()
 	{
 		return mockService;
 	}
@@ -308,12 +314,12 @@ public class WsdlMockRunContext implements MockRunContext, Map<String, Object>, 
 		return context == null ? mockService.getSettings() : context.getTestCase().getSettings();
 	}
 
-	public void setMockResponse( WsdlMockResponse mockResponse )
+	public void setMockResponse( MockResponse mockResponse )
 	{
 		this.mockResponse = mockResponse;
 	}
 
-	public WsdlMockResponse getMockResponse()
+	public MockResponse getMockResponse()
 	{
 		return mockResponse;
 	}

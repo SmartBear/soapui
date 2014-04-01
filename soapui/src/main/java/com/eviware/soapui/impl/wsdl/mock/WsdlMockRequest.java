@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.mock;
 
@@ -23,6 +27,10 @@ import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.eviware.soapui.impl.support.AbstractMockRequest;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.settings.Settings;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
@@ -51,58 +59,19 @@ import com.eviware.soapui.support.xml.XmlUtils;
  * @author ole.matzura
  */
 
-public class WsdlMockRequest implements MockRequest
+public class WsdlMockRequest extends AbstractMockRequest
 {
-	private StringToStringsMap requestHeaders;
-	private String requestContent;
-	private MultipartMessageSupport mmSupport;
-	private XmlObject requestXmlObject;
 	private SoapVersion soapVersion;
-	private final HttpServletResponse response;
-	private String protocol;
-	private String path;
 	private String soapAction;
-	private final WsdlMockRunContext context;
-	private final WsdlMockRunContext requestContext;
-	private final HttpServletRequest request;
 	private Vector<Object> wssResult;
-	private MockRequestDataSource mockRequestDataSource;
-	private String actualRequestContent;
-	private boolean responseMessage;
-	private String method;
 
 	public WsdlMockRequest( HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context )
 			throws Exception
 	{
-		this.request = request;
-		this.response = response;
-		this.context = context;
 
-		requestContext = new WsdlMockRunContext( context.getMockService(), null );
+		super(request, response, context);
 
-		requestHeaders = new StringToStringsMap();
-		for( Enumeration<?> e = request.getHeaderNames(); e.hasMoreElements(); )
-		{
-			String header = ( String )e.nextElement();
-			String lcHeader = header.toLowerCase();
-			if( lcHeader.equals( "soapaction" ) )
-				requestHeaders.put( "SOAPAction", request.getHeader( header ) );
-			else if( lcHeader.equals( "content-type" ) )
-				requestHeaders.put( "Content-Type", request.getHeader( header ) );
-			else if( lcHeader.equals( "content-length" ) )
-				requestHeaders.put( "Content-Length", request.getHeader( header ) );
-			else if( lcHeader.equals( "content-encoding" ) )
-				requestHeaders.put( "Content-Encoding", request.getHeader( header ) );
-			else
-				requestHeaders.put( header, request.getHeader( header ) );
-		}
-
-		protocol = request.getProtocol();
-		path = request.getPathInfo();
-		if( path == null )
-			path = "";
-
-		if( request.getMethod().equals( "POST" ) )
+		if( "POST".equals( request.getMethod() ) )
 		{
 			initPostRequest( request, context );
 		}
@@ -115,17 +84,20 @@ public class WsdlMockRequest implements MockRequest
 		if( contentType != null && contentType.toUpperCase().startsWith( "MULTIPART" ) )
 		{
 			readMultipartRequest( request );
-			if( mmSupport != null && mmSupport.getRootPart() != null )
-				contentType = mmSupport.getRootPart().getContentType();
+			MultipartMessageSupport multipartMessageSupport = getMultipartMessageSupport();
+			if( multipartMessageSupport != null && multipartMessageSupport.getRootPart() != null )
+				contentType = multipartMessageSupport.getRootPart().getContentType();
 		}
 		else
 		{
-			this.requestContent = readRequestContent( request );
+			String requestContent = readRequestContent( request );
+			super.setRequestContent( requestContent );
 
-			if( StringUtils.hasContent( context.getMockService().getIncomingWss() ) )
+			WsdlMockService mockService = (WsdlMockService)context.getMockService();
+			if( StringUtils.hasContent( mockService.getIncomingWss() ) )
 			{
-				IncomingWss incoming = context.getMockService().getProject().getWssContainer()
-						.getIncomingWssByName( context.getMockService().getIncomingWss() );
+				IncomingWss incoming = ((WsdlProject)mockService.getProject()).getWssContainer()
+						.getIncomingWssByName( mockService.getIncomingWss() );
 				if( incoming != null )
 				{
 					Document dom = XmlUtils.parseXml( requestContent );
@@ -136,8 +108,8 @@ public class WsdlMockRequest implements MockRequest
 						{
 							StringWriter writer = new StringWriter();
 							XmlUtils.serialize( dom, writer );
-							actualRequestContent = requestContent;
-							requestContent = writer.toString();
+							setActualRequestContent( requestContent );
+							super.setRequestContent( writer.toString() );
 						}
 					}
 					catch( Exception e )
@@ -162,7 +134,7 @@ public class WsdlMockRequest implements MockRequest
 		if( soapVersion == null )
 			soapVersion = SoapVersion.Soap11;
 
-		soapAction = SoapUtils.getSoapAction( soapVersion, requestHeaders );
+		soapAction = SoapUtils.getSoapAction( soapVersion, getRequestHeaders() );
 	}
 
 	public SoapVersion getSoapVersion()
@@ -172,7 +144,7 @@ public class WsdlMockRequest implements MockRequest
 
 	public String getProtocol()
 	{
-		return protocol;
+		return super.getProtocol();
 	}
 
 	public Vector<?> getWssResult()
@@ -183,9 +155,12 @@ public class WsdlMockRequest implements MockRequest
 	private void readMultipartRequest( HttpServletRequest request ) throws MessagingException
 	{
 		StringToStringMap values = StringToStringMap.fromHttpHeader( request.getContentType() );
-		mockRequestDataSource = new MockRequestDataSource( request );
-		mmSupport = new MultipartMessageSupport( mockRequestDataSource, values.get( "start" ), null, true, requestContext
-				.getMockService().getSettings().getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES ) );
+		MockRequestDataSource mockRequestDataSource = new MockRequestDataSource( request );
+		setMockRequestDataSource( mockRequestDataSource );
+		Settings settings = getRequestContext().getMockService().getSettings();
+		boolean isPrettyPrint = settings.getBoolean( WsdlSettings.PRETTY_PRINT_RESPONSE_MESSAGES );
+		MultipartMessageSupport mmSupport = new MultipartMessageSupport( mockRequestDataSource, values.get( "start" ), null, true, isPrettyPrint );
+		setMultipartMessageSupport( mmSupport );
 	}
 
 	private String readRequestContent( HttpServletRequest request ) throws Exception
@@ -216,7 +191,7 @@ public class WsdlMockRequest implements MockRequest
 
 		// decompress
 		String compressionAlg = HttpClientSupport.getCompressionType( request.getContentType(),
-				requestHeaders.get( "Content-Encoding", ( String )null ) );
+				getRequestHeaders().get( "Content-Encoding", ( String )null ) );
 
 		if( compressionAlg != null )
 		{
@@ -263,29 +238,14 @@ public class WsdlMockRequest implements MockRequest
 		return messageContent;
 	}
 
-	public Attachment[] getRequestAttachments()
-	{
-		return mmSupport == null ? new Attachment[0] : mmSupport.getAttachments();
-	}
-
-	public String getRequestContent()
-	{
-		return mmSupport == null ? requestContent : mmSupport.getContentAsString();
-	}
-
-	public StringToStringsMap getRequestHeaders()
-	{
-		return requestHeaders;
-	}
-
 	public void setRequestContent( String requestContent )
 	{
-		this.requestContent = requestContent;
-		requestXmlObject = null;
+		super.setRequestContent( requestContent );
+		setRequestXmlObject( null );
 
 		try
 		{
-			soapVersion = SoapUtils.deduceSoapVersion( request.getContentType(), getRequestXmlObject() );
+			soapVersion = SoapUtils.deduceSoapVersion( getRequest().getContentType(), getRequestXmlObject() );
 		}
 		catch( XmlException e )
 		{
@@ -296,59 +256,10 @@ public class WsdlMockRequest implements MockRequest
 			soapVersion = SoapVersion.Soap11;
 	}
 
-	public XmlObject getRequestXmlObject() throws XmlException
-	{
-		if( requestXmlObject == null && StringUtils.hasContent( getRequestContent() ) )
-			// requestXmlObject = XmlObject.Factory.parse( getRequestContent() );
-			requestXmlObject = XmlUtils.createXmlObject( getRequestContent(), XmlUtils.createDefaultXmlOptions() );
-
-		return requestXmlObject;
-	}
-
-	public HttpServletResponse getHttpResponse()
-	{
-		return response;
-	}
-
-	public HttpServletRequest getHttpRequest()
-	{
-		return request;
-	}
-
-	public String getMethod()
-	{
-		return method == null ? request.getMethod() : method;
-	}
-
-	public void setMethod( String method )
-	{
-		this.method = method;
-	}
 
 	public XmlObject getContentElement() throws XmlException
 	{
 		return SoapUtils.getContentElement( getRequestXmlObject(), soapVersion );
-	}
-
-	public String getPath()
-	{
-		return path;
-	}
-
-	public WsdlMockRunContext getContext()
-	{
-		return context;
-	}
-
-	public void setOperation( WsdlOperation operation )
-	{
-		if( mmSupport != null )
-			mmSupport.setOperation( operation );
-	}
-
-	public WsdlMockRunContext getRequestContext()
-	{
-		return requestContext;
 	}
 
 	public String getSoapAction()
@@ -361,19 +272,4 @@ public class WsdlMockRequest implements MockRequest
 		this.soapAction = soapAction;
 	}
 
-	public byte[] getRawRequestData()
-	{
-		return mockRequestDataSource == null ? actualRequestContent == null ? requestContent.getBytes()
-				: actualRequestContent.getBytes() : mockRequestDataSource.getData();
-	}
-
-	public void setResponseMessage( boolean responseMessage )
-	{
-		this.responseMessage = responseMessage;
-	}
-
-	public boolean isResponseMessage()
-	{
-		return responseMessage;
-	}
 }

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<definitions name="GeoCoder"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:tns="http://rpc.geocoder.us/Geo/Coder/US/"
+             xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="http://rpc.geocoder.us/Geo/Coder/US/">
+    <types>
+        <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://rpc.geocoder.us/Geo/Coder/US/" elementFormDefault="unqualified">
+            <import namespace="http://schemas.xmlsoap.org/soap/encoding/" />
+            <xsd:complexType name="ArrayOfGeocoderResult">
+                <complexContent>
+                    <restriction base="SOAP-ENC:Array">
+                        <attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:GeocoderResult[]" />
+                    </restriction>
+                </complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="GeocoderResult">
+                <xsd:all>
+                    <xsd:element name="zip" type="xsd:int" />
+                    <xsd:element name="state" type="xsd:string" />
+                    <xsd:element name="city" type="xsd:string" />
+                    <xsd:element name="lat" type="xsd:float" />
+                    <xsd:element name="long" type="xsd:float" />
+                    <xsd:element name="number" type="xsd:int" />
+                    <xsd:element name="suffix" type="xsd:string" />
+                    <xsd:element name="prefix" type="xsd:string" />
+                    <xsd:element name="type" type="xsd:string" />
+                    <xsd:element name="street" type="xsd:string" />
+                    <xsd:element name="suffix1" type="xsd:string" />
+                    <xsd:element name="prefix1" type="xsd:string" />
+                    <xsd:element name="type1" type="xsd:string" />
+                    <xsd:element name="street1" type="xsd:string" />
+                    <xsd:element name="suffix2" type="xsd:string" />
+                    <xsd:element name="prefix2" type="xsd:string" />
+                    <xsd:element name="type2" type="xsd:string" />
+                    <xsd:element name="street2" type="xsd:string" />
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="ArrayOfGeocoderAddressResult">
+                <complexContent>
+                    <restriction base="SOAP-ENC:Array">
+                        <attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:GeocoderAddressResult[]" />
+                    </restriction>
+                </complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="GeocoderAddressResult">
+                <xsd:all>
+                    <xsd:element name="number" type="xsd:int" />
+                    <xsd:element name="zip" type="xsd:int" />
+                    <xsd:element name="suffix" type="xsd:string" />
+                    <xsd:element name="prefix" type="xsd:string" />
+                    <xsd:element name="type" type="xsd:string" />
+                    <xsd:element name="street" type="xsd:string" />
+                    <xsd:element name="state" type="xsd:string" />
+                    <xsd:element name="city" type="xsd:string" />
+                    <xsd:element name="lat" type="xsd:float" />
+                    <xsd:element name="long" type="xsd:float" />
+                </xsd:all>
+            </xsd:complexType>
+            <xsd:complexType name="ArrayOfGeocoderIntersectionResult">
+                <complexContent>
+                    <restriction base="SOAP-ENC:Array">
+                        <attribute ref="SOAP-ENC:arrayType" wsdl:arrayType="tns:GeocoderIntersectionResult[]" />
+                    </restriction>
+                </complexContent>
+            </xsd:complexType>
+            <xsd:complexType name="GeocoderIntersectionResult">
+                <xsd:all>
+                    <xsd:element name="zip" type="xsd:int" />
+                    <xsd:element name="suffix1" type="xsd:string" />
+                    <xsd:element name="prefix1" type="xsd:string" />
+                    <xsd:element name="type1" type="xsd:string" />
+                    <xsd:element name="street1" type="xsd:string" />
+                    <xsd:element name="suffix2" type="xsd:string" />
+                    <xsd:element name="prefix2" type="xsd:string" />
+                    <xsd:element name="type2" type="xsd:string" />
+                    <xsd:element name="street2" type="xsd:string" />
+                    <xsd:element name="state" type="xsd:string" />
+                    <xsd:element name="city" type="xsd:string" />
+                    <xsd:element name="lat" type="xsd:float" />
+                    <xsd:element name="long" type="xsd:float" />
+                </xsd:all>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+
+    <message name="geocodeRequest">
+        <part name="location" type="xsd:string" />
+    </message>
+    <message name="geocodeResponse">
+        <part name="results" type="tns:ArrayOfGeocoderResult" />
+    </message>
+    <message name="geocodeAddressRequest">
+        <part name="address" type="xsd:string" />
+    </message>
+    <message name="geocodeAddressResponse">
+        <part name="results" type="tns:ArrayOfGeocoderAddressResult" />
+    </message>
+    <message name="geocodeIntersectionRequest">
+        <part name="intersection" type="xsd:string" />
+    </message>
+    <message name="geocodeIntersectionResponse">
+        <part name="results" type="tns:ArrayOfGeocoderIntersectionResult" />
+    </message>
+    <portType name="GeoCode_PortType">
+        <operation name="geocode">
+            <input message="tns:geocodeRequest" />
+            <output message="tns:geocodeResponse" />
+        </operation>
+        <operation name="geocode_address">
+            <input message="tns:geocodeAddressRequest" />
+            <output message="tns:geocodeAddressResponse" />
+        </operation>
+        <operation name="geocode_intersection">
+            <input message="tns:geocodeIntersectionRequest" />
+            <output message="tns:geocodeIntersectionResponse" />
+        </operation>
+    </portType>
+    <binding name="GeoCode_Binding" type="tns:GeoCode_PortType">
+        <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+        <operation name="geocode">
+            <soap:operation style="rpc" soapAction="http://rpc.geocoder.us/Geo/Coder/US#geocode" />
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                           namespace="http://rpc.geocoder.us/Geo/Coder/US/"
+                           use="encoded" />
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                           namespace="http://rpc.geocoder.us/Geo/Coder/US/"
+                           use="encoded" />
+            </output>
+        </operation>
+        <operation name="geocode_address">
+            <soap:operation style="rpc" soapAction="http://rpc.geocoder.us/Geo/Coder/US#geocode_address" />
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                           namespace="http://rpc.geocoder.us/Geo/Coder/US/"
+                           use="encoded" />
+            </input>                                                http://geocoder.us/dist/eg/clients/GeoCoderPHP.wsdl
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                           namespace="http://rpc.geocoder.us/Geo/Coder/US/"
+                           use="encoded" />
+            </output>
+        </operation>
+        <operation name="geocode_intersection">
+            <soap:operation style="rpc" soapAction="http://rpc.geocoder.us/Geo/Coder/US#geocode_intersection" />
+            <input>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                           namespace="http://rpc.geocoder.us/Geo/Coder/US/"
+                           use="encoded" />
+            </input>
+            <output>
+                <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+                           namespace="http://rpc.geocoder.us/Geo/Coder/US/"
+                           use="encoded" />
+            </output>
+        </operation>
+    </binding>
+
+    <service name="GeoCode_Service">
+        <documentation>WSDL File for Geo Coder - Written by Scott Gunn (scott_gunn*AT*email.com) Modified by Douglass Davis</documentation>
+        <port binding="tns:GeoCode_Binding" name="GeoCode_Port">
+            <soap:address location="http://rpc.geocoder.us/service/soap/" />
+        </port>
+    </service>
+</definitions>

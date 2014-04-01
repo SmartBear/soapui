@@ -1,14 +1,18 @@
 /*
- * soapUI, copyright (C) 2004-2013 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- * soapUI is free software; you can redistribute it and/or modify it under the
- * terms of version 2.1 of the GNU Lesser General Public License as published by
- * the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- * soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.config.RestMethodConfig;
@@ -32,7 +36,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -48,7 +52,7 @@ public class RestTestRequestDesktopPanelTest
 	private RestRequest restRequest;
 	private StubbedDialogs dialogs;
 	private XDialogs originalDialogs;
-	private JComboBox<String> endpointsCombo;
+	private JComboBox endpointsCombo;
 
 	@Before
 	public void setUp() throws Exception
@@ -99,7 +103,7 @@ public class RestTestRequestDesktopPanelTest
 
 	/* Helpers */
 
-	private JComboBox<String> findEndpointsComboBox()
+	private JComboBox findEndpointsComboBox()
 
 	{
 		ContainerWalker finder = new ContainerWalker( restTestDesktopPanel );
@@ -124,7 +128,7 @@ public class RestTestRequestDesktopPanelTest
 	private RestResource createRestRequestModel( StatefulModelItemFactory modelItemFactory ) throws SoapUIException
 	{
 		restRequest = modelItemFactory.makeRestRequest();
-		restRequest.setMethod( RestRequestInterface.RequestMethod.GET );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.GET );
 		RestResource restResource = restRequest.getResource();
 		restResource.getParams().addProperty( PARAMETER_NAME );
 		restResource.addNewMethod( restRequest.getRestMethod().getName() );

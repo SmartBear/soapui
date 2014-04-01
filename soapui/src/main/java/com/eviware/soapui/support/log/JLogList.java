@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.support.log;
 
@@ -20,41 +24,26 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-import java.util.StringTokenizer;
-import java.util.concurrent.Future;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Component for displaying log entries
- * 
+ *
  * @author Ole.Matzura
  */
 
@@ -62,15 +51,13 @@ public class JLogList extends JPanel
 {
 	private long maxRows = 1000;
 	private JList logList;
-	private LogListModel model;
+	private final LogListModel model;
 	private List<Logger> loggers = new ArrayList<Logger>();
 	private InternalLogAppender internalLogAppender = new InternalLogAppender();
 	private boolean tailing = true;
-	private Stack<Object> linesToAdd = new Stack<Object>();
+	private BlockingQueue<Object> linesToAdd = new LinkedBlockingQueue<Object>();
 	private JCheckBoxMenuItem enableMenuItem;
 	private final String title;
-	private boolean released;
-	private Future<?> future;
 
 	public JLogList( String title )
 	{
@@ -113,7 +100,7 @@ public class JLogList extends JPanel
 		{
 			maxRows = Long.parseLong( SoapUI.getSettings().getString( "JLogList#" + title, "1000" ) );
 		}
-		catch( NumberFormatException e )
+		catch( NumberFormatException ignore )
 		{
 		}
 	}
@@ -138,39 +125,32 @@ public class JLogList extends JPanel
 		this.maxRows = maxRows;
 	}
 
-	public synchronized void addLine( Object line )
+	public void addLine( Object line )
 	{
 		if( !isEnabled() )
 			return;
 
-		synchronized( model.lines )
+		if( line instanceof LoggingEvent )
 		{
-			if( line instanceof LoggingEvent )
-			{
-				LoggingEvent ev = ( LoggingEvent )line;
-				linesToAdd.push( new LoggingEventWrapper( ev ) );
+			LoggingEvent ev = ( LoggingEvent )line;
+			linesToAdd.add( new LoggingEventWrapper( ev ) );
 
-				if( ev.getThrowableInformation() != null )
-				{
-					Throwable t = ev.getThrowableInformation().getThrowable();
-					StringWriter sw = new StringWriter();
-					PrintWriter pw = new PrintWriter( sw );
-					t.printStackTrace( pw );
-					StringTokenizer st = new StringTokenizer( sw.toString(), "\r\n" );
-					while( st.hasMoreElements() )
-						linesToAdd.push( "   " + st.nextElement() );
-				}
-			}
-			else
+			if( ev.getThrowableInformation() != null )
 			{
-				linesToAdd.push( line );
+				Throwable t = ev.getThrowableInformation().getThrowable();
+				StringWriter sw = new StringWriter();
+				PrintWriter pw = new PrintWriter( sw );
+				t.printStackTrace( pw );
+				StringTokenizer st = new StringTokenizer( sw.toString(), "\r\n" );
+				while( st.hasMoreElements() )
+					linesToAdd.add( "   " + st.nextElement() );
 			}
 		}
-		if( future == null )
+		else
 		{
-			released = false;
-			future = SoapUI.getThreadPool().submit( model );
+			linesToAdd.add( line );
 		}
+		model.ensureUpdateIsStarted();
 	}
 
 	public void setEnabled( boolean enabled )
@@ -193,7 +173,7 @@ public class JLogList extends JPanel
 		}
 
 		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus )
+																	  boolean cellHasFocus )
 		{
 			JLabel component = ( JLabel )super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
 
@@ -316,6 +296,24 @@ public class JLogList extends JPanel
 		}
 	}
 
+	public void saveToFile( File file )
+	{
+		try
+		{
+			PrintWriter writer = new PrintWriter( file );
+			for( int c = 0; c < model.getSize(); c++ )
+			{
+				writer.println( model.getElementAt( c ) );
+			}
+
+			writer.close();
+		}
+		catch( Exception e )
+		{
+			UISupport.showErrorMessage( e );
+		}
+	}
+
 	public boolean isTailing()
 	{
 		return tailing;
@@ -325,6 +323,10 @@ public class JLogList extends JPanel
 	{
 		this.tailing = tail;
 	}
+
+	/*
+	Helper classes.
+	*/
 
 	private class ClearAction extends AbstractAction
 	{
@@ -436,133 +438,155 @@ public class JLogList extends JPanel
 
 	/**
 	 * Internal list model that for optimized storage and notifications
-	 * 
+	 *
 	 * @author Ole.Matzura
 	 */
 
 	@SuppressWarnings( "unchecked" )
-	private final class LogListModel extends AbstractListModel implements Runnable
+	private final class LogListModel extends AbstractListModel
 	{
-		private final List<Object> lines = new TreeList();
+		private final List<Object> lines = Collections.synchronizedList( new TreeList() );
+		private ListUpdater updater = new ListUpdater();
 
 		public int getSize()
 		{
-			synchronized( lines )
-			{
-				return lines.size();
-			}
+			return lines.size();
 		}
 
 		public Object getElementAt( int index )
 		{
-			synchronized( lines )
-			{
-				return lines.get( index );
-			}
+			return lines.get( index );
 		}
 
 		public void clear()
 		{
-			int sz = lines.size();
-			if( sz == 0 )
-				return;
-
-			synchronized( lines )
+			final int size = lines.size();
+			if( size == 0 )
 			{
-				lines.clear();
-				fireIntervalRemoved( this, 0, sz - 1 );
+				return;
 			}
+
+			lines.clear();
+			SwingUtilities.invokeLater( new Runnable()
+			{
+				public void run()
+				{
+					fireIntervalRemoved( this, 0, size - 1 );
+				}
+			} );
 		}
 
-		public void run()
+		public void ensureUpdateIsStarted()
 		{
-			String originalName = Thread.currentThread().getName();
-			Thread.currentThread().setName( "LogList Updater for " + title );
+			updater.ensureUpdateIsStarted();
+		}
 
-			try
+		private class ListUpdater implements Runnable {
+			private volatile boolean updating;
+
+			public void run()
 			{
-				while( !released && !linesToAdd.isEmpty() )
+				String originalThreadName = Thread.currentThread().getName();
+				Thread.currentThread().setName( "LogList Updater for " + title );
+				setUpdating( true );
+				try
 				{
-					try
+					Object line;
+					while( ( line = getNextLine( ) ) != null )
 					{
+						try
+						{
+							List<Object> linesToAddNow = new ArrayList<Object>(  );
+							linesToAddNow.add( line );
+							while((line = linesToAdd.poll()) != null)
+							{
+								linesToAddNow.add( line );
+							}
+							int oldSize = lines.size();
+							lines.addAll( linesToAddNow );
+							updateJList( oldSize );
+						}
+						catch( Exception e )
+						{
+							SoapUI.logError( e );
+						}
+					}
+				} finally
+				{
+					synchronized( this )
+					{
+						updating = false;
 						if( !linesToAdd.isEmpty() )
 						{
-							SwingUtilities.invokeAndWait( new Runnable()
-							{
-								public void run()
-								{
-									try
-									{
-										synchronized( lines )
-										{
-											while( !linesToAdd.isEmpty() )
-											{
-												int sz = lines.size();
-												lines.addAll( linesToAdd );
-												linesToAdd.clear();
-												fireIntervalAdded( LogListModel.this, sz, lines.size() - sz );
-											}
-
-											int cnt = 0;
-											while( lines.size() > maxRows )
-											{
-												lines.remove( 0 );
-												cnt++ ;
-											}
-
-											if( cnt > 0 )
-												fireIntervalRemoved( LogListModel.this, 0, cnt - 1 );
-
-											if( tailing )
-											{
-												logList.ensureIndexIsVisible( lines.size() - 1 );
-											}
-										}
-									}
-									catch( Exception e )
-									{
-										SoapUI.logError( e );
-									}
-								}
-							} );
+							ensureUpdateIsStarted();
 						}
-
-						Thread.sleep( 500 );
 					}
-					catch( Exception e )
-					{
-						SoapUI.logError( e );
-					}
+					Thread.currentThread().setName( originalThreadName );
 				}
 			}
-			finally
-			{
-				Thread.currentThread().setName(originalName);
-				future = null;
-			}
-		}
-	}
 
-	public void release()
-	{
-		released = true;
-	}
-
-	public void saveToFile( File file )
-	{
-		try
-		{
-			PrintWriter writer = new PrintWriter( file );
-			for( int c = 0; c < model.getSize(); c++ )
+			public synchronized void ensureUpdateIsStarted()
 			{
-				writer.println( model.getElementAt( c ) );
+				if( !updating )
+				{
+					setUpdating( true );
+					SoapUI.getThreadPool().submit( this );
+				}
 			}
 
-			writer.close();
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
+			private Object getNextLine( )
+			{
+				try
+				{
+					return linesToAdd.poll( 500, TimeUnit.MILLISECONDS );
+				}
+				catch( InterruptedException e )
+				{
+					//shouldn't really happen
+					return null;
+				}
+			}
+
+
+			private void updateJList( final int oldSize )
+			{
+				try
+				{
+					SwingUtilities.invokeAndWait( new Runnable()
+					{
+						public void run()
+						{
+							fireIntervalAdded( LogListModel.this, oldSize, lines.size() - 1 );
+							int linesToRemove = lines.size() - ( ( int )maxRows );
+							if( linesToRemove > 0 )
+							{
+								for( int i = 0; i < linesToRemove; i++ )
+								{
+									lines.remove( 0 );
+								}
+								fireIntervalRemoved( LogListModel.this, 0, linesToRemove );
+							}
+							if( tailing )
+							{
+								logList.ensureIndexIsVisible( lines.size() - 1 );
+							}
+						}
+					} );
+				}
+				catch( InterruptedException e )
+				{
+					e.printStackTrace();
+				}
+				catch( InvocationTargetException e )
+				{
+					e.printStackTrace();
+				}
+			}
+
+			private synchronized void setUpdating( boolean updating )
+			{
+				this.updating = updating;
+			}
 		}
 	}
 }

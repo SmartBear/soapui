@@ -1,31 +1,33 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui;
 
-import java.awt.Color;
-import java.awt.Insets;
-
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
-import javax.swing.plaf.ColorUIResource;
-
 import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.standalone.StandaloneDesktopFactory;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyBluer;
-import com.jniwrapper.PlatformContext;
+
+import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
+import javax.swing.plaf.ColorUIResource;
+import java.awt.Color;
+import java.awt.Insets;
 
 public class StandaloneSoapUICore extends SwingSoapUICore
 {
@@ -44,7 +46,7 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 
 	}
 
-	public StandaloneSoapUICore( boolean init, boolean settingPassword, String soapUISettingsPassword )
+	public StandaloneSoapUICore( boolean init, String soapUISettingsPassword )
 	{
 		super( true, soapUISettingsPassword );
 
@@ -68,15 +70,11 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 		try
 		{
 			// Enabling native look & feel by default on Mac OS X
-			if( Tools.isMac() )
+			if( UISupport.isMac() )
 			{
 				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
 				getSettings().setBoolean( UISettings.NATIVE_LAF, true );
 				log.info( "Defaulting to native L&F for Mac OS X" );
-			}
-			else if( !SoapUI.isJXBrowserDisabled( true ) && PlatformContext.isMacOS() )
-			{
-				javax.swing.UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName() );
 			}
 			else if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
 			{
@@ -97,9 +95,9 @@ public class StandaloneSoapUICore extends SwingSoapUICore
 				PlasticXPLookAndFeel.setPlasticTheme( theme );
 			}
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
-			System.err.println( "Error initializing PlasticXPLookAndFeel; " + e.getMessage() );
+			SoapUI.logError( e, "Error initializing Look and Feel" );
 		}
 	}
 

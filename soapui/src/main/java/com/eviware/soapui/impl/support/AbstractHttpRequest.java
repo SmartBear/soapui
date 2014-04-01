@@ -1,29 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support;
-
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.ImageIcon;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AbstractRequestConfig;
@@ -39,7 +30,7 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.IAfte
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.FileAttachment;
-import com.eviware.soapui.impl.wsdl.support.ModelItemIconAnimator;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.support.RequestFileAttachment;
 import com.eviware.soapui.impl.wsdl.support.jms.header.JMSHeaderContainer;
 import com.eviware.soapui.impl.wsdl.support.jms.property.JMSPropertyContainer;
@@ -62,9 +53,22 @@ import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.xmlbeans.impl.values.XmlValueOutOfRangeException;
 
+import javax.swing.ImageIcon;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> extends AbstractWsdlModelItem<T> implements
 		Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer
 {
+	public static final String BASIC_AUTH_PROFILE = "Basic";
+	public static final String SELECTED_AUTH_PROFILE_PROPERTY_NAME = "selectedAuthProfile";
 
 	private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
 	private String requestContent;
@@ -78,10 +82,13 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	{
 		super( config, parent, icon );
 
-		if( !forLoadTest && !UISupport.isHeadless() )
+		if( !forLoadTest )
 		{
 			iconAnimator = initIconAnimator();
-			addSubmitListener( iconAnimator );
+			if( SoapUI.usingGraphicalEnvironment() )
+			{
+				addSubmitListener( iconAnimator );
+			}
 		}
 
 		initAttachments();
@@ -142,11 +149,11 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		return fileAttachment;
 	}
 
-	public abstract RestRequestInterface.RequestMethod getMethod();
+	public abstract RestRequestInterface.HttpMethod getMethod();
 
 	/**
 	 * Override just to get a better return type
-	 * 
+	 *
 	 * @see com.eviware.soapui.impl.wsdl.AttachmentContainer#getAttachmentPart(java.lang.String)
 	 */
 
@@ -218,8 +225,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		try
 		{
 			notifyPropertyChanged( ATTACHMENTS_PROPERTY, attachment, null );
-		}
-		finally
+		} finally
 		{
 			getConfig().removeAttachment( ix );
 		}
@@ -237,7 +243,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/request.gif", "/exec_request", 4, "gif" );
+		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/request.gif", "/exec_request.gif", 4 );
 	}
 
 	public void addSubmitListener( SubmitListener listener )
@@ -307,8 +313,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 						SoapUI.logError( e );
 					}
 				}
-			}
-			finally
+			} finally
 			{
 				UISupport.resetCursor();
 			}
@@ -326,7 +331,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			return newAttachment;
 		}
 		else
-			log.error( "Unkown attachment type: " + attachment );
+			log.error( "Unknown attachment type: " + attachment );
 
 		return null;
 	}
@@ -448,7 +453,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 	/**
 	 * Added for backwards compatibility
-	 * 
+	 *
 	 * @param map
 	 */
 
@@ -467,7 +472,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	@Override
 	public ImageIcon getIcon()
 	{
-		return iconAnimator == null || UISupport.isHeadless() ? null : iconAnimator.getIcon();
+		return iconAnimator == null ? null : iconAnimator.getIcon();
 	}
 
 	public PropertyExpansion[] getPropertyExpansions()
@@ -516,12 +521,83 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 
 		return credentialsConfig.getDomain();
 	}
-	
+
+	public String getSelectedAuthProfile()
+	{
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
+		String selectedAuthProfile = credentialsConfig.getSelectedAuthProfile();
+		if( selectedAuthProfile == null )
+		{
+			//For backward compatibility (4.6.4 or earlier projects)
+			String authType = getAuthType();
+
+			if( AuthType.PREEMPTIVE.toString().equals( authType )
+					|| AuthType.GLOBAL_HTTP_SETTINGS.toString().equals( authType ))
+			{
+				addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive( BASIC_AUTH_PROFILE );
+				return BASIC_AUTH_PROFILE;
+			}
+			else if(AuthType.NTLM.toString().equals( authType ) || AuthType.SPNEGO_KERBEROS.toString().equals( authType ))
+			{
+				addBasicAuthenticationProfile( authType );
+				return authType;
+			}
+
+			return CredentialsConfig.AuthType.NO_AUTHORIZATION.toString();
+		}
+		//For 5.0 Alpha backward compatibility, where we still supported these types before merging them into one 'Basic'
+		else if(AuthType.PREEMPTIVE.toString().equals( selectedAuthProfile )
+				|| AuthType.GLOBAL_HTTP_SETTINGS.toString().equals( selectedAuthProfile ))
+		{
+			addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive( BASIC_AUTH_PROFILE );
+			return BASIC_AUTH_PROFILE;
+		}
+
+		return selectedAuthProfile;
+	}
+
+	private void addBasicProfileAndRemoveGlobalHttpSettingsAndPreEmptive( String authType )
+	{
+		addBasicAuthenticationProfile( authType );
+		removeGlobalHttpSettingsAndPreEmptiveProfiles();
+	}
+
+	private void removeGlobalHttpSettingsAndPreEmptiveProfiles()
+	{
+		removeBasicAuthenticationProfile( AuthType.PREEMPTIVE.toString() );
+		removeBasicAuthenticationProfile( AuthType.GLOBAL_HTTP_SETTINGS.toString() );
+	}
+
+	public Set<String> getBasicAuthenticationProfiles()
+	{
+		Set<String> authTypes = new HashSet<String>();
+		CredentialsConfig credentialsConfig = getConfig().getCredentials();
+		if( credentialsConfig != null )
+		{
+			for( String type : credentialsConfig.getAddedBasicAuthenticationTypesList() )
+			{
+				if( AuthType.PREEMPTIVE.toString().equals( type )
+						|| AuthType.GLOBAL_HTTP_SETTINGS.toString().equals( type ))
+				{
+					authTypes.add( BASIC_AUTH_PROFILE );
+				}
+				else
+				{
+					authTypes.add( type );
+				}
+			}
+		}
+
+		if( authTypes.contains( BASIC_AUTH_PROFILE ) )
+		{
+			removeGlobalHttpSettingsAndPreEmptiveProfiles();
+		}
+		return authTypes;
+	}
+
 	public String getAuthType()
 	{
-		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
-			credentialsConfig = getConfig().addNewCredentials();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
 
 		initializeAuthType( credentialsConfig );
 
@@ -533,7 +609,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		try
 		{
 			if( credentialsConfig.getAuthType() == null )
-				credentialsConfig.setAuthType( AuthType.GLOBAL_HTTP_SETTINGS );
+				credentialsConfig.setAuthType( CredentialsConfig.AuthType.NO_AUTHORIZATION );
 		}
 		catch( XmlValueOutOfRangeException e )
 		{
@@ -542,12 +618,32 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		}
 	}
 
+	public void addBasicAuthenticationProfile( String authType )
+	{
+		List<String> addedBasicAuthenticationTypesList = getCredentialsConfig().getAddedBasicAuthenticationTypesList();
+		if( !addedBasicAuthenticationTypesList.contains( authType ) )
+		{
+			addedBasicAuthenticationTypesList.add( authType );
+		}
+	}
+
+	public void removeBasicAuthenticationProfile( String authType )
+	{
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
+		for( int count = 0; count < credentialsConfig.sizeOfAddedBasicAuthenticationTypesArray(); count++ )
+		{
+			if( credentialsConfig.getAddedBasicAuthenticationTypesArray( count ).equals( authType ) )
+			{
+				credentialsConfig.removeAddedBasicAuthenticationTypes( count );
+				break;
+			}
+		}
+	}
+
 	public void setUsername( String username )
 	{
 		String old = getUsername();
-		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
-			credentialsConfig = getConfig().addNewCredentials();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
 
 		credentialsConfig.setUsername( username );
 		notifyPropertyChanged( "username", old, username );
@@ -556,9 +652,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public void setPassword( String password )
 	{
 		String old = getPassword();
-		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
-			credentialsConfig = getConfig().addNewCredentials();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
 
 		credentialsConfig.setPassword( password );
 		notifyPropertyChanged( "password", old, password );
@@ -567,23 +661,82 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 	public void setDomain( String domain )
 	{
 		String old = getDomain();
-		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
-			credentialsConfig = getConfig().addNewCredentials();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
 
 		credentialsConfig.setDomain( domain );
 		notifyPropertyChanged( "domain", old, domain );
 	}
-	
-	public void setAuthType( String authType )
-	{
-		String old = getAuthType();
-		CredentialsConfig credentialsConfig = getConfig().getCredentials();
-		if( credentialsConfig == null )
-			credentialsConfig = getConfig().addNewCredentials();
 
-		credentialsConfig.setAuthType( AuthType.Enum.forString( authType ) );
+	public void setSelectedAuthProfileAndAuthType( String authProfile, AuthType.Enum authType )
+	{
+		setSelectedAuthProfile( authProfile );
+		setAuthType( authType );
+	}
+
+	public CredentialsConfig.AuthType.Enum getBasicAuthType( String selectedProfile )
+	{
+		if( AbstractHttpRequest.BASIC_AUTH_PROFILE.equals( selectedProfile ) )
+		{
+			if(getPreemptive() )
+			{
+				return CredentialsConfig.AuthType.PREEMPTIVE;
+			}
+			else
+			{
+				return CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS;
+			}
+		}
+		else
+		{
+			return CredentialsConfig.AuthType.Enum.forString( selectedProfile );
+		}
+	}
+
+	private void setSelectedAuthProfile( String authProfile )
+	{
+		String old = getSelectedAuthProfile();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
+
+		credentialsConfig.setSelectedAuthProfile( authProfile );
+		notifyPropertyChanged( SELECTED_AUTH_PROFILE_PROPERTY_NAME, old, authProfile );
+	}
+
+	private void setAuthType(  AuthType.Enum authType )
+	{
+		if( authType!=null && !AuthType.O_AUTH_2_0.equals( authType ) && !AuthType.NO_AUTHORIZATION.equals( authType ) )
+		{
+			if( authType.equals( AuthType.PREEMPTIVE ) || authType.equals( AuthType.GLOBAL_HTTP_SETTINGS ) )
+			{
+				addBasicAuthenticationProfile( BASIC_AUTH_PROFILE );
+			}
+			else
+			{
+				addBasicAuthenticationProfile( authType.toString() );
+			}
+		}
+
+		String old = getAuthType();
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
+
+		credentialsConfig.setAuthType( authType );
 		notifyPropertyChanged( "authType", old, authType );
+	}
+
+	public boolean getPreemptive()
+	{
+		CredentialsConfig credentialsConfig = getCredentialsConfig();
+		if( AuthType.PREEMPTIVE.toString().equals( getAuthType() ) && !credentialsConfig.getPreemptive())
+		{
+			credentialsConfig.setPreemptive( true );
+		}
+		return credentialsConfig.getPreemptive();
+	}
+
+	public void setPreemptive( boolean preemptive )
+	{
+		boolean old = getPreemptive();
+		getCredentialsConfig().setPreemptive( preemptive );
+		notifyPropertyChanged( "preemptive", old, preemptive );
 	}
 
 	public String getSslKeystore()
@@ -688,12 +841,20 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 		}
 	}
 
-	public static class RequestIconAnimator<T extends AbstractHttpRequest<?>> extends ModelItemIconAnimator<T> implements
+	private CredentialsConfig getCredentialsConfig()
+	{
+		CredentialsConfig credentialsConfig = getConfig().getCredentials();
+		if( credentialsConfig == null )
+			credentialsConfig = getConfig().addNewCredentials();
+		return credentialsConfig;
+	}
+
+	public static class RequestIconAnimator<T extends AbstractHttpRequest<?>> extends IconAnimator<T> implements
 			SubmitListener
 	{
-		public RequestIconAnimator( T modelItem, String baseIcon, String animIconRoot, int iconCount, String iconExtension )
+		public RequestIconAnimator( T modelItem, String baseIcon, String animIcon, int iconCounts )
 		{
-			super( modelItem, baseIcon, animIconRoot, iconCount, iconExtension );
+			super( modelItem, baseIcon, animIcon, iconCounts );
 		}
 
 		public boolean beforeSubmit( Submit submit, SubmitContext context )
@@ -716,7 +877,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
 			removeSubmitListener( this.iconAnimator );
 
 		this.iconAnimator = iconAnimator;
-		addSubmitListener( this.iconAnimator );
+		if( SoapUI.usingGraphicalEnvironment() )
+		{
+			addSubmitListener( this.iconAnimator );
+		}
 	}
 
 	public HttpResponse getResponse()

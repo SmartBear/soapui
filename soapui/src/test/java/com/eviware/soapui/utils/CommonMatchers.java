@@ -1,4 +1,18 @@
-package com.eviware.soapui.utils;
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/package com.eviware.soapui.utils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -6,12 +20,14 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import javax.mail.internet.ContentType;
 import javax.xml.XMLConstants;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.net.URL;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Hamcrest matchers for common data types.
@@ -91,6 +107,42 @@ public class CommonMatchers
 		};
 	}
 
+	public static Matcher<Collection> anEmptyCollection()
+	{
+		return new TypeSafeMatcher<Collection>()
+		{
+			@Override
+			public boolean matchesSafely( Collection collection)
+			{
+				return collection.isEmpty();
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an empty collection" );
+			}
+		};
+	}
+
+	public static Matcher<Map> anEmptyMap()
+	{
+		return new TypeSafeMatcher<Map>()
+		{
+			@Override
+			public boolean matchesSafely( Map collection)
+			{
+				return collection.isEmpty();
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "an empty map" );
+			}
+		};
+	}
+
 	public static Matcher<Collection> aCollectionWithSize( final int size )
 	{
 		return new TypeSafeMatcher<Collection>()
@@ -150,6 +202,23 @@ public class CommonMatchers
 			public void describeTo( Description description )
 			{
 				description.appendText( "an XML node compliant with the XML schema at " + schemaPath );
+			}
+		};
+	}
+
+	public static Matcher<ContentType> sameBaseContentType( final String contentType ){
+		return new TypeSafeMatcher<ContentType>()
+		{
+			@Override
+			public boolean matchesSafely( ContentType item )
+			{
+				return contentType.equals( item.getBaseType());
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "the content type " + contentType );
 			}
 		};
 	}

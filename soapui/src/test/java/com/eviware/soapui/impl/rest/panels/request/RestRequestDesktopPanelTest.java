@@ -1,4 +1,18 @@
-package com.eviware.soapui.impl.rest.panels.request;
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -55,13 +69,13 @@ public class RestRequestDesktopPanelTest
 	private RestRequest restRequest;
 	private StubbedDialogs dialogs;
 	private XDialogs originalDialogs;
-	private JComboBox<String> endpointsCombo;
+	private JComboBox endpointsCombo;
 
 	@Before
 	public void setUp() throws Exception
 	{
 		restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setMethod( RestRequestInterface.RequestMethod.GET );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.GET );
 		restRequest.getResource().getParams().addProperty( PARAMETER_NAME );
 		restRequest.getResource().setPath( RESOURCE_PATH );
 		restService().addEndpoint( ENDPOINT );
@@ -150,7 +164,7 @@ public class RestRequestDesktopPanelTest
 		String expectedChildPath = expectedParentPath + childPath ;
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
 
@@ -179,7 +193,7 @@ public class RestRequestDesktopPanelTest
 
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
 
@@ -203,7 +217,7 @@ public class RestRequestDesktopPanelTest
 		childResource.setPropertyValue( childParamName, "childValue" );
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel origDesktopPanel = requestDesktopPanel;
 		requestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
@@ -232,7 +246,7 @@ public class RestRequestDesktopPanelTest
 		childResource.setPropertyValue( childParamName, "childValue" );
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel origDesktopPanel = requestDesktopPanel;
 		requestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
@@ -288,7 +302,7 @@ public class RestRequestDesktopPanelTest
 		String expectedChildPath = parentResource.getPath() + "{" + PARAMETER_NAME + "}"+ childResource.getPath()  ;
 
 		RestRequest childRestRequest = ModelItemFactory.makeRestRequest( childResource );
-		childRestRequest.setMethod( RestRequestInterface.RequestMethod.GET  );
+		childRestRequest.setMethod( RestRequestInterface.HttpMethod.GET  );
 
 		RestRequestDesktopPanel childRequestDesktopPanel = new RestRequestDesktopPanel( childRestRequest );
 
@@ -329,7 +343,7 @@ public class RestRequestDesktopPanelTest
 	@Test
 	public void keepsEnteredEndpointValueWhenEditingEndpoint() throws Exception
 	{
-		JComboBox<String> endpointsCombo = findEndpointsComboBox();
+		JComboBox endpointsCombo = findEndpointsComboBox();
 		String otherValue = "http://dn.se";
 		setComboTextFieldValue( endpointsCombo, otherValue );
 		endpointsCombo.setSelectedItem( EndpointsComboBoxModel.EDIT_ENDPOINT );
@@ -392,13 +406,13 @@ public class RestRequestDesktopPanelTest
 		return document.getText( 0, document.getLength() );
 	}
 
-	private JComboBox<String> findEndpointsComboBox()
+	private JComboBox findEndpointsComboBox()
 	{
 		ContainerWalker finder = new ContainerWalker( requestDesktopPanel );
 		return finder.findComboBoxWithValue( ENDPOINT );
 	}
 
-	private void setComboTextFieldValue( JComboBox<String> endpointsCombo, String otherValue )
+	private void setComboTextFieldValue( JComboBox endpointsCombo, String otherValue )
 	{
 		( ( JTextComponent )endpointsCombo.getEditor().getEditorComponent() ).setText( otherValue );
 	}

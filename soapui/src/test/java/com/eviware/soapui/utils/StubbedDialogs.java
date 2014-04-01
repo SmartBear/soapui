@@ -1,4 +1,18 @@
-package com.eviware.soapui.utils;
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/package com.eviware.soapui.utils;
 
 import com.eviware.soapui.support.NullProgressDialog;
 import com.eviware.x.dialogs.XDialogs;
@@ -7,7 +21,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.junit.internal.matchers.TypeSafeMatcher;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +81,12 @@ public class StubbedDialogs implements XDialogs
 			return currentConfirmationReturnValue;
 		}
 		return false;
+	}
+
+	@Override
+	public boolean confirm( String question, String title, Component parent )
+	{
+		return confirm(question, title);
 	}
 
 	@Override
@@ -138,7 +159,7 @@ public class StubbedDialogs implements XDialogs
 	@Override
 	public boolean confirmExtendedInfo( String title, String description, String content, Dimension size )
 	{
-		return false;
+		return confirm( content, title );
 	}
 
 	@Override
@@ -291,6 +312,32 @@ public class StubbedDialogs implements XDialogs
 			public void describeTo( Description description )
 			{
 				description.appendText( "a Confirm list with a confirm with the question '" + question + "'" );
+			}
+		};
+	}
+
+	public static Matcher<List<Confirmation>> hasConfirmationWithQuestionThat( final Matcher<String> stringMatcher )
+	{
+		return new TypeSafeMatcher<List<Confirmation>>()
+		{
+			@Override
+			public boolean matchesSafely( List<Confirmation> confirmations )
+			{
+				for( Confirmation confirmation : confirmations )
+				{
+					if( stringMatcher.matches( confirmation.question) )
+					{
+						return true;
+					}
+				}
+				return false;
+			}
+
+			@Override
+			public void describeTo( Description description )
+			{
+				description.appendText( "a confirmation with a question that ");
+				stringMatcher.describeTo( description );
 			}
 		};
 	}

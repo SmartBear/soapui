@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2011 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
@@ -20,6 +24,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.http.Header;
 import org.apache.http.entity.AbstractHttpEntity;
 import org.apache.http.message.BasicHeader;
@@ -39,9 +45,9 @@ public class MimeMessageMockResponseEntity extends AbstractHttpEntity
 {
 	private final MimeMessage message;
 	private final boolean isXOP;
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 
-	public MimeMessageMockResponseEntity( MimeMessage message, boolean isXOP, WsdlMockResponse response )
+	public MimeMessageMockResponseEntity( MimeMessage message, boolean isXOP, MockResponse response )
 	{
 		this.message = message;
 		this.isXOP = isXOP;
@@ -67,20 +73,28 @@ public class MimeMessageMockResponseEntity extends AbstractHttpEntity
 	{
 		try
 		{
-			SoapVersion soapVersion = mockResponse.getSoapVersion();
-
-			if( isXOP )
+			if(mockResponse instanceof  WsdlMockResponse)
 			{
-				String header = message.getHeader( "Content-Type" )[0];
-				return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
+				SoapVersion soapVersion = (( WsdlMockResponse )mockResponse).getSoapVersion();
+
+				if( isXOP )
+				{
+					String header = message.getHeader( "Content-Type" )[0];
+					return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
+				}
+				else
+				{
+					String header = message.getHeader( "Content-Type" )[0];
+					int ix = header.indexOf( "boundary" );
+					return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
+							+ "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
+				}
 			}
 			else
 			{
-				String header = message.getHeader( "Content-Type" )[0];
-				int ix = header.indexOf( "boundary" );
-				return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
-						+ "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
+				throw new IllegalStateException( "Multipart support is only available for SOAP" );
 			}
+
 		}
 		catch( MessagingException e )
 		{

@@ -1,4 +1,18 @@
-package com.eviware.soapui.impl.rest.panels.resource;
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/package com.eviware.soapui.impl.rest.panels.resource;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -7,14 +21,11 @@ import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
-import org.hamcrest.core.Is;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.swing.JTable;
 
-import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation.METHOD;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -57,7 +68,7 @@ public class RestResourceDesktopPanelTest
 			throws SoapUIException
 	{
 		RestRequest restRequest = ModelItemFactory.makeRestRequest( childResource );
-		restRequest.setMethod( RestRequestInterface.RequestMethod.GET );
+		restRequest.setMethod( RestRequestInterface.HttpMethod.GET );
 		return new RestRequestDesktopPanel( restRequest );
 	}
 

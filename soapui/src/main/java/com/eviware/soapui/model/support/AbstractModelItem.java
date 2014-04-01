@@ -1,24 +1,29 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.model.support;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.Collections;
 import java.util.List;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.ModelItem;
 
 /**
  * Base-class for ModelItem implementations
@@ -168,4 +173,14 @@ public abstract class AbstractModelItem implements ModelItem
 		return Collections.EMPTY_LIST;
 	}
 
+	@Override
+	public Project getProject()
+	{
+		Project project = ModelSupport.getModelItemProject( this );
+		if (project == null)
+		{
+			throw new UnsupportedOperationException( this + " is not associated with a project" );
+		}
+		return project;
+	}
 }

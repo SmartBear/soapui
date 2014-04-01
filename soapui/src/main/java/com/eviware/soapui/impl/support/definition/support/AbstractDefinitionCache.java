@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support.definition.support;
 
@@ -97,12 +101,12 @@ public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> im
 		Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
 		definitionCache.setRootPart( baseUri );
 
-		for( Iterator<String> i = urls.keySet().iterator(); i.hasNext(); )
+		for( Map.Entry<String, XmlObject> entry : urls.entrySet() )
 		{
 			DefintionPartConfig definitionPart = definitionCache.addNewPart();
-			String url = i.next();
+			String url = entry.getKey();
 			definitionPart.setUrl( url );
-			XmlObject xmlObject = urls.get( url );
+			XmlObject xmlObject = entry.getValue();
 			Node domNode = xmlObject.getDomNode();
 
 			if( domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )

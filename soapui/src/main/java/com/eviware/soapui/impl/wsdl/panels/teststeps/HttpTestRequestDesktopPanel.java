@@ -1,36 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.beans.PropertyChangeEvent;
-import java.util.Date;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.ListModel;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -70,6 +54,25 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.log.JLogList;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.ListModel;
+import javax.swing.SwingUtilities;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.util.Date;
 
 public class HttpTestRequestDesktopPanel extends
 		AbstractHttpXmlRequestDesktopPanel<HttpTestRequestStepInterface, HttpTestRequestInterface<?>>
@@ -206,7 +209,7 @@ public class HttpTestRequestDesktopPanel extends
 
 	protected void addMethodCombo( JXToolBar toolbar )
 	{
-		methodCombo = new JComboBox( RestRequestInterface.RequestMethod.getMethods() );
+		methodCombo = new JComboBox( RestRequestInterface.HttpMethod.getMethods() );
 
 		methodCombo.setSelectedItem( getRequest().getMethod() );
 		methodCombo.setToolTipText( "Set desired HTTP method" );
@@ -215,7 +218,7 @@ public class HttpTestRequestDesktopPanel extends
 			public void itemStateChanged( ItemEvent e )
 			{
 				updatingRequest = true;
-				getRequest().setMethod( ( RestRequestInterface.RequestMethod )methodCombo.getSelectedItem() );
+				getRequest().setMethod( ( RestRequestInterface.HttpMethod )methodCombo.getSelectedItem() );
 				updatingRequest = false;
 			}
 		} );
@@ -268,8 +271,10 @@ public class HttpTestRequestDesktopPanel extends
 				}
 			}
 		} );
-
-		toolbar.addLabeledFixed( "Request URL:", pathTextField );
+		JPanel pathPanel = new JPanel(new BorderLayout( 0, 0 ));
+		pathPanel.add(getLockIcon(), BorderLayout.WEST);
+		pathPanel.add(pathTextField, BorderLayout.CENTER);
+		toolbar.addLabeledFixed( "Request URL:", pathPanel );
 
 		toolbar.addSeparator();
 		addCheckBox( toolbar );
@@ -280,7 +285,7 @@ public class HttpTestRequestDesktopPanel extends
 		downloadResources = new JCheckBox();
 		try
 		{
-			downloadResources.setSelected( ( ( HttpRequest )( ( HttpTestRequestStep )getModelItem() ).getHttpRequest() )
+			downloadResources.setSelected( ( ( HttpRequest )getModelItem().getHttpRequest() )
 					.getDownloadIncludedResources() );
 		}
 		catch( Exception cce )
@@ -297,7 +302,7 @@ public class HttpTestRequestDesktopPanel extends
 				{
 					if( 1001 == e.getID() && getModelItem() instanceof HttpTestRequestStep )
 					{
-						( ( HttpRequest )( ( HttpTestRequestStep )getModelItem() ).getHttpRequest() )
+						( ( HttpRequest )getModelItem().getHttpRequest() )
 								.setDownloadIncludedResources( ( ( JCheckBox )e.getSource() ).isSelected() );
 					}
 				}
@@ -412,7 +417,6 @@ public class HttpTestRequestDesktopPanel extends
 			assertionsPanel.release();
 			inspectorPanel.release();
 			SoapUI.getTestMonitor().removeTestMonitorListener( testMonitorListener );
-			logArea.release();
 			getModelItem().getTestRequest().removeAssertionsListener( assertionsListener );
 			return true;
 		}
@@ -494,7 +498,6 @@ public class HttpTestRequestDesktopPanel extends
 			pathTextField.setText( String.valueOf( evt.getNewValue() ) );
 			updating = false;
 		}
-
 		super.propertyChange( evt );
 	}
 

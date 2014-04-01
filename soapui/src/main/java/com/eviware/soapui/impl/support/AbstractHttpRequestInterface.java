@@ -1,22 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support;
-
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
-import org.apache.log4j.Logger;
 
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -33,6 +31,10 @@ import com.eviware.soapui.model.iface.SubmitListener;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+
+import javax.swing.ImageIcon;
+import java.util.List;
 
 public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> extends Request,
 		PropertyExpansionContainer, MutableAttachmentContainer
@@ -50,7 +52,7 @@ public interface AbstractHttpRequestInterface<T extends AbstractRequestConfig> e
 	public static final String MAX_SIZE = AbstractHttpRequest.class.getName() + "@max-size";
 	public static final String FOLLOW_REDIRECTS = AbstractHttpRequest.class.getName() + "@follow-redirects";
 
-	public abstract RestRequestInterface.RequestMethod getMethod();
+	public abstract RestRequestInterface.HttpMethod getMethod();
 
 	public abstract void setMultipartEnabled( boolean multipartEnabled );
 

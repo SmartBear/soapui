@@ -14,8 +14,14 @@ echo Set JAVA_HOME to the directory of your local JDK to avoid this message.
 :SET_CLASSPATH
 
 rem init classpath
+set OLDDIR=%CD%
+cd /d %SOAPUI_HOME%
 
-set CLASSPATH=%SOAPUI_HOME%${project.src.artifactId}-${project.version}.jar;%SOAPUI_HOME%..\lib\*;
+set CLASSPATH=%SOAPUI_HOME%${project.src.artifactId}-${project.version}.jar;%SOAPUI_HOME%..\lib\*
+"%JAVA%" -cp "%CLASSPATH%" com.eviware.soapui.tools.JfxrtLocator > %TEMP%\jfxrtpath
+set /P JFXRTPATH= < %TEMP%\jfxrtpath
+del %TEMP%\jfxrtpath
+set CLASSPATH=%CLASSPATH%;%JFXRTPATH%
 
 rem JVM parameters, modify as appropriate
 
@@ -28,11 +34,9 @@ if "%SOAPUI_HOME%" == "" goto START
 	set JAVA_OPTS=%JAVA_OPTS% -Djava.library.path="%SOAPUI_HOME%\"
 	set JAVA_OPTS=%JAVA_OPTS% -Dwsi.dir="%SOAPUI_HOME%..\wsi-test-tools"
 rem uncomment to disable browser component
-rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.jxbrowser.disable="true"
+rem    set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.browser.disabled="true"
 :START
 
-set OLDDIR=%CD%
-cd /d %SOAPUI_HOME%
 rem ********* run soapui ***********
 
 "%JAVA%" %JAVA_OPTS% -cp "%CLASSPATH%" com.eviware.soapui.SoapUI %*

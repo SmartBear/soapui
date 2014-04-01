@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>4.6.4</version>
+        <version>5.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>soapui-system-test</artifactId>
@@ -18,31 +18,56 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.12.4</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/*.class</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>2.16</version>
+                <configuration>
+                    <systemProperties>
+                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
+                        </soapui.log4j.config>
+                    </systemProperties>
+                    <includes>
+                        <include>**/*.class</include>
+                    </includes>
+                    <groups>com.smartbear.soapui.utils.IntegrationTest</groups>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <inherited>true</inherited>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
+                            <goal>test-jar</goal>
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <systemProperties>
-                        <!-- Only log errors and only log to the console to decrease the log verbosity -->
-                        <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-pro-test-log4j.xml</soapui.log4j.config>
-                    </systemProperties>
-                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
-         <dependency>
-             <groupId>com.smartbear.soapui</groupId>
-             <artifactId>soapui</artifactId>
+        <dependency>
+            <groupId>com.smartbear.soapui</groupId>
+            <artifactId>soapui</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.smartbear.soapui</groupId>
+            <artifactId>soapui</artifactId>
+            <version>${project.version}</version>
+            <type>test-jar</type>
         </dependency>
         <dependency>
             <groupId>org.easytesting</groupId>
@@ -50,6 +75,46 @@
             <version>1.2.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.8.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>1.1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-junit</artifactId>
+            <version>1.1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-picocontainer</artifactId>
+            <version>1.1.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.picocontainer</groupId>
+            <artifactId>picocontainer</artifactId>
+            <version>2.14.3</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-
 </project>

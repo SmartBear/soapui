@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.x.form.support;
 
@@ -33,6 +37,8 @@ import com.eviware.x.impl.swing.JMultilineLabelTextField;
 import com.eviware.x.impl.swing.JPasswordFieldFormField;
 import com.eviware.x.impl.swing.JStringListFormField;
 import com.eviware.x.impl.swing.JTableFormField;
+import com.jgoodies.forms.layout.FormLayout;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Builds XFormDialogs from AForm/AField annotated classes/interfaces
@@ -44,10 +50,14 @@ public class ADialogBuilder
 {
 	public static XFormDialog buildDialog( Class<? extends Object> formClass )
 	{
-		return buildDialog( formClass, null );
+		return buildDialog( formClass, null, null );
 	}
 
 	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions )
+	{
+		return buildDialog( formClass, actions, null ) ;
+	}
+	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions, FormLayout layout )
 	{
 		AForm formAnnotation = formClass.getAnnotation( AForm.class );
 		if( formAnnotation == null )
@@ -58,7 +68,7 @@ public class ADialogBuilder
 		MessageSupport messages = MessageSupport.getMessages( formClass );
 
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
-		XForm form = builder.createForm( "Basic" );
+		XForm form = createForm( builder, layout );
 
 		for( Field field : formClass.getFields() )
 		{
@@ -76,7 +86,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl() == null ? builder.buildOkCancelActions() : builder
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? builder.buildOkCancelActions() : builder
 				.buildOkCancelHelpActions( formAnnotation.helpUrl() );
 
 		if( actions == null )
@@ -90,14 +100,26 @@ public class ADialogBuilder
 		return dialog;
 	}
 
+	private static XForm createForm( XFormDialogBuilder builder, FormLayout layout )
+	{
+		if(layout==null)
+		{
+			return builder.createForm( "Basic" );
+		}
+		else
+		{
+			return builder.createForm( "Basic",  layout );
+		}
+	}
+
 	/**
 	 * Allow to use custom Ok, Cancel buttons...
-	 * 
+	 *
 	 * This means user have to add control for closing dialog.
-	 * 
+	 *
 	 * @param formClass
 	 * @param actions
-	 * @param okCancel
+	 * @param useDefaultOkCancel
 	 * @return
 	 */
 	public static XFormDialog buildDialog( Class<? extends Object> formClass, ActionList actions,
@@ -115,7 +137,7 @@ public class ADialogBuilder
 		MessageSupport messages = MessageSupport.getMessages( formClass );
 
 		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( messages.get( formAnnotation.name() ) );
-		XForm form = builder.createForm( "Basic" );
+		XForm form = createForm( builder, null );
 
 		for( Field field : formClass.getFields() )
 		{
@@ -133,7 +155,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl() == null ? null : builder.buildHelpActions( formAnnotation
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? null : builder.buildHelpActions( formAnnotation
 				.helpUrl() );
 
 		if( actions == null )
@@ -183,7 +205,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl().length() == 0 ? builder.buildOkCancelActions() : builder
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? builder.buildOkCancelActions() : builder
 				.buildOkCancelHelpActions( formAnnotation.helpUrl() );
 
 		if( actions == null )
@@ -232,7 +254,7 @@ public class ADialogBuilder
 			}
 		}
 
-		ActionList defaultActions = formAnnotation.helpUrl().length() == 0 ? null : builder
+		ActionList defaultActions = StringUtils.isBlank( formAnnotation.helpUrl() ) ? null : builder
 				.buildHelpActions( formAnnotation.helpUrl() );
 
 		if( actions == null )
@@ -367,6 +389,9 @@ public class ADialogBuilder
 		case RADIOGROUP_TOP_BUTTON :
 			field = form.addComponent( name, new XFormRadioGroupTopButtonPosition( values ) );
 			break;
+		case COMBOBOX :
+				field = form.addComboBox( name, values,  description );
+				break;
 		default :
 			System.out.println( "Unsupported field type: " + type );
 		}

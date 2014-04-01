@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.security;
 
@@ -60,6 +64,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 	public final static String FAIL_ON_SCANS_ERRORS_PROPERTY = SecurityTest.class.getName() + "@failOnScansErrors";
 	public final static String FAIL_ON_ERROR_PROPERTY = SecurityTest.class.getName() + "@failOnError";
 	public final static String SKIP_DATASOURCE_LOOP_PROPERTY = SecurityTest.class.getName() + "@skipDataSourceLoop";
+	public static final String ICON_NAME = "/security_test.gif";
 	private WsdlTestCase testCase;
 	private Set<SecurityTestRunListener> securityTestRunListeners = Collections
 			.synchronizedSet( new HashSet<SecurityTestRunListener>() );
@@ -75,7 +80,7 @@ public class SecurityTest extends AbstractTestPropertyHolderWsdlModelItem<Securi
 
 	public SecurityTest( WsdlTestCase testCase, SecurityTestConfig config )
 	{
-		super( config, testCase, "/security_test.gif" );
+		super( config, testCase, ICON_NAME );
 		this.testCase = testCase;
 		if( !getConfig().isSetProperties() )
 			getConfig().addNewProperties();

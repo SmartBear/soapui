@@ -1,31 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.teststeps;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.XmlString;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RequestStepConfig;
@@ -76,6 +65,19 @@ import com.eviware.soapui.support.resolver.RemoveTestStepResolver;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.XmlString;
+
+import javax.swing.ImageIcon;
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -682,10 +684,11 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 		result.extractAndAddAll( "domain" );
 
 		StringToStringsMap requestHeaders = testRequest.getRequestHeaders();
-		for( String key : requestHeaders.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : requestHeaders.entrySet() )
 		{
-			for( String value : requestHeaders.get( key ) )
-				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( key, value, testRequest ), "value" );
+			for( String value : headerEntry.getValue() )
+				result.extractAndAddAll( new HttpTestRequestStep.RequestHeaderHolder( headerEntry.getKey(), value,
+						testRequest ), "value" );
 		}
 
 		testRequest.addWsaPropertyExpansions( result, testRequest.getWsaConfig(), this );
@@ -736,7 +739,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
 	public Interface getInterface()
 	{
-		return getOperation().getInterface();
+		return wsdlOperation == null ? null : wsdlOperation.getInterface();
 	}
 
 	public WsdlOperation getOperation()

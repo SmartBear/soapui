@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2011 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
@@ -25,14 +29,11 @@ import org.apache.commons.ssl.KeyMaterial;
 import org.apache.http.*;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
-import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.impl.auth.NTLMSchemeFactory;
-import org.apache.http.impl.auth.NegotiateSchemeFactory;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.RequestWrapper;
@@ -45,6 +46,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ProxySelector;
 import java.security.*;
 import java.security.cert.CertificateException;
 
@@ -57,6 +59,9 @@ import java.security.cert.CertificateException;
 public class HttpClientSupport
 {
 	private final static Helper helper = new Helper();
+	static {
+		ProxyUtils.setGlobalProxy( SoapUI.getSettings() );
+	}
 
 	/**
 	 * Internal helper to ensure synchronized access..
@@ -217,7 +222,6 @@ public class HttpClientSupport
 
 			// this interceptor needs to be last one added and executed.
 			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
-			httpClient.setRoutePlanner( new CompositeHttpRoutePlanner(  registry ) );
 
 			settings.addSettingsListener( new SSLSettingsListener() );
 		}
@@ -225,6 +229,11 @@ public class HttpClientSupport
 		public SoapUIHttpClient getHttpClient()
 		{
 			return httpClient;
+		}
+
+		private SchemeRegistry getRegistry()
+		{
+			return registry;
 		}
 
 		public HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext ) throws ClientProtocolException,
@@ -340,6 +349,11 @@ public class HttpClientSupport
 	public static SoapUIHttpClient getHttpClient()
 	{
 		return helper.getHttpClient();
+	}
+
+	public static void setProxySelector( ProxySelector proxySelector )
+	{
+		getHttpClient().setRoutePlanner( new OverridableProxySelectorRoutePlanner( helper.getRegistry(), proxySelector ) );
 	}
 
 	public static HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext )

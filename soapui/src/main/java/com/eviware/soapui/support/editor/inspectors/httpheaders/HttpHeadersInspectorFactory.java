@@ -1,18 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.support.editor.inspectors.httpheaders;
-
-import java.beans.PropertyChangeEvent;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
@@ -27,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFTestStepResult;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
@@ -34,6 +37,8 @@ import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspe
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 import com.eviware.soapui.support.types.StringToStringsMap;
+
+import java.beans.PropertyChangeEvent;
 
 public class HttpHeadersInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
 {
@@ -97,8 +102,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		}
 		else if( modelItem instanceof WsdlMockResponse )
 		{
-			HttpHeadersInspector inspector = new HttpHeadersInspector( new WsdlMockResponseHeadersModel(
-					( WsdlMockResponse )modelItem ) );
+			HttpHeadersInspector inspector = new HttpHeadersInspector( new MockResponseHeadersModel( (WsdlMockResponse)modelItem ) );
 			inspector.setEnabled( !JMSUtils.checkIfJMS( modelItem ) );
 			return inspector;
 		}
@@ -295,11 +299,11 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		}
 	}
 
-	private class WsdlMockResponseHeadersModel extends AbstractHeadersModel<WsdlMockResponse>
+	private class MockResponseHeadersModel extends AbstractHeadersModel<MockResponse>
 	{
-		public WsdlMockResponseHeadersModel( WsdlMockResponse request )
+		public MockResponseHeadersModel( MockResponse mockResponse )
 		{
-			super( false, request, WsdlMockResponse.HEADERS_PROPERTY );
+			super( false, mockResponse, WsdlMockResponse.HEADERS_PROPERTY );
 		}
 
 		public StringToStringsMap getHeaders()
@@ -311,7 +315,6 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 		{
 			getModelItem().setResponseHeaders( headers );
 		}
-
 	}
 
 	private class WsdlRequestResponseHeadersModel extends AbstractHeadersModel<AbstractHttpRequest<?>>

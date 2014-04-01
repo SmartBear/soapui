@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
@@ -37,7 +41,7 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -127,8 +131,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
 		httpRequest.setMethod( method );
 
-		String path = RestUtils.extractParams( endpoint, params, true );
-		endpoint = path;
+		endpoint = RestUtils.extractParams( endpoint, params, true );
 
 		XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder( testCase,
 				httpRequest.addNewParameters() );
@@ -149,12 +152,18 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory
 		return true;
 	}
 
+	@Override
+	public boolean promptForName()
+	{
+		return false;
+	}
+
 	private void buildDialog()
 	{
 		dialog = ADialogBuilder.buildDialog( Form.class );
 		dialog.getFormField( Form.STEPNAME ).addFormFieldValidator( new RequiredValidator() );
 		dialog.getFormField( Form.EXTRACTPARAMS ).setProperty( "action", new ExtractParamsAction() );
-		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( RestRequestInterface.RequestMethod
+		( ( XFormOptionsField )dialog.getFormField( Form.HTTPMETHOD ) ).setOptions( RestRequestInterface.HttpMethod
 				.getMethods() );
 	}
 

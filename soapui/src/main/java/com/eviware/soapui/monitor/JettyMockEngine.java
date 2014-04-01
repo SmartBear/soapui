@@ -1,38 +1,36 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.monitor;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.nio.channels.SocketChannel;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletInputStream;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractMockService;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
+import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.settings.SSLSettings;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.log.JettyLogger;
 import org.apache.log4j.Logger;
 import org.mortbay.component.AbstractLifeCycle;
 import org.mortbay.io.Connection;
@@ -49,21 +47,26 @@ import org.mortbay.jetty.handler.RequestLogHandler;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
-import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunner;
-import com.eviware.soapui.model.mock.MockService;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.settings.SSLSettings;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.log.JettyLogger;
+import javax.servlet.ServletException;
+import javax.servlet.ServletInputStream;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Core Mock-Engine hosting a Jetty web server
@@ -78,7 +81,7 @@ public class JettyMockEngine implements MockEngine
 	private Server server;
 	private Map<Integer, Map<String, List<MockRunner>>> runners = new HashMap<Integer, Map<String, List<MockRunner>>>();
 	private Map<Integer, SoapUIConnector> connectors = new HashMap<Integer, SoapUIConnector>();
-	private List<MockRunner> mockRunners = new ArrayList<MockRunner>();
+	private List<MockRunner> mockRunners = new CopyOnWriteArrayList<MockRunner>();
 
 	private SslSocketConnector sslConnector;
 
@@ -92,7 +95,7 @@ public class JettyMockEngine implements MockEngine
 	public boolean hasRunningMock( MockService mockService )
 	{
 		for( MockRunner runner : mockRunners )
-			if( runner.getMockService() == mockService )
+			if( runner.getMockContext().getMockService() == mockService )
 				return true;
 
 		return false;
@@ -105,7 +108,7 @@ public class JettyMockEngine implements MockEngine
 
 		synchronized( server )
 		{
-			WsdlMockService mockService = ( WsdlMockService )runner.getMockService();
+			MockService mockService = runner.getMockContext().getMockService();
 			int port = mockService.getPort();
 
 			if( SoapUI.getSettings().getBoolean( SSLSettings.ENABLE_MOCK_SSL ) && !addedSslConnector )
@@ -125,7 +128,7 @@ public class JettyMockEngine implements MockEngine
 			if( !runners.containsKey( port ) )
 			{
 				SoapUIConnector connector = new SoapUIConnector();
-				PropertySupport.applySystemProperties( connector, "soapui.mock.connector", runner.getMockService() );
+				PropertySupport.applySystemProperties( connector, "soapui.mock.connector", runner.getMockContext().getMockService() );
 
 				connector.setPort( port );
 				if( sslConnector != null )
@@ -135,7 +138,7 @@ public class JettyMockEngine implements MockEngine
 
 				if( mockService.getBindToHostOnly() )
 				{
-					String host = PropertyExpander.expandProperties( mockService, mockService.getHost() );
+					String host = PropertyExpander.expandProperties( mockService, ((AbstractMockService)mockService).getHost() );
 					if( StringUtils.hasContent( host ) )
 					{
 						connector.setHost( host );
@@ -166,8 +169,8 @@ public class JettyMockEngine implements MockEngine
 					}
 				}
 
-				connectors.put( new Integer( port ), connector );
-				runners.put( new Integer( port ), new HashMap<String, List<MockRunner>>() );
+				connectors.put( port, connector );
+				runners.put( port, new HashMap<String, List<MockRunner>>() );
 			}
 
 			Map<String, List<MockRunner>> map = runners.get( port );
@@ -202,10 +205,10 @@ public class JettyMockEngine implements MockEngine
 		sslConnector.setKeystore( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE, null ) );
 		sslConnector.setPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_PASSWORD, null ) );
 		sslConnector.setKeyPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_KEYSTORE_PASSWORD, null ) );
-		String truststore = SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null );
-		if( StringUtils.hasContent( truststore ) )
+		String trustStore = SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE, null );
+		if( StringUtils.hasContent( trustStore ) )
 		{
-			sslConnector.setTruststore( truststore );
+			sslConnector.setTruststore( trustStore );
 			sslConnector.setTrustPassword( SoapUI.getSettings().getString( SSLSettings.MOCK_TRUSTSTORE_PASSWORD, null ) );
 		}
 
@@ -217,8 +220,8 @@ public class JettyMockEngine implements MockEngine
 	{
 		synchronized( server )
 		{
-			MockService mockService = runner.getMockService();
-			final Integer port = new Integer( mockService.getPort() );
+			MockService mockService = runner.getMockContext().getMockService();
+			final Integer port = mockService.getPort();
 			Map<String, List<MockRunner>> map = runners.get( port );
 
 			if( map == null || !map.containsKey( mockService.getPath() ) )
@@ -304,13 +307,13 @@ public class JettyMockEngine implements MockEngine
 			return new SoapUIHttpConnection( SoapUIConnector.this, selectChannelEndPoint, getServer() );
 		}
 
-		public boolean waitUntilIdle( long maxwait ) throws Exception
+		public boolean waitUntilIdle( long maxWait ) throws Exception
 		{
-			while( maxwait > 0 && hasActiveConnections() )
+			while( maxWait > 0 && hasActiveConnections() )
 			{
 				System.out.println( "Waiting for active connections to finish.." );
 				Thread.sleep( 500 );
-				maxwait -= 500;
+				maxWait -= 500;
 			}
 
 			return !hasActiveConnections();
@@ -407,8 +410,7 @@ public class JettyMockEngine implements MockEngine
 
 		public int read() throws IOException
 		{
-			int i = getBuffer().read();
-			return i;
+			return getBuffer().read();
 		}
 
 		public int readLine( byte[] b, int off, int len ) throws IOException
@@ -434,14 +436,12 @@ public class JettyMockEngine implements MockEngine
 
 		public int read( byte[] b ) throws IOException
 		{
-			int i = getBuffer().read( b );
-			return i;
+			return getBuffer().read( b );
 		}
 
 		public int read( byte[] b, int off, int len ) throws IOException
 		{
-			int result = getBuffer().read( b, off, len );
-			return result;
+			return getBuffer().read( b, off, len );
 		}
 
 		public long skip( long n ) throws IOException
@@ -643,13 +643,11 @@ public class JettyMockEngine implements MockEngine
 		public void close() throws IOException
 		{
 			inputStream.close();
-			// log.info( "Closing input stream, captured: " +
-			// captureOutputStream.toString() );
 		}
 
-		public void mark( int readlimit )
+		public void mark( int readLimit )
 		{
-			inputStream.mark( readlimit );
+			inputStream.mark( readLimit );
 		}
 
 		public boolean markSupported()
@@ -689,10 +687,13 @@ public class JettyMockEngine implements MockEngine
 				List<MockRunner> wsdlMockRunners = map.get( request.getPathInfo() );
 				if( wsdlMockRunners == null )
 				{
+					String bestMatchedRootPath = "";
+
 					for( String root : map.keySet() )
 					{
-						if( request.getPathInfo().startsWith( root ) )
+						if( request.getPathInfo().startsWith( root ) && root.length() > bestMatchedRootPath.length() )
 						{
+							bestMatchedRootPath = root;
 							wsdlMockRunners = map.get( root );
 						}
 					}
@@ -721,10 +722,6 @@ public class JettyMockEngine implements MockEngine
 							}
 							catch( DispatchException e )
 							{
-								// log.debug( wsdlMockRunner.getMockService().getName()
-								// + " was unable to dispatch mock request ",
-								// e );
-
 								ex = e;
 							}
 						}
@@ -769,8 +766,8 @@ public class JettyMockEngine implements MockEngine
 			for( MockRunner mockRunner : mockRunners )
 			{
 				out.print( "<li><a href=\"" );
-				out.print( mockRunner.getMockService().getPath() + "?WSDL" );
-				out.print( "\">" + mockRunner.getMockService().getName() + "</a></li>" );
+				out.print( mockRunner.getMockContext().getMockService().getPath() + "?WSDL" );
+				out.print( "\">" + mockRunner.getMockContext().getMockService().getName() + "</a></li>" );
 			}
 
 			out.print( "</ul></p></body></html>" );
@@ -813,7 +810,7 @@ public class JettyMockEngine implements MockEngine
 					}
 				}
 			}
-			catch( Throwable e )
+			catch( Exception e )
 			{
 				SoapUI.logError( e );
 			}
@@ -836,7 +833,7 @@ public class JettyMockEngine implements MockEngine
 					}
 				}
 			}
-			catch( Throwable e )
+			catch( Exception e )
 			{
 				SoapUI.logError( e );
 			}

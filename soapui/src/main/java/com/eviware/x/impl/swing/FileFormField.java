@@ -1,19 +1,32 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.x.impl.swing;
 
-import java.awt.event.ActionEvent;
-import java.io.File;
+import com.eviware.soapui.settings.ProjectSettings;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JUndoableTextField;
+import com.eviware.x.form.XForm.FieldType;
+import com.eviware.x.form.XFormTextField;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.l2fprod.common.swing.JDirectoryChooser;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.log4j.Logger;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -21,17 +34,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.Document;
-
-import org.apache.log4j.Logger;
-
-import com.eviware.soapui.settings.ProjectSettings;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JUndoableTextField;
-import com.eviware.x.form.XForm.FieldType;
-import com.eviware.x.form.XFormTextField;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.l2fprod.common.swing.JDirectoryChooser;
+import java.awt.event.ActionEvent;
+import java.io.File;
 
 public class FileFormField extends AbstractSwingXFormField<JPanel> implements XFormTextField
 {
@@ -46,13 +50,14 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 	private String oldValue;
 	private String currentDirectory;
 
-	public FileFormField( String tooltip, FieldType type )
+	public FileFormField( String tooltip, FieldType type, String name )
 	{
 		super( new JPanel() );
 		this.type = type;
 
 		ButtonBarBuilder builder = new ButtonBarBuilder( getComponent() );
 		textField = new JUndoableTextField( 30 );
+		textField.setName( name );
 		textField.setToolTipText( tooltip );
 		builder.addGriddedGrowing( textField );
 		builder.addRelatedGap();
@@ -148,24 +153,67 @@ public class FileFormField extends AbstractSwingXFormField<JPanel> implements XF
 					fileChooser.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
 				}
 				else if( type == FieldType.FOLDER || type == FieldType.PROJECT_FOLDER )
+				{
 					fileChooser = new JDirectoryChooser();
+				}
 				else
+				{
 					fileChooser = new JFileChooser();
+				}
 
+			}
+
+			File file = null;
+			String startingDirectory = StringUtils.hasContent( currentDirectory ) ? currentDirectory : StringUtils.hasContent( projectRoot ) ? projectRoot : null;
+			if( startingDirectory != null )
+			{
+				startingDirectory = FilenameUtils.normalize( startingDirectory );
 			}
 
 			String value = FileFormField.this.getValue();
-			if( value.length() > 0 )
+			if( StringUtils.hasContent( value ) )
 			{
-				fileChooser.setSelectedFile( new File( value ) );
+				file = new File( FilenameUtils.normalize( value ) );
+				if( !file.isAbsolute() )
+				{
+					if( startingDirectory != null )
+					{
+						file = new File( FilenameUtils.normalize( startingDirectory + File.separator + value ) );
+					}
+					else
+					{
+						file = file.getAbsoluteFile();
+					}
+				}
 			}
-			else if( currentDirectory != null )
+			else
 			{
-				fileChooser.setCurrentDirectory( new File( currentDirectory ) );
+				file = new File( ( startingDirectory != null ) ? startingDirectory : System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
 			}
-			else if( projectRoot != null )
+
+			if( file.exists() )
 			{
-				fileChooser.setCurrentDirectory( new File( projectRoot ) );
+				fileChooser.setSelectedFile( file );
+				if( file.isDirectory() )
+				{
+					fileChooser.setCurrentDirectory( file );
+				}
+				else
+				{
+					fileChooser.setCurrentDirectory( file.getParentFile() );
+				}
+			}
+			else
+			{
+				while( file != null && !file.exists() )
+				{
+					file = file.getParentFile();
+				}
+				if( file == null )
+				{
+					file = new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
+				}
+				fileChooser.setCurrentDirectory( file );
 			}
 
 			int returnVal = fileChooser.showOpenDialog( UISupport.getMainFrame() );

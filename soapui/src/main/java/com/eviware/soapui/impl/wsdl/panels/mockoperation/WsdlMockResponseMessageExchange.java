@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
@@ -49,12 +53,12 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public String getEndpoint()
 	{
-		return getModelItem().getMockResult().getMockRequest().getHttpRequest().getRequestURI();
+		return getWsdlMockResult().getMockRequest().getHttpRequest().getRequestURI();
 	}
 
 	public String getRequestContent()
 	{
-		WsdlMockResult mockResult = getModelItem().getMockResult();
+		WsdlMockResult mockResult = getWsdlMockResult();
 		WsdlMockRequest mockRequest = mockResult.getMockRequest();
 		return mockRequest.getRequestContent();
 	}
@@ -102,7 +106,7 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public Vector<?> getRequestWssResult()
 	{
-		return getModelItem().getMockResult().getRequestWssResult();
+		return getWsdlMockResult().getRequestWssResult();
 	}
 
 	public Vector<?> getResponseWssResult()
@@ -112,12 +116,12 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 
 	public int getResponseStatusCode()
 	{
-		return getModelItem().getMockResult().getResponseStatus();
+		return getModelItem().getResponseHttpStatus();
 	}
 
 	public String getResponseContentType()
 	{
-		return getModelItem().getMockResult().getResponseContentType();
+		return getWsdlMockResult().getResponseContentType();
 	}
 
 	@Override
@@ -129,12 +133,17 @@ public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange
 	@Override
 	public byte[] getRawResponseData()
 	{
-		return getModelItem().getMockResult().getRawResponseData();
+		return getWsdlMockResult().getRawResponseData();
 	}
 
 	public byte[] getRawRequestData()
 	{
 		return getModelItem().getMockResult().getMockRequest().getRawRequestData();
+	}
+
+	public WsdlMockResult getWsdlMockResult()
+	{
+		return (WsdlMockResult)getModelItem().getMockResult();
 	}
 
 }

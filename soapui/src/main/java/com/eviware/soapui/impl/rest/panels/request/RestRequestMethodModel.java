@@ -2,34 +2,32 @@ package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 
-import javax.swing.*;
-import javax.swing.event.ListDataListener;
+import javax.swing.DefaultComboBoxModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 
 /*
- * SoapUI, copyright (C) 2004-2013 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- * SoapUI is free software; you can redistribute it and/or modify it under the
- * terms of version 2.1 of the GNU Lesser General Public License as published by
- * the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- * SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU Lesser General Public License for more details at gnu.org.
+ * http://ec.europa.eu/idabc/eupl
  *
- */
-public class RestRequestMethodModel extends DefaultComboBoxModel<RequestMethod> implements PropertyChangeListener
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
+public class RestRequestMethodModel extends DefaultComboBoxModel implements PropertyChangeListener
 {
 	private RestRequestInterface request;
 
 	public RestRequestMethodModel( RestRequestInterface request )
 	{
-		super( RequestMethod.values() );
+		super( RestRequestInterface.HttpMethod.values() );
 		this.request = request;
 		request.addPropertyChangeListener( this );
 	}
@@ -38,7 +36,7 @@ public class RestRequestMethodModel extends DefaultComboBoxModel<RequestMethod> 
 	public void setSelectedItem( Object anItem )
 	{
 		super.setSelectedItem( anItem );
-		request.setMethod( ( RequestMethod )anItem );
+		request.setMethod( ( RestRequestInterface.HttpMethod )anItem );
 	}
 
 	@Override

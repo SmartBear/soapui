@@ -1,8 +1,23 @@
-package com.eviware.soapui.support.preferences;
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/package com.eviware.soapui.support.preferences;
 
 import com.eviware.soapui.SoapUI;
 
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.Rectangle;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -21,6 +36,7 @@ public class UserPreferences
 	static final String WINDOW_WIDTH = "SoapUIWindowWidth";
 	static final String WINDOW_HEIGHT = "SoapUIWindowHeight";
 	static final String EXTENDED_STATE = "SoapUIExtendedState";
+	static final String INSTALLATION_TYPE = "SoapUIInstallationType";
 
 	private Preferences preferences = Preferences.userRoot().node( ROOT_NODE_NAME );
 
@@ -66,6 +82,24 @@ public class UserPreferences
 			else
 			{
 				return Frame.NORMAL;
+			}
+	}
+
+	public void setInstallationType( int type ) throws BackingStoreException
+	{
+		preferences.putInt( INSTALLATION_TYPE, type );
+		preferences.flush();
+	}
+
+	public int getInstallationType()
+	{
+			if ( hasAllIntProperties( INSTALLATION_TYPE ) )
+			{
+				 return preferences.getInt( INSTALLATION_TYPE, -1 );
+			}
+			else
+			{
+				return -1;
 			}
 	}
 

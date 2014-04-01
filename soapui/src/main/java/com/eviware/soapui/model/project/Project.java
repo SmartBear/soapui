@@ -1,17 +1,24 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.model.project;
 
+import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.mock.MockService;
@@ -61,17 +68,29 @@ public interface Project extends TestModelItem
 
 	public int getMockServiceCount();
 
+	public int getRestMockServiceCount();
+
 	public MockService getMockServiceAt( int index );
 
-	public MockService getMockServiceByName( String mockServiceName );
+	public MockService getRestMockServiceAt( int index );
 
-	public MockService addNewMockService( String name );
+   public MockService getMockServiceByName( String mockServiceName );
 
-	public SaveStatus save() throws IOException;
+   public RestMockService getRestMockServiceByName( String mockServiceName );
+
+   public MockService addNewMockService( String name );
+
+   public RestMockService addNewRestMockService( String name );
+
+	public void removeMockService( MockService service);
+
+   public SaveStatus save() throws IOException;
 
 	public List<TestSuite> getTestSuiteList();
 
-	public List<MockService> getMockServiceList();
+	public List<WsdlMockService> getMockServiceList();
+
+	public List<RestMockService> getRestMockServiceList();
 
 	public List<Interface> getInterfaceList();
 
@@ -97,4 +116,5 @@ public interface Project extends TestModelItem
 
 	public int getIndexOfTestSuite( TestSuite testSuite );
 
+	OAuth2ProfileContainer getOAuth2ProfileContainer();
 }

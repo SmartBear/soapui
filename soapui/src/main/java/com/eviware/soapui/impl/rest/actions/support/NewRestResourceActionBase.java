@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.actions.support;
 
@@ -174,7 +178,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 	private void createMethodAndRequestFor( RestResource resource )
 	{
 		RestMethod method = resource.addNewMethod( "Method " + (resource.getRestMethodCount() + 1) );
-		method.setMethod( RestRequestInterface.RequestMethod.GET );
+		method.setMethod( RestRequestInterface.HttpMethod.GET );
 		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
 		UISupport.select( request );
 		UISupport.showDesktopPanel( request );

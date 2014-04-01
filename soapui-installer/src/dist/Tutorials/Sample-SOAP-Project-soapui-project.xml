@@ -1,0 +1,1122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="Sample SOAP Project Core" soapui-version="5.0.0-SNAPSHOT" resourceRoot="" id="9a18faae-53d4-41df-9779-e5d2b73f9ae8" abortOnError="false" runType="SEQUENTIAL" activeEnvironment="Default" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="IncludeOverview">true</con:setting><con:setting id="IncludeResults">true</con:setting><con:setting id="FlowLayout">false</con:setting><con:setting id="ErrorDetails">true</con:setting><con:setting id="IncludeCoverage">true</con:setting><con:setting id="GeneratableJUnitReport@Style">Multiple Pages</con:setting><con:setting id="GeneratableJUnitReport@Folder">C:\dev\htmlreports</con:setting><con:setting id="ReportTitle">SoapUI Report</con:setting></con:settings><con:interface name="ServiceSoapBinding" bindingName="{http://www.soapui.org/sample/}ServiceSoapBinding" soapVersion="1_1" definition="WSDL-WADL/sample-service.wsdl" xsi:type="con:WsdlInterface" wsaVersion="NONE" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:endpoints><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:endpoint>http://www.soapui.org/sample</con:endpoint></con:endpoints><con:operation action="http://www.soapui.org/sample/login" name="login" bindingOperationName="login" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="login rq" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Login</username>
+ <password>Login123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation action="http://www.soapui.org/sample/logout" name="logout" bindingOperationName="logout" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="logout rq" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>21974891784000294</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation action="http://www.soapui.org/sample/search" name="search" bindingOperationName="search" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="search rq" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>0154144954954053</sessionid>
+ <searchstring>?</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation action="http://www.soapui.org/sample/buy" name="buy" bindingOperationName="buy" inputName="" isOneWay="false" receivesAttachments="false" sendsAttachments="false" type="Request-Response"><con:settings/><con:call name="buy rq" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buy>
+ <sessionid>?</sessionid>
+ <buystring>?</buystring>
+ </sam:buy>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:definitionCache rootPart="WSDL-WADL/sample-service.wsdl"><con:part><con:url>WSDL-WADL/sample-service.wsdl</con:url><con:content><wsdl:definitions name="sample" targetNamespace="http://www.soapui.org/sample/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.soapui.org/sample/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+ <wsdl:types>
+ <xsd:schema targetNamespace="http://www.soapui.org/sample/">
+ <xsd:element name="searchResponseContent">
+ <xsd:complexType>
+ <xsd:sequence>
+ <xsd:element name="item" type="tns:ItemType" maxOccurs="unbounded"/>
+ </xsd:sequence>
+ </xsd:complexType>
+ </xsd:element>
+ <xsd:complexType name="ItemType">
+ <xsd:sequence>
+ <xsd:element name="id" type="xsd:string"/>
+ <xsd:element name="description" type="xsd:string"/>
+ <xsd:element name="price" type="xsd:string"/>
+ </xsd:sequence>
+ </xsd:complexType>
+ <xsd:element name="buyResponseContent">
+ <xsd:complexType>
+ <xsd:sequence>
+ <xsd:element name="purchasestatus" type="tns:PurchaseStatusType" maxOccurs="unbounded"/>
+ </xsd:sequence>
+ </xsd:complexType>
+ </xsd:element>
+ <xsd:complexType name="PurchaseStatusType">
+ <xsd:sequence>
+ <xsd:element name="id" type="xsd:string"/>
+ <xsd:element name="stockStatus" type="xsd:string"/>
+ <xsd:element name="expectedDelivery" type="xsd:string"/>
+ </xsd:sequence>
+ </xsd:complexType>
+ </xsd:schema>
+ </wsdl:types>
+ <wsdl:message name="loginRequest">
+ <wsdl:part name="username" type="xsd:string"/>
+ <wsdl:part name="password" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="loginResponse">
+ <wsdl:part name="sessionid" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="logoutResponse">
+ <wsdl:part name="sessioninfo" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="logoutRequest">
+ <wsdl:part name="sessionid" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="searchRequest">
+ <wsdl:part name="sessionid" type="xsd:string"/>
+ <wsdl:part name="searchstring" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="searchResponse">
+ <wsdl:part name="searchresult" element="tns:searchResponseContent"/>
+ </wsdl:message>
+ <wsdl:message name="buyRequest">
+ <wsdl:part name="sessionid" type="xsd:string"/>
+ <wsdl:part name="buystring" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="buyResponse">
+ <wsdl:part name="buyresult" element="tns:buyResponseContent"/>
+ </wsdl:message>
+ <wsdl:message name="login_faultMsg">
+ <wsdl:part name="loginFault" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="logout_faultMsg">
+ <wsdl:part name="logoutFault" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="search_faultMsg">
+ <wsdl:part name="searchFault" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:message name="buy_faultMsg">
+ <wsdl:part name="buyFault" type="xsd:string"/>
+ </wsdl:message>
+ <wsdl:portType name="ISampleService">
+ <wsdl:operation name="login">
+ <wsdl:input message="tns:loginRequest"/>
+ <wsdl:output message="tns:loginResponse"/>
+ <wsdl:fault name="fault" message="tns:login_faultMsg"/>
+ </wsdl:operation>
+ <wsdl:operation name="logout">
+ <wsdl:input message="tns:logoutRequest"/>
+ <wsdl:output message="tns:logoutResponse"/>
+ <wsdl:fault name="fault" message="tns:logout_faultMsg"/>
+ </wsdl:operation>
+ <wsdl:operation name="search">
+ <wsdl:input message="tns:searchRequest"/>
+ <wsdl:output message="tns:searchResponse"/>
+ <wsdl:fault name="fault" message="tns:search_faultMsg"/>
+ </wsdl:operation>
+ <wsdl:operation name="buy">
+ <wsdl:input message="tns:buyRequest"/>
+ <wsdl:output message="tns:buyResponse"/>
+ <wsdl:fault name="fault" message="tns:buy_faultMsg"/>
+ </wsdl:operation>
+ </wsdl:portType>
+ <wsdl:binding name="ServiceSoapBinding" type="tns:ISampleService">
+ <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <wsdl:operation name="login">
+ <soap:operation soapAction="http://www.soapui.org/sample/login"/>
+ <wsdl:input>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:input>
+ <wsdl:output>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:output>
+ <wsdl:fault name="fault">
+ <soap:fault use="literal" name="fault"/>
+ </wsdl:fault>
+ </wsdl:operation>
+ <wsdl:operation name="logout">
+ <soap:operation soapAction="http://www.soapui.org/sample/logout"/>
+ <wsdl:input>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:input>
+ <wsdl:output>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:output>
+ <wsdl:fault name="fault">
+ <soap:fault use="literal" name="fault"/>
+ </wsdl:fault>
+ </wsdl:operation>
+ <wsdl:operation name="search">
+ <soap:operation soapAction="http://www.soapui.org/sample/search"/>
+ <wsdl:input>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:input>
+ <wsdl:output>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:output>
+ <wsdl:fault name="fault">
+ <soap:fault use="literal" name="fault"/>
+ </wsdl:fault>
+ </wsdl:operation>
+ <wsdl:operation name="buy">
+ <soap:operation soapAction="http://www.soapui.org/sample/buy"/>
+ <wsdl:input>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:input>
+ <wsdl:output>
+ <soap:body use="literal" namespace="http://www.soapui.org/sample/"/>
+ </wsdl:output>
+ <wsdl:fault name="fault">
+ <soap:fault use="literal" name="fault"/>
+ </wsdl:fault>
+ </wsdl:operation>
+ </wsdl:binding>
+ <wsdl:service name="SampleService">
+ <wsdl:port name="SamplePort" binding="tns:ServiceSoapBinding">
+ <soap:address location="http://www.soapui.org/sample"/>
+ </wsdl:port>
+ </wsdl:service>
+</wsdl:definitions></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache></con:interface><con:testSuite name="Simple TestSuite" id="93f915cc-dfd5-492c-850d-831ccda88ca4"><con:description>This is a sample TestSuite.
+
+It contains a number of TestCases Illustrating a number of principles with SoapUI.
+
+Try each test and read the descriptions.</con:description><con:settings><con:setting id="ExportJUnitReportAction@report-directory">C:\dev\testreport</con:setting><con:setting id="ExportJUnitReportAction@clear-existing">true</con:setting><con:setting id="ExportJUnitReportAction@format">Frames</con:setting><con:setting id="CreateReportAction@report-directory">C:\dev\testreport</con:setting><con:setting id="CreateReportAction@format">Multiple Pages</con:setting><con:setting id="IncludeOverview">true</con:setting><con:setting id="IncludeResults">true</con:setting><con:setting id="FlowLayout">false</con:setting><con:setting id="ErrorDetails">true</con:setting><con:setting id="IncludeCoverage">true</con:setting><con:setting id="ReportTitle">Default Title</con:setting></con:settings><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout w. Properties Steps" searchProperties="true" maxResults="0" id="e48ca537-bd68-4f56-80b7-ce8c8242c751"><con:description>TestCase - Simple Login and Logout
+
+This one is easy...
+
+The test will first login and then it will logout. :-)
+
+We are using a Property Transfer Step to move password and user name from a Properties Step to the 
+Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings><con:setting id="ReportTitle">Default Titlkjle</con:setting></con:settings><con:testStep type="properties" name="Properties - Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Loginn${=String.valueOf(Math.random()).substring( 0, 5 )}</con:value></con:property><con:property><con:name>Password</con:name><con:value>Loginn123</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer - Move Username and Password"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>TransferUser</con:name><con:sourceType>Username</con:sourceType><con:sourceStep>Properties - Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request - login</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:login/username</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false"><con:name>TransferPass</con:name><con:sourceType>Password</con:sourceType><con:sourceStep>Properties - Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request - login</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:login/password</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request - login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Loginn${=String.valueOf(Math.random()).substring( 0, 5 )}</username>
+ <password>Loginn123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer - Move sessionID"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" ignoreEmpty="false"><con:name>MoveSessionId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request - login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:loginResponse/sessionid</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Test Request - logout</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:logout/sessionid</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>7457366704567645</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:loadTest name="LoadTest 1" id="2e3517e5-cbf9-4f56-ad33-3a56cdbbec52"><con:settings><con:setting id="ReportTitle">Default Title</con:setting><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>5</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:statisticsLogFolder/><con:statisticsLogInterval>0</con:statisticsLogInterval><con:logStatisticsOnThreadChange>false</con:logStatisticsOnThreadChange><con:cancelOnReachedLimit>false</con:cancelOnReachedLimit><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:updateStatisticsPerTestStep>false</con:updateStatisticsPerTestStep><con:reportParameters/></con:loadTest><con:properties/><con:reportParameters><con:property><con:name>ReportTitle</con:name><con:value>${=testCase.name}</con:value></con:property></con:reportParameters></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout Property Expansion" searchProperties="true" maxResults="0" id="b99e440c-c19e-4818-a805-9b130aa66b13"><con:description>TestCase - Simple Login and Logout
+
+This one is easy and a little tighter than "Simple Login and Logout w. Properties Steps"
+
+The test will first login and then it will logout. :-)
+
+We are using a Property Transfer Step to move password and user name from a Properties 
+Step to the Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings/><con:testStep type="properties" name="Properties - Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Loginn${=String.valueOf(Math.random()).substring( 0, 5 )}</con:value></con:property><con:property><con:name>Password</con:name><con:value>Loginu123</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="Test Request - login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>${Properties - Username and Password#Username}</username>
+ <password>${Properties - Username and Password#Password}</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Login and Logout and Login Again" searchProperties="true" maxResults="0" id="4a2bfe83-78c8-4ee8-9d6a-e3ec52ccd91b"><con:description>TestCase - Simple Login and Logout
+
+This one is a bit wonky, but has its reasons. What we are testing is that we are able to login again after a logout.
+
+The test will:
+1) login 
+2) logout
+3) login again
+4) logout again 
+
+The last step is there in order for us to be able to run the test continuously.</con:description><con:settings/><con:testStep type="properties" name="Properties - Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Loginn${=String.valueOf(Math.random()).substring( 0, 5 )}</con:value></con:property><con:property><con:name>Password</con:name><con:value>Loginu123</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="Test Request - login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>${Properties - Username and Password#Username}</username>
+ <password>${Properties - Username and Password#Password}</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - login again"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login again" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>${Properties - Username and Password#Username}</username>
+ <password>${Properties - Username and Password#Password}</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout again"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout again" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - login again#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Simple Search TestCase" searchProperties="true" maxResults="0" id="f41faf48-26b9-416b-bd93-aaa969c9236a"><con:description>TestCase - Simple Search TestCase
+
+
+The test extends the previous TastCases by doing a simple search between login and logout.
+
+We are using a Property Transfer Step to move password and user name from a Properties Step to the 
+Request and a second Property Transfer Step to move the sessionID we got in the login response to the logout request..</con:description><con:settings/><con:testStep type="properties" name="Properties - Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Logini${=String.valueOf(Math.random()).substring( 0, 5 )}</con:value></con:property><con:property><con:name>Password</con:name><con:value>Logini123</con:value></con:property><con:property><con:name>SearchPhrase</con:name><con:value>Item 1</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer - Move Username and Password"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true"><con:name>TransferUser</con:name><con:sourceType>Username</con:sourceType><con:sourceStep>Properties - Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request - login</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:login/username</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false"><con:name>TransferPass</con:name><con:sourceType>Password</con:sourceType><con:sourceStep>Properties - Username and Password</con:sourceStep><con:targetType>Request</con:targetType><con:targetStep>Test Request - login</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:login/password</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request - login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Logini${=String.valueOf(Math.random()).substring( 0, 5 )}</username>
+ <password>Logini123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="transfer" name="Property Transfer - Move sessionID"><con:settings/><con:config xsi:type="con:PropertyTransfersStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" transferToAll="false" ignoreEmpty="false"><con:name>MoveSessionId</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request - login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:loginResponse/sessionid</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Test Request - logout</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:logout/sessionid</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false"><con:name>moveSessionID Search</con:name><con:sourceType>Response</con:sourceType><con:sourceStep>Test Request - login</con:sourceStep><con:sourcePath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:loginResponse/sessionid</con:sourcePath><con:targetType>Request</con:targetType><con:targetStep>Test Request - search</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:search/sessionid</con:targetPath></con:transfers><con:transfers setNullOnMissingSource="true" transferTextContent="true" failOnError="true" ignoreEmpty="false" transferToAll="false"><con:name>MoveSearchstring</con:name><con:sourceType>SearchPhrase</con:sourceType><con:sourceStep>Properties - Username and Password</con:sourceStep><con:sourcePath/><con:targetType>Request</con:targetType><con:targetStep>Test Request - search</con:targetStep><con:targetPath>declare namespace sam='http://www.soapui.org/sample/';
+//sam:search/searchstring</con:targetPath></con:transfers></con:config></con:testStep><con:testStep type="request" name="Test Request - search"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - search" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>23053886437829452</sessionid>
+ <searchstring>Item 1</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>23053886437829452</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:properties/><con:setupScript/><con:tearDownScript/><con:reportScript>import soapui.demo.subreport.SystemPropertiesSubReport
+
+if( !report.hasSubReport( "SystemProperties" ))
+{
+	report.addSubReport( new SystemPropertiesSubReport( testSuite ))
+}
+	</con:reportScript><con:reportParameters/></con:testSuite><con:testSuite name="TestSuite fails if we don't get faults"><con:description>This is a complementary TestSuite that illustrates something important.
+
+Do not only test that your Web Service works under the right conditions, also test that it work under the wrong ones.
+
+One of the strengths of SoapUI is the ability do quickly create a number of destructive tests, that confirms that the your Web Service handles input errors, abuse, input faults etc. correctly.</con:description><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase - Invalid Login" searchProperties="true" maxResults="0" id="08759721-5f14-441f-8882-24bbbb27501c"><con:description>Now, what's this? TestCases that we want to fail?
+
+Yes, sometimes it's a great idea to test that the Web Service fail when it should and fail correctly.
+Therefore the TestCase will pass if we get fails for every test in the Case.
+
+These tests are for login alone.</con:description><con:settings/><con:testStep type="request" name="Test Request - login wrong username"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login wrong username" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Logi</username>
+ <password>Loginn123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//detail/sam:loginFault</path><content>The login credentials are invalid</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Password without numbers"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - Password without numbers" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Loginn</username>
+ <password>Loginn</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//detail/sam:loginFault</path><content>The login credentials are invalid</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - To long User/Pass Combo (25)"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - To long User/Pass Combo (25)" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Loginnnnnnsdfgdfgf</username>
+ <password>Loginnnnnn123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//detail/sam:loginFault</path><content>The login credentials are invalid</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - To short User/Pass Combo (9)"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - To short User/Pass Combo (9)" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Log</username>
+ <password>Log123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//detail/sam:loginFault</path><content>The login credentials are invalid</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Double Login step 1 (SUCCESS)"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - Double Login step 1 (SUCCESS)" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Login</username>
+ <password>Login123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Double Login step 2 (FAIL)"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - Double Login step 2 (FAIL)" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Login</username>
+ <password>Login123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Already Login</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - Double Login step 1 (SUCCESS)#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:logoutResponse/sessioninfo</path><content>OK</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase - Invalid Search" searchProperties="true" maxResults="0" id="b039ef15-91b1-4e97-9d17-f0bfb2e1257a"><con:description>Another batch of TestCases that we want to fail?
+
+These tests expands on what we did with "TestCase - Invalid Login" and shows some important test that you always should have.
+
+1) If you have a Web Service that depends on logging in, always make sure that nothing can be done wothout logging in. Don't make one test, make several.
+2) If you have a Web Service that depends on logging in, create a number of test with the user logged in.
+3) Create SQL injections test. Sure this should not never ever happend, but it does... And when it does it is bad. It is easy to create with SoapUI and will make you sleep easier at night.
+4) Always test what happends when you try to make a call quickly after logging out.
+</con:description><con:settings/><con:testStep type="properties" name="Properties - Correct Session Property"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Session</con:name><con:value>29711622719335506</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="Test Request - Correct Search wo Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Correct Search wo Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Correct Session Property#Session}</sessionid>
+ <searchstring>Item 4</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Illegal Search wo Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Illegal Search wo Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Correct Session Property#Session}</sessionid>
+ <searchstring>Item 7</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Empty Search wo. Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Empty Search wo. Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Correct Session Property#Session}</sessionid>
+ <searchstring/>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Illegal Session wo. Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Illegal Session wo. Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>6767676767676</sessionid>
+ <searchstring>Item 1</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - SQL Injection SearchString wo. Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - SQL Injection SearchString wo. Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Correct Session Property#Session}</sessionid>
+ <searchstring>Select * from Customers</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - SQL Injection Session wo. Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - SQL Injection Session wo. Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>Select * from Customers</sessionid>
+ <searchstring>Item 2</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Double SessionIDs wo. Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Double SessionIDs wo. Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Correct Session Property#Session}</sessionid>
+	 <sessionid>${Correct Session Property#Session}</sessionid>
+ <searchstring>Item 2</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Missing operation for soapAction [http://www.soapui.org/sample/search] and body element [{http://www.soapui.org/sample/}search] with SOAP Version [SOAP 1.1]</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - Login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Login</username>
+ <password>Login123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Illegal Search"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Illegal Search" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring>Item 7</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="Simple Contains"><con:configuration><token>Unknown Search</token><ignoreCase>false</ignoreCase></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Empty Search"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Empty Search" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring/>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Unknown Search String</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Illegal Session"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Illegal Session" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>6767676767676</sessionid>
+ <searchstring>Item 1</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - SQL Injection SearchString"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - SQL Injection SearchString" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring>Select * from Customers</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Unknown Search String</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - SQL Injection Session"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - SQL Injection Session" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>Select * from Customers</sessionid>
+ <searchstring>Item 2</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Double SessionIDs"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Double SessionIDs" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+	 <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring>Item 2</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Missing operation for soapAction [http://www.soapui.org/sample/search] and body element [{http://www.soapui.org/sample/}search] with SOAP Version [SOAP 1.1]</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:logoutResponse/sessioninfo</path><content>OK</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Correct Search after Logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Correct Search after Logout" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Correct Session Property#Session}</sessionid>
+ <searchstring>Item 4</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="TestCase - Searching after Logging out LoadTests" searchProperties="true" maxResults="0" id="c3d3394e-1c70-404a-bcf5-7e6437e10728"><con:description>Here is an interesting TestCase.
+
+The actual TestCase itself is not that interesting, but we've used it in order to test how the Web Service handles load.
+
+AND...
+
+The second LoadTest "LoadTest with Multiple Tests (will fail)" DOES fail. Why does it fail and not the first? 
+This is because in the first test we have just one simple thread and in the second we have a whopping ten.
+
+What have we achieved?
+Our Web Service is not thread safe!
+Bug Found!
+</con:description><con:settings/><con:testStep type="request" name="Test Request - Login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - Login" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>Login${=String.valueOf(Math.random()).substring( 0, 5 )}</username>
+ <password>Login123</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:logoutResponse/sessioninfo</path><content>OK</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Correct Search after Logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - Correct Search after Logout" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - Login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring>Item 4</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="Not SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>//faultstring</path><content>Invalid Session Id</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:loadTest name="LoadTest"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:loadTest name="LoadTest with Multiple Tests (will fail)"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>10</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>60</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:assertion type="Max Errors" name="After 30 errors, stop"><con:configuration><name>After 30 errors, stop</name><max-absolute-errors>30</max-absolute-errors><max-relative-errors>0.0</max-relative-errors><test-step>- Any -</test-step></con:configuration></con:assertion><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:properties><con:property><con:name>URL</con:name><con:value/></con:property></con:properties><con:reportParameters/></con:testCase><con:properties/><con:reportParameters/></con:testSuite><con:testSuite name="Expanded TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="Search and Buy TestCase" searchProperties="true" maxResults="0" id="bd5bc347-98a7-4e66-b57f-691e7db558eb"><con:description>TestCase - Search and Buy TestCase
+
+This test is the first expanded TestCase.
+It basically tests our entire MockService by doing the following.
+
+1) Logging in
+2) Searching for all items in stock
+3) Choosing the first items and Buying it
+4) Logging out
+
+We also have added LoadTests of all "Strategies"
+
+1) Simple
+2) Variance
+3) Burst
+4) Thread
+
+The thread strategy will produce errors. 
+We will go into that further in the TestCase "TestCase - Searching after Logging out LoadTests" in the TestSuite
+"Sample TestSuite fails if we don't get faults"</con:description><con:settings/><con:testStep type="properties" name="Properties - Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Logini${=String.valueOf(Math.random()).substring( 0, 5 )}</con:value></con:property><con:property><con:name>Password</con:name><con:value>Logini123</con:value></con:property><con:property><con:name>SearchPhrase</con:name><con:value>Item 1</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="Test Request - login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>${Properties - Username and Password#Username}</username>
+ <password>${Properties - Username and Password#Password}</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - search"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - search" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring>all</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:searchResponse[1]/sam:searchResponseContent/item[3]/description</path><content>One towel. Massively useful thing. 
+Impress the strags with this amazing cloth!</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - Buy"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>buy</con:operation><con:request name="Test Request - Buy" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buy>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <buystring>${Test Request - search#Response#//sam:searchResponse/sam:searchResponseContent/item[id="Item 5"]/id}</buystring>
+ </sam:buy>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:assertion type="XPath Match"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:buyResponse/sam:buyResponseContent/purchasestatus/expectedDelivery</path><content>You should already have it.</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:loadTest name="LoadTest - Simple Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Simple</con:type></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:loadTest name="LoadTest - Variance Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Variance</con:type><con:config><interval>5000</interval><variance>0.5</variance></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:loadTest name="LoadTest - Burst Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>1</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Burst</con:type><con:config><burstDelay>5000</burstDelay><burstDuration>5000</burstDuration></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:loadTest name="LoadTest - Thread Strategy"><con:settings><con:setting id="HttpSettings@close-connections">false</con:setting></con:settings><con:threadCount>2</con:threadCount><con:startDelay>0</con:startDelay><con:sampleInterval>250</con:sampleInterval><con:calculateTPSOnTimePassed>false</con:calculateTPSOnTimePassed><con:resetStatisticsOnThreadCountChange>true</con:resetStatisticsOnThreadCountChange><con:historyLimit>-1</con:historyLimit><con:testLimit>30</con:testLimit><con:limitType>TIME</con:limitType><con:loadStrategy><con:type>Thread</con:type><con:config><startThreadCount>1</startThreadCount><endThreadCount>2</endThreadCount></con:config></con:loadStrategy><con:assertion type="Step Status" name="Step Status"/><con:maxAssertionErrors>100</con:maxAssertionErrors><con:cancelExcessiveThreads>true</con:cancelExcessiveThreads><con:strategyInterval>500</con:strategyInterval><con:reportParameters/></con:loadTest><con:properties/><con:reportParameters/></con:testCase><con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" name="More Than Less Than TestCase" searchProperties="true" maxResults="0" id="fd17d7a2-29e0-4239-9d5b-9e516cd2809d"><con:description>This TestCase shows some interesting assertions. Check out the search TestStep, there are two assertions "XPath retrieve sibling value" 
+and "XPath Match More Than Less Than" that shows some interesting ways of using XPath.</con:description><con:settings/><con:testStep type="properties" name="Properties - Username and Password"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Username</con:name><con:value>Logini${=String.valueOf(Math.random()).substring( 0, 5 )}</con:value></con:property><con:property><con:name>Password</con:name><con:value>Logini123</con:value></con:property><con:property><con:name>SearchPhrase</con:name><con:value>Item 1</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="properties" name="Properties - Wanted Response"><con:settings/><con:config xsi:type="con:PropertiesStep" saveFirst="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:properties><con:property><con:name>Item</con:name><con:value>Item 3</con:value></con:property><con:property><con:name>Wanted At Least</con:name><con:value>2.50</con:value></con:property><con:property><con:name>Wanted at most</con:name><con:value>3.50</con:value></con:property><con:property><con:name>Sibling</con:name><con:value>2.99</con:value></con:property></con:properties></con:config></con:testStep><con:testStep type="request" name="Test Request - login"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>login</con:operation><con:request name="Test Request - login" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:login>
+ <username>${Properties - Username and Password#Username}</username>
+ <password>${Properties - Username and Password#Password}</password>
+ </sam:login>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="SOAP Fault Assertion"/><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - search"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>search</con:operation><con:request name="Test Request - search" outgoingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:search>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ <searchstring>all</searchstring>
+ </sam:search>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="SOAP Fault Assertion"/><con:assertion type="Schema Compliance" name="Schema Compliance"><con:configuration/></con:assertion><con:assertion type="XPath Match" name="XPath Match for description"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:searchResponse[1]/sam:searchResponseContent/item[3]/description</path><content>One towel. Massively useful thing. 
+Impress the strags with this amazing cloth!</content><allowWildcards>false</allowWildcards><ignoreNamspaceDifferences>false</ignoreNamspaceDifferences><ignoreComments>false</ignoreComments></con:configuration></con:assertion><con:assertion type="XPath Match" name="XPath Match More Than Less Than"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+//sam:searchResponse[1]/sam:searchResponseContent/item[id="${Properties - Wanted Response#Item}"]/price >= ("${Properties - Wanted Response#Wanted At Least}")
+and 
+//sam:searchResponse[1]/sam:searchResponseContent/item[id="${Properties - Wanted Response#Item}"]/price &lt;= ("${Properties - Wanted Response#Wanted At Most}" )</path><content>true</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:assertion type="XPath Match" name="XPath retrieve sibling value"><con:configuration><path>declare namespace sam='http://www.soapui.org/sample/';
+
+//sam:searchResponse[1]/sam:searchResponseContent/item[price="${Properties - Wanted Response#Sibling}"]/id</path><content>${Properties - Wanted Response#Item}</content><allowWildcards>false</allowWildcards></con:configuration></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:testStep type="request" name="Test Request - logout"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ServiceSoapBinding</con:interface><con:operation>logout</con:operation><con:request name="Test Request - logout" outgoingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://127.0.0.1:8088/mockServiceSoapBinding</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logout>
+ <sessionid>${Test Request - login#Response#//sam:loginResponse/sessionid}</sessionid>
+ </sam:logout>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:assertion type="SOAP Response"/><con:assertion type="Schema Compliance"><con:configuration/></con:assertion><con:credentials><con:username xsi:nil="true"/><con:password xsi:nil="true"/><con:domain xsi:nil="true"/><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:properties/><con:reportParameters/></con:testSuite><con:mockService port="8088" path="/mockServiceSoapBinding" name="ServiceSoapBinding MockService" host="localhost"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.mock.WsdlMockService@require-soap-action">false</con:setting></con:settings><con:mockOperation name="login" interface="ServiceSoapBinding" operation="login"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
+
+def username = holder.getNodeValue( "//username" )
+def password = holder.getNodeValue( "//password" )
+def sum = username + password
+
+// validate
+if( sum.length() > 25 || sum.length() &lt; 10 || !username.startsWith("Login") || !password.endsWith( "123" ))
+ return "Invalid Login Fault"
+
+if( context.hasProperty( sum ))
+ return "Already Logged In Fault"
+
+// seems ok
+def sessionid = String.valueOf( Math.random() ).substring( 2 )
+
+context.setProperty( sum, sessionid )
+context.setProperty( sessionid, sum )
+
+requestContext.sessionid = sessionid
+return "Ok Response"
+</con:dispatchPath><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:defaultResponse>Ok Response</con:defaultResponse><con:response name="Ok Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:loginResponse>
+ <sessionid>${sessionid}</sessionid>
+ </sam:loginResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Invalid Login Fault" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Client</faultcode>
+ <faultstring>Invalid Login</faultstring>
+ <detail>
+ <sam:loginFault>The login credentials are invalid</sam:loginFault>
+ </detail>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Already Logged In Fault" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Client</faultcode>
+ <faultstring>Already Login</faultstring>
+ <detail>
+ <sam:loginFault>The specified credentials are already logged in</sam:loginFault>
+ </detail>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="logout" interface="ServiceSoapBinding" operation="logout"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
+
+def sessionid = holder.getNodeValue( "//sessionid" )
+
+// check
+if( !context.hasProperty( sessionid ))
+ return "Invalid Session Id Fault"
+
+// logout
+context.removeProperty( context.getProperty( sessionid ))
+context.removeProperty( sessionid )
+requestContext.sessioninfo = "OK"
+
+return "Ok Response"
+</con:dispatchPath><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Ok Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:logoutResponse>
+ <sessioninfo>${sessioninfo}</sessioninfo>
+ </sam:logoutResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Invalid Session Id Fault" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Client</faultcode>
+ <faultstring>Invalid Session Id</faultstring>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="search" interface="ServiceSoapBinding" operation="search"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
+
+def sessionid = holder.getNodeValue( "//sessionid" )
+
+// check
+if( !context.hasProperty( sessionid ))
+ return "Invalid Session Id Fault"
+
+def searchstring = holder.getNodeValue( "//searchstring" )
+
+if (searchstring == "all") 
+ return "WildCard Response"
+else if (searchstring == "Item 1") 
+ return "Item 1 Response"
+else if (searchstring == "Item 2") 
+ return "Item 2 Response"
+else if (searchstring == "Item 3") 
+ return "Item 3 Response"
+else if (searchstring == "Item 4") 
+ return "Item 3 Response"
+else if (searchstring == "Item 5") 
+ return "Item 5 Response"
+else
+return "Unknown Response" 
+	
+
+
+return "Search Response"</con:dispatchPath><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:defaultResponse>Response 1</con:defaultResponse><con:response name="Search Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>1</id>
+ <description>One handy protocol droid.</description>
+ <price>1</price>
+ </item>
+ <item>
+ <id>2</id>
+ <description>Item nr 2</description>
+ <price>2</price>
+ </item>
+ <item>
+ <id>3</id>
+ <description>Item nr 3</description>
+ <price>3</price>
+ </item>
+ <item>
+ <id>4</id>
+ <description>${item4description}</description>
+ <price>4</price>
+ </item>
+ <item>
+ <id>5</id>
+ <description>Item nr 5</description>
+ <price>5</price>
+ </item>
+ </sam:searchResponseContent>
+ </sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Invalid Session Id Fault" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Client</faultcode>
+ <faultstring>Invalid Session Id</faultstring>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 1 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ 	 <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>Item 1</id>
+ <description>One handy protocol droid. This droid is fluent 
+		in over six million forms of communication and has a lovely golden color. 
+		Built by an enthusiast. Mindwiped only once. Can be carried on your back.</description>
+ <price>1</price>
+ </item>
+ </sam:searchResponseContent>
+		</sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 2 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+	 <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>Item 2</id>
+ <description>Box of chocolate with several popular items. Covered in Glucose.
+		Recommended safety distance when eating Spring Surprise, 10 feet.</description>
+ <price>1.99</price>
+ </item>
+ </sam:searchResponseContent>
+	 </sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 3 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+	 <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>Item 3</id>
+ <description>One towel. Massively useful thing. 
+Impress the strags with this amazing cloth!</description>
+ <price>2.99</price>
+ </item>
+ </sam:searchResponseContent>
+	 </sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 4 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+	 <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>item 4</id>
+ <description>Ono-Sendai 7. The newest cowboy tech from Hosaka. 
+		Break the ICE with this conversation piece.</description>
+ <price>4.99</price>
+ </item>
+ </sam:searchResponseContent>
+ </sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 5 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+	 <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>item 5</id>
+ <description>soapui Pro 1.7.5. Necessary when testing Web Services.</description>
+ <price>349</price>
+ </item>
+ <sam:searchResponseContent>
+ </sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Search Fault Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Server</faultcode>
+ <faultstring>No Result</faultstring>
+ <detail>
+ <sam:loginFault>The search returned no items</sam:loginFault>
+ </detail>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Unknown Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Client</faultcode>
+ <faultstring>Unknown Search String</faultstring>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="WildCard Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:script>context.item4description = Math.random() > 0.9 ? "garbage" : "Item nr 4"</con:script><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:searchResponse>
+ <sam:searchResponseContent>
+ <item>
+ <id>Item 1</id>
+ <description>One handy protocol droid. This droid is fluent 
+		in over six million forms of communication and has a lovely golden color. 
+		Built by an enthusiast. Mindwiped only once. Can be carried on your back.</description>
+ <price>1</price>
+ </item>
+ <item>
+ <id>Item 2</id>
+ <description>Box of chocolate with several popular items. Covered in Glucose.
+		Recommended safety distance when eating Spring Surprise, 10 feet.</description>
+ <price>1.99</price>
+ </item>
+ <item>
+ <id>Item 3</id>
+ <description>One towel. Massively useful thing. 
+Impress the strags with this amazing cloth!</description>
+ <price>2.99</price>
+ </item>
+ <item>
+ <id>Item 4</id>
+ <description>Ono-Sendai 7. The newest cowboy tech from Hosaka. 
+		Break the ICE with this conversation piece.</description>
+ <price>4.99</price>
+ </item>
+ <item>
+ <id>Item 5</id>
+ <description>soapui Pro 1.7.5. Necessary when testing Web Services.</description>
+ <price>349</price>
+ </item>
+ </sam:searchResponseContent>
+ </sam:searchResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:dispatchConfig/></con:mockOperation><con:mockOperation name="buy" interface="ServiceSoapBinding" operation="buy"><con:settings/><con:dispatchPath>def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )
+def holder = groovyUtils.getXmlHolder( mockRequest.requestContent )
+
+def sessionid = holder.getNodeValue( "//sessionid" )
+
+// check
+if( !context.hasProperty( sessionid ))
+ return "Invalid Session Id Fault"
+
+def buystring = holder.getNodeValue( "//buystring" )
+
+if (buystring == "all") 
+ return "WildCard Response"
+else if (buystring == "Item 1") 
+ return "Item 1 Response"
+else if (buystring == "Item 2") 
+ return "Item 2 Response"
+else if (buystring == "Item 3") 
+ return "Item 3 Response"
+else if (buystring == "Item 4") 
+ return "Item 3 Response"
+else if (buystring == "Item 5") 
+ return "Item 5 Response"
+else
+return "Unknown Response" 
+	
+
+
+return "Search Response"</con:dispatchPath><con:dispatchStyle>SCRIPT</con:dispatchStyle><con:defaultResponse>Buy Response</con:defaultResponse><con:response name="Buy Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>?</id>
+ <stockStatus>?</stockStatus>
+ <expectedDelivery>?</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 1 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>Item 1</id>
+ <stockStatus>1 unit</stockStatus>
+ <expectedDelivery>2000 years from now</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 2 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>Item 2</id>
+ <stockStatus>10 000 boxes</stockStatus>
+ <expectedDelivery>1 week</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 3 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>Item 3</id>
+ <stockStatus>4 towels</stockStatus>
+ <expectedDelivery>Any day now...</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 4 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>Item 4</id>
+ <stockStatus>1 unit</stockStatus>
+ <expectedDelivery>In the near future.</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Item 5 Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>Item 5</id>
+ <stockStatus>1 license</stockStatus>
+ <expectedDelivery>You should already have it.</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Invalid Session Id Fault" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+ <soapenv:Body>
+ <soapenv:Fault>
+ <faultcode>Client</faultcode>
+ <faultstring>Invalid Session Id</faultstring>
+ </soapenv:Fault>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="Unknown Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>?</id>
+ <stockStatus>?</stockStatus>
+ <expectedDelivery>?</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:response name="WildCard Response" encoding="UTF-8" httpResponseStatus="200"><con:settings/><con:responseContent><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:sam="http://www.soapui.org/sample/">
+ <soapenv:Header/>
+ <soapenv:Body>
+ <sam:buyResponse>
+ <sam:buyResponseContent>
+ <purchasestatus>
+ <id>Item 1</id>
+ <stockStatus>1 unit</stockStatus>
+ <expectedDelivery>2000 years from now</expectedDelivery>
+ </purchasestatus>
+ <purchasestatus>
+ <id>Item 2</id>
+ <stockStatus>10 000 boxes</stockStatus>
+ <expectedDelivery>1 week</expectedDelivery>
+ </purchasestatus>
+	 <purchasestatus>
+ <id>Item 3</id>
+ <stockStatus>4 towels</stockStatus>
+ <expectedDelivery>Any day now...</expectedDelivery>
+ </purchasestatus>
+ <purchasestatus>
+ <id>Item 4</id>
+ <stockStatus>1 unit</stockStatus>
+ <expectedDelivery>In the near future.</expectedDelivery>
+ </purchasestatus>'
+ <purchasestatus>
+ <id>Item 5</id>
+ <stockStatus>1 license</stockStatus>
+ <expectedDelivery>You should already have it.</expectedDelivery>
+ </purchasestatus>
+ </sam:buyResponseContent>
+ </sam:buyResponse>
+ </soapenv:Body>
+</soapenv:Envelope>]]></con:responseContent><con:wsaConfig mustUnderstand="NONE" version="200508"/></con:response><con:dispatchConfig/></con:mockOperation><con:properties/><con:onRequestScript/></con:mockService><con:requirements/><con:properties><con:property><con:name>Some Property</con:name><con:value>with a value</con:value></con:property></con:properties><con:wssContainer/><con:databaseConnectionContainer/><con:oAuth2ProfileContainer/><con:reporting><con:reportTemplates>
+ <con:name>SystemPropertiesReport</con:name>
+ <con:path>/home/robert/soapui/bin/reports/subreports/loadtest/LoadTestLog.jrxml</con:path>
+ <con:reportType>COMMON</con:reportType>
+ <con:reportLevel>SUBREPORT</con:reportLevel>
+ <con:nameInReport>LoadTestLog</con:nameInReport>
+ <con:data xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><![CDATA[<jasperReport xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" language="groovy" pageWidth="535" pageHeight="842" columnWidth="535" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+ <template>"../../styles.jrtx"</template>
+ <field name="name" class="java.lang.String"/>
+ <field name="value" class="java.lang.String"/>
+ <columnHeader>
+ <band height="59">
+ <staticText>
+ <reportElement style="ColumnHeader" x="0" y="35" width="122" height="20"/>
+ <textElement textAlignment="Left" verticalAlignment="Middle"/>
+ <text>Name</text>
+ </staticText>
+ <staticText>
+ <reportElement style="ColumnHeader" x="133" y="35" width="40" height="20"/>
+ <textElement textAlignment="Left" verticalAlignment="Middle"/>
+ <text>Value</text>
+ </staticText>
+ <staticText>
+ <reportElement style="SmallHeader" x="0" y="0" width="535" height="34"/>
+ <textElement textAlignment="Left" verticalAlignment="Middle"/>
+ <text>System Properties</text>
+ </staticText>
+ </band>
+ </columnHeader>
+ <detail>
+ <band height="21">
+ <textField>
+ <reportElement x="0" y="1" width="122" height="20"/>
+ <textElement textAlignment="Left" verticalAlignment="Top"/>
+ <textFieldExpression class="java.lang.String">$F{name}</textFieldExpression>
+ </textField>
+ <textField>
+ <reportElement x="133" y="1" width="350" height="20"/>
+ <textElement textAlignment="Left" verticalAlignment="Top"/>
+ <textFieldExpression class="java.lang.String">$F{value}</textFieldExpression>
+ </textField>
+ </band>
+ </detail>
+</jasperReport>]]></con:data>
+ <con:description>NO DESC</con:description>
+ <con:scope>PROJECT</con:scope>
+ <con:dataSource xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+</con:reportTemplates><con:xmlTemplates/><con:parameters/></con:reporting><con:sensitiveInformation/></con:soapui-project>

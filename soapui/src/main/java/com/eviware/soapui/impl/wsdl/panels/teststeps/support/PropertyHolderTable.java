@@ -1,21 +1,27 @@
 /*
- *  SoapUI, copyright (C) 2004-2013 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.RestParameter;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
@@ -27,11 +33,13 @@ import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.support.ProjectListenerAdapter;
 import com.eviware.soapui.model.support.TestPropertyUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.JTableFactory;
@@ -41,17 +49,34 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import com.eviware.x.impl.swing.FileFormField;
+import org.apache.commons.io.FilenameUtils;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
-import java.awt.dnd.*;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.File;
@@ -61,9 +86,10 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@SuppressWarnings( "serial" )
+@SuppressWarnings("serial")
 public class PropertyHolderTable extends JPanel
 {
+	public static final String PROPERTIES_HOLDER_TABLE_NAME = "PropertiesHolderTable";
 	protected final TestPropertyHolder holder;
 	protected DefaultPropertyHolderTableModel propertiesModel;
 	protected RemovePropertyAction removePropertyAction;
@@ -106,7 +132,7 @@ public class PropertyHolderTable extends JPanel
 	{
 		propertiesModel = getPropertyHolderTableModel();
 		propertiesTable = new PropertiesHolderJTable();
-
+		propertiesTable.setName( PROPERTIES_HOLDER_TABLE_NAME );
 		propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
 		propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
 		{
@@ -151,10 +177,10 @@ public class PropertyHolderTable extends JPanel
 			setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 			setSurrendersFocusOnKeystroke( true );
 			setRowHeight( 19 );
-			if (UISupport.isMac())
+			if( UISupport.isMac() )
 			{
 				setShowGrid( false );
-				setIntercellSpacing( new Dimension(0, 0) );
+				setIntercellSpacing( new Dimension( 0, 0 ) );
 			}
 		}
 
@@ -166,7 +192,8 @@ public class PropertyHolderTable extends JPanel
 			// loop, because the table is an editor listener and the
 			// editingCanceled method calls this removeEditor method
 			super.removeEditor();
-			if (editor != null) {
+			if( editor != null )
+			{
 				editor.cancelCellEditing();
 			}
 		}
@@ -342,6 +369,14 @@ public class PropertyHolderTable extends JPanel
 			if( dialog == null )
 				dialog = ADialogBuilder.buildDialog( LoadOptionsForm.class );
 
+			Project project = ModelSupport.getModelItemProject( holder.getModelItem() );
+			if( project != null )
+			{
+				FileFormField fileFormField = ( FileFormField )dialog.getFormField( LoadOptionsForm.FILE );
+				String currentDirectory = extractFileChooserPathForProject( project );
+				fileFormField.setCurrentDirectory( currentDirectory );
+			}
+
 			dialog.getFormField( LoadOptionsForm.DELETEREMAINING )
 					.setEnabled( holder instanceof MutableTestPropertyHolder );
 			dialog.getFormField( LoadOptionsForm.CREATEMISSING ).setEnabled( holder instanceof MutableTestPropertyHolder );
@@ -394,7 +429,8 @@ public class PropertyHolderTable extends JPanel
 										&& holder instanceof MutableTestPropertyHolder )
 								{
 									TestProperty prop = ( ( MutableTestPropertyHolder )holder ).addProperty( name );
-									if( !prop.isReadOnly() ) {
+									if( !prop.isReadOnly() )
+									{
 										prop.setValue( value );
 										if( prop instanceof RestParameter )
 										{
@@ -428,6 +464,55 @@ public class PropertyHolderTable extends JPanel
 					UISupport.showErrorMessage( ex );
 				}
 			}
+		}
+
+		private String extractFileChooserPathForProject( Project project )
+		{
+			String currentDirectory = determineSuggestedDirectory( project );
+			File file = ensurePathExistsAndIsDirectory( currentDirectory );
+
+			return file.getAbsolutePath();
+		}
+
+		private String determineSuggestedDirectory( Project project )
+		{
+			String currentDirectory = StringUtils.hasContent( project.getResourceRoot() ) ? project.getResourceRoot() : project.getPath();
+			if( !StringUtils.hasContent( currentDirectory ) )
+			{
+				return System.getProperty( "user.dir", "." );
+			}
+			else if( holder.getModelItem() instanceof AbstractWsdlModelItem )
+			{
+				String expandedPath = PathUtils.expandPath( currentDirectory, ( ( AbstractWsdlModelItem )( holder.getModelItem() ) ) );
+				return FilenameUtils.normalize( expandedPath );
+			}
+			else
+			{
+				return currentDirectory;
+			}
+		}
+
+		private File ensurePathExistsAndIsDirectory( String path )
+		{
+			File file = new File( path );
+			while( !( file == null ) && !file.exists() )
+			{
+				file = file.getParentFile();
+			}
+			if( file == null )
+			{
+				file = getCurrentJvmDirectory();
+			}
+			if( !file.isDirectory() )
+			{
+				file = file.getParentFile();
+			}
+			return file;
+		}
+
+		private File getCurrentJvmDirectory()
+		{
+			return new File( System.getProperty( "user.dir", "." ) ).getAbsoluteFile();
 		}
 	}
 
@@ -672,7 +757,7 @@ public class PropertyHolderTable extends JPanel
 			Component component = super.getTableCellRendererComponent( table, value, isSelected, hasFocus, row, column );
 			if( value instanceof String )
 			{
-				if(  ( ( String )value ).length() > 0 )
+				if( ( ( String )value ).length() > 0 )
 				{
 					String val = ( ( String )table.getValueAt( row, 0 ) ).toLowerCase();
 					if( val.startsWith( "password" ) || val.endsWith( "password" ) )

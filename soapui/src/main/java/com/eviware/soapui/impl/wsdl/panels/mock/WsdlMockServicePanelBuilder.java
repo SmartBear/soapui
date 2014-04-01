@@ -1,21 +1,27 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.mock;
 
 import java.awt.Component;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.components.JPropertiesTable;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
@@ -54,10 +60,12 @@ public class WsdlMockServicePanelBuilder extends EmptyPanelBuilder<WsdlMockServi
 				"Matches incoming SOAP Version against corresponding Interface" );
 		table.addProperty( "Require SOAP Action", "requireSoapAction", JPropertiesTable.BOOLEAN_OPTIONS );
 		table.addProperty( "Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS );
-		StringList incomingNames = new StringList( mockService.getProject().getWssContainer().getIncomingWssNames() );
+
+		WsdlProject project = (WsdlProject)mockService.getProject();
+		StringList incomingNames = new StringList( project.getWssContainer().getIncomingWssNames() );
 		incomingNames.add( "" );
 		table.addProperty( "Incoming WSS", "incomingWss", incomingNames.toStringArray() );
-		StringList outgoingNames = new StringList( mockService.getProject().getWssContainer().getOutgoingWssNames() );
+		StringList outgoingNames = new StringList( project.getWssContainer().getOutgoingWssNames() );
 		outgoingNames.add( "" );
 		table.addProperty( "Default Outgoing WSS", "outgoingWss", outgoingNames.toStringArray() );
 		table.setPropertyObject( mockService );

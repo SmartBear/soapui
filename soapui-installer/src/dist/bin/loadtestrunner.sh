@@ -26,10 +26,12 @@ fi
 export SOAPUI_HOME
 
 SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
+JFXRTPATH=`$JAVA -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
+SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME"
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin"
 
 if [ $SOAPUI_HOME != "" ] 
 then

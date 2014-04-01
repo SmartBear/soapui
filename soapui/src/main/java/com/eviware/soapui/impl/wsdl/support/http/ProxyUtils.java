@@ -1,39 +1,40 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
+import com.btr.proxy.selector.whitelist.ProxyBypassListSelector;
+import com.btr.proxy.util.UriFilter;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.StringUtils;
-import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.protocol.ClientContext;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.protocol.HttpContext;
+import org.apache.http.params.HttpParams;
+import org.apache.log4j.Logger;
 
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.net.*;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,8 @@ import java.util.regex.Pattern;
 
 public class ProxyUtils
 {
+	private final static Logger logger = Logger.getLogger( ProxyUtils.class );
+
 	private static boolean proxyEnabled;
 
 	private static boolean autoProxy;
@@ -55,61 +58,16 @@ public class ProxyUtils
 		setAutoProxy( SoapUI.getSettings().getBoolean( ProxySettings.AUTO_PROXY ) );
 	}
 
-	public static void initProxySettings( final Settings settings, HttpUriRequest httpMethod, HttpContext httpContext,
-													  String urlString, final PropertyExpansionContext context )
-	{
-		if( proxyEnabled )
-		{
-			if( autoProxy )
-			{
-				setProxyCredentials( settings, httpContext, context, null );
-			}
-			else
-			{
-				setManualProxySettings( settings, httpMethod, httpContext, urlString, context );
-			}
-		}
-	}
-
 	private static String getExpandedProperty( PropertyExpansionContext context, Settings settings, String property )
 	{
-		return PropertyExpander.expandProperties( context, settings.getString( property, null ) );
+		String content = settings.getString( property, null );
+		return context != null ? PropertyExpander.expandProperties( context, content ) : PropertyExpander.expandProperties( content );
 	}
 
-	private static void setManualProxySettings( Settings settings, HttpUriRequest httpMethod, HttpContext httpContext, String urlString, PropertyExpansionContext context )
+	private static CredentialsProvider getProxyCredentials( Settings settings )
 	{
-		String proxyHost = getExpandedProperty( context, settings, ProxySettings.HOST );
-		String proxyPort = getExpandedProperty( context, settings, ProxySettings.PORT );
-
-		if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
-		{
-			// check excludes
-			String[] excludes = PropertyExpander.expandProperties( context,
-					settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
-
-			try
-			{
-				URL url = new URL( urlString );
-
-				if( !excludes( excludes, url.getHost(), url.getPort() ) )
-				{
-					HttpHost proxy = new HttpHost( proxyHost, Integer.parseInt( proxyPort ) );
-
-					setProxyCredentials( settings, httpContext, context, proxy );
-					httpMethod.getParams().setParameter( ConnRoutePNames.DEFAULT_PROXY, proxy );
-				}
-			}
-			catch( MalformedURLException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
-
-	private static void setProxyCredentials( Settings settings, HttpContext httpContext, PropertyExpansionContext context, HttpHost proxy )
-	{
-		String proxyUsername = getExpandedProperty( context, settings, ProxySettings.USERNAME );
-		String proxyPassword = getExpandedProperty( context, settings, ProxySettings.PASSWORD );
+		String proxyUsername = getExpandedProperty( null, settings, ProxySettings.USERNAME );
+		String proxyPassword = getExpandedProperty( null, settings, ProxySettings.PASSWORD );
 
 		if( !StringUtils.isNullOrEmpty( proxyUsername ) && !StringUtils.isNullOrEmpty( proxyPassword ) )
 		{
@@ -117,21 +75,34 @@ public class ProxyUtils
 
 			// check for nt-username
 			int ix = proxyUsername.indexOf( '\\' );
-			String hostName = proxy == null ? null : proxy.getHostName();
-			int port = proxy == null ? -1 : proxy.getPort();
 			if( ix > 0 )
 			{
 				String domain = proxyUsername.substring( 0, ix );
 				if( proxyUsername.length() > ix + 1 )
 				{
 					String user = proxyUsername.substring( ix + 1 );
-					proxyCreds = new NTCredentials( user, proxyPassword, hostName, domain );
+					proxyCreds = new NTCredentials( user, proxyPassword, getWorkstationName(), domain );
 				}
 			}
 			CredentialsProvider credsProvider = new BasicCredentialsProvider();
-			credsProvider.setCredentials( new AuthScope( hostName, port ), proxyCreds );
-			httpContext.setAttribute( ClientContext.CREDS_PROVIDER, credsProvider );
+			credsProvider.setCredentials( AuthScope.ANY, proxyCreds );
+			return credsProvider;
 		}
+		return null;
+	}
+
+	private static String getWorkstationName()
+	{
+		String workstation = "";
+		try
+		{
+			workstation = InetAddress.getLocalHost().getHostName();
+		}
+		catch( UnknownHostException e )
+		{
+			logger.warn( "Workstation name could not be fetched.", e );
+		}
+		return workstation;
 	}
 
 	public static boolean excludes( String[] excludes, String proxyHost, int proxyPort )
@@ -207,7 +178,6 @@ public class ProxyUtils
 	public static void setProxyEnabled( boolean proxyEnabled )
 	{
 		ProxyUtils.proxyEnabled = proxyEnabled;
-		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
 	}
 
 	public static boolean isAutoProxy()
@@ -218,6 +188,88 @@ public class ProxyUtils
 	public static void setAutoProxy( boolean autoProxy )
 	{
 		ProxyUtils.autoProxy = autoProxy;
-		( ( CompositeHttpRoutePlanner )HttpClientSupport.getHttpClient().getRoutePlanner() ).setAutoProxyEnabled( autoProxy && proxyEnabled );
 	}
+
+	public static void setGlobalProxy( Settings settings )
+	{
+		ProxySelector proxySelector = null;
+		ProxySettingsAuthenticator authenticator = null;
+		if( proxyEnabled )
+		{
+			if( autoProxy )
+			{
+				proxySelector = new ProxyVoleUtil().createAutoProxySearch().getProxySelector();
+			}
+			else
+			{
+				proxySelector = getManualProxySelector( settings );
+			}
+			if( proxySelector != null )
+			{
+				// Don't register any proxies for other schemes
+				proxySelector = filterHttpHttpsProxy( proxySelector );
+			}
+			authenticator = new ProxySettingsAuthenticator();
+		}
+		ProxySelector.setDefault( proxySelector );
+		Authenticator.setDefault( authenticator );
+		HttpClientSupport.setProxySelector( proxySelector );
+		HttpClientSupport.getHttpClient().setCredentialsProvider( getProxyCredentials( settings ) );
+	}
+
+	public static ProxySelector filterHttpHttpsProxy( ProxySelector proxySelector )
+	{
+		return new ProxyBypassListSelector(
+				Arrays.<UriFilter>asList( new SchemeProxyFilter( "http", "https" ) ),
+				proxySelector );
+	}
+
+	private static ProxySelector getManualProxySelector( Settings settings )
+	{
+		try
+		{
+			String proxyHost = getExpandedProperty( null, settings, ProxySettings.HOST );
+			String proxyPort = getExpandedProperty( null, settings, ProxySettings.PORT );
+			if( !StringUtils.isNullOrEmpty( proxyHost ) && !StringUtils.isNullOrEmpty( proxyPort ) )
+			{
+				String[] excludes = PropertyExpander.expandProperties( settings.getString( ProxySettings.EXCLUDES, "" ) ).split( "," );
+				return new ManualProxySelector( proxyHost, Integer.valueOf( proxyPort ), excludes );
+			}
+		}
+		catch( Exception e )
+		{
+			SoapUI.logError( e, "Unable to expand proxy settings" );
+		}
+		return null;
+	}
+
+	public static void setForceDirectConnection( HttpParams params )
+	{
+		OverridableProxySelectorRoutePlanner.setForceDirectConnection( params );
+	}
+
+	private static class ProxySettingsAuthenticator extends Authenticator
+	{
+		@Override
+		protected PasswordAuthentication getPasswordAuthentication()
+		{
+			if( getRequestorType() != RequestorType.PROXY )
+			{
+				return null;
+			}
+			Settings settings = SoapUI.getSettings();
+			try
+			{
+				String proxyUsername = PropertyExpander.expandProperties( settings.getString( ProxySettings.USERNAME, null ) );
+				String proxyPassword = PropertyExpander.expandProperties( settings.getString( ProxySettings.PASSWORD, null ) );
+				return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
+			}
+			catch( Exception e )
+			{
+				SoapUI.logError( e, "Unable to expand proxy settings" );
+				return null;
+			}
+		}
+	}
+
 }

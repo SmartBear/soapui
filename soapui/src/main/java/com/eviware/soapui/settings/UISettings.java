@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.settings;
 
@@ -62,12 +66,12 @@ public interface UISettings
 
 	public static final String DESKTOP_TYPE = UISettings.class.getSimpleName() + "@desktop-type";
 
+	@Setting( name = "MRU Panel Selection", description = "Activate the most recently used desktop panel when closing a panel",
+			type = SettingType.BOOLEAN, defaultValue = "true")
+	public static final String MRU_PANEL_SELECTOR = UISettings.class.getSimpleName() + "@mru_panel_selector";
+
 	@Setting( name = "Native LF", description = "(use native Look & Feel - requires restart)", type = SettingType.BOOLEAN )
 	public static final String NATIVE_LAF = UISettings.class.getSimpleName() + "@native-laf";
-
-	@Setting( name = "Disable Browser", description = "(disables integrated browser component)", type = SettingType.BOOLEAN )
-	public static final String DISABLE_BROWSER = UISettings.class.getSimpleName() + "@disable-browser";
-	public static final String DISABLE_BROWSER_PLUGINS = UISettings.class.getSimpleName() + "@disable-browser-plugins";
 
 	public final static String NO_RESIZE_REQUEST_EDITOR = UISettings.class.getSimpleName() + "@no_resize_request_editor";
 	public final static String START_WITH_REQUEST_TABS = UISettings.class.getSimpleName() + "@start_with_request_tabs";

@@ -1,20 +1,25 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support.http;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestRequestContentView;
 import com.eviware.soapui.impl.rest.panels.request.views.content.RestTestRequestContentView;
+import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestInterface;
 import com.eviware.soapui.model.ModelItem;
@@ -28,7 +33,7 @@ public class HttpRequestContentViewFactory implements RequestEditorViewFactory
 
 	public EditorView<?> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
 	{
-		if( editor instanceof HttpRequestMessageEditor && modelItem instanceof HttpRequestInterface<?> )
+		if( editor instanceof AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor && modelItem instanceof HttpRequestInterface<?> )
 		{
 			if( modelItem instanceof RestTestRequestInterface )
 				return new RestTestRequestContentView( ( HttpRequestMessageEditor )editor, ( RestRequestInterface )modelItem );

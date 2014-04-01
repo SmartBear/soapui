@@ -1,14 +1,18 @@
 /*
- *  soapUI, copyright (C) 2004-2012 smartbear.com 
+ * Copyright 2004-2014 SmartBear Software
  *
- *  soapUI is free software; you can redistribute it and/or modify it under the 
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  soapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without 
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
@@ -57,15 +61,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+
 /**
  * RequestFilter that adds SOAP specific headers
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class HttpRequestFilter extends AbstractRequestFilter
 {
-	@SuppressWarnings( "deprecation" )
 	@Override
 	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
 	{
@@ -78,8 +83,9 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		StringToStringMap responseProperties = ( StringToStringMap )context
 				.getProperty( BaseHttpRequestTransport.RESPONSE_PROPERTIES );
 
-		MimeMultipart formMp = "multipart/form-data".equals( request.getMediaType() )
-				&& httpMethod instanceof HttpEntityEnclosingRequestBase ? new MimeMultipart() : null;
+		MimeMultipart formMp = ( "multipart/form-data".equals( request.getMediaType() )
+				|| "multipart/mixed".equals( request.getMediaType() ))
+		&& httpMethod instanceof HttpEntityEnclosingRequestBase ? new MimeMultipart() : null;
 
 		RestParamsPropertyHolder params = request.getParams();
 
@@ -110,17 +116,17 @@ public class HttpRequestFilter extends AbstractRequestFilter
 					}
 					else
 					{
-						value = URLEncoder.encode( value );
+						value = urlEncodeWithUtf8( value );
 						for( int i = 0; i < valueParts.size(); i++ )
-							valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
+							valueParts.set( i, urlEncodeWithUtf8( valueParts.get( i ) ) );
 					}
 				}
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
-					value = URLEncoder.encode( value );
+					value = urlEncodeWithUtf8( value );
 					for( int i = 0; i < valueParts.size(); i++ )
-						valueParts.set( i, URLEncoder.encode( valueParts.get( i ) ) );
+						valueParts.set( i, urlEncodeWithUtf8( valueParts.get( i ) ) );
 				}
 				// URLEncoder replaces space with "+", but we want "%20".
 				value = value.replaceAll( "\\+", "%20" );
@@ -136,78 +142,78 @@ public class HttpRequestFilter extends AbstractRequestFilter
 
 			switch( param.getStyle() )
 			{
-			case HEADER :
-				for( String valuePart : valueParts )
-					httpMethod.addHeader( param.getName(), valuePart );
-				break;
-			case QUERY :
-				if( formMp == null || !request.isPostQueryString() )
-				{
+				case HEADER:
 					for( String valuePart : valueParts )
+						httpMethod.addHeader( param.getName(), valuePart );
+					break;
+				case QUERY:
+					if( formMp == null || !request.isPostQueryString() )
 					{
-						if( query.length() > 0 )
-							query.append( '&' );
+						for( String valuePart : valueParts )
+						{
+							if( query.length() > 0 )
+								query.append( '&' );
 
-						query.append( URLEncoder.encode( param.getName() ) );
-						query.append( '=' );
-						if( StringUtils.hasContent( valuePart ) )
-							query.append( valuePart );
+							query.append( urlEncodeWithUtf8( param.getName() ) );
+							query.append( '=' );
+							if( StringUtils.hasContent( valuePart ) )
+								query.append( valuePart );
+						}
 					}
-				}
-				else
-				{
+					else
+					{
+						try
+						{
+							addFormMultipart( request, formMp, param.getName(), responseProperties.get( param.getName() ) );
+						}
+						catch( MessagingException e )
+						{
+							SoapUI.logError( e );
+						}
+					}
+
+					break;
+				case TEMPLATE:
 					try
 					{
-						addFormMultipart( request, formMp, param.getName(), responseProperties.get( param.getName() ) );
+						value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
+								.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+						path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
 					}
-					catch( MessagingException e )
+					catch( UnsupportedEncodingException e )
 					{
 						SoapUI.logError( e );
 					}
-				}
+					break;
+				case MATRIX:
+					try
+					{
+						value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
+								.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
+					}
+					catch( UnsupportedEncodingException e )
+					{
+						SoapUI.logError( e );
+					}
 
-				break;
-			case TEMPLATE :
-				try
-				{
-					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
-							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
-					path = path.replaceAll( "\\{" + param.getName() + "\\}", value == null ? "" : value );
-				}
-				catch( UnsupportedEncodingException e )
-				{
-					SoapUI.logError( e );
-				}
-				break;
-			case MATRIX :
-				try
-				{
-					value = getEncodedValue( value, encoding, param.isDisableUrlEncoding(), request
-							.getSettings().getBoolean( HttpSettings.ENCODED_URLS ) );
-				}
-				catch( UnsupportedEncodingException e )
-				{
-					SoapUI.logError( e );
-				}
-
-				if( param.getType().equals( XmlBoolean.type.getName() ) )
-				{
-					if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
+					if( param.getType().equals( XmlBoolean.type.getName() ) )
+					{
+						if( value.toUpperCase().equals( "TRUE" ) || value.equals( "1" ) )
+						{
+							path += ";" + param.getName();
+						}
+					}
+					else
 					{
 						path += ";" + param.getName();
+						if( StringUtils.hasContent( value ) )
+						{
+							path += "=" + value;
+						}
 					}
-				}
-				else
-				{
-					path += ";" + param.getName();
-					if( StringUtils.hasContent( value ) )
-					{
-						path += "=" + value;
-					}
-				}
-				break;
-			case PLAIN :
-				break;
+					break;
+				case PLAIN:
+					break;
 			}
 		}
 
@@ -462,17 +468,22 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		DataHandler dataHandler = new DataHandler( new RestRequestDataSource( wsdlRequest, requestContent ) );
 		rootPart.setDataHandler( dataHandler );
 	}
-	
+
 	protected String getEncodedValue( String value, String encoding, boolean isDisableUrlEncoding, boolean isPreEncoded ) throws UnsupportedEncodingException
 	{
 
-		// get default encoding if there is no encoding set
-		if(!StringUtils.hasContent( encoding ))
+		if( value == null )
 		{
-			encoding = System.getProperty("file.encoding");
+			return "";
 		}
-		
-		if(isAlreadyEncoded(value, encoding ))
+
+		// get default encoding if there is no encoding set
+		if( !StringUtils.hasContent( encoding ) )
+		{
+			encoding = System.getProperty( "file.encoding" );
+		}
+
+		if( isAlreadyEncoded( value, encoding ) )
 		{
 			// Already encoded so we don't do anything
 			return value;
@@ -485,18 +496,18 @@ public class HttpRequestFilter extends AbstractRequestFilter
 		else
 		{
 			// encoding NOT disabled neither it is pre-encoded, so we encode here
-			String encodedValue =  URLEncoder.encode(value, encoding );
+			String encodedValue = URLEncoder.encode( value, encoding );
 			// URLEncoder replaces space with "+", but we want "%20".
 			return encodedValue.replaceAll( "\\+", "%20" );
 		}
 
 	}
-	
+
 	protected boolean isAlreadyEncoded( String path, String encoding ) throws UnsupportedEncodingException
 	{
-		String decodedPath = java.net.URLDecoder.decode(path, encoding);
-		return !path.equals(decodedPath);
-				
+		String decodedPath = java.net.URLDecoder.decode( path, encoding );
+		return !path.equals( decodedPath );
+
 	}
 
 }

@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2011 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.mockaswar;
 
@@ -167,8 +171,7 @@ public class MockAsWarServlet extends HttpServlet
 
 		SoapUI.ensureGroovyLog().addAppender( new GroovyLogAppender() );
 
-		String mockServiceEndpoint = getInitParameter( "mockServiceEndpoint" );
-		return mockServiceEndpoint;
+		return getInitParameter( "mockServiceEndpoint" );
 	}
 
 	public void destroy()
@@ -256,7 +259,7 @@ public class MockAsWarServlet extends HttpServlet
 
 			for( MockRunner mockRunner : getMockRunners() )
 			{
-				if( pathInfo.equals( mockRunner.getMockService().getPath() ) )
+				if( pathInfo.equals( mockRunner.getMockContext().getMockService().getPath() ) )
 				{
 					MockResult result = mockRunner.dispatchRequest( request, response );
 
@@ -350,7 +353,7 @@ public class MockAsWarServlet extends HttpServlet
 		{
 			for( MockRunner runner : mockRunners )
 			{
-				if( runner.getMockService() == mockService )
+				if( runner.getMockContext().getMockService() == mockService )
 				{
 					return true;
 				}
@@ -379,7 +382,7 @@ public class MockAsWarServlet extends HttpServlet
 		PrintWriter out = response.getWriter();
 		startHtmlPage( out, "MockService Log Table", "15" );
 
-		out.print( "<h3><img src=\"header_logo.jpg\"> SoapUI MockServices Log for project [" + project.getName()
+		out.print( "<img src=\"header_logo.png\"><h3>SoapUI MockServices Log for project [" + project.getName()
 				+ "]</h3>" + "<p style=\"text-align: left\">WSDLs:" );
 
 		for( MockRunner mockRunner : mockRunners )
@@ -390,7 +393,7 @@ public class MockAsWarServlet extends HttpServlet
 				overviewUrl = overviewUrl.substring( 1 );
 			}
 
-			out.print( " [<a target=\"new\" href=\"" + overviewUrl + "\">" + mockRunner.getMockService().getName()
+			out.print( " [<a target=\"new\" href=\"" + overviewUrl + "\">" + mockRunner.getMockContext().getMockService().getName()
 					+ "</a>]" );
 		}
 

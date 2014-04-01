@@ -1,31 +1,25 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.support.http;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.namespace.QName;
-
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
 
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
 import com.eviware.soapui.impl.rest.RestRequest.ParameterMessagePart;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
-import com.eviware.soapui.impl.rest.RestRequestInterface.RequestMethod;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
@@ -48,6 +42,13 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implements
 		HttpRequestInterface<HttpRequestConfig>
@@ -107,9 +108,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 
 	public boolean hasRequestBody()
 	{
-		RestRequestInterface.RequestMethod method = getMethod();
-		return method == RestRequestInterface.RequestMethod.POST || method == RestRequestInterface.RequestMethod.PUT
-				|| method == RestRequestInterface.RequestMethod.PATCH;
+		RestRequestInterface.HttpMethod method = getMethod();
+		return method == RestRequestInterface.HttpMethod.POST || method == RestRequestInterface.HttpMethod.PUT
+				|| method == RestRequestInterface.HttpMethod.PATCH;
 	}
 
 	@Override
@@ -176,15 +177,15 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 		getConfig().setPostQueryString( b );
 		notifyPropertyChanged( "postQueryString", old, b );
 
-		if( !"multipart/form-data".equals( getMediaType() ) )
+		if( !( "multipart/form-data".equals( getMediaType() ) ||  "multipart/mixed".equals( getMediaType() )))
 		{
 			setMediaType( b ? "application/x-www-form-urlencoded" : getMediaType() );
 		}
 	}
 
-	public void setMethod( RequestMethod method )
+	public void setMethod( RestRequestInterface.HttpMethod method )
 	{
-		RestRequestInterface.RequestMethod old = getMethod();
+		RestRequestInterface.HttpMethod old = getMethod();
 		getConfig().setMethod( method.toString() );
 		setIcon( UISupport.createImageIcon( "/" + method.toString().toLowerCase() + "_method.gif" ) );
 		notifyPropertyChanged( "method", old, method );
@@ -223,10 +224,10 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 	}
 
 	@Override
-	public RestRequestInterface.RequestMethod getMethod()
+	public RestRequestInterface.HttpMethod getMethod()
 	{
 		String method = getConfig().getMethod();
-		return method == null ? null : RestRequestInterface.RequestMethod.valueOf( method );
+		return method == null ? null : RestRequestInterface.HttpMethod.valueOf( method );
 	}
 
 	public MessagePart[] getRequestParts()
@@ -238,9 +239,9 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
 			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
 		}
 
-		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT
-				|| getMethod() == RestRequestInterface.RequestMethod.PATCH )
+		if( getMethod() == RestRequestInterface.HttpMethod.POST
+				|| getMethod() == RestRequestInterface.HttpMethod.PUT
+				|| getMethod() == RestRequestInterface.HttpMethod.PATCH )
 		{
 			result.add( new HttpContentPart() );
 		}

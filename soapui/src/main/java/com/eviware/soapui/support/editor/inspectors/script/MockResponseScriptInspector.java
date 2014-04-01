@@ -1,37 +1,28 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.support.editor.inspectors.script;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -41,14 +32,19 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeListener;
+
 public class MockResponseScriptInspector extends AbstractXmlInspector
 {
-	private final WsdlMockResponse mockResponse;
+	private final MockResponse mockResponse;
 	private GroovyEditor responseScriptEditor;
 	private RunScriptAction runScriptAction = new RunScriptAction();
 	private JPanel panel;
 
-	protected MockResponseScriptInspector( WsdlMockResponse mockResponse )
+	protected MockResponseScriptInspector( MockResponse mockResponse )
 	{
 		super( "Script", "Script for this MockResponse", true, ScriptInspectorFactory.INSPECTOR_ID );
 		this.mockResponse = mockResponse;
@@ -91,7 +87,7 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 		toolBar.add( label );
 		toolBar.addUnrelatedGap();
 		toolBar.addFixed( UISupport.createActionButton(
-				new ShowOnlineHelpAction( HelpUrls.MOCKRESPONSE_SCRIPT_HELP_URL ), true ) );
+				new ShowOnlineHelpAction( mockResponse.getScriptHelpUrl() ), true ) );
 
 		return toolBar;
 	}
@@ -116,8 +112,8 @@ public class MockResponseScriptInspector extends AbstractXmlInspector
 		{
 			try
 			{
-				mockResponse.evaluateScript( mockResponse.getMockResult() == null ? null : mockResponse.getMockResult()
-						.getMockRequest() );
+				MockResult mockResult = mockResponse.getMockResult();
+				mockResponse.evaluateScript( mockResult == null ? null : mockResult.getMockRequest() );
 
 				StringToStringMap values = null;
 				if( mockResponse.getMockResult() != null )

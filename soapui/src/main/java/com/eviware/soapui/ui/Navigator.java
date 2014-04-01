@@ -1,33 +1,33 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Insets;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.dnd.Autoscroll;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.tree.SoapUITreeModel;
+import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.model.tree.SoapUITreeNodeRenderer;
+import com.eviware.soapui.model.tree.nodes.ProjectTreeNode;
+import com.eviware.soapui.model.workspace.Workspace;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionListBuilder;
+import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.components.JXToolBar;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -44,20 +44,22 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
-
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.tree.SoapUITreeModel;
-import com.eviware.soapui.model.tree.SoapUITreeNode;
-import com.eviware.soapui.model.tree.SoapUITreeNodeRenderer;
-import com.eviware.soapui.model.tree.nodes.ProjectTreeNode;
-import com.eviware.soapui.model.workspace.Workspace;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.SoapUIMultiAction;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionListBuilder;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.components.JXToolBar;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.dnd.Autoscroll;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The SoapUI navigator tree
@@ -171,7 +173,7 @@ public class Navigator extends JPanel
 		if( path == null )
 			return null;
 
-		Object node = ( Object )path.getLastPathComponent();
+		Object node = path.getLastPathComponent();
 		while( node != null && !( node instanceof ProjectTreeNode ) )
 		{
 			path = path.getParentPath();
@@ -515,22 +517,4 @@ public class Navigator extends JPanel
 		}
 	}
 
-	public class MultiActionInvoker extends AbstractAction
-	{
-		private final SoapUIMultiAction action;
-		private final List<ModelItem> targets;
-
-		public MultiActionInvoker( SoapUIMultiAction action, List<ModelItem> targets )
-		{
-			super( action.getName() );
-
-			this.action = action;
-			this.targets = targets;
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			action.perform( targets.toArray( new ModelItem[targets.size()] ), null );
-		}
-	}
 }

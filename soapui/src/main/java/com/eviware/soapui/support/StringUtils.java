@@ -1,16 +1,22 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.support;
+
+import com.eviware.soapui.support.types.StringList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,8 +28,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import com.eviware.soapui.support.types.StringList;
 
 public class StringUtils
 {
@@ -93,7 +97,7 @@ public class StringUtils
 			if( st.hasMoreTokens() )
 			{
 
-				StringBuffer sb = new StringBuffer( str.length() );
+				StringBuilder sb = new StringBuilder( str.length() );
 				while( true )
 				{
 					sb.append( st.nextToken() );
@@ -180,7 +184,7 @@ public class StringUtils
 		{
 			if( row.startsWith( String.valueOf( quote ) ) )
 			{
-				StringBuffer buf = new StringBuffer();
+				StringBuilder buf = new StringBuilder();
 				char last = row.charAt( 0 );
 				int ix = 1;
 				while( ix < row.length() )
@@ -236,7 +240,7 @@ public class StringUtils
 	 */
 	public static String createFileName( String str, char whitespaceChar )
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		for( int c = 0; c < str.length(); c++ )
 		{
@@ -264,7 +268,7 @@ public class StringUtils
 	}
 
 	/**
-	 * replaces all non letter and non digit characte from file name
+	 * replaces all non letter and non digit characters from file name
 	 * 
 	 * @param str
 	 * @param replace
@@ -272,7 +276,7 @@ public class StringUtils
 	 */
 	public static String createFileName2( String str, char replace )
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 
 		for( int c = 0; c < str.length(); c++ )
 		{
@@ -289,9 +293,8 @@ public class StringUtils
 
 	public static String createXmlName( String str )
 	{
-		StringBuffer result = new StringBuffer();
+		StringBuilder result = new StringBuilder();
 		boolean skipped = false;
-		boolean numbersOnly = true;
 
 		for( int c = 0; c < str.length(); c++ )
 		{
@@ -303,7 +306,6 @@ public class StringUtils
 					result.append( Character.toUpperCase( ch ) );
 				else
 					result.append( ch );
-				numbersOnly = false;
 				skipped = false;
 			}
 			else if( Character.isDigit( ch ) )
@@ -318,7 +320,7 @@ public class StringUtils
 		}
 
 		str = result.toString();
-		if( numbersOnly && str.length() > 0 )
+		if( str.length() > 0 && Character.isDigit(str.charAt(0)))
 			str = "_" + str;
 
 		return str;
@@ -344,7 +346,7 @@ public class StringUtils
 
 	public static String join( String[] array, String separator )
 	{
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 		for( int i = 0; i < array.length; i++ )
 		{
 			if( i > 0 )
@@ -365,7 +367,7 @@ public class StringUtils
 			return "<html><body></body></html>";
 
 		BufferedReader st = new BufferedReader( new StringReader( string ) );
-		StringBuffer buf = new StringBuffer( "<html><body>" );
+		StringBuilder buf = new StringBuilder( "<html><body>" );
 
 		String str = null;
 
@@ -405,8 +407,8 @@ public class StringUtils
 
 	public static String replace( String data, String from, String to )
 	{
-		StringBuffer buf = new StringBuffer( data.length() );
-		int pos = -1;
+		StringBuilder buf = new StringBuilder( data.length() );
+		int pos;
 		int i = 0;
 		while( ( pos = data.indexOf( from, i ) ) != -1 )
 		{

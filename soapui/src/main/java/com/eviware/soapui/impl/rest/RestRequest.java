@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest;
 
@@ -19,6 +23,7 @@ import com.eviware.soapui.impl.rest.RestRepresentation.Type;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.RestRequestParamsPropertyHolder;
+import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
@@ -50,6 +55,7 @@ import org.apache.xmlbeans.XmlString;
 
 import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -69,6 +75,8 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 	private RestMethod method;
 	private RestRequestParamsPropertyHolder params;
 	private ParamUpdater paramUpdater;
+	private JMSHeaderConfig jmsHeaderConfig;
+	private JMSPropertiesConfig jmsPropertyConfig;
 
 	public RestRequest( RestMethod method, RestRequestConfig requestConfig, boolean forLoadTest )
 	{
@@ -92,17 +100,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		cleanUpAcceptEncoding();
 	}
 
-	private void cleanUpAcceptEncoding()
-	{
-		if (StringUtils.hasContent( getAccept() ))
-		{
-			StringToStringsMap requestHeaders = getRequestHeaders();
-			requestHeaders.add( ACCEPT_HEADER_NAME, getAccept() );
-			setRequestHeaders( requestHeaders );
-			setAccept( null );
-		}
-	}
-
 	public ModelItem getParent()
 	{
 		return getRestMethod();
@@ -115,7 +112,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 
 	protected RequestIconAnimator<?> initIconAnimator()
 	{
-		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/rest_request.gif", "/exec_rest_request", 4, "gif" );
+		return new RequestIconAnimator<AbstractHttpRequest<?>>( this, "/rest_request.gif", "/exec_rest_request.gif", 4 );
 	}
 
 	public MessagePart[] getRequestParts()
@@ -127,9 +124,9 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			result.add( new ParameterMessagePart( getPropertyAt( c ) ) );
 		}
 
-		if( getMethod() == RestRequestInterface.RequestMethod.POST
-				|| getMethod() == RestRequestInterface.RequestMethod.PUT
-				|| getMethod() == RestRequestInterface.RequestMethod.PATCH )
+		if( getMethod() == HttpMethod.POST
+				|| getMethod() == HttpMethod.PUT
+				|| getMethod() == HttpMethod.PATCH )
 		{
 			result.add( new RestContentPart() );
 		}
@@ -157,7 +154,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return new MessagePart[0];
 	}
 
-	public RestRequestInterface.RequestMethod getMethod()
+	public HttpMethod getMethod()
 	{
 		return getRestMethod().getMethod();
 	}
@@ -187,7 +184,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		return getConfig().getMediaType();
 	}
 
-	public void setMethod( RequestMethod method )
+	public void setMethod( HttpMethod method )
 	{
 		getRestMethod().setMethod( method );
 	}
@@ -218,6 +215,17 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 			WsdlSubmit<RestRequest> submitter = new WsdlSubmit<RestRequest>( this, getSubmitListeners(),
 					RequestTransportRegistry.getTransport( endpoint, submitContext ) );
 			submitter.submitRequest( submitContext, async );
+			addPropertyChangeListener( AbstractHttpRequest.RESPONSE_PROPERTY, new PropertyChangeListener()
+			{
+				@Override
+				public void propertyChange( PropertyChangeEvent evt )
+				{
+					if( evt.getNewValue() != null )
+					{
+						setOriginalUriInConfig( ( HttpResponse )evt.getNewValue() );
+					}
+				}
+			} );
 			return submitter;
 		}
 		catch( Exception e )
@@ -385,7 +393,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		getConfig().setPostQueryString( b );
 		notifyPropertyChanged( "postQueryString", old, b );
 
-		if( !"multipart/form-data".equals( getMediaType() ) )
+		if( !( "multipart/form-data".equals( getMediaType() ) || "multipart/mixed".equals( getMediaType() ) ) )
 		{
 			setMediaType( b ? "application/x-www-form-urlencoded" : getMediaType() );
 		}
@@ -643,9 +651,6 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		updateParams();
 	}
 
-	private JMSHeaderConfig jmsHeaderConfig;
-	private JMSPropertiesConfig jmsPropertyConfig;
-
 	public JMSHeaderConfig getJMSHeaderConfig()
 	{
 		if( jmsHeaderConfig == null )
@@ -684,5 +689,29 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
 		getConfig().setMultiValueDelimiter( delimiter );
 
 		notifyPropertyChanged( "multiValueDelimiter", old, delimiter );
+	}
+
+
+	/*
+	Helper methods
+	 */
+
+	private void setOriginalUriInConfig( HttpResponse response )
+	{
+		if( getConfig().getOriginalUri() == null && response.getURL() != null)
+		{
+			getConfig().setOriginalUri( JsonMediaTypeHandler.makeNamespaceUriFrom( response.getURL() ) );
+		}
+	}
+
+	private void cleanUpAcceptEncoding()
+	{
+		if( StringUtils.hasContent( getAccept() ) )
+		{
+			StringToStringsMap requestHeaders = getRequestHeaders();
+			requestHeaders.add( ACCEPT_HEADER_NAME, getAccept() );
+			setRequestHeaders( requestHeaders );
+			setAccept( null );
+		}
 	}
 }

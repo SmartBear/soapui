@@ -1,21 +1,27 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.x.impl.swing;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
+import com.eviware.soapui.support.DefaultHyperlinkListener;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.ProgressDialog;
+import com.eviware.x.dialogs.XDialogs;
+import com.eviware.x.dialogs.XProgressDialog;
+import com.jgoodies.forms.factories.ButtonBarFactory;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -31,13 +37,10 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
-
-import com.eviware.soapui.support.DefaultHyperlinkListener;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.ProgressDialog;
-import com.eviware.x.dialogs.XDialogs;
-import com.eviware.x.dialogs.XProgressDialog;
-import com.jgoodies.forms.factories.ButtonBarFactory;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 
 /**
  * 
@@ -60,6 +63,12 @@ public class SwingDialogs implements XDialogs
 	}
 
 	public boolean confirm( String question, String title )
+	{
+		return JOptionPane.showConfirmDialog( this.parent, question, title, JOptionPane.YES_NO_OPTION ) == JOptionPane.OK_OPTION;
+	}
+
+	@Override
+	public boolean confirm( String question, String title, Component parent )
 	{
 		return JOptionPane.showConfirmDialog( parent, question, title, JOptionPane.YES_NO_OPTION ) == JOptionPane.OK_OPTION;
 	}
@@ -103,10 +112,10 @@ public class SwingDialogs implements XDialogs
 	{
 		int result = JOptionPane.showConfirmDialog( parent, question, title, JOptionPane.YES_NO_CANCEL_OPTION );
 
-		if( result == JOptionPane.CANCEL_OPTION )
+		if( result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION )
 			return null;
 
-		return Boolean.valueOf( result == JOptionPane.YES_OPTION );
+		return result == JOptionPane.YES_OPTION;
 	}
 
 	public int yesYesToAllOrNo( String question, String title )

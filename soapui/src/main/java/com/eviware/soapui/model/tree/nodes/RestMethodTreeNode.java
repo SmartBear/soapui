@@ -1,20 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.model.tree.nodes;
-
-import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -22,10 +22,15 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.tree.AbstractModelItemTreeNode;
 import com.eviware.soapui.model.tree.SoapUITreeModel;
 import com.eviware.soapui.model.tree.SoapUITreeNode;
+import com.eviware.soapui.support.UISupport;
+
+import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SoapUITreeNode for RestRequest implementations
- * 
+ *
  * @author dain.nilsson
  */
 
@@ -96,19 +101,26 @@ public class RestMethodTreeNode extends AbstractModelItemTreeNode<RestMethod>
 		}
 	}
 
-	public void propertyChange( PropertyChangeEvent evt )
+	public void propertyChange( final PropertyChangeEvent evt )
 	{
-		super.propertyChange( evt );
-		if( evt.getPropertyName().equals( "childRequests" ) )
+		UISupport.invokeAndWaitIfNotInEDT( new Runnable()
 		{
-			if( evt.getNewValue() != null )
+			@Override
+			public void run()
 			{
-				requestAdded( ( RestRequest )evt.getNewValue() );
+				RestMethodTreeNode.super.propertyChange( evt );
+				if( evt.getPropertyName().equals( "childRequests" ) )
+				{
+					if( evt.getNewValue() != null )
+					{
+						requestAdded( ( RestRequest )evt.getNewValue() );
+					}
+					else
+					{
+						requestRemoved( ( RestRequest )evt.getOldValue() );
+					}
+				}
 			}
-			else
-			{
-				requestRemoved( ( RestRequest )evt.getOldValue() );
-			}
-		}
+		} );
 	}
 }

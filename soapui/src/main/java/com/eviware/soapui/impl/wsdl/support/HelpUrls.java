@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.support;
 
@@ -30,14 +34,11 @@ public interface HelpUrls
 
 	// TODO option for adding help URl to page section, see
 	// buildInterfaceOverviewTab() section operations
-	public static final String OPERATION_HELP_URL = HELP_URL_ROOT + "operations.html";
 	public static final String INTERFACE_HELP_URL = HELP_URL_ROOT + "interfaces/index.html";
 
-	public static final String HEADERS_HELP_URL = HELP_URL_ROOT + "requests.html#HTTP_Headers";
+	public static final String HEADERS_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/adding-headers-and-attachments.html#1-custom-http-headers";
 	public static final String PREPAREDPROPERTIES_HELP_URL = HELP_URL_ROOT
 			+ "functional/datasourcestep.html#JDBC_DataSource_PreparedProperties";
-	public static final String PROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#soapui_WSDL_Projects";
-	public static final String REQUEST_HELP_URL = HELP_URL_ROOT + "requests.html";
 	public static final String ATTACHMENTS_HELP_URL = HELP_URL_ROOT + "attachments.html";
 
 	public static final String TESTSUITE_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html";
@@ -66,8 +67,6 @@ public interface HelpUrls
 	public static final String LOADTESTEDITOR_HELP_URL = HELP_URL_ROOT + "loadtest/index.html#The_LoadTest_Editor";
 	public static final String STATISTICSGRAPH_HELP_URL = HELP_URL_ROOT
 			+ "loadtest/diagrams.html#The_Statistics_Diagram";
-	public static final String STATISTICSHISTORYGRAPH_HELP_URL = HELP_URL_ROOT
-			+ "loadtest/diagrams.html#The_Statistics_History_Diagram";
 	public static final String REQUESTEDITOR_HELP_URL = HELP_URL_ROOT + "requests.html#The_Request_Editor";
 	public static final String TESTREQUESTEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/testrequests.html#The_TestRequest_Editor";
@@ -113,7 +112,6 @@ public interface HelpUrls
 	public static final String GROOVYASSERTION_HELP_URL = HELP_URL_ROOT
 			+ "functional/response-assertions.html#Script_Assertion";
 
-	public static final String MOCKRESPONSE_HELP_URL = HELP_URL_ROOT + "mock/responses.html";
 	public static final String MOCKSERVICE_HELP_URL = HELP_URL_ROOT + "mock/services.html";
 	public static final String MOCKRESPONSE_SCRIPT_HELP_URL = HELP_URL_ROOT + "mock/responses.html#Response_Scripts";
 
@@ -129,7 +127,6 @@ public interface HelpUrls
 	public static final String XQUERYASSERTIONEDITOR_HELP_URL = HELP_URL_ROOT
 			+ "functional/response-assertions.html#XQuery_Match_Assertion";
 
-	public static final String REQUEST_ASSERTIONS_HELP_URL = HELP_URL_ROOT + "functional/response-assertions.html";
 	public static final String LOADTEST_ASSERTIONS_URL = HELP_URL_ROOT + "loadtest/assertions.html";
 
 	public static final String UPDATE_INTERFACE_HELP_URL = HELP_URL_ROOT
@@ -145,8 +142,6 @@ public interface HelpUrls
 
 	public static final String CLONEMOCKSERVICE_HELP_URL = HELP_URL_ROOT + "mock/services.html";
 
-	public static final String MOCKOPERATIONOPTIONS_HELP_URL = HELP_URL_ROOT + "mock/operations.html";
-
 	public static final String MOCKSERVICEOPTIONS_HELP_URL = HELP_URL_ROOT + "mock/services.html#MockService_Options";
 
 	public static final String CLONETESTCASE_HELP_URL = HELP_URL_ROOT + "functional/testcases.html#Clone_TestCase";
@@ -161,6 +156,9 @@ public interface HelpUrls
 	public static final String RUNTESTCASESTEP_HELP_URL = HELP_URL_ROOT + "functional/runtestcasestep.html";
 
 	public static final String SOAPMONITOR_HELP_URL = HELP_URL_ROOT + "monitor/index.html";
+	public static final String SOAPMONITOR_GENERAL_OPTIONS = "http://www.soapui.org/HTTP-Recording/general-options.html";
+	public static final String SOAPMONITOR_MONITOR_OPTIONS = "http://www.soapui.org/HTTP-Recording/monitor-options.html";
+	public static final String SOAPMONITOR_MONITOR = "http://www.soapui.org/HTTP-Recording/monitor.html";
 
 	public static final String WSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html";
 
@@ -169,10 +167,6 @@ public interface HelpUrls
 	public static final String INCOMINGWSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html#Incoming_WSS";
 
 	public static final String CRYPTOSWSS_HELP_URL = HELP_URL_ROOT + "projects/wss.html#Keystores";
-
-	public static final String WSIREPORT_HELP_URL = HELP_URL_ROOT + "interfaces/wsi.html#Creating_WS-I_Reports";
-
-	public static final String RESOLVEPROJECT_HELP_URL = HELP_URL_ROOT + "projects/resolving.html";
 
 	public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/getting-started.html";
 
@@ -208,7 +202,6 @@ public interface HelpUrls
 	public static final String MANUALTESTSTEP_HELP_URL = "";
 
 	public static final String SECURITYTESTEDITOR_HELP_URL = "http://www.soapui.org/Security/working-with-security-tests.html";
-	public static final String SECURITY_HELP_ROOT = "http://www.soapui.org/Security/getting-started.html";
 
 	public static final String SECURITY_ASSERTION_HELP = "http://www.soapui.org/Security/security-scans-overview.html#3-security-scan-assertions";
 	public static final String SECURITY_XSS_ASSERTION_HELP = "http://www.soapui.org/Security/cross-site-scripting.html";
@@ -221,4 +214,25 @@ public interface HelpUrls
 	public static final String ALERT_SITE_HELP_URL = HELP_URL_ROOT + "";
 	public static final String ADD_ASSERTION_PANEL = "http://www.soapui.org/Functional-Testing/getting-started-with-assertions.html#add_assertion";
 
+	public static final String ADD_AUTHORIZATION = "http://www.soapui.org/OAuth/add-authorization.html";
+	public static final String OAUTH_OVERVIEW = "http://www.soapui.org/OAuth/oauth2-overview.html";
+	public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "http://www.soapui.org/OAuth/access-token-from-server.html";
+	public static final String OAUTH_AUTOMATING_ACCES_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
+	public static final String OAUTH_ADVANCED_OPTIONS = "http://www.soapui.org/OAuth/advanced-options.html";
+	public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/access-token-retrieval.html";
+	public static final String OAUTH_AUTOMATED_TOKEN_PROFILE_EDITOR = "http://www.soapui.org/OAuth/automated-token-profile-editor.html";
+
+	public static final String AUTHORIZATION = "http://www.soapui.org/OAuth/authorization.html";
+	public static final String AUTHORIZATION_BASIC = "http://www.soapui.org/OAuth/Basic.html";
+	public static final String AUTHORIZATION_NTLM = "http://www.soapui.org/OAuth/NTLM.html";
+	public static final String AUTHORIZATION_SPNEGO_KERBEROS = "http://www.soapui.org/OAuth/SPNEGO-Kerberos.html";
+	public static final String AUTHORIZATION_OAUTH2 = "http://www.soapui.org/OAuth/OAuth2.html";
+
+	public static final String REST_MOCKSERVICE_HELP_URL = "http://www.soapui.org/REST-Service-Mocking/mock-service-editor.html";
+	public static final String REST_MOCKSERVICE_ACTION = "http://www.soapui.org/REST-Service-Mocking/mock-action-editor.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR_HEADER = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-header.html";
+	public static final String REST_MOCK_RESPONSE_SCRIPT = "http://www.soapui.org/REST-Service-Mocking/mock-response-script.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
+	public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
 }

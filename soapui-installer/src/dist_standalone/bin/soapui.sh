@@ -38,6 +38,8 @@ else
 fi
 
 SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
+JFXRTPATH=`$JAVA -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
+SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 export SOAPUI_CLASSPATH
 
@@ -56,7 +58,7 @@ then
     JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$SOAPUI_HOME/bin"
 	JAVA_OPTS="$JAVA_OPTS -Dwsi.dir=$SOAPUI_HOME/wsi-test-tools"
 # uncomment to disable browser component
-#   JAVA_OPTS="$JAVA_OPTS -Dsoapui.jxbrowser.disable=true"
+#   JAVA_OPTS="$JAVA_OPTS -Dsoapui.browser.disabled=true"
 fi
 
 export JAVA_OPTS

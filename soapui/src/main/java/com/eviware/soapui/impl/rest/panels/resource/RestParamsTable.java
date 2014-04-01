@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2013 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.panels.resource;
 
@@ -50,6 +54,7 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 public class RestParamsTable extends JPanel
 {
 	public static final String REST_PARAMS_TABLE = "RestParamsTable";
+    public static final String REVERT_PARAMETER_VALUES = "Revert Parameter Values";
 	protected RestParamsPropertyHolder params;
 	protected RestParamsTableModel paramsTableModel;
 	protected JTable paramsTable;
@@ -65,8 +70,9 @@ public class RestParamsTable extends JPanel
 	private boolean showEditableButtons;
 	private boolean showDefaultParamsButton;
 	private JSplitPane splitPane;
+    private JScrollPane scrollPane;
 
-	public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
+    public RestParamsTable( RestParamsPropertyHolder params, boolean showInspector, ParamLocation defaultParamLocation,
 									boolean showEditableButtons, boolean showDefaultParamsButton )
 	{
 		this( params, showInspector, new RestParamsTableModel( params, RestParamsTableModel.Mode.MEDIUM ), defaultParamLocation, showEditableButtons,
@@ -157,9 +163,9 @@ public class RestParamsTable extends JPanel
 
 		paramsTable.setSelectionMode( ListSelectionModel.SINGLE_SELECTION );
 		paramsTable.setDefaultEditor( ParameterStyle.class, new DefaultCellEditor(
-				new JComboBox<ParameterStyle>( getStylesForLocation( ParamLocation.RESOURCE ) ) ) );
+				new JComboBox( getStylesForLocation( ParamLocation.RESOURCE ) ) ) );
 		paramsTable.setDefaultEditor( ParamLocation.class, new DefaultCellEditor(
-				new JComboBox<ParamLocation>( ParamLocation.values() ) ) );
+				new JComboBox( ParamLocation.values() ) ) );
 		// Workaround: for some reason the lower part of text gets clipped on some platforms
 		paramsTable.setRowHeight( 25 );
 		paramsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
@@ -201,43 +207,44 @@ public class RestParamsTable extends JPanel
 
 		add( buildToolbar(), BorderLayout.NORTH );
 
+        scrollPane = new JScrollPane(paramsTable);
+
 		if( showInspector )
 		{
-			splitPane = UISupport.createVerticalSplit( new JScrollPane( paramsTable ), buildDetails() );
-			add( splitPane, BorderLayout.CENTER );
-
-			splitPane.setResizeWeight( 0.7 );
+			splitPane = UISupport.createVerticalSplit(scrollPane, buildDetails() );
+			add(splitPane, BorderLayout.CENTER);
+            splitPane.setResizeWeight( 0.7 );
 		}
 		else
 		{
-			add( new JScrollPane( paramsTable ), BorderLayout.CENTER );
+            add(scrollPane, BorderLayout.CENTER );
 		}
 	}
 
-	private DefaultComboBoxModel<ParameterStyle> getStylesForLocation( ParamLocation paramLocation )
+    private DefaultComboBoxModel getStylesForLocation( ParamLocation paramLocation )
 	{
 		if( paramLocation == ParamLocation.METHOD )
 		{
-			return new DefaultComboBoxModel<ParameterStyle>(
+			return new DefaultComboBoxModel(
 					new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN } );
 		}
 		else
 		{
-			return new DefaultComboBoxModel<ParameterStyle>(
+			return new DefaultComboBoxModel(
 					new ParameterStyle[] { ParameterStyle.QUERY, ParameterStyle.TEMPLATE, ParameterStyle.HEADER, ParameterStyle.MATRIX, ParameterStyle.PLAIN } );
 		}
 	}
 
-	private DefaultComboBoxModel<ParamLocation> getLocationForParameter( ParameterStyle style )
+	private DefaultComboBoxModel getLocationForParameter( ParameterStyle style )
 	{
 		if( style != ParameterStyle.TEMPLATE )
 		{
-			return new DefaultComboBoxModel<ParamLocation>(
+			return new DefaultComboBoxModel(
 					new ParamLocation[] { ParamLocation.RESOURCE, ParamLocation.METHOD } );
 		}
 		else
 		{
-			return new DefaultComboBoxModel<ParamLocation>(
+			return new DefaultComboBoxModel(
 					new ParamLocation[] { ParamLocation.RESOURCE } );
 		}
 	}
@@ -381,13 +388,23 @@ public class RestParamsTable extends JPanel
 				JTextField editorComponent = ( JTextField )paramsTable.getEditorComponent();
 				editorComponent.grabFocus();
 				editorComponent.selectAll();
+                scrollIntoPosition(i, paramsTable.getRowCount());
 				return;
 			}
 		}
 
-	}
+    }
 
-	private class UpdateParamsAction extends AbstractAction
+    private void scrollIntoPosition(int selectedIndex, int numOfIndices) {
+        scrollIntoPosition((double)selectedIndex / numOfIndices);
+    }
+    private void scrollIntoPosition(double percent) {
+        int maximumScrollPosition = scrollPane.getVerticalScrollBar().getMaximum();
+        int requestedScrollPosition = (int) Math.round(maximumScrollPosition * percent);
+        scrollPane.getVerticalScrollBar().setValue(requestedScrollPosition);
+    }
+
+    private class UpdateParamsAction extends AbstractAction
 	{
 		private UpdateParamsAction()
 		{
@@ -416,10 +433,11 @@ public class RestParamsTable extends JPanel
 	}
 
 	private class UseDefaultParamsAction extends AbstractAction
-	{
-		public UseDefaultParamsAction()
+    {
+        public UseDefaultParamsAction()
 		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/default_properties.gif" ) );
+			super(REVERT_PARAMETER_VALUES);
+            putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/default_properties.gif" ) );
 			putValue( Action.SHORT_DESCRIPTION, "Reverts all current parameters to default values" );
 			setEnabled( false );
 		}

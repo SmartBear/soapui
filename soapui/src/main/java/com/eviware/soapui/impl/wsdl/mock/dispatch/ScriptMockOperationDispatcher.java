@@ -1,43 +1,31 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.MockRunContext;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -46,34 +34,40 @@ import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatcher implements PropertyChangeListener
 {
 	private ScriptEnginePool scriptEnginePool;
 	private GroovyEditor groovyEditor;
 	private JPanel groovyEditorPanel;
 
-	public ScriptMockOperationDispatcher( WsdlMockOperation mockOperation )
+	public ScriptMockOperationDispatcher( MockOperation mockOperation )
 	{
 		super( mockOperation );
 
 		scriptEnginePool = new ScriptEnginePool( mockOperation );
-		scriptEnginePool.setScript( mockOperation.getDispatchPath() );
+		scriptEnginePool.setScript( mockOperation.getScript() );
 
-		mockOperation.addPropertyChangeListener( WsdlMockOperation.DISPATCH_PATH_PROPERTY, this );
+		mockOperation.addPropertyChangeListener( AbstractMockOperation.DISPATCH_PATH_PROPERTY, this );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public MockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException
 	{
-		String dispatchScript = getMockOperation().getDispatchPath();
+		String dispatchScript = getMockOperation().getScript();
 		if( StringUtils.hasContent( dispatchScript ) )
 		{
 			SoapUIScriptEngine scriptEngine = scriptEnginePool.getScriptEngine();
 
 			try
 			{
-				WsdlMockService mockService = getMockOperation().getMockService();
-				WsdlMockRunner mockRunner = mockService.getMockRunner();
+				MockService mockService = getMockOperation().getMockService();
+				MockRunner mockRunner = mockService.getMockRunner();
 				MockRunContext context = mockRunner == null ? new WsdlMockRunContext( mockService, null ) : mockRunner
 						.getMockContext();
 
@@ -108,7 +102,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 		releaseEditorComponent();
 
-		getMockOperation().removePropertyChangeListener( WsdlMockOperation.DISPATCH_PATH_PROPERTY, this );
+		getMockOperation().removePropertyChangeListener( AbstractMockOperation.DISPATCH_PATH_PROPERTY, this );
 
 		super.release();
 	}
@@ -140,6 +134,12 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 		super.releaseEditorComponent();
 	}
 
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return true;
+	}
+
 	protected JXToolBar buildGroovyEditorToolbar( DispatchScriptGroovyEditorModel editorModel )
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
@@ -165,7 +165,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 	public static class Factory implements MockOperationDispatchFactory
 	{
-		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		public MockOperationDispatcher build( MockOperation mockOperation )
 		{
 			return new ScriptMockOperationDispatcher( mockOperation );
 		}
@@ -187,7 +187,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 		public String getScript()
 		{
-			return getMockOperation().getDispatchPath();
+			return getMockOperation().getScript();
 		}
 
 		public Settings getSettings()
@@ -197,7 +197,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 		public void setScript( String text )
 		{
-			getMockOperation().setDispatchPath( text );
+			getMockOperation().setScript( text );
 		}
 
 		public String getScriptName()
@@ -229,12 +229,12 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
 		public void actionPerformed( ActionEvent e )
 		{
-			WsdlMockResult lastMockResult = getMockOperation().getLastMockResult();
-			WsdlMockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();
+			MockResult lastMockResult = getMockOperation().getLastMockResult();
+			MockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();
 
 			try
 			{
-				WsdlMockResponse retVal = selectMockResponse( mockRequest, null );
+				MockResponse retVal = selectMockResponse( mockRequest, null );
 				UISupport.showInfoMessage( "Script returned [" + ( retVal == null ? "null" : retVal.getName() ) + "]" );
 			}
 			catch( Exception e1 )

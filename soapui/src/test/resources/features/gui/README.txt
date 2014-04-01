@@ -1,1 +1,0 @@
-Put features files for automated GUI tests here.

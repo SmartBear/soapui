@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2011 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 package com.eviware.soapui.support;
 
 import com.eviware.soapui.SoapUI;
@@ -96,49 +100,10 @@ public class SoapUIVersionUpdate
 
 	private String fetchVersionDocumentContent( final URL versionUrl ) throws URISyntaxException, IOException
 	{
-		Proxy proxy = null;
-		if( ProxyUtils.isProxyEnabled() )
-		{
-			HttpRoutePlanner routePlanner = HttpClientSupport.getHttpClient().getRoutePlanner();
-			HttpRoute httpRoute;
-			try
-			{
-				HttpGet request = new HttpGet( versionUrl.toURI() );
-				HttpContext httpContext = HttpClientSupport.createEmptyContext();
-				ProxyUtils.initProxySettings( SoapUI.getSettings(), request, httpContext, versionUrl.toString(), null );
-				httpRoute = routePlanner.determineRoute( new HttpHost( versionUrl.getHost() ), request, null );
-			}
-			catch( HttpException e )
-			{
-				throw new IOException( "Error detecting proxy", e );
-			}
-			HttpHost proxyHost = httpRoute.getProxyHost();
-			if( proxyHost != null )
-			{
-				proxy = new Proxy( Proxy.Type.HTTP, new InetSocketAddress( proxyHost.getHostName(), proxyHost.getPort() ) );
-				Authenticator.setDefault( new Authenticator()
-				{
-					@Override
-					protected PasswordAuthentication getPasswordAuthentication()
-					{
-						if( !getRequestingURL().getHost().equals( versionUrl.getHost() ) )
-						{
-							return null;
-						}
-						Settings settings = SoapUI.getSettings();
-						String proxyUsername = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
-								settings.getString( ProxySettings.USERNAME, null ) );
-						String proxyPassword = PropertyExpander.expandProperties( ( PropertyExpansionContext )null,
-								settings.getString( ProxySettings.PASSWORD, null ) );
-
-						return new PasswordAuthentication( proxyUsername, proxyPassword.toCharArray() );
-					}
-				} );
-			}
-		}
-
-		URLConnection connection = proxy == null ? versionUrl.openConnection() : versionUrl.openConnection(proxy);
-		String response = IOUtils.toString( connection.getInputStream() );
+		URLConnection connection = versionUrl.openConnection();
+		InputStream inputStream = connection.getInputStream();
+		String response = IOUtils.toString( inputStream );
+		inputStream.close();
 		Authenticator.setDefault( null );
 		return response;
 	}
@@ -159,6 +124,14 @@ public class SoapUIVersionUpdate
 			currentSoapuiVersion = currentSoapuiVersion.substring( 0, snapshotIndex - 1 );
 		}
 
+		int betaIndex = currentSoapuiVersion.toUpperCase().indexOf( "BETA" );
+		boolean isBeta = betaIndex > 0;
+		//if version is snapshot strip BETA
+		if( isBeta )
+		{
+			currentSoapuiVersion = currentSoapuiVersion.substring( 0, betaIndex - 1 );
+		}
+
 		String latestVersion = getLatestVersion();
 
 		if( StringUtils.isNullOrEmpty( latestVersion ) )
@@ -168,6 +141,11 @@ public class SoapUIVersionUpdate
 
 		// user has to be notified when SNAPSHOT version became OFFICIAL 
 		if( isSnapshot && currentSoapuiVersion.equals( latestVersion ) )
+		{
+			return true;
+		}
+		// user has to be notified when BETA version became OFFICIAL
+		if( isBeta && currentSoapuiVersion.equals( latestVersion ) )
 		{
 			return true;
 		}

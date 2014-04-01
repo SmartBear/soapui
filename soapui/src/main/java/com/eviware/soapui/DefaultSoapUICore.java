@@ -1,37 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.GeneralSecurityException;
-import java.util.TimerTask;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-
-import org.apache.commons.ssl.OpenSSL;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
@@ -48,7 +31,6 @@ import com.eviware.soapui.settings.SecuritySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.settings.WSISettings;
-import com.eviware.soapui.settings.WebRecordingSettings;
 import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SecurityScanUtil;
@@ -58,10 +40,30 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 import com.eviware.soapui.support.types.StringList;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.ssl.OpenSSL;
+import org.apache.log4j.Logger;
+import org.apache.log4j.xml.DOMConfigurator;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.security.GeneralSecurityException;
+import java.util.TimerTask;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Initializes core objects. Transform to a Spring "ApplicationContext"?
- * 
+ *
  * @author ole.matzura
  */
 
@@ -201,12 +203,10 @@ public class DefaultSoapUICore implements SoapUICore
 	protected void initExtensions( ClassLoader extensionClassLoader )
 	{
 		String extDir = System.getProperty( "soapui.ext.listeners" );
-		addExternalListeners( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar
-				+ "listeners", extensionClassLoader );
+		addExternalListeners( FilenameUtils.normalize( extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar + "listeners" ), extensionClassLoader );
 
 		String factoriesDir = System.getProperty( "soapui.ext.factories" );
-		addExternalFactories( factoriesDir != null ? factoriesDir : root == null ? "factories" : root
-				+ File.separatorChar + "factories", extensionClassLoader );
+		addExternalFactories( FilenameUtils.normalize( factoriesDir != null ? factoriesDir : root == null ? "factories" : root + File.separatorChar + "factories" ), extensionClassLoader );
 	}
 
 	protected void initCoreComponents()
@@ -217,7 +217,7 @@ public class DefaultSoapUICore implements SoapUICore
 	{
 		if( root == null || root.length() == 0 )
 			root = System.getProperty( "soapui.home", new File( "." ).getAbsolutePath() );
-		return root;
+		return FilenameUtils.normalize( root );
 	}
 
 	protected Settings initSettings( String fileName )
@@ -333,22 +333,6 @@ public class DefaultSoapUICore implements SoapUICore
 			settings.setString( WsdlSettings.EXCLUDED_TYPES, list.toXml() );
 		}
 
-		if( !settings.isSet( WebRecordingSettings.EXCLUDED_HEADERS ) )
-		{
-			StringList list = new StringList();
-			list.add( "Cookie" );
-			list.add( "Set-Cookie" );
-			list.add( "Referer" );
-			list.add( "Keep-Alive" );
-			list.add( "Connection" );
-			list.add( "Proxy-Connection" );
-			list.add( "Pragma" );
-			list.add( "Cache-Control" );
-			list.add( "Transfer-Encoding" );
-			list.add( "Date" );
-			settings.setString( WebRecordingSettings.EXCLUDED_HEADERS, list.toXml() );
-		}
-
 		if( settings.getString( HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1 ).equals(
 				HttpSettings.HTTP_VERSION_0_9 ) )
 		{
@@ -374,6 +358,7 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( HttpSettings.INCLUDE_REQUEST_IN_TIME_TAKEN, true );
 		setIfNotSet( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN, true );
 		setIfNotSet( HttpSettings.LEAVE_MOCKENGINE, true );
+		setIfNotSet( HttpSettings.START_MOCK_SERVICE, true );
 		setIfNotSet( UISettings.AUTO_SAVE_INTERVAL, "0" );
 		setIfNotSet( UISettings.GC_INTERVAL, "60" );
 		setIfNotSet( UISettings.SHOW_STARTUP_PAGE, true );
@@ -383,7 +368,7 @@ public class DefaultSoapUICore implements SoapUICore
 		setIfNotSet( WsaSettings.OVERRIDE_EXISTING_HEADERS, false );
 		setIfNotSet( WsaSettings.ENABLE_FOR_OPTIONAL, false );
 		setIfNotSet( VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE, true );
-		if( !settings.isSet( ProxySettings.AUTO_PROXY ) && !settings.isSet( ProxySettings.ENABLE_PROXY ))
+		if( !settings.isSet( ProxySettings.AUTO_PROXY ) && !settings.isSet( ProxySettings.ENABLE_PROXY ) )
 		{
 			settings.setBoolean( ProxySettings.AUTO_PROXY, true );
 			settings.setBoolean( ProxySettings.ENABLE_PROXY, true );
@@ -500,7 +485,7 @@ public class DefaultSoapUICore implements SoapUICore
 					byte[] encryptedData = OpenSSL.encrypt( encryptionAlgorithm, password.toCharArray(), data );
 					settingsDocument.setSoapuiSettings( null );
 					settingsDocument.getSoapuiSettings().setEncryptedContent( encryptedData );
-					settingsDocument.getSoapuiSettings().setEncryptedContentAlgorithm(encryptionAlgorithm);
+					settingsDocument.getSoapuiSettings().setEncryptedContentAlgorithm( encryptionAlgorithm );
 				}
 				catch( UnsupportedEncodingException e )
 				{
@@ -717,6 +702,14 @@ public class DefaultSoapUICore implements SoapUICore
 				}
 			}
 		}
+	}
+
+	public static boolean settingsFileExists()
+	{
+		DefaultSoapUICore soapUICore = new DefaultSoapUICore(  );
+		return new File(DEFAULT_SETTINGS_FILE).exists() ||
+				new File(new File(soapUICore.getRoot()), DEFAULT_SETTINGS_FILE).exists() ||
+				new File( System.getProperty( "user.home", "." ) + File.separator + DEFAULT_SETTINGS_FILE).exists();
 	}
 
 	private class SettingsWatcher extends TimerTask

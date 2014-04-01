@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.panels.request;
 
@@ -107,7 +111,7 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 
 			JComponent submitButton = super.getSubmitButton();
 			topToolBar.add( submitButton );
-			topToolBar.add( cancelButton );
+			topToolBar.add( getCancelButton() );
 
 			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
 			insertButtons( topToolBar );
@@ -115,13 +119,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			JPanel endpointPanel = new JPanel( new BorderLayout() );
 			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
 
-			JComponent endpointCombo = buildEndpointComponent();
-			super.setEndpointComponent( endpointCombo );
+			JPanel comboBoxPanel = buildEndpointPanel();
 
 			JLabel endPointLabel = new JLabel( "Endpoint" );
 
 			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
-			endpointPanel.add( endpointCombo, BorderLayout.SOUTH );
+			endpointPanel.add( comboBoxPanel, BorderLayout.SOUTH );
 
 			topToolBar.add( Box.createHorizontalStrut( 4 ) );
 			topToolBar.addWithOnlyMinimumHeight( endpointPanel );
@@ -131,8 +134,8 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 			addTopToolbarComponents( topToolBar );
 
 			topToolBar.add( Box.createHorizontalGlue() );
-			topToolBar.add( tabsButton );
-			topToolBar.add( splitButton );
+			topToolBar.add( getTabsButton() );
+			topToolBar.add( getSplitButton() );
 			topToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
 			int maximumPreferredHeight = findMaximumPreferredHeight( topToolBar ) + 6;
 			topToolBar.setPreferredSize( new Dimension( 600, Math.max( maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
@@ -146,7 +149,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		}
 		else
 		{
-			//TODO: If we don't need special clause for empty resources then remove it
 			return super.buildToolbar();
 		}
 	}
@@ -296,14 +298,12 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
 		{
 			if( evt.getPropertyName().equals( Interface.ENDPOINT_PROPERTY ) )
 			{
-				Object currentEndpoint = endpointsModel.getSelectedItem();
+				Object currentEndpoint = getEndpointsModel().getSelectedItem();
 				if( currentEndpoint != null && currentEndpoint.equals( evt.getOldValue() ) )
 				{
-					endpointsModel.setSelectedItem( evt.getNewValue() );
+					getEndpointsModel().setSelectedItem( evt.getNewValue() );
 				}
 			}
 		}
 	}
-
-
 }

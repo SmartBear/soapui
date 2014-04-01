@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
@@ -18,6 +22,7 @@ import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.eviware.soapui.model.mock.MockOperation;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
@@ -25,40 +30,35 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 
 public abstract class AbstractMockOperationDispatcher implements PropertyChangeNotifier, MockOperationDispatcher
 {
-	private WsdlMockOperation mockOperation;
+	private MockOperation mockOperation;
 	private PropertyChangeSupport propertyChangeSupport;
 
-	protected AbstractMockOperationDispatcher( WsdlMockOperation mockOperation )
+	protected AbstractMockOperationDispatcher( MockOperation mockOperation )
 	{
 		this.mockOperation = mockOperation;
 		propertyChangeSupport = new PropertyChangeSupport( this );
 	}
 
+	@Override
 	public JComponent getEditorComponent()
 	{
 		return new JPanel();
 	}
 
+	@Override
 	public void releaseEditorComponent()
 	{
 	}
 
+	@Override
 	public void release()
 	{
-		mockOperation = null;
+		// TODO : the following line causes NullPointerException when getSettings
+		// TODO : will removing it cause a memory leak?
+		//mockOperation = null;
 	}
 
-	public XmlObject getConfig()
-	{
-		return mockOperation.getConfig().getDispatchConfig();
-	}
-
-	protected void saveConfig( XmlObject xmlObject )
-	{
-		mockOperation.getConfig().getDispatchConfig().set( xmlObject );
-	}
-
-	public WsdlMockOperation getMockOperation()
+	public MockOperation getMockOperation()
 	{
 		return mockOperation;
 	}

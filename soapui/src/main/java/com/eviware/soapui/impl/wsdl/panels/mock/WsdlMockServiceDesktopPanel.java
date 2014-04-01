@@ -1,50 +1,26 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.mock;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
-import javax.swing.text.Document;
-
-import org.apache.commons.collections.list.TreeList;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction;
+import com.eviware.soapui.impl.rest.actions.mock.RestMockServiceOptionsAction;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.AddNewMockOperationAction;
 import com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction;
@@ -54,34 +30,36 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockResult;
-import com.eviware.soapui.model.mock.MockRunner;
-import com.eviware.soapui.model.mock.MockServiceListener;
+import com.eviware.soapui.model.mock.*;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.GroovyEditorComponent;
-import com.eviware.soapui.support.components.GroovyEditorInspector;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JFocusableComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JUndoableTextArea;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.swing.AbstractListMouseListener;
 import com.eviware.soapui.support.swing.ModelItemListKeyListener;
 import com.eviware.soapui.support.swing.ModelItemListMouseListener;
+import com.eviware.soapui.ui.support.JProgressBarWrapper;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
+import org.apache.commons.collections.list.TreeList;
+
+import javax.swing.*;
+import javax.swing.text.Document;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * DesktopPanel for WsdlMockServices
@@ -91,12 +69,13 @@ import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
 
 @SuppressWarnings( "serial" )
-public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPanel<WsdlMockService>
+public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockService>
+		extends KeySensitiveModelItemDesktopPanel<MockServiceType>
 {
 	private JButton runButton;
 	private WsdlMockRunner mockRunner;
 	private JButton stopButton;
-	private JProgressBar progressBar;
+	private JProgressBarWrapper progressBarWrapper = new JProgressBarWrapper();
 	private LogListModel logListModel;
 	private JList testLogList;
 	private JCheckBox enableLogCheckBox;
@@ -115,7 +94,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 	private JInspectorPanel inspectorPanel;
 	private JInspectorPanel contentInspector;
 
-	public WsdlMockServiceDesktopPanel( WsdlMockService mockService )
+	public WsdlMockServiceDesktopPanel( MockServiceType mockService )
 	{
 		super( mockService );
 		buildUI();
@@ -190,7 +169,8 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 		JTabbedPane tabs = new JTabbedPane();
 		inspectorPanel = JInspectorPanelFactory.build( buildOperationList() );
 
-		tabs.addTab( "Operations", inspectorPanel.getComponent() );
+		String title = getModelItem() instanceof RestMockService ? "Actions" : "Operations";
+		tabs.addTab( title, inspectorPanel.getComponent() );
 		addTabs( tabs, inspectorPanel );
 
 		if( StringUtils.hasContent( getModelItem().getDescription() )
@@ -230,8 +210,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 				if( defaultActions == null )
 				{
 					defaultActions = new DefaultActionList();
-					defaultActions.addAction( SwingActionDelegate.createDelegate(
-							AddNewMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, null ) );
+					defaultActions.addAction( createAddMockOperationDelegate() );
 				}
 
 				return defaultActions;
@@ -255,10 +234,24 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 	private JComponent buildMockOperationListToolbar()
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				AddNewMockOperationAction.SOAPUI_ACTION_ID, getModelItem(), null, "/mockOperation.gif" ) ) );
+
+		toolbar.add( UISupport.createToolbarButton( createAddMockOperationDelegate() ) );
 
 		return toolbar;
+	}
+
+	private SwingActionDelegate<?> createAddMockOperationDelegate()
+	{
+		String actionId = AddNewMockOperationAction.SOAPUI_ACTION_ID;
+		String icon = "/mockOperation.gif";
+
+		if( getModelItem() instanceof RestMockService )
+		{
+			actionId = AddEmptyRestMockResourceAction.SOAPUI_ACTION_ID;
+			icon = "/addToRestMockAction.gif";
+		}
+
+		return SwingActionDelegate.createDelegate( actionId, getModelItem(), null, icon );
 	}
 
 	protected JComponent buildPropertiesPanel()
@@ -372,30 +365,40 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		runButton = createActionButton( new RunMockServiceAction(), true );
 		stopButton = createActionButton( new StopMockServiceAction(), false );
+		MockServiceType modelItem = getModelItem();
+
+		AbstractSoapUIAction<MockServiceType> action = ( AbstractSoapUIAction<MockServiceType> )new MockServiceOptionsAction();
+
+		if( modelItem instanceof RestMockService )
+		{
+			action = ( AbstractSoapUIAction<MockServiceType> )new RestMockServiceOptionsAction();
+		}
+
 		optionsButton = createActionButton(
-				SwingActionDelegate.createDelegate( new MockServiceOptionsAction(), getModelItem(), null, "/options.gif" ),
+				SwingActionDelegate.createDelegate( action, modelItem, null, "/options.gif" ),
 				true );
 		showWsdlButton = createActionButton( new ShowWsdlAction(), false );
 
 		toolbar.addFixed( runButton );
 		toolbar.addFixed( stopButton );
-		toolbar.addFixed( showWsdlButton );
+
+		if( modelItem instanceof  WsdlMockService )
+		{
+			toolbar.addFixed( showWsdlButton );
+		}
 		toolbar.addFixed( optionsButton );
 
 		toolbar.addGlue();
 
 		runInfoLabel = new JLabel( "", SwingConstants.RIGHT );
-		toolbar.addFixed( UISupport.setFixedSize( runInfoLabel, 200, 20 ) );
+		runInfoLabel.setBorder( BorderFactory.createEmptyBorder( 0, 0, 0, 3 ) );
+		toolbar.addFixed( UISupport.setFixedSize( runInfoLabel, 205, 20 ) );
 		toolbar.addRelatedGap();
 
-		progressBar = new JProgressBar();
-		JPanel progressBarPanel = UISupport.createProgressBarPanel( progressBar, 2, false );
-		progressBarPanel.setPreferredSize( new Dimension( 60, 20 ) );
-
-		toolbar.addFixed( progressBarPanel );
+		progressBarWrapper.addToToolBar( toolbar );
 		toolbar.addRelatedGap();
 
-		toolbar.addFixed( createActionButton( new ShowOnlineHelpAction( HelpUrls.MOCKSERVICE_HELP_URL ), true ) );
+		toolbar.addFixed( createActionButton( new ShowOnlineHelpAction( getModelItem().getHelpUrl()), true ) );
 
 		return toolbar;
 	}
@@ -432,7 +435,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 			mockRunner.setMaxResults( logListModel.getMaxSize() );
 			mockRunner.setLogEnabled( enableLogCheckBox.isSelected() );
 
-			progressBar.setIndeterminate( true );
+			progressBarWrapper.setIndeterminate( true );
 
 			runButton.setEnabled( false );
 			stopButton.setEnabled( true );
@@ -445,7 +448,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 		@Override
 		public void onMockRunnerStop( MockRunner mockRunner )
 		{
-			progressBar.setIndeterminate( false );
+			progressBarWrapper.setIndeterminate( false );
 
 			runButton.setEnabled( true );
 			stopButton.setEnabled( false );
@@ -467,13 +470,13 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 	public class OperationListModel extends AbstractListModel implements ListModel, MockServiceListener,
 			PropertyChangeListener
 	{
-		private List<WsdlMockOperation> operations = new ArrayList<WsdlMockOperation>();
+		private List<MockOperation> operations = new ArrayList<MockOperation>();
 
 		public OperationListModel()
 		{
 			for( int c = 0; c < getModelItem().getMockOperationCount(); c++ )
 			{
-				WsdlMockOperation mockOperation = getModelItem().getMockOperationAt( c );
+				MockOperation mockOperation = getModelItem().getMockOperationAt( c );
 				mockOperation.addPropertyChangeListener( this );
 
 				operations.add( mockOperation );
@@ -494,7 +497,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		public void mockOperationAdded( MockOperation operation )
 		{
-			operations.add( ( WsdlMockOperation )operation );
+			operations.add( operation );
 			operation.addPropertyChangeListener( this );
 			fireIntervalAdded( this, operations.size() - 1, operations.size() - 1 );
 		}
@@ -526,7 +529,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		public void release()
 		{
-			for( WsdlMockOperation operation : operations )
+			for( MockOperation operation : operations )
 			{
 				operation.removePropertyChangeListener( this );
 			}
@@ -589,7 +592,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 
 		public void actionPerformed( ActionEvent arg0 )
 		{
-			WsdlMockService mockService = getModelItem();
+			WsdlMockService mockService = (WsdlMockService)getModelItem();
 			Tools.openURL( mockService.getLocalEndpoint() + "?WSDL" );
 		}
 	}
@@ -921,7 +924,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runOnRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{
@@ -962,7 +965,7 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 					{
 						WsdlMockRunContext context = mockRunner == null ? new WsdlMockRunContext(
 								WsdlMockServiceDesktopPanel.this.getModelItem(), null ) : mockRunner.getMockContext();
-						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, mockRunner, null );
+						WsdlMockServiceDesktopPanel.this.getModelItem().runAfterRequestScript( context, null );
 					}
 					catch( Exception e1 )
 					{
@@ -984,4 +987,5 @@ public class WsdlMockServiceDesktopPanel extends KeySensitiveModelItemDesktopPan
 	{
 		SoapUI.getActionRegistry().performAction( "CloneMockServiceAction", getModelItem(), null );
 	}
+
 }

@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <document>
     <properties>
-        <title>soapUI Userguide Overview</title>
+        <title>SoapUI User Guide Overview</title>
     </properties>
     <body>
-		<section name="The soapUI Interface">
-		 <p>soapUI is a standard desktop application adhering to established User Interface concepts for Integrated Development Environments, as available in for example
+		<section name="The SoapUI Interface">
+		 <p>SoapUI is a standard desktop application adhering to established User Interface concepts for Integrated Development Environments, as available in for example
 		 Eclipse, NetBeans and IDEA. Most actions have keyboard shortcuts and tooltips, you should have no problems finding 
-		 your way around. soapUI makes heavy use of "Inspectors"; i.e. tabs that can be shown and hidden by selecting them.</p>
+		 your way around. SoapUI makes heavy use of "Inspectors"; i.e. tabs that can be shown and hidden by selecting them.</p>
 
-		 <p>The soapUI window is divided into the following views:</p>
+		 <p>The SoapUI window is divided into the following views:</p>
 		 <table><tr>
 		 <td><i>left</i><br/>The main navigator showing a hierarchy of all projects, interfaces, etc. (see below)
 		 <ul>
@@ -18,7 +18,7 @@
 		 	to the right if available</li>
 		 </ul>
 		 </td>
-		 <td><i>right</i><br/>The soapUI desktop containing editors and viewers for those double clicked items in the navigator.
+		 <td><i>right</i><br/>The SoapUI desktop containing editors and viewers for those double clicked items in the navigator.
 		 <ul>
 		 <li>Cycle between active panes with Ctrl-Tab or use Ctrl-W to switch</li>
 		 <li>Maximize, Minimize, Resize or Move as usual using each panes window menu</li>
@@ -29,19 +29,19 @@
 		 <ul>
 		 <li>The <b>Properties</b> panel will show information on the item currently selected in the navigator</li>
 		 </ul>
-		 </td><td><i>bottom right</i><br/>A color coded log view showing log messages from soapUI</td></tr></table>
+		 </td><td><i>bottom right</i><br/>A color coded log view showing log messages from SoapUI</td></tr></table>
 		 <p align="center">
-			<img src="images/soapui_overview.gif" border="0" alt="an overview of the Web Testing tool, soapUI"/>
+			<img src="images/soapui_overview.gif" border="0" alt="an overview of the Web Testing tool, SoapUI"/>
 		</p>
 		<p>You can set a centered background image for the default desktop by placing a soapui-backgroung.gif/jpg/png file in the
-		soapUI bin folder when using the default desktop</p>
+		SoapUI bin folder when using the default desktop</p>
 		 
 		 <subsection name="The Navigator">
 		 <p>
              The following objects are currently shown in the navigator tree:
 		 
 		 <ul>
-		 	<li><b>Projects</b> node : the soapUI workspace
+		 	<li><b>Projects</b> node : the SoapUI workspace
 		 	<ul>
 		 		<li><p><a href="projects/index.html">Project</a> node(s) : for each project in the workspace</p>
 		 		<ul>
@@ -110,7 +110,7 @@
 				<table class="relatedInfo" cellspacing="0" cellpadding="0">
 	<tr class="a">
     	<td width="75" style="padding-top:5px">
-        	<img src="../images/where_do_i_start.jpg" alt="Start soapUI Testing" longdesc="http://www.soapui.org"></img>
+        	<img src="../images/where_do_i_start.jpg" alt="Start SoapUI Testing" longdesc="http://www.soapui.org"></img>
         </td>
         <td>
             <table class="relatedInner">
@@ -123,18 +123,18 @@
                 <td>
                     <div>
 						<p>
-						There is a commercial version of soapUI available; <b><i>soapUI Pro</i></b>.
+						There is a commercial version of SoapUI available; <b><i>SoapUI Pro</i></b>.
 						</p>
 						<p>
-						<b><i>soapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
+						<b><i>SoapUI Pro</i></b> contains productivity enhancements as well as offers Professional World Class support.
 						</p>
                     </div>
                 </td>
               </tr>
               <tr align="right">
               	<td>
-                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try soapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
-                                               <img src="../images/try_pro_100.png" alt="Try soapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
+                	<span class="relatedLinks"><a href="http://www.eviware.com/component/option,com_wrapper/Itemid,41/" title="try SoapUI Pro" onclick="javascript:urchinTracker:('/downloadTrial');">
+                                               <img src="../images/try_pro_100.png" alt="Try SoapUI pro to soap test" width="101" height="20" longdesc="http://www.eviware.com"/></a></span>
                 </td>
               </tr>
             </table>
@@ -142,35 +142,35 @@
 	</tr>
 </table>
 		 <subsection name="Browser Component">
-		<p>soapUI bundles the JXBrowser component provided by TeamDev software for displaying HTML pages (the startup page, etc)
-		and REST responses in the <a href="rest/requests.html#HTML_Response_View">HTML Response Viewer</a>, which gives broad file format support (images, flash-movies, etc..). Unfortunately this component does not work 
-		under a 64-bit JRE and will in this situation disable itself. If you are experiencing other issues with soapUI that seem to be related
-		to JXBrowser, adding the -Dsoapui.jxbrowser.disable=true flag to the command-line options (see ) will disable it anyhow.</p>
+		<p>SoapUI uses the browser component in the JavaFX library for displaying HTML pages (the startup page, etc)
+		and REST responses in the <a href="rest/requests.html#HTML_Response_View">HTML Response Viewer</a>, which gives broad file format support (images, flash-movies, etc..).
+            If you are experiencing issues with SoapUI that seem to be related
+		to the browser, adding the -Dsoapui.jxbrowser.disable=true flag to the command-line options will disable it anyhow.</p>
 		</subsection>
 		 
 		 <subsection name="Drag and Drop">
-		 <p>soapUI provides extensive support for dragging and dropping items in the Navigator, resulting in corresponding Clone or Move 
+		 <p>SoapUI provides extensive support for dragging and dropping items in the Navigator, resulting in corresponding Clone or Move
 		 operations, alternatively add or import actions, for example dragging a Request to a TestCase creates a TestRequest Step corresponding
 		 to the dragged Request. It is also possible to drag and drop within or between the TestSuite and TestCase editors and the Navigator to 
 		 rearrange, move, or copy items.</p>
 		 </subsection>
 		 
 		 <subsection name="Main Menu">
-		 <p>Most actions in soapUI are performed through toolbar buttons or context sensitive right-button menus. 
+		 <p>Most actions in SoapUI are performed through toolbar buttons or context sensitive right-button menus.
 		 The following actions are available from the main menu:</p>
 		 <p>
 				 <b>File Menu</b>
 				 <p>The first 9 actions are the same as those for the Workspace popup menu, please go to the
 				 <a href="workspaces.html">Workspaces</a> page for details. After these come the following actions:</p>
 				 <ul>
-				 	<li><b>Preferences</b> - Sets global <a href="preferences.html">soapUI Preferences</a></li>
+				 	<li><b>Preferences</b> - Sets global <a href="preferences.html">SoapUI Preferences</a></li>
 				 	<li><b>Save Preferences</b> - Saves the current global settings</li>
 				 	<li><b>Import Preferences</b> - Prompts to import global settings from another location (for example
-				 	an old soapUI installation). After loading, soapUI may need to be restarted for all settings to be 
+				 	an old SoapUI installation). After loading, SoapUI may need to be restarted for all settings to be 
 				 	activated</li>
 				 	<li><b>Recent</b> - Contains submenus for recent editors, projects, or workspaces for easy switching</li>
-				 	<li><b>Exit</b> - Prompts to exit soapUI</li>
-				 	<li><b>Exit without saving</b> - prompts to exit soapUI without saving anything</li>
+				 	<li><b>Exit</b> - Prompts to exit SoapUI</li>
+				 	<li><b>Exit without saving</b> - prompts to exit SoapUI without saving anything</li>
 				 	<li><b>Online Help</b> - displays this page in an external browser</li>
 				 </ul>
 				</p>
@@ -192,23 +192,23 @@
 			<li><b>Close Current</b> - closes the currently active desktop pane</li>
 			<li><b>Close All</b> - closes all desktop panes</li>
 			<li><b>Closes Others</b> - closes all desktop panes except the currently active one</li>		 
-             <li><b>Open TestCase Layout (soapUI Pro Tabbed Desktop only)</b> - enabled if a TestCase is selected in the
+             <li><b>Open TestCase Layout (SoapUI Pro Tabbed Desktop only)</b> - enabled if a TestCase is selected in the
              Navigator; will create a desktop with the TestCase to the left and all TestStep windows in a Tab Group to
              the right.</li>
 		 </ul>
 		 </p>
 		 
 		 <p>
-		 <b>Help Menu</b> - general information and soapUI Pro specific actions
+		 <b>Help Menu</b> - general information and SoapUI Pro specific actions
 		 <ul>
-             <li><b>Starter Page</b> - Opens the Starter Page which is by default shown when soapUI starts</li>
-			<li><b>User Guide</b> - Opens the soapUI User Guide</li>
-			<li><b>Getting Started</b> - Opens the soapUI Getting Started documents </li>
+             <li><b>Starter Page</b> - Opens the Starter Page which is by default shown when SoapUI starts</li>
+			<li><b>User Guide</b> - Opens the SoapUI User Guide</li>
+			<li><b>Getting Started</b> - Opens the SoapUI Getting Started documents </li>
 			<li><b>System Properties</b> - Opens a list of all currently defined system properties (see below)</li>
-			<li><b>Update License</b> (soapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
-			<li><b>Show License Details</b> (soapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
-			<li><b>soapUI.org/eviware.com</b> - Opens http://www.soapui.org or http://www.eviware.com</li>		 
-			<li><b>About soapUI</b> - Shows a version information dialog</li>
+			<li><b>Update License</b> (SoapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
+			<li><b>Show License Details</b> (SoapUI Pro only) - see <a href="licensemanagement.html">License Management</a></li>
+			<li><b>SoapUI.org/eviware.com</b> - Opens http://www.soapui.org or http://www.eviware.com</li>		 
+			<li><b>About SoapUI</b> - Shows a version information dialog</li>
 		 </ul>
 		 </p>
 		 </subsection>
@@ -216,14 +216,14 @@
 		 <subsection name="System Properties">
 		 <p>The System Properties option from the help menu opens a simple dialog showing all current defined system properties, 
 		 which can be useful for debugging system or security settings, etc…</p>
-		 <p align="center"><img src="images/systemproperties.gif" alt="System Properties in soapUI"/></p>
+		 <p align="center"><img src="images/systemproperties.gif" alt="System Properties in SoapUI"/></p>
 		 </subsection>
 		 
 		 <subsection name="Log Tabs">
  
- 		 <p>The bottom right of the soapUI workspace contains a number of log windows, each displaying 
+ 		 <p>The bottom right of the SoapUI workspace contains a number of log windows, each displaying 
  		 corresponding output;</p>
- 		 <p align="center"><img src="images/log_tabs.gif" alt="the soapUI Logs Tab"/></p>
+ 		 <p align="center"><img src="images/log_tabs.gif" alt="the SoapUI Logs Tab"/></p>
  		 <p>Right clicking on a log will show a popup menu with options to clear and enable or disable the 
 		 log and to copy selected rows to the clipboard. Also, log-entries can be selected or copied to the clipboard for transfer to 
  		 external tools. An option to set the maximum number of rows is available (default is 1000), when exceeding this
@@ -231,7 +231,7 @@
 		
 		 <p>The following tabs are currently displayed (when needed):</p>
 		 <ul>
-		 <li><b>soapUI log</b> - general notifications and messages</li>
+		 <li><b>SoapUI log</b> - general notifications and messages</li>
 		 <li><b>http Log</b> - http wire log for sent http requests for viewing the actual
 		 data sent and received on the socket (disabled during LoadTesting)</li>
 		 <li><b>jetty log</b> - mock-service related status notifications from</li>
@@ -239,18 +239,18 @@
 		 during LoadTest but can be enabled from File/Preferences/UI Settings)</li>
 		 <li><b>error log</b> - log with diagnostic information for errors that arise during execution, this log
 		 should be included in any bug-reports if it contains related error information. Please note that not
-		 all errors logged have to be actual errors in soapUI, for example if a target server or service is not
+		 all errors logged have to be actual errors in SoapUI, for example if a target server or service is not
 		 available, a socket connection error will be shown here, which may well be due to "natural" causes.</li>
-             <li><b>memory log</b> - shows an scrolling monitor over how much of the memory allocated to soapUI that
+             <li><b>memory log</b> - shows an scrolling monitor over how much of the memory allocated to SoapUI that
              is being used. Right-clicking open a menu with a "GC" option to trigger the Garbage Collector.</li>
 		 </ul>
 
-		 <p>soapUI uses <a target="_new" href="http://logging.apache.org/log4j/docs/index.html">log4j</a> for logging, 
+		 <p>SoapUI uses <a target="_new" href="http://logging.apache.org/log4j/docs/index.html">log4j</a> for logging, 
 		 you can customize the log4j configuration by putting a log4j xml configuration file named "soapui-log4j.xml" 
-		 in the soapUI bin directory (or the current working directory when not running from there).</p>
+		 in the SoapUI bin directory (or the current working directory when not running from there).</p>
 		 </subsection>
 		 
-		 <p><hr size="1"/>Next: <a href="tabbeddesktop.html">soapUI Pro Tabbed Desktop</a></p>
+		 <p><hr size="1"/>Next: <a href="tabbeddesktop.html">SoapUI Pro Tabbed Desktop</a></p>
 		</section>
     </body>
 </document>

@@ -1,14 +1,18 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.rest.support;
 
@@ -16,6 +20,8 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.StringUtils;
@@ -32,6 +38,8 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 
 public class RestUtils
 {
@@ -217,7 +225,6 @@ public class RestUtils
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	public static String expandPath( String path, RestParamsPropertyHolder params, RestRequestInterface request )
 	{
 		DefaultPropertyExpansionContext context = new DefaultPropertyExpansionContext( request );
@@ -241,7 +248,7 @@ public class RestUtils
 				catch( UnsupportedEncodingException e1 )
 				{
 					SoapUI.logError( e1 );
-					value = URLEncoder.encode( value );
+					value = urlEncodeWithUtf8( value );
 				}
 			}
 
@@ -335,7 +342,8 @@ public class RestUtils
 
 	private static boolean isRequestWithoutQueryString( RestRequestInterface request )
 	{
-		return request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() );
+		return request.isPostQueryString() || "multipart/form-data".equals( request.getMediaType() )
+				||  "multipart/mixed".equals( request.getMediaType() );
 	}
 
 
@@ -392,5 +400,19 @@ public class RestUtils
 		}
 		Collections.reverse( resources );
 		return resources;
+	}
+
+	public static String getExpandedPath( String path, RestParamsPropertyHolder params, ModelItem context )
+	{
+		String expandedPath = path;
+		expandedPath = PropertyExpander.expandProperties( context, expandedPath );
+		for(String pathParam: RestUtils.extractTemplateParams( expandedPath ))
+		{
+			String pathParamValue = params.getPropertyValue( pathParam );
+			pathParamValue = PropertyExpander.expandProperties( context, pathParamValue );
+			expandedPath = expandedPath.replaceAll( "\\{" + pathParam + "\\}", pathParamValue == null ? "" : pathParamValue );
+		}
+
+		return expandedPath;
 	}
 }

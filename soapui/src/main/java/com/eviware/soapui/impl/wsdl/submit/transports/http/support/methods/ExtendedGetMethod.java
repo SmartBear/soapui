@@ -1,31 +1,36 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
-
-import java.io.IOException;
-
-import javax.net.ssl.SSLSession;
-
-import org.apache.commons.httpclient.util.EncodingUtil;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import org.apache.commons.httpclient.util.EncodingUtil;
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+
+import javax.net.ssl.SSLSession;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 /**
  * Extended PostMethod that supports limiting of response size and detailed
@@ -120,7 +125,7 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 
 	public String getMethod()
 	{
-		return RestRequestInterface.RequestMethod.GET.toString();
+		return RestRequestInterface.HttpMethod.GET.toString();
 	}
 
 	public HttpEntity getRequestEntity()
@@ -194,6 +199,18 @@ public final class ExtendedGetMethod extends HttpGet implements ExtendedHttpMeth
 	public SoapUIMetrics getMetrics()
 	{
 		return httpMethodSupport.getMetrics();
+	}
+
+	@Override
+	public Header[] getAllResponseHeaders()
+	{
+		return httpMethodSupport.getAllResponseHeaders();
+	}
+
+	@Override
+	public URL getURL() throws MalformedURLException
+	{
+		return getURI().toURL();
 	}
 
 }

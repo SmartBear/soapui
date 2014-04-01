@@ -1,50 +1,26 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation.actions;
 
-import java.awt.Dimension;
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Calendar;
-
-import org.wsI.testing.x2003.x03.common.AddStyleSheet;
-import org.wsI.testing.x2003.x03.log.Environment;
-import org.wsI.testing.x2003.x03.log.HttpMessageEntry;
-import org.wsI.testing.x2003.x03.log.Implementation;
-import org.wsI.testing.x2003.x03.log.Log;
-import org.wsI.testing.x2003.x03.log.LogDocument;
-import org.wsI.testing.x2003.x03.log.MessageEntry;
-import org.wsI.testing.x2003.x03.log.Monitor;
-import org.wsI.testing.x2003.x03.log.NameVersionPair;
-import org.wsI.testing.x2003.x03.log.TcpMessageType;
-import org.wsI.testing.x2004.x07.analyzerConfig.AssertionResults;
-import org.wsI.testing.x2004.x07.analyzerConfig.Configuration;
-import org.wsI.testing.x2004.x07.analyzerConfig.ConfigurationDocument;
-import org.wsI.testing.x2004.x07.analyzerConfig.LogFile;
-import org.wsI.testing.x2004.x07.analyzerConfig.LogFile.CorrelationType;
-import org.wsI.testing.x2004.x07.analyzerConfig.ReportFile;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.RunnerContext;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.*;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIReportPanel;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.WSISettings;
@@ -52,6 +28,19 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+import org.wsI.testing.x2003.x03.common.AddStyleSheet;
+import org.wsI.testing.x2003.x03.log.*;
+import org.wsI.testing.x2004.x07.analyzerConfig.*;
+import org.wsI.testing.x2004.x07.analyzerConfig.LogFile.CorrelationType;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Validates the current request/response exchange of a WsdlMockResponse with
@@ -60,7 +49,7 @@ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
  * @author Ole.Matzura
  */
 
-public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockResponse>
+public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
 {
 	private String configFile;
 	private File logFile;
@@ -74,7 +63,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		// setEnabled( request != null && request.getMockResult() != null );
 	}
 
-	protected void generate( StringToStringMap values, ToolHost toolHost, WsdlMockResponse modelItem ) throws Exception
+	protected void generate( StringToStringMap values, ToolHost toolHost, MockResponse modelItem ) throws Exception
 	{
 		if( modelItem.getMockResult() == null )
 		{
@@ -108,7 +97,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		toolHost.run( new WSIProcessToolRunner( builder, reportFile, modelItem ) );
 	}
 
-	private ArgumentBuilder buildArgs( File reportFile, WsdlMockResponse modelItem ) throws Exception
+	private ArgumentBuilder buildArgs( File reportFile, MockResponse modelItem ) throws Exception
 	{
 		File logFile = buildLog( modelItem );
 		File file = buildConfig( reportFile, logFile, modelItem );
@@ -126,7 +115,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		return builder;
 	}
 
-	private File buildLog( WsdlMockResponse modelItem ) throws Exception
+	private File buildLog( MockResponse modelItem ) throws Exception
 	{
 		LogDocument logDoc = LogDocument.Factory.newInstance();
 		Log log = logDoc.addNewLog();
@@ -140,7 +129,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		return logFile;
 	}
 
-	private File buildConfig( File reportFile, File logFile, WsdlMockResponse modelItem ) throws IOException
+	private File buildConfig( File reportFile, File logFile, MockResponse modelItem ) throws IOException
 	{
 		Settings settings = modelItem.getSettings();
 
@@ -192,10 +181,10 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 		return file;
 	}
 
-	private void addMessageConfig( Log log, WsdlMockResponse modelItem ) throws MalformedURLException
+	private void addMessageConfig( Log log, MockResponse modelItem ) throws MalformedURLException
 	{
 		HttpMessageEntry requestMessage = HttpMessageEntry.Factory.newInstance();
-		WsdlMockRequest mockRequest = modelItem.getMockResult().getMockRequest();
+		MockRequest mockRequest = modelItem.getMockResult().getMockRequest();
 		requestMessage.addNewMessageContent().setStringValue( mockRequest.getRequestContent() );
 		requestMessage.setConversationID( "1" );
 		requestMessage.setTimestamp( Calendar.getInstance() );
@@ -284,12 +273,12 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 			buffer.append( headers.get( "#status#" ) ).append( "\r\n" );
 		}
 
-		for( String header : headers.keySet() )
+		for( Map.Entry<String, List<String>> headerEntry : headers.entrySet() )
 		{
-			if( !header.equals( "#status#" ) )
+			if( !headerEntry.getKey().equals( "#status#" ) )
 			{
-				for( String value : headers.get( header ) )
-					buffer.append( header ).append( ": " ).append( value ).append( "\r\n" );
+				for( String value : headerEntry.getValue() )
+					buffer.append( headerEntry.getKey() ).append( ": " ).append( value ).append( "\r\n" );
 			}
 		}
 
@@ -299,9 +288,9 @@ public class WSIValidateResponseAction extends AbstractToolsAction<WsdlMockRespo
 	private class WSIProcessToolRunner extends ProcessToolRunner
 	{
 		private final File reportFile;
-		private final WsdlMockResponse modelItem;
+		private final MockResponse modelItem;
 
-		public WSIProcessToolRunner( ProcessBuilder builder, File reportFile, WsdlMockResponse modelItem )
+		public WSIProcessToolRunner( ProcessBuilder builder, File reportFile, MockResponse modelItem )
 		{
 			super( builder, "WSI Message Validation", modelItem );
 			this.reportFile = reportFile;

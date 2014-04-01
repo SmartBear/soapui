@@ -1,51 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.monitor;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.table.AbstractTableModel;
-
-import org.apache.commons.collections.list.TreeList;
-import org.jdesktop.swingx.JXTable;
-import org.jdesktop.swingx.decorator.Filter;
-import org.jdesktop.swingx.decorator.FilterPipeline;
-import org.jdesktop.swingx.decorator.PatternFilter;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractInterface;
@@ -78,7 +47,6 @@ import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.BrowserComponent;
 import com.eviware.soapui.support.components.JComponentInspector;
 import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
@@ -93,6 +61,27 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.commons.collections.list.TreeList;
+import org.jdesktop.swingx.JXTable;
+import org.jdesktop.swingx.decorator.Filter;
+import org.jdesktop.swingx.decorator.FilterPipeline;
+import org.jdesktop.swingx.decorator.PatternFilter;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * A SOAP Monitor..
@@ -226,17 +215,12 @@ public class SoapMonitor extends JPanel
 				int row = logTable.getSelectedRow();
 				if( row == -1 )
 				{
-					// requestXmlDocument.setXml( null );
-					// responseXmlDocument.setXml( null );
 					requestModelItem.setMessageExchange( null );
 				}
 				else
 				{
 					WsdlMonitorMessageExchange exchange = tableModel.getMessageExchangeAt( row );
 					requestModelItem.setMessageExchange( exchange );
-					// responseModelItem.setMessageExchange( exchange );
-					// requestXmlDocument.setXml( exchange.getRequestContent() );
-					// responseXmlDocument.setXml( exchange.getResponseContent() );
 				}
 
 				addToMockServiceButton.setEnabled( row != -1 );
@@ -497,6 +481,8 @@ public class SoapMonitor extends JPanel
 			}
 		};
 		monitorEngine = new SoapMonitorEngineImpl( sslEndpoint );
+		monitorEngine.setIncludedContentTypes( ContentTypes.of( project.getSettings()
+				.getString( SoapMonitorAction.LaunchForm.SET_CONTENT_TYPES, SoapMonitorAction.defaultContentTypes().toString() ) ) );
 		monitorEngine.start( this.getProject(), localPort, listenerCallBack );
 
 		if( monitorEngine.isRunning() )
@@ -636,7 +622,7 @@ public class SoapMonitor extends JPanel
 
 					WsdlMockOperation mockOperation = mockService.getMockOperation( me.getOperation() );
 					if( mockOperation == null )
-						mockOperation = mockService.addNewMockOperation( me.getOperation() );
+						mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( me.getOperation() );
 
 					WsdlMockResponse mockResponse = mockOperation
 							.addNewMockResponse( "Monitor Response " + ( ++cnt ), false );
@@ -776,7 +762,7 @@ public class SoapMonitor extends JPanel
 						HttpTestRequestStep test = ( HttpTestRequestStep )testCase.insertTestStep(
 								httpRequestStepFactory.createConfig( me, "Monitor Request " + ( row + 1 ) ), -1 );
 
-						test.getTestRequest().setRequestHeaders( excludeHeaders( me.getRequestHeaders() ) );
+						test.getTestRequest().setRequestHeaders( excludeProxyHeaders( me.getRequestHeaders() ) );
 
 						HttpTestRequest request = ( HttpTestRequest )test.getHttpRequest();
 
@@ -1014,7 +1000,7 @@ public class SoapMonitor extends JPanel
 		{
 			exchanges.add( exchange );
 			int size = exchanges.size();
-			fireTableRowsInserted( size - 1, size );
+			fireTableRowsInserted( size - 1, size - 1 );
 
 			fitSizeToMaxRows();
 
@@ -1058,18 +1044,17 @@ public class SoapMonitor extends JPanel
 	}
 
 	/**
-	 * excludes proxy headers as well as headers set for excluding in Global
-	 * Preferences/WebRecordingSettings.EXCLUDED_HEADERS
+	 * Excludes proxy headers
 	 * 
 	 * @param requestHeaders
 	 * @return
 	 */
-	private StringToStringsMap excludeHeaders( StringToStringsMap requestHeaders )
+	private StringToStringsMap excludeProxyHeaders( StringToStringsMap requestHeaders )
 	{
 		StringToStringsMap stsmap = new StringToStringsMap();
 		for( String key : requestHeaders.getKeys() )
 		{
-			if( !( key.contains( "Proxy" ) || key.contains( "Content" ) ) && !BrowserComponent.isHeaderExcluded( key ) )
+			if( !( key.contains( "Proxy" ) || key.contains( "Content" ) ) )
 			{
 				stsmap.add( key, requestHeaders.get( key, "" ) );
 			}
@@ -1258,7 +1243,7 @@ public class SoapMonitor extends JPanel
 					.setValue(
 							LaunchForm.SET_CONTENT_TYPES,
 							project.getSettings().getString( LaunchForm.SET_CONTENT_TYPES,
-									SoapMonitorAction.defaultContentTypes() ) );
+									SoapMonitorAction.defaultContentTypes().toString() ) );
 
 			if( optionsDialog.show() )
 			{
@@ -1275,7 +1260,7 @@ public class SoapMonitor extends JPanel
 			}
 		}
 
-		@AForm( name = "HTTP Monitor Options", description = "Set options for HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
+		@AForm( name = "HTTP Monitor Options", description = "Set options for HTTP Monitor", helpUrl = HelpUrls.SOAPMONITOR_MONITOR_OPTIONS, icon = UISupport.OPTIONS_ICON_PATH )
 		private class OptionsForm
 		{
 			@AField( description = "The local port to listen on", name = "Port", type = AFieldType.INT )

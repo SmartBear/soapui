@@ -1,24 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.net.URL;
-import java.util.List;
-
-import org.apache.http.Header;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
@@ -36,6 +32,13 @@ import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.http.Header;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.net.URL;
+import java.util.List;
 
 public abstract class BaseHttpResponse implements HttpResponse
 {
@@ -57,7 +60,6 @@ public abstract class BaseHttpResponse implements HttpResponse
 	private byte[] rawResponseBody;
 	private int requestContentPos = -1;
 	private String xmlContent;
-	private boolean downloadIncludedResources;
 	private Attachment[] attachments = new Attachment[0];
 	protected HTMLPageSourceDownloader downloader;
 	private int statusCode;
@@ -74,7 +76,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 		try
 		{
-			this.url = httpMethod.getURI().toURL();
+			this.url = httpMethod.getURL();
 		}
 		catch( Exception e1 )
 		{
@@ -108,15 +110,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 			{
 				this.timestamp = System.currentTimeMillis();
 				this.contentType = httpMethod.getResponseContentType();
-				this.statusCode = httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getStatusLine()
-						.getStatusCode() : 0;
+				this.statusCode = extractStatusCode( httpMethod );
 				this.sslInfo = httpMethod.getSSLInfo();
-				this.url = httpMethod.getURI().toURL();
+				this.url = httpMethod.getURL();
 
 				metrics.setTimestamp( getTimestamp() );
 				metrics.setHttpStatus( getStatusCode() );
 			}
-			catch( Throwable e )
+			catch( Exception e )
 			{
 				e.printStackTrace();
 			}
@@ -134,10 +135,10 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 		initHeaders( httpMethod );
 
-		if( this.httpRequest.get() instanceof HttpRequest )
+		AbstractHttpRequestInterface<?> requestInterface = this.httpRequest.get();
+		if( requestInterface instanceof HttpRequest )
 		{
-			downloadIncludedResources = ( HttpRequest )this.httpRequest.get() != null ? ( ( HttpRequest )this.httpRequest
-					.get() ).getDownloadIncludedResources() : false;
+			boolean downloadIncludedResources = ( ( HttpRequest )requestInterface ).getDownloadIncludedResources();
 
 			if( downloadIncludedResources )
 			{
@@ -148,6 +149,20 @@ public abstract class BaseHttpResponse implements HttpResponse
 				metrics.getTotalTimer().add( afterNanos - beforeNanos );
 				context.setProperty( HTMLPageSourceDownloader.MISSING_RESOURCES_LIST, downloader.getMissingResourcesList() );
 			}
+		}
+	}
+
+	private int extractStatusCode( ExtendedHttpMethod httpMethod )
+	{
+		if (httpMethod instanceof HttpStatusHolder)
+		{
+			return ((HttpStatusHolder)httpMethod).getResponseStatusCode();
+		}
+		else
+		{
+			return httpMethod.hasHttpResponse() ? httpMethod.getHttpResponse().getStatusLine()
+					.getStatusCode() : 0;
+
 		}
 	}
 
@@ -165,7 +180,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 			attachments = new Attachment[1];
 			try
 			{
-				attachments[0] = downloader.createAttachment( rawResponseData, url, ( HttpRequest )httpRequest.get() );
+				attachments[0] = downloader.createAttachment( rawResponseData, url, httpRequest.get() );
 			}
 			catch( IOException e )
 			{
@@ -189,10 +204,10 @@ public abstract class BaseHttpResponse implements HttpResponse
 			{
 				try
 				{
-					rawResponse.write( String.valueOf( httpMethod.getHttpResponse().getStatusLine() ).getBytes() );
+					rawResponse.write( extractStatusLine( httpMethod ).getBytes() );
 					rawResponse.write( "\r\n".getBytes() );
 				}
-				catch( Throwable e )
+				catch( Exception ignore )
 				{
 				}
 			}
@@ -212,14 +227,14 @@ public abstract class BaseHttpResponse implements HttpResponse
 
 			if( !httpMethod.isFailed() && httpMethod.hasHttpResponse() )
 			{
-				headers = httpMethod.getHttpResponse().getAllHeaders();
+				headers = httpMethod.getAllResponseHeaders();
 				for( Header header : headers )
 				{
 					responseHeaders.put( header.getName(), header.getValue() );
 					rawResponse.write( toExternalForm( header ).getBytes() );
 				}
 
-				responseHeaders.put( "#status#", String.valueOf( httpMethod.getHttpResponse().getStatusLine() ) );
+				responseHeaders.put( "#status#", extractStatusLine( httpMethod ) );
 			}
 
 			if( httpMethod.getRequestEntity() != null )
@@ -246,9 +261,21 @@ public abstract class BaseHttpResponse implements HttpResponse
 			rawResponseData = rawResponse.toByteArray();
 			rawRequestData = rawRequest.toByteArray();
 		}
-		catch( Throwable e )
+		catch( Exception e )
 		{
 			e.printStackTrace();
+		}
+	}
+
+	private String extractStatusLine( ExtendedHttpMethod httpMethod )
+	{
+		if( httpMethod instanceof HttpStatusHolder )
+		{
+			return ((HttpStatusHolder)httpMethod).getResponseStatusLine();
+		}
+		else
+		{
+			return String.valueOf( httpMethod.getHttpResponse().getStatusLine() );
 		}
 	}
 
@@ -314,7 +341,7 @@ public abstract class BaseHttpResponse implements HttpResponse
 					responseHeaders.put( header.getName(), header.getValue() );
 				}
 
-				responseHeaders.put( "#status#", String.valueOf( httpMethod.getHttpResponse().getStatusLine() ) );
+				responseHeaders.put( "#status#", extractStatusLine( httpMethod ) );
 			}
 		}
 		catch( Throwable e )

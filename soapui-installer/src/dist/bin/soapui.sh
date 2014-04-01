@@ -33,7 +33,9 @@ SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.j
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME -splash:soapui-splash.png"
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin -splash:soapui-splash.png"
+JFXRTPATH=`java -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
+SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 if $darwin
 then
@@ -48,7 +50,7 @@ then
 	JAVA_OPTS="$JAVA_OPTS -Djava.library.path=$SOAPUI_HOME/bin"
 	JAVA_OPTS="$JAVA_OPTS -Dwsi.dir=$SOAPUI_HOME/wsi-test-tools"
 #uncomment to disable browser component
-#   JAVA_OPTS="$JAVA_OPTS -Dsoapui.jxbrowser.disable=true"
+#   JAVA_OPTS="$JAVA_OPTS -Dsoapui.browser.disabled=true"
 fi
 
 export JAVA_OPTS

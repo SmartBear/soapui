@@ -1,58 +1,33 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.AbstractAction;
-import javax.swing.AbstractListModel;
-import javax.swing.Action;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.MockOperationQueryMatchDispatchConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResult;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.support.AbstractPropertyChangeNotifier;
 import com.eviware.soapui.support.StringUtils;
@@ -62,6 +37,21 @@ import com.eviware.soapui.support.components.SimpleBindingForm;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.jgoodies.binding.PresentationModel;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDispatcher implements
 		PropertyChangeListener
@@ -79,13 +69,13 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 	private JButton declareNsButton = new JButton( new DeclareNamespacesAction() );
 	private JButton extractFromCurrentButton = new JButton( new ExtractFromCurrentAction() );
 
-	public QueryMatchMockOperationDispatcher( WsdlMockOperation mockOperation )
+	public QueryMatchMockOperationDispatcher( MockOperation mockOperation )
 	{
 		super( mockOperation );
 
 		try
 		{
-			conf = MockOperationQueryMatchDispatchConfig.Factory.parse( getConfig().xmlText() );
+			conf = MockOperationQueryMatchDispatchConfig.Factory.parse( ((WsdlMockOperation)mockOperation).getConfig().getDispatchConfig().xmlText() );
 
 			for( MockOperationQueryMatchDispatchConfig.Query query : conf.getQueryList() )
 			{
@@ -114,6 +104,12 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 		splitPane.setDividerLocation( 300 );
 		setEnabled();
 		return splitPane;
+	}
+
+	@Override
+	public boolean hasDefaultResponse()
+	{
+		return true;
 	}
 
 	protected Component buildQueryListComponent()
@@ -215,7 +211,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 		toolBar.addFixed( extractFromCurrentButton );
 	}
 
-	public WsdlMockResponse selectMockResponse( WsdlMockRequest request, WsdlMockResult result )
+	public WsdlMockResponse selectMockResponse( MockRequest request, MockResult result )
 			throws DispatchException
 	{
 		Map<String, XmlCursor> cursorCache = new HashMap<String, XmlCursor>();
@@ -250,7 +246,8 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 						if( value.equals( XmlUtils.getValueForMatch( cursor ) ) )
 						{
-							request.getRequestContext().put( "usedQueryMatch", query.getName() );
+							WsdlMockRunContext requestContext = (WsdlMockRunContext)request.getRequestContext();
+							requestContext.put( "usedQueryMatch", query.getName() );
 
 							WsdlMockResponse resp = null;
 							for( MockResponse mockResponse : this.getMockOperation().getMockResponses() )
@@ -267,7 +264,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 								return resp;
 							}
 
-							return getMockOperation().getMockResponseByName( query.getResponse() );
+							return ((WsdlMockOperation)getMockOperation()).getMockResponseByName( query.getResponse() );
 						}
 					}
 
@@ -354,7 +351,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 	public static class Factory implements MockOperationDispatchFactory
 	{
-		public MockOperationDispatcher build( WsdlMockOperation mockOperation )
+		public MockOperationDispatcher build( MockOperation mockOperation )
 		{
 			return new QueryMatchMockOperationDispatcher( mockOperation );
 		}
@@ -440,7 +437,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 	private void saveConfig()
 	{
-		saveConfig( conf );
+		((WsdlMockOperation)getMockOperation()).getConfig().getDispatchConfig().set( conf );
 	}
 
 	private class QueryItemListModel extends AbstractListModel
@@ -610,7 +607,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 			try
 			{
-				WsdlMockResult lastResult = getMockOperation().getLastMockResult();
+				MockResult lastResult = getMockOperation().getLastMockResult();
 				String content = null;
 				if( lastResult == null )
 				{
@@ -650,7 +647,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
 		public void actionPerformed( ActionEvent e )
 		{
-			WsdlMockResult result = getMockOperation().getLastMockResult();
+			MockResult result = getMockOperation().getLastMockResult();
 			if( result != null )
 			{
 				try
@@ -684,7 +681,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 			if( selectedQuery == null )
 				return;
 
-			WsdlMockResult result = getMockOperation().getLastMockResult();
+			MockResult result = getMockOperation().getLastMockResult();
 			String content;
 
 			if( result != null && StringUtils.hasContent( result.getMockRequest().getRequestContent() ) )

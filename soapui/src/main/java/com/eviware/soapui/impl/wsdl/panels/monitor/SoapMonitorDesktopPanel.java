@@ -1,22 +1,20 @@
 /*
- *  SoapUI, copyright (C) 2004-2012 smartbear.com
+ * Copyright 2004-2014 SmartBear Software
  *
- *  SoapUI is free software; you can redistribute it and/or modify it under the
- *  terms of version 2.1 of the GNU Lesser General Public License as published by 
- *  the Free Software Foundation.
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
  *
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
- *  See the GNU Lesser General Public License for more details at gnu.org.
- */
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.monitor;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -27,7 +25,12 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
-public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+public class SoapMonitorDesktopPanel extends DefaultDesktopPanel implements SoapMonitorContainer
 {
 	private SoapMonitor soapMonitor;
 	private final WsdlProject project;
@@ -47,7 +50,7 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 
 		tabs.add( soapMonitor, "Traffic Log" );
 
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_HELP_URL ) ) );
+		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_MONITOR ) ) );
 
 		p.add( toolbar, BorderLayout.NORTH );
 		p.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
@@ -80,5 +83,10 @@ public class SoapMonitorDesktopPanel extends DefaultDesktopPanel
 	public WsdlProject getProject()
 	{
 		return project;
+	}
+
+	public SoapMonitor getSoapMonitor()
+	{
+		return soapMonitor;
 	}
 }
