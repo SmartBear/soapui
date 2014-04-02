@@ -48,7 +48,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 
 		if( dialog.show() )
 		{
-			String mockServiceName = dialog.getValue( Form.MOCKSERVICENAME );
+			String mockServiceName = dialog.getValue( Form.MOCKSERVICE_NAME );
 			RestMockService mockService = getMockService( mockServiceName, restService.getProject() );
 
 			if( mockService != null )
@@ -69,7 +69,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 			dialog = ADialogBuilder.buildDialog( Form.class );
 		}
 		String nextMockServiceName = nextMockServiceName( restService );
-		dialog.setValue( Form.MOCKSERVICENAME, nextMockServiceName );
+		dialog.setValue( Form.MOCKSERVICE_NAME, nextMockServiceName );
 	}
 
 	private void maybeStart( MockService mockService )
@@ -144,7 +144,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 	@AForm( name = "Generate REST Mock Service", description = "Set name for the new REST Mock Service", helpUrl = HelpUrls.GENERATE_MOCKSERVICE_HELP_URL )
 	protected interface Form
 	{
-		@AField( name = "MockServiceName", description = "The Mock Service name", type = AField.AFieldType.STRING )
-		public final static String MOCKSERVICENAME = "MockServiceName";
+		@AField( name = "MockService Name", description = "The Mock Service name", type = AField.AFieldType.STRING )
+		public final static String MOCKSERVICE_NAME = "MockService Name";
 	}
 }
