@@ -459,6 +459,10 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 		// TODO This might be extracted to a common utils class
 		private boolean isMouseOnComponent( Component component )
 		{
+			if( !component.isShowing() )
+			{
+				return false;
+			}
 			Point mouseLocation = MouseInfo.getPointerInfo().getLocation();
 			Point componentLocationOnScreen = component.getLocationOnScreen();
 			return component.contains( mouseLocation.x - componentLocationOnScreen.x, mouseLocation.y - componentLocationOnScreen.y );
