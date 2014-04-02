@@ -1229,18 +1229,16 @@ public class JsonXmlSerializer
 					&& ( ( ( JSONArray )value ).isExpandElements() || ArrayUtils.contains( expandableProperties, name ) ) )
 			{
 				JSONArray array = ( JSONArray )value;
-				int l = array.size();
-				for( int j = 0; j < l; j++ )
+				for( Object item : array )
 				{
-					Object item = array.get( j );
 					element = newElement( name );
 					if( item instanceof JSONObject )
 					{
-						element = processJSONValue( ( JSONObject )item, root, element, expandableProperties );
+						element = processJSONValue( item, root, element, expandableProperties );
 					}
 					else if( item instanceof JSONArray )
 					{
-						element = processJSONValue( ( JSONArray )item, root, element, expandableProperties );
+						element = processJSONValue( item, root, element, expandableProperties );
 					}
 					else
 					{
