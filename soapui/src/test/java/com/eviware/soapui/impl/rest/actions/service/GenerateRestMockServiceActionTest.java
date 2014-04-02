@@ -34,7 +34,6 @@ import org.mockito.internal.matchers.NotNull;
 import org.mockito.internal.matchers.Null;
 
 import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -77,7 +76,7 @@ public class GenerateRestMockServiceActionTest
 	public void mockFormDialog()
 	{
 		dialog = mock( XFormDialog.class );
-		when( dialog.getValue( GenerateRestMockServiceAction.Form.MOCKSERVICENAME ) ).thenReturn( restMockServiceName );
+		when( dialog.getValue( GenerateRestMockServiceAction.Form.MOCKSERVICE_NAME ) ).thenReturn( restMockServiceName );
 		when( dialog.show() ).thenReturn( true ).thenReturn( false );
 		action.setFormDialog( dialog );
 	}
