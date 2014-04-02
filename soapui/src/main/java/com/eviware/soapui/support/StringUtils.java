@@ -319,11 +319,17 @@ public class StringUtils
 			}
 		}
 
-		str = result.toString();
-		if( str.length() > 0 && Character.isDigit(str.charAt(0)))
-			str = "_" + str;
+		String resultString  = result.toString();
+		return isValidXmlName( str ) ? resultString : "_" + resultString;
+	}
 
-		return str;
+	private static boolean isValidXmlName( String str )
+	{
+		if (str.isEmpty() || str.toLowerCase().startsWith( "xml" )) {
+			return false;
+		}
+		char firstCharacter = str.charAt( 0 );
+		return Character.isLetter( firstCharacter ) || firstCharacter == '_';
 	}
 
 	public static String[] merge( String[] incomingNames, String string )
