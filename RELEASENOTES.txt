@@ -2,7 +2,7 @@
 #### Released 2014-04-09 ####
 
 ### Major new features ###
-* REST Mocking - Easily create REST MockServices without the need for scripting and test unavailable/prototype APIs.
+*  REST Mocking - Easily create REST MockServices without scripting and test unavailable/prototype APIs.
 * OAuth 2.0 support - Test APIs using OAuth 2.0, group different OAuth 2.0 credentials into profiles, and automate your OAuth 2.0 tests to integrate with other build tools.
 * (Pro only) REST Discovery - Quickly get your undocumented API under test by recording your interactions with the API.
 * (Pro only) REST Test Suite Builder - Automatically create test suites from your recorded interactions with the API, making sure you test the right requests.
