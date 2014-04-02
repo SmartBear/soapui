@@ -106,6 +106,6 @@ public interface HttpSettings
 	@Setting( name = "Enable Mock HTTP Log", description = "Logs wire content of all mock requests", type = SettingType.BOOLEAN )
 	public static final String ENABLE_MOCK_WIRE_LOG = HttpSettings.class.getSimpleName() + "@" + "enable_mock_wire_log";
 
-	@Setting( name = "Start RestMockService", description = "Start RestMockService after creation", type = SettingType.BOOLEAN )
+	@Setting( name = "Start REST MockService", description = "Start REST MockService after creation", type = SettingType.BOOLEAN )
 	public static final String START_MOCK_SERVICE = HttpSettings.class.getSimpleName() + "@" + "start_mock_service";
 }
