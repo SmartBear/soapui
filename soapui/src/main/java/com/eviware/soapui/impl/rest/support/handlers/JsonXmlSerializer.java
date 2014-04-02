@@ -27,7 +27,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- * Modifications by Ole Lensmar
+ * Modifications by Ole Lensmar and Manne Fagerlind
  * Copyright 2012 SmartBear Software
  */
 
@@ -71,7 +71,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * Utility class for transforming JSON to XML an back.<br>
+ * Utility class for transforming JSON to XML and back.<br>
  * When transforming JSONObject and JSONArray instances to XML, this class will
  * add hints for converting back to JSON.<br>
  * Examples:<br>
@@ -1229,18 +1229,16 @@ public class JsonXmlSerializer
 					&& ( ( ( JSONArray )value ).isExpandElements() || ArrayUtils.contains( expandableProperties, name ) ) )
 			{
 				JSONArray array = ( JSONArray )value;
-				int l = array.size();
-				for( int j = 0; j < l; j++ )
+				for( Object item : array )
 				{
-					Object item = array.get( j );
 					element = newElement( name );
 					if( item instanceof JSONObject )
 					{
-						element = processJSONValue( ( JSONObject )item, root, element, expandableProperties );
+						element = processJSONValue( item, root, element, expandableProperties );
 					}
 					else if( item instanceof JSONArray )
 					{
-						element = processJSONValue( ( JSONArray )item, root, element, expandableProperties );
+						element = processJSONValue( item, root, element, expandableProperties );
 					}
 					else
 					{

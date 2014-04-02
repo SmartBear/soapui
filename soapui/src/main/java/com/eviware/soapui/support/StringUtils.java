@@ -1,4 +1,4 @@
-/*
+ /*
  * Copyright 2004-2014 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
@@ -13,6 +13,7 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
+
 
 package com.eviware.soapui.support;
 
@@ -319,11 +320,17 @@ public class StringUtils
 			}
 		}
 
-		str = result.toString();
-		if( str.length() > 0 && Character.isDigit(str.charAt(0)))
-			str = "_" + str;
+		String resultString  = result.toString();
+		return isValidXmlName( str ) ? resultString : "_" + resultString;
+	}
 
-		return str;
+	private static boolean isValidXmlName( String str )
+	{
+		if (str.isEmpty() || str.toLowerCase().startsWith( "xml" )) {
+			return false;
+		}
+		char firstCharacter = str.charAt( 0 );
+		return Character.isLetter( firstCharacter ) || firstCharacter == '_';
 	}
 
 	public static String[] merge( String[] incomingNames, String string )
