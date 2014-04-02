@@ -27,6 +27,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -43,7 +44,9 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	public static final String EDIT_ENDPOINT = "[edit current..]";
 	private static final String DELETE_ENDPOINT = "[delete current]";
 
-	private Set<ListDataListener> listeners = new HashSet<ListDataListener>();
+	private Set<ListDataListener> listeners =  new HashSet<ListDataListener>() ;
+//	private Set<ListDataListener> listeners = Collections.synchronizedSet( new HashSet<ListDataListener>() );
+
 	private String[] endpoints;
 	private AbstractHttpRequestInterface<?> request;
 	private Document textFieldDocument;
@@ -188,10 +191,13 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	protected void notifyContentsChanged()
 	{
 		ListDataEvent e = new ListDataEvent( this, ListDataEvent.CONTENTS_CHANGED, 0, getSize() );
-		Iterator<ListDataListener> iterator = listeners.iterator();
-		while( iterator.hasNext() )
+		synchronized( listeners )
 		{
-			iterator.next().contentsChanged( e );
+			Iterator<ListDataListener> iterator = listeners.iterator();
+			while( iterator.hasNext() )
+			{
+				iterator.next().contentsChanged( e );
+			}
 		}
 	}
 
