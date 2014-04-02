@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.editor.inspectors.auth;
+*/
+package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.config.TimeUnitConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
@@ -141,7 +142,7 @@ class ExpirationTimeChooser extends JPanel
 		}
 		else
 		{
-			serverIssuedExpirationTimeLabel = "No expiration";
+			serverIssuedExpirationTimeLabel = "No expiration.";
 		}
 
 		serverExpirationTimeOption = new JRadioButton( "Use expiration time from authorization server: " + serverIssuedExpirationTimeLabel );
