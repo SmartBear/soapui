@@ -20,10 +20,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <!-- TODO Not sure if this is needed -->
-                    <exclude>src/main/resources/com/eviware/soapui/resources/conf/soapui-log4j.xml</exclude>
-                </excludes>
             </resource>
         </resources>
 
