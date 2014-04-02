@@ -1350,7 +1350,7 @@ public class SoapUI
 
 		public void actionPerformed( ActionEvent e )
 		{
-			String text = UISupport.prompt( "Search Forum", "Searches the online Forum, leave empty to open", "" );
+			String text = UISupport.prompt( "Search Text", "Search Online Forum", "" );
 			if( text == null )
 				return;
 
