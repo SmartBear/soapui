@@ -251,21 +251,7 @@ public class WsdlMockDispatcher extends AbstractMockDispatcher
 				if( mockOperation != null )
 				{
 					long startTime = System.nanoTime();
-					// try
-					// {
 					result = mockOperation.dispatchRequest( mockRequest );
-					// }
-					// catch( DispatchException e )
-					// {
-					// result = new WsdlMockResult( mockRequest );
-					//
-					// String fault = SoapMessageBuilder.buildFault( "Server",
-					// e.getMessage(), mockRequest.getSoapVersion() );
-					// result.setResponseContent( fault );
-					// result.setMockOperation( mockOperation );
-					//
-					// mockRequest.getHttpResponse().getWriter().write( fault );
-					// }
 
 					if( mockRequest.getHttpRequest() instanceof org.mortbay.jetty.Request )
 						( ( org.mortbay.jetty.Request )mockRequest.getHttpRequest() ).setHandled( true );
