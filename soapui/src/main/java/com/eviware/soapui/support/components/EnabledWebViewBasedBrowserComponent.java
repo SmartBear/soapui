@@ -18,6 +18,7 @@ package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -44,10 +45,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.IOException;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -436,18 +434,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
 											webEngine.loadContent( "" );
 										}
 									} );
-									try
-									{
-										Desktop.getDesktop().browse( new URI( newValue ) );
-									}
-									catch( IOException e )
-									{
-										SoapUI.logError( e, "Error opening popup in external browser" );
-									}
-									catch( URISyntaxException e )
-									{
-										SoapUI.logError( e, "Error opening popup in external browser" );
-									}
+									Tools.openURL( newValue );
 								}
 							} );
 							return webEngine;
