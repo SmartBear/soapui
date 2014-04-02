@@ -44,8 +44,7 @@ public class EndpointsComboBoxModel implements ComboBoxModel, PropertyChangeList
 	public static final String EDIT_ENDPOINT = "[edit current..]";
 	private static final String DELETE_ENDPOINT = "[delete current]";
 
-	private Set<ListDataListener> listeners =  new HashSet<ListDataListener>() ;
-//	private Set<ListDataListener> listeners = Collections.synchronizedSet( new HashSet<ListDataListener>() );
+	private Set<ListDataListener> listeners = Collections.synchronizedSet( new HashSet<ListDataListener>() );
 
 	private String[] endpoints;
 	private AbstractHttpRequestInterface<?> request;
