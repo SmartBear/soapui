@@ -30,62 +30,51 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
-public class FileFormComponent extends JPanel implements JFormComponent
-{
-	private JTextField textField;
-	private AbstractWsdlModelItem<?> modelItem;
+public class FileFormComponent extends JPanel implements JFormComponent {
+    private JTextField textField;
+    private AbstractWsdlModelItem<?> modelItem;
 
-	public FileFormComponent( String tooltip )
-	{
-		ButtonBarBuilder builder = new ButtonBarBuilder( this );
-		textField = new JTextField( 30 );
-		textField.setToolTipText( tooltip );
-		builder.addGriddedGrowing( textField );
-		builder.addRelatedGap();
-		builder.addFixed( new JButton( new SelectFileAction() ) );
-	}
+    public FileFormComponent(String tooltip) {
+        ButtonBarBuilder builder = new ButtonBarBuilder(this);
+        textField = new JTextField(30);
+        textField.setToolTipText(tooltip);
+        builder.addGriddedGrowing(textField);
+        builder.addRelatedGap();
+        builder.addFixed(new JButton(new SelectFileAction()));
+    }
 
-	public void setValue( String value )
-	{
-		textField.setText( value );
-	}
+    public void setValue(String value) {
+        textField.setText(value);
+    }
 
-	public JTextField getTextField()
-	{
-		return textField;
-	}
+    public JTextField getTextField() {
+        return textField;
+    }
 
-	public String getValue()
-	{
-		return textField.getText();
-	}
+    public String getValue() {
+        return textField.getText();
+    }
 
-	public void setFile( File file )
-	{
-		setValue( file.getAbsolutePath() );
-	}
+    public void setFile(File file) {
+        setValue(file.getAbsolutePath());
+    }
 
-	public void setModelItem( AbstractWsdlModelItem<?> modelItem )
-	{
-		this.modelItem = modelItem;
-	}
+    public void setModelItem(AbstractWsdlModelItem<?> modelItem) {
+        this.modelItem = modelItem;
+    }
 
-	public class SelectFileAction extends AbstractAction
-	{
-		public SelectFileAction()
-		{
-			super( "Browse..." );
-		}
+    public class SelectFileAction extends AbstractAction {
+        public SelectFileAction() {
+            super("Browse...");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			String value = FileFormComponent.this.getValue();
-			File file = UISupport.getFileDialogs().open( this, "Select file", null, null,
-					StringUtils.hasContent( value ) ? value : PathUtils.getExpandedResourceRoot( modelItem ) );
-			if( file != null )
-			{
-				setFile( file );
-			}
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            String value = FileFormComponent.this.getValue();
+            File file = UISupport.getFileDialogs().open(this, "Select file", null, null,
+                    StringUtils.hasContent(value) ? value : PathUtils.getExpandedResourceRoot(modelItem));
+            if (file != null) {
+                setFile(file);
+            }
+        }
+    }
 }

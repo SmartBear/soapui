@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.panels.mock;
+*/
+package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.impl.EmptyPanelBuilder;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -22,35 +23,30 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 import java.awt.Component;
 
-public class RestMockActionPanelBuilder  extends EmptyPanelBuilder<RestMockAction>
-{
-	public boolean hasOverviewPanel()
-	{
-		return true;
-	}
+public class RestMockActionPanelBuilder extends EmptyPanelBuilder<RestMockAction> {
+    public boolean hasOverviewPanel() {
+        return true;
+    }
 
-	public Component buildOverviewPanel( RestMockAction mockAction )
-	{
-		JPropertiesTable<RestMockAction> table = new JPropertiesTable<RestMockAction>( "MockAction Properties" );
-		boolean editable = true;
-		table.addProperty( "Name", "name", editable );
-		table.addProperty( "Description", "description", editable );
-		table.addProperty( "Resource path", "resourcePath", editable );
-		table.addProperty( "Method", "method", RestRequestInterface.HttpMethod.values() );
-		table.setPropertyObject( mockAction );
+    public Component buildOverviewPanel(RestMockAction mockAction) {
+        JPropertiesTable<RestMockAction> table = new JPropertiesTable<RestMockAction>("MockAction Properties");
+        boolean editable = true;
+        table.addProperty("Name", "name", editable);
+        table.addProperty("Description", "description", editable);
+        table.addProperty("Resource path", "resourcePath", editable);
+        table.addProperty("Method", "method", RestRequestInterface.HttpMethod.values());
+        table.setPropertyObject(mockAction);
 
-		return table;
-	}
+        return table;
+    }
 
-	@Override
-	public DesktopPanel buildDesktopPanel( RestMockAction mockOperation )
-	{
-		return new RestMockActionDesktopPanel( mockOperation );
-	}
+    @Override
+    public DesktopPanel buildDesktopPanel(RestMockAction mockOperation) {
+        return new RestMockActionDesktopPanel(mockOperation);
+    }
 
-	@Override
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    @Override
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 }

@@ -25,42 +25,37 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Exports the definition (wsdls and xsds) of a WsdlInterface to the file system
- * 
+ *
  * @author Ole.Matzura
  */
 
-@SuppressWarnings( "unchecked" )
-public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface>
-{
-	public static final String SOAPUI_ACTION_ID = "ExportDefinitionAction";
+@SuppressWarnings("unchecked")
+public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface> {
+    public static final String SOAPUI_ACTION_ID = "ExportDefinitionAction";
 
-	public ExportDefinitionAction()
-	{
-		super( "Export Definition", "Exports the entire WSDL and included/imported files to a local directory" );
-	}
+    public ExportDefinitionAction() {
+        super("Export Definition", "Exports the entire WSDL and included/imported files to a local directory");
+    }
 
-	public void perform( WsdlInterface iface, Object param )
-	{
-		try
-		{
-			if( exportDefinition( null, iface ) != null )
-				UISupport.showInfoMessage( "Definition exported succesfully" );
-		}
-		catch( Exception e1 )
-		{
-			UISupport.showErrorMessage( e1 );
-		}
-	}
+    public void perform(WsdlInterface iface, Object param) {
+        try {
+            if (exportDefinition(null, iface) != null) {
+                UISupport.showInfoMessage("Definition exported succesfully");
+            }
+        } catch (Exception e1) {
+            UISupport.showErrorMessage(e1);
+        }
+    }
 
-	public String exportDefinition( String location, WsdlInterface iface ) throws Exception
-	{
-		File folderName = location == null ? UISupport.getFileDialogs().openDirectory( this, "Select output directory",
-				null ) : new File( location );
+    public String exportDefinition(String location, WsdlInterface iface) throws Exception {
+        File folderName = location == null ? UISupport.getFileDialogs().openDirectory(this, "Select output directory",
+                null) : new File(location);
 
-		if( folderName == null )
-			return null;
+        if (folderName == null) {
+            return null;
+        }
 
-		WsdlDefinitionExporter exporter = new WsdlDefinitionExporter( iface );
-		return exporter.export( folderName.getAbsolutePath() );
-	}
+        WsdlDefinitionExporter exporter = new WsdlDefinitionExporter(iface);
+        return exporter.export(folderName.getAbsolutePath());
+    }
 }

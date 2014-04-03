@@ -47,254 +47,215 @@ import com.eviware.soapui.impl.wsdl.support.wss.entries.AutomaticSAMLEntry;
  * default it creates an authentication assertion.
  * 
  */
-public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler
-{
+public abstract class AbstractSAMLCallbackHandler implements SAMLCallbackHandler {
 
-	public enum Statement
-	{
-		AUTHN, ATTR, AUTHZ
-	};
+    public enum Statement {
+        AUTHN, ATTR, AUTHZ
+    }
 
-	protected String subjectName = null;
-	protected String subjectQualifier = null;
-	protected String confirmationMethod = null;
-	protected X509Certificate[] certs;
-	protected Statement statement = Statement.AUTHN;
-	protected CERT_IDENTIFIER certIdentifier = CERT_IDENTIFIER.X509_CERT;
-	protected byte[] ephemeralKey = null;
-	protected String issuer = null;
-	protected String subjectNameIDFormat = null;
-	protected String subjectLocalityIpAddress = null;
-	protected String subjectLocalityDnsAddress = null;
-	protected String resource = null;
-	protected List<?> customAttributeValues = null;
-	private Crypto crypto;
-	private String alias;
-	private String customAttributeName;
+    ;
 
-	/**
-	 * Use this for signed assertion
-	 */
-	public AbstractSAMLCallbackHandler( Crypto crypto, String alias, String assertionTypeFriendlyName,
-			String confirmationMethodFriendlyName )
-	{
-		this.crypto = crypto;
-		this.alias = alias;
-		setStatement( assertionTypeFriendlyName );
-		setConfirmationMethod( confirmationMethodFriendlyName );
-	}
+    protected String subjectName = null;
+    protected String subjectQualifier = null;
+    protected String confirmationMethod = null;
+    protected X509Certificate[] certs;
+    protected Statement statement = Statement.AUTHN;
+    protected CERT_IDENTIFIER certIdentifier = CERT_IDENTIFIER.X509_CERT;
+    protected byte[] ephemeralKey = null;
+    protected String issuer = null;
+    protected String subjectNameIDFormat = null;
+    protected String subjectLocalityIpAddress = null;
+    protected String subjectLocalityDnsAddress = null;
+    protected String resource = null;
+    protected List<?> customAttributeValues = null;
+    private Crypto crypto;
+    private String alias;
+    private String customAttributeName;
 
-	/**
-	 * Use this is for unsigned assertions
-	 */
-	public AbstractSAMLCallbackHandler( String assertionTypeFriendlyName, String confirmationMethodFriendlyName )
-	{
-		setStatement( assertionTypeFriendlyName );
-		setConfirmationMethod( confirmationMethodFriendlyName );
-	}
+    /**
+     * Use this for signed assertion
+     */
+    public AbstractSAMLCallbackHandler(Crypto crypto, String alias, String assertionTypeFriendlyName,
+                                       String confirmationMethodFriendlyName) {
+        this.crypto = crypto;
+        this.alias = alias;
+        setStatement(assertionTypeFriendlyName);
+        setConfirmationMethod(confirmationMethodFriendlyName);
+    }
 
-	@Override
-	public void setCertIdentifier( CERT_IDENTIFIER certIdentifier )
-	{
-		this.certIdentifier = certIdentifier;
-	}
+    /**
+     * Use this is for unsigned assertions
+     */
+    public AbstractSAMLCallbackHandler(String assertionTypeFriendlyName, String confirmationMethodFriendlyName) {
+        setStatement(assertionTypeFriendlyName);
+        setConfirmationMethod(confirmationMethodFriendlyName);
+    }
 
-	@Override
-	public void setCerts( X509Certificate[] certs )
-	{
-		this.certs = certs;
-	}
+    @Override
+    public void setCertIdentifier(CERT_IDENTIFIER certIdentifier) {
+        this.certIdentifier = certIdentifier;
+    }
 
-	@Override
-	public byte[] getEphemeralKey()
-	{
-		return ephemeralKey;
-	}
+    @Override
+    public void setCerts(X509Certificate[] certs) {
+        this.certs = certs;
+    }
 
-	@Override
-	public void setIssuer( String issuer )
-	{
-		this.issuer = issuer;
-	}
+    @Override
+    public byte[] getEphemeralKey() {
+        return ephemeralKey;
+    }
 
-	@Override
-	public void setSubjectName( String subjectName )
-	{
-		this.subjectName = subjectName;
-	}
+    @Override
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
+    }
 
-	@Override
-	public void setSubjectQualifier( String subjectQualifier )
-	{
-		this.subjectQualifier = subjectQualifier;
-	}
+    @Override
+    public void setSubjectName(String subjectName) {
+        this.subjectName = subjectName;
+    }
 
-	@Override
-	public void setSubjectNameIDFormat( String subjectNameIDFormat )
-	{
-		this.subjectNameIDFormat = subjectNameIDFormat;
-	}
+    @Override
+    public void setSubjectQualifier(String subjectQualifier) {
+        this.subjectQualifier = subjectQualifier;
+    }
 
-	@Override
-	public void setSubjectLocality( String ipAddress, String dnsAddress )
-	{
-		this.subjectLocalityIpAddress = ipAddress;
-		this.subjectLocalityDnsAddress = dnsAddress;
-	}
+    @Override
+    public void setSubjectNameIDFormat(String subjectNameIDFormat) {
+        this.subjectNameIDFormat = subjectNameIDFormat;
+    }
 
-	@Override
-	public void setResource( String resource )
-	{
-		this.resource = resource;
-	}
+    @Override
+    public void setSubjectLocality(String ipAddress, String dnsAddress) {
+        this.subjectLocalityIpAddress = ipAddress;
+        this.subjectLocalityDnsAddress = dnsAddress;
+    }
 
-	@Override
-	public void setCustomAttributeName( String customAttributeName )
-	{
-		this.customAttributeName = customAttributeName;
-	}
+    @Override
+    public void setResource(String resource) {
+        this.resource = resource;
+    }
 
-	@Override
-	public void setCustomAttributeValues( List<?> customAttributeValues )
-	{
-		this.customAttributeValues = customAttributeValues;
-	}
+    @Override
+    public void setCustomAttributeName(String customAttributeName) {
+        this.customAttributeName = customAttributeName;
+    }
 
-	@Override
-	public Crypto getCrypto()
-	{
-		return crypto;
-	}
+    @Override
+    public void setCustomAttributeValues(List<?> customAttributeValues) {
+        this.customAttributeValues = customAttributeValues;
+    }
 
-	@Override
-	public void setCrypto( Crypto crypto )
-	{
-		this.crypto = crypto;
-	}
+    @Override
+    public Crypto getCrypto() {
+        return crypto;
+    }
 
-	@Override
-	public String getAlias()
-	{
-		return alias;
-	}
+    @Override
+    public void setCrypto(Crypto crypto) {
+        this.crypto = crypto;
+    }
 
-	@Override
-	public void setAlias( String alias )
-	{
-		this.alias = alias;
-	}
+    @Override
+    public String getAlias() {
+        return alias;
+    }
 
-	@Override
-	public void setStatement( String statement )
-	{
-		if( statement.equals( AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE ) )
-		{
-			this.statement = Statement.AUTHN;
-		}
-		else if( statement.equals( AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE ) )
-		{
-			this.statement = Statement.ATTR;
-		}
-		else if( statement.equals( AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE ) )
-		{
-			this.statement = Statement.AUTHZ;
-		}
-	}
+    @Override
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
-	/**
-	 * Note that the SubjectBean parameter should be null for SAML2.0
-	 */
-	protected void createAndSetStatement( SubjectBean subjectBean, SAMLCallback callback )
-	{
-		if( statement == Statement.AUTHN )
-		{
-			AuthenticationStatementBean authBean = new AuthenticationStatementBean();
-			if( subjectBean != null )
-			{
-				authBean.setSubject( subjectBean );
-			}
-			if( subjectLocalityIpAddress != null || subjectLocalityDnsAddress != null )
-			{
-				SubjectLocalityBean subjectLocality = new SubjectLocalityBean();
-				subjectLocality.setIpAddress( subjectLocalityIpAddress );
-				subjectLocality.setDnsAddress( subjectLocalityDnsAddress );
-				authBean.setSubjectLocality( subjectLocality );
-			}
-			authBean.setAuthenticationMethod( "Password" );
-			callback.setAuthenticationStatementData( Collections.singletonList( authBean ) );
-		}
-		else if( statement == Statement.ATTR )
-		{
-			AttributeStatementBean attrBean = new AttributeStatementBean();
-			if( subjectBean != null )
-			{
-				attrBean.setSubject( subjectBean );
-			}
-			AttributeBean attributeBean = new AttributeBean();
-			attributeBean.setSimpleName( customAttributeName );
-			if( customAttributeValues != null )
-			{
-				attributeBean.setCustomAttributeValues( customAttributeValues );
-			}
+    @Override
+    public void setStatement(String statement) {
+        if (statement.equals(AutomaticSAMLEntry.AUTHENTICATION_ASSERTION_TYPE)) {
+            this.statement = Statement.AUTHN;
+        } else if (statement.equals(AutomaticSAMLEntry.ATTRIBUTE_ASSERTION_TYPE)) {
+            this.statement = Statement.ATTR;
+        } else if (statement.equals(AutomaticSAMLEntry.AUTHORIZATION_ASSERTION_TYPE)) {
+            this.statement = Statement.AUTHZ;
+        }
+    }
 
-			// TODO This should be removed
-			else
-			{
-				attributeBean.setAttributeValues( Collections.singletonList( "user" ) );
-			}
+    /**
+     * Note that the SubjectBean parameter should be null for SAML2.0
+     */
+    protected void createAndSetStatement(SubjectBean subjectBean, SAMLCallback callback) {
+        if (statement == Statement.AUTHN) {
+            AuthenticationStatementBean authBean = new AuthenticationStatementBean();
+            if (subjectBean != null) {
+                authBean.setSubject(subjectBean);
+            }
+            if (subjectLocalityIpAddress != null || subjectLocalityDnsAddress != null) {
+                SubjectLocalityBean subjectLocality = new SubjectLocalityBean();
+                subjectLocality.setIpAddress(subjectLocalityIpAddress);
+                subjectLocality.setDnsAddress(subjectLocalityDnsAddress);
+                authBean.setSubjectLocality(subjectLocality);
+            }
+            authBean.setAuthenticationMethod("Password");
+            callback.setAuthenticationStatementData(Collections.singletonList(authBean));
+        } else if (statement == Statement.ATTR) {
+            AttributeStatementBean attrBean = new AttributeStatementBean();
+            if (subjectBean != null) {
+                attrBean.setSubject(subjectBean);
+            }
+            AttributeBean attributeBean = new AttributeBean();
+            attributeBean.setSimpleName(customAttributeName);
+            if (customAttributeValues != null) {
+                attributeBean.setCustomAttributeValues(customAttributeValues);
+            }
 
-			attrBean.setSamlAttributes( Collections.singletonList( attributeBean ) );
-			callback.setAttributeStatementData( Collections.singletonList( attrBean ) );
-		}
-		else
-		{
-			AuthDecisionStatementBean authzBean = new AuthDecisionStatementBean();
-			if( subjectBean != null )
-			{
-				authzBean.setSubject( subjectBean );
-			}
-			ActionBean actionBean = new ActionBean();
-			actionBean.setContents( "Read" );
-			authzBean.setActions( Collections.singletonList( actionBean ) );
-			authzBean.setResource( "endpoint" );
-			authzBean.setDecision( AuthDecisionStatementBean.Decision.PERMIT );
-			authzBean.setResource( resource );
-			callback.setAuthDecisionStatementData( Collections.singletonList( authzBean ) );
-		}
-	}
+            // TODO This should be removed
+            else {
+                attributeBean.setAttributeValues(Collections.singletonList("user"));
+            }
 
-	protected KeyInfoBean createKeyInfo() throws Exception
-	{
-		KeyInfoBean keyInfo = new KeyInfoBean();
-		if( statement == Statement.AUTHN )
-		{
-			keyInfo.setCertificate( certs[0] );
-			keyInfo.setCertIdentifer( certIdentifier );
-		}
-		else if( statement == Statement.ATTR )
-		{
-			// Build a new Document
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-			docBuilderFactory.setNamespaceAware( true );
-			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.newDocument();
+            attrBean.setSamlAttributes(Collections.singletonList(attributeBean));
+            callback.setAttributeStatementData(Collections.singletonList(attrBean));
+        } else {
+            AuthDecisionStatementBean authzBean = new AuthDecisionStatementBean();
+            if (subjectBean != null) {
+                authzBean.setSubject(subjectBean);
+            }
+            ActionBean actionBean = new ActionBean();
+            actionBean.setContents("Read");
+            authzBean.setActions(Collections.singletonList(actionBean));
+            authzBean.setResource("endpoint");
+            authzBean.setDecision(AuthDecisionStatementBean.Decision.PERMIT);
+            authzBean.setResource(resource);
+            callback.setAuthDecisionStatementData(Collections.singletonList(authzBean));
+        }
+    }
 
-			// Create an Encrypted Key
-			WSSecEncryptedKey encrKey = new WSSecEncryptedKey();
-			encrKey.setKeyIdentifierType( WSConstants.X509_KEY_IDENTIFIER );
-			encrKey.setUseThisCert( certs[0] );
-			encrKey.prepare( doc, null );
-			ephemeralKey = encrKey.getEphemeralKey();
-			Element encryptedKeyElement = encrKey.getEncryptedKeyElement();
+    protected KeyInfoBean createKeyInfo() throws Exception {
+        KeyInfoBean keyInfo = new KeyInfoBean();
+        if (statement == Statement.AUTHN) {
+            keyInfo.setCertificate(certs[0]);
+            keyInfo.setCertIdentifer(certIdentifier);
+        } else if (statement == Statement.ATTR) {
+            // Build a new Document
+            DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+            docBuilderFactory.setNamespaceAware(true);
+            DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+            Document doc = docBuilder.newDocument();
 
-			// Append the EncryptedKey to a KeyInfo element
-			Element keyInfoElement = doc.createElementNS( WSConstants.SIG_NS, WSConstants.SIG_PREFIX + ":"
-					+ WSConstants.KEYINFO_LN );
-			keyInfoElement.setAttributeNS( WSConstants.XMLNS_NS, "xmlns:" + WSConstants.SIG_PREFIX, WSConstants.SIG_NS );
-			keyInfoElement.appendChild( encryptedKeyElement );
+            // Create an Encrypted Key
+            WSSecEncryptedKey encrKey = new WSSecEncryptedKey();
+            encrKey.setKeyIdentifierType(WSConstants.X509_KEY_IDENTIFIER);
+            encrKey.setUseThisCert(certs[0]);
+            encrKey.prepare(doc, null);
+            ephemeralKey = encrKey.getEphemeralKey();
+            Element encryptedKeyElement = encrKey.getEncryptedKeyElement();
 
-			keyInfo.setElement( keyInfoElement );
-		}
-		return keyInfo;
-	}
+            // Append the EncryptedKey to a KeyInfo element
+            Element keyInfoElement = doc.createElementNS(WSConstants.SIG_NS, WSConstants.SIG_PREFIX + ":"
+                    + WSConstants.KEYINFO_LN);
+            keyInfoElement.setAttributeNS(WSConstants.XMLNS_NS, "xmlns:" + WSConstants.SIG_PREFIX, WSConstants.SIG_NS);
+            keyInfoElement.appendChild(encryptedKeyElement);
+
+            keyInfo.setElement(keyInfoElement);
+        }
+        return keyInfo;
+    }
 }

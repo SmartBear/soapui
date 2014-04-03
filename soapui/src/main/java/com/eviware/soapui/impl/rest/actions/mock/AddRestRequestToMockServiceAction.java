@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.mock;
+*/
+package com.eviware.soapui.impl.rest.actions.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
@@ -32,133 +33,113 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<RestRequest>
-{
+public class AddRestRequestToMockServiceAction extends AbstractSoapUIAction<RestRequest> {
 
-	private static final String SELECT_MOCKSERVICE_OPTION = "Create new..";
-	public static final String SOAPUI_ACTION_ID = "AddRestRequestToMockServiceAction";
-	private static final MessageSupport messages = MessageSupport.getMessages( AddRestRequestToMockServiceAction.class );
-	private static List<String> HEADERS_TO_IGNORE = new ArrayList<String>(  );
+    private static final String SELECT_MOCKSERVICE_OPTION = "Create new..";
+    public static final String SOAPUI_ACTION_ID = "AddRestRequestToMockServiceAction";
+    private static final MessageSupport messages = MessageSupport.getMessages(AddRestRequestToMockServiceAction.class);
+    private static List<String> HEADERS_TO_IGNORE = new ArrayList<String>();
 
-	static
-	{
-		HEADERS_TO_IGNORE.add( "#status#" );
-		HEADERS_TO_IGNORE.add( "Content-Type" );
-		HEADERS_TO_IGNORE.add( "Content-Length" );
-	}
+    static {
+        HEADERS_TO_IGNORE.add("#status#");
+        HEADERS_TO_IGNORE.add("Content-Type");
+        HEADERS_TO_IGNORE.add("Content-Length");
+    }
 
 
-	public AddRestRequestToMockServiceAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    public AddRestRequestToMockServiceAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
-	@Override
-	public void perform( RestRequest restRequest, Object param )
-	{
-		String title = getName();
+    @Override
+    public void perform(RestRequest restRequest, Object param) {
+        String title = getName();
 
-		RestMockService mockService = null;
-		WsdlProject project = restRequest.getOperation().getInterface().getProject();
+        RestMockService mockService = null;
+        WsdlProject project = restRequest.getOperation().getInterface().getProject();
 
-		while( mockService == null )
-		{
+        while (mockService == null) {
 
-			if( project.getRestMockServiceCount() > 0 )
-			{
-				String option = promptForMockServiceSelection( title, project );
-				boolean userCancelled = option == null;
-				if( userCancelled )
-					return;
+            if (project.getRestMockServiceCount() > 0) {
+                String option = promptForMockServiceSelection(title, project);
+                boolean userCancelled = option == null;
+                if (userCancelled) {
+                    return;
+                }
 
-				mockService = project.getRestMockServiceByName( option );
-			}
+                mockService = project.getRestMockServiceByName(option);
+            }
 
-			if( mockService == null )
-			{
-				mockService = createNewMockService( title, project );
-				UISupport.showDesktopPanel( mockService );
-				maybeStart( mockService );
-			}
-		}
+            if (mockService == null) {
+                mockService = createNewMockService(title, project);
+                UISupport.showDesktopPanel(mockService);
+                maybeStart(mockService);
+            }
+        }
 
-		addRequestToMockService( restRequest, mockService );
-		restRequest.getOperation().getService().addEndpoint( mockService.getLocalEndpoint() );
-	}
+        addRequestToMockService(restRequest, mockService);
+        restRequest.getOperation().getService().addEndpoint(mockService.getLocalEndpoint());
+    }
 
 
-	private void maybeStart( MockService mockService )
-	{
-		try
-		{
-			mockService.startIfConfigured();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			UISupport.showErrorMessage( e.getMessage() );
-		}
-	}
+    private void maybeStart(MockService mockService) {
+        try {
+            mockService.startIfConfigured();
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            UISupport.showErrorMessage(e.getMessage());
+        }
+    }
 
 
+    private String promptForMockServiceSelection(String title, WsdlProject project) {
+        String[] mockServices = ModelSupport.getNames(project.getRestMockServiceList(),
+                new String[]{SELECT_MOCKSERVICE_OPTION});
 
-	private String promptForMockServiceSelection( String title, WsdlProject project )
-	{
-		String[] mockServices = ModelSupport.getNames( project.getRestMockServiceList(),
-				new String[] { SELECT_MOCKSERVICE_OPTION } );
+        // prompt
+        return UISupport.prompt("Select RESTMockService for adding REST request", title, mockServices);
+    }
 
-		// prompt
-		return UISupport.prompt( "Select RESTMockService for adding REST request", title, mockServices );
-	}
+    private RestMockService createNewMockService(String title, WsdlProject project) {
+        String mockServiceName = promptForServiceName(title, project);
+        return project.addNewRestMockService(mockServiceName);
+    }
 
-	private RestMockService createNewMockService( String title, WsdlProject project )
-	{
-		String mockServiceName = promptForServiceName( title, project );
-		return project.addNewRestMockService( mockServiceName );
-	}
+    private String promptForServiceName(String title, WsdlProject project) {
+        String defaultName = "REST MockService " + (project.getRestMockServiceCount() + 1);
+        return UISupport.prompt("Enter name of new MockService", title, defaultName);
+    }
 
-	private String promptForServiceName( String title, WsdlProject project )
-	{
-		String defaultName = "REST MockService " + ( project.getRestMockServiceCount() + 1 );
-		return UISupport.prompt( "Enter name of new MockService", title, defaultName );
-	}
+    private void addRequestToMockService(RestRequest restRequest, RestMockService mockService) {
+        MockOperation matchedOperation = mockService.findOrCreateNewOperation(restRequest);
 
-	private void addRequestToMockService( RestRequest restRequest, RestMockService mockService )
-	{
-		MockOperation matchedOperation = mockService.findOrCreateNewOperation( restRequest );
+        int responseCount = matchedOperation.getMockResponseCount() + 1;
+        String responseName = "Response " + responseCount;
 
-		int responseCount = matchedOperation.getMockResponseCount() + 1;
-		String responseName = "Response " + responseCount;
+        RestMockResponse mockResponse = ((RestMockAction) matchedOperation).addNewMockResponse(responseName);
+        // add expected response if available
+        if (restRequest != null && restRequest.getResponse() != null) {
+            copyResponseContent(restRequest, mockResponse);
+            copyHeaders(restRequest, mockResponse);
+        }
+    }
 
-		RestMockResponse mockResponse = ((RestMockAction )matchedOperation).addNewMockResponse( responseName );
-		// add expected response if available
-		if( restRequest != null && restRequest.getResponse() != null )
-		{
-			copyResponseContent( restRequest, mockResponse );
-			copyHeaders( restRequest, mockResponse );
-		}
-	}
+    private void copyHeaders(RestRequest restRequest, RestMockResponse mockResponse) {
+        StringToStringsMap requestHeaders = restRequest.getResponse().getResponseHeaders();
+        for (String header : HEADERS_TO_IGNORE) {
+            requestHeaders.remove(header);
+        }
+        mockResponse.setResponseHeaders(requestHeaders);
+    }
 
-	private void copyHeaders( RestRequest restRequest, RestMockResponse mockResponse )
-	{
-		StringToStringsMap requestHeaders = restRequest.getResponse().getResponseHeaders();
-		for( String header : HEADERS_TO_IGNORE )
-		{
-			requestHeaders.remove( header );
-		}
-		mockResponse.setResponseHeaders( requestHeaders );
-	}
+    private void copyResponseContent(RestRequest restRequest, RestMockResponse mockResponse) {
+        HttpResponse response = restRequest.getResponse();
 
-	private void copyResponseContent( RestRequest restRequest, RestMockResponse mockResponse )
-	{
-		HttpResponse response = restRequest.getResponse();
+        if (response.getContentAsString() != null) {
+            mockResponse.setResponseContent(response.getContentAsString());
+            mockResponse.setContentType(response.getContentType());
+        }
 
-		if( response.getContentAsString() != null )
-		{
-			mockResponse.setResponseContent( response.getContentAsString() );
-			mockResponse.setContentType( response.getContentType() );
-		}
-
-	}
+    }
 
 }

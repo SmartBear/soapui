@@ -36,225 +36,199 @@ import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 import com.eviware.soapui.model.testsuite.AssertionException;
 
-public class XPathContainsAssertionTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( XPathContainsAssertionTestCase.class );
-	}
+public class XPathContainsAssertionTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(XPathContainsAssertionTestCase.class);
+    }
 
-	private String testResponse;
-	private XPathContainsAssertion assertion;
-	private String testBody;
+    private String testResponse;
+    private XPathContainsAssertion assertion;
+    private String testBody;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		 testResponse = readResource( "/testResponse.xml" );
-		testBody = readResource( "/testBody.xml" );
-		assertion = new XPathContainsAssertion( TestAssertionConfig.Factory.newInstance(), null );
-	}
+    @Before
+    public void setUp() throws Exception {
+        testResponse = readResource("/testResponse.xml");
+        testBody = readResource("/testBody.xml");
+        assertion = new XPathContainsAssertion(TestAssertionConfig.Factory.newInstance(), null);
+    }
 
-	@Test
-	public void testCreate() throws Exception
-	{
-		TestAssertionConfig config = createConfig( "testPath", "testContent" );
+    @Test
+    public void testCreate() throws Exception {
+        TestAssertionConfig config = createConfig("testPath", "testContent");
 
-		XPathContainsAssertion assertion = new XPathContainsAssertion( config, null );
+        XPathContainsAssertion assertion = new XPathContainsAssertion(config, null);
 
-		assertEquals( "testPath", assertion.getPath() );
-		assertEquals( "testContent", assertion.getExpectedContent() );
+        assertEquals("testPath", assertion.getPath());
+        assertEquals("testContent", assertion.getExpectedContent());
 
-		XmlObject conf = assertion.createConfiguration();
-		String str = conf.xmlText();
-	}
+        XmlObject conf = assertion.createConfiguration();
+        String str = conf.xmlText();
+    }
 
-	@Test
-	public void testFullContentMatch() throws Exception
-	{
-		assertion.setPath( "/" );
-		assertion.setExpectedContent( testResponse );
+    @Test
+    public void testFullContentMatch() throws Exception {
+        assertion.setPath("/");
+        assertion.setExpectedContent(testResponse);
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testFullBodyMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "//urn:searchResponse" );
+    @Test
+    public void testFullBodyMatch() throws Exception {
+        assertion.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
 
-		assertion.setExpectedContent( testBody );
+        assertion.setExpectedContent(testBody);
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testAttributeMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
-				+ "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/@hitCount" );
-		assertion.setExpectedContent( "131" );
+    @Test
+    public void testAttributeMatch() throws Exception {
+        assertion.setPath("declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
+                + "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/@hitCount");
+        assertion.setExpectedContent("131");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testElementMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "//urn:searchResponse/urn1:searchResult/company[2]/companyName" );
-		assertion.setExpectedContent( "<companyName>Bonnier Otto Karl Adam</companyName>" );
+    @Test
+    public void testElementMatch() throws Exception {
+        assertion.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "//urn:searchResponse/urn1:searchResult/company[2]/companyName");
+        assertion.setExpectedContent("<companyName>Bonnier Otto Karl Adam</companyName>");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testElementTextMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
-				+ "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company[2]/companyName/text()" );
-		assertion.setExpectedContent( "Bonnier Otto Karl Adam" );
+    @Test
+    public void testElementTextMatch() throws Exception {
+        assertion.setPath("declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
+                + "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company[2]/companyName/text()");
+        assertion.setExpectedContent("Bonnier Otto Karl Adam");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testFragmentMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "//urn:searchResponse/urn1:searchResult/company[4]" );
-		assertion.setExpectedContent( readResource( "/testFragment.xml" ) );
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+    @Test
+    public void testFragmentMatch() throws Exception {
+        assertion.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "//urn:searchResponse/urn1:searchResult/company[4]");
+        assertion.setExpectedContent(readResource("/testFragment.xml"));
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testFragmentWithCommentMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "//urn:searchResponse/urn1:searchResult/company[4]" );
+    @Test
+    public void testFragmentWithCommentMatch() throws Exception {
+        assertion.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "//urn:searchResponse/urn1:searchResult/company[4]");
 
-		assertion.setAllowWildcards( true );
-		assertion.setExpectedContent( readResource( "/testFragmentWithCommentAndWildcard.xml" ) );
+        assertion.setAllowWildcards(true);
+        assertion.setExpectedContent(readResource("/testFragmentWithCommentAndWildcard.xml"));
 
-		try
-		{
-			assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" );
-			assertFalse( "Assertion should have failed", true );
-		}
-		catch( AssertionException e )
-		{
-		}
+        try {
+            assertion.assertContent(testResponse, new WsdlSubmitContext(null), "");
+            assertFalse("Assertion should have failed", true);
+        } catch (AssertionException e) {
+        }
 
-		assertion.setIgnoreComments( true );
+        assertion.setIgnoreComments(true);
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testAnyFragmentMatch() throws Exception
-	{
-		assertion.setExpectedContent( readResource( "/testFragment.xml" ) );
-		assertion.setPath( "//company" );
+    @Test
+    public void testAnyFragmentMatch() throws Exception {
+        assertion.setExpectedContent(readResource("/testFragment.xml"));
+        assertion.setPath("//company");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	// TODO Disabling for now due to character encoding hell
-	@Ignore
-	@Test
-	public void testLastElementTextMatch() throws Exception
-	{
-		assertion.setPath( "//company[last()]/companyName/text()" );
-		assertion.setExpectedContent( "Bonnier Zoo Förlag AB" );
+    // TODO Disabling for now due to character encoding hell
+    @Ignore
+    @Test
+    public void testLastElementTextMatch() throws Exception {
+        assertion.setPath("//company[last()]/companyName/text()");
+        assertion.setExpectedContent("Bonnier Zoo Förlag AB");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testElementCountMatch() throws Exception
-	{
-		assertion.setPath( "count(//company)" );
-		assertion.setExpectedContent( "20" );
+    @Test
+    public void testElementCountMatch() throws Exception {
+        assertion.setPath("count(//company)");
+        assertion.setExpectedContent("20");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testAnyElementTextMatch() throws Exception
-	{
-		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
-				+ "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company/companyName/text()" );
-		assertion.setExpectedContent( "Bonnier Otto Karl Adam" );
+    @Test
+    public void testAnyElementTextMatch() throws Exception {
+        assertion.setPath("declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
+                + "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company/companyName/text()");
+        assertion.setExpectedContent("Bonnier Otto Karl Adam");
 
-		assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 
-	@Test
-	public void testAnyElementTextFail() throws Exception
-	{
-		assertion.setPath( "declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
-				+ "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
-				+ "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
-				+ "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company/companyName/text()" );
-		assertion.setExpectedContent( "Bonnier Otto Karl Adams" );
+    @Test
+    public void testAnyElementTextFail() throws Exception {
+        assertion.setPath("declare namespace env='http://schemas.xmlsoap.org/soap/envelope/';"
+                + "declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "declare namespace urn1='urn:v1:companysearch:common:bis.bonnier.se';"
+                + "/env:Envelope/env:Body/urn:searchResponse/urn1:searchResult/company/companyName/text()");
+        assertion.setExpectedContent("Bonnier Otto Karl Adams");
 
-		try
-		{
-			assertNotNull( assertion.assertContent( testResponse, new WsdlSubmitContext( null ), "" ) );
-			assertFalse( "assertion should have failed", true );
-		}
-		catch( Exception e )
-		{
-		}
-	}
+        try {
+            assertNotNull(assertion.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+            assertFalse("assertion should have failed", true);
+        } catch (Exception e) {
+        }
+    }
 
-	@Test
-	public void testComplexMatch() throws Exception
-	{
-		String response = "<response><book>" + "<bookID>1012</bookID>" + "<author type=\"humanBeing\" href=\"#ID_1\"/>"
-				+ "<title type=\"string\">Birds</title>" + "</book>" + "<humanBeing id=\"ID_1\">"
-				+ "<name>Stephen King</name>" + "</humanBeing></response>";
+    @Test
+    public void testComplexMatch() throws Exception {
+        String response = "<response><book>" + "<bookID>1012</bookID>" + "<author type=\"humanBeing\" href=\"#ID_1\"/>"
+                + "<title type=\"string\">Birds</title>" + "</book>" + "<humanBeing id=\"ID_1\">"
+                + "<name>Stephen King</name>" + "</humanBeing></response>";
 
-		assertion.setExpectedContent( "Stephen King" );
-		// assertion.setPath(
-		// "//*[@id=substring(//book/bookID[text()='1012']/following-sibling::author/@href,2)]"
-		// );
+        assertion.setExpectedContent("Stephen King");
+        // assertion.setPath(
+        // "//*[@id=substring(//book/bookID[text()='1012']/following-sibling::author/@href,2)]"
+        // );
 
-		assertion
-				.setPath( "//*[@id=substring(//book/bookID[text()='1012']/following-sibling::author/@href,2)]/name/text()" );
-		// assertion.setPath( "//*[@id='ID_1']/name/text()" );
-		assertNotNull( assertion.assertContent( response, new WsdlSubmitContext( null ), "" ) );
-	}
+        assertion
+                .setPath("//*[@id=substring(//book/bookID[text()='1012']/following-sibling::author/@href,2)]/name/text()");
+        // assertion.setPath( "//*[@id='ID_1']/name/text()" );
+        assertNotNull(assertion.assertContent(response, new WsdlSubmitContext(null), ""));
+    }
 
-	private String readResource( String string ) throws Exception
-	{
-		BufferedReader reader = new BufferedReader( new InputStreamReader( getClass().getResourceAsStream( string ) ) );
-		StringBuffer result = new StringBuffer();
+    private String readResource(String string) throws Exception {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(string)));
+        StringBuffer result = new StringBuffer();
 
-		String line = reader.readLine();
-		while( line != null )
-		{
-			result.append( line );
-			line = reader.readLine();
-		}
+        String line = reader.readLine();
+        while (line != null) {
+            result.append(line);
+            line = reader.readLine();
+        }
 
-		return result.toString();
-	}
+        return result.toString();
+    }
 
-	private TestAssertionConfig createConfig( String path, String content ) throws XmlException
-	{
-		return TestAssertionConfig.Factory.parse( "<con:configuration xmlns:con=\"http://eviware.com/soapui/config\">"
-				+ "<path>" + path + "</path><content>" + content + "</content></con:configuration>" );
-	}
+    private TestAssertionConfig createConfig(String path, String content) throws XmlException {
+        return TestAssertionConfig.Factory.parse("<con:configuration xmlns:con=\"http://eviware.com/soapui/config\">"
+                + "<path>" + path + "</path><content>" + content + "</content></con:configuration>");
+    }
 
 }

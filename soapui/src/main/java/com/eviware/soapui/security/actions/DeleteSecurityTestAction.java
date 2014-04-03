@@ -24,30 +24,25 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Removes a SecurityTest from its WsdlTestCase
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DeleteSecurityTestAction extends AbstractSoapUIAction<SecurityTest>
-{
-	public DeleteSecurityTestAction()
-	{
-		super( "Remove", "Removes this Test Schedule from the test-case" );
-	}
+public class DeleteSecurityTestAction extends AbstractSoapUIAction<SecurityTest> {
+    public DeleteSecurityTestAction() {
+        super("Remove", "Removes this Test Schedule from the test-case");
+    }
 
-	public void perform( SecurityTest securityTest, Object param )
-	{
+    public void perform(SecurityTest securityTest, Object param) {
 
-		if( SoapUI.getTestMonitor().hasRunningSecurityTest( ( securityTest.getTestCase() ) ) )
-		{
-			UISupport.showErrorMessage( "Cannot remove test while tests are running" );
-			return;
-		}
+        if (SoapUI.getTestMonitor().hasRunningSecurityTest((securityTest.getTestCase()))) {
+            UISupport.showErrorMessage("Cannot remove test while tests are running");
+            return;
+        }
 
-		if( UISupport.confirm( "Remove SecurityTest [" + securityTest.getName() + "] from test-case",
-				"Remove SecurityTest" ) )
-		{
-			( ( WsdlTestCase )securityTest.getTestCase() ).removeSecurityTest( securityTest );
-		}
-	}
+        if (UISupport.confirm("Remove SecurityTest [" + securityTest.getName() + "] from test-case",
+                "Remove SecurityTest")) {
+            ((WsdlTestCase) securityTest.getTestCase()).removeSecurityTest(securityTest);
+        }
+    }
 }

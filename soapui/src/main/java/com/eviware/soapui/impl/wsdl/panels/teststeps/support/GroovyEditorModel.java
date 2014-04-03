@@ -25,27 +25,26 @@ import com.eviware.soapui.model.settings.Settings;
 
 /**
  * Model used by custom GrooyEditor
- * 
+ *
  * @author ole.matzura
  */
 
-public interface GroovyEditorModel
-{
-	public String[] getKeywords();
+public interface GroovyEditorModel {
+    public String[] getKeywords();
 
-	public String getScript();
+    public String getScript();
 
-	public void setScript( String text );
+    public void setScript(String text);
 
-	public Action getRunAction();
+    public Action getRunAction();
 
-	public Settings getSettings();
+    public Settings getSettings();
 
-	public String getScriptName();
+    public String getScriptName();
 
-	public void addPropertyChangeListener( PropertyChangeListener listener );
+    public void addPropertyChangeListener(PropertyChangeListener listener);
 
-	public void removePropertyChangeListener( PropertyChangeListener listener );
+    public void removePropertyChangeListener(PropertyChangeListener listener);
 
-	public ModelItem getModelItem();
+    public ModelItem getModelItem();
 }

@@ -44,99 +44,89 @@ import java.util.Date;
 
 /**
  * Shows a desktop-panel with the MessageExchange for a WsdlMockResult
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ViewWsdlMockResultAction extends AbstractAction
-{
-	private final WsdlMockResult result;
-	private DefaultDesktopPanel desktopPanel;
+public class ViewWsdlMockResultAction extends AbstractAction {
+    private final WsdlMockResult result;
+    private DefaultDesktopPanel desktopPanel;
 
-	public ViewWsdlMockResultAction( WsdlMockResult result )
-	{
-		super( "Show Results" );
+    public ViewWsdlMockResultAction(WsdlMockResult result) {
+        super("Show Results");
 
-		this.result = result;
-	}
+        this.result = result;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		try
-		{
-			if( result.isDiscarded() )
-				UISupport.showInfoMessage( "Request has been discarded.." );
-			else
-				UISupport.showDesktopPanel( buildFrame() );
-		}
-		catch( Exception ex )
-		{
-			SoapUI.logError( ex );
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if (result.isDiscarded()) {
+                UISupport.showInfoMessage("Request has been discarded..");
+            } else {
+                UISupport.showDesktopPanel(buildFrame());
+            }
+        } catch (Exception ex) {
+            SoapUI.logError(ex);
+        }
+    }
 
-	private DesktopPanel buildFrame()
-	{
-		if( desktopPanel == null )
-		{
-			String title = "Mock Result for [" + result.getMockResponse().getName() + "]";
-			desktopPanel = new DefaultDesktopPanel( title, title, buildContent() );
-		}
+    private DesktopPanel buildFrame() {
+        if (desktopPanel == null) {
+            String title = "Mock Result for [" + result.getMockResponse().getName() + "]";
+            desktopPanel = new DefaultDesktopPanel(title, title, buildContent());
+        }
 
-		return desktopPanel;
-	}
+        return desktopPanel;
+    }
 
-	private JComponent buildContent()
-	{
-		JTabbedPane messageTabs = new JTabbedPane();
-		messageTabs.addTab( "Request", buildRequestTab() );
-		messageTabs.addTab( "Response", buildResponseTab() );
-		messageTabs.setPreferredSize( new Dimension( 500, 400 ) );
+    private JComponent buildContent() {
+        JTabbedPane messageTabs = new JTabbedPane();
+        messageTabs.addTab("Request", buildRequestTab());
+        messageTabs.addTab("Response", buildResponseTab());
+        messageTabs.setPreferredSize(new Dimension(500, 400));
 
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.add( UISupport.createTabPanel( messageTabs, true ), BorderLayout.CENTER );
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(UISupport.createTabPanel(messageTabs, true), BorderLayout.CENTER);
 
-		ButtonBarBuilder builder = new ButtonBarBuilder();
-		builder.addFixed( new JLabel( "Mock Request handled at " + new Date( result.getTimestamp() ) + ", time taken: "
-				+ result.getTimeTaken() + "ms" ) );
-		builder.addGlue();
-		builder.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
-		panel.add( builder.getPanel(), BorderLayout.PAGE_START );
+        ButtonBarBuilder builder = new ButtonBarBuilder();
+        builder.addFixed(new JLabel("Mock Request handled at " + new Date(result.getTimestamp()) + ", time taken: "
+                + result.getTimeTaken() + "ms"));
+        builder.addGlue();
+        builder.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+        panel.add(builder.getPanel(), BorderLayout.PAGE_START);
 
-		return panel;
-	}
+        return panel;
+    }
 
-	private Component buildResponseTab()
-	{
-		RSyntaxTextArea responseArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-		responseArea.setText( XmlUtils.prettyPrintXml( result.getResponseContent() ) );
-		responseArea.setEditable( false );
-		responseArea.setToolTipText( "Response Content" );
-		responseArea.setFont( UISupport.getEditorFont() );
-		RTextScrollPane scrollPane = new RTextScrollPane( responseArea );
-		scrollPane.setFoldIndicatorEnabled( true );
-		scrollPane.setLineNumbersEnabled( true );
+    private Component buildResponseTab() {
+        RSyntaxTextArea responseArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+        responseArea.setText(XmlUtils.prettyPrintXml(result.getResponseContent()));
+        responseArea.setEditable(false);
+        responseArea.setToolTipText("Response Content");
+        responseArea.setFont(UISupport.getEditorFont());
+        RTextScrollPane scrollPane = new RTextScrollPane(responseArea);
+        scrollPane.setFoldIndicatorEnabled(true);
+        scrollPane.setLineNumbersEnabled(true);
 
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( JTableFactory.getInstance().makeJTable( new StringToStringsMapTableModel(
-				result.getResponseHeaders(), "Header", "Value", false ) ) ), scrollPane );
-		split.setDividerLocation( 150 );
-		return split;
-	}
+        JSplitPane split = UISupport.createVerticalSplit(new JScrollPane(JTableFactory.getInstance().makeJTable(new StringToStringsMapTableModel(
+                result.getResponseHeaders(), "Header", "Value", false))), scrollPane);
+        split.setDividerLocation(150);
+        return split;
+    }
 
-	private Component buildRequestTab()
-	{
-		RSyntaxTextArea resultArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
-		resultArea.setFont( UISupport.getEditorFont() );
-		resultArea.setText( XmlUtils.prettyPrintXml( result.getMockRequest().getRequestContent() ) );
-		resultArea.setEditable( false );
-		resultArea.setToolTipText( "Request Content" );
+    private Component buildRequestTab() {
+        RSyntaxTextArea resultArea = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+        resultArea.setFont(UISupport.getEditorFont());
+        resultArea.setText(XmlUtils.prettyPrintXml(result.getMockRequest().getRequestContent()));
+        resultArea.setEditable(false);
+        resultArea.setToolTipText("Request Content");
 
-		RTextScrollPane scrollPane = new RTextScrollPane( resultArea );
-		scrollPane.setFoldIndicatorEnabled( true );
-		scrollPane.setLineNumbersEnabled( true );
-		JSplitPane split = UISupport.createVerticalSplit( new JScrollPane( JTableFactory.getInstance().makeJTable( new StringToStringsMapTableModel(
-				result.getMockRequest().getRequestHeaders(), "Header", "Value", false ) ) ), scrollPane );
-		split.setDividerLocation( 150 );
-		return split;
-	}
+        RTextScrollPane scrollPane = new RTextScrollPane(resultArea);
+        scrollPane.setFoldIndicatorEnabled(true);
+        scrollPane.setLineNumbersEnabled(true);
+        JSplitPane split = UISupport.createVerticalSplit(new JScrollPane(JTableFactory.getInstance().makeJTable(new StringToStringsMapTableModel(
+                result.getMockRequest().getRequestHeaders(), "Header", "Value", false))), scrollPane);
+        split.setDividerLocation(150);
+        return split;
+    }
 }

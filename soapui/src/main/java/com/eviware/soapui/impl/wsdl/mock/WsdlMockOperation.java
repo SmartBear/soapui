@@ -45,351 +45,302 @@ import java.util.List;
 
 /**
  * A WsdlMockOperation in a WsdlMockService
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig, WsdlMockResponse>
-{
-	@SuppressWarnings( "unused" )
-	private final static Logger log = Logger.getLogger( WsdlMockOperation.class );
+public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig, WsdlMockResponse> {
+    @SuppressWarnings("unused")
+    private final static Logger log = Logger.getLogger(WsdlMockOperation.class);
 
-	public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
-	public static final String ICON_NAME = "/mockOperation.gif";
+    public final static String OPERATION_PROPERTY = WsdlMockOperation.class.getName() + "@operation";
+    public static final String ICON_NAME = "/mockOperation.gif";
 
-	private WsdlOperation operation;
-	private InterfaceListener interfaceListener = new InternalInterfaceListener();
-	private ProjectListener projectListener = new InternalProjectListener();
-	private ImageIcon oneWayIcon;
-	private ImageIcon notificationIcon;
-	private ImageIcon solicitResponseIcon;
+    private WsdlOperation operation;
+    private InterfaceListener interfaceListener = new InternalInterfaceListener();
+    private ProjectListener projectListener = new InternalProjectListener();
+    private ImageIcon oneWayIcon;
+    private ImageIcon notificationIcon;
+    private ImageIcon solicitResponseIcon;
 
-	public WsdlMockOperation( WsdlMockService mockService, MockOperationConfig config )
-	{
-		super( config, mockService, ICON_NAME );
+    public WsdlMockOperation(WsdlMockService mockService, MockOperationConfig config) {
+        super(config, mockService, ICON_NAME);
 
-		Interface iface = mockService.getProject().getInterfaceByName( config.getInterface() );
-		if( iface == null )
-		{
-			SoapUI.log.warn( "Missing interface [" + config.getInterface() + "] for MockOperation in project" );
-		}
-		else
-		{
-			operation = ( WsdlOperation )iface.getOperationByName( config.getOperation() );
-		}
+        Interface iface = mockService.getProject().getInterfaceByName(config.getInterface());
+        if (iface == null) {
+            SoapUI.log.warn("Missing interface [" + config.getInterface() + "] for MockOperation in project");
+        } else {
+            operation = (WsdlOperation) iface.getOperationByName(config.getOperation());
+        }
 
-		List<MockResponseConfig> responseConfigs = config.getResponseList();
-		for( MockResponseConfig responseConfig : responseConfigs )
-		{
-			WsdlMockResponse wsdlMockResponse = new WsdlMockResponse( this, responseConfig );
-			wsdlMockResponse.addPropertyChangeListener( this );
-			super.addMockResponse( wsdlMockResponse );
-		}
+        List<MockResponseConfig> responseConfigs = config.getResponseList();
+        for (MockResponseConfig responseConfig : responseConfigs) {
+            WsdlMockResponse wsdlMockResponse = new WsdlMockResponse(this, responseConfig);
+            wsdlMockResponse.addPropertyChangeListener(this);
+            super.addMockResponse(wsdlMockResponse);
+        }
 
-		setupConfig( config );
-	}
+        setupConfig(config);
+    }
 
-	public WsdlMockOperation( WsdlMockService mockService, MockOperationConfig config, WsdlOperation operation )
-	{
-		super( config, mockService, ICON_NAME );
-		this.operation = operation;
+    public WsdlMockOperation(WsdlMockService mockService, MockOperationConfig config, WsdlOperation operation) {
+        super(config, mockService, ICON_NAME);
+        this.operation = operation;
 
-		config.setInterface( operation.getInterface().getName() );
-		config.setOperation( operation.getName() );
+        config.setInterface(operation.getInterface().getName());
+        config.setOperation(operation.getName());
 
-		setupConfig( config );
-	}
+        setupConfig(config);
+    }
 
-	protected void setupConfig( MockOperationConfig config )
-	{
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
+    protected void setupConfig(MockOperationConfig config) {
+        if (!getConfig().isSetDispatchConfig()) {
+            getConfig().addNewDispatchConfig();
+        }
 
-		super.setupConfig( config );
+        super.setupConfig(config);
 
-		createIcons();
-		addListeners();
-	}
+        createIcons();
+        addListeners();
+    }
 
-	private void addListeners()
-	{
-		Operation operation = getOperation();
-		if( operation != null )
-		{
-			operation.getInterface().getProject().addProjectListener( projectListener );
-			operation.getInterface().addInterfaceListener( interfaceListener );
-			operation.getInterface().addPropertyChangeListener( WsdlInterface.NAME_PROPERTY, this );
-		}
-	}
+    private void addListeners() {
+        Operation operation = getOperation();
+        if (operation != null) {
+            operation.getInterface().getProject().addProjectListener(projectListener);
+            operation.getInterface().addInterfaceListener(interfaceListener);
+            operation.getInterface().addPropertyChangeListener(WsdlInterface.NAME_PROPERTY, this);
+        }
+    }
 
-	private void createIcons()
-	{
-		oneWayIcon = UISupport.createImageIcon( "/onewaymockoperation.gif" );
-		notificationIcon = UISupport.createImageIcon( "/mocknotificationoperation.gif" );
-		solicitResponseIcon = UISupport.createImageIcon( "/mocksolicitresponseoperation.gif" );
-	}
+    private void createIcons() {
+        oneWayIcon = UISupport.createImageIcon("/onewaymockoperation.gif");
+        notificationIcon = UISupport.createImageIcon("/mocknotificationoperation.gif");
+        solicitResponseIcon = UISupport.createImageIcon("/mocksolicitresponseoperation.gif");
+    }
 
-	@Override
-	public ImageIcon getIcon()
-	{
-		if( operation != null )
-		{
-			if( isOneWay() )
-			{
-				return oneWayIcon;
-			}
-			else if( isNotification() )
-			{
-				return notificationIcon;
-			}
-			else if( isSolicitResponse() )
-			{
-				return solicitResponseIcon;
-			}
-		}
+    @Override
+    public ImageIcon getIcon() {
+        if (operation != null) {
+            if (isOneWay()) {
+                return oneWayIcon;
+            } else if (isNotification()) {
+                return notificationIcon;
+            } else if (isSolicitResponse()) {
+                return solicitResponseIcon;
+            }
+        }
 
-		return super.getIcon();
-	}
+        return super.getIcon();
+    }
 
-	public WsdlMockService getMockService()
-	{
-		return ( WsdlMockService )getParent();
-	}
+    public WsdlMockService getMockService() {
+        return (WsdlMockService) getParent();
+    }
 
-	public WsdlOperation getOperation()
-	{
-		return operation;
-	}
+    public WsdlOperation getOperation() {
+        return operation;
+    }
 
-	@Override
-	public MockResponse addNewMockResponse( String name )
-	{
-		return this.addNewMockResponse( name, true );
-	}
+    @Override
+    public MockResponse addNewMockResponse(String name) {
+        return this.addNewMockResponse(name, true);
+    }
 
-	public WsdlMockResponse addNewMockResponse( MockResponseConfig responseConfig )
-	{
-		WsdlMockResponse mockResponse = new WsdlMockResponse( this, responseConfig );
+    public WsdlMockResponse addNewMockResponse(MockResponseConfig responseConfig) {
+        WsdlMockResponse mockResponse = new WsdlMockResponse(this, responseConfig);
 
-		super.addMockResponse( mockResponse );
-		if( getMockResponseCount() == 1 )
-			setDefaultResponse( mockResponse.getName() );
+        super.addMockResponse(mockResponse);
+        if (getMockResponseCount() == 1) {
+            setDefaultResponse(mockResponse.getName());
+        }
 
-		// add ws-a action
-		WsdlUtils.setDefaultWsaAction( mockResponse.getWsaConfig(), true );
+        // add ws-a action
+        WsdlUtils.setDefaultWsaAction(mockResponse.getWsaConfig(), true);
 
-		getMockService().fireMockResponseAdded( mockResponse );
-		notifyPropertyChanged( "mockResponses", null, mockResponse );
+        getMockService().fireMockResponseAdded(mockResponse);
+        notifyPropertyChanged("mockResponses", null, mockResponse);
 
-		return mockResponse;
-	}
+        return mockResponse;
+    }
 
-	public WsdlMockResponse addNewMockResponse( String name, boolean createResponse )
-	{
-		MockResponseConfig responseConfig = getConfig().addNewResponse();
-		responseConfig.setName( name );
-		responseConfig.addNewResponseContent();
+    public WsdlMockResponse addNewMockResponse(String name, boolean createResponse) {
+        MockResponseConfig responseConfig = getConfig().addNewResponse();
+        responseConfig.setName(name);
+        responseConfig.addNewResponseContent();
 
-		if( createResponse && getOperation() != null && getOperation().isBidirectional() )
-		{
-			boolean createOptional = SoapUI.getSettings().getBoolean(
-					WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
-			CompressedStringSupport.setString( responseConfig.getResponseContent(),
-					getOperation().createResponse( createOptional ) );
-		}
+        if (createResponse && getOperation() != null && getOperation().isBidirectional()) {
+            boolean createOptional = SoapUI.getSettings().getBoolean(
+                    WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS);
+            CompressedStringSupport.setString(responseConfig.getResponseContent(),
+                    getOperation().createResponse(createOptional));
+        }
 
-		return addNewMockResponse( responseConfig );
-	}
+        return addNewMockResponse(responseConfig);
+    }
 
-	public WsdlMockResult dispatchRequest( WsdlMockRequest request ) throws DispatchException
-	{
-		try
-		{
-			request.setOperation( getOperation() );
-			WsdlMockResult result = new WsdlMockResult( request );
+    public WsdlMockResult dispatchRequest(WsdlMockRequest request) throws DispatchException {
+        try {
+            request.setOperation(getOperation());
+            WsdlMockResult result = new WsdlMockResult(request);
 
-			if( getMockResponseCount() == 0 )
-				throw new DispatchException( "Missing MockResponse(s) in MockOperation [" + getName() + "]" );
+            if (getMockResponseCount() == 0) {
+                throw new DispatchException("Missing MockResponse(s) in MockOperation [" + getName() + "]");
+            }
 
-			result.setMockOperation( this );
-			WsdlMockResponse response = ( WsdlMockResponse )getDispatcher().selectMockResponse( request, result );
-			if( response == null )
-			{
-				response = getMockResponseByName( getDefaultResponse() );
-			}
+            result.setMockOperation(this);
+            WsdlMockResponse response = (WsdlMockResponse) getDispatcher().selectMockResponse(request, result);
+            if (response == null) {
+                response = getMockResponseByName(getDefaultResponse());
+            }
 
-			if( response == null )
-			{
-				throw new DispatchException( "Failed to find MockResponse" );
-			}
+            if (response == null) {
+                throw new DispatchException("Failed to find MockResponse");
+            }
 
-			result.setMockResponse( response );
-			response.execute( request, result );
+            result.setMockResponse(response);
+            response.execute(request, result);
 
-			return result;
-		}
-		catch( Throwable e )
-		{
-			if( e instanceof DispatchException )
-				throw ( DispatchException )e;
-			else
-				throw new DispatchException( e );
-		}
-	}
+            return result;
+        } catch (Throwable e) {
+            if (e instanceof DispatchException) {
+                throw (DispatchException) e;
+            } else {
+                throw new DispatchException(e);
+            }
+        }
+    }
 
-	@Override
-	public MockOperationDispatcher setDispatchStyle( String dispatchStyle )
-	{
-		if( !getConfig().isSetDispatchConfig() )
-			getConfig().addNewDispatchConfig();
+    @Override
+    public MockOperationDispatcher setDispatchStyle(String dispatchStyle) {
+        if (!getConfig().isSetDispatchConfig()) {
+            getConfig().addNewDispatchConfig();
+        }
 
-		return super.setDispatchStyle( dispatchStyle );
-	}
+        return super.setDispatchStyle(dispatchStyle);
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		if( getDispatcher() != null )
-			getDispatcher().release();
+        if (getDispatcher() != null) {
+            getDispatcher().release();
+        }
 
-		for( MockResponse response : getMockResponses() )
-		{
-			response.removePropertyChangeListener( this );
-			response.release();
-		}
+        for (MockResponse response : getMockResponses()) {
+            response.removePropertyChangeListener(this);
+            response.release();
+        }
 
-		if( operation != null )
-		{
-			operation.getInterface().getProject().removeProjectListener( projectListener );
-			operation.getInterface().removeInterfaceListener( interfaceListener );
-			operation.getInterface().removePropertyChangeListener( WsdlInterface.NAME_PROPERTY, this );
-		}
-	}
+        if (operation != null) {
+            operation.getInterface().getProject().removeProjectListener(projectListener);
+            operation.getInterface().removeInterfaceListener(interfaceListener);
+            operation.getInterface().removePropertyChangeListener(WsdlInterface.NAME_PROPERTY, this);
+        }
+    }
 
-	// this may seem to be unused but is actually used in the MockOperation Properties view - don't remove it
-	public String getWsdlOperationName()
-	{
-		return operation.getName();
-	}
+    // this may seem to be unused but is actually used in the MockOperation Properties view - don't remove it
+    public String getWsdlOperationName() {
+        return operation.getName();
+    }
 
-	public void propertyChange( PropertyChangeEvent arg0 )
-	{
-		if( arg0.getPropertyName().equals( WsdlMockResponse.NAME_PROPERTY ) )
-		{
-			if( arg0.getOldValue().equals( getDefaultResponse() ) )
-				setDefaultResponse( arg0.getNewValue().toString() );
-		}
-		else if( arg0.getPropertyName().equals( WsdlInterface.NAME_PROPERTY ) )
-		{
-			getConfig().setInterface( arg0.getNewValue().toString() );
-		}
-	}
+    public void propertyChange(PropertyChangeEvent arg0) {
+        if (arg0.getPropertyName().equals(WsdlMockResponse.NAME_PROPERTY)) {
+            if (arg0.getOldValue().equals(getDefaultResponse())) {
+                setDefaultResponse(arg0.getNewValue().toString());
+            }
+        } else if (arg0.getPropertyName().equals(WsdlInterface.NAME_PROPERTY)) {
+            getConfig().setInterface(arg0.getNewValue().toString());
+        }
+    }
 
-	public void setOperation( WsdlOperation operation )
-	{
-		WsdlOperation oldOperation = getOperation();
+    public void setOperation(WsdlOperation operation) {
+        WsdlOperation oldOperation = getOperation();
 
-		if( operation == null )
-		{
-			getConfig().unsetInterface();
-			getConfig().unsetOperation();
-		}
-		else
-		{
-			getConfig().setInterface( operation.getInterface().getName() );
-			getConfig().setOperation( operation.getName() );
-		}
+        if (operation == null) {
+            getConfig().unsetInterface();
+            getConfig().unsetOperation();
+        } else {
+            getConfig().setInterface(operation.getInterface().getName());
+            getConfig().setOperation(operation.getName());
+        }
 
-		this.operation = operation;
+        this.operation = operation;
 
-		notifyPropertyChanged( OPERATION_PROPERTY, oldOperation, operation );
-	}
+        notifyPropertyChanged(OPERATION_PROPERTY, oldOperation, operation);
+    }
 
-	@Override
-	public void removeResponseFromConfig( int index )
-	{
-		getConfig().removeResponse( index );
-	}
+    @Override
+    public void removeResponseFromConfig(int index) {
+        getConfig().removeResponse(index);
+    }
 
-	private class InternalInterfaceListener extends InterfaceListenerAdapter
-	{
-		@Override
-		public void operationUpdated( Operation operation )
-		{
-			// such wow - works? equals?
-			if( operation == WsdlMockOperation.this.operation )
-				getConfig().setOperation( operation.getName() );
-		}
+    private class InternalInterfaceListener extends InterfaceListenerAdapter {
+        @Override
+        public void operationUpdated(Operation operation) {
+            // such wow - works? equals?
+            if (operation == WsdlMockOperation.this.operation) {
+                getConfig().setOperation(operation.getName());
+            }
+        }
 
-		@Override
-		public void operationRemoved( Operation operation )
-		{
-			// such wow - works? equals?
-			if( operation == WsdlMockOperation.this.operation )
-				getMockService().removeMockOperation( WsdlMockOperation.this );
-		}
-	}
+        @Override
+        public void operationRemoved(Operation operation) {
+            // such wow - works? equals?
+            if (operation == WsdlMockOperation.this.operation) {
+                getMockService().removeMockOperation(WsdlMockOperation.this);
+            }
+        }
+    }
 
-	private class InternalProjectListener extends ProjectListenerAdapter
-	{
-		@Override
-		public void interfaceRemoved( Interface iface )
-		{
-			if( operation.getInterface() == iface )
-				getMockService().removeMockOperation( WsdlMockOperation.this );
-		}
+    private class InternalProjectListener extends ProjectListenerAdapter {
+        @Override
+        public void interfaceRemoved(Interface iface) {
+            if (operation.getInterface() == iface) {
+                getMockService().removeMockOperation(WsdlMockOperation.this);
+            }
+        }
 
-		@Override
-		public void interfaceUpdated( Interface iface )
-		{
-			if( operation.getInterface() == iface )
-				getConfig().setInterface( iface.getName() );
-		}
-	}
+        @Override
+        public void interfaceUpdated(Interface iface) {
+            if (operation.getInterface() == iface) {
+                getConfig().setInterface(iface.getName());
+            }
+        }
+    }
 
-	public boolean isOneWay()
-	{
-		return operation == null ? false : operation.isOneWay();
-	}
+    public boolean isOneWay() {
+        return operation == null ? false : operation.isOneWay();
+    }
 
-	public boolean isNotification()
-	{
-		return operation == null ? false : operation.isNotification();
-	}
+    public boolean isNotification() {
+        return operation == null ? false : operation.isNotification();
+    }
 
-	public boolean isSolicitResponse()
-	{
-		return operation == null ? false : operation.isSolicitResponse();
-	}
+    public boolean isSolicitResponse() {
+        return operation == null ? false : operation.isSolicitResponse();
+    }
 
-	public boolean isUnidirectional()
-	{
-		return operation == null ? false : operation.isUnidirectional();
-	}
+    public boolean isUnidirectional() {
+        return operation == null ? false : operation.isUnidirectional();
+    }
 
-	public boolean isBidirectional()
-	{
-		return !isUnidirectional();
-	}
+    public boolean isBidirectional() {
+        return !isUnidirectional();
+    }
 
-	public List<? extends ModelItem> getChildren()
-	{
-		return getMockResponses();
-	}
+    public List<? extends ModelItem> getChildren() {
+        return getMockResponses();
+    }
 
-	public void exportMockOperation( File file )
-	{
-		try
-		{
-			this.getConfig().newCursor().save( file );
-		}
-		catch( IOException e )
-		{
-			e.printStackTrace();
-		}
-	}
+    public void exportMockOperation(File file) {
+        try {
+            this.getConfig().newCursor().save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

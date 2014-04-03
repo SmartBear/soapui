@@ -23,14 +23,12 @@ import com.eviware.soapui.security.SecurityTest;
 
 /**
  * SoapUITreeNode for LoadTest implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SecurityTestTreeNode extends AbstractModelItemTreeNode<SecurityTest>
-{
-	public SecurityTestTreeNode( SecurityTest securityTest, ModelItem parent, SoapUITreeModel treeModel )
-	{
-		super( securityTest, parent, treeModel );
-	}
+public class SecurityTestTreeNode extends AbstractModelItemTreeNode<SecurityTest> {
+    public SecurityTestTreeNode(SecurityTest securityTest, ModelItem parent, SoapUITreeModel treeModel) {
+        super(securityTest, parent, treeModel);
+    }
 }

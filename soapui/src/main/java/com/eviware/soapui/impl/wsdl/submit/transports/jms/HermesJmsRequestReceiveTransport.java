@@ -26,45 +26,37 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 
-public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport
-{
+public class HermesJmsRequestReceiveTransport extends HermesJmsRequestTransport {
 
-	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
-	{
-		Session queueSession = null;
-		JMSConnectionHolder jmsConnectionHolder = null;
-		try
-		{
-			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, clientID, username, password );
+    public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception {
+        Session queueSession = null;
+        JMSConnectionHolder jmsConnectionHolder = null;
+        try {
+            init(submitContext, request);
+            jmsConnectionHolder = new JMSConnectionHolder(jmsEndpoint, hermes, false, clientID, username, password);
 
-			// session
-			queueSession = jmsConnectionHolder.getSession();
+            // session
+            queueSession = jmsConnectionHolder.getSession();
 
-			// destination
-			Queue queue = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+            // destination
+            Queue queue = jmsConnectionHolder.getQueue(jmsConnectionHolder.getJmsEndpoint().getReceive());
 
-			// consumer
-			MessageConsumer messageConsumer = queueSession.createConsumer( queue, submitContext.expand( messageSelector ) );
+            // consumer
+            MessageConsumer messageConsumer = queueSession.createConsumer(queue, submitContext.expand(messageSelector));
 
-			return makeResponse( submitContext, request, timeStarted, null, messageConsumer );
+            return makeResponse(submitContext, request, timeStarted, null, messageConsumer);
 
-		}
-		catch( JMSException jmse )
-		{
-			return errorResponse( submitContext, request, timeStarted, jmse );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-		finally
-		{
-			if( jmsConnectionHolder != null )
-				jmsConnectionHolder.closeAll();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
-					queueSession );
-		}
-		return null;
-	}
+        } catch (JMSException jmse) {
+            return errorResponse(submitContext, request, timeStarted, jmse);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        } finally {
+            if (jmsConnectionHolder != null) {
+                jmsConnectionHolder.closeAll();
+            }
+            closeSessionAndConnection(jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+                    queueSession);
+        }
+        return null;
+    }
 }

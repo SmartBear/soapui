@@ -25,24 +25,20 @@ import javax.swing.text.JTextComponent;
 
 import com.eviware.soapui.support.Tools;
 
-public final class HyperlinkLabelMouseAdapter extends MouseAdapter
-{
-	private final JComponent label;
+public final class HyperlinkLabelMouseAdapter extends MouseAdapter {
+    private final JComponent label;
 
-	public HyperlinkLabelMouseAdapter( JTextComponent label )
-	{
-		this.label = label;
-	}
+    public HyperlinkLabelMouseAdapter(JTextComponent label) {
+        this.label = label;
+    }
 
-	public HyperlinkLabelMouseAdapter( JLabel label )
-	{
-		this.label = label;
-	}
+    public HyperlinkLabelMouseAdapter(JLabel label) {
+        this.label = label;
+    }
 
-	@Override
-	public void mouseClicked( MouseEvent e )
-	{
-		String text = label instanceof JLabel ? ( ( JLabel )label ).getText() : ( ( JTextComponent )label ).getText();
-		Tools.openURL( text );
-	}
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        String text = label instanceof JLabel ? ((JLabel) label).getText() : ((JTextComponent) label).getText();
+        Tools.openURL(text);
+    }
 }

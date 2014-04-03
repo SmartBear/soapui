@@ -20,19 +20,16 @@ import javax.swing.*;
 import javax.swing.plaf.metal.MetalTabbedPaneUI;
 import java.awt.*;
 
-public class VerticalMetalTabbedPaneUI extends MetalTabbedPaneUI
-{
-	protected void installDefaults()
-	{
-		super.installDefaults();
+public class VerticalMetalTabbedPaneUI extends MetalTabbedPaneUI {
+    protected void installDefaults() {
+        super.installDefaults();
 
-		textIconGap = 0;
-		tabInsets = new Insets( 0, 0, 0, 0 );
-	}
+        textIconGap = 0;
+        tabInsets = new Insets(0, 0, 0, 0);
+    }
 
-	protected int calculateTabWidth( int tabPlacement, int tabIndex, FontMetrics metrics )
-	{
-		Icon icon = getIconForTab( tabIndex );
-		return icon == null ? 2 : icon.getIconWidth() + 2;
-	}
+    protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
+        Icon icon = getIconForTab(tabIndex);
+        return icon == null ? 2 : icon.getIconWidth() + 2;
+    }
 }

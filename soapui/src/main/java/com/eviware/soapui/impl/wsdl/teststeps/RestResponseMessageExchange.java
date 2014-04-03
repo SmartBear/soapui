@@ -25,162 +25,143 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class RestResponseMessageExchange extends AbstractRestMessageExchange<RestRequestInterface>
-{
-	private HttpResponse response;
-	private String requestContent;
+public class RestResponseMessageExchange extends AbstractRestMessageExchange<RestRequestInterface> {
+    private HttpResponse response;
+    private String requestContent;
 
-	public RestResponseMessageExchange( RestRequestInterface request )
-	{
-		super( request );
+    public RestResponseMessageExchange(RestRequestInterface request) {
+        super(request);
 
-		response = request.getResponse();
-		if( response != null )
-		{
-			for( String key : response.getPropertyNames() )
-			{
-				addProperty( key, response.getProperty( key ) );
-			}
-		}
-	}
+        response = request.getResponse();
+        if (response != null) {
+            for (String key : response.getPropertyNames()) {
+                addProperty(key, response.getProperty(key));
+            }
+        }
+    }
 
-	public String getEndpoint()
-	{
-		return response == null ? null : response.getURL().toString();
-	}
+    public String getEndpoint() {
+        return response == null ? null : response.getURL().toString();
+    }
 
-	public boolean hasRawData()
-	{
-		return response != null;
-	}
+    public boolean hasRawData() {
+        return response != null;
+    }
 
-	public byte[] getRawRequestData()
-	{
-		return response == null ? null : response.getRawRequestData();
-	}
+    public byte[] getRawRequestData() {
+        return response == null ? null : response.getRawRequestData();
+    }
 
-	public byte[] getRawResponseData()
-	{
-		return response == null ? null : response.getRawResponseData();
-	}
+    public byte[] getRawResponseData() {
+        return response == null ? null : response.getRawResponseData();
+    }
 
-	public String getRequestContent()
-	{
-		if( requestContent != null )
-			return requestContent;
+    public String getRequestContent() {
+        if (requestContent != null) {
+            return requestContent;
+        }
 
-		if( response == null )
-			response = getModelItem().getResponse();
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
-	}
+        return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
+    }
 
-	public StringToStringsMap getRequestHeaders()
-	{
-		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
-	}
+    public StringToStringsMap getRequestHeaders() {
+        return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
+    }
 
-	public Attachment[] getRequestAttachments()
-	{
-		return getModelItem().getAttachments();
-	}
+    public Attachment[] getRequestAttachments() {
+        return getModelItem().getAttachments();
+    }
 
-	public Attachment[] getResponseAttachments()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public Attachment[] getResponseAttachments() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getAttachments();
-	}
+        return response == null ? null : response.getAttachments();
+    }
 
-	public String getResponseContent()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public String getResponseContent() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getContentAsString();
-	}
+        return response == null ? null : response.getContentAsString();
+    }
 
-	public HttpResponse getResponse()
-	{
-		return response;
-	}
+    public HttpResponse getResponse() {
+        return response;
+    }
 
-	public String getRequestContentAsXml()
-	{
-		String result = getRequestContent();
-		return XmlUtils.seemsToBeXml( result ) ? result : "<not-xml/>";
-	}
+    public String getRequestContentAsXml() {
+        String result = getRequestContent();
+        return XmlUtils.seemsToBeXml(result) ? result : "<not-xml/>";
+    }
 
-	public void setResponse( HttpResponse response )
-	{
-		this.response = response;
-	}
+    public void setResponse(HttpResponse response) {
+        this.response = response;
+    }
 
-	public String getResponseContentAsXml()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public String getResponseContentAsXml() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getContentAsXml();
-	}
+        return response == null ? null : response.getContentAsXml();
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public StringToStringsMap getResponseHeaders() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? new StringToStringsMap() : response.getResponseHeaders();
-	}
+        return response == null ? new StringToStringsMap() : response.getResponseHeaders();
+    }
 
-	public long getTimeTaken()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public long getTimeTaken() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? 0 : response.getTimeTaken();
-	}
+        return response == null ? 0 : response.getTimeTaken();
+    }
 
-	public long getTimestamp()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public long getTimestamp() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? 0 : response.getTimestamp();
-	}
+        return response == null ? 0 : response.getTimestamp();
+    }
 
-	public void setRequestContent( String requestContent )
-	{
-		this.requestContent = requestContent;
-	}
+    public void setRequestContent(String requestContent) {
+        this.requestContent = requestContent;
+    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+    public boolean isDiscarded() {
+        return false;
+    }
 
-	public RestResource getResource()
-	{
-		return getModelItem().getResource();
-	}
+    public RestResource getResource() {
+        return getModelItem().getResource();
+    }
 
-	public RestRequestInterface getRestRequest()
-	{
-		return getModelItem();
-	}
+    public RestRequestInterface getRestRequest() {
+        return getModelItem();
+    }
 
-	public Operation getOperation()
-	{
-		return getResource();
-	}
+    public Operation getOperation() {
+        return getResource();
+    }
 
-	public int getResponseStatusCode()
-	{
-		return response == null ? 0 : response.getStatusCode();
-	}
+    public int getResponseStatusCode() {
+        return response == null ? 0 : response.getStatusCode();
+    }
 
-	public String getResponseContentType()
-	{
-		return response == null ? null : response.getContentType();
-	}
+    public String getResponseContentType() {
+        return response == null ? null : response.getContentType();
+    }
 }

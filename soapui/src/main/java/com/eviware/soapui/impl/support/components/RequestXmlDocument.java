@@ -30,65 +30,53 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 
 /**
  * XmlDocument for a WsdlRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class RequestXmlDocument extends AbstractXmlDocument implements PropertyChangeListener
-{
-	private final WsdlRequest request;
-	private boolean updating;
+public class RequestXmlDocument extends AbstractXmlDocument implements PropertyChangeListener {
+    private final WsdlRequest request;
+    private boolean updating;
 
-	public RequestXmlDocument( WsdlRequest request )
-	{
-		this.request = request;
-		request.addPropertyChangeListener( WsdlRequest.REQUEST_PROPERTY, this );
-	}
+    public RequestXmlDocument(WsdlRequest request) {
+        this.request = request;
+        request.addPropertyChangeListener(WsdlRequest.REQUEST_PROPERTY, this);
+    }
 
-	public String getXml()
-	{
-		return request.getRequestContent();
-	}
+    public String getXml() {
+        return request.getRequestContent();
+    }
 
-	public void setXml( String xml )
-	{
-		if( !updating )
-		{
-			updating = true;
-			String old = request.getRequestContent();
-			request.setRequestContent( xml );
-			fireXmlChanged( old, xml );
-			updating = false;
-		}
-	}
+    public void setXml(String xml) {
+        if (!updating) {
+            updating = true;
+            String old = request.getRequestContent();
+            request.setRequestContent(xml);
+            fireXmlChanged(old, xml);
+            updating = false;
+        }
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( !updating )
-		{
-			updating = true;
-			fireXmlChanged( ( String )evt.getOldValue(), ( String )evt.getNewValue() );
-			updating = false;
-		}
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!updating) {
+            updating = true;
+            fireXmlChanged((String) evt.getOldValue(), (String) evt.getNewValue());
+            updating = false;
+        }
+    }
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		WsdlInterface iface = ( WsdlInterface )request.getOperation().getInterface();
-		WsdlContext wsdlContext = iface.getWsdlContext();
-		try
-		{
-			return wsdlContext.getSchemaTypeSystem();
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-			return XmlBeans.getBuiltinTypeSystem();
-		}
-	}
+    public SchemaTypeSystem getTypeSystem() {
+        WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
+        WsdlContext wsdlContext = iface.getWsdlContext();
+        try {
+            return wsdlContext.getSchemaTypeSystem();
+        } catch (Exception e1) {
+            SoapUI.logError(e1);
+            return XmlBeans.getBuiltinTypeSystem();
+        }
+    }
 
-	public void release()
-	{
-		request.removePropertyChangeListener( WsdlRequest.REQUEST_PROPERTY, this );
-	}
+    public void release() {
+        request.removePropertyChangeListener(WsdlRequest.REQUEST_PROPERTY, this);
+    }
 }

@@ -27,61 +27,50 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 /**
  * Holder for WSDL4J Definitions and related SchemaTypeLoader types
- * 
+ *
  * @author Ole.Matzura
  */
 
 public class WsdlContext extends
-		AbstractDefinitionContext<WsdlInterface, WsdlDefinitionLoader, WsdlInterfaceDefinition>
-{
-	private SoapVersion soapVersion = SoapVersion.Soap11;
+        AbstractDefinitionContext<WsdlInterface, WsdlDefinitionLoader, WsdlInterfaceDefinition> {
+    private SoapVersion soapVersion = SoapVersion.Soap11;
 
-	public WsdlContext( String url, WsdlInterface iface )
-	{
-		super( url, iface );
-	}
+    public WsdlContext(String url, WsdlInterface iface) {
+        super(url, iface);
+    }
 
-	public WsdlContext( String wsdlUrl )
-	{
-		this( wsdlUrl, ( WsdlInterface )null );
-	}
+    public WsdlContext(String wsdlUrl) {
+        this(wsdlUrl, (WsdlInterface) null);
+    }
 
-	public WsdlContext( String wsdlUrl, SoapVersion soapVersion )
-	{
-		this( wsdlUrl );
-		if( soapVersion != null )
-		{
-			this.soapVersion = soapVersion;
-		}
-	}
+    public WsdlContext(String wsdlUrl, SoapVersion soapVersion) {
+        this(wsdlUrl);
+        if (soapVersion != null) {
+            this.soapVersion = soapVersion;
+        }
+    }
 
-	protected WsdlDefinitionLoader createDefinitionLoader( DefinitionCache wsdlInterfaceDefinitionCache )
-	{
-		return new InterfaceCacheDefinitionLoader( wsdlInterfaceDefinitionCache );
-	}
+    protected WsdlDefinitionLoader createDefinitionLoader(DefinitionCache wsdlInterfaceDefinitionCache) {
+        return new InterfaceCacheDefinitionLoader(wsdlInterfaceDefinitionCache);
+    }
 
-	protected WsdlDefinitionLoader createDefinitionLoader( String url )
-	{
-		return new UrlWsdlLoader( url, getInterface() );
-	}
+    protected WsdlDefinitionLoader createDefinitionLoader(String url) {
+        return new UrlWsdlLoader(url, getInterface());
+    }
 
-	protected WsdlInterfaceDefinition loadDefinition( WsdlDefinitionLoader loader ) throws Exception
-	{
-		return new WsdlInterfaceDefinition( getInterface() ).load( loader );
-	}
+    protected WsdlInterfaceDefinition loadDefinition(WsdlDefinitionLoader loader) throws Exception {
+        return new WsdlInterfaceDefinition(getInterface()).load(loader);
+    }
 
-	public Definition getDefinition() throws Exception
-	{
-		return getInterfaceDefinition().getWsdlDefinition();
-	}
+    public Definition getDefinition() throws Exception {
+        return getInterfaceDefinition().getWsdlDefinition();
+    }
 
-	public SoapVersion getSoapVersion()
-	{
-		return getInterface() == null ? soapVersion : getInterface().getSoapVersion();
-	}
+    public SoapVersion getSoapVersion() {
+        return getInterface() == null ? soapVersion : getInterface().getSoapVersion();
+    }
 
-	public String export( String path ) throws Exception
-	{
-		return new WsdlDefinitionExporter( getInterface() ).export( path );
-	}
+    public String export(String path) throws Exception {
+        return new WsdlDefinitionExporter(getInterface()).export(path);
+    }
 }

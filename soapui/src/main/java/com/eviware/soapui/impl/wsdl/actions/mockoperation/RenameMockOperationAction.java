@@ -26,25 +26,23 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Renames a WsdlMockOperation
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RenameMockOperationAction extends AbstractSoapUIAction<AbstractMockOperation>
-{
-	public RenameMockOperationAction()
-	{
-		super( "Rename", "Renames this node" );
-	}
+public class RenameMockOperationAction extends AbstractSoapUIAction<AbstractMockOperation> {
+    public RenameMockOperationAction() {
+        super("Rename", "Renames this node");
+    }
 
-	public void perform( AbstractMockOperation mockOperation, Object param )
-	{
-		String nodeName = mockOperation instanceof RestMockAction ? "RestMockAction" : "MockOperation";
-		String name = UISupport.prompt( "Specify name of " + nodeName, "Rename " + nodeName, mockOperation.getName() );
-		if( name == null || name.equals( mockOperation.getName() ) )
-			return;
+    public void perform(AbstractMockOperation mockOperation, Object param) {
+        String nodeName = mockOperation instanceof RestMockAction ? "RestMockAction" : "MockOperation";
+        String name = UISupport.prompt("Specify name of " + nodeName, "Rename " + nodeName, mockOperation.getName());
+        if (name == null || name.equals(mockOperation.getName())) {
+            return;
+        }
 
-		mockOperation.setName( name );
-	}
+        mockOperation.setName(name);
+    }
 
 }

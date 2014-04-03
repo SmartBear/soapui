@@ -30,38 +30,37 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 
 /**
  * Assertion for LoadTest runs
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface LoadTestAssertion extends PropertyChangeNotifier
-{
-	public final static String NAME_PROPERTY = LoadTestAssertion.class.getName() + "@name";
-	public final static String ICON_PROPERTY = LoadTestAssertion.class.getName() + "@icon";
-	public final static String CONFIGURATION_PROPERTY = LoadTestAssertion.class.getName() + "@configuration";
+public interface LoadTestAssertion extends PropertyChangeNotifier {
+    public final static String NAME_PROPERTY = LoadTestAssertion.class.getName() + "@name";
+    public final static String ICON_PROPERTY = LoadTestAssertion.class.getName() + "@icon";
+    public final static String CONFIGURATION_PROPERTY = LoadTestAssertion.class.getName() + "@configuration";
 
-	public static final String ALL_TEST_STEPS = "- Total -";
-	public static final String ANY_TEST_STEP = "- Any -";
+    public static final String ALL_TEST_STEPS = "- Total -";
+    public static final String ANY_TEST_STEP = "- Any -";
 
-	public String getName();
+    public String getName();
 
-	public ImageIcon getIcon();
+    public ImageIcon getIcon();
 
-	public XmlObject getConfiguration();
+    public XmlObject getConfiguration();
 
-	public void updateConfiguration( LoadTestAssertionConfig configuration );
+    public void updateConfiguration(LoadTestAssertionConfig configuration);
 
-	public String assertResult( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result,
-			TestCaseRunner testRunner, TestCaseRunContext runContext );
+    public String assertResult(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestStepResult result,
+                               TestCaseRunner testRunner, TestCaseRunContext runContext);
 
-	public String assertResults( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext );
+    public String assertResults(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                                TestCaseRunContext runContext);
 
-	public String getTargetStep();
+    public String getTargetStep();
 
-	public void setTargetStep( String name );
+    public void setTargetStep(String name);
 
-	public String getDescription();
+    public String getDescription();
 
-	public void release();
+    public void release();
 }

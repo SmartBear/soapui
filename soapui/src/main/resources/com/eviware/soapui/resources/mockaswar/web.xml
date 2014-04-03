@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	id="WebApp_ID" version="2.5">
-	<servlet>
-		<description></description>
-		<display-name>SoapUIMockServlet</display-name>
-		<servlet-name>SoapUIMockServlet</servlet-name>
-		<servlet-class>com.eviware.soapui.mockaswar.MockAsWarServlet</servlet-class>
-		<init-param>
-			<description>project file path</description>
-			<param-name>projectFile</param-name>
-			<param-value>WEB-INF/soapui/[ProjectFileName]</param-value>
-		</init-param>
-		<init-param>
-			<description>enable Web UI</description>
-			<param-name>enableWebUI</param-name>
-			<param-value>true</param-value>
-		</init-param>
-		<init-param>
-			<description>global settings file</description>
-			<param-name>soapUISettings</param-name>
-			<param-value>[SoapUISettings]</param-value>
-		</init-param>
-		<init-param>
-			<description>set listeners directory</description>
-			<param-name>listeners</param-name>
-			<param-value>WEB-INF/listeners</param-value>
-		</init-param>
-		<init-param>
-			<description>set actions directory</description>
-			<param-name>actions</param-name>
-			<param-value>WEB-INF/actions</param-value>
-		</init-param>
-		<init-param>
-			<description>set scripts directory</description>
-			<param-name>scripts</param-name>
-			<param-value>WEB-INF/scripts</param-value>
-		</init-param>
-		<init-param>
-			<description>set MockService endpoint used in generated WSDLs and schemas</description>
-			<param-name>mockServiceEndpoint</param-name>
-			<param-value>[mockServiceEndpoint]</param-value>
-		</init-param>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>SoapUIMockServlet</servlet-name>
-		<url-pattern>/*</url-pattern>
-	</servlet-mapping>
+         xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+         id="WebApp_ID" version="2.5">
+    <servlet>
+        <description></description>
+        <display-name>SoapUIMockServlet</display-name>
+        <servlet-name>SoapUIMockServlet</servlet-name>
+        <servlet-class>com.eviware.soapui.mockaswar.MockAsWarServlet</servlet-class>
+        <init-param>
+            <description>project file path</description>
+            <param-name>projectFile</param-name>
+            <param-value>WEB-INF/soapui/[ProjectFileName]</param-value>
+        </init-param>
+        <init-param>
+            <description>enable Web UI</description>
+            <param-name>enableWebUI</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <description>global settings file</description>
+            <param-name>soapUISettings</param-name>
+            <param-value>[SoapUISettings]</param-value>
+        </init-param>
+        <init-param>
+            <description>set listeners directory</description>
+            <param-name>listeners</param-name>
+            <param-value>WEB-INF/listeners</param-value>
+        </init-param>
+        <init-param>
+            <description>set actions directory</description>
+            <param-name>actions</param-name>
+            <param-value>WEB-INF/actions</param-value>
+        </init-param>
+        <init-param>
+            <description>set scripts directory</description>
+            <param-name>scripts</param-name>
+            <param-value>WEB-INF/scripts</param-value>
+        </init-param>
+        <init-param>
+            <description>set MockService endpoint used in generated WSDLs and schemas</description>
+            <param-name>mockServiceEndpoint</param-name>
+            <param-value>[mockServiceEndpoint]</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SoapUIMockServlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 </web-app>

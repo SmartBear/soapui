@@ -44,103 +44,91 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * @author Erik R. Yverling
- * 
+ *         <p/>
  *         Used to create a manual SAML assertion using a test editor field
  */
 
-public class ManualSAMLEntry extends WssEntryBase
-{
-	public static final String TYPE = "SAML (XML)";
+public class ManualSAMLEntry extends WssEntryBase {
+    public static final String TYPE = "SAML (XML)";
 
-	private String samlAssertion;
+    private String samlAssertion;
 
-	private RSyntaxTextArea editor;
+    private RSyntaxTextArea editor;
 
-	public void init( WSSEntryConfig config, OutgoingWss container )
-	{
-		super.init( config, container, TYPE );
-	}
+    public void init(WSSEntryConfig config, OutgoingWss container) {
+        super.init(config, container, TYPE);
+    }
 
-	@Override
-	protected JComponent buildUI()
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
+    @Override
+    protected JComponent buildUI() {
+        JPanel panel = new JPanel(new BorderLayout());
 
-		editor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+        editor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
 
-		RTextScrollPane scrollPane = new RTextScrollPane( editor );
-		scrollPane.setFoldIndicatorEnabled( true );
-		scrollPane.setLineNumbersEnabled( true );
+        RTextScrollPane scrollPane = new RTextScrollPane(editor);
+        scrollPane.setFoldIndicatorEnabled(true);
+        scrollPane.setLineNumbersEnabled(true);
 
-		editor = SyntaxEditorUtil.addDefaultActions( editor, scrollPane, false );
+        editor = SyntaxEditorUtil.addDefaultActions(editor, scrollPane, false);
 
-		editor.setText( samlAssertion == null ? "" : samlAssertion );
-		editor.getDocument().addDocumentListener( new DocumentListenerAdapter()
-		{
+        editor.setText(samlAssertion == null ? "" : samlAssertion);
+        editor.getDocument().addDocumentListener(new DocumentListenerAdapter() {
 
-			@Override
-			public void update( javax.swing.text.Document document )
-			{
-				samlAssertion = editor.getText();
-				saveConfig();
+            @Override
+            public void update(javax.swing.text.Document document) {
+                samlAssertion = editor.getText();
+                saveConfig();
 
-			}
-		} );
-		panel.add( scrollPane, BorderLayout.CENTER );
+            }
+        });
+        panel.add(scrollPane, BorderLayout.CENTER);
 
-		return UISupport.addTitledBorder( panel, "Enter SAML Assertion" );
-	}
+        return UISupport.addTitledBorder(panel, "Enter SAML Assertion");
+    }
 
-	@Override
-	protected void load( XmlObjectConfigurationReader reader )
-	{
-		samlAssertion = reader.readString( "samlAssertion", null );
+    @Override
+    protected void load(XmlObjectConfigurationReader reader) {
+        samlAssertion = reader.readString("samlAssertion", null);
 
-	}
+    }
 
-	@Override
-	protected void save( XmlObjectConfigurationBuilder builder )
-	{
-		builder.add( "samlAssertion", samlAssertion );
-	}
+    @Override
+    protected void save(XmlObjectConfigurationBuilder builder) {
+        builder.add("samlAssertion", samlAssertion);
+    }
 
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
-	{
-		if( StringUtils.isNullOrEmpty( samlAssertion ) )
-			return;
+    public void process(WSSecHeader secHeader, Document doc, PropertyExpansionContext context) {
+        if (StringUtils.isNullOrEmpty(samlAssertion)) {
+            return;
+        }
 
-		try
-		{
-			Document samlAssertionDOM = XmlUtils.parseXml( XmlUtils.stripWhitespaces( context.expand( samlAssertion ) ) );
-			Element samlAssertionRootElement = samlAssertionDOM.getDocumentElement();
-			AssertionWrapper assertion = new AssertionWrapper( samlAssertionRootElement );
-			WSSecSAMLToken wsSign = new WSSecSAMLToken();
-			wsSign.build( doc, assertion, secHeader );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+        try {
+            Document samlAssertionDOM = XmlUtils.parseXml(XmlUtils.stripWhitespaces(context.expand(samlAssertion)));
+            Element samlAssertionRootElement = samlAssertionDOM.getDocumentElement();
+            AssertionWrapper assertion = new AssertionWrapper(samlAssertionRootElement);
+            WSSecSAMLToken wsSign = new WSSecSAMLToken();
+            wsSign.build(doc, assertion, secHeader);
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public String getSamlAssertion()
-	{
-		return samlAssertion;
-	}
+    public String getSamlAssertion() {
+        return samlAssertion;
+    }
 
-	public void setSamlAssertion( String samlAssertion )
-	{
-		this.samlAssertion = samlAssertion;
-		saveConfig();
+    public void setSamlAssertion(String samlAssertion) {
+        this.samlAssertion = samlAssertion;
+        saveConfig();
 
-		if( editor != null )
-			editor.setText( samlAssertion );
-	}
+        if (editor != null) {
+            editor.setText(samlAssertion);
+        }
+    }
 
-	@Override
-	protected void addPropertyExpansions( PropertyExpansionsResult result )
-	{
-		super.addPropertyExpansions( result );
-		result.extractAndAddAll( "samlAssertion" );
-	}
+    @Override
+    protected void addPropertyExpansions(PropertyExpansionsResult result) {
+        super.addPropertyExpansions(result);
+        result.extractAndAddAll("samlAssertion");
+    }
 }

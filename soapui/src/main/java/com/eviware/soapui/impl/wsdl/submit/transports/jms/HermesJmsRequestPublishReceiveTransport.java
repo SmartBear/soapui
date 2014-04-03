@@ -28,59 +28,51 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 
-public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTransport
-{
+public class HermesJmsRequestPublishReceiveTransport extends HermesJmsRequestTransport {
 
-	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
-	{
-		Session topicSession = null;
-		Session queueSession = null;
+    public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception {
+        Session topicSession = null;
+        Session queueSession = null;
 
-		JMSConnectionHolder jmsConnectionHolderTopic = null;
-		JMSConnectionHolder jmsConnectionHolderQueue = null;
-		try
-		{
-			init( submitContext, request );
-			jmsConnectionHolderTopic = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientID, username, password );
-			jmsConnectionHolderQueue = new JMSConnectionHolder( jmsEndpoint, hermes, false, null, username, password );
+        JMSConnectionHolder jmsConnectionHolderTopic = null;
+        JMSConnectionHolder jmsConnectionHolderQueue = null;
+        try {
+            init(submitContext, request);
+            jmsConnectionHolderTopic = new JMSConnectionHolder(jmsEndpoint, hermes, true, clientID, username, password);
+            jmsConnectionHolderQueue = new JMSConnectionHolder(jmsEndpoint, hermes, false, null, username, password);
 
-			// session
-			topicSession = jmsConnectionHolderTopic.getSession();
-			queueSession = jmsConnectionHolderQueue.getSession();
+            // session
+            topicSession = jmsConnectionHolderTopic.getSession();
+            queueSession = jmsConnectionHolderQueue.getSession();
 
-			// destination
-			Topic topicPublish = jmsConnectionHolderTopic.getTopic( jmsConnectionHolderTopic.getJmsEndpoint().getSend() );
-			Queue queueReceive = jmsConnectionHolderQueue
-					.getQueue( jmsConnectionHolderQueue.getJmsEndpoint().getReceive() );
+            // destination
+            Topic topicPublish = jmsConnectionHolderTopic.getTopic(jmsConnectionHolderTopic.getJmsEndpoint().getSend());
+            Queue queueReceive = jmsConnectionHolderQueue
+                    .getQueue(jmsConnectionHolderQueue.getJmsEndpoint().getReceive());
 
-			Message messagePublish = messagePublish( submitContext, request, topicSession,
-					jmsConnectionHolderTopic.getHermes(), topicPublish, queueReceive );
+            Message messagePublish = messagePublish(submitContext, request, topicSession,
+                    jmsConnectionHolderTopic.getHermes(), topicPublish, queueReceive);
 
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive,
-					submitContext.expand( messageSelector ) );
+            MessageConsumer messageConsumer = queueSession.createConsumer(queueReceive,
+                    submitContext.expand(messageSelector));
 
-			return makeResponse( submitContext, request, timeStarted, messagePublish, messageConsumer );
-		}
-		catch( JMSException jmse )
-		{
-			return errorResponse( submitContext, request, timeStarted, jmse );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-		finally
-		{
-			if( jmsConnectionHolderQueue != null )
-				jmsConnectionHolderQueue.closeAll();
+            return makeResponse(submitContext, request, timeStarted, messagePublish, messageConsumer);
+        } catch (JMSException jmse) {
+            return errorResponse(submitContext, request, timeStarted, jmse);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        } finally {
+            if (jmsConnectionHolderQueue != null) {
+                jmsConnectionHolderQueue.closeAll();
+            }
 
-			closeSessionAndConnection( jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,
-					queueSession );
-			closeSessionAndConnection( jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,
-					topicSession );
+            closeSessionAndConnection(jmsConnectionHolderQueue != null ? jmsConnectionHolderQueue.getConnection() : null,
+                    queueSession);
+            closeSessionAndConnection(jmsConnectionHolderTopic != null ? jmsConnectionHolderTopic.getConnection() : null,
+                    topicSession);
 
-		}
-		return null;
+        }
+        return null;
 
-	}
+    }
 }

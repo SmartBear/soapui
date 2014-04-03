@@ -25,32 +25,27 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for WsdlGotoTestStep
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ManualTestStepPanelBuilder extends EmptyPanelBuilder<ManualTestStep>
-{
-	public ManualTestStepPanelBuilder()
-	{
-	}
+public class ManualTestStepPanelBuilder extends EmptyPanelBuilder<ManualTestStep> {
+    public ManualTestStepPanelBuilder() {
+    }
 
-	@Override
-	public Component buildOverviewPanel( ManualTestStep modelItem )
-	{
-		JPropertiesTable<ManualTestStep> table = buildDefaultProperties( modelItem, "Step Properties" );
-		return table;
-	}
+    @Override
+    public Component buildOverviewPanel(ManualTestStep modelItem) {
+        JPropertiesTable<ManualTestStep> table = buildDefaultProperties(modelItem, "Step Properties");
+        return table;
+    }
 
-	@Override
-	public DesktopPanel buildDesktopPanel( ManualTestStep modelItem )
-	{
-		return new ManualTestStepDesktopPanel( modelItem );
-	}
+    @Override
+    public DesktopPanel buildDesktopPanel(ManualTestStep modelItem) {
+        return new ManualTestStepDesktopPanel(modelItem);
+    }
 
-	@Override
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    @Override
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 }

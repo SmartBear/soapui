@@ -23,87 +23,69 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
  * null-desktop used when running from command-line, etc
- * 
+ *
  * @author Ole
  */
 
-public class NullDesktop implements SoapUIDesktop
-{
-	public void addDesktopListener( DesktopListener listener )
-	{
-	}
+public class NullDesktop implements SoapUIDesktop {
+    public void addDesktopListener(DesktopListener listener) {
+    }
 
-	public boolean closeAll()
-	{
-		return false;
-	}
+    public boolean closeAll() {
+        return false;
+    }
 
-	public boolean closeDesktopPanel( DesktopPanel desktopPanel )
-	{
-		return false;
-	}
+    public boolean closeDesktopPanel(DesktopPanel desktopPanel) {
+        return false;
+    }
 
-	public boolean closeDesktopPanel( ModelItem modelItem )
-	{
-		return false;
-	}
+    public boolean closeDesktopPanel(ModelItem modelItem) {
+        return false;
+    }
 
-	public ActionList getActions()
-	{
-		return null;
-	}
+    public ActionList getActions() {
+        return null;
+    }
 
-	public JComponent getDesktopComponent()
-	{
-		return null;
-	}
+    public JComponent getDesktopComponent() {
+        return null;
+    }
 
-	public DesktopPanel getDesktopPanel( ModelItem modelItem )
-	{
-		return null;
-	}
+    public DesktopPanel getDesktopPanel(ModelItem modelItem) {
+        return null;
+    }
 
-	public DesktopPanel[] getDesktopPanels()
-	{
-		return null;
-	}
+    public DesktopPanel[] getDesktopPanels() {
+        return null;
+    }
 
-	public boolean hasDesktopPanel( ModelItem modelItem )
-	{
-		return false;
-	}
+    public boolean hasDesktopPanel(ModelItem modelItem) {
+        return false;
+    }
 
-	public void init()
-	{
-	}
+    public void init() {
+    }
 
-	public void maximize( DesktopPanel dp )
-	{
-	}
+    public void maximize(DesktopPanel dp) {
+    }
 
-	public void minimize( DesktopPanel desktopPanel )
-	{
-	}
+    public void minimize(DesktopPanel desktopPanel) {
+    }
 
-	public void release()
-	{
-	}
+    public void release() {
+    }
 
-	public void removeDesktopListener( DesktopListener listener )
-	{
-	}
+    public void removeDesktopListener(DesktopListener listener) {
+    }
 
-	public DesktopPanel showDesktopPanel( ModelItem modelItem )
-	{
-		return null;
-	}
+    public DesktopPanel showDesktopPanel(ModelItem modelItem) {
+        return null;
+    }
 
-	public DesktopPanel showDesktopPanel( DesktopPanel desktopPanel )
-	{
-		return null;
-	}
+    public DesktopPanel showDesktopPanel(DesktopPanel desktopPanel) {
+        return null;
+    }
 
-	public void transferTo( SoapUIDesktop newDesktop )
-	{
-	}
+    public void transferTo(SoapUIDesktop newDesktop) {
+    }
 }

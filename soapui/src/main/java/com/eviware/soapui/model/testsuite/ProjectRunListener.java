@@ -16,13 +16,12 @@
 
 package com.eviware.soapui.model.testsuite;
 
-public interface ProjectRunListener
-{
-	void afterTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner );
+public interface ProjectRunListener {
+    void afterTestSuite(ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner);
 
-	void beforeTestSuite( ProjectRunner projectRunner, ProjectRunContext runContext, TestSuite testSuite );
+    void beforeTestSuite(ProjectRunner projectRunner, ProjectRunContext runContext, TestSuite testSuite);
 
-	void beforeRun( ProjectRunner projectRunner, ProjectRunContext runContext );
+    void beforeRun(ProjectRunner projectRunner, ProjectRunContext runContext);
 
-	void afterRun( ProjectRunner projectRunner, ProjectRunContext runContext );
+    void afterRun(ProjectRunner projectRunner, ProjectRunContext runContext);
 }

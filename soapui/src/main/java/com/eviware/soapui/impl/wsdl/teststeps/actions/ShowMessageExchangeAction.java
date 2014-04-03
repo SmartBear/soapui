@@ -53,177 +53,154 @@ import java.util.List;
 
 /**
  * Shows a desktop-panel with the TestStepResult for a WsdlTestRequestStepResult
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ShowMessageExchangeAction extends AbstractAction
-{
-	private DefaultDesktopPanel desktopPanel;
-	private final MessageExchange messageExchange;
-	private final String ownerName;
-	private MessageExchangeResponseMessageEditor responseMessageEditor;
-	private MessageExchangeRequestMessageEditor requestMessageEditor;
+public class ShowMessageExchangeAction extends AbstractAction {
+    private DefaultDesktopPanel desktopPanel;
+    private final MessageExchange messageExchange;
+    private final String ownerName;
+    private MessageExchangeResponseMessageEditor responseMessageEditor;
+    private MessageExchangeRequestMessageEditor requestMessageEditor;
 
-	public ShowMessageExchangeAction( MessageExchange messageExchange, String ownerName )
-	{
-		super( "Show Message Exchange" );
-		this.ownerName = ownerName;
-		this.messageExchange = messageExchange;
-	}
+    public ShowMessageExchangeAction(MessageExchange messageExchange, String ownerName) {
+        super("Show Message Exchange");
+        this.ownerName = ownerName;
+        this.messageExchange = messageExchange;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		try
-		{
-			UISupport.showDesktopPanel( buildFrame() );
-		}
-		catch( Exception ex )
-		{
-			SoapUI.logError( ex );
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        try {
+            UISupport.showDesktopPanel(buildFrame());
+        } catch (Exception ex) {
+            SoapUI.logError(ex);
+        }
+    }
 
-	private DesktopPanel buildFrame()
-	{
-		if( desktopPanel == null )
-		{
-			desktopPanel = new MessageExchangeDesktopPanel( "Message Viewer", "Message for " + ownerName, buildContent() );
-		}
+    private DesktopPanel buildFrame() {
+        if (desktopPanel == null) {
+            desktopPanel = new MessageExchangeDesktopPanel("Message Viewer", "Message for " + ownerName, buildContent());
+        }
 
-		return desktopPanel;
-	}
+        return desktopPanel;
+    }
 
-	private JComponent buildContent()
-	{
-		JTabbedPane messageTabs = new JTabbedPane();
-		messageTabs.addTab( "Request Message", buildRequestTab() );
-		messageTabs.addTab( "Response Message", buildResponseTab() );
-		messageTabs.addTab( "Properties", buildPropertiesTab() );
+    private JComponent buildContent() {
+        JTabbedPane messageTabs = new JTabbedPane();
+        messageTabs.addTab("Request Message", buildRequestTab());
+        messageTabs.addTab("Response Message", buildResponseTab());
+        messageTabs.addTab("Properties", buildPropertiesTab());
 
-		String[] messages = messageExchange.getMessages();
-		if( messages != null && messages.length > 0 )
-			messageTabs.addTab( "Messages", buildMessagesTab() );
+        String[] messages = messageExchange.getMessages();
+        if (messages != null && messages.length > 0) {
+            messageTabs.addTab("Messages", buildMessagesTab());
+        }
 
-		if( getAssertedXPaths().size() > 0 )
-			messageTabs.addTab( "XPath Assertions", buildAssertionsTab() );
+        if (getAssertedXPaths().size() > 0) {
+            messageTabs.addTab("XPath Assertions", buildAssertionsTab());
+        }
 
-		messageTabs.setPreferredSize( new Dimension( 500, 400 ) );
+        messageTabs.setPreferredSize(new Dimension(500, 400));
 
-		JPanel tabPanel = UISupport.createTabPanel( messageTabs, true );
+        JPanel tabPanel = UISupport.createTabPanel(messageTabs, true);
 
-		Component descriptionPanel = UISupport.buildDescription( "MessageExchange Results",
-				"See the request/response message below", null );
-		tabPanel.add( descriptionPanel, BorderLayout.NORTH );
+        Component descriptionPanel = UISupport.buildDescription("MessageExchange Results",
+                "See the request/response message below", null);
+        tabPanel.add(descriptionPanel, BorderLayout.NORTH);
 
-		return tabPanel;
-	}
+        return tabPanel;
+    }
 
-	private Component buildAssertionsTab()
-	{
-		List<AssertedXPath> assertedXPaths = getAssertedXPaths();
+    private Component buildAssertionsTab() {
+        List<AssertedXPath> assertedXPaths = getAssertedXPaths();
 
-		DefaultTableModel tm = new DefaultTableModel( assertedXPaths.size(), 2 );
-		tm.setColumnIdentifiers( new String[] { "Label", "XPath" } );
+        DefaultTableModel tm = new DefaultTableModel(assertedXPaths.size(), 2);
+        tm.setColumnIdentifiers(new String[]{"Label", "XPath"});
 
-		JXTable table = JTableFactory.getInstance().makeJXTable( tm );
-		table.setHorizontalScrollEnabled( true );
-		table.getColumn( 0 ).setPreferredWidth( 100 );
+        JXTable table = JTableFactory.getInstance().makeJXTable(tm);
+        table.setHorizontalScrollEnabled(true);
+        table.getColumn(0).setPreferredWidth(100);
 
-		for( int c = 0; c < assertedXPaths.size(); c++ )
-		{
-			tm.setValueAt( assertedXPaths.get( c ).getLabel(), c, 0 );
-			tm.setValueAt( assertedXPaths.get( c ).getPath(), c, 1 );
-		}
+        for (int c = 0; c < assertedXPaths.size(); c++) {
+            tm.setValueAt(assertedXPaths.get(c).getLabel(), c, 0);
+            tm.setValueAt(assertedXPaths.get(c).getPath(), c, 1);
+        }
 
-		return new JScrollPane( table );
-	}
+        return new JScrollPane(table);
+    }
 
-	private List<AssertedXPath> getAssertedXPaths()
-	{
-		List<AssertedXPath> assertedXPaths = new ArrayList<AssertedXPath>();
+    private List<AssertedXPath> getAssertedXPaths() {
+        List<AssertedXPath> assertedXPaths = new ArrayList<AssertedXPath>();
 
-		if( messageExchange instanceof RequestAssertedMessageExchange )
-		{
-			AssertedXPath[] xpaths = ( ( RequestAssertedMessageExchange )messageExchange ).getAssertedXPathsForRequest();
-			if( xpaths != null && xpaths.length > 0 )
-			{
-				assertedXPaths.addAll( Arrays.asList( xpaths ) );
-			}
-		}
+        if (messageExchange instanceof RequestAssertedMessageExchange) {
+            AssertedXPath[] xpaths = ((RequestAssertedMessageExchange) messageExchange).getAssertedXPathsForRequest();
+            if (xpaths != null && xpaths.length > 0) {
+                assertedXPaths.addAll(Arrays.asList(xpaths));
+            }
+        }
 
-		if( messageExchange instanceof ResponseAssertedMessageExchange )
-		{
-			AssertedXPath[] xpaths = ( ( ResponseAssertedMessageExchange )messageExchange ).getAssertedXPathsForResponse();
-			if( xpaths != null && xpaths.length > 0 )
-			{
-				assertedXPaths.addAll( Arrays.asList( xpaths ) );
-			}
-		}
-		return assertedXPaths;
-	}
+        if (messageExchange instanceof ResponseAssertedMessageExchange) {
+            AssertedXPath[] xpaths = ((ResponseAssertedMessageExchange) messageExchange).getAssertedXPathsForResponse();
+            if (xpaths != null && xpaths.length > 0) {
+                assertedXPaths.addAll(Arrays.asList(xpaths));
+            }
+        }
+        return assertedXPaths;
+    }
 
-	private Component buildPropertiesTab()
-	{
-		StringToStringMap properties = new StringToStringMap();
-		if( messageExchange != null && messageExchange.getProperties() != null )
-		{
-			properties.putAll( messageExchange.getProperties() );
+    private Component buildPropertiesTab() {
+        StringToStringMap properties = new StringToStringMap();
+        if (messageExchange != null && messageExchange.getProperties() != null) {
+            properties.putAll(messageExchange.getProperties());
 
-			// for( String name : messageExchange.getResponse().getPropertyNames())
-			// {
-			// properties.put( name, messageExchange.getResponse().getProperty(
-			// name ) );
-			// }
+            // for( String name : messageExchange.getResponse().getPropertyNames())
+            // {
+            // properties.put( name, messageExchange.getResponse().getProperty(
+            // name ) );
+            // }
 
-			properties.put( "Timestamp", new Date( messageExchange.getTimestamp() ).toString() );
-			properties.put( "Time Taken", String.valueOf( messageExchange.getTimeTaken() ) );
-		}
-		JTable table = JTableFactory.getInstance().makeJTable( new StringToStringMapTableModel( properties, "Name", "Value", false ) );
-		return new JScrollPane( table );
-	}
+            properties.put("Timestamp", new Date(messageExchange.getTimestamp()).toString());
+            properties.put("Time Taken", String.valueOf(messageExchange.getTimeTaken()));
+        }
+        JTable table = JTableFactory.getInstance().makeJTable(new StringToStringMapTableModel(properties, "Name", "Value", false));
+        return new JScrollPane(table);
+    }
 
-	private Component buildMessagesTab()
-	{
-		String[] messages = messageExchange.getMessages();
-		return messages == null || messages.length == 0 ? new JLabel( "No messages to display" ) : new JScrollPane(
-				new JList( messages ) );
-	}
+    private Component buildMessagesTab() {
+        String[] messages = messageExchange.getMessages();
+        return messages == null || messages.length == 0 ? new JLabel("No messages to display") : new JScrollPane(
+                new JList(messages));
+    }
 
-	private Component buildResponseTab()
-	{
-		responseMessageEditor = new MessageExchangeResponseMessageEditor( messageExchange );
-		return responseMessageEditor;
-	}
+    private Component buildResponseTab() {
+        responseMessageEditor = new MessageExchangeResponseMessageEditor(messageExchange);
+        return responseMessageEditor;
+    }
 
-	private Component buildRequestTab()
-	{
-		requestMessageEditor = new MessageExchangeRequestMessageEditor( messageExchange );
-		return requestMessageEditor;
-	}
+    private Component buildRequestTab() {
+        requestMessageEditor = new MessageExchangeRequestMessageEditor(messageExchange);
+        return requestMessageEditor;
+    }
 
-	private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel
-	{
-		private MessageExchangeDesktopPanel( String title, String description, JComponent component )
-		{
-			super( title, description, component );
-		}
+    private final class MessageExchangeDesktopPanel extends DefaultDesktopPanel {
+        private MessageExchangeDesktopPanel(String title, String description, JComponent component) {
+            super(title, description, component);
+        }
 
-		@Override
-		public boolean onClose( boolean canCancel )
-		{
-			requestMessageEditor.release();
-			responseMessageEditor.release();
+        @Override
+        public boolean onClose(boolean canCancel) {
+            requestMessageEditor.release();
+            responseMessageEditor.release();
 
-			desktopPanel = null;
+            desktopPanel = null;
 
-			return super.onClose( canCancel );
-		}
+            return super.onClose(canCancel);
+        }
 
-		@Override
-		public boolean dependsOn( ModelItem modelItem )
-		{
-			return ModelSupport.dependsOn( messageExchange.getModelItem(), modelItem );
-		}
-	}
+        @Override
+        public boolean dependsOn(ModelItem modelItem) {
+            return ModelSupport.dependsOn(messageExchange.getModelItem(), modelItem);
+        }
+    }
 }

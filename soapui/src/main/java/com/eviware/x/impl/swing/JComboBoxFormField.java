@@ -25,85 +25,73 @@ import javax.swing.JComboBox;
 
 import com.eviware.x.form.XFormOptionsField;
 
-public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> implements ItemListener, XFormOptionsField
-{
-	public JComboBoxFormField( Object[] values )
-	{
-		super( new JComboBox() );
+public class JComboBoxFormField extends AbstractSwingXFormField<JComboBox> implements ItemListener, XFormOptionsField {
+    public JComboBoxFormField(Object[] values) {
+        super(new JComboBox());
 
-		setOptions( values );
+        setOptions(values);
 
-		getComponent().addItemListener( this );
-	}
+        getComponent().addItemListener(this);
+    }
 
-	public void setValue( String value )
-	{
-		getComponent().setSelectedItem( value );
-	}
+    public void setValue(String value) {
+        getComponent().setSelectedItem(value);
+    }
 
-	public String getValue()
-	{
-		Object selectedItem = getComponent().getSelectedItem();
-		return selectedItem == null ? null : selectedItem.toString();
-	}
+    public String getValue() {
+        Object selectedItem = getComponent().getSelectedItem();
+        return selectedItem == null ? null : selectedItem.toString();
+    }
 
-	public void itemStateChanged( ItemEvent e )
-	{
-		Object selectedItem = getComponent().getSelectedItem();
-		fireValueChanged( selectedItem == null ? null : selectedItem.toString(), null );
-	}
+    public void itemStateChanged(ItemEvent e) {
+        Object selectedItem = getComponent().getSelectedItem();
+        fireValueChanged(selectedItem == null ? null : selectedItem.toString(), null);
+    }
 
-	public void addItem( Object value )
-	{
-		getComponent().addItem( value );
-	}
+    public void addItem(Object value) {
+        getComponent().addItem(value);
+    }
 
-	public void setOptions( Object[] values )
-	{
-		String selectedItem = getValue();
-		DefaultComboBoxModel model = new DefaultComboBoxModel( values );
+    public void setOptions(Object[] values) {
+        String selectedItem = getValue();
+        DefaultComboBoxModel model = new DefaultComboBoxModel(values);
 
-		if( values.length > 0 && values[0] == null )
-		{
-			model.removeElementAt( 0 );
-			getComponent().setEditable( true );
-		}
-		else
-		{
-			getComponent().setEditable( false );
-		}
+        if (values.length > 0 && values[0] == null) {
+            model.removeElementAt(0);
+            getComponent().setEditable(true);
+        } else {
+            getComponent().setEditable(false);
+        }
 
-		getComponent().setModel( model );
+        getComponent().setModel(model);
 
-		if( selectedItem != null )
-			getComponent().setSelectedItem( selectedItem );
-		else if( getComponent().isEditable() )
-			getComponent().setSelectedItem( "" );
-	}
+        if (selectedItem != null) {
+            getComponent().setSelectedItem(selectedItem);
+        } else if (getComponent().isEditable()) {
+            getComponent().setSelectedItem("");
+        }
+    }
 
-	public Object[] getOptions()
-	{
-		ComboBoxModel model = getComponent().getModel();
+    public Object[] getOptions() {
+        ComboBoxModel model = getComponent().getModel();
 
-		Object[] result = new Object[model.getSize()];
-		for( int c = 0; c < result.length; c++ )
-			result[c] = model.getElementAt( c );
+        Object[] result = new Object[model.getSize()];
+        for (int c = 0; c < result.length; c++) {
+            result[c] = model.getElementAt(c);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public Object[] getSelectedOptions()
-	{
-		return new Object[] { getComponent().getSelectedItem() };
-	}
+    public Object[] getSelectedOptions() {
+        return new Object[]{getComponent().getSelectedItem()};
+    }
 
-	public void setSelectedOptions( Object[] options )
-	{
-		getComponent().setSelectedItem( options.length > 0 ? options[0] : null );
-	}
+    public void setSelectedOptions(Object[] options) {
+        getComponent().setSelectedItem(options.length > 0 ? options[0] : null);
+    }
 
-	public int[] getSelectedIndexes()
-	{
-		return new int[] { getComponent().getSelectedIndex() };
-	}
+    public int[] getSelectedIndexes() {
+        return new int[]{getComponent().getSelectedIndex()};
+    }
 }

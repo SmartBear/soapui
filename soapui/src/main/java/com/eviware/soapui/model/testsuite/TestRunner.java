@@ -16,72 +16,71 @@
 
 package com.eviware.soapui.model.testsuite;
 
-public interface TestRunner
-{
+public interface TestRunner {
 
-	/**
-	 * Gets the current status of this TestRunner
-	 */
+    /**
+     * Gets the current status of this TestRunner
+     */
 
-	public Status getStatus();
+    public Status getStatus();
 
-	public enum Status
-	{
-		INITIALIZED, RUNNING, CANCELED, FINISHED, FAILED, WARNING
-	};
+    public enum Status {
+        INITIALIZED, RUNNING, CANCELED, FINISHED, FAILED, WARNING
+    }
 
-	/**
-	 * Starts running this TestRunners TestCase. If the async flag is set to
-	 * true, this method will return directly, otherwise it will block until the
-	 * TestCase is finished
-	 * 
-	 * @param async
-	 *           flag controlling if TestCase should be run in seperate or
-	 *           callers thread.
-	 */
+    ;
 
-	public void start( boolean async );
+    /**
+     * Starts running this TestRunners TestCase. If the async flag is set to
+     * true, this method will return directly, otherwise it will block until the
+     * TestCase is finished
+     *
+     * @param async flag controlling if TestCase should be run in seperate or
+     *              callers thread.
+     */
 
-	/**
-	 * Returns the time taken by this runner since its last start
-	 */
+    public void start(boolean async);
 
-	public long getTimeTaken();
+    /**
+     * Returns the time taken by this runner since its last start
+     */
 
-	/**
-	 * Returns the time this runner was last started
-	 */
+    public long getTimeTaken();
 
-	public long getStartTime();
+    /**
+     * Returns the time this runner was last started
+     */
 
-	/**
-	 * Blocks until this runner is finished, (returns directly if it already has
-	 * finished)
-	 */
+    public long getStartTime();
 
-	public Status waitUntilFinished();
+    /**
+     * Blocks until this runner is finished, (returns directly if it already has
+     * finished)
+     */
 
-	/**
-	 * Cancels an ongoing test run with the specified reason
-	 */
+    public Status waitUntilFinished();
 
-	public void cancel( String reason );
+    /**
+     * Cancels an ongoing test run with the specified reason
+     */
 
-	/**
-	 * Fails an ongoing test run with the specified reason
-	 */
+    public void cancel(String reason);
 
-	public void fail( String reason );
+    /**
+     * Fails an ongoing test run with the specified reason
+     */
 
-	/**
-	 * Gets the reason why a running test was canceled or failed.
-	 */
+    public void fail(String reason);
 
-	public String getReason();
+    /**
+     * Gets the reason why a running test was canceled or failed.
+     */
 
-	public TestRunContext getRunContext();
+    public String getReason();
 
-	public TestRunnable getTestRunnable();
+    public TestRunContext getRunContext();
 
-	public boolean isRunning();
+    public TestRunnable getTestRunnable();
+
+    public boolean isRunning();
 }

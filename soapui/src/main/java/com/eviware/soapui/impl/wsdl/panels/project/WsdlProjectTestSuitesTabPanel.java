@@ -58,411 +58,360 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
-public class WsdlProjectTestSuitesTabPanel extends JPanel
-{
-	private final WsdlProject project;
-	private JProgressBar progressBar;
-	private JProjectTestSuiteList testSuiteList;
-	private RunAction runAction = new RunAction();
-	private CancelAction cancelAction = new CancelAction();
-	private JToggleButton sequentialButton;
-	private JToggleButton parallellButton;
-	private final InternalProjectListener testSuiteListener = new InternalProjectListener();
-	private final InternalTestSuiteRunListener testSuiteRunListener = new InternalTestSuiteRunListener();
-	private JTestRunLog testRunLog;
-	private GroovyEditorComponent tearDownGroovyEditor;
-	private GroovyEditorComponent setupGroovyEditor;
-	private JInspectorPanel testSuiteListInspectorPanel;
-	private JInspectorPanel inspectorPanel;
-	private WsdlProjectRunner projectRunner;
-
-	public WsdlProjectTestSuitesTabPanel( WsdlProject project )
-	{
-		super( new BorderLayout() );
-		this.project = project;
-
-		buildUI();
-		project.addProjectRunListener( testSuiteRunListener );
-		project.addProjectListener( testSuiteListener );
-	}
-
-	public WsdlProject getProject()
-	{
-		return project;
-	}
-
-	private void buildUI()
-	{
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildContent(), BorderLayout.CENTER );
-
-		setPreferredSize( new Dimension( 500, 500 ) );
-	}
-
-	private JComponent buildContent()
-	{
-		inspectorPanel = JInspectorPanelFactory.build( buildTabs() );
-		addInspectors( inspectorPanel );
-
-		return inspectorPanel.getComponent();
-	}
-
-	protected void addInspectors( JInspectorPanel inspectorPanel )
-	{
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildRunLog(), "TestSuite Log",
-				"Log of executed TestSuites, TestCases and TestSteps", true ) );
-	}
-
-	private JComponent buildRunLog()
-	{
-		testRunLog = new JTestRunLog( project.getSettings() );
-		return testRunLog;
-	}
-
-	protected JProjectTestSuiteList getTestSuiteList()
-	{
-		return testSuiteList;
-	}
-
-	private JComponent buildToolbar()
-	{
-		cancelAction.setEnabled( false );
-		runAction.setEnabled( project.getTestSuiteCount() > 0 );
-
-		JXToolBar toolbar = UISupport.createToolbar();
-
-		addToolbarActions( toolbar );
-		toolbar.addGlue();
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITE_HELP_URL ) ) );
-
-		progressBar = new JProgressBar( 0, project.getTestSuiteCount() );
-		JPanel progressPanel = UISupport.createProgressBarPanel( progressBar, 10, false );
-
-		JPanel panel = new JPanel( new BorderLayout() );
-
-		panel.add( toolbar, BorderLayout.PAGE_START );
-		panel.add( progressPanel, BorderLayout.CENTER );
-
-		return panel;
-	}
-
-	protected void addToolbarActions( JXToolBar toolbar )
-	{
-		toolbar.add( UISupport.createToolbarButton( runAction ) );
-		toolbar.add( UISupport.createToolbarButton( cancelAction ) );
-
-		toolbar.addRelatedGap();
-
-		ButtonGroup buttonGroup = new ButtonGroup();
-
-		sequentialButton = new JToggleButton( UISupport.createImageIcon( "/sequential.gif" ), true );
-		sequentialButton.setToolTipText( "The selected TestSuites are run in sequence" );
-		sequentialButton.setPreferredSize( UISupport.getPreferredButtonSize() );
-		sequentialButton.setSelected( project.getRunType() == TestSuiteRunType.SEQUENTIAL );
-		sequentialButton.addActionListener( new ActionListener()
-		{
-			public void actionPerformed( ActionEvent e )
-			{
-				project.setRunType( TestSuiteRunType.SEQUENTIAL );
-			}
-		} );
-
-		buttonGroup.add( sequentialButton );
-
-		parallellButton = new JToggleButton( UISupport.createImageIcon( "/parallell.gif" ) );
-		parallellButton.setToolTipText( "The selected TestSuites are run in parallel" );
-		parallellButton.setPreferredSize( UISupport.getPreferredButtonSize() );
-		parallellButton.setSelected( project.getRunType() == TestSuiteRunType.PARALLEL );
-		parallellButton.addActionListener( new ActionListener()
-		{
-
-			public void actionPerformed( ActionEvent e )
-			{
-				project.setRunType( TestSuiteRunType.PARALLEL );
-			}
-		} );
-
-		buttonGroup.add( parallellButton );
-
-		toolbar.addUnrelatedGap();
-		toolbar.add( sequentialButton );
-		toolbar.addRelatedGap();
-		toolbar.add( parallellButton );
-	}
-
-	private JComponent buildTabs()
-	{
-		JTabbedPane tabs = new JTabbedPane( JTabbedPane.TOP );
-		testSuiteListInspectorPanel = JInspectorPanelFactory.build( buildTestSuiteList( project ) );
-
-		tabs.addTab( "TestSuites", testSuiteListInspectorPanel.getComponent() );
-
-		addTabs( tabs, testSuiteListInspectorPanel );
-		tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
-
-		return UISupport.createTabPanel( tabs, true );
-	}
-
-	protected void addTabs( JTabbedPane tabs, JInspectorPanel inspectorPanel )
-	{
-		inspectorPanel.addInspector( new GroovyEditorInspector( buildSetupScriptPanel(), "Setup Script",
-				"Script to run before running TestSuites" ) );
-		inspectorPanel.addInspector( new GroovyEditorInspector( buildTearDownScriptPanel(), "TearDown Script",
-				"Script to run after running TestSuites" ) );
-	}
-
-	protected GroovyEditorComponent buildTearDownScriptPanel()
-	{
-		tearDownGroovyEditor = new GroovyEditorComponent( new TearDownScriptGroovyEditorModel(), null );
-		return tearDownGroovyEditor;
-	}
-
-	protected GroovyEditorComponent buildSetupScriptPanel()
-	{
-		setupGroovyEditor = new GroovyEditorComponent( new SetupScriptGroovyEditorModel(), null );
-		return setupGroovyEditor;
-	}
-
-	protected JComponent buildTestSuiteList( WsdlProject testSuite )
-	{
-		testSuiteList = new JProjectTestSuiteList( testSuite );
-
-		JPanel p = new JPanel( new BorderLayout() );
-
-		p.add( buildTestCaseListToolbar(), BorderLayout.NORTH );
-		p.add( new JScrollPane( testSuiteList ), BorderLayout.CENTER );
-
-		return p;
-	}
-
-	private Component buildTestCaseListToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
-		toolbar.add( UISupport.createToolbarButton( SwingActionDelegate.createDelegate(
-				AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, "/testSuite.gif" ) ) );
-		toolbar.addGlue();
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.TESTSUITELIST_HELP_URL ) ) );
-		return toolbar;
-	}
-
-	public void release()
-	{
-		inspectorPanel.release();
-		testSuiteListInspectorPanel.release();
-
-		setupGroovyEditor.release();
-		tearDownGroovyEditor.release();
-
-		testRunLog.release();
-		project.removeProjectRunListener( testSuiteRunListener );
-		project.removeProjectListener( testSuiteListener );
-	}
-
-	protected void runProject()
-	{
-		projectRunner = project.run( new StringToObjectMap(), true );
-	}
-
-	protected void beforeRun()
-	{
-		runAction.setEnabled( false );
-		cancelAction.setEnabled( true );
-		testSuiteList.setEnabled( false );
-		progressBar.setForeground( Color.GREEN.darker() );
-	}
-
-	protected void afterRun()
-	{
-		runAction.setEnabled( true );
-		cancelAction.setEnabled( false );
-		testSuiteList.setEnabled( true );
-
-		progressBar.setString( projectRunner.getStatus().toString() );
-		progressBar.setForeground( projectRunner.isFailed() ? Color.RED : Color.GREEN.darker() );
-	}
-
-	private final class InternalProjectListener extends ProjectListenerAdapter
-	{
-		public void testSuiteAdded( TestSuite testSuite )
-		{
-			runAction.setEnabled( project.getTestSuiteCount() > 0 );
-		}
-
-		public void testSuiteRemoved( TestSuite testSuite )
-		{
-			runAction.setEnabled( project.getTestSuiteCount() > 0 );
-		}
-	}
-
-	private class RunAction extends AbstractAction
-	{
-		public RunAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/run_testcase.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Runs the selected TestSuites" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			runProject();
-		}
-	}
-
-	private class CancelAction extends AbstractAction
-	{
-		public CancelAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/stop_testcase.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Cancels ongoing TestSuite runs" );
-		}
-
-		public void actionPerformed( ActionEvent e )
-		{
-			projectRunner.cancel( "Cancelled from UI" );
-		}
-	}
-
-	private class SetupScriptGroovyEditorModel extends AbstractGroovyEditorModel
-	{
-		public SetupScriptGroovyEditorModel()
-		{
-			super( new String[] { "log", "runner", "context", "project" }, project, "Setup" );
-		}
-
-		public String getScript()
-		{
-			return project.getBeforeRunScript();
-		}
-
-		public void setScript( String text )
-		{
-			project.setBeforeRunScript( text );
-		}
-
-		@Override
-		public Action createRunAction()
-		{
-			return new AbstractAction()
-			{
-
-				public void actionPerformed( ActionEvent e )
-				{
-					try
-					{
-						MockProjectRunner runner = new MockProjectRunner( project );
-						project.runBeforeRunScript( ( ProjectRunContext )runner.getRunContext(), runner );
-					}
-					catch( Exception e1 )
-					{
-						UISupport.showErrorMessage( e1 );
-					}
-				}
-			};
-		}
-	}
-
-	private class TearDownScriptGroovyEditorModel extends AbstractGroovyEditorModel
-	{
-		public TearDownScriptGroovyEditorModel()
-		{
-			super( new String[] { "log", "runner", "context", "project" }, project, "TearDown" );
-		}
-
-		public String getScript()
-		{
-			return project.getAfterRunScript();
-		}
-
-		public void setScript( String text )
-		{
-			project.setAfterRunScript( text );
-		}
-
-		@Override
-		public Action createRunAction()
-		{
-			return new AbstractAction()
-			{
-
-				public void actionPerformed( ActionEvent e )
-				{
-					try
-					{
-						MockProjectRunner runner = new MockProjectRunner( project );
-						project.runAfterRunScript( ( ProjectRunContext )runner.getRunContext(), runner );
-					}
-					catch( Exception e1 )
-					{
-						UISupport.showErrorMessage( e1 );
-					}
-				}
-			};
-		}
-	}
-
-	private class InternalTestSuiteRunListener implements ProjectRunListener
-	{
-		private TestRunLogTestSuiteRunListener runLogListener;
-		private int finishCount;
-
-		public void afterRun( ProjectRunner testScenarioRunner, ProjectRunContext runContext )
-		{
-			if( testScenarioRunner != projectRunner )
-				return;
-
-			WsdlProjectTestSuitesTabPanel.this.afterRun();
-		}
-
-		public void afterTestSuite( ProjectRunner testScenarioRunner, ProjectRunContext runContext,
-				TestSuiteRunner testRunner )
-		{
-			if( testScenarioRunner != projectRunner )
-				return;
-
-			progressBar.setValue( ++finishCount );
-
-			if( project.getRunType() == TestSuiteRunType.SEQUENTIAL )
-				testRunner.getTestSuite().removeTestSuiteRunListener( runLogListener );
-		}
-
-		public void beforeRun( ProjectRunner testScenarioRunner, ProjectRunContext runContext )
-		{
-			if( testScenarioRunner != projectRunner )
-				return;
-
-			WsdlProjectTestSuitesTabPanel.this.beforeRun();
-
-			testSuiteList.reset();
-
-			progressBar.setMaximum( project.getTestSuiteCount() );
-			progressBar.setValue( 0 );
-			progressBar.setString( "" );
-			finishCount = 0;
-
-			if( runLogListener == null )
-				runLogListener = new TestRunLogTestSuiteRunListener( testRunLog, false );
-
-			testRunLog.clear();
-
-			if( project.getRunType() == TestSuiteRunType.PARALLEL )
-				testRunLog.addText( "<log disabled during parallel execution>" );
-		}
-
-		public void beforeTestSuite( ProjectRunner testScenarioRunner, ProjectRunContext runContext,
-				TestSuite testRunnable )
-		{
-			if( testScenarioRunner != projectRunner )
-				return;
-
-			progressBar.setString( "Running " + testRunnable.getName() );
-
-			if( project.getRunType() == TestSuiteRunType.SEQUENTIAL )
-				testRunnable.addTestSuiteRunListener( runLogListener );
-		}
-	}
-
-	public WsdlProjectRunner getProjectRunner()
-	{
-		return projectRunner;
-	}
+public class WsdlProjectTestSuitesTabPanel extends JPanel {
+    private final WsdlProject project;
+    private JProgressBar progressBar;
+    private JProjectTestSuiteList testSuiteList;
+    private RunAction runAction = new RunAction();
+    private CancelAction cancelAction = new CancelAction();
+    private JToggleButton sequentialButton;
+    private JToggleButton parallellButton;
+    private final InternalProjectListener testSuiteListener = new InternalProjectListener();
+    private final InternalTestSuiteRunListener testSuiteRunListener = new InternalTestSuiteRunListener();
+    private JTestRunLog testRunLog;
+    private GroovyEditorComponent tearDownGroovyEditor;
+    private GroovyEditorComponent setupGroovyEditor;
+    private JInspectorPanel testSuiteListInspectorPanel;
+    private JInspectorPanel inspectorPanel;
+    private WsdlProjectRunner projectRunner;
+
+    public WsdlProjectTestSuitesTabPanel(WsdlProject project) {
+        super(new BorderLayout());
+        this.project = project;
+
+        buildUI();
+        project.addProjectRunListener(testSuiteRunListener);
+        project.addProjectListener(testSuiteListener);
+    }
+
+    public WsdlProject getProject() {
+        return project;
+    }
+
+    private void buildUI() {
+        add(buildToolbar(), BorderLayout.NORTH);
+        add(buildContent(), BorderLayout.CENTER);
+
+        setPreferredSize(new Dimension(500, 500));
+    }
+
+    private JComponent buildContent() {
+        inspectorPanel = JInspectorPanelFactory.build(buildTabs());
+        addInspectors(inspectorPanel);
+
+        return inspectorPanel.getComponent();
+    }
+
+    protected void addInspectors(JInspectorPanel inspectorPanel) {
+        inspectorPanel.addInspector(new JComponentInspector<JComponent>(buildRunLog(), "TestSuite Log",
+                "Log of executed TestSuites, TestCases and TestSteps", true));
+    }
+
+    private JComponent buildRunLog() {
+        testRunLog = new JTestRunLog(project.getSettings());
+        return testRunLog;
+    }
+
+    protected JProjectTestSuiteList getTestSuiteList() {
+        return testSuiteList;
+    }
+
+    private JComponent buildToolbar() {
+        cancelAction.setEnabled(false);
+        runAction.setEnabled(project.getTestSuiteCount() > 0);
+
+        JXToolBar toolbar = UISupport.createToolbar();
+
+        addToolbarActions(toolbar);
+        toolbar.addGlue();
+        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITE_HELP_URL)));
+
+        progressBar = new JProgressBar(0, project.getTestSuiteCount());
+        JPanel progressPanel = UISupport.createProgressBarPanel(progressBar, 10, false);
+
+        JPanel panel = new JPanel(new BorderLayout());
+
+        panel.add(toolbar, BorderLayout.PAGE_START);
+        panel.add(progressPanel, BorderLayout.CENTER);
+
+        return panel;
+    }
+
+    protected void addToolbarActions(JXToolBar toolbar) {
+        toolbar.add(UISupport.createToolbarButton(runAction));
+        toolbar.add(UISupport.createToolbarButton(cancelAction));
+
+        toolbar.addRelatedGap();
+
+        ButtonGroup buttonGroup = new ButtonGroup();
+
+        sequentialButton = new JToggleButton(UISupport.createImageIcon("/sequential.gif"), true);
+        sequentialButton.setToolTipText("The selected TestSuites are run in sequence");
+        sequentialButton.setPreferredSize(UISupport.getPreferredButtonSize());
+        sequentialButton.setSelected(project.getRunType() == TestSuiteRunType.SEQUENTIAL);
+        sequentialButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                project.setRunType(TestSuiteRunType.SEQUENTIAL);
+            }
+        });
+
+        buttonGroup.add(sequentialButton);
+
+        parallellButton = new JToggleButton(UISupport.createImageIcon("/parallell.gif"));
+        parallellButton.setToolTipText("The selected TestSuites are run in parallel");
+        parallellButton.setPreferredSize(UISupport.getPreferredButtonSize());
+        parallellButton.setSelected(project.getRunType() == TestSuiteRunType.PARALLEL);
+        parallellButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                project.setRunType(TestSuiteRunType.PARALLEL);
+            }
+        });
+
+        buttonGroup.add(parallellButton);
+
+        toolbar.addUnrelatedGap();
+        toolbar.add(sequentialButton);
+        toolbar.addRelatedGap();
+        toolbar.add(parallellButton);
+    }
+
+    private JComponent buildTabs() {
+        JTabbedPane tabs = new JTabbedPane(JTabbedPane.TOP);
+        testSuiteListInspectorPanel = JInspectorPanelFactory.build(buildTestSuiteList(project));
+
+        tabs.addTab("TestSuites", testSuiteListInspectorPanel.getComponent());
+
+        addTabs(tabs, testSuiteListInspectorPanel);
+        tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        return UISupport.createTabPanel(tabs, true);
+    }
+
+    protected void addTabs(JTabbedPane tabs, JInspectorPanel inspectorPanel) {
+        inspectorPanel.addInspector(new GroovyEditorInspector(buildSetupScriptPanel(), "Setup Script",
+                "Script to run before running TestSuites"));
+        inspectorPanel.addInspector(new GroovyEditorInspector(buildTearDownScriptPanel(), "TearDown Script",
+                "Script to run after running TestSuites"));
+    }
+
+    protected GroovyEditorComponent buildTearDownScriptPanel() {
+        tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), null);
+        return tearDownGroovyEditor;
+    }
+
+    protected GroovyEditorComponent buildSetupScriptPanel() {
+        setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), null);
+        return setupGroovyEditor;
+    }
+
+    protected JComponent buildTestSuiteList(WsdlProject testSuite) {
+        testSuiteList = new JProjectTestSuiteList(testSuite);
+
+        JPanel p = new JPanel(new BorderLayout());
+
+        p.add(buildTestCaseListToolbar(), BorderLayout.NORTH);
+        p.add(new JScrollPane(testSuiteList), BorderLayout.CENTER);
+
+        return p;
+    }
+
+    private Component buildTestCaseListToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
+        toolbar.add(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
+                AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, "/testSuite.gif")));
+        toolbar.addGlue();
+        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITELIST_HELP_URL)));
+        return toolbar;
+    }
+
+    public void release() {
+        inspectorPanel.release();
+        testSuiteListInspectorPanel.release();
+
+        setupGroovyEditor.release();
+        tearDownGroovyEditor.release();
+
+        testRunLog.release();
+        project.removeProjectRunListener(testSuiteRunListener);
+        project.removeProjectListener(testSuiteListener);
+    }
+
+    protected void runProject() {
+        projectRunner = project.run(new StringToObjectMap(), true);
+    }
+
+    protected void beforeRun() {
+        runAction.setEnabled(false);
+        cancelAction.setEnabled(true);
+        testSuiteList.setEnabled(false);
+        progressBar.setForeground(Color.GREEN.darker());
+    }
+
+    protected void afterRun() {
+        runAction.setEnabled(true);
+        cancelAction.setEnabled(false);
+        testSuiteList.setEnabled(true);
+
+        progressBar.setString(projectRunner.getStatus().toString());
+        progressBar.setForeground(projectRunner.isFailed() ? Color.RED : Color.GREEN.darker());
+    }
+
+    private final class InternalProjectListener extends ProjectListenerAdapter {
+        public void testSuiteAdded(TestSuite testSuite) {
+            runAction.setEnabled(project.getTestSuiteCount() > 0);
+        }
+
+        public void testSuiteRemoved(TestSuite testSuite) {
+            runAction.setEnabled(project.getTestSuiteCount() > 0);
+        }
+    }
+
+    private class RunAction extends AbstractAction {
+        public RunAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Runs the selected TestSuites");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            runProject();
+        }
+    }
+
+    private class CancelAction extends AbstractAction {
+        public CancelAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Cancels ongoing TestSuite runs");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            projectRunner.cancel("Cancelled from UI");
+        }
+    }
+
+    private class SetupScriptGroovyEditorModel extends AbstractGroovyEditorModel {
+        public SetupScriptGroovyEditorModel() {
+            super(new String[]{"log", "runner", "context", "project"}, project, "Setup");
+        }
+
+        public String getScript() {
+            return project.getBeforeRunScript();
+        }
+
+        public void setScript(String text) {
+            project.setBeforeRunScript(text);
+        }
+
+        @Override
+        public Action createRunAction() {
+            return new AbstractAction() {
+
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        MockProjectRunner runner = new MockProjectRunner(project);
+                        project.runBeforeRunScript((ProjectRunContext) runner.getRunContext(), runner);
+                    } catch (Exception e1) {
+                        UISupport.showErrorMessage(e1);
+                    }
+                }
+            };
+        }
+    }
+
+    private class TearDownScriptGroovyEditorModel extends AbstractGroovyEditorModel {
+        public TearDownScriptGroovyEditorModel() {
+            super(new String[]{"log", "runner", "context", "project"}, project, "TearDown");
+        }
+
+        public String getScript() {
+            return project.getAfterRunScript();
+        }
+
+        public void setScript(String text) {
+            project.setAfterRunScript(text);
+        }
+
+        @Override
+        public Action createRunAction() {
+            return new AbstractAction() {
+
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        MockProjectRunner runner = new MockProjectRunner(project);
+                        project.runAfterRunScript((ProjectRunContext) runner.getRunContext(), runner);
+                    } catch (Exception e1) {
+                        UISupport.showErrorMessage(e1);
+                    }
+                }
+            };
+        }
+    }
+
+    private class InternalTestSuiteRunListener implements ProjectRunListener {
+        private TestRunLogTestSuiteRunListener runLogListener;
+        private int finishCount;
+
+        public void afterRun(ProjectRunner testScenarioRunner, ProjectRunContext runContext) {
+            if (testScenarioRunner != projectRunner) {
+                return;
+            }
+
+            WsdlProjectTestSuitesTabPanel.this.afterRun();
+        }
+
+        public void afterTestSuite(ProjectRunner testScenarioRunner, ProjectRunContext runContext,
+                                   TestSuiteRunner testRunner) {
+            if (testScenarioRunner != projectRunner) {
+                return;
+            }
+
+            progressBar.setValue(++finishCount);
+
+            if (project.getRunType() == TestSuiteRunType.SEQUENTIAL) {
+                testRunner.getTestSuite().removeTestSuiteRunListener(runLogListener);
+            }
+        }
+
+        public void beforeRun(ProjectRunner testScenarioRunner, ProjectRunContext runContext) {
+            if (testScenarioRunner != projectRunner) {
+                return;
+            }
+
+            WsdlProjectTestSuitesTabPanel.this.beforeRun();
+
+            testSuiteList.reset();
+
+            progressBar.setMaximum(project.getTestSuiteCount());
+            progressBar.setValue(0);
+            progressBar.setString("");
+            finishCount = 0;
+
+            if (runLogListener == null) {
+                runLogListener = new TestRunLogTestSuiteRunListener(testRunLog, false);
+            }
+
+            testRunLog.clear();
+
+            if (project.getRunType() == TestSuiteRunType.PARALLEL) {
+                testRunLog.addText("<log disabled during parallel execution>");
+            }
+        }
+
+        public void beforeTestSuite(ProjectRunner testScenarioRunner, ProjectRunContext runContext,
+                                    TestSuite testRunnable) {
+            if (testScenarioRunner != projectRunner) {
+                return;
+            }
+
+            progressBar.setString("Running " + testRunnable.getName());
+
+            if (project.getRunType() == TestSuiteRunType.SEQUENTIAL) {
+                testRunnable.addTestSuiteRunListener(runLogListener);
+            }
+        }
+    }
+
+    public WsdlProjectRunner getProjectRunner() {
+        return projectRunner;
+    }
 }

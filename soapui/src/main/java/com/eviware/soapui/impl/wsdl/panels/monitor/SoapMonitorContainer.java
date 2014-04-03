@@ -12,15 +12,15 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.panels.monitor;
+*/
+package com.eviware.soapui.impl.wsdl.panels.monitor;
 
 import com.eviware.soapui.impl.wsdl.monitor.SoapMonitor;
 
 /**
  * Defines an object that holds a reference to a SoapMonitor object and its corresponding desktop panel.
  */
-public interface SoapMonitorContainer
-{
-	SoapMonitor getSoapMonitor();
+public interface SoapMonitorContainer {
+    SoapMonitor getSoapMonitor();
 
 }

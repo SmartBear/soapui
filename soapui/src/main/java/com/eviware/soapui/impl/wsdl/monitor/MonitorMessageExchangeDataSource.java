@@ -28,47 +28,38 @@ import com.eviware.soapui.support.Tools;
 
 /**
  * DataSource for a MockRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class MonitorMessageExchangeDataSource implements DataSource
-{
-	private byte[] data;
-	private String contentType;
-	private String name;
+public class MonitorMessageExchangeDataSource implements DataSource {
+    private byte[] data;
+    private String contentType;
+    private String name;
 
-	public MonitorMessageExchangeDataSource( String name, InputStream in, String contentType )
-	{
-		try
-		{
-			data = Tools.readAll( in, 0 ).toByteArray();
-			this.contentType = contentType;
-			this.name = name;
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+    public MonitorMessageExchangeDataSource(String name, InputStream in, String contentType) {
+        try {
+            data = Tools.readAll(in, 0).toByteArray();
+            this.contentType = contentType;
+            this.name = name;
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public String getContentType()
-	{
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		return new ByteArrayInputStream( data );
-	}
+    public InputStream getInputStream() throws IOException {
+        return new ByteArrayInputStream(data);
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

@@ -22,25 +22,20 @@ import com.eviware.soapui.model.mock.MockServiceListener;
 
 /**
  * Adapter for MockServiceListeners
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockServiceListenerAdapter implements MockServiceListener
-{
-	public void mockOperationAdded( MockOperation operation )
-	{
-	}
+public class MockServiceListenerAdapter implements MockServiceListener {
+    public void mockOperationAdded(MockOperation operation) {
+    }
 
-	public void mockOperationRemoved( MockOperation operation )
-	{
-	}
+    public void mockOperationRemoved(MockOperation operation) {
+    }
 
-	public void mockResponseAdded( MockResponse request )
-	{
-	}
+    public void mockResponseAdded(MockResponse request) {
+    }
 
-	public void mockResponseRemoved( MockResponse request )
-	{
-	}
+    public void mockResponseRemoved(MockResponse request) {
+    }
 }

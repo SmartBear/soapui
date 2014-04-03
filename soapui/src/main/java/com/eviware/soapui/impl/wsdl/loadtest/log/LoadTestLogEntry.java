@@ -24,29 +24,28 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
  * An entry in the loadtest log
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface LoadTestLogEntry
-{
-	public String getMessage();
+public interface LoadTestLogEntry {
+    public String getMessage();
 
-	public long getTimeStamp();
+    public long getTimeStamp();
 
-	public String getType();
+    public String getType();
 
-	public String getTargetStepName();
+    public String getTargetStepName();
 
-	public ActionList getActions();
+    public ActionList getActions();
 
-	public ImageIcon getIcon();
+    public ImageIcon getIcon();
 
-	public boolean isError();
+    public boolean isError();
 
-	public void discard();
+    public void discard();
 
-	public boolean isDiscarded();
+    public boolean isDiscarded();
 
-	public void exportToFile( String fileName ) throws IOException;
+    public void exportToFile(String fileName) throws IOException;
 }

@@ -34,116 +34,103 @@ import com.eviware.soapui.inferredSchema.MapEntryConfig;
 
 /**
  * Represents an xs:attribute, with a name, a type, etc.
- * 
+ *
  * @author Dain Nilsson
  */
-public class AttributeParticle implements Particle
-{
-	private String name;
-	private Schema schema;
-	private Type type;
-	private Map<String, String> attributes;
+public class AttributeParticle implements Particle {
+    private String name;
+    private Schema schema;
+    private Type type;
+    private Map<String, String> attributes;
 
-	public AttributeParticle( Schema schema, String name )
-	{
-		this.schema = schema;
-		this.name = name;
-		type = Type.Factory.newType( schema );
-		attributes = new HashMap<String, String>();
-	}
+    public AttributeParticle(Schema schema, String name) {
+        this.schema = schema;
+        this.name = name;
+        type = Type.Factory.newType(schema);
+        attributes = new HashMap<String, String>();
+    }
 
-	public AttributeParticle( AttributeParticleConfig xml, Schema schema )
-	{
-		this.schema = schema;
-		name = xml.getName();
-		type = Type.Factory.parse( xml.getType(), schema );
-		attributes = new HashMap<String, String>();
-		for( MapEntryConfig entry : xml.getAttributeList() )
-		{
-			attributes.put( entry.getKey(), entry.getValue() );
-		}
-	}
+    public AttributeParticle(AttributeParticleConfig xml, Schema schema) {
+        this.schema = schema;
+        name = xml.getName();
+        type = Type.Factory.parse(xml.getType(), schema);
+        attributes = new HashMap<String, String>();
+        for (MapEntryConfig entry : xml.getAttributeList()) {
+            attributes.put(entry.getKey(), entry.getValue());
+        }
+    }
 
-	public AttributeParticleConfig save()
-	{
-		AttributeParticleConfig xml = AttributeParticleConfig.Factory.newInstance();
-		xml.setName( name );
-		for( Map.Entry<String, String> entry : attributes.entrySet() )
-		{
-			MapEntryConfig mapEntry = xml.addNewAttribute();
-			mapEntry.setKey( entry.getKey() );
-			mapEntry.setValue( entry.getValue() );
-		}
-		xml.setType( type.save() );
-		return xml;
-	}
+    public AttributeParticleConfig save() {
+        AttributeParticleConfig xml = AttributeParticleConfig.Factory.newInstance();
+        xml.setName(name);
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            MapEntryConfig mapEntry = xml.addNewAttribute();
+            mapEntry.setKey(entry.getKey());
+            mapEntry.setValue(entry.getValue());
+        }
+        xml.setType(type.save());
+        return xml;
+    }
 
-	public String getAttribute( String key )
-	{
-		String value = attributes.get( key );
-		if( value == null )
-			value = "";
-		return value;
-	}
+    public String getAttribute(String key) {
+        String value = attributes.get(key);
+        if (value == null) {
+            value = "";
+        }
+        return value;
+    }
 
-	public QName getName()
-	{
-		return new QName( schema.getNamespace(), name );
-	}
+    public QName getName() {
+        return new QName(schema.getNamespace(), name);
+    }
 
-	public Type getType()
-	{
-		return type;
-	}
+    public Type getType() {
+        return type;
+    }
 
-	public void setAttribute( String key, String value )
-	{
-		attributes.put( key, value );
-	}
+    public void setAttribute(String key, String value) {
+        attributes.put(key, value);
+    }
 
-	public void setType( Type type )
-	{
-		this.type = type;
-	}
+    public void setType(Type type) {
+        this.type = type;
+    }
 
-	public void validate( Context context ) throws XmlException
-	{
-		context.getCursor().push();
-		Type newType = type.validate( context );
-		if( newType != type )
-		{
-			String problem = "Illegal value for attribute '" + name + "' with type '" + type.getName() + "'.";
-			if( context.getHandler().callback( ConflictHandler.Event.MODIFICATION, ConflictHandler.Type.ATTRIBUTE,
-					getName(), context.getPath(), "Illegal value." ) )
-			{
-				type = newType;
-				context.getCursor().pop();
-				validate( context );
-				return;
-			}
-			else
-				throw new XmlException( problem );
-		}
-		context.getCursor().pop();
-	}
+    public void validate(Context context) throws XmlException {
+        context.getCursor().push();
+        Type newType = type.validate(context);
+        if (newType != type) {
+            String problem = "Illegal value for attribute '" + name + "' with type '" + type.getName() + "'.";
+            if (context.getHandler().callback(ConflictHandler.Event.MODIFICATION, ConflictHandler.Type.ATTRIBUTE,
+                    getName(), context.getPath(), "Illegal value.")) {
+                type = newType;
+                context.getCursor().pop();
+                validate(context);
+                return;
+            } else {
+                throw new XmlException(problem);
+            }
+        }
+        context.getCursor().pop();
+    }
 
-	@Override
-	public String toString()
-	{
-		StringBuilder s = new StringBuilder( "<" + schema.getPrefixForNamespace( Settings.xsdns ) + ":" + getPType()
-				+ " name=\"" + name + "\" type=\"" );
-		if( type.getSchema() != schema )
-			s.append( schema.getPrefixForNamespace( type.getSchema().getNamespace() ) + ":" );
-		s.append( type.getName() + "\"" );
-		for( Map.Entry<String, String> entry : attributes.entrySet() )
-			s.append( " " + entry.getKey() + "=\"" + entry.getValue() + "\"" );
-		s.append( "/>" );
-		return s.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder("<" + schema.getPrefixForNamespace(Settings.xsdns) + ":" + getPType()
+                + " name=\"" + name + "\" type=\"");
+        if (type.getSchema() != schema) {
+            s.append(schema.getPrefixForNamespace(type.getSchema().getNamespace()) + ":");
+        }
+        s.append(type.getName() + "\"");
+        for (Map.Entry<String, String> entry : attributes.entrySet()) {
+            s.append(" " + entry.getKey() + "=\"" + entry.getValue() + "\"");
+        }
+        s.append("/>");
+        return s.toString();
+    }
 
-	public Particle.ParticleType getPType()
-	{
-		return Particle.ParticleType.ATTRIBUTE;
-	}
+    public Particle.ParticleType getPType() {
+        return Particle.ParticleType.ATTRIBUTE;
+    }
 
 }

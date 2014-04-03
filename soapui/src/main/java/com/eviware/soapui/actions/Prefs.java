@@ -22,21 +22,20 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Interface for a preferences page
- * 
+ *
  * @author ole.matzura
  */
 
-public interface Prefs
-{
-	public SimpleForm getForm();
+public interface Prefs {
+    public SimpleForm getForm();
 
-	public void setFormValues( Settings settings );
+    public void setFormValues(Settings settings);
 
-	public void getFormValues( Settings settings );
+    public void getFormValues(Settings settings);
 
-	public void storeValues( StringToStringMap values, Settings settings );
+    public void storeValues(StringToStringMap values, Settings settings);
 
-	public StringToStringMap getValues( Settings settings );
+    public StringToStringMap getValues(Settings settings);
 
-	public String getTitle();
+    public String getTitle();
 }

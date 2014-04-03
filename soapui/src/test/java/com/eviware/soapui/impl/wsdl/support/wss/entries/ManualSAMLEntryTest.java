@@ -48,69 +48,63 @@ import com.eviware.soapui.utils.TestUtils;
 
 /**
  * @author Erik R. Yverling
- * 
  */
-public class ManualSAMLEntryTest
-{
+public class ManualSAMLEntryTest {
 
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( ManualSAMLEntryTest.class );
-	}
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ManualSAMLEntryTest.class);
+    }
 
-	@Mock
-	private WSSEntryConfig wssEntryConfigMock;
-	@Mock
-	private OutgoingWss outgoingWssMock;
-	@Mock
-	private PropertyExpansionContext contextMock;
-	@Mock
-	private XmlObject xmlObjectMock;
+    @Mock
+    private WSSEntryConfig wssEntryConfigMock;
+    @Mock
+    private OutgoingWss outgoingWssMock;
+    @Mock
+    private PropertyExpansionContext contextMock;
+    @Mock
+    private XmlObject xmlObjectMock;
 
-	private ManualSAMLEntry manualSAMLentry;
-	private Document doc;
-	private WSSecHeader secHeader;
-	private XPathFactory factory;
-	private NamespaceContextImpl namespaceContext;
-	private XPath xpath;
+    private ManualSAMLEntry manualSAMLentry;
+    private Document doc;
+    private WSSecHeader secHeader;
+    private XPathFactory factory;
+    private NamespaceContextImpl namespaceContext;
+    private XPath xpath;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		MockitoAnnotations.initMocks( this );
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
 
-		initXpath();
+        initXpath();
 
-		doc = XmlUtils.parseXml( TestUtils.SAMPLE_SOAP_MESSAGE );
+        doc = XmlUtils.parseXml(TestUtils.SAMPLE_SOAP_MESSAGE);
 
-		secHeader = new WSSecHeader();
-		secHeader.insertSecurityHeader( doc );
+        secHeader = new WSSecHeader();
+        secHeader.insertSecurityHeader(doc);
 
-		manualSAMLentry = new ManualSAMLEntry();
+        manualSAMLentry = new ManualSAMLEntry();
 
-		manualSAMLentry.init( wssEntryConfigMock, outgoingWssMock );
+        manualSAMLentry.init(wssEntryConfigMock, outgoingWssMock);
 
-		when( wssEntryConfigMock.getConfiguration() ).thenReturn( xmlObjectMock );
-		when( contextMock.expand( TestUtils.SAMPLE_SAML_1_ASSERTION ) ).thenReturn( TestUtils.SAMPLE_SAML_1_ASSERTION );
-	}
+        when(wssEntryConfigMock.getConfiguration()).thenReturn(xmlObjectMock);
+        when(contextMock.expand(TestUtils.SAMPLE_SAML_1_ASSERTION)).thenReturn(TestUtils.SAMPLE_SAML_1_ASSERTION);
+    }
 
-	@Test
-	public void testProcess() throws XPathExpressionException, IOException
-	{
-		manualSAMLentry.setSamlAssertion( TestUtils.SAMPLE_SAML_1_ASSERTION );
-		manualSAMLentry.process( secHeader, doc, contextMock );
+    @Test
+    public void testProcess() throws XPathExpressionException, IOException {
+        manualSAMLentry.setSamlAssertion(TestUtils.SAMPLE_SAML_1_ASSERTION);
+        manualSAMLentry.process(secHeader, doc, contextMock);
 
-		assertNotNull( xpath.evaluate( "//saml1:Assertion", doc, XPathConstants.NODE ) );
+        assertNotNull(xpath.evaluate("//saml1:Assertion", doc, XPathConstants.NODE));
         assertEquals("1", xpath.evaluate("//saml1:Assertion/@MajorVersion", doc, XPathConstants.STRING));
         assertEquals("1", xpath.evaluate("//saml1:Assertion/@MinorVersion", doc, XPathConstants.STRING));
     }
 
-	private void initXpath()
-	{
-		factory = XPathFactory.newInstance();
-		namespaceContext = new NamespaceContextImpl();
-		namespaceContext.startPrefixMapping( "saml1", "urn:oasis:names:tc:SAML:1.0:assertion" );
-		xpath = factory.newXPath();
-		xpath.setNamespaceContext( namespaceContext );
-	}
+    private void initXpath() {
+        factory = XPathFactory.newInstance();
+        namespaceContext = new NamespaceContextImpl();
+        namespaceContext.startPrefixMapping("saml1", "urn:oasis:names:tc:SAML:1.0:assertion");
+        xpath = factory.newXPath();
+        xpath.setNamespaceContext(namespaceContext);
+    }
 }

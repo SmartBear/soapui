@@ -50,145 +50,121 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class WsdlMimeMessageResponse extends MimeMessageResponse implements WsdlResponse
-{
-	private Vector<Object> wssResult;
+public class WsdlMimeMessageResponse extends MimeMessageResponse implements WsdlResponse {
+    private Vector<Object> wssResult;
 
-	public WsdlMimeMessageResponse( WsdlRequest httpRequest, ExtendedHttpMethod httpMethod, String requestContent,
-			PropertyExpansionContext context )
-	{
-		super( httpRequest, httpMethod, requestContent, context );
+    public WsdlMimeMessageResponse(WsdlRequest httpRequest, ExtendedHttpMethod httpMethod, String requestContent,
+                                   PropertyExpansionContext context) {
+        super(httpRequest, httpMethod, requestContent, context);
 
-		WsdlRequest wsdlRequest = ( WsdlRequest )httpRequest;
-		processIncomingWss( wsdlRequest, context );
+        WsdlRequest wsdlRequest = (WsdlRequest) httpRequest;
+        processIncomingWss(wsdlRequest, context);
 
-		String multipartType = null;
+        String multipartType = null;
 
-		Header h = null;
-		if( httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null )
-		{
-			h = httpMethod.getHttpResponse().getEntity().getContentType();
-		}
+        Header h = null;
+        if (httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null) {
+            h = httpMethod.getHttpResponse().getEntity().getContentType();
+        }
 
-		if( h != null )
-		{
-			HeaderElement[] elements = h.getElements();
+        if (h != null) {
+            HeaderElement[] elements = h.getElements();
 
-			for( HeaderElement element : elements )
-			{
-				String name = element.getName().toUpperCase();
-				if( name.startsWith( "MULTIPART/" ) )
-				{
-					NameValuePair parameter = element.getParameterByName( "type" );
-					if( parameter != null )
-						multipartType = parameter.getValue();
-				}
-			}
-		}
+            for (HeaderElement element : elements) {
+                String name = element.getName().toUpperCase();
+                if (name.startsWith("MULTIPART/")) {
+                    NameValuePair parameter = element.getParameterByName("type");
+                    if (parameter != null) {
+                        multipartType = parameter.getValue();
+                    }
+                }
+            }
+        }
 
-		if( wsdlRequest.isExpandMtomResponseAttachments() && "application/xop+xml".equals( multipartType ) )
-		{
-			expandMtomAttachments( wsdlRequest );
-		}
-	}
+        if (wsdlRequest.isExpandMtomResponseAttachments() && "application/xop+xml".equals(multipartType)) {
+            expandMtomAttachments(wsdlRequest);
+        }
+    }
 
-	private void processIncomingWss( AbstractHttpRequestInterface<?> wsdlRequest, PropertyExpansionContext context )
-	{
-		IncomingWss incomingWss = ( IncomingWss )context.getProperty( WssRequestFilter.INCOMING_WSS_PROPERTY );
-		if( incomingWss != null )
-		{
-			try
-			{
-				Document document = XmlUtils.parseXml( getMmSupport().getResponseContent() );
-				wssResult = incomingWss.processIncoming( document, context );
-				if( wssResult != null && wssResult.size() > 0 )
-				{
-					StringWriter writer = new StringWriter();
-					XmlUtils.serializePretty( document, writer );
-					getMmSupport().setResponseContent( writer.toString() );
-				}
-			}
-			catch( Exception e )
-			{
-				if( wssResult == null )
-					wssResult = new Vector<Object>();
-				wssResult.add( e );
-			}
-		}
-	}
+    private void processIncomingWss(AbstractHttpRequestInterface<?> wsdlRequest, PropertyExpansionContext context) {
+        IncomingWss incomingWss = (IncomingWss) context.getProperty(WssRequestFilter.INCOMING_WSS_PROPERTY);
+        if (incomingWss != null) {
+            try {
+                Document document = XmlUtils.parseXml(getMmSupport().getResponseContent());
+                wssResult = incomingWss.processIncoming(document, context);
+                if (wssResult != null && wssResult.size() > 0) {
+                    StringWriter writer = new StringWriter();
+                    XmlUtils.serializePretty(document, writer);
+                    getMmSupport().setResponseContent(writer.toString());
+                }
+            } catch (Exception e) {
+                if (wssResult == null) {
+                    wssResult = new Vector<Object>();
+                }
+                wssResult.add(e);
+            }
+        }
+    }
 
-	private void expandMtomAttachments( WsdlRequest wsdlRequest )
-	{
-		try
-		{
-			// XmlObject xmlObject = XmlObject.Factory.parse( getContentAsString()
-			// );
-			XmlObject xmlObject = XmlUtils.createXmlObject( getContentAsString() );
-			XmlObject[] includes = xmlObject
-					.selectPath( "declare namespace xop='http://www.w3.org/2004/08/xop/include'; //xop:Include" );
+    private void expandMtomAttachments(WsdlRequest wsdlRequest) {
+        try {
+            // XmlObject xmlObject = XmlObject.Factory.parse( getContentAsString()
+            // );
+            XmlObject xmlObject = XmlUtils.createXmlObject(getContentAsString());
+            XmlObject[] includes = xmlObject
+                    .selectPath("declare namespace xop='http://www.w3.org/2004/08/xop/include'; //xop:Include");
 
-			for( XmlObject include : includes )
-			{
-				Element elm = ( Element )include.getDomNode();
-				String href = elm.getAttribute( "href" );
-				Attachment attachment = getMmSupport().getAttachmentWithContentId( "<" + href.substring( 4 ) + ">" );
-				if( attachment != null )
-				{
-					ByteArrayOutputStream data = Tools.readAll( attachment.getInputStream(), 0 );
-					byte[] byteArray = data.toByteArray();
+            for (XmlObject include : includes) {
+                Element elm = (Element) include.getDomNode();
+                String href = elm.getAttribute("href");
+                Attachment attachment = getMmSupport().getAttachmentWithContentId("<" + href.substring(4) + ">");
+                if (attachment != null) {
+                    ByteArrayOutputStream data = Tools.readAll(attachment.getInputStream(), 0);
+                    byte[] byteArray = data.toByteArray();
 
-					XmlCursor cursor = include.newCursor();
-					cursor.toParent();
-					XmlObject parentXmlObject = cursor.getObject();
-					cursor.dispose();
+                    XmlCursor cursor = include.newCursor();
+                    cursor.toParent();
+                    XmlObject parentXmlObject = cursor.getObject();
+                    cursor.dispose();
 
-					SchemaType schemaType = parentXmlObject.schemaType();
-					Node parentNode = elm.getParentNode();
+                    SchemaType schemaType = parentXmlObject.schemaType();
+                    Node parentNode = elm.getParentNode();
 
-					if( schemaType.isNoType() )
-					{
-						SchemaTypeSystem typeSystem = wsdlRequest.getOperation().getInterface().getWsdlContext()
-								.getSchemaTypeSystem();
-						SchemaGlobalElement schemaElement = typeSystem.findElement( new QName( parentNode.getNamespaceURI(),
-								parentNode.getLocalName() ) );
-						if( schemaElement != null )
-						{
-							schemaType = schemaElement.getType();
-						}
-					}
+                    if (schemaType.isNoType()) {
+                        SchemaTypeSystem typeSystem = wsdlRequest.getOperation().getInterface().getWsdlContext()
+                                .getSchemaTypeSystem();
+                        SchemaGlobalElement schemaElement = typeSystem.findElement(new QName(parentNode.getNamespaceURI(),
+                                parentNode.getLocalName()));
+                        if (schemaElement != null) {
+                            schemaType = schemaElement.getType();
+                        }
+                    }
 
-					String txt = null;
+                    String txt = null;
 
-					if( SchemaUtils.isInstanceOf( schemaType, XmlHexBinary.type ) )
-					{
-						txt = new String( Hex.encodeHex( byteArray ) );
-					}
-					else
-					{
-						txt = new String( Base64.encodeBase64( byteArray ) );
-					}
+                    if (SchemaUtils.isInstanceOf(schemaType, XmlHexBinary.type)) {
+                        txt = new String(Hex.encodeHex(byteArray));
+                    } else {
+                        txt = new String(Base64.encodeBase64(byteArray));
+                    }
 
-					parentNode.replaceChild( elm.getOwnerDocument().createTextNode( txt ), elm );
-				}
-			}
+                    parentNode.replaceChild(elm.getOwnerDocument().createTextNode(txt), elm);
+                }
+            }
 
-			getMmSupport().setResponseContent( xmlObject.toString() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+            getMmSupport().setResponseContent(xmlObject.toString());
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	@Override
-	public WsdlRequest getRequest()
-	{
-		return ( WsdlRequest )super.getRequest();
-	}
+    @Override
+    public WsdlRequest getRequest() {
+        return (WsdlRequest) super.getRequest();
+    }
 
-	public Vector<?> getWssResult()
-	{
-		return wssResult;
-	}
+    public Vector<?> getWssResult() {
+        return wssResult;
+    }
 
 }

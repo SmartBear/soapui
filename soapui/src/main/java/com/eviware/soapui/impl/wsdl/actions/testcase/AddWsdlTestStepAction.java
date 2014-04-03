@@ -27,42 +27,41 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 /**
  * Adds a WsdlTestStep specified by the supplied WsdlTestStepFactory to a
  * WsdlTestCase
- * 
+ *
  * @author ole.matzura
  */
 
-public class AddWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestCase>
-{
-	public final static String SOAPUI_ACTION_ID = "AddWsdlTestStepAction";
+public class AddWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestCase> {
+    public final static String SOAPUI_ACTION_ID = "AddWsdlTestStepAction";
 
-	public AddWsdlTestStepAction()
-	{
-		super( "Add Step", "Adds a TestStep to this TestCase" );
-	}
+    public AddWsdlTestStepAction() {
+        super("Add Step", "Adds a TestStep to this TestCase");
+    }
 
-	public void perform( WsdlTestCase testCase, Object param )
-	{
-		WsdlTestStepFactory factory = ( WsdlTestStepFactory )param;
+    public void perform(WsdlTestCase testCase, Object param) {
+        WsdlTestStepFactory factory = (WsdlTestStepFactory) param;
 
-		if( !factory.canAddTestStepToTestCase( testCase ) )
-			return;
+        if (!factory.canAddTestStepToTestCase(testCase)) {
+            return;
+        }
 
-		String name = UISupport.prompt( "Specify name for new step", "Add Step", factory.getTestStepName() );
+        String name = UISupport.prompt("Specify name for new step", "Add Step", factory.getTestStepName());
 
-		if( name == null )
-			return;
-		while( testCase.getTestStepByName( name.trim() ) != null )
-		{
-			name = UISupport.prompt( "Specify unique name of TestStep", "Rename TestStep", name );
-			if( StringUtils.isNullOrEmpty( name ) )
-				return;
-		}
-		TestStepConfig newTestStepConfig = factory.createNewTestStep( testCase, name );
-		if( newTestStepConfig != null )
-		{
-			WsdlTestStep testStep = testCase.addTestStep( newTestStepConfig );
-			if( testStep != null )
-				UISupport.selectAndShow( testStep );
-		}
-	}
+        if (name == null) {
+            return;
+        }
+        while (testCase.getTestStepByName(name.trim()) != null) {
+            name = UISupport.prompt("Specify unique name of TestStep", "Rename TestStep", name);
+            if (StringUtils.isNullOrEmpty(name)) {
+                return;
+            }
+        }
+        TestStepConfig newTestStepConfig = factory.createNewTestStep(testCase, name);
+        if (newTestStepConfig != null) {
+            WsdlTestStep testStep = testCase.addTestStep(newTestStepConfig);
+            if (testStep != null) {
+                UISupport.selectAndShow(testStep);
+            }
+        }
+    }
 }

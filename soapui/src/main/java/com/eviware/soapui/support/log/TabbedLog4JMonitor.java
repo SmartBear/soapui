@@ -25,116 +25,94 @@ import org.apache.log4j.spi.LoggingEvent;
 
 /**
  * JTabbedPane that displays Log4J output in different tabs
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor
-{
-	private JLogList defaultLogArea;
+public class TabbedLog4JMonitor extends JTabbedPane implements Log4JMonitor {
+    private JLogList defaultLogArea;
 
-	public TabbedLog4JMonitor()
-	{
-		super( JTabbedPane.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT );
-	}
+    public TabbedLog4JMonitor() {
+        super(JTabbedPane.BOTTOM, JTabbedPane.SCROLL_TAB_LAYOUT);
+    }
 
-	public JLogList addLogArea( String title, String loggerName, boolean isDefault )
-	{
-		JLogList logArea = new JLogList( title );
-		logArea.addLogger( loggerName, !isDefault );
-		addTab( title, logArea );
+    public JLogList addLogArea(String title, String loggerName, boolean isDefault) {
+        JLogList logArea = new JLogList(title);
+        logArea.addLogger(loggerName, !isDefault);
+        addTab(title, logArea);
 
-		if( isDefault )
-			defaultLogArea = logArea;
+        if (isDefault) {
+            defaultLogArea = logArea;
+        }
 
-		return logArea;
-	}
+        return logArea;
+    }
 
-	public void logEvent( Object msg )
-	{
-		if( msg instanceof LoggingEvent )
-		{
-			LoggingEvent event = ( LoggingEvent )msg;
-			String loggerName = event.getLoggerName();
+    public void logEvent(Object msg) {
+        if (msg instanceof LoggingEvent) {
+            LoggingEvent event = (LoggingEvent) msg;
+            String loggerName = event.getLoggerName();
 
-			for( int c = 0; c < getTabCount(); c++ )
-			{
-				Component tabComponent = getComponentAt( c );
-				if( tabComponent instanceof JLogList )
-				{
-					JLogList logArea = ( JLogList )tabComponent;
-					if( logArea.monitors( loggerName ) )
-					{
-						logArea.addLine( msg );
-					}
-				}
-			}
-		}
-		else if( defaultLogArea != null )
-		{
-			defaultLogArea.addLine( msg );
-		}
-	}
+            for (int c = 0; c < getTabCount(); c++) {
+                Component tabComponent = getComponentAt(c);
+                if (tabComponent instanceof JLogList) {
+                    JLogList logArea = (JLogList) tabComponent;
+                    if (logArea.monitors(loggerName)) {
+                        logArea.addLine(msg);
+                    }
+                }
+            }
+        } else if (defaultLogArea != null) {
+            defaultLogArea.addLine(msg);
+        }
+    }
 
-	public JLogList getLogArea( String title )
-	{
-		int ix = indexOfTab( title );
-		return ( JLogList )( ix == -1 ? null : getComponentAt( ix ) );
-	}
+    public JLogList getLogArea(String title) {
+        int ix = indexOfTab(title);
+        return (JLogList) (ix == -1 ? null : getComponentAt(ix));
+    }
 
-	public boolean hasLogArea( String loggerName )
-	{
-		for( int c = 0; c < getTabCount(); c++ )
-		{
-			Component tabComponent = getComponentAt( c );
-			if( tabComponent instanceof JLogList )
-			{
-				JLogList logArea = ( JLogList )tabComponent;
-				if( logArea.monitors( loggerName ) )
-				{
-					return true;
-				}
-			}
-		}
+    public boolean hasLogArea(String loggerName) {
+        for (int c = 0; c < getTabCount(); c++) {
+            Component tabComponent = getComponentAt(c);
+            if (tabComponent instanceof JLogList) {
+                JLogList logArea = (JLogList) tabComponent;
+                if (logArea.monitors(loggerName)) {
+                    return true;
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public JComponent getComponent()
-	{
-		return this;
-	}
+    public JComponent getComponent() {
+        return this;
+    }
 
-	public JLogList getCurrentLog()
-	{
-		int ix = getSelectedIndex();
-		return ix == -1 ? null : getLogArea( getTitleAt( ix ) );
-	}
+    public JLogList getCurrentLog() {
+        int ix = getSelectedIndex();
+        return ix == -1 ? null : getLogArea(getTitleAt(ix));
+    }
 
-	public void setCurrentLog( JLogList lastLog )
-	{
-		for( int c = 0; c < getTabCount(); c++ )
-		{
-			Component tabComponent = getComponentAt( c );
-			if( tabComponent == lastLog )
-			{
-				setSelectedComponent( tabComponent );
-			}
-		}
-	}
+    public void setCurrentLog(JLogList lastLog) {
+        for (int c = 0; c < getTabCount(); c++) {
+            Component tabComponent = getComponentAt(c);
+            if (tabComponent == lastLog) {
+                setSelectedComponent(tabComponent);
+            }
+        }
+    }
 
-	public boolean removeLogArea( String loggerName )
-	{
-		for( int c = 0; c < getTabCount(); c++ )
-		{
-			JLogList tabComponent = ( JLogList )getComponentAt( c );
-			if( tabComponent.getLogger( loggerName ) != null )
-			{
-				removeTabAt( c );
-				return true;
-			}
-		}
+    public boolean removeLogArea(String loggerName) {
+        for (int c = 0; c < getTabCount(); c++) {
+            JLogList tabComponent = (JLogList) getComponentAt(c);
+            if (tabComponent.getLogger(loggerName) != null) {
+                removeTabAt(c);
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

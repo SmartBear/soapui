@@ -31,65 +31,54 @@ import com.eviware.soapui.settings.HttpSettings;
 
 /**
  * DataSource for a standard POST response
- * 
+ *
  * @author ole.matzura
  */
 
-public class PostResponseDataSource implements DataSource
-{
-	private final ExtendedHttpMethod postMethod;
-	private byte[] data;
+public class PostResponseDataSource implements DataSource {
+    private final ExtendedHttpMethod postMethod;
+    private byte[] data;
 
-	public PostResponseDataSource( ExtendedHttpMethod postMethod )
-	{
-		this.postMethod = postMethod;
+    public PostResponseDataSource(ExtendedHttpMethod postMethod) {
+        this.postMethod = postMethod;
 
-		try
-		{
-			data = postMethod.getResponseBody();
+        try {
+            data = postMethod.getResponseBody();
 
-			if( !SoapUI.getSettings().getBoolean( HttpSettings.DISABLE_RESPONSE_DECOMPRESSION )
-					&& postMethod.hasHttpResponse() )
-			{
-				String compressionAlg = HttpClientSupport.getResponseCompressionType( postMethod.getHttpResponse() );
-				if( compressionAlg != null )
-					data = CompressionSupport.decompress( compressionAlg, data );
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+            if (!SoapUI.getSettings().getBoolean(HttpSettings.DISABLE_RESPONSE_DECOMPRESSION)
+                    && postMethod.hasHttpResponse()) {
+                String compressionAlg = HttpClientSupport.getResponseCompressionType(postMethod.getHttpResponse());
+                if (compressionAlg != null) {
+                    data = CompressionSupport.decompress(compressionAlg, data);
+                }
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public long getDataSize()
-	{
-		return data == null ? -1 : data.length;
-	}
+    public long getDataSize() {
+        return data == null ? -1 : data.length;
+    }
 
-	public String getContentType()
-	{
-		return postMethod.getResponseContentType();
-	}
+    public String getContentType() {
+        return postMethod.getResponseContentType();
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		return new ByteArrayInputStream( data );
-	}
+    public InputStream getInputStream() throws IOException {
+        return new ByteArrayInputStream(data);
+    }
 
-	public String getName()
-	{
-		return postMethod.getRequestLine().getMethod() + " response for "
-				+ postMethod.getRequestLine().getUri().toString();
-	}
+    public String getName() {
+        return postMethod.getRequestLine().getMethod() + " response for "
+                + postMethod.getRequestLine().getUri().toString();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 
-	public byte[] getData()
-	{
-		return data;
-	}
+    public byte[] getData() {
+        return data;
+    }
 }

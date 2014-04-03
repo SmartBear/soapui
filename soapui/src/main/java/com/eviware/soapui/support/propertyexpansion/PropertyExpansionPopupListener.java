@@ -65,373 +65,319 @@ import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class PropertyExpansionPopupListener implements PopupMenuListener
-{
-	private final Container targetMenu;
-	private final ModelItem modelItem;
-	private final PropertyExpansionTarget target;
+public class PropertyExpansionPopupListener implements PopupMenuListener {
+    private final Container targetMenu;
+    private final ModelItem modelItem;
+    private final PropertyExpansionTarget target;
 
-	public PropertyExpansionPopupListener( Container transferMenu, ModelItem modelItem, PropertyExpansionTarget target )
-	{
-		this.modelItem = modelItem;
-		this.target = target;
+    public PropertyExpansionPopupListener(Container transferMenu, ModelItem modelItem, PropertyExpansionTarget target) {
+        this.modelItem = modelItem;
+        this.target = target;
 
-		this.targetMenu = transferMenu;
-	}
+        this.targetMenu = transferMenu;
+    }
 
-	@Override
-	public void popupMenuCanceled( PopupMenuEvent arg0 )
-	{
-	}
+    @Override
+    public void popupMenuCanceled(PopupMenuEvent arg0) {
+    }
 
-	@Override
-	public void popupMenuWillBecomeInvisible( PopupMenuEvent arg0 )
-	{
-	}
+    @Override
+    public void popupMenuWillBecomeInvisible(PopupMenuEvent arg0) {
+    }
 
-	@Override
-	public void popupMenuWillBecomeVisible( PopupMenuEvent arg0 )
-	{
-		// create transfer menus
-		targetMenu.removeAll();
+    @Override
+    public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
+        // create transfer menus
+        targetMenu.removeAll();
 
-		WsdlTestStep testStep = null;
-		WsdlTestCase testCase = null;
-		WsdlTestSuite testSuite = null;
-		WsdlProject project = null;
-		WsdlMockService mockService = null;
-		WsdlMockResponse mockResponse = null;
-		SecurityTest securityTest = null;
+        WsdlTestStep testStep = null;
+        WsdlTestCase testCase = null;
+        WsdlTestSuite testSuite = null;
+        WsdlProject project = null;
+        WsdlMockService mockService = null;
+        WsdlMockResponse mockResponse = null;
+        SecurityTest securityTest = null;
 
-		if( modelItem instanceof WsdlTestStep )
-		{
-			testStep = ( WsdlTestStep )modelItem;
-			testCase = testStep.getTestCase();
-			testSuite = testCase.getTestSuite();
-			project = testSuite.getProject();
-		}
-		else if( modelItem instanceof WsdlTestCase )
-		{
-			testCase = ( WsdlTestCase )modelItem;
-			testSuite = testCase.getTestSuite();
-			project = testSuite.getProject();
-		}
-		else if( modelItem instanceof WsdlTestSuite )
-		{
-			testSuite = ( WsdlTestSuite )modelItem;
-			project = testSuite.getProject();
-		}
-		else if( modelItem instanceof WsdlMockService )
-		{
-			project = ( WsdlProject )( ( WsdlMockService )modelItem ).getProject();
-		}
-		else if( modelItem instanceof WsdlMockResponse )
-		{
-			mockResponse = ( WsdlMockResponse )modelItem;
-			mockService = ( mockResponse ).getMockOperation().getMockService();
-			project = ( WsdlProject )mockService.getProject();
-		}
-		else if( modelItem instanceof WsdlProject )
-		{
-			project = ( WsdlProject )modelItem;
-		}
-		else if( modelItem instanceof AbstractHttpRequestInterface<?> )
-		{
-			project = ( ( AbstractHttpRequest<?> )modelItem ).getOperation().getInterface().getProject();
-		}
-		else if( modelItem instanceof Operation )
-		{
-			project = ( WsdlProject )( ( Operation )modelItem ).getInterface().getProject();
-		}
-		else if( modelItem instanceof SecurityTest )
-		{
-			securityTest = ( SecurityTest )modelItem;
-			testCase = securityTest.getTestCase();
-			testSuite = testCase.getTestSuite();
-			project = testSuite.getProject();
-		}
+        if (modelItem instanceof WsdlTestStep) {
+            testStep = (WsdlTestStep) modelItem;
+            testCase = testStep.getTestCase();
+            testSuite = testCase.getTestSuite();
+            project = testSuite.getProject();
+        } else if (modelItem instanceof WsdlTestCase) {
+            testCase = (WsdlTestCase) modelItem;
+            testSuite = testCase.getTestSuite();
+            project = testSuite.getProject();
+        } else if (modelItem instanceof WsdlTestSuite) {
+            testSuite = (WsdlTestSuite) modelItem;
+            project = testSuite.getProject();
+        } else if (modelItem instanceof WsdlMockService) {
+            project = (WsdlProject) ((WsdlMockService) modelItem).getProject();
+        } else if (modelItem instanceof WsdlMockResponse) {
+            mockResponse = (WsdlMockResponse) modelItem;
+            mockService = (mockResponse).getMockOperation().getMockService();
+            project = (WsdlProject) mockService.getProject();
+        } else if (modelItem instanceof WsdlProject) {
+            project = (WsdlProject) modelItem;
+        } else if (modelItem instanceof AbstractHttpRequestInterface<?>) {
+            project = ((AbstractHttpRequest<?>) modelItem).getOperation().getInterface().getProject();
+        } else if (modelItem instanceof Operation) {
+            project = (WsdlProject) ((Operation) modelItem).getInterface().getProject();
+        } else if (modelItem instanceof SecurityTest) {
+            securityTest = (SecurityTest) modelItem;
+            testCase = securityTest.getTestCase();
+            testSuite = testCase.getTestSuite();
+            project = testSuite.getProject();
+        }
 
-		TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();
-		if( globalProperties.getProperties().size() > 0 )
-			targetMenu.add( createPropertyMenu( "Global", globalProperties ) );
+        TestPropertyHolder globalProperties = PropertyExpansionUtils.getGlobalProperties();
+        if (globalProperties.getProperties().size() > 0) {
+            targetMenu.add(createPropertyMenu("Global", globalProperties));
+        }
 
-		if( project != null )
-			targetMenu.add( createPropertyMenu( "Project: [" + project.getName() + "]", project ) );
+        if (project != null) {
+            targetMenu.add(createPropertyMenu("Project: [" + project.getName() + "]", project));
+        }
 
-		if( testSuite != null )
-			targetMenu.add( createPropertyMenu( "TestSuite: [" + testSuite.getName() + "]", testSuite ) );
+        if (testSuite != null) {
+            targetMenu.add(createPropertyMenu("TestSuite: [" + testSuite.getName() + "]", testSuite));
+        }
 
-		if( mockService != null )
-			targetMenu.add( createPropertyMenu( "MockService: [" + mockService.getName() + "]", mockService ) );
+        if (mockService != null) {
+            targetMenu.add(createPropertyMenu("MockService: [" + mockService.getName() + "]", mockService));
+        }
 
-		if( mockResponse != null )
-			targetMenu.add( createPropertyMenu( "MockResponse: [" + mockResponse.getName() + "]", mockResponse ) );
+        if (mockResponse != null) {
+            targetMenu.add(createPropertyMenu("MockResponse: [" + mockResponse.getName() + "]", mockResponse));
+        }
 
-		if( testCase != null )
-		{
-			targetMenu.add( createPropertyMenu( "TestCase: [" + testCase.getName() + "]", testCase ) );
+        if (testCase != null) {
+            targetMenu.add(createPropertyMenu("TestCase: [" + testCase.getName() + "]", testCase));
 
-			for( int c = 0; c < testCase.getTestStepCount(); c++ )
-			{
-				testStep = testCase.getTestStepAt( c );
-				if( testStep.getPropertyNames().length == 0 )
-					continue;
+            for (int c = 0; c < testCase.getTestStepCount(); c++) {
+                testStep = testCase.getTestStepAt(c);
+                if (testStep.getPropertyNames().length == 0) {
+                    continue;
+                }
 
-				if( targetMenu.getComponentCount() == 3 )
-					targetMenu.add( new JSeparator() );
+                if (targetMenu.getComponentCount() == 3) {
+                    targetMenu.add(new JSeparator());
+                }
 
-				targetMenu.add( createPropertyMenu( "Step " + ( c + 1 ) + ": [" + testStep.getName() + "]", testStep ) );
-			}
-		}
+                targetMenu.add(createPropertyMenu("Step " + (c + 1) + ": [" + testStep.getName() + "]", testStep));
+            }
+        }
 
-		if( securityTest != null )
-			targetMenu.add( createPropertyMenu( "SecurityTest: [" + securityTest.getName() + "]", securityTest ) );
-	}
+        if (securityTest != null) {
+            targetMenu.add(createPropertyMenu("SecurityTest: [" + securityTest.getName() + "]", securityTest));
+        }
+    }
 
-	private JMenu createPropertyMenu( String string, TestPropertyHolder holder )
-	{
-		ScrollableMenu menu = new ScrollableMenu( string );
+    private JMenu createPropertyMenu(String string, TestPropertyHolder holder) {
+        ScrollableMenu menu = new ScrollableMenu(string);
 
-		if( holder instanceof TestModelItem )
-			menu.setIcon( ( ( TestModelItem )holder ).getIcon() );
+        if (holder instanceof TestModelItem) {
+            menu.setIcon(((TestModelItem) holder).getIcon());
+        }
 
-		String[] propertyNames = holder.getPropertyNames();
+        String[] propertyNames = holder.getPropertyNames();
 
-		for( String name : propertyNames )
-		{
-			menu.add( new TransferFromPropertyActionInvoker( holder, name ) );
-		}
+        for (String name : propertyNames) {
+            menu.add(new TransferFromPropertyActionInvoker(holder, name));
+        }
 
-		if( holder instanceof MutableTestPropertyHolder )
-		{
-			menu.addHeader( new TransferFromPropertyActionInvoker( ( MutableTestPropertyHolder )holder ) );
-		}
+        if (holder instanceof MutableTestPropertyHolder) {
+            menu.addHeader(new TransferFromPropertyActionInvoker((MutableTestPropertyHolder) holder));
+        }
 
-		return menu;
-	}
+        return menu;
+    }
 
-	private class TransferFromPropertyActionInvoker extends AbstractAction
-	{
-		private final TestPropertyHolder sourceStep;
-		private String sourceProperty;
+    private class TransferFromPropertyActionInvoker extends AbstractAction {
+        private final TestPropertyHolder sourceStep;
+        private String sourceProperty;
 
-		public TransferFromPropertyActionInvoker( TestPropertyHolder sourceStep, String sourceProperty )
-		{
-			super( "Property [" + sourceProperty + "]" );
-			this.sourceStep = sourceStep;
-			this.sourceProperty = sourceProperty;
-		}
+        public TransferFromPropertyActionInvoker(TestPropertyHolder sourceStep, String sourceProperty) {
+            super("Property [" + sourceProperty + "]");
+            this.sourceStep = sourceStep;
+            this.sourceProperty = sourceProperty;
+        }
 
-		public TransferFromPropertyActionInvoker( MutableTestPropertyHolder testStep )
-		{
-			super( "Create new.." );
-			this.sourceStep = testStep;
-		}
+        public TransferFromPropertyActionInvoker(MutableTestPropertyHolder testStep) {
+            super("Create new..");
+            this.sourceStep = testStep;
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			if( sourceProperty == null && sourceStep instanceof MutableTestPropertyHolder )
-			{
-				MutableTestPropertyHolder step = ( MutableTestPropertyHolder )sourceStep;
-				sourceProperty = target.getNameForCreation();
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            if (sourceProperty == null && sourceStep instanceof MutableTestPropertyHolder) {
+                MutableTestPropertyHolder step = (MutableTestPropertyHolder) sourceStep;
+                sourceProperty = target.getNameForCreation();
 
-				sourceProperty = UISupport.prompt( "Specify name of source property to create", "Create source property",
-						sourceProperty );
-				while( sourceProperty != null && step.getProperty( sourceProperty ) != null )
-				{
-					sourceProperty = UISupport.prompt( "Name is taken, specify unique name of source property to create",
-							"Create source property", sourceProperty );
-				}
+                sourceProperty = UISupport.prompt("Specify name of source property to create", "Create source property",
+                        sourceProperty);
+                while (sourceProperty != null && step.getProperty(sourceProperty) != null) {
+                    sourceProperty = UISupport.prompt("Name is taken, specify unique name of source property to create",
+                            "Create source property", sourceProperty);
+                }
 
-				if( sourceProperty == null )
-				{
-					return;
-				}
+                if (sourceProperty == null) {
+                    return;
+                }
 
-				( ( MutableTestPropertyHolder )sourceStep ).addProperty( sourceProperty );
+                ((MutableTestPropertyHolder) sourceStep).addProperty(sourceProperty);
 
-				String newVal = UISupport.prompt( "Specify the value of the new property '" + sourceProperty + "'",
-						"Set the value of the property", "" );
+                String newVal = UISupport.prompt("Specify the value of the new property '" + sourceProperty + "'",
+                        "Set the value of the property", "");
 
-				if( newVal != null )
-				{
-					sourceStep.setPropertyValue( sourceProperty, newVal );
-				}
-			}
+                if (newVal != null) {
+                    sourceStep.setPropertyValue(sourceProperty, newVal);
+                }
+            }
 
-			String sourceXPath = "";
+            String sourceXPath = "";
 
-			String val = sourceStep.getPropertyValue( sourceProperty );
+            String val = sourceStep.getPropertyValue(sourceProperty);
 
-			try
-			{
-				if( StringUtils.isNullOrEmpty( val ) )
-				{
-					String defaultValue = sourceStep.getProperty( sourceProperty ).getDefaultValue();
-					if( StringUtils.hasContent( defaultValue ) )
-					{
-						if( UISupport.confirm( "Missing property value, use default value instead?", "Get Data" ) )
-						{
-							val = defaultValue;
-						}
-					}
-				}
+            try {
+                if (StringUtils.isNullOrEmpty(val)) {
+                    String defaultValue = sourceStep.getProperty(sourceProperty).getDefaultValue();
+                    if (StringUtils.hasContent(defaultValue)) {
+                        if (UISupport.confirm("Missing property value, use default value instead?", "Get Data")) {
+                            val = defaultValue;
+                        }
+                    }
+                }
 
-				if( XmlUtils.seemsToBeXml( val ) )
-				{
-					// XmlObject.Factory.parse( val );
-					XmlUtils.createXmlObject( val );
-					sourceXPath = UISupport.selectXPath( "Select XPath", "Select source xpath for property transfer", val,
-							null );
-				}
-			}
-			catch( Throwable e )
-			{
-				// just ignore.. this wasn't xml..
-			}
+                if (XmlUtils.seemsToBeXml(val)) {
+                    // XmlObject.Factory.parse( val );
+                    XmlUtils.createXmlObject(val);
+                    sourceXPath = UISupport.selectXPath("Select XPath", "Select source xpath for property transfer", val,
+                            null);
+                }
+            } catch (Throwable e) {
+                // just ignore.. this wasn't xml..
+            }
 
-			if( StringUtils.hasContent( sourceXPath ) )
-			{
-				sourceXPath = PropertyExpansionUtils.shortenXPathForPropertyExpansion( sourceXPath, val );
-			}
+            if (StringUtils.hasContent(sourceXPath)) {
+                sourceXPath = PropertyExpansionUtils.shortenXPathForPropertyExpansion(sourceXPath, val);
+            }
 
-			TestProperty property = sourceStep.getProperty( sourceProperty );
-			PropertyExpansion pe = new PropertyExpansionImpl( property, sourceXPath );
+            TestProperty property = sourceStep.getProperty(sourceProperty);
+            PropertyExpansion pe = new PropertyExpansionImpl(property, sourceXPath);
 
-			String userSelectedValue = target.getValueForCreation();
-			target.insertPropertyExpansion( pe, null );
+            String userSelectedValue = target.getValueForCreation();
+            target.insertPropertyExpansion(pe, null);
 
-			if( !StringUtils.hasContent( sourceXPath ) && StringUtils.hasContent( userSelectedValue )
-					&& !property.isReadOnly() )
-			{
-				if( !userInputIsPropertyExpansion( userSelectedValue ) )
-				{
-					userSelectedValue = UISupport.prompt( "Do you want to update the value of the property? (" + val + ")",
-							"Get Data", userSelectedValue );
-					if( userSelectedValue != null )
-					{
-						property.setValue( userSelectedValue );
-					}
-				}
-			}
-		}
-	}
+            if (!StringUtils.hasContent(sourceXPath) && StringUtils.hasContent(userSelectedValue)
+                    && !property.isReadOnly()) {
+                if (!userInputIsPropertyExpansion(userSelectedValue)) {
+                    userSelectedValue = UISupport.prompt("Do you want to update the value of the property? (" + val + ")",
+                            "Get Data", userSelectedValue);
+                    if (userSelectedValue != null) {
+                        property.setValue(userSelectedValue);
+                    }
+                }
+            }
+        }
+    }
 
-	private static final Pattern pattern = Pattern.compile( "^\\$\\{(.*)\\}$" );
+    private static final Pattern pattern = Pattern.compile("^\\$\\{(.*)\\}$");
 
-	private static final boolean userInputIsPropertyExpansion( String userSelectedValue )
-	{
-		if( userSelectedValue == null )
-		{
-			return false;
-		}
-		Matcher matcher = pattern.matcher( userSelectedValue );
-		return matcher.matches();
-	}
+    private static final boolean userInputIsPropertyExpansion(String userSelectedValue) {
+        if (userSelectedValue == null) {
+            return false;
+        }
+        Matcher matcher = pattern.matcher(userSelectedValue);
+        return matcher.matches();
+    }
 
-	public static void addMenu( JPopupMenu popup, String menuName, ModelItem item, PropertyExpansionTarget component )
-	{
-		ScrollableMenu menu = new ScrollableMenu( menuName );
-		menu.setName( menuName );
-		boolean contains = false;
-		for( int i = 0; i < popup.getComponentCount(); i++ )
-		{
-			if( menu.getName() != null && menu.getName().equals( popup.getComponent( i ).getName() ) )
-			{
-				contains = true;
-				break;
-			}
-		}
-		if( !contains )
-		{
-			popup.add( menu );
-			popup.addPopupMenuListener( new PropertyExpansionPopupListener( menu, item, component ) );
-		}
-	}
+    public static void addMenu(JPopupMenu popup, String menuName, ModelItem item, PropertyExpansionTarget component) {
+        ScrollableMenu menu = new ScrollableMenu(menuName);
+        menu.setName(menuName);
+        boolean contains = false;
+        for (int i = 0; i < popup.getComponentCount(); i++) {
+            if (menu.getName() != null && menu.getName().equals(popup.getComponent(i).getName())) {
+                contains = true;
+                break;
+            }
+        }
+        if (!contains) {
+            popup.add(menu);
+            popup.addPopupMenuListener(new PropertyExpansionPopupListener(menu, item, component));
+        }
+    }
 
-	public static void enable( JTextComponent textField, ModelItem modelItem, JPopupMenu popup )
-	{
-		JTextComponentPropertyExpansionTarget target = new JTextComponentPropertyExpansionTarget( textField, modelItem );
-		DropTarget dropTarget = new DropTarget( textField, new PropertyExpansionDropTarget( target ) );
-		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
+    public static void enable(JTextComponent textField, ModelItem modelItem, JPopupMenu popup) {
+        JTextComponentPropertyExpansionTarget target = new JTextComponentPropertyExpansionTarget(textField, modelItem);
+        DropTarget dropTarget = new DropTarget(textField, new PropertyExpansionDropTarget(target));
+        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
 
-		textField.setComponentPopupMenu( popup );
+        textField.setComponentPopupMenu(popup);
 
-		if( popup != null )
-		{
-			PropertyExpansionPopupListener.addMenu( popup, "Get Data..", target.getContextModelItem(), target );
-		}
-	}
+        if (popup != null) {
+            PropertyExpansionPopupListener.addMenu(popup, "Get Data..", target.getContextModelItem(), target);
+        }
+    }
 
-	public static JPanel addPropertyExpansionPopup( JTextField textField, JPopupMenu popup, ModelItem modelItem )
-	{
-		PropertyExpansionPopupListener.enable( textField, modelItem, popup );
+    public static JPanel addPropertyExpansionPopup(JTextField textField, JPopupMenu popup, ModelItem modelItem) {
+        PropertyExpansionPopupListener.enable(textField, modelItem, popup);
 
-		JButton popupButton = new JButton();
-		popupButton.setAction( new ShowPopupAction( textField, popupButton ) );
-		popupButton.setBackground( Color.WHITE );
-		popupButton.setForeground( Color.WHITE );
-		popupButton.setBorder( null );
-		popupButton.setOpaque( true );
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.add( textField, BorderLayout.CENTER );
-		panel.add( popupButton, BorderLayout.EAST );
-		panel.setBorder( textField.getBorder() );
-		textField.setBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) );
+        JButton popupButton = new JButton();
+        popupButton.setAction(new ShowPopupAction(textField, popupButton));
+        popupButton.setBackground(Color.WHITE);
+        popupButton.setForeground(Color.WHITE);
+        popupButton.setBorder(null);
+        popupButton.setOpaque(true);
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(textField, BorderLayout.CENTER);
+        panel.add(popupButton, BorderLayout.EAST);
+        panel.setBorder(textField.getBorder());
+        textField.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
 
-		return panel;
-	}
+        return panel;
+    }
 
-	public static void enable( RSyntaxTextArea textField, ModelItem modelItem )
-	{
-		RSyntaxTextAreaPropertyExpansionTarget target = new RSyntaxTextAreaPropertyExpansionTarget( textField, modelItem );
-		DropTarget dropTarget = new DropTarget( textField, new PropertyExpansionDropTarget( target ) );
-		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
+    public static void enable(RSyntaxTextArea textField, ModelItem modelItem) {
+        RSyntaxTextAreaPropertyExpansionTarget target = new RSyntaxTextAreaPropertyExpansionTarget(textField, modelItem);
+        DropTarget dropTarget = new DropTarget(textField, new PropertyExpansionDropTarget(target));
+        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
 
-		JPopupMenu popup = textField.getPopupMenu();
+        JPopupMenu popup = textField.getPopupMenu();
 
-		if( popup != null )
-		{
-			PropertyExpansionPopupListener.addMenu( popup, "Get Data..", target.getContextModelItem(), target );
-		}
-	}
+        if (popup != null) {
+            PropertyExpansionPopupListener.addMenu(popup, "Get Data..", target.getContextModelItem(), target);
+        }
+    }
 
-	public static void enable( GroovyEditor groovyEditor, ModelItem modelItem )
-	{
-		GroovyEditorPropertyExpansionTarget target = new GroovyEditorPropertyExpansionTarget( groovyEditor, modelItem );
-		DropTarget dropTarget = new DropTarget( groovyEditor.getEditArea(), new PropertyExpansionDropTarget( target ) );
-		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
+    public static void enable(GroovyEditor groovyEditor, ModelItem modelItem) {
+        GroovyEditorPropertyExpansionTarget target = new GroovyEditorPropertyExpansionTarget(groovyEditor, modelItem);
+        DropTarget dropTarget = new DropTarget(groovyEditor.getEditArea(), new PropertyExpansionDropTarget(target));
+        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
 
-		JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
+        JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
 
-		if( popup != null )
-		{
-			ScrollableMenu menu = new ScrollableMenu( "Get Data.." );
-			popup.insert( menu, 0 );
-			popup.addPopupMenuListener( new PropertyExpansionPopupListener( menu, target.getContextModelItem(), target ) );
-			popup.insert( new JSeparator(), 1 );
-		}
-	}
+        if (popup != null) {
+            ScrollableMenu menu = new ScrollableMenu("Get Data..");
+            popup.insert(menu, 0);
+            popup.addPopupMenuListener(new PropertyExpansionPopupListener(menu, target.getContextModelItem(), target));
+            popup.insert(new JSeparator(), 1);
+        }
+    }
 
-	public static void enable( JTextComponent textField, ModelItem modelItem )
-	{
-		JPopupMenu popupMenu = textField.getComponentPopupMenu();
-		if( popupMenu == null )
-		{
-			popupMenu = new JPopupMenu();
-			textField.setComponentPopupMenu( popupMenu );
-		}
+    public static void enable(JTextComponent textField, ModelItem modelItem) {
+        JPopupMenu popupMenu = textField.getComponentPopupMenu();
+        if (popupMenu == null) {
+            popupMenu = new JPopupMenu();
+            textField.setComponentPopupMenu(popupMenu);
+        }
 
-		enable( textField, modelItem, popupMenu );
-	}
+        enable(textField, modelItem, popupMenu);
+    }
 
-	public static void disable( GroovyEditor editor )
-	{
-	}
+    public static void disable(GroovyEditor editor) {
+    }
 
-	public static void enable( GroovyEditorComponent gec, ModelItem modelItem )
-	{
-		enable( gec.getEditor(), modelItem );
-	}
+    public static void enable(GroovyEditorComponent gec, ModelItem modelItem) {
+        enable(gec.getEditor(), modelItem);
+    }
 }

@@ -21,46 +21,39 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JProgressBar;
 
-public class JEditorStatusBarWithProgress extends JEditorStatusBar
-{
-	private JProgressBar progressBar;
+public class JEditorStatusBarWithProgress extends JEditorStatusBar {
+    private JProgressBar progressBar;
 
-	public JEditorStatusBarWithProgress()
-	{
-		super();
+    public JEditorStatusBarWithProgress() {
+        super();
 
-		initProgressBar();
-	}
+        initProgressBar();
+    }
 
-	private void initProgressBar()
-	{
-		progressBar = new JProgressBar();
-		progressBar.setBackground( Color.WHITE );
-		progressBar.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 2, 2, 2, 3 ),
-				BorderFactory.createMatteBorder( 0, 0, 1, 1, Color.LIGHT_GRAY ) ) );
+    private void initProgressBar() {
+        progressBar = new JProgressBar();
+        progressBar.setBackground(Color.WHITE);
+        progressBar.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 2, 2, 3),
+                BorderFactory.createMatteBorder(0, 0, 1, 1, Color.LIGHT_GRAY)));
 
-		setStatusComponent( progressBar );
-	}
+        setStatusComponent(progressBar);
+    }
 
-	public JEditorStatusBarWithProgress( JEditorStatusBarTarget target )
-	{
-		super( target );
+    public JEditorStatusBarWithProgress(JEditorStatusBarTarget target) {
+        super(target);
 
-		initProgressBar();
-	}
+        initProgressBar();
+    }
 
-	public JProgressBar getProgressBar()
-	{
-		return progressBar;
-	}
+    public JProgressBar getProgressBar() {
+        return progressBar;
+    }
 
-	public void setIndeterminate( boolean newValue )
-	{
-		progressBar.setIndeterminate( newValue );
-	}
+    public void setIndeterminate(boolean newValue) {
+        progressBar.setIndeterminate(newValue);
+    }
 
-	public void setValue( int n )
-	{
-		progressBar.setValue( n );
-	}
+    public void setValue(int n) {
+        progressBar.setValue(n);
+    }
 }

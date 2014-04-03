@@ -28,64 +28,56 @@ import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFac
 
 /**
  * Registry of availabel XmlViews
- * 
+ *
  * @author ole.matzura
  */
 
-public class EditorViewFactoryRegistry
-{
-	private static EditorViewFactoryRegistry instance;
-	private List<EditorViewFactory> factories = new ArrayList<EditorViewFactory>();
+public class EditorViewFactoryRegistry {
+    private static EditorViewFactoryRegistry instance;
+    private List<EditorViewFactory> factories = new ArrayList<EditorViewFactory>();
 
-	public EditorViewFactoryRegistry()
-	{
-		// this should obviously come from a configuration file..
-		addFactory( new XmlSourceEditorViewFactory() );
-		// addFactory( new RestRequestParamsViewFactory() );
-		addFactory( new HttpRequestContentViewFactory() );
-		addFactory( new JsonResponseViewFactory() );
-		addFactory( new HttpHtmlResponseViewFactory() );
-		addFactory( new RawXmlEditorFactory() );
-	}
+    public EditorViewFactoryRegistry() {
+        // this should obviously come from a configuration file..
+        addFactory(new XmlSourceEditorViewFactory());
+        // addFactory( new RestRequestParamsViewFactory() );
+        addFactory(new HttpRequestContentViewFactory());
+        addFactory(new JsonResponseViewFactory());
+        addFactory(new HttpHtmlResponseViewFactory());
+        addFactory(new RawXmlEditorFactory());
+    }
 
-	public void addFactory( EditorViewFactory factory )
-	{
-		factories.add( factory );
-	}
+    public void addFactory(EditorViewFactory factory) {
+        factories.add(factory);
+    }
 
-	public void setFactory( String viewId, EditorViewFactory factory )
-	{
-		for( int c = 0; c < factories.size(); c++ )
-		{
-			if( factories.get( c ).getViewId().equals( viewId ) )
-			{
-				factories.set( c, factory );
-			}
-		}
-	}
+    public void setFactory(String viewId, EditorViewFactory factory) {
+        for (int c = 0; c < factories.size(); c++) {
+            if (factories.get(c).getViewId().equals(viewId)) {
+                factories.set(c, factory);
+            }
+        }
+    }
 
-	public static final EditorViewFactoryRegistry getInstance()
-	{
-		if( instance == null )
-			instance = new EditorViewFactoryRegistry();
+    public static final EditorViewFactoryRegistry getInstance() {
+        if (instance == null) {
+            instance = new EditorViewFactoryRegistry();
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public EditorViewFactory[] getFactories()
-	{
-		return factories.toArray( new EditorViewFactory[factories.size()] );
-	}
+    public EditorViewFactory[] getFactories() {
+        return factories.toArray(new EditorViewFactory[factories.size()]);
+    }
 
-	public EditorViewFactory[] getFactoriesOfType( Class<?> type )
-	{
-		List<EditorViewFactory> result = new ArrayList<EditorViewFactory>();
-		for( EditorViewFactory factory : factories )
-		{
-			if( Arrays.asList( factory.getClass().getInterfaces() ).contains( type ) )
-				result.add( factory );
-		}
+    public EditorViewFactory[] getFactoriesOfType(Class<?> type) {
+        List<EditorViewFactory> result = new ArrayList<EditorViewFactory>();
+        for (EditorViewFactory factory : factories) {
+            if (Arrays.asList(factory.getClass().getInterfaces()).contains(type)) {
+                result.add(factory);
+            }
+        }
 
-		return result.toArray( new EditorViewFactory[result.size()] );
-	}
+        return result.toArray(new EditorViewFactory[result.size()]);
+    }
 }

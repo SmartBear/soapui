@@ -25,69 +25,54 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 
 /**
  * Adapter for ProjectListener implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ProjectListenerAdapter implements ProjectListener
-{
-	public void interfaceAdded( Interface iface )
-	{
-	}
+public class ProjectListenerAdapter implements ProjectListener {
+    public void interfaceAdded(Interface iface) {
+    }
 
-	public void interfaceRemoved( Interface iface )
-	{
-	}
+    public void interfaceRemoved(Interface iface) {
+    }
 
-	public void testSuiteAdded( TestSuite testSuite )
-	{
-	}
+    public void testSuiteAdded(TestSuite testSuite) {
+    }
 
-	public void testSuiteRemoved( TestSuite testSuite )
-	{
-	}
+    public void testSuiteRemoved(TestSuite testSuite) {
+    }
 
-	public void testSuiteMoved( TestSuite testSuite, int index, int offset )
-	{
+    public void testSuiteMoved(TestSuite testSuite, int index, int offset) {
 
-	}
+    }
 
-	public void mockServiceAdded( MockService mockService )
-	{
-	}
+    public void mockServiceAdded(MockService mockService) {
+    }
 
-	public void mockServiceRemoved( MockService mockService )
-	{
-	}
+    public void mockServiceRemoved(MockService mockService) {
+    }
 
-	public void interfaceUpdated( Interface iface )
-	{
-	}
+    public void interfaceUpdated(Interface iface) {
+    }
 
-	public void afterLoad( Project project )
-	{
-	}
+    public void afterLoad(Project project) {
+    }
 
-	public void beforeSave( Project project )
-	{
-	}
+    public void beforeSave(Project project) {
+    }
 
-	public void environmentAdded( Environment env )
-	{
-	}
+    public void environmentAdded(Environment env) {
+    }
 
-	public void environmentRemoved( Environment env, int index )
-	{
-	}
+    public void environmentRemoved(Environment env, int index) {
+    }
 
-	public void environmentSwitched( Environment environment )
-	{
-	}
+    public void environmentSwitched(Environment environment) {
+    }
 
-	@Override
-	public void environmentRenamed( Environment environment, String oldName, String newName )
-	{
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void environmentRenamed(Environment environment, String oldName, String newName) {
+        // TODO Auto-generated method stub
+
+    }
 }

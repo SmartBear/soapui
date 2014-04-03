@@ -21,13 +21,12 @@ import java.util.Vector;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
-public interface WsdlMessageExchange extends HttpMessageExchange
-{
-	public abstract SoapVersion getSoapVersion();
+public interface WsdlMessageExchange extends HttpMessageExchange {
+    public abstract SoapVersion getSoapVersion();
 
-	public abstract Vector<?> getRequestWssResult();
+    public abstract Vector<?> getRequestWssResult();
 
-	public abstract Vector<?> getResponseWssResult();
+    public abstract Vector<?> getResponseWssResult();
 
-	public WsdlOperation getOperation();
+    public WsdlOperation getOperation();
 }

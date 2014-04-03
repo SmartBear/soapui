@@ -40,202 +40,183 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 
-public class JTabbedFormDialog extends SwingXFormDialog
-{
-	private JDialog dialog;
-	private List<SwingXFormImpl> forms = new ArrayList<SwingXFormImpl>();
-	private JTabbedPane tabs;
-	private JButtonBar buttons;
+public class JTabbedFormDialog extends SwingXFormDialog {
+    private JDialog dialog;
+    private List<SwingXFormImpl> forms = new ArrayList<SwingXFormImpl>();
+    private JTabbedPane tabs;
+    private JButtonBar buttons;
 
-	public JTabbedFormDialog( String name, XForm[] forms, ActionList actions, String description, ImageIcon icon )
-	{
-		dialog = new JDialog( UISupport.getMainFrame(), name, true );
-		tabs = new JTabbedPane();
-		for( XForm form : forms )
-		{
-			SwingXFormImpl swingFormImpl = ( ( SwingXFormImpl )form );
-			this.forms.add( swingFormImpl );
+    public JTabbedFormDialog(String name, XForm[] forms, ActionList actions, String description, ImageIcon icon) {
+        dialog = new JDialog(UISupport.getMainFrame(), name, true);
+        tabs = new JTabbedPane();
+        for (XForm form : forms) {
+            SwingXFormImpl swingFormImpl = ((SwingXFormImpl) form);
+            this.forms.add(swingFormImpl);
 
-			JPanel panel = swingFormImpl.getPanel();
-			panel.setBorder( BorderFactory.createEmptyBorder( 0, 0, 5, 0 ) );
+            JPanel panel = swingFormImpl.getPanel();
+            panel.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 0));
 
-			tabs.addTab( form.getName(), panel );
-		}
+            tabs.addTab(form.getName(), panel);
+        }
 
-		buttons = UISupport.initDialogActions( actions, dialog );
+        buttons = UISupport.initDialogActions(actions, dialog);
 
-		if( description != null || icon != null )
-			dialog.getContentPane().add( UISupport.buildDescription( name, description, icon ), BorderLayout.NORTH );
+        if (description != null || icon != null) {
+            dialog.getContentPane().add(UISupport.buildDescription(name, description, icon), BorderLayout.NORTH);
+        }
 
-		dialog.getContentPane().add( UISupport.createTabPanel( tabs, false ), BorderLayout.CENTER );
+        dialog.getContentPane().add(UISupport.createTabPanel(tabs, false), BorderLayout.CENTER);
 
-		buttons.setBorder( BorderFactory.createEmptyBorder( 3, 5, 3, 5 ) );
-		dialog.getContentPane().add( buttons, BorderLayout.SOUTH );
-		dialog.pack();
-		Dimension size = dialog.getSize();
-		if( size.getHeight() < 300 )
-		{
-			dialog.setSize( new Dimension( ( int )size.getWidth(), 300 ) );
-		}
-	}
+        buttons.setBorder(BorderFactory.createEmptyBorder(3, 5, 3, 5));
+        dialog.getContentPane().add(buttons, BorderLayout.SOUTH);
+        dialog.pack();
+        Dimension size = dialog.getSize();
+        if (size.getHeight() < 300) {
+            dialog.setSize(new Dimension((int) size.getWidth(), 300));
+        }
+    }
 
-	public void setSize( int i, int j )
-	{
-		dialog.setSize( i, j );
-	}
+    public void setSize(int i, int j) {
+        dialog.setSize(i, j);
+    }
 
-	public XForm[] getForms()
-	{
-		List<XForm> result = new ArrayList<XForm>();
-		for( XForm form : forms )
-			result.add( form );
-		return result.toArray( new XForm[result.size()] );
-	}
+    public XForm[] getForms() {
+        List<XForm> result = new ArrayList<XForm>();
+        for (XForm form : forms) {
+            result.add(form);
+        }
+        return result.toArray(new XForm[result.size()]);
+    }
 
-	public void setValues( StringToStringMap values )
-	{
-		for( XForm form : forms )
-			form.setValues( values );
-	}
+    public void setValues(StringToStringMap values) {
+        for (XForm form : forms) {
+            form.setValues(values);
+        }
+    }
 
-	public void setOptions( String field, Object[] options )
-	{
-		for( XForm form : forms )
-			form.setOptions( field, options );
-	}
+    public void setOptions(String field, Object[] options) {
+        for (XForm form : forms) {
+            form.setOptions(field, options);
+        }
+    }
 
-	public XFormField getFormField( String name )
-	{
-		for( XForm form : forms )
-		{
-			XFormField formField = form.getFormField( name );
-			if( formField != null )
-				return formField;
-		}
+    public XFormField getFormField(String name) {
+        for (XForm form : forms) {
+            XFormField formField = form.getFormField(name);
+            if (formField != null) {
+                return formField;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void addAction( Action action )
-	{
-		DefaultActionList actions = new DefaultActionList();
-		actions.addAction( action );
-		buttons.addActions( actions );
-	}
+    public void addAction(Action action) {
+        DefaultActionList actions = new DefaultActionList();
+        actions.addAction(action);
+        buttons.addActions(actions);
+    }
 
-	public StringToStringMap getValues()
-	{
-		StringToStringMap result = new StringToStringMap();
+    public StringToStringMap getValues() {
+        StringToStringMap result = new StringToStringMap();
 
-		for( XForm form : forms )
-			result.putAll( form.getValues() );
+        for (XForm form : forms) {
+            result.putAll(form.getValues());
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public void setVisible( boolean visible )
-	{
-		if( visible )
-			tabs.setSelectedIndex( 0 );
+    public void setVisible(boolean visible) {
+        if (visible) {
+            tabs.setSelectedIndex(0);
+        }
 
-		UISupport.centerDialog( dialog );
+        UISupport.centerDialog(dialog);
 
-		dialog.setVisible( visible );
-	}
+        dialog.setVisible(visible);
+    }
 
-	public boolean validate()
-	{
-		for( int i = 0; i < forms.size(); i++ )
-		{
-			XFormField[] formFields = forms.get( i ).getFormFields();
-			for( int c = 0; c < formFields.length; c++ )
-			{
-				ValidationMessage[] messages = formFields[c].validate();
-				if( messages != null && messages.length > 0 )
-				{
-					tabs.setSelectedIndex( i );
-					( ( AbstractSwingXFormField<?> )messages[0].getFormField() ).getComponent().requestFocus();
-					UISupport.showErrorMessage( messages[0].getMessage() );
-					return false;
-				}
-			}
-		}
+    public boolean validate() {
+        for (int i = 0; i < forms.size(); i++) {
+            XFormField[] formFields = forms.get(i).getFormFields();
+            for (int c = 0; c < formFields.length; c++) {
+                ValidationMessage[] messages = formFields[c].validate();
+                if (messages != null && messages.length > 0) {
+                    tabs.setSelectedIndex(i);
+                    ((AbstractSwingXFormField<?>) messages[0].getFormField()).getComponent().requestFocus();
+                    UISupport.showErrorMessage(messages[0].getMessage());
+                    return false;
+                }
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public void setFormFieldProperty( String name, Object value )
-	{
-		for( XForm form : forms )
-			form.setFormFieldProperty( name, value );
-	}
+    public void setFormFieldProperty(String name, Object value) {
+        for (XForm form : forms) {
+            form.setFormFieldProperty(name, value);
+        }
+    }
 
-	public String getValue( String field )
-	{
-		for( XForm form : forms )
-		{
-			if( form.getComponent( field ) != null )
-				return form.getComponent( field ).getValue();
-		}
+    public String getValue(String field) {
+        for (XForm form : forms) {
+            if (form.getComponent(field) != null) {
+                return form.getComponent(field).getValue();
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void setValue( String field, String value )
-	{
-		for( XForm form : forms )
-		{
-			if( form.getComponent( field ) != null )
-				form.getComponent( field ).setValue( value );
-		}
-	}
+    public void setValue(String field, String value) {
+        for (XForm form : forms) {
+            if (form.getComponent(field) != null) {
+                form.getComponent(field).setValue(value);
+            }
+        }
+    }
 
-	public int getValueIndex( String name )
-	{
-		for( SwingXFormImpl form : forms )
-		{
-			if( form.getComponent( name ) != null )
-			{
-				Object[] options = form.getOptions( name );
-				if( options == null )
-					return -1;
+    public int getValueIndex(String name) {
+        for (SwingXFormImpl form : forms) {
+            if (form.getComponent(name) != null) {
+                Object[] options = form.getOptions(name);
+                if (options == null) {
+                    return -1;
+                }
 
-				return Arrays.asList( options ).indexOf( form.getComponentValue( name ) );
-			}
-		}
+                return Arrays.asList(options).indexOf(form.getComponentValue(name));
+            }
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 
-	public boolean show()
-	{
-		setReturnValue( XFormDialog.CANCEL_OPTION );
-		show( new StringToStringMap() );
-		return getReturnValue() == XFormDialog.OK_OPTION;
-	}
+    public boolean show() {
+        setReturnValue(XFormDialog.CANCEL_OPTION);
+        show(new StringToStringMap());
+        return getReturnValue() == XFormDialog.OK_OPTION;
+    }
 
-	public void setWidth( int i )
-	{
-		dialog.setPreferredSize( new Dimension( i, ( int )dialog.getPreferredSize().getHeight() ) );
-	}
+    public void setWidth(int i) {
+        dialog.setPreferredSize(new Dimension(i, (int) dialog.getPreferredSize().getHeight()));
+    }
 
-	public void release()
-	{
-		dialog.dispose();
-		tabs.removeAll();
+    public void release() {
+        dialog.dispose();
+        tabs.removeAll();
 
-		dialog = null;
-		tabs = null;
-	}
+        dialog = null;
+        tabs = null;
+    }
 
-	public JComponent getTabs()
-	{
-		return tabs;
-	}
+    public JComponent getTabs() {
+        return tabs;
+    }
 
-	public void setResizable( boolean b )
-	{
-		dialog.setResizable( b );
-	}
+    public void setResizable(boolean b) {
+        dialog.setResizable(b);
+    }
 
 }

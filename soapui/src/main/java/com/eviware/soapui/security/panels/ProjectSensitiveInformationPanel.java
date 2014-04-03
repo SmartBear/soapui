@@ -45,176 +45,151 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectSensitiveInformationPanel
-{
+public class ProjectSensitiveInformationPanel {
 
-	private XFormDialog dialog;
-	private SensitiveInformationConfig config;
-	private List<String> projectSpecificExposureList;
-	public static final String PROJECT_SPECIFIC_EXPOSURE_LIST = "ProjectSpecificExposureList";
-	private SensitiveInformationTableModel sensitiveInformationTableModel;
-	private JXTable tokenTable;
-	private JPanel sensitiveInfoTableForm;
+    private XFormDialog dialog;
+    private SensitiveInformationConfig config;
+    private List<String> projectSpecificExposureList;
+    public static final String PROJECT_SPECIFIC_EXPOSURE_LIST = "ProjectSpecificExposureList";
+    private SensitiveInformationTableModel sensitiveInformationTableModel;
+    private JXTable tokenTable;
+    private JPanel sensitiveInfoTableForm;
 
-	public ProjectSensitiveInformationPanel( ProjectConfig projectConfig )
-	{
-		config = projectConfig.getSensitiveInformation();
-		if( config == null )
-		{
-			config = SensitiveInformationConfig.Factory.newInstance();
-			projectConfig.addNewSensitiveInformation();
-			projectConfig.setSensitiveInformation( config );
-		}
-		init();
-	}
+    public ProjectSensitiveInformationPanel(ProjectConfig projectConfig) {
+        config = projectConfig.getSensitiveInformation();
+        if (config == null) {
+            config = SensitiveInformationConfig.Factory.newInstance();
+            projectConfig.addNewSensitiveInformation();
+            projectConfig.setSensitiveInformation(config);
+        }
+        init();
+    }
 
-	private void init()
-	{
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( config );
-		projectSpecificExposureList = StringUtils.toStringList( reader.readStrings( PROJECT_SPECIFIC_EXPOSURE_LIST ) );
-		extractTokenTable();
-	}
+    private void init() {
+        XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(config);
+        projectSpecificExposureList = StringUtils.toStringList(reader.readStrings(PROJECT_SPECIFIC_EXPOSURE_LIST));
+        extractTokenTable();
+    }
 
-	private void extractTokenTable()
-	{
-		SensitiveInformationPropertyHolder siph = new SensitiveInformationPropertyHolder();
-		for( String str : projectSpecificExposureList )
-		{
-			String[] tokens = str.split( "###" );
-			if( tokens.length == 2 )
-			{
-				siph.setPropertyValue( tokens[0], tokens[1] );
-			}
-			else
-			{
-				siph.setPropertyValue( tokens[0], "" );
-			}
-		}
-		sensitiveInformationTableModel = new SensitiveInformationTableModel( siph );
-	}
+    private void extractTokenTable() {
+        SensitiveInformationPropertyHolder siph = new SensitiveInformationPropertyHolder();
+        for (String str : projectSpecificExposureList) {
+            String[] tokens = str.split("###");
+            if (tokens.length == 2) {
+                siph.setPropertyValue(tokens[0], tokens[1]);
+            } else {
+                siph.setPropertyValue(tokens[0], "");
+            }
+        }
+        sensitiveInformationTableModel = new SensitiveInformationTableModel(siph);
+    }
 
-	public boolean build()
-	{
-		if( dialog == null )
-			buildDialog();
+    public boolean build() {
+        if (dialog == null) {
+            buildDialog();
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public void save()
-	{
-		projectSpecificExposureList = createListFromTable();
-		setConfiguration( createConfiguration() );
-	}
+    public void save() {
+        projectSpecificExposureList = createListFromTable();
+        setConfiguration(createConfiguration());
+    }
 
-	private List<String> createListFromTable()
-	{
-		List<String> temp = new ArrayList<String>();
-		for( TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList() )
-		{
-			String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
-			temp.add( tokenPlusDescription );
-		}
-		return temp;
-	}
+    private List<String> createListFromTable() {
+        List<String> temp = new ArrayList<String>();
+        for (TestProperty tp : sensitiveInformationTableModel.getHolder().getPropertyList()) {
+            String tokenPlusDescription = tp.getName() + "###" + tp.getValue();
+            temp.add(tokenPlusDescription);
+        }
+        return temp;
+    }
 
-	protected XmlObject createConfiguration()
-	{
-		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( PROJECT_SPECIFIC_EXPOSURE_LIST,
-				projectSpecificExposureList.toArray( new String[projectSpecificExposureList.size()] ) );
-		return builder.finish();
-	}
+    protected XmlObject createConfiguration() {
+        XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
+        builder.add(PROJECT_SPECIFIC_EXPOSURE_LIST,
+                projectSpecificExposureList.toArray(new String[projectSpecificExposureList.size()]));
+        return builder.finish();
+    }
 
-	protected void buildDialog()
-	{
-		dialog = ADialogBuilder.buildDialog( SensitiveInformationConfigDialog.class );
-		dialog.getFormField( SensitiveInformationConfigDialog.TOKENS ).setProperty( "component", getForm() );
+    protected void buildDialog() {
+        dialog = ADialogBuilder.buildDialog(SensitiveInformationConfigDialog.class);
+        dialog.getFormField(SensitiveInformationConfigDialog.TOKENS).setProperty("component", getForm());
 
-	}
+    }
 
-	// TODO : update help URL
-	@AForm( description = "Configure Sensitive Information Exposure Assertion", name = "Sensitive Information Exposure Assertion", helpUrl = HelpUrls.SECURITY_SENSITIVE_INFORMATION_EXPOSURE_ASSERTION_HELP )
-	protected interface SensitiveInformationConfigDialog
-	{
+    // TODO : update help URL
+    @AForm(description = "Configure Sensitive Information Exposure Assertion", name = "Sensitive Information Exposure Assertion", helpUrl = HelpUrls.SECURITY_SENSITIVE_INFORMATION_EXPOSURE_ASSERTION_HELP)
+    protected interface SensitiveInformationConfigDialog {
 
-		@AField( description = "Sensitive informations to check. Use ~ as prefix for values that are regular expressions.", name = "Sensitive Information Tokens", type = AFieldType.COMPONENT )
-		public final static String TOKENS = "Sensitive Information Tokens";
-	}
+        @AField(description = "Sensitive informations to check. Use ~ as prefix for values that are regular expressions.", name = "Sensitive Information Tokens", type = AFieldType.COMPONENT)
+        public final static String TOKENS = "Sensitive Information Tokens";
+    }
 
-	public void setConfiguration( XmlObject configuration )
-	{
-		config.set( configuration );
-	}
+    public void setConfiguration(XmlObject configuration) {
+        config.set(configuration);
+    }
 
-	public XFormDialog getDialog()
-	{
-		return dialog;
-	}
+    public XFormDialog getDialog() {
+        return dialog;
+    }
 
-	public JPanel getForm()
-	{
-		if( sensitiveInfoTableForm == null )
-		{
-			sensitiveInfoTableForm = new JPanel( new BorderLayout() );
+    public JPanel getForm() {
+        if (sensitiveInfoTableForm == null) {
+            sensitiveInfoTableForm = new JPanel(new BorderLayout());
 
-			JXToolBar toolbar = UISupport.createToolbar();
+            JXToolBar toolbar = UISupport.createToolbar();
 
-			toolbar.add( UISupport.createToolbarButton( new AddTokenAction() ) );
-			toolbar.add( UISupport.createToolbarButton( new RemoveTokenAction() ) );
+            toolbar.add(UISupport.createToolbarButton(new AddTokenAction()));
+            toolbar.add(UISupport.createToolbarButton(new RemoveTokenAction()));
 
-			tokenTable = JTableFactory.getInstance().makeJXTable( sensitiveInformationTableModel );
-			tokenTable.setPreferredSize( new Dimension( 200, 100 ) );
-			sensitiveInfoTableForm.add( toolbar, BorderLayout.NORTH );
-			sensitiveInfoTableForm.add( new JScrollPane( tokenTable ), BorderLayout.CENTER );
-		}
+            tokenTable = JTableFactory.getInstance().makeJXTable(sensitiveInformationTableModel);
+            tokenTable.setPreferredSize(new Dimension(200, 100));
+            sensitiveInfoTableForm.add(toolbar, BorderLayout.NORTH);
+            sensitiveInfoTableForm.add(new JScrollPane(tokenTable), BorderLayout.CENTER);
+        }
 
-		return sensitiveInfoTableForm;
-	}
+        return sensitiveInfoTableForm;
+    }
 
-	class AddTokenAction extends AbstractAction
-	{
+    class AddTokenAction extends AbstractAction {
 
-		public AddTokenAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a token to assertion" );
-		}
+        public AddTokenAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Adds a token to assertion");
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			String newToken = "";
-			newToken = UISupport.prompt( "Enter token", "New Token", newToken );
-			String newValue = "";
-			newValue = UISupport.prompt( "Enter description", "New Description", newValue );
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            String newToken = "";
+            newToken = UISupport.prompt("Enter token", "New Token", newToken);
+            String newValue = "";
+            newValue = UISupport.prompt("Enter description", "New Description", newValue);
 
-			sensitiveInformationTableModel.addToken( newToken, newValue );
-			save();
-		}
+            sensitiveInformationTableModel.addToken(newToken, newValue);
+            save();
+        }
 
-	}
+    }
 
-	class RemoveTokenAction extends AbstractAction
-	{
+    class RemoveTokenAction extends AbstractAction {
 
-		public RemoveTokenAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes token from assertion" );
-		}
+        public RemoveTokenAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Removes token from assertion");
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			sensitiveInformationTableModel.removeRows( tokenTable.getSelectedRows() );
-			save();
-		}
-	}
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            sensitiveInformationTableModel.removeRows(tokenTable.getSelectedRows());
+            save();
+        }
+    }
 
-	public void release()
-	{
-		if( dialog != null )
-			dialog.release();
-	}
+    public void release() {
+        if (dialog != null) {
+            dialog.release();
+        }
+    }
 }

@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.panels.request;
+*/
+package com.eviware.soapui.impl.rest.panels.request;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
@@ -48,204 +49,171 @@ import java.beans.PropertyChangeListener;
 /**
  * A component that displays matrix and query string parameters for a REST request and provides a popup to edit them.
  */
-class ParametersField extends JPanel
-{
+class ParametersField extends JPanel {
 
     public static final String PARAMETERS_FIELD = "ParametersField";
     private final RestRequestInterface request;
-	private final JLabel textLabel;
-	private final JTextField textField;
-	private int lastSelectedPosition;
+    private final JLabel textLabel;
+    private final JTextField textField;
+    private int lastSelectedPosition;
 
-	ParametersField( RestRequestInterface request )
-	{
-		this.request = request;
-		textLabel = new JLabel( "Parameters" );
+    ParametersField(RestRequestInterface request) {
+        this.request = request;
+        textLabel = new JLabel("Parameters");
 
-		String paramsString = RestUtils.makeSuffixParameterString( request );
-		textField = new JTextField( paramsString );
-		textField.setEditable( false );
-		textField.setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
-		textField.setBackground( Color.WHITE );
+        String paramsString = RestUtils.makeSuffixParameterString(request);
+        textField = new JTextField(paramsString);
+        textField.setEditable(false);
+        textField.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+        textField.setBackground(Color.WHITE);
         textField.setName(PARAMETERS_FIELD);
-		setToolTipText(paramsString);
-		super.setLayout( new BorderLayout() );
-		super.add( textLabel, BorderLayout.NORTH );
-		super.add( textField, BorderLayout.SOUTH );
-		addListeners();
-	}
+        setToolTipText(paramsString);
+        super.setLayout(new BorderLayout());
+        super.add(textLabel, BorderLayout.NORTH);
+        super.add(textField, BorderLayout.SOUTH);
+        addListeners();
+    }
 
-	private void addListeners()
-	{
-		textField.addMouseListener( new MouseAdapter()
-		{
+    private void addListeners() {
+        textField.addMouseListener(new MouseAdapter() {
 
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				final ParameterFinder finder = new ParameterFinder( textField.getText() );
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						openPopup( finder.findParameterAt( lastSelectedPosition ) );
-					}
-				} );
-			}
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                final ParameterFinder finder = new ParameterFinder(textField.getText());
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        openPopup(finder.findParameterAt(lastSelectedPosition));
+                    }
+                });
+            }
 
 
-		} );
-		textField.addCaretListener( new CaretListener()
-		{
-			@Override
-			public void caretUpdate( final CaretEvent e )
-			{
-				lastSelectedPosition = e.getDot();
-			}
+        });
+        textField.addCaretListener(new CaretListener() {
+            @Override
+            public void caretUpdate(final CaretEvent e) {
+                lastSelectedPosition = e.getDot();
+            }
 
-		} );
-	}
+        });
+    }
 
-	public String getText()
-	{
-		return textField.getText();
-	}
+    public String getText() {
+        return textField.getText();
+    }
 
-	public void setText( String text )
-	{
-		textField.setText( text );
-		setToolTipText( text );
-	}
+    public void setText(String text) {
+        textField.setText(text);
+        setToolTipText(text);
+    }
 
-	@Override
-	public void setToolTipText( String text )
-	{
-		super.setToolTipText( text );
-		textLabel.setToolTipText( text );
-		textField.setToolTipText( text );
-	}
+    @Override
+    public void setToolTipText(String text) {
+        super.setToolTipText(text);
+        textLabel.setToolTipText(text);
+        textField.setToolTipText(text);
+    }
 
-	private void openPopup( final String selectedParameter )
-	{
-		RestParamsTable restParamsTable = new RestParamsTable( request.getParams(), false, new RestParamsTableModel(
-				request.getParams(), RestParamsTableModel.Mode.MINIMAL ),
-				NewRestResourceActionBase.ParamLocation.RESOURCE, true, true );
-		showParametersTableInWindow( restParamsTable, selectedParameter );
-	}
+    private void openPopup(final String selectedParameter) {
+        RestParamsTable restParamsTable = new RestParamsTable(request.getParams(), false, new RestParamsTableModel(
+                request.getParams(), RestParamsTableModel.Mode.MINIMAL),
+                NewRestResourceActionBase.ParamLocation.RESOURCE, true, true);
+        showParametersTableInWindow(restParamsTable, selectedParameter);
+    }
 
-	private void showParametersTableInWindow( RestParamsTable restParamsTable, String selectedParameter )
-	{
-		PopupWindow popupWindow = new PopupWindow( restParamsTable );
-		popupWindow.pack();
-		restParamsTable.focusParameter( selectedParameter );
-		moveWindowBelowTextField( popupWindow );
-		popupWindow.setModal( true );
-		popupWindow.setVisible( true );
-	}
+    private void showParametersTableInWindow(RestParamsTable restParamsTable, String selectedParameter) {
+        PopupWindow popupWindow = new PopupWindow(restParamsTable);
+        popupWindow.pack();
+        restParamsTable.focusParameter(selectedParameter);
+        moveWindowBelowTextField(popupWindow);
+        popupWindow.setModal(true);
+        popupWindow.setVisible(true);
+    }
 
-	private void moveWindowBelowTextField( PopupWindow popupWindow )
-	{
-		try
-		{
-			Point textFieldLocation = textField.getLocationOnScreen();
-			popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + textField.getHeight() );
-		}
-		catch( IllegalComponentStateException ignore )
-		{
-			// this will happen when the desktop panel is being closed
-		}
-	}
+    private void moveWindowBelowTextField(PopupWindow popupWindow) {
+        try {
+            Point textFieldLocation = textField.getLocationOnScreen();
+            popupWindow.setLocation(textFieldLocation.x, textFieldLocation.y + textField.getHeight());
+        } catch (IllegalComponentStateException ignore) {
+            // this will happen when the desktop panel is being closed
+        }
+    }
 
-	public void updateTextField()
-	{
-		setText( RestUtils.makeSuffixParameterString( request ) );
-	}
+    public void updateTextField() {
+        setText(RestUtils.makeSuffixParameterString(request));
+    }
 
-	private class PopupWindow extends JDialog
-	{
+    private class PopupWindow extends JDialog {
 
-		private final JButton closeButton;
-		private RestParamsTable restParamsTable;
+        private final JButton closeButton;
+        private RestParamsTable restParamsTable;
 
-		private PopupWindow( final RestParamsTable restParamsTable )
-		{
-			super( SoapUI.getFrame() );
-			setResizable( false );
-			this.restParamsTable = restParamsTable;
-			getContentPane().setLayout( new BorderLayout() );
-			JPanel buttonPanel = new JPanel( new FlowLayout( FlowLayout.RIGHT ) );
-			closeButton = new JButton( "Close" );
-			getRootPane().setDefaultButton( closeButton );
-			closeButton.addActionListener( new ActionListener()
-			{
-				@Override
-				public void actionPerformed( ActionEvent e )
-				{
-					close();
-				}
-			} );
-			buttonPanel.add( closeButton );
-			getContentPane().add( restParamsTable, BorderLayout.CENTER );
-			getContentPane().add( buttonPanel, BorderLayout.SOUTH );
-			closeButton.getInputMap( WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( ( char )KeyEvent.VK_ESCAPE ), "closePopup" );
-			closeButton.getActionMap().put( "closePopup", new CloseAction() );
-		}
+        private PopupWindow(final RestParamsTable restParamsTable) {
+            super(SoapUI.getFrame());
+            setResizable(false);
+            this.restParamsTable = restParamsTable;
+            getContentPane().setLayout(new BorderLayout());
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            closeButton = new JButton("Close");
+            getRootPane().setDefaultButton(closeButton);
+            closeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    close();
+                }
+            });
+            buttonPanel.add(closeButton);
+            getContentPane().add(restParamsTable, BorderLayout.CENTER);
+            getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+            closeButton.getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ESCAPE), "closePopup");
+            closeButton.getActionMap().put("closePopup", new CloseAction());
+        }
 
-		private void close()
-		{
-			JTable actualTable = restParamsTable.getParamsTable();
-			if( actualTable.isEditing() )
-			{
-				actualTable.getCellEditor().stopCellEditing();
-			}
-			setVisible( false );
-			dispose();
-		}
+        private void close() {
+            JTable actualTable = restParamsTable.getParamsTable();
+            if (actualTable.isEditing()) {
+                actualTable.getCellEditor().stopCellEditing();
+            }
+            setVisible(false);
+            dispose();
+        }
 
-		private class CloseAction implements Action
-		{
-			@Override
-			public Object getValue( String key )
-			{
-				return null;
-			}
+        private class CloseAction implements Action {
+            @Override
+            public Object getValue(String key) {
+                return null;
+            }
 
-			@Override
-			public void putValue( String key, Object value )
-			{
+            @Override
+            public void putValue(String key, Object value) {
 
-			}
+            }
 
-			@Override
-			public void setEnabled( boolean b )
-			{
+            @Override
+            public void setEnabled(boolean b) {
 
-			}
+            }
 
-			@Override
-			public boolean isEnabled()
-			{
-				return true;
-			}
+            @Override
+            public boolean isEnabled() {
+                return true;
+            }
 
-			@Override
-			public void addPropertyChangeListener( PropertyChangeListener listener )
-			{
+            @Override
+            public void addPropertyChangeListener(PropertyChangeListener listener) {
 
-			}
+            }
 
-			@Override
-			public void removePropertyChangeListener( PropertyChangeListener listener )
-			{
+            @Override
+            public void removePropertyChangeListener(PropertyChangeListener listener) {
 
-			}
+            }
 
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				close();
-			}
-		}
-	}
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                close();
+            }
+        }
+    }
 
 }

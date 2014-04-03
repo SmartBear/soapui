@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.utils;
+*/
+package com.eviware.soapui.utils;
 
 import com.eviware.soapui.config.*;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -42,110 +43,90 @@ import com.eviware.soapui.support.types.StringToStringMap;
 /**
  * Class containing factory methods for commonly used model items, for use in automatic tests.
  */
-public class ModelItemFactory
-{
-	public static RestRequest makeRestRequest() throws SoapUIException
-	{
-		return new RestRequest( makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
-	}
+public class ModelItemFactory {
+    public static RestRequest makeRestRequest() throws SoapUIException {
+        return new RestRequest(makeRestMethod(), RestRequestConfig.Factory.newInstance(), false);
+    }
 
-	public static RestRequest makeRestRequest(RestResource restResource) throws SoapUIException
-	{
-		return new RestRequest( makeRestMethod(restResource), RestRequestConfig.Factory.newInstance(), false);
-	}
+    public static RestRequest makeRestRequest(RestResource restResource) throws SoapUIException {
+        return new RestRequest(makeRestMethod(restResource), RestRequestConfig.Factory.newInstance(), false);
+    }
 
-	private static RestMethod makeRestMethod( RestResource restResource )
-	{
-		return new RestMethod( restResource, RestMethodConfig.Factory.newInstance());
-	}
+    private static RestMethod makeRestMethod(RestResource restResource) {
+        return new RestMethod(restResource, RestMethodConfig.Factory.newInstance());
+    }
 
-	public static RestMethod makeRestMethod() throws SoapUIException
-	{
+    public static RestMethod makeRestMethod() throws SoapUIException {
 
-		RestMethod restMethod = new RestMethod( makeRestResource(), RestMethodConfig.Factory.newInstance() );
-		restMethod.setMethod( RestRequestInterface.HttpMethod.GET );
-		return restMethod;
-	}
+        RestMethod restMethod = new RestMethod(makeRestResource(), RestMethodConfig.Factory.newInstance());
+        restMethod.setMethod(RestRequestInterface.HttpMethod.GET);
+        return restMethod;
+    }
 
-	public static RestResource makeRestResource() throws SoapUIException
-	{
-		return new RestResource( makeRestService(), RestResourceConfig.Factory.newInstance());
-	}
+    public static RestResource makeRestResource() throws SoapUIException {
+        return new RestResource(makeRestService(), RestResourceConfig.Factory.newInstance());
+    }
 
-	public static RestService makeRestService() throws SoapUIException
-	{
-		return new RestService(makeWsdlProject(), RestServiceConfig.Factory.newInstance());
-	}
+    public static RestService makeRestService() throws SoapUIException {
+        return new RestService(makeWsdlProject(), RestServiceConfig.Factory.newInstance());
+    }
 
-	public static RestMockAction makeRestMockAction() throws SoapUIException
-	{
-		RestMockService mockService = makeRestMockService();
-		RestMockAction restMockAction = new RestMockAction( mockService, mockService.getConfig().addNewRestMockAction() );
-		mockService.addMockOperation( restMockAction );
-		return restMockAction;
-	}
+    public static RestMockAction makeRestMockAction() throws SoapUIException {
+        RestMockService mockService = makeRestMockService();
+        RestMockAction restMockAction = new RestMockAction(mockService, mockService.getConfig().addNewRestMockAction());
+        mockService.addMockOperation(restMockAction);
+        return restMockAction;
+    }
 
-	public static WsdlProject makeWsdlProject() throws SoapUIException
-	{
-		return new WsdlProject( (WorkspaceImpl )WorkspaceFactory.getInstance().openWorkspace( "testWorkSpace" , new StringToStringMap()));
-	}
+    public static WsdlProject makeWsdlProject() throws SoapUIException {
+        return new WsdlProject((WorkspaceImpl) WorkspaceFactory.getInstance().openWorkspace("testWorkSpace", new StringToStringMap()));
+    }
 
-	public static WsdlTestCase makeTestCase() throws SoapUIException
-	{
-		return new WsdlTestCase( new WsdlTestSuite( makeWsdlProject(), TestSuiteConfig.Factory.newInstance() ), TestCaseConfig.Factory.newInstance(), false );
-	}
+    public static WsdlTestCase makeTestCase() throws SoapUIException {
+        return new WsdlTestCase(new WsdlTestSuite(makeWsdlProject(), TestSuiteConfig.Factory.newInstance()), TestCaseConfig.Factory.newInstance(), false);
+    }
 
-	public static WsdlTestRequestStep makeTestRequestStep() throws SoapUIException
-	{
-		return new WsdlTestRequestStep( makeTestCase(), TestStepConfig.Factory.newInstance(), false);
-	}
+    public static WsdlTestRequestStep makeTestRequestStep() throws SoapUIException {
+        return new WsdlTestRequestStep(makeTestCase(), TestStepConfig.Factory.newInstance(), false);
+    }
 
-	public static WsdlOperation makeWsdlOperation() throws SoapUIException
-	{
-		return new WsdlOperation( makeWsdlInterface(), OperationConfig.Factory.newInstance() );
-	}
+    public static WsdlOperation makeWsdlOperation() throws SoapUIException {
+        return new WsdlOperation(makeWsdlInterface(), OperationConfig.Factory.newInstance());
+    }
 
-	private static WsdlInterface makeWsdlInterface() throws SoapUIException
-	{
-		return new WsdlInterface( makeWsdlProject(), WsdlInterfaceConfig.Factory.newInstance() );
-	}
+    private static WsdlInterface makeWsdlInterface() throws SoapUIException {
+        return new WsdlInterface(makeWsdlProject(), WsdlInterfaceConfig.Factory.newInstance());
+    }
 
-	public static OAuth2ProfileContainer makeOAuth2ProfileContainer() throws SoapUIException
-	{
-		return new DefaultOAuth2ProfileContainer( makeWsdlProject(),
-				OAuth2ProfileContainerConfig.Factory.newInstance() );
-	}
+    public static OAuth2ProfileContainer makeOAuth2ProfileContainer() throws SoapUIException {
+        return new DefaultOAuth2ProfileContainer(makeWsdlProject(),
+                OAuth2ProfileContainerConfig.Factory.newInstance());
+    }
 
-	public static OAuth2Profile makeOAuth2Profile() throws SoapUIException
-	{
-		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
-		return new OAuth2Profile( makeOAuth2ProfileContainer(), configuration );
-	}
+    public static OAuth2Profile makeOAuth2Profile() throws SoapUIException {
+        OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+        return new OAuth2Profile(makeOAuth2ProfileContainer(), configuration);
+    }
 
 
+    public static RestMockService makeRestMockService() throws SoapUIException {
+        WsdlProject project = makeWsdlProject();
+        RESTMockServiceConfig restMockServiceConfig = project.getConfig().addNewRestMockService();
+        restMockServiceConfig.setName("mockServiceConfig");
+        RestMockService restMockService = new RestMockService(project, restMockServiceConfig);
+        project.addRestMockService(restMockService);
+        return restMockService;
+    }
 
-	public static RestMockService makeRestMockService() throws SoapUIException
-	{
-		WsdlProject project = makeWsdlProject();
-		RESTMockServiceConfig restMockServiceConfig = project.getConfig().addNewRestMockService();
-		restMockServiceConfig.setName( "mockServiceConfig" );
-		RestMockService restMockService = new RestMockService( project, restMockServiceConfig );
-		project.addRestMockService( restMockService );
-		return restMockService;
-	}
+    public static WsdlMockOperation makeWsdlMockOperation() throws SoapUIException {
+        return new WsdlMockOperation(makeWsdlMockService(), MockOperationConfig.Factory.newInstance(), makeWsdlOperation());
+    }
 
-	public static WsdlMockOperation makeWsdlMockOperation() throws SoapUIException
-	{
-		return new WsdlMockOperation( makeWsdlMockService(), MockOperationConfig.Factory.newInstance(), makeWsdlOperation() );
-	}
+    private static WsdlMockService makeWsdlMockService() throws SoapUIException {
+        return new WsdlMockService(makeWsdlProject(), MockServiceConfig.Factory.newInstance());
+    }
 
-	private static WsdlMockService makeWsdlMockService() throws SoapUIException
-	{
-		return new WsdlMockService( makeWsdlProject(), MockServiceConfig.Factory.newInstance() );
-	}
-
-	public static WsdlMockResponse makeWsdlMockResponse() throws SoapUIException
-	{
-		return new WsdlMockResponse( makeWsdlMockOperation(), MockResponseConfig.Factory.newInstance());
-	}
+    public static WsdlMockResponse makeWsdlMockResponse() throws SoapUIException {
+        return new WsdlMockResponse(makeWsdlMockOperation(), MockResponseConfig.Factory.newInstance());
+    }
 }

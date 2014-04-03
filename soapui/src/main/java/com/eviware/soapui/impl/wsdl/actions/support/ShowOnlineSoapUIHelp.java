@@ -25,38 +25,34 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Shows an online help page
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ShowOnlineSoapUIHelp extends AbstractSoapUIAction<ModelItem> implements HelpActionMarker
-{
-	public static final String SOAPUI_ACTION_ID = "ShowOnlineSoapUIHelp";
-	private String url;
+public class ShowOnlineSoapUIHelp extends AbstractSoapUIAction<ModelItem> implements HelpActionMarker {
+    public static final String SOAPUI_ACTION_ID = "ShowOnlineSoapUIHelp";
+    private String url;
 
-	public ShowOnlineSoapUIHelp()
-	{
-		super( "Online Help", "Show Online Help" );
-	}
+    public ShowOnlineSoapUIHelp() {
+        super("Online Help", "Show Online Help");
+    }
 
-	public ShowOnlineSoapUIHelp( String name, String url )
-	{
-		super( name, url );
-		this.url = url;
-	}
+    public ShowOnlineSoapUIHelp(String name, String url) {
+        super(name, url);
+        this.url = url;
+    }
 
-	public void perform( ModelItem target, Object param )
-	{
-		if( param == null && url == null )
-		{
-			UISupport.showErrorMessage( "Missing help URL" );
-			return;
-		}
+    public void perform(ModelItem target, Object param) {
+        if (param == null && url == null) {
+            UISupport.showErrorMessage("Missing help URL");
+            return;
+        }
 
-		String url = param == null ? this.url : param.toString();
-		if( !url.startsWith( "http://" ) )
-			url = HelpUrls.HELP_URL_ROOT + url;
+        String url = param == null ? this.url : param.toString();
+        if (!url.startsWith("http://")) {
+            url = HelpUrls.HELP_URL_ROOT + url;
+        }
 
-		Tools.openURL( url );
-	}
+        Tools.openURL(url);
+    }
 }

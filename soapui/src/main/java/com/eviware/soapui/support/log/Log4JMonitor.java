@@ -20,25 +20,24 @@ import javax.swing.JComponent;
 
 /**
  * JTabbedPane that displays Log4J output in different tabs
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface Log4JMonitor
-{
-	public JLogList addLogArea( String title, String loggerName, boolean isDefault );
+public interface Log4JMonitor {
+    public JLogList addLogArea(String title, String loggerName, boolean isDefault);
 
-	public void logEvent( Object msg );
+    public void logEvent(Object msg);
 
-	public JLogList getLogArea( String title );
+    public JLogList getLogArea(String title);
 
-	public boolean hasLogArea( String loggerName );
+    public boolean hasLogArea(String loggerName);
 
-	public JComponent getComponent();
+    public JComponent getComponent();
 
-	public JLogList getCurrentLog();
+    public JLogList getCurrentLog();
 
-	public void setCurrentLog( JLogList lastLog );
+    public void setCurrentLog(JLogList lastLog);
 
-	public boolean removeLogArea( String loggerName );
+    public boolean removeLogArea(String loggerName);
 }

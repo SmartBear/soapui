@@ -26,35 +26,31 @@ import java.util.List;
 
 /**
  * Action for adding a new child REST resource.
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class NewRestChildResourceAction extends NewRestResourceActionBase<RestResource>
-{
-	public static final String SOAPUI_ACTION_ID = "NewRestChildResourceAction";
-	public static final MessageSupport messages = MessageSupport.getMessages( NewRestChildResourceAction.class );
+public class NewRestChildResourceAction extends NewRestResourceActionBase<RestResource> {
+    public static final String SOAPUI_ACTION_ID = "NewRestChildResourceAction";
+    public static final MessageSupport messages = MessageSupport.getMessages(NewRestChildResourceAction.class);
 
-	public NewRestChildResourceAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    public NewRestChildResourceAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
 
-	@Override
-	protected List<RestResource> getResourcesFor( RestResource item )
-	{
-		List<RestResource> returnValue = new ArrayList<RestResource>( );
-		returnValue.add(item);
-		returnValue.addAll( Arrays.asList( item.getAllChildResources() ));
-		return returnValue;
-	}
+    @Override
+    protected List<RestResource> getResourcesFor(RestResource item) {
+        List<RestResource> returnValue = new ArrayList<RestResource>();
+        returnValue.add(item);
+        returnValue.addAll(Arrays.asList(item.getAllChildResources()));
+        return returnValue;
+    }
 
-	@Override
-	protected RestResource addResourceTo( RestResource parentResource, String name, String path )
-	{
-		return parentResource.addNewChildResource( name, path );
-	}
+    @Override
+    protected RestResource addResourceTo(RestResource parentResource, String name, String path) {
+        return parentResource.addNewChildResource(name, path);
+    }
 
 
 }

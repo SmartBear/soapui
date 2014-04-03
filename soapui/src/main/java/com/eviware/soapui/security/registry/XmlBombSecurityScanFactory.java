@@ -25,37 +25,32 @@ import com.eviware.soapui.security.scan.XmlBombSecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
- * 
+ *
  * @author SoapUI team
  */
 
-public class XmlBombSecurityScanFactory extends AbstractSecurityScanFactory
-{
+public class XmlBombSecurityScanFactory extends AbstractSecurityScanFactory {
 
-	public XmlBombSecurityScanFactory()
-	{
-		super( XmlBombSecurityScan.TYPE, XmlBombSecurityScan.NAME, "Performs a scan for XML Bomb Vulnerabilities",
-				"/xml_bomb_scan.gif" );
-	}
+    public XmlBombSecurityScanFactory() {
+        super(XmlBombSecurityScan.TYPE, XmlBombSecurityScan.NAME, "Performs a scan for XML Bomb Vulnerabilities",
+                "/xml_bomb_scan.gif");
+    }
 
-	public boolean canCreate( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep;
-	}
+    public boolean canCreate(TestStep testStep) {
+        return testStep instanceof WsdlTestRequestStep;
+    }
 
-	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
-	{
-		return new XmlBombSecurityScan( testStep, config, parent, "/xml_bomb_scan.gif" );
-	}
+    @Override
+    public AbstractSecurityScan buildSecurityScan(TestStep testStep, SecurityScanConfig config, ModelItem parent) {
+        return new XmlBombSecurityScan(testStep, config, parent, "/xml_bomb_scan.gif");
+    }
 
-	@Override
-	public SecurityScanConfig createNewSecurityScan( String name )
-	{
-		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
-		securityCheckConfig.setType( XmlBombSecurityScan.TYPE );
-		securityCheckConfig.setName( name );
-		return securityCheckConfig;
-	}
+    @Override
+    public SecurityScanConfig createNewSecurityScan(String name) {
+        SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
+        securityCheckConfig.setType(XmlBombSecurityScan.TYPE);
+        securityCheckConfig.setName(name);
+        return securityCheckConfig;
+    }
 
 }

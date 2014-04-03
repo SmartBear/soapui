@@ -31,181 +31,211 @@ import com.eviware.soapui.model.iface.Attachment;
 
 /**
  * TableModel for Request Attachments
- * 
+ *
  * @author emibre
  */
 
-public class AttachmentsTableModel extends AbstractTableModel implements PropertyChangeListener, AttachmentTableModel
-{
+public class AttachmentsTableModel extends AbstractTableModel implements PropertyChangeListener, AttachmentTableModel {
 
-	private AttachmentContainer container;
+    private AttachmentContainer container;
 
-	/** Creates a new instance of AttachmentTableModel */
-	public AttachmentsTableModel( AttachmentContainer request )
-	{
-		this.container = request;
+    /**
+     * Creates a new instance of AttachmentTableModel
+     */
+    public AttachmentsTableModel(AttachmentContainer request) {
+        this.container = request;
 
-		this.container.addAttachmentsChangeListener( this );
-	}
+        this.container.addAttachmentsChangeListener(this);
+    }
 
-	public void release()
-	{
-		container.removeAttachmentsChangeListener( this );
-	}
+    public void release() {
+        container.removeAttachmentsChangeListener(this);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.impl.wsdl.panels.attachments.AttachmentTableModel#addFile
-	 * (java.io.File, boolean)
-	 */
-	public void addFile( File file, boolean cacheInRequest ) throws IOException
-	{
-		if( container instanceof MutableAttachmentContainer )
-		{
-			( ( MutableAttachmentContainer )container ).attachFile( file, cacheInRequest );
-		}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.eviware.soapui.impl.wsdl.panels.attachments.AttachmentTableModel#addFile
+     * (java.io.File, boolean)
+     */
+    public void addFile(File file, boolean cacheInRequest) throws IOException {
+        if (container instanceof MutableAttachmentContainer) {
+            ((MutableAttachmentContainer) container).attachFile(file, cacheInRequest);
+        }
 
-		this.fireTableRowsInserted( container.getAttachmentCount(), container.getAttachmentCount() );
-	}
+        this.fireTableRowsInserted(container.getAttachmentCount(), container.getAttachmentCount());
+    }
 
-	public void removeAttachment( int[] rowIndexes )
-	{
-		Arrays.sort( rowIndexes );
-		for( int i = rowIndexes.length - 1; i >= 0; i-- )
-			removeAttachment( rowIndexes[i] );
-	}
+    public void removeAttachment(int[] rowIndexes) {
+        Arrays.sort(rowIndexes);
+        for (int i = rowIndexes.length - 1; i >= 0; i--)
 
-	public void removeAttachment( int rowIndex )
-	{
-		if( container instanceof MutableAttachmentContainer )
-		{
-			( ( MutableAttachmentContainer )container ).removeAttachment( container.getAttachmentAt( rowIndex ) );
-			this.fireTableRowsDeleted( rowIndex, rowIndex );
-		}
-	}
+         emoveAttachment(rowIndexes[i]);
 
-	public int getRowCount()
-	{
-		return container.getAttachmentCount();
-	}
 
-	public int getColumnCount()
-	{
-		return container instanceof MutableAttachmentContainer ? 7 : 6;
-	}
+    }
 
-	public Attachment getAttachmentAt( int rowIndex )
-	{
-		return container.getAttachmentAt( rowIndex );
-	}
+    public void removeAttachment(int rowIndex) {
+        if (container instanceof MutableAttachmentContainer) {
+            ((MutableAttachmentContainer) container).removeAttachment(container.getAttachmentAt(rowIndex));
+            this.fireTableRowsDeleted(rowIndex, rowIndex);
+        }
+    }
 
-	public Object getValueAt( int rowIndex, int columnIndex )
-	{
-		if( rowIndex > getRowCount() )
-			return null;
+    public int getRowCount() {
+        return container.getAttachmentCount();
+    }
 
-		Attachment att = container.getAttachmentAt( rowIndex );
+    public int getColumnCount() {
+        return container instanceof MutableAttachmentContainer ? 7 : 6;
+    }
 
-		switch( columnIndex )
-		{
-		case 0 :
-			return att.isCached() ? att.getName() : att.getUrl();
-		case 1 :
-			return att.getContentType();
-		case 2 :
-			return att.getSize();
-		case 3 :
-			return att.getPart();
-		case 4 :
-			return att.getAttachmentType();
-		case 5 :
-			return att.getContentID();
-		case 6 :
-			return att.isCached();
-		default :
-			return null;
-		}
-	}
+    public Attachment getAttachmentAt(int rowIndex) {
+        return container.getAttachmentAt(rowIndex);
+    }
 
-	public int findColumn( String columnName )
-	{
-		if( columnName.equals( "Name" ) )
-			return 0;
-		else if( columnName.equals( "Content type" ) )
-			return 1;
-		else if( columnName.equals( "Size" ) )
-			return 2;
-		else if( columnName.equals( "Part" ) )
-			return 3;
-		else if( columnName.equals( "Type" ) )
-			return 4;
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        if (rowIndex > getRowCount())
 
-		return -1;
-	}
+         eturn  ull;
 
-	public String getColumnName( int column )
-	{
-		if( column == 0 )
-			return "Name";
-		else if( column == 1 )
-			return "Content type";
-		else if( column == 2 )
-			return "Size";
-		else if( column == 3 )
-			return "Part";
-		else if( column == 4 )
-			return "Type";
-		else if( column == 5 )
-			return "ContentID";
-		else if( column == 6 )
-			return "Cached";
-		else
-			return null;
-	}
 
-	@Override
-	public Class<?> getColumnClass( int columnIndex )
-	{
-		return columnIndex == 6 ? Boolean.class : super.getColumnClass( columnIndex );
-	}
 
-	public boolean isCellEditable( int rowIndex, int columnIndex )
-	{
-		return container instanceof MutableAttachmentContainer
-				&& ( columnIndex == 0 || columnIndex == 1 || columnIndex == 3 || columnIndex == 5 );
-	}
+        Attachment att = container.getAttachmentAt(rowIndex);
 
-	public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-	{
-		if( !( container instanceof MutableAttachmentContainer ) )
-			return;
+        switch (columnIndex) {
+            case 0:
+                return att.isCached() ? att.getName() : att.getUrl();
+            case 1:
+                return att.getContentType();
+            case 2:
+                return att.getSize();
+            case 3:
+                return att.getPart();
+            case 4:
+                return att.getAttachmentType();
+            case 5:
+                return att.getContentID();
+            case 6:
+                return att.isCached();
+            default:
+                return null;
+        }
+    }
 
-		WsdlAttachment att = ( WsdlAttachment )container.getAttachmentAt( rowIndex );
-		if( columnIndex == 0 )
-		{
-			if( att.isCached() )
-				att.setName( ( String )aValue );
-			else
-				att.setUrl( aValue.toString() );
-		}
-		else if( columnIndex == 1 )
-			att.setContentType( ( String )aValue );
-		else if( columnIndex == 3 )
-			att.setPart( ( String )aValue );
-		else if( columnIndex == 5 )
-			att.setContentID( ( String )aValue );
+    public int findColumn(String columnName) {
+        if (columnName.equals("Name"))
 
-		fireTableRowsUpdated( rowIndex, rowIndex );
-	}
+         eturn  ;
 
-	/**
-	 * Update table when attachments or response changes
-	 */
+       lse if (columnName.equals("Content type"))
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		fireTableDataChanged();
-	}
+         eturn  ;
+
+       lse if (columnName.equals("Size"))
+
+         eturn  ;
+
+       lse if (columnName.equals("Part"))
+
+         eturn  ;
+
+       lse if (columnName.equals("Type"))
+
+         eturn  ;
+
+
+
+        return -1;
+    }
+
+    public String getColumnName(int column) {
+        if (column == 0)
+
+         eturn  Name";
+
+       lse if (column == 1)
+
+         eturn  Content type";
+
+       lse if (column == 2)
+
+         eturn  Size";
+
+       lse if (column == 3)
+
+         eturn  Part";
+
+       lse if (column == 4)
+
+         eturn  Type";
+
+       lse if (column == 5)
+
+         eturn  ContentID";
+
+       lse if (column == 6)
+
+         eturn  Cached";
+
+       lse
+
+         eturn  ull;
+
+
+    }
+
+    @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        return columnIndex == 6 ? Boolean.class : super.getColumnClass(columnIndex);
+    }
+
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return container instanceof MutableAttachmentContainer
+                && (columnIndex == 0 || columnIndex == 1 || columnIndex == 3 || columnIndex == 5);
+    }
+
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+        if (!(container instanceof MutableAttachmentContainer))
+
+         eturn;
+
+
+
+        WsdlAttachment att = (WsdlAttachment) container.getAttachmentAt(rowIndex);
+        if (columnIndex == 0) {
+            if (att.isCached())
+
+             tt.setName((String)  Value);
+
+           lse
+
+             tt.setUrl(aValue.toString());
+
+
+        } else if (columnIndex == 1)
+
+             tt.setContentType((String)  Value);
+
+           lse if (columnIndex == 3)
+
+             tt.setPart((String)  Value);
+
+           lse if (columnIndex == 5)
+
+             tt.setContentID((String)  Value);
+
+
+
+        fireTableRowsUpdated(rowIndex, rowIndex);
+    }
+
+    /**
+     * Update table when attachments or response changes
+     */
+
+    public void propertyChange(PropertyChangeEvent evt) {
+        fireTableDataChanged();
+    }
 }

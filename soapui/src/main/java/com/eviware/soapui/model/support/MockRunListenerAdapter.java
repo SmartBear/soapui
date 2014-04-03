@@ -25,26 +25,21 @@ import com.eviware.soapui.model.mock.MockRunner;
 
 /**
  * Adapter for MockRunListeners
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockRunListenerAdapter implements MockRunListener
-{
-	public void onMockRunnerStart( MockRunner mockRunner )
-	{
-	}
+public class MockRunListenerAdapter implements MockRunListener {
+    public void onMockRunnerStart(MockRunner mockRunner) {
+    }
 
-	public void onMockRunnerStop( MockRunner mockRunner )
-	{
-	}
+    public void onMockRunnerStop(MockRunner mockRunner) {
+    }
 
-	public void onMockResult( MockResult result )
-	{
-	}
+    public void onMockResult(MockResult result) {
+    }
 
-	public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
-	{
-		return null;
-	}
+    public MockResult onMockRequest(MockRunner runner, HttpServletRequest request, HttpServletResponse response) {
+        return null;
+    }
 }

@@ -44,32 +44,27 @@ import java.awt.event.MouseListener;
  * Text field for editing a rest resource. Pops up a separate dialog to edit parts of the resource separately if the
  * rest resource has parents or children.
  */
-public class RestResourceEditor extends JTextField
-{
-	public static final String REST_RESOURCE_EDITOR_TEXT_FIELD = "RestResourceEditorTextField";
-	MouseListener mouseListener;
+public class RestResourceEditor extends JTextField {
+    public static final String REST_RESOURCE_EDITOR_TEXT_FIELD = "RestResourceEditorTextField";
+    MouseListener mouseListener;
 
-	private RestResource editingRestResource;
-	private MutableBoolean updating;
-	private int lastSelectedPosition;
+    private RestResource editingRestResource;
+    private MutableBoolean updating;
+    private int lastSelectedPosition;
 
-	public RestResourceEditor( final RestResource editingRestResource, MutableBoolean updating )
-	{
-		super( editingRestResource.getFullPath() );
-		this.editingRestResource = editingRestResource;
-		this.updating = updating;
-		setName( REST_RESOURCE_EDITOR_TEXT_FIELD );
+    public RestResourceEditor(final RestResource editingRestResource, MutableBoolean updating) {
+        super(editingRestResource.getFullPath());
+        this.editingRestResource = editingRestResource;
+        this.updating = updating;
+        setName(REST_RESOURCE_EDITOR_TEXT_FIELD);
 
-		if( isResourceLonely( editingRestResource ) )
-		{
-			getDocument().addDocumentListener( new LonelyDocumentListener() );
-			addFocusListener( new FocusListener()
-			{
-				public void focusLost( FocusEvent e )
-				{
-					scanForTemplateParameters(editingRestResource);
+        if (isResourceLonely(editingRestResource)) {
+            getDocument().addDocumentListener(new LonelyDocumentListener());
+            addFocusListener(new FocusListener() {
+                public void focusLost(FocusEvent e) {
+                    scanForTemplateParameters(editingRestResource);
                     removeMatrixParameters();
-				}
+                }
 
                 /**
                  * Matrix parameters should not be added directly on the rest resource.
@@ -80,124 +75,98 @@ public class RestResourceEditor extends JTextField
                     setText(getText().split(";")[0]);
                 }
 
-                public void focusGained( FocusEvent e )
-				{
-				}
-			} );
+                public void focusGained(FocusEvent e) {
+                }
+            });
 
-		}
-		else
-		{
-			Color originalBackground = getBackground();
-			Border originalBorder = getBorder();
-			setEditable( false );
-			setBackground( originalBackground );
-			setBorder( originalBorder );
-			setCursor( Cursor.getPredefinedCursor( Cursor.TEXT_CURSOR ) );
-			mouseListener = new MouseAdapter()
-			{
-				@Override
-				public void mouseClicked( MouseEvent e )
-				{
-					final RestResource focusedResource = new RestResourceFinder( editingRestResource ).findResourceAt( lastSelectedPosition );
-					SwingUtilities.invokeLater( new Runnable()
-					{
-						@Override
-						public void run()
-						{
-							openPopup( focusedResource );
-						}
-					} );
-				}
-			};
-			addMouseListener( mouseListener );
-			addCaretListener( new CaretListener()
-			{
-				@Override
-				public void caretUpdate( final CaretEvent e )
-				{
-					lastSelectedPosition = e.getDot();
-				}
+        } else {
+            Color originalBackground = getBackground();
+            Border originalBorder = getBorder();
+            setEditable(false);
+            setBackground(originalBackground);
+            setBorder(originalBorder);
+            setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
+            mouseListener = new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    final RestResource focusedResource = new RestResourceFinder(editingRestResource).findResourceAt(lastSelectedPosition);
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            openPopup(focusedResource);
+                        }
+                    });
+                }
+            };
+            addMouseListener(mouseListener);
+            addCaretListener(new CaretListener() {
+                @Override
+                public void caretUpdate(final CaretEvent e) {
+                    lastSelectedPosition = e.getDot();
+                }
 
-			} );
-		}
-	}
+            });
+        }
+    }
 
-	static void scanForTemplateParameters(RestResource resource)
-	{
-		for( RestResource restResource : RestUtils.extractAncestorsParentFirst( resource ) )
-		{
-			for( String p : RestUtils.extractTemplateParams( restResource.getPath() ) )
-			{
-				if( !resourceOrParentHasProperty( restResource, p ) )
-				{
-					RestParamProperty property = restResource.addProperty( p );
-					property.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-					String value = UISupport.prompt( "Specify default value for parameter [" + p + "]",
-							"Add Parameter", "" );
-					if( value != null )
-					{
-						property.setDefaultValue( value );
-						property.setValue( value );
-					}
-				}
-			}
-		}
-	}
+    static void scanForTemplateParameters(RestResource resource) {
+        for (RestResource restResource : RestUtils.extractAncestorsParentFirst(resource)) {
+            for (String p : RestUtils.extractTemplateParams(restResource.getPath())) {
+                if (!resourceOrParentHasProperty(restResource, p)) {
+                    RestParamProperty property = restResource.addProperty(p);
+                    property.setStyle(RestParamsPropertyHolder.ParameterStyle.TEMPLATE);
+                    String value = UISupport.prompt("Specify default value for parameter [" + p + "]",
+                            "Add Parameter", "");
+                    if (value != null) {
+                        property.setDefaultValue(value);
+                        property.setValue(value);
+                    }
+                }
+            }
+        }
+    }
 
-	private static boolean resourceOrParentHasProperty( RestResource restResource, String name )
-	{
-		for( RestResource r = restResource; r != null; r = r.getParentResource() )
-		{
-			if( r.hasProperty( name ) )
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    private static boolean resourceOrParentHasProperty(RestResource restResource, String name) {
+        for (RestResource r = restResource; r != null; r = r.getParentResource()) {
+            if (r.hasProperty(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private boolean isResourceLonely( RestResource restResource )
-	{
-		return restResource.getParentResource() == null && StringUtils.isNullOrEmpty( restResource.getInterface().getBasePath() );
+    private boolean isResourceLonely(RestResource restResource) {
+        return restResource.getParentResource() == null && StringUtils.isNullOrEmpty(restResource.getInterface().getBasePath());
 
 
-	}
+    }
 
-	public void openPopup( RestResource focusedResource )
-	{
-		RestResourceEditorPopupWindow popupWindow = new RestResourceEditorPopupWindow( editingRestResource, focusedResource );
-		moveWindowBelowTextField( popupWindow );
-		popupWindow.setVisible( true );
-	}
+    public void openPopup(RestResource focusedResource) {
+        RestResourceEditorPopupWindow popupWindow = new RestResourceEditorPopupWindow(editingRestResource, focusedResource);
+        moveWindowBelowTextField(popupWindow);
+        popupWindow.setVisible(true);
+    }
 
-	private class LonelyDocumentListener extends DocumentListenerAdapter
-	{
-		@Override
-		public void update( Document document )
-		{
-			if( updating.booleanValue() )
-			{
-				return;
-			}
-			updating.setValue( true );
-			editingRestResource.setPath( getText( document ).trim() );
-			updating.setValue( false );
-		}
-	}
+    private class LonelyDocumentListener extends DocumentListenerAdapter {
+        @Override
+        public void update(Document document) {
+            if (updating.booleanValue()) {
+                return;
+            }
+            updating.setValue(true);
+            editingRestResource.setPath(getText(document).trim());
+            updating.setValue(false);
+        }
+    }
 
-	private void moveWindowBelowTextField( RestResourceEditorPopupWindow popupWindow )
-	{
-		try
-		{
-			Point textFieldLocation = this.getLocationOnScreen();
-			popupWindow.setLocation( textFieldLocation.x, textFieldLocation.y + this.getHeight() );
-		}
-		catch( IllegalComponentStateException ignore )
-		{
-			// this will happen when the desktop panel is being closed
-		}
-	}
+    private void moveWindowBelowTextField(RestResourceEditorPopupWindow popupWindow) {
+        try {
+            Point textFieldLocation = this.getLocationOnScreen();
+            popupWindow.setLocation(textFieldLocation.x, textFieldLocation.y + this.getHeight());
+        } catch (IllegalComponentStateException ignore) {
+            // this will happen when the desktop panel is being closed
+        }
+    }
 
 
 }

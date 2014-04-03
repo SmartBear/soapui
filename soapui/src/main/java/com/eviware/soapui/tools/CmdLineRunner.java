@@ -18,15 +18,14 @@ package com.eviware.soapui.tools;
 
 import org.apache.log4j.Logger;
 
-public interface CmdLineRunner
-{
-	public String getProjectFile();
+public interface CmdLineRunner {
+    public String getProjectFile();
 
-	public String getSettingsFile();
+    public String getSettingsFile();
 
-	public String getOutputFolder();
+    public String getOutputFolder();
 
-	public Logger getLog();
+    public Logger getLog();
 
-	public String[] getProjectProperties();
+    public String[] getProjectProperties();
 }

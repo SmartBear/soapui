@@ -12,38 +12,33 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.tools;
+*/
+package com.eviware.soapui.security.tools;
 
 import com.eviware.soapui.model.iface.Attachment;
 
-public class AttachmentElement
-{
-	private Attachment attachment;
-	private String id;
+public class AttachmentElement {
+    private Attachment attachment;
+    private String id;
 
-	public AttachmentElement( Attachment attachment, String id )
-	{
-		this.attachment = attachment;
-		this.id = id;
-	}
+    public AttachmentElement(Attachment attachment, String id) {
+        this.attachment = attachment;
+        this.id = id;
+    }
 
-	public Attachment getAttachment()
-	{
-		return attachment;
-	}
+    public Attachment getAttachment() {
+        return attachment;
+    }
 
-	public void setAttachment( Attachment attachment )
-	{
-		this.attachment = attachment;
-	}
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
+    }
 
-	public String getId()
-	{
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public String toString()
-	{
-		return attachment.getName();
-	}
+    public String toString() {
+        return attachment.getName();
+    }
 }

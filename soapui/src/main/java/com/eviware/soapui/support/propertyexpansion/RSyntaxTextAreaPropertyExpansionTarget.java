@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.propertyexpansion;
+*/
+package com.eviware.soapui.support.propertyexpansion;
 
 import java.awt.Point;
 
@@ -24,50 +25,42 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 
-public class RSyntaxTextAreaPropertyExpansionTarget extends AbstractPropertyExpansionTarget
-{
+public class RSyntaxTextAreaPropertyExpansionTarget extends AbstractPropertyExpansionTarget {
 
-	private final RSyntaxTextArea textField;
+    private final RSyntaxTextArea textField;
 
-	public RSyntaxTextAreaPropertyExpansionTarget( RSyntaxTextArea textField, ModelItem modelItem )
-	{
-		super( modelItem );
-		this.textField = textField;
-	}
+    public RSyntaxTextAreaPropertyExpansionTarget(RSyntaxTextArea textField, ModelItem modelItem) {
+        super(modelItem);
+        this.textField = textField;
+    }
 
-	@Override
-	public void insertPropertyExpansion( PropertyExpansion expansion, Point pt )
-	{
-		int pos = pt == null ? -1 : textField.viewToModel( pt );
-		if( pos == -1 )
-			pos = textField.getCaretPosition();
+    @Override
+    public void insertPropertyExpansion(PropertyExpansion expansion, Point pt) {
+        int pos = pt == null ? -1 : textField.viewToModel(pt);
+        if (pos == -1) {
+            pos = textField.getCaretPosition();
+        }
 
-		try
-		{
-			textField.setText( textField.getText( 0, pos ) + expansion.toString()
-					+ textField.getText( pos, textField.getText().length() - textField.getText( 0, pos ).length()  ) );
-		}
-		catch( BadLocationException e )
-		{
-			SoapUI.logError( e, "Unable to insert property expansion" );
-		}
+        try {
+            textField.setText(textField.getText(0, pos) + expansion.toString()
+                    + textField.getText(pos, textField.getText().length() - textField.getText(0, pos).length()));
+        } catch (BadLocationException e) {
+            SoapUI.logError(e, "Unable to insert property expansion");
+        }
 
-		if( pos >= 0 )
-		{
-			textField.setCaretPosition( pos );
-			textField.requestFocusInWindow();
-		}
-	}
+        if (pos >= 0) {
+            textField.setCaretPosition(pos);
+            textField.requestFocusInWindow();
+        }
+    }
 
-	@Override
-	public String getValueForCreation()
-	{
-		return textField.getSelectedText();
-	}
+    @Override
+    public String getValueForCreation() {
+        return textField.getSelectedText();
+    }
 
-	@Override
-	public String getNameForCreation()
-	{
-		return textField.getName();
-	}
+    @Override
+    public String getNameForCreation() {
+        return textField.getName();
+    }
 }

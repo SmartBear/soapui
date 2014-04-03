@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.support.handlers;
+*/
+package com.eviware.soapui.impl.rest.support.handlers;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
@@ -49,92 +50,84 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for the JsonMediaTypeHandler class.
  */
-public class JsonMediaTypeHandlerTest
-{
+public class JsonMediaTypeHandlerTest {
 
-	public static final String ENDPOINT = "http://somehost.com";
-	private RestRequest restRequest;
-	private JsonMediaTypeHandler mediaTypeHandler;
+    public static final String ENDPOINT = "http://somehost.com";
+    private RestRequest restRequest;
+    private JsonMediaTypeHandler mediaTypeHandler;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		restRequest = makeRestRequest();
-		restRequest.setEndpoint( ENDPOINT );
+    @Before
+    public void setUp() throws Exception {
+        restRequest = makeRestRequest();
+        restRequest.setEndpoint(ENDPOINT);
 
-		mediaTypeHandler = new JsonMediaTypeHandler();
-	}
+        mediaTypeHandler = new JsonMediaTypeHandler();
+    }
 
-	@Test
-	public void retainsUriInFirstSubmitAsNamespaceUri() throws Exception
-	{
-		HttpResponse response = submitRequestAndReceiveResponse( restRequest, "/original/path" );
+    @Test
+    public void retainsUriInFirstSubmitAsNamespaceUri() throws Exception {
+        HttpResponse response = submitRequestAndReceiveResponse(restRequest, "/original/path");
 
-		String originalXml = mediaTypeHandler.createXmlRepresentation( response );
-		HttpResponse responseWithNewPath = submitRequestAndReceiveResponse( restRequest, "/another/path" );
-		assertThat( mediaTypeHandler.createXmlRepresentation( responseWithNewPath ), is( equalTo( originalXml ) ) );
-	}
+        String originalXml = mediaTypeHandler.createXmlRepresentation(response);
+        HttpResponse responseWithNewPath = submitRequestAndReceiveResponse(restRequest, "/another/path");
+        assertThat(mediaTypeHandler.createXmlRepresentation(responseWithNewPath), is(equalTo(originalXml)));
+    }
 
-	@Test
-	public void usesActualUriWhenPathContainsTemplateParameters() throws Exception
-	{
-		RestParamProperty userParameter = restRequest.getParams().addProperty( "user" );
-		userParameter.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-		userParameter.setValue( "billy" );
+    @Test
+    public void usesActualUriWhenPathContainsTemplateParameters() throws Exception {
+        RestParamProperty userParameter = restRequest.getParams().addProperty("user");
+        userParameter.setStyle(RestParamsPropertyHolder.ParameterStyle.TEMPLATE);
+        userParameter.setValue("billy");
 
-		String originalPath = "/original/{user}";
-		restRequest.setPath( originalPath );
+        String originalPath = "/original/{user}";
+        restRequest.setPath(originalPath);
 
-		SubmitContext submitContext = submitRequest( restRequest, originalPath );
-		HttpResponse response = makeResponseFor( restRequest, "/original/billy" );
-		restRequest.setResponse(response, submitContext);
+        SubmitContext submitContext = submitRequest(restRequest, originalPath);
+        HttpResponse response = makeResponseFor(restRequest, "/original/billy");
+        restRequest.setResponse(response, submitContext);
 
-		assertThat( mediaTypeHandler.createXmlRepresentation( response ), containsString("/original/billy") );
-	}
+        assertThat(mediaTypeHandler.createXmlRepresentation(response), containsString("/original/billy"));
+    }
 
-	private HttpResponse submitRequestAndReceiveResponse( RestRequest restRequest, String originalPath ) throws Exception
-	{
-		restRequest.setPath( originalPath );
+    private HttpResponse submitRequestAndReceiveResponse(RestRequest restRequest, String originalPath) throws Exception {
+        restRequest.setPath(originalPath);
 
-		SubmitContext submitContext = submitRequest( restRequest, originalPath );
-		HttpResponse response = makeResponseFor( restRequest, originalPath );
-		// this simulates that we receive a response
-		restRequest.setResponse( response, submitContext );
-		return response;
-	}
+        SubmitContext submitContext = submitRequest(restRequest, originalPath);
+        HttpResponse response = makeResponseFor(restRequest, originalPath);
+        // this simulates that we receive a response
+        restRequest.setResponse(response, submitContext);
+        return response;
+    }
 
-	private SubmitContext submitRequest( RestRequest restRequest, String originalPath ) throws URISyntaxException, URIException, Request.SubmitException
-	{
-		SubmitContext submitContext = new WsdlSubmitContext( restRequest );
-		HttpRequestBase httpMethod = mock( HttpRequestBase.class );
-		submitContext.setProperty( BaseHttpRequestTransport.HTTP_METHOD, httpMethod );
-		submitContext.setProperty( BaseHttpRequestTransport.REQUEST_URI, new URI( ENDPOINT + originalPath ) );
-		restRequest.submit( submitContext, false );
-		return submitContext;
-	}
+    private SubmitContext submitRequest(RestRequest restRequest, String originalPath) throws URISyntaxException, URIException, Request.SubmitException {
+        SubmitContext submitContext = new WsdlSubmitContext(restRequest);
+        HttpRequestBase httpMethod = mock(HttpRequestBase.class);
+        submitContext.setProperty(BaseHttpRequestTransport.HTTP_METHOD, httpMethod);
+        submitContext.setProperty(BaseHttpRequestTransport.REQUEST_URI, new URI(ENDPOINT + originalPath));
+        restRequest.submit(submitContext, false);
+        return submitContext;
+    }
 
-	private SinglePartHttpResponse makeResponseFor( RestRequest restRequest, String path) throws Exception
-	{
-		ExtendedHttpMethod httpMethod = prepareHttpMethodWith( path );
-		SinglePartHttpResponse response =
-				new SinglePartHttpResponse( restRequest, httpMethod, null, mock( PropertyExpansionContext.class ) );
-		response.setResponseContent( "{ firstName: 'Kalle', secondName: 'Ek' }" );
-		return response;
-	}
+    private SinglePartHttpResponse makeResponseFor(RestRequest restRequest, String path) throws Exception {
+        ExtendedHttpMethod httpMethod = prepareHttpMethodWith(path);
+        SinglePartHttpResponse response =
+                new SinglePartHttpResponse(restRequest, httpMethod, null, mock(PropertyExpansionContext.class));
+        response.setResponseContent("{ firstName: 'Kalle', secondName: 'Ek' }");
+        return response;
+    }
 
-	private ExtendedHttpMethod prepareHttpMethodWith( String path ) throws URISyntaxException, MalformedURLException
-	{
-		ExtendedHttpMethod httpMethod = mock( ExtendedHttpMethod.class );
-		when( httpMethod.getResponseContentType() ).thenReturn( "text/json" );
-		when( httpMethod.getMethod() ).thenReturn( "GET" );
-		when( httpMethod.getProtocolVersion() ).thenReturn( new ProtocolVersion( "http", 1, 1 ) );
-		SoapUIMetrics soapUIMetrics = new SoapUIMetrics( mock( HttpTransportMetrics.class ),
-				mock( HttpTransportMetrics.class ) );
-		when( httpMethod.getMetrics() ).thenReturn( soapUIMetrics );
-		when( httpMethod.getAllHeaders() ).thenReturn( new Header[0] );
-		when( httpMethod.getResponseReadTime() ).thenReturn( 10L );
-		when( httpMethod.getURI() ).thenReturn( new java.net.URI( ENDPOINT + path ) );
-		when( httpMethod.getURL() ).thenReturn( new java.net.URL( ENDPOINT + path ) );
-		return httpMethod;
-	}
+    private ExtendedHttpMethod prepareHttpMethodWith(String path) throws URISyntaxException, MalformedURLException {
+        ExtendedHttpMethod httpMethod = mock(ExtendedHttpMethod.class);
+        when(httpMethod.getResponseContentType()).thenReturn("text/json");
+        when(httpMethod.getMethod()).thenReturn("GET");
+        when(httpMethod.getProtocolVersion()).thenReturn(new ProtocolVersion("http", 1, 1));
+        SoapUIMetrics soapUIMetrics = new SoapUIMetrics(mock(HttpTransportMetrics.class),
+                mock(HttpTransportMetrics.class));
+        when(httpMethod.getMetrics()).thenReturn(soapUIMetrics);
+        when(httpMethod.getAllHeaders()).thenReturn(new Header[0]);
+        when(httpMethod.getResponseReadTime()).thenReturn(10L);
+        when(httpMethod.getURI()).thenReturn(new java.net.URI(ENDPOINT + path));
+        when(httpMethod.getURL()).thenReturn(new java.net.URL(ENDPOINT + path));
+        return httpMethod;
+    }
 }

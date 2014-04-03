@@ -26,45 +26,39 @@ import java.awt.*;
 /**
  *
  */
-public abstract class AbstractAuthenticationForm
-{
-	protected static final ColumnSpec LABEL_COLUMN = new ColumnSpec( "left:72dlu" );
-	protected static final ColumnSpec RIGHTMOST_COLUMN = new ColumnSpec( "5px" );
-	protected static final Color CARD_BORDER_COLOR = new Color( 121, 121, 121 );
-	protected static final Color CARD_BACKGROUND_COLOR = new Color( 228, 228, 228 );
-	protected static final int TOP_SPACING = 10;
-	protected static final int GROUP_SPACING = 20;
+public abstract class AbstractAuthenticationForm {
+    protected static final ColumnSpec LABEL_COLUMN = new ColumnSpec("left:72dlu");
+    protected static final ColumnSpec RIGHTMOST_COLUMN = new ColumnSpec("5px");
+    protected static final Color CARD_BORDER_COLOR = new Color(121, 121, 121);
+    protected static final Color CARD_BACKGROUND_COLOR = new Color(228, 228, 228);
+    protected static final int TOP_SPACING = 10;
+    protected static final int GROUP_SPACING = 20;
 
-	public JPanel getComponent()
-	{
-		return buildUI();
-	}
+    public JPanel getComponent() {
+        return buildUI();
+    }
 
-	protected abstract JPanel buildUI();
+    protected abstract JPanel buildUI();
 
-	protected void setBorderOnPanel( JPanel card )
-	{
-		card.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createMatteBorder( 1, 1, 1, 1, CARD_BORDER_COLOR ),
-				BorderFactory.createMatteBorder( 10, 10, 10, 10, CARD_BACKGROUND_COLOR ) ) );
-	}
+    protected void setBorderOnPanel(JPanel card) {
+        card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createMatteBorder(1, 1, 1, 1, CARD_BORDER_COLOR),
+                BorderFactory.createMatteBorder(10, 10, 10, 10, CARD_BACKGROUND_COLOR)));
+    }
 
-	protected void setBackgroundColorOnPanel( JPanel panel )
-	{
-		panel.setBackground( CARD_BACKGROUND_COLOR );
-	}
+    protected void setBackgroundColorOnPanel(JPanel panel) {
+        panel.setBackground(CARD_BACKGROUND_COLOR);
+    }
 
-	protected void setBorderAndBackgroundColorOnPanel( JPanel panel )
-	{
-		panel.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( CARD_BORDER_COLOR ),
-				BorderFactory.createEmptyBorder( 10, 10, 10, 10 )) );
-		setBackgroundColorOnPanel( panel );
-	}
+    protected void setBorderAndBackgroundColorOnPanel(JPanel panel) {
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(CARD_BORDER_COLOR),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
+        setBackgroundColorOnPanel(panel);
+    }
 
-	void initForm( SimpleBindingForm form )
-	{
-		// TODO We should pass the encodedCellConstrains string instead
-		FormLayout formLayout = ( FormLayout )form.getPanel().getLayout();
-		formLayout.setColumnSpec( 2, LABEL_COLUMN );
-		formLayout.setColumnSpec( 5, RIGHTMOST_COLUMN );
-	}
+    void initForm(SimpleBindingForm form) {
+        // TODO We should pass the encodedCellConstrains string instead
+        FormLayout formLayout = (FormLayout) form.getPanel().getLayout();
+        formLayout.setColumnSpec(2, LABEL_COLUMN);
+        formLayout.setColumnSpec(5, RIGHTMOST_COLUMN);
+    }
 }

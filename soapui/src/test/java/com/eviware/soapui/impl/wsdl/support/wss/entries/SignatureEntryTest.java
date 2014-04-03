@@ -37,14 +37,20 @@ import org.apache.ws.security.util.Loader;
 import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xmlbeans.XmlObject;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
+
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
+
 import org.mockito.Mock;
+
 import static org.mockito.Mockito.when;
+
 import org.mockito.MockitoAnnotations;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

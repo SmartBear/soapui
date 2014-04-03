@@ -25,28 +25,24 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * RequestFilter for stripping whitespaces
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class StripWhitespacesRequestFilter extends AbstractRequestFilter
-{
-	private final static Logger log = Logger.getLogger( StripWhitespacesRequestFilter.class );
+public class StripWhitespacesRequestFilter extends AbstractRequestFilter {
+    private final static Logger log = Logger.getLogger(StripWhitespacesRequestFilter.class);
 
-	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
-	{
-		if( !wsdlRequest.isStripWhitespaces() )
-			return;
+    public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest) {
+        if (!wsdlRequest.isStripWhitespaces()) {
+            return;
+        }
 
-		String content = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		if( content == null )
-		{
-			log.warn( "Missing request content in context, skipping stripWhitespaces" );
-		}
-		else
-		{
-			content = XmlUtils.stripWhitespaces( content );
-			context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
-		}
-	}
+        String content = (String) context.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        if (content == null) {
+            log.warn("Missing request content in context, skipping stripWhitespaces");
+        } else {
+            content = XmlUtils.stripWhitespaces(content);
+            context.setProperty(BaseHttpRequestTransport.REQUEST_CONTENT, content);
+        }
+    }
 }

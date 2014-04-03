@@ -21,61 +21,53 @@ import java.util.List;
 
 /**
  * Registry of registered XmlInspectorFactories
- * 
+ *
  * @author ole.matzura
  */
 
-public class InspectorRegistry
-{
-	private static InspectorRegistry instance;
-	private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
+public class InspectorRegistry {
+    private static InspectorRegistry instance;
+    private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
 
-	public InspectorRegistry()
-	{
-	}
+    public InspectorRegistry() {
+    }
 
-	public void addFactory( InspectorFactory factory )
-	{
-		for( int c = 0; c < factories.size(); c++ )
-		{
-			InspectorFactory f = factories.get( c );
-			if( f.getInspectorId().equals( factory.getInspectorId() ) )
-			{
-				factories.set( c, factory );
-				return;
-			}
-		}
+    public void addFactory(InspectorFactory factory) {
+        for (int c = 0; c < factories.size(); c++) {
+            InspectorFactory f = factories.get(c);
+            if (f.getInspectorId().equals(factory.getInspectorId())) {
+                factories.set(c, factory);
+                return;
+            }
+        }
 
-		factories.add( factory );
-	}
+        factories.add(factory);
+    }
 
-	public static final InspectorRegistry getInstance()
-	{
-		if( instance == null )
-			instance = new InspectorRegistry();
+    public static final InspectorRegistry getInstance() {
+        if (instance == null) {
+            instance = new InspectorRegistry();
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public void removeFactory( InspectorFactory factory )
-	{
-		factories.remove( factory );
-	}
+    public void removeFactory(InspectorFactory factory) {
+        factories.remove(factory);
+    }
 
-	public InspectorFactory[] getFactories()
-	{
-		return factories.toArray( new InspectorFactory[factories.size()] );
-	}
+    public InspectorFactory[] getFactories() {
+        return factories.toArray(new InspectorFactory[factories.size()]);
+    }
 
-	public InspectorFactory[] getFactoriesOfType( Class<?> type )
-	{
-		List<InspectorFactory> result = new ArrayList<InspectorFactory>();
-		for( InspectorFactory factory : factories )
-		{
-			if( type.isAssignableFrom( factory.getClass() ) )
-				result.add( factory );
-		}
+    public InspectorFactory[] getFactoriesOfType(Class<?> type) {
+        List<InspectorFactory> result = new ArrayList<InspectorFactory>();
+        for (InspectorFactory factory : factories) {
+            if (type.isAssignableFrom(factory.getClass())) {
+                result.add(factory);
+            }
+        }
 
-		return result.toArray( new InspectorFactory[result.size()] );
-	}
+        return result.toArray(new InspectorFactory[result.size()]);
+    }
 }

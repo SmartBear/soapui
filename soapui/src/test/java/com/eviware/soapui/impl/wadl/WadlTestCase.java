@@ -17,24 +17,22 @@
 package com.eviware.soapui.impl.wadl;
 
 import static org.junit.Assert.assertNotNull;
+
 import junit.framework.JUnit4TestAdapter;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
 
 import org.junit.Test;
 
-public class WadlTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( WadlTestCase.class );
-	}
+public class WadlTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(WadlTestCase.class);
+    }
 
-	@Test
-	public void testWadl() throws Exception
-	{
-		ApplicationDocument applicationDocument = ApplicationDocument.Factory.newInstance();
-		Application application = applicationDocument.addNewApplication();
-		assertNotNull( application );
-	}
+    @Test
+    public void testWadl() throws Exception {
+        ApplicationDocument applicationDocument = ApplicationDocument.Factory.newInstance();
+        Application application = applicationDocument.addNewApplication();
+        assertNotNull(application);
+    }
 }

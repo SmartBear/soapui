@@ -40,229 +40,189 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel;
 import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 
 /**
- * 
  * @author soapui team
  */
 
-public class GroovySecurityScan extends AbstractSecurityScanWithProperties
-{
-	
-	public static final String SCRIPT_PROPERTY = GroovySecurityScan.class.getName() + "@script";
-	public static final String TYPE = "GroovySecurityScan";
-	public static final String NAME = "Custom Script";
-	private GroovySecurityScanConfig groovyscc;
-	private Boolean hasNext = true;
-	private Object scriptResult;
-	private SoapUIScriptEngine scriptEngine;
+public class GroovySecurityScan extends AbstractSecurityScanWithProperties {
 
-	private StringToStringMap parameters;
-	// private TestStepResult stepResult;
+    public static final String SCRIPT_PROPERTY = GroovySecurityScan.class.getName() + "@script";
+    public static final String TYPE = "GroovySecurityScan";
+    public static final String NAME = "Custom Script";
+    private GroovySecurityScanConfig groovyscc;
+    private Boolean hasNext = true;
+    private Object scriptResult;
+    private SoapUIScriptEngine scriptEngine;
 
-	// private TestProperty response;
+    private StringToStringMap parameters;
+    // private TestStepResult stepResult;
 
-	private static final String PARAMETERS_INITIALIZED = "parameterInitialized";
+    // private TestProperty response;
 
-	public GroovySecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
-	{
+    private static final String PARAMETERS_INITIALIZED = "parameterInitialized";
 
-		super( testStep, config, parent, icon );
-		if( config.getConfig() == null )
-		{
-			groovyscc = GroovySecurityScanConfig.Factory.newInstance();
-			groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
-			groovyscc.getExecuteScript().setLanguage( "groovy" );
-			groovyscc.getExecuteScript().setStringValue( "" );
-			config.setConfig( groovyscc );
-		}
-		else
-		{
-			groovyscc = ( GroovySecurityScanConfig )config.getConfig();
-			if( groovyscc.getExecuteScript() == null )
-			{
-				groovyscc.setExecuteScript( ScriptConfig.Factory.newInstance() );
-				groovyscc.getExecuteScript().setLanguage( "groovy" );
-				groovyscc.getExecuteScript().setStringValue( "" );
-			}
-		}
+    public GroovySecurityScan(TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon) {
 
-		scriptEngine = SoapUIScriptEngineRegistry.create( this );
+        super(testStep, config, parent, icon);
+        if (config.getConfig() == null) {
+            groovyscc = GroovySecurityScanConfig.Factory.newInstance();
+            groovyscc.setExecuteScript(ScriptConfig.Factory.newInstance());
+            groovyscc.getExecuteScript().setLanguage("groovy");
+            groovyscc.getExecuteScript().setStringValue("");
+            config.setConfig(groovyscc);
+        } else {
+            groovyscc = (GroovySecurityScanConfig) config.getConfig();
+            if (groovyscc.getExecuteScript() == null) {
+                groovyscc.setExecuteScript(ScriptConfig.Factory.newInstance());
+                groovyscc.getExecuteScript().setLanguage("groovy");
+                groovyscc.getExecuteScript().setStringValue("");
+            }
+        }
 
-		getExecutionStrategy().setImmutable( true );
-	}
+        scriptEngine = SoapUIScriptEngineRegistry.create(this);
 
-	@Override
-	protected boolean hasNext( TestStep testStep, SecurityTestRunContext context )
-	{
-		if( !context.hasProperty( PARAMETERS_INITIALIZED ) )
-		{
-			parameters = new StringToStringMap();
-			initParameters( parameters );
-			context.put( PARAMETERS_INITIALIZED, "true" );
-			hasNext = true;
-		}
+        getExecutionStrategy().setImmutable(true);
+    }
 
-		if( !hasNext )
-		{
-			context.remove( PARAMETERS_INITIALIZED );
-			scriptEngine.clearVariables();
-		}
+    @Override
+    protected boolean hasNext(TestStep testStep, SecurityTestRunContext context) {
+        if (!context.hasProperty(PARAMETERS_INITIALIZED)) {
+            parameters = new StringToStringMap();
+            initParameters(parameters);
+            context.put(PARAMETERS_INITIALIZED, "true");
+            hasNext = true;
+        }
 
-		return hasNext;
-	}
+        if (!hasNext) {
+            context.remove(PARAMETERS_INITIALIZED);
+            scriptEngine.clearVariables();
+        }
 
-	private void initParameters( StringToStringMap parameters2 )
-	{
-		List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
-		for( SecurityCheckedParameter scp : scpList )
-		{
-			parameters.put( scp.getLabel(), null );
-		}
-	}
+        return hasNext;
+    }
 
-	@Override
-	protected void execute( SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context )
-	{
-		scriptEngine.setScript( groovyscc.getExecuteScript().getStringValue() );
-		scriptEngine.setVariable( "context", context );
-		scriptEngine.setVariable( "testStep", testStep );
-		scriptEngine.setVariable( "securityScan", this );
-		scriptEngine.setVariable( "parameters", parameters );
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+    private void initParameters(StringToStringMap parameters2) {
+        List<SecurityCheckedParameter> scpList = getParameterHolder().getParameterList();
+        for (SecurityCheckedParameter scp : scpList) {
+            parameters.put(scp.getLabel(), null);
+        }
+    }
 
-		try
-		{
-			scriptResult = scriptEngine.run();
-			hasNext = castResultToBoolean( scriptResult );
-			XmlObjectTreeModel model = null;
-			for( SecurityCheckedParameter scp : getParameterHolder().getParameterList() )
-			{
-				if( parameters.containsKey( scp.getLabel() ) && parameters.get( scp.getLabel() ) != null )
-				{
-					if( scp.isChecked() && scp.getXpath().trim().length() > 0 )
-					{
-						model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
-						XmlTreeNode[] treeNodes = null;
-						treeNodes = model.selectTreeNodes( context.expand( scp.getXpath() ) );
-						if( treeNodes.length > 0 )
-						{
-							XmlTreeNode mynode = treeNodes[0];
-							mynode.setValue( 1, parameters.get( scp.getLabel() ) );
-						}
-						updateRequestProperty( testStep, scp.getName(), model.getXmlObject().toString() );
+    @Override
+    protected void execute(SecurityTestRunner securityTestRunner, TestStep testStep, SecurityTestRunContext context) {
+        scriptEngine.setScript(groovyscc.getExecuteScript().getStringValue());
+        scriptEngine.setVariable("context", context);
+        scriptEngine.setVariable("testStep", testStep);
+        scriptEngine.setVariable("securityScan", this);
+        scriptEngine.setVariable("parameters", parameters);
+        scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
 
-					}
-					else
-					{
-						updateRequestProperty( testStep, scp.getName(), parameters.get( scp.getLabel() ) );
-					}
-				}
-				else if( parameters.containsKey( scp.getLabel() ) && parameters.get( scp.getLabel() ) == null )
-				{// clears null values form parameters
-					parameters.remove( scp.getLabel() );
-				}
+        try {
+            scriptResult = scriptEngine.run();
+            hasNext = castResultToBoolean(scriptResult);
+            XmlObjectTreeModel model = null;
+            for (SecurityCheckedParameter scp : getParameterHolder().getParameterList()) {
+                if (parameters.containsKey(scp.getLabel()) && parameters.get(scp.getLabel()) != null) {
+                    if (scp.isChecked() && scp.getXpath().trim().length() > 0) {
+                        model = SecurityScanUtil.getXmlObjectTreeModel(testStep, scp);
+                        XmlTreeNode[] treeNodes = null;
+                        treeNodes = model.selectTreeNodes(context.expand(scp.getXpath()));
+                        if (treeNodes.length > 0) {
+                            XmlTreeNode mynode = treeNodes[0];
+                            mynode.setValue(1, parameters.get(scp.getLabel()));
+                        }
+                        updateRequestProperty(testStep, scp.getName(), model.getXmlObject().toString());
 
-			}
+                    } else {
+                        updateRequestProperty(testStep, scp.getName(), parameters.get(scp.getLabel()));
+                    }
+                } else if (parameters.containsKey(scp.getLabel()) && parameters.get(scp.getLabel()) == null) {// clears null values form parameters
+                    parameters.remove(scp.getLabel());
+                }
 
-			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )securityTestRunner, context );
-			createMessageExchange( clearNullValues( parameters ), message, context );
+            }
 
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			hasNext = false;
-		}
-		finally
-		{
-			// if( scriptResult != null )
-			// {
-			// getTestStep().getProperty( "Request" ).setValue( ( String
-			// )scriptResult );
-			//
-			// getTestStep().run( ( TestCaseRunner )securityTestRunner,
-			// ( TestCaseRunContext )securityTestRunner.getRunContext() );
-			// }
+            MessageExchange message = (MessageExchange) testStep.run((TestCaseRunner) securityTestRunner, context);
+            createMessageExchange(clearNullValues(parameters), message, context);
 
-		}
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            hasNext = false;
+        } finally {
+            // if( scriptResult != null )
+            // {
+            // getTestStep().getProperty( "Request" ).setValue( ( String
+            // )scriptResult );
+            //
+            // getTestStep().run( ( TestCaseRunner )securityTestRunner,
+            // ( TestCaseRunContext )securityTestRunner.getRunContext() );
+            // }
 
-	}
+        }
 
-	private Boolean castResultToBoolean( Object scriptResult2 )
-	{
-		try
-		{
-			hasNext = ( Boolean )scriptResult2;
-			if( hasNext == null )
-			{
-				hasNext = false;
-				SoapUI.ensureGroovyLog().error( "You must return Boolean value from groovy script!" );
-			}
-		}
-		catch( Exception e )
-		{
-			hasNext = false;
-			SoapUI.ensureGroovyLog().error( "You must return Boolean value from groovy script!" );
-		}
-		return hasNext;
-	}
+    }
 
-	private StringToStringMap clearNullValues( StringToStringMap parameters )
-	{
-		StringToStringMap params = new StringToStringMap();
-		for( Map.Entry<String, String> entry : parameters.entrySet() )
-		{
-			if( entry.getValue() != null )
-				params.put( entry.getKey(), entry.getValue() );
-		}
-		return params;
-	}
+    private Boolean castResultToBoolean(Object scriptResult2) {
+        try {
+            hasNext = (Boolean) scriptResult2;
+            if (hasNext == null) {
+                hasNext = false;
+                SoapUI.ensureGroovyLog().error("You must return Boolean value from groovy script!");
+            }
+        } catch (Exception e) {
+            hasNext = false;
+            SoapUI.ensureGroovyLog().error("You must return Boolean value from groovy script!");
+        }
+        return hasNext;
+    }
 
-	private void updateRequestProperty( TestStep testStep, String propertyName, String propertyValue )
-	{
-		testStep.getProperty( propertyName ).setValue( propertyValue );
+    private StringToStringMap clearNullValues(StringToStringMap parameters) {
+        StringToStringMap params = new StringToStringMap();
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            if (entry.getValue() != null) {
+                params.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return params;
+    }
 
-	}
+    private void updateRequestProperty(TestStep testStep, String propertyName, String propertyValue) {
+        testStep.getProperty(propertyName).setValue(propertyValue);
 
-	public void setExecuteScript( String script )
-	{
-		String old = getExecuteScript();
-		groovyscc.getExecuteScript().setStringValue( script );
-		notifyPropertyChanged( SCRIPT_PROPERTY, old, script );
-	}
+    }
 
-	public String getExecuteScript()
-	{
-		return groovyscc.getExecuteScript().getStringValue();
-	}
+    public void setExecuteScript(String script) {
+        String old = getExecuteScript();
+        groovyscc.getExecuteScript().setStringValue(script);
+        notifyPropertyChanged(SCRIPT_PROPERTY, old, script);
+    }
 
-	@Override
-	public SecurityScanConfigPanel getComponent()
-	{
-		return new GroovySecurityScanPanel( this );
-	}
+    public String getExecuteScript() {
+        return groovyscc.getExecuteScript().getStringValue();
+    }
 
-	@Override
-	public String getType()
-	{
-		return TYPE;
-	}
+    @Override
+    public SecurityScanConfigPanel getComponent() {
+        return new GroovySecurityScanPanel(this);
+    }
 
-	@Override
-	public String getConfigDescription()
-	{
-		return "Configuration for Custom Script Security Scan";
-	}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
 
-	@Override
-	public String getConfigName()
-	{
-		return "Configuration for Custom Script Security Scan";
-	}
+    @Override
+    public String getConfigDescription() {
+        return "Configuration for Custom Script Security Scan";
+    }
 
-	@Override
-	public String getHelpURL()
-	{
-		return "http://soapui.org/Security/script-custom-scan.html";
-	}
+    @Override
+    public String getConfigName() {
+        return "Configuration for Custom Script Security Scan";
+    }
+
+    @Override
+    public String getHelpURL() {
+        return "http://soapui.org/Security/script-custom-scan.html";
+    }
 
 }

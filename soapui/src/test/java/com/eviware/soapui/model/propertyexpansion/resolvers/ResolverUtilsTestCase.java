@@ -17,24 +17,22 @@
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
 import static org.junit.Assert.assertEquals;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.Test;
 
-public class ResolverUtilsTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( ResolverUtilsTestCase.class );
-	}
+public class ResolverUtilsTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(ResolverUtilsTestCase.class);
+    }
 
-	@Test
-	public void testExtractXPathPropertyValue() throws Exception
-	{
-		assertEquals( "audi", ResolverUtils.extractXPathPropertyValue( "<test><bil>audi</bil></test>", "//bil" ) );
-		assertEquals( "<test><bil>audi</bil><bil>bmw</bil></test>",
-				ResolverUtils.extractXPathPropertyValue( "<test><bil>audi</bil><bil>bmw</bil></test>", "//test" ) );
-		assertEquals( "audi",
-				ResolverUtils.extractXPathPropertyValue( "<test><bil>audi</bil><bil>bmw</bil></test>", "//test/bil[1]" ) );
-	}
+    @Test
+    public void testExtractXPathPropertyValue() throws Exception {
+        assertEquals("audi", ResolverUtils.extractXPathPropertyValue("<test><bil>audi</bil></test>", "//bil"));
+        assertEquals("<test><bil>audi</bil><bil>bmw</bil></test>",
+                ResolverUtils.extractXPathPropertyValue("<test><bil>audi</bil><bil>bmw</bil></test>", "//test"));
+        assertEquals("audi",
+                ResolverUtils.extractXPathPropertyValue("<test><bil>audi</bil><bil>bmw</bil></test>", "//test/bil[1]"));
+    }
 }

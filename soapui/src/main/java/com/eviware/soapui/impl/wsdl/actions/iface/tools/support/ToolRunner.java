@@ -20,25 +20,24 @@ import com.eviware.soapui.model.ModelItem;
 
 /**
  * Runner for Tool-related utilities
- * 
+ *
  * @author ole.matzura
  */
 
-public interface ToolRunner extends Runnable
-{
-	public void setContext( RunnerContext context );
+public interface ToolRunner extends Runnable {
+    public void setContext(RunnerContext context);
 
-	public boolean isRunning();
+    public boolean isRunning();
 
-	public boolean canCancel();
+    public boolean canCancel();
 
-	public boolean showLog();
+    public boolean showLog();
 
-	public void cancel();
+    public void cancel();
 
-	public String getName();
+    public String getName();
 
-	public ModelItem getModelItem();
+    public ModelItem getModelItem();
 
-	public String getDescription();
+    public String getDescription();
 }

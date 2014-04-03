@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.editor.views.xml.source;
+*/
+package com.eviware.soapui.support.editor.views.xml.source;
 
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -27,63 +28,55 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class XmlSourceEditorViewFactoryTest
-{
+public class XmlSourceEditorViewFactoryTest {
 
-	XmlSourceEditorViewFactory xmlSourceEditorViewFactory;
-	XmlEditor<MockResponseXmlDocument> editor;
-	MockResponse mockResponse;
+    XmlSourceEditorViewFactory xmlSourceEditorViewFactory;
+    XmlEditor<MockResponseXmlDocument> editor;
+    MockResponse mockResponse;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		xmlSourceEditorViewFactory = new XmlSourceEditorViewFactory();
+    @Before
+    public void setUp() throws Exception {
+        xmlSourceEditorViewFactory = new XmlSourceEditorViewFactory();
 
-		editor = ( XmlEditor<MockResponseXmlDocument> )mock( XmlEditor.class );
-	}
+        editor = (XmlEditor<MockResponseXmlDocument>) mock(XmlEditor.class);
+    }
 
-	@Test
-	public void testCreateRequestEditorViewForWsdlMockResponse() throws Exception
-	{
-		mockResponse = mock( WsdlMockResponse.class );
-		EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createRequestEditorView( editor, mockResponse );
-		assertEditorView( requestEditorView );
-	}
+    @Test
+    public void testCreateRequestEditorViewForWsdlMockResponse() throws Exception {
+        mockResponse = mock(WsdlMockResponse.class);
+        EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createRequestEditorView(editor, mockResponse);
+        assertEditorView(requestEditorView);
+    }
 
-	@Test
-	public void testCreateRequestEditorViewForRestMockResponse() throws Exception
-	{
-		mockResponse = mock( RestMockResponse.class );
-		EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createRequestEditorView( editor, mockResponse );
-		assertEditorView( requestEditorView );
-	}
+    @Test
+    public void testCreateRequestEditorViewForRestMockResponse() throws Exception {
+        mockResponse = mock(RestMockResponse.class);
+        EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createRequestEditorView(editor, mockResponse);
+        assertEditorView(requestEditorView);
+    }
 
-	@Test
-	public void testCreateResponseEditorViewForWsdlMockResponse() throws Exception
-	{
-		mockResponse = mock( WsdlMockResponse.class );
-		EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createResponseEditorView( editor, mockResponse );
-		assertEditorView( requestEditorView );
-	}
+    @Test
+    public void testCreateResponseEditorViewForWsdlMockResponse() throws Exception {
+        mockResponse = mock(WsdlMockResponse.class);
+        EditorView<?> requestEditorView = xmlSourceEditorViewFactory.createResponseEditorView(editor, mockResponse);
+        assertEditorView(requestEditorView);
+    }
 
-	@Test
-	public void testCreateResponseEditorViewForRestMockResponse() throws Exception
-	{
-		mockResponse = mock( RestMockResponse.class );
-		EditorView<?> responseEditorView = xmlSourceEditorViewFactory.createResponseEditorView( editor, mockResponse );
-		assertEditorView( responseEditorView, "Editor" );
-	}
+    @Test
+    public void testCreateResponseEditorViewForRestMockResponse() throws Exception {
+        mockResponse = mock(RestMockResponse.class);
+        EditorView<?> responseEditorView = xmlSourceEditorViewFactory.createResponseEditorView(editor, mockResponse);
+        assertEditorView(responseEditorView, "Editor");
+    }
 
-	private void assertEditorView( EditorView<?> requestEditorView )
-	{
-		assertEditorView( requestEditorView, "XML" );
-	}
+    private void assertEditorView(EditorView<?> requestEditorView) {
+        assertEditorView(requestEditorView, "XML");
+    }
 
-	private void assertEditorView( EditorView<?> requestEditorView, String xml )
-	{
-		assertNotNull( requestEditorView );
-		assertEquals( "Source", requestEditorView.getViewId() );
-		assertEquals( xml, requestEditorView.getTitle() );
-	}
+    private void assertEditorView(EditorView<?> requestEditorView, String xml) {
+        assertNotNull(requestEditorView);
+        assertEquals("Source", requestEditorView.getViewId());
+        assertEquals(xml, requestEditorView.getTitle());
+    }
 
 }

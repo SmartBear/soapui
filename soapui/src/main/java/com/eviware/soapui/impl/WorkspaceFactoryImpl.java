@@ -23,21 +23,16 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Default WorkspaceFactory implementation
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WorkspaceFactoryImpl extends WorkspaceFactory
-{
-	public Workspace openWorkspace( String workspaceName, StringToStringMap projectOptions ) throws SoapUIException
-	{
-		try
-		{
-			return new WorkspaceImpl( workspaceName, projectOptions );
-		}
-		catch( Exception e )
-		{
-			throw new SoapUIException( e );
-		}
-	}
+public class WorkspaceFactoryImpl extends WorkspaceFactory {
+    public Workspace openWorkspace(String workspaceName, StringToStringMap projectOptions) throws SoapUIException {
+        try {
+            return new WorkspaceImpl(workspaceName, projectOptions);
+        } catch (Exception e) {
+            throw new SoapUIException(e);
+        }
+    }
 }

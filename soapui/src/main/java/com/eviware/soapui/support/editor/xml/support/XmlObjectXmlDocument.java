@@ -25,46 +25,37 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Default XmlDocument that works on an existing XmlObject
- * 
+ *
  * @author ole.matzura
  */
 
-public class XmlObjectXmlDocument extends AbstractXmlDocument
-{
-	private XmlObject xmlObject;
+public class XmlObjectXmlDocument extends AbstractXmlDocument {
+    private XmlObject xmlObject;
 
-	public XmlObjectXmlDocument( XmlObject xmlObject )
-	{
-		this.xmlObject = xmlObject;
-	}
+    public XmlObjectXmlDocument(XmlObject xmlObject) {
+        this.xmlObject = xmlObject;
+    }
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		return xmlObject == null ? XmlBeans.getBuiltinTypeSystem() : xmlObject.schemaType().getTypeSystem();
-	}
+    public SchemaTypeSystem getTypeSystem() {
+        return xmlObject == null ? XmlBeans.getBuiltinTypeSystem() : xmlObject.schemaType().getTypeSystem();
+    }
 
-	public String getXml()
-	{
-		return xmlObject.toString();
-	}
+    public String getXml() {
+        return xmlObject.toString();
+    }
 
-	public void setXml( String xml )
-	{
-		try
-		{
-			String old = getXml();
-			// xmlObject = XmlObject.Factory.parse( xml );
-			xmlObject = XmlUtils.createXmlObject( xml );
-			fireXmlChanged( old, getXml() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+    public void setXml(String xml) {
+        try {
+            String old = getXml();
+            // xmlObject = XmlObject.Factory.parse( xml );
+            xmlObject = XmlUtils.createXmlObject(xml);
+            fireXmlChanged(old, getXml());
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public void release()
-	{
-		xmlObject = null;
-	}
+    public void release() {
+        xmlObject = null;
+    }
 }

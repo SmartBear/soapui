@@ -47,191 +47,170 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.impl.swing.JFormDialog;
 
 /**
- * 
  * @author nebojsa.tasic
  */
 
 public class ManualTestStep extends WsdlTestStepWithProperties implements PropertyExpansionContainer
 
 {
-	@SuppressWarnings( "unused" )
-	private final static Logger log = Logger.getLogger( WsdlTestRequestStep.class );
-	protected ManualTestStepConfig manualTestStepConfig;
-	private ManualTestStepResult testStepResult;
-	public final static String MANUAL_STEP = ManualTestStep.class.getName() + "@manualstep";
-	public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
-	private final boolean forLoadTest;
+    @SuppressWarnings("unused")
+    private final static Logger log = Logger.getLogger(WsdlTestRequestStep.class);
+    protected ManualTestStepConfig manualTestStepConfig;
+    private ManualTestStepResult testStepResult;
+    public final static String MANUAL_STEP = ManualTestStep.class.getName() + "@manualstep";
+    public static final String STATUS_PROPERTY = WsdlTestRequest.class.getName() + "@status";
+    private final boolean forLoadTest;
 
-	public ManualTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-	{
-		super( testCase, config, true, forLoadTest );
-		this.forLoadTest = forLoadTest;
+    public ManualTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
+        super(testCase, config, true, forLoadTest);
+        this.forLoadTest = forLoadTest;
 
-		if( !forLoadTest )
-		{
-			setIcon( UISupport.createImageIcon( "/manualteststep.gif" ) );
-		}
+        if (!forLoadTest) {
+            setIcon(UISupport.createImageIcon("/manualteststep.gif"));
+        }
 
-		if( getConfig().getConfig() != null )
-		{
-			manualTestStepConfig = ( ManualTestStepConfig )getConfig().getConfig().changeType( ManualTestStepConfig.type );
-		}
-		else
-		{
-			manualTestStepConfig = ( ManualTestStepConfig )getConfig().addNewConfig().changeType(
-					ManualTestStepConfig.type );
-		}
+        if (getConfig().getConfig() != null) {
+            manualTestStepConfig = (ManualTestStepConfig) getConfig().getConfig().changeType(ManualTestStepConfig.type);
+        } else {
+            manualTestStepConfig = (ManualTestStepConfig) getConfig().addNewConfig().changeType(
+                    ManualTestStepConfig.type);
+        }
 
-		addProperty( new DefaultTestStepProperty( "Result", true, new DefaultTestStepProperty.PropertyHandlerAdapter()
-		{
-			@Override
-			public String getValue( DefaultTestStepProperty property )
-			{
-				return getLastResult() == null ? null : getLastResult().getResult();
-			}
-		}, this ) );
+        addProperty(new DefaultTestStepProperty("Result", true, new DefaultTestStepProperty.PropertyHandlerAdapter() {
+            @Override
+            public String getValue(DefaultTestStepProperty property) {
+                return getLastResult() == null ? null : getLastResult().getResult();
+            }
+        }, this));
 
-		addProperty( new TestStepBeanProperty( "ExpectedResult", false, this, "expectedResult", this ) );
-	}
+        addProperty(new TestStepBeanProperty("ExpectedResult", false, this, "expectedResult", this));
+    }
 
-	protected ManualTestStepResult getLastResult()
-	{
-		return testStepResult;
-	}
+    protected ManualTestStepResult getLastResult() {
+        return testStepResult;
+    }
 
-	public ManualTestStepConfig getManualTestStepConfig()
-	{
-		return manualTestStepConfig;
-	}
+    public ManualTestStepConfig getManualTestStepConfig() {
+        return manualTestStepConfig;
+    }
 
-	@Override
-	public WsdlTestStep clone( WsdlTestCase targetTestCase, String name )
-	{
-		beforeSave();
+    @Override
+    public WsdlTestStep clone(WsdlTestCase targetTestCase, String name) {
+        beforeSave();
 
-		TestStepConfig config = ( TestStepConfig )getConfig().copy();
-		ManualTestStep result = ( ManualTestStep )targetTestCase.addTestStep( config );
+        TestStepConfig config = (TestStepConfig) getConfig().copy();
+        ManualTestStep result = (ManualTestStep) targetTestCase.addTestStep(config);
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
-	}
+    @Override
+    public void release() {
+        super.release();
+    }
 
-	public TestStepResult run( TestCaseRunner runner, TestCaseRunContext runContext )
-	{
-		testStepResult = new ManualTestStepResult( this );
-		testStepResult.startTimer();
+    public TestStepResult run(TestCaseRunner runner, TestCaseRunContext runContext) {
+        testStepResult = new ManualTestStepResult(this);
+        testStepResult.startTimer();
 
-		if( !forLoadTest && SoapUI.usingGraphicalEnvironment() )
-		{
-			XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
-			dialog.setSize( 450, 550 );
-			( ( JFormDialog )dialog ).getDialog().setModalityType( ModalityType.MODELESS );
+        if (!forLoadTest && SoapUI.usingGraphicalEnvironment()) {
+            XFormDialog dialog = ADialogBuilder.buildDialog(Form.class);
+            dialog.setSize(450, 550);
+            ((JFormDialog) dialog).getDialog().setModalityType(ModalityType.MODELESS);
 
-			dialog.setValue( Form.DESCRIPTION, runContext.expand( getDescription() ) );
-			dialog.setValue( Form.EXPECTED_DESULT, runContext.expand( getExpectedResult() ) );
-			dialog.setValue( Form.STATUS, "Unknown" );
+            dialog.setValue(Form.DESCRIPTION, runContext.expand(getDescription()));
+            dialog.setValue(Form.EXPECTED_DESULT, runContext.expand(getExpectedResult()));
+            dialog.setValue(Form.STATUS, "Unknown");
 
-			UISupport.select( this );
+            UISupport.select(this);
 
-			while( !dialog.show() )
-			{
-				if( UISupport.confirm( "Are you sure? This will stop the entire test", "Cancel TestStep" ) )
-				{
-					testStepResult.setStatus( TestStepStatus.CANCELED );
-					runner.cancel( "Canceled by user" );
-					break;
-				}
-			}
+            while (!dialog.show()) {
+                if (UISupport.confirm("Are you sure? This will stop the entire test", "Cancel TestStep")) {
+                    testStepResult.setStatus(TestStepStatus.CANCELED);
+                    runner.cancel("Canceled by user");
+                    break;
+                }
+            }
 
-			if( dialog.getValue( Form.STATUS ).equals( "Pass" ) )
-				testStepResult.setStatus( TestStepStatus.OK );
-			else if( dialog.getValue( Form.STATUS ).equals( "Fail" ) )
-				testStepResult.setStatus( TestStepStatus.FAILED );
+            if (dialog.getValue(Form.STATUS).equals("Pass")) {
+                testStepResult.setStatus(TestStepStatus.OK);
+            } else if (dialog.getValue(Form.STATUS).equals("Fail")) {
+                testStepResult.setStatus(TestStepStatus.FAILED);
+            }
 
-			String result = dialog.getValue( Form.RESULT );
-			if( StringUtils.hasContent( result ) )
-				testStepResult.setResult( result );
+            String result = dialog.getValue(Form.RESULT);
+            if (StringUtils.hasContent(result)) {
+                testStepResult.setResult(result);
+            }
 
-			testStepResult.setUrls( ( ( XFormOptionsField )dialog.getFormField( Form.URLS ) ).getOptions() );
+            testStepResult.setUrls(((XFormOptionsField) dialog.getFormField(Form.URLS)).getOptions());
 
-			dialog.release();
-		}
+            dialog.release();
+        }
 
-		testStepResult.stopTimer();
-		// FIXME This should not be hard coded
-		return testStepResult;
-	}
+        testStepResult.stopTimer();
+        // FIXME This should not be hard coded
+        return testStepResult;
+    }
 
-	@Override
-	public boolean cancel()
-	{
-		return true;
-	}
+    @Override
+    public boolean cancel() {
+        return true;
+    }
 
-	@Override
-	public String getDefaultSourcePropertyName()
-	{
-		return "Result";
-	}
+    @Override
+    public String getDefaultSourcePropertyName() {
+        return "Result";
+    }
 
-	@Override
-	public String getDefaultTargetPropertyName()
-	{
-		return "ExpectedResult";
-	}
+    @Override
+    public String getDefaultTargetPropertyName() {
+        return "ExpectedResult";
+    }
 
-	public PropertyExpansion[] getPropertyExpansions()
-	{
-		List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "description" ) );
-		result.addAll( PropertyExpansionUtils.extractPropertyExpansions( this, this, "expectedResult" ) );
-		return result.toArray( new PropertyExpansion[result.size()] );
-	}
+    public PropertyExpansion[] getPropertyExpansions() {
+        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
+        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "description"));
+        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(this, this, "expectedResult"));
+        return result.toArray(new PropertyExpansion[result.size()]);
+    }
 
-	public String getExpectedResult()
-	{
-		return manualTestStepConfig.getExpectedResult();
-	}
+    public String getExpectedResult() {
+        return manualTestStepConfig.getExpectedResult();
+    }
 
-	public void setExpectedResult( String expectedResult )
-	{
-		String old = getExpectedResult();
-		if( String.valueOf( old ).equals( expectedResult ) )
-			return;
+    public void setExpectedResult(String expectedResult) {
+        String old = getExpectedResult();
+        if (String.valueOf(old).equals(expectedResult)) {
+            return;
+        }
 
-		manualTestStepConfig.setExpectedResult( expectedResult );
-		notifyPropertyChanged( "expectedResult", old, expectedResult );
-		firePropertyValueChanged( "ExpectedResult", old, expectedResult );
-	}
+        manualTestStepConfig.setExpectedResult(expectedResult);
+        notifyPropertyChanged("expectedResult", old, expectedResult);
+        firePropertyValueChanged("ExpectedResult", old, expectedResult);
+    }
 
-	public void resetConfigOnMove( TestStepConfig config )
-	{
-		super.resetConfigOnMove( config );
-		manualTestStepConfig = ( ManualTestStepConfig )config.getConfig().changeType( ManualTestStepConfig.type );
-	}
+    public void resetConfigOnMove(TestStepConfig config) {
+        super.resetConfigOnMove(config);
+        manualTestStepConfig = (ManualTestStepConfig) config.getConfig().changeType(ManualTestStepConfig.type);
+    }
 
-	@AForm( description = "", name = "Run Manual TestStep", helpUrl = HelpUrls.MANUALTESTSTEP_HELP_URL )
-	protected interface Form
-	{
-		@AField( name = "Description", description = "Describes the actions to perform", type = AFieldType.INFORMATION )
-		public final static String DESCRIPTION = "Description";
+    @AForm(description = "", name = "Run Manual TestStep", helpUrl = HelpUrls.MANUALTESTSTEP_HELP_URL)
+    protected interface Form {
+        @AField(name = "Description", description = "Describes the actions to perform", type = AFieldType.INFORMATION)
+        public final static String DESCRIPTION = "Description";
 
-		@AField( name = "Expected Result", description = "Describes the actions to perform", type = AFieldType.INFORMATION )
-		public final static String EXPECTED_DESULT = "Expected Result";
+        @AField(name = "Expected Result", description = "Describes the actions to perform", type = AFieldType.INFORMATION)
+        public final static String EXPECTED_DESULT = "Expected Result";
 
-		@AField( name = "Result", description = "an optional result description or value", type = AFieldType.STRINGAREA )
-		public final static String RESULT = "Result";
+        @AField(name = "Result", description = "an optional result description or value", type = AFieldType.STRINGAREA)
+        public final static String RESULT = "Result";
 
-		@AField( name = "URLs", description = "A list of URLs related to the result", type = AFieldType.STRINGLIST )
-		public final static String URLS = "URLs";
+        @AField(name = "URLs", description = "A list of URLs related to the result", type = AFieldType.STRINGLIST)
+        public final static String URLS = "URLs";
 
-		@AField( name = "Result Status", description = "The result status", type = AFieldType.ENUMERATION, values = {
-				"Pass", "Fail", "Unknown" } )
-		public final static String STATUS = "Result Status";
-	}
+        @AField(name = "Result Status", description = "The result status", type = AFieldType.ENUMERATION, values = {
+                "Pass", "Fail", "Unknown"})
+        public final static String STATUS = "Result Status";
+    }
 }
