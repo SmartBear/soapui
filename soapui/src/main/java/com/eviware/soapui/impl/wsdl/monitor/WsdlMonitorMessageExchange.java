@@ -23,28 +23,26 @@ import com.eviware.soapui.model.iface.Operation;
 import java.net.URL;
 import java.util.Map;
 
-public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExchange<Operation>
-{
-	public WsdlMonitorMessageExchange( Operation modelItem )
-	{
-		super( modelItem );
-	}
+public abstract class WsdlMonitorMessageExchange extends AbstractWsdlMessageExchange<Operation> {
+    public WsdlMonitorMessageExchange(Operation modelItem) {
+        super(modelItem);
+    }
 
-	public abstract URL getTargetUrl();
+    public abstract URL getTargetUrl();
 
-	public abstract void discard();
+    public abstract void discard();
 
-	public abstract String getRequestHost();
+    public abstract String getRequestHost();
 
-	public abstract long getRequestContentLength();
+    public abstract long getRequestContentLength();
 
-	public abstract long getResponseContentLength();
+    public abstract long getResponseContentLength();
 
-	public abstract void prepare( IncomingWss incomingRequestWss, IncomingWss incomingResponseWss );
+    public abstract void prepare(IncomingWss incomingRequestWss, IncomingWss incomingResponseWss);
 
-	public abstract String getRequestMethod();
+    public abstract String getRequestMethod();
 
-	public abstract Map<String, String> getHttpRequestParameters();
+    public abstract Map<String, String> getHttpRequestParameters();
 
-	public abstract String getQueryParameters();
+    public abstract String getQueryParameters();
 }

@@ -20,52 +20,51 @@ import java.util.List;
 
 /**
  * Runs a TestCase
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface TestCaseRunner extends TestRunner
-{
-	/**
-	 * Gets the TestCase being run
-	 * 
-	 * @return the TestCase being run
-	 */
+public interface TestCaseRunner extends TestRunner {
+    /**
+     * Gets the TestCase being run
+     *
+     * @return the TestCase being run
+     */
 
-	public TestCase getTestCase();
+    public TestCase getTestCase();
 
-	/**
-	 * Gets the accumulated results so far; each TestStep returns a
-	 * TestStepResult when running.
-	 * 
-	 * @return the accumulated results so far
-	 */
+    /**
+     * Gets the accumulated results so far; each TestStep returns a
+     * TestStepResult when running.
+     *
+     * @return the accumulated results so far
+     */
 
-	public List<TestStepResult> getResults();
+    public List<TestStepResult> getResults();
 
-	/**
-	 * Transfers execution of this TestRunner to the TestStep with the specified
-	 * index in the TestCase
-	 */
+    /**
+     * Transfers execution of this TestRunner to the TestStep with the specified
+     * index in the TestCase
+     */
 
-	public void gotoStep( int index );
+    public void gotoStep(int index);
 
-	/**
-	 * Transfers execution of this TestRunner to the TestStep with the specified
-	 * name in the TestCase
-	 */
+    /**
+     * Transfers execution of this TestRunner to the TestStep with the specified
+     * name in the TestCase
+     */
 
-	public void gotoStepByName( String stepName );
+    public void gotoStepByName(String stepName);
 
-	/**
-	 * Runs the specified TestStep and returns the result
-	 */
+    /**
+     * Runs the specified TestStep and returns the result
+     */
 
-	public TestStepResult runTestStepByName( String name );
+    public TestStepResult runTestStepByName(String name);
 
-	/**
-	 * Returns the context used by this runner
-	 */
+    /**
+     * Returns the context used by this runner
+     */
 
-	public TestCaseRunContext getRunContext();
+    public TestCaseRunContext getRunContext();
 }

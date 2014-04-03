@@ -31,57 +31,49 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Inserts a file as base64 into a JXmlTextArea at the current cursor position.
- * 
+ *
  * @author Cory Lewis
  * @author Ole.Matzura
  */
 
-public class InsertBase64FileTextAreaAction extends AbstractAction
-{
-	private final RSyntaxTextArea textArea;
-	private String dialogTitle;
+public class InsertBase64FileTextAreaAction extends AbstractAction {
+    private final RSyntaxTextArea textArea;
+    private String dialogTitle;
 
-	public InsertBase64FileTextAreaAction( RSyntaxTextArea editArea, String dialogTitle )
-	{
-		super( "Insert file as Base64" );
+    public InsertBase64FileTextAreaAction(RSyntaxTextArea editArea, String dialogTitle) {
+        super("Insert file as Base64");
 
-		this.textArea = editArea;
-		this.dialogTitle = dialogTitle;
-		if( UISupport.isMac() )
-		{
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "meta G" ) );
-		}
-		else
-		{
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl G" ) );
-		}
-	}
+        this.textArea = editArea;
+        this.dialogTitle = dialogTitle;
+        if (UISupport.isMac()) {
+            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("meta G"));
+        } else {
+            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("ctrl G"));
+        }
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		File file = UISupport.getFileDialogs().open( this, dialogTitle, null, null, null );
-		if( file == null )
-			return;
+    public void actionPerformed(ActionEvent e) {
+        File file = UISupport.getFileDialogs().open(this, dialogTitle, null, null, null);
+        if (file == null) {
+            return;
+        }
 
-		try
-		{
-			// read file
-			byte[] ba = FileUtils.readFileToByteArray( file );
+        try {
+            // read file
+            byte[] ba = FileUtils.readFileToByteArray(file);
 
-			// convert to base 64
-			Base64 b64 = new Base64();
-			String hex = new String( b64.encode( ba ) );
-			// insert into text at cursor position
-			int pos = textArea.getCaretPosition();
-			StringBuffer text = new StringBuffer( textArea.getText() );
-			text.insert( pos, hex );
-			textArea.setText( text.toString() );
+            // convert to base 64
+            Base64 b64 = new Base64();
+            String hex = new String(b64.encode(ba));
+            // insert into text at cursor position
+            int pos = textArea.getCaretPosition();
+            StringBuffer text = new StringBuffer(textArea.getText());
+            text.insert(pos, hex);
+            textArea.setText(text.toString());
 
-		}
-		catch( IOException e1 )
-		{
-			UISupport.showErrorMessage( "Error reading from file: " + e1.getMessage() );
-		}
-	}
+        } catch (IOException e1) {
+            UISupport.showErrorMessage("Error reading from file: " + e1.getMessage());
+        }
+    }
 
 }

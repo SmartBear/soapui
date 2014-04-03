@@ -21,24 +21,22 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-public class ToolsTestCase
-{
-	@Test
-	public void shouldTokenizeArgs() throws Exception
-	{
-		assertNull( Tools.tokenizeArgs( "" ) );
+public class ToolsTestCase {
+    @Test
+    public void shouldTokenizeArgs() throws Exception {
+        assertNull(Tools.tokenizeArgs(""));
 
-		String[] args = Tools.tokenizeArgs( "test ett" );
-		assertEquals( args.length, 2 );
+        String[] args = Tools.tokenizeArgs("test ett");
+        assertEquals(args.length, 2);
 
-		args = Tools.tokenizeArgs( "\"test ett\"" );
-		assertEquals( args.length, 1 );
-		assertEquals( args[0], "test ett" );
+        args = Tools.tokenizeArgs("\"test ett\"");
+        assertEquals(args.length, 1);
+        assertEquals(args[0], "test ett");
 
-		args = Tools.tokenizeArgs( "\"test\\\" ett\" " );
-		assertEquals( args.length, 1 );
-		assertEquals( args[0], "test\" ett" );
-	}
+        args = Tools.tokenizeArgs("\"test\\\" ett\" ");
+        assertEquals(args.length, 1);
+        assertEquals(args[0], "test\" ett");
+    }
 
 
 }

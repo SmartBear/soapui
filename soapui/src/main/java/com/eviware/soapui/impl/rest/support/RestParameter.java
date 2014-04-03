@@ -20,47 +20,46 @@ import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 
 import javax.xml.namespace.QName;
 
-public interface RestParameter
-{
-	String getName();
+public interface RestParameter {
+    String getName();
 
-	void setName( String name );
+    void setName(String name);
 
-	String getDescription();
+    String getDescription();
 
-	void setDescription( String description );
+    void setDescription(String description);
 
-	XmlBeansRestParamsTestPropertyHolder.ParameterStyle getStyle();
+    XmlBeansRestParamsTestPropertyHolder.ParameterStyle getStyle();
 
-	void setStyle( XmlBeansRestParamsTestPropertyHolder.ParameterStyle style );
+    void setStyle(XmlBeansRestParamsTestPropertyHolder.ParameterStyle style);
 
-	NewRestResourceActionBase.ParamLocation getParamLocation();
+    NewRestResourceActionBase.ParamLocation getParamLocation();
 
-	void  setParamLocation( NewRestResourceActionBase.ParamLocation paramLocation );
+    void setParamLocation(NewRestResourceActionBase.ParamLocation paramLocation);
 
-	String getValue();
+    String getValue();
 
-	void setValue( String value );
+    void setValue(String value);
 
-	boolean isReadOnly();
+    boolean isReadOnly();
 
-	String getDefaultValue();
+    String getDefaultValue();
 
-	String[] getOptions();
+    String[] getOptions();
 
-	boolean getRequired();
+    boolean getRequired();
 
-	QName getType();
+    QName getType();
 
-	void setOptions( String[] arg0 );
+    void setOptions(String[] arg0);
 
-	void setRequired( boolean arg0 );
+    void setRequired(boolean arg0);
 
-	void setType( QName arg0 );
+    void setType(QName arg0);
 
-	void setDefaultValue( String default1 );
+    void setDefaultValue(String default1);
 
-	String getPath();
+    String getPath();
 
-	void setPath( String path );
+    void setPath(String path);
 }

@@ -33,55 +33,46 @@ import com.eviware.soapui.impl.wsdl.support.xsd.SchemaException;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 
 public abstract class XmlSchemaBasedInterfaceDefinition<T extends AbstractInterface<?>> extends
-		AbstractInterfaceDefinition<T>
-{
-	private SchemaTypeSystem schemaTypes;
-	private SchemaTypeLoader schemaTypeLoader;
+        AbstractInterfaceDefinition<T> {
+    private SchemaTypeSystem schemaTypes;
+    private SchemaTypeLoader schemaTypeLoader;
 
-	public XmlSchemaBasedInterfaceDefinition( T iface )
-	{
-		super( iface );
-	}
+    public XmlSchemaBasedInterfaceDefinition(T iface) {
+        super(iface);
+    }
 
-	public SchemaTypeLoader getSchemaTypeLoader()
-	{
-		return schemaTypeLoader;
-	}
+    public SchemaTypeLoader getSchemaTypeLoader() {
+        return schemaTypeLoader;
+    }
 
-	public SchemaTypeSystem getSchemaTypeSystem()
-	{
-		return schemaTypes;
-	}
+    public SchemaTypeSystem getSchemaTypeSystem() {
+        return schemaTypes;
+    }
 
-	public boolean hasSchemaTypes()
-	{
-		return schemaTypes != null;
-	}
+    public boolean hasSchemaTypes() {
+        return schemaTypes != null;
+    }
 
-	public Collection<String> getDefinedNamespaces() throws Exception
-	{
-		Set<String> namespaces = new HashSet<String>();
+    public Collection<String> getDefinedNamespaces() throws Exception {
+        Set<String> namespaces = new HashSet<String>();
 
-		SchemaTypeSystem schemaTypes = getSchemaTypeSystem();
-		if( schemaTypes != null )
-		{
-			namespaces.addAll( SchemaUtils.extractNamespaces( getSchemaTypeSystem(), true ) );
-		}
+        SchemaTypeSystem schemaTypes = getSchemaTypeSystem();
+        if (schemaTypes != null) {
+            namespaces.addAll(SchemaUtils.extractNamespaces(getSchemaTypeSystem(), true));
+        }
 
-		namespaces.add( getTargetNamespace() );
+        namespaces.add(getTargetNamespace());
 
-		return namespaces;
-	}
+        return namespaces;
+    }
 
-	public SchemaType findType( QName typeName )
-	{
-		return getSchemaTypeLoader().findType( typeName );
-	}
+    public SchemaType findType(QName typeName) {
+        return getSchemaTypeLoader().findType(typeName);
+    }
 
-	public void loadSchemaTypes( DefinitionLoader loader ) throws SchemaException
-	{
-		schemaTypes = SchemaUtils.loadSchemaTypes( loader.getBaseURI(), loader );
-		schemaTypeLoader = XmlBeans.typeLoaderUnion( new SchemaTypeLoader[] { schemaTypes,
-				XmlBeans.getBuiltinTypeSystem() } );
-	}
+    public void loadSchemaTypes(DefinitionLoader loader) throws SchemaException {
+        schemaTypes = SchemaUtils.loadSchemaTypes(loader.getBaseURI(), loader);
+        schemaTypeLoader = XmlBeans.typeLoaderUnion(new SchemaTypeLoader[]{schemaTypes,
+                XmlBeans.getBuiltinTypeSystem()});
+    }
 }

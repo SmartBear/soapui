@@ -24,31 +24,30 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
  * Behaviour for navigator tree nodes
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface SoapUITreeNode extends TreeNode
-{
-	public int getChildCount();
+public interface SoapUITreeNode extends TreeNode {
+    public int getChildCount();
 
-	public int getIndexOfChild( Object child );
+    public int getIndexOfChild(Object child);
 
-	public boolean valueChanged( Object newValue );
+    public boolean valueChanged(Object newValue);
 
-	public SoapUITreeNode getChildNode( int index );
+    public SoapUITreeNode getChildNode(int index);
 
-	public boolean isLeaf();
+    public boolean isLeaf();
 
-	public JPopupMenu getPopup();
+    public JPopupMenu getPopup();
 
-	public SoapUITreeNode getParentTreeNode();
+    public SoapUITreeNode getParentTreeNode();
 
-	public void release();
+    public void release();
 
-	public ActionList getActions();
+    public ActionList getActions();
 
-	public void reorder( boolean notify );
+    public void reorder(boolean notify);
 
-	public ModelItem getModelItem();
+    public ModelItem getModelItem();
 }

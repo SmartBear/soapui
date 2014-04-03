@@ -40,61 +40,50 @@ import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.support.http.NTLMSchemeFactory;
 
-public class TestJCIFS
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( TestJCIFS.class );
-	}
+public class TestJCIFS {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(TestJCIFS.class);
+    }
 
-	@Test
-	public void test() throws ParseException, IOException
-	{
-		try
-		{
-			DefaultHttpClient httpClient = new DefaultHttpClient();
+    @Test
+    public void test() throws ParseException, IOException {
+        try {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
 
-			httpClient.getAuthSchemes().register( AuthPolicy.NTLM, new NTLMSchemeFactory() );
-			httpClient.getAuthSchemes().register( AuthPolicy.SPNEGO, new NTLMSchemeFactory() );
+            httpClient.getAuthSchemes().register(AuthPolicy.NTLM, new NTLMSchemeFactory());
+            httpClient.getAuthSchemes().register(AuthPolicy.SPNEGO, new NTLMSchemeFactory());
 
-			NTCredentials creds = new NTCredentials( "testuser", "kebabsalladT357", "", "" );
-			httpClient.getCredentialsProvider().setCredentials( AuthScope.ANY, creds );
+            NTCredentials creds = new NTCredentials("testuser", "kebabsalladT357", "", "");
+            httpClient.getCredentialsProvider().setCredentials(AuthScope.ANY, creds);
 
-			HttpHost target = new HttpHost( "dev-appsrv01.eviware.local", 81, "http" );
-			HttpContext localContext = new BasicHttpContext();
-			HttpGet httpget = new HttpGet( "/" );
+            HttpHost target = new HttpHost("dev-appsrv01.eviware.local", 81, "http");
+            HttpContext localContext = new BasicHttpContext();
+            HttpGet httpget = new HttpGet("/");
 
-			HttpResponse response1 = httpClient.execute( target, httpget, localContext );
-			HttpEntity entity1 = response1.getEntity();
+            HttpResponse response1 = httpClient.execute(target, httpget, localContext);
+            HttpEntity entity1 = response1.getEntity();
 
-			//		System.out.println( "----------------------------------------" );
-			//System.out.println( response1.getStatusLine() );
-			//		System.out.println( "----------------------------------------" );
-			if( entity1 != null )
-			{
-				//System.out.println( EntityUtils.toString( entity1 ) );
-			}
-			//		System.out.println( "----------------------------------------" );
+            //		System.out.println( "----------------------------------------" );
+            //System.out.println( response1.getStatusLine() );
+            //		System.out.println( "----------------------------------------" );
+            if (entity1 != null) {
+                //System.out.println( EntityUtils.toString( entity1 ) );
+            }
+            //		System.out.println( "----------------------------------------" );
 
-			// This ensures the connection gets released back to the manager
-			EntityUtils.consume( entity1 );
+            // This ensures the connection gets released back to the manager
+            EntityUtils.consume(entity1);
 
-			Assert.assertEquals( response1.getStatusLine().getStatusCode(), 200 );
-		}
-		catch( UnknownHostException e )
-		{
+            Assert.assertEquals(response1.getStatusLine().getStatusCode(), 200);
+        } catch (UnknownHostException e) {
+            /* ignore */
+        } catch (HttpHostConnectException e) {
 			/* ignore */
-		}
-		catch( HttpHostConnectException e )
-		{
+        } catch (SocketException e) {
 			/* ignore */
-		}
-		catch( SocketException e )
-		{
-			/* ignore */
-		}
+        }
 
-		Assert.assertTrue( true );
-	}
+        Assert.assertTrue(true);
+    }
 
 }

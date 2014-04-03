@@ -23,21 +23,20 @@ import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 
-public interface TestAssertionFactory
-{
-	public boolean canAssert( Assertable assertable );
+public interface TestAssertionFactory {
+    public boolean canAssert(Assertable assertable);
 
-	public boolean canAssert( TestPropertyHolder modelItem, String property );
+    public boolean canAssert(TestPropertyHolder modelItem, String property);
 
-	public TestAssertion buildAssertion( TestAssertionConfig config, Assertable assertable );
+    public TestAssertion buildAssertion(TestAssertionConfig config, Assertable assertable);
 
-	public Class<? extends WsdlMessageAssertion> getAssertionClassType();
+    public Class<? extends WsdlMessageAssertion> getAssertionClassType();
 
-	public String getAssertionId();
+    public String getAssertionId();
 
-	public String getAssertionLabel();
+    public String getAssertionLabel();
 
-	public AssertionListEntry getAssertionListEntry();
+    public AssertionListEntry getAssertionListEntry();
 
-	public String getCategory();
+    public String getCategory();
 }

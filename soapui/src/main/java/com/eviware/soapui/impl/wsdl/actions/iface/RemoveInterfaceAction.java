@@ -30,112 +30,97 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Removes a WsdlInterface from a WsdlProject
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RemoveInterfaceAction extends AbstractSoapUIAction<WsdlInterface>
-{
-	public RemoveInterfaceAction()
-	{
-		super( "Remove", "Removes this interface from the project" );
-	}
+public class RemoveInterfaceAction extends AbstractSoapUIAction<WsdlInterface> {
+    public RemoveInterfaceAction() {
+        super("Remove", "Removes this interface from the project");
+    }
 
-	public void perform( WsdlInterface iface, Object param )
-	{
-		if( hasRunningDependingTests( iface ) )
-		{
-			UISupport.showErrorMessage( "Cannot remove Interface due to running depending tests" );
-			return;
-		}
+    public void perform(WsdlInterface iface, Object param) {
+        if (hasRunningDependingTests(iface)) {
+            UISupport.showErrorMessage("Cannot remove Interface due to running depending tests");
+            return;
+        }
 
-		if( UISupport.confirm( "Remove interface [" + iface.getName() + "] from project [" + iface.getProject().getName()
-				+ "]?", "Remove Interface" ) )
-		{
-			if( hasDependingTests( iface ) )
-			{
-				if( !UISupport.confirm( "Interface has depending TestSteps which will also be removed. Remove anyway?",
-						"Remove Interface" ) )
-					return;
-			}
+        if (UISupport.confirm("Remove interface [" + iface.getName() + "] from project [" + iface.getProject().getName()
+                + "]?", "Remove Interface")) {
+            if (hasDependingTests(iface)) {
+                if (!UISupport.confirm("Interface has depending TestSteps which will also be removed. Remove anyway?",
+                        "Remove Interface")) {
+                    return;
+                }
+            }
 
-			if( hasDependingMockOperations( iface ) )
-			{
-				if( !UISupport.confirm(
-						"Interface has depending MockOperations which will also be removed. Remove anyway?",
-						"Remove Interface" ) )
-					return;
-			}
+            if (hasDependingMockOperations(iface)) {
+                if (!UISupport.confirm(
+                        "Interface has depending MockOperations which will also be removed. Remove anyway?",
+                        "Remove Interface")) {
+                    return;
+                }
+            }
 
-			WsdlProject project = ( WsdlProject )iface.getProject();
-			project.removeInterface( iface );
-		}
-	}
+            WsdlProject project = (WsdlProject) iface.getProject();
+            project.removeInterface(iface);
+        }
+    }
 
-	public static boolean hasRunningDependingTests( AbstractInterface<?> iface )
-	{
-		if( SoapUI.getTestMonitor() == null )
-			return false;
+    public static boolean hasRunningDependingTests(AbstractInterface<?> iface) {
+        if (SoapUI.getTestMonitor() == null) {
+            return false;
+        }
 
-		for( int c = 0; c < iface.getProject().getTestSuiteCount(); c++ )
-		{
-			TestSuite testSuite = iface.getProject().getTestSuiteAt( c );
-			for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
-			{
-				TestCase testCase = testSuite.getTestCaseAt( i );
-				if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
-					continue;
+        for (int c = 0; c < iface.getProject().getTestSuiteCount(); c++) {
+            TestSuite testSuite = iface.getProject().getTestSuiteAt(c);
+            for (int i = 0; i < testSuite.getTestCaseCount(); i++) {
+                TestCase testCase = testSuite.getTestCaseAt(i);
+                if (!SoapUI.getTestMonitor().hasRunningTest(testCase)) {
+                    continue;
+                }
 
-				for( int j = 0; j < testCase.getTestStepCount(); j++ )
-				{
-					WsdlTestStep testStep = ( WsdlTestStep )testCase.getTestStepAt( j );
-					if( testStep.dependsOn( iface ) )
-					{
-						return true;
-					}
-				}
-			}
-		}
+                for (int j = 0; j < testCase.getTestStepCount(); j++) {
+                    WsdlTestStep testStep = (WsdlTestStep) testCase.getTestStepAt(j);
+                    if (testStep.dependsOn(iface)) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static boolean hasDependingTests( AbstractInterface<?> iface )
-	{
-		for( int c = 0; c < iface.getProject().getTestSuiteCount(); c++ )
-		{
-			TestSuite testSuite = iface.getProject().getTestSuiteAt( c );
-			for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
-			{
-				TestCase testCase = testSuite.getTestCaseAt( i );
+    public static boolean hasDependingTests(AbstractInterface<?> iface) {
+        for (int c = 0; c < iface.getProject().getTestSuiteCount(); c++) {
+            TestSuite testSuite = iface.getProject().getTestSuiteAt(c);
+            for (int i = 0; i < testSuite.getTestCaseCount(); i++) {
+                TestCase testCase = testSuite.getTestCaseAt(i);
 
-				for( int j = 0; j < testCase.getTestStepCount(); j++ )
-				{
-					WsdlTestStep testStep = ( WsdlTestStep )testCase.getTestStepAt( j );
-					if( testStep.dependsOn( iface ) )
-					{
-						return true;
-					}
-				}
-			}
-		}
+                for (int j = 0; j < testCase.getTestStepCount(); j++) {
+                    WsdlTestStep testStep = (WsdlTestStep) testCase.getTestStepAt(j);
+                    if (testStep.dependsOn(iface)) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public static boolean hasDependingMockOperations( WsdlInterface iface )
-	{
-		for( int c = 0; c < iface.getProject().getMockServiceCount(); c++ )
-		{
-			MockService mockService = iface.getProject().getMockServiceAt( c );
-			for( int i = 0; i < mockService.getMockOperationCount(); i++ )
-			{
-				MockOperation mockOperation = mockService.getMockOperationAt( i );
-				if( mockOperation.getOperation().getInterface() == iface )
-					return true;
-			}
-		}
+    public static boolean hasDependingMockOperations(WsdlInterface iface) {
+        for (int c = 0; c < iface.getProject().getMockServiceCount(); c++) {
+            MockService mockService = iface.getProject().getMockServiceAt(c);
+            for (int i = 0; i < mockService.getMockOperationCount(); i++) {
+                MockOperation mockOperation = mockService.getMockOperationAt(i);
+                if (mockOperation.getOperation().getInterface() == iface) {
+                    return true;
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

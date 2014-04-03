@@ -26,79 +26,70 @@ import com.eviware.soapui.support.types.StringList;
 
 /**
  * PanelBuilder for RestTestRequest
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestRequestStep>
-{
-	public RestTestRequestPanelBuilder()
-	{
-	}
+public class RestTestRequestPanelBuilder extends EmptyPanelBuilder<RestTestRequestStep> {
+    public RestTestRequestPanelBuilder() {
+    }
 
-	public RestTestRequestDesktopPanel buildDesktopPanel( RestTestRequestStep testStep )
-	{
-		return new RestTestRequestDesktopPanel( testStep );
-	}
+    public RestTestRequestDesktopPanel buildDesktopPanel(RestTestRequestStep testStep) {
+        return new RestTestRequestDesktopPanel(testStep);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	public JPanel buildOverviewPanel( RestTestRequestStep testStep )
-	{
-		RestTestRequestInterface request = testStep.getTestRequest();
-		JPropertiesTable<RestTestRequestInterface> table = new JPropertiesTable<RestTestRequestInterface>(
-				"REST TestRequest Properties" );
+    public JPanel buildOverviewPanel(RestTestRequestStep testStep) {
+        RestTestRequestInterface request = testStep.getTestRequest();
+        JPropertiesTable<RestTestRequestInterface> table = new JPropertiesTable<RestTestRequestInterface>(
+                "REST TestRequest Properties");
 
-		// basic properties
-		table.addProperty( "Name", "name", true );
-		table.addProperty( "Description", "description", true );
-		// table.addProperty( "Message Size", "contentLength", false );
-		table.addProperty( "Encoding", "encoding", new String[] { null, "UTF-8", "iso-8859-1" } );
+        // basic properties
+        table.addProperty("Name", "name", true);
+        table.addProperty("Description", "description", true);
+        // table.addProperty( "Message Size", "contentLength", false );
+        table.addProperty("Encoding", "encoding", new String[]{null, "UTF-8", "iso-8859-1"});
 
-		if( request.getOperation() == null )
-		{
-			table.addProperty( "Path", "path", true );
-		}
-		else
-		{
-			table.addProperty( "Endpoint", "endpoint", request.getInterface() == null ? new String[0] : request
-					.getInterface().getEndpoints() );
-			table.addProperty( "Service", "serviceName" );
-			table.addProperty( "Resource", "path" );
-			table.addProperty( "Method", "restMethodName" );
-		}
+        if (request.getOperation() == null) {
+            table.addProperty("Path", "path", true);
+        } else {
+            table.addProperty("Endpoint", "endpoint", request.getInterface() == null ? new String[0] : request
+                    .getInterface().getEndpoints());
+            table.addProperty("Service", "serviceName");
+            table.addProperty("Resource", "path");
+            table.addProperty("Method", "restMethodName");
+        }
 
-		table.addProperty( "Timeout", "timeout", true );
+        table.addProperty("Timeout", "timeout", true);
 
-		table.addProperty( "Bind Address", "bindAddress", true );
-		table.addProperty( "Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS );
+        table.addProperty("Bind Address", "bindAddress", true);
+        table.addProperty("Follow Redirects", "followRedirects", JPropertiesTable.BOOLEAN_OPTIONS);
 
-		StringList keystores = new StringList( request.getTestStep().getTestCase().getTestSuite().getProject()
-				.getWssContainer().getCryptoNames() );
-		keystores.add( "" );
-		table.addProperty( "SSL Keystore", "sslKeystore", keystores.toStringArray() );
+        StringList keystores = new StringList(request.getTestStep().getTestCase().getTestSuite().getProject()
+                .getWssContainer().getCryptoNames());
+        keystores.add("");
+        table.addProperty("SSL Keystore", "sslKeystore", keystores.toStringArray());
 
-		table.addProperty( "Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS );
-		table.addProperty( "Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS );
-		table.addProperty( "Entitize Properties", "entitizeProperties", JPropertiesTable.BOOLEAN_OPTIONS );
-		table.addProperty( "Multi-Value Delimiter", "multiValueDelimiter", true );
+        table.addProperty("Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS);
+        table.addProperty("Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS);
+        table.addProperty("Entitize Properties", "entitizeProperties", JPropertiesTable.BOOLEAN_OPTIONS);
+        table.addProperty("Multi-Value Delimiter", "multiValueDelimiter", true);
 
-		// post-processing
-		table.addProperty( "Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS );
-		table.addProperty( "Dump File", "dumpFile", true ).setDescription( "Dumps response message to specified file" );
-		table.addProperty( "Max Size", "maxSize", true ).setDescription( "The maximum number of bytes to receive" );
-		table.addProperty( "Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS );
+        // post-processing
+        table.addProperty("Pretty Print", "prettyPrint", JPropertiesTable.BOOLEAN_OPTIONS);
+        table.addProperty("Dump File", "dumpFile", true).setDescription("Dumps response message to specified file");
+        table.addProperty("Max Size", "maxSize", true).setDescription("The maximum number of bytes to receive");
+        table.addProperty("Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS);
 
-		table.setPropertyObject( request );
+        table.setPropertyObject(request);
 
-		return table;
-	}
+        return table;
+    }
 
-	public boolean hasOverviewPanel()
-	{
-		return true;
-	}
+    public boolean hasOverviewPanel() {
+        return true;
+    }
 }

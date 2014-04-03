@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.panels.mock;
+*/
+package com.eviware.soapui.impl.rest.panels.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
@@ -46,205 +47,168 @@ import java.lang.reflect.Field;
 import java.util.Vector;
 
 public class RestMockResponseDesktopPanel extends
-		AbstractMockResponseDesktopPanel<RestMockResponse, MockResponse>
-{
+        AbstractMockResponseDesktopPanel<RestMockResponse, MockResponse> {
 
-	public RestMockResponseDesktopPanel( MockResponse mockResponse )
-	{
-		super( ( RestMockResponse )mockResponse );
+    public RestMockResponseDesktopPanel(MockResponse mockResponse) {
+        super((RestMockResponse) mockResponse);
 
-		init( mockResponse );
-	}
+        init(mockResponse);
+    }
 
-	public JComponent addTopEditorPanel()
-	{
-		JPanel topEditorPanel = new JPanel( new BorderLayout() );
+    public JComponent addTopEditorPanel() {
+        JPanel topEditorPanel = new JPanel(new BorderLayout());
 
-		topEditorPanel.add( createHttpStatusPanel(), BorderLayout.NORTH );
-		topEditorPanel.add( createHeaderInspector(), BorderLayout.CENTER );
+        topEditorPanel.add(createHttpStatusPanel(), BorderLayout.NORTH);
+        topEditorPanel.add(createHeaderInspector(), BorderLayout.CENTER);
 
-		return topEditorPanel;
-	}
+        return topEditorPanel;
+    }
 
-	protected Component addBottomEditorPanel( MockResponseMessageEditor responseEditor )
-	{
-		JPanel bottomEditorPanel = new JPanel( new BorderLayout());
+    protected Component addBottomEditorPanel(MockResponseMessageEditor responseEditor) {
+        JPanel bottomEditorPanel = new JPanel(new BorderLayout());
 
-		bottomEditorPanel.add( createMediaTypeCombo(), BorderLayout.NORTH );
-		bottomEditorPanel.add( responseEditor, BorderLayout.CENTER );
+        bottomEditorPanel.add(createMediaTypeCombo(), BorderLayout.NORTH);
+        bottomEditorPanel.add(responseEditor, BorderLayout.CENTER);
 
-		return bottomEditorPanel;
-	}
+        return bottomEditorPanel;
+    }
 
-	public boolean hasTopEditorPanel( )
-	{
-		return true;
-	}
+    public boolean hasTopEditorPanel() {
+        return true;
+    }
 
-	private JComponent createHttpStatusPanel()
-	{
-		return createPanelWithLabel( "Http Status Code: ", createStatusCodeCombo() );
-	}
+    private JComponent createHttpStatusPanel() {
+        return createPanelWithLabel("Http Status Code: ", createStatusCodeCombo());
+    }
 
-	protected MockResponseMessageEditor buildResponseEditor()
-	{
-		MockResponseXmlDocument documentContent = new MockResponseXmlDocument( getMockResponse() );
-		MockResponseMessageEditor mockResponseMessageEditor = new MockResponseMessageEditor( documentContent );
-		setMediaType( mockResponseMessageEditor.getInputArea(), getModelItem().getMediaType() );
-		return mockResponseMessageEditor;
-	}
+    protected MockResponseMessageEditor buildResponseEditor() {
+        MockResponseXmlDocument documentContent = new MockResponseXmlDocument(getMockResponse());
+        MockResponseMessageEditor mockResponseMessageEditor = new MockResponseMessageEditor(documentContent);
+        setMediaType(mockResponseMessageEditor.getInputArea(), getModelItem().getMediaType());
+        return mockResponseMessageEditor;
+    }
 
-	public void setMediaType( RSyntaxTextArea inputArea, String mediaType )
-	{
-		if( mediaType.contains( "json" ) )
-		{
-			inputArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT );
-		}
-		else if( mediaType.contains( "xml" ) )
-		{
-			inputArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_XML );
-		}
-		else
-		{
-			inputArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_NONE );
-		}
+    public void setMediaType(RSyntaxTextArea inputArea, String mediaType) {
+        if (mediaType.contains("json")) {
+            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        } else if (mediaType.contains("xml")) {
+            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
+        } else {
+            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+        }
 
-	}
+    }
 
 
-	private JComponent createMediaTypeCombo()
-	{
-		MediaTypeComboBox mediaTypeComboBox = new MediaTypeComboBox( this.getModelItem() );
-		mediaTypeComboBox.addItemListener( new ItemListener()
-		{
-			@Override
-			public void itemStateChanged( ItemEvent e )
-			{
-				setMediaType( getResponseEditor().getInputArea(), e.getItem().toString() );
-			}
-		} );
-		JComponent innerPanel = createPanelWithLabel( "Content | Media type: ", mediaTypeComboBox );
+    private JComponent createMediaTypeCombo() {
+        MediaTypeComboBox mediaTypeComboBox = new MediaTypeComboBox(this.getModelItem());
+        mediaTypeComboBox.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                setMediaType(getResponseEditor().getInputArea(), e.getItem().toString());
+            }
+        });
+        JComponent innerPanel = createPanelWithLabel("Content | Media type: ", mediaTypeComboBox);
 
-		JPanel outerPanel = new JPanel( );
-		outerPanel.setLayout( new BoxLayout( outerPanel, BoxLayout.X_AXIS ) );
-		outerPanel.add( innerPanel );
-		outerPanel.add( Box.createHorizontalGlue() );
-		outerPanel.add( UISupport.createFormButton( new ShowOnlineHelpAction( HelpUrls.REST_MOCK_RESPONSE_EDITOR_BODY ) ));
+        JPanel outerPanel = new JPanel();
+        outerPanel.setLayout(new BoxLayout(outerPanel, BoxLayout.X_AXIS));
+        outerPanel.add(innerPanel);
+        outerPanel.add(Box.createHorizontalGlue());
+        outerPanel.add(UISupport.createFormButton(new ShowOnlineHelpAction(HelpUrls.REST_MOCK_RESPONSE_EDITOR_BODY)));
 
-		return outerPanel;
-	}
+        return outerPanel;
+    }
 
-	private JComponent createPanelWithLabel( String labelText, Component rightSideComponent )
-	{
-		JPanel innerPanel = new JPanel(new FlowLayout( FlowLayout.LEFT ));
+    private JComponent createPanelWithLabel(String labelText, Component rightSideComponent) {
+        JPanel innerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-		innerPanel.add( new JLabel( labelText ) );
-		innerPanel.add( rightSideComponent );
+        innerPanel.add(new JLabel(labelText));
+        innerPanel.add(rightSideComponent);
 
-		return innerPanel;
-	}
+        return innerPanel;
+    }
 
-	private JComboBox createStatusCodeCombo()
-	{
-		ComboBoxModel httpStatusCodeComboBoxModel = new HttpStatusCodeComboBoxModel();
+    private JComboBox createStatusCodeCombo() {
+        ComboBoxModel httpStatusCodeComboBoxModel = new HttpStatusCodeComboBoxModel();
 
-		final JComboBox statusCodeCombo = new JComboBox( httpStatusCodeComboBoxModel );
+        final JComboBox statusCodeCombo = new JComboBox(httpStatusCodeComboBoxModel);
 
-		statusCodeCombo.setSelectedItem( CompleteHttpStatus.from( getModelItem().getResponseHttpStatus() ) );
-		statusCodeCombo.setToolTipText( "Set desired HTTP status code" );
-		statusCodeCombo.addItemListener( new ItemListener()
-		{
-			public void itemStateChanged( ItemEvent e )
-			{
-				getModelItem().setResponseHttpStatus( ( ( CompleteHttpStatus )statusCodeCombo.getSelectedItem() ).getStatusCode() );
-			}
-		} );
-		return statusCodeCombo;
-	}
+        statusCodeCombo.setSelectedItem(CompleteHttpStatus.from(getModelItem().getResponseHttpStatus()));
+        statusCodeCombo.setToolTipText("Set desired HTTP status code");
+        statusCodeCombo.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                getModelItem().setResponseHttpStatus(((CompleteHttpStatus) statusCodeCombo.getSelectedItem()).getStatusCode());
+            }
+        });
+        return statusCodeCombo;
+    }
 
-	private JComponent createHeaderInspector()
-	{
-		MockResponseHeadersModel model = new MockResponseHeadersModel( getModelItem() );
-		HttpHeadersInspector inspector = new HttpHeadersInspector( model );
+    private JComponent createHeaderInspector() {
+        MockResponseHeadersModel model = new MockResponseHeadersModel(getModelItem());
+        HttpHeadersInspector inspector = new HttpHeadersInspector(model);
 
-		JComponent component = inspector.getComponent();
-		return component;
-	}
+        JComponent component = inspector.getComponent();
+        return component;
+    }
 
-	public boolean hasRequestEditor()
-	{
-		return false;
-	}
+    public boolean hasRequestEditor() {
+        return false;
+    }
 
-	@Override
-	public String getHelpUrl()
-	{
-		return HelpUrls.REST_MOCK_RESPONSE_EDITOR;
-	}
+    @Override
+    public String getHelpUrl() {
+        return HelpUrls.REST_MOCK_RESPONSE_EDITOR;
+    }
 
 }
 
-class CompleteHttpStatus
-{
-	private int statusCode;
-	private String description;
+class CompleteHttpStatus {
+    private int statusCode;
+    private String description;
 
-	private CompleteHttpStatus( int statusCode )
-	{
-		this.statusCode = statusCode;
-		this.description = HttpStatus.getStatusText( statusCode );
-	}
+    private CompleteHttpStatus(int statusCode) {
+        this.statusCode = statusCode;
+        this.description = HttpStatus.getStatusText(statusCode);
+    }
 
-	public static CompleteHttpStatus from( int statusCode )
-	{
-		return new CompleteHttpStatus( statusCode );
-	}
+    public static CompleteHttpStatus from(int statusCode) {
+        return new CompleteHttpStatus(statusCode);
+    }
 
-	public int getStatusCode()
-	{
-		return statusCode;
-	}
+    public int getStatusCode() {
+        return statusCode;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "" + statusCode + " - " + description;
-	}
+    @Override
+    public String toString() {
+        return "" + statusCode + " - " + description;
+    }
 
-	@Override
-	public boolean equals( Object object )
-	{
-		return ( ( CompleteHttpStatus )object ).statusCode == statusCode;
+    @Override
+    public boolean equals(Object object) {
+        return ((CompleteHttpStatus) object).statusCode == statusCode;
 
-	}
+    }
 }
 
-class HttpStatusCodeComboBoxModel extends DefaultComboBoxModel
-{
-	private static Vector<CompleteHttpStatus> LIST_OF_CODES = new Vector<CompleteHttpStatus>();
+class HttpStatusCodeComboBoxModel extends DefaultComboBoxModel {
+    private static Vector<CompleteHttpStatus> LIST_OF_CODES = new Vector<CompleteHttpStatus>();
 
-	static
-	{
-		final String statusCodePrefix = "SC_";
+    static {
+        final String statusCodePrefix = "SC_";
 
-		for( Field statusCodeField : HttpStatus.class.getDeclaredFields() )
-		{
-			try
-			{
-				if( statusCodeField.getName().startsWith( statusCodePrefix ) )
-				{
-					LIST_OF_CODES.add( CompleteHttpStatus.from( statusCodeField.getInt( null ) ) );
-				}
-			}
-			catch( IllegalAccessException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+        for (Field statusCodeField : HttpStatus.class.getDeclaredFields()) {
+            try {
+                if (statusCodeField.getName().startsWith(statusCodePrefix)) {
+                    LIST_OF_CODES.add(CompleteHttpStatus.from(statusCodeField.getInt(null)));
+                }
+            } catch (IllegalAccessException e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 
-	public HttpStatusCodeComboBoxModel()
-	{
-		super( LIST_OF_CODES );
-	}
+    public HttpStatusCodeComboBoxModel() {
+        super(LIST_OF_CODES);
+    }
 }

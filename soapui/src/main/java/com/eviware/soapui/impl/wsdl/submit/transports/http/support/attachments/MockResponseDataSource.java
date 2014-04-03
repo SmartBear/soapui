@@ -28,56 +28,46 @@ import java.io.OutputStream;
 
 /**
  * DataSource for an existing WsdlMockResponse
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockResponseDataSource implements DataSource
-{
-	private final String responseContent;
-	private final boolean isXOP;
-	private final MockResponse mockResponse;
+public class MockResponseDataSource implements DataSource {
+    private final String responseContent;
+    private final boolean isXOP;
+    private final MockResponse mockResponse;
 
-	public MockResponseDataSource( MockResponse mockResponse, String responseContent, boolean isXOP )
-	{
-		this.mockResponse = mockResponse;
-		this.responseContent = responseContent;
-		this.isXOP = isXOP;
-	}
+    public MockResponseDataSource(MockResponse mockResponse, String responseContent, boolean isXOP) {
+        this.mockResponse = mockResponse;
+        this.responseContent = responseContent;
+        this.isXOP = isXOP;
+    }
 
-	public String getContentType()
-	{
-		if(mockResponse instanceof WsdlMockResponse)
-		{
-			SoapVersion soapVersion = ((WsdlMockResponse)mockResponse).getSoapVersion();
+    public String getContentType() {
+        if (mockResponse instanceof WsdlMockResponse) {
+            SoapVersion soapVersion = ((WsdlMockResponse) mockResponse).getSoapVersion();
 
-			if( isXOP )
-			{
-				return AttachmentUtils.buildRootPartContentType( mockResponse.getMockOperation().getOperation().getName(),
-						soapVersion );
-			}
-			else
-				return soapVersion.getContentType() + "; charset=UTF-8";
-		}
-		else
-		{
-			throw new IllegalStateException( "Multipart support is only available for SOAP" );
-		}
-	}
+            if (isXOP) {
+                return AttachmentUtils.buildRootPartContentType(mockResponse.getMockOperation().getOperation().getName(),
+                        soapVersion);
+            } else {
+                return soapVersion.getContentType() + "; charset=UTF-8";
+            }
+        } else {
+            throw new IllegalStateException("Multipart support is only available for SOAP");
+        }
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		byte[] bytes = responseContent.getBytes( "UTF-8" );
-		return new ByteArrayInputStream( bytes );
-	}
+    public InputStream getInputStream() throws IOException {
+        byte[] bytes = responseContent.getBytes("UTF-8");
+        return new ByteArrayInputStream(bytes);
+    }
 
-	public String getName()
-	{
-		return mockResponse.getName();
-	}
+    public String getName() {
+        return mockResponse.getName();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

@@ -18,16 +18,15 @@ package com.eviware.soapui.impl.wsdl.support.wsa;
 
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 
-public interface WsaContainer
-{
-	boolean isWsaEnabled();
+public interface WsaContainer {
+    boolean isWsaEnabled();
 
-	void setWsaEnabled( boolean arg0 );
+    void setWsaEnabled(boolean arg0);
 
-	WsaConfig getWsaConfig();
+    WsaConfig getWsaConfig();
 
-	WsdlOperation getOperation();
+    WsdlOperation getOperation();
 
-	void setOperation( WsdlOperation operation );
+    void setOperation(WsdlOperation operation);
 
 }

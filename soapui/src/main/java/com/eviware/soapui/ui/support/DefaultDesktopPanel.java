@@ -31,98 +31,82 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * Default implementation for simple DesktopPanels
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DefaultDesktopPanel implements DesktopPanel
-{
-	private PropertyChangeSupport propertyChangeSupport;
-	private String title;
-	private JComponent component;
-	private Set<ModelItem> depends = new HashSet<ModelItem>();
-	private ImageIcon icon;
-	private final String description;
+public class DefaultDesktopPanel implements DesktopPanel {
+    private PropertyChangeSupport propertyChangeSupport;
+    private String title;
+    private JComponent component;
+    private Set<ModelItem> depends = new HashSet<ModelItem>();
+    private ImageIcon icon;
+    private final String description;
 
-	public DefaultDesktopPanel( String title, String description, JComponent component )
-	{
-		this.title = title;
-		this.description = description;
-		this.component = component;
+    public DefaultDesktopPanel(String title, String description, JComponent component) {
+        this.title = title;
+        this.description = description;
+        this.component = component;
 
-		propertyChangeSupport = new PropertyChangeSupport( this );
-	}
+        propertyChangeSupport = new PropertyChangeSupport(this);
+    }
 
-	public void loadIcon( String path )
-	{
-		icon = UISupport.createImageIcon( path );
-	}
+    public void loadIcon(String path) {
+        icon = UISupport.createImageIcon(path);
+    }
 
-	public String getTitle()
-	{
-		return title;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	public String getDescription()
-	{
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setTitle( String title )
-	{
-		String oldTitle = this.title;
-		this.title = title;
+    public void setTitle(String title) {
+        String oldTitle = this.title;
+        this.title = title;
 
-		propertyChangeSupport.firePropertyChange( TITLE_PROPERTY, oldTitle, title );
-	}
+        propertyChangeSupport.firePropertyChange(TITLE_PROPERTY, oldTitle, title);
+    }
 
-	public ModelItem getModelItem()
-	{
-		return null;
-	}
+    public ModelItem getModelItem() {
+        return null;
+    }
 
-	public boolean onClose( boolean canCancel )
-	{
-		return true;
-	}
+    public boolean onClose(boolean canCancel) {
+        return true;
+    }
 
-	public JComponent getComponent()
-	{
-		return component;
-	}
+    public JComponent getComponent() {
+        return component;
+    }
 
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return depends != null && depends.contains( modelItem );
-	}
+    public boolean dependsOn(ModelItem modelItem) {
+        return depends != null && depends.contains(modelItem);
+    }
 
-	public void addDependency( ModelItem modelItem )
-	{
-		depends.add( modelItem );
-	}
+    public void addDependency(ModelItem modelItem) {
+        depends.add(modelItem);
+    }
 
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-	}
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( listener );
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( listener );
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-	}
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
 
-	public Icon getIcon()
-	{
-		return icon;
-	}
+    public Icon getIcon() {
+        return icon;
+    }
 }

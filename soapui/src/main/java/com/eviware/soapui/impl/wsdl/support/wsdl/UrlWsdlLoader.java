@@ -60,358 +60,318 @@ import com.eviware.x.form.XFormFactory;
 
 /**
  * WsdlLoader for URLs
- * 
+ *
  * @author ole.matzura
  */
 
-public class UrlWsdlLoader extends WsdlLoader
-{
-	private HttpContext state;
-	protected HttpGet getMethod;
-	private boolean aborted;
-	protected Map<String, byte[]> urlCache = new HashMap<String, byte[]>();
-	protected boolean finished;
-	private boolean useWorker;
-	private ModelItem contextModelItem;
-	private org.apache.http.HttpResponse httpResponse;
+public class UrlWsdlLoader extends WsdlLoader {
+    private HttpContext state;
+    protected HttpGet getMethod;
+    private boolean aborted;
+    protected Map<String, byte[]> urlCache = new HashMap<String, byte[]>();
+    protected boolean finished;
+    private boolean useWorker;
+    private ModelItem contextModelItem;
+    private org.apache.http.HttpResponse httpResponse;
 
-	public UrlWsdlLoader( String url )
-	{
-		this( url, null );
-	}
+    public UrlWsdlLoader(String url) {
+        this(url, null);
+    }
 
-	public UrlWsdlLoader( String url, ModelItem contextModelItem )
-	{
-		super( url );
-		this.contextModelItem = contextModelItem;
-		state = new BasicHttpContext();
-	}
+    public UrlWsdlLoader(String url, ModelItem contextModelItem) {
+        super(url);
+        this.contextModelItem = contextModelItem;
+        state = new BasicHttpContext();
+    }
 
-	public boolean isUseWorker()
-	{
-		return useWorker;
-	}
+    public boolean isUseWorker() {
+        return useWorker;
+    }
 
-	public void setUseWorker( boolean useWorker )
-	{
-		this.useWorker = useWorker;
-	}
+    public void setUseWorker(boolean useWorker) {
+        this.useWorker = useWorker;
+    }
 
-	public InputStream load() throws Exception
-	{
-		return load( getBaseURI() );
-	}
+    public InputStream load() throws Exception {
+        return load(getBaseURI());
+    }
 
-	public synchronized InputStream load( String url ) throws Exception
-	{
-		if( !PathUtils.isHttpPath( url ) )
-		{
-			try
-			{
-				File file = new File( url.replace( '/', File.separatorChar ) );
-				if( file.exists() )
-					url = file.toURI().toURL().toString();
-			}
-			catch( Exception e )
-			{
-			}
-		}
+    public synchronized InputStream load(String url) throws Exception {
+        if (!PathUtils.isHttpPath(url)) {
+            try {
+                File file = new File(url.replace('/', File.separatorChar));
+                if (file.exists()) {
+                    url = file.toURI().toURL().toString();
+                }
+            } catch (Exception e) {
+            }
+        }
 
-		if( urlCache.containsKey( url ) )
-		{
-			setNewBaseURI( url );
-			return new ByteArrayInputStream( urlCache.get( url ) );
-		}
+        if (urlCache.containsKey(url)) {
+            setNewBaseURI(url);
+            return new ByteArrayInputStream(urlCache.get(url));
+        }
 
-		if( url.startsWith( "file:" ) )
-		{
-			return handleFile( url );
-		}
+        if (url.startsWith("file:")) {
+            return handleFile(url);
+        }
 
-		log.debug( "Getting wsdl component from [" + url + "]" );
+        log.debug("Getting wsdl component from [" + url + "]");
 
-		createGetMethod( url );
+        createGetMethod(url);
 
-		if( aborted )
-			return null;
+        if (aborted) {
+            return null;
+        }
 
-		LoaderWorker worker = new LoaderWorker();
-		if( useWorker )
-			worker.start();
-		else
-			worker.construct();
+        LoaderWorker worker = new LoaderWorker();
+        if (useWorker) {
+            worker.start();
+        } else {
+            worker.construct();
+        }
 
-		while( !aborted && !finished )
-		{
-			Thread.sleep( 200 );
-		}
+        while (!aborted && !finished) {
+            Thread.sleep(200);
+        }
 
-		// wait for method to catch up - required in unit tests..
-		// limited looping to 10 loops because of eclipse plugin which entered 
-		// endless loop without it
-		int counter = 0;
-		byte[] content = null;
+        // wait for method to catch up - required in unit tests..
+        // limited looping to 10 loops because of eclipse plugin which entered
+        // endless loop without it
+        int counter = 0;
+        byte[] content = null;
 
-		if( httpResponse != null && httpResponse.getEntity() != null )
-		{
-			content = EntityUtils.toByteArray( new BufferedHttpEntity( httpResponse.getEntity() ) );
-		}
+        if (httpResponse != null && httpResponse.getEntity() != null) {
+            content = EntityUtils.toByteArray(new BufferedHttpEntity(httpResponse.getEntity()));
+        }
 
-		while( !aborted && content == null && counter < 10 )
-		{
-			Thread.sleep( 200 );
-			counter++ ;
-		}
+        while (!aborted && content == null && counter < 10) {
+            Thread.sleep(200);
+            counter++;
+        }
 
-		if( aborted )
-		{
-			throw new Exception( "Load of url [" + url + "] was aborted" );
-		}
-		else
-		{
-			if( content != null )
-			{
-				String compressionAlg = HttpClientSupport.getResponseCompressionType( httpResponse );
-				if( compressionAlg != null )
-					content = CompressionSupport.decompress( compressionAlg, content );
+        if (aborted) {
+            throw new Exception("Load of url [" + url + "] was aborted");
+        } else {
+            if (content != null) {
+                String compressionAlg = HttpClientSupport.getResponseCompressionType(httpResponse);
+                if (compressionAlg != null)
 
-				urlCache.put( url, content );
-				String newUrl = getMethod.getURI().toString();
-				if( !url.equals( newUrl ) )
-					log.info( "BaseURI was redirected to [" + newUrl + "]" );
-				setNewBaseURI( newUrl );
-				urlCache.put( newUrl, content );
-				return new ByteArrayInputStream( content );
-			}
-			else
-			{
-				throw new Exception( "Failed to load url; " + url + ", "
-						+ ( httpResponse != null ? httpResponse.getStatusLine().getStatusCode() : 0 ) + " - "
-						+ ( httpResponse != null ? httpResponse.getStatusLine().getReasonPhrase() : "" ) );
-			}
-		}
-	}
+             ontent    ompressionSupport.decompress(compressionAlg,  ontent);
 
-	protected InputStream handleFile( String url ) throws Exception
-	{
-		setNewBaseURI( url );
-		return new URL( url ).openStream();
-	}
 
-	protected void createGetMethod( String url )
-	{
-		getMethod = new HttpGet( url );
-		getMethod.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, true );
-		state.setAttribute( ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider() );
 
-		if( SoapUI.getSettings().getBoolean( HttpSettings.AUTHENTICATE_PREEMPTIVELY ) )
-		{
-			if( !StringUtils.isNullOrEmpty( getUsername() ) && !StringUtils.isNullOrEmpty( getPassword() ) )
-			{
-				UsernamePasswordCredentials creds = new UsernamePasswordCredentials( getUsername(), getPassword() );
-				getMethod.addHeader( BasicScheme.authenticate( creds, "utf-8", false ) );
-			}
-		}
-	}
+                urlCache.put(url, content);
+                String newUrl = getMethod.getURI().toString();
+                if (!url.equals(newUrl))
 
-	public final class LoaderWorker extends SwingWorker
-	{
-		public Object construct()
-		{
-			HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
-			try
-			{
-				Settings soapuiSettings = SoapUI.getSettings();
+                 og.info("BaseURI was redirected to ["    ewUrl    ]");
 
-				HttpClientSupport.applyHttpSettings( getMethod, soapuiSettings );
 
-				httpResponse = httpClient.execute( getMethod, state );
-			}
-			catch( Exception e )
-			{
-				return e;
-			}
-			finally
-			{
-				finished = true;
-			}
+                setNewBaseURI(newUrl);
+                urlCache.put(newUrl, content);
+                return new ByteArrayInputStream(content);
+            } else {
+                throw new Exception("Failed to load url; " + url + ", "
+                        + (httpResponse != null ? httpResponse.getStatusLine().getStatusCode() : 0) + " - "
+                        + (httpResponse != null ? httpResponse.getStatusLine().getReasonPhrase() : ""));
+            }
+        }
+    }
 
-			return null;
-		}
-	}
+    protected InputStream handleFile(String url) throws Exception {
+        setNewBaseURI(url);
+        return new URL(url).openStream();
+    }
 
-	public boolean abort()
-	{
-		if( getMethod != null )
-			getMethod.abort();
+    protected void createGetMethod(String url) {
+        getMethod = new HttpGet(url);
+        getMethod.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, true);
+        state.setAttribute(ClientContext.CREDS_PROVIDER, new WsdlCredentialsProvider());
 
-		aborted = true;
+        if (SoapUI.getSettings().getBoolean(HttpSettings.AUTHENTICATE_PREEMPTIVELY)) {
+            if (!StringUtils.isNullOrEmpty(getUsername()) && !StringUtils.isNullOrEmpty(getPassword())) {
+                UsernamePasswordCredentials creds = new UsernamePasswordCredentials(getUsername(), getPassword());
+                getMethod.addHeader(BasicScheme.authenticate(creds, "utf-8", false));
+            }
+        }
+    }
 
-		return true;
-	}
+    public final class LoaderWorker extends SwingWorker {
+        public Object construct() {
+            HttpClientSupport.SoapUIHttpClient httpClient = HttpClientSupport.getHttpClient();
+            try {
+                Settings soapuiSettings = SoapUI.getSettings();
 
-	public boolean isAborted()
-	{
-		return aborted;
-	}
+                HttpClientSupport.applyHttpSettings(getMethod, soapuiSettings);
 
-	/**
-	 * CredentialsProvider for providing login information during WSDL loading
-	 * 
-	 * @author ole.matzura
-	 */
+                httpResponse = httpClient.execute(getMethod, state);
+            } catch (Exception e) {
+                return e;
+            } finally {
+                finished = true;
+            }
 
-	private static Map<AuthScope, Credentials> cache = new HashMap<AuthScope, Credentials>();
+            return null;
+        }
+    }
 
-	public final class WsdlCredentialsProvider implements CredentialsProvider
-	{
-		private XFormDialog basicDialog;
-		private XFormDialog ntDialog;
+    public boolean abort() {
+        if (getMethod != null)
 
-		public WsdlCredentialsProvider()
-		{
-		}
+         etMethod.abort();
 
-		public Credentials getCredentials( final AuthScope authScope )
-		{
-			if( authScope == null )
-			{
-				throw new IllegalArgumentException( "Authentication scope may not be null" );
-			}
 
-			//	if( cache.containsKey( authScope ) )
-			//	{
-			//	return cache.get( authScope );
-			//	}
 
-			String pw = getPassword();
-			if( pw == null )
-				pw = "";
+        aborted = true;
 
-			if( AuthPolicy.NTLM.equalsIgnoreCase( authScope.getScheme() )
-					|| AuthPolicy.SPNEGO.equalsIgnoreCase( authScope.getScheme() ) )
-			{
-				String workstation = "";
-				try
-				{
-					workstation = InetAddress.getLocalHost().getHostName();
-				}
-				catch( UnknownHostException e )
-				{
-				}
+        return true;
+    }
 
-				if( hasCredentials() )
-				{
-					log.info( "Returning url credentials" );
-					return new NTCredentials( getUsername(), pw, workstation, null );
-				}
+    public boolean isAborted() {
+        return aborted;
+    }
 
-				log.info( authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication" );
-				if( ntDialog == null )
-				{
-					buildNtDialog();
-				}
+    /**
+     * CredentialsProvider for providing login information during WSDL loading
+     *
+     * @author ole.matzura
+     */
 
-				StringToStringMap values = new StringToStringMap();
-				values.put( "Info", "Authentication required for [" + authScope.getHost() + ":" + authScope.getPort() + "]" );
-				ntDialog.setValues( values );
+    private static Map<AuthScope, Credentials> cache = new HashMap<AuthScope, Credentials>();
 
-				if( ntDialog.show() )
-				{
-					values = ntDialog.getValues();
-					NTCredentials credentials = new NTCredentials( values.get( "Username" ), values.get( "Password" ),
-							workstation, values.get( "Domain" ) );
+    public final class WsdlCredentialsProvider implements CredentialsProvider {
+        private XFormDialog basicDialog;
+        private XFormDialog ntDialog;
 
-					cache.put( authScope, credentials );
-					return credentials;
-				}
-			}
-			else if( AuthPolicy.BASIC.equalsIgnoreCase( authScope.getScheme() )
-					|| AuthPolicy.DIGEST.equalsIgnoreCase( authScope.getScheme() ) )
-			{
-				if( hasCredentials() )
-				{
-					log.info( "Returning url credentials" );
-					UsernamePasswordCredentials credentials = new UsernamePasswordCredentials( getUsername(), pw );
-					cache.put( authScope, credentials );
-					return credentials;
-				}
+        public WsdlCredentialsProvider() {
+        }
 
-				log.info( authScope.getHost() + ":" + authScope.getPort() + " requires authentication with the realm '"
-						+ authScope.getRealm() + "'" );
-				ShowDialog showDialog = new ShowDialog();
-				showDialog.values.put( "Info",
-						"Authentication required for [" + authScope.getHost() + ":" + authScope.getPort() + "]" );
+        public Credentials getCredentials(final AuthScope authScope) {
+            if (authScope == null) {
+                throw new IllegalArgumentException("Authentication scope may not be null");
+            }
 
-				UISupport.getUIUtils().runInUIThreadIfSWT( showDialog );
-				if( showDialog.result )
-				{
-					UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-							showDialog.values.get( "Username" ), showDialog.values.get( "Password" ) );
-					cache.put( authScope, credentials );
-					return credentials;
-				}
-			}
+            //	if( cache.containsKey( authScope ) )
+            //	{
+            //	return cache.get( authScope );
+            //	}
 
-			return null;
-		}
+            String pw = getPassword();
+            if (pw == null)
 
-		private void buildBasicDialog()
-		{
-			XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Basic Authentication" );
-			XForm mainForm = builder.createForm( "Basic" );
-			mainForm.addLabel( "Info", "" );
-			mainForm.addTextField( "Username", "Username for authentication", XForm.FieldType.TEXT );
-			mainForm.addTextField( "Password", "Password for authentication", XForm.FieldType.PASSWORD );
+                 w    ";
 
-			basicDialog = builder.buildDialog( builder.buildOkCancelActions(), "Specify Basic Authentication Credentials",
-					UISupport.OPTIONS_ICON );
-		}
 
-		private void buildNtDialog()
-		{
-			XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "NT Authentication" );
-			XForm mainForm = builder.createForm( "Basic" );
-			mainForm.addLabel( "Info", "" );
-			mainForm.addTextField( "Username", "Username for authentication", XForm.FieldType.TEXT );
-			mainForm.addTextField( "Password", "Password for authentication", XForm.FieldType.PASSWORD );
-			mainForm.addTextField( "Domain", "NT Domain for authentication", XForm.FieldType.TEXT );
 
-			ntDialog = builder.buildDialog( builder.buildOkCancelActions(), "Specify NT Authentication Credentials",
-					UISupport.OPTIONS_ICON );
-		}
+            if (AuthPolicy.NTLM.equalsIgnoreCase(authScope.getScheme())
+                    || AuthPolicy.SPNEGO.equalsIgnoreCase(authScope.getScheme())) {
+                String workstation = "";
+                try {
+                    workstation = InetAddress.getLocalHost().getHostName();
+                } catch (UnknownHostException e) {
+                }
 
-		private class ShowDialog implements Runnable
-		{
-			StringToStringMap values = new StringToStringMap();
-			boolean result;
+                if (hasCredentials()) {
+                    log.info("Returning url credentials");
+                    return new NTCredentials(getUsername(), pw, workstation, null);
+                }
 
-			public void run()
-			{
-				if( basicDialog == null )
-					buildBasicDialog();
+                log.info(authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication");
+                if (ntDialog == null) {
+                    buildNtDialog();
+                }
 
-				basicDialog.setValues( values );
+                StringToStringMap values = new StringToStringMap();
+                values.put("Info", "Authentication required for [" + authScope.getHost() + ":" + authScope.getPort() + "]");
+                ntDialog.setValues(values);
 
-				result = basicDialog.show();
-				if( result )
-				{
-					values = basicDialog.getValues();
-				}
-			}
-		}
+                if (ntDialog.show()) {
+                    values = ntDialog.getValues();
+                    NTCredentials credentials = new NTCredentials(values.get("Username"), values.get("Password"),
+                            workstation, values.get("Domain"));
 
-		public void clear()
-		{
-			cache.clear();
-		}
+                    cache.put(authScope, credentials);
+                    return credentials;
+                }
+            } else if (AuthPolicy.BASIC.equalsIgnoreCase(authScope.getScheme())
+                    || AuthPolicy.DIGEST.equalsIgnoreCase(authScope.getScheme())) {
+                if (hasCredentials()) {
+                    log.info("Returning url credentials");
+                    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(getUsername(), pw);
+                    cache.put(authScope, credentials);
+                    return credentials;
+                }
 
-		public void setCredentials( AuthScope arg0, Credentials arg1 )
-		{
-		}
-	}
+                log.info(authScope.getHost() + ":" + authScope.getPort() + " requires authentication with the realm '"
+                        + authScope.getRealm() + "'");
+                ShowDialog showDialog = new ShowDialog();
+                showDialog.values.put("Info",
+                        "Authentication required for [" + authScope.getHost() + ":" + authScope.getPort() + "]");
 
-	public void close()
-	{
-	}
+                UISupport.getUIUtils().runInUIThreadIfSWT(showDialog);
+                if (showDialog.result) {
+                    UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+                            showDialog.values.get("Username"), showDialog.values.get("Password"));
+                    cache.put(authScope, credentials);
+                    return credentials;
+                }
+            }
+
+            return null;
+        }
+
+        private void buildBasicDialog() {
+            XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Basic Authentication");
+            XForm mainForm = builder.createForm("Basic");
+            mainForm.addLabel("Info", "");
+            mainForm.addTextField("Username", "Username for authentication", XForm.FieldType.TEXT);
+            mainForm.addTextField("Password", "Password for authentication", XForm.FieldType.PASSWORD);
+
+            basicDialog = builder.buildDialog(builder.buildOkCancelActions(), "Specify Basic Authentication Credentials",
+                    UISupport.OPTIONS_ICON);
+        }
+
+        private void buildNtDialog() {
+            XFormDialogBuilder builder = XFormFactory.createDialogBuilder("NT Authentication");
+            XForm mainForm = builder.createForm("Basic");
+            mainForm.addLabel("Info", "");
+            mainForm.addTextField("Username", "Username for authentication", XForm.FieldType.TEXT);
+            mainForm.addTextField("Password", "Password for authentication", XForm.FieldType.PASSWORD);
+            mainForm.addTextField("Domain", "NT Domain for authentication", XForm.FieldType.TEXT);
+
+            ntDialog = builder.buildDialog(builder.buildOkCancelActions(), "Specify NT Authentication Credentials",
+                    UISupport.OPTIONS_ICON);
+        }
+
+        private class ShowDialog implements Runnable {
+            StringToStringMap values = new StringToStringMap();
+            boolean result;
+
+            public void run() {
+                if (basicDialog == null)
+
+                 uildBasicDialog();
+
+
+
+                basicDialog.setValues(values);
+
+                result = basicDialog.show();
+                if (result) {
+                    values = basicDialog.getValues();
+                }
+            }
+        }
+
+        public void clear() {
+            cache.clear();
+        }
+
+        public void setCredentials(AuthScope arg0, Credentials arg1) {
+        }
+    }
+
+    public void close() {
+    }
 }

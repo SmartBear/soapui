@@ -36,62 +36,51 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 /**
  * @author ole
  */
-public class SoapUIMockServlet extends HttpServlet
-{
-	private WsdlMockRunner mockRunner;
-	private WsdlMockService mockService;
-	private WsdlProject project;
-	private static Logger logger = Logger.getLogger( SoapUIMockServlet.class.getName() );
+public class SoapUIMockServlet extends HttpServlet {
+    private WsdlMockRunner mockRunner;
+    private WsdlMockService mockService;
+    private WsdlProject project;
+    private static Logger logger = Logger.getLogger(SoapUIMockServlet.class.getName());
 
-	@Override
-	public void init() throws ServletException
-	{
-		super.init();
-		try
-		{
-			logger.info( "Initializing SoapUI Core" );
-			SoapUI.setSoapUICore(
-					createSoapUICore( getInitParameter( "settingsFile" ), getInitParameter( "settingsPassword" ) ), true );
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        try {
+            logger.info("Initializing SoapUI Core");
+            SoapUI.setSoapUICore(
+                    createSoapUICore(getInitParameter("settingsFile"), getInitParameter("settingsPassword")), true);
 
-			logger.info( "Loading project" );
-			project = new WsdlProject( getInitParameter( "projectFile" ), getInitParameter( "projectPassword" ) );
+            logger.info("Loading project");
+            project = new WsdlProject(getInitParameter("projectFile"), getInitParameter("projectPassword"));
 
-			logger.info( "Starting MockService" );
-			mockService = project.getMockServiceByName( getInitParameter( "mockService" ) );
-			mockRunner = mockService.start();
-		}
-		catch( Exception ex )
-		{
-			logger.log( Level.SEVERE, null, ex );
-		}
-	}
+            logger.info("Starting MockService");
+            mockService = project.getMockServiceByName(getInitParameter("mockService"));
+            mockRunner = mockService.start();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+    }
 
-	@Override
-	protected void service( HttpServletRequest request, HttpServletResponse response ) throws ServletException,
-			IOException
-	{
-		try
-		{
-			mockRunner.dispatchRequest( request, response );
-		}
-		catch( DispatchException ex )
-		{
-			logger.log( Level.SEVERE, null, ex );
-		}
-	}
+    @Override
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
+            IOException {
+        try {
+            mockRunner.dispatchRequest(request, response);
+        } catch (DispatchException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+    }
 
-	/**
-	 * Returns a short description of the servlet.
-	 */
-	public String getServletInfo()
-	{
-		return mockService.getName();
-	}
+    /**
+     * Returns a short description of the servlet.
+     */
+    public String getServletInfo() {
+        return mockService.getName();
+    }
 
-	// </editor-fold>
+    // </editor-fold>
 
-	protected SoapUICore createSoapUICore( String settingsFile, String soapUISettingsPassword )
-	{
-		return new DefaultSoapUICore( null, settingsFile, soapUISettingsPassword );
-	}
+    protected SoapUICore createSoapUICore(String settingsFile, String soapUISettingsPassword) {
+        return new DefaultSoapUICore(null, settingsFile, soapUISettingsPassword);
+    }
 }

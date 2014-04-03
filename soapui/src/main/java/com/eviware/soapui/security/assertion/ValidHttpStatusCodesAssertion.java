@@ -48,157 +48,134 @@ import com.eviware.x.form.XFormFactory;
 
 /**
  * Asserts Http status code in response
- * 
+ *
  * @author nebojsa.tasic
  */
 
-public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implements ResponseAssertion
-{
-	public static final String ID = "Valid HTTP Status Codes";
-	public static final String LABEL = "Valid HTTP Status Codes";
+public class ValidHttpStatusCodesAssertion extends WsdlMessageAssertion implements ResponseAssertion {
+    public static final String ID = "Valid HTTP Status Codes";
+    public static final String LABEL = "Valid HTTP Status Codes";
 
-	private String codes;
-	private XFormDialog dialog;
-	private static final String CODES = "codes";
-	public static final String DESCRIPTION = "Checks that the target TestStep received an HTTP result with a status code in the list of defined codes. Applicable to any TestStep that receives HTTP messages.";
+    private String codes;
+    private XFormDialog dialog;
+    private static final String CODES = "codes";
+    public static final String DESCRIPTION = "Checks that the target TestStep received an HTTP result with a status code in the list of defined codes. Applicable to any TestStep that receives HTTP messages.";
 
-	public ValidHttpStatusCodesAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
-	{
-		super( assertionConfig, assertable, false, true, false, false );
+    public ValidHttpStatusCodesAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
+        super(assertionConfig, assertable, false, true, false, false);
 
-		init();
-	}
+        init();
+    }
 
-	private void init()
-	{
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
-		codes = reader.readString( CODES, "" );
-	}
+    private void init() {
+        XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
+        codes = reader.readString(CODES, "");
+    }
 
-	@Override
-	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
+    @Override
+    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
 
-		List<String> codeList = extractCodes( context );
-		String[] statusElements = null;
-		try
-		{
-			statusElements = messageExchange.getResponseHeaders().get( "#status#", "-1" ).split( " " );
+        List<String> codeList = extractCodes(context);
+        String[] statusElements = null;
+        try {
+            statusElements = messageExchange.getResponseHeaders().get("#status#", "-1").split(" ");
 
-		}
-		catch( NullPointerException npe )
-		{
-			SoapUI.logError( npe, "Header #status# is missing!" );
-		}
+        } catch (NullPointerException npe) {
+            SoapUI.logError(npe, "Header #status# is missing!");
+        }
 
-		if( statusElements.length >= 2 )
-		{
-			String statusCode = statusElements[1].trim();
-			if( !codeList.contains( statusCode ) )
-			{
-				String message = "Response status code:" + statusCode + " is not in acceptable list of status codes";
-				throw new AssertionException( new AssertionError( message ) );
-			}
-		}
-		else
-		{
-			throw new AssertionException( new AssertionError( "Status code extraction error! " ) );
-		}
+        if (statusElements.length >= 2) {
+            String statusCode = statusElements[1].trim();
+            if (!codeList.contains(statusCode)) {
+                String message = "Response status code:" + statusCode + " is not in acceptable list of status codes";
+                throw new AssertionException(new AssertionError(message));
+            }
+        } else {
+            throw new AssertionException(new AssertionError("Status code extraction error! "));
+        }
 
-		return "OK";
-	}
+        return "OK";
+    }
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
-			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
-	{
-		return null;
-	}
+    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
+                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
+        return null;
+    }
 
-	private List<String> extractCodes( SubmitContext context )
-	{
-		String expandedCodes = context.expand( codes );
-		List<String> codeList = new ArrayList<String>();
-		for( String str : expandedCodes.split( "," ) )
-		{
-			codeList.add( str.trim() );
-		}
-		return codeList;
-	}
+    private List<String> extractCodes(SubmitContext context) {
+        String expandedCodes = context.expand(codes);
+        List<String> codeList = new ArrayList<String>();
+        for (String str : expandedCodes.split(",")) {
+            codeList.add(str.trim());
+        }
+        return codeList;
+    }
 
-	public static class Factory extends AbstractTestAssertionFactory
-	{
-		@SuppressWarnings( "unchecked" )
-		public Factory()
-		{
-			super( ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
-					ValidHttpStatusCodesAssertion.class, new Class[] { SecurityScan.class, AbstractHttpRequest.class } );
-		}
+    public static class Factory extends AbstractTestAssertionFactory {
+        @SuppressWarnings("unchecked")
+        public Factory() {
+            super(ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
+                    ValidHttpStatusCodesAssertion.class, new Class[]{SecurityScan.class, AbstractHttpRequest.class});
+        }
 
-		@Override
-		public String getCategory()
-		{
-			return AssertionCategoryMapping.STATUS_CATEGORY;
-		}
+        @Override
+        public String getCategory() {
+            return AssertionCategoryMapping.STATUS_CATEGORY;
+        }
 
-		@Override
-		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
-		{
-			return ValidHttpStatusCodesAssertion.class;
-		}
+        @Override
+        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
+            return ValidHttpStatusCodesAssertion.class;
+        }
 
-		@Override
-		public AssertionListEntry getAssertionListEntry()
-		{
-			return new AssertionListEntry( ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
-					ValidHttpStatusCodesAssertion.DESCRIPTION );
-		}
-	}
+        @Override
+        public AssertionListEntry getAssertionListEntry() {
+            return new AssertionListEntry(ValidHttpStatusCodesAssertion.ID, ValidHttpStatusCodesAssertion.LABEL,
+                    ValidHttpStatusCodesAssertion.DESCRIPTION);
+        }
+    }
 
-	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		return null;
-	}
+    @Override
+    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        return null;
+    }
 
-	protected XmlObject createConfiguration()
-	{
-		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( CODES, codes );
-		return builder.finish();
-	}
+    protected XmlObject createConfiguration() {
+        XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
+        builder.add(CODES, codes);
+        return builder.finish();
+    }
 
-	@Override
-	public boolean configure()
-	{
-		if( dialog == null )
-			buildDialog();
+    @Override
+    public boolean configure() {
+        if (dialog == null) {
+            buildDialog();
+        }
 
-		StringToStringMap values = new StringToStringMap();
-		values.put( CODES, codes );
+        StringToStringMap values = new StringToStringMap();
+        values.put(CODES, codes);
 
-		values = dialog.show( values );
-		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
-		{
-			codes = values.get( CODES );
-		}
+        values = dialog.show(values);
+        if (dialog.getReturnValue() == XFormDialog.OK_OPTION) {
+            codes = values.get(CODES);
+        }
 
-		setConfiguration( createConfiguration() );
-		return true;
-	}
+        setConfiguration(createConfiguration());
+        return true;
+    }
 
-	private void buildDialog()
-	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "Valid HTTP status codes Assertion" );
-		XForm mainForm = builder.createForm( "Basic" );
+    private void buildDialog() {
+        XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Valid HTTP status codes Assertion");
+        XForm mainForm = builder.createForm("Basic");
 
-		mainForm.addTextField( CODES, "Comma-separated acceptable status codes", XForm.FieldType.TEXTAREA ).setWidth( 40 );
+        mainForm.addTextField(CODES, "Comma-separated acceptable status codes", XForm.FieldType.TEXTAREA).setWidth(40);
 
-		// TODO : update help URL
-		dialog = builder.buildDialog(
-				builder.buildOkCancelHelpActions( HelpUrls.SECURITY_VALID_HTTP_CODES_ASSERTION_HELP ), "Specify codes",
-				UISupport.OPTIONS_ICON );
-	}
+        // TODO : update help URL
+        dialog = builder.buildDialog(
+                builder.buildOkCancelHelpActions(HelpUrls.SECURITY_VALID_HTTP_CODES_ASSERTION_HELP), "Specify codes",
+                UISupport.OPTIONS_ICON);
+    }
 
 }

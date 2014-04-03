@@ -22,18 +22,16 @@ import junit.framework.TestCase;
 
 import com.eviware.soapui.config.DefinitionCacheConfig;
 
-public class WsdlUtilsTestCase extends TestCase
-{
-	public void testCacheWsdl() throws Exception
-	{
-		File file = new File( WsdlUtilsTestCase.class.getResource(  "/test6/TestService.wsdl" ).toURI());
+public class WsdlUtilsTestCase extends TestCase {
+    public void testCacheWsdl() throws Exception {
+        File file = new File(WsdlUtilsTestCase.class.getResource("/test6/TestService.wsdl").toURI());
 
-		assertTrue( file.exists() );
+        assertTrue(file.exists());
 
-		WsdlLoader loader = new UrlWsdlLoader( file.toURI().toURL().toString() );
+        WsdlLoader loader = new UrlWsdlLoader(file.toURI().toURL().toString());
 
-		DefinitionCacheConfig cachedWsdl = WsdlUtils.cacheWsdl( loader );
-		assertEquals( 4, cachedWsdl.sizeOfPartArray() );
+        DefinitionCacheConfig cachedWsdl = WsdlUtils.cacheWsdl(loader);
+        assertEquals(4, cachedWsdl.sizeOfPartArray());
 
-	}
+    }
 }

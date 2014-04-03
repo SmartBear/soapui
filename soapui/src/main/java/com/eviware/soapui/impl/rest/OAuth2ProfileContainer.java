@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest;
+*/
+package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.config.OAuth2ProfileContainerConfig;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -21,28 +22,27 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface OAuth2ProfileContainer extends PropertyExpansionContainer
-{
+public interface OAuth2ProfileContainer extends PropertyExpansionContainer {
 
-	public WsdlProject getProject();
+    public WsdlProject getProject();
 
-	public List<OAuth2Profile> getOAuth2ProfileList();
+    public List<OAuth2Profile> getOAuth2ProfileList();
 
-	public void release();
+    public void release();
 
-	public OAuth2ProfileContainerConfig getConfig();
+    public OAuth2ProfileContainerConfig getConfig();
 
-	public OAuth2Profile addNewOAuth2Profile( String profileName );
+    public OAuth2Profile addNewOAuth2Profile(String profileName);
 
-	public void removeProfile(String profileName);
+    public void removeProfile(String profileName);
 
-	ArrayList<String> getOAuth2ProfileNameList();
+    ArrayList<String> getOAuth2ProfileNameList();
 
-	OAuth2Profile getProfileByName( String profileName );
+    OAuth2Profile getProfileByName(String profileName);
 
-	void addOAuth2ProfileListener(OAuth2ProfileListener listener);
+    void addOAuth2ProfileListener(OAuth2ProfileListener listener);
 
-	void removeOAuth2ProfileListener(OAuth2ProfileListener listener);
+    void removeOAuth2ProfileListener(OAuth2ProfileListener listener);
 
-	void renameProfile( String profileOldName, String newName );
+    void renameProfile(String profileOldName, String newName);
 }

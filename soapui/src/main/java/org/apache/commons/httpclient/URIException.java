@@ -49,7 +49,7 @@ package org.apache.commons.httpclient;
  *
  * @author <a href="mailto:jericho at apache.org">Sung-Gu</a>
  * @author <a href="mailto:oleg@ural.ru">Oleg Kalnichevski</a>
- * @version $Revision: 480424 $ $Date: 2002/03/14 15:14:01 
+ * @version $Revision: 480424 $ $Date: 2002/03/14 15:14:01
  */
 public class URIException extends HttpException {
 
@@ -76,7 +76,7 @@ public class URIException extends HttpException {
      * The constructor with a reason string and its code arguments.
      *
      * @param reasonCode the reason code
-     * @param reason the reason
+     * @param reason     the reason
      */
     public URIException(int reasonCode, String reason) {
         super(reason); // for backward compatibility of Throwable
@@ -155,9 +155,8 @@ public class URIException extends HttpException {
      * Set the reason code.
      *
      * @param reasonCode the reason code
-     *
      * @deprecated Callers should set the reason code as a parameter to the
-     *  constructor.
+     *             constructor.
      */
     public void setReasonCode(int reasonCode) {
         this.reasonCode = reasonCode;
@@ -168,7 +167,6 @@ public class URIException extends HttpException {
      * Get the reason message.
      *
      * @return the reason message
-     *
      * @deprecated You should instead call {@link #getMessage()}.
      */
     public String getReason() {
@@ -180,7 +178,6 @@ public class URIException extends HttpException {
      * Set the reason message.
      *
      * @param reason the reason message
-     *
      * @deprecated Callers should instead set this via a parameter to the constructor.
      */
     public void setReason(String reason) {

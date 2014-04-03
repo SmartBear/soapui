@@ -32,79 +32,63 @@ import java.io.IOException;
  * @author Ole.Matzura
  */
 
-public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject>
-{
-	public static final String SOAPUI_ACTION_ID = "RemoveProjectAction";
+public class RemoveProjectAction extends AbstractSoapUIAction<WsdlProject> {
+    public static final String SOAPUI_ACTION_ID = "RemoveProjectAction";
 
-	public RemoveProjectAction()
-	{
-		super( "Remove", "Removes this project from the workspace" );
-	}
+    public RemoveProjectAction() {
+        super("Remove", "Removes this project from the workspace");
+    }
 
-	public void perform( WsdlProject project, Object param )
-	{
-		if( hasRunningTests( project ) )
-		{
-			UISupport.showErrorMessage( "Cannot remove Interface due to running tests" );
-			return;
-		}
+    public void perform(WsdlProject project, Object param) {
+        if (hasRunningTests(project)) {
+            UISupport.showErrorMessage("Cannot remove Interface due to running tests");
+            return;
+        }
 
-		Boolean saveProject = Boolean.FALSE;
+        Boolean saveProject = Boolean.FALSE;
 
-		if( project.isOpen() )
-		{
-			saveProject = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before removing?",
-					"Remove Project" );
-			if( saveProject == null )
-				return;
-		}
-		else
-		{
-			if( !UISupport.confirm( "Remove project [" + project.getName() + "] from workspace", "Remove Project" ) )
-				return;
-		}
+        if (project.isOpen()) {
+            saveProject = UISupport.confirmOrCancel("Save project [" + project.getName() + "] before removing?",
+                    "Remove Project");
+            if (saveProject == null) {
+                return;
+            }
+        } else {
+            if (!UISupport.confirm("Remove project [" + project.getName() + "] from workspace", "Remove Project")) {
+                return;
+            }
+        }
 
-		if( saveProject )
-		{
-			try
-			{
-				SaveStatus status = project.save();
-				if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
-				{
-					return;
-				}
-			}
-			catch( IOException e1 )
-			{
-				UISupport.showErrorMessage( e1 );
-			}
-		}
-		project.getWorkspace().removeProject( project );
+        if (saveProject) {
+            try {
+                SaveStatus status = project.save();
+                if (status == SaveStatus.CANCELLED || status == SaveStatus.FAILED) {
+                    return;
+                }
+            } catch (IOException e1) {
+                UISupport.showErrorMessage(e1);
+            }
+        }
+        project.getWorkspace().removeProject(project);
 
-	}
+    }
 
-	private boolean hasRunningTests( WsdlProject project )
-	{
-		for( int c = 0; c < project.getTestSuiteCount(); c++ )
-		{
-			TestSuite testSuite = project.getTestSuiteAt( c );
-			for( int i = 0; i < testSuite.getTestCaseCount(); i++ )
-			{
-				if( SoapUI.getTestMonitor().hasRunningTest( testSuite.getTestCaseAt( i ) ) )
-				{
-					return true;
-				}
-			}
-		}
+    private boolean hasRunningTests(WsdlProject project) {
+        for (int c = 0; c < project.getTestSuiteCount(); c++) {
+            TestSuite testSuite = project.getTestSuiteAt(c);
+            for (int i = 0; i < testSuite.getTestCaseCount(); i++) {
+                if (SoapUI.getTestMonitor().hasRunningTest(testSuite.getTestCaseAt(i))) {
+                    return true;
+                }
+            }
+        }
 
-		for( MockService mockService : project.getMockServiceList() )
-		{
-			if( SoapUI.getTestMonitor().hasRunningMock( mockService ) )
-			{
-				return true;
-			}
-		}
+        for (MockService mockService : project.getMockServiceList()) {
+            if (SoapUI.getTestMonitor().hasRunningMock(mockService)) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

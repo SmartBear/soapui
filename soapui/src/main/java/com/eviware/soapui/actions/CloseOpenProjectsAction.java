@@ -28,49 +28,45 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Action to save all projects
- * 
+ *
  * @author ole.matzura
  */
 
-public class CloseOpenProjectsAction extends AbstractSoapUIAction<WorkspaceImpl>
-{
-	public static final String SOAPUI_ACTION_ID = "CloseOpenProjectsAction";
+public class CloseOpenProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> {
+    public static final String SOAPUI_ACTION_ID = "CloseOpenProjectsAction";
 
-	public CloseOpenProjectsAction()
-	{
-		super( "Close All Open Projects", "Closes all open projects in the current Workspace" );
-	}
+    public CloseOpenProjectsAction() {
+        super("Close All Open Projects", "Closes all open projects in the current Workspace");
+    }
 
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		List<Project> openProjects = new ArrayList<Project>();
-		for( Project project : workspace.getProjectList() )
-			if( project.isOpen() )
-				openProjects.add( project );
+    public void perform(WorkspaceImpl workspace, Object param) {
+        List<Project> openProjects = new ArrayList<Project>();
+        for (Project project : workspace.getProjectList()) {
+            if (project.isOpen()) {
+                openProjects.add(project);
+            }
+        }
 
-		if( openProjects.isEmpty() )
-		{
-			UISupport.showErrorMessage( "No open projects in workspace" );
-			return;
-		}
+        if (openProjects.isEmpty()) {
+            UISupport.showErrorMessage("No open projects in workspace");
+            return;
+        }
 
-		Boolean coc = UISupport.confirmOrCancel( "Save projects before closing?", getName() );
-		if( coc == null )
-			return;
+        Boolean coc = UISupport.confirmOrCancel("Save projects before closing?", getName());
+        if (coc == null) {
+            return;
+        }
 
-		for( Project project : openProjects )
-		{
-			try
-			{
-				if( coc )
-					project.save();
+        for (Project project : openProjects) {
+            try {
+                if (coc) {
+                    project.save();
+                }
 
-				workspace.closeProject( project );
-			}
-			catch( IOException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+                workspace.closeProject(project);
+            } catch (IOException e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 }

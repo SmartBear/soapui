@@ -28,45 +28,37 @@ import com.eviware.x.form.XFormDialog;
  * Action for adding a new REST URI to a project.
  */
 
-public class AddRestUriAction extends AbstractSoapUIAction<WsdlProject>
-{
-	public static final String SOAPUI_ACTION_ID = "AddRestUriAction";
+public class AddRestUriAction extends AbstractSoapUIAction<WsdlProject> {
+    public static final String SOAPUI_ACTION_ID = "AddRestUriAction";
 
-	private static final MessageSupport messages = MessageSupport.getMessages( AddRestUriAction.class );
+    private static final MessageSupport messages = MessageSupport.getMessages(AddRestUriAction.class);
 
 
-	private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
-	private RestServiceBuilder serviceBuilder = new RestServiceBuilder();
+    private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
+    private RestServiceBuilder serviceBuilder = new RestServiceBuilder();
 
-	public AddRestUriAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    public AddRestUriAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
-	public void perform( WsdlProject project, Object param )
-	{
-		XFormDialog dialog = dialogBuilder.buildDialog( messages, null );
-		while( dialog.show() )
-		{
-			try
-			{
-				String uri = dialogBuilder.getUri();
-				if( uri != null )
-				{
-					serviceBuilder.createRestService( project, uri );
-				}
-				// If there is no exception or error we break out
-				break;
+    public void perform(WsdlProject project, Object param) {
+        XFormDialog dialog = dialogBuilder.buildDialog(messages, null);
+        while (dialog.show()) {
+            try {
+                String uri = dialogBuilder.getUri();
+                if (uri != null) {
+                    serviceBuilder.createRestService(project, uri);
+                }
+                // If there is no exception or error we break out
+                break;
 
-			}
-			catch( Exception ex )
-			{
-				UISupport.showErrorMessage( ex.getMessage() );
+            } catch (Exception ex) {
+                UISupport.showErrorMessage(ex.getMessage());
 
-				dialogBuilder.resetUriField();
-			}
-		}
-	}
+                dialogBuilder.resetUriField();
+            }
+        }
+    }
 
 
 }

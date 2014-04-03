@@ -19,36 +19,32 @@ import net.sf.json.JSON;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class JsonXmlSerializerTest
-{
+public class JsonXmlSerializerTest {
 
-	private JsonXmlSerializer serializer;
+    private JsonXmlSerializer serializer;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		serializer = new JsonXmlSerializer();
-	}
+    @Before
+    public void setUp() throws Exception {
+        serializer = new JsonXmlSerializer();
+    }
 
-	@Test
-	public void serializesJsonWithVanillaNames() throws Exception
-	{
-		JSON parse = JSONSerializer.toJSON( "{ name: 'Barack', surname: 'Obama', profession: 'president'}" );
+    @Test
+    public void serializesJsonWithVanillaNames() throws Exception {
+        JSON parse = JSONSerializer.toJSON("{ name: 'Barack', surname: 'Obama', profession: 'president'}");
 
-		assertThat(serializer.write(parse), is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<o>" +
-				"<name type=\"string\">Barack</name>" +
-				"<profession type=\"string\">president</profession>" +
-				"<surname type=\"string\">Obama</surname>" +
-				"</o>\r\n"));
-	}
+        assertThat(serializer.write(parse), is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<o>" +
+                "<name type=\"string\">Barack</name>" +
+                "<profession type=\"string\">president</profession>" +
+                "<surname type=\"string\">Obama</surname>" +
+                "</o>\r\n"));
+    }
 
-	@Test
-	public void serializesJsonWithDollarSign() throws Exception
-	{
-		JSON parse = JSONSerializer.toJSON( "{ $: 'value' }" );
+    @Test
+    public void serializesJsonWithDollarSign() throws Exception {
+        JSON parse = JSONSerializer.toJSON("{ $: 'value' }");
 
-		assertThat(serializer.write(parse), is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<o>" +
-				"<_ type=\"string\">value</_>" +
-				"</o>\r\n"));
-	}
+        assertThat(serializer.write(parse), is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<o>" +
+                "<_ type=\"string\">value</_>" +
+                "</o>\r\n"));
+    }
 }

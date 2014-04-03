@@ -37,107 +37,81 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 /**
  * MimeMessage response for a WsdlMockResponse
- * 
+ *
  * @author ole.matzura
  */
 
-public class MimeMessageMockResponseEntity extends AbstractHttpEntity
-{
-	private final MimeMessage message;
-	private final boolean isXOP;
-	private final MockResponse mockResponse;
+public class MimeMessageMockResponseEntity extends AbstractHttpEntity {
+    private final MimeMessage message;
+    private final boolean isXOP;
+    private final MockResponse mockResponse;
 
-	public MimeMessageMockResponseEntity( MimeMessage message, boolean isXOP, MockResponse response )
-	{
-		this.message = message;
-		this.isXOP = isXOP;
-		this.mockResponse = response;
-	}
+    public MimeMessageMockResponseEntity(MimeMessage message, boolean isXOP, MockResponse response) {
+        this.message = message;
+        this.isXOP = isXOP;
+        this.mockResponse = response;
+    }
 
-	public long getContentLength()
-	{
-		try
-		{
-			DummyOutputStream out = new DummyOutputStream();
-			writeTo( out );
-			return out.getSize();
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			return -1;
-		}
-	}
+    public long getContentLength() {
+        try {
+            DummyOutputStream out = new DummyOutputStream();
+            writeTo(out);
+            return out.getSize();
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            return -1;
+        }
+    }
 
-	public Header getContentType()
-	{
-		try
-		{
-			if(mockResponse instanceof  WsdlMockResponse)
-			{
-				SoapVersion soapVersion = (( WsdlMockResponse )mockResponse).getSoapVersion();
+    public Header getContentType() {
+        try {
+            if (mockResponse instanceof WsdlMockResponse) {
+                SoapVersion soapVersion = ((WsdlMockResponse) mockResponse).getSoapVersion();
 
-				if( isXOP )
-				{
-					String header = message.getHeader( "Content-Type" )[0];
-					return new BasicHeader( "Content-Type", AttachmentUtils.buildMTOMContentType( header, null, soapVersion ) );
-				}
-				else
-				{
-					String header = message.getHeader( "Content-Type" )[0];
-					int ix = header.indexOf( "boundary" );
-					return new BasicHeader( "Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
-							+ "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring( ix ) );
-				}
-			}
-			else
-			{
-				throw new IllegalStateException( "Multipart support is only available for SOAP" );
-			}
+                if (isXOP) {
+                    String header = message.getHeader("Content-Type")[0];
+                    return new BasicHeader("Content-Type", AttachmentUtils.buildMTOMContentType(header, null, soapVersion));
+                } else {
+                    String header = message.getHeader("Content-Type")[0];
+                    int ix = header.indexOf("boundary");
+                    return new BasicHeader("Content-Type", "multipart/related; type=\"" + soapVersion.getContentType()
+                            + "\"; start=\"" + AttachmentUtils.ROOTPART_SOAPUI_ORG + "\"; " + header.substring(ix));
+                }
+            } else {
+                throw new IllegalStateException("Multipart support is only available for SOAP");
+            }
 
-		}
-		catch( MessagingException e )
-		{
-			SoapUI.logError( e );
-		}
+        } catch (MessagingException e) {
+            SoapUI.logError(e);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public boolean isRepeatable()
-	{
-		return true;
-	}
+    public boolean isRepeatable() {
+        return true;
+    }
 
-	public void writeTo( OutputStream arg0 ) throws IOException
-	{
-		try
-		{
-			arg0.write( "\r\n".getBytes() );
-			( ( MimeMultipart )message.getContent() ).writeTo( arg0 );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+    public void writeTo(OutputStream arg0) throws IOException {
+        try {
+            arg0.write("\r\n".getBytes());
+            ((MimeMultipart) message.getContent()).writeTo(arg0);
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	@Override
-	public InputStream getContent() throws IOException, IllegalStateException
-	{
-		try
-		{
-			return message.getInputStream();
-		}
-		catch( MessagingException e )
-		{
-			throw new IOException( e );
-		}
-	}
+    @Override
+    public InputStream getContent() throws IOException, IllegalStateException {
+        try {
+            return message.getInputStream();
+        } catch (MessagingException e) {
+            throw new IOException(e);
+        }
+    }
 
-	@Override
-	public boolean isStreaming()
-	{
-		return false;
-	}
+    @Override
+    public boolean isStreaming() {
+        return false;
+    }
 }

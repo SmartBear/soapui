@@ -34,49 +34,47 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
-@Category( IntegrationTest.class )
-public class WsdlImporterTestCaseTest extends JettyTestCaseBase
-{
+@Category(IntegrationTest.class)
+public class WsdlImporterTestCaseTest extends JettyTestCaseBase {
 
-	//TODO: Should be split up into several smaller methods
-	@Test
-	public void testOneWayOperationImport() throws Exception
-	{
-		replaceInFile( "wsdls/testonewayop/TestService.wsdl","8082","" + getPort());
+    //TODO: Should be split up into several smaller methods
+    @Test
+    public void testOneWayOperationImport() throws Exception {
+        replaceInFile("wsdls/testonewayop/TestService.wsdl", "8082", "" + getPort());
 
-		WsdlProject project = new WsdlProject();
-		WsdlInterface[] wsdls = WsdlImporter.importWsdl( project, "http://localhost:" + getPort() + "/wsdls/testonewayop/TestService.wsdl" );
+        WsdlProject project = new WsdlProject();
+        WsdlInterface[] wsdls = WsdlImporter.importWsdl(project, "http://localhost:" + getPort() + "/wsdls/testonewayop/TestService.wsdl");
 
-		assertThat( wsdls.length, is( 1 ) );
+        assertThat(wsdls.length, is(1));
 
-		WsdlInterface iface = wsdls[0];
+        WsdlInterface iface = wsdls[0];
 
-		assertThat( iface, is(notNullValue()) );
-		assertThat(iface.getOperationCount(), is(2) );
+        assertThat(iface, is(notNullValue()));
+        assertThat(iface.getOperationCount(), is(2));
 
-		WsdlOperation operation = iface.getOperationAt( 0 );
+        WsdlOperation operation = iface.getOperationAt(0);
 
-		assertThat( operation, is( notNullValue() ) );
-		assertThat( operation.getName(), is( "GetDefaultPageData" ) );
+        assertThat(operation, is(notNullValue()));
+        assertThat(operation.getName(), is("GetDefaultPageData"));
 
-		Definition definition = WsdlUtils.readDefinition( "http://localhost:" + getPort() + "/wsdls/testonewayop/TestService.wsdl" );
+        Definition definition = WsdlUtils.readDefinition("http://localhost:" + getPort() + "/wsdls/testonewayop/TestService.wsdl");
 
-		BindingOperation bindingOperation = operation.findBindingOperation( definition );
-		assertThat( bindingOperation, is( notNullValue() ) );
-		assertThat( operation.getBindingOperationName(), is(bindingOperation.getName()) );
+        BindingOperation bindingOperation = operation.findBindingOperation(definition);
+        assertThat(bindingOperation, is(notNullValue()));
+        assertThat(operation.getBindingOperationName(), is(bindingOperation.getName()));
 
-		assertThat( operation.getOutputName(), is( nullValue() ) );
+        assertThat(operation.getOutputName(), is(nullValue()));
 
-		WsdlRequest request = operation.addNewRequest( "TestRequest" );
-		assertThat( request, is(notNullValue()) );
+        WsdlRequest request = operation.addNewRequest("TestRequest");
+        assertThat(request, is(notNullValue()));
 
-		String requestXml = operation.createRequest( true );
-		assertThat( requestXml, is(notNullValue()) );
+        String requestXml = operation.createRequest(true);
+        assertThat(requestXml, is(notNullValue()));
 
-		request.setRequestContent( requestXml );
+        request.setRequestContent(requestXml);
 
-		Submit submit = request.submit( new WsdlSubmitContext( null ), false );
+        Submit submit = request.submit(new WsdlSubmitContext(null), false);
 
-		assertThat( submit.getResponse().getContentAsString(), containsString( "Error 404 NOT_FOUND" ));
-	}
+        assertThat(submit.getResponse().getContentAsString(), containsString("Error 404 NOT_FOUND"));
+    }
 }

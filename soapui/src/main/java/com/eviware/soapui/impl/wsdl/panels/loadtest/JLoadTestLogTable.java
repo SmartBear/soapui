@@ -67,195 +67,185 @@ import java.util.List;
 
 /**
  * Compound component for showing a LoadTestLog
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class JLoadTestLogTable extends JPanel
-{
-	private final LoadTestLog loadTestLog;
-	private JXTable logTable;
-	private PatternFilter stepFilter;
-	private PatternFilter typeFilter;
-	private JComboBox typesFilterComboBox;
-	private JComboBox stepsFilterComboBox;
-	private JButton clearErrorsButton;
-	private JLabel rowCountLabel;
-	@SuppressWarnings( "unused" )
-	private JPopupMenu popup;
-	private LoadTestLogTableModel logTableModel;
-	private JButton exportButton;
-	private LogTableModelListener logTableModelListener;
+public class JLoadTestLogTable extends JPanel {
+    private final LoadTestLog loadTestLog;
+    private JXTable logTable;
+    private PatternFilter stepFilter;
+    private PatternFilter typeFilter;
+    private JComboBox typesFilterComboBox;
+    private JComboBox stepsFilterComboBox;
+    private JButton clearErrorsButton;
+    private JLabel rowCountLabel;
+    @SuppressWarnings("unused")
+    private JPopupMenu popup;
+    private LoadTestLogTableModel logTableModel;
+    private JButton exportButton;
+    private LogTableModelListener logTableModelListener;
 
-	public JLoadTestLogTable( LoadTestLog log )
-	{
-		super( new BorderLayout() );
+    public JLoadTestLogTable(LoadTestLog log) {
+        super(new BorderLayout());
 
-		loadTestLog = log;
+        loadTestLog = log;
 
-		logTableModel = new LoadTestLogTableModel();
-		logTable = JTableFactory.getInstance().makeJXTable( logTableModel );
-		logTable.setHorizontalScrollEnabled( true );
-		logTable.setColumnControlVisible( true );
-		logTable.addMouseListener( new LoadTestLogTableMouseListener() );
+        logTableModel = new LoadTestLogTableModel();
+        logTable = JTableFactory.getInstance().makeJXTable(logTableModel);
+        logTable.setHorizontalScrollEnabled(true);
+        logTable.setColumnControlVisible(true);
+        logTable.addMouseListener(new LoadTestLogTableMouseListener());
 
-		TableColumnModel columnModel = logTable.getColumnModel();
-		columnModel.getColumn( 0 ).setMaxWidth( 5 );
-		columnModel.getColumn( 0 ).setCellRenderer( new IconTableCellRenderer() );
+        TableColumnModel columnModel = logTable.getColumnModel();
+        columnModel.getColumn(0).setMaxWidth(5);
+        columnModel.getColumn(0).setCellRenderer(new IconTableCellRenderer());
 
-		columnModel.getColumn( 1 ).setPreferredWidth( 120 );
-		columnModel.getColumn( 1 ).setCellRenderer( new TimestampTableCellRenderer() );
+        columnModel.getColumn(1).setPreferredWidth(120);
+        columnModel.getColumn(1).setCellRenderer(new TimestampTableCellRenderer());
 
-		columnModel.getColumn( 2 ).setPreferredWidth( 110 );
-		columnModel.getColumn( 3 ).setPreferredWidth( 110 );
-		columnModel.getColumn( 4 ).setPreferredWidth( 250 );
+        columnModel.getColumn(2).setPreferredWidth(110);
+        columnModel.getColumn(3).setPreferredWidth(110);
+        columnModel.getColumn(4).setPreferredWidth(250);
 
-		typeFilter = new PatternFilter( ".*", 0, 2 );
-		typeFilter.setAcceptNull( true );
-		stepFilter = new PatternFilter( ".*", 0, 3 );
-		stepFilter.setAcceptNull( true );
+        typeFilter = new PatternFilter(".*", 0, 2);
+        typeFilter.setAcceptNull(true);
+        stepFilter = new PatternFilter(".*", 0, 3);
+        stepFilter.setAcceptNull(true);
 
-		Filter[] filters = new Filter[] { typeFilter, // regex, matchflags, column
-				stepFilter // regex, matchflags, column
-		};
+        Filter[] filters = new Filter[]{typeFilter, // regex, matchflags, column
+                stepFilter // regex, matchflags, column
+        };
 
-		FilterPipeline pipeline = new FilterPipeline( filters );
-		logTable.setFilters( pipeline );
+        FilterPipeline pipeline = new FilterPipeline(filters);
+        logTable.setFilters(pipeline);
 
-		JScrollPane scrollPane = new JScrollPane( logTable );
-		add( scrollPane, BorderLayout.CENTER );
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildStatus(), BorderLayout.SOUTH );
+        JScrollPane scrollPane = new JScrollPane(logTable);
+        add(scrollPane, BorderLayout.CENTER);
+        add(buildToolbar(), BorderLayout.NORTH);
+        add(buildStatus(), BorderLayout.SOUTH);
 
-		logTableModelListener = new LogTableModelListener();
-		logTable.getModel().addTableModelListener( logTableModelListener );
+        logTableModelListener = new LogTableModelListener();
+        logTable.getModel().addTableModelListener(logTableModelListener);
 
-		logTable.setSortOrder( 1, SortOrder.ASCENDING );
-	}
+        logTable.setSortOrder(1, SortOrder.ASCENDING);
+    }
 
-	public void addNotify()
-	{
-		super.addNotify();
-		if( logTableModelListener != null )
-			logTableModel.addTableModelListener( logTableModelListener );
+    public void addNotify() {
+        super.addNotify();
+        if (logTableModelListener != null) {
+            logTableModel.addTableModelListener(logTableModelListener);
+        }
 
-		loadTestLog.addListDataListener( logTableModel );
-	}
+        loadTestLog.addListDataListener(logTableModel);
+    }
 
-	public void removeNotify()
-	{
-		super.removeNotify();
-		logTableModel.removeTableModelListener( logTableModelListener );
-		loadTestLog.removeListDataListener( logTableModel );
-	}
+    public void removeNotify() {
+        super.removeNotify();
+        logTableModel.removeTableModelListener(logTableModelListener);
+        loadTestLog.removeListDataListener(logTableModel);
+    }
 
-	private JComponent buildStatus()
-	{
-		ButtonBarBuilder builder = new ButtonBarBuilder();
-		rowCountLabel = new JLabel( "0 entries" );
-		builder.addFixed( rowCountLabel );
-		builder.addGlue();
-		builder.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		return builder.getPanel();
-	}
+    private JComponent buildStatus() {
+        ButtonBarBuilder builder = new ButtonBarBuilder();
+        rowCountLabel = new JLabel("0 entries");
+        builder.addFixed(rowCountLabel);
+        builder.addGlue();
+        builder.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        return builder.getPanel();
+    }
 
-	protected void updateRowCountLabel()
-	{
-		int c = logTableModel.getRowCount();
-		rowCountLabel.setText( c == 1 ? "1 entry" : c + " entries" );
-	}
+    protected void updateRowCountLabel() {
+        int c = logTableModel.getRowCount();
+        rowCountLabel.setText(c == 1 ? "1 entry" : c + " entries");
+    }
 
-	private JComponent buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+    private JComponent buildToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		clearErrorsButton = UISupport.createToolbarButton( new ClearErrorsAction() );
-		exportButton = UISupport.createToolbarButton( new ExportLoadTestLogAction( loadTestLog, logTable ) );
+        clearErrorsButton = UISupport.createToolbarButton(new ClearErrorsAction());
+        exportButton = UISupport.createToolbarButton(new ExportLoadTestLogAction(loadTestLog, logTable));
 
-		toolbar.add( clearErrorsButton );
-		toolbar.add( exportButton );
-		toolbar.addGlue();
+        toolbar.add(clearErrorsButton);
+        toolbar.add(exportButton);
+        toolbar.addGlue();
 
-		List<Object> steps = new ArrayList<Object>();
-		steps.add( "- All -" );
-		steps.add( "Message" );
-		for( LoadTestAssertion assertion : loadTestLog.getLoadTest().getAssertionList() )
-		{
-			steps.add( assertion.getName() );
-		}
+        List<Object> steps = new ArrayList<Object>();
+        steps.add("- All -");
+        steps.add("Message");
+        for (LoadTestAssertion assertion : loadTestLog.getLoadTest().getAssertionList()) {
+            steps.add(assertion.getName());
+        }
 
-		toolbar.add( new JLabel( "Show Types:" ) );
-		toolbar.addSeparator();
-		typesFilterComboBox = new JComboBox( steps.toArray() );
-		typesFilterComboBox.addItemListener( new ItemListener()
-		{
+        toolbar.add(new JLabel("Show Types:"));
+        toolbar.addSeparator();
+        typesFilterComboBox = new JComboBox(steps.toArray());
+        typesFilterComboBox.addItemListener(new ItemListener() {
 
-			public void itemStateChanged( ItemEvent e )
-			{
-				int ix = typesFilterComboBox.getSelectedIndex();
-				if( ix == -1 )
-					return;
+            public void itemStateChanged(ItemEvent e) {
+                int ix = typesFilterComboBox.getSelectedIndex();
+                if (ix == -1) {
+                    return;
+                }
 
-				typeFilter.setAcceptNull( ix == 0 );
+                typeFilter.setAcceptNull(ix == 0);
 
-				if( ix == 0 )
-					typeFilter.setPattern( ".*", 0 );
-				else
-					typeFilter.setPattern( typesFilterComboBox.getSelectedItem().toString(), 0 );
+                if (ix == 0) {
+                    typeFilter.setPattern(".*", 0);
+                } else {
+                    typeFilter.setPattern(typesFilterComboBox.getSelectedItem().toString(), 0);
+                }
 
-				updateRowCountLabel();
-			}
-		} );
+                updateRowCountLabel();
+            }
+        });
 
-		toolbar.add( typesFilterComboBox );
-		toolbar.addSeparator();
+        toolbar.add(typesFilterComboBox);
+        toolbar.addSeparator();
 
-		List<Object> types = new ArrayList<Object>();
-		types.add( "- All -" );
-		for( TestStep testStep : loadTestLog.getLoadTest().getTestCase().getTestStepList() )
-		{
-			types.add( testStep.getName() );
-		}
+        List<Object> types = new ArrayList<Object>();
+        types.add("- All -");
+        for (TestStep testStep : loadTestLog.getLoadTest().getTestCase().getTestStepList()) {
+            types.add(testStep.getName());
+        }
 
-		toolbar.addFixed( new JLabel( "Show Steps:" ) );
-		toolbar.addSeparator();
-		stepsFilterComboBox = new JComboBox( types.toArray() );
-		stepsFilterComboBox.addItemListener( new ItemListener()
-		{
+        toolbar.addFixed(new JLabel("Show Steps:"));
+        toolbar.addSeparator();
+        stepsFilterComboBox = new JComboBox(types.toArray());
+        stepsFilterComboBox.addItemListener(new ItemListener() {
 
-			public void itemStateChanged( ItemEvent e )
-			{
-				int ix = stepsFilterComboBox.getSelectedIndex();
-				if( ix == -1 )
-					return;
+            public void itemStateChanged(ItemEvent e) {
+                int ix = stepsFilterComboBox.getSelectedIndex();
+                if (ix == -1) {
+                    return;
+                }
 
-				stepFilter.setAcceptNull( ix == 0 );
+                stepFilter.setAcceptNull(ix == 0);
 
-				if( ix == 0 )
-					stepFilter.setPattern( ".*", 0 );
-				else
-					stepFilter.setPattern( stepsFilterComboBox.getSelectedItem().toString(), 0 );
+                if (ix == 0) {
+                    stepFilter.setPattern(".*", 0);
+                } else {
+                    stepFilter.setPattern(stepsFilterComboBox.getSelectedItem().toString(), 0);
+                }
 
-				updateRowCountLabel();
-			}
-		} );
+                updateRowCountLabel();
+            }
+        });
 
-		toolbar.addFixed( stepsFilterComboBox );
-		// toolbar.setBorder( BorderFactory.createEmptyBorder( 0, 0, 2, 0 ));
+        toolbar.addFixed(stepsFilterComboBox);
+        // toolbar.setBorder( BorderFactory.createEmptyBorder( 0, 0, 2, 0 ));
 
-		return toolbar; // builder.getPanel();
-	}
+        return toolbar; // builder.getPanel();
+    }
 
-	private final class LogTableModelListener implements TableModelListener
-	{
-		public void tableChanged( TableModelEvent e )
-		{
-			updateRowCountLabel();
-		}
-	}
+    private final class LogTableModelListener implements TableModelListener {
+        public void tableChanged(TableModelEvent e) {
+            updateRowCountLabel();
+        }
+    }
 
 	/*
-	 * 
+     *
 	 * private class SelectStepFilterAction extends AbstractAction { private
 	 * final String filter;
 	 * 
@@ -275,223 +265,214 @@ public class JLoadTestLogTable extends JPanel
 	 * filter, 0 ); } }
 	 */
 
-	private class LoadTestLogTableModel extends AbstractTableModel implements ListDataListener
-	{
-		public LoadTestLogTableModel()
-		{
-		}
+    private class LoadTestLogTableModel extends AbstractTableModel implements ListDataListener {
+        public LoadTestLogTableModel() {
+        }
 
-		public int getRowCount()
-		{
-			return loadTestLog.getSize();
-		}
+        public int getRowCount() {
+            return loadTestLog.getSize();
+        }
 
-		public int getColumnCount()
-		{
-			return 5;
-		}
+        public int getColumnCount() {
+            return 5;
+        }
 
-		public Class<?> getColumnClass( int columnIndex )
-		{
-			switch( columnIndex )
-			{
-			case 0 :
-				return ImageIcon.class;
-			case 1 :
-				return Date.class;
-			default :
-				return String.class;
-			}
-		}
+        public Class<?> getColumnClass(int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return ImageIcon.class;
+                case 1:
+                    return Date.class;
+                default:
+                    return String.class;
+            }
+        }
 
-		public String getColumnName( int column )
-		{
-			switch( column )
-			{
-			case 0 :
-				return " ";
-			case 1 :
-				return "time";
-			case 2 :
-				return "type";
-			case 3 :
-				return "step";
-			case 4 :
-				return "message";
-			}
+        public String getColumnName(int column) {
+            switch (column) {
+                case 0:
+                    return " ";
+                case 1:
+                    return "time";
+                case 2:
+                    return "type";
+                case 3:
+                    return "step";
+                case 4:
+                    return "message";
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			if( rowIndex == -1 )
-				return null;
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            if (rowIndex == -1)
 
-			LoadTestLogEntry entry = ( LoadTestLogEntry )loadTestLog.getElementAt( rowIndex );
+             eturn  ull;
 
-			switch( columnIndex )
-			{
-			case 0 :
-				return entry.getIcon();
-			case 1 :
-				return entry.getTimeStamp();
-			case 2 :
-				return entry.getType();
-			case 3 :
-				return entry.getTargetStepName();
-			case 4 :
-				return entry.getMessage();
-			}
 
-			return null;
-		}
 
-		public void intervalAdded( ListDataEvent e )
-		{
-			fireTableRowsInserted( e.getIndex0(), e.getIndex1() );
-		}
+            LoadTestLogEntry entry = (LoadTestLogEntry) loadTestLog.getElementAt(rowIndex);
 
-		public void intervalRemoved( ListDataEvent e )
-		{
-			fireTableRowsDeleted( e.getIndex0(), e.getIndex1() );
-		}
+            switch (columnIndex) {
+                case 0:
+                    return entry.getIcon();
+                case 1:
+                    return entry.getTimeStamp();
+                case 2:
+                    return entry.getType();
+                case 3:
+                    return entry.getTargetStepName();
+                case 4:
+                    return entry.getMessage();
+            }
 
-		public void contentsChanged( ListDataEvent e )
-		{
-			fireTableDataChanged();
-		}
-	}
+            return null;
+        }
 
-	private static final class IconTableCellRenderer extends DefaultTableCellRenderer
-	{
-		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column )
-		{
-			if( value != null )
-				setIcon( ( Icon )value );
+        public void intervalAdded(ListDataEvent e) {
+            fireTableRowsInserted(e.getIndex0(), e.getIndex1());
+        }
 
-			if( isSelected )
-			{
-				setBackground( table.getSelectionBackground() );
-				setForeground( table.getSelectionForeground() );
-			}
-			else
-			{
-				setBackground( table.getBackground() );
-				setForeground( table.getForeground() );
-			}
+        public void intervalRemoved(ListDataEvent e) {
+            fireTableRowsDeleted(e.getIndex0(), e.getIndex1());
+        }
 
-			return this;
-		}
-	}
+        public void contentsChanged(ListDataEvent e) {
+            fireTableDataChanged();
+        }
+    }
 
-	private static final class TimestampTableCellRenderer extends DefaultTableCellRenderer
-	{
+    private static final class IconTableCellRenderer extends DefaultTableCellRenderer {
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                                                       int row, int column) {
+            if (value != null)
 
-		private TimestampTableCellRenderer()
-		{
-		}
+         etIcon((Icon)  alue);
 
-		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column )
-		{
-			if( value != null )
-				setText( DateUtil.formatExtraFull( new Date( ( Long )value ) ) );
 
-			if( isSelected )
-			{
-				setBackground( table.getSelectionBackground() );
-				setForeground( table.getSelectionForeground() );
-			}
-			else
-			{
-				setBackground( table.getBackground() );
-				setForeground( table.getForeground() );
-			}
 
-			return this;
-		}
-	}
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
 
-	public class ClearErrorsAction extends AbstractAction
-	{
-		public ClearErrorsAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clear_errors.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes all errors from the LoadTest log" );
-		}
+            return this;
+        }
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			loadTestLog.clearErrors();
-		}
-	}
+    private static final class TimestampTableCellRenderer extends DefaultTableCellRenderer {
 
-	private final class LoadTestLogTableMouseListener extends MouseAdapter
-	{
-		public void mouseClicked( MouseEvent e )
-		{
-			if( e.getClickCount() > 1 )
-			{
-				int selectedRow = logTable.getSelectedRow();
-				if( selectedRow < 0 )
-					return;
+        private TimestampTableCellRenderer() {
+        }
 
-				int row = logTable.convertRowIndexToModel( selectedRow );
-				if( row < 0 )
-					return;
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                                                       int row, int column) {
+            if (value != null)
 
-				LoadTestLogEntry entry = ( LoadTestLogEntry )loadTestLog.getElementAt( row );
-				ActionList actions = entry.getActions();
-				if( actions != null )
-					actions.performDefaultAction( new ActionEvent( logTable, 0, null ) );
-			}
-		}
+             etText(DateUtil.formatExtraFull(new  ate((Long)  alue)));
 
-		public void mousePressed( MouseEvent e )
-		{
-			if( e.isPopupTrigger() )
-			{
-				showPopup( e );
-			}
-		}
 
-		public void mouseReleased( MouseEvent e )
-		{
-			if( e.isPopupTrigger() )
-			{
-				showPopup( e );
-			}
-		}
-	}
 
-	public void showPopup( MouseEvent e )
-	{
-		int selectedRow = logTable.rowAtPoint( e.getPoint() );
-		if( selectedRow == -1 )
-			return;
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
 
-		if( logTable.getSelectedRow() != selectedRow )
-		{
-			logTable.getSelectionModel().setSelectionInterval( selectedRow, selectedRow );
-		}
+            return this;
+        }
+    }
 
-		int row = logTable.convertRowIndexToModel( selectedRow );
-		if( row < 0 )
-			return;
+    public class ClearErrorsAction extends AbstractAction {
+        public ClearErrorsAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_errors.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Removes all errors from the LoadTest log");
+        }
 
-		LoadTestLogEntry entry = ( LoadTestLogEntry )loadTestLog.getElementAt( row );
-		ActionList actions = entry.getActions();
+        public void actionPerformed(ActionEvent e) {
+            loadTestLog.clearErrors();
+        }
+    }
 
-		if( actions == null || actions.getActionCount() == 0 )
-			return;
+    private final class LoadTestLogTableMouseListener extends MouseAdapter {
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() > 1) {
+                int selectedRow = logTable.getSelectedRow();
+                if (selectedRow < 0)
 
-		JPopupMenu popup = ActionSupport.buildPopup( actions );
-		popup.setInvoker( logTable );
+         eturn;
 
-		popup.setLocation( ( int )( logTable.getLocationOnScreen().getX() + e.getPoint().getX() ), ( int )( logTable
-				.getLocationOnScreen().getY() + e.getPoint().getY() ) );
-		popup.setVisible( true );
-	}
+
+
+                int row = logTable.convertRowIndexToModel(selectedRow);
+                if (row < 0)
+
+             eturn;
+
+
+
+                LoadTestLogEntry entry = (LoadTestLogEntry) loadTestLog.getElementAt(row);
+                ActionList actions = entry.getActions();
+                if (actions != null)
+
+             ctions.performDefaultAction(new  ctionEvent(logTable,  ,  ull));
+
+
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
+        }
+
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
+        }
+    }
+
+    public void showPopup(MouseEvent e) {
+        int selectedRow = logTable.rowAtPoint(e.getPoint());
+        if (selectedRow == -1)
+
+         eturn;
+
+
+
+        if (logTable.getSelectedRow() != selectedRow) {
+            logTable.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
+        }
+
+        int row = logTable.convertRowIndexToModel(selectedRow);
+        if (row < 0)
+
+             eturn;
+
+
+
+        LoadTestLogEntry entry = (LoadTestLogEntry) loadTestLog.getElementAt(row);
+        ActionList actions = entry.getActions();
+
+        if (actions == null || actions.getActionCount() == 0)
+
+             eturn;
+
+
+
+        JPopupMenu popup = ActionSupport.buildPopup(actions);
+        popup.setInvoker(logTable);
+
+        popup.setLocation((int) (logTable.getLocationOnScreen().getX() + e.getPoint().getX()), (int) (logTable
+                .getLocationOnScreen().getY() + e.getPoint().getY()));
+        popup.setVisible(true);
+    }
 }

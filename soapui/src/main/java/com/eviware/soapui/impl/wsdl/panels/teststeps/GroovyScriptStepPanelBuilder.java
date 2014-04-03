@@ -22,23 +22,19 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for WsdlGroovyTestStep
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class GroovyScriptStepPanelBuilder extends EmptyPanelBuilder<WsdlGroovyScriptTestStep>
-{
-	public GroovyScriptStepPanelBuilder()
-	{
-	}
+public class GroovyScriptStepPanelBuilder extends EmptyPanelBuilder<WsdlGroovyScriptTestStep> {
+    public GroovyScriptStepPanelBuilder() {
+    }
 
-	public DesktopPanel buildDesktopPanel( WsdlGroovyScriptTestStep testStep )
-	{
-		return new GroovyScriptStepDesktopPanel( testStep );
-	}
+    public DesktopPanel buildDesktopPanel(WsdlGroovyScriptTestStep testStep) {
+        return new GroovyScriptStepDesktopPanel(testStep);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 }

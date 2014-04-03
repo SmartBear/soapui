@@ -31,29 +31,26 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public class WsdlRequestStepTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( WsdlRequestStepTestCase.class );
-	}
+public class WsdlRequestStepTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(WsdlRequestStepTestCase.class);
+    }
 
-	@Test
-	public void executesAndReturnsResult() throws Exception
-	{
-		File sampleProjectFile = new File( WsdlRequestStepTestCase.class.getResource( "/sample-soapui-project.xml" ).toURI() );
-		WsdlProject project = new WsdlProject( sampleProjectFile.getAbsolutePath()  );
-		TestSuite testSuite = project.getTestSuiteByName( "Test Suite" );
-		com.eviware.soapui.model.testsuite.TestCase testCase = testSuite.getTestCaseByName( "Test Conversions" );
+    @Test
+    public void executesAndReturnsResult() throws Exception {
+        File sampleProjectFile = new File(WsdlRequestStepTestCase.class.getResource("/sample-soapui-project.xml").toURI());
+        WsdlProject project = new WsdlProject(sampleProjectFile.getAbsolutePath());
+        TestSuite testSuite = project.getTestSuiteByName("Test Suite");
+        com.eviware.soapui.model.testsuite.TestCase testCase = testSuite.getTestCaseByName("Test Conversions");
 
-		WsdlTestRequestStep testStep = ( WsdlTestRequestStep )testCase.getTestStepByName( "SEK to USD Test" );
+        WsdlTestRequestStep testStep = (WsdlTestRequestStep) testCase.getTestStepByName("SEK to USD Test");
 
-		MockTestRunner testRunner = new MockTestRunner( testStep.getTestCase() );
-		MockTestRunContext testRunContext = new MockTestRunContext( testRunner, testStep );
+        MockTestRunner testRunner = new MockTestRunner(testStep.getTestCase());
+        MockTestRunContext testRunContext = new MockTestRunContext(testRunner, testStep);
 
-		TestStepResult result = testStep.run( testRunner, testRunContext );
+        TestStepResult result = testStep.run(testRunner, testRunContext);
 
-		WsdlTestRequestStepResult wsdlResult = ( WsdlTestRequestStepResult )result;
-		assertNotNull( wsdlResult );
-	}
+        WsdlTestRequestStepResult wsdlResult = (WsdlTestRequestStepResult) result;
+        assertNotNull(wsdlResult);
+    }
 }

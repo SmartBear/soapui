@@ -25,39 +25,34 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for WsdlMockOperation
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WsdlMockOperationPanelBuilder extends EmptyPanelBuilder<WsdlMockOperation>
-{
-	public boolean hasOverviewPanel()
-	{
-		return true;
-	}
+public class WsdlMockOperationPanelBuilder extends EmptyPanelBuilder<WsdlMockOperation> {
+    public boolean hasOverviewPanel() {
+        return true;
+    }
 
-	public Component buildOverviewPanel( WsdlMockOperation mockOperation )
-	{
-		JPropertiesTable<WsdlMockOperation> table = new JPropertiesTable<WsdlMockOperation>( "Mock Operation" );
-		table = new JPropertiesTable<WsdlMockOperation>( "MockOperation Properties" );
-		table.addProperty( "Name", "name", true );
-		table.addProperty( "Description", "description", true );
-		table.addProperty( "WSDL Operation", "wsdlOperationName", false );
-		table.addProperty( "Dispatch Style", "dispatchStyle", false );
-		table.setPropertyObject( mockOperation );
+    public Component buildOverviewPanel(WsdlMockOperation mockOperation) {
+        JPropertiesTable<WsdlMockOperation> table = new JPropertiesTable<WsdlMockOperation>("Mock Operation");
+        table = new JPropertiesTable<WsdlMockOperation>("MockOperation Properties");
+        table.addProperty("Name", "name", true);
+        table.addProperty("Description", "description", true);
+        table.addProperty("WSDL Operation", "wsdlOperationName", false);
+        table.addProperty("Dispatch Style", "dispatchStyle", false);
+        table.setPropertyObject(mockOperation);
 
-		return table;
-	}
+        return table;
+    }
 
-	@Override
-	public DesktopPanel buildDesktopPanel( WsdlMockOperation mockOperation )
-	{
-		return new WsdlMockOperationDesktopPanel( mockOperation );
-	}
+    @Override
+    public DesktopPanel buildDesktopPanel(WsdlMockOperation mockOperation) {
+        return new WsdlMockOperationDesktopPanel(mockOperation);
+    }
 
-	@Override
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    @Override
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 }

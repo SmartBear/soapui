@@ -31,87 +31,74 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-public class TimestampEntry extends WssEntryBase
-{
-	public static final String TYPE = "Timestamp";
+public class TimestampEntry extends WssEntryBase {
+    public static final String TYPE = "Timestamp";
 
-	private int timeToLive;
-	private boolean strictTimestamp;
+    private int timeToLive;
+    private boolean strictTimestamp;
 
-	public void init( WSSEntryConfig config, OutgoingWss container )
-	{
-		super.init( config, container, TYPE );
-	}
+    public void init(WSSEntryConfig config, OutgoingWss container) {
+        super.init(config, container, TYPE);
+    }
 
-	@Override
-	protected JComponent buildUI()
-	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<TimestampEntry>( this ) );
-		form.addSpace( 5 );
-		form.appendTextField( "timeToLive", "Time To Live", "Sets the TimeToLive value for the Timestamp Token" );
-		form.appendCheckBox( "strictTimestamp", "Millisecond Precision", "Sets precision of timestamp to milliseconds" );
+    @Override
+    protected JComponent buildUI() {
+        SimpleBindingForm form = new SimpleBindingForm(new PresentationModel<TimestampEntry>(this));
+        form.addSpace(5);
+        form.appendTextField("timeToLive", "Time To Live", "Sets the TimeToLive value for the Timestamp Token");
+        form.appendCheckBox("strictTimestamp", "Millisecond Precision", "Sets precision of timestamp to milliseconds");
 
-		return form.getPanel();
-	}
+        return form.getPanel();
+    }
 
-	@Override
-	protected void load( XmlObjectConfigurationReader reader )
-	{
-		timeToLive = reader.readInt( "timeToLive", 0 );
-		strictTimestamp = reader.readBoolean( "strictTimestamp", true );
-	}
+    @Override
+    protected void load(XmlObjectConfigurationReader reader) {
+        timeToLive = reader.readInt("timeToLive", 0);
+        strictTimestamp = reader.readBoolean("strictTimestamp", true);
+    }
 
-	@Override
-	protected void save( XmlObjectConfigurationBuilder builder )
-	{
-		builder.add( "timeToLive", timeToLive );
-		builder.add( "strictTimestamp", strictTimestamp );
-	}
+    @Override
+    protected void save(XmlObjectConfigurationBuilder builder) {
+        builder.add("timeToLive", timeToLive);
+        builder.add("strictTimestamp", strictTimestamp);
+    }
 
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
-	{
-		if( timeToLive <= 0 )
-			return;
+    public void process(WSSecHeader secHeader, Document doc, PropertyExpansionContext context) {
+        if (timeToLive <= 0) {
+            return;
+        }
 
-		WSSecTimestamp timestamp = new WSSecTimestamp();
-		timestamp.setTimeToLive( timeToLive );
+        WSSecTimestamp timestamp = new WSSecTimestamp();
+        timestamp.setTimeToLive(timeToLive);
 
-		if( !strictTimestamp )
-		{
-			WSSConfig wsc = WSSConfig.getNewInstance();
-			wsc.setPrecisionInMilliSeconds( false );
-			wsc.setTimeStampStrict( false );
-			timestamp.setWsConfig( wsc );
-		}
+        if (!strictTimestamp) {
+            WSSConfig wsc = WSSConfig.getNewInstance();
+            wsc.setPrecisionInMilliSeconds(false);
+            wsc.setTimeStampStrict(false);
+            timestamp.setWsConfig(wsc);
+        }
 
-		timestamp.build( doc, secHeader );
-	}
+        timestamp.build(doc, secHeader);
+    }
 
-	public String getTimeToLive()
-	{
-		return String.valueOf( timeToLive );
-	}
+    public String getTimeToLive() {
+        return String.valueOf(timeToLive);
+    }
 
-	public boolean isStrictTimestamp()
-	{
-		return strictTimestamp;
-	}
+    public boolean isStrictTimestamp() {
+        return strictTimestamp;
+    }
 
-	public void setStrictTimestamp( boolean strictTimestamp )
-	{
-		this.strictTimestamp = strictTimestamp;
-		saveConfig();
-	}
+    public void setStrictTimestamp(boolean strictTimestamp) {
+        this.strictTimestamp = strictTimestamp;
+        saveConfig();
+    }
 
-	public void setTimeToLive( String timeToLive )
-	{
-		try
-		{
-			this.timeToLive = Integer.valueOf( timeToLive );
-			saveConfig();
-		}
-		catch( Exception e )
-		{
-		}
-	}
+    public void setTimeToLive(String timeToLive) {
+        try {
+            this.timeToLive = Integer.valueOf(timeToLive);
+            saveConfig();
+        } catch (Exception e) {
+        }
+    }
 }

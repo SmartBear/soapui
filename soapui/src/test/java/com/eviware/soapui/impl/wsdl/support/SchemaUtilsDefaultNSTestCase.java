@@ -29,19 +29,16 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 
-public class SchemaUtilsDefaultNSTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( SchemaUtilsDefaultNSTestCase.class );
-	}
+public class SchemaUtilsDefaultNSTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(SchemaUtilsDefaultNSTestCase.class);
+    }
 
-	@Test
-	public void testLoadNS() throws Exception
-	{
-		SoapUI.initDefaultCore();
-		String wsdlUriString = SchemaUtilsDefaultNSTestCase.class.getResource( "/chameleon/chameleon.wsdl" ).toString();
-		SchemaTypeSystem sts = SchemaUtils.loadSchemaTypes( wsdlUriString, new UrlWsdlLoader( wsdlUriString ) );
-		assertNotNull( sts );
-	}
+    @Test
+    public void testLoadNS() throws Exception {
+        SoapUI.initDefaultCore();
+        String wsdlUriString = SchemaUtilsDefaultNSTestCase.class.getResource("/chameleon/chameleon.wsdl").toString();
+        SchemaTypeSystem sts = SchemaUtils.loadSchemaTypes(wsdlUriString, new UrlWsdlLoader(wsdlUriString));
+        assertNotNull(sts);
+    }
 }

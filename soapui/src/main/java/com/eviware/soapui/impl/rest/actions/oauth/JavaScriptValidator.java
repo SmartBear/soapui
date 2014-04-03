@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.oauth;
+*/
+package com.eviware.soapui.impl.rest.actions.oauth;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.EvaluatorException;
@@ -20,20 +21,15 @@ import org.mozilla.javascript.EvaluatorException;
 /**
  * Simple Javascript syntax validator.
  */
-public class JavaScriptValidator
-{
-	public JavaScriptValidationError validate( String script )
-	{
-		Context mozillaJavaScriptContext = Context.enter();
-		try
-		{
-			mozillaJavaScriptContext.compileString( script, "scriptToValidate", 1, null );
-			return null;
-		}
-		catch( EvaluatorException e )
-		{
-			return new JavaScriptValidationError( e.getMessage(), e.lineNumber());
-		}
-	}
+public class JavaScriptValidator {
+    public JavaScriptValidationError validate(String script) {
+        Context mozillaJavaScriptContext = Context.enter();
+        try {
+            mozillaJavaScriptContext.compileString(script, "scriptToValidate", 1, null);
+            return null;
+        } catch (EvaluatorException e) {
+            return new JavaScriptValidationError(e.getMessage(), e.lineNumber());
+        }
+    }
 
 }

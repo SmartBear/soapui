@@ -25,31 +25,26 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for AMFRequestTestStep
- * 
+ *
  * @author nebojsa.tasic
  */
 
-public class AMFRequestTestStepPanelBuilder extends EmptyPanelBuilder<AMFRequestTestStep>
-{
-	public AMFRequestTestStepPanelBuilder()
-	{
-	}
+public class AMFRequestTestStepPanelBuilder extends EmptyPanelBuilder<AMFRequestTestStep> {
+    public AMFRequestTestStepPanelBuilder() {
+    }
 
-	public DesktopPanel buildDesktopPanel( AMFRequestTestStep testStep )
-	{
-		return new AMFRequestTestStepDesktopPanel( testStep );
-	}
+    public DesktopPanel buildDesktopPanel(AMFRequestTestStep testStep) {
+        return new AMFRequestTestStepDesktopPanel(testStep);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	@Override
-	public Component buildOverviewPanel( AMFRequestTestStep modelItem )
-	{
-		JPropertiesTable<AMFRequestTestStep> table = buildDefaultProperties( modelItem, "AMFRequestTestStep Properties" );
-		table.addProperty( "Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS );
-		return table;
-	}
+    @Override
+    public Component buildOverviewPanel(AMFRequestTestStep modelItem) {
+        JPropertiesTable<AMFRequestTestStep> table = buildDefaultProperties(modelItem, "AMFRequestTestStep Properties");
+        table.addProperty("Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS);
+        return table;
+    }
 }

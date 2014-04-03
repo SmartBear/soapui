@@ -22,47 +22,42 @@ import com.eviware.soapui.support.types.StringList;
 
 /**
  * Default SoapUIActionGroup implementation
- * 
+ *
  * @author ole.matzura
  */
 
-public class DefaultSoapUIActionGroup<T extends ModelItem> extends AbstractSoapUIActionGroup<T>
-{
-	private SoapUIActionMappingList<T> mappings = new SoapUIActionMappingList<T>();
-	private StringList ids = new StringList();
+public class DefaultSoapUIActionGroup<T extends ModelItem> extends AbstractSoapUIActionGroup<T> {
+    private SoapUIActionMappingList<T> mappings = new SoapUIActionMappingList<T>();
+    private StringList ids = new StringList();
 
-	public DefaultSoapUIActionGroup( String id, String name )
-	{
-		super( id, name );
-	}
+    public DefaultSoapUIActionGroup(String id, String name) {
+        super(id, name);
+    }
 
-	public SoapUIActionMappingList<T> getActionMappings( T modelItem )
-	{
-		return mappings;
-	}
+    public SoapUIActionMappingList<T> getActionMappings(T modelItem) {
+        return mappings;
+    }
 
-	@Override
-	public SoapUIActionMapping<T> addMapping( String id, int index, SoapUIActionMapping<T> mapping )
-	{
-		if( index == -1 || index >= mappings.size() )
-			return addMapping( id, mapping );
+    @Override
+    public SoapUIActionMapping<T> addMapping(String id, int index, SoapUIActionMapping<T> mapping) {
+        if (index == -1 || index >= mappings.size()) {
+            return addMapping(id, mapping);
+        }
 
-		mappings.add( index, mapping );
-		ids.add( index, id );
-		return mapping;
-	}
+        mappings.add(index, mapping);
+        ids.add(index, id);
+        return mapping;
+    }
 
-	@Override
-	public SoapUIActionMapping<T> addMapping( String id, SoapUIActionMapping<T> mapping )
-	{
-		mappings.add( mapping );
-		ids.add( id );
-		return mapping;
-	}
+    @Override
+    public SoapUIActionMapping<T> addMapping(String id, SoapUIActionMapping<T> mapping) {
+        mappings.add(mapping);
+        ids.add(id);
+        return mapping;
+    }
 
-	@Override
-	public int getMappingIndex( String positionRef )
-	{
-		return ids.indexOf( positionRef );
-	}
+    @Override
+    public int getMappingIndex(String positionRef) {
+        return ids.indexOf(positionRef);
+    }
 }

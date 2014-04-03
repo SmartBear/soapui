@@ -18,85 +18,68 @@ package com.eviware.soapui.model.environment;
 import com.eviware.soapui.config.ServiceConfig;
 import com.eviware.soapui.model.project.Project;
 
-public class DefaultEnvironment implements Environment
-{
+public class DefaultEnvironment implements Environment {
 
-	public static final String NAME = "Default";
+    public static final String NAME = "Default";
 
-	private DefaultEnvironment()
-	{
-	}
+    private DefaultEnvironment() {
+    }
 
-	private static class DefaultEnvironmentHolder
-	{
-		public static final DefaultEnvironment instance = new DefaultEnvironment();
-	}
+    private static class DefaultEnvironmentHolder {
+        public static final DefaultEnvironment instance = new DefaultEnvironment();
+    }
 
-	public static DefaultEnvironment getInstance()
-	{
-		return DefaultEnvironmentHolder.instance;
-	}
+    public static DefaultEnvironment getInstance() {
+        return DefaultEnvironmentHolder.instance;
+    }
 
-	public String getName()
-	{
-		return NAME;
-	}
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public boolean equals( Object obj )
-	{
-		return( obj instanceof DefaultEnvironment );
-	}
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof DefaultEnvironment);
+    }
 
-	@Override
-	public int hashCode()
-	{
-		return getName().hashCode();
-	}
+    @Override
+    public int hashCode() {
+        return getName().hashCode();
+    }
 
-	public void setProject( Project project )
-	{
-	}
+    public void setProject(Project project) {
+    }
 
-	public Project getProject()
-	{
-		return null;
-	}
+    public Project getProject() {
+        return null;
+    }
 
-	public void release()
-	{
-	}
+    public void release() {
+    }
 
-	public Service addNewService( String name, ServiceConfig.Type.Enum serviceType )
-	{
-		return null;
-	}
+    public Service addNewService(String name, ServiceConfig.Type.Enum serviceType) {
+        return null;
+    }
 
-	public void removeService( Service service )
-	{
-	}
+    public void removeService(Service service) {
+    }
 
-	public Property addNewProperty( String name, String value )
-	{
-		return null;
-	}
+    public Property addNewProperty(String name, String value) {
+        return null;
+    }
 
-	public void removeProperty( Property property )
-	{
-	}
+    public void removeProperty(Property property) {
+    }
 
-	public void changePropertyName( String name, String value )
-	{
-	}
+    public void changePropertyName(String name, String value) {
+    }
 
-	public void moveProperty( String name, int idx )
-	{
-	}
+    public void moveProperty(String name, int idx) {
+    }
 
-	@Override
-	public void setName( String name )
-	{
-		// TODO Auto-generated method stub
-	}
+    @Override
+    public void setName(String name) {
+        // TODO Auto-generated method stub
+    }
 
 }

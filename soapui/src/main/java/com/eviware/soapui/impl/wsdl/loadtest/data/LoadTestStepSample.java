@@ -21,49 +21,42 @@ import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 
 /**
  * Base class for a LoadTest sample
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class LoadTestStepSample
-{
-	private long size;
-	private TestStepStatus status;
-	private long timeTaken;
-	private String[] messages;
-	private long timeStamp;
+public class LoadTestStepSample {
+    private long size;
+    private TestStepStatus status;
+    private long timeTaken;
+    private String[] messages;
+    private long timeStamp;
 
-	LoadTestStepSample( TestStepResult result )
-	{
-		size = result.getSize();
-		status = result.getStatus();
-		timeTaken = result.getTimeTaken();
-		messages = result.getMessages();
-		timeStamp = result.getTimeStamp();
-	}
+    LoadTestStepSample(TestStepResult result) {
+        size = result.getSize();
+        status = result.getStatus();
+        timeTaken = result.getTimeTaken();
+        messages = result.getMessages();
+        timeStamp = result.getTimeStamp();
+    }
 
-	public String[] getMessages()
-	{
-		return messages.clone();
-	}
+    public String[] getMessages() {
+        return messages.clone();
+    }
 
-	public long getSize()
-	{
-		return size;
-	}
+    public long getSize() {
+        return size;
+    }
 
-	public TestStepStatus getStatus()
-	{
-		return status;
-	}
+    public TestStepStatus getStatus() {
+        return status;
+    }
 
-	public long getTimeStamp()
-	{
-		return timeStamp;
-	}
+    public long getTimeStamp() {
+        return timeStamp;
+    }
 
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
+    public long getTimeTaken() {
+        return timeTaken;
+    }
 }

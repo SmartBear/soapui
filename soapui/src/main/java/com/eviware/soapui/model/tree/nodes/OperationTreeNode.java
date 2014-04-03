@@ -28,65 +28,56 @@ import com.eviware.soapui.settings.UISettings;
 
 /**
  * SoapUITreeNode for Operation implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class OperationTreeNode extends AbstractModelItemTreeNode<Operation>
-{
-	private List<RequestTreeNode> requestNodes = new ArrayList<RequestTreeNode>();
-	private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
+public class OperationTreeNode extends AbstractModelItemTreeNode<Operation> {
+    private List<RequestTreeNode> requestNodes = new ArrayList<RequestTreeNode>();
+    private ReorderPropertyChangeListener propertyChangeListener = new ReorderPropertyChangeListener();
 
-	public OperationTreeNode( Operation operation, SoapUITreeModel treeModel )
-	{
-		super( operation, operation.getInterface(), treeModel );
+    public OperationTreeNode(Operation operation, SoapUITreeModel treeModel) {
+        super(operation, operation.getInterface(), treeModel);
 
-		for( int c = 0; c < operation.getRequestCount(); c++ )
-		{
-			Request request = operation.getRequestAt( c );
-			request.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
-			requestNodes.add( new RequestTreeNode( request, getTreeModel() ) );
-		}
+        for (int c = 0; c < operation.getRequestCount(); c++) {
+            Request request = operation.getRequestAt(c);
+            request.addPropertyChangeListener(Request.NAME_PROPERTY, propertyChangeListener);
+            requestNodes.add(new RequestTreeNode(request, getTreeModel()));
+        }
 
-		initOrdering( requestNodes, UISettings.ORDER_REQUESTS );
-		treeModel.mapModelItems( requestNodes );
-	}
+        initOrdering(requestNodes, UISettings.ORDER_REQUESTS);
+        treeModel.mapModelItems(requestNodes);
+    }
 
-	public void release()
-	{
-		super.release();
+    public void release() {
+        super.release();
 
-		for( RequestTreeNode treeNode : requestNodes )
-		{
-			treeNode.getModelItem().removePropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
-			treeNode.release();
-		}
-	}
+        for (RequestTreeNode treeNode : requestNodes) {
+            treeNode.getModelItem().removePropertyChangeListener(Request.NAME_PROPERTY, propertyChangeListener);
+            treeNode.release();
+        }
+    }
 
-	public Operation getOperation()
-	{
-		return ( Operation )getModelItem();
-	}
+    public Operation getOperation() {
+        return (Operation) getModelItem();
+    }
 
-	public void requestAdded( Request request )
-	{
-		RequestTreeNode requestTreeNode = new RequestTreeNode( request, getTreeModel() );
-		requestNodes.add( requestTreeNode );
-		reorder( false );
-		request.addPropertyChangeListener( Request.NAME_PROPERTY, propertyChangeListener );
-		getTreeModel().notifyNodeInserted( requestTreeNode );
-	}
+    public void requestAdded(Request request) {
+        RequestTreeNode requestTreeNode = new RequestTreeNode(request, getTreeModel());
+        requestNodes.add(requestTreeNode);
+        reorder(false);
+        request.addPropertyChangeListener(Request.NAME_PROPERTY, propertyChangeListener);
+        getTreeModel().notifyNodeInserted(requestTreeNode);
+    }
 
-	public void requestRemoved( Request request )
-	{
-		SoapUITreeNode requestTreeNode = getTreeModel().getTreeNode( request );
-		if( requestNodes.contains( requestTreeNode ) )
-		{
-			getTreeModel().notifyNodeRemoved( requestTreeNode );
-			requestNodes.remove( requestTreeNode );
-			request.removePropertyChangeListener( propertyChangeListener );
-		}
-		else
-			throw new RuntimeException( "Removing unknown request" );
-	}
+    public void requestRemoved(Request request) {
+        SoapUITreeNode requestTreeNode = getTreeModel().getTreeNode(request);
+        if (requestNodes.contains(requestTreeNode)) {
+            getTreeModel().notifyNodeRemoved(requestTreeNode);
+            requestNodes.remove(requestTreeNode);
+            request.removePropertyChangeListener(propertyChangeListener);
+        } else {
+            throw new RuntimeException("Removing unknown request");
+        }
+    }
 }

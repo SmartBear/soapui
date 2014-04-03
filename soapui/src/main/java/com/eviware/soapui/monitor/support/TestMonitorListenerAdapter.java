@@ -24,41 +24,32 @@ import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * Adapter for TestMonitorListener implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TestMonitorListenerAdapter implements TestMonitorListener
-{
-	public void loadTestStarted( LoadTestRunner runner )
-	{
-	}
+public class TestMonitorListenerAdapter implements TestMonitorListener {
+    public void loadTestStarted(LoadTestRunner runner) {
+    }
 
-	public void loadTestFinished( LoadTestRunner runner )
-	{
-	}
+    public void loadTestFinished(LoadTestRunner runner) {
+    }
 
-	public void securityTestStarted( SecurityTestRunner runner )
-	{
-	}
+    public void securityTestStarted(SecurityTestRunner runner) {
+    }
 
-	public void securityTestFinished( SecurityTestRunner runner )
-	{
-	}
+    public void securityTestFinished(SecurityTestRunner runner) {
+    }
 
-	public void testCaseStarted( TestCaseRunner runner )
-	{
-	}
+    public void testCaseStarted(TestCaseRunner runner) {
+    }
 
-	public void testCaseFinished( TestCaseRunner runner )
-	{
-	}
+    public void testCaseFinished(TestCaseRunner runner) {
+    }
 
-	public void mockServiceStarted( MockRunner runner )
-	{
-	}
+    public void mockServiceStarted(MockRunner runner) {
+    }
 
-	public void mockServiceStopped( MockRunner runner )
-	{
-	}
+    public void mockServiceStopped(MockRunner runner) {
+    }
 }

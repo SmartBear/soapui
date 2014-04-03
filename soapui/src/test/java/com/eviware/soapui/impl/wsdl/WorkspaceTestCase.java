@@ -28,22 +28,18 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.model.workspace.WorkspaceFactory;
 
-public class WorkspaceTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( WorkspaceTestCase.class );
-	}
+public class WorkspaceTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(WorkspaceTestCase.class);
+    }
 
-	@Test
-	public void testWorkspaceImpl() throws Exception
-	{
-		Workspace workspace = WorkspaceFactory.getInstance().openWorkspace(
-				System.getProperty( "user.home", "." ) + File.separatorChar + SoapUI.DEFAULT_WORKSPACE_FILE, null );
+    @Test
+    public void testWorkspaceImpl() throws Exception {
+        Workspace workspace = WorkspaceFactory.getInstance().openWorkspace(
+                System.getProperty("user.home", ".") + File.separatorChar + SoapUI.DEFAULT_WORKSPACE_FILE, null);
 
-		for( int c = 0; c < workspace.getProjectCount(); c++ )
-		{
-			assertNotNull( workspace.getProjectAt( c ).getName() );
-		}
-	}
+        for (int c = 0; c < workspace.getProjectCount(); c++) {
+            assertNotNull(workspace.getProjectAt(c).getName());
+        }
+    }
 }

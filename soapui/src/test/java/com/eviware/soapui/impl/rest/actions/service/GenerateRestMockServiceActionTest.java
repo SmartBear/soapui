@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.service;
+*/
+package com.eviware.soapui.impl.rest.actions.service;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceConfig;
@@ -41,174 +42,156 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 
-public class GenerateRestMockServiceActionTest
-{
+public class GenerateRestMockServiceActionTest {
 
-	private RestService restService;
-	private String restMockServiceName;
-	private XFormDialog dialog;
-	private GenerateRestMockServiceAction action;
+    private RestService restService;
+    private String restMockServiceName;
+    private XFormDialog dialog;
+    private GenerateRestMockServiceAction action;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		restService = ModelItemFactory.makeRestService();
-		restMockServiceName = "My Mock Service";
-		action = new GenerateRestMockServiceAction();
+    @Before
+    public void setUp() throws Exception {
+        restService = ModelItemFactory.makeRestService();
+        restMockServiceName = "My Mock Service";
+        action = new GenerateRestMockServiceAction();
 
-		mockFormDialog();
+        mockFormDialog();
 
-		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, FALSE );
-		SoapUI.getSettings().setBoolean( HttpSettings.LEAVE_MOCKENGINE, FALSE );
-	}
+        SoapUI.getSettings().setBoolean(HttpSettings.START_MOCK_SERVICE, FALSE);
+        SoapUI.getSettings().setBoolean(HttpSettings.LEAVE_MOCKENGINE, FALSE);
+    }
 
-	@After
-	public void tearDown()
-	{
-		RestMockService restMockService = getResultingRestMockService();
+    @After
+    public void tearDown() {
+        RestMockService restMockService = getResultingRestMockService();
 
-		if( restMockService != null && restMockService.getMockRunner() != null )
-		{
-			restMockService.getMockRunner().stop();
-		}
-	}
+        if (restMockService != null && restMockService.getMockRunner() != null) {
+            restMockService.getMockRunner().stop();
+        }
+    }
 
-	public void mockFormDialog()
-	{
-		dialog = mock( XFormDialog.class );
-		when( dialog.getValue( GenerateRestMockServiceAction.Form.MOCKSERVICE_NAME ) ).thenReturn( restMockServiceName );
-		when( dialog.show() ).thenReturn( true ).thenReturn( false );
-		action.setFormDialog( dialog );
-	}
+    public void mockFormDialog() {
+        dialog = mock(XFormDialog.class);
+        when(dialog.getValue(GenerateRestMockServiceAction.Form.MOCKSERVICE_NAME)).thenReturn(restMockServiceName);
+        when(dialog.show()).thenReturn(true).thenReturn(false);
+        action.setFormDialog(dialog);
+    }
 
-	@Test
-	public void shouldGenerateRestMockService() throws SoapUIException
-	{
-		action.perform( restService, null );
+    @Test
+    public void shouldGenerateRestMockService() throws SoapUIException {
+        action.perform(restService, null);
 
-		RestMockService restMockService = getResultingRestMockService();
-		assertThat( restMockService, is( NotNull.NOT_NULL ) );
-		assertThat( restMockService.getName(), is( restMockServiceName ) );
-	}
+        RestMockService restMockService = getResultingRestMockService();
+        assertThat(restMockService, is(NotNull.NOT_NULL));
+        assertThat(restMockService.getName(), is(restMockServiceName));
+    }
 
-	@Test
-	public void shouldGenerateNonStartedRestMockServiceIfSettingIsOff() throws SoapUIException
-	{
-		SoapUI.getSettings().setBoolean( HttpSettings.START_MOCK_SERVICE, FALSE );
+    @Test
+    public void shouldGenerateNonStartedRestMockServiceIfSettingIsOff() throws SoapUIException {
+        SoapUI.getSettings().setBoolean(HttpSettings.START_MOCK_SERVICE, FALSE);
 
-		action.perform( restService, null );
+        action.perform(restService, null);
 
-		RestMockService restMockService = getResultingRestMockService();
-		assertThat( restMockService.getMockRunner(), is( Null.NULL ) );
-	}
+        RestMockService restMockService = getResultingRestMockService();
+        assertThat(restMockService.getMockRunner(), is(Null.NULL));
+    }
 
-	public RestMockService getResultingRestMockService()
-	{
-		return restService.getProject().getRestMockServiceByName( restMockServiceName );
-	}
+    public RestMockService getResultingRestMockService() {
+        return restService.getProject().getRestMockServiceByName(restMockServiceName);
+    }
 
-	@Test
-	public void shouldGenerateRestMockServiceWithResources()
-	{
-		restService.addNewResource( "one", "/one" );
-		restService.addNewResource( "two", "/two" );
+    @Test
+    public void shouldGenerateRestMockServiceWithResources() {
+        restService.addNewResource("one", "/one");
+        restService.addNewResource("two", "/two");
 
-		action.perform( restService, null );
+        action.perform(restService, null);
 
-		RestMockService restMockService = getResultingRestMockService();
-		assertThat( restMockService.getMockOperationCount(), is( 2 ) );
-		assertThat( restMockService.getMockOperationAt( 1 ).getName(), is( "/two" ) );
+        RestMockService restMockService = getResultingRestMockService();
+        assertThat(restMockService.getMockOperationCount(), is(2));
+        assertThat(restMockService.getMockOperationAt(1).getName(), is("/two"));
 
-		for( MockOperation mockAction : restMockService.getMockOperationList() )
-		{
-			assertThat( mockAction.getMockResponseCount(), is( 1 ) );
-		}
-	}
+        for (MockOperation mockAction : restMockService.getMockOperationList()) {
+            assertThat(mockAction.getMockResponseCount(), is(1));
+        }
+    }
 
-	@Test
-	public void shouldGenerateRestMockServiceForNestedResources()
-	{
-		RestResource one = restService.addNewResource( "one", "/one{version}" );
+    @Test
+    public void shouldGenerateRestMockServiceForNestedResources() {
+        RestResource one = restService.addNewResource("one", "/one{version}");
 
-		RestParamProperty path = one.addProperty( "version" );
-		path.setValue( "v1" );
+        RestParamProperty path = one.addProperty("version");
+        path.setValue("v1");
 
-		RestResourceConfig nestedResourceConfig = one.getConfig().addNewResource();
-		nestedResourceConfig.setPath( "/path/again" );
+        RestResourceConfig nestedResourceConfig = one.getConfig().addNewResource();
+        nestedResourceConfig.setPath("/path/again");
 
-		RestResource three = one.addNewChildResource( "three", "/will/be/overwritten" );
-		three.setConfig( nestedResourceConfig );
+        RestResource three = one.addNewChildResource("three", "/will/be/overwritten");
+        three.setConfig(nestedResourceConfig);
 
-		restService.addNewResource( "two", "/two" );
+        restService.addNewResource("two", "/two");
 
-		action.perform( restService, null );
+        action.perform(restService, null);
 
-		RestMockService restMockService = getResultingRestMockService();
-		assertThat( restMockService.getMockOperationCount(), is( 3 ));
-		assertMockActionWithPath( restMockService, "/onev1" );
-		assertMockActionWithPath( restMockService, "/one/path/again" );
-		assertMockActionWithPath( restMockService, "/two" );
-	}
+        RestMockService restMockService = getResultingRestMockService();
+        assertThat(restMockService.getMockOperationCount(), is(3));
+        assertMockActionWithPath(restMockService, "/onev1");
+        assertMockActionWithPath(restMockService, "/one/path/again");
+        assertMockActionWithPath(restMockService, "/two");
+    }
 
-	@Test
-	public void shouldGenerateRestMockServiceForResourceWithSeveralMethods()
-	{
-		RestResource resource = restService.addNewResource( "one", "/one" );
+    @Test
+    public void shouldGenerateRestMockServiceForResourceWithSeveralMethods() {
+        RestResource resource = restService.addNewResource("one", "/one");
 
-		addMethod( resource, HttpMethod.GET );
-		addMethod( resource, HttpMethod.POST );
+        addMethod(resource, HttpMethod.GET);
+        addMethod(resource, HttpMethod.POST);
 
-		action.perform( restService, null );
+        action.perform(restService, null);
 
-		RestMockService restMockService = getResultingRestMockService();
-		assertThat( restMockService.getMockOperationCount(), is( 2 ));
+        RestMockService restMockService = getResultingRestMockService();
+        assertThat(restMockService.getMockOperationCount(), is(2));
 
-		assertMockAction( HttpMethod.GET, "/one", restMockService.getMockOperationAt( 0 ) );
-		assertMockAction( HttpMethod.POST, "/one", restMockService.getMockOperationAt( 1 ) );
-	}
+        assertMockAction(HttpMethod.GET, "/one", restMockService.getMockOperationAt(0));
+        assertMockAction(HttpMethod.POST, "/one", restMockService.getMockOperationAt(1));
+    }
 
-	@Test
-	public void shouldExpandPathParamForEmptyRestMethod()
-	{
-		RestResource resource = restService.addNewResource( "one", "/one{version}" );
-		RestParamProperty path = resource.addProperty( "version" );
-		path.setValue( "v1" );
+    @Test
+    public void shouldExpandPathParamForEmptyRestMethod() {
+        RestResource resource = restService.addNewResource("one", "/one{version}");
+        RestParamProperty path = resource.addProperty("version");
+        path.setValue("v1");
 
-		addMethod( resource, HttpMethod.GET );
+        addMethod(resource, HttpMethod.GET);
 
-		action.perform( restService, null );
+        action.perform(restService, null);
 
-		assertMockAction( HttpMethod.GET, "/onev1", getResultingRestMockService().getMockOperationAt( 0 ) );
-	}
+        assertMockAction(HttpMethod.GET, "/onev1", getResultingRestMockService().getMockOperationAt(0));
+    }
 
-	private void assertMockAction( HttpMethod method, String path, RestMockAction mockAction )
-	{
-		assertThat( mockAction.getMethod(), is( method ) );
-		assertThat( mockAction.getResourcePath(), is( path ) );
-	}
+    private void assertMockAction(HttpMethod method, String path, RestMockAction mockAction) {
+        assertThat(mockAction.getMethod(), is(method));
+        assertThat(mockAction.getResourcePath(), is(path));
+    }
 
-	private void addMethod( RestResource one, HttpMethod method )
-	{
-		RestMethod restMethod = one.addNewMethod( method.name() );
-		restMethod.setMethod( method );
-	}
+    private void addMethod(RestResource one, HttpMethod method) {
+        RestMethod restMethod = one.addNewMethod(method.name());
+        restMethod.setMethod(method);
+    }
 
-	private void assertMockActionWithPath( RestMockService restMockService, String expectedPath )
-	{
-		boolean foundMatch = false;
+    private void assertMockActionWithPath(RestMockService restMockService, String expectedPath) {
+        boolean foundMatch = false;
 
-		for( MockOperation mockOperation : restMockService.getMockOperationList() )
-		{
-			RestMockAction mockAction = ( RestMockAction )mockOperation;
+        for (MockOperation mockOperation : restMockService.getMockOperationList()) {
+            RestMockAction mockAction = (RestMockAction) mockOperation;
 
-			if( mockAction.getResourcePath().equals( expectedPath ))
-			{
-				foundMatch = true;
-				break;
-			}
-		}
-		assertTrue( "Did not find a match for " + expectedPath, foundMatch );
-	}
+            if (mockAction.getResourcePath().equals(expectedPath)) {
+                foundMatch = true;
+                break;
+            }
+        }
+        assertTrue("Did not find a match for " + expectedPath, foundMatch);
+    }
 
 
 }

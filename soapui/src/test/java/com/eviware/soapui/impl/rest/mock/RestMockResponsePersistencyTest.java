@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.mock;
+*/
+package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -31,45 +32,40 @@ import java.io.IOException;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class RestMockResponsePersistencyTest
-{
-	private MockResponse restMockResponse;
-	private Integer httpStatusCode = HttpStatus.SC_NOT_FOUND;
-	private String projectFileName = "RESTMockResponseTest.xml";
-	private String restMockServiceName = "REST Mock Service";
+public class RestMockResponsePersistencyTest {
+    private MockResponse restMockResponse;
+    private Integer httpStatusCode = HttpStatus.SC_NOT_FOUND;
+    private String projectFileName = "RESTMockResponseTest.xml";
+    private String restMockServiceName = "REST Mock Service";
 
-	@Before
-	public void setUp() throws XmlException, IOException, SoapUIException
-	{
-		RestMockAction restMockAction = ModelItemFactory.makeRestMockAction( );
-		WsdlProject project = ( WsdlProject )restMockAction.getMockService().getProject();
-		restMockAction.getMockService().setName( restMockServiceName );
-		restMockResponse = restMockAction.addNewMockResponse( "REST Mock Response" );
-		restMockResponse.setResponseHttpStatus( httpStatusCode );
-		project.saveAs( projectFileName );
+    @Before
+    public void setUp() throws XmlException, IOException, SoapUIException {
+        RestMockAction restMockAction = ModelItemFactory.makeRestMockAction();
+        WsdlProject project = (WsdlProject) restMockAction.getMockService().getProject();
+        restMockAction.getMockService().setName(restMockServiceName);
+        restMockResponse = restMockAction.addNewMockResponse("REST Mock Response");
+        restMockResponse.setResponseHttpStatus(httpStatusCode);
+        project.saveAs(projectFileName);
 
-	}
+    }
 
-	@After
-	public void tearDown()
-	{
-		File file = new File( projectFileName );
-		if( file.exists() )
-		{
-			file.delete();
-		}
-	}
+    @After
+    public void tearDown() {
+        File file = new File(projectFileName);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
 
-	@Test
-	public void testResponseHttpStatusIsPersisted() throws Exception
-	{
-		WsdlProject retrievedProject = new WsdlProject( projectFileName );
-		RestMockService restMockService = retrievedProject.getRestMockServiceByName( restMockServiceName );
-		RestMockResponse mockResponse = restMockService.getMockOperationAt( 0 ).getMockResponseAt( 0 );
+    @Test
+    public void testResponseHttpStatusIsPersisted() throws Exception {
+        WsdlProject retrievedProject = new WsdlProject(projectFileName);
+        RestMockService restMockService = retrievedProject.getRestMockServiceByName(restMockServiceName);
+        RestMockResponse mockResponse = restMockService.getMockOperationAt(0).getMockResponseAt(0);
 
-		assertThat( mockResponse.getResponseHttpStatus(), is(httpStatusCode));
+        assertThat(mockResponse.getResponseHttpStatus(), is(httpStatusCode));
 
-	}
+    }
 
 
 }

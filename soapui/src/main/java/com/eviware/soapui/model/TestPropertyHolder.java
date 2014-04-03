@@ -22,31 +22,30 @@ import java.util.Map;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
-public interface TestPropertyHolder
-{
-	public String[] getPropertyNames();
+public interface TestPropertyHolder {
+    public String[] getPropertyNames();
 
-	public void setPropertyValue( String name, String value );
+    public void setPropertyValue(String name, String value);
 
-	public String getPropertyValue( String name );
+    public String getPropertyValue(String name);
 
-	public TestProperty getProperty( String name );
+    public TestProperty getProperty(String name);
 
-	public Map<String, TestProperty> getProperties();
+    public Map<String, TestProperty> getProperties();
 
-	public void addTestPropertyListener( TestPropertyListener listener );
+    public void addTestPropertyListener(TestPropertyListener listener);
 
-	public void removeTestPropertyListener( TestPropertyListener listener );
+    public void removeTestPropertyListener(TestPropertyListener listener);
 
-	public boolean hasProperty( String name );
+    public boolean hasProperty(String name);
 
-	public ModelItem getModelItem();
+    public ModelItem getModelItem();
 
-	public int getPropertyCount();
+    public int getPropertyCount();
 
-	public List<TestProperty> getPropertyList();
+    public List<TestProperty> getPropertyList();
 
-	public TestProperty getPropertyAt( int index );
+    public TestProperty getPropertyAt(int index);
 
-	public String getPropertiesLabel();
+    public String getPropertiesLabel();
 }

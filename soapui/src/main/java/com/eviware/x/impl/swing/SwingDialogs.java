@@ -43,245 +43,210 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 /**
- * 
  * @author Lars
  */
-public class SwingDialogs implements XDialogs
-{
-	private Component parent;
-	private JDialog extendedInfoDialog;
-	private Boolean extendedInfoResult;
+public class SwingDialogs implements XDialogs {
+    private Component parent;
+    private JDialog extendedInfoDialog;
+    private Boolean extendedInfoResult;
 
-	public SwingDialogs( Component parent )
-	{
-		this.parent = parent;
-	}
+    public SwingDialogs(Component parent) {
+        this.parent = parent;
+    }
 
-	public void showErrorMessage( String message )
-	{
-		JOptionPane.showMessageDialog( parent, message, "Error", JOptionPane.ERROR_MESSAGE );
-	}
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+    }
 
-	public boolean confirm( String question, String title )
-	{
-		return JOptionPane.showConfirmDialog( this.parent, question, title, JOptionPane.YES_NO_OPTION ) == JOptionPane.OK_OPTION;
-	}
+    public boolean confirm(String question, String title) {
+        return JOptionPane.showConfirmDialog(this.parent, question, title, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
+    }
 
-	@Override
-	public boolean confirm( String question, String title, Component parent )
-	{
-		return JOptionPane.showConfirmDialog( parent, question, title, JOptionPane.YES_NO_OPTION ) == JOptionPane.OK_OPTION;
-	}
+    @Override
+    public boolean confirm(String question, String title, Component parent) {
+        return JOptionPane.showConfirmDialog(parent, question, title, JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION;
+    }
 
-	public String prompt( String question, String title, String value )
-	{
-		return ( String )JOptionPane.showInputDialog( parent, question, title, JOptionPane.QUESTION_MESSAGE, null, null,
-				value );
-	}
+    public String prompt(String question, String title, String value) {
+        return (String) JOptionPane.showInputDialog(parent, question, title, JOptionPane.QUESTION_MESSAGE, null, null,
+                value);
+    }
 
-	public String prompt( String question, String title )
-	{
-		return JOptionPane.showInputDialog( parent, question, title, JOptionPane.QUESTION_MESSAGE );
-	}
+    public String prompt(String question, String title) {
+        return JOptionPane.showInputDialog(parent, question, title, JOptionPane.QUESTION_MESSAGE);
+    }
 
-	public void showInfoMessage( String message )
-	{
-		showInfoMessage( message, "Information" );
-	}
+    public void showInfoMessage(String message) {
+        showInfoMessage(message, "Information");
+    }
 
-	public void showInfoMessage( String message, String title )
-	{
-		JOptionPane.showMessageDialog( parent, message, title, JOptionPane.INFORMATION_MESSAGE );
-	}
+    public void showInfoMessage(String message, String title) {
+        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+    }
 
-	public Object prompt( String question, String title, Object[] objects )
-	{
-		Object result = JOptionPane.showInputDialog( parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
-				objects, null );
-		return result;
-	}
+    public Object prompt(String question, String title, Object[] objects) {
+        Object result = JOptionPane.showInputDialog(parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
+                objects, null);
+        return result;
+    }
 
-	public Object prompt( String question, String title, Object[] objects, String value )
-	{
-		Object result = JOptionPane.showInputDialog( parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
-				objects, value );
-		return result;
-	}
+    public Object prompt(String question, String title, Object[] objects, String value) {
+        Object result = JOptionPane.showInputDialog(parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
+                objects, value);
+        return result;
+    }
 
-	public Boolean confirmOrCancel( String question, String title )
-	{
-		int result = JOptionPane.showConfirmDialog( parent, question, title, JOptionPane.YES_NO_CANCEL_OPTION );
+    public Boolean confirmOrCancel(String question, String title) {
+        int result = JOptionPane.showConfirmDialog(parent, question, title, JOptionPane.YES_NO_CANCEL_OPTION);
 
-		if( result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION )
-			return null;
+        if (result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION) {
+            return null;
+        }
 
-		return result == JOptionPane.YES_OPTION;
-	}
+        return result == JOptionPane.YES_OPTION;
+    }
 
-	public int yesYesToAllOrNo( String question, String title )
-	{
-		String[] buttons = { "Yes", "Yes to all", "No" };
-		return JOptionPane.showOptionDialog( parent, question, title, 0, JOptionPane.QUESTION_MESSAGE, null, buttons,
-				buttons[0] );
-	}
+    public int yesYesToAllOrNo(String question, String title) {
+        String[] buttons = {"Yes", "Yes to all", "No"};
+        return JOptionPane.showOptionDialog(parent, question, title, 0, JOptionPane.QUESTION_MESSAGE, null, buttons,
+                buttons[0]);
+    }
 
-	public XProgressDialog createProgressDialog( String label, int length, String initialValue, boolean canCancel )
-	{
-		return new ProgressDialog( "Progress", label, length, initialValue, canCancel );
-	}
+    public XProgressDialog createProgressDialog(String label, int length, String initialValue, boolean canCancel) {
+        return new ProgressDialog("Progress", label, length, initialValue, canCancel);
+    }
 
-	public void showExtendedInfo( String title, String description, String content, Dimension size )
-	{
-		JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( new JButton( new OkAction( "OK" ) ) );
+    public void showExtendedInfo(String title, String description, String content, Dimension size) {
+        JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK")));
 
-		showExtendedInfo( title, description, content, buttonBar, size );
-	}
+        showExtendedInfo(title, description, content, buttonBar, size);
+    }
 
-	private void showExtendedInfo( String title, String description, String content, JPanel buttonBar, Dimension size )
-	{
-		extendedInfoDialog = new JDialog( UISupport.getMainFrame(), title );
-		extendedInfoDialog.setModal( true );
-		JPanel panel = new JPanel( new BorderLayout() );
+    private void showExtendedInfo(String title, String description, String content, JPanel buttonBar, Dimension size) {
+        extendedInfoDialog = new JDialog(UISupport.getMainFrame(), title);
+        extendedInfoDialog.setModal(true);
+        JPanel panel = new JPanel(new BorderLayout());
 
-		if( description != null )
-		{
-			panel.add( UISupport.buildDescription( title, description, null ), BorderLayout.NORTH );
-		}
+        if (description != null) {
+            panel.add(UISupport.buildDescription(title, description, null), BorderLayout.NORTH);
+        }
 
-		JEditorPane editorPane = new JEditorPane( "text/html", content );
-		editorPane.setCaretPosition( 0 );
-		editorPane.setEditable( false );
-		editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ) );
+        JEditorPane editorPane = new JEditorPane("text/html", content);
+        editorPane.setCaretPosition(0);
+        editorPane.setEditable(false);
+        editorPane.addHyperlinkListener(new DefaultHyperlinkListener(editorPane));
 
-		JScrollPane scrollPane = new JScrollPane( editorPane );
-		scrollPane.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ),
-				scrollPane.getBorder() ) );
+        JScrollPane scrollPane = new JScrollPane(editorPane);
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5),
+                scrollPane.getBorder()));
 
-		panel.add( scrollPane );
-		buttonBar.setBorder( BorderFactory.createEmptyBorder( 0, 0, 5, 5 ) );
-		panel.add( buttonBar, BorderLayout.SOUTH );
+        panel.add(scrollPane);
+        buttonBar.setBorder(BorderFactory.createEmptyBorder(0, 0, 5, 5));
+        panel.add(buttonBar, BorderLayout.SOUTH);
 
-		extendedInfoDialog.getRootPane().setContentPane( panel );
-		if( size == null )
-			extendedInfoDialog.setSize( 400, 300 );
-		else
-			extendedInfoDialog.setSize( size );
+        extendedInfoDialog.getRootPane().setContentPane(panel);
+        if (size == null) {
+            extendedInfoDialog.setSize(400, 300);
+        } else {
+            extendedInfoDialog.setSize(size);
+        }
 
-		extendedInfoResult = null;
-		UISupport.showDialog( extendedInfoDialog );
-	}
+        extendedInfoResult = null;
+        UISupport.showDialog(extendedInfoDialog);
+    }
 
-	public boolean confirmExtendedInfo( String title, String description, String content, Dimension size )
-	{
-		JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( new JButton( new OkAction( "OK" ) ), new JButton(
-				new CancelAction( "Cancel" ) ) );
+    public boolean confirmExtendedInfo(String title, String description, String content, Dimension size) {
+        JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK")), new JButton(
+                new CancelAction("Cancel")));
 
-		showExtendedInfo( title, description, content, buttonBar, size );
+        showExtendedInfo(title, description, content, buttonBar, size);
 
-		return extendedInfoResult == null ? false : extendedInfoResult;
-	}
+        return extendedInfoResult == null ? false : extendedInfoResult;
+    }
 
-	public Boolean confirmOrCancleExtendedInfo( String title, String description, String content, Dimension size )
-	{
-		JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( new JButton( new OkAction( "Yes" ) ), new JButton(
-				new NoAction( "No" ) ), new JButton( new CancelAction( "Cancel" ) ) );
+    public Boolean confirmOrCancleExtendedInfo(String title, String description, String content, Dimension size) {
+        JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("Yes")), new JButton(
+                new NoAction("No")), new JButton(new CancelAction("Cancel")));
 
-		showExtendedInfo( title, description, content, buttonBar, size );
+        showExtendedInfo(title, description, content, buttonBar, size);
 
-		return extendedInfoResult;
-	}
+        return extendedInfoResult;
+    }
 
-	private final class OkAction extends AbstractAction
-	{
-		public OkAction( String name )
-		{
-			super( name );
-		}
+    private final class OkAction extends AbstractAction {
+        public OkAction(String name) {
+            super(name);
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			extendedInfoResult = true;
-			extendedInfoDialog.setVisible( false );
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            extendedInfoResult = true;
+            extendedInfoDialog.setVisible(false);
+        }
+    }
 
-	private final class NoAction extends AbstractAction
-	{
-		public NoAction( String name )
-		{
-			super( name );
-		}
+    private final class NoAction extends AbstractAction {
+        public NoAction(String name) {
+            super(name);
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			extendedInfoResult = false;
-			extendedInfoDialog.setVisible( false );
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            extendedInfoResult = false;
+            extendedInfoDialog.setVisible(false);
+        }
+    }
 
-	private final class CancelAction extends AbstractAction
-	{
-		public CancelAction( String name )
-		{
-			super( name );
-		}
+    private final class CancelAction extends AbstractAction {
+        public CancelAction(String name) {
+            super(name);
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			extendedInfoResult = null;
-			extendedInfoDialog.setVisible( false );
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            extendedInfoResult = null;
+            extendedInfoDialog.setVisible(false);
+        }
+    }
 
-	public String selectXPath( String title, String info, String xml, String xpath )
-	{
-		return prompt( "Specify XPath expression", "Select XPath", xpath );
-	}
+    public String selectXPath(String title, String info, String xml, String xpath) {
+        return prompt("Specify XPath expression", "Select XPath", xpath);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.x.dialogs.XDialogs#promptPassword(java.lang.String,
-	 * java.lang.String)
-	 */
-	public char[] promptPassword( String question, String title )
-	{
-		JPasswordField passwordField = new JPasswordField();
-		passwordField.addAncestorListener( new RequestFocusListener() );
-		JLabel qLabel = new JLabel( question );
-		JOptionPane.showConfirmDialog( parent, new Object[] { qLabel, passwordField }, title,
-				JOptionPane.OK_CANCEL_OPTION );
-		return passwordField.getPassword();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.x.dialogs.XDialogs#promptPassword(java.lang.String,
+     * java.lang.String)
+     */
+    public char[] promptPassword(String question, String title) {
+        JPasswordField passwordField = new JPasswordField();
+        passwordField.addAncestorListener(new RequestFocusListener());
+        JLabel qLabel = new JLabel(question);
+        JOptionPane.showConfirmDialog(parent, new Object[]{qLabel, passwordField}, title,
+                JOptionPane.OK_CANCEL_OPTION);
+        return passwordField.getPassword();
+    }
 
-	/*
-	 * Used to give focus to password field, instead of the default OK button in
-	 * the confirmation dialog.
-	 */
-	private static class RequestFocusListener implements AncestorListener
-	{
-		public void ancestorAdded( final AncestorEvent e )
-		{
-			final AncestorListener al = this;
-			SwingUtilities.invokeLater( new Runnable()
-			{
+    /*
+     * Used to give focus to password field, instead of the default OK button in
+     * the confirmation dialog.
+     */
+    private static class RequestFocusListener implements AncestorListener {
+        public void ancestorAdded(final AncestorEvent e) {
+            final AncestorListener al = this;
+            SwingUtilities.invokeLater(new Runnable() {
 
-				@Override
-				public void run()
-				{
-					JComponent component = ( JComponent )e.getComponent();
-					component.requestFocusInWindow();
-					component.removeAncestorListener( al );
-				}
-			} );
-		}
+                @Override
+                public void run() {
+                    JComponent component = (JComponent) e.getComponent();
+                    component.requestFocusInWindow();
+                    component.removeAncestorListener(al);
+                }
+            });
+        }
 
-		public void ancestorMoved( AncestorEvent e )
-		{
-		}
+        public void ancestorMoved(AncestorEvent e) {
+        }
 
-		public void ancestorRemoved( AncestorEvent e )
-		{
-		}
-	}
+        public void ancestorRemoved(AncestorEvent e) {
+        }
+    }
 }

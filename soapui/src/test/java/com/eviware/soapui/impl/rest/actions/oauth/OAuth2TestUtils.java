@@ -35,89 +35,74 @@ import static org.mockito.Mockito.mock;
 /**
  *
  */
-public class OAuth2TestUtils
-{
-	public static String AUTHORIZATION_CODE = "some_code";
-	public static String ACCESS_TOKEN = "expected_access_token";
-	public static String REFRESH_TOKEN = "expected_refresh_token";
+public class OAuth2TestUtils {
+    public static String AUTHORIZATION_CODE = "some_code";
+    public static String ACCESS_TOKEN = "expected_access_token";
+    public static String REFRESH_TOKEN = "expected_refresh_token";
 
-	public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
+    public static final String OAUTH_2_OOB_URN = "urn:ietf:wg:oauth:2.0:oob";
 
-	public static OAuth2Profile getOAuthProfileWithDefaultValues() throws SoapUIException
-	{
-		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
-		OAuth2Profile profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
-		profile.setName( "OAuth 2 -Profile" );
-		profile.setAuthorizationURI( "http://localhost:8080/authorize" );
-		profile.setAccessTokenURI( "http://localhost:8080/accesstoken" );
-		profile.setRedirectURI( "http://localhost:8080/redirect" );
-		profile.setClientID( "ClientId" );
-		profile.setClientSecret( "ClientSecret" );
-		profile.setScope( "ReadOnly" );
-		return profile;
-	}
+    public static OAuth2Profile getOAuthProfileWithDefaultValues() throws SoapUIException {
+        OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+        OAuth2Profile profile = new OAuth2Profile(ModelItemFactory.makeOAuth2ProfileContainer(), configuration);
+        profile.setName("OAuth 2 -Profile");
+        profile.setAuthorizationURI("http://localhost:8080/authorize");
+        profile.setAccessTokenURI("http://localhost:8080/accesstoken");
+        profile.setRedirectURI("http://localhost:8080/redirect");
+        profile.setClientID("ClientId");
+        profile.setClientSecret("ClientSecret");
+        profile.setScope("ReadOnly");
+        return profile;
+    }
 
-	public static OAuth2Profile getOAuth2ProfileWithOnlyAccessToken() throws SoapUIException
-	{
-		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
-		OAuth2Profile profileWithOnlyAccessToken = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(),
-				configuration );
-		profileWithOnlyAccessToken.setAccessToken( ACCESS_TOKEN );
+    public static OAuth2Profile getOAuth2ProfileWithOnlyAccessToken() throws SoapUIException {
+        OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+        OAuth2Profile profileWithOnlyAccessToken = new OAuth2Profile(ModelItemFactory.makeOAuth2ProfileContainer(),
+                configuration);
+        profileWithOnlyAccessToken.setAccessToken(ACCESS_TOKEN);
 
-		return profileWithOnlyAccessToken;
-	}
+        return profileWithOnlyAccessToken;
+    }
 
-	public static OAuth2Profile getOAuthProfileWithRefreshToken() throws SoapUIException
-	{
-		OAuth2Profile profile = getOAuthProfileWithDefaultValues();
-		profile.setRefreshToken( "REFRESH#TOKEN" );
+    public static OAuth2Profile getOAuthProfileWithRefreshToken() throws SoapUIException {
+        OAuth2Profile profile = getOAuthProfileWithDefaultValues();
+        profile.setRefreshToken("REFRESH#TOKEN");
 
-		return profile;
-	}
+        return profile;
+    }
 
-	public static OAuth2TokenExtractor mockOAuth2TokenExtractor( final OAuth2Profile profile )
-			throws OAuthSystemException, MalformedURLException, URISyntaxException, OAuthProblemException
-	{
-		OAuth2TokenExtractor oAuth2TokenExtractor = mock( OAuth2TokenExtractor.class );
-		doAnswer( new Answer<Object>()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
-				return profile;
-			}
-		} ).when( oAuth2TokenExtractor ).extractAccessToken( any( OAuth2Parameters.class ) );
+    public static OAuth2TokenExtractor mockOAuth2TokenExtractor(final OAuth2Profile profile)
+            throws OAuthSystemException, MalformedURLException, URISyntaxException, OAuthProblemException {
+        OAuth2TokenExtractor oAuth2TokenExtractor = mock(OAuth2TokenExtractor.class);
+        doAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                profile.setAccessToken(OAuth2TestUtils.ACCESS_TOKEN);
+                return profile;
+            }
+        }).when(oAuth2TokenExtractor).extractAccessToken(any(OAuth2Parameters.class));
 
-		doAnswer( new Answer()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( OAuth2TestUtils.ACCESS_TOKEN );
-				return profile;
-			}
-		} ).when( oAuth2TokenExtractor ).refreshAccessToken( any( OAuth2Parameters.class ) );
-		return oAuth2TokenExtractor;
-	}
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                profile.setAccessToken(OAuth2TestUtils.ACCESS_TOKEN);
+                return profile;
+            }
+        }).when(oAuth2TokenExtractor).refreshAccessToken(any(OAuth2Parameters.class));
+        return oAuth2TokenExtractor;
+    }
 
-	public static OltuOAuth2ClientFacade getOltuOAuth2ClientFacadeWithMockedTokenExtractor( final OAuth2Profile profile )
-	{
-		return new OltuOAuth2ClientFacade()
-		{
-			@Override
-			protected OAuth2TokenExtractor getOAuth2TokenExtractor()
-			{
-				try
-				{
-					return mockOAuth2TokenExtractor( profile );
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-					return null;
-				}
-			}
-		};
-	}
+    public static OltuOAuth2ClientFacade getOltuOAuth2ClientFacadeWithMockedTokenExtractor(final OAuth2Profile profile) {
+        return new OltuOAuth2ClientFacade() {
+            @Override
+            protected OAuth2TokenExtractor getOAuth2TokenExtractor() {
+                try {
+                    return mockOAuth2TokenExtractor(profile);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }
+        };
+    }
 }

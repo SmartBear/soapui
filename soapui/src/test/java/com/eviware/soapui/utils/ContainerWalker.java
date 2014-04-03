@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.utils;
+*/
+package com.eviware.soapui.utils;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -32,153 +33,124 @@ import java.util.NoSuchElementException;
 /**
  * Helper to find Swing/AWT components in a Container.
  */
-public class ContainerWalker
-{
+public class ContainerWalker {
 
-	private final Container container;
-	private java.util.List<Component> containedComponents;
+    private final Container container;
+    private java.util.List<Component> containedComponents;
 
-	public ContainerWalker( Container container )
-	{
-		this.container = container;
-		rebuildIndex();
-	}
+    public ContainerWalker(Container container) {
+        this.container = container;
+        rebuildIndex();
+    }
 
-	public AbstractButton findButtonWithIcon( String iconFile )
-	{
-		AbstractButton returnedButton = ( AbstractButton )Iterables.find( containedComponents, new ButtonWithIconPredicate( iconFile ) );
-		if( returnedButton == null )
-		{
-			throw new NoSuchElementException( "No button found with icon file " + iconFile );
-		}
-		return returnedButton;
-	}
+    public AbstractButton findButtonWithIcon(String iconFile) {
+        AbstractButton returnedButton = (AbstractButton) Iterables.find(containedComponents, new ButtonWithIconPredicate(iconFile));
+        if (returnedButton == null) {
+            throw new NoSuchElementException("No button found with icon file " + iconFile);
+        }
+        return returnedButton;
+    }
 
-	// Currently unused, but probably useful
-public <T> JComboBox findComboBoxWithValue( T value )
-	{
-		for( Component component : containedComponents )
-		{
-			if( component instanceof JComboBox )
-			{
-				JComboBox comboBox = ( JComboBox )component;
-				for( int i = 0; i < comboBox.getItemCount(); i++ )
-				{
-					if( comboBox.getItemAt( i ).equals( value ) )
-					{
-						return comboBox;
-					}
-				}
-			}
-		}
-		throw new NoSuchElementException( "No combo box found with item " + value );
-	}
+    // Currently unused, but probably useful
+    public <T> JComboBox findComboBoxWithValue(T value) {
+        for (Component component : containedComponents) {
+            if (component instanceof JComboBox) {
+                JComboBox comboBox = (JComboBox) component;
+                for (int i = 0; i < comboBox.getItemCount(); i++) {
+                    if (comboBox.getItemAt(i).equals(value)) {
+                        return comboBox;
+                    }
+                }
+            }
+        }
+        throw new NoSuchElementException("No combo box found with item " + value);
+    }
 
-	// Currently unused, but probably useful
-	public AbstractButton findCheckBoxWithLabel( String labelText )
-	{
-		for( Component component : containedComponents )
-		{
-			if( component instanceof JCheckBox )
-			{
-				JCheckBox checkBox = ( JCheckBox )component;
-				if( String.valueOf( checkBox.getText() ).equals( labelText ) )
-				{
-					return checkBox;
-				}
-			}
-		}
-		throw new NoSuchElementException( "No checkbox found with label " + labelText );
-	}
+    // Currently unused, but probably useful
+    public AbstractButton findCheckBoxWithLabel(String labelText) {
+        for (Component component : containedComponents) {
+            if (component instanceof JCheckBox) {
+                JCheckBox checkBox = (JCheckBox) component;
+                if (String.valueOf(checkBox.getText()).equals(labelText)) {
+                    return checkBox;
+                }
+            }
+        }
+        throw new NoSuchElementException("No checkbox found with label " + labelText);
+    }
 
-	private java.util.List<Component> findAllComponentsIn( Container container )
-	{
-		java.util.List<Component> components = new ArrayList<Component>();
-		for( Component component : container.getComponents() )
-		{
-			components.add( component );
-			if( component instanceof Container )
-			{
-				components.addAll( findAllComponentsIn( ( Container )component ) );
-			}
-		}
-		return components;
-	}
+    private java.util.List<Component> findAllComponentsIn(Container container) {
+        java.util.List<Component> components = new ArrayList<Component>();
+        for (Component component : container.getComponents()) {
+            components.add(component);
+            if (component instanceof Container) {
+                components.addAll(findAllComponentsIn((Container) component));
+            }
+        }
+        return components;
+    }
 
-	public AbstractButton findButtonWithName( String buttonName )
-	{
-		return ( AbstractButton )Iterables.find( containedComponents,
-				new ComponentClassAndNamePredicate( AbstractButton.class, buttonName ) );
-	}
+    public AbstractButton findButtonWithName(String buttonName) {
+        return (AbstractButton) Iterables.find(containedComponents,
+                new ComponentClassAndNamePredicate(AbstractButton.class, buttonName));
+    }
 
-	public JLabel findLabelWithName( String labelName )
-	{
-		return (JLabel)Iterables.find(containedComponents,
-				new ComponentClassAndNamePredicate( JLabel.class, labelName ));
-	}
+    public JLabel findLabelWithName(String labelName) {
+        return (JLabel) Iterables.find(containedComponents,
+                new ComponentClassAndNamePredicate(JLabel.class, labelName));
+    }
 
-	public JTextComponent findTextComponent( String componentName)
-	{
-		JTextComponent component = ( JTextComponent )Iterables.find( containedComponents,
-				new ComponentClassAndNamePredicate( JTextComponent.class, componentName ) );
-		if (component == null)
-		{
-			throw new NoSuchElementException( "No text component with name '" + componentName + "' found");
-		}
-		return component;
-	}
+    public JTextComponent findTextComponent(String componentName) {
+        JTextComponent component = (JTextComponent) Iterables.find(containedComponents,
+                new ComponentClassAndNamePredicate(JTextComponent.class, componentName));
+        if (component == null) {
+            throw new NoSuchElementException("No text component with name '" + componentName + "' found");
+        }
+        return component;
+    }
 
-	public void rebuildIndex()
-	{
-		containedComponents = findAllComponentsIn( container );
-	}
+    public void rebuildIndex() {
+        containedComponents = findAllComponentsIn(container);
+    }
 
-	public <T extends Component> T findComponent( String name, Class<? extends T> componentClass)
-	{
-		return (T)Iterables.find(containedComponents, new ComponentClassAndNamePredicate( componentClass, name ));
-	}
+    public <T extends Component> T findComponent(String name, Class<? extends T> componentClass) {
+        return (T) Iterables.find(containedComponents, new ComponentClassAndNamePredicate(componentClass, name));
+    }
 
-	private class ComponentClassAndNamePredicate implements Predicate<Component>
-	{
+    private class ComponentClassAndNamePredicate implements Predicate<Component> {
 
-		private Class<? extends Component> componentClass;
-		private String name;
+        private Class<? extends Component> componentClass;
+        private String name;
 
-		private ComponentClassAndNamePredicate( Class<? extends Component> componentClass, String name )
-		{
-			this.componentClass = componentClass;
-			this.name = name;
-		}
+        private ComponentClassAndNamePredicate(Class<? extends Component> componentClass, String name) {
+            this.componentClass = componentClass;
+            this.name = name;
+        }
 
-		@Override
-		public boolean apply( @Nullable Component component )
-		{
-			return component != null && componentClass.isAssignableFrom( component.getClass() ) &&
-					StringUtils.equals( name, component.getName() );
-		}
+        @Override
+        public boolean apply(@Nullable Component component) {
+            return component != null && componentClass.isAssignableFrom(component.getClass()) &&
+                    StringUtils.equals(name, component.getName());
+        }
 
-	}
+    }
 
-	private class ButtonWithIconPredicate implements Predicate<Component>
-	{
+    private class ButtonWithIconPredicate implements Predicate<Component> {
 
-		private String iconFile;
+        private String iconFile;
 
-		private ButtonWithIconPredicate( String iconFile )
-		{
-			this.iconFile = iconFile;
-		}
+        private ButtonWithIconPredicate(String iconFile) {
+            this.iconFile = iconFile;
+        }
 
-		@Override
-		public boolean apply( @Nullable Component component )
-		{
-			if( !( component instanceof AbstractButton ) )
-			{
-				return false;
-			}
-			AbstractButton button = ( AbstractButton )component;
-			return String.valueOf( button.getIcon() ).endsWith( "/" + iconFile );
-		}
-	}
+        @Override
+        public boolean apply(@Nullable Component component) {
+            if (!(component instanceof AbstractButton)) {
+                return false;
+            }
+            AbstractButton button = (AbstractButton) component;
+            return String.valueOf(button.getIcon()).endsWith("/" + iconFile);
+        }
+    }
 
 }

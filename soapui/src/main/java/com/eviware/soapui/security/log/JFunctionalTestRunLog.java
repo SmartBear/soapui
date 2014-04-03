@@ -54,291 +54,260 @@ import com.eviware.soapui.support.components.JXToolBar;
 
 /**
  * Panel for displaying Functional Results in a SecurityTest
- * 
+ *
  * @author dragica.soldo
  */
 
-public class JFunctionalTestRunLog extends JPanel
-{
-	private FunctionalTestLogModel logListModel;
-	private JList testLogList;
-	private Set<String> boldTexts = new HashSet<String>();
-	protected int selectedIndex;
-	private Logger log = Logger.getLogger( JSecurityTestRunLog.class );
-	// TODO see how to get this from security log options to apply here
-	private boolean follow = true;
+public class JFunctionalTestRunLog extends JPanel {
+    private FunctionalTestLogModel logListModel;
+    private JList testLogList;
+    private Set<String> boldTexts = new HashSet<String>();
+    protected int selectedIndex;
+    private Logger log = Logger.getLogger(JSecurityTestRunLog.class);
+    // TODO see how to get this from security log options to apply here
+    private boolean follow = true;
 
-	public JFunctionalTestRunLog( SecurityTest securityTest )
-	{
-		super( new BorderLayout() );
-		logListModel = new FunctionalTestLogModel();
-		buildUI();
-	}
+    public JFunctionalTestRunLog(SecurityTest securityTest) {
+        super(new BorderLayout());
+        logListModel = new FunctionalTestLogModel();
+        buildUI();
+    }
 
-	private void buildUI()
-	{
-		testLogList = new JList( logListModel );
-		testLogList.setCellRenderer( new FunctionalLogCellRenderer() );
-		testLogList.addMouseListener( new LogListMouseListener() );
+    private void buildUI() {
+        testLogList = new JList(logListModel);
+        testLogList.setCellRenderer(new FunctionalLogCellRenderer());
+        testLogList.addMouseListener(new LogListMouseListener());
 
-		JScrollPane scrollPane = new JScrollPane( testLogList );
+        JScrollPane scrollPane = new JScrollPane(testLogList);
 
-		add( scrollPane, BorderLayout.CENTER );
-		add( buildToolbar(), BorderLayout.NORTH );
-	}
+        add(scrollPane, BorderLayout.CENTER);
+        add(buildToolbar(), BorderLayout.NORTH);
+    }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createSmallToolbar();
+    private Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		addToolbarButtons( toolbar );
+        addToolbarButtons(toolbar);
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	protected JList getTestLogList()
-	{
-		return testLogList;
-	}
+    protected JList getTestLogList() {
+        return testLogList;
+    }
 
-	protected void addToolbarButtons( JXToolBar toolbar )
-	{
-		toolbar.addFixed( UISupport.createToolbarButton( new ClearLogAction() ) );
-		toolbar.addFixed( UISupport.createToolbarButton( new ExportLogAction() ) );
-	}
+    protected void addToolbarButtons(JXToolBar toolbar) {
+        toolbar.addFixed(UISupport.createToolbarButton(new ClearLogAction()));
+        toolbar.addFixed(UISupport.createToolbarButton(new ExportLogAction()));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog#clear()
-	 */
-	public synchronized void clear()
-	{
-		logListModel.clear();
-		boldTexts.clear();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.soapui.impl.wsdl.panels.testcase.TestRunLog#clear()
+     */
+    public synchronized void clear() {
+        logListModel.clear();
+        boldTexts.clear();
+    }
 
-	public synchronized void addSecurityTestFunctionalStepResult( TestStepResult testStepResult )
-	{
-		logListModel.addSecurityTestFunctionalStepResult( testStepResult );
-		if( follow )
-		{
-			try
-			{
-				testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-			}
-			catch( RuntimeException e )
-			{
-				log.error( e.getMessage() );
-			}
-		}
-	}
+    public synchronized void addSecurityTestFunctionalStepResult(TestStepResult testStepResult) {
+        logListModel.addSecurityTestFunctionalStepResult(testStepResult);
+        if (follow) {
+            try {
+                testLogList.ensureIndexIsVisible(logListModel.getSize() - 1);
+            } catch (RuntimeException e) {
+                log.error(e.getMessage());
+            }
+        }
+    }
 
-	private class ClearLogAction extends AbstractAction
-	{
-		public ClearLogAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/clear_loadtest.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Clears the log" );
-		}
+    private class ClearLogAction extends AbstractAction {
+        public ClearLogAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_loadtest.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Clears the log");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			logListModel.clear();
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            logListModel.clear();
+        }
+    }
 
-	private class ExportLogAction extends AbstractAction
-	{
-		public ExportLogAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/export.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Exports this log to a file" );
-		}
+    private class ExportLogAction extends AbstractAction {
+        public ExportLogAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Exports this log to a file");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			File file = UISupport.getFileDialogs().saveAs( this, "Save Log" );
-			if( file != null )
-			{
-				try
-				{
-					PrintWriter out = new PrintWriter( file );
-					printLog( out );
+        public void actionPerformed(ActionEvent e) {
+            File file = UISupport.getFileDialogs().saveAs(this, "Save Log");
+            if (file != null) {
+                try {
+                    PrintWriter out = new PrintWriter(file);
+                    printLog(out);
 
-					out.close();
-				}
-				catch( FileNotFoundException e1 )
-				{
-					UISupport.showErrorMessage( e1 );
-				}
-			}
-		}
-	}
+                    out.close();
+                } catch (FileNotFoundException e1) {
+                    UISupport.showErrorMessage(e1);
+                }
+            }
+        }
+    }
 
-	public void printLog( PrintWriter out )
-	{
-		for( int c = 0; c < logListModel.getSize(); c++ )
-		{
-			Object value = logListModel.getElementAt( c );
-			if( value instanceof String )
-			{
-				out.println( value.toString() );
-			}
-		}
-	}
+    public void printLog(PrintWriter out) {
+        for (int c = 0; c < logListModel.getSize(); c++) {
+            Object value = logListModel.getElementAt(c);
+            if (value instanceof String) {
+                out.println(value.toString());
+            }
+        }
+    }
 
-	/**
-	 * Mouse Listener for triggering default action and showing popup for log
-	 * list items
-	 * 
-	 * @author Ole.Matzura
-	 */
+    /**
+     * Mouse Listener for triggering default action and showing popup for log
+     * list items
+     *
+     * @author Ole.Matzura
+     */
 
-	private final class LogListMouseListener extends MouseAdapter
-	{
-		public void mouseClicked( MouseEvent e )
-		{
-			int index = testLogList.getSelectedIndex();
-			if( index != -1 && ( index == selectedIndex || e.getClickCount() > 1 ) )
-			{
-				TestStepResult result = logListModel.getTestStepResultAt( index );
-				if( result != null && result.getActions() != null )
-					result.getActions().performDefaultAction( new ActionEvent( this, 0, null ) );
-			}
-			selectedIndex = index;
-		}
+    private final class LogListMouseListener extends MouseAdapter {
+        public void mouseClicked(MouseEvent e) {
+            int index = testLogList.getSelectedIndex();
+            if (index != -1 && (index == selectedIndex || e.getClickCount() > 1)) {
+                TestStepResult result = logListModel.getTestStepResultAt(index);
+                if (result != null && result.getActions() != null)
 
-		public void mousePressed( MouseEvent e )
-		{
-			if( e.isPopupTrigger() )
-				showPopup( e );
-		}
+         esult.getActions().performDefaultAction(new  ctionEvent(this,  ,  ull));
 
-		public void mouseReleased( MouseEvent e )
-		{
-			if( e.isPopupTrigger() )
-				showPopup( e );
-		}
 
-		public void showPopup( MouseEvent e )
-		{
-			int row = testLogList.locationToIndex( e.getPoint() );
-			if( row == -1 )
-				return;
+            }
+            selectedIndex = index;
+        }
 
-			if( testLogList.getSelectedIndex() != row )
-			{
-				testLogList.setSelectedIndex( row );
-			}
+        public void mousePressed(MouseEvent e) {
+            if (e.isPopupTrigger())
 
-			TestStepResult result = logListModel.getTestStepResultAt( row );
-			if( result == null )
-				return;
+             howPopup(e);
 
-			ActionList actions = result.getActions();
 
-			if( actions == null || actions.getActionCount() == 0 )
-				return;
+        }
 
-			JPopupMenu popup = ActionSupport.buildPopup( actions );
-			UISupport.showPopup( popup, testLogList, e.getPoint() );
-		}
-	}
+        public void mouseReleased(MouseEvent e) {
+            if (e.isPopupTrigger())
 
-	public synchronized void addText( String string )
-	{
-		logListModel.addText( string );
-		if( follow )
-			testLogList.ensureIndexIsVisible( logListModel.getSize() - 1 );
-	}
+             howPopup(e);
 
-	private final class FunctionalLogCellRenderer extends JLabel implements ListCellRenderer
-	{
-		private Font boldFont;
-		private Font normalFont;
-		private JHyperlinkLabel hyperlinkLabel = new JHyperlinkLabel( "" );
 
-		public FunctionalLogCellRenderer()
-		{
-			setOpaque( true );
-			setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-			setIcon( null );
-			boldFont = getFont().deriveFont( Font.BOLD );
-			normalFont = getFont();
+        }
 
-			hyperlinkLabel.setOpaque( true );
-			hyperlinkLabel.setForeground( Color.BLUE.darker().darker().darker() );
-			hyperlinkLabel.setUnderlineColor( Color.GRAY );
-			hyperlinkLabel.setBorder( BorderFactory.createEmptyBorder( 0, 4, 3, 3 ) );
-		}
+        public void showPopup(MouseEvent e) {
+            int row = testLogList.locationToIndex(e.getPoint());
+            if (row == -1)
 
-		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus )
-		{
-			if( isSelected )
-			{
-				setBackground( list.getSelectionBackground() );
-				setForeground( list.getSelectionForeground() );
-			}
-			else
-			{
-				setBackground( list.getBackground() );
-				setForeground( list.getForeground() );
-			}
+             eturn;
 
-			if( value instanceof String )
-			{
-				setText( value.toString() );
-			}
-			else if( value instanceof TestCaseLogItem )
-			{
-				TestCaseLogItem logItem = ( TestCaseLogItem )value;
-				String msg = logItem.getMsg();
-				setText( msg == null ? "" : msg );
-			}
 
-			TestStepResult result = logListModel.getTestStepResultAt( index );
-			if( result != null && !getText().startsWith( " ->" ) )
-			{
-				hyperlinkLabel.setText( getText() );
-				hyperlinkLabel.setBackground( getBackground() );
-				hyperlinkLabel.setEnabled( list.isEnabled() );
 
-				if( result.getStatus() == TestStepStatus.OK )
-				{
-					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/valid_assertion.gif" ) );
-				}
-				else if( result.getStatus() == TestStepStatus.FAILED )
-				{
-					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/failed_assertion.gif" ) );
-				}
-				else
-				{
-					hyperlinkLabel.setIcon( UISupport.createImageIcon( "/unknown_assertion.gif" ) );
-				}
+            if (testLogList.getSelectedIndex() != row) {
+                testLogList.setSelectedIndex(row);
+            }
 
-				return hyperlinkLabel;
-			}
-			setEnabled( list.isEnabled() );
+            TestStepResult result = logListModel.getTestStepResultAt(row);
+            if (result == null)
 
-			if( boldTexts.contains( getText() ) )
-			{
-				setFont( boldFont );
-			}
-			else
-			{
-				setFont( normalFont );
-			}
+                 eturn;
 
-			return this;
-		}
-	}
 
-	public void release()
-	{
-		logListModel = null;
-		testLogList.setModel( new DefaultListModel() );
-	}
+
+            ActionList actions = result.getActions();
+
+            if (actions == null || actions.getActionCount() == 0)
+
+                 eturn;
+
+
+
+            JPopupMenu popup = ActionSupport.buildPopup(actions);
+            UISupport.showPopup(popup, testLogList, e.getPoint());
+        }
+    }
+
+    public synchronized void addText(String string) {
+        logListModel.addText(string);
+        if (follow)
+
+         estLogList.ensureIndexIsVisible(logListModel.getSize()    );
+
+
+    }
+
+    private final class FunctionalLogCellRenderer extends JLabel implements ListCellRenderer {
+        private Font boldFont;
+        private Font normalFont;
+        private JHyperlinkLabel hyperlinkLabel = new JHyperlinkLabel("");
+
+        public FunctionalLogCellRenderer() {
+            setOpaque(true);
+            setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+            setIcon(null);
+            boldFont = getFont().deriveFont(Font.BOLD);
+            normalFont = getFont();
+
+            hyperlinkLabel.setOpaque(true);
+            hyperlinkLabel.setForeground(Color.BLUE.darker().darker().darker());
+            hyperlinkLabel.setUnderlineColor(Color.GRAY);
+            hyperlinkLabel.setBorder(BorderFactory.createEmptyBorder(0, 4, 3, 3));
+        }
+
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                                                      boolean cellHasFocus) {
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+
+            if (value instanceof String) {
+                setText(value.toString());
+            } else if (value instanceof TestCaseLogItem) {
+                TestCaseLogItem logItem = (TestCaseLogItem) value;
+                String msg = logItem.getMsg();
+                setText(msg == null ? "" : msg);
+            }
+
+            TestStepResult result = logListModel.getTestStepResultAt(index);
+            if (result != null && !getText().startsWith(" ->")) {
+                hyperlinkLabel.setText(getText());
+                hyperlinkLabel.setBackground(getBackground());
+                hyperlinkLabel.setEnabled(list.isEnabled());
+
+                if (result.getStatus() == TestStepStatus.OK) {
+                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/valid_assertion.gif"));
+                } else if (result.getStatus() == TestStepStatus.FAILED) {
+                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/failed_assertion.gif"));
+                } else {
+                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                }
+
+                return hyperlinkLabel;
+            }
+            setEnabled(list.isEnabled());
+
+            if (boldTexts.contains(getText())) {
+                setFont(boldFont);
+            } else {
+                setFont(normalFont);
+            }
+
+            return this;
+        }
+    }
+
+    public void release() {
+        logListModel = null;
+        testLogList.setModel(new DefaultListModel());
+    }
 
 }

@@ -26,47 +26,43 @@ import com.eviware.soapui.impl.wsdl.WsdlAttachmentContainer;
 
 /**
  * Attachment for a WsdlRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>>
-{
-	public RequestFileAttachment( AttachmentConfig config, AbstractHttpRequestInterface<?> request )
-	{
-		super( ( AbstractHttpRequest<?> )request, config );
-	}
+public class RequestFileAttachment extends FileAttachment<AbstractHttpRequest<?>> {
+    public RequestFileAttachment(AttachmentConfig config, AbstractHttpRequestInterface<?> request) {
+        super((AbstractHttpRequest<?>) request, config);
+    }
 
-	public RequestFileAttachment( File file, boolean cache, AbstractHttpRequest<?> request ) throws IOException
-	{
-		super( request, file, cache, request.getConfig().addNewAttachment() );
-	}
+    public RequestFileAttachment(File file, boolean cache, AbstractHttpRequest<?> request) throws IOException {
+        super(request, file, cache, request.getConfig().addNewAttachment());
+    }
 
-	public AttachmentEncoding getEncoding()
-	{
-		AbstractHttpRequestInterface<?> request = getModelItem();
-		if( request instanceof WsdlAttachmentContainer && ( ( WsdlAttachmentContainer )request ).isEncodeAttachments() )
-			return ( ( WsdlAttachmentContainer )request ).getAttachmentEncoding( getPart() );
-		else
-			return AttachmentEncoding.NONE;
-	}
+    public AttachmentEncoding getEncoding() {
+        AbstractHttpRequestInterface<?> request = getModelItem();
+        if (request instanceof WsdlAttachmentContainer && ((WsdlAttachmentContainer) request).isEncodeAttachments()) {
+            return ((WsdlAttachmentContainer) request).getAttachmentEncoding(getPart());
+        } else {
+            return AttachmentEncoding.NONE;
+        }
+    }
 
-	@Override
-	public AttachmentType getAttachmentType()
-	{
-		if( getModelItem() == null || getPart() == null || getModelItem().getAttachmentPart( getPart() ) == null )
-			return AttachmentType.UNKNOWN;
-		else
-			return getModelItem().getAttachmentPart( getPart() ).getAttachmentType();
-	}
-	
-	public String toString() {
-		return getName();
-	}
+    @Override
+    public AttachmentType getAttachmentType() {
+        if (getModelItem() == null || getPart() == null || getModelItem().getAttachmentPart(getPart()) == null) {
+            return AttachmentType.UNKNOWN;
+        } else {
+            return getModelItem().getAttachmentPart(getPart()).getAttachmentType();
+        }
+    }
 
-	@Override
-	public String getId()
-	{
-		return getConfig().getId();
-	}
+    public String toString() {
+        return getName();
+    }
+
+    @Override
+    public String getId() {
+        return getConfig().getId();
+    }
 }

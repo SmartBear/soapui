@@ -24,51 +24,44 @@ import javax.swing.JComponent;
 
 /**
  * Utility for working with collections of components
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ComponentBag
-{
-	private Map<String, JComponent> components = new HashMap<String, JComponent>();
+public class ComponentBag {
+    private Map<String, JComponent> components = new HashMap<String, JComponent>();
 
-	public ComponentBag()
-	{
-	}
+    public ComponentBag() {
+    }
 
-	public void add( JComponent component )
-	{
-		components.put( String.valueOf( component.hashCode() ), component );
-	}
+    public void add(JComponent component) {
+        components.put(String.valueOf(component.hashCode()), component);
+    }
 
-	public void add( String name, JComponent component )
-	{
-		components.put( name, component );
-	}
+    public void add(String name, JComponent component) {
+        components.put(name, component);
+    }
 
-	public JComponent get( String name )
-	{
-		return components.get( name );
-	}
+    public JComponent get(String name) {
+        return components.get(name);
+    }
 
-	public void setEnabled( boolean enabled )
-	{
-		Iterator<JComponent> iterator = components.values().iterator();
-		while( iterator.hasNext() )
-		{
-			iterator.next().setEnabled( enabled );
-		}
-	}
+    public void setEnabled(boolean enabled) {
+        Iterator<JComponent> iterator = components.values().iterator();
+        while (iterator.hasNext()) {
+            iterator.next().setEnabled(enabled);
+        }
+    }
 
-	public void setEnabled( boolean enabled, String name )
-	{
-		if( components.containsKey( name ) )
-			components.get( name ).setEnabled( enabled );
-	}
+    public void setEnabled(boolean enabled, String name) {
+        if (components.containsKey(name)) {
+            components.get(name).setEnabled(enabled);
+        }
+    }
 
-	public void setEnabled( boolean enabled, String[] names )
-	{
-		for( int c = 0; c < names.length; c++ )
-			setEnabled( enabled, names[c] );
-	}
+    public void setEnabled(boolean enabled, String[] names) {
+        for (int c = 0; c < names.length; c++) {
+            setEnabled(enabled, names[c]);
+        }
+    }
 }

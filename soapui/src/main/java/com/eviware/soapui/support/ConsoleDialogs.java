@@ -22,93 +22,75 @@ import com.eviware.x.dialogs.XProgressDialog;
 import java.awt.Component;
 import java.awt.Dimension;
 
-public class ConsoleDialogs implements XDialogs
-{
-	public boolean confirm( String question, String title )
-	{
-		return false;
-	}
+public class ConsoleDialogs implements XDialogs {
+    public boolean confirm(String question, String title) {
+        return false;
+    }
 
-	@Override
-	public boolean confirm( String question, String title, Component parent )
-	{
-		return confirm( question, title);
-	}
+    @Override
+    public boolean confirm(String question, String title, Component parent) {
+        return confirm(question, title);
+    }
 
-	public Boolean confirmOrCancel( String question, String title )
-	{
-		return null;
-	}
+    public Boolean confirmOrCancel(String question, String title) {
+        return null;
+    }
 
-	public String prompt( String question, String title, String value )
-	{
-		return null;
-	}
+    public String prompt(String question, String title, String value) {
+        return null;
+    }
 
-	public String prompt( String question, String title )
-	{
-		return null;
-	}
+    public String prompt(String question, String title) {
+        return null;
+    }
 
-	public String prompt( String question, String title, Object[] objects )
-	{
-		return null;
-	}
+    public String prompt(String question, String title, Object[] objects) {
+        return null;
+    }
 
-	public String prompt( String question, String title, Object[] objects, String value )
-	{
-		return null;
-	}
+    public String prompt(String question, String title, Object[] objects, String value) {
+        return null;
+    }
 
-	public void showErrorMessage( String message )
-	{
-		System.err.println( message );
-	}
+    public void showErrorMessage(String message) {
+        System.err.println(message);
+    }
 
-	public void showInfoMessage( String message )
-	{
-		System.out.println( message );
-	}
+    public void showInfoMessage(String message) {
+        System.out.println(message);
+    }
 
-	public void showInfoMessage( String message, String title )
-	{
-		System.out.println( title + ": " + message );
-	}
+    public void showInfoMessage(String message, String title) {
+        System.out.println(title + ": " + message);
+    }
 
-	public XProgressDialog createProgressDialog( String label, int length, String initialValue, boolean canCancel )
-	{
-		return new NullProgressDialog();
-	}
+    public XProgressDialog createProgressDialog(String label, int length, String initialValue, boolean canCancel) {
+        return new NullProgressDialog();
+    }
 
-	public void showExtendedInfo( String title, String description, String content, Dimension size )
-	{
-	}
+    public void showExtendedInfo(String title, String description, String content, Dimension size) {
+    }
 
-	public boolean confirmExtendedInfo( String title, String description, String content, Dimension size )
-	{
-		return false;
-	}
+    public boolean confirmExtendedInfo(String title, String description, String content, Dimension size) {
+        return false;
+    }
 
-	public Boolean confirmOrCancleExtendedInfo( String title, String description, String content, Dimension size )
-	{
-		return null;
-	}
+    public Boolean confirmOrCancleExtendedInfo(String title, String description, String content, Dimension size) {
+        return null;
+    }
 
-	public String selectXPath( String title, String info, String xml, String xpath )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public String selectXPath(String title, String info, String xml, String xpath) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public char[] promptPassword( String question, String title )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public char[] promptPassword(String question, String title) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public int yesYesToAllOrNo( String question, String title )
-	{
-		// TODO Auto-generated method stub
-		return 2;
-	}
+    public int yesYesToAllOrNo(String question, String title) {
+        // TODO Auto-generated method stub
+        return 2;
+    }
 }

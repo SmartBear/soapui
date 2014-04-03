@@ -23,18 +23,15 @@ import javax.swing.AbstractAction;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
 
-public class ShowModelItemAction extends AbstractAction
-{
-	private final ModelItem modelItem;
+public class ShowModelItemAction extends AbstractAction {
+    private final ModelItem modelItem;
 
-	public ShowModelItemAction( String title, ModelItem modelItem )
-	{
-		super( title );
-		this.modelItem = modelItem;
-	}
+    public ShowModelItemAction(String title, ModelItem modelItem) {
+        super(title);
+        this.modelItem = modelItem;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		UISupport.selectAndShow( modelItem );
-	}
+    public void actionPerformed(ActionEvent e) {
+        UISupport.selectAndShow(modelItem);
+    }
 }

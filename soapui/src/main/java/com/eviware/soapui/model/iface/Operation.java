@@ -22,33 +22,32 @@ import java.util.List;
 
 /**
  * Operation interface
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface Operation extends ModelItem
-{
-	public final static String ACTION_PROPERTY = Operation.class.getName() + "@action";
+public interface Operation extends ModelItem {
+    public final static String ACTION_PROPERTY = Operation.class.getName() + "@action";
 
-	public boolean isUnidirectional();
+    public boolean isUnidirectional();
 
-	public boolean isBidirectional();
+    public boolean isBidirectional();
 
-	public Request getRequestAt( int index );
+    public Request getRequestAt(int index);
 
-	public Request getRequestByName( String requestName );
+    public Request getRequestByName(String requestName);
 
-	public List<Request> getRequestList();
+    public List<Request> getRequestList();
 
-	public int getRequestCount();
+    public int getRequestCount();
 
-	public Interface getInterface();
+    public Interface getInterface();
 
-	public MessagePart[] getDefaultRequestParts();
+    public MessagePart[] getDefaultRequestParts();
 
-	public MessagePart[] getDefaultResponseParts();
+    public MessagePart[] getDefaultResponseParts();
 
-	public String createRequest( boolean b );
+    public String createRequest(boolean b);
 
-	public String createResponse( boolean b );
+    public String createResponse(boolean b);
 }

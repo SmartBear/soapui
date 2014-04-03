@@ -34,109 +34,88 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 
 /**
  * LoadStrategy allowing maximum runs and request delays
- * 
+ *
  * @author Ole.Matzura
  */
 
-public abstract class AbstractLoadStrategy implements LoadStrategy
-{
-	private PropertyChangeSupport propertyChangeSupport;
-	private final String type;
-	private final WsdlLoadTest loadTest;
+public abstract class AbstractLoadStrategy implements LoadStrategy {
+    private PropertyChangeSupport propertyChangeSupport;
+    private final String type;
+    private final WsdlLoadTest loadTest;
 
-	public AbstractLoadStrategy( String type, WsdlLoadTest loadTest )
-	{
-		this.type = type;
-		this.loadTest = loadTest;
-		propertyChangeSupport = new PropertyChangeSupport( this );
-	}
+    public AbstractLoadStrategy(String type, WsdlLoadTest loadTest) {
+        this.type = type;
+        this.loadTest = loadTest;
+        propertyChangeSupport = new PropertyChangeSupport(this);
+    }
 
-	public XmlObject getConfig()
-	{
-		return null;
-	}
+    public XmlObject getConfig() {
+        return null;
+    }
 
-	public JComponent getConfigurationPanel()
-	{
-		return null;
-	}
+    public JComponent getConfigurationPanel() {
+        return null;
+    }
 
-	public String getType()
-	{
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public WsdlLoadTest getLoadTest()
-	{
-		return loadTest;
-	}
+    public WsdlLoadTest getLoadTest() {
+        return loadTest;
+    }
 
-	public void addConfigurationChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( CONFIGURATION_PROPERTY, listener );
-	}
+    public void addConfigurationChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(CONFIGURATION_PROPERTY, listener);
+    }
 
-	public void removeConfigurationChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( CONFIGURATION_PROPERTY, listener );
-	}
+    public void removeConfigurationChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(CONFIGURATION_PROPERTY, listener);
+    }
 
-	public void notifyConfigurationChanged()
-	{
-		propertyChangeSupport.firePropertyChange( CONFIGURATION_PROPERTY, null, null );
-	}
+    public void notifyConfigurationChanged() {
+        propertyChangeSupport.firePropertyChange(CONFIGURATION_PROPERTY, null, null);
+    }
 
-	public boolean allowThreadCountChangeDuringRun()
-	{
-		return true;
-	}
+    public boolean allowThreadCountChangeDuringRun() {
+        return true;
+    }
 
-	public void afterLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
-	{
-	}
+    public void afterLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context) {
+    }
 
-	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext )
-	{
-	}
+    public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                              TestCaseRunContext runContext) {
+    }
 
-	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext, TestStepResult testStepResult )
-	{
-	}
+    public void afterTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                              TestCaseRunContext runContext, TestStepResult testStepResult) {
+    }
 
-	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
-	{
-		if( getLoadTest().getLimitType() == LoadTestLimitTypesConfig.COUNT
-				&& getLoadTest().getTestLimit() < getLoadTest().getThreadCount() )
-		{
-			getLoadTest().setThreadCount( getLoadTest().getTestLimit() );
-		}
-	}
+    public void beforeLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context) {
+        if (getLoadTest().getLimitType() == LoadTestLimitTypesConfig.COUNT
+                && getLoadTest().getTestLimit() < getLoadTest().getThreadCount()) {
+            getLoadTest().setThreadCount(getLoadTest().getTestLimit());
+        }
+    }
 
-	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext )
-	{
-	}
+    public void beforeTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                               TestCaseRunContext runContext) {
+    }
 
-	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext, TestStep testStep )
-	{
-	}
+    public void beforeTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                               TestCaseRunContext runContext, TestStep testStep) {
+    }
 
-	public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context )
-	{
-	}
+    public void loadTestStarted(LoadTestRunner loadTestRunner, LoadTestRunContext context) {
+    }
 
-	public void loadTestStopped( LoadTestRunner loadTestRunner, LoadTestRunContext context )
-	{
-	}
+    public void loadTestStopped(LoadTestRunner loadTestRunner, LoadTestRunContext context) {
+    }
 
-	public void recalculate( LoadTestRunner loadTestRunner, LoadTestRunContext context )
-	{
-	}
+    public void recalculate(LoadTestRunner loadTestRunner, LoadTestRunContext context) {
+    }
 
-	public void updateConfig( XmlObject config )
-	{
-	}
+    public void updateConfig(XmlObject config) {
+    }
 }

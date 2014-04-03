@@ -32,63 +32,51 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 
 /**
  * XmlDocument for a WsdlMockResponse
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockResponseXmlDocument extends AbstractXmlDocument implements PropertyChangeListener
-{
-	private final MockResponse mockResponse;
+public class MockResponseXmlDocument extends AbstractXmlDocument implements PropertyChangeListener {
+    private final MockResponse mockResponse;
 
-	public MockResponseXmlDocument( MockResponse response )
-	{
-		this.mockResponse = response;
+    public MockResponseXmlDocument(MockResponse response) {
+        this.mockResponse = response;
 
-		mockResponse.addPropertyChangeListener( WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this );
-	}
+        mockResponse.addPropertyChangeListener(WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this);
+    }
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		try
-		{
-			if( mockResponse instanceof WsdlMockResponse)
-			{
-				WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
-				if( operation != null )
-				{
-					WsdlInterface iface = operation.getInterface();
-					WsdlContext wsdlContext = iface.getWsdlContext();
-					return wsdlContext.getSchemaTypeSystem();
-				}
-			}
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-		}
+    public SchemaTypeSystem getTypeSystem() {
+        try {
+            if (mockResponse instanceof WsdlMockResponse) {
+                WsdlOperation operation = (WsdlOperation) mockResponse.getMockOperation().getOperation();
+                if (operation != null) {
+                    WsdlInterface iface = operation.getInterface();
+                    WsdlContext wsdlContext = iface.getWsdlContext();
+                    return wsdlContext.getSchemaTypeSystem();
+                }
+            }
+        } catch (Exception e1) {
+            SoapUI.logError(e1);
+        }
 
-		return XmlBeans.getBuiltinTypeSystem();
-	}
+        return XmlBeans.getBuiltinTypeSystem();
+    }
 
-	public String getXml()
-	{
-		return mockResponse.getResponseContent();
-	}
+    public String getXml() {
+        return mockResponse.getResponseContent();
+    }
 
-	public void setXml( String xml )
-	{
-		mockResponse.setResponseContent( xml );
-	}
+    public void setXml(String xml) {
+        mockResponse.setResponseContent(xml);
+    }
 
-	public void propertyChange( PropertyChangeEvent arg0 )
-	{
-		fireXmlChanged( ( String )arg0.getOldValue(), ( String )arg0.getNewValue() );
-	}
+    public void propertyChange(PropertyChangeEvent arg0) {
+        fireXmlChanged((String) arg0.getOldValue(), (String) arg0.getNewValue());
+    }
 
-	@Override
-	public void release()
-	{
-		mockResponse.removePropertyChangeListener( WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this );
-		super.release();
-	}
+    @Override
+    public void release() {
+        mockResponse.removePropertyChangeListener(WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this);
+        super.release();
+    }
 }

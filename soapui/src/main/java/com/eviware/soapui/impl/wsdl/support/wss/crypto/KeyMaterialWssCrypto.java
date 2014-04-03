@@ -29,7 +29,9 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 import com.google.common.io.Files;
+
 import javax.annotation.Nonnull;
+
 import org.apache.commons.ssl.KeyStoreBuilder;
 import org.apache.commons.ssl.ProbablyBadPasswordException;
 import org.apache.commons.ssl.Util;
@@ -44,334 +46,280 @@ import java.security.cert.CertificateException;
 import java.util.List;
 import java.util.Properties;
 
-public class KeyMaterialWssCrypto implements WssCrypto
-{
-	private static final String JCEKS_KEYSTORE_TYPE = "jceks";
-	private static final String JCEKS_FILE_EXTENSION = "jck";
+public class KeyMaterialWssCrypto implements WssCrypto {
+    private static final String JCEKS_KEYSTORE_TYPE = "jceks";
+    private static final String JCEKS_FILE_EXTENSION = "jck";
 
-	private static final String PKCS12_KEYSTORE_TYPE = "pkcs12";
-	private static final String PKCS12_FILE_EXTENSION = "pk12";
+    private static final String PKCS12_KEYSTORE_TYPE = "pkcs12";
+    private static final String PKCS12_FILE_EXTENSION = "pk12";
 
-	private KeyMaterialCryptoConfig config;
-	private final WssContainer container;
-	private KeyStore keyStore;
-	private BeanPathPropertySupport sourceProperty;
+    private KeyMaterialCryptoConfig config;
+    private final WssContainer container;
+    private KeyStore keyStore;
+    private BeanPathPropertySupport sourceProperty;
 
-	private static final Logger log = Logger.getLogger( KeyMaterialWssCrypto.class );
+    private static final Logger log = Logger.getLogger(KeyMaterialWssCrypto.class);
 
-	public KeyMaterialWssCrypto( KeyMaterialCryptoConfig config2, WssContainer container, String source,
-			String password, CryptoType type )
-	{
-		this( config2, container );
-		setSource( source );
-		setPassword( password );
-		this.setType( type );
-	}
+    public KeyMaterialWssCrypto(KeyMaterialCryptoConfig config2, WssContainer container, String source,
+                                String password, CryptoType type) {
+        this(config2, container);
+        setSource(source);
+        setPassword(password);
+        this.setType(type);
+    }
 
-	public KeyMaterialWssCrypto( KeyMaterialCryptoConfig cryptoConfig, WssContainer container2 )
-	{
-		config = cryptoConfig;
-		container = container2;
+    public KeyMaterialWssCrypto(KeyMaterialCryptoConfig cryptoConfig, WssContainer container2) {
+        config = cryptoConfig;
+        container = container2;
 
-		sourceProperty = new BeanPathPropertySupport( ( AbstractWsdlModelItem<?> )container.getModelItem(), config,
-				"source" )
-		{
-			@Override
-			protected void notifyUpdate( String value, String old )
-			{
-				getWssContainer().fireCryptoUpdated( KeyMaterialWssCrypto.this );
-			}
-		};
-	}
+        sourceProperty = new BeanPathPropertySupport((AbstractWsdlModelItem<?>) container.getModelItem(), config,
+                "source") {
+            @Override
+            protected void notifyUpdate(String value, String old) {
+                getWssContainer().fireCryptoUpdated(KeyMaterialWssCrypto.this);
+            }
+        };
+    }
 
-	public Merlin getCrypto()
-	{
-		try
-		{
-			Properties properties = new Properties();
+    public Merlin getCrypto() {
+        try {
+            Properties properties = new Properties();
 
-			properties.put( "org.apache.ws.security.crypto.merlin.keystore.provider", "this" );
+            properties.put("org.apache.ws.security.crypto.merlin.keystore.provider", "this");
 
-			if( getType() == CryptoType.TRUSTSTORE )
-			{
-				properties.put( "org.apache.ws.security.crypto.merlin.truststore.file", sourceProperty.expand() );
-			}
-			else
-			{
-				properties.put( "org.apache.ws.security.crypto.merlin.keystore.file", sourceProperty.expand() );
-				if( StringUtils.hasContent( getDefaultAlias() ) )
-					properties.put( "org.apache.ws.security.crypto.merlin.keystore.alias", getDefaultAlias() );
-			}
+            if (getType() == CryptoType.TRUSTSTORE) {
+                properties.put("org.apache.ws.security.crypto.merlin.truststore.file", sourceProperty.expand());
+            } else {
+                properties.put("org.apache.ws.security.crypto.merlin.keystore.file", sourceProperty.expand());
+                if (StringUtils.hasContent(getDefaultAlias())) {
+                    properties.put("org.apache.ws.security.crypto.merlin.keystore.alias", getDefaultAlias());
+                }
+            }
 
-			KeyMaterialCrypto keyMaterialCrypto = new KeyMaterialCrypto( properties );
-			return keyMaterialCrypto;
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-		return null;
-	}
+            KeyMaterialCrypto keyMaterialCrypto = new KeyMaterialCrypto(properties);
+            return keyMaterialCrypto;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-	public String getLabel()
-	{
-		String source = getSource();
+    public String getLabel() {
+        String source = getSource();
 
-		int ix = source.lastIndexOf( File.separatorChar );
-		if( ix == -1 )
-			ix = source.lastIndexOf( '/' );
+        int ix = source.lastIndexOf(File.separatorChar);
+        if (ix == -1) {
+            ix = source.lastIndexOf('/');
+        }
 
-		if( ix != -1 )
-			source = source.substring( ix + 1 );
+        if (ix != -1) {
+            source = source.substring(ix + 1);
+        }
 
-		return source;
-	}
+        return source;
+    }
 
-	public String getSource()
-	{
-		return sourceProperty.expand();
-	}
+    public String getSource() {
+        return sourceProperty.expand();
+    }
 
-	public void udpateConfig( KeyMaterialCryptoConfig config )
-	{
-		this.config = config;
-		sourceProperty.setConfig( config );
-	}
+    public void udpateConfig(KeyMaterialCryptoConfig config) {
+        this.config = config;
+        sourceProperty.setConfig(config);
+    }
 
-	public void setSource( String source )
-	{
-		sourceProperty.set( source, true );
-		keyStore = null;
-	}
+    public void setSource(String source) {
+        sourceProperty.set(source, true);
+        keyStore = null;
+    }
 
-	/*
-	 * This loads the keystore / truststore file
-	 */
-	// FIXME Why is this method called like times in a row? 
-	public KeyStore load() throws Exception
-	{
-		if( keyStore != null )
-			return keyStore;
+    /*
+     * This loads the keystore / truststore file
+     */
+    // FIXME Why is this method called like times in a row?
+    public KeyStore load() throws Exception {
+        if (keyStore != null)
 
-		try
-		{
-			UISupport.setHourglassCursor();
+        eturn  eyStore;
 
-			String crypotFilePath = sourceProperty.expand();
-			String fileExtension = Files.getFileExtension( crypotFilePath );
-			String keystoreType = fileExtensionToKeystoreType( fileExtension );
 
-			ClassLoader loader = Loader.getClassLoader( KeyMaterialWssCrypto.class );
-			InputStream input = Merlin.loadInputStream( loader, crypotFilePath );
-			keyStore = KeyStore.getInstance( keystoreType );
 
-			char[] password = null;
+        try {
+            UISupport.setHourglassCursor();
 
-			if( !StringUtils.isNullOrEmpty( getPassword() ) )
-			{
-				password = getPassword().toCharArray();
-			}
+            String crypotFilePath = sourceProperty.expand();
+            String fileExtension = Files.getFileExtension(crypotFilePath);
+            String keystoreType = fileExtensionToKeystoreType(fileExtension);
 
-			keyStore.load( input, password );
+            ClassLoader loader = Loader.getClassLoader(KeyMaterialWssCrypto.class);
+            InputStream input = Merlin.loadInputStream(loader, crypotFilePath);
+            keyStore = KeyStore.getInstance(keystoreType);
 
-			return keyStore;
-		}
-		catch( Exception exceptionFromNormalLoad )
-		{
-			log.warn( "Using fallback method to load keystore/truststore due to: " + exceptionFromNormalLoad.getMessage() );
-			try
-			{
-				keyStore = fallbackLoad();
-				return keyStore;
-			}
-			catch( Exception exceptionFromFallbackLoad )
-			{
-				keyStore = null;
-				SoapUI.logError( exceptionFromFallbackLoad, "Could not load keystore/truststore" );
-				throw new Exception( exceptionFromFallbackLoad );
-			}
-		}
-		finally
-		{
-			UISupport.resetCursor();
-		}
-	}
+            char[] password = null;
 
-	@Nonnull
-	private String fileExtensionToKeystoreType( String fileExtension )
-	{
-		if( fileExtension.equals( PKCS12_FILE_EXTENSION ) )
-		{
-			return PKCS12_KEYSTORE_TYPE;
-		}
-		else if( fileExtension.equals( JCEKS_FILE_EXTENSION ) )
-		{
-			return JCEKS_KEYSTORE_TYPE;
-		}
-		else
-		{
-			return KeyStore.getDefaultType();
-		}
-	}
+            if (!StringUtils.isNullOrEmpty(getPassword())) {
+                password = getPassword().toCharArray();
+            }
 
-	/*
-	 * This is the less preferred way to loading cryptos, but is used for
-	 * backwards compability.
-	 */
-	@javax.annotation.Nullable
-	@Deprecated
-	private KeyStore fallbackLoad() throws IOException, CertificateException, KeyStoreException,
-			NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, ProbablyBadPasswordException,
-			UnrecoverableKeyException, FileNotFoundException
-	{
-		KeyStore fallbackKeystore = null;
-		if( StringUtils.hasContent( getDefaultAlias() ) && StringUtils.hasContent( getAliasPassword() ) )
-		{
-			fallbackKeystore = KeyStoreBuilder.build(
-					Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ), getDefaultAlias().getBytes(),
-					getPassword().toCharArray(), getAliasPassword().toCharArray() );
-		}
-		else
-			fallbackKeystore = KeyStoreBuilder.build(
-					Util.streamToBytes( new FileInputStream( sourceProperty.expand() ) ),
-					StringUtils.hasContent( getPassword() ) ? getPassword().toCharArray() : null );
-		return fallbackKeystore;
-	}
+            keyStore.load(input, password);
 
-	public String getStatus()
-	{
-		try
-		{
-			if( StringUtils.hasContent( getSource() ) )
-			{
-				load();
-				return "OK";
-			}
-			else
-			{
-				return "<unavailable>";
-			}
-		}
-		catch( Exception e )
-		{
-			// FIXME We should also log the error if it weren't for all repedious calls to this method.
-			return "<error: " + e.getMessage() + ">";
-		}
-	}
+            return keyStore;
+        } catch (Exception exceptionFromNormalLoad) {
+            log.warn("Using fallback method to load keystore/truststore due to: " + exceptionFromNormalLoad.getMessage());
+            try {
+                keyStore = fallbackLoad();
+                return keyStore;
+            } catch (Exception exceptionFromFallbackLoad) {
+                keyStore = null;
+                SoapUI.logError(exceptionFromFallbackLoad, "Could not load keystore/truststore");
+                throw new Exception(exceptionFromFallbackLoad);
+            }
+        } finally {
+            UISupport.resetCursor();
+        }
+    }
 
-	public String getPassword()
-	{
-		return config.getPassword();
-	}
+    @Nonnull
+    private String fileExtensionToKeystoreType(String fileExtension) {
+        if (fileExtension.equals(PKCS12_FILE_EXTENSION)) {
+            return PKCS12_KEYSTORE_TYPE;
+        } else if (fileExtension.equals(JCEKS_FILE_EXTENSION)) {
+            return JCEKS_KEYSTORE_TYPE;
+        } else {
+            return KeyStore.getDefaultType();
+        }
+    }
 
-	public String getAliasPassword()
-	{
-		return config.getAliasPassword();
-	}
+    /*
+     * This is the less preferred way to loading cryptos, but is used for
+     * backwards compability.
+     */
+    @javax.annotation.Nullable
+    @Deprecated
+    private KeyStore fallbackLoad() throws IOException, CertificateException, KeyStoreException,
+            NoSuchAlgorithmException, InvalidKeyException, NoSuchProviderException, ProbablyBadPasswordException,
+            UnrecoverableKeyException, FileNotFoundException {
+        KeyStore fallbackKeystore = null;
+        if (StringUtils.hasContent(getDefaultAlias()) && StringUtils.hasContent(getAliasPassword())) {
+            fallbackKeystore = KeyStoreBuilder.build(
+                    Util.streamToBytes(new FileInputStream(sourceProperty.expand())), getDefaultAlias().getBytes(),
+                    getPassword().toCharArray(), getAliasPassword().toCharArray());
+        } else
 
-	public String getDefaultAlias()
-	{
-		return config.getDefaultAlias();
-	}
+         allbackKeystore    eyStoreBuilder.build(
+til.streamToBytes(new  ileInputStream(sourceProperty.expand())),
+ tringUtils.hasContent(getPassword())    etPassword().toCharArray()    ull);
 
-	public void setAliasPassword( String arg0 )
-	{
-		config.setAliasPassword( arg0 );
-	}
 
-	public void setDefaultAlias( String arg0 )
-	{
-		config.setDefaultAlias( arg0 );
-	}
+        return fallbackKeystore;
+    }
 
-	public void setPassword( String arg0 )
-	{
-		config.setPassword( arg0 );
-		keyStore = null;
-		getWssContainer().fireCryptoUpdated( this );
-	}
+    public String getStatus() {
+        try {
+            if (StringUtils.hasContent(getSource())) {
+                load();
+                return "OK";
+            } else {
+                return "<unavailable>";
+            }
+        } catch (Exception e) {
+            // FIXME We should also log the error if it weren't for all repedious calls to this method.
+            return "<error: " + e.getMessage() + ">";
+        }
+    }
 
-	public String toString()
-	{
-		return getLabel();
-	}
+    public String getPassword() {
+        return config.getPassword();
+    }
 
-	public DefaultWssContainer getWssContainer()
-	{
-		return ( DefaultWssContainer )container;
-	}
+    public String getAliasPassword() {
+        return config.getAliasPassword();
+    }
 
-	private class KeyMaterialCrypto extends Merlin
-	{
-		private KeyMaterialCrypto( Properties properties ) throws CredentialException, IOException
-		{
-			super( properties );
-		}
+    public String getDefaultAlias() {
+        return config.getDefaultAlias();
+    }
 
-		@Override
-		public KeyStore load( InputStream input, String storepass, String provider, String type )
-				throws CredentialException
-		{
-			if( "this".equals( provider ) )
-			{
-				try
-				{
-					return KeyMaterialWssCrypto.this.load();
-				}
-				catch( Exception e )
-				{
-					throw new CredentialException( 0, null, e );
-				}
-			}
-			else
-				return super.load( input, storepass, provider, type );
-		}
+    public void setAliasPassword(String arg0) {
+        config.setAliasPassword(arg0);
+    }
 
-		@Override
-		public String getCryptoProvider()
-		{
-			return config.getCryptoProvider();
-		}
-	}
+    public void setDefaultAlias(String arg0) {
+        config.setDefaultAlias(arg0);
+    }
 
-	public String getCryptoProvider()
-	{
-		return config.getCryptoProvider();
-	}
+    public void setPassword(String arg0) {
+        config.setPassword(arg0);
+        keyStore = null;
+        getWssContainer().fireCryptoUpdated(this);
+    }
 
-	public void setCryptoProvider( String provider )
-	{
-		config.setCryptoProvider( provider );
-		keyStore = null;
-		getWssContainer().fireCryptoUpdated( this );
-	}
+    public String toString() {
+        return getLabel();
+    }
 
-	@Override
-	public CryptoType getType()
-	{
-		String typeConfig = config.getType();
+    public DefaultWssContainer getWssContainer() {
+        return (DefaultWssContainer) container;
+    }
 
-		// Default to Keystore if type is not saved in configuration
-		if( typeConfig == null )
-		{
-			typeConfig = CryptoType.KEYSTORE.name();
-		}
-		CryptoType type = CryptoType.valueOf( typeConfig );
-		return type;
-	}
+    private class KeyMaterialCrypto extends Merlin {
+        private KeyMaterialCrypto(Properties properties) throws CredentialException, IOException {
+            super(properties);
+        }
 
-	public void setType( @Nonnull CryptoType type )
-	{
-		config.setType( type.name() );
-	}
+        @Override
+        public KeyStore load(InputStream input, String storepass, String provider, String type)
+                throws CredentialException {
+            if ("this".equals(provider)) {
+                try {
+                    return KeyMaterialWssCrypto.this.load();
+                } catch (Exception e) {
+                    throw new CredentialException(0, null, e);
+                }
+            } else
 
-	public void resolve( ResolveContext<?> context )
-	{
-		sourceProperty.resolveFile( context, "Missing keystore/certificate file" );
-	}
+             eturn  uper.load(input,  torepass,  rovider,  ype);
 
-	public void addExternalDependency( List<ExternalDependency> dependencies )
-	{
-		dependencies.add( new PathPropertyExternalDependency( sourceProperty ) );
-	}
+
+        }
+
+        @Override
+        public String getCryptoProvider() {
+            return config.getCryptoProvider();
+        }
+    }
+
+    public String getCryptoProvider() {
+        return config.getCryptoProvider();
+    }
+
+    public void setCryptoProvider(String provider) {
+        config.setCryptoProvider(provider);
+        keyStore = null;
+        getWssContainer().fireCryptoUpdated(this);
+    }
+
+    @Override
+    public CryptoType getType() {
+        String typeConfig = config.getType();
+
+        // Default to Keystore if type is not saved in configuration
+        if (typeConfig == null) {
+            typeConfig = CryptoType.KEYSTORE.name();
+        }
+        CryptoType type = CryptoType.valueOf(typeConfig);
+        return type;
+    }
+
+    public void setType(@Nonnull CryptoType type) {
+        config.setType(type.name());
+    }
+
+    public void resolve(ResolveContext<?> context) {
+        sourceProperty.resolveFile(context, "Missing keystore/certificate file");
+    }
+
+    public void addExternalDependency(List<ExternalDependency> dependencies) {
+        dependencies.add(new PathPropertyExternalDependency(sourceProperty));
+    }
 }

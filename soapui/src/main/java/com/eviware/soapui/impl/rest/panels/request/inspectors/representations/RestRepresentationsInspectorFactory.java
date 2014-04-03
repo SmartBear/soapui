@@ -24,28 +24,26 @@ import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
-public class RestRepresentationsInspectorFactory implements ResponseInspectorFactory, RequestInspectorFactory
-{
-	public static final String INSPECTOR_ID = "Rep";
+public class RestRepresentationsInspectorFactory implements ResponseInspectorFactory, RequestInspectorFactory {
+    public static final String INSPECTOR_ID = "Rep";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof RestRequestInterface )
-			return new RestResponseRepresentationsInspector( ( RestRequest )modelItem );
+    public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof RestRequestInterface) {
+            return new RestResponseRepresentationsInspector((RestRequest) modelItem);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof RestRequestInterface )
-			return new RestRequestRepresentationsInspector( ( RestRequest )modelItem );
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof RestRequestInterface) {
+            return new RestRequestRepresentationsInspector((RestRequest) modelItem);
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

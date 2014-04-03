@@ -18,15 +18,14 @@ package com.eviware.soapui.impl.wsdl.monitor;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 
-public interface SoapMonitorEngine
-{
-	void start( WsdlProject project, int localPort, SoapMonitorListenerCallBack listenerCallBack );
+public interface SoapMonitorEngine {
+    void start(WsdlProject project, int localPort, SoapMonitorListenerCallBack listenerCallBack);
 
-	void stop();
+    void stop();
 
-	boolean isRunning();
+    boolean isRunning();
 
-	boolean isProxy();
+    boolean isProxy();
 
-	void setIncludedContentTypes( ContentTypes includedContentTypes );
+    void setIncludedContentTypes(ContentTypes includedContentTypes);
 }

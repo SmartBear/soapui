@@ -26,43 +26,34 @@ import com.eviware.soapui.model.iface.Attachment;
 
 /**
  * Standard DataSource for existing attachments in SoapUI
- * 
+ *
  * @author ole.matzura
  */
 
-public class AttachmentDataSource implements DataSource
-{
-	private final Attachment attachment;
+public class AttachmentDataSource implements DataSource {
+    private final Attachment attachment;
 
-	public AttachmentDataSource( Attachment attachment )
-	{
-		this.attachment = attachment;
-	}
+    public AttachmentDataSource(Attachment attachment) {
+        this.attachment = attachment;
+    }
 
-	public String getContentType()
-	{
-		return attachment.getContentType();
-	}
+    public String getContentType() {
+        return attachment.getContentType();
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		try
-		{
-			return attachment.getInputStream();
-		}
-		catch( Exception e )
-		{
-			throw new IOException( e.toString() );
-		}
-	}
+    public InputStream getInputStream() throws IOException {
+        try {
+            return attachment.getInputStream();
+        } catch (Exception e) {
+            throw new IOException(e.toString());
+        }
+    }
 
-	public String getName()
-	{
-		return attachment.getName();
-	}
+    public String getName() {
+        return attachment.getName();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

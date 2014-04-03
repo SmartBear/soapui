@@ -26,31 +26,28 @@ import org.junit.Test;
 
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 
-public class AttachmentTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( AttachmentTestCase.class );
-	}
+public class AttachmentTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(AttachmentTestCase.class);
+    }
 
-	@Test
-	public void shouldHaveAttachments() throws Exception
-	{
+    @Test
+    public void shouldHaveAttachments() throws Exception {
 
-		String wsdlUrl = AttachmentTestCase.class.getResource( "/attachment-test.wsdl" ).toString();
-		WsdlProject project = new WsdlProject();
-		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, wsdlUrl, false )[0];
+        String wsdlUrl = AttachmentTestCase.class.getResource("/attachment-test.wsdl").toString();
+        WsdlProject project = new WsdlProject();
+        WsdlInterface iface = WsdlInterfaceFactory.importWsdl(project, wsdlUrl, false)[0];
 
-		WsdlOperation operation = iface.getOperationByName( "SendClaim" );
-		WsdlRequest request = operation.addNewRequest( "Test" );
+        WsdlOperation operation = iface.getOperationByName("SendClaim");
+        WsdlRequest request = operation.addNewRequest("Test");
 
-		request.setRequestContent( operation.createRequest( true ) );
+        request.setRequestContent(operation.createRequest(true));
 
-		System.out.println( request.getRequestContent() );
+        System.out.println(request.getRequestContent());
 
-		HttpAttachmentPart[] definedAttachmentParts = request.getDefinedAttachmentParts();
+        HttpAttachmentPart[] definedAttachmentParts = request.getDefinedAttachmentParts();
 
-		assertEquals( definedAttachmentParts.length, 4 );
-		assertEquals( definedAttachmentParts[0].getName(), "ClaimPhoto" );
-	}
+        assertEquals(definedAttachmentParts.length, 4);
+        assertEquals(definedAttachmentParts[0].getName(), "ClaimPhoto");
+    }
 }

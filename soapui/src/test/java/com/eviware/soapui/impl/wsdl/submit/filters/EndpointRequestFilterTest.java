@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.submit.filters;
+*/
+package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -31,52 +32,46 @@ import org.mockito.Mockito;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class EndpointRequestFilterTest
-{
-	EndpointRequestFilter endpointRequestFilter;
+public class EndpointRequestFilterTest {
+    EndpointRequestFilter endpointRequestFilter;
 
-	@Before
-	public void setUp()
-	{
-		endpointRequestFilter = new EndpointRequestFilter();
-	}
+    @Before
+    public void setUp() {
+        endpointRequestFilter = new EndpointRequestFilter();
+    }
 
-	@Test
-	public void doesNotDoubleEncodeAlreadyEncodedUri() throws URISyntaxException
-	{
-		String encodedUri = "http://user:password@google.se/search?q=%3F";
+    @Test
+    public void doesNotDoubleEncodeAlreadyEncodedUri() throws URISyntaxException {
+        String encodedUri = "http://user:password@google.se/search?q=%3F";
 
-		HttpRequestBase httpMethod = Mockito.mock( HttpRequestBase.class );
+        HttpRequestBase httpMethod = Mockito.mock(HttpRequestBase.class);
 
-		SubmitContext context = mockContext( httpMethod );
-		AbstractHttpRequest<?> request = mockRequest( encodedUri, mockSettings() );
+        SubmitContext context = mockContext(httpMethod);
+        AbstractHttpRequest<?> request = mockRequest(encodedUri, mockSettings());
 
-		endpointRequestFilter.filterAbstractHttpRequest( context, request );
+        endpointRequestFilter.filterAbstractHttpRequest(context, request);
 
-		ArgumentCaptor<URI> httpMethodUri = ArgumentCaptor.forClass( URI.class );
-		Mockito.verify( httpMethod ).setURI( httpMethodUri.capture() );
-		Assert.assertThat( httpMethodUri.getValue(), Is.is( new URI( encodedUri ) ) );
-	}
+        ArgumentCaptor<URI> httpMethodUri = ArgumentCaptor.forClass(URI.class);
+        Mockito.verify(httpMethod).setURI(httpMethodUri.capture());
+        Assert.assertThat(httpMethodUri.getValue(), Is.is(new URI(encodedUri)));
+    }
 
-	private SubmitContext mockContext( HttpRequestBase httpMethod )
-	{
-		SubmitContext context = Mockito.mock( SubmitContext.class );
-		Mockito.when( context.getProperty( BaseHttpRequestTransport.HTTP_METHOD ) ).thenReturn( httpMethod );
-		return context;
-	}
+    private SubmitContext mockContext(HttpRequestBase httpMethod) {
+        SubmitContext context = Mockito.mock(SubmitContext.class);
+        Mockito.when(context.getProperty(BaseHttpRequestTransport.HTTP_METHOD)).thenReturn(httpMethod);
+        return context;
+    }
 
-	private AbstractHttpRequest<?> mockRequest( String encodedUri, XmlBeansSettingsImpl settings )
-	{
-		AbstractHttpRequest<?> request = Mockito.mock( HttpRequest.class );
-		Mockito.when( request.getEndpoint() ).thenReturn( encodedUri );
-		Mockito.when( request.getSettings() ).thenReturn( settings );
-		return request;
-	}
+    private AbstractHttpRequest<?> mockRequest(String encodedUri, XmlBeansSettingsImpl settings) {
+        AbstractHttpRequest<?> request = Mockito.mock(HttpRequest.class);
+        Mockito.when(request.getEndpoint()).thenReturn(encodedUri);
+        Mockito.when(request.getSettings()).thenReturn(settings);
+        return request;
+    }
 
-	private XmlBeansSettingsImpl mockSettings()
-	{
-		XmlBeansSettingsImpl settings = Mockito.mock( XmlBeansSettingsImpl.class );
-		Mockito.when( settings.getBoolean( HttpSettings.ENCODED_URLS ) ).thenReturn( true );
-		return settings;
-	}
+    private XmlBeansSettingsImpl mockSettings() {
+        XmlBeansSettingsImpl settings = Mockito.mock(XmlBeansSettingsImpl.class);
+        Mockito.when(settings.getBoolean(HttpSettings.ENCODED_URLS)).thenReturn(true);
+        return settings;
+    }
 }

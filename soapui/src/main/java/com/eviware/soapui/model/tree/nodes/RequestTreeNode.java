@@ -22,14 +22,12 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
 
 /**
  * SoapUITreeNode for Request implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RequestTreeNode extends AbstractModelItemTreeNode<Request>
-{
-	public RequestTreeNode( Request request, SoapUITreeModel treeModel )
-	{
-		super( request, request.getParent(), treeModel );
-	}
+public class RequestTreeNode extends AbstractModelItemTreeNode<Request> {
+    public RequestTreeNode(Request request, SoapUITreeModel treeModel) {
+        super(request, request.getParent(), treeModel);
+    }
 }

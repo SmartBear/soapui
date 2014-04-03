@@ -23,18 +23,15 @@ import org.junit.Test;
 
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
 
-public class HttpPatchTestCase
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( HttpPatchTestCase.class );
-	}
+public class HttpPatchTestCase {
+    public static junit.framework.Test suite() {
+        return new JUnit4TestAdapter(HttpPatchTestCase.class);
+    }
 
-	private ExtendedPatchMethod patchMethod;
+    private ExtendedPatchMethod patchMethod;
 
-	@Test
-	public void dummyTest()
-	{
-		Assert.assertTrue( true );
-	}
+    @Test
+    public void dummyTest() {
+        Assert.assertTrue(true);
+    }
 }

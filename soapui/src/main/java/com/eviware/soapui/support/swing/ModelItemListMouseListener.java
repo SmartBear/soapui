@@ -24,33 +24,26 @@ import com.eviware.soapui.support.action.swing.ActionListBuilder;
 
 /**
  * ListMouseListener for ModelItems
- * 
+ *
  * @author ole.matzura
  */
 
-public class ModelItemListMouseListener extends AbstractListMouseListener
-{
-	public ModelItemListMouseListener()
-	{
-		this( true );
-	}
+public class ModelItemListMouseListener extends AbstractListMouseListener {
+    public ModelItemListMouseListener() {
+        this(true);
+    }
 
-	public ModelItemListMouseListener( boolean enablePopup )
-	{
-		super( enablePopup );
-	}
+    public ModelItemListMouseListener(boolean enablePopup) {
+        super(enablePopup);
+    }
 
-	@Override
-	protected ActionList getActionsForRow( JList list, int row )
-	{
-		ModelItem item = ( ModelItem )list.getModel().getElementAt( row );
-		try
-		{
-			return item == null ? null : ActionListBuilder.buildActions( item );
-		}
-		catch( Exception e )
-		{
-			return null;
-		}
-	}
+    @Override
+    protected ActionList getActionsForRow(JList list, int row) {
+        ModelItem item = (ModelItem) list.getModel().getElementAt(row);
+        try {
+            return item == null ? null : ActionListBuilder.buildActions(item);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
