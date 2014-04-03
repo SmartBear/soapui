@@ -36,7 +36,7 @@ public class JdbcUtils
 	public static Connection initConnection( PropertyExpansionContext context, String driver, String connectionString,
 			String password ) throws SQLException, SoapUIException
 	{
-		if( JdbcUtils.missingConnSettings( driver, connectionString, password ) )
+		if( JdbcUtils.missingConnSettings( driver, connectionString ) )
 		{
 			throw new SoapUIException( "Some connections settings are missing" );
 		}
@@ -65,7 +65,7 @@ public class JdbcUtils
 			catch( Exception e1 )
 			{
 				SoapUI.logError( e );
-				throw new SoapUIException( "Failed to init connection for drvr [" + drvr + "], connectionString ["
+				throw new SoapUIException( "Failed to init connection for driver [" + drvr + "], connectionString ["
 						+ masskedPass + "]" );
 			}
 		}
@@ -78,10 +78,9 @@ public class JdbcUtils
 		return !StringUtils.isNullOrEmpty( connStr ) ? connStr.contains( PASS_TEMPLATE ) : false;
 	}
 
-	public static boolean missingConnSettings( String driver, String connectionString, String password )
+	public static boolean missingConnSettings( String driver, String connectionString )
 	{
-		return StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString )
-				|| ( connectionString.contains( PASS_TEMPLATE ) && StringUtils.isNullOrEmpty( password ) );
+		return StringUtils.isNullOrEmpty( driver ) || StringUtils.isNullOrEmpty( connectionString );
 	}
 
 }
