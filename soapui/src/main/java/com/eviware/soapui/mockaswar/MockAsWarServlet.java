@@ -81,17 +81,22 @@ public class MockAsWarServlet extends HttpServlet {
             }
 
             if (project == null) {
-                logger.info("Starting MockService(s)");
+                logger.info("Starting Mock service(s)");
             }
 
             for (MockService mockService : project.getMockServiceList()) {
-                logger.info("Starting mockService [" + mockService.getName() + "]");
+                logger.info("Starting mock service [" + mockService.getName() + "]");
                 if (StringUtils.hasContent(mockServiceEndpoint)) {
                     ((WsdlMockService) mockService).setMockServiceEndpoint(mockServiceEndpoint);
                 }
 
                 mockService.start();
             }
+
+			  for (MockService mockService : project.getRestMockServiceList()) {
+				  logger.info("Starting REST mock service [" + mockService.getName() + "]");
+				  mockService.start();
+			  }
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
