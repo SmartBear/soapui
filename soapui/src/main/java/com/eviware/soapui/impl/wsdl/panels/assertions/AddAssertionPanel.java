@@ -113,10 +113,12 @@ public class AddAssertionPanel extends SimpleDialog
 		for( Interface inf : project.getInterfaceList() )
 			try
 			{
+				// There seems to be no good reason to load the definitions for rest interfaces
+				// hence that call has been removed for the time being.
 				if( inf instanceof WsdlInterface )
+				{
 					( ( WsdlInterface )inf ).getWsdlContext().loadIfNecessary();
-				else
-					( ( RestService )inf ).getDefinitionContext().loadIfNecessary();
+				}
 			}
 			catch( Exception e )
 			{
