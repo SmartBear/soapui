@@ -217,15 +217,11 @@ public class SoapUIVersionUpdate {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                if (isNewReleaseAvailable() && (!skipThisVersion() || helpAction))
-
-         howNewVersionDownloadDialog();
-
-       lse if (helpAction)
-
-         ISupport.showInfoMessage("You are running the latest version of SoapUI!",  Version Check");
-
-
+                if (isNewReleaseAvailable() && (!skipThisVersion() || helpAction)) {
+                    showNewVersionDownloadDialog();
+                } else if (helpAction) {
+                    UISupport.showInfoMessage("You are running the latest version of SoapUI!", "Version Check");
+                }
             }
         });
     }
@@ -268,15 +264,11 @@ public class SoapUIVersionUpdate {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (url == null)
-
-             ISupport.showErrorMessage("Missing url");
-
-           lse
-
-             ools.openURL(url);
-
-
+            if (url == null) {
+                UISupport.showErrorMessage("Missing url");
+            } else {
+                Tools.openURL(url);
+            }
             dialog.setVisible(false);
         }
     }

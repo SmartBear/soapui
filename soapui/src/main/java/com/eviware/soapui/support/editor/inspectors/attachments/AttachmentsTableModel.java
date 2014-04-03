@@ -69,11 +69,9 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
 
     public void removeAttachment(int[] rowIndexes) {
         Arrays.sort(rowIndexes);
-        for (int i = rowIndexes.length - 1; i >= 0; i--)
-
-         emoveAttachment(rowIndexes[i]);
-
-
+        for (int i = rowIndexes.length - 1; i >= 0; i--) {
+            removeAttachment(rowIndexes[i]);
+        }
     }
 
     public void removeAttachment(int rowIndex) {
@@ -96,11 +94,9 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex > getRowCount())
-
-         eturn  ull;
-
-
+        if (rowIndex > getRowCount()) {
+            return null;
+        }
 
         Attachment att = container.getAttachmentAt(rowIndex);
 
@@ -125,65 +121,39 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
     }
 
     public int findColumn(String columnName) {
-        if (columnName.equals("Name"))
-
-         eturn  ;
-
-       lse if (columnName.equals("Content type"))
-
-         eturn  ;
-
-       lse if (columnName.equals("Size"))
-
-         eturn  ;
-
-       lse if (columnName.equals("Part"))
-
-         eturn  ;
-
-       lse if (columnName.equals("Type"))
-
-         eturn  ;
-
-
+        if (columnName.equals("Name")) {
+            return 0;
+        } else if (columnName.equals("Content type")) {
+            return 1;
+        } else if (columnName.equals("Size")) {
+            return 2;
+        } else if (columnName.equals("Part")) {
+            return 3;
+        } else if (columnName.equals("Type")) {
+            return 4;
+        }
 
         return -1;
     }
 
     public String getColumnName(int column) {
-        if (column == 0)
-
-         eturn  Name";
-
-       lse if (column == 1)
-
-         eturn  Content type";
-
-       lse if (column == 2)
-
-         eturn  Size";
-
-       lse if (column == 3)
-
-         eturn  Part";
-
-       lse if (column == 4)
-
-         eturn  Type";
-
-       lse if (column == 5)
-
-         eturn  ContentID";
-
-       lse if (column == 6)
-
-         eturn  Cached";
-
-       lse
-
-         eturn  ull;
-
-
+        if (column == 0) {
+            return "Name";
+        } else if (column == 1) {
+            return "Content type";
+        } else if (column == 2) {
+            return "Size";
+        } else if (column == 3) {
+            return "Part";
+        } else if (column == 4) {
+            return "Type";
+        } else if (column == 5) {
+            return "ContentID";
+        } else if (column == 6) {
+            return "Cached";
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -197,36 +167,24 @@ public class AttachmentsTableModel extends AbstractTableModel implements Propert
     }
 
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (!(container instanceof MutableAttachmentContainer))
-
-         eturn;
-
-
+        if (!(container instanceof MutableAttachmentContainer)) {
+            return;
+        }
 
         WsdlAttachment att = (WsdlAttachment) container.getAttachmentAt(rowIndex);
         if (columnIndex == 0) {
-            if (att.isCached())
-
-             tt.setName((String)  Value);
-
-           lse
-
-             tt.setUrl(aValue.toString());
-
-
-        } else if (columnIndex == 1)
-
-             tt.setContentType((String)  Value);
-
-           lse if (columnIndex == 3)
-
-             tt.setPart((String)  Value);
-
-           lse if (columnIndex == 5)
-
-             tt.setContentID((String)  Value);
-
-
+            if (att.isCached()) {
+                att.setName((String) aValue);
+            } else {
+                att.setUrl(aValue.toString());
+            }
+        } else if (columnIndex == 1) {
+            att.setContentType((String) aValue);
+        } else if (columnIndex == 3) {
+            att.setPart((String) aValue);
+        } else if (columnIndex == 5) {
+            att.setContentID((String) aValue);
+        }
 
         fireTableRowsUpdated(rowIndex, rowIndex);
     }

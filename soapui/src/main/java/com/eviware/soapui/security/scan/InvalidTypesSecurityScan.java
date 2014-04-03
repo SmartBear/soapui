@@ -155,76 +155,51 @@ public class InvalidTypesSecurityScan extends AbstractSecurityScanWithProperties
 
         StringToStringMap params = new StringToStringMap();
 
-        if (parameterMutations.size() == 0)
-
-             utateParameters(testStep,  ontext);
-
-
+        if (parameterMutations.size() == 0) {
+            mutateParameters(testStep, context);
+        }
         if (getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE) {
             /*
 			 * Idea is to drain for each parameter mutations.
 			 */
             for (SecurityCheckedParameter param : getParameterHolder().getParameterList()) {
-                if (parameterMutations.containsKey(param))
+                if (parameterMutations.containsKey(param)) {
+                    if (parameterMutations.get(param).size() > 0) {
 
-             f  parameterMutations.get(param).size()    )
+                        TestProperty property = getTestStep().getProperties().get(param.getName());
+                        String value = context.expand(property.getValue());
+                        if (param.getXpath() == null || param.getXpath().trim().length() == 0) {
+                            testStep.getProperties().get(param.getName())
+                                    .setValue(parameterMutations.get(param).get(0));
+                            params.put(param.getLabel(), parameterMutations.get(param).get(0));
+                            parameterMutations.get(param).remove(0);
+                        } else {
+                            // no value, do nothing.
+                            if (value == null || value.trim().equals("")) {
+                                continue;
+                            }
+                            if (XmlUtils.seemsToBeXml(value))
+                            // try
+                            {
+                                // XmlObjectTreeModel model = new XmlObjectTreeModel(
+                                // property.getSchemaType().getTypeSystem(),
+                                // XmlObject.Factory.parse( value ) );
+                                XmlObjectTreeModel model = new XmlObjectTreeModel(property.getSchemaType().getTypeSystem(),
+                                        XmlUtils.createXmlObject(value));
+                                XmlTreeNode[] nodes = model.selectTreeNodes(context.expand(param.getXpath()));
+                                for (XmlTreeNode node : nodes) {
+                                    node.setValue(1, parameterMutations.get(param).get(0));
+                                }
+                                params.put(param.getLabel(), parameterMutations.get(param).get(0));
+                                parameterMutations.get(param).remove(0);
 
-                 estProperty  roperty    etTestStep().getProperties().get(param.getName());
+                                testStep.getProperties().get(param.getName()).setValue(model.getXmlObject().toString());
 
-                 tring  alue    ontext.expand(property.getValue());
-
-                 f  param.getXpath()  =  ull  |  aram.getXpath().trim().length()  =  )
-
-                     estStep.getProperties().get(param.getName())
-setValue(parameterMutations.get(param).get(0));
-
-                     arams.put(param.getLabel(),  arameterMutations.get(param).get(0));
-
-                     arameterMutations.get(param).remove(0);
-
-                   lse
-                             / no value, do nothing.
-
-                     f  value  =  ull  |  alue.trim().equals(""))
-
-                         ontinue;
-
-
-
-                     f  XmlUtils.seemsToBeXml(value))
-                             / try
-
-
-                                 / XmlObjectTreeModel model = new XmlObjectTreeModel(
-                                 / property.getSchemaType().getTypeSystem(),
-                                 / XmlObject.Factory.parse( value ) );
-
-                         mlObjectTreeModel  odel    ew  mlObjectTreeModel(property.getSchemaType().getTypeSystem(),
- mlUtils.createXmlObject(value));
-
-                         mlTreeNode[]  odes    odel.selectTreeNodes(context.expand(param.getXpath()));
-
-                         or  XmlTreeNode  ode    odes)
-
-                             ode.setValue(1,  arameterMutations.get(param).get(0));
-
-
-
-                         arams.put(param.getLabel(),  arameterMutations.get(param).get(0));
-
-                         arameterMutations.get(param).remove(0);
-
-                         estStep.getProperties().get(param.getName()).setValue(model.getXmlObject().toString());
-
-
-
-
-
-                 reak;
-
-
-
-
+                            }
+                        }
+                        break;
+                    }
+                }
             }
         } else {
             for (TestProperty property : testStep.getPropertyList()) {
@@ -246,38 +221,26 @@ setValue(parameterMutations.get(param).get(0));
                             parameterMutations.get(param).remove(0);
                         } else {
                             // no value, do nothing.
-                            if (value == null || value.trim().equals(""))
-
-                         ontinue;
-
-
+                            if (value == null || value.trim().equals("")) {
+                                continue;
+                            }
                             if (param.getName().equals(property.getName())) {
                                 XmlTreeNode[] nodes = model.selectTreeNodes(context.expand(param.getXpath()));
-                                if (parameterMutations.containsKey(param))
-
-                         f  parameterMutations.get(param).size()    )
-
-                             or  XmlTreeNode  ode    odes)
-
-                                 ode.setValue(1,  arameterMutations.get(param).get(0));
-
-
-
-                             arams.put(param.getLabel(),  arameterMutations.get(param).get(0));
-
-                             arameterMutations.get(param).remove(0);
-
-
-
-
+                                if (parameterMutations.containsKey(param)) {
+                                    if (parameterMutations.get(param).size() > 0) {
+                                        for (XmlTreeNode node : nodes) {
+                                            node.setValue(1, parameterMutations.get(param).get(0));
+                                        }
+                                        params.put(param.getLabel(), parameterMutations.get(param).get(0));
+                                        parameterMutations.get(param).remove(0);
+                                    }
+                                }
                             }
                         }
                     }
-                    if (model != null)
-
-                     roperty.setValue(model.getXmlObject().toString());
-
-
+                    if (model != null) {
+                        property.setValue(model.getXmlObject().toString());
+                    }
 
                 }
             }
@@ -307,22 +270,18 @@ setValue(parameterMutations.get(param).get(0));
                 if (parameter.getXpath() == null || parameter.getXpath().trim().length() == 0) {
                     for (SchemaTypeForSecurityScanConfig invalidType : invalidTypeConfig.getTypesListList()) {
 
-                        if (!parameterMutations.containsKey(parameter))
-
-                             arameterMutations.put(parameter,  ew  rrayList<String>());
-
-
+                        if (!parameterMutations.containsKey(parameter)) {
+                            parameterMutations.put(parameter, new ArrayList<String>());
+                        }
                         parameterMutations.get(parameter).add(invalidType.getValue());
 
                     }
                 } else {
                     // we have xpath but do we have xml which need to mutate
                     // ignore if there is no value, since than we'll get exception
-                    if (property.getValue() == null && property.getDefaultValue() == null)
-
-                 ontinue;
-
-
+                    if (property.getValue() == null && property.getDefaultValue() == null) {
+                        continue;
+                    }
                     // get value of that property
                     String value = context.expand(property.getValue());
 
@@ -343,11 +302,9 @@ setValue(parameterMutations.get(param).get(0));
 
                             if (nodes.length > 0) {
                                 if (nodes[0].getSchemaType().getBuiltinTypeCode() != type.getType()) {
-                                    if (!parameterMutations.containsKey(parameter))
-
-                                 arameterMutations.put(parameter,  ew  rrayList<String>());
-
-
+                                    if (!parameterMutations.containsKey(parameter)) {
+                                        parameterMutations.put(parameter, new ArrayList<String>());
+                                    }
                                     parameterMutations.get(parameter).add(type.getValue());
                                 }
                             }
@@ -363,15 +320,11 @@ setValue(parameterMutations.get(param).get(0));
     protected boolean hasNext(TestStep testStep, SecurityTestRunContext context) {
         boolean hasNext = false;
         if ((parameterMutations == null || parameterMutations.size() == 0) && !mutation) {
-            if (getParameterHolder().getParameterList().size() > 0)
-
-         asNext    rue;
-
-       lse
-
-         asNext    alse;
-
-
+            if (getParameterHolder().getParameterList().size() > 0) {
+                hasNext = true;
+            } else {
+                hasNext = false;
+            }
         } else {
             for (SecurityCheckedParameter param : parameterMutations.keySet()) {
                 if (parameterMutations.get(param).size() > 0) {
@@ -547,15 +500,11 @@ setValue(parameterMutations.get(param).get(0));
             if (simpleType != null && !simpleType.isNoType()) {
                 XmlObjectTreeModel model2 = new XmlObjectTreeModel(simpleType.getTypeSystem(), simpleType.getParseObject());
                 List<String> list = BoundaryRestrictionUtill.getType(model2.getRootNode(), new ArrayList<String>());
-                if (list.isEmpty())
-
-             ypeLabel.setJlabel("parameter has type ["    impleType.getName()    ]");
-
-           lse
-
-             ypeLabel.setJlabel("parameter has types ["    ist.toString()    ]");
-
-
+                if (list.isEmpty()) {
+                    typeLabel.setJlabel("parameter has type [" + simpleType.getName() + "]");
+                } else {
+                    typeLabel.setJlabel("parameter has types [" + list.toString() + "]");
+                }
             } else {
                 typeLabel.setJlabel("parameter is missing type in schema");
             }

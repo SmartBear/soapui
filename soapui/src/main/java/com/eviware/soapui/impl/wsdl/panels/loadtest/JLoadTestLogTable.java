@@ -306,11 +306,9 @@ public class JLoadTestLogTable extends JPanel {
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            if (rowIndex == -1)
-
-             eturn  ull;
-
-
+            if (rowIndex == -1) {
+                return null;
+            }
 
             LoadTestLogEntry entry = (LoadTestLogEntry) loadTestLog.getElementAt(rowIndex);
 
@@ -346,11 +344,9 @@ public class JLoadTestLogTable extends JPanel {
     private static final class IconTableCellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                                                        int row, int column) {
-            if (value != null)
-
-         etIcon((Icon)  alue);
-
-
+            if (value != null) {
+                setIcon((Icon) value);
+            }
 
             if (isSelected) {
                 setBackground(table.getSelectionBackground());
@@ -371,11 +367,9 @@ public class JLoadTestLogTable extends JPanel {
 
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
                                                        int row, int column) {
-            if (value != null)
-
-             etText(DateUtil.formatExtraFull(new  ate((Long)  alue)));
-
-
+            if (value != null) {
+                setText(DateUtil.formatExtraFull(new Date((Long) value)));
+            }
 
             if (isSelected) {
                 setBackground(table.getSelectionBackground());
@@ -404,26 +398,20 @@ public class JLoadTestLogTable extends JPanel {
         public void mouseClicked(MouseEvent e) {
             if (e.getClickCount() > 1) {
                 int selectedRow = logTable.getSelectedRow();
-                if (selectedRow < 0)
-
-         eturn;
-
-
+                if (selectedRow < 0) {
+                    return;
+                }
 
                 int row = logTable.convertRowIndexToModel(selectedRow);
-                if (row < 0)
-
-             eturn;
-
-
+                if (row < 0) {
+                    return;
+                }
 
                 LoadTestLogEntry entry = (LoadTestLogEntry) loadTestLog.getElementAt(row);
                 ActionList actions = entry.getActions();
-                if (actions != null)
-
-             ctions.performDefaultAction(new  ctionEvent(logTable,  ,  ull));
-
-
+                if (actions != null) {
+                    actions.performDefaultAction(new ActionEvent(logTable, 0, null));
+                }
             }
         }
 
@@ -442,31 +430,25 @@ public class JLoadTestLogTable extends JPanel {
 
     public void showPopup(MouseEvent e) {
         int selectedRow = logTable.rowAtPoint(e.getPoint());
-        if (selectedRow == -1)
-
-         eturn;
-
-
+        if (selectedRow == -1) {
+            return;
+        }
 
         if (logTable.getSelectedRow() != selectedRow) {
             logTable.getSelectionModel().setSelectionInterval(selectedRow, selectedRow);
         }
 
         int row = logTable.convertRowIndexToModel(selectedRow);
-        if (row < 0)
-
-             eturn;
-
-
+        if (row < 0) {
+            return;
+        }
 
         LoadTestLogEntry entry = (LoadTestLogEntry) loadTestLog.getElementAt(row);
         ActionList actions = entry.getActions();
 
-        if (actions == null || actions.getActionCount() == 0)
-
-             eturn;
-
-
+        if (actions == null || actions.getActionCount() == 0) {
+            return;
+        }
 
         JPopupMenu popup = ActionSupport.buildPopup(actions);
         popup.setInvoker(logTable);

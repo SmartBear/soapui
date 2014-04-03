@@ -112,11 +112,9 @@ public class SwingXFormImpl implements XForm {
      * com.eviware.x.form.XFormField)
      */
     public XFormField addComponent(String label, XFormField formComponent) {
-        if (rowSpacing > 0 && !components.isEmpty())
-
-        ddSpace(rowSpacing);
-
-
+        if (rowSpacing > 0 && !components.isEmpty()) {
+            addSpace(rowSpacing);
+        }
 
         components.put(label, formComponent);
 
@@ -148,17 +146,12 @@ public class SwingXFormImpl implements XForm {
             swingFormComponent.getComponent().getAccessibleContext().setAccessibleDescription(label);
         }
 
-        if (!StringUtils.isNullOrEmpty(label) && label.startsWith("###"))
-
-             anel.add(swingFormComponent.getComponent(),  c.xyw(2,  ow,  ));
-
-           lse  //Keep the name/Label to empty/null to add only the component (in column 4), not the JLabel for name
-
-
-
-             anel.add(swingFormComponent.getComponent(),  c.xy(4,  ow));
-
-
+        if (!StringUtils.isNullOrEmpty(label) && label.startsWith("###")) {
+            panel.add(swingFormComponent.getComponent(), cc.xyw(2, row, 4));
+        } else  //Keep the name/Label to empty/null to add only the component (in column 4), not the JLabel for name
+        {
+            panel.add(swingFormComponent.getComponent(), cc.xy(4, row));
+        }
 
         components.put(label, formComponent);
 
@@ -184,15 +177,11 @@ public class SwingXFormImpl implements XForm {
         layout.appendRow(rowSpec);
         int row = layout.getRowCount();
 
-        if (StringUtils.isNullOrEmpty(label))
-
-             anel.add(new  Separator(),  c.xywh(2,  ow,  ,  ));
-
-           lse
-
-             anel.add(new  Label(label),  c.xywh(2,  ow,  ,  ));
-
-
+        if (StringUtils.isNullOrEmpty(label)) {
+            panel.add(new JSeparator(), cc.xywh(2, row, 3, 1));
+        } else {
+            panel.add(new JLabel(label), cc.xywh(2, row, 3, 1));
+        }
 
         addSpace(rowSpacing);
     }
@@ -226,11 +215,9 @@ public class SwingXFormImpl implements XForm {
 
     public void setComponentValue(String label, String value) {
         XFormField component = getComponent(label);
-        if (component != null)
-
-         omponent.setValue(value);
-
-
+        if (component != null) {
+            component.setValue(value);
+        }
     }
 
     public String getComponentValue(String name) {
@@ -247,11 +234,9 @@ public class SwingXFormImpl implements XForm {
     }
 
     public XFormField addComponent(XFormField component) {
-        if (rowSpacing > 0 && !components.isEmpty())
-
-         ddSpace(rowSpacing);
-
-
+        if (rowSpacing > 0 && !components.isEmpty()) {
+            addSpace(rowSpacing);
+        }
 
         layout.appendRow(rowSpec);
         int row = layout.getRowCount();
@@ -285,11 +270,9 @@ public class SwingXFormImpl implements XForm {
 
     public void setOptions(String name, Object[] values) {
         XFormOptionsField combo = (XFormOptionsField) getComponent(name);
-        if (combo != null)
-
-         ombo.setOptions(values);
-
-
+        if (combo != null) {
+            combo.setOptions(values);
+        }
     }
 
     public void addLabel(String name, String label) {
@@ -308,11 +291,9 @@ public class SwingXFormImpl implements XForm {
 
     public Object[] getOptions(String name) {
         XFormField combo = getComponent(name);
-        if (combo instanceof XFormOptionsField)
-
-         eturn  (XFormOptionsField)  ombo).getOptions();
-
-
+        if (combo instanceof XFormOptionsField) {
+            return ((XFormOptionsField) combo).getOptions();
+        }
 
         return null;
     }

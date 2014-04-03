@@ -179,10 +179,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
         } else if (panelBuilder != null && panelBuilder.hasDesktopPanel()) {
             DesktopPanel desktopPanel = panelBuilder.buildDesktopPanel(modelItem);
             if (desktopPanel == null)
-
-         eturn  ull;
-
-
+                return null;
 
             JInternalFrame frame = createContentFrame(desktopPanel);
 
@@ -201,10 +198,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             currentPanel = desktopPanel;
             desktopPanel.getComponent().requestFocusInWindow();
         } else
-
-         oolkit.getDefaultToolkit().beep();
-
-
+            Toolkit.getDefaultToolkit().beep();
 
         enableWindowActions();
 
@@ -282,16 +276,10 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             e.getInternalFrame().dispose();
 
             if (!transferring)
-
-                 ireDesktopPanelClosed(desktopPanel);
-
-
+                fireDesktopPanelClosed(desktopPanel);
 
             if (currentPanel == desktopPanel)
-
-                 urrentPanel    ull;
-
-
+                currentPanel = null;
         }
 
         public void internalFrameActivated(InternalFrameEvent e) {
@@ -320,10 +308,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
         public void actionPerformed(ActionEvent e) {
             JInternalFrame frame = desktop.getSelectedFrame();
             if (frame != null)
-
-             loseDesktopPanel(internalFrameToDesktopPanelMap.get(frame));
-
-
+                closeDesktopPanel(internalFrameToDesktopPanelMap.get(frame));
         }
     }
 
@@ -337,10 +322,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
         public void actionPerformed(ActionEvent e) {
             JInternalFrame frame = desktop.getSelectedFrame();
             if (frame == null)
-
-             eturn;
-
-
+                return;
 
             JInternalFrame[] frames = internalFrameToDesktopPanelMap.keySet().toArray(
                     new JInternalFrame[internalFrameToDesktopPanelMap.size()]);
@@ -414,10 +396,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             desktop.add(frame);
 
             if (desktopPanel.getModelItem() != null)
-
-                 odelItemToInternalFrameMap.put(desktopPanel.getModelItem(),  rame);
-
-
+                modelItemToInternalFrameMap.put(desktopPanel.getModelItem(), frame);
 
             internalFrameToDesktopPanelMap.put(frame, desktopPanel);
             fireDesktopPanelCreated(desktopPanel);
@@ -440,15 +419,9 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             try {
                 File file = new File("soapui-background.gif");
                 if (!file.exists())
-
-             ile    ew  ile("soapui-background.jpg");
-
-
+                    file = new File("soapui-background.jpg");
                 if (!file.exists())
-
-             ile    ew  ile("soapui-background.png");
-
-
+                    file = new File("soapui-background.png");
 
                 if (file.exists()) {
                     img = javax.imageio.ImageIO.read(file);
@@ -464,10 +437,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             super.paintComponent(g);
 
             if (img == null)
-
-                 eturn;
-
-
+                return;
 
             int x = (this.getWidth() - imageWidth) / 2;
             int y = (this.getHeight() - imageHeight) / 2;
