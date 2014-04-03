@@ -196,11 +196,9 @@ public class JSecurityTestRunLog extends JPanel {
     }
 
     public synchronized void addSecurityScanRequestResult(SecurityScanRequestResult checkRequestResult) {
-        if (errorsOnly && checkRequestResult.getStatus() != SecurityScanRequestResult.ResultStatus.FAILED)
-
-         eturn;
-
-
+        if (errorsOnly && checkRequestResult.getStatus() != SecurityScanRequestResult.ResultStatus.FAILED) {
+            return;
+        }
 
         logListModel.addSecurityScanRequestResult(checkRequestResult);
         if (follow) {
@@ -219,11 +217,9 @@ public class JSecurityTestRunLog extends JPanel {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (optionsDialog == null)
-
-             ptionsDialog    DialogBuilder.buildDialog(OptionsForm.class);
-
-
+            if (optionsDialog == null) {
+                optionsDialog = ADialogBuilder.buildDialog(OptionsForm.class);
+            }
 
             optionsDialog.setIntValue(OptionsForm.MAXROWS,
                     (int) settings.getLong(OptionsForm.class.getName() + "@max_rows", 1000));
@@ -315,57 +311,45 @@ public class JSecurityTestRunLog extends JPanel {
             int index = testLogList.getSelectedIndex();
             if (index != -1 && (index == selectedIndex || e.getClickCount() > 1)) {
                 SecurityResult result = logListModel.getTestStepResultAt(index);
-                if (result != null && result.getActions() != null)
-
-         esult.getActions().performDefaultAction(new  ctionEvent(this,  ,  ull));
-
-
+                if (result != null && result.getActions() != null) {
+                    result.getActions().performDefaultAction(new ActionEvent(this, 0, null));
+                }
             }
             selectedIndex = index;
         }
 
         public void mousePressed(MouseEvent e) {
-            if (e.isPopupTrigger())
-
-             howPopup(e);
-
-
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
         }
 
         public void mouseReleased(MouseEvent e) {
-            if (e.isPopupTrigger())
-
-             howPopup(e);
-
-
+            if (e.isPopupTrigger()) {
+                showPopup(e);
+            }
         }
 
         public void showPopup(MouseEvent e) {
             int row = testLogList.locationToIndex(e.getPoint());
-            if (row == -1)
-
-             eturn;
-
-
+            if (row == -1) {
+                return;
+            }
 
             if (testLogList.getSelectedIndex() != row) {
                 testLogList.setSelectedIndex(row);
             }
 
             SecurityResult result = logListModel.getTestStepResultAt(row);
-            if (result == null)
-
-                 eturn;
-
-
+            if (result == null) {
+                return;
+            }
 
             ActionList actions = result.getActions();
 
-            if (actions == null || actions.getActionCount() == 0)
-
-                 eturn;
-
-
+            if (actions == null || actions.getActionCount() == 0) {
+                return;
+            }
 
             JPopupMenu popup = ActionSupport.buildPopup(actions);
             UISupport.showPopup(popup, testLogList, e.getPoint());
@@ -374,11 +358,9 @@ public class JSecurityTestRunLog extends JPanel {
 
     public synchronized void addText(String string) {
         logListModel.addText(string);
-        if (follow)
-
-         estLogList.ensureIndexIsVisible(logListModel.getSize()    );
-
-
+        if (follow) {
+            testLogList.ensureIndexIsVisible(logListModel.getSize() - 1);
+        }
     }
 
     private final class SecurityTestLogCellRenderer extends JLabel implements ListCellRenderer {

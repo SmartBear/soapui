@@ -176,37 +176,25 @@ public class JFunctionalTestRunLog extends JPanel {
             if (index != -1 && (index == selectedIndex || e.getClickCount() > 1)) {
                 TestStepResult result = logListModel.getTestStepResultAt(index);
                 if (result != null && result.getActions() != null)
-
-         esult.getActions().performDefaultAction(new  ctionEvent(this,  ,  ull));
-
-
+                    result.getActions().performDefaultAction(new ActionEvent(this, 0, null));
             }
             selectedIndex = index;
         }
 
         public void mousePressed(MouseEvent e) {
             if (e.isPopupTrigger())
-
-             howPopup(e);
-
-
+                showPopup(e);
         }
 
         public void mouseReleased(MouseEvent e) {
             if (e.isPopupTrigger())
-
-             howPopup(e);
-
-
+                showPopup(e);
         }
 
         public void showPopup(MouseEvent e) {
             int row = testLogList.locationToIndex(e.getPoint());
             if (row == -1)
-
-             eturn;
-
-
+                return;
 
             if (testLogList.getSelectedIndex() != row) {
                 testLogList.setSelectedIndex(row);
@@ -214,18 +202,12 @@ public class JFunctionalTestRunLog extends JPanel {
 
             TestStepResult result = logListModel.getTestStepResultAt(row);
             if (result == null)
-
-                 eturn;
-
-
+                return;
 
             ActionList actions = result.getActions();
 
             if (actions == null || actions.getActionCount() == 0)
-
-                 eturn;
-
-
+                return;
 
             JPopupMenu popup = ActionSupport.buildPopup(actions);
             UISupport.showPopup(popup, testLogList, e.getPoint());
@@ -235,10 +217,7 @@ public class JFunctionalTestRunLog extends JPanel {
     public synchronized void addText(String string) {
         logListModel.addText(string);
         if (follow)
-
-         estLogList.ensureIndexIsVisible(logListModel.getSize()    );
-
-
+            testLogList.ensureIndexIsVisible(logListModel.getSize() - 1);
     }
 
     private final class FunctionalLogCellRenderer extends JLabel implements ListCellRenderer {

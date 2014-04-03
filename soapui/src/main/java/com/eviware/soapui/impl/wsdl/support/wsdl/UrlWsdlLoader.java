@@ -155,19 +155,15 @@ public class UrlWsdlLoader extends WsdlLoader {
         } else {
             if (content != null) {
                 String compressionAlg = HttpClientSupport.getResponseCompressionType(httpResponse);
-                if (compressionAlg != null)
-
-             ontent    ompressionSupport.decompress(compressionAlg,  ontent);
-
-
+                if (compressionAlg != null) {
+                    content = CompressionSupport.decompress(compressionAlg, content);
+                }
 
                 urlCache.put(url, content);
                 String newUrl = getMethod.getURI().toString();
-                if (!url.equals(newUrl))
-
-                 og.info("BaseURI was redirected to ["    ewUrl    ]");
-
-
+                if (!url.equals(newUrl)) {
+                    log.info("BaseURI was redirected to [" + newUrl + "]");
+                }
                 setNewBaseURI(newUrl);
                 urlCache.put(newUrl, content);
                 return new ByteArrayInputStream(content);
@@ -217,11 +213,9 @@ public class UrlWsdlLoader extends WsdlLoader {
     }
 
     public boolean abort() {
-        if (getMethod != null)
-
-         etMethod.abort();
-
-
+        if (getMethod != null) {
+            getMethod.abort();
+        }
 
         aborted = true;
 
@@ -258,11 +252,9 @@ public class UrlWsdlLoader extends WsdlLoader {
             //	}
 
             String pw = getPassword();
-            if (pw == null)
-
-                 w    ";
-
-
+            if (pw == null) {
+                pw = "";
+            }
 
             if (AuthPolicy.NTLM.equalsIgnoreCase(authScope.getScheme())
                     || AuthPolicy.SPNEGO.equalsIgnoreCase(authScope.getScheme())) {
@@ -349,11 +341,9 @@ public class UrlWsdlLoader extends WsdlLoader {
             boolean result;
 
             public void run() {
-                if (basicDialog == null)
-
-                 uildBasicDialog();
-
-
+                if (basicDialog == null) {
+                    buildBasicDialog();
+                }
 
                 basicDialog.setValues(values);
 

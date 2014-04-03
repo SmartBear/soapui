@@ -138,11 +138,9 @@ public class KeyMaterialWssCrypto implements WssCrypto {
      */
     // FIXME Why is this method called like times in a row?
     public KeyStore load() throws Exception {
-        if (keyStore != null)
-
-        eturn  eyStore;
-
-
+        if (keyStore != null) {
+            return keyStore;
+        }
 
         try {
             UISupport.setHourglassCursor();
@@ -204,13 +202,11 @@ public class KeyMaterialWssCrypto implements WssCrypto {
             fallbackKeystore = KeyStoreBuilder.build(
                     Util.streamToBytes(new FileInputStream(sourceProperty.expand())), getDefaultAlias().getBytes(),
                     getPassword().toCharArray(), getAliasPassword().toCharArray());
-        } else
-
-         allbackKeystore    eyStoreBuilder.build(
-til.streamToBytes(new  ileInputStream(sourceProperty.expand())),
- tringUtils.hasContent(getPassword())    etPassword().toCharArray()    ull);
-
-
+        } else {
+            fallbackKeystore = KeyStoreBuilder.build(
+                    Util.streamToBytes(new FileInputStream(sourceProperty.expand())),
+                    StringUtils.hasContent(getPassword()) ? getPassword().toCharArray() : null);
+        }
         return fallbackKeystore;
     }
 
@@ -276,11 +272,9 @@ til.streamToBytes(new  ileInputStream(sourceProperty.expand())),
                 } catch (Exception e) {
                     throw new CredentialException(0, null, e);
                 }
-            } else
-
-             eturn  uper.load(input,  torepass,  rovider,  ype);
-
-
+            } else {
+                return super.load(input, storepass, provider, type);
+            }
         }
 
         @Override
