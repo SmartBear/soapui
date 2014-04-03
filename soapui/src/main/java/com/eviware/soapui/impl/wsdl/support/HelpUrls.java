@@ -192,7 +192,7 @@ public interface HelpUrls {
 
     public static final String TRIAL_URL = "http://www.eviware.com/soapui/trial";
 
-    public static final String TESTSUITELIST_HELP_URL = null;
+	public static final String TESTSUITELIST_HELP_URL = "http://www.soapui.org/Functional-Testing/project-testsuites-tab.html";
 
     public static final String JDBC_CONNECTION_HELP_URL = HELP_URL_ROOT + "projects/jdbcConnections.html";
 
@@ -227,11 +227,14 @@ public interface HelpUrls {
     public static final String AUTHORIZATION_SPNEGO_KERBEROS = "http://www.soapui.org/OAuth/SPNEGO-Kerberos.html";
     public static final String AUTHORIZATION_OAUTH2 = "http://www.soapui.org/OAuth/OAuth2.html";
 
-    public static final String REST_MOCKSERVICE_HELP_URL = "http://www.soapui.org/REST-Service-Mocking/mock-service-editor.html";
-    public static final String REST_MOCKSERVICE_ACTION = "http://www.soapui.org/REST-Service-Mocking/mock-action-editor.html";
-    public static final String REST_MOCK_RESPONSE_EDITOR = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor.html";
-    public static final String REST_MOCK_RESPONSE_EDITOR_HEADER = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-header.html";
-    public static final String REST_MOCK_RESPONSE_SCRIPT = "http://www.soapui.org/REST-Service-Mocking/mock-response-script.html";
-    public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
-    public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
+	public static final String REST_MOCKSERVICE_HELP_URL = "http://www.soapui.org/REST-Service-Mocking/mock-service-editor.html";
+	public static final String REST_MOCKSERVICE_ACTION = "http://www.soapui.org/REST-Service-Mocking/mock-action-editor.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR_HEADER = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-header.html";
+	public static final String REST_MOCK_RESPONSE_SCRIPT = "http://www.soapui.org/REST-Service-Mocking/mock-response-script.html";
+	public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
+	public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
+
+	public static final String FUNCITONAL_TESTING_SETUP_SCRIPT = "http://www.soapui.org/Functional-Testing/setup-script.html";
+	public static final String FUNCITONAL_TESTING_TEARDOWN_SCRIPT = "http://www.soapui.org/Functional-Testing/teardown-script.html";
 }

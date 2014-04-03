@@ -195,15 +195,17 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
                 "Script to run after running TestSuites"));
     }
 
-    protected GroovyEditorComponent buildTearDownScriptPanel() {
-        tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), null);
-        return tearDownGroovyEditor;
-    }
+	protected GroovyEditorComponent buildTearDownScriptPanel()
+	{
+		tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), HelpUrls.FUNCITONAL_TESTING_TEARDOWN_SCRIPT);
+		return tearDownGroovyEditor;
+	}
 
-    protected GroovyEditorComponent buildSetupScriptPanel() {
-        setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), null);
-        return setupGroovyEditor;
-    }
+	protected GroovyEditorComponent buildSetupScriptPanel()
+	{
+		setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), HelpUrls.FUNCITONAL_TESTING_SETUP_SCRIPT);
+		return setupGroovyEditor;
+	}
 
     protected JComponent buildTestSuiteList(WsdlProject testSuite) {
         testSuiteList = new JProjectTestSuiteList(testSuite);
