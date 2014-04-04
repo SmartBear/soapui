@@ -57,7 +57,6 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
 		  XFormField settingFile = getPreFilledSettings();
 
-        XFormField warDirectory = dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY);
         XFormField warFile = dialog.getFormField(MockAsWarDialog.WAR_FILE);
 
         String passwordForEncryption = project.getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
@@ -75,7 +74,9 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
             MockAsWar mockAsWar = new MockAsWar(project.getPath(),
                     dialog.getBooleanValue(MockAsWarDialog.GLOBAL_SETTINGS) ? settingFile.getValue() : "",
-                    warDirectory.getValue(), warFile.getValue(), dialog.getBooleanValue(MockAsWarDialog.EXT_LIBS),
+						  dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY).getValue(),
+						  dialog.getFormField(MockAsWarDialog.WAR_FILE).getValue(),
+						  dialog.getBooleanValue(MockAsWarDialog.EXT_LIBS),
                     dialog.getBooleanValue(MockAsWarDialog.ACTIONS), dialog.getBooleanValue(MockAsWarDialog.LISTENERS),
                     dialog.getValue(MockAsWarDialog.MOCKSERVICE_ENDPOINT),
                     dialog.getBooleanValue(MockAsWarDialog.ENABLE_WEBUI));
@@ -83,10 +84,16 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
         }
     }
 
+    // Only to be called from test class
+    protected void setDialog(XFormDialog dialog){
+        this.dialog = dialog;
+    }
+
 	private XFormField getPreFilledSettings()
 	{
 		XFormField settingFile = dialog.getFormField( MockAsWarDialog.SETTINGS_FILE);
-		settingFile.setValue(((DefaultSoapUICore ) SoapUI.getSoapUICore()).getSettingsFile());
+        DefaultSoapUICore soapUICore = (DefaultSoapUICore) SoapUI.getSoapUICore();
+        settingFile.setValue(soapUICore.getSettingsFile());
 		settingFile.setEnabled(dialog.getBooleanValue( MockAsWarDialog.GLOBAL_SETTINGS));
 		return settingFile;
 	}
