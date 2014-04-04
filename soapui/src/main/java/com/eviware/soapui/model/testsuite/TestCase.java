@@ -16,11 +16,12 @@
 
 package com.eviware.soapui.model.testsuite;
 
-import java.util.List;
-
+import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.types.StringToObjectMap;
+
+import java.util.List;
 
 /**
  * A TestCase holding a number of TestSteps
@@ -83,4 +84,6 @@ public interface TestCase extends TestModelItem, ResultContainer, TestRunnable {
     public int getSecurityTestCount();
 
     public List<SecurityTest> getSecurityTestList();
+
+    TestStep insertTestStep(TestStepConfig config, int position);
 }

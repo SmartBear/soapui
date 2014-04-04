@@ -19,13 +19,13 @@ package com.eviware.soapui.impl.wsdl.actions.request;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.actions.support.AbstractAddToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestRequestStepFactory;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
@@ -41,7 +41,7 @@ import com.eviware.x.form.XFormField;
  * @author Ole.Matzura
  */
 
-public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<WsdlRequest> {
+public class AddRequestToTestCaseAction extends AbstractAddRequestToTestCaseAction<WsdlRequest> {
     public static final String SOAPUI_ACTION_ID = "AddRequestToTestCaseAction";
 
     private static final String STEP_NAME = "Name";
@@ -70,7 +70,8 @@ public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<Wsdl
         }
     }
 
-    public WsdlTestRequestStep addRequest(WsdlTestCase testCase, WsdlRequest request, int position) {
+    @Override
+    public boolean addRequest(TestCase testCase, WsdlRequest request, int position) {
         if (dialog == null) {
             buildDialog();
         }
@@ -94,7 +95,7 @@ public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<Wsdl
 
         dialogValues = dialog.show(dialogValues);
         if (dialog.getReturnValue() != XFormDialog.OK_OPTION) {
-            return null;
+            return false;
         }
 
         String name = dialogValues.get(STEP_NAME);
@@ -103,7 +104,7 @@ public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<Wsdl
                 WsdlTestRequestStepFactory.createConfig(request, name), position);
 
         if (testStep == null) {
-            return null;
+            return false;
         }
 
         if (dialogValues.getBoolean(COPY_ATTACHMENTS)) {
@@ -138,7 +139,7 @@ public class AddRequestToTestCaseAction extends AbstractAddToTestCaseAction<Wsdl
             UISupport.selectAndShow(testCase);
         }
 
-        return testStep;
+        return true;
     }
 
     private void buildDialog() {
