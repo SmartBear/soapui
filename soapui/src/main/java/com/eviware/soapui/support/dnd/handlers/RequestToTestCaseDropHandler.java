@@ -16,101 +16,61 @@
 
 package com.eviware.soapui.support.dnd.handlers;
 
-import java.util.HashSet;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction;
+import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.actions.request.AbstractAddRequestToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.iface.Interface;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.SoapUIAction;
 
-public class RequestToTestCaseDropHandler extends AbstractBeforeAfterModelItemDropHandler<WsdlRequest, WsdlTestCase> {
+public class RequestToTestCaseDropHandler extends AbstractCopyingModelItemDropHandler<AbstractHttpRequest, WsdlTestCase> {
     public RequestToTestCaseDropHandler() {
-        super(WsdlRequest.class, WsdlTestCase.class);
+        super(AbstractHttpRequest.class, WsdlTestCase.class);
     }
 
     @Override
-    boolean canCopyAfter(WsdlRequest source, WsdlTestCase target) {
+    boolean canCopyBefore(AbstractHttpRequest source, WsdlTestCase target) {
+        return false;
+    }
+
+    @Override
+    boolean canCopyOn(AbstractHttpRequest source, WsdlTestCase target) {
         return true;
     }
 
     @Override
-    boolean canMoveAfter(WsdlRequest source, WsdlTestCase target) {
+    boolean canCopyAfter(AbstractHttpRequest source, WsdlTestCase target) {
         return true;
     }
 
     @Override
-    boolean copyAfter(WsdlRequest source, WsdlTestCase target) {
-        return addRequestToTestCase(source, target, -1);
-    }
-
-    private boolean addRequestToTestCase(WsdlRequest source, WsdlTestCase target, int index) {
-        if (!UISupport.confirm("Add Request [" + source.getName() + "] to TestCase [" + target.getName() + "]",
-                "Add Request to TestCase")) {
-            return false;
-        }
-
-        WsdlProject targetProject = target.getTestSuite().getProject();
-        if (targetProject != source.getOperation().getInterface().getProject()) {
-            HashSet<Interface> requiredInterfaces = new HashSet<Interface>();
-            requiredInterfaces.add(source.getOperation().getInterface());
-
-            if (!DragAndDropSupport
-                    .importRequiredInterfaces(targetProject, requiredInterfaces, "Add Request to TestCase")) {
-                return false;
-            }
-        }
-
-        SoapUIAction<WsdlRequest> action = SoapUI.getActionRegistry().getAction(
-                AddRequestToTestCaseAction.SOAPUI_ACTION_ID);
-        return ((AddRequestToTestCaseAction) action).addRequest(target, source, index) != null;
+    boolean copyBefore(AbstractHttpRequest source, WsdlTestCase target) {
+        return false;
     }
 
     @Override
-    boolean moveAfter(WsdlRequest source, WsdlTestCase target) {
-        return addRequestToTestCase(source, target, -1);
+    boolean copyOn(AbstractHttpRequest source, WsdlTestCase target) {
+        return addRequestToTestCase(source, target);
     }
 
     @Override
-    String getCopyAfterInfo(WsdlRequest source, WsdlTestCase target) {
+    boolean copyAfter(AbstractHttpRequest source, WsdlTestCase target) {
+        return addRequestToTestCase(source, target);
+    }
+
+    private boolean addRequestToTestCase(AbstractHttpRequest source, WsdlTestCase target) {
+        return AbstractAddRequestToTestCaseAction.addRequestToTestCase(source, target, 0);
+    }
+
+    @Override
+    String getCopyBeforeInfo(AbstractHttpRequest source, WsdlTestCase target) {
+        return null;
+    }
+
+    @Override
+    String getCopyOnInfo(AbstractHttpRequest source, WsdlTestCase target) {
+        return getCopyAfterInfo(source, target);
+    }
+
+    @Override
+    String getCopyAfterInfo(AbstractHttpRequest source, WsdlTestCase target) {
         return "Add Request [" + source.getName() + "] to TestCase [" + target.getName() + "]";
-    }
-
-    @Override
-    String getMoveAfterInfo(WsdlRequest source, WsdlTestCase target) {
-        return getCopyAfterInfo(source, target);
-    }
-
-    @Override
-    boolean canCopyBefore(WsdlRequest source, WsdlTestCase target) {
-        return true;
-    }
-
-    @Override
-    boolean canMoveBefore(WsdlRequest source, WsdlTestCase target) {
-        return true;
-    }
-
-    @Override
-    boolean copyBefore(WsdlRequest source, WsdlTestCase target) {
-        return addRequestToTestCase(source, target, 0);
-    }
-
-    @Override
-    String getCopyBeforeInfo(WsdlRequest source, WsdlTestCase target) {
-        return getCopyAfterInfo(source, target);
-    }
-
-    @Override
-    String getMoveBeforeInfo(WsdlRequest source, WsdlTestCase target) {
-        return getCopyAfterInfo(source, target);
-    }
-
-    @Override
-    boolean moveBefore(WsdlRequest source, WsdlTestCase target) {
-        return addRequestToTestCase(source, target, 0);
     }
 }

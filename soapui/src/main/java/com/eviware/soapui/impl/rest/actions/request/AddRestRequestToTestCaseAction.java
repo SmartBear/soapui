@@ -19,11 +19,11 @@ package com.eviware.soapui.impl.rest.actions.request;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.actions.support.AbstractAddToTestCaseAction;
+import com.eviware.soapui.impl.wsdl.actions.request.AbstractAddRequestToTestCaseAction;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
-import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.RestRequestStepFactory;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
@@ -39,7 +39,7 @@ import com.eviware.x.form.XFormField;
  * @author Ole.Matzura
  */
 
-public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<RestRequest> {
+public class AddRestRequestToTestCaseAction extends AbstractAddRequestToTestCaseAction<RestRequest> {
     public static final String SOAPUI_ACTION_ID = "AddRestRequestToTestCaseAction";
 
     private static final String STEP_NAME = "Name";
@@ -64,7 +64,7 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
         }
     }
 
-    public RestTestRequestStepInterface addRequest(WsdlTestCase testCase, RestRequest request, int position) {
+    public boolean addRequest(TestCase testCase, RestRequest request, int position) {
         if (dialog == null) {
             buildDialog();
         }
@@ -79,9 +79,8 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
 
         dialogValues = dialog.show(dialogValues);
         if (dialog.getReturnValue() != XFormDialog.OK_OPTION) {
-            return null;
+            return false;
         }
-        ;
 
         String name = dialogValues.get(STEP_NAME);
 
@@ -89,7 +88,7 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
                 RestRequestStepFactory.createConfig(request, name), position);
 
         if (testStep == null) {
-            return null;
+            return false;
         }
 
         if (dialogValues.getBoolean(CLOSE_REQUEST) && desktop != null) {
@@ -104,7 +103,7 @@ public class AddRestRequestToTestCaseAction extends AbstractAddToTestCaseAction<
             UISupport.selectAndShow(testStep);
         }
 
-        return testStep;
+        return true;
     }
 
     private void buildDialog() {
