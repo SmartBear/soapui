@@ -35,7 +35,7 @@ import static com.eviware.soapui.impl.rest.RestRequestInterface.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RestMockService extends AbstractMockService<RestMockAction, RestMockResponse, RESTMockServiceConfig> {
+public class RestMockService extends AbstractMockService<RestMockAction, RESTMockServiceConfig> {
 
     public final static String ICON_NAME = "/restMockService.gif";
 

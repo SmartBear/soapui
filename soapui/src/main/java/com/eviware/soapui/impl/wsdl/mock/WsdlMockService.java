@@ -47,7 +47,7 @@ import java.util.*;
  * @author ole.matzura
  */
 
-public class WsdlMockService extends AbstractMockService<WsdlMockOperation, WsdlMockResponse, MockServiceConfig> {
+public class WsdlMockService extends AbstractMockService<WsdlMockOperation, MockServiceConfig> {
     private static final String REQUIRE_SOAP_VERSION = WsdlMockService.class.getName() + "@require-soap-version";
     private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
 
