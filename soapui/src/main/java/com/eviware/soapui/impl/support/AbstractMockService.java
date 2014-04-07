@@ -24,7 +24,6 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.support.ExternalDependency;
 import com.eviware.soapui.impl.wsdl.support.IconAnimator;
-import com.eviware.soapui.impl.wsdl.support.MockServiceExternalDependency;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
@@ -180,6 +179,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
         return getProtocol() + host + ":" + getPort() + getPath();
     }
 
+    @Override
     public String getHost() {
         return getConfig().getHost();
     }
@@ -374,7 +374,8 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
         return getConfig().isSetStopScript() ? getConfig().getStopScript().getStringValue() : null;
     }
 
-    public Object runStartScript(WsdlMockRunContext runContext, WsdlMockRunner runner) throws Exception {
+    @Override
+    public Object runStartScript(WsdlMockRunContext runContext, MockRunner runner) throws Exception {
         String script = getStartScript();
         if (StringUtils.isNullOrEmpty(script)) {
             return null;
@@ -391,7 +392,8 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
         return startScriptEngine.run();
     }
 
-    public Object runStopScript(WsdlMockRunContext runContext, WsdlMockRunner runner) throws Exception {
+    @Override
+    public Object runStopScript(WsdlMockRunContext runContext, MockRunner runner) throws Exception {
         String script = getStopScript();
         if (StringUtils.isNullOrEmpty(script)) {
             return null;
@@ -447,8 +449,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
         return getConfig().isSetAfterRequestScript() ? getConfig().getAfterRequestScript().getStringValue() : null;
     }
 
-    public Object runOnRequestScript(WsdlMockRunContext runContext, MockRequest mockRequest)
-            throws Exception {
+    public Object runOnRequestScript(WsdlMockRunContext runContext, MockRequest mockRequest) throws Exception {
         String script = getOnRequestScript();
         if (StringUtils.isNullOrEmpty(script)) {
             return null;
@@ -472,8 +473,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
         }
     }
 
-    public Object runAfterRequestScript(WsdlMockRunContext runContext, MockResult mockResult)
-            throws Exception {
+    public Object runAfterRequestScript(WsdlMockRunContext runContext, MockResult mockResult) throws Exception {
         String script = getAfterRequestScript();
         if (StringUtils.isNullOrEmpty(script)) {
             return null;
@@ -530,8 +530,6 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 
     public abstract String getIconName();
 
-    public abstract MockDispatcher createDispatcher(WsdlMockRunContext mockContext);
-
     public void fireOnMockResult(Object result) {
         if (result != null && result instanceof MockResult) {
             for (MockRunListener listener : getMockRunListeners()) {
@@ -541,7 +539,7 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
     }
 
     private class MockServiceIconAnimator
-            extends IconAnimator<AbstractMockService<MockOperationType, MockResponseType, MockServiceConfigType>>
+            extends IconAnimator<MockService>
             implements MockRunListener {
         public MockServiceIconAnimator() {
             super(AbstractMockService.this, getIconName(), getIconName(), 4);

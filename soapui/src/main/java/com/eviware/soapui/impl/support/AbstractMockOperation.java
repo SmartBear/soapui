@@ -24,6 +24,7 @@ import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockService;
 
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public abstract class AbstractMockOperation
 
     private List<MockResponseType> responses = new ArrayList<MockResponseType>();
 
-    protected AbstractMockOperation(BaseMockOperationConfigType config, AbstractMockService parent, String icon) {
+    protected AbstractMockOperation(BaseMockOperationConfigType config, MockService parent, String icon) {
         super(config, parent, icon);
     }
 

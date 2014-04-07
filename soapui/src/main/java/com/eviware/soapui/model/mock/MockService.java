@@ -16,10 +16,14 @@
 
 package com.eviware.soapui.model.mock;
 
+import com.eviware.soapui.impl.support.HasHelpUrl;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.AnimatableItem;
 
 import java.util.List;
 
@@ -30,7 +34,7 @@ import java.util.List;
  */
 
 // TODO: some things in AbstractMockRunner that is inherited from far above should probably makes its way in here
-public interface MockService extends TestModelItem, Releasable {
+public interface MockService extends TestModelItem, Releasable, AnimatableItem, HasHelpUrl {
     public final static String PATH_PROPERTY = MockService.class.getName() + "@path";
     public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
 
@@ -71,6 +75,8 @@ public interface MockService extends TestModelItem, Releasable {
 
     public void removeMockRunListener(MockRunListener listener);
 
+    public MockRunListener[] getMockRunListeners();
+
     public void addMockServiceListener(MockServiceListener listener);
 
     public void removeMockServiceListener(MockServiceListener listener);
@@ -86,4 +92,32 @@ public interface MockService extends TestModelItem, Releasable {
     public boolean getBindToHostOnly();
 
     public String getLocalEndpoint();
+
+    public MockDispatcher createDispatcher(WsdlMockRunContext mockContext);
+
+    public String getHost();
+
+    public Object runStartScript(WsdlMockRunContext mockContext, MockRunner wsdlMockRunner) throws Exception;
+
+    public String getStartScript();
+
+    public void setStartScript(String script);
+
+    public String getStopScript();
+
+    public void setStopScript(String script);
+
+    public Object runStopScript(WsdlMockRunContext mockContext, MockRunner mockRunner) throws Exception;
+
+    public String getOnRequestScript();
+
+    public void setOnRequestScript(String text);
+
+    public Object runOnRequestScript(WsdlMockRunContext context, MockRequest request) throws Exception;
+
+    public String getAfterRequestScript();
+
+    public void setAfterRequestScript(String text);
+
+    public Object runAfterRequestScript(WsdlMockRunContext context, MockResult request) throws Exception;
 }
