@@ -16,24 +16,20 @@
 
 package com.eviware.soapui.tools;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import com.eviware.soapui.impl.support.AbstractMockService;
-import com.eviware.soapui.model.mock.MockRunContext;
-import org.apache.commons.cli.CommandLine;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.mock.MockRunner;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.model.support.MockRunListenerAdapter;
 import com.eviware.soapui.support.DateUtil;
+import org.apache.commons.cli.CommandLine;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from

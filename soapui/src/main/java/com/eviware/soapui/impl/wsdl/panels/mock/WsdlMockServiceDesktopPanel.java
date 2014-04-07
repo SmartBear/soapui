@@ -69,7 +69,7 @@ import java.util.List;
 
 
 @SuppressWarnings("serial")
-public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockService>
+public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         extends KeySensitiveModelItemDesktopPanel<MockServiceType> {
     private JButton runButton;
     private WsdlMockRunner mockRunner;
@@ -266,7 +266,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends AbstractMockSer
         descriptionArea = new JUndoableTextArea(getModelItem().getDescription());
         descriptionArea.getDocument().addDocumentListener(new DocumentListenerAdapter() {
             public void update(Document document) {
-                getModelItem().setDescription(descriptionArea.getText());
+                ((AbstractMockService)getModelItem()).setDescription(descriptionArea.getText());
             }
         });
 

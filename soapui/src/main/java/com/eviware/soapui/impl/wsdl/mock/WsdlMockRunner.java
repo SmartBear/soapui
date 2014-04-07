@@ -17,11 +17,9 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.mock.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +41,7 @@ public class WsdlMockRunner implements MockRunner {
     private boolean running;
     private MockDispatcher dispatcher;
 
-    public WsdlMockRunner(AbstractMockService mockService, WsdlTestRunContext context) throws Exception {
+    public WsdlMockRunner(MockService mockService, WsdlTestRunContext context) throws Exception {
         Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
 
         // TODO: move this code elsewhere when the rest counterpoint is in place
@@ -72,8 +70,8 @@ public class WsdlMockRunner implements MockRunner {
         return mockContext;
     }
 
-    private AbstractMockService getMockService() {
-        return (AbstractMockService) getMockContext().getMockService();
+    private MockService getMockService() {
+        return getMockContext().getMockService();
     }
 
     public boolean isRunning() {

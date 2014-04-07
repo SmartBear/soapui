@@ -17,7 +17,6 @@
 package com.eviware.soapui.monitor;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapMessageBuilder;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
@@ -131,7 +130,7 @@ public class JettyMockEngine implements MockEngine {
                 }
 
                 if (mockService.getBindToHostOnly()) {
-                    String host = PropertyExpander.expandProperties(mockService, ((AbstractMockService) mockService).getHost());
+                    String host = PropertyExpander.expandProperties(mockService, mockService.getHost());
                     if (StringUtils.hasContent(host)) {
                         connector.setHost(host);
                     }

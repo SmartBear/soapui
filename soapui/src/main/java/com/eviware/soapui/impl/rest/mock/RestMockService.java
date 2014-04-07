@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.project.Project;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.*;
@@ -183,6 +184,5 @@ public class RestMockService extends AbstractMockService<RestMockAction, RestMoc
     public String getHelpUrl() {
         return HelpUrls.REST_MOCKSERVICE_HELP_URL;
     }
-
 
 }
