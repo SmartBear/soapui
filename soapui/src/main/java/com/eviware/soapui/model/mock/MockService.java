@@ -33,8 +33,8 @@ import java.util.List;
  * @author ole.matzura
  */
 
-// TODO: some things in AbstractMockRunner that is inherited from far above should probably makes its way in here
-public interface MockService extends TestModelItem, Releasable, AnimatableItem, HasHelpUrl {
+public interface MockService extends TestModelItem, Releasable, AnimatableItem, HasHelpUrl, MockServer, MockServiceScripts
+{
     public final static String PATH_PROPERTY = MockService.class.getName() + "@path";
     public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
 
@@ -52,31 +52,6 @@ public interface MockService extends TestModelItem, Releasable, AnimatableItem, 
 
     public void removeMockOperation(MockOperation mockOperation);
 
-    public String getPath();
-
-    public void setPath(String path);
-
-    public int getPort();
-
-    public void setPort(int i);
-
-    public MockRunner getMockRunner();
-
-    public MockRunner start() throws Exception;
-
-    /**
-     * Start this mock service if HttpSetting.START_MOCK_SERVICE is true.
-     *
-     * @throws Exception if the start fails for some reason. One case may be that the port is occupied already.
-     */
-    public void startIfConfigured() throws Exception;
-
-    public void addMockRunListener(MockRunListener listener);
-
-    public void removeMockRunListener(MockRunListener listener);
-
-    public MockRunListener[] getMockRunListeners();
-
     public void addMockServiceListener(MockServiceListener listener);
 
     public void removeMockServiceListener(MockServiceListener listener);
@@ -89,35 +64,4 @@ public interface MockService extends TestModelItem, Releasable, AnimatableItem, 
 
     public void fireMockResponseRemoved(MockResponse mockResponse);
 
-    public boolean getBindToHostOnly();
-
-    public String getLocalEndpoint();
-
-    public MockDispatcher createDispatcher(WsdlMockRunContext mockContext);
-
-    public String getHost();
-
-    public Object runStartScript(WsdlMockRunContext mockContext, MockRunner wsdlMockRunner) throws Exception;
-
-    public String getStartScript();
-
-    public void setStartScript(String script);
-
-    public String getStopScript();
-
-    public void setStopScript(String script);
-
-    public Object runStopScript(WsdlMockRunContext mockContext, MockRunner mockRunner) throws Exception;
-
-    public String getOnRequestScript();
-
-    public void setOnRequestScript(String text);
-
-    public Object runOnRequestScript(WsdlMockRunContext context, MockRequest request) throws Exception;
-
-    public String getAfterRequestScript();
-
-    public void setAfterRequestScript(String text);
-
-    public Object runAfterRequestScript(WsdlMockRunContext context, MockResult request) throws Exception;
 }
