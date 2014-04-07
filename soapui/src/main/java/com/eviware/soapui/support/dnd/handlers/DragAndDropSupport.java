@@ -115,7 +115,10 @@ public class DragAndDropSupport {
                 }
             }
 
-            target.importTestStep(source, name, defaultPosition, false);
+            final WsdlTestStep result = target.importTestStep(source, name, defaultPosition, false);
+            if (result == null) {
+                return false;
+            }
             source.getTestCase().removeTestStep(source);
         }
 
