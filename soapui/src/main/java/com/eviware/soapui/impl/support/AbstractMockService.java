@@ -44,7 +44,6 @@ import java.net.UnknownHostException;
 import java.util.*;
 
 public abstract class AbstractMockService<MockOperationType extends MockOperation,
-        MockResponseType extends MockResponse,
         MockServiceConfigType extends BaseMockServiceConfig>
         extends AbstractTestPropertyHolderWsdlModelItem<MockServiceConfigType>
         implements MockService, HasHelpUrl {
