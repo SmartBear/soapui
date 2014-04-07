@@ -528,10 +528,8 @@ public class PropertyTransfer implements PropertyChangeNotifier {
             return null;
         }
 
-        // XmlObject sourceXml = sourceValue == null ? null :
-        // XmlObject.Factory.parse( sourceValue );
-        XmlObject sourceXml = sourceValue == null ? null : XmlUtils.createXmlObject(sourceValue);
-        XmlCursor sourceCursor = sourceValue == null ? null : sourceXml.newCursor();
+        XmlObject sourceXml = XmlUtils.createXmlObject(sourceValue);
+        XmlCursor sourceCursor = sourceXml.newCursor();
 
         try {
             String value = null;
