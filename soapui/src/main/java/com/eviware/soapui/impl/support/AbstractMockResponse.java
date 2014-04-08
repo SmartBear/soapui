@@ -276,7 +276,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
         // only support multipart for wsdl currently.....
         if (operation instanceof WsdlMockOperation) {
             if (operation == null) {
-                throw new Exception("Missing WsdlOperation for mock response");
+                throw new IllegalStateException("Missing WsdlOperation for mock response");
             }
 
 
@@ -298,16 +298,13 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                     SoapUI.logError(e);
                 }
             }
-        }
 
-        responseContent = removeEmptyContent(responseContent);
+            responseContent = removeEmptyContent(responseContent);
+        }
 
         if (isStripWhitespaces()) {
             responseContent = XmlUtils.stripWhitespaces(responseContent);
         }
-
-        MockRequest request = result.getMockRequest();
-        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
 
         ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
@@ -375,6 +372,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             }
             result.writeRawResponseData(data);
         }
+
+        MockRequest request = result.getMockRequest();
+        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
 
         return responseContent;
     }
