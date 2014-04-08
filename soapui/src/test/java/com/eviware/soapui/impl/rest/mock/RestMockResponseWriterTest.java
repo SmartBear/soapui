@@ -17,7 +17,9 @@ package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.ServletOutputStream;
@@ -28,20 +30,43 @@ import java.util.Enumeration;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 public class RestMockResponseWriterTest {
 
+    private RestMockResponse mockResponse;
+    private MockResult result;
+    private String originalResponseContent = "<content>awful lot of content</content>";;
+    private HttpServletRequest servletRequest;
+    private HttpServletResponse servletResponse;
+
+    @Before
+    public void setUp() throws IOException, SoapUIException {
+        mockHttpServletRequest();
+        mockHttpServletResponse();
+        mockResponse = ModelItemFactory.makeRestResponse();
+        result = createMockResult();
+    }
+
     @Test
     public void writesResponse() throws Exception {
-        RestMockResponse mockResponse = ModelItemFactory.makeRestResponse();
-        MockResult result = createMockResult();
-        String originalResponseContent = "<content>awful lot of content</content>";
-
         String writtenResponseContent = mockResponse.writeResponse(result, originalResponseContent);
 
         assertThat(writtenResponseContent, is( originalResponseContent ));
+    }
+
+    @Test
+    public void shouldWriteContentLength() throws Exception {
+        mockResponse.writeResponse(result, originalResponseContent);
+        verify(servletResponse).addHeader("Content-Length", "" + originalResponseContent.getBytes().length);
+    }
+
+    @Test
+    public void shouldNotWriteContentLengthIfTransferEncodingIsPresent() throws Exception {
+        result.addHeader("Transfer-Encoding", "chunked");
+        mockResponse.writeResponse(result, originalResponseContent);
+        verify(servletResponse, never()).addHeader(eq("Content-Length"), anyString());
     }
 
     public MockResult createMockResult() throws IOException {
@@ -50,20 +75,18 @@ public class RestMockResponseWriterTest {
     }
 
     public RestMockRequest createMockRequest(WsdlMockRunContext runContext) throws IOException {
-        return new RestMockRequest(mockHttpServletRequest(), mockHttpServletResponse(), runContext);
+        return new RestMockRequest(servletRequest, servletResponse, runContext);
     }
 
-    private HttpServletRequest mockHttpServletRequest() {
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+    private void mockHttpServletRequest() {
+        servletRequest = mock(HttpServletRequest.class);
         when(servletRequest.getHeaderNames()).thenReturn(headerNames());
-        return servletRequest;
     }
 
-    private HttpServletResponse mockHttpServletResponse() throws IOException {
-        HttpServletResponse servletResponse = mock(HttpServletResponse.class);
+    private void mockHttpServletResponse() throws IOException {
+        servletResponse = mock(HttpServletResponse.class);
         ServletOutputStream os = mock(ServletOutputStream.class);
         when(servletResponse.getOutputStream()).thenReturn(os);
-        return servletResponse;
     }
 
     private Enumeration headerNames() {
