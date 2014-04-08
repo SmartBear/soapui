@@ -21,8 +21,6 @@ import static org.junit.Assert.assertNotNull;
 
 import javax.xml.namespace.QName;
 
-import junit.framework.JUnit4TestAdapter;
-
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Test;
@@ -33,19 +31,17 @@ import org.w3c.dom.NodeList;
 import com.eviware.soapui.support.xml.XmlUtils;
 
 public class XmlUtilsTestCase {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(XmlUtilsTestCase.class);
-    }
 
     @Test
     public void testGetElementIndex() throws Exception {
         Document dom = XmlUtils.parseXml("<h1><p>p1</p><h2>lkj</h2><p>p2</p></h1>");
         NodeList nl = dom.getDocumentElement().getElementsByTagName("p");
 
-        assertEquals(1, XmlUtils.getElementIndex((Element) nl.item(0)));
-        assertEquals(2, XmlUtils.getElementIndex((Element) nl.item(1)));
+        assertEquals(1, XmlUtils.getElementIndex(nl.item(0)));
+        assertEquals(2, XmlUtils.getElementIndex(nl.item(1)));
     }
 
+    @Test
     public void testGetElementPath() throws Exception {
         Document dom = XmlUtils.parseXml("<h1><p>p1</p><h2>lkj</h2><p>p2</p></h1>");
         NodeList nl = dom.getDocumentElement().getElementsByTagName("p");
@@ -89,7 +85,6 @@ public class XmlUtilsTestCase {
                 + "<soapenv:Header/><soapenv:Body><ord:purchaseOrder><productId>?</productId>"
                 + "</ord:purchaseOrder></soapenv:Body></soapenv:Envelope>";
 
-        // XmlObject xml = XmlObject.Factory.parse( str );
         XmlObject xml = XmlUtils.createXmlObject(str);
         XmlObject xmlobj = xml.selectPath("//productId")[0];
         String xpath = XmlUtils.createXPath(xmlobj.getDomNode());
@@ -112,7 +107,6 @@ public class XmlUtilsTestCase {
                 + "<soapenv:Header/><soapenv:Body><purchaseOrder xmlns=\"http://test\"><productId>?</productId>"
                 + "</purchaseOrder></soapenv:Body></soapenv:Envelope>";
 
-        // XmlObject xml = XmlObject.Factory.parse( str );
         XmlObject xml = XmlUtils.createXmlObject(str);
         XmlObject xmlobj = xml.selectPath("declare namespace ns='http://test';//ns:productId")[0];
         String xpath = XmlUtils.createXPath(xmlobj.getDomNode());
@@ -123,7 +117,6 @@ public class XmlUtilsTestCase {
     @Test
     public void testGetFirstChildElementNS() throws XmlException {
         String xml = "<SofEnvelope><partnerid>test</partnerid><sessionID>asdadasdasd</sessionID></SofEnvelope>";
-        // XmlObject xmlObject = XmlObject.Factory.parse( xml );
         XmlObject xmlObject = XmlUtils.createXmlObject(xml);
 
         Element documentElement = ((Document) xmlObject.getDomNode()).getDocumentElement();
