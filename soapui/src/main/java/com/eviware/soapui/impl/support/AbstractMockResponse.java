@@ -264,7 +264,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
         }
     }
 
-    protected String writeResponse(MockResult result, String responseContent) throws Exception {
+    public String writeResponse(MockResult result, String responseContent) throws Exception {
         MimeMultipart mp = null;
 
         Operation operation = getMockOperation().getOperation();
