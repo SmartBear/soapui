@@ -19,6 +19,7 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockResult;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.utils.ModelItemFactory;
+import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -52,7 +53,6 @@ public class RestMockResponseWriterTest {
     @Test
     public void writesResponse() throws Exception {
         String writtenResponseContent = mockResponse.writeResponse(result, originalResponseContent);
-
         assertThat(writtenResponseContent, is( originalResponseContent ));
     }
 
@@ -67,6 +67,13 @@ public class RestMockResponseWriterTest {
         result.addHeader("Transfer-Encoding", "chunked");
         mockResponse.writeResponse(result, originalResponseContent);
         verify(servletResponse, never()).addHeader(eq("Content-Length"), anyString());
+    }
+
+    @Test
+    public void shouldSetStatusCode() throws Exception {
+        mockResponse.setResponseHttpStatus(HttpStatus.SC_CONFLICT);
+        mockResponse.writeResponse(result, originalResponseContent);
+        verify(servletResponse).setStatus(HttpStatus.SC_CONFLICT);
     }
 
     public MockResult createMockResult() throws IOException {
