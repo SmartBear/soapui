@@ -40,12 +40,13 @@ import static org.mockito.Mockito.when;
 
 public class MockAsWarActionTest {
 
-    public static final String WAR_FILE_NAME = "./mock.war";
     private final String SOAPUI_HOME = "soapui.home";
     private WsdlProject project;
     private XFormDialog mockedDialog;
     private String soapuiOriginalHome;
     private final File warTestDir = new File("wartestdir");
+    private final String warDirectoryPath = warTestDir.getPath() + "/wardirectory";
+    private final String WAR_FILE_NAME = warTestDir.getPath()+"/mock.war";
 
     @Before
     public void setUp() throws SoapUIException, URISyntaxException, IOException, XmlException {
@@ -61,7 +62,7 @@ public class MockAsWarActionTest {
 
         createFileformfield(getFilePathFromResource("/config/soapui-test-settings.xml"), MockAsWarAction.MockAsWarDialog.SETTINGS_FILE);
         createFileformfield(WAR_FILE_NAME, MockAsWarAction.MockAsWarDialog.WAR_FILE);
-        createFileformfield(warTestDir.getPath(), MockAsWarAction.MockAsWarDialog.WAR_DIRECTORY);
+        createFileformfield(warDirectoryPath, MockAsWarAction.MockAsWarDialog.WAR_DIRECTORY);
 
         when(mockedDialog.getValue(MockAsWarAction.MockAsWarDialog.MOCKSERVICE_ENDPOINT)).thenReturn("http://localhost:8080");
     }
@@ -114,7 +115,7 @@ public class MockAsWarActionTest {
     }
 
     @Test
-    public void createMockAsWar() throws SoapUIException {
+    public void createMockAsWar() throws SoapUIException, IOException {
 
         MockAsWarAction action = new MockAsWarAction();
 
@@ -122,6 +123,12 @@ public class MockAsWarActionTest {
         action.perform(project, null);
 
         assertTrue(new File(WAR_FILE_NAME).exists());
+        assertValidWarDirectory(warDirectoryPath);
+    }
+
+    private void assertValidWarDirectory(String warDirectoryPath) {
+        assertTrue( new File(warDirectoryPath+"/WEB-INF/web.xml").exists());
+        assertTrue( new File(warDirectoryPath+"/WEB-INF/lib/soapui.jar").exists());
     }
 
 }
