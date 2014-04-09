@@ -80,7 +80,7 @@ public class ModelItemFactory {
     }
 
     public static WsdlProject makeWsdlProject() throws SoapUIException {
-        return new WsdlProject("file:///tmp/project.xml", (WorkspaceImpl) WorkspaceFactory.getInstance().openWorkspace("testWorkSpace", new StringToStringMap()));
+        return new WsdlProject((WorkspaceImpl) WorkspaceFactory.getInstance().openWorkspace("testWorkSpace", new StringToStringMap()));
     }
 
     public static WsdlTestCase makeTestCase() throws SoapUIException {
