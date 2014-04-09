@@ -15,12 +15,9 @@
 */
 package com.eviware.soapui.actions;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.utils.ModelItemFactory;
-import com.eviware.x.dialogs.XFileDialogs;
 import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
@@ -34,7 +31,6 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Random;
 
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -49,18 +45,52 @@ public class MockAsWarActionTest {
     private WsdlProject project;
     private XFormDialog mockedDialog;
     private String soapuiOriginalHome;
-    private File mockSoapHomeDir = null;
+    private final File warTestDir = new File("wartestdir");
 
     @Before
     public void setUp() throws SoapUIException, URISyntaxException, IOException, XmlException {
+        setUpTestDirectories();
+        setUpProject();
+        setUpFormDialog();
+    }
 
+    private void setUpFormDialog() throws IOException, URISyntaxException {
+        mockedDialog = mock(XFormDialog.class);
+        when(mockedDialog.show()).thenReturn(true);
+        when(mockedDialog.getFormField(anyString())).thenReturn(any(XFormField.class));
 
-        XFileDialogs xFileDialogs = mock(XFileDialogs.class);
-        UISupport.setFileDialogs(xFileDialogs);
+        createFileformfield(getFilePathFromResource("/config/soapui-test-settings.xml"), MockAsWarAction.MockAsWarDialog.SETTINGS_FILE);
+        createFileformfield(WAR_FILE_NAME, MockAsWarAction.MockAsWarDialog.WAR_FILE);
+        createFileformfield(warTestDir.getPath(), MockAsWarAction.MockAsWarDialog.WAR_DIRECTORY);
 
-        mockSoapHomeDir = new File("soapuihometestdir");
+        when(mockedDialog.getValue(MockAsWarAction.MockAsWarDialog.MOCKSERVICE_ENDPOINT)).thenReturn("http://localhost:8080");
+    }
+
+    private void createFileformfield(String filePath, String fieldName) {
+        String name = filePath;
+        FileFormField fileFormField = new FileFormField("tooltip", XForm.FieldType.FILE, name);
+        fileFormField.setValue(filePath);
+        when(mockedDialog.getFormField(fieldName)).thenReturn(fileFormField);
+    }
+
+    private void setUpProject() throws URISyntaxException, XmlException, IOException, SoapUIException {
+        String fileNameWithPath = getFilePathFromResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml");
+        project = new WsdlProject(fileNameWithPath);
+        ModelItemFactory.makeRestMockService(project);
+    }
+
+    private String getFilePathFromResource(String fileName) throws URISyntaxException {
+        return this.getClass().getResource(fileName).getFile();
+    }
+
+    private void setUpTestDirectories() throws IOException {
+        warTestDir.mkdirs();
+        setSoapUiHomeDirectory();
+    }
+
+    private void setSoapUiHomeDirectory() throws IOException {
+        File mockSoapHomeDir = new File(warTestDir, "soapuihometestdir");
         mockSoapHomeDir.mkdirs();
-        mockSoapHomeDir.deleteOnExit();
 
         File lib = new File(mockSoapHomeDir, "lib");
         lib.mkdir();
@@ -69,35 +99,18 @@ public class MockAsWarActionTest {
 
         soapuiOriginalHome = System.getProperty(SOAPUI_HOME);
         System.setProperty(SOAPUI_HOME, lib.getPath());
-
-
-        String fileName = SoapUI.class.getResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml").toURI().toString();
-        project = new WsdlProject(fileName);
-
-        ModelItemFactory.makeRestMockService(project);
-
-        mockedDialog = mock(XFormDialog.class);
-        when(mockedDialog.show()).thenReturn(true);
-        when(mockedDialog.getFormField(anyString())).thenReturn(any(XFormField.class));
-        when(mockedDialog.getFormField(MockAsWarAction.MockAsWarDialog.SETTINGS_FILE)).thenReturn(new FileFormField("", XForm.FieldType.FILE, "setting.war"));
-        FileFormField warFileFormField = new FileFormField("", XForm.FieldType.FILE, WAR_FILE_NAME);
-        warFileFormField.setValue(WAR_FILE_NAME);
-        when(mockedDialog.getFormField(MockAsWarAction.MockAsWarDialog.WAR_FILE)).thenReturn(warFileFormField);
-        when(mockedDialog.getFormField(MockAsWarAction.MockAsWarDialog.WAR_DIRECTORY)).thenReturn(new FileFormField("", XForm.FieldType.FILE, "./tmp"));
-        when(mockedDialog.getValue(MockAsWarAction.MockAsWarDialog.MOCKSERVICE_ENDPOINT)).thenReturn("http://localhost:8080");
-
-
     }
 
     @After
     public void tearDown() throws IOException {
 
-        if (soapuiOriginalHome != null) {
+        if (soapuiOriginalHome == null) {
+            System.getProperties().remove(SOAPUI_HOME);
+        } else {
             System.setProperty(SOAPUI_HOME, soapuiOriginalHome);
         }
 
-        // TODO: remove all files
-        FileUtils.deleteDirectory(mockSoapHomeDir);
+        FileUtils.deleteDirectory(warTestDir);
     }
 
     @Test
