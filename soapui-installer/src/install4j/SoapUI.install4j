@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="5.1.6" transformSequenceNumber="4">
+<install4j version="5.1.11" transformSequenceNumber="4">
   <directoryPresets config="./resources/images" />
   <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
@@ -2249,6 +2249,36 @@ return installTutorials;</condition>
                       </void>
                       <void property="recursive">
                         <boolean>true</boolean>
+                      </void>
+                    </object>
+                  </java>
+                </serializedBean>
+                <condition />
+              </action>
+              <action name="Set browser for opening readme in linux" id="4924" customizedId="" beanClass="com.install4j.runtime.beans.actions.control.SetVariableAction" enabled="true" commentSet="false" comment="" actionElevationType="inherit" rollbackBarrier="false" multiExec="false" failureStrategy="1" errorMessage="">
+                <serializedBean>
+                  <java class="java.beans.XMLDecoder">
+                    <object class="com.install4j.runtime.beans.actions.control.SetVariableAction">
+                      <void property="script">
+                        <object class="com.install4j.api.beans.ScriptProperty">
+                          <void property="value">
+                            <string>import com.install4j.runtime.installer.helper.InstallerUtil;
+import com.install4j.runtime.installer.frontend.GUIHelper;
+
+if (!(InstallerUtil.isUnattended() || InstallerUtil.isConsole() || InstallerUtil.isWindows() || InstallerUtil.isMacOS())) {
+    for (String browser : new String[]{"xdg-open", "firefox", "opera", "konqueror", "epiphany", "mozilla", "netscape", "chromium-browser"}) {
+        if (Runtime.getRuntime().exec(new String[]{"which", browser}).waitFor() == 0) {
+            GUIHelper.setBrowserExecutable(browser);
+            break;
+        }
+    }
+}
+return "";</string>
+                          </void>
+                        </object>
+                      </void>
+                      <void property="variableName">
+                        <string>BROWSER_DUMMY</string>
                       </void>
                     </object>
                   </java>
