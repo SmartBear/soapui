@@ -23,9 +23,12 @@ import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Enumeration;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
+import static com.eviware.soapui.utils.MockedServlet.mockHttpServletRequest;
+import static com.eviware.soapui.utils.MockedServlet.mockHttpServletResponse;
 import static org.mockito.Mockito.*;
 
 
@@ -38,7 +41,7 @@ public class RestMockDispatcherTest {
     private RestMockService restMockService;
 
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         createRestMockDispatcher();
     }
 
@@ -53,7 +56,7 @@ public class RestMockDispatcherTest {
 
     @Test
     public void onRequestScriptIsCalled() throws Exception {
-        RestMockResult mockResult = (RestMockResult) restMockDispatcher.dispatchRequest(request, response);
+        restMockDispatcher.dispatchRequest(request, response);
 
         verify(restMockService).runOnRequestScript(any(WsdlMockRunContext.class), any(MockRequest.class));
     }
@@ -71,7 +74,6 @@ public class RestMockDispatcherTest {
 
         restMockDispatcher.dispatchRequest(request, response);
 
-        // we would like to verify that dispatchRequest is never called but it is hard so we verify on this instead
         verify(restMockService, never()).findBestMatchedOperation(anyString(), any(HttpMethod.class));
     }
 
@@ -122,13 +124,11 @@ public class RestMockDispatcherTest {
     }
 
 
-    private void createRestMockDispatcher() {
-        request = mock(HttpServletRequest.class);
-        Enumeration enumeration = mock(Enumeration.class);
-        when(request.getHeaderNames()).thenReturn(enumeration);
+    private void createRestMockDispatcher() throws IOException {
+        request = mockHttpServletRequest();
         when(request.getMethod()).thenReturn(HttpMethod.DELETE.name());
 
-        response = mock(HttpServletResponse.class);
+        response = mockHttpServletResponse();
         restMockService = mock(RestMockService.class);
         context = mock(WsdlMockRunContext.class);
 

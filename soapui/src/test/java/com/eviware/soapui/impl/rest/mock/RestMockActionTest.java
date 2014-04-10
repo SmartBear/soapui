@@ -24,18 +24,17 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
 
+import static com.eviware.soapui.utils.MockedServlet.mockHttpServletRequest;
+import static com.eviware.soapui.utils.MockedServlet.mockHttpServletResponse;
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class RestMockActionTest {
     RestMockRequest restMockRequest;
@@ -207,13 +206,8 @@ public class RestMockActionTest {
 
 
     private RestMockRequest makeRestMockRequest() throws Exception {
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        Enumeration enumeration = mock(Enumeration.class);
-        when(request.getHeaderNames()).thenReturn(enumeration);
-
-        HttpServletResponse response = mock(HttpServletResponse.class);
-        ServletOutputStream os = mock(ServletOutputStream.class);
-        when(response.getOutputStream()).thenReturn(os);
+        HttpServletRequest request = mockHttpServletRequest();
+        HttpServletResponse response = mockHttpServletResponse();
 
         WsdlMockRunContext context = mock(WsdlMockRunContext.class);
 
