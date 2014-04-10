@@ -134,6 +134,7 @@ public interface HelpUrls {
     public static final String NEWPROJECT_HELP_URL = HELP_URL_ROOT + "projects/index.html#Creating_a_WSDL_Projects";
 
     public static final String GENERATE_MOCKSERVICE_HELP_URL = HELP_URL_ROOT + "mock/services.html";
+    public static final String GENERATE_REST_MOCKSERVICE = "http://www.soapui.org/REST-Service-Mocking/generate-rest-mock.html";
 
     public static final String GENERATE_TESTSUITE_HELP_URL = HELP_URL_ROOT + "functional/testsuites.html";
 
@@ -154,7 +155,6 @@ public interface HelpUrls {
 
     public static final String RUNTESTCASESTEP_HELP_URL = HELP_URL_ROOT + "functional/runtestcasestep.html";
 
-    public static final String SOAPMONITOR_HELP_URL = HELP_URL_ROOT + "monitor/index.html";
     public static final String SOAPMONITOR_GENERAL_OPTIONS = "http://www.soapui.org/HTTP-Recording/general-options.html";
     public static final String SOAPMONITOR_MONITOR_OPTIONS = "http://www.soapui.org/HTTP-Recording/monitor-options.html";
     public static final String SOAPMONITOR_MONITOR = "http://www.soapui.org/HTTP-Recording/monitor.html";
