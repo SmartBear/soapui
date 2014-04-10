@@ -102,12 +102,10 @@ public class WsdlProjectTest {
 
         WsdlProject reloadedProject = saveAndReloadProject(project);
 
-        assertThat(getFirstRestMockService(reloadedProject).getMockOperationAt(0).getName(), is("b"));
-        assertThat(getFirstRestMockService(reloadedProject).getMockOperationAt(1).getName(), is("a"));
-    }
+        RestMockService mockServiceX = reloadedProject.getRestMockServiceByName("x");
 
-    public RestMockService getFirstRestMockService(WsdlProject reloadedProject) {
-        return reloadedProject.getRestMockServiceAt(0);
+        assertThat(mockServiceX.getMockOperationAt(0).getName(), is("b"));
+        assertThat(mockServiceX.getMockOperationAt(1).getName(), is("a"));
     }
 
     private void addRestMockResponseToProject() throws SoapUIException {
