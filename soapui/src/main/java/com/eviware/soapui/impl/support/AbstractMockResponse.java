@@ -274,7 +274,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
         StringToStringMap contentIds = new StringToStringMap();
 
         // only support multipart for wsdl currently.....
-        if (operation instanceof WsdlMockOperation) {
+        if (operation instanceof WsdlOperation) {
             if (operation == null) {
                 throw new IllegalStateException("Missing WsdlOperation for mock response");
             }
@@ -285,7 +285,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                 try {
                     mp = new MimeMultipart();
 
-                    WsdlOperation wsdlOperation = ((WsdlMockOperation) operation).getOperation();
+                    WsdlOperation wsdlOperation = ((WsdlOperation) operation);
                     MessageXmlObject requestXmlObject = new MessageXmlObject(wsdlOperation, responseContent, false);
                     MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
                     for (MessageXmlPart requestPart : requestParts) {
