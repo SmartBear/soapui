@@ -31,7 +31,10 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
+import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -46,7 +49,7 @@ public class MockAsWarActionTest {
     private String soapuiOriginalHome;
     private final File warTestDir = new File("wartestdir");
     private final String warDirectoryPath = warTestDir.getPath() + "/wardirectory";
-    private final String WAR_FILE_NAME = warTestDir.getPath()+"/mock.war";
+    private final String warFileName = warTestDir.getPath() + "/mock.war";
 
     @Before
     public void setUp() throws SoapUIException, URISyntaxException, IOException, XmlException {
@@ -61,7 +64,7 @@ public class MockAsWarActionTest {
         when(mockedDialog.getFormField(anyString())).thenReturn(any(XFormField.class));
 
         createFileformfield(getFilePathFromResource("/config/soapui-test-settings.xml"), MockAsWarAction.MockAsWarDialog.SETTINGS_FILE);
-        createFileformfield(WAR_FILE_NAME, MockAsWarAction.MockAsWarDialog.WAR_FILE);
+        createFileformfield(warFileName, MockAsWarAction.MockAsWarDialog.WAR_FILE);
         createFileformfield(warDirectoryPath, MockAsWarAction.MockAsWarDialog.WAR_DIRECTORY);
 
         when(mockedDialog.getValue(MockAsWarAction.MockAsWarDialog.MOCKSERVICE_ENDPOINT)).thenReturn("http://localhost:8080");
@@ -122,13 +125,38 @@ public class MockAsWarActionTest {
         action.setDialog(mockedDialog);
         action.perform(project, null);
 
-        assertTrue(new File(WAR_FILE_NAME).exists());
+        assertTrue(new File(warFileName).exists());
         assertValidWarDirectory(warDirectoryPath);
+        assertValidWarFile(warFileName);
+    }
+
+    private void assertValidWarFile(String warFileName) throws IOException {
+
+        JarFile jarFile = new JarFile(warFileName);
+
+        for (String fileName : getExpectedWarContents()) {
+            JarEntry jarEntry = jarFile.getJarEntry(fileName);
+            assertNotNull(jarEntry);
+        }
+
     }
 
     private void assertValidWarDirectory(String warDirectoryPath) {
-        assertTrue( new File(warDirectoryPath+"/WEB-INF/web.xml").exists());
-        assertTrue( new File(warDirectoryPath+"/WEB-INF/lib/soapui.jar").exists());
+
+        for (String fileName : getExpectedWarContents()) {
+            File file = new File(warDirectoryPath, fileName);
+            assertTrue(file.exists());
+        }
+    }
+
+    private String[] getExpectedWarContents() {
+
+        return new String[]{
+                "WEB-INF/web.xml",
+                "WEB-INF/lib/soapui.jar",
+                "WEB-INF/soapui/BasicMock-soapui-4.6.3-Project.xml"
+        };
+
     }
 
 }
