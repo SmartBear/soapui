@@ -22,7 +22,10 @@ import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.*;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
@@ -40,10 +43,8 @@ import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
-import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.ws.security.WSSecurityException;
-import org.apache.xmlbeans.XmlException;
 
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
@@ -51,7 +52,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -274,9 +274,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
         StringToStringMap contentIds = new StringToStringMap();
 
         // only support multipart for wsdl currently.....
-        if (operation instanceof WsdlMockOperation) {
+        if (operation instanceof WsdlOperation) {
             if (operation == null) {
-                throw new Exception("Missing WsdlOperation for mock response");
+                throw new IllegalStateException("Missing WsdlOperation for mock response");
             }
 
 
@@ -285,7 +285,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                 try {
                     mp = new MimeMultipart();
 
-                    WsdlOperation wsdlOperation = ((WsdlMockOperation) operation).getOperation();
+                    WsdlOperation wsdlOperation = ((WsdlOperation) operation);
                     MessageXmlObject requestXmlObject = new MessageXmlObject(wsdlOperation, responseContent, false);
                     MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
                     for (MessageXmlPart requestPart : requestParts) {
@@ -298,16 +298,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                     SoapUI.logError(e);
                 }
             }
+
+            responseContent = removeEmptyContent(responseContent);
         }
-
-        responseContent = removeEmptyContent(responseContent);
-
-        if (isStripWhitespaces()) {
-            responseContent = XmlUtils.stripWhitespaces(responseContent);
-        }
-
-        MockRequest request = result.getMockRequest();
-        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
 
         ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
@@ -376,6 +369,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             result.writeRawResponseData(data);
         }
 
+        MockRequest request = result.getMockRequest();
+        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
+
         return responseContent;
     }
 
@@ -415,8 +411,6 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
     public abstract long getResponseDelay();
 
     public abstract boolean isForceMtom();
-
-    public abstract boolean isStripWhitespaces();
 
     public void addTestPropertyListener(TestPropertyListener listener) {
         propertyHolder.addTestPropertyListener(listener);

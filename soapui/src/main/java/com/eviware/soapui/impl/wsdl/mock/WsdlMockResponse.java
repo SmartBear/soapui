@@ -460,16 +460,6 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
         notifyPropertyChanged(ENCODE_ATTACHMENTS, old, encodeAttachments);
     }
 
-    public boolean isStripWhitespaces() {
-        return getSettings().getBoolean(STRIP_WHITESPACES);
-    }
-
-    public void setStripWhitespaces(boolean stripWhitespaces) {
-        boolean old = getSettings().getBoolean(STRIP_WHITESPACES);
-        getSettings().setBoolean(STRIP_WHITESPACES, stripWhitespaces);
-        notifyPropertyChanged(STRIP_WHITESPACES, old, stripWhitespaces);
-    }
-
     public boolean isInlineFilesEnabled() {
         return getSettings().getBoolean(WsdlMockResponse.ENABLE_INLINE_FILES);
     }
