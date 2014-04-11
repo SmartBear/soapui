@@ -1617,18 +1617,6 @@ if (Util.isMacOS()) {
                         <void method="add">
                           <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
                             <void property="name">
-                              <string>Online User Guide</string>
-                            </void>
-                            <void property="target">
-                              <object class="java.io.File">
-                                <string>${installer:sys.installationDir}/UserGuide.url</string>
-                              </object>
-                            </void>
-                          </object>
-                        </void>
-                        <void method="add">
-                          <object class="com.install4j.runtime.beans.screens.components.ProgramGroupFileConfig">
-                            <void property="name">
                               <string>soapui.org website</string>
                             </void>
                             <void property="target">
