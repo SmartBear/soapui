@@ -210,7 +210,7 @@ public interface HelpUrls {
 
     public static final String FUNCITONAL_TESTING_SETUP_SCRIPT = "http://www.soapui.org/Functional-Testing/setup-script.html";
     public static final String FUNCITONAL_TESTING_TEARDOWN_SCRIPT = "http://www.soapui.org/Functional-Testing/teardown-script.html";
-    String DEBUGGING_TESTCASE_DEBUGGING = "http://www.soapui.org/Debugging/testcase-debugging.html";
-    String DEBUGGING_ENVIRONMENT_HANDLING = "http://www.soapui.org/Environments/environment-handling-in-soapui.html";
-    String DEBUGGING_ASSERTION_TEST_STEP = "http://www.soapui.org/Functional-Testing/assertion-test-step.html";
+    public static final String DEBUGGING_TESTCASE_DEBUGGING = "http://www.soapui.org/Debugging/testcase-debugging.html";
+    public static final String DEBUGGING_ENVIRONMENT_HANDLING = "http://www.soapui.org/Environments/environment-handling-in-soapui.html";
+    public static final String DEBUGGING_ASSERTION_TEST_STEP = "http://www.soapui.org/Functional-Testing/assertion-test-step.html";
 }
