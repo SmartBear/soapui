@@ -16,7 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.support;
 
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
@@ -50,7 +49,7 @@ public class ShowOnlineSoapUIHelp extends AbstractSoapUIAction<ModelItem> implem
 
         String url = param == null ? this.url : param.toString();
         if (!url.startsWith("http://")) {
-            url = HelpUrls.HELP_URL_ROOT + url;
+            url = "http://www.soapui.org/userguide/" + url;
         }
 
         Tools.openURL(url);
