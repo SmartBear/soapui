@@ -498,8 +498,10 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
     }
 
     public SoapVersion getSoapVersion() {
-        return getMockOperation().getOperation() == null ? SoapVersion.Soap11 : ((WsdlOperation) getMockOperation().getOperation())
-                .getInterface().getSoapVersion();
+        if( getMockOperation().getOperation() == null ) {
+            return SoapVersion.Soap11;
+        }
+        return getMockOperation().getOperation().getInterface().getSoapVersion();
     }
 
     public PropertyExpansion[] getPropertyExpansions() {

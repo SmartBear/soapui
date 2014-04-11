@@ -286,10 +286,10 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                     mp = new MimeMultipart();
 
                     WsdlOperation wsdlOperation = ((WsdlOperation) operation);
-                    MessageXmlObject requestXmlObject = new MessageXmlObject(wsdlOperation, responseContent, false);
+                    MessageXmlObject requestXmlObject = createMessageXmlObject(responseContent, wsdlOperation);
                     MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
                     for (MessageXmlPart requestPart : requestParts) {
-                        if (AttachmentUtils.prepareMessagePart(this, mp, requestPart, contentIds)) {
+                        if (prepareMessagePart(mp, contentIds, requestPart)) {
                             isXOP = true;
                         }
                     }
@@ -377,6 +377,14 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
         request.getHttpResponse().setStatus(this.getResponseHttpStatus());
 
         return responseContent;
+    }
+
+    public boolean prepareMessagePart(MimeMultipart mp, StringToStringMap contentIds, MessageXmlPart requestPart) throws Exception {
+        return AttachmentUtils.prepareMessagePart(this, mp, requestPart, contentIds);
+    }
+
+    public MessageXmlObject createMessageXmlObject(String responseContent, WsdlOperation wsdlOperation) {
+        return new MessageXmlObject(wsdlOperation, responseContent, false);
     }
 
     private void initRootPart(String requestContent, MimeMultipart mp, boolean isXOP) throws MessagingException {
