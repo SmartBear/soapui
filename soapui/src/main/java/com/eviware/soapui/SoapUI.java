@@ -502,8 +502,6 @@ public class SoapUI {
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction());
         fileMenu.add(new ExitWithoutSavingAction());
-        fileMenu.addSeparator();
-        fileMenu.add(new ShowOnlineHelpAction(HelpUrls.OVERVIEW_HELP_URL));
 
         return fileMenu;
     }
