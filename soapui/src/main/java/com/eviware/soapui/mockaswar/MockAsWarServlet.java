@@ -146,7 +146,7 @@ public class MockAsWarServlet extends HttpServlet {
 
         try {
             maxResults = Integer.parseInt(getInitParameter("maxResults"));
-        } catch (Throwable t) {
+        } catch (NumberFormatException ex) {
             maxResults = 1000;
         }
 

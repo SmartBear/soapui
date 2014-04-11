@@ -34,6 +34,7 @@ import java.net.URISyntaxException;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static com.eviware.soapui.utils.ResourceUtils.getFilePathFromResource;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -81,10 +82,6 @@ public class MockAsWarActionTest {
         String fileNameWithPath = getFilePathFromResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml");
         project = new WsdlProject(fileNameWithPath);
         ModelItemFactory.makeRestMockService(project);
-    }
-
-    private String getFilePathFromResource(String fileName) throws URISyntaxException {
-        return this.getClass().getResource(fileName).getFile();
     }
 
     private void setUpTestDirectories() throws IOException {
