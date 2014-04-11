@@ -40,14 +40,12 @@ public class OAuth2AdvancedOptionsDialog {
     private ExpirationTimeChooser expirationTimeComponent;
     private JButton refreshAccessTokenButton;
 
-
     public OAuth2AdvancedOptionsDialog(OAuth2Profile profile, JButton refreshAccessTokenButton) {
         this.refreshAccessTokenButton = refreshAccessTokenButton;
         expirationTimeComponent = new ExpirationTimeChooser(profile);
         XFormDialog dialog = ADialogBuilder.buildDialog(Form.class);
 
         dialog.getFormField(Form.ACCESS_TOKEN_EXPIRATION_TIME).setProperty("component", expirationTimeComponent);
-
 
         setAccessTokenOptions(profile, dialog);
 

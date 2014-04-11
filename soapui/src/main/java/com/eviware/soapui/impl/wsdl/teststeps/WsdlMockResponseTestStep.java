@@ -702,8 +702,16 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         return mockResponse.isRemoveEmptyContent();
     }
 
+    public boolean isStripWhitespaces() {
+        return mockResponse.isStripWhitespaces();
+    }
+
     public void setRemoveEmptyContent(boolean removeEmptyContent) {
         mockResponse.setRemoveEmptyContent(removeEmptyContent);
+    }
+
+    public void setStripWhitespaces(boolean stripWhitespaces) {
+        mockResponse.setStripWhitespaces(stripWhitespaces);
     }
 
     public void setPath(String path) {

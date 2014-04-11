@@ -103,9 +103,20 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     }
 
     public enum AccessTokenPosition {
-        QUERY,
-        HEADER,
-        BODY
+        QUERY("Query"),
+        HEADER("Header"),
+        BODY("Body");
+
+        private final String description;
+
+        AccessTokenPosition(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     public enum OAuth2Flow {
@@ -122,12 +133,22 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         public String toString() {
             return description;
         }
-
     }
 
     public enum RefreshAccessTokenMethods {
-        AUTOMATIC,
-        MANUAL
+        AUTOMATIC("Automatic"),
+        MANUAL("Manual");
+
+        private String description;
+
+        RefreshAccessTokenMethods(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     private final OAuth2ProfileContainer oAuth2ProfileContainer;
