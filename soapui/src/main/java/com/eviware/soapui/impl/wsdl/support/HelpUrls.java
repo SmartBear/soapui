@@ -208,8 +208,8 @@ public interface HelpUrls {
     public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
     public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
 
-    public static final String FUNCITONAL_TESTING_SETUP_SCRIPT = "http://www.soapui.org/Functional-Testing/setup-script.html";
-    public static final String FUNCITONAL_TESTING_TEARDOWN_SCRIPT = "http://www.soapui.org/Functional-Testing/teardown-script.html";
+    public static final String FUNCTIONAL_TESTING_SETUP_SCRIPT = "http://www.soapui.org/Functional-Testing/setup-script.html";
+    public static final String FUNCTIONAL_TESTING_TEARDOWN_SCRIPT = "http://www.soapui.org/Functional-Testing/teardown-script.html";
     public static final String DEBUGGING_TESTCASE_DEBUGGING = "http://www.soapui.org/Debugging/testcase-debugging.html";
     public static final String DEBUGGING_ENVIRONMENT_HANDLING = "http://www.soapui.org/Environments/environment-handling-in-soapui.html";
     public static final String DEBUGGING_ASSERTION_TEST_STEP = "http://www.soapui.org/Functional-Testing/assertion-test-step.html";

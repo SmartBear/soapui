@@ -197,13 +197,13 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
 
 	protected GroovyEditorComponent buildTearDownScriptPanel()
 	{
-		tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), HelpUrls.FUNCITONAL_TESTING_TEARDOWN_SCRIPT);
+		tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), HelpUrls.FUNCTIONAL_TESTING_TEARDOWN_SCRIPT);
 		return tearDownGroovyEditor;
 	}
 
 	protected GroovyEditorComponent buildSetupScriptPanel()
 	{
-		setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), HelpUrls.FUNCITONAL_TESTING_SETUP_SCRIPT);
+		setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), HelpUrls.FUNCTIONAL_TESTING_SETUP_SCRIPT);
 		return setupGroovyEditor;
 	}
 
