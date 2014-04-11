@@ -22,10 +22,7 @@ import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.DispatchException;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.impl.wsdl.mock.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
@@ -43,8 +40,10 @@ import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.ws.security.WSSecurityException;
+import org.apache.xmlbeans.XmlException;
 
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
@@ -52,6 +51,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -302,6 +302,10 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             responseContent = removeEmptyContent(responseContent);
         }
 
+        if (isStripWhitespaces()) {
+            responseContent = XmlUtils.stripWhitespaces(responseContent);
+        }
+
         ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
         // non-multipart request?
@@ -411,6 +415,8 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
     public abstract long getResponseDelay();
 
     public abstract boolean isForceMtom();
+
+    public abstract boolean isStripWhitespaces();
 
     public void addTestPropertyListener(TestPropertyListener listener) {
         propertyHolder.addTestPropertyListener(listener);

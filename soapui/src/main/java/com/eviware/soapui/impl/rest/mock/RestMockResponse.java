@@ -169,6 +169,11 @@ public class RestMockResponse extends AbstractMockResponse<RESTMockResponseConfi
     }
 
     @Override
+    public boolean isStripWhitespaces() {
+        return false;
+    }
+
+    @Override
     public String getMediaType() {
         return getConfig().isSetMediaType() ? getConfig().getMediaType() : RestRequestInterface.DEFAULT_MEDIATYPE;
     }
