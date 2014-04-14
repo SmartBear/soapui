@@ -2200,7 +2200,7 @@ return installTutorials;</condition>
                     </object>
                   </java>
                 </serializedBean>
-                <condition />
+                <condition>!Util.isMacOS()</condition>
               </action>
             </actions>
             <formComponents />
