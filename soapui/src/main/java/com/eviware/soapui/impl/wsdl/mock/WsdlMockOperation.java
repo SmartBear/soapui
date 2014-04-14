@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.dispatch.MockOperationDispatcher;
 import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
@@ -140,6 +141,11 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
     public WsdlOperation getOperation() {
         return operation;
+    }
+
+    @Override
+    public String getScriptHelpUrl() {
+        return HelpUrls.MOCKOPERATION_SCRIPTDISPATCH_HELP_URL;
     }
 
     @Override

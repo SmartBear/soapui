@@ -202,9 +202,11 @@ public interface HelpUrls {
 
     public static final String REST_MOCKSERVICE_HELP_URL = "http://www.soapui.org/REST-Service-Mocking/mock-service-editor.html";
     public static final String REST_MOCKSERVICE_ACTION = "http://www.soapui.org/REST-Service-Mocking/mock-action-editor.html";
+    public static final String REST_MOCKSERVICE_OPTIONS = "http://www.soapui.org/REST-Service-Mocking/mock-service-options.html";
     public static final String REST_MOCK_RESPONSE_EDITOR = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor.html";
     public static final String REST_MOCK_RESPONSE_EDITOR_HEADER = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-header.html";
     public static final String REST_MOCK_RESPONSE_SCRIPT = "http://www.soapui.org/REST-Service-Mocking/mock-response-script.html";
+    public static final String REST_MOCK_SCRIPTDISPATCH = "http://www.soapui.org/REST-Service-Mocking/mock-service-dispatch.html";
     public static final String REST_MOCK_RESPONSE_EDITOR_BODY = "http://www.soapui.org/REST-Service-Mocking/mock-response-editor-body.html";
     public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
 

@@ -140,7 +140,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
         toolbar.add(label);
         toolbar.addFixed(ModelItemDesktopPanel.createActionButton(new ShowOnlineHelpAction(
-                HelpUrls.MOCKOPERATION_SCRIPTDISPATCH_HELP_URL), true));
+                getMockOperation().getScriptHelpUrl()), true));
         return toolbar;
     }
 
