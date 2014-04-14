@@ -16,10 +16,9 @@
 
 package com.eviware.soapui.support.editor.xml;
 
-import org.apache.xmlbeans.SchemaTypeSystem;
-
 import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.editor.EditorDocument;
+import org.apache.xmlbeans.SchemaTypeSystem;
 
 /**
  * Document class used by XmlEditors
@@ -29,10 +28,13 @@ import com.eviware.soapui.support.editor.EditorDocument;
 
 public interface XmlDocument extends PropertyChangeNotifier, EditorDocument {
     public final static String XML_PROPERTY = XmlDocument.class.getName() + "@xml";
+    //TODO: make this a real property?
+    public final static String CONTENT_PROPERTY = XmlDocument.class.getName() + "@content";
 
     public String getXml();
 
     public void setXml(String xml);
 
     public SchemaTypeSystem getTypeSystem();
+
 }

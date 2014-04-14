@@ -18,4 +18,8 @@ package com.eviware.soapui.support.editor;
 
 public interface EditorDocument {
     public abstract void release();
+
+    void addContentChangeListener(ContentChangeListener listener);
+
+    void removeContentChangeListener(ContentChangeListener listener);
 }

@@ -17,12 +17,20 @@
 package com.eviware.soapui.support.editor;
 
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.Inspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.VTextIcon;
+import com.eviware.soapui.support.components.VerticalMetalTabbedPaneUI;
+import com.eviware.soapui.support.components.VerticalWindowsTabbedPaneUI;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -83,7 +91,6 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
         editorView.addPropertyChangeListener(this);
         editorView.addLocationListener(this);
-
         editorView.setDocument(document);
     }
 

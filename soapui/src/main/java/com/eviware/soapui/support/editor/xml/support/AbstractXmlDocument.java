@@ -16,13 +16,15 @@
 
 package com.eviware.soapui.support.editor.xml.support;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.support.editor.ContentChangeListener;
+import com.eviware.soapui.support.editor.ContentChangeSupport;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
-import com.eviware.soapui.support.editor.xml.XmlDocument;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Abstract base-class for XmlDocument implementations
@@ -32,6 +34,7 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 
 public abstract class AbstractXmlDocument implements XmlDocument {
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private ContentChangeSupport contentChangeSupport = new ContentChangeSupport();
 
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
@@ -49,8 +52,21 @@ public abstract class AbstractXmlDocument implements XmlDocument {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
+    public void addContentChangeListener(ContentChangeListener listener) {
+        contentChangeSupport.addContentChangeListener(listener);
+    }
+
+    @Override
+    public void removeContentChangeListener(ContentChangeListener listener) {
+        contentChangeSupport.removeContentChangeListener(listener);
+    }
+
     protected void fireXmlChanged(String oldValue, String newValue) {
         propertyChangeSupport.firePropertyChange(XML_PROPERTY, oldValue, newValue);
+    }
+
+    protected void fireContentChanged(DocumentContent oldValue, DocumentContent newValue) {
+        contentChangeSupport.fireContentChange(oldValue, newValue);
     }
 
     public void release() {

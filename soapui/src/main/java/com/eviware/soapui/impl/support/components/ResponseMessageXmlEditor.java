@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.support.components;
 
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.editor.ContentChangeListener;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.EditorViewFactory;
@@ -60,6 +61,14 @@ public class ResponseMessageXmlEditor<T extends ModelItem, T2 extends XmlDocumen
             if (inspector != null) {
                 addInspector((EditorInspector<T2>) inspector);
             }
+        }
+    }
+
+    @Override
+    public void addEditorView(EditorView<T2> editorView) {
+        super.addEditorView(editorView);
+        if (editorView instanceof ContentChangeListener) {
+            getDocument().addContentChangeListener((ContentChangeListener) editorView);
         }
     }
 }

@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.StringUtils;
@@ -135,7 +136,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
                 }
                 //TODO: do this recursively but make sure that cyclic dependencies are handled
                 /*else if ( value instanceof JSONObject && oldJson.get(key) instanceof JSONObject)
-				{
+                {
 					overwriteNullValues( (JSONObject) value, (JSONObject) oldJson.get(key) );
 				}*/
             }
@@ -184,8 +185,18 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((HttpResponse) evt.getOldValue()).getContentAsString(),
-                    getXml());
+            HttpResponse oldResponse = (HttpResponse) evt.getOldValue();
+            HttpResponse response = (HttpResponse) evt.getNewValue();
+            fireContentChanged(extractContentFrom(oldResponse), extractContentFrom(response));
+            fireXmlChanged(oldResponse == null ? null : oldResponse.getContentAsString(), getXml());
+        }
+
+        private DocumentContent extractContentFrom(HttpResponse oldResponse) {
+            if (oldResponse == null) {
+                return null;
+            } else {
+                return new DocumentContent(oldResponse.getContentType(), oldResponse.getContentAsString());
+            }
         }
 
         public void release() {
@@ -193,4 +204,6 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             modelItem.removePropertyChangeListener(RestRequestInterface.RESPONSE_PROPERTY, this);
         }
     }
+
+
 }

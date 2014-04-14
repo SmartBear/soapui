@@ -16,12 +16,14 @@
 
 package com.eviware.soapui.impl.wsdl.panels.support;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.support.editor.ContentChangeListener;
+import com.eviware.soapui.support.editor.ContentChangeSupport;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 
-import com.eviware.soapui.support.editor.xml.XmlDocument;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Adapter for XmlDocument implementations/sources
@@ -33,6 +35,7 @@ public class XmlDocumentAdapter implements XmlDocument {
     private String xml;
     private SchemaTypeSystem typeSystem;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
+    private ContentChangeSupport contentChangeSupport = new ContentChangeSupport();
 
     public SchemaTypeSystem getTypeSystem() {
         return typeSystem;
@@ -73,7 +76,22 @@ public class XmlDocumentAdapter implements XmlDocument {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
+    @Override
+    public void addContentChangeListener(ContentChangeListener listener) {
+        contentChangeSupport.addContentChangeListener(listener);
+    }
+
+    @Override
+    public void removeContentChangeListener(ContentChangeListener listener) {
+        contentChangeSupport.removeContentChangeListener(listener);
+    }
+
     public void release() {
         typeSystem = null;
+        contentChangeSupport.clear();
+    }
+
+    protected void fireContentChangeEvent(DocumentContent oldContent, DocumentContent newContent) {
+        contentChangeSupport.fireContentChange(oldContent, newContent);
     }
 }
