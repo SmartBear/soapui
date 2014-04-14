@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support;
 
+import junit.framework.ComparisonFailure;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -40,5 +41,47 @@ public class ToolsTestCase
 		assertEquals( args[0], "test\" ett" );
 	}
 
+    @Test
+    public void onlyWildcardMatches() {
+        Tools.assertSimilar("*", "abc", '*');
+    }
+    @Test
+    public void exactMatches() {
+        Tools.assertSimilar("abc", "abc", '*');
+    }
 
+    @Test
+    public void wildCardInBeginningMatches() {
+        Tools.assertSimilar("*abc", "abc", '*');
+        Tools.assertSimilar("*bc", "abc", '*');
+    }
+
+    @Test
+    public void wildCardInMiddleMatches() {
+        Tools.assertSimilar("a*c", "abc", '*');
+    }
+
+    @Test
+    public void wildCardInEndMatches() {
+        Tools.assertSimilar("abc*", "abc", '*');
+        Tools.assertSimilar("ab*", "abc", '*');
+    }
+
+    @Test
+    public void wildCardInBeginningAndEndMatches() {
+        Tools.assertSimilar("*abc*", "abc", '*');
+        Tools.assertSimilar("*bc*", "abc", '*');
+        Tools.assertSimilar("*ab*", "abc", '*');
+        Tools.assertSimilar("*b*", "abc", '*');
+    }
+
+    @Test(expected = ComparisonFailure.class)
+    public void mixingUpOrderBetweenWildcardsDoesNotMatch() {
+        Tools.assertSimilar("The*in*mainly*rain*Spain*stays*the*plain!", "The rain in Spain stays mainly in the plain!", '*');
+    }
+
+    @Test(expected = ComparisonFailure.class)
+    public void differentCasingDoesNotMatch() {
+        Tools.assertSimilar("heLLo", "HEllO", '*');
+    }
 }

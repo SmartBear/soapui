@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 public class Tools
 {
@@ -569,39 +570,29 @@ public class Tools
 		if( !expected.equals( String.valueOf( wildcard ) ) )
 		{
 
-			List<String> tokens = null;
-			if( wildcard == '*' || wildcard == '.' )
-				tokens = Arrays.asList( expected.split( "\\" + wildcard ) );
-			else
-				tokens = Arrays.asList( expected.split( String.valueOf( wildcard ) ) );
-
-			if( tokens.isEmpty() )
-				throw new ComparisonFailure( "Not used wildcard in expected " + "[" + wildcard + "]", expected, real );
-
-			for( int cnt = 0; cnt < tokens.size(); cnt++ )
-			{
-				if( cnt == 0 )
-				{
-					if( real.startsWith( tokens.get( cnt ) ) )
-						continue;
-					else
-						throw new ComparisonFailure( "Not matched", expected, real );
-				}
-
-				if( cnt == tokens.size() - 1 )
-				{
-					if( real.endsWith( tokens.get( cnt ) ) )
-						continue;
-					else
-						throw new ComparisonFailure( "Not matched", expected, real );
-				}
-
-				if( real.indexOf( tokens.get( cnt ) ) == -1 )
-					throw new ComparisonFailure( "Not matched", expected, real );
-			}
-
-		}
-	}
+            StringBuilder sb = new StringBuilder();
+            if (expected.startsWith(String.valueOf(wildcard))) {
+                sb.append(".*");
+            }
+            boolean first=true;
+            for (String token : expected.split(Pattern.quote(String.valueOf(wildcard)))) {
+                if(token.isEmpty()){
+                    continue;
+                }
+                if(!first) {
+                    sb.append(".*");
+                }
+                first = false;
+                sb.append(Pattern.quote(token));
+            }
+            if (expected.endsWith(String.valueOf(wildcard))) {
+                sb.append(".*");
+            }
+            if (!Pattern.compile(sb.toString()).matcher(real).matches()) {
+                throw new ComparisonFailure("Not matched", expected, real);
+            }
+        }
+    }
 
 	public static void main( String[] args )
 	{
