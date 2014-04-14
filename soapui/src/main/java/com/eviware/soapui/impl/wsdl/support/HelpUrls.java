@@ -189,7 +189,7 @@ public interface HelpUrls {
     public static final String ADD_AUTHORIZATION = "http://www.soapui.org/OAuth/add-authorization.html";
     public static final String OAUTH_OVERVIEW = "http://www.soapui.org/OAuth/oauth2-overview.html";
     public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "http://www.soapui.org/OAuth/access-token-from-server.html";
-    public static final String OAUTH_AUTOMATING_ACCES_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
+    public static final String OAUTH_AUTOMATING_ACCESS_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/automating-access-token-retrieval.html";
     public static final String OAUTH_ADVANCED_OPTIONS = "http://www.soapui.org/OAuth/advanced-options.html";
     public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/access-token-retrieval.html";
     public static final String OAUTH_AUTOMATED_TOKEN_PROFILE_EDITOR = "http://www.soapui.org/OAuth/automated-token-profile-editor.html";
