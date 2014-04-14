@@ -75,7 +75,7 @@ public class Tools {
     }
 
     public static String convertToHtml(String str) {
-        StringBuffer result = new StringBuffer("<html><body>");
+        StringBuilder result = new StringBuilder("<html><body>");
 
         for (int c = 0; c < str.length(); c++) {
             char ch = str.charAt(c);
@@ -179,7 +179,7 @@ public class Tools {
             if (osName.startsWith("Mac OS")) {
                 Class<?> fileMgr = Class.forName("com.apple.eio.FileManager");
                 Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
-                openURL.invoke(null, new Object[]{url});
+                openURL.invoke(null, url);
             } else if (osName.startsWith("Windows")) {
                 if (url.startsWith("file:")) {
                     url = URLDecoder.decode(url.substring(5), "utf-8");
@@ -339,7 +339,7 @@ public class Tools {
         }
 
         // remove "/./"
-        while (url.indexOf("/./") != -1 || url.indexOf("\\.\\") != -1) {
+        while (url.contains("/./") || url.contains("\\.\\")) {
             int ix2 = url.indexOf("/./");
             if (ix2 == -1) {
                 ix2 = url.indexOf("\\.\\");
@@ -349,7 +349,7 @@ public class Tools {
         }
 
         // remove "/../"
-        while (url.indexOf("/../") != -1 || url.indexOf("\\..\\") != -1) {
+        while (url.contains("/../") || url.contains("\\..\\")) {
             int ix2 = -1;
 
             int ix3 = url.indexOf("/../");
@@ -399,7 +399,7 @@ public class Tools {
             return content;
         }
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int lastIx = 0;
         while (ix != -1) {
             buf.append(content.substring(lastIx, ix));
@@ -460,7 +460,7 @@ public class Tools {
     }
 
     public static String getEndpointFromUrl(URL baseUrl) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(baseUrl.getProtocol()).append("://");
         result.append(baseUrl.getHost());
         if (baseUrl.getPort() > 0) {
