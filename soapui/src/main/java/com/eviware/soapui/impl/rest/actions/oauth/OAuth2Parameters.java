@@ -104,6 +104,6 @@ public class OAuth2Parameters {
     }
 
     public boolean isAccessTokenRetrivedFromServer() {
-        return profile.getAccessTokenStatusAsEnum() == OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER;
+        return profile.getAccessTokenStatus() == OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER;
     }
 }

@@ -57,7 +57,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     public void waitForAccessTokenStatus(AccessTokenStatus accessTokenStatus, int timeout) {
         int timeLeft = timeout;
-        while (!String.valueOf(getAccessTokenStatus()).equals(accessTokenStatus.toString()) && timeLeft > 0) {
+        while ((getAccessTokenStatus() != accessTokenStatus) && timeLeft > 0) {
             long startTime = System.currentTimeMillis();
             try {
                 synchronized (this) {
@@ -79,14 +79,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         EXPIRED("Expired");
 
         private String description;
-        private static final Map<String, AccessTokenStatus> lookups;
-
-        static {
-            lookups = new HashMap<String, AccessTokenStatus>();
-            for (AccessTokenStatus status : AccessTokenStatus.values()) {
-                lookups.put(status.toString(), status);
-            }
-        }
 
         AccessTokenStatus(String description) {
             this.description = description;
@@ -95,10 +87,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         @Override
         public String toString() {
             return description;
-        }
-
-        public static AccessTokenStatus byDescription(String description) {
-            return lookups.get(description);
         }
     }
 
@@ -330,16 +318,24 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    // FIXME We should try to make this and the fired property event into an enum
-    public String getAccessTokenStatus() {
-        if (configuration.getAccessTokenStatus() != null) {
-            return AccessTokenStatus.valueOf(configuration.getAccessTokenStatus().toString()).toString();
-        }
-        return null;
+    public AccessTokenStatus getAccessTokenStatus() {
+        return getSavedEnum(configuration.getAccessTokenStatus());
     }
 
-    public AccessTokenStatus getAccessTokenStatusAsEnum() {
-        return AccessTokenStatus.byDescription(getAccessTokenStatus());
+    public void setAccessTokenStatus(@Nonnull AccessTokenStatus newStatus) {
+        Preconditions.checkNotNull(newStatus);
+
+        AccessTokenStatus oldStatus = getSavedEnum(configuration.getAccessTokenStatus());
+
+        if (newStatus == oldStatus) {
+            return;
+        }
+
+        synchronized (this) {
+            notifyAll();
+        }
+
+        pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldStatus, newStatus);
     }
 
     public AccessTokenStatus getAccessTokenStartingStatus() {
@@ -496,36 +492,13 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-	/* Helper method */
-
-    private void setAccessTokenStatus(AccessTokenStatus status) {
-        AccessTokenStatusConfig.Enum savedAccessTokenStatus = configuration.getAccessTokenStatus();
-        AccessTokenStatus oldValue = savedAccessTokenStatus == null ? null :
-                AccessTokenStatus.valueOf(savedAccessTokenStatus.toString());
-
-        if (status == null && oldValue == null) {
-            return;
-        }
-
-
-        if (status != null) {
-            if (status.equals(oldValue)) {
-                return;
-            }
-            configuration.setAccessTokenStatus(AccessTokenStatusConfig.Enum.forString(status.name()));
-        } else {
-            configuration.setAccessTokenStatus(null);
-
-        }
-        synchronized (this) {
-            notifyAll();
-        }
-        String oldValueAsString = oldValue == null ? null : oldValue.toString();
-        pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status != null ? status.toString() : null);
-    }
-
     private void setAccessTokenStartingStatus(@Nonnull AccessTokenStatus startingStatus) {
         Preconditions.checkNotNull(startingStatus);
         configuration.setAccessTokenStartingStatus(AccessTokenStatusConfig.Enum.forString(startingStatus.name()));
+    }
+
+    // TODO Make generic
+    private AccessTokenStatus getSavedEnum(AccessTokenStatusConfig.Enum persistedEnum) {
+        return AccessTokenStatus.valueOf(persistedEnum.toString());
     }
 }
