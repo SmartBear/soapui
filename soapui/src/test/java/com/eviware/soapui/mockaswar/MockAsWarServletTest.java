@@ -16,9 +16,11 @@
 package com.eviware.soapui.mockaswar;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.model.mock.MockRunner;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.ServletContext;
@@ -32,6 +34,7 @@ import static com.eviware.soapui.utils.MockedServlet.*;
 import static com.eviware.soapui.utils.ResourceUtils.getFilePathFromResource;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.*;
 
 public class MockAsWarServletTest {
 
@@ -64,6 +67,38 @@ public class MockAsWarServletTest {
         assertThat(mockRunners.length, is(2));
     }
 
+    @Ignore
+    @Test
+    public void shouldDispatchToCorrectMockRunner() throws Exception {
+
+        String path = "/numeric";
+        when(reqeust.getPathInfo()).thenReturn(path);
+        MockRunner spiedRunner = getMockRunnerByPath(path);
+
+        stubMockAsWarServlet.service(reqeust, response);
+
+        verify(reqeust, atLeastOnce()).getPathInfo();
+        verify(spiedRunner).dispatchRequest(reqeust, response);
+    }
+
+
+    private MockRunner getMockRunnerByPath(String path) throws Exception {
+        MockRunner[] mockRunners = ((MockAsWarServlet.MockServletSoapUICore) stubMockAsWarServlet.getMockServletCore()).getMockRunners();
+        MockRunner runner = getMockRunnerByPath(mockRunners, path);
+        return spy(runner);
+    }
+
+
+    private MockRunner getMockRunnerByPath(MockRunner[] mockRunners, String path) throws Exception {
+        for (MockRunner runner : mockRunners) {
+
+            if (runner.getMockContext().getMockService().getPath().equals(path)) {
+                return runner;
+            }
+        }
+
+        return new WsdlMockRunner(null, null);
+    }
 }
 
 class StubMockAsWarServlet extends MockAsWarServlet {
