@@ -25,7 +25,9 @@ import java.net.URISyntaxException;
 
 import static com.eviware.soapui.utils.MockedServlet.mockHttpServletRequest;
 import static com.eviware.soapui.utils.MockedServlet.mockHttpServletResponse;
+import static com.eviware.soapui.utils.MockedServlet.stubbedServletContext;
 import static com.eviware.soapui.utils.ResourceUtils.getFilePathFromResource;
+import static org.mockito.Mockito.mock;
 
 public class MockAsWarServletTest {
 
@@ -33,7 +35,8 @@ public class MockAsWarServletTest {
     @Test
     public void shouldGetResponse() throws IOException, ServletException {
 
-        MockedMockAsWarServlet servlet = new MockedMockAsWarServlet();
+        StubMockAsWarServlet servlet = new StubMockAsWarServlet();
+        servlet.init();
         HttpServletRequest reqeust = mockHttpServletRequest();
         HttpServletResponse response = mockHttpServletResponse();
         servlet.service(reqeust, response);
@@ -41,18 +44,30 @@ public class MockAsWarServletTest {
 
 }
 
-class MockedMockAsWarServlet extends MockAsWarServlet {
+class StubMockAsWarServlet extends MockAsWarServlet {
 
     @Override
     public String getInitParameter(String name) {
 
-        try {
-            return getFilePathFromResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml");
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException(e);
+        if (name.equals("projectFile")) {
+            return getProjectFilePath();
+
         }
 
+        return "";
+    }
+
+    @Override
+    public javax.servlet.ServletContext getServletContext() {
+        return stubbedServletContext();
 
     }
 
+    private String getProjectFilePath() {
+        try {
+            return getFilePathFromResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml").substring(1);
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 }

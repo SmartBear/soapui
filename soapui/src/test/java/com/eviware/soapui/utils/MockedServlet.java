@@ -15,11 +15,16 @@
 */
 package com.eviware.soapui.utils;
 
-import javax.servlet.ServletOutputStream;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Enumeration;
+import java.util.Set;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,7 +40,14 @@ public class MockedServlet {
         HttpServletResponse servletResponse = mock(HttpServletResponse.class);
         ServletOutputStream os = mock(ServletOutputStream.class);
         when(servletResponse.getOutputStream()).thenReturn(os);
+        PrintWriter writer = mock(PrintWriter.class);
+        when(servletResponse.getWriter()).thenReturn(writer);
         return servletResponse;
+    }
+
+    public static ServletContext stubbedServletContext() {
+
+        return new StubbedServletContext();
     }
 
     private static Enumeration headerNames() {
@@ -52,3 +64,134 @@ public class MockedServlet {
         };
     }
 }
+
+class StubbedServletContext implements ServletContext {
+
+
+    @Override
+    public String getContextPath() {
+        return null;
+    }
+
+    @Override
+    public ServletContext getContext(String s) {
+        return null;
+    }
+
+    @Override
+    public int getMajorVersion() {
+        return 0;
+    }
+
+    @Override
+    public int getMinorVersion() {
+        return 0;
+    }
+
+    @Override
+    public String getMimeType(String s) {
+        return null;
+    }
+
+    @Override
+    public Set getResourcePaths(String s) {
+        return null;
+    }
+
+    @Override
+    public URL getResource(String s) throws MalformedURLException {
+
+        return new URL("file://" + s );
+    }
+
+    @Override
+    public InputStream getResourceAsStream(String s) {
+        return null;
+    }
+
+    @Override
+    public RequestDispatcher getRequestDispatcher(String s) {
+        return null;
+    }
+
+    @Override
+    public RequestDispatcher getNamedDispatcher(String s) {
+        return null;
+    }
+
+    @Override
+    public Servlet getServlet(String s) throws ServletException {
+        return null;
+    }
+
+    @Override
+    public Enumeration getServlets() {
+        return null;
+    }
+
+    @Override
+    public Enumeration getServletNames() {
+        return null;
+    }
+
+    @Override
+    public void log(String s) {
+
+    }
+
+    @Override
+    public void log(Exception e, String s) {
+
+    }
+
+    @Override
+    public void log(String s, Throwable throwable) {
+
+    }
+
+    @Override
+    public String getRealPath(String s) {
+        return null;
+    }
+
+    @Override
+    public String getServerInfo() {
+        return null;
+    }
+
+    @Override
+    public String getInitParameter(String s) {
+        return null;
+    }
+
+    @Override
+    public Enumeration getInitParameterNames() {
+        return null;
+    }
+
+    @Override
+    public Object getAttribute(String s) {
+        return null;
+    }
+
+    @Override
+    public Enumeration getAttributeNames() {
+        return null;
+    }
+
+    @Override
+    public void setAttribute(String s, Object o) {
+
+    }
+
+    @Override
+    public void removeAttribute(String s) {
+
+    }
+
+    @Override
+    public String getServletContextName() {
+        return null;
+    }
+}
+
