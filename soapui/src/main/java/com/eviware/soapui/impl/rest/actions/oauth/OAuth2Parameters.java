@@ -75,7 +75,7 @@ public class OAuth2Parameters {
     }
 
     public void waitingForAuthorization() {
-        profile.waitingForAuthorization();
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
     }
 
     private String expandProperty(OAuth2Profile profile, String value) {
@@ -83,11 +83,11 @@ public class OAuth2Parameters {
     }
 
     public void receivedAuthorizationCode() {
-        profile.receivedAuthorizationCode();
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE);
     }
 
     public void retrivalCanceled() {
-        profile.retrivalCanceled();
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.RETRIEVAL_CANCELED);
     }
 
     public void applyRetrievedAccessToken(String accessToken) {

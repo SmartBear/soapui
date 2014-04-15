@@ -146,30 +146,11 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         return javaScripts != null && !javaScripts.isEmpty();
     }
 
-    public void waitingForAuthorization() {
-        setAccessTokenStatus(AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
-    }
-
-    public void receivedAuthorizationCode() {
-        setAccessTokenStatus(AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE);
-    }
-
-    public void expired() {
-        setAccessTokenStatus(AccessTokenStatus.EXPIRED);
-        setAccessTokenStartingStatus(AccessTokenStatus.EXPIRED);
-
-    }
-
-    public void retrivalCanceled() {
-        setAccessTokenStatus(AccessTokenStatus.RETRIEVAL_CANCELED);
-    }
-
     public void applyRetrievedAccessToken(String accessToken) {
         // Ignore return value in this case: even if it is not a change, it is important to know that a token has been
         // retrieved from the server
         doSetAccessToken(accessToken);
         setAccessTokenStatus(AccessTokenStatus.RETRIEVED_FROM_SERVER);
-        setAccessTokenStartingStatus(AccessTokenStatus.RETRIEVED_FROM_SERVER);
     }
 
     public String getAccessToken() {
@@ -185,7 +166,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     public void setAccessToken(String accessToken) {
         if (doSetAccessToken(accessToken)) {
             setAccessTokenStatus(AccessTokenStatus.ENTERED_MANUALLY);
-            setAccessTokenStartingStatus(AccessTokenStatus.ENTERED_MANUALLY);
         }
     }
 
@@ -329,6 +309,12 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
         if (newStatus == oldStatus) {
             return;
+        }
+
+        saveEnum(newStatus, configuration);
+
+        if (isAStartingStatus(newStatus)) {
+            setAccessTokenStartingStatus(newStatus);
         }
 
         synchronized (this) {
@@ -497,8 +483,24 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         configuration.setAccessTokenStartingStatus(AccessTokenStatusConfig.Enum.forString(startingStatus.name()));
     }
 
+    private boolean isAStartingStatus(AccessTokenStatus newStatus) {
+        return newStatus == AccessTokenStatus.ENTERED_MANUALLY
+                || newStatus == AccessTokenStatus.RETRIEVED_FROM_SERVER
+                || newStatus == AccessTokenStatus.EXPIRED;
+    }
+
     // TODO Make generic
     private AccessTokenStatus getSavedEnum(AccessTokenStatusConfig.Enum persistedEnum) {
-        return AccessTokenStatus.valueOf(persistedEnum.toString());
+        // TODO Could we avoid passing null?
+        if (persistedEnum == null) {
+            return null;
+        } else {
+            return AccessTokenStatus.valueOf(persistedEnum.toString());
+        }
+    }
+
+    // TODO Make generic
+    private void saveEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setAccessTokenStatus(AccessTokenStatusConfig.Enum.forString(enumToBePersisted.name()));
     }
 }

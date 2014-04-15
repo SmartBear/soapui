@@ -67,7 +67,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
                 if (profile.shouldReloadAccessTokenAutomatically()) {
                     reloadAccessToken(profile, oAuth2Client);
                 } else {
-                    profile.expired();
+                    profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.EXPIRED);
                 }
             }
             oAuth2Client.applyAccessToken(profile, httpMethod, request.getRequestContent());
