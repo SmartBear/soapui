@@ -16,6 +16,9 @@
 package com.eviware.soapui.mockaswar;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.mock.MockRunner;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.ServletContext;
@@ -25,36 +28,52 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import static com.eviware.soapui.utils.MockedServlet.mockHttpServletRequest;
-import static com.eviware.soapui.utils.MockedServlet.mockHttpServletResponse;
-import static com.eviware.soapui.utils.MockedServlet.stubbedServletContext;
+import static com.eviware.soapui.utils.MockedServlet.*;
 import static com.eviware.soapui.utils.ResourceUtils.getFilePathFromResource;
-import static org.mockito.Mockito.mock;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 
 public class MockAsWarServletTest {
 
 
-    @Test
-    public void shouldGetResponse() throws IOException, ServletException {
+    private StubMockAsWarServlet stubMockAsWarServlet;
+    private HttpServletRequest reqeust;
+    private HttpServletResponse response;
 
-        StubMockAsWarServlet servlet = new StubMockAsWarServlet();
-        servlet.init();
-        HttpServletRequest reqeust = mockHttpServletRequest();
-        HttpServletResponse response = mockHttpServletResponse();
-        servlet.service(reqeust, response);
+    @Before
+    public void setUp() throws ServletException, IOException {
+        stubMockAsWarServlet = new StubMockAsWarServlet();
+        stubMockAsWarServlet.init();
+
+        reqeust = mockHttpServletRequest();
+        response = mockHttpServletResponse();
+    }
+
+    @After
+    public void tearDown() {
+        stubMockAsWarServlet.destroy();
+
+    }
+
+    @Test
+    public void shouldStartAllMockServices() throws ServletException, IOException {
+
+        stubMockAsWarServlet.service(reqeust, response);
+
+        MockRunner[] mockRunners = ((MockAsWarServlet.MockServletSoapUICore) stubMockAsWarServlet.getMockServletCore()).getMockRunners();
+        assertThat(mockRunners.length, is(2));
     }
 
 }
 
 class StubMockAsWarServlet extends MockAsWarServlet {
 
-   ServletContext stubbedServletContext = stubbedServletContext();
+    ServletContext stubbedServletContext = stubbedServletContext();
 
     public void init() throws ServletException {
-       super.init();
-       SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
-
-   }
+        SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+        super.init();
+    }
 
     @Override
     public String getInitParameter(String name) {
@@ -69,6 +88,7 @@ class StubMockAsWarServlet extends MockAsWarServlet {
 
     @Override
     public javax.servlet.ServletContext getServletContext() {
+
         return stubbedServletContext;
 
     }
