@@ -75,7 +75,8 @@ class StubMockAsWarServlet extends MockAsWarServlet {
 
     private String getProjectFilePath() {
         try {
-            return getFilePathFromResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml").substring(1);
+            // remove the initial "/" since on the servlet it always append a slash
+            return getFilePathFromResource("/soapui-projects/REST-multiple-service-soapui-project.xml").substring(1);
         } catch (URISyntaxException e) {
             throw new IllegalStateException(e);
         }
