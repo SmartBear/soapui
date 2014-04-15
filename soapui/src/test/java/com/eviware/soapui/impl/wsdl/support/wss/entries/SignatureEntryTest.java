@@ -24,7 +24,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.eviware.soapui.utils.TestUtils;
-import junit.framework.JUnit4TestAdapter;
 import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
@@ -37,20 +36,9 @@ import org.apache.ws.security.util.Loader;
 import org.apache.xml.security.algorithms.MessageDigestAlgorithm;
 import org.apache.xml.security.signature.XMLSignature;
 import org.apache.xmlbeans.XmlObject;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-
 import org.mockito.Mock;
-
-import static org.mockito.Mockito.when;
-
 import org.mockito.MockitoAnnotations;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -67,15 +55,17 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.Collections;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 /**
  * @author Erik R. Yverling
  */
 
 public class SignatureEntryTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(SignatureEntryTest.class);
-    }
-
     private static final String ISSUER = "www.issuer.com";
     private static final String KEYSTORE_PATH = "keys/keystore.jks";
     private static final String KEYSTORE_PASSWORD = "foobar42";

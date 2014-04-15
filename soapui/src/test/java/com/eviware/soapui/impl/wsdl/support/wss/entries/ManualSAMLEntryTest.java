@@ -16,45 +16,34 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import junit.framework.JUnit4TestAdapter;
-
+import com.eviware.soapui.config.WSSEntryConfig;
+import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.utils.TestUtils;
 import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.apache.ws.security.message.WSSecHeader;
-import org.apache.ws.security.saml.ext.builder.SAML1Constants;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
-import com.eviware.soapui.config.WSSEntryConfig;
-import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.utils.TestUtils;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Erik R. Yverling
  */
 public class ManualSAMLEntryTest {
-
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ManualSAMLEntryTest.class);
-    }
-
     @Mock
     private WSSEntryConfig wssEntryConfigMock;
     @Mock

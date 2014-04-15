@@ -16,31 +16,22 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-
-import junit.framework.JUnit4TestAdapter;
-
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
+import com.eviware.soapui.model.testsuite.AssertionException;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
-import com.eviware.soapui.model.testsuite.AssertionException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-public class XPathContainsAssertionTestCase {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(XPathContainsAssertionTestCase.class);
-    }
+import static org.junit.Assert.*;
 
+public class XPathContainsAssertionTest {
     private String testResponse;
     private XPathContainsAssertion assertion;
     private String testBody;
