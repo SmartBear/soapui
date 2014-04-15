@@ -15,8 +15,10 @@
 */
 package com.eviware.soapui.mockaswar;
 
+import com.eviware.soapui.SoapUI;
 import org.junit.Test;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +48,14 @@ public class MockAsWarServletTest {
 
 class StubMockAsWarServlet extends MockAsWarServlet {
 
+   ServletContext stubbedServletContext = stubbedServletContext();
+
+    public void init() throws ServletException {
+       super.init();
+       SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+
+   }
+
     @Override
     public String getInitParameter(String name) {
 
@@ -59,7 +69,7 @@ class StubMockAsWarServlet extends MockAsWarServlet {
 
     @Override
     public javax.servlet.ServletContext getServletContext() {
-        return stubbedServletContext();
+        return stubbedServletContext;
 
     }
 
