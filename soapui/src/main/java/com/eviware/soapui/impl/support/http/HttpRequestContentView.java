@@ -196,7 +196,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             }
         });
 
-        toolbar.addFixed(postQueryCheckBox);
+        toolbar.add(postQueryCheckBox);
     }
 
     protected void addMediaTypeCombo(JXToolBar toolbar) {
