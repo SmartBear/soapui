@@ -28,4 +28,12 @@ public class DocumentContent {
     public String getContentType() {
         return contentType;
     }
+
+    public DocumentContent withContent(String newContent){
+        return new DocumentContent(contentType, newContent);
+    }
+
+    public DocumentContent withContentType(String newContentType){
+        return new DocumentContent(newContentType, contentAsString);
+    }
 }

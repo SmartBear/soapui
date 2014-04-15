@@ -23,6 +23,7 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -74,5 +75,18 @@ public abstract class AbstractXmlDocument implements XmlDocument {
 
     public SchemaTypeSystem getTypeSystem() {
         return XmlBeans.getBuiltinTypeSystem();
+    }
+
+    @Override
+    public void setXml(DocumentContent documentContent) {
+        setXml(documentContent.getContentAsString());
+    }
+
+    protected abstract void setXml(String contentAsString);
+
+    @Override
+    @Nonnull
+    public DocumentContent getDocumentContent() {
+        return new DocumentContent(null, getXml());
     }
 }

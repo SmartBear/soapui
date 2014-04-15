@@ -54,6 +54,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -182,7 +183,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             public void update(Document document) {
                 if (!updating && getDocument() != null) {
                     updating = true;
-                    getDocument().setXml(editArea.getText());
+                    getDocument().setXml(getDocument().getDocumentContent().withContent(editArea.getText()));
                     updating = false;
                 }
             }

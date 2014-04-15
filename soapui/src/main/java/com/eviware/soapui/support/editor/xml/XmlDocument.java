@@ -16,9 +16,12 @@
 
 package com.eviware.soapui.support.editor.xml;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.editor.EditorDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
+
+import javax.annotation.Nonnull;
 
 /**
  * Document class used by XmlEditors
@@ -31,9 +34,18 @@ public interface XmlDocument extends PropertyChangeNotifier, EditorDocument {
     //TODO: make this a real property?
     public final static String CONTENT_PROPERTY = XmlDocument.class.getName() + "@content";
 
+    /**
+     * Use #getDocumentContent instead.
+     *
+     * @return content as string, sometimes XML, sometimes JSON, sometimes something else
+     */
+    @Deprecated
     public String getXml();
 
-    public void setXml(String xml);
+    @Nonnull
+    public DocumentContent getDocumentContent();
+
+    public void setXml(DocumentContent documentContent);
 
     public SchemaTypeSystem getTypeSystem();
 

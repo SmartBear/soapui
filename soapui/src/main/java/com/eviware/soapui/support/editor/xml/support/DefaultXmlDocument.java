@@ -48,8 +48,6 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
         }
 
         try {
-            // typeSystem = XmlObject.Factory.parse( xml
-            // ).schemaType().getTypeSystem();
             typeSystem = XmlUtils.createXmlObject(xml).schemaType().getTypeSystem();
             return typeSystem;
         } catch (Exception e) {

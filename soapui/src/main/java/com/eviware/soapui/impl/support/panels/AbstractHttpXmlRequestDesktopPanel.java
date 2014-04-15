@@ -31,6 +31,7 @@ import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 import net.sf.json.groovy.JsonSlurper;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.StringReader;
@@ -84,6 +85,12 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
         public String getXml() {
             return getRequest().getRequestContent();
+        }
+
+        @Nonnull
+        @Override
+        public DocumentContent getDocumentContent() {
+            return new DocumentContent(getRequest().getMediaType(), getRequest().getRequestContent());
         }
 
         @Override

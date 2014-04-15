@@ -34,7 +34,7 @@ import org.apache.xmlbeans.XmlBeans;
  * @author ole.matzura
  */
 
-public class MockRequestXmlDocument extends AbstractXmlDocument implements XmlDocument {
+public class MockRequestXmlDocument extends AbstractXmlDocument {
     private final MockResponse mockResponse;
 
     public MockRequestXmlDocument(MockResponse response) {

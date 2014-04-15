@@ -22,6 +22,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -39,7 +40,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     private boolean isActive;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     private T xmlDocument;
-    private boolean xmlChanged;
+    private boolean documentContentChanged;
     private Set<EditorLocationListener<T>> listeners = new HashSet<EditorLocationListener<T>>();
     private XmlEditor<T> editor;
     private final String viewId;
@@ -49,7 +50,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
         this.title = title;
         editor = xmlEditor;
         this.viewId = viewId;
-        xmlChanged = false;
+        documentContentChanged = false;
     }
 
     protected PropertyChangeSupport getPropertyChangeSupport() {
@@ -68,19 +69,15 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public void update() {
-        if (xmlChanged) {
-            setXml(xmlDocument == null ? null : xmlDocument.getXml());
-            xmlChanged = false;
+        if (documentContentChanged) {
+            setDocumentContent(xmlDocument == null ? null : xmlDocument.getDocumentContent());
+            documentContentChanged = false;
         }
-    }
-
-    public boolean isXmlChanged() {
-        return xmlChanged;
     }
 
     public boolean deactivate() {
         isActive = false;
-        xmlChanged = false;
+        documentContentChanged = false;
 
         return true;
     }
@@ -126,20 +123,20 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
         }
 
         this.xmlDocument = xmlDocument;
-        xmlChanged = false;
+        documentContentChanged = false;
 
         if (xmlDocument != null) {
             this.xmlDocument.addPropertyChangeListener(XmlDocument.XML_PROPERTY, this);
             if (isActive()) {
-                setXml(xmlDocument.getXml());
+                setDocumentContent(xmlDocument.getDocumentContent());
             } else {
-                xmlChanged = true;
+                documentContentChanged = true;
             }
         } else {
             if (isActive()) {
-                setXml(null);
+                setDocumentContent(null);
             } else {
-                xmlChanged = true;
+                documentContentChanged = true;
             }
         }
     }
@@ -147,14 +144,27 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(XmlDocument.XML_PROPERTY)) {
             if (isActive()) {
-                setXml((String) evt.getNewValue());
+                setDocumentContent(xmlDocument.getDocumentContent().withContent((String) evt.getNewValue()));
             } else {
-                xmlChanged = true;
+                documentContentChanged = true;
+            }
+        }
+        if (evt.getPropertyName().equals("mediaType")) {
+            if (isActive()) {
+                setDocumentContent(xmlDocument.getDocumentContent().withContentType((String) evt.getNewValue()));
+            } else {
+                documentContentChanged = true;
             }
         }
     }
 
-    public abstract void setXml(String xml);
+    @Deprecated
+    public void setXml(String xml) {
+    }
+
+    public void setDocumentContent(DocumentContent documentContent){
+        setXml(documentContent.getContentAsString());
+    }
 
     public void release() {
         if (this.xmlDocument != null) {
@@ -192,9 +202,9 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public void syncUpdates() {
-        if (!isActive() && xmlChanged) {
+        if (!isActive() && documentContentChanged) {
             setXml(xmlDocument == null ? null : xmlDocument.getXml());
-            xmlChanged = false;
+            documentContentChanged = false;
         }
     }
 
