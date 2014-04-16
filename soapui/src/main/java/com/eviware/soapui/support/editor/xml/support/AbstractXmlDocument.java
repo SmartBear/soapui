@@ -63,7 +63,7 @@ public abstract class AbstractXmlDocument implements XmlDocument {
     }
 
     protected void fireXmlChanged(String oldValue, String newValue) {
-        propertyChangeSupport.firePropertyChange(XML_PROPERTY, oldValue, newValue);
+        propertyChangeSupport.firePropertyChange(CONTENT_PROPERTY, oldValue, newValue);
     }
 
     protected void fireContentChanged(DocumentContent oldValue, DocumentContent newValue) {
@@ -78,10 +78,11 @@ public abstract class AbstractXmlDocument implements XmlDocument {
     }
 
     @Override
-    public void setXml(DocumentContent documentContent) {
+    public void setDocumentContent(DocumentContent documentContent) {
         setXml(documentContent.getContentAsString());
     }
 
+    @Deprecated
     protected abstract void setXml(String contentAsString);
 
     @Override

@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -125,7 +126,7 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
     }
 
     @Override
-    public void setXml(String xml) {
+    public void setDocumentContent(DocumentContent documentContent) {
     }
 
     public boolean saveDocument(boolean validate) {

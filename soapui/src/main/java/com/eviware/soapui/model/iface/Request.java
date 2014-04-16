@@ -28,6 +28,7 @@ public interface Request extends ModelItem {
     public final static String REQUEST_PROPERTY = "request";
     public final static String ENDPOINT_PROPERTY = "endpoint";
     public final static String ENCODING_PROPERTY = "encoding";
+    public final String MEDIA_TYPE = "mediaType";
 
     public String getRequestContent();
 

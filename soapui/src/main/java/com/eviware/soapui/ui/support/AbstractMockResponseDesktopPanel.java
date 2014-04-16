@@ -270,7 +270,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
                 MockResult mockResult = mockResponse.getMockResult();
                 MockRequest mockRequest = mockResult == null ? null : mockResult.getMockRequest();
                 if (hasRequestEditor()) {
-                    requestEditor.getDocument().setXml(new DocumentContent( mockRequest == null ? "" : mockRequest.getHttpRequest().getContentType(), mockRequest == null ? "" : mockRequest.getRequestContent()));
+                    requestEditor.getDocument().setDocumentContent(new DocumentContent(mockRequest == null ? "" : mockRequest.getHttpRequest().getContentType(), mockRequest == null ? "" : mockRequest.getRequestContent()));
                 }
             }
         }

@@ -183,7 +183,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             public void update(Document document) {
                 if (!updating && getDocument() != null) {
                     updating = true;
-                    getDocument().setXml(getDocument().getDocumentContent().withContent(editArea.getText()));
+                    getDocument().setDocumentContent(getDocument().getDocumentContent().withContent(editArea.getText()));
                     updating = false;
                 }
             }
@@ -788,10 +788,11 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         }
     }
 
-    public void setXml(String xml) {
+    public void setDocumentContent(DocumentContent documentContent) {
         if (!updating) {
             updating = true;
 
+            String xml = documentContent.getContentAsString();
             if (xml == null) {
                 editArea.setText("");
                 editArea.setEnabled(false);

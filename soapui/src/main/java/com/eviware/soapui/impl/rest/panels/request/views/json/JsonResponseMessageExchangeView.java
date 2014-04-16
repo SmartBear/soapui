@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.rest.panels.request.views.json;
 
 import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.UISupport;
@@ -136,7 +137,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
     }
 
     @Override
-    public void setXml(String xml) {
+    public void setDocumentContent(DocumentContent documentContent) {
     }
 
     public boolean saveDocument(boolean validate) {

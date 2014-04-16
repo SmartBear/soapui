@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestContentView;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
@@ -87,7 +88,7 @@ public class RestRequestContentView extends HttpRequestContentView {
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("mediaType") && recreateButton != null) {
+        if (evt.getPropertyName().equals(Request.MEDIA_TYPE) && recreateButton != null) {
             recreateButton.setEnabled(canRecreate());
         } else if (evt.getPropertyName().equals("restMethod")) {
             paramsTable.setParams(restRequest.getParams());

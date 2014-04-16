@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -119,14 +120,14 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 
     public void setDocument(T xmlDocument) {
         if (this.xmlDocument != null) {
-            this.xmlDocument.removePropertyChangeListener(XmlDocument.XML_PROPERTY, this);
+            this.xmlDocument.removePropertyChangeListener(XmlDocument.CONTENT_PROPERTY, this);
         }
 
         this.xmlDocument = xmlDocument;
         documentContentChanged = false;
 
         if (xmlDocument != null) {
-            this.xmlDocument.addPropertyChangeListener(XmlDocument.XML_PROPERTY, this);
+            this.xmlDocument.addPropertyChangeListener(XmlDocument.CONTENT_PROPERTY, this);
             if (isActive()) {
                 setDocumentContent(xmlDocument.getDocumentContent());
             } else {
@@ -142,14 +143,14 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(XmlDocument.XML_PROPERTY)) {
+        if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(XmlDocument.CONTENT_PROPERTY)) {
             if (isActive()) {
                 setDocumentContent(xmlDocument.getDocumentContent().withContent((String) evt.getNewValue()));
             } else {
                 documentContentChanged = true;
             }
         }
-        if (evt.getPropertyName().equals("mediaType")) {
+        if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
             if (isActive()) {
                 setDocumentContent(xmlDocument.getDocumentContent().withContentType((String) evt.getNewValue()));
             } else {
@@ -158,17 +159,11 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
         }
     }
 
-    @Deprecated
-    public void setXml(String xml) {
-    }
-
-    public void setDocumentContent(DocumentContent documentContent){
-        setXml(documentContent.getContentAsString());
-    }
+    public abstract void setDocumentContent(DocumentContent documentContent);
 
     public void release() {
         if (this.xmlDocument != null) {
-            this.xmlDocument.removePropertyChangeListener(XmlDocument.XML_PROPERTY, this);
+            this.xmlDocument.removePropertyChangeListener(XmlDocument.CONTENT_PROPERTY, this);
             this.xmlDocument = null;
         }
     }
@@ -203,7 +198,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 
     public void syncUpdates() {
         if (!isActive() && documentContentChanged) {
-            setXml(xmlDocument == null ? null : xmlDocument.getXml());
+            setDocumentContent(xmlDocument == null ? null : xmlDocument.getDocumentContent());
             documentContentChanged = false;
         }
     }

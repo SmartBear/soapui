@@ -30,8 +30,6 @@ import javax.annotation.Nonnull;
  */
 
 public interface XmlDocument extends PropertyChangeNotifier, EditorDocument {
-    public final static String XML_PROPERTY = XmlDocument.class.getName() + "@xml";
-    //TODO: make this a real property?
     public final static String CONTENT_PROPERTY = XmlDocument.class.getName() + "@content";
 
     /**
@@ -41,11 +39,6 @@ public interface XmlDocument extends PropertyChangeNotifier, EditorDocument {
      */
     @Deprecated
     public String getXml();
-
-    @Nonnull
-    public DocumentContent getDocumentContent();
-
-    public void setXml(DocumentContent documentContent);
 
     public SchemaTypeSystem getTypeSystem();
 

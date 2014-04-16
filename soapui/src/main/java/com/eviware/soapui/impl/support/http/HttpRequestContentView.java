@@ -23,6 +23,8 @@ import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.UISupport;
@@ -224,7 +226,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             updatingRequest = false;
         } else if (evt.getPropertyName().equals("method")) {
             fixRequestPanel();
-        } else if (evt.getPropertyName().equals("mediaType")) {
+        } else if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
             mediaTypeCombo.setSelectedItem(evt.getNewValue());
         } else if (evt.getPropertyName().equals(AbstractHttpRequest.ATTACHMENTS_PROPERTY)) {
             mediaTypeCombo.setModel(new DefaultComboBoxModel(getRequestMediaTypes()));
@@ -260,7 +262,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     }
 
     @Override
-    public void setXml(String xml) {
+    public void setDocumentContent(DocumentContent documentContent) {
     }
 
     public boolean saveDocument(boolean validate) {

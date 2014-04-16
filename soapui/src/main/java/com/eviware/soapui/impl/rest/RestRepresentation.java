@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+import com.eviware.soapui.model.iface.Request;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaType;
 
@@ -128,7 +129,7 @@ public class RestRepresentation implements PropertyChangeNotifier, PropertyChang
     public void setMediaType(String arg0) {
         String old = getMediaType();
         config.setMediaType(arg0);
-        propertyChangeSupport.firePropertyChange("mediaType", old, arg0);
+        propertyChangeSupport.firePropertyChange(Request.MEDIA_TYPE, old, arg0);
     }
 
     public void setElement(QName name) {
