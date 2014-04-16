@@ -16,11 +16,10 @@
 package com.eviware.soapui.mockaswar;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.model.mock.MockRunner;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import javax.servlet.ServletContext;
@@ -67,37 +66,18 @@ public class MockAsWarServletTest {
         assertThat(mockRunners.length, is(2));
     }
 
-    @Ignore
     @Test
-    public void shouldDispatchToCorrectMockRunner() throws Exception {
+    public void shouldWriteResponse() throws Exception {
 
-        String path = "/numeric";
+        String path = "/numeric/numericpath";
         when(reqeust.getPathInfo()).thenReturn(path);
-        MockRunner spiedRunner = getMockRunnerByPath(path);
+        when(reqeust.getMethod()).thenReturn(RestRequestInterface.HttpMethod.GET.name());
 
         stubMockAsWarServlet.service(reqeust, response);
 
         verify(reqeust, atLeastOnce()).getPathInfo();
-        verify(spiedRunner).dispatchRequest(reqeust, response);
-    }
+        verify( response, atLeastOnce()).getOutputStream();
 
-
-    private MockRunner getMockRunnerByPath(String path) throws Exception {
-        MockRunner[] mockRunners = ((MockAsWarServlet.MockServletSoapUICore) stubMockAsWarServlet.getMockServletCore()).getMockRunners();
-        MockRunner runner = getMockRunnerByPath(mockRunners, path);
-        return spy(runner);
-    }
-
-
-    private MockRunner getMockRunnerByPath(MockRunner[] mockRunners, String path) throws Exception {
-        for (MockRunner runner : mockRunners) {
-
-            if (runner.getMockContext().getMockService().getPath().equals(path)) {
-                return runner;
-            }
-        }
-
-        return new WsdlMockRunner(null, null);
     }
 }
 
