@@ -48,7 +48,6 @@ public class OAuth2AdvancedOptionsDialog {
 
         dialog.getFormField(Form.ACCESS_TOKEN_EXPIRATION_TIME).setProperty("component", expirationTimeComponent);
 
-
         setAccessTokenOptions(profile, dialog);
 
         setRefreshAccessTokenOptions(profile, dialog);
@@ -90,12 +89,11 @@ public class OAuth2AdvancedOptionsDialog {
 
     private void setAccessTokenOptions(OAuth2Profile target, XFormDialog dialog) {
         XFormRadioGroup accessTokenPositionField = (XFormRadioGroup) dialog.getFormField(Form.ACCESS_TOKEN_POSITION);
-        String[] accessTokenPositions = new String[]{AccessTokenPosition.HEADER.toString(),
-                AccessTokenPosition.QUERY.toString()};
+        AccessTokenPosition[] accessTokenPositions = new AccessTokenPosition[]{AccessTokenPosition.HEADER, AccessTokenPosition.QUERY};
 
         accessTokenPositionField.setOptions(accessTokenPositions);
 
-        dialog.setValue(Form.ACCESS_TOKEN_POSITION, target.getAccessTokenPosition().toString());
+        dialog.setValue(Form.ACCESS_TOKEN_POSITION, target.getAccessTokenPosition().name());
     }
 
     @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.OAUTH_ADVANCED_OPTIONS)

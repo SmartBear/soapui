@@ -22,6 +22,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.*;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
@@ -91,9 +92,20 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     }
 
     public enum AccessTokenPosition {
-        QUERY,
-        HEADER,
-        BODY
+        QUERY("Query"),
+        HEADER("Header"),
+        BODY("Body");
+
+        private String description;
+
+        AccessTokenPosition(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     public enum OAuth2Flow {
@@ -126,6 +138,8 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         this.oAuth2ProfileContainer = oAuth2ProfileContainer;
         this.configuration = configuration;
         pcs = new PropertyChangeSupport(this);
+
+        setDefaultAccessTokenPosition();
     }
 
     public String getName() {
@@ -166,22 +180,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     public void setAccessToken(String accessToken) {
         if (doSetAccessToken(accessToken)) {
             setAccessTokenStatus(AccessTokenStatus.ENTERED_MANUALLY);
-        }
-    }
-
-    public AccessTokenPosition getAccessTokenPosition() {
-        if (configuration.getAccessTokenPosition() == null) {
-            configuration.setAccessTokenPosition(AccessTokenPositionConfig.HEADER);
-        }
-        return AccessTokenPosition.valueOf(configuration.getAccessTokenPosition().toString());
-    }
-
-    public void setAccessTokenPosition(AccessTokenPosition accessTokenPosition) {
-        AccessTokenPosition oldValue = getAccessTokenPosition();
-        if (!accessTokenPosition.equals(oldValue.toString())) {
-            configuration.setAccessTokenPosition(AccessTokenPositionConfig.Enum.forString(accessTokenPosition.toString()));
-            pcs.firePropertyChange(ACCESS_TOKEN_POSITION_PROPERTY, AccessTokenPosition.valueOf(oldValue.toString()),
-                    accessTokenPosition);
         }
     }
 
@@ -302,8 +300,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         return getSavedEnum(configuration.getAccessTokenStatus());
     }
 
-    public void setAccessTokenStatus(@Nonnull AccessTokenStatus newStatus) {
-        Preconditions.checkNotNull(newStatus);
+    public void setAccessTokenStatus(AccessTokenStatus newStatus) {
 
         AccessTokenStatus oldStatus = getSavedEnum(configuration.getAccessTokenStatus());
 
@@ -322,6 +319,20 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
 
         pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldStatus, newStatus);
+    }
+
+    public AccessTokenPosition getAccessTokenPosition() {
+        return getSavedEnum(configuration.getAccessTokenPosition());
+    }
+
+    public void setAccessTokenPosition(@Nonnull AccessTokenPosition newAccessTokenPosition) {
+        Preconditions.checkNotNull(newAccessTokenPosition);
+
+        AccessTokenPosition oldAccessTokenPosition = getSavedEnum(configuration.getAccessTokenPosition());
+
+        saveEnum(newAccessTokenPosition, configuration);
+
+        pcs.firePropertyChange(ACCESS_TOKEN_POSITION_PROPERTY, oldAccessTokenPosition, newAccessTokenPosition);
     }
 
     public AccessTokenStatus getAccessTokenStartingStatus() {
@@ -489,7 +500,14 @@ public class OAuth2Profile implements PropertyExpansionContainer {
                 || newStatus == AccessTokenStatus.EXPIRED;
     }
 
-    // TODO Make generic
+    private void setDefaultAccessTokenPosition() {
+        if (getAccessTokenPosition() == null) {
+            setAccessTokenPosition(AccessTokenPosition.HEADER);
+        }
+    }
+
+    // TODO ------------------------- Make generic -------------------------
+
     private AccessTokenStatus getSavedEnum(AccessTokenStatusConfig.Enum persistedEnum) {
         // TODO Could we avoid passing null?
         if (persistedEnum == null) {
@@ -499,8 +517,21 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    // TODO Make generic
+    private AccessTokenPosition getSavedEnum(AccessTokenPositionConfig.Enum persistedEnum) {
+        // TODO Could we avoid passing null?
+        if (persistedEnum == null) {
+            return null;
+        } else {
+            return AccessTokenPosition.valueOf(persistedEnum.toString());
+        }
+    }
+
+
     private void saveEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
         configuration.setAccessTokenStatus(AccessTokenStatusConfig.Enum.forString(enumToBePersisted.name()));
+    }
+
+    private void saveEnum(AccessTokenPosition enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setAccessTokenPosition(AccessTokenPositionConfig.Enum.forString(enumToBePersisted.name()));
     }
 }
