@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -83,6 +84,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             return request;
         }
 
+        @Deprecated
         public String getXml() {
             return getRequest().getRequestContent();
         }
@@ -159,10 +161,22 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(RestRequestInterface.REQUEST_PROPERTY) && !updating) {
-                updating = true;
-                fireXmlChanged((String) evt.getOldValue(), (String) evt.getNewValue());
-                updating = false;
+            if(!updating){
+                try{
+                    updating = true;
+                    if (evt.getPropertyName().equals(Request.REQUEST_PROPERTY)) {
+                        fireContentChanged(
+                                getDocumentContent().withContent((String)evt.getOldValue()),
+                                getDocumentContent().withContent((String)evt.getNewValue()));
+                    }
+                    if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
+                        fireContentChanged(
+                                getDocumentContent().withContentType((String)evt.getOldValue()),
+                                getDocumentContent().withContentType((String)evt.getNewValue()));
+                    }
+                } finally {
+                    updating = false;
+                }
             }
         }
     }

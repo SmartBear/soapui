@@ -62,12 +62,13 @@ public abstract class AbstractXmlDocument implements XmlDocument {
         contentChangeSupport.removeContentChangeListener(listener);
     }
 
+    @Deprecated
     protected void fireXmlChanged(String oldValue, String newValue) {
-        propertyChangeSupport.firePropertyChange(CONTENT_PROPERTY, oldValue, newValue);
+        fireContentChanged(getDocumentContent().withContent(oldValue), getDocumentContent().withContent(newValue));
     }
 
     protected void fireContentChanged(DocumentContent oldValue, DocumentContent newValue) {
-        contentChangeSupport.fireContentChange(oldValue, newValue);
+        propertyChangeSupport.firePropertyChange(CONTENT_PROPERTY, oldValue, newValue);
     }
 
     public void release() {

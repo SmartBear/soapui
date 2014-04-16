@@ -21,14 +21,14 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import javax.annotation.Nonnull;
 
 public interface EditorDocument {
-    public abstract void release();
+    abstract void release();
 
     void addContentChangeListener(ContentChangeListener listener);
 
     void removeContentChangeListener(ContentChangeListener listener);
 
     @Nonnull
-    public DocumentContent getDocumentContent();
+    DocumentContent getDocumentContent();
 
-    public void setDocumentContent(DocumentContent documentContent);
+    void setDocumentContent(DocumentContent documentContent);
 }

@@ -145,14 +145,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(XmlDocument.CONTENT_PROPERTY)) {
             if (isActive()) {
-                setDocumentContent(xmlDocument.getDocumentContent().withContent((String) evt.getNewValue()));
-            } else {
-                documentContentChanged = true;
-            }
-        }
-        if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
-            if (isActive()) {
-                setDocumentContent(xmlDocument.getDocumentContent().withContentType((String) evt.getNewValue()));
+                setDocumentContent((DocumentContent) evt.getNewValue());
             } else {
                 documentContentChanged = true;
             }
