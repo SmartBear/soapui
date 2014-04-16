@@ -93,10 +93,10 @@ public class MockAsWarServlet extends HttpServlet {
                 mockService.start();
             }
 
-			  for (MockService mockService : project.getRestMockServiceList()) {
-				  logger.info("Starting REST mock service [" + mockService.getName() + "]");
-				  mockService.start();
-			  }
+            for (MockService mockService : project.getRestMockServiceList()) {
+                logger.info("Starting REST mock service [" + mockService.getName() + "]");
+                mockService.start();
+            }
         } catch (Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }
@@ -229,22 +229,22 @@ public class MockAsWarServlet extends HttpServlet {
                 pathInfo = "";
             }
 
-            for (MockRunner mockRunner : getMockRunners()) {
-                if (pathInfo.equals(mockRunner.getMockContext().getMockService().getPath())) {
-                    MockResult result = mockRunner.dispatchRequest(request, response);
+            MockRunner mockRunner = getMatchedMockRunner(getMockRunners(), pathInfo);
 
-                    if (maxResults > 0) {
-                        synchronized (results) {
-                            while (maxResults > 0 && results.size() > maxResults) {
-                                results.remove(0);
-                            }
-                            if (result != null) {
-                                results.add(result);
-                            }
+            if (mockRunner != null) {
+                MockResult result = mockRunner.dispatchRequest(request, response);
+
+                if (maxResults > 0) {
+                    synchronized (results) {
+                        while (maxResults > 0 && results.size() > maxResults) {
+                            results.remove(0);
+                        }
+                        if (result != null) {
+                            results.add(result);
                         }
                     }
-                    return;
                 }
+                return;
             }
 
             if (enableWebUI) {
@@ -270,6 +270,23 @@ public class MockAsWarServlet extends HttpServlet {
             } else {
                 printDisabledLogFrameset(request, response);
             }
+        }
+
+        private MockRunner getMatchedMockRunner(MockRunner[] mockRunners, String pathInfo) {
+
+            MockRunner mockRunner = null;
+            String bestMatchedRootPath = "";
+
+            for (MockRunner runner : mockRunners) {
+                String mockServicePath = runner.getMockContext().getMockService().getPath();
+                if (pathInfo.startsWith(mockServicePath) && mockServicePath.length() > bestMatchedRootPath.length()) {
+                    bestMatchedRootPath = mockServicePath;
+                    mockRunner = runner;
+                }
+            }
+
+            return mockRunner;
+            
         }
 
         /*
