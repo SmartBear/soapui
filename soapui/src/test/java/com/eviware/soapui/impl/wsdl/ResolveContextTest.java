@@ -16,21 +16,15 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import static org.junit.Assert.assertTrue;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.support.Tools;
+import org.junit.Test;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Test;
-
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.support.Tools;
+import static org.junit.Assert.assertTrue;
 
 public class ResolveContextTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ResolveContextTest.class);
-    }
 
     @Test
     public void shouldRelativizePath() {

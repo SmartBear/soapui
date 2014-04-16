@@ -20,7 +20,6 @@ import com.eviware.soapui.config.KeyMaterialCryptoConfig;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.support.SoapUIException;
-import junit.framework.JUnit4TestAdapter;
 import org.apache.xmlbeans.XmlException;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,9 +40,6 @@ import static org.mockito.Mockito.when;
  */
 // FIXME We should also add tests for truststores
 public class KeyMaterialWssCryptoTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(KeyMaterialWssCryptoTest.class);
-    }
 
     private static final String TEST_RESOURCES_DIR = "/keys/";
 

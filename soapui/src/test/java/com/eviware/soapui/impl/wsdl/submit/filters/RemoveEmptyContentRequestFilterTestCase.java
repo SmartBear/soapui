@@ -16,16 +16,11 @@
 
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import static org.junit.Assert.assertEquals;
-
-import junit.framework.JUnit4TestAdapter;
-
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+
 public class RemoveEmptyContentRequestFilterTestCase {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(RemoveEmptyContentRequestFilterTestCase.class);
-    }
 
     @Test
     public void testRemoval() throws Exception {

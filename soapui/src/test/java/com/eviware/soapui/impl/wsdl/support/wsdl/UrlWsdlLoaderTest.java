@@ -16,22 +16,22 @@
 
 package com.eviware.soapui.impl.wsdl.support.wsdl;
 
+import com.eviware.soapui.config.DefinitionCacheConfig;
+import org.junit.Test;
+
 import java.io.File;
 
-import junit.framework.TestCase;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-import com.eviware.soapui.config.DefinitionCacheConfig;
+public class UrlWsdlLoaderTest {
 
-public class WsdlUtilsTestCase extends TestCase {
-    public void testCacheWsdl() throws Exception {
-        File file = new File(WsdlUtilsTestCase.class.getResource("/test6/TestService.wsdl").toURI());
-
-        assertTrue(file.exists());
-
+    @Test
+    public void cachesWsdl() throws Exception {
+        File file = new File(UrlWsdlLoaderTest.class.getResource("/test6/TestService.wsdl").toURI());
         WsdlLoader loader = new UrlWsdlLoader(file.toURI().toURL().toString());
 
         DefinitionCacheConfig cachedWsdl = WsdlUtils.cacheWsdl(loader);
-        assertEquals(4, cachedWsdl.sizeOfPartArray());
-
+        assertThat(cachedWsdl.sizeOfPartArray(), is(4));
     }
 }

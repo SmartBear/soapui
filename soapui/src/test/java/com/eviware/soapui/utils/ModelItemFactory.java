@@ -112,6 +112,10 @@ public class ModelItemFactory {
 
     public static RestMockService makeRestMockService() throws SoapUIException {
         WsdlProject project = makeWsdlProject();
+        return makeRestMockService(project);
+    }
+
+    public static RestMockService makeRestMockService(WsdlProject project) {
         RESTMockServiceConfig restMockServiceConfig = project.getConfig().addNewRestMockService();
         restMockServiceConfig.setName("mockServiceConfig");
         RestMockService restMockService = new RestMockService(project, restMockServiceConfig);

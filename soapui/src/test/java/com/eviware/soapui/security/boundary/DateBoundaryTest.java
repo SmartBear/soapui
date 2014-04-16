@@ -15,20 +15,15 @@
 */
 package com.eviware.soapui.security.boundary;
 
-import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.text.ParseException;
 import java.util.Calendar;
 
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertTrue;
 
 public class DateBoundaryTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(DateBoundaryTest.class);
-    }
 
     DateTimeBoundary dateBoundary;
     String today;
