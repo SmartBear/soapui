@@ -161,18 +161,18 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if(!updating){
-                try{
+            if (!updating) {
+                try {
                     updating = true;
                     if (evt.getPropertyName().equals(Request.REQUEST_PROPERTY)) {
                         fireContentChanged(
-                                getDocumentContent().withContent((String)evt.getOldValue()),
-                                getDocumentContent().withContent((String)evt.getNewValue()));
+                                getDocumentContent().withContent((String) evt.getOldValue()),
+                                getDocumentContent().withContent((String) evt.getNewValue()));
                     }
                     if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
                         fireContentChanged(
-                                getDocumentContent().withContentType((String)evt.getOldValue()),
-                                getDocumentContent().withContentType((String)evt.getNewValue()));
+                                getDocumentContent().withContentType((String) evt.getOldValue()),
+                                getDocumentContent().withContentType((String) evt.getNewValue()));
                     }
                 } finally {
                     updating = false;
@@ -208,8 +208,13 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
         public void propertyChange(PropertyChangeEvent evt) {
             HttpResponse oldResponse = (HttpResponse) evt.getOldValue();
             HttpResponse response = (HttpResponse) evt.getNewValue();
-            fireContentChanged(extractContentFrom(oldResponse), extractContentFrom(response));
-            fireXmlChanged(oldResponse == null ? null : oldResponse.getContentAsString(), getXml());
+
+            final DocumentContent newValue = extractContentFrom(response);
+            if (seemsToBeJsonContentType(newValue.getContentType())) {
+                fireContentChanged(extractContentFrom(oldResponse), newValue);
+            } else {
+                fireContentChanged(getDocumentContent().withContent(oldResponse == null ? null : oldResponse.getContentAsString()), getDocumentContent().withContent(getXml()));
+            }
         }
 
         private DocumentContent extractContentFrom(HttpResponse oldResponse) {
