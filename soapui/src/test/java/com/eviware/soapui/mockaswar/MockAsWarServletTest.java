@@ -60,10 +60,11 @@ public class MockAsWarServletTest {
     @Test
     public void shouldStartAllMockServices() throws ServletException, IOException {
 
+        int totalMockService = stubMockAsWarServlet.project.getRestMockServiceCount() + stubMockAsWarServlet.project.getMockServiceCount();
         stubMockAsWarServlet.service(reqeust, response);
 
         MockRunner[] mockRunners = ((MockAsWarServlet.MockServletSoapUICore) stubMockAsWarServlet.getMockServletCore()).getMockRunners();
-        assertThat(mockRunners.length, is(2));
+        assertThat(mockRunners.length, is(totalMockService));
     }
 
     @Test
