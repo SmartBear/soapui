@@ -23,10 +23,6 @@ import javax.annotation.Nonnull;
 public interface EditorDocument {
     abstract void release();
 
-    void addContentChangeListener(ContentChangeListener listener);
-
-    void removeContentChangeListener(ContentChangeListener listener);
-
     @Nonnull
     DocumentContent getDocumentContent();
 

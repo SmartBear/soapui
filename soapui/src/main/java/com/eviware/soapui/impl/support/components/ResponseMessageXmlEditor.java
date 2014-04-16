@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.support.components;
 
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.editor.ContentChangeListener;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.EditorViewFactory;

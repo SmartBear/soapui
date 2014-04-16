@@ -17,8 +17,6 @@
 package com.eviware.soapui.support.editor.xml.support;
 
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
-import com.eviware.soapui.support.editor.ContentChangeListener;
-import com.eviware.soapui.support.editor.ContentChangeSupport;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
@@ -35,7 +33,6 @@ import java.beans.PropertyChangeSupport;
 
 public abstract class AbstractXmlDocument implements XmlDocument {
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
-    private ContentChangeSupport contentChangeSupport = new ContentChangeSupport();
 
     public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
@@ -51,15 +48,6 @@ public abstract class AbstractXmlDocument implements XmlDocument {
 
     public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
-    }
-
-    public void addContentChangeListener(ContentChangeListener listener) {
-        contentChangeSupport.addContentChangeListener(listener);
-    }
-
-    @Override
-    public void removeContentChangeListener(ContentChangeListener listener) {
-        contentChangeSupport.removeContentChangeListener(listener);
     }
 
     @Deprecated
