@@ -555,31 +555,35 @@ public class Tools
 		return input;
 	}
 
-	/**
-	 * Compares two string for similarity, allows wildcard.
-	 * 
-	 * @param expected
-	 * @param real
-	 * @param wildcard
-	 * @throws ComparisonFailure
-	 */
-	public static void assertSimilar( String expected, String real, char wildcard ) throws ComparisonFailure
-	{
+    /**
+     * Compares two string for similarity, allows wildcard.
+     *
+     * @param expected
+     * @param real
+     * @param wildcard
+     * @throws ComparisonFailure
+     */
+    public static void assertSimilar(String expected, String real, char wildcard) throws ComparisonFailure {
+        if (!isSimilar(expected, real, wildcard)) {
+            throw new ComparisonFailure("Not matched", expected, real);
+        }
+    }
 
-		// expected == wildcard matches all
-		if( !expected.equals( String.valueOf( wildcard ) ) )
-		{
+    public static boolean isSimilar(String expected, String real, char wildcard) throws ComparisonFailure {
+
+        // expected == wildcard matches all
+        if (!expected.equals(String.valueOf(wildcard))) {
 
             StringBuilder sb = new StringBuilder();
             if (expected.startsWith(String.valueOf(wildcard))) {
                 sb.append(".*");
             }
-            boolean first=true;
+            boolean first = true;
             for (String token : expected.split(Pattern.quote(String.valueOf(wildcard)))) {
-                if(token.isEmpty()){
+                if (token.isEmpty()) {
                     continue;
                 }
-                if(!first) {
+                if (!first) {
                     sb.append(".*");
                 }
                 first = false;
@@ -588,10 +592,11 @@ public class Tools
             if (expected.endsWith(String.valueOf(wildcard))) {
                 sb.append(".*");
             }
-            if (!Pattern.compile(sb.toString()).matcher(real).matches()) {
-                throw new ComparisonFailure("Not matched", expected, real);
+            if (!Pattern.compile(sb.toString(), Pattern.DOTALL).matcher(real).matches()) {
+                return false;
             }
         }
+        return true;
     }
 
 	public static void main( String[] args )

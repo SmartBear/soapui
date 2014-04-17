@@ -620,39 +620,33 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 	{
 		private StringList nodesToRemove = new StringList();
 
-		public int differenceFound( Difference diff )
-		{
-			if( allowWildcards
-					&& ( diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE
-							.getId() ) )
-			{
-				if( diff.getControlNodeDetail().getValue().equals( "*" ) )
-				{
-					Node node = diff.getTestNodeDetail().getNode();
-					String xp = XmlUtils.createAbsoluteXPath( node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
-							.getParentNode() );
-					nodesToRemove.add( xp );
-					return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-				}
-			}
-			else if( allowWildcards && diff.getId() == DifferenceEngine.NODE_TYPE.getId() )
-			{
-				if( diff.getControlNodeDetail().getNode().getNodeValue().equals( "*" ) )
-				{
-					Node node = diff.getTestNodeDetail().getNode();
-					String xp = XmlUtils.createAbsoluteXPath( node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
-							.getParentNode() );
-					nodesToRemove.add( xp );
-					return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-				}
-			}
-			else if( ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID )
-			{
-				return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-			}
+        public int differenceFound(Difference diff) {
+            if (allowWildcards
+                    && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId()
+                    || diff.getId() == DifferenceEngine.ATTR_VALUE.getId())) {
+                if (Tools.isSimilar(diff.getControlNodeDetail().getValue(), diff.getTestNodeDetail().getValue(), '*')) {
+                    addToNodesToRemove(diff);
+                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+                }
+            } else if (allowWildcards && diff.getId() == DifferenceEngine.NODE_TYPE.getId()) {
+                if (Tools.isSimilar(diff.getControlNodeDetail().getNode().getNodeValue(), diff.getTestNodeDetail().getNode().getNodeValue(), '*')) {
+                    addToNodesToRemove(diff);
+                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+                }
+            } else if (ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID) {
+                return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+            }
 
-			return Diff.RETURN_ACCEPT_DIFFERENCE;
-		}
+            return Diff.RETURN_ACCEPT_DIFFERENCE;
+        }
+
+        private void addToNodesToRemove(Difference diff) {
+            Node node = diff.getTestNodeDetail().getNode();
+            String xp = XmlUtils.createAbsoluteXPath(node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
+                    .getParentNode());
+            nodesToRemove.add(xp);
+
+        }
 
 		public void skippedComparison( Node arg0, Node arg1 )
 		{
