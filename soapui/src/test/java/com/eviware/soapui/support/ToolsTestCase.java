@@ -19,8 +19,12 @@ package com.eviware.soapui.support;
 import junit.framework.ComparisonFailure;
 import org.junit.Test;
 
+import java.io.File;
+
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 public class ToolsTestCase
 {
@@ -83,5 +87,10 @@ public class ToolsTestCase
     @Test(expected = ComparisonFailure.class)
     public void differentCasingDoesNotMatch() {
         Tools.assertSimilar("heLLo", "HEllO", '*');
+    }
+
+    @Test
+    public void wildcardMatchesMultipleLine() {
+        assertThat(Tools.isSimilar("first*rd line", "first line\nsecond line\third line", '*'), is(true));
     }
 }
