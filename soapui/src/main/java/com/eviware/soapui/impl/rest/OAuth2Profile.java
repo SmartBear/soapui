@@ -22,7 +22,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang.StringUtils;
-import org.apache.xmlbeans.*;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
@@ -126,8 +125,19 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     }
 
     public enum RefreshAccessTokenMethods {
-        AUTOMATIC,
-        MANUAL
+        AUTOMATIC("Automatic"),
+        MANUAL("Manual");
+
+        private final String description;
+
+        RefreshAccessTokenMethods(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -140,6 +150,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         pcs = new PropertyChangeSupport(this);
 
         setDefaultAccessTokenPosition();
+        setDefaultRefreshMethod();
     }
 
     public String getName() {
@@ -297,18 +308,17 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     }
 
     public AccessTokenStatus getAccessTokenStatus() {
-        return getSavedEnum(configuration.getAccessTokenStatus());
+        return getSavedAccessTokenStatusEnum(configuration.getAccessTokenStatus());
     }
 
     public void setAccessTokenStatus(AccessTokenStatus newStatus) {
-
-        AccessTokenStatus oldStatus = getSavedEnum(configuration.getAccessTokenStatus());
+        AccessTokenStatus oldStatus = getSavedAccessTokenStatusEnum(configuration.getAccessTokenStatus());
 
         if (newStatus == oldStatus) {
             return;
         }
 
-        saveEnum(newStatus, configuration);
+        saveAccessTokenStatusEnum(newStatus, configuration);
 
         if (isAStartingStatus(newStatus)) {
             setAccessTokenStartingStatus(newStatus);
@@ -321,29 +331,40 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldStatus, newStatus);
     }
 
+    public AccessTokenStatus getAccessTokenStartingStatus() {
+        return getSavedAccessTokenStartingStatusEnum(configuration.getAccessTokenStartingStatus());
+    }
+
+    public void resetAccessTokenStatusToStartingStatus() {
+        setAccessTokenStatus(getAccessTokenStartingStatus());
+    }
+
     public AccessTokenPosition getAccessTokenPosition() {
-        return getSavedEnum(configuration.getAccessTokenPosition());
+        return getSavedAccessTokenPositionEnum(configuration.getAccessTokenPosition());
     }
 
     public void setAccessTokenPosition(@Nonnull AccessTokenPosition newAccessTokenPosition) {
         Preconditions.checkNotNull(newAccessTokenPosition);
 
-        AccessTokenPosition oldAccessTokenPosition = getSavedEnum(configuration.getAccessTokenPosition());
+        AccessTokenPosition oldAccessTokenPosition = getSavedAccessTokenPositionEnum(configuration.getAccessTokenPosition());
 
-        saveEnum(newAccessTokenPosition, configuration);
+        saveAccessTokenPositionEnum(newAccessTokenPosition, configuration);
 
         pcs.firePropertyChange(ACCESS_TOKEN_POSITION_PROPERTY, oldAccessTokenPosition, newAccessTokenPosition);
     }
 
-    public AccessTokenStatus getAccessTokenStartingStatus() {
-        if (configuration.getAccessTokenStartingStatus() != null) {
-            return AccessTokenStatus.valueOf(configuration.getAccessTokenStartingStatus().toString());
-        }
-        return null;
+    public RefreshAccessTokenMethods getRefreshAccessTokenMethod() {
+        return getSavedRefreshAccessTokenMethodsEnum(configuration.getRefreshAccessTokenMethod());
     }
 
-    public void resetAccessTokenStatusToStartingStatus() {
-        setAccessTokenStatus(getAccessTokenStartingStatus());
+    public void setRefreshAccessTokenMethod(@Nonnull RefreshAccessTokenMethods newRefreshAccessTokenMethod) {
+        Preconditions.checkNotNull(newRefreshAccessTokenMethod);
+
+        RefreshAccessTokenMethods oldRefreshTokenMethod = getSavedRefreshAccessTokenMethodsEnum(configuration.getRefreshAccessTokenMethod());
+
+        saveRefreshTokenMethodsEnum(newRefreshAccessTokenMethod, configuration);
+
+        pcs.firePropertyChange(REFRESH_ACCESS_TOKEN_METHOD_PROPERTY, oldRefreshTokenMethod, newRefreshAccessTokenMethod);
     }
 
     public long getAccessTokenExpirationTime() {
@@ -414,22 +435,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    public RefreshAccessTokenMethods getRefreshAccessTokenMethod() {
-        if (configuration.getRefreshAccessTokenMethod() == null) {
-            configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum
-                    .forString(RefreshAccessTokenMethods.AUTOMATIC.toString()));
-        }
-        return RefreshAccessTokenMethods.valueOf(configuration.getRefreshAccessTokenMethod().toString());
-    }
-
-    public void setRefreshAccessTokenMethod(RefreshAccessTokenMethods newValue) {
-        RefreshAccessTokenMethods oldValue = getRefreshAccessTokenMethod();
-        if (!oldValue.equals(newValue)) {
-            configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum.forString(newValue.toString()));
-            pcs.firePropertyChange(REFRESH_ACCESS_TOKEN_METHOD_PROPERTY, oldValue.toString(), newValue.toString());
-        }
-    }
-
     public boolean shouldReloadAccessTokenAutomatically() {
         return getRefreshAccessTokenMethod().equals(AUTOMATIC) && (!StringUtils.isEmpty(getRefreshToken()) ||
                 hasAutomationJavaScripts());
@@ -491,7 +496,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     private void setAccessTokenStartingStatus(@Nonnull AccessTokenStatus startingStatus) {
         Preconditions.checkNotNull(startingStatus);
-        configuration.setAccessTokenStartingStatus(AccessTokenStatusConfig.Enum.forString(startingStatus.name()));
+        saveAccessTokenStartingStatusEnum(startingStatus, configuration);
     }
 
     private boolean isAStartingStatus(AccessTokenStatus newStatus) {
@@ -506,10 +511,17 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    // TODO ------------------------- Make generic -------------------------
+    private void setDefaultRefreshMethod() {
+        if (getRefreshAccessTokenMethod() == null) {
+            setRefreshAccessTokenMethod(RefreshAccessTokenMethods.AUTOMATIC);
+        }
+    }
 
-    private AccessTokenStatus getSavedEnum(AccessTokenStatusConfig.Enum persistedEnum) {
-        // TODO Could we avoid passing null?
+    private AccessTokenStatus getSavedAccessTokenStartingStatusEnum(AccessTokenStatusConfig.Enum persistedEnum) {
+        return getSavedAccessTokenStatusEnum(persistedEnum);
+    }
+
+    private AccessTokenStatus getSavedAccessTokenStatusEnum(AccessTokenStatusConfig.Enum persistedEnum) {
         if (persistedEnum == null) {
             return null;
         } else {
@@ -517,8 +529,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    private AccessTokenPosition getSavedEnum(AccessTokenPositionConfig.Enum persistedEnum) {
-        // TODO Could we avoid passing null?
+    private AccessTokenPosition getSavedAccessTokenPositionEnum(AccessTokenPositionConfig.Enum persistedEnum) {
         if (persistedEnum == null) {
             return null;
         } else {
@@ -526,12 +537,27 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
+    private RefreshAccessTokenMethods getSavedRefreshAccessTokenMethodsEnum(RefreshAccessTokenMethodConfig.Enum persistedEnum) {
+        if (persistedEnum == null) {
+            return null;
+        } else {
+            return RefreshAccessTokenMethods.valueOf(persistedEnum.toString());
+        }
+    }
 
-    private void saveEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
+    private void saveAccessTokenStatusEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
         configuration.setAccessTokenStatus(AccessTokenStatusConfig.Enum.forString(enumToBePersisted.name()));
     }
 
-    private void saveEnum(AccessTokenPosition enumToBePersisted, OAuth2ProfileConfig configuration) {
+    private void saveAccessTokenStartingStatusEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setAccessTokenStartingStatus(AccessTokenStatusConfig.Enum.forString(enumToBePersisted.name()));
+    }
+
+    private void saveAccessTokenPositionEnum(AccessTokenPosition enumToBePersisted, OAuth2ProfileConfig configuration) {
         configuration.setAccessTokenPosition(AccessTokenPositionConfig.Enum.forString(enumToBePersisted.name()));
+    }
+
+    private void saveRefreshTokenMethodsEnum(RefreshAccessTokenMethods enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum.forString(enumToBePersisted.name()));
     }
 }
