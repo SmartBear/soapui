@@ -228,11 +228,20 @@ public class MockAsWar {
     }
 
     private void copyWarResource(String resource) {
+        FileOutputStream out = null;
         try {
-            Tools.writeAll(new FileOutputStream(new File(warDir, resource)),
+            out  = new FileOutputStream(new File(warDir, resource));
+            Tools.writeAll(out,
                     SoapUI.class.getResourceAsStream("/com/eviware/soapui/resources/mockaswar/" + resource));
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException ignore) {
+                }
+            }
         }
     }
 
