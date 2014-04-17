@@ -568,21 +568,15 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
         public int differenceFound(Difference diff) {
             if (allowWildcards
-                    && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE
-                    .getId())) {
-                if (diff.getControlNodeDetail().getValue().equals("*")) {
-                    Node node = diff.getTestNodeDetail().getNode();
-                    String xp = XmlUtils.createAbsoluteXPath(node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
-                            .getParentNode());
-                    nodesToRemove.add(xp);
+                    && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId()
+                    || diff.getId() == DifferenceEngine.ATTR_VALUE.getId())) {
+                if (Tools.isSimilar(diff.getControlNodeDetail().getValue(), diff.getTestNodeDetail().getValue(), '*')) {
+                    addToNodesToRemove(diff);
                     return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
                 }
             } else if (allowWildcards && diff.getId() == DifferenceEngine.NODE_TYPE.getId()) {
-                if (diff.getControlNodeDetail().getNode().getNodeValue().equals("*")) {
-                    Node node = diff.getTestNodeDetail().getNode();
-                    String xp = XmlUtils.createAbsoluteXPath(node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
-                            .getParentNode());
-                    nodesToRemove.add(xp);
+                if (Tools.isSimilar(diff.getControlNodeDetail().getNode().getNodeValue(), diff.getTestNodeDetail().getNode().getNodeValue(), '*')) {
+                    addToNodesToRemove(diff);
                     return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
                 }
             } else if (ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID) {
@@ -590,6 +584,14 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
             }
 
             return Diff.RETURN_ACCEPT_DIFFERENCE;
+        }
+
+        private void addToNodesToRemove(Difference diff) {
+            Node node = diff.getTestNodeDetail().getNode();
+            String xp = XmlUtils.createAbsoluteXPath(node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
+                    .getParentNode());
+            nodesToRemove.add(xp);
+
         }
 
         public void skippedComparison(Node arg0, Node arg1) {
