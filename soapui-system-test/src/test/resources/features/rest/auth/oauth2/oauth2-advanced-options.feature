@@ -15,6 +15,6 @@ Feature: OAuth2 Advanced options
 
   Examples:
   |accessTokenPosition  | refreshMethod |
-  | QUERY               | MANUAL        |
-  | HEADER              | AUTOMATIC     |
+  | Query               | Manual        |
+  | Header              | Automatic     |
 
