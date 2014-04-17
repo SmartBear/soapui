@@ -13,16 +13,15 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
+package com.eviware.soapui.model.iface;
 
-package com.eviware.soapui.impl.rest.support;
+/**
+ * @author joel.jonsson
+ */
+public interface TypedContent {
+    public String getContentAsString();
 
-import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
-import com.eviware.soapui.model.iface.TypedContent;
+    public String getContentType();
 
-public interface MediaTypeHandler {
-    public boolean canHandle(String contentType);
-
-    public String createXmlRepresentation(HttpResponse response);
-
-    public String createXmlRepresentation(TypedContent typedContent);
+    public long getContentLength();
 }

@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyHold
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
@@ -62,6 +63,7 @@ import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -583,6 +585,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             return response == null ? null : response.getResponseContentXML();
         }
 
+        @Override
+        @Nonnull
+        public DocumentContent getDocumentContent() {
+            AMFResponse response = amfRequestTestStep.getAMFRequest().getResponse();
+            return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getResponseContentXML());
+        }
+
         public void setXml(String xml) {
             if (amfRequestTestStep.getAMFRequest().getResponse() != null) {
                 amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(xml);
@@ -608,6 +617,13 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         public String getXml() {
             AMFRequest request = amfRequestTestStep.getAMFRequest();
             return request == null ? null : request.requestAsXML();
+        }
+
+        @Override
+        @Nonnull
+        public DocumentContent getDocumentContent() {
+            AMFRequest request = amfRequestTestStep.getAMFRequest();
+            return new DocumentContent(null, request == null ? null : request.requestAsXML());
         }
 
         public void setXml(String xml) {

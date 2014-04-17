@@ -54,6 +54,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 
+import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
@@ -90,6 +91,8 @@ import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+
+import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
 /**
  * Default "XML" source editor view in SoapUI
@@ -792,17 +795,18 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         if (!updating) {
             updating = true;
 
-            String xml = documentContent.getContentAsString();
-            if (xml == null) {
+            String contentAsString = documentContent.getContentAsString();
+            if (contentAsString == null) {
                 editArea.setText("");
+                editArea.setEnabled(false);
+            } else if(seemsToBeJsonContentType(documentContent.getContentType())){
+                editArea.setText("Sorry, but the content you are looking for is in another tab");
                 editArea.setEnabled(false);
             } else {
                 int caretPosition = editArea.getCaretPosition();
-
                 editArea.setEnabled(true);
-                editArea.setText(xml);
-
-                editArea.setCaretPosition(caretPosition < xml.length() ? caretPosition : 0);
+                editArea.setText(MediaTypeHandlerRegistry.getTypeHandler(documentContent.getContentType()).createXmlRepresentation(documentContent));
+                editArea.setCaretPosition(caretPosition < contentAsString.length() ? caretPosition : 0);
             }
 
             updating = false;

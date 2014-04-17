@@ -16,10 +16,13 @@
 
 package com.eviware.soapui.support.editor.xml.support;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import javax.annotation.Nonnull;
 
 /**
  * Default XmlDocument that works on a standard xml string
@@ -71,5 +74,11 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
 
     public void release() {
         typeSystem = null;
+    }
+
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent() {
+        return new DocumentContent("text/xml", xml);
     }
 }

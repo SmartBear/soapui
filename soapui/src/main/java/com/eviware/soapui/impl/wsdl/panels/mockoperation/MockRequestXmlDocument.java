@@ -20,6 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
@@ -27,6 +28,8 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
+
+import javax.annotation.Nonnull;
 
 /**
  * XmlDocument for the last request to a WsdlMockResponse
@@ -74,4 +77,12 @@ public class MockRequestXmlDocument extends AbstractXmlDocument {
             fireXmlChanged(null, xml);
         }
     }
+
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent() {
+        MockResult mockResult = mockResponse.getMockResult();
+        return new DocumentContent(null, mockResult.getMockRequest().getRequestContent());
+    }
+
 }

@@ -198,6 +198,12 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             return modelItem.getResponseContentAsXml();
         }
 
+        @Nonnull
+        @Override
+        public DocumentContent getDocumentContent() {
+            return extractContentFrom(modelItem.getResponse());
+        }
+
         public void setXml(String xml) {
             HttpResponse response = getRequest().getResponse();
             if (response != null) {
@@ -210,16 +216,16 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             HttpResponse response = (HttpResponse) evt.getNewValue();
 
             final DocumentContent newValue = extractContentFrom(response);
-            if (seemsToBeJsonContentType(newValue.getContentType())) {
+//            if (seemsToBeJsonContentType(newValue.getContentType())) {
                 fireContentChanged(extractContentFrom(oldResponse), newValue);
-            } else {
-                fireContentChanged(getDocumentContent().withContent(oldResponse == null ? null : oldResponse.getContentAsString()), getDocumentContent().withContent(getXml()));
-            }
+//            } else {
+//                fireContentChanged(getDocumentContent().withContent(oldResponse == null ? null : oldResponse.getContentAsString()), getDocumentContent().withContent(getXml()));
+//            }
         }
 
         private DocumentContent extractContentFrom(HttpResponse oldResponse) {
             if (oldResponse == null) {
-                return null;
+                return new DocumentContent(null, null);
             } else {
                 return new DocumentContent(oldResponse.getContentType(), oldResponse.getContentAsString());
             }

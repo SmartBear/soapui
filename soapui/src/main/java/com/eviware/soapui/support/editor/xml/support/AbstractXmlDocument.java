@@ -73,10 +73,4 @@ public abstract class AbstractXmlDocument implements XmlDocument {
 
     @Deprecated
     protected abstract void setXml(String contentAsString);
-
-    @Override
-    @Nonnull
-    public DocumentContent getDocumentContent() {
-        return new DocumentContent(null, getXml());
-    }
 }

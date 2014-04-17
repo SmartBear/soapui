@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import com.eviware.soapui.model.iface.TypedContent;
 import org.w3c.dom.Document;
 import org.w3c.tidy.Tidy;
 
@@ -34,8 +35,13 @@ public class HtmlMediaTypeHandler implements MediaTypeHandler {
         return contentType != null && contentType.toLowerCase().contains("text/html");
     }
 
+    @Override
     public String createXmlRepresentation(HttpResponse response) {
-        String content = response == null ? null : response.getContentAsString();
+        return createXmlRepresentation((TypedContent)response);
+    }
+
+    public String createXmlRepresentation(TypedContent typedContent) {
+        String content = typedContent == null ? null : typedContent.getContentAsString();
         if (!StringUtils.hasContent(content)) {
             return "<xml/>";
         }

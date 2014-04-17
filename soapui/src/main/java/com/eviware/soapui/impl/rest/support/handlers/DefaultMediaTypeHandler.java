@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
+import com.eviware.soapui.model.iface.TypedContent;
 import org.apache.commons.codec.binary.Base64;
 
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
@@ -28,9 +29,14 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler {
         return true;
     }
 
+    @Override
     public String createXmlRepresentation(HttpResponse response) {
-        String contentType = response.getContentType();
-        String content = response.getContentAsString();
+        return createXmlRepresentation((TypedContent)response);
+    }
+
+    public String createXmlRepresentation(TypedContent typedContent) {
+        String contentType = typedContent.getContentType();
+        String content = typedContent.getContentAsString();
 
         if (StringUtils.hasContent(contentType) && contentType.toUpperCase().endsWith("XML")) {
             return content;
@@ -42,7 +48,7 @@ public class DefaultMediaTypeHandler implements MediaTypeHandler {
             content = "";
         }
 
-        String result = "<data contentType=\"" + contentType + "\" contentLength=\"" + response.getContentLength()
+        String result = "<data contentType=\"" + contentType + "\" contentLength=\"" + typedContent.getContentLength()
                 + "\">";
 
         for (int c = 0; c < content.length(); c++) {

@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.support.components;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
@@ -29,6 +30,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+
+import javax.annotation.Nonnull;
 
 /**
  * XmlDocument for the response to a WsdlRequest
@@ -48,6 +51,13 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
     public String getXml() {
         Response response = request.getResponse();
         return response == null ? null : response.getContentAsString();
+    }
+
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent() {
+        Response response = request.getResponse();
+        return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getContentAsString());
     }
 
     public void setXml(String xml) {

@@ -11,7 +11,9 @@
  */
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-public class DocumentContent {
+import com.eviware.soapui.model.iface.TypedContent;
+
+public class DocumentContent implements TypedContent {
 
     private final String contentType;
     private final String contentAsString;
@@ -21,12 +23,19 @@ public class DocumentContent {
         this.contentType = contentType;
     }
 
+    @Override
     public String getContentAsString() {
         return contentAsString;
     }
 
+    @Override
     public String getContentType() {
         return contentType;
+    }
+
+    @Override
+    public long getContentLength() {
+        return getContentAsString() == null ? 0 : getContentAsString().length();
     }
 
     public DocumentContent withContent(String newContent){
