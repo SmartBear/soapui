@@ -576,8 +576,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((AMFResponse) evt.getOldValue()).getContentAsString(),
-                    getXml());
+            fireContentChanged();
         }
 
         public String getXml() {
@@ -587,7 +586,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
         @Override
         @Nonnull
-        public DocumentContent getDocumentContent() {
+        public DocumentContent getDocumentContent(Format format) {
             AMFResponse response = amfRequestTestStep.getAMFRequest().getResponse();
             return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getResponseContentXML());
         }
@@ -610,8 +609,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((AMFRequest) evt.getOldValue()).requestAsXML(),
-                    getXml());
+            fireContentChanged();
         }
 
         public String getXml() {
@@ -621,7 +619,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
 
         @Override
         @Nonnull
-        public DocumentContent getDocumentContent() {
+        public DocumentContent getDocumentContent(Format format) {
             AMFRequest request = amfRequestTestStep.getAMFRequest();
             return new DocumentContent(null, request == null ? null : request.requestAsXML());
         }

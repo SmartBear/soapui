@@ -24,7 +24,11 @@ public interface EditorDocument {
     abstract void release();
 
     @Nonnull
-    DocumentContent getDocumentContent();
+    DocumentContent getDocumentContent(Format format);
 
     void setDocumentContent(DocumentContent documentContent);
+
+    public static enum Format {
+        RAW, XML
+    }
 }

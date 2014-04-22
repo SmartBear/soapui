@@ -69,20 +69,19 @@ public class MockRequestXmlDocument extends AbstractXmlDocument {
     public void setXml(String xml) {
         MockResult mockResult = mockResponse.getMockResult();
         if (mockResult != null) {
-            String oldXml = getXml();
             mockResult.getMockRequest().setRequestContent(xml);
-            oldXml = "";
-            fireXmlChanged(oldXml, xml);
+            fireContentChanged();
         } else {
-            fireXmlChanged(null, xml);
+            fireContentChanged();
         }
     }
 
     @Nonnull
     @Override
-    public DocumentContent getDocumentContent() {
+    public DocumentContent getDocumentContent(Format format) {
         MockResult mockResult = mockResponse.getMockResult();
-        return new DocumentContent(null, mockResult.getMockRequest().getRequestContent());
+        final String requestContent = mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
+        return new DocumentContent(null, requestContent);
     }
 
 }

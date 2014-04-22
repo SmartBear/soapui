@@ -74,7 +74,7 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {
-        fireXmlChanged((String) arg0.getOldValue(), (String) arg0.getNewValue());
+        fireContentChanged();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
 
     @Nonnull
     @Override
-    public DocumentContent getDocumentContent() {
+    public DocumentContent getDocumentContent(Format format) {
         return new DocumentContent(mockResponse.getContentType(), mockResponse.getResponseContent());
     }
 }

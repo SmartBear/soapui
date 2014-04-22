@@ -21,7 +21,6 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
-import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -50,13 +49,8 @@ public abstract class AbstractXmlDocument implements XmlDocument {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
-    @Deprecated
-    protected void fireXmlChanged(String oldValue, String newValue) {
-        fireContentChanged(getDocumentContent().withContent(oldValue), getDocumentContent().withContent(newValue));
-    }
-
-    protected void fireContentChanged(DocumentContent oldValue, DocumentContent newValue) {
-        propertyChangeSupport.firePropertyChange(CONTENT_PROPERTY, oldValue, newValue);
+    protected void fireContentChanged() {
+        propertyChangeSupport.firePropertyChange(DOCUMENT_PROPERTY, null, this);
     }
 
     public void release() {

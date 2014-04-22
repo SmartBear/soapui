@@ -53,9 +53,8 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
     public void setXml(String xml) {
         if (!updating) {
             updating = true;
-            String old = request.getRequestContent();
             request.setRequestContent(xml);
-            fireXmlChanged(old, xml);
+            fireContentChanged();
             updating = false;
         }
     }
@@ -63,7 +62,7 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
     public void propertyChange(PropertyChangeEvent evt) {
         if (!updating) {
             updating = true;
-            fireXmlChanged((String) evt.getOldValue(), (String) evt.getNewValue());
+            fireContentChanged();
             updating = false;
         }
     }
@@ -85,7 +84,7 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
 
     @Nonnull
     @Override
-    public DocumentContent getDocumentContent() {
+    public DocumentContent getDocumentContent(Format format) {
         return new DocumentContent(null, request.getRequestContent());
     }
 }

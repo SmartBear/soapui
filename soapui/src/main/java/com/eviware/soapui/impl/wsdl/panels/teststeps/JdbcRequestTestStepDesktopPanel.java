@@ -540,8 +540,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((JdbcResponse) evt.getOldValue()).getContentAsString(),
-                    getXml());
+            fireContentChanged();
         }
 
         public String getXml() {
@@ -562,7 +561,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
         @Nonnull
         @Override
-        public DocumentContent getDocumentContent() {
+        public DocumentContent getDocumentContent(Format format) {
             JdbcResponse response = jdbcRequestTestStep.getJdbcRequest().getResponse();
             return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getContentAsString());
         }

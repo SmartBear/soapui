@@ -225,10 +225,6 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
         }
     }
 
-    @Override
-    public void setDocumentContent(DocumentContent documentContent) {
-    }
-
     public boolean saveDocument(boolean validate) {
         return false;
     }

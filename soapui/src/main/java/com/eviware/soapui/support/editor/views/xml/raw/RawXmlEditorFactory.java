@@ -92,7 +92,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
-                setDocumentContent(new DocumentContent(null, ""));
+                documentUpdated();
             }
         }
 
@@ -133,7 +133,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
-                setDocumentContent(new DocumentContent(null, ""));
+                documentUpdated();
             }
         }
 
@@ -174,7 +174,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlMockResponse.MOCKRESULT_PROPERTY)) {
-                setDocumentContent(new DocumentContent(null, ""));
+                documentUpdated();
             }
         }
 
@@ -208,7 +208,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlMockResponse.MOCKRESULT_PROPERTY)) {
-                setDocumentContent(new DocumentContent(null, ""));
+                documentUpdated();
             }
         }
 
@@ -300,7 +300,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            setDocumentContent(new DocumentContent(null, ""));
+            documentUpdated();
         }
 
         @Override
@@ -338,7 +338,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            setDocumentContent(new DocumentContent(null, ""));
+            documentUpdated();
         }
 
         @Override

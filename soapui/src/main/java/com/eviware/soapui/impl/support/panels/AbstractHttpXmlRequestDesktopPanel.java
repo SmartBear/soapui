@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.support.panels;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
@@ -91,7 +92,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
         @Nonnull
         @Override
-        public DocumentContent getDocumentContent() {
+        public DocumentContent getDocumentContent(Format format) {
             return new DocumentContent(getRequest().getMediaType(), getRequest().getRequestContent());
         }
 
@@ -164,15 +165,9 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             if (!updating) {
                 try {
                     updating = true;
-                    if (evt.getPropertyName().equals(Request.REQUEST_PROPERTY)) {
-                        fireContentChanged(
-                                getDocumentContent().withContent((String) evt.getOldValue()),
-                                getDocumentContent().withContent((String) evt.getNewValue()));
-                    }
-                    if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
-                        fireContentChanged(
-                                getDocumentContent().withContentType((String) evt.getOldValue()),
-                                getDocumentContent().withContentType((String) evt.getNewValue()));
+                    if (evt.getPropertyName().equals(Request.REQUEST_PROPERTY)
+                            || evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
+                        fireContentChanged();
                     }
                 } finally {
                     updating = false;
@@ -200,8 +195,8 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
         @Nonnull
         @Override
-        public DocumentContent getDocumentContent() {
-            return extractContentFrom(modelItem.getResponse());
+        public DocumentContent getDocumentContent(Format format) {
+            return extractContentFrom(modelItem.getResponse(), format);
         }
 
         public void setXml(String xml) {
@@ -212,22 +207,20 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            HttpResponse oldResponse = (HttpResponse) evt.getOldValue();
-            HttpResponse response = (HttpResponse) evt.getNewValue();
-
-            final DocumentContent newValue = extractContentFrom(response);
-//            if (seemsToBeJsonContentType(newValue.getContentType())) {
-                fireContentChanged(extractContentFrom(oldResponse), newValue);
-//            } else {
-//                fireContentChanged(getDocumentContent().withContent(oldResponse == null ? null : oldResponse.getContentAsString()), getDocumentContent().withContent(getXml()));
-//            }
+            fireContentChanged();
         }
 
-        private DocumentContent extractContentFrom(HttpResponse oldResponse) {
-            if (oldResponse == null) {
+        private DocumentContent extractContentFrom(HttpResponse response, Format format) {
+            if (response == null) {
                 return new DocumentContent(null, null);
             } else {
-                return new DocumentContent(oldResponse.getContentType(), oldResponse.getContentAsString());
+                String contentAsString;
+                if (format == Format.XML) {
+                    contentAsString = MediaTypeHandlerRegistry.getTypeHandler(response.getContentType()).createXmlRepresentation(response);
+                } else {
+                    contentAsString = response.getContentAsString();
+                }
+                return new DocumentContent(response.getContentType(), contentAsString);
             }
         }
 

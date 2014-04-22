@@ -55,7 +55,7 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
 
     @Nonnull
     @Override
-    public DocumentContent getDocumentContent() {
+    public DocumentContent getDocumentContent(Format format) {
         Response response = request.getResponse();
         return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getContentAsString());
     }
@@ -65,9 +65,8 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
         if (response != null) {
             try {
                 settingResponse = true;
-                String oldXml = response.getContentAsString();
                 response.setResponseContent(xml);
-                fireXmlChanged(oldXml, xml);
+                fireContentChanged();
             } finally {
                 settingResponse = false;
             }
@@ -79,19 +78,9 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
             return;
         }
 
-        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
-            Response oldResponse = (Response) evt.getOldValue();
-            Response newResponse = (Response) evt.getNewValue();
-
-            fireXmlChanged(oldResponse == null ? null : oldResponse.getContentAsString(), newResponse == null ? null
-                    : newResponse.getContentAsString());
-        }
-
-        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_CONTENT_PROPERTY)) {
-            String oldResponse = (String) evt.getOldValue();
-            String newResponse = (String) evt.getNewValue();
-
-            fireXmlChanged(oldResponse, newResponse);
+        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)
+                || evt.getPropertyName().equals(WsdlRequest.RESPONSE_CONTENT_PROPERTY)) {
+            fireContentChanged();
         }
     }
 

@@ -43,7 +43,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
         UISupport.addPreviewCorner(scrollPane, true);
     }
 
-    public void setDocumentContent(DocumentContent documentContent){
+    public void documentUpdated(){
         textArea.setText(getContent());
         textArea.setLineWrap(SoapUI.getSettings().getBoolean(UISettings.WRAP_RAW_MESSAGES));
         textArea.setCaretPosition(0);

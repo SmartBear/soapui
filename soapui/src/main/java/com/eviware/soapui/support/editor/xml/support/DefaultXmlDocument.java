@@ -66,10 +66,10 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
         String oldXml = this.xml;
         this.xml = xml;
         if ("<not-xml/>".equals(xml)) {
-            fireXmlChanged("", xml);
+            fireContentChanged();
         }
 
-        fireXmlChanged(oldXml, xml);
+        fireContentChanged();
     }
 
     public void release() {
@@ -78,7 +78,7 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
 
     @Nonnull
     @Override
-    public DocumentContent getDocumentContent() {
+    public DocumentContent getDocumentContent(Format format) {
         return new DocumentContent("text/xml", xml);
     }
 }

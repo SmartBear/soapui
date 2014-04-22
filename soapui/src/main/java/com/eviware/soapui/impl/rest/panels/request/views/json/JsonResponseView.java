@@ -125,10 +125,6 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
         }
     }
 
-    @Override
-    public void setDocumentContent(DocumentContent documentContent) {
-    }
-
     public boolean saveDocument(boolean validate) {
         return false;
     }

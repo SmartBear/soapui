@@ -109,6 +109,9 @@ public class MimeMessageResponse extends BaseHttpResponse {
     }
 
     public Attachment[] getAttachments() {
+        if(mmSupport == null) {
+            return new Attachment[0];
+        }
         int lengthA = super.getAttachments().length;
         int lengthB = mmSupport.getAttachments().length;
         if (lengthA > 0) {
@@ -127,16 +130,7 @@ public class MimeMessageResponse extends BaseHttpResponse {
     }
 
     public String getContentAsString() {
-        return mmSupport.getContentAsString();
+        return mmSupport == null ? null : mmSupport.getContentAsString();
     }
 
-    // public byte[] getRawRequestData()
-    // {
-    // return requestData;
-    // }
-    //
-    // public byte[] getRawResponseData()
-    // {
-    // return postResponseDataSource.getData();
-    // }
 }

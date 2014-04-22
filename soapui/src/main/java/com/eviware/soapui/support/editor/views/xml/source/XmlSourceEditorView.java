@@ -56,6 +56,7 @@ import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.support.editor.EditorDocument;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
@@ -186,7 +187,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             public void update(Document document) {
                 if (!updating && getDocument() != null) {
                     updating = true;
-                    getDocument().setDocumentContent(getDocument().getDocumentContent().withContent(editArea.getText()));
+                    getDocument().setDocumentContent(getDocument().getDocumentContent(EditorDocument.Format.XML).withContent(editArea.getText()));
                     updating = false;
                 }
             }
@@ -546,30 +547,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
     }
 
-    //	private final class EnableLineNumbersAction extends AbstractAction
-    //	{
-    //		EnableLineNumbersAction( String title )
-    //		{
-    //			super( title );
-    //			if( UISupport.isMac() )
-    //			{
-    //				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
-    //			}
-    //			else
-    //			{
-    //				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl alt L" ) );
-    //			}
-    //		}
-    //
-    //		@Override
-    //		public void actionPerformed( ActionEvent e )
-    //		{
-    //			editorScrollPane.setLineNumbersEnabled( !editorScrollPane.getLineNumbersEnabled() );
-    //		}
-    //
-    //	}
-
-    private final static class ValidationListMouseAdapter extends MouseAdapter {
+     private final static class ValidationListMouseAdapter extends MouseAdapter {
         private final JList list;
 
         private final RSyntaxTextArea textArea;
@@ -791,21 +769,24 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         }
     }
 
-    public void setDocumentContent(DocumentContent documentContent) {
+    @Override
+    public void documentUpdated() {
         if (!updating) {
             updating = true;
 
-            String contentAsString = documentContent.getContentAsString();
-            if (contentAsString == null) {
+            final DocumentContent rawDocumentContent = getDocument().getDocumentContent(EditorDocument.Format.RAW);
+            final String contentType = rawDocumentContent.getContentType();
+            if (rawDocumentContent.getContentAsString() == null) {
                 editArea.setText("");
                 editArea.setEnabled(false);
-            } else if(seemsToBeJsonContentType(documentContent.getContentType())){
+            } else if(seemsToBeJsonContentType(contentType) && readOnly){
                 editArea.setText("Sorry, but the content you are looking for is in another tab");
                 editArea.setEnabled(false);
             } else {
                 int caretPosition = editArea.getCaretPosition();
                 editArea.setEnabled(true);
-                editArea.setText(MediaTypeHandlerRegistry.getTypeHandler(documentContent.getContentType()).createXmlRepresentation(documentContent));
+                final String contentAsString = getDocument().getDocumentContent(EditorDocument.Format.XML).getContentAsString();
+                editArea.setText(contentAsString);
                 editArea.setCaretPosition(caretPosition < contentAsString.length() ? caretPosition : 0);
             }
 
