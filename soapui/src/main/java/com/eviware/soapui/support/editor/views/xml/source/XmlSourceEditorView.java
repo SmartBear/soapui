@@ -696,7 +696,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         return new XmlLocation(getCurrentLine() + 1, getCurrentColumn());
     }
 
-    public void setLocation(XmlLocation location) {
+    @Override
+    public void setLocation(EditorLocation<XmlDocument> location) {
         int line = location.getLine() - 1;
         if (location != null && line >= 0) {
             try {
