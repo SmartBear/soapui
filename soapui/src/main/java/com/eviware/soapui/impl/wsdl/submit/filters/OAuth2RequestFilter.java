@@ -67,7 +67,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
                 if (profile.shouldReloadAccessTokenAutomatically()) {
                     reloadAccessToken(profile, oAuth2Client);
                 } else {
-                    profile.expired();
+                    profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.EXPIRED);
                 }
             }
             oAuth2Client.applyAccessToken(profile, httpMethod, request.getRequestContent());
@@ -124,7 +124,7 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
                     oAuth2Client.requestAccessToken(profile);
                     profile.waitForAccessTokenStatus(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER,
                             ACCESS_TOKEN_RETRIEVAL_TIMEOUT);
-                    if (profile.getAccessTokenStatus().equals(String.valueOf(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER))) {
+                    if (profile.getAccessTokenStatus() == OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER) {
                         log.info("A new access token has been retrieved successfully.");
                     } else {
                         log.warn("OAuth2 access token retrieval timed out after " + ACCESS_TOKEN_RETRIEVAL_TIMEOUT + " ms");

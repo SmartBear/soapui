@@ -120,11 +120,10 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
         addOAuth2Panel(oAuth2Form);
         statusChangeManager.register();
 
-        if (profile.getAccessTokenStatusAsEnum() != OAuth2Profile.AccessTokenStatus.RETRIEVAL_CANCELED) {
+        if (profile.getAccessTokenStatus() != OAuth2Profile.AccessTokenStatus.RETRIEVAL_CANCELED) {
             profile.resetAccessTokenStatusToStartingStatus();
         }
-        setAccessTokenStatusFeedback(profile.getAccessTokenStatusAsEnum());
-
+        setAccessTokenStatusFeedback(profile.getAccessTokenStatus());
         return formPanel;
     }
 

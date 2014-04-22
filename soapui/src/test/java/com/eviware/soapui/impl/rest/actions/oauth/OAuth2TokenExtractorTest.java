@@ -144,20 +144,20 @@ public class OAuth2TokenExtractorTest {
 
     @Test
     public void updatesProfileAccessTokenStatus() throws Exception {
-        final List<String> statusValues = new ArrayList<String>();
+        final List<OAuth2Profile.AccessTokenStatus> statuses = new ArrayList<OAuth2Profile.AccessTokenStatus>();
         profile.addPropertyChangeListener(OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY, new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
-                statusValues.add((String) evt.getNewValue());
+                statuses.add((OAuth2Profile.AccessTokenStatus) evt.getNewValue());
             }
         });
 
         oAuth2TokenExtractor.extractAccessTokenForAuthorizationCodeGrantFlow(parameters);
 
-        assertThat(statusValues.size(), is(3));
-        assertThat(statusValues, hasItem(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION.toString()));
-        assertThat(statusValues, hasItem(OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE.toString()));
-        assertThat(statusValues, hasItem(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER.toString()));
+        assertThat(statuses.size(), is(3));
+        assertThat(statuses, hasItem(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION));
+        assertThat(statuses, hasItem(OAuth2Profile.AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE));
+        assertThat(statuses, hasItem(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER));
     }
 
     @Test

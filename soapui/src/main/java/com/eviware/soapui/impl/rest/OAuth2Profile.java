@@ -57,7 +57,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     public void waitForAccessTokenStatus(AccessTokenStatus accessTokenStatus, int timeout) {
         int timeLeft = timeout;
-        while (!String.valueOf(getAccessTokenStatus()).equals(accessTokenStatus.toString()) && timeLeft > 0) {
+        while ((getAccessTokenStatus() != accessTokenStatus) && timeLeft > 0) {
             long startTime = System.currentTimeMillis();
             try {
                 synchronized (this) {
@@ -79,14 +79,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         EXPIRED("Expired");
 
         private String description;
-        private static final Map<String, AccessTokenStatus> lookups;
-
-        static {
-            lookups = new HashMap<String, AccessTokenStatus>();
-            for (AccessTokenStatus status : AccessTokenStatus.values()) {
-                lookups.put(status.toString(), status);
-            }
-        }
 
         AccessTokenStatus(String description) {
             this.description = description;
@@ -96,16 +88,23 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         public String toString() {
             return description;
         }
-
-        public static AccessTokenStatus byDescription(String description) {
-            return lookups.get(description);
-        }
     }
 
     public enum AccessTokenPosition {
-        QUERY,
-        HEADER,
-        BODY
+        QUERY("Query"),
+        HEADER("Header"),
+        BODY("Body");
+
+        private String description;
+
+        AccessTokenPosition(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     public enum OAuth2Flow {
@@ -126,8 +125,19 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     }
 
     public enum RefreshAccessTokenMethods {
-        AUTOMATIC,
-        MANUAL
+        AUTOMATIC("Automatic"),
+        MANUAL("Manual");
+
+        private final String description;
+
+        RefreshAccessTokenMethods(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return description;
+        }
     }
 
     private final OAuth2ProfileContainer oAuth2ProfileContainer;
@@ -138,6 +148,9 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         this.oAuth2ProfileContainer = oAuth2ProfileContainer;
         this.configuration = configuration;
         pcs = new PropertyChangeSupport(this);
+
+        setDefaultAccessTokenPosition();
+        setDefaultRefreshMethod();
     }
 
     public String getName() {
@@ -158,30 +171,11 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         return javaScripts != null && !javaScripts.isEmpty();
     }
 
-    public void waitingForAuthorization() {
-        setAccessTokenStatus(AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
-    }
-
-    public void receivedAuthorizationCode() {
-        setAccessTokenStatus(AccessTokenStatus.RECEIVED_AUTHORIZATION_CODE);
-    }
-
-    public void expired() {
-        setAccessTokenStatus(AccessTokenStatus.EXPIRED);
-        setAccessTokenStartingStatus(AccessTokenStatus.EXPIRED);
-
-    }
-
-    public void retrivalCanceled() {
-        setAccessTokenStatus(AccessTokenStatus.RETRIEVAL_CANCELED);
-    }
-
     public void applyRetrievedAccessToken(String accessToken) {
         // Ignore return value in this case: even if it is not a change, it is important to know that a token has been
         // retrieved from the server
         doSetAccessToken(accessToken);
         setAccessTokenStatus(AccessTokenStatus.RETRIEVED_FROM_SERVER);
-        setAccessTokenStartingStatus(AccessTokenStatus.RETRIEVED_FROM_SERVER);
     }
 
     public String getAccessToken() {
@@ -197,23 +191,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     public void setAccessToken(String accessToken) {
         if (doSetAccessToken(accessToken)) {
             setAccessTokenStatus(AccessTokenStatus.ENTERED_MANUALLY);
-            setAccessTokenStartingStatus(AccessTokenStatus.ENTERED_MANUALLY);
-        }
-    }
-
-    public AccessTokenPosition getAccessTokenPosition() {
-        if (configuration.getAccessTokenPosition() == null) {
-            configuration.setAccessTokenPosition(AccessTokenPositionConfig.HEADER);
-        }
-        return AccessTokenPosition.valueOf(configuration.getAccessTokenPosition().toString());
-    }
-
-    public void setAccessTokenPosition(AccessTokenPosition accessTokenPosition) {
-        AccessTokenPosition oldValue = getAccessTokenPosition();
-        if (!accessTokenPosition.equals(oldValue.toString())) {
-            configuration.setAccessTokenPosition(AccessTokenPositionConfig.Enum.forString(accessTokenPosition.toString()));
-            pcs.firePropertyChange(ACCESS_TOKEN_POSITION_PROPERTY, AccessTokenPosition.valueOf(oldValue.toString()),
-                    accessTokenPosition);
         }
     }
 
@@ -330,27 +307,64 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    // FIXME We should try to make this and the fired property event into an enum
-    public String getAccessTokenStatus() {
-        if (configuration.getAccessTokenStatus() != null) {
-            return AccessTokenStatus.valueOf(configuration.getAccessTokenStatus().toString()).toString();
-        }
-        return null;
+    public AccessTokenStatus getAccessTokenStatus() {
+        return getSavedAccessTokenStatusEnum(configuration.getAccessTokenStatus());
     }
 
-    public AccessTokenStatus getAccessTokenStatusAsEnum() {
-        return AccessTokenStatus.byDescription(getAccessTokenStatus());
+    public void setAccessTokenStatus(AccessTokenStatus newStatus) {
+        AccessTokenStatus oldStatus = getSavedAccessTokenStatusEnum(configuration.getAccessTokenStatus());
+
+        if (newStatus == oldStatus) {
+            return;
+        }
+
+        saveAccessTokenStatusEnum(newStatus, configuration);
+
+        if (isAStartingStatus(newStatus)) {
+            setAccessTokenStartingStatus(newStatus);
+        }
+
+        synchronized (this) {
+            notifyAll();
+        }
+
+        pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldStatus, newStatus);
     }
 
     public AccessTokenStatus getAccessTokenStartingStatus() {
-        if (configuration.getAccessTokenStartingStatus() != null) {
-            return AccessTokenStatus.valueOf(configuration.getAccessTokenStartingStatus().toString());
-        }
-        return null;
+        return getSavedAccessTokenStartingStatusEnum(configuration.getAccessTokenStartingStatus());
     }
 
     public void resetAccessTokenStatusToStartingStatus() {
         setAccessTokenStatus(getAccessTokenStartingStatus());
+    }
+
+    public AccessTokenPosition getAccessTokenPosition() {
+        return getSavedAccessTokenPositionEnum(configuration.getAccessTokenPosition());
+    }
+
+    public void setAccessTokenPosition(@Nonnull AccessTokenPosition newAccessTokenPosition) {
+        Preconditions.checkNotNull(newAccessTokenPosition);
+
+        AccessTokenPosition oldAccessTokenPosition = getSavedAccessTokenPositionEnum(configuration.getAccessTokenPosition());
+
+        saveAccessTokenPositionEnum(newAccessTokenPosition, configuration);
+
+        pcs.firePropertyChange(ACCESS_TOKEN_POSITION_PROPERTY, oldAccessTokenPosition, newAccessTokenPosition);
+    }
+
+    public RefreshAccessTokenMethods getRefreshAccessTokenMethod() {
+        return getSavedRefreshAccessTokenMethodsEnum(configuration.getRefreshAccessTokenMethod());
+    }
+
+    public void setRefreshAccessTokenMethod(@Nonnull RefreshAccessTokenMethods newRefreshAccessTokenMethod) {
+        Preconditions.checkNotNull(newRefreshAccessTokenMethod);
+
+        RefreshAccessTokenMethods oldRefreshTokenMethod = getSavedRefreshAccessTokenMethodsEnum(configuration.getRefreshAccessTokenMethod());
+
+        saveRefreshTokenMethodsEnum(newRefreshAccessTokenMethod, configuration);
+
+        pcs.firePropertyChange(REFRESH_ACCESS_TOKEN_METHOD_PROPERTY, oldRefreshTokenMethod, newRefreshAccessTokenMethod);
     }
 
     public long getAccessTokenExpirationTime() {
@@ -421,22 +435,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
-    public RefreshAccessTokenMethods getRefreshAccessTokenMethod() {
-        if (configuration.getRefreshAccessTokenMethod() == null) {
-            configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum
-                    .forString(RefreshAccessTokenMethods.AUTOMATIC.toString()));
-        }
-        return RefreshAccessTokenMethods.valueOf(configuration.getRefreshAccessTokenMethod().toString());
-    }
-
-    public void setRefreshAccessTokenMethod(RefreshAccessTokenMethods newValue) {
-        RefreshAccessTokenMethods oldValue = getRefreshAccessTokenMethod();
-        if (!oldValue.equals(newValue)) {
-            configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum.forString(newValue.toString()));
-            pcs.firePropertyChange(REFRESH_ACCESS_TOKEN_METHOD_PROPERTY, oldValue.toString(), newValue.toString());
-        }
-    }
-
     public boolean shouldReloadAccessTokenAutomatically() {
         return getRefreshAccessTokenMethod().equals(AUTOMATIC) && (!StringUtils.isEmpty(getRefreshToken()) ||
                 hasAutomationJavaScripts());
@@ -496,36 +494,70 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         pcs.removePropertyChangeListener(propertyName, listener);
     }
 
-	/* Helper method */
-
-    private void setAccessTokenStatus(AccessTokenStatus status) {
-        AccessTokenStatusConfig.Enum savedAccessTokenStatus = configuration.getAccessTokenStatus();
-        AccessTokenStatus oldValue = savedAccessTokenStatus == null ? null :
-                AccessTokenStatus.valueOf(savedAccessTokenStatus.toString());
-
-        if (status == null && oldValue == null) {
-            return;
-        }
-
-
-        if (status != null) {
-            if (status.equals(oldValue)) {
-                return;
-            }
-            configuration.setAccessTokenStatus(AccessTokenStatusConfig.Enum.forString(status.name()));
-        } else {
-            configuration.setAccessTokenStatus(null);
-
-        }
-        synchronized (this) {
-            notifyAll();
-        }
-        String oldValueAsString = oldValue == null ? null : oldValue.toString();
-        pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldValueAsString, status != null ? status.toString() : null);
-    }
-
     private void setAccessTokenStartingStatus(@Nonnull AccessTokenStatus startingStatus) {
         Preconditions.checkNotNull(startingStatus);
-        configuration.setAccessTokenStartingStatus(AccessTokenStatusConfig.Enum.forString(startingStatus.name()));
+        saveAccessTokenStartingStatusEnum(startingStatus, configuration);
+    }
+
+    private boolean isAStartingStatus(AccessTokenStatus newStatus) {
+        return newStatus == AccessTokenStatus.ENTERED_MANUALLY
+                || newStatus == AccessTokenStatus.RETRIEVED_FROM_SERVER
+                || newStatus == AccessTokenStatus.EXPIRED;
+    }
+
+    private void setDefaultAccessTokenPosition() {
+        if (getAccessTokenPosition() == null) {
+            setAccessTokenPosition(AccessTokenPosition.HEADER);
+        }
+    }
+
+    private void setDefaultRefreshMethod() {
+        if (getRefreshAccessTokenMethod() == null) {
+            setRefreshAccessTokenMethod(RefreshAccessTokenMethods.AUTOMATIC);
+        }
+    }
+
+    private AccessTokenStatus getSavedAccessTokenStartingStatusEnum(AccessTokenStatusConfig.Enum persistedEnum) {
+        return getSavedAccessTokenStatusEnum(persistedEnum);
+    }
+
+    private AccessTokenStatus getSavedAccessTokenStatusEnum(AccessTokenStatusConfig.Enum persistedEnum) {
+        if (persistedEnum == null) {
+            return null;
+        } else {
+            return AccessTokenStatus.valueOf(persistedEnum.toString());
+        }
+    }
+
+    private AccessTokenPosition getSavedAccessTokenPositionEnum(AccessTokenPositionConfig.Enum persistedEnum) {
+        if (persistedEnum == null) {
+            return null;
+        } else {
+            return AccessTokenPosition.valueOf(persistedEnum.toString());
+        }
+    }
+
+    private RefreshAccessTokenMethods getSavedRefreshAccessTokenMethodsEnum(RefreshAccessTokenMethodConfig.Enum persistedEnum) {
+        if (persistedEnum == null) {
+            return null;
+        } else {
+            return RefreshAccessTokenMethods.valueOf(persistedEnum.toString());
+        }
+    }
+
+    private void saveAccessTokenStatusEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setAccessTokenStatus(AccessTokenStatusConfig.Enum.forString(enumToBePersisted.name()));
+    }
+
+    private void saveAccessTokenStartingStatusEnum(AccessTokenStatus enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setAccessTokenStartingStatus(AccessTokenStatusConfig.Enum.forString(enumToBePersisted.name()));
+    }
+
+    private void saveAccessTokenPositionEnum(AccessTokenPosition enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setAccessTokenPosition(AccessTokenPositionConfig.Enum.forString(enumToBePersisted.name()));
+    }
+
+    private void saveRefreshTokenMethodsEnum(RefreshAccessTokenMethods enumToBePersisted, OAuth2ProfileConfig configuration) {
+        configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum.forString(enumToBePersisted.name()));
     }
 }

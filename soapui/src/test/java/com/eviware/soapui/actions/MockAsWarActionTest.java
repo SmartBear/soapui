@@ -130,12 +130,14 @@ public class MockAsWarActionTest {
     private void assertValidWarFile(String warFileName) throws IOException {
 
         JarFile jarFile = new JarFile(warFileName);
-
-        for (String fileName : getExpectedWarContents()) {
-            JarEntry jarEntry = jarFile.getJarEntry(fileName);
-            assertNotNull(jarEntry);
+        try {
+            for (String fileName : getExpectedWarContents()) {
+                JarEntry jarEntry = jarFile.getJarEntry(fileName);
+                assertNotNull(jarEntry);
+            }
+        } finally {
+            jarFile.close();
         }
-
     }
 
     private void assertValidWarDirectory(String warDirectoryPath) {

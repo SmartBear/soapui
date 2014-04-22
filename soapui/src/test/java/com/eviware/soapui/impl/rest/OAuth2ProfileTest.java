@@ -39,7 +39,7 @@ public class OAuth2ProfileTest {
     @Test
     public void waitsForAccessTokenStatusChange() throws Exception {
         final String accessToken = "mock token";
-        profile.waitingForAuthorization();
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
 
         Runnable simulatedAccessTokenRetrieval = new Runnable() {
             public void run() {
@@ -60,13 +60,13 @@ public class OAuth2ProfileTest {
     @Test
     public void ignoresIntermediateAccessTokenStatusChanges() throws Exception {
         final String accessToken = "mock token";
-        profile.waitingForAuthorization();
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
 
         Runnable simulatedAccessTokenRetrieval = new Runnable() {
             public void run() {
                 try {
                     Thread.sleep(50);
-                    profile.waitingForAuthorization();
+                    profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
                     Thread.sleep(10);
                 } catch (InterruptedException ignore) {
 
@@ -83,13 +83,13 @@ public class OAuth2ProfileTest {
     @Test
     public void appliesTimeOutCorrectlyEvenOnMultipleStatusChanges() throws Exception {
         final String accessToken = "mock token";
-        profile.waitingForAuthorization();
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
 
         Runnable simulatedAccessTokenRetrieval = new Runnable() {
             public void run() {
                 try {
                     Thread.sleep(100);
-                    profile.waitingForAuthorization();
+                    profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
                     Thread.sleep(100);
                 } catch (InterruptedException ignore) {
 

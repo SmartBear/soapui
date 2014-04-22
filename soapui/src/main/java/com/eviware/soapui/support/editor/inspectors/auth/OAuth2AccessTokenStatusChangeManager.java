@@ -36,13 +36,13 @@ final class OAuth2AccessTokenStatusChangeManager implements PropertyChangeListen
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         if (evt.getPropertyName().equals(OAuth2Profile.ACCESS_TOKEN_STATUS_PROPERTY)) {
-            OAuth2Profile.AccessTokenStatus status = OAuth2Profile.AccessTokenStatus.byDescription((String) evt.getNewValue());
+            OAuth2Profile.AccessTokenStatus status = (OAuth2Profile.AccessTokenStatus) evt.getNewValue();
             listener.onAccessTokenStatusChanged(status);
         }
     }
 
     /**
-     * Start reciving Access Token Status change events
+     * Start receiving Access Token Status change events
      */
     public void register() {
         Preconditions.checkNotNull(listener.getProfile(), "Could not get OAuth 2 profile from the listener");
@@ -50,7 +50,7 @@ final class OAuth2AccessTokenStatusChangeManager implements PropertyChangeListen
     }
 
     /**
-     * Stop reciving Acess Token Status change events.
+     * Stop receiving Access Token Status change events.
      */
     public void unregister() {
         Preconditions.checkNotNull(listener.getProfile(), "Could not get OAuth 2 profile from the listener");

@@ -18,9 +18,7 @@ package com.eviware.x.form.support;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -42,7 +40,7 @@ import com.eviware.x.impl.swing.AbstractSwingXFormField;
 public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements XFormOptionsField {
     protected ButtonGroup buttonGroup;
     protected Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
-    protected StringList items = new StringList();
+    protected List<Object> items = new ArrayList<Object>();
 
     public XFormRadioGroup(String[] values) {
         super(new JPanel());
@@ -65,9 +63,17 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
     }
 
     public void addItem(Object value) {
-        JRadioButton button = new JRadioButton(String.valueOf(value));
+        JRadioButton button;
+        if (value instanceof Enum) {
+            button = new JRadioButton(value.toString());
+            button.setActionCommand(((Enum) value).name());
+            models.put(((Enum) value).name(), button.getModel());
+        } else {
+            button = new JRadioButton(String.valueOf(value));
+            button.setActionCommand(String.valueOf(value));
+            models.put(String.valueOf(value), button.getModel());
+        }
 
-        button.setActionCommand(String.valueOf(value));
         button.setName(String.valueOf(value));
         button.setFocusPainted(false);
         button.addActionListener(new ActionListener() {
@@ -79,12 +85,11 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
 
         getComponent().add(button);
         buttonGroup.add(button);
-        models.put(String.valueOf(value), button.getModel());
-        items.add(String.valueOf(value));
+        items.add(value);
     }
 
     public Object[] getOptions() {
-        return items.toStringArray();
+        return items.toArray();
     }
 
     public Object[] getSelectedOptions() {
@@ -101,7 +106,7 @@ public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements 
         getComponent().removeAll();
 
         for (Object value : values) {
-            addItem(value.toString());
+            addItem(value);
         }
     }
 

@@ -86,10 +86,10 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
         populateGetAccessTokenForm(accessTokenForm);
         statusChangeManager.register();
 
-        if (profile.getAccessTokenStatusAsEnum() != OAuth2Profile.AccessTokenStatus.RETRIEVAL_CANCELED) {
+        if (profile.getAccessTokenStatus() != OAuth2Profile.AccessTokenStatus.RETRIEVAL_CANCELED) {
             profile.resetAccessTokenStatusToStartingStatus();
         }
-        setOAuth2StatusFeedback(profile.getAccessTokenStatusAsEnum());
+        setOAuth2StatusFeedback(profile.getAccessTokenStatus());
 
         accessTokenDialog = createGetAccessTokenDialog(accessTokenForm.getPanel());
         return accessTokenDialog;

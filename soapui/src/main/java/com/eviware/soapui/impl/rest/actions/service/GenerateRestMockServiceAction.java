@@ -82,7 +82,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 
     private void populateMockService(RestService restService, RestMockService mockService) {
         mockService.setPath("/");
-        mockService.setPort(8080);
+        mockService.setPort(8089);
         addMockOperations(restService, mockService);
     }
 
