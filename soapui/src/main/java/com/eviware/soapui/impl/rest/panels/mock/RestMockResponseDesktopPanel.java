@@ -96,7 +96,8 @@ public class RestMockResponseDesktopPanel extends
         } else {
             inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
         }
-
+        // Force rendering with new style
+        inputArea.setText(inputArea.getText());
     }
 
 
