@@ -29,7 +29,7 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +52,7 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
         this.parent = parent;
         if (config != null) {
             setConfig(config);
+            ensureIdIsSet();
         }
 
         if (icon != null) {
@@ -136,11 +137,13 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
     }
 
     public String getId() {
+        return config.getId();
+    }
+
+    private void ensureIdIsSet() {
         if (!config.isSetId()) {
             config.setId(ModelSupport.generateModelItemID());
         }
-
-        return config.getId();
     }
 
     protected void setSettings(XmlBeansSettingsImpl settings) {
