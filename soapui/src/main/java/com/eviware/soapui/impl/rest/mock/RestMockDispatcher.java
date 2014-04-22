@@ -31,8 +31,6 @@ public class RestMockDispatcher extends AbstractMockDispatcher {
     private RestMockService mockService;
     private WsdlMockRunContext mockContext;
 
-    private final static Logger log = Logger.getLogger(RestMockDispatcher.class);
-
     public RestMockDispatcher(RestMockService mockService, WsdlMockRunContext mockContext) {
         this.mockService = mockService;
         this.mockContext = mockContext;
