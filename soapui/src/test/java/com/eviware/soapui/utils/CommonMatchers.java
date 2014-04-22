@@ -26,6 +26,7 @@ import javax.xml.XMLConstants;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.File;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
@@ -175,6 +176,20 @@ public class CommonMatchers {
             @Override
             public void describeTo(Description description) {
                 description.appendText("the content type " + contentType);
+            }
+        };
+    }
+
+    public static Matcher<File> exists() {
+        return new TypeSafeMatcher<File>() {
+            @Override
+            public boolean matchesSafely(File file) {
+                return file.exists();
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("an existing file");
             }
         };
     }
