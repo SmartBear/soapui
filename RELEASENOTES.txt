@@ -2,6 +2,7 @@
 
 ### Bugs fixed ###
 * REST Mock does not read the payload (SOAP-2173)
+* Wildcard in XPath assertions (SOAP-1299)
 
 -------------------------------------------------------------------------------
 
