@@ -137,4 +137,16 @@ public class SyntaxEditorUtil {
 
         return editor;
     }
+
+    public static void setMediaType(RSyntaxTextArea inputArea, String mediaType) {
+        if (mediaType.contains("json")) {
+            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        } else if (mediaType.contains("xml")) {
+            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
+        } else {
+            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+        }
+        // Force rendering with new style
+        inputArea.setText(inputArea.getText());
+    }
 }

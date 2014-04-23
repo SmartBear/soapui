@@ -23,7 +23,6 @@ import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.MediaTypeComboBox;
@@ -144,6 +143,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
         // Add popup!
         contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+        SyntaxEditorUtil.setMediaType(contentEditor, httpRequest.getMediaType());
         contentEditor.setText(httpRequest.getRequestContent());
 
         contentEditor.getDocument().addDocumentListener(new DocumentListenerAdapter() {
@@ -203,6 +203,12 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
     protected void addMediaTypeCombo(JXToolBar toolbar) {
         mediaTypeCombo = new MediaTypeComboBox(httpRequest);
+        mediaTypeCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                SyntaxEditorUtil.setMediaType(contentEditor, e.getItem().toString());
+            }
+        });
         mediaTypeCombo.setEnabled(httpRequest.hasRequestBody());
         toolbar.addLabeledFixed("Media Type", mediaTypeCombo);
     }
