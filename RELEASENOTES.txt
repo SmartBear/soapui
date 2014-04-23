@@ -1,3 +1,10 @@
+# SoapUI 5.0.0-m
+
+### Bugs fixed ###
+* REST Mock does not read the payload (SOAP-2173)
+
+-------------------------------------------------------------------------------
+
 # SoapUI 5.0.0
 #### Released 2014-04-09 ####
 
