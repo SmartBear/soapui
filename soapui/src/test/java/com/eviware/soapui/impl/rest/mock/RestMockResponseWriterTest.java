@@ -42,7 +42,7 @@ public class RestMockResponseWriterTest {
     private HttpServletResponse servletResponse;
 
     @Before
-    public void setUp() throws IOException, SoapUIException {
+    public void setUp() throws Exception {
         servletRequest = mockHttpServletRequest();
         servletResponse = mockHttpServletResponse();
         mockResponse = ModelItemFactory.makeRestResponse();
@@ -75,12 +75,12 @@ public class RestMockResponseWriterTest {
         verify(servletResponse).setStatus(HttpStatus.SC_CONFLICT);
     }
 
-    public MockResult createMockResult() throws IOException {
+    public MockResult createMockResult() throws Exception {
         WsdlMockRunContext runContext = mock(WsdlMockRunContext.class);
         return new RestMockResult(createMockRequest(runContext));
     }
 
-    public RestMockRequest createMockRequest(WsdlMockRunContext runContext) throws IOException {
+    public RestMockRequest createMockRequest(WsdlMockRunContext runContext) throws Exception {
         return new RestMockRequest(servletRequest, servletResponse, runContext);
     }
 

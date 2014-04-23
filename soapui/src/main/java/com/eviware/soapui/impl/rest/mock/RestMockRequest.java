@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class RestMockRequest extends AbstractMockRequest {
-    public RestMockRequest(HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context) {
+    public RestMockRequest(HttpServletRequest request, HttpServletResponse response, WsdlMockRunContext context) throws Exception {
         super(request, response, context);
     }
 

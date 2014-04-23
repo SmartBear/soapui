@@ -38,10 +38,11 @@ public class RestMockDispatcher extends AbstractMockDispatcher {
 
     @Override
     public MockResult dispatchRequest(HttpServletRequest request, HttpServletResponse response) {
-        RestMockRequest restMockRequest = new RestMockRequest(request, response, mockContext);
 
+        RestMockRequest restMockRequest = null;
         Object result = null;
         try {
+            restMockRequest = new RestMockRequest(request, response, mockContext);
             result = mockService.runOnRequestScript(mockContext, restMockRequest);
 
             if (!(result instanceof MockResult)) {
