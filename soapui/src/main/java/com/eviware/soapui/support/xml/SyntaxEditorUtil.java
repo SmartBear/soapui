@@ -116,7 +116,7 @@ public class SyntaxEditorUtil {
         if (UISupport.isMac()) {
             editor.getInputMap().put(KeyStroke.getKeyStroke("meta S"), saveXmlTextAreaAction);
             editor.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
-            editor.getInputMap().put(KeyStroke.getKeyStroke("control meta L"), goToLineAction);
+            editor.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
             if (!readOnly) {
                 editor.getInputMap().put(KeyStroke.getKeyStroke("shift meta F"), formatXmlAction);
                 editor.getInputMap().put(KeyStroke.getKeyStroke("meta L"), loadXmlTextAreaAction);
@@ -124,7 +124,7 @@ public class SyntaxEditorUtil {
         } else {
             editor.getInputMap().put(KeyStroke.getKeyStroke("ctrl S"), saveXmlTextAreaAction);
             editor.getInputMap().put(KeyStroke.getKeyStroke("alt L"), enableLineNumbersAction);
-            editor.getInputMap().put(KeyStroke.getKeyStroke("control alt L"), goToLineAction);
+            editor.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
             if (!readOnly) {
                 editor.getInputMap().put(KeyStroke.getKeyStroke("alt F"), formatXmlAction);
                 editor.getInputMap().put(KeyStroke.getKeyStroke("ctrl L"), loadXmlTextAreaAction);

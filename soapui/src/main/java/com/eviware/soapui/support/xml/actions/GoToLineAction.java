@@ -31,12 +31,7 @@ public class GoToLineAction extends AbstractAction {
         super(title);
         this.editArea = editArea;
         putValue(Action.SHORT_DESCRIPTION, "Moves the caret to the specified line");
-        if (UISupport.isMac()) {
-            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("control meta L"));
-        } else {
-            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("ctrl alt L"));
-        }
-
+        putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("control G"));
     }
 
     public void actionPerformed(ActionEvent e) {

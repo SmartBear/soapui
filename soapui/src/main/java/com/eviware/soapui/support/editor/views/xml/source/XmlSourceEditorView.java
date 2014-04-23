@@ -201,7 +201,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             editArea.getInputMap().put(KeyStroke.getKeyStroke("shift meta V"), validateXmlAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("meta S"), saveXmlTextAreaAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control meta L"), goToLineAction);
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("meta F"), findAndReplaceDialog);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("shift meta F"), formatXmlAction);
             if (!readOnly) {
@@ -211,7 +211,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             editArea.getInputMap().put(KeyStroke.getKeyStroke("alt V"), validateXmlAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl S"), saveXmlTextAreaAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("alt L"), enableLineNumbersAction);
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control alt L"), goToLineAction);
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F"), findAndReplaceDialog);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("alt F"), formatXmlAction);
             if (!readOnly) {
