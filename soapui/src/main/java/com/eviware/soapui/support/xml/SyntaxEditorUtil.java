@@ -15,17 +15,6 @@
 */
 package com.eviware.soapui.support.xml;
 
-import java.awt.Color;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rtextarea.RTextScrollPane;
-
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
 import com.eviware.soapui.support.xml.actions.FormatXmlAction;
@@ -34,6 +23,18 @@ import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
 import com.eviware.soapui.ui.support.FindAndReplaceDialogView;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory;
+import org.fife.ui.rtextarea.RTextScrollPane;
+
+import javax.mail.internet.ContentType;
+import javax.mail.internet.ParseException;
+import javax.swing.BorderFactory;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+import java.awt.Color;
 
 public class SyntaxEditorUtil {
     public static RSyntaxTextArea createDefaultXmlSyntaxTextArea() {
@@ -106,12 +107,10 @@ public class SyntaxEditorUtil {
         popupMenu.add(saveXmlTextAreaAction);
 
         LoadXmlTextAreaAction loadXmlTextAreaAction = null;
-        InsertBase64FileTextAreaAction insertBase64FileTextAreaAction = null;
         if (!readOnly) {
             loadXmlTextAreaAction = new LoadXmlTextAreaAction(editor, "Load");
-            insertBase64FileTextAreaAction = new InsertBase64FileTextAreaAction(editor, "Insert File as Base64");
             popupMenu.add(loadXmlTextAreaAction);
-            popupMenu.add(insertBase64FileTextAreaAction);
+            popupMenu.add(new InsertBase64FileTextAreaAction(editor, "Insert File as Base64"));
         }
 
         if (UISupport.isMac()) {
@@ -131,10 +130,6 @@ public class SyntaxEditorUtil {
                 editor.getInputMap().put(KeyStroke.getKeyStroke("ctrl L"), loadXmlTextAreaAction);
             }
         }
-        if (!readOnly) {
-
-        }
-
         return editor;
     }
 
@@ -144,7 +139,18 @@ public class SyntaxEditorUtil {
         } else if (mediaType.contains("xml")) {
             inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
         } else {
-            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+            try {
+                ContentType contentType = new ContentType(mediaType);
+                String subType = contentType.getSubType();
+                String textContentType = "text/" + subType.replaceAll(".*\\+", "");
+                if (TokenMakerFactory.getDefaultInstance().keySet().contains(textContentType)) {
+                    inputArea.setSyntaxEditingStyle(textContentType);
+                } else {
+                    inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+                }
+            } catch (ParseException e) {
+                inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
+            }
         }
         // Force rendering with new style
         inputArea.setText(inputArea.getText());
