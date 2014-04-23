@@ -120,8 +120,11 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
     public void setConfig(T config) {
         this.config = config;
 
-        if (config != null && config.isSetName()) {
-            config.setName(config.getName().trim());
+        if (config != null) {
+            ensureIdIsSet();
+            if (config.isSetName()) {
+                config.setName(config.getName().trim());
+            }
         }
 
         if (settings != null) {

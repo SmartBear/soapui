@@ -16,10 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import com.eviware.soapui.config.TestStepConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -35,6 +31,10 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.UISupport;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Base class for WSDL TestCase test steps.
@@ -159,7 +159,7 @@ abstract public class WsdlTestStep extends AbstractWsdlModelItem<TestStepConfig>
         TestStepConfig newConfig = (TestStepConfig) getConfig().copy();
         newConfig.setName(name);
         WsdlTestStep result = targetTestCase.addTestStep(newConfig);
-        ModelSupport.unsetIds(result);
+        ModelSupport.createNewIds(result);
         return result;
     }
 
