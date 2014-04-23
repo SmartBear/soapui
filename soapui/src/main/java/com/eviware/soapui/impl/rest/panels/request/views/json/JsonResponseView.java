@@ -21,7 +21,6 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -94,7 +93,7 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
     }
 
     protected void setEditorContent(HttpResponse httpResponse) {
-        if (httpResponse == null) {
+        if (httpResponse == null || httpResponse.getContentAsString() == null) {
             contentEditor.setText("");
         } else {
             String content;
@@ -112,7 +111,7 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
                 }
                 contentEditor.setText(content);
             } else {
-                contentEditor.setText("<Not JSON content>");
+                contentEditor.setText("The content you are trying to view cannot be viewed as JSON");
             }
         }
     }
