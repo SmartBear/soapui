@@ -55,24 +55,14 @@ public class MockResponseStepPanelBuilder extends EmptyPanelBuilder<WsdlMockResp
         outgoingNames.add("");
         table.addProperty("Outgoing WSS", "outgoingWss", outgoingNames.toStringArray());
 
-        table.addProperty("Handle Fault", "handleFault", JPropertiesTable.BOOLEAN_OPTIONS);
-        table.addProperty("Handle Response", "handleResponse", JPropertiesTable.BOOLEAN_OPTIONS);
-
         // attachments
         table.addProperty("Enable MTOM", "mtomEnabled", JPropertiesTable.BOOLEAN_OPTIONS);
-        table.addProperty("Force MTOM", "forceMtom", JPropertiesTable.BOOLEAN_OPTIONS);
-        table.addProperty("Enable multiparts", "multipartEnabled", JPropertiesTable.BOOLEAN_OPTIONS);
-        table.addProperty("Encode Attachments", "encodeAttachments", JPropertiesTable.BOOLEAN_OPTIONS);
 
         // preprocessing
         table.addProperty("Strip whitespaces", "stripWhitespaces", JPropertiesTable.BOOLEAN_OPTIONS);
         table.addProperty("Remove Empty Content", "removeEmptyContent", JPropertiesTable.BOOLEAN_OPTIONS);
 
         // others
-        table.addProperty("Enable Inline Files", "inlineFilesEnabled", JPropertiesTable.BOOLEAN_OPTIONS)
-                .setDescription("Enables inline file references [file:<path>] in elements with binary content");
-        table.addProperty("Response HTTP-Status", "responseHttpStatus", true);
-        table.addProperty("Response Delay", "responseDelay", true);
         table.addProperty("Timeout", "timeout", true);
 
         String[] names = ModelSupport.getNames(new String[]{""}, mockResponseStep.getTestCase().getTestStepList());
