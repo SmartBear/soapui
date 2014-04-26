@@ -31,94 +31,77 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * WsdlLoader for cached definitions
- * 
+ *
  * @author ole.matzura
  */
 
-public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader
-{
-	private String rootInConfig = "";
-	private DefinitionCache config;
+public class InterfaceCacheDefinitionLoader extends AbstractWsdlDefinitionLoader {
+    private String rootInConfig = "";
+    private DefinitionCache config;
 
-	public InterfaceCacheDefinitionLoader( DefinitionCache config )
-	{
-		super( config.getRootPart().getUrl() );
-		this.config = config;
-	}
+    public InterfaceCacheDefinitionLoader(DefinitionCache config) {
+        super(config.getRootPart().getUrl());
+        this.config = config;
+    }
 
-	public InputStream load( String url ) throws Exception
-	{
-		XmlObject xmlObject = loadXmlObject( url, null );
-		return xmlObject == null ? null : xmlObject.newInputStream();
-	}
+    public InputStream load(String url) throws Exception {
+        XmlObject xmlObject = loadXmlObject(url, null);
+        return xmlObject == null ? null : xmlObject.newInputStream();
+    }
 
-	public XmlObject loadXmlObject( String url, XmlOptions options ) throws Exception
-	{
-		// required for backwards compatibility when the entire path was stored
-		if( url.endsWith( config.getRootPart().getUrl() ) )
-		{
-			rootInConfig = url.substring( 0, url.length() - config.getRootPart().getUrl().length() );
-		}
+    public XmlObject loadXmlObject(String url, XmlOptions options) throws Exception {
+        // required for backwards compatibility when the entire path was stored
+        if (url.endsWith(config.getRootPart().getUrl())) {
+            rootInConfig = url.substring(0, url.length() - config.getRootPart().getUrl().length());
+        }
 
-		List<InterfaceDefinitionPart> partList = config.getDefinitionParts();
-		for( InterfaceDefinitionPart part : partList )
-		{
-			if( ( rootInConfig + part.getUrl() ).equalsIgnoreCase( url ) )
-			{
-				return getPartContent( part );
-			}
-		}
+        List<InterfaceDefinitionPart> partList = config.getDefinitionParts();
+        for (InterfaceDefinitionPart part : partList) {
+            if ((rootInConfig + part.getUrl()).equalsIgnoreCase(url)) {
+                return getPartContent(part);
+            }
+        }
 
-		// hack: this could be due to windows -> unix, try again with replaced '/'
-		if( File.separatorChar == '/' )
-		{
-			url = url.replace( '/', '\\' );
+        // hack: this could be due to windows -> unix, try again with replaced '/'
+        if (File.separatorChar == '/') {
+            url = url.replace('/', '\\');
 
-			for( InterfaceDefinitionPart part : partList )
-			{
-				if( ( rootInConfig + part.getUrl() ).equalsIgnoreCase( url ) )
-				{
-					return getPartContent( part );
-				}
-			}
-		}
-		// or the other way around..
-		else if( File.separatorChar == '\\' )
-		{
-			url = url.replace( '\\', '/' );
+            for (InterfaceDefinitionPart part : partList) {
+                if ((rootInConfig + part.getUrl()).equalsIgnoreCase(url)) {
+                    return getPartContent(part);
+                }
+            }
+        }
+        // or the other way around..
+        else if (File.separatorChar == '\\') {
+            url = url.replace('\\', '/');
 
-			for( InterfaceDefinitionPart part : partList )
-			{
-				if( ( rootInConfig + part.getUrl() ).equalsIgnoreCase( url ) )
-				{
-					return getPartContent( part );
-				}
-			}
-		}
+            for (InterfaceDefinitionPart part : partList) {
+                if ((rootInConfig + part.getUrl()).equalsIgnoreCase(url)) {
+                    return getPartContent(part);
+                }
+            }
+        }
 
-		log.error( "Failed to find [" + url + "] in InterfaceCache" );
+        log.error("Failed to find [" + url + "] in InterfaceCache");
 
-		return null;
-	}
+        return null;
+    }
 
-	public static XmlObject getPartContent( InterfaceDefinitionPart part ) throws XmlException
-	{
-		// return XmlObject.Factory.parse( part.getContent(), new
-		// XmlOptions().setLoadLineNumbers() );
-		return XmlUtils.createXmlObject( part.getContent(), new XmlOptions().setLoadLineNumbers() );
-	}
+    public static XmlObject getPartContent(InterfaceDefinitionPart part) throws XmlException {
+        // return XmlObject.Factory.parse( part.getContent(), new
+        // XmlOptions().setLoadLineNumbers() );
+        return XmlUtils.createXmlObject(part.getContent(), new XmlOptions().setLoadLineNumbers());
+    }
 
-	public void close()
-	{
-	}
+    public void close() {
+    }
 
-	public void setNewBaseURI( String uri )
-	{
-		// not implemented
-	}
+    public void setNewBaseURI(String uri) {
+        // not implemented
+    }
 
-	public String getFirstNewURI()
-	{
-		return getBaseURI();
-	}
+    public String getFirstNewURI() {
+        return getBaseURI();
+    }
 }

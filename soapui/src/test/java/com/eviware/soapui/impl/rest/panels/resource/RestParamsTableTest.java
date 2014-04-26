@@ -33,89 +33,78 @@ import static org.junit.matchers.JUnitMatchers.hasItem;
 /**
  * @author Joel
  */
-public class RestParamsTableTest
-{
-	private JTable paramTable;
-	private RestParamsPropertyHolder params;
+public class RestParamsTableTest {
+    private JTable paramTable;
+    private RestParamsPropertyHolder params;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		params = ModelItemFactory.makeRestRequest().getParams();
-		paramTable = new RestParamsTable( params, false, new RestParamsTableModel( params, RestParamsTableModel.Mode.FULL ), NewRestResourceActionBase.ParamLocation.RESOURCE, false, false ).paramsTable;
-	}
+    @Before
+    public void setUp() throws Exception {
+        params = ModelItemFactory.makeRestRequest().getParams();
+        paramTable = new RestParamsTable(params, false, new RestParamsTableModel(params, RestParamsTableModel.Mode.FULL), NewRestResourceActionBase.ParamLocation.RESOURCE, false, false).paramsTable;
+    }
 
-	@Test
-	public void disallowsTemplateParameterForMethodLevel() throws Exception
-	{
-		RestParamProperty prop = params.addProperty( "prop" );
-		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.METHOD );
-		List<RestParamsPropertyHolder.ParameterStyle> availableStyles = getParameterStyles();
-		assertThat( availableStyles, not( hasItem( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) ) );
-	}
+    @Test
+    public void disallowsTemplateParameterForMethodLevel() throws Exception {
+        RestParamProperty prop = params.addProperty("prop");
+        prop.setParamLocation(NewRestResourceActionBase.ParamLocation.METHOD);
+        List<RestParamsPropertyHolder.ParameterStyle> availableStyles = getParameterStyles();
+        assertThat(availableStyles, not(hasItem(RestParamsPropertyHolder.ParameterStyle.TEMPLATE)));
+    }
 
-	@Test
-	public void allowsTemplateParameterForResourceLevel() throws Exception
-	{
-		RestParamProperty prop = params.addProperty( "prop" );
-		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
-		List<RestParamsPropertyHolder.ParameterStyle> availableStyles = getParameterStyles();
-		assertThat( availableStyles, hasItem( RestParamsPropertyHolder.ParameterStyle.TEMPLATE ) );
-	}
+    @Test
+    public void allowsTemplateParameterForResourceLevel() throws Exception {
+        RestParamProperty prop = params.addProperty("prop");
+        prop.setParamLocation(NewRestResourceActionBase.ParamLocation.RESOURCE);
+        List<RestParamsPropertyHolder.ParameterStyle> availableStyles = getParameterStyles();
+        assertThat(availableStyles, hasItem(RestParamsPropertyHolder.ParameterStyle.TEMPLATE));
+    }
 
-	@Test
-	public void disallowsMethodLocationForTemplateParameter() throws Exception
-	{
-		RestParamProperty prop = params.addProperty( "prop" );
-		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
-		prop.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-		List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
-		assertThat( availableLocations, not( hasItem( NewRestResourceActionBase.ParamLocation.METHOD ) ) );
-	}
+    @Test
+    public void disallowsMethodLocationForTemplateParameter() throws Exception {
+        RestParamProperty prop = params.addProperty("prop");
+        prop.setParamLocation(NewRestResourceActionBase.ParamLocation.RESOURCE);
+        prop.setStyle(RestParamsPropertyHolder.ParameterStyle.TEMPLATE);
+        List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
+        assertThat(availableLocations, not(hasItem(NewRestResourceActionBase.ParamLocation.METHOD)));
+    }
 
-	@Test
-	public void disallowsMethodLocationForTemplateParameterOnMethodLevel() throws Exception
-	{
-		RestParamProperty prop = params.addProperty( "prop" );
-		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.METHOD );
-		prop.setStyle( RestParamsPropertyHolder.ParameterStyle.TEMPLATE );
-		List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
-		assertThat( availableLocations, not( hasItem( NewRestResourceActionBase.ParamLocation.METHOD ) ) );
-	}
+    @Test
+    public void disallowsMethodLocationForTemplateParameterOnMethodLevel() throws Exception {
+        RestParamProperty prop = params.addProperty("prop");
+        prop.setParamLocation(NewRestResourceActionBase.ParamLocation.METHOD);
+        prop.setStyle(RestParamsPropertyHolder.ParameterStyle.TEMPLATE);
+        List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
+        assertThat(availableLocations, not(hasItem(NewRestResourceActionBase.ParamLocation.METHOD)));
+    }
 
-	@Test
-	public void allowsMethodLocationForQueryParameter() throws Exception
-	{
-		RestParamProperty prop = params.addProperty( "prop" );
-		prop.setParamLocation( NewRestResourceActionBase.ParamLocation.RESOURCE );
-		prop.setStyle( RestParamsPropertyHolder.ParameterStyle.QUERY );
-		List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
-		assertThat( availableLocations, hasItem( NewRestResourceActionBase.ParamLocation.METHOD ) );
-	}
+    @Test
+    public void allowsMethodLocationForQueryParameter() throws Exception {
+        RestParamProperty prop = params.addProperty("prop");
+        prop.setParamLocation(NewRestResourceActionBase.ParamLocation.RESOURCE);
+        prop.setStyle(RestParamsPropertyHolder.ParameterStyle.QUERY);
+        List<NewRestResourceActionBase.ParamLocation> availableLocations = getParameterLocations();
+        assertThat(availableLocations, hasItem(NewRestResourceActionBase.ParamLocation.METHOD));
+    }
 
-	private List<RestParamsPropertyHolder.ParameterStyle> getParameterStyles()
-	{
-		paramTable.editCellAt( 0, RestParamsTableModel.STYLE_COLUMN_INDEX );
-		DefaultCellEditor cellEditor = ( DefaultCellEditor )paramTable.getCellEditor( 0, RestParamsTableModel.STYLE_COLUMN_INDEX );
-		JComboBox comboBox = ( JComboBox )cellEditor.getComponent();
-		return getSelectableValues( comboBox );
-	}
+    private List<RestParamsPropertyHolder.ParameterStyle> getParameterStyles() {
+        paramTable.editCellAt(0, RestParamsTableModel.STYLE_COLUMN_INDEX);
+        DefaultCellEditor cellEditor = (DefaultCellEditor) paramTable.getCellEditor(0, RestParamsTableModel.STYLE_COLUMN_INDEX);
+        JComboBox comboBox = (JComboBox) cellEditor.getComponent();
+        return getSelectableValues(comboBox);
+    }
 
-	private List<NewRestResourceActionBase.ParamLocation> getParameterLocations()
-	{
-		paramTable.editCellAt( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX );
-		DefaultCellEditor cellEditor = ( DefaultCellEditor )paramTable.getCellEditor( 0, RestParamsTableModel.LOCATION_COLUMN_INDEX );
-		JComboBox comboBox = ( JComboBox )cellEditor.getComponent();
-		return getSelectableValues( comboBox );
-	}
+    private List<NewRestResourceActionBase.ParamLocation> getParameterLocations() {
+        paramTable.editCellAt(0, RestParamsTableModel.LOCATION_COLUMN_INDEX);
+        DefaultCellEditor cellEditor = (DefaultCellEditor) paramTable.getCellEditor(0, RestParamsTableModel.LOCATION_COLUMN_INDEX);
+        JComboBox comboBox = (JComboBox) cellEditor.getComponent();
+        return getSelectableValues(comboBox);
+    }
 
-	private <T> List<T> getSelectableValues( JComboBox comboBox )
-	{
-		List<T> availableStyles = new ArrayList<T>();
-		for( int i = 0; i < comboBox.getItemCount(); i++ )
-		{
-			availableStyles.add( ( T )comboBox.getItemAt( i ) );
-		}
-		return availableStyles;
-	}
+    private <T> List<T> getSelectableValues(JComboBox comboBox) {
+        List<T> availableStyles = new ArrayList<T>();
+        for (int i = 0; i < comboBox.getItemCount(); i++) {
+            availableStyles.add((T) comboBox.getItemAt(i));
+        }
+        return availableStyles;
+    }
 }

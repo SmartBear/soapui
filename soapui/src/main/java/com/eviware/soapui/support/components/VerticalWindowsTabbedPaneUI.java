@@ -21,19 +21,16 @@ import com.sun.java.swing.plaf.windows.WindowsTabbedPaneUI;
 import javax.swing.*;
 import java.awt.*;
 
-public class VerticalWindowsTabbedPaneUI extends WindowsTabbedPaneUI
-{
-	protected void installDefaults()
-	{
-		super.installDefaults();
+public class VerticalWindowsTabbedPaneUI extends WindowsTabbedPaneUI {
+    protected void installDefaults() {
+        super.installDefaults();
 
-		textIconGap = 0;
-		tabInsets = new Insets( 0, 0, 0, 0 );
-	}
+        textIconGap = 0;
+        tabInsets = new Insets(0, 0, 0, 0);
+    }
 
-	protected int calculateTabWidth( int tabPlacement, int tabIndex, FontMetrics metrics )
-	{
-		Icon icon = getIconForTab( tabIndex );
-		return icon == null ? 2 : icon.getIconWidth() + 2;
-	}
+    protected int calculateTabWidth(int tabPlacement, int tabIndex, FontMetrics metrics) {
+        Icon icon = getIconForTab(tabIndex);
+        return icon == null ? 2 : icon.getIconWidth() + 2;
+    }
 }

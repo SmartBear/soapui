@@ -17,11 +17,9 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.mock.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,229 +31,190 @@ import java.util.Set;
 /**
  * MockRunner that dispatches Http Requests to their designated
  * WsdlMockOperation if possible
- * 
+ *
  * @author ole.matzura
  */
 
-@SuppressWarnings( "unchecked" )
-public class WsdlMockRunner implements MockRunner
-{
-	private final WsdlMockRunContext mockContext;
-	private boolean running;
-	private MockDispatcher dispatcher;
+@SuppressWarnings("unchecked")
+public class WsdlMockRunner implements MockRunner {
+    private final WsdlMockRunContext mockContext;
+    private boolean running;
+    private MockDispatcher dispatcher;
 
-	public WsdlMockRunner( AbstractMockService mockService, WsdlTestRunContext context ) throws Exception
-	{
-		Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
+    public WsdlMockRunner(MockService mockService, WsdlTestRunContext context) throws Exception {
+        Set<WsdlInterface> interfaces = new HashSet<WsdlInterface>();
 
-		// TODO: move this code elsewhere when the rest counterpoint is in place
-		if( mockService instanceof WsdlMockService )
-		{
-			WsdlMockService wsdlMockService = (WsdlMockService)mockService;
+        // TODO: move this code elsewhere when the rest counterpoint is in place
+        if (mockService instanceof WsdlMockService) {
+            WsdlMockService wsdlMockService = (WsdlMockService) mockService;
 
-			for( int i = 0; i < mockService.getMockOperationCount(); i++ )
-			{
-				WsdlOperation operation = wsdlMockService.getMockOperationAt( i ).getOperation();
-				if( operation != null )
-					interfaces.add( operation.getInterface() );
-			}
-		}
+            for (int i = 0; i < mockService.getMockOperationCount(); i++) {
+                WsdlOperation operation = wsdlMockService.getMockOperationAt(i).getOperation();
+                if (operation != null) {
+                    interfaces.add(operation.getInterface());
+                }
+            }
+        }
 
-		for( WsdlInterface iface : interfaces )
-			iface.getWsdlContext().loadIfNecessary();
+        for (WsdlInterface iface : interfaces) {
+            iface.getWsdlContext().loadIfNecessary();
+        }
 
-		mockContext = new WsdlMockRunContext( mockService, context );
-		dispatcher = mockService.createDispatcher(mockContext);
+        mockContext = new WsdlMockRunContext(mockService, context);
+        dispatcher = mockService.createDispatcher(mockContext);
 
-		start();
-	}
+        start();
+    }
 
-	public WsdlMockRunContext getMockContext()
-	{
-		return mockContext;
-	}
+    public WsdlMockRunContext getMockContext() {
+        return mockContext;
+    }
 
-	private AbstractMockService getMockService()
-	{
-		return ( AbstractMockService )getMockContext().getMockService();
-	}
+    private MockService getMockService() {
+        return getMockContext().getMockService();
+    }
 
-	public boolean isRunning()
-	{
-		return running;
-	}
+    public boolean isRunning() {
+        return running;
+    }
 
-	public void stop()
-	{
-		if( !isRunning() )
-			return;
+    public void stop() {
+        if (!isRunning()) {
+            return;
+        }
 
-		SoapUI.getMockEngine().stopMockService( this );
+        SoapUI.getMockEngine().stopMockService(this);
 
-		MockRunListener[] mockRunListeners = getMockService().getMockRunListeners();
+        MockRunListener[] mockRunListeners = getMockService().getMockRunListeners();
 
-		for( MockRunListener listener : mockRunListeners )
-		{
-			listener.onMockRunnerStop( this );
-		}
+        for (MockRunListener listener : mockRunListeners) {
+            listener.onMockRunnerStop(this);
+        }
 
-		try
-		{
-			getMockService().runStopScript( mockContext, this );
-			running = false;
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+        try {
+            getMockService().runStopScript(mockContext, this);
+            running = false;
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public void release()
-	{
-		mockContext.clear();
-		dispatcher = null;
+    public void release() {
+        mockContext.clear();
+        dispatcher = null;
 
-	}
+    }
 
-	@Override
-	public int getMockResultCount()
-	{
-		return dispatcher.getMockResultCount();
-	}
+    @Override
+    public int getMockResultCount() {
+        return dispatcher.getMockResultCount();
+    }
 
-	@Override
-	public MockResult getMockResultAt( int index )
-	{
-		return dispatcher.getMockResultAt( index );
-	}
+    @Override
+    public MockResult getMockResultAt(int index) {
+        return dispatcher.getMockResultAt(index);
+    }
 
-	@Override
-	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
-			throws DispatchException
-	{
-		for( MockRunListener listener : getMockService().getMockRunListeners() )
-		{
-			Object result = listener.onMockRequest( this, request, response );
-			if( result instanceof MockResult )
-				return ( MockResult )result;
-		}
+    @Override
+    public MockResult dispatchRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException {
+        for (MockRunListener listener : getMockService().getMockRunListeners()) {
+            Object result = listener.onMockRequest(this, request, response);
+            if (result instanceof MockResult) {
+                return (MockResult) result;
+            }
+        }
 
-		String qs = request.getQueryString();
-		if( qs != null && qs.startsWith( "cmd=" ) )
-		{
-			try
-			{
-				dispatchCommand( request.getParameter( "cmd" ), request, response );
-			}
-			catch( IOException e )
-			{
-				throw new DispatchException( e );
-			}
-		}
+        String qs = request.getQueryString();
+        if (qs != null && qs.startsWith("cmd=")) {
+            try {
+                dispatchCommand(request.getParameter("cmd"), request, response);
+            } catch (IOException e) {
+                throw new DispatchException(e);
+            }
+        }
 
-		return dispatcher.dispatchRequest( request, response );
-	}
+        return dispatcher.dispatchRequest(request, response);
+    }
 
-	private void dispatchCommand( String cmd, HttpServletRequest request, HttpServletResponse response )
-			throws IOException
-	{
-		if( "stop".equals( cmd ) )
-		{
-			response.setStatus( HttpServletResponse.SC_OK );
-			response.flushBuffer();
+    private void dispatchCommand(String cmd, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        if ("stop".equals(cmd)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.flushBuffer();
 
-			SoapUI.getThreadPool().execute( new Runnable()
-			{
+            SoapUI.getThreadPool().execute(new Runnable() {
 
-				public void run()
-				{
-					try
-					{
-						Thread.sleep( 500 );
-					}
-					catch( InterruptedException e )
-					{
-						e.printStackTrace();
-					}
-					stop();
-				}
-			} );
-		}
-		else if( "restart".equals( cmd ) )
-		{
-			response.setStatus( HttpServletResponse.SC_OK );
-			response.flushBuffer();
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    stop();
+                }
+            });
+        } else if ("restart".equals(cmd)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.flushBuffer();
 
-			SoapUI.getThreadPool().execute( new Runnable()
-			{
+            SoapUI.getThreadPool().execute(new Runnable() {
 
-				public void run()
-				{
-					try
-					{
-						Thread.sleep( 500 );
-					}
-					catch( InterruptedException e )
-					{
-						e.printStackTrace();
-					}
+                public void run() {
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-					stop();
+                    stop();
 
-					try
-					{
-						getMockService().start();
-					}
-					catch( Exception e )
-					{
-						e.printStackTrace();
-					}
+                    try {
+                        getMockService().start();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-				}
-			} );
-		}
-	}
+                }
+            });
+        }
+    }
 
-	// TODO remove this duplication. Look at WsdlMockDispatcher
-	public String getOverviewUrl()
-	{
-		return getMockService().getPath() + "?WSDL";
-	}
+    // TODO remove this duplication. Look at WsdlMockDispatcher
+    public String getOverviewUrl() {
+        return getMockService().getPath() + "?WSDL";
+    }
 
 
-	public void start() throws Exception
-	{
-		if( running )
-			return;
+    public void start() throws Exception {
+        if (running) {
+            return;
+        }
 
-		mockContext.reset();
-		getMockService().runStartScript( mockContext, this );
+        mockContext.reset();
+        getMockService().runStartScript(mockContext, this);
 
-		SoapUI.getMockEngine().startMockService( this );
-		running = true;
+        SoapUI.getMockEngine().startMockService(this);
+        running = true;
 
-		MockRunListener[] mockRunListeners = getMockService().getMockRunListeners();
+        MockRunListener[] mockRunListeners = getMockService().getMockRunListeners();
 
-		for( MockRunListener listener : mockRunListeners )
-		{
-			listener.onMockRunnerStart( this );
-		}
-	}
+        for (MockRunListener listener : mockRunListeners) {
+            listener.onMockRunnerStart(this);
+        }
+    }
 
-	public void setLogEnabled( boolean logEnabled )
-	{
-		dispatcher.setLogEnabled( logEnabled );
-	}
+    public void setLogEnabled(boolean logEnabled) {
+        dispatcher.setLogEnabled(logEnabled);
+    }
 
-	@Override
-	public void clearResults()
-	{
-		dispatcher.clearResults();
-	}
+    @Override
+    public void clearResults() {
+        dispatcher.clearResults();
+    }
 
 
-	public void setMaxResults( long maxNumberOfResults )
-	{
-		dispatcher.setMaxResults( maxNumberOfResults );
-	}
+    public void setMaxResults(long maxNumberOfResults) {
+        dispatcher.setMaxResults(maxNumberOfResults);
+    }
 }

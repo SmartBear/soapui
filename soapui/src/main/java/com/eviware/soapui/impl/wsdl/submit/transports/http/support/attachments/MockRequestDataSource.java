@@ -29,55 +29,45 @@ import com.eviware.soapui.settings.UISettings;
 
 /**
  * DataSource for a MockRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockRequestDataSource implements DataSource
-{
-	private String contentType;
-	private String name;
-	private final HttpServletRequest request;
-	private CaptureInputStream capture = null;
+public class MockRequestDataSource implements DataSource {
+    private String contentType;
+    private String name;
+    private final HttpServletRequest request;
+    private CaptureInputStream capture = null;
 
-	public MockRequestDataSource( HttpServletRequest request )
-	{
-		this.request = request;
-		try
-		{
-			contentType = request.getContentType();
-			name = "Request for " + request.getPathInfo();
-			capture = new CaptureInputStream( request.getInputStream(), SoapUI.getSettings().getLong(
-					UISettings.RAW_REQUEST_MESSAGE_SIZE, 0 ) );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+    public MockRequestDataSource(HttpServletRequest request) {
+        this.request = request;
+        try {
+            contentType = request.getContentType();
+            name = "Request for " + request.getPathInfo();
+            capture = new CaptureInputStream(request.getInputStream(), SoapUI.getSettings().getLong(
+                    UISettings.RAW_REQUEST_MESSAGE_SIZE, 0));
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public String getContentType()
-	{
-		return contentType;
-	}
+    public String getContentType() {
+        return contentType;
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		return request.getInputStream();
-	}
+    public InputStream getInputStream() throws IOException {
+        return request.getInputStream();
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 
-	public byte[] getData()
-	{
-		return capture.getCapturedData();
-	}
+    public byte[] getData() {
+        return capture.getCapturedData();
+    }
 }

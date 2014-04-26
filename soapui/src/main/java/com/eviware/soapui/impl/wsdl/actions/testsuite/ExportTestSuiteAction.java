@@ -23,30 +23,29 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
-public class ExportTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite>
-{
+public class ExportTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
 
-	public ExportTestSuiteAction()
-	{
-		super( "Export", "Export this test suite" );
-	}
+    public ExportTestSuiteAction() {
+        super("Export", "Export this test suite");
+    }
 
-	public void perform( WsdlTestSuite tSuite, Object param )
-	{
-		tSuite.beforeSave();
-		String defaultFileName = System.getProperty( "user.home" ) + File.separator
-				+ StringUtils.createFileName( tSuite.getName(), '-' ) + ".xml";
-		File file = UISupport.getFileDialogs().saveAs( this, "Select test case file", "xml", "XML",
-				new File( defaultFileName ) );
+    public void perform(WsdlTestSuite tSuite, Object param) {
+        tSuite.beforeSave();
+        String defaultFileName = System.getProperty("user.home") + File.separator
+                + StringUtils.createFileName(tSuite.getName(), '-') + ".xml";
+        File file = UISupport.getFileDialogs().saveAs(this, "Select test case file", "xml", "XML",
+                new File(defaultFileName));
 
-		if( file == null )
-			return;
+        if (file == null) {
+            return;
+        }
 
-		String fileName = file.getAbsolutePath();
-		if( fileName == null )
-			return;
+        String fileName = file.getAbsolutePath();
+        if (fileName == null) {
+            return;
+        }
 
-		tSuite.export( file );
-	}
+        tSuite.export(file);
+    }
 
 }

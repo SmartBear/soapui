@@ -20,11 +20,10 @@ import com.eviware.soapui.model.testsuite.TestPropertyListener;
 
 /**
  * Listener for WsdlTestStep events
- * 
+ *
  * @author ole.matzura
  */
 
-public interface WsdlTestStepListener extends TestPropertyListener
-{
+public interface WsdlTestStepListener extends TestPropertyListener {
 
 }

@@ -12,15 +12,16 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.teststeps;
+*/
+package com.eviware.soapui.impl.wsdl.teststeps;
 
 /**
  * String constants used when dealing with script test steps.
  */
-public final class Script
-{
-	private Script() { }
+public final class Script {
+    private Script() {
+    }
 
-	public final static String RESULT_PROPERTY = "result";
-	public final static String SCRIPT_PROPERTY = "script";
+    public final static String RESULT_PROPERTY = "result";
+    public final static String SCRIPT_PROPERTY = "script";
 }

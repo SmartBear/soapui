@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.utils;
+*/
+package com.eviware.soapui.utils;
 
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
@@ -22,39 +23,33 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 /**
  * @author manne
  */
-public class RestRequestParamsMatcher extends TypeSafeMatcher<RestParamsPropertyHolder>
-{
+public class RestRequestParamsMatcher extends TypeSafeMatcher<RestParamsPropertyHolder> {
 
-	private String parameterName;
-	private String parameterValue;
+    private String parameterName;
+    private String parameterValue;
 
-	RestRequestParamsMatcher( String parameterName )
-	{
-		this.parameterName = parameterName;
-	}
+    RestRequestParamsMatcher(String parameterName) {
+        this.parameterName = parameterName;
+    }
 
-	public RestRequestParamsMatcher withValue(String value)
-	{
-		RestRequestParamsMatcher matcherToReturn = new RestRequestParamsMatcher( parameterName );
-		matcherToReturn.parameterValue = value;
-		return matcherToReturn;
-	}
+    public RestRequestParamsMatcher withValue(String value) {
+        RestRequestParamsMatcher matcherToReturn = new RestRequestParamsMatcher(parameterName);
+        matcherToReturn.parameterValue = value;
+        return matcherToReturn;
+    }
 
-	@Override
-	public boolean matchesSafely( RestParamsPropertyHolder restParameters )
-	{
-		RestParamProperty property = restParameters.getProperty( parameterName );
-		return property != null && ( parameterValue == null || parameterValue.equals( parameterValue ) );
-	}
+    @Override
+    public boolean matchesSafely(RestParamsPropertyHolder restParameters) {
+        RestParamProperty property = restParameters.getProperty(parameterName);
+        return property != null && (parameterValue == null || parameterValue.equals(parameterValue));
+    }
 
-	@Override
-	public void describeTo( Description description )
-	{
-		description.appendText( "a REST requests having a parameter named '" + parameterName + "'" );
-		if (parameterValue != null)
-		{
-			description.appendText( " with the value '" + parameterValue + "'");
-		}
-	}
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("a REST requests having a parameter named '" + parameterName + "'");
+        if (parameterValue != null) {
+            description.appendText(" with the value '" + parameterValue + "'");
+        }
+    }
 }
 

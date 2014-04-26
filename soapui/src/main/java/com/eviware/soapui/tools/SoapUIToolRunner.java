@@ -38,225 +38,196 @@ import com.eviware.soapui.support.UISupport;
  * For standalone usage, set the project file (with setProjectFile) and other
  * desired properties before calling run
  * </p>
- * 
+ *
  * @author Ole.Matzura
  * @author <a href="mailto:nenadn@eviware.com">Nenad V. Nikolic</a>
  */
 
-public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, RunnerContext
-{
-	private String iface;
-	private String tool;
+public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, RunnerContext {
+    private String iface;
+    private String tool;
 
-	private RunnerStatus status;
-	private String projectPassword;
+    private RunnerStatus status;
+    private String projectPassword;
 
-	public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
+    public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " Tool Runner";
 
-	/**
-	 * Runs the specified tool in the specified soapUI project file, see SoapUI
-	 * xdocs for details.
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
+    /**
+     * Runs the specified tool in the specified soapUI project file, see SoapUI
+     * xdocs for details.
+     *
+     * @param args
+     * @throws Exception
+     */
 
-	public static void main( String[] args ) throws Exception
-	{
-		System.exit( new SoapUIToolRunner().runFromCommandLine( args ) );
-	}
+    public static void main(String[] args) throws Exception {
+        System.exit(new SoapUIToolRunner().runFromCommandLine(args));
+    }
 
-	/**
-	 * Sets the tool(s) to run, can be a comma-seperated list
-	 * 
-	 * @param tool
-	 *           the tools to run
-	 */
+    /**
+     * Sets the tool(s) to run, can be a comma-seperated list
+     *
+     * @param tool the tools to run
+     */
 
-	public void setTool( String tool )
-	{
-		this.tool = tool;
-	}
+    public void setTool(String tool) {
+        this.tool = tool;
+    }
 
-	public void setInterface( String iface )
-	{
-		this.iface = iface;
-	}
+    public void setInterface(String iface) {
+        this.iface = iface;
+    }
 
-	public SoapUIToolRunner()
-	{
-		super( TITLE );
-	}
+    public SoapUIToolRunner() {
+        super(TITLE);
+    }
 
-	public SoapUIToolRunner( String title )
-	{
-		super( title );
-	}
+    public SoapUIToolRunner(String title) {
+        super(title);
+    }
 
-	public boolean runRunner() throws Exception
-	{
-		UISupport.setToolHost( this );
-		String projectFile = getProjectFile();
+    public boolean runRunner() throws Exception {
+        UISupport.setToolHost(this);
+        String projectFile = getProjectFile();
 
-		if( !new File( projectFile ).exists() )
-			throw new Exception( "SoapUI project file [" + projectFile + "] not found" );
+        if (!new File(projectFile).exists()) {
+            throw new Exception("SoapUI project file [" + projectFile + "] not found");
+        }
 
-		// WsdlProject project = new WsdlProject( projectFile,
-		// getProjectPassword() );
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( WsdlProjectFactory.WSDL_TYPE )
-				.createNew( projectFile, getProjectPassword() );
+        // WsdlProject project = new WsdlProject( projectFile,
+        // getProjectPassword() );
+        WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE)
+                .createNew(projectFile, getProjectPassword());
 
-		log.info( "Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]" );
+        log.info("Running tools [" + tool + "] for interface [" + iface + "] in project [" + project.getName() + "]");
 
-		long startTime = System.nanoTime();
+        long startTime = System.nanoTime();
 
-		for( int c = 0; c < project.getInterfaceCount(); c++ )
-		{
-			Interface i = project.getInterfaceAt( c );
-			if( iface == null || i.getName().equals( iface ) )
-			{
-				runTool( i );
-			}
-		}
+        for (int c = 0; c < project.getInterfaceCount(); c++) {
+            Interface i = project.getInterfaceAt(c);
+            if (iface == null || i.getName().equals(iface)) {
+                runTool(i);
+            }
+        }
 
-		long timeTaken = ( System.nanoTime() - startTime ) / 1000000;
-		log.info( "time taken: " + timeTaken + "ms" );
+        long timeTaken = (System.nanoTime() - startTime) / 1000000;
+        log.info("time taken: " + timeTaken + "ms");
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Runs the configured tool(s) for the specified interface.
-	 * 
-	 * @param iface
-	 *           an interface that exposes an invokable operation
-	 */
-	public void runTool( Interface iface )
-	{
-		AbstractToolsAction<Interface> action = null;
+    /**
+     * Runs the configured tool(s) for the specified interface.
+     *
+     * @param iface an interface that exposes an invokable operation
+     */
+    public void runTool(Interface iface) {
+        AbstractToolsAction<Interface> action = null;
 
-		String[] tools = tool.split( "," );
-		for( String toolName : tools )
-		{
-			if( toolName == null || toolName.trim().length() == 0 )
-				continue;
+        String[] tools = tool.split(",");
+        for (String toolName : tools) {
+            if (toolName == null || toolName.trim().length() == 0) {
+                continue;
+            }
 
-			action = ToolActionFactory.createToolAction( toolName );
-			try
-			{
-				if( action != null )
-				{
-					log.info( "Running tool [" + toolName + "] for Interface [" + iface.getName() + "]" );
-					action.performHeadless( iface, null );
-				}
-				else
-				{
-					log.error( "Specified tool [" + toolName + "] is unknown or unsupported." );
-				}
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+            action = ToolActionFactory.createToolAction(toolName);
+            try {
+                if (action != null) {
+                    log.info("Running tool [" + toolName + "] for Interface [" + iface.getName() + "]");
+                    action.performHeadless(iface, null);
+                } else {
+                    log.error("Specified tool [" + toolName + "] is unknown or unsupported.");
+                }
+            } catch (Exception e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 
-	public void run( ToolRunner runner ) throws Exception
-	{
-		status = RunnerStatus.RUNNING;
-		runner.setContext( this );
-		runner.run();
-	}
+    public void run(ToolRunner runner) throws Exception {
+        status = RunnerStatus.RUNNING;
+        runner.setContext(this);
+        runner.run();
+    }
 
-	public RunnerStatus getStatus()
-	{
-		return status;
-	}
+    public RunnerStatus getStatus() {
+        return status;
+    }
 
-	public String getTitle()
-	{
-		return getClass().getSimpleName();
-	}
+    public String getTitle() {
+        return getClass().getSimpleName();
+    }
 
-	public String getProjectPassword()
-	{
-		return projectPassword;
-	}
+    public String getProjectPassword() {
+        return projectPassword;
+    }
 
-	public void log( String msg )
-	{
-		System.out.print( msg );
-	}
+    public void log(String msg) {
+        System.out.print(msg);
+    }
 
-	public void logError( String msg )
-	{
-		System.err.println( msg );
-	}
+    public void logError(String msg) {
+        System.err.println(msg);
+    }
 
-	public void setStatus( RunnerStatus status )
-	{
-		this.status = status;
-	}
+    public void setStatus(RunnerStatus status) {
+        this.status = status;
+    }
 
-	public void disposeContext()
-	{
-	}
+    public void disposeContext() {
+    }
 
-	@Override
-	protected SoapUIOptions initCommandLineOptions()
-	{
-		SoapUIOptions options = new SoapUIOptions( "toolrunner" );
-		options.addOption( "i", true, "Sets the interface" );
-		options.addOption( "t", true, "Sets the tool to run" );
-		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
-		options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
-		options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
-		options.addOption( "f", true, "Sets report output folder" );
-		options.addOption( "D", true, "Sets system property with name=value" );
-		options.addOption( "G", true, "Sets global property with name=value" );
+    @Override
+    protected SoapUIOptions initCommandLineOptions() {
+        SoapUIOptions options = new SoapUIOptions("toolrunner");
+        options.addOption("i", true, "Sets the interface");
+        options.addOption("t", true, "Sets the tool to run");
+        options.addOption("s", true, "Sets the soapui-settings.xml file to use");
+        options.addOption("x", true, "Sets project password for decryption if project is encrypted");
+        options.addOption("v", true, "Sets password for soapui-settings.xml file");
+        options.addOption("f", true, "Sets report output folder");
+        options.addOption("D", true, "Sets system property with name=value");
+        options.addOption("G", true, "Sets global property with name=value");
 
-		return options;
-	}
+        return options;
+    }
 
-	@Override
-	protected boolean processCommandLine( CommandLine cmd )
-	{
-		setTool( cmd.getOptionValue( "t" ) );
+    @Override
+    protected boolean processCommandLine(CommandLine cmd) {
+        setTool(cmd.getOptionValue("t"));
 
-		if( cmd.hasOption( "i" ) )
-			setInterface( cmd.getOptionValue( "i" ) );
+        if (cmd.hasOption("i")) {
+            setInterface(cmd.getOptionValue("i"));
+        }
 
-		if( cmd.hasOption( "s" ) )
-			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ) );
+        if (cmd.hasOption("s")) {
+            setSettingsFile(getCommandLineOptionSubstSpace(cmd, "s"));
+        }
 
-		if( cmd.hasOption( "x" ) )
-		{
-			setProjectPassword( cmd.getOptionValue( "x" ) );
-		}
+        if (cmd.hasOption("x")) {
+            setProjectPassword(cmd.getOptionValue("x"));
+        }
 
-		if( cmd.hasOption( "v" ) )
-		{
-			setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
-		}
+        if (cmd.hasOption("v")) {
+            setSoapUISettingsPassword(cmd.getOptionValue("v"));
+        }
 
-		if( cmd.hasOption( "D" ) )
-		{
-			setSystemProperties( cmd.getOptionValues( "D" ) );
-		}
+        if (cmd.hasOption("D")) {
+            setSystemProperties(cmd.getOptionValues("D"));
+        }
 
-		if( cmd.hasOption( "G" ) )
-		{
-			setGlobalProperties( cmd.getOptionValues( "G" ) );
-		}
+        if (cmd.hasOption("G")) {
+            setGlobalProperties(cmd.getOptionValues("G"));
+        }
 
-		if( cmd.hasOption( "f" ) )
-			setOutputFolder( cmd.getOptionValue( "f" ) );
+        if (cmd.hasOption("f")) {
+            setOutputFolder(cmd.getOptionValue("f"));
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public void setProjectPassword( String projectPassword )
-	{
-		this.projectPassword = projectPassword;
-	}
+    public void setProjectPassword(String projectPassword) {
+        this.projectPassword = projectPassword;
+    }
 }

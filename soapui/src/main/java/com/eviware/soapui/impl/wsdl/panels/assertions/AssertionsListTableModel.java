@@ -19,44 +19,36 @@ import java.util.SortedSet;
 
 import javax.swing.table.DefaultTableModel;
 
-public class AssertionsListTableModel extends DefaultTableModel
-{
-	SortedSet<AssertionListEntry> listEntriesSet;
+public class AssertionsListTableModel extends DefaultTableModel {
+    SortedSet<AssertionListEntry> listEntriesSet;
 
-	public AssertionsListTableModel()
-	{
-	}
+    public AssertionsListTableModel() {
+    }
 
-	public void setListEntriesSet( SortedSet<AssertionListEntry> listEntriesSet )
-	{
-		this.listEntriesSet = listEntriesSet;
-	}
+    public void setListEntriesSet(SortedSet<AssertionListEntry> listEntriesSet) {
+        this.listEntriesSet = listEntriesSet;
+    }
 
-	@Override
-	public int getColumnCount()
-	{
-		return 1;
-	}
+    @Override
+    public int getColumnCount() {
+        return 1;
+    }
 
-	@Override
-	public int getRowCount()
-	{
-		if( listEntriesSet != null )
-		{
-			return listEntriesSet.size();
-		}
-		else
-		{
-			return 1;
-		}
-	}
+    @Override
+    public int getRowCount() {
+        if (listEntriesSet != null) {
+            return listEntriesSet.size();
+        } else {
+            return 1;
+        }
+    }
 
-	@Override
-	public Object getValueAt( int rowIndex, int columnIndex )
-	{
-		if( listEntriesSet != null )
-			return listEntriesSet.toArray()[rowIndex];
-		else
-			return null;
-	}
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        if (listEntriesSet != null) {
+            return listEntriesSet.toArray()[rowIndex];
+        } else {
+            return null;
+        }
+    }
 }

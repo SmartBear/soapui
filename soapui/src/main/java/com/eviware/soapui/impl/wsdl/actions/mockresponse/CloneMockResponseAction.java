@@ -24,31 +24,29 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Clones a WsdlMockResponse
- * 
+ *
  * @author ole.matzura
  */
 
-public class CloneMockResponseAction extends AbstractSoapUIAction<WsdlMockResponse>
-{
-	public CloneMockResponseAction()
-	{
-		super( "Clone", "Clones this MockResponse" );
-	}
+public class CloneMockResponseAction extends AbstractSoapUIAction<WsdlMockResponse> {
+    public CloneMockResponseAction() {
+        super("Clone", "Clones this MockResponse");
+    }
 
-	public void perform( WsdlMockResponse mockResponse, Object param )
-	{
-		String name = UISupport.prompt( "Specify name of cloned MockResponse", getName(),
-				"Copy of " + mockResponse.getName() );
-		if( name == null )
-			return;
+    public void perform(WsdlMockResponse mockResponse, Object param) {
+        String name = UISupport.prompt("Specify name of cloned MockResponse", getName(),
+                "Copy of " + mockResponse.getName());
+        if (name == null) {
+            return;
+        }
 
-		WsdlMockOperation mockOperation = mockResponse.getMockOperation();
-		mockOperation.beforeSave();
-		MockResponseConfig config = mockOperation.getConfig().addNewResponse();
-		config.set( mockResponse.getConfig().copy() );
-		config.setName( name );
-		WsdlMockResponse newResponse = mockOperation.addNewMockResponse( config );
+        WsdlMockOperation mockOperation = mockResponse.getMockOperation();
+        mockOperation.beforeSave();
+        MockResponseConfig config = mockOperation.getConfig().addNewResponse();
+        config.set(mockResponse.getConfig().copy());
+        config.setName(name);
+        WsdlMockResponse newResponse = mockOperation.addNewMockResponse(config);
 
-		UISupport.selectAndShow( newResponse );
-	}
+        UISupport.selectAndShow(newResponse);
+    }
 }

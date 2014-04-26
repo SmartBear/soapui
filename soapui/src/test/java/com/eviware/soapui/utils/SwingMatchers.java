@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.utils;
+*/
+package com.eviware.soapui.utils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -23,23 +24,19 @@ import java.awt.Component;
 /**
  * Contains factory methods for Hamcrest matchers to be applied on Swing and AWT components.
  */
-public class SwingMatchers
-{
+public class SwingMatchers {
 
-	public static Matcher<Component> enabled() {
-		 return new TypeSafeMatcher<Component>()
-		 {
-			 @Override
-			 public boolean matchesSafely( Component component )
-			 {
-				 return component.isEnabled();
-			 }
+    public static Matcher<Component> enabled() {
+        return new TypeSafeMatcher<Component>() {
+            @Override
+            public boolean matchesSafely(Component component) {
+                return component.isEnabled();
+            }
 
-			 @Override
-			 public void describeTo( Description description )
-			 {
-				 description.appendText( "an enabled component");
-			 }
-		 };
-	}
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("an enabled component");
+            }
+        };
+    }
 }

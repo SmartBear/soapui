@@ -45,299 +45,258 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
  * Graphical representation of testschedule statistics
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class JStatisticsHistoryGraph extends JComponent implements Scrollable
-{
-	private static final Color THREADCOUNT_COLOR = Color.GREEN.darker();
-	private static final int SCROLL_AHEAD = 50;
-	private static final Color TOTAL_COLOR = Color.BLACK;
+public class JStatisticsHistoryGraph extends JComponent implements Scrollable {
+    private static final Color THREADCOUNT_COLOR = Color.GREEN.darker();
+    private static final int SCROLL_AHEAD = 50;
+    private static final Color TOTAL_COLOR = Color.BLACK;
 
-	private final WsdlLoadTest loadTest;
-	private final LoadTestStatistics statisticsModel;
-	private StatisticsHistoryModel data;
-	private JComponent legend;
-	private InternalTableModelListener tableModelListener = new InternalTableModelListener();
-	private long[] maxValues;
-	private float[] scales;
+    private final WsdlLoadTest loadTest;
+    private final LoadTestStatistics statisticsModel;
+    private StatisticsHistoryModel data;
+    private JComponent legend;
+    private InternalTableModelListener tableModelListener = new InternalTableModelListener();
+    private long[] maxValues;
+    private float[] scales;
 
-	public JStatisticsHistoryGraph( WsdlLoadTest loadTest )
-	{
-		this.loadTest = loadTest;
-		this.statisticsModel = loadTest.getStatisticsModel();
-		this.data = statisticsModel.getHistory().getStatisticsValueHistory( Statistic.AVERAGE );
+    public JStatisticsHistoryGraph(WsdlLoadTest loadTest) {
+        this.loadTest = loadTest;
+        this.statisticsModel = loadTest.getStatisticsModel();
+        this.data = statisticsModel.getHistory().getStatisticsValueHistory(Statistic.AVERAGE);
 
-		setAutoscrolls( true );
-		addMouseMotionListener( new InternalMouseMotionListener() );
+        setAutoscrolls(true);
+        addMouseMotionListener(new InternalMouseMotionListener());
 
-		data.addTableModelListener( tableModelListener );
+        data.addTableModelListener(tableModelListener);
 
-		initMaxValues();
-		initScales();
+        initMaxValues();
+        initScales();
 
-		setBackground( Color.WHITE );
-		setOpaque( true );
+        setBackground(Color.WHITE);
+        setOpaque(true);
 
-		addComponentListener( new ComponentAdapter()
-		{
+        addComponentListener(new ComponentAdapter() {
 
-			public void componentResized( ComponentEvent e )
-			{
-				initScales();
-			}
-		} );
-	}
+            public void componentResized(ComponentEvent e) {
+                initScales();
+            }
+        });
+    }
 
-	public long getResolution()
-	{
-		return statisticsModel.getHistory().getResolution();
-	}
+    public long getResolution() {
+        return statisticsModel.getHistory().getResolution();
+    }
 
-	public void setResolution( long resolution )
-	{
-		statisticsModel.getHistory().setResolution( resolution );
-	}
+    public void setResolution(long resolution) {
+        statisticsModel.getHistory().setResolution(resolution);
+    }
 
-	public TableModel getModel()
-	{
-		return data;
-	}
+    public TableModel getModel() {
+        return data;
+    }
 
-	public void release()
-	{
-		data.removeTableModelListener( tableModelListener );
-	}
+    public void release() {
+        data.removeTableModelListener(tableModelListener);
+    }
 
-	public void setStatistic( Statistic statistic )
-	{
-		if( data != null )
-		{
-			data.removeTableModelListener( tableModelListener );
-			data.release();
-		}
+    public void setStatistic(Statistic statistic) {
+        if (data != null) {
+            data.removeTableModelListener(tableModelListener);
+            data.release();
+        }
 
-		data = statisticsModel.getHistory().getStatisticsValueHistory( statistic );
+        data = statisticsModel.getHistory().getStatisticsValueHistory(statistic);
 
-		initMaxValues();
-		initScales();
+        initMaxValues();
+        initScales();
 
-		data.addTableModelListener( tableModelListener );
+        data.addTableModelListener(tableModelListener);
 
-		getParent().invalidate();
-		revalidate();
-		repaint();
-	}
+        getParent().invalidate();
+        revalidate();
+        repaint();
+    }
 
-	private void initMaxValues()
-	{
-		maxValues = new long[data.getColumnCount()];
+    private void initMaxValues() {
+        maxValues = new long[data.getColumnCount()];
 
-		for( int c = 0; c < data.getRowCount(); c++ )
-		{
-			for( int i = 0; i < data.getColumnCount(); i++ )
-			{
-				long value = ( Long )data.getValueAt( c, i );
-				if( value > maxValues[i] )
-					maxValues[i] = value;
-			}
-		}
-	}
+        for (int c = 0; c < data.getRowCount(); c++) {
+            for (int i = 0; i < data.getColumnCount(); i++) {
+                long value = (Long) data.getValueAt(c, i);
+                if (value > maxValues[i]) {
+                    maxValues[i] = value;
+                }
+            }
+        }
+    }
 
-	private void initScales()
-	{
-		scales = new float[maxValues.length];
+    private void initScales() {
+        scales = new float[maxValues.length];
 
-		for( int c = 0; c < maxValues.length; c++ )
-		{
-			recalcScale( c );
-		}
-	}
+        for (int c = 0; c < maxValues.length; c++) {
+            recalcScale(c);
+        }
+    }
 
-	private boolean recalcScale( int index )
-	{
-		float scale = ( index == 0 || maxValues[index] == 0 ) ? 1 : ( float )( getHeight() )
-				/ ( float )( maxValues[index] + 10 );
-		if( scale > 1 )
-			scale = 1;
+    private boolean recalcScale(int index) {
+        float scale = (index == 0 || maxValues[index] == 0) ? 1 : (float) (getHeight())
+                / (float) (maxValues[index] + 10);
+        if (scale > 1) {
+            scale = 1;
+        }
 
-		if( Float.compare( scale, scales[index] ) == 0 )
-		{
-			return false;
-		}
+        if (Float.compare(scale, scales[index]) == 0) {
+            return false;
+        }
 
-		scales[index] = scale;
-		return true;
-	}
+        scales[index] = scale;
+        return true;
+    }
 
-	public void paintComponent( Graphics g )
-	{
-		g.setColor( getBackground() );
+    public void paintComponent(Graphics g) {
+        g.setColor(getBackground());
 
-		Rectangle clip = g.getClipBounds();
-		g.fillRect( ( int )clip.getX(), ( int )clip.getY(), ( int )clip.getWidth(), ( int )clip.getHeight() );
+        Rectangle clip = g.getClipBounds();
+        g.fillRect((int) clip.getX(), (int) clip.getY(), (int) clip.getWidth(), (int) clip.getHeight());
 
-		double right = clip.getX() + clip.getWidth();
-		int height = getHeight();
+        double right = clip.getX() + clip.getWidth();
+        int height = getHeight();
 
-		for( int c = ( int )clip.getX(); c < data.getRowCount() && c < right; c++ )
-		{
-			for( int i = 0; i < data.getColumnCount(); i++ )
-			{
-				if( i == 0 )
-					g.setColor( THREADCOUNT_COLOR );
-				else if( i == data.getColumnCount() - 1 )
-					g.setColor( TOTAL_COLOR );
-				else
-					g.setColor( ColorPalette.getColor( loadTest.getTestCase().getTestStepAt( i - 1 ) ) );
+        for (int c = (int) clip.getX(); c < data.getRowCount() && c < right; c++) {
+            for (int i = 0; i < data.getColumnCount(); i++) {
+                if (i == 0) {
+                    g.setColor(THREADCOUNT_COLOR);
+                } else if (i == data.getColumnCount() - 1) {
+                    g.setColor(TOTAL_COLOR);
+                } else {
+                    g.setColor(ColorPalette.getColor(loadTest.getTestCase().getTestStepAt(i - 1)));
+                }
 
-				int yOffset = ( int )( ( float )( ( Long )data.getValueAt( c, i ) ) * scales[i] );
+                int yOffset = (int) ((float) ((Long) data.getValueAt(c, i)) * scales[i]);
 
-				if( clip.contains( c, height - yOffset - 1 ) )
-				{
-					g.drawLine( c, height - yOffset - 1, c, height - yOffset - 1 );
-				}
-			}
-		}
-	}
+                if (clip.contains(c, height - yOffset - 1)) {
+                    g.drawLine(c, height - yOffset - 1, c, height - yOffset - 1);
+                }
+            }
+        }
+    }
 
-	public JComponent getLegend()
-	{
-		if( legend == null )
-			buildLegend();
+    public JComponent getLegend() {
+        if (legend == null) {
+            buildLegend();
+        }
 
-		return legend;
-	}
+        return legend;
+    }
 
-	private void buildLegend()
-	{
-		ButtonBarBuilder builder = new ButtonBarBuilder();
+    private void buildLegend() {
+        ButtonBarBuilder builder = new ButtonBarBuilder();
 
-		builder.addFixed( new JLabel( "ThreadCount", createLegendIcon( THREADCOUNT_COLOR ), JLabel.LEFT ) );
-		builder.addUnrelatedGap();
-		builder.addFixed( new JLabel( "Total", createLegendIcon( TOTAL_COLOR ), JLabel.LEFT ) );
-		builder.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+        builder.addFixed(new JLabel("ThreadCount", createLegendIcon(THREADCOUNT_COLOR), JLabel.LEFT));
+        builder.addUnrelatedGap();
+        builder.addFixed(new JLabel("Total", createLegendIcon(TOTAL_COLOR), JLabel.LEFT));
+        builder.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		legend = builder.getPanel();
-	}
+        legend = builder.getPanel();
+    }
 
-	private Icon createLegendIcon( Color color )
-	{
-		BufferedImage image = new BufferedImage( 10, 10, BufferedImage.TYPE_3BYTE_BGR );
-		Graphics g = image.getGraphics();
-		g.setColor( color );
-		g.fillRect( 1, 1, 8, 8 );
-		g.setColor( Color.DARK_GRAY );
-		g.drawRect( 0, 0, 10, 10 );
-		return new ImageIcon( image );
-	}
+    private Icon createLegendIcon(Color color) {
+        BufferedImage image = new BufferedImage(10, 10, BufferedImage.TYPE_3BYTE_BGR);
+        Graphics g = image.getGraphics();
+        g.setColor(color);
+        g.fillRect(1, 1, 8, 8);
+        g.setColor(Color.DARK_GRAY);
+        g.drawRect(0, 0, 10, 10);
+        return new ImageIcon(image);
+    }
 
-	public Dimension getPreferredScrollableViewportSize()
-	{
-		return getPreferredSize();
-	}
+    public Dimension getPreferredScrollableViewportSize() {
+        return getPreferredSize();
+    }
 
-	public Dimension getPreferredSize()
-	{
-		int height = getHeight();
-		int width = data.getRowCount() + SCROLL_AHEAD;
-		return new Dimension( width, height );
-	}
+    public Dimension getPreferredSize() {
+        int height = getHeight();
+        int width = data.getRowCount() + SCROLL_AHEAD;
+        return new Dimension(width, height);
+    }
 
-	public int getScrollableUnitIncrement( Rectangle visibleRect, int orientation, int direction )
-	{
-		return 1;
-	}
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 1;
+    }
 
-	public int getScrollableBlockIncrement( Rectangle visibleRect, int orientation, int direction )
-	{
-		return 10;
-	}
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 10;
+    }
 
-	public boolean getScrollableTracksViewportWidth()
-	{
-		return false;
-	}
+    public boolean getScrollableTracksViewportWidth() {
+        return false;
+    }
 
-	public boolean getScrollableTracksViewportHeight()
-	{
-		return true;
-	}
+    public boolean getScrollableTracksViewportHeight() {
+        return true;
+    }
 
-	private final class InternalTableModelListener implements TableModelListener
-	{
-		public synchronized void tableChanged( TableModelEvent e )
-		{
-			boolean repaint = false;
+    private final class InternalTableModelListener implements TableModelListener {
+        public synchronized void tableChanged(TableModelEvent e) {
+            boolean repaint = false;
 
-			if( e.getType() == TableModelEvent.INSERT )
-			{
-				int firstRow = e.getFirstRow();
-				int lastRow = e.getLastRow();
-				int height = getHeight();
+            if (e.getType() == TableModelEvent.INSERT) {
+                int firstRow = e.getFirstRow();
+                int lastRow = e.getLastRow();
+                int height = getHeight();
 
-				for( int c = firstRow; c <= lastRow; c++ )
-				{
-					for( int i = 0; i < data.getColumnCount(); i++ )
-					{
-						long value = ( Long )data.getValueAt( c, i );
+                for (int c = firstRow; c <= lastRow; c++) {
+                    for (int i = 0; i < data.getColumnCount(); i++) {
+                        long value = (Long) data.getValueAt(c, i);
 
-						if( value > maxValues[i] )
-						{
-							maxValues[i] = value;
-							repaint = recalcScale( i );
-						}
-					}
-				}
+                        if (value > maxValues[i]) {
+                            maxValues[i] = value;
+                            repaint = recalcScale(i);
+                        }
+                    }
+                }
 
-				if( !repaint )
-				{
-					Rectangle rect = new Rectangle( firstRow, 0, ( lastRow - firstRow ) + 1, height );
-					repaint( rect );
-				}
+                if (!repaint) {
+                    Rectangle rect = new Rectangle(firstRow, 0, (lastRow - firstRow) + 1, height);
+                    repaint(rect);
+                }
 
-				Dimension size = getSize();
-				Rectangle r = getVisibleRect();
+                Dimension size = getSize();
+                Rectangle r = getVisibleRect();
 
-				double x2 = r.getX() + r.getWidth();
-				if( x2 >= data.getRowCount() && x2 < data.getRowCount() + SCROLL_AHEAD )
-				{
-					scrollRectToVisible( new Rectangle( firstRow + SCROLL_AHEAD / 2, 0, ( lastRow - firstRow ) + 1, height ) );
-				}
+                double x2 = r.getX() + r.getWidth();
+                if (x2 >= data.getRowCount() && x2 < data.getRowCount() + SCROLL_AHEAD) {
+                    scrollRectToVisible(new Rectangle(firstRow + SCROLL_AHEAD / 2, 0, (lastRow - firstRow) + 1, height));
+                }
 
-				if( !repaint && size.getWidth() < data.getRowCount() + SCROLL_AHEAD )
-				{
-					revalidate();
-				}
-			}
-			else if( e.getType() == TableModelEvent.UPDATE )
-			{
-				initMaxValues();
-				initScales();
+                if (!repaint && size.getWidth() < data.getRowCount() + SCROLL_AHEAD) {
+                    revalidate();
+                }
+            } else if (e.getType() == TableModelEvent.UPDATE) {
+                initMaxValues();
+                initScales();
 
-				repaint = true;
-			}
+                repaint = true;
+            }
 
-			if( repaint )
-			{
-				getParent().invalidate();
-				revalidate();
-				repaint();
-			}
-		}
-	}
+            if (repaint) {
+                getParent().invalidate();
+                revalidate();
+                repaint();
+            }
+        }
+    }
 
-	private class InternalMouseMotionListener implements MouseMotionListener
-	{
-		public void mouseDragged( MouseEvent e )
-		{
-			Rectangle r = new Rectangle( e.getX(), e.getY(), 1, 1 );
-			scrollRectToVisible( r );
-		}
+    private class InternalMouseMotionListener implements MouseMotionListener {
+        public void mouseDragged(MouseEvent e) {
+            Rectangle r = new Rectangle(e.getX(), e.getY(), 1, 1);
+            scrollRectToVisible(r);
+        }
 
-		public void mouseMoved( MouseEvent e )
-		{
-		}
-	}
+        public void mouseMoved(MouseEvent e) {
+        }
+    }
 }

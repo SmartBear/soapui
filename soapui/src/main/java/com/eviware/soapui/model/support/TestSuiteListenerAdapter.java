@@ -24,49 +24,38 @@ import com.eviware.soapui.security.SecurityTest;
 
 /**
  * Adapter for TestSuiteListener implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TestSuiteListenerAdapter implements TestSuiteListener
-{
-	public void testCaseAdded( TestCase testCase )
-	{
-	}
+public class TestSuiteListenerAdapter implements TestSuiteListener {
+    public void testCaseAdded(TestCase testCase) {
+    }
 
-	public void testCaseRemoved( TestCase testCase )
-	{
-	}
+    public void testCaseRemoved(TestCase testCase) {
+    }
 
-	public void testStepAdded( TestStep testStep, int index )
-	{
-	}
+    public void testStepAdded(TestStep testStep, int index) {
+    }
 
-	public void testStepRemoved( TestStep testStep, int index )
-	{
-	}
+    public void testStepRemoved(TestStep testStep, int index) {
+    }
 
-	public void loadTestAdded( LoadTest loadTest )
-	{
-	}
+    public void loadTestAdded(LoadTest loadTest) {
+    }
 
-	public void loadTestRemoved( LoadTest loadTest )
-	{
-	}
+    public void loadTestRemoved(LoadTest loadTest) {
+    }
 
-	public void securityTestAdded( SecurityTest securityTest )
-	{
-	}
+    public void securityTestAdded(SecurityTest securityTest) {
+    }
 
-	public void securityTestRemoved( SecurityTest securityTest )
-	{
-	}
+    public void securityTestRemoved(SecurityTest securityTest) {
+    }
 
-	public void testStepMoved( TestStep testStep, int fromIndex, int offset )
-	{
-	}
+    public void testStepMoved(TestStep testStep, int fromIndex, int offset) {
+    }
 
-	public void testCaseMoved( TestCase testCase, int index, int offset )
-	{
-	}
+    public void testCaseMoved(TestCase testCase, int index, int offset) {
+    }
 }

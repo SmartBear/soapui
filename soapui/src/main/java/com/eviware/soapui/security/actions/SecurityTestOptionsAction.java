@@ -30,63 +30,53 @@ import com.eviware.x.form.XFormFieldListener;
 
 /**
  * Options dialog for securitytests
- * 
+ *
  * @author dragica.soldo
  */
 
-public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest>
-{
-	private static final String FAIL_ON_ERROR = "Abort on Error";
-	private static final String FAIL_SECURITYTEST_ON_ERROR = "Fail SecurityTest on Error";
-	public static final String SOAPUI_ACTION_ID = "SecurityTestOptionsAction";
+public class SecurityTestOptionsAction extends AbstractSoapUIAction<SecurityTest> {
+    private static final String FAIL_ON_ERROR = "Abort on Error";
+    private static final String FAIL_SECURITYTEST_ON_ERROR = "Fail SecurityTest on Error";
+    public static final String SOAPUI_ACTION_ID = "SecurityTestOptionsAction";
 
-	private XFormDialog dialog;
-	private XForm form;
+    private XFormDialog dialog;
+    private XForm form;
 
-	public SecurityTestOptionsAction()
-	{
-		super( "Options", "Sets options for this SecurityTest" );
-	}
+    public SecurityTestOptionsAction() {
+        super("Options", "Sets options for this SecurityTest");
+    }
 
-	public void perform( SecurityTest securityTest, Object param )
-	{
-		if( dialog == null )
-		{
-			XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "SecurityTest Options" );
-			form = builder.createForm( "Basic" );
-			form.addCheckBox( FAIL_ON_ERROR, "Fail on error" ).addFormFieldListener( new XFormFieldListener()
-			{
+    public void perform(SecurityTest securityTest, Object param) {
+        if (dialog == null) {
+            XFormDialogBuilder builder = XFormFactory.createDialogBuilder("SecurityTest Options");
+            form = builder.createForm("Basic");
+            form.addCheckBox(FAIL_ON_ERROR, "Fail on error").addFormFieldListener(new XFormFieldListener() {
 
-				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-				{
-					form.getFormField( FAIL_SECURITYTEST_ON_ERROR ).setEnabled( !Boolean.parseBoolean( newValue ) );
-				}
-			} );
-			form.addCheckBox( FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps" );
+                public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                    form.getFormField(FAIL_SECURITYTEST_ON_ERROR).setEnabled(!Boolean.parseBoolean(newValue));
+                }
+            });
+            form.addCheckBox(FAIL_SECURITYTEST_ON_ERROR, "Fail SecurityTest if it has failed TestSteps");
 
-			dialog = builder.buildDialog( builder.buildOkCancelHelpActions( HelpUrls.SECURITYTESTEDITOR_HELP_URL ),
-					"Specify general options for this SecurityTest", UISupport.OPTIONS_ICON );
-		}
+            dialog = builder.buildDialog(builder.buildOkCancelHelpActions(HelpUrls.SECURITYTESTEDITOR_HELP_URL),
+                    "Specify general options for this SecurityTest", UISupport.OPTIONS_ICON);
+        }
 
-		StringToStringMap values = new StringToStringMap();
+        StringToStringMap values = new StringToStringMap();
 
-		values.put( FAIL_ON_ERROR, String.valueOf( securityTest.getFailOnError() ) );
-		values.put( FAIL_SECURITYTEST_ON_ERROR, String.valueOf( securityTest.getFailSecurityTestOnScanErrors() ) );
-		values = dialog.show( values );
+        values.put(FAIL_ON_ERROR, String.valueOf(securityTest.getFailOnError()));
+        values.put(FAIL_SECURITYTEST_ON_ERROR, String.valueOf(securityTest.getFailSecurityTestOnScanErrors()));
+        values = dialog.show(values);
 
-		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
-		{
-			try
-			{
-				securityTest.setFailOnError( Boolean.parseBoolean( values.get( FAIL_ON_ERROR ) ) );
-				securityTest.setFailSecurityTestOnScanErrors( Boolean
-						.parseBoolean( values.get( FAIL_SECURITYTEST_ON_ERROR ) ) );
+        if (dialog.getReturnValue() == XFormDialog.OK_OPTION) {
+            try {
+                securityTest.setFailOnError(Boolean.parseBoolean(values.get(FAIL_ON_ERROR)));
+                securityTest.setFailSecurityTestOnScanErrors(Boolean
+                        .parseBoolean(values.get(FAIL_SECURITYTEST_ON_ERROR)));
 
-			}
-			catch( Exception e1 )
-			{
-				UISupport.showErrorMessage( e1.getMessage() );
-			}
-		}
-	}
+            } catch (Exception e1) {
+                UISupport.showErrorMessage(e1.getMessage());
+            }
+        }
+    }
 }

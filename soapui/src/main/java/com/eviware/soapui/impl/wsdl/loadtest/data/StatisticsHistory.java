@@ -37,315 +37,267 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 
 /**
  * Collector of statistics to be exposed as TableModels
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class StatisticsHistory
-{
-	private final LoadTestStatistics statistics;
-	private List<long[][]> data = new ArrayList<long[][]>();
-	private List<Long> threadCounts = new ArrayList<Long>();
-	private Map<Integer, TestStepStatisticsHistory> testStepStatisticHistories = new HashMap<Integer, TestStepStatisticsHistory>();
-	private EnumMap<Statistic, StatisticsValueHistory> statisticsValueHistories = new EnumMap<Statistic, StatisticsValueHistory>(
-			Statistic.class );
+public class StatisticsHistory {
+    private final LoadTestStatistics statistics;
+    private List<long[][]> data = new ArrayList<long[][]>();
+    private List<Long> threadCounts = new ArrayList<Long>();
+    private Map<Integer, TestStepStatisticsHistory> testStepStatisticHistories = new HashMap<Integer, TestStepStatisticsHistory>();
+    private EnumMap<Statistic, StatisticsValueHistory> statisticsValueHistories = new EnumMap<Statistic, StatisticsValueHistory>(
+            Statistic.class);
 
-	@SuppressWarnings( "unused" )
-	private final static Logger logger = Logger.getLogger( StatisticsHistory.class );
-	private long resolution = 0;
-	private InternalTableModelListener internalTableModelListener = new InternalTableModelListener();
-	private Updater updater = new Updater();
+    @SuppressWarnings("unused")
+    private final static Logger logger = Logger.getLogger(StatisticsHistory.class);
+    private long resolution = 0;
+    private InternalTableModelListener internalTableModelListener = new InternalTableModelListener();
+    private Updater updater = new Updater();
 
-	public StatisticsHistory( LoadTestStatistics statistics )
-	{
-		this.statistics = statistics;
+    public StatisticsHistory(LoadTestStatistics statistics) {
+        this.statistics = statistics;
 
-		statistics.addTableModelListener( internalTableModelListener );
-		statistics.getLoadTest().addLoadTestRunListener( new LoadTestRunListenerAdapter()
-		{
+        statistics.addTableModelListener(internalTableModelListener);
+        statistics.getLoadTest().addLoadTestRunListener(new LoadTestRunListenerAdapter() {
 
-			public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context )
-			{
-				if( resolution > 0 )
-					new Thread( updater, StatisticsHistory.this.statistics.getLoadTest().getName()
-							+ " StatisticsHistory Updater" ).start();
-			}
-		} );
-	}
+            public void beforeLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context) {
+                if (resolution > 0) {
+                    new Thread(updater, StatisticsHistory.this.statistics.getLoadTest().getName()
+                            + " StatisticsHistory Updater").start();
+                }
+            }
+        });
+    }
 
-	public Map<Integer, TestStepStatisticsHistory> getTestStepStatisticHistories()
-	{
-		return testStepStatisticHistories;
-	}
+    public Map<Integer, TestStepStatisticsHistory> getTestStepStatisticHistories() {
+        return testStepStatisticHistories;
+    }
 
-	public long getResolution()
-	{
-		return resolution;
-	}
+    public long getResolution() {
+        return resolution;
+    }
 
-	public void setResolution( long resolution )
-	{
-		long old = this.resolution;
-		this.resolution = resolution;
+    public void setResolution(long resolution) {
+        long old = this.resolution;
+        this.resolution = resolution;
 
-		if( resolution > 0 && old == 0 && statistics.getLoadTest().getHistoryLimit() != 0 )
-		{
-			new Thread( updater, statistics.getLoadTest().getName() + " StatisticsHistory Updater" ).start();
-		}
-	}
+        if (resolution > 0 && old == 0 && statistics.getLoadTest().getHistoryLimit() != 0) {
+            new Thread(updater, statistics.getLoadTest().getName() + " StatisticsHistory Updater").start();
+        }
+    }
 
-	public int getRowCount()
-	{
-		return data.size();
-	}
+    public int getRowCount() {
+        return data.size();
+    }
 
-	public long[][] getHistoryAt( int index )
-	{
-		return data.get( index );
-	}
+    public long[][] getHistoryAt(int index) {
+        return data.get(index);
+    }
 
-	public long getThreadCountAt( int index )
-	{
-		return threadCounts.get( index );
-	}
+    public long getThreadCountAt(int index) {
+        return threadCounts.get(index);
+    }
 
-	public StatisticsHistoryModel getTestStepHistory( int testStepIndex )
-	{
-		if( !testStepStatisticHistories.containsKey( testStepIndex ) )
-		{
-			testStepStatisticHistories.put( testStepIndex, new TestStepStatisticsHistory( testStepIndex ) );
-		}
+    public StatisticsHistoryModel getTestStepHistory(int testStepIndex) {
+        if (!testStepStatisticHistories.containsKey(testStepIndex)) {
+            testStepStatisticHistories.put(testStepIndex, new TestStepStatisticsHistory(testStepIndex));
+        }
 
-		return testStepStatisticHistories.get( testStepIndex );
-	}
+        return testStepStatisticHistories.get(testStepIndex);
+    }
 
-	public StatisticsHistoryModel getStatisticsValueHistory( Statistic statistic )
-	{
-		if( !statisticsValueHistories.containsKey( statistic ) )
-		{
-			statisticsValueHistories.put( statistic, new StatisticsValueHistory( statistic ) );
-		}
+    public StatisticsHistoryModel getStatisticsValueHistory(Statistic statistic) {
+        if (!statisticsValueHistories.containsKey(statistic)) {
+            statisticsValueHistories.put(statistic, new StatisticsValueHistory(statistic));
+        }
 
-		return statisticsValueHistories.get( statistic );
-	}
+        return statisticsValueHistories.get(statistic);
+    }
 
-	public void reset()
-	{
-		data.clear();
-		threadCounts.clear();
+    public void reset() {
+        data.clear();
+        threadCounts.clear();
 
-		for( StatisticsValueHistory history : statisticsValueHistories.values() )
-		{
-			history.fireTableDataChanged();
-			history.fireTableStructureChanged();
-		}
+        for (StatisticsValueHistory history : statisticsValueHistories.values()) {
+            history.fireTableDataChanged();
+            history.fireTableStructureChanged();
+        }
 
-		for( TestStepStatisticsHistory history : testStepStatisticHistories.values() )
-		{
-			history.fireTableDataChanged();
-			history.fireTableStructureChanged();
-		}
-	}
+        for (TestStepStatisticsHistory history : testStepStatisticHistories.values()) {
+            history.fireTableDataChanged();
+            history.fireTableStructureChanged();
+        }
+    }
 
-	private synchronized void updateHistory()
-	{
-		if( statistics.getStatistic( LoadTestStatistics.TOTAL, Statistic.COUNT ) == 0 )
-		{
-			reset();
-		}
-		else
-		{
-			int columnCount = statistics.getColumnCount();
-			int rowCount = statistics.getRowCount();
+    private synchronized void updateHistory() {
+        if (statistics.getStatistic(LoadTestStatistics.TOTAL, Statistic.COUNT) == 0) {
+            reset();
+        } else {
+            int columnCount = statistics.getColumnCount();
+            int rowCount = statistics.getRowCount();
 
-			long[][] values = new long[rowCount][columnCount - 2];
+            long[][] values = new long[rowCount][columnCount - 2];
 
-			for( int c = 0; c < rowCount; c++ )
-			{
-				for( int i = 2; i < columnCount; i++ )
-				{
-					try
-					{
-						values[c][i - 2] = Long.parseLong( statistics.getValueAt( c, i ).toString() );
-					}
-					catch( NumberFormatException ex )
-					{
-						values[c][i - 2] = ( long )Float.parseFloat( statistics.getValueAt( c, i ).toString() );
-					}
-				}
-			}
+            for (int c = 0; c < rowCount; c++) {
+                for (int i = 2; i < columnCount; i++) {
+                    try {
+                        values[c][i - 2] = Long.parseLong(statistics.getValueAt(c, i).toString());
+                    } catch (NumberFormatException ex) {
+                        values[c][i - 2] = (long) Float.parseFloat(statistics.getValueAt(c, i).toString());
+                    }
+                }
+            }
 
-			data.add( values );
-			threadCounts.add( statistics.getLoadTest().getThreadCount() );
+            data.add(values);
+            threadCounts.add(statistics.getLoadTest().getThreadCount());
 
-			// notify!
-			int sz = data.size() - 1;
-			for( StatisticsValueHistory history : statisticsValueHistories.values() )
-			{
-				history.fireTableRowsInserted( sz, sz );
-			}
+            // notify!
+            int sz = data.size() - 1;
+            for (StatisticsValueHistory history : statisticsValueHistories.values()) {
+                history.fireTableRowsInserted(sz, sz);
+            }
 
-			for( TestStepStatisticsHistory history : testStepStatisticHistories.values() )
-			{
-				history.fireTableRowsInserted( sz, sz );
-			}
-		}
-	}
+            for (TestStepStatisticsHistory history : testStepStatisticHistories.values()) {
+                history.fireTableRowsInserted(sz, sz);
+            }
+        }
+    }
 
-	public abstract class StatisticsHistoryModel extends AbstractTableModel
-	{
-		public abstract void release();
-	}
+    public abstract class StatisticsHistoryModel extends AbstractTableModel {
+        public abstract void release();
+    }
 
-	public class TestStepStatisticsHistory extends StatisticsHistoryModel
-	{
-		private final int testStepIndex;
+    public class TestStepStatisticsHistory extends StatisticsHistoryModel {
+        private final int testStepIndex;
 
-		public TestStepStatisticsHistory( int testStepIndex )
-		{
-			this.testStepIndex = testStepIndex == -1 ? statistics.getRowCount() - 1 : testStepIndex;
-		}
+        public TestStepStatisticsHistory(int testStepIndex) {
+            this.testStepIndex = testStepIndex == -1 ? statistics.getRowCount() - 1 : testStepIndex;
+        }
 
-		public int getTestStepIndex()
-		{
-			return testStepIndex;
-		}
+        public int getTestStepIndex() {
+            return testStepIndex;
+        }
 
-		public int getRowCount()
-		{
-			return data.size();
-		}
+        public int getRowCount() {
+            return data.size();
+        }
 
-		public int getColumnCount()
-		{
-			return statistics.getColumnCount() - 1;
-		}
+        public int getColumnCount() {
+            return statistics.getColumnCount() - 1;
+        }
 
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			if( columnIndex == 0 )
-				return threadCounts.get( rowIndex );
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            if (columnIndex == 0) {
+                return threadCounts.get(rowIndex);
+            }
 
-			// tolerance..
-			if( rowIndex < data.size() )
-				return data.get( rowIndex )[testStepIndex][columnIndex - 1];
-			else
-				return new Long( 0 );
-		}
+            // tolerance..
+            if (rowIndex < data.size()) {
+                return data.get(rowIndex)[testStepIndex][columnIndex - 1];
+            } else {
+                return new Long(0);
+            }
+        }
 
-		public Class<?> getColumnClass( int columnIndex )
-		{
-			return Long.class;
-		}
+        public Class<?> getColumnClass(int columnIndex) {
+            return Long.class;
+        }
 
-		public String getColumnName( int column )
-		{
-			return column == 0 ? "ThreadCount" : Statistic.forIndex( column - 1 ).getName();
-		}
+        public String getColumnName(int column) {
+            return column == 0 ? "ThreadCount" : Statistic.forIndex(column - 1).getName();
+        }
 
-		public void release()
-		{
-			testStepStatisticHistories.remove( testStepIndex );
-		}
-	}
+        public void release() {
+            testStepStatisticHistories.remove(testStepIndex);
+        }
+    }
 
-	private class StatisticsValueHistory extends StatisticsHistoryModel
-	{
-		private final Statistic statistic;
+    private class StatisticsValueHistory extends StatisticsHistoryModel {
+        private final Statistic statistic;
 
-		public StatisticsValueHistory( Statistic statistic )
-		{
-			this.statistic = statistic;
-		}
+        public StatisticsValueHistory(Statistic statistic) {
+            this.statistic = statistic;
+        }
 
-		@SuppressWarnings( "unused" )
-		public Statistic getStatistic()
-		{
-			return statistic;
-		}
+        @SuppressWarnings("unused")
+        public Statistic getStatistic() {
+            return statistic;
+        }
 
-		public int getRowCount()
-		{
-			return data.size();
-		}
+        public int getRowCount() {
+            return data.size();
+        }
 
-		public int getColumnCount()
-		{
-			return statistics.getRowCount() + 1;
-		}
+        public int getColumnCount() {
+            return statistics.getRowCount() + 1;
+        }
 
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			if( columnIndex == 0 )
-				return threadCounts.get( rowIndex );
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            if (columnIndex == 0) {
+                return threadCounts.get(rowIndex);
+            }
 
-			return data.get( rowIndex )[columnIndex - 1][statistic.getIndex()];
-		}
+            return data.get(rowIndex)[columnIndex - 1][statistic.getIndex()];
+        }
 
-		public Class<?> getColumnClass( int columnIndex )
-		{
-			return Long.class;
-		}
+        public Class<?> getColumnClass(int columnIndex) {
+            return Long.class;
+        }
 
-		public String getColumnName( int column )
-		{
-			if( column == 0 )
-				return "ThreadCount";
+        public String getColumnName(int column) {
+            if (column == 0) {
+                return "ThreadCount";
+            }
 
-			if( column == statistics.getRowCount() )
-				return "Total";
+            if (column == statistics.getRowCount()) {
+                return "Total";
+            }
 
-			return statistics.getLoadTest().getTestCase().getTestStepAt( column - 1 ).getName();
-		}
+            return statistics.getLoadTest().getTestCase().getTestStepAt(column - 1).getName();
+        }
 
-		public void release()
-		{
-			statisticsValueHistories.remove( statistic );
-		}
-	}
+        public void release() {
+            statisticsValueHistories.remove(statistic);
+        }
+    }
 
-	private class InternalTableModelListener implements TableModelListener
-	{
-		public synchronized void tableChanged( TableModelEvent e )
-		{
-			if( ( resolution > 0 && statistics.getLoadTest().isRunning() ) || e.getType() != TableModelEvent.UPDATE
-					|| statistics.getLoadTest().getHistoryLimit() == 0 )
-				return;
+    private class InternalTableModelListener implements TableModelListener {
+        public synchronized void tableChanged(TableModelEvent e) {
+            if ((resolution > 0 && statistics.getLoadTest().isRunning()) || e.getType() != TableModelEvent.UPDATE
+                    || statistics.getLoadTest().getHistoryLimit() == 0) {
+                return;
+            }
 
-			updateHistory();
-		}
-	}
+            updateHistory();
+        }
+    }
 
-	private final class Updater implements Runnable
-	{
-		public void run()
-		{
-			WsdlLoadTest loadTest = statistics.getLoadTest();
+    private final class Updater implements Runnable {
+        public void run() {
+            WsdlLoadTest loadTest = statistics.getLoadTest();
 
-			while( resolution > 0 && loadTest.isRunning() )
-			{
-				try
-				{
-					if( loadTest.getHistoryLimit() != 0 )
-						updateHistory();
+            while (resolution > 0 && loadTest.isRunning()) {
+                try {
+                    if (loadTest.getHistoryLimit() != 0) {
+                        updateHistory();
+                    }
 
-					// chunck wait so we can get canceled..
-					long res = resolution;
-					while( res > 100 && resolution > 0 && loadTest.isRunning() )
-					{
-						Thread.sleep( res );
-						res -= 100;
-					}
+                    // chunck wait so we can get canceled..
+                    long res = resolution;
+                    while (res > 100 && resolution > 0 && loadTest.isRunning()) {
+                        Thread.sleep(res);
+                        res -= 100;
+                    }
 
-					if( resolution > 0 && loadTest.isRunning() )
-						Thread.sleep( res );
-				}
-				catch( InterruptedException e )
-				{
-					SoapUI.logError( e );
-					break;
-				}
-			}
-		}
-	}
+                    if (resolution > 0 && loadTest.isRunning()) {
+                        Thread.sleep(res);
+                    }
+                } catch (InterruptedException e) {
+                    SoapUI.logError(e);
+                    break;
+                }
+            }
+        }
+    }
 }

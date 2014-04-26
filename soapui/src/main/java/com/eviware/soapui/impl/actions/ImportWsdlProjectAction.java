@@ -29,54 +29,46 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 /**
  * Actions for importing an existing SoapUI project file into the current
  * workspace
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
-{
-	public static final String SOAPUI_ACTION_ID = "ImportWsdlProjectAction";
-	public static final MessageSupport messages = MessageSupport.getMessages( ImportWsdlProjectAction.class );
+public class ImportWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
+    public static final String SOAPUI_ACTION_ID = "ImportWsdlProjectAction";
+    public static final MessageSupport messages = MessageSupport.getMessages(ImportWsdlProjectAction.class);
 
-	public ImportWsdlProjectAction()
-	{
-		super( messages.get( "title" ), messages.get( "description" ) );
-	}
+    public ImportWsdlProjectAction() {
+        super(messages.get("title"), messages.get("description"));
+    }
 
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		File file = null;
+    public void perform(WorkspaceImpl workspace, Object param) {
+        File file = null;
 
-		if( param == null )
-		{
-			file = UISupport.getFileDialogs().openXML( this, messages.get( "prompt.title" ) );
-		}
-		else
-		{
-			file = new File( param.toString() );
-		}
+        if (param == null) {
+            file = UISupport.getFileDialogs().openXML(this, messages.get("prompt.title"));
+        } else {
+            file = new File(param.toString());
+        }
 
-		if( file == null )
-			return;
+        if (file == null) {
+            return;
+        }
 
-		String fileName = file.getAbsolutePath();
-		if( fileName == null )
-			return;
+        String fileName = file.getAbsolutePath();
+        if (fileName == null) {
+            return;
+        }
 
-		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
-		try
-		{
-			WsdlProject project = ( WsdlProject )workspace.importProject( fileName );
-			if( project != null )
-				UISupport.select( project );
-		}
-		catch( Exception ex )
-		{
-			UISupport.showErrorMessage( ex );
-		}
-		finally
-		{
-			state.restore();
-		}
-	}
+        SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
+        try {
+            WsdlProject project = (WsdlProject) workspace.importProject(fileName);
+            if (project != null) {
+                UISupport.select(project);
+            }
+        } catch (Exception ex) {
+            UISupport.showErrorMessage(ex);
+        } finally {
+            state.restore();
+        }
+    }
 }

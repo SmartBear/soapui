@@ -42,111 +42,100 @@ import com.eviware.soapui.model.iface.Submit.Status;
 import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContext;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class WsmcUtils
-{
-	private static final String WSMC_ACTION = "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection";
-	private static final String WSMC_NAMESPACE = "http://docs.oasis-open.org/ws-rx/wsmc/200702";
+public class WsmcUtils {
+    private static final String WSMC_ACTION = "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection";
+    private static final String WSMC_NAMESPACE = "http://docs.oasis-open.org/ws-rx/wsmc/200702";
 
-	public void sendMakeConnectionRequest( String endpoint, SoapVersion soapVersion, WsdlOperation operation, String uuid )
-	{
-		String identifier = null;
+    public void sendMakeConnectionRequest(String endpoint, SoapVersion soapVersion, WsdlOperation operation, String uuid) {
+        String identifier = null;
 
-		HttpRequestConfig httpRequestConfig = ( HttpRequestConfig )( XmlObject.Factory.newInstance()
-				.changeType( HttpRequestConfig.type ) );
-		httpRequestConfig.setEndpoint( endpoint );
+        HttpRequestConfig httpRequestConfig = (HttpRequestConfig) (XmlObject.Factory.newInstance()
+                .changeType(HttpRequestConfig.type));
+        httpRequestConfig.setEndpoint(endpoint);
 
-		WsaConfigConfig wsaConfigConfig = ( WsaConfigConfig )( XmlObject.Factory.newInstance()
-				.changeType( WsaConfigConfig.type ) );
-		WsaContainer wsaContainer = new WsaContainerImpl();
-		wsaContainer.setOperation( operation );
-		WsaConfig wsaConfig = new WsaConfig( wsaConfigConfig, wsaContainer );
+        WsaConfigConfig wsaConfigConfig = (WsaConfigConfig) (XmlObject.Factory.newInstance()
+                .changeType(WsaConfigConfig.type));
+        WsaContainer wsaContainer = new WsaContainerImpl();
+        wsaContainer.setOperation(operation);
+        WsaConfig wsaConfig = new WsaConfig(wsaConfigConfig, wsaContainer);
 
-		WsrmConfigConfig wsrmConfigConfig = ( WsrmConfigConfig )( XmlObject.Factory.newInstance()
-				.changeType( WsrmConfigConfig.type ) );
-		WsrmConfig wsrmConfig = new WsrmConfig( wsrmConfigConfig, null );
+        WsrmConfigConfig wsrmConfigConfig = (WsrmConfigConfig) (XmlObject.Factory.newInstance()
+                .changeType(WsrmConfigConfig.type));
+        WsrmConfig wsrmConfig = new WsrmConfig(wsrmConfigConfig, null);
 
-		WsaRequest makeConnectionRequest = new WsaRequest( httpRequestConfig, wsaConfig, wsrmConfig, false );
-		makeConnectionRequest.setOperation( operation );
+        WsaRequest makeConnectionRequest = new WsaRequest(httpRequestConfig, wsaConfig, wsrmConfig, false);
+        makeConnectionRequest.setOperation(operation);
 
-		String makeConnectionMessageContent = SoapMessageBuilder.buildEmptyMessage( soapVersion );
+        String makeConnectionMessageContent = SoapMessageBuilder.buildEmptyMessage(soapVersion);
 
-		makeConnectionRequest.getWsaConfig().setWsaEnabled( true );
-		makeConnectionRequest.getWsaConfig().setAction( WSMC_ACTION );
+        makeConnectionRequest.getWsaConfig().setWsaEnabled(true);
+        makeConnectionRequest.getWsaConfig().setAction(WSMC_ACTION);
 
-		makeConnectionRequest.getWsaConfig().setTo(
-				WsaUtils.getNamespace( makeConnectionRequest.getWsaConfig().getVersion() ) + "/anonymous" );
-		makeConnectionRequest.getWsaConfig().setGenerateMessageId( true );
+        makeConnectionRequest.getWsaConfig().setTo(
+                WsaUtils.getNamespace(makeConnectionRequest.getWsaConfig().getVersion()) + "/anonymous");
+        makeConnectionRequest.getWsaConfig().setGenerateMessageId(true);
 
-		try
-		{
-			// XmlObject object = XmlObject.Factory.parse(
-			// makeConnectionMessageContent );
-			XmlObject object = XmlUtils.createXmlObject( makeConnectionMessageContent );
-			XmlCursor cursor = object.newCursor();
+        try {
+            // XmlObject object = XmlObject.Factory.parse(
+            // makeConnectionMessageContent );
+            XmlObject object = XmlUtils.createXmlObject(makeConnectionMessageContent);
+            XmlCursor cursor = object.newCursor();
 
-			cursor.toFirstContentToken();
-			cursor.toFirstChild();
-			cursor.toNextSibling();
+            cursor.toFirstContentToken();
+            cursor.toFirstChild();
+            cursor.toNextSibling();
 
-			cursor.toNextToken();
-			cursor.insertNamespace( "wsmc", WSMC_NAMESPACE );
+            cursor.toNextToken();
+            cursor.insertNamespace("wsmc", WSMC_NAMESPACE);
 
-			cursor.beginElement( "MakeConnection", WSMC_NAMESPACE );
-			cursor.beginElement( "Address", WSMC_NAMESPACE );
-			cursor.insertChars( WsaUtils.getNamespace( makeConnectionRequest.getWsaConfig().getVersion() )
-					+ "/anonymous?id=" + uuid );
+            cursor.beginElement("MakeConnection", WSMC_NAMESPACE);
+            cursor.beginElement("Address", WSMC_NAMESPACE);
+            cursor.insertChars(WsaUtils.getNamespace(makeConnectionRequest.getWsaConfig().getVersion())
+                    + "/anonymous?id=" + uuid);
 
-			cursor.dispose();
+            cursor.dispose();
 
-			cursor.dispose();
+            cursor.dispose();
 
-			WsaUtils wsaUtils = new WsaUtils( object.xmlText(), soapVersion, null, new DefaultPropertyExpansionContext(
-					makeConnectionRequest ) );
-			String content = wsaUtils.addWSAddressingRequest( makeConnectionRequest );
+            WsaUtils wsaUtils = new WsaUtils(object.xmlText(), soapVersion, null, new DefaultPropertyExpansionContext(
+                    makeConnectionRequest));
+            String content = wsaUtils.addWSAddressingRequest(makeConnectionRequest);
 
-			makeConnectionRequest.setRequestContent( content );
+            makeConnectionRequest.setRequestContent(content);
 
-		}
-		catch( XmlException e )
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        } catch (XmlException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-		try
-		{
+        try {
 
-			WsdlSubmit wsdlSubmit = makeConnectionRequest.submit( new WsdlSubmitContext( null ), true );
+            WsdlSubmit wsdlSubmit = makeConnectionRequest.submit(new WsdlSubmitContext(null), true);
 
-			// startSequenceRequest.getWsaConfig().setWsaEnabled(false);
-			while( wsdlSubmit.getStatus() != Status.FINISHED )
-			{
-				wsdlSubmit.waitUntilFinished();
-			}
-			Response response = wsdlSubmit.getResponse();
-			String responseContent = response.getContentAsString();
-			// XmlObject xml = XmlObject.Factory.parse( responseContent );
-			XmlObject xml = XmlUtils.createXmlObject( responseContent );
-			XmlCursor cursor = xml.newCursor();
-			cursor.toFirstContentToken();
-			cursor.toFirstChild();
-			cursor.toNextSibling();
-			cursor.toFirstChild();
+            // startSequenceRequest.getWsaConfig().setWsaEnabled(false);
+            while (wsdlSubmit.getStatus() != Status.FINISHED) {
+                wsdlSubmit.waitUntilFinished();
+            }
+            Response response = wsdlSubmit.getResponse();
+            String responseContent = response.getContentAsString();
+            // XmlObject xml = XmlObject.Factory.parse( responseContent );
+            XmlObject xml = XmlUtils.createXmlObject(responseContent);
+            XmlCursor cursor = xml.newCursor();
+            cursor.toFirstContentToken();
+            cursor.toFirstChild();
+            cursor.toNextSibling();
+            cursor.toFirstChild();
 
-			String sequenceIdentifier = cursor.getTextValue();
-			Logger.getLogger( "wsrm" ).info( "Sequence response Received, sequence ID: " + sequenceIdentifier );
+            String sequenceIdentifier = cursor.getTextValue();
+            Logger.getLogger("wsrm").info("Sequence response Received, sequence ID: " + sequenceIdentifier);
 
-			// WsmcInjection receiveInjection = new WsmcInjection(request);
-			// request.setAfterRequestInjection(receiveInjection);
+            // WsmcInjection receiveInjection = new WsmcInjection(request);
+            // request.setAfterRequestInjection(receiveInjection);
 
-		}
-		catch( SubmitException e1 )
-		{
-			SoapUI.logError( e1 );
-		}
-		catch( XmlException e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+        } catch (SubmitException e1) {
+            SoapUI.logError(e1);
+        } catch (XmlException e) {
+            SoapUI.logError(e);
+        }
+    }
 }

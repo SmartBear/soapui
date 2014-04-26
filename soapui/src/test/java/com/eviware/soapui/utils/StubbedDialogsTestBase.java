@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.utils;
+*/
+package com.eviware.soapui.utils;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.XDialogs;
@@ -26,22 +27,19 @@ import org.junit.Before;
  * Time: 10:10 AM
  * To change this template use File | Settings | File Templates.
  */
-public class StubbedDialogsTestBase
-{
-	protected StubbedDialogs stubbedDialogs;
-	private XDialogs originalDialogs;
+public class StubbedDialogsTestBase {
+    protected StubbedDialogs stubbedDialogs;
+    private XDialogs originalDialogs;
 
-	@Before
-	public void resetDialogs()
-	{
-		originalDialogs = UISupport.getDialogs();
-		stubbedDialogs = new StubbedDialogs();
-		UISupport.setDialogs( stubbedDialogs );
-	}
+    @Before
+    public void resetDialogs() {
+        originalDialogs = UISupport.getDialogs();
+        stubbedDialogs = new StubbedDialogs();
+        UISupport.setDialogs(stubbedDialogs);
+    }
 
-	@After
-	public void restoreDialogs()
-	{
-		UISupport.setDialogs( originalDialogs );
-	}
+    @After
+    public void restoreDialogs() {
+        UISupport.setDialogs(originalDialogs);
+    }
 }

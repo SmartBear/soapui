@@ -18,9 +18,8 @@ package com.eviware.soapui.impl.rest.support;
 
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 
-public interface MediaTypeHandler
-{
-	public boolean canHandle( String contentType );
+public interface MediaTypeHandler {
+    public boolean canHandle(String contentType);
 
-	public String createXmlRepresentation( HttpResponse response );
+    public String createXmlRepresentation(HttpResponse response);
 }

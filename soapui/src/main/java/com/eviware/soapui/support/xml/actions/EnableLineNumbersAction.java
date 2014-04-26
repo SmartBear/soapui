@@ -24,28 +24,22 @@ import org.fife.ui.rtextarea.RTextScrollPane;
 
 import com.eviware.soapui.support.UISupport;
 
-public class EnableLineNumbersAction extends AbstractAction
-{
-	private final RTextScrollPane editorScrollPane;
+public class EnableLineNumbersAction extends AbstractAction {
+    private final RTextScrollPane editorScrollPane;
 
-	public EnableLineNumbersAction( RTextScrollPane editorScrollPane, String title )
-	{
-		super( title );
-		this.editorScrollPane = editorScrollPane;
-		if( UISupport.isMac() )
-		{
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
-		}
-		else
-		{
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt L" ) );
-		}
-	}
+    public EnableLineNumbersAction(RTextScrollPane editorScrollPane, String title) {
+        super(title);
+        this.editorScrollPane = editorScrollPane;
+        if (UISupport.isMac()) {
+            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("ctrl L"));
+        } else {
+            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt L"));
+        }
+    }
 
-	@Override
-	public void actionPerformed( ActionEvent e )
-	{
-		editorScrollPane.setLineNumbersEnabled( !editorScrollPane.getLineNumbersEnabled() );
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        editorScrollPane.setLineNumbersEnabled(!editorScrollPane.getLineNumbersEnabled());
+    }
 
 }

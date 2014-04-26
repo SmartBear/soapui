@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.mock;
+*/
+package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.model.mock.MockRequest;
@@ -22,125 +23,115 @@ import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Enumeration;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
+import static com.eviware.soapui.utils.MockedServlet.mockHttpServletRequest;
+import static com.eviware.soapui.utils.MockedServlet.mockHttpServletResponse;
 import static org.mockito.Mockito.*;
 
 
-public class RestMockDispatcherTest
-{
+public class RestMockDispatcherTest {
 
-	private HttpServletRequest request;
-	private HttpServletResponse response;
-	private RestMockDispatcher restMockDispatcher;
-	private WsdlMockRunContext context;
-	private RestMockService restMockService;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
+    private RestMockDispatcher restMockDispatcher;
+    private WsdlMockRunContext context;
+    private RestMockService restMockService;
 
-	@Before
-	public void setUp()
-	{
-		createRestMockDispatcher();
-	}
+    @Before
+    public void setUp() throws IOException {
+        createRestMockDispatcher();
+    }
 
-	@Test
-	public void afterRequestScriptIsCalled() throws Exception
-	{
-		when( restMockService.getPath()).thenReturn( "/" );
-		when( request.getPathInfo() ).thenReturn( "/" );
-		RestMockResult mockResult = ( RestMockResult )restMockDispatcher.dispatchRequest( request, response );
+    @Test
+    public void afterRequestScriptIsCalled() throws Exception {
+        when(restMockService.getPath()).thenReturn("/");
+        when(request.getPathInfo()).thenReturn("/");
+        RestMockResult mockResult = (RestMockResult) restMockDispatcher.dispatchRequest(request, response);
 
-		verify( restMockService ).runAfterRequestScript( context, mockResult );
-	}
+        verify(restMockService).runAfterRequestScript(context, mockResult);
+    }
 
-	@Test
-	public void onRequestScriptIsCalled() throws Exception
-	{
-		RestMockResult mockResult = ( RestMockResult )restMockDispatcher.dispatchRequest( request, response );
+    @Test
+    public void onRequestScriptIsCalled() throws Exception {
+        restMockDispatcher.dispatchRequest(request, response);
 
-		verify( restMockService ).runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ) );
-	}
+        verify(restMockService).runOnRequestScript(any(WsdlMockRunContext.class), any(MockRequest.class));
+    }
 
-	@Test
-	public void onRequestScriptOverridesRegularDispatching() throws Exception
-	{
-		/*
+    @Test
+    public void onRequestScriptOverridesRegularDispatching() throws Exception {
+        /*
 			When onRequestScript returns a MockResult instance then regular dispatching is ignored.
 			This tests verify when script returns MokResult instance we bypass regular dispatching.
 
 		 */
 
-		RestMockResult  restMockResult = mock(RestMockResult.class );
-		when( restMockService.runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ))).thenReturn( restMockResult );
+        RestMockResult restMockResult = mock(RestMockResult.class);
+        when(restMockService.runOnRequestScript(any(WsdlMockRunContext.class), any(MockRequest.class))).thenReturn(restMockResult);
 
-		restMockDispatcher.dispatchRequest( request, response );
+        restMockDispatcher.dispatchRequest(request, response);
 
-		// we would like to verify that dispatchRequest is never called but it is hard so we verify on this instead
-		verify( restMockService, never() ).findBestMatchedOperation( anyString(), any( HttpMethod.class ) );
-	}
+        verify(restMockService, never()).findBestMatchedOperation(anyString(), any(HttpMethod.class));
+    }
 
-	@Test
-	public void shouldReturnNoResponseFoundWhenThereIsNoMatchingAction() throws Exception
-	{
-		when( restMockService.findBestMatchedOperation( anyString(), any( HttpMethod.class ) ) ).thenReturn( null );
-		when( restMockService.getPath()).thenReturn( "/" );
-		when( request.getPathInfo() ).thenReturn( "/" );
+    @Test
+    public void shouldReturnNoResponseFoundWhenThereIsNoMatchingAction() throws Exception {
+        when(restMockService.findBestMatchedOperation(anyString(), any(HttpMethod.class))).thenReturn(null);
+        when(restMockService.getPath()).thenReturn("/");
+        when(request.getPathInfo()).thenReturn("/");
 
-		restMockDispatcher.dispatchRequest( request, response );
+        restMockDispatcher.dispatchRequest(request, response);
 
-		verify( response ).setStatus( HttpStatus.SC_NOT_FOUND );
-	}
+        verify(response).setStatus(HttpStatus.SC_NOT_FOUND);
+    }
 
 
-	@Test
-	public void shouldResponseWhenServicePathMatches() throws Exception
-	{
-		RestMockAction action = mock(RestMockAction.class);
-		when( restMockService.findBestMatchedOperation( "/api", HttpMethod.DELETE ) ).thenReturn( action );
-		when( restMockService.getPath()).thenReturn( "/sweden" );
-		when( request.getPathInfo() ).thenReturn( "/sweden/api" );
+    @Test
+    public void shouldResponseWhenServicePathMatches() throws Exception {
+        RestMockAction action = mock(RestMockAction.class);
+        when(restMockService.findBestMatchedOperation("/api", HttpMethod.DELETE)).thenReturn(action);
+        when(restMockService.getPath()).thenReturn("/sweden");
+        when(request.getPathInfo()).thenReturn("/sweden/api");
 
-		restMockDispatcher.dispatchRequest( request, response );
+        restMockDispatcher.dispatchRequest(request, response);
 
-		verify( action ).dispatchRequest( any(RestMockRequest.class) );
-	}
+        verify(action).dispatchRequest(any(RestMockRequest.class));
+    }
 
-	@Test
-	public void shouldResponseWhenPathMatches() throws Exception
-	{
-		RestMockAction action = mock(RestMockAction.class);
-		when( restMockService.findBestMatchedOperation( "/api", HttpMethod.DELETE ) ).thenReturn( action );
-		when( restMockService.getPath()).thenReturn( "/" );
-		when( request.getPathInfo() ).thenReturn( "/api" );
+    @Test
+    public void shouldResponseWhenPathMatches() throws Exception {
+        RestMockAction action = mock(RestMockAction.class);
+        when(restMockService.findBestMatchedOperation("/api", HttpMethod.DELETE)).thenReturn(action);
+        when(restMockService.getPath()).thenReturn("/");
+        when(request.getPathInfo()).thenReturn("/api");
 
-		restMockDispatcher.dispatchRequest( request, response );
+        restMockDispatcher.dispatchRequest(request, response);
 
-		verify( action ).dispatchRequest( any(RestMockRequest.class) );
-	}
+        verify(action).dispatchRequest(any(RestMockRequest.class));
+    }
 
-	@Test
-	public void returnsErrorOnrequestScriptException() throws Exception
-	{
-		Exception runTimeException = new IllegalStateException( "wrong state" );
-		when( restMockService.runOnRequestScript( any( WsdlMockRunContext.class ), any( MockRequest.class ))).thenThrow( runTimeException );
+    @Test
+    public void returnsErrorOnrequestScriptException() throws Exception {
+        Exception runTimeException = new IllegalStateException("wrong state");
+        when(restMockService.runOnRequestScript(any(WsdlMockRunContext.class), any(MockRequest.class))).thenThrow(runTimeException);
 
-		restMockDispatcher.dispatchRequest( request, response );
+        restMockDispatcher.dispatchRequest(request, response);
 
-		verify( response ).setStatus( HttpStatus.SC_INTERNAL_SERVER_ERROR );
-	}
+        verify(response).setStatus(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+    }
 
 
-	private void createRestMockDispatcher()
-	{
-		request = mock( HttpServletRequest.class );
-		Enumeration enumeration = mock( Enumeration.class );
-		when( request.getHeaderNames() ).thenReturn( enumeration );
-		when( request.getMethod() ).thenReturn( HttpMethod.DELETE.name() );
+    private void createRestMockDispatcher() throws IOException {
+        request = mockHttpServletRequest();
+        when(request.getMethod()).thenReturn(HttpMethod.DELETE.name());
 
-		response = mock( HttpServletResponse.class );
-		restMockService = mock( RestMockService.class );
-		context = mock( WsdlMockRunContext.class );
+        response = mockHttpServletResponse();
+        restMockService = mock(RestMockService.class);
+        context = mock(WsdlMockRunContext.class);
 
-		restMockDispatcher = new RestMockDispatcher( restMockService, context );
-	}
+        restMockDispatcher = new RestMockDispatcher(restMockService, context);
+    }
 }

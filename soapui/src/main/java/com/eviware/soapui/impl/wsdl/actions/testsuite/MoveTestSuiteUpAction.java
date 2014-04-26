@@ -24,25 +24,23 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 /**
  * Moves the specified WsdlTestCase up one step in the WsdlTestSuites list of
  * WsdlTestCases
- * 
+ *
  * @author ole.matzura
  */
 
-public class MoveTestSuiteUpAction extends AbstractSoapUIAction<WsdlTestSuite>
-{
-	public MoveTestSuiteUpAction()
-	{
-		super( "Move TestSuite Up", "Moves this TestSuite up" );
-	}
+public class MoveTestSuiteUpAction extends AbstractSoapUIAction<WsdlTestSuite> {
+    public MoveTestSuiteUpAction() {
+        super("Move TestSuite Up", "Moves this TestSuite up");
+    }
 
-	public void perform( WsdlTestSuite testSuite, Object param )
-	{
-		WsdlProject project = testSuite.getProject();
-		int ix = project.getIndexOfTestSuite( testSuite );
-		if( ix == -1 || ix == 0 )
-			return;
+    public void perform(WsdlTestSuite testSuite, Object param) {
+        WsdlProject project = testSuite.getProject();
+        int ix = project.getIndexOfTestSuite(testSuite);
+        if (ix == -1 || ix == 0) {
+            return;
+        }
 
-		project.moveTestSuite( ix, -1 );
-		UISupport.select( testSuite );
-	}
+        project.moveTestSuite(ix, -1);
+        UISupport.select(testSuite);
+    }
 }

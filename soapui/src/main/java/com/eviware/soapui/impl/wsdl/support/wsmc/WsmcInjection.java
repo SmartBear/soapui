@@ -20,30 +20,27 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.IAfterRequestInjection;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
-public class WsmcInjection implements IAfterRequestInjection
-{
+public class WsmcInjection implements IAfterRequestInjection {
 
-	private static final String WSMC_ACTION = "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection";
-	private static final String WSMC_NAMESPACE = "http://docs.oasis-open.org/ws-rx/wsmc/200702";
+    private static final String WSMC_ACTION = "http://docs.oasis-open.org/ws-rx/wsmc/200702/MakeConnection";
+    private static final String WSMC_NAMESPACE = "http://docs.oasis-open.org/ws-rx/wsmc/200702";
 
-	private String endpoint;
-	private WsdlOperation operation;
-	private SoapVersion soapVersion;
-	private String uuid;
+    private String endpoint;
+    private WsdlOperation operation;
+    private SoapVersion soapVersion;
+    private String uuid;
 
-	public WsmcInjection( String endpoint, WsdlOperation operation, SoapVersion soapVersion, String uuid )
-	{
-		this.endpoint = endpoint;
-		this.operation = operation;
-		this.soapVersion = soapVersion;
-		this.uuid = uuid;
-	}
+    public WsmcInjection(String endpoint, WsdlOperation operation, SoapVersion soapVersion, String uuid) {
+        this.endpoint = endpoint;
+        this.operation = operation;
+        this.soapVersion = soapVersion;
+        this.uuid = uuid;
+    }
 
-	public String executeAfterRequest()
-	{
+    public String executeAfterRequest() {
 
 		/*
-		 * HttpRequestConfig httpRequestConfig = ( HttpRequestConfig )(
+         * HttpRequestConfig httpRequestConfig = ( HttpRequestConfig )(
 		 * XmlObject.Factory.newInstance() .changeType( HttpRequestConfig.type )
 		 * ); httpRequestConfig.setEndpoint( endpoint );
 		 * 
@@ -101,7 +98,7 @@ public class WsmcInjection implements IAfterRequestInjection
 		 * 
 		 * } catch( SubmitException e1 ) { SoapUI.logError( e1 ); }
 		 */
-		return null;
-	}
+        return null;
+    }
 
 }

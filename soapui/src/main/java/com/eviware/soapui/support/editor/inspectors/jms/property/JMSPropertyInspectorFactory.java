@@ -32,92 +32,77 @@ import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class JMSPropertyInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
-{
-	public static final String INSPECTOR_ID = "JMS Properties";
+public class JMSPropertyInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory {
+    public static final String INSPECTOR_ID = "JMS Properties";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof AbstractHttpRequest<?> )
-		{
-			JMSPropertyInspector inspector = new JMSPropertyInspector(
-					( JMSPropertyInspectorModel )new WsdlRequestJMSPropertiesModel( ( AbstractHttpRequest<?> )modelItem ) );
-			inspector.setEnabled( JMSUtils.checkIfJMS( modelItem ) );
-			return inspector;
-		}
-		return null;
-	}
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof AbstractHttpRequest<?>) {
+            JMSPropertyInspector inspector = new JMSPropertyInspector(
+                    (JMSPropertyInspectorModel) new WsdlRequestJMSPropertiesModel((AbstractHttpRequest<?>) modelItem));
+            inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
+            return inspector;
+        }
+        return null;
+    }
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
-	{
+    public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem) {
 
-		return null;
-	}
+        return null;
+    }
 
-	private class WsdlRequestJMSPropertiesModel extends AbstractJMSPropertyModel<AbstractHttpRequest<?>>
-	{
-		AbstractHttpRequest<?> request;
-		JMSPropertyInspector inspector;
+    private class WsdlRequestJMSPropertiesModel extends AbstractJMSPropertyModel<AbstractHttpRequest<?>> {
+        AbstractHttpRequest<?> request;
+        JMSPropertyInspector inspector;
 
-		public WsdlRequestJMSPropertiesModel( AbstractHttpRequest<?> wsdlRequest )
-		{
-			super( false, wsdlRequest, "jmsProperty" );
-			this.request = wsdlRequest;
-			request.addPropertyChangeListener( this );
-		}
+        public WsdlRequestJMSPropertiesModel(AbstractHttpRequest<?> wsdlRequest) {
+            super(false, wsdlRequest, "jmsProperty");
+            this.request = wsdlRequest;
+            request.addPropertyChangeListener(this);
+        }
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			if( request.getEndpoint() != null && evt.getPropertyName().equals( AbstractHttpRequest.ENDPOINT_PROPERTY ) )
-			{
-				inspector.setEnabled( request.getEndpoint().startsWith( JMSEndpoint.JMS_ENDPIONT_PREFIX ) );
-			}
-			super.propertyChange( evt );
-		}
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
+                inspector.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+            }
+            super.propertyChange(evt);
+        }
 
-		@Override
-		public void release()
-		{
-			super.release();
-			request.removePropertyChangeListener( this );
-		}
+        @Override
+        public void release() {
+            super.release();
+            request.removePropertyChangeListener(this);
+        }
 
-		public StringToStringMap getJMSProperties()
-		{
-			List<JMSPropertyConfig> propertyList = request.getJMSPropertiesConfig().getJMSProperties();
-			StringToStringMap stringToStringMap = new StringToStringMap( propertyList.size() );
-			for( JMSPropertyConfig jmsProperty : propertyList )
-			{
-				stringToStringMap.put( jmsProperty.getName(), jmsProperty.getValue() );
-			}
-			return stringToStringMap;
-		}
+        public StringToStringMap getJMSProperties() {
+            List<JMSPropertyConfig> propertyList = request.getJMSPropertiesConfig().getJMSProperties();
+            StringToStringMap stringToStringMap = new StringToStringMap(propertyList.size());
+            for (JMSPropertyConfig jmsProperty : propertyList) {
+                stringToStringMap.put(jmsProperty.getName(), jmsProperty.getValue());
+            }
+            return stringToStringMap;
+        }
 
-		public void setJMSProperties( StringToStringMap stringToStringMap )
-		{
-			String[] keyList = stringToStringMap.getKeys();
-			List<JMSPropertyConfig> propertyList = new ArrayList<JMSPropertyConfig>();
-			for( String key : keyList )
-			{
-				JMSPropertyConfig jmsPropertyConfig = JMSPropertyConfig.Factory.newInstance();
-				jmsPropertyConfig.setName( key );
-				jmsPropertyConfig.setValue( stringToStringMap.get( key ) );
-				propertyList.add( jmsPropertyConfig );
-			}
-			List<JMSPropertyConfig> propertyList2 = request.getJMSPropertiesConfig().getJMSProperties();
-			propertyList2.clear();
-			propertyList2.addAll( propertyList );
-		}
+        public void setJMSProperties(StringToStringMap stringToStringMap) {
+            String[] keyList = stringToStringMap.getKeys();
+            List<JMSPropertyConfig> propertyList = new ArrayList<JMSPropertyConfig>();
+            for (String key : keyList) {
+                JMSPropertyConfig jmsPropertyConfig = JMSPropertyConfig.Factory.newInstance();
+                jmsPropertyConfig.setName(key);
+                jmsPropertyConfig.setValue(stringToStringMap.get(key));
+                propertyList.add(jmsPropertyConfig);
+            }
+            List<JMSPropertyConfig> propertyList2 = request.getJMSPropertiesConfig().getJMSProperties();
+            propertyList2.clear();
+            propertyList2.addAll(propertyList);
+        }
 
-		public void setInspector( JMSPropertyInspector inspector )
-		{
-			this.inspector = inspector;
-		}
-	}
+        public void setInspector(JMSPropertyInspector inspector) {
+            this.inspector = inspector;
+        }
+    }
 
 }

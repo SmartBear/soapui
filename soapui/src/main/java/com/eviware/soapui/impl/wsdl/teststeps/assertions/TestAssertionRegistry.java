@@ -61,331 +61,269 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Registry for WsdlAssertions
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TestAssertionRegistry
-{
-	private static TestAssertionRegistry instance;
-	private Map<String, TestAssertionFactory> availableAssertions = new HashMap<String, TestAssertionFactory>();
-	private StringToStringMap assertionLabels = new StringToStringMap();
-	private final static Logger log = Logger.getLogger( TestAssertionRegistry.class );
+public class TestAssertionRegistry {
+    private static TestAssertionRegistry instance;
+    private Map<String, TestAssertionFactory> availableAssertions = new HashMap<String, TestAssertionFactory>();
+    private StringToStringMap assertionLabels = new StringToStringMap();
+    private final static Logger log = Logger.getLogger(TestAssertionRegistry.class);
 
-	private TestAssertionRegistry()
-	{
-		addAssertion( new SoapResponseAssertion.Factory() );
-		addAssertion( new SoapRequestAssertion.Factory() );
-		addAssertion( new SchemaComplianceAssertion.Factory() );
-		addAssertion( new SimpleContainsAssertion.Factory() );
-		addAssertion( new SimpleNotContainsAssertion.Factory() );
-		addAssertion( new XPathContainsAssertion.Factory() );
-		addAssertion( new NotSoapFaultAssertion.Factory() );
-		addAssertion( new SoapFaultAssertion.Factory() );
-		addAssertion( new ResponseSLAAssertion.Factory() );
-		addAssertion( new GroovyScriptAssertion.Factory() );
-		addAssertion( new XQueryContainsAssertion.Factory() );
-		addAssertion( new WSSStatusAssertion.Factory() );
-		addAssertion( new WSAResponseAssertion.Factory() );
-		addAssertion( new WSARequestAssertion.Factory() );
-		addAssertion( new JMSStatusAssertion.Factory() );
-		addAssertion( new JMSTimeoutAssertion.Factory() );
-		addAssertion( new JdbcStatusAssertion.Factory() );
-		addAssertion( new JdbcTimeoutAssertion.Factory() );
-		addAssertion( new HttpDownloadAllResourcesAssertion.Factory() );
+    private TestAssertionRegistry() {
+        addAssertion(new SoapResponseAssertion.Factory());
+        addAssertion(new SoapRequestAssertion.Factory());
+        addAssertion(new SchemaComplianceAssertion.Factory());
+        addAssertion(new SimpleContainsAssertion.Factory());
+        addAssertion(new SimpleNotContainsAssertion.Factory());
+        addAssertion(new XPathContainsAssertion.Factory());
+        addAssertion(new NotSoapFaultAssertion.Factory());
+        addAssertion(new SoapFaultAssertion.Factory());
+        addAssertion(new ResponseSLAAssertion.Factory());
+        addAssertion(new GroovyScriptAssertion.Factory());
+        addAssertion(new XQueryContainsAssertion.Factory());
+        addAssertion(new WSSStatusAssertion.Factory());
+        addAssertion(new WSAResponseAssertion.Factory());
+        addAssertion(new WSARequestAssertion.Factory());
+        addAssertion(new JMSStatusAssertion.Factory());
+        addAssertion(new JMSTimeoutAssertion.Factory());
+        addAssertion(new JdbcStatusAssertion.Factory());
+        addAssertion(new JdbcTimeoutAssertion.Factory());
+        addAssertion(new HttpDownloadAllResourcesAssertion.Factory());
 
-		// security
-		addAssertion( new ValidHttpStatusCodesAssertion.Factory() );
-		addAssertion( new InvalidHttpStatusCodesAssertion.Factory() );
-		addAssertion( new SensitiveInfoExposureAssertion.Factory() );
-		addAssertion( new CrossSiteScriptAssertion.Factory() );
-		
-		// pro placeh0lders
-		addAssertion( new ProAssertionPlaceHolderFactory("MessageContentAssertion", "Message Content Assertion"));
+        // security
+        addAssertion(new ValidHttpStatusCodesAssertion.Factory());
+        addAssertion(new InvalidHttpStatusCodesAssertion.Factory());
+        addAssertion(new SensitiveInfoExposureAssertion.Factory());
+        addAssertion(new CrossSiteScriptAssertion.Factory());
 
-		for( TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories( TestAssertionFactory.class ) )
-		{
-			addAssertion( factory );
-		}
-	}
+        // pro placeh0lders
+        addAssertion(new ProAssertionPlaceHolderFactory("MessageContentAssertion", "Message Content Assertion"));
 
-	public void addAssertion( TestAssertionFactory factory )
-	{
-		availableAssertions.put( factory.getAssertionId(), factory );
-		assertionLabels.put( factory.getAssertionLabel(), factory.getAssertionId() );
-	}
+        for (TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories(TestAssertionFactory.class)) {
+            addAssertion(factory);
+        }
+    }
 
-	public static synchronized TestAssertionRegistry getInstance()
-	{
-		if( instance == null )
-			instance = new TestAssertionRegistry();
+    public void addAssertion(TestAssertionFactory factory) {
+        availableAssertions.put(factory.getAssertionId(), factory);
+        assertionLabels.put(factory.getAssertionLabel(), factory.getAssertionId());
+    }
 
-		return instance;
-	}
+    public static synchronized TestAssertionRegistry getInstance() {
+        if (instance == null) {
+            instance = new TestAssertionRegistry();
+        }
 
-	public WsdlMessageAssertion buildAssertion( TestAssertionConfig config, Assertable assertable )
-	{
-		try
-		{
-			String type = config.getType();
-			TestAssertionFactory factory = availableAssertions.get( type );
-			if( factory == null )
-			{
-				log.error( "Missing assertion for type [" + type + "]" );
-			}
-			else
-			{
-				return ( WsdlMessageAssertion )factory.buildAssertion( config, assertable );
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
+        return instance;
+    }
 
-		return null;
-	}
+    public WsdlMessageAssertion buildAssertion(TestAssertionConfig config, Assertable assertable) {
+        try {
+            String type = config.getType();
+            TestAssertionFactory factory = availableAssertions.get(type);
+            if (factory == null) {
+                log.error("Missing assertion for type [" + type + "]");
+            } else {
+                return (WsdlMessageAssertion) factory.buildAssertion(config, assertable);
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
 
-	public Class<? extends WsdlMessageAssertion> getAssertionClassType( String assertionType )
-	{
-		try
-		{
-			TestAssertionFactory factory = availableAssertions.get( assertionType );
-			if( factory == null )
-			{
-				log.error( "Missing assertion for type [" + assertionType + "]" );
-			}
-			else
-			{
-				return factory.getAssertionClassType();
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public Class<? extends WsdlMessageAssertion> getAssertionClassType(String assertionType) {
+        try {
+            TestAssertionFactory factory = availableAssertions.get(assertionType);
+            if (factory == null) {
+                log.error("Missing assertion for type [" + assertionType + "]");
+            } else {
+                return factory.getAssertionClassType();
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
 
-	public Class<? extends WsdlMessageAssertion> getAssertionClassType( TestAssertionConfig config )
-	{
-		try
-		{
-			String type = config.getType();
-			TestAssertionFactory factory = availableAssertions.get( type );
-			if( factory == null )
-			{
-				log.error( "Missing assertion for type [" + type + "]" );
-			}
-			else
-			{
-				return factory.getAssertionClassType();
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
+        return null;
+    }
 
-		return null;
-	}
+    public Class<? extends WsdlMessageAssertion> getAssertionClassType(TestAssertionConfig config) {
+        try {
+            String type = config.getType();
+            TestAssertionFactory factory = availableAssertions.get(type);
+            if (factory == null) {
+                log.error("Missing assertion for type [" + type + "]");
+            } else {
+                return factory.getAssertionClassType();
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
 
-	public boolean canBuildAssertion( TestAssertionConfig config )
-	{
-		return availableAssertions.containsKey( config.getType() );
-	}
+        return null;
+    }
 
-	public String getAssertionTypeForName( String name )
-	{
-		return assertionLabels.get( name );
-	}
+    public boolean canBuildAssertion(TestAssertionConfig config) {
+        return availableAssertions.containsKey(config.getType());
+    }
 
-	public enum AssertableType
-	{
-		REQUEST, RESPONSE, BOTH
-	}
+    public String getAssertionTypeForName(String name) {
+        return assertionLabels.get(name);
+    }
 
-	public AssertionListEntry getAssertionListEntry( String type )
-	{
-		TestAssertionFactory factory = availableAssertions.get( type );
-		if( factory != null )
-		{
-			return factory.getAssertionListEntry();
-		}
-		else
-		{
-			return null;
-		}
-	}
+    public enum AssertableType {
+        REQUEST, RESPONSE, BOTH
+    }
 
-	public boolean canAssert( String type, Assertable assertable )
-	{
-		TestAssertionFactory factory = availableAssertions.get( type );
-		if( factory != null )
-		{
-			return factory.canAssert( assertable );
-		}
-		else
-		{
-			return false;
-		}
-	}
+    public AssertionListEntry getAssertionListEntry(String type) {
+        TestAssertionFactory factory = availableAssertions.get(type);
+        if (factory != null) {
+            return factory.getAssertionListEntry();
+        } else {
+            return null;
+        }
+    }
 
-	public boolean canAssert( String type, TestModelItem modelItem, String property )
-	{
-		TestAssertionFactory factory = availableAssertions.get( type );
-		if( factory != null )
-		{
-			return factory.canAssert( modelItem, property );
-		}
-		else
-		{
-			return false;
-		}
-	}
+    public boolean canAssert(String type, Assertable assertable) {
+        TestAssertionFactory factory = availableAssertions.get(type);
+        if (factory != null) {
+            return factory.canAssert(assertable);
+        } else {
+            return false;
+        }
+    }
 
-	/**
-	 * 
-	 * @param assertable
-	 * @param categoryAssertionsMap
-	 * @return assertion categories mapped with assertions in exact category if @param
-	 *         assertable is not null only assertions for specific @param
-	 *         assertable will be included if @param assertable is null all
-	 *         assertions are included
-	 */
-	public LinkedHashMap<String, SortedSet<AssertionListEntry>> addCategoriesAssertionsMap( Assertable assertable,
-			LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap )
-	{
-		for( String category : AssertionCategoryMapping.getAssertionCategories() )
-		{
-			SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
-			categoryAssertionsMap.put( category, assertionCategorySet );
-		}
+    public boolean canAssert(String type, TestModelItem modelItem, String property) {
+        TestAssertionFactory factory = availableAssertions.get(type);
+        if (factory != null) {
+            return factory.canAssert(modelItem, property);
+        } else {
+            return false;
+        }
+    }
 
-		for( TestAssertionFactory assertion : availableAssertions.values() )
-		{
-			SortedSet<AssertionListEntry> set;
-			if( assertable == null || assertion.canAssert( assertable ) )
-			{
-				set = categoryAssertionsMap.get( assertion.getCategory() );
-				if( set != null )
-				{
-					AssertionListEntry assertionListEntry = assertion.getAssertionListEntry();
-					//					if( assertable == null && disableNonApplicable )
-					set.add( assertionListEntry );
-					categoryAssertionsMap.put( assertion.getCategory(), set );
-				}
+    /**
+     * @param assertable
+     * @param categoryAssertionsMap
+     * @return assertion categories mapped with assertions in exact category if @param
+     *         assertable is not null only assertions for specific @param
+     *         assertable will be included if @param assertable is null all
+     *         assertions are included
+     */
+    public LinkedHashMap<String, SortedSet<AssertionListEntry>> addCategoriesAssertionsMap(Assertable assertable,
+                                                                                           LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap) {
+        for (String category : AssertionCategoryMapping.getAssertionCategories()) {
+            SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
+            categoryAssertionsMap.put(category, assertionCategorySet);
+        }
 
-			}
-		}
-		for( String category : AssertionCategoryMapping.getAssertionCategories() )
-		{
-			if( categoryAssertionsMap.get( category ).isEmpty() )
-			{
-				categoryAssertionsMap.remove( category );
-			}
-		}
+        for (TestAssertionFactory assertion : availableAssertions.values()) {
+            SortedSet<AssertionListEntry> set;
+            if (assertable == null || assertion.canAssert(assertable)) {
+                set = categoryAssertionsMap.get(assertion.getCategory());
+                if (set != null) {
+                    AssertionListEntry assertionListEntry = assertion.getAssertionListEntry();
+                    //					if( assertable == null && disableNonApplicable )
+                    set.add(assertionListEntry);
+                    categoryAssertionsMap.put(assertion.getCategory(), set);
+                }
 
-		return categoryAssertionsMap;
-	}
+            }
+        }
+        for (String category : AssertionCategoryMapping.getAssertionCategories()) {
+            if (categoryAssertionsMap.get(category).isEmpty()) {
+                categoryAssertionsMap.remove(category);
+            }
+        }
 
-	/**
-	 * 
-	 * adds all assertions into map, to be disabled later when non applicable
-	 */
-	public LinkedHashMap<String, SortedSet<AssertionListEntry>> addAllCategoriesMap(
-			LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap )
-	{
-		for( String category : AssertionCategoryMapping.getAssertionCategories() )
-		{
-			SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
-			categoryAssertionsMap.put( category, assertionCategorySet );
-		}
+        return categoryAssertionsMap;
+    }
 
-		for( TestAssertionFactory assertion : availableAssertions.values() )
-		{
-			SortedSet<AssertionListEntry> set;
-			set = categoryAssertionsMap.get( assertion.getCategory() );
-			if( set != null )
-			{
-				AssertionListEntry assertionListEntry = assertion.getAssertionListEntry();
-				set.add( assertionListEntry );
-				categoryAssertionsMap.put( assertion.getCategory(), set );
-			}
+    /**
+     * adds all assertions into map, to be disabled later when non applicable
+     */
+    public LinkedHashMap<String, SortedSet<AssertionListEntry>> addAllCategoriesMap(
+            LinkedHashMap<String, SortedSet<AssertionListEntry>> categoryAssertionsMap) {
+        for (String category : AssertionCategoryMapping.getAssertionCategories()) {
+            SortedSet<AssertionListEntry> assertionCategorySet = new TreeSet<AssertionListEntry>();
+            categoryAssertionsMap.put(category, assertionCategorySet);
+        }
 
-		}
-		for( String category : AssertionCategoryMapping.getAssertionCategories() )
-		{
-			if( categoryAssertionsMap.get( category ).isEmpty() )
-			{
-				categoryAssertionsMap.remove( category );
-			}
-		}
+        for (TestAssertionFactory assertion : availableAssertions.values()) {
+            SortedSet<AssertionListEntry> set;
+            set = categoryAssertionsMap.get(assertion.getCategory());
+            if (set != null) {
+                AssertionListEntry assertionListEntry = assertion.getAssertionListEntry();
+                set.add(assertionListEntry);
+                categoryAssertionsMap.put(assertion.getCategory(), set);
+            }
 
-		return categoryAssertionsMap;
-	}
+        }
+        for (String category : AssertionCategoryMapping.getAssertionCategories()) {
+            if (categoryAssertionsMap.get(category).isEmpty()) {
+                categoryAssertionsMap.remove(category);
+            }
+        }
 
-	public Map<String, TestAssertionFactory> getAvailableAssertions()
-	{
-		return availableAssertions;
-	}
+        return categoryAssertionsMap;
+    }
 
-	public String[] getAvailableAssertionNames( Assertable assertable )
-	{
-		List<String> result = new ArrayList<String>();
+    public Map<String, TestAssertionFactory> getAvailableAssertions() {
+        return availableAssertions;
+    }
 
-		for( TestAssertionFactory assertion : availableAssertions.values() )
-		{
-			if( assertion.canAssert( assertable ) )
-				result.add( assertion.getAssertionLabel() );
-		}
+    public String[] getAvailableAssertionNames(Assertable assertable) {
+        List<String> result = new ArrayList<String>();
 
-		return result.toArray( new String[result.size()] );
-	}
+        for (TestAssertionFactory assertion : availableAssertions.values()) {
+            if (assertion.canAssert(assertable)) {
+                result.add(assertion.getAssertionLabel());
+            }
+        }
 
-	public String getAssertionNameForType( String type )
-	{
-		for( String assertion : assertionLabels.keySet() )
-		{
-			if( assertionLabels.get( assertion ).equals( type ) )
-				return assertion;
-		}
+        return result.toArray(new String[result.size()]);
+    }
 
-		return null;
-	}
+    public String getAssertionNameForType(String type) {
+        for (String assertion : assertionLabels.keySet()) {
+            if (assertionLabels.get(assertion).equals(type)) {
+                return assertion;
+            }
+        }
 
-	public boolean canAddMultipleAssertions( String name, Assertable assertable )
-	{
-		for( int c = 0; c < assertable.getAssertionCount(); c++ )
-		{
-			TestAssertion assertion = assertable.getAssertionAt( c );
-			if( assertion.isAllowMultiple() )
-				continue;
+        return null;
+    }
 
-			if( assertion.getClass().equals(
-					availableAssertions.get( getAssertionTypeForName( name ) ).getAssertionClassType() ) )
-			{
-				return false;
-			}
-		}
+    public boolean canAddMultipleAssertions(String name, Assertable assertable) {
+        for (int c = 0; c < assertable.getAssertionCount(); c++) {
+            TestAssertion assertion = assertable.getAssertionAt(c);
+            if (assertion.isAllowMultiple()) {
+                continue;
+            }
 
-		return true;
-	}
+            if (assertion.getClass().equals(
+                    availableAssertions.get(getAssertionTypeForName(name)).getAssertionClassType())) {
+                return false;
+            }
+        }
 
-	public boolean canAddAssertion( WsdlMessageAssertion assertion, Assertable assertable )
-	{
-		if( assertion.isAllowMultiple() )
-			return true;
+        return true;
+    }
 
-		for( int c = 0; c < assertable.getAssertionCount(); c++ )
-		{
-			if( assertion.getClass().equals( assertable.getAssertionAt( c ).getClass() ) )
-			{
-				return false;
-			}
-		}
+    public boolean canAddAssertion(WsdlMessageAssertion assertion, Assertable assertable) {
+        if (assertion.isAllowMultiple()) {
+            return true;
+        }
 
-		return true;
-	}
+        for (int c = 0; c < assertable.getAssertionCount(); c++) {
+            if (assertion.getClass().equals(assertable.getAssertionAt(c).getClass())) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

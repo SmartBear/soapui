@@ -12,27 +12,24 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.model.security;
+*/
+package com.eviware.soapui.model.security;
 
 /**
  * Register when parameter has been added or removed to holder.
- * 
+ *
  * @author robert
- * 
  */
-public interface SecurityScanParameterHolderListener
-{
+public interface SecurityScanParameterHolderListener {
 
-	/**
-	 * @param parameter
-	 *           parameter that has been added
-	 */
-	void parameterAdded( SecurityCheckedParameter parameter );
+    /**
+     * @param parameter parameter that has been added
+     */
+    void parameterAdded(SecurityCheckedParameter parameter);
 
-	/**
-	 * @param parameter
-	 *           parameter that has been removed
-	 */
-	void parameterRemoved( SecurityCheckedParameter parameter );
+    /**
+     * @param parameter parameter that has been removed
+     */
+    void parameterRemoved(SecurityCheckedParameter parameter);
 
 }

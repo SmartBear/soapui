@@ -18,36 +18,35 @@ package com.eviware.soapui.model.settings;
 
 /**
  * Base interface for settings available in the soapui model
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface Settings
-{
-	public String getString( String id, String defaultValue );
+public interface Settings {
+    public String getString(String id, String defaultValue);
 
-	public void setString( String id, String value );
+    public void setString(String id, String value);
 
-	/**
-	 * Defaults to false.
-	 */
-	public boolean getBoolean( String id );
+    /**
+     * Defaults to false.
+     */
+    public boolean getBoolean(String id);
 
-	public boolean getBoolean( String id, boolean defaultValue );
+    public boolean getBoolean(String id, boolean defaultValue);
 
-	public void setBoolean( String id, boolean value );
+    public void setBoolean(String id, boolean value);
 
-	public void addSettingsListener( SettingsListener listener );
+    public void addSettingsListener(SettingsListener listener);
 
-	public void removeSettingsListener( SettingsListener listener );
+    public void removeSettingsListener(SettingsListener listener);
 
-	public void clearSetting( String id );
+    public void clearSetting(String id);
 
-	public long getLong( String id, long defaultValue );
+    public long getLong(String id, long defaultValue);
 
-	public boolean isSet( String id );
+    public boolean isSet(String id);
 
-	public void setLong( String id, long value );
+    public void setLong(String id, long value);
 
-	public void reloadSettings();
+    public void reloadSettings();
 }

@@ -21,33 +21,28 @@ import java.beans.PropertyChangeListener;
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-public class RestRequestMethodModel extends DefaultComboBoxModel implements PropertyChangeListener
-{
-	private RestRequestInterface request;
+public class RestRequestMethodModel extends DefaultComboBoxModel implements PropertyChangeListener {
+    private RestRequestInterface request;
 
-	public RestRequestMethodModel( RestRequestInterface request )
-	{
-		super( RestRequestInterface.HttpMethod.values() );
-		this.request = request;
-		request.addPropertyChangeListener( this );
-	}
+    public RestRequestMethodModel(RestRequestInterface request) {
+        super(RestRequestInterface.HttpMethod.values());
+        this.request = request;
+        request.addPropertyChangeListener(this);
+    }
 
-	@Override
-	public void setSelectedItem( Object anItem )
-	{
-		super.setSelectedItem( anItem );
-		request.setMethod( ( RestRequestInterface.HttpMethod )anItem );
-	}
+    @Override
+    public void setSelectedItem(Object anItem) {
+        super.setSelectedItem(anItem);
+        request.setMethod((RestRequestInterface.HttpMethod) anItem);
+    }
 
-	@Override
-	public Object getSelectedItem()
-	{
-		return request.getMethod();
-	}
+    @Override
+    public Object getSelectedItem() {
+        return request.getMethod();
+    }
 
-	@Override
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		fireContentsChanged( this, -1, -1 );
-	}
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        fireContentsChanged(this, -1, -1);
+    }
 }

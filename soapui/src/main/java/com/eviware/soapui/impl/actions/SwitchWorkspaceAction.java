@@ -27,79 +27,64 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Action to swtich the current workspace
- * 
+ *
  * @author ole.matzura
  */
 
-public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl>
-{
-	public static final String SOAPUI_ACTION_ID = "SwitchWorkspaceAction";
-	public static final MessageSupport messages = MessageSupport.getMessages( SwitchWorkspaceAction.class );
+public class SwitchWorkspaceAction extends AbstractSoapUIAction<WorkspaceImpl> {
+    public static final String SOAPUI_ACTION_ID = "SwitchWorkspaceAction";
+    public static final MessageSupport messages = MessageSupport.getMessages(SwitchWorkspaceAction.class);
 
-	public SwitchWorkspaceAction()
-	{
-		super( messages.get( "SwitchWorkspaceAction.Title" ), messages.get( "SwitchWorkspaceAction.Description" ) );
-	}
+    public SwitchWorkspaceAction() {
+        super(messages.get("SwitchWorkspaceAction.Title"), messages.get("SwitchWorkspaceAction.Description"));
+    }
 
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		if( SoapUI.getTestMonitor().hasRunningTests() )
-		{
-			UISupport.showErrorMessage( messages.get( "SwitchWorkspaceAction.WhileTestsAreRunningError" ) );
-			return;
-		}
+    public void perform(WorkspaceImpl workspace, Object param) {
+        if (SoapUI.getTestMonitor().hasRunningTests()) {
+            UISupport.showErrorMessage(messages.get("SwitchWorkspaceAction.WhileTestsAreRunningError"));
+            return;
+        }
 
-		File newPath = null;
+        File newPath = null;
 
-		if( param != null )
-		{
-			newPath = new File( param.toString() );
-		}
-		else
-		{
-			newPath = UISupport.getFileDialogs().open( this, messages.get( "SwitchWorkspaceAction.FileOpenTitle" ),
-					".xml", "SoapUI Workspace (*.xml)", workspace.getPath() );
-		}
+        if (param != null) {
+            newPath = new File(param.toString());
+        } else {
+            newPath = UISupport.getFileDialogs().open(this, messages.get("SwitchWorkspaceAction.FileOpenTitle"),
+                    ".xml", "SoapUI Workspace (*.xml)", workspace.getPath());
+        }
 
-		if( newPath != null )
-		{
-			if( SoapUI.getDesktop().closeAll() )
-			{
-				boolean save = true;
+        if (newPath != null) {
+            if (SoapUI.getDesktop().closeAll()) {
+                boolean save = true;
 
-				if( !newPath.exists() )
-				{
-					if( !UISupport.confirm( messages.get( "SwitchWorkspaceAction.Confirm.Label", newPath.getName() ),
-							messages.get( "SwitchWorkspaceAction.Confirm.Title" ) ) )
-					{
-						return;
-					}
+                if (!newPath.exists()) {
+                    if (!UISupport.confirm(messages.get("SwitchWorkspaceAction.Confirm.Label", newPath.getName()),
+                            messages.get("SwitchWorkspaceAction.Confirm.Title"))) {
+                        return;
+                    }
 
-					save = false;
-				}
-				else if( workspace.getOpenProjectList().size() > 0 )
-				{
-					Boolean val = UISupport.confirmOrCancel( messages.get( "SwitchWorkspaceAction.SaveOpenProjects.Label" ),
-							messages.get( "SwitchWorkspaceAction.SaveOpenProjects.Title" ) );
-					if( val == null )
-						return;
+                    save = false;
+                } else if (workspace.getOpenProjectList().size() > 0) {
+                    Boolean val = UISupport.confirmOrCancel(messages.get("SwitchWorkspaceAction.SaveOpenProjects.Label"),
+                            messages.get("SwitchWorkspaceAction.SaveOpenProjects.Title"));
+                    if (val == null) {
+                        return;
+                    }
 
-					save = val.booleanValue();
-				}
+                    save = val.booleanValue();
+                }
 
-				workspace.save( !save );
+                workspace.save(!save);
 
-				try
-				{
-					workspace.switchWorkspace( newPath );
-					SoapUI.getSettings().setString( SoapUI.CURRENT_SOAPUI_WORKSPACE, newPath.getAbsolutePath() );
-					UISupport.select( workspace );
-				}
-				catch( SoapUIException e )
-				{
-					UISupport.showErrorMessage( e );
-				}
-			}
-		}
-	}
+                try {
+                    workspace.switchWorkspace(newPath);
+                    SoapUI.getSettings().setString(SoapUI.CURRENT_SOAPUI_WORKSPACE, newPath.getAbsolutePath());
+                    UISupport.select(workspace);
+                } catch (SoapUIException e) {
+                    UISupport.showErrorMessage(e);
+                }
+            }
+        }
+    }
 }

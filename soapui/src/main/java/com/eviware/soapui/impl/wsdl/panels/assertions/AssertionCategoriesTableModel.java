@@ -19,49 +19,37 @@ import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 
-public class AssertionCategoriesTableModel extends DefaultTableModel
-{
-	Set<String> listEntriesSet;
+public class AssertionCategoriesTableModel extends DefaultTableModel {
+    Set<String> listEntriesSet;
 
-	public AssertionCategoriesTableModel()
-	{
-	}
+    public AssertionCategoriesTableModel() {
+    }
 
-	public void setLisetEntriesSet( Set<String> keySet )
-	{
-		listEntriesSet = keySet;
-	}
+    public void setLisetEntriesSet(Set<String> keySet) {
+        listEntriesSet = keySet;
+    }
 
-	@Override
-	public int getColumnCount()
-	{
-		return 1;
-	}
+    @Override
+    public int getColumnCount() {
+        return 1;
+    }
 
-	@Override
-	public int getRowCount()
-	{
-		if( listEntriesSet != null )
-		{
-			return listEntriesSet.size();
-		}
-		else
-		{
-			return 1;
-		}
-	}
+    @Override
+    public int getRowCount() {
+        if (listEntriesSet != null) {
+            return listEntriesSet.size();
+        } else {
+            return 1;
+        }
+    }
 
-	@Override
-	public Object getValueAt( int row, int column )
-	{
-		if( listEntriesSet != null )
-		{
-			return listEntriesSet.toArray()[row];
-		}
-		else
-		{
-			return null;
-		}
-	}
+    @Override
+    public Object getValueAt(int row, int column) {
+        if (listEntriesSet != null) {
+            return listEntriesSet.toArray()[row];
+        } else {
+            return null;
+        }
+    }
 
 }

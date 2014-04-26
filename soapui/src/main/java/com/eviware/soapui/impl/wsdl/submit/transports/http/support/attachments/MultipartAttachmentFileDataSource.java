@@ -30,49 +30,40 @@ import javax.mail.internet.MimeMultipart;
 
 import com.eviware.soapui.SoapUI;
 
-public class MultipartAttachmentFileDataSource implements DataSource
-{
-	private final MimeMultipart multipart;
+public class MultipartAttachmentFileDataSource implements DataSource {
+    private final MimeMultipart multipart;
 
-	public MultipartAttachmentFileDataSource( MimeMultipart multipart )
-	{
-		this.multipart = multipart;
-	}
+    public MultipartAttachmentFileDataSource(MimeMultipart multipart) {
+        this.multipart = multipart;
+    }
 
-	public String getContentType()
-	{
-		return multipart.getContentType();
-	}
+    public String getContentType() {
+        return multipart.getContentType();
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		try
-		{
-			File file = File.createTempFile( "largeAttachment", ".tmp" );
-			file.deleteOnExit();
+    public InputStream getInputStream() throws IOException {
+        try {
+            File file = File.createTempFile("largeAttachment", ".tmp");
+            file.deleteOnExit();
 
-			BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( file ) );
-			multipart.writeTo( out );
+            BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+            multipart.writeTo(out);
 
-			out.flush();
-			out.close();
+            out.flush();
+            out.close();
 
-			return new BufferedInputStream( new FileInputStream( file ) );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+            return new BufferedInputStream(new FileInputStream(file));
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            return null;
+        }
+    }
 
-	public String getName()
-	{
-		return multipart.toString();
-	}
+    public String getName() {
+        return multipart.toString();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

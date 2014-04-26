@@ -34,186 +34,167 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
 
-public abstract class SimpleDialog extends JDialog
-{
-	protected JButtonBar buttons = null;
-	private final String title;
-	private final String description;
-	private final String helpUrl;
-	private final boolean okAndCancel;
-	private boolean initialized = false;
+public abstract class SimpleDialog extends JDialog {
+    protected JButtonBar buttons = null;
+    private final String title;
+    private final String description;
+    private final String helpUrl;
+    private final boolean okAndCancel;
+    private boolean initialized = false;
 
-	public SimpleDialog( String title, String description, String helpUrl, boolean okAndCancel )
-	{
-		super( UISupport.getMainFrame(), title, true );
-		this.title = title;
-		this.description = description;
-		this.helpUrl = helpUrl;
-		this.okAndCancel = okAndCancel;
-	}
+    public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel) {
+        super(UISupport.getMainFrame(), title, true);
+        this.title = title;
+        this.description = description;
+        this.helpUrl = helpUrl;
+        this.okAndCancel = okAndCancel;
+    }
 
-	private synchronized void init()
-	{
-		if( initialized )
-			return;
+    private synchronized void init() {
+        if (initialized) {
+            return;
+        }
 
-		buttons = UISupport.initDialogActions( buildActions( helpUrl, okAndCancel ), this );
-		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
+        buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
+        buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		getContentPane().add(
-				UISupport.buildDescription( title, description, UISupport.createImageIcon( UISupport.TOOL_ICON_PATH ) ),
-				BorderLayout.NORTH );
+        getContentPane().add(
+                UISupport.buildDescription(title, description, UISupport.createImageIcon(UISupport.TOOL_ICON_PATH)),
+                BorderLayout.NORTH);
 
-		getContentPane().add( buildContent(), BorderLayout.CENTER );
+        getContentPane().add(buildContent(), BorderLayout.CENTER);
 
-		buttons
-				.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder(
-						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.GRAY ),
-						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ), BorderFactory.createEmptyBorder( 3, 5,
-						3, 5 ) ) );
+        buttons
+                .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.WHITE)), BorderFactory.createEmptyBorder(3, 5,
+                        3, 5)));
 
-		getContentPane().add( buttons, BorderLayout.SOUTH );
-		modifyButtons();
+        getContentPane().add(buttons, BorderLayout.SOUTH);
+        modifyButtons();
 
-		pack();
+        pack();
 
-		initialized = true;
-	}
+        initialized = true;
+    }
 
-	/*
-	 * overide this to change buttons at bottom of dialog. I did not make it
-	 * abstrac because it would require refactoring when SimpleDialog is used.
-	 * Robert.
-	 */
-	protected void modifyButtons()
-	{
-	};
+    /*
+     * overide this to change buttons at bottom of dialog. I did not make it
+     * abstrac because it would require refactoring when SimpleDialog is used.
+     * Robert.
+     */
+    protected void modifyButtons() {
+    }
 
-	public SimpleDialog( String title, String description, String helpUrl )
-	{
-		this( title, description, helpUrl, true );
-	}
+    ;
 
-	protected abstract Component buildContent();
+    public SimpleDialog(String title, String description, String helpUrl) {
+        this(title, description, helpUrl, true);
+    }
 
-	public ActionList buildActions( String url, boolean okAndCancel )
-	{
-		DefaultActionList actions = new DefaultActionList( "Actions" );
-		if( url != null )
-			actions.addAction( new HelpAction( url ) );
+    protected abstract Component buildContent();
 
-		OKAction okAction = new OKAction();
-		actions.addAction( okAction );
-		if( okAndCancel )
-		{
-			actions.addAction( new CancelAction() );
-			actions.setDefaultAction( okAction );
-		}
-		return actions;
-	}
+    public ActionList buildActions(String url, boolean okAndCancel) {
+        DefaultActionList actions = new DefaultActionList("Actions");
+        if (url != null) {
+            actions.addAction(new HelpAction(url));
+        }
 
-	protected abstract boolean handleOk();
+        OKAction okAction = new OKAction();
+        actions.addAction(okAction);
+        if (okAndCancel) {
+            actions.addAction(new CancelAction());
+            actions.setDefaultAction(okAction);
+        }
+        return actions;
+    }
 
-	@Override
-	public void setVisible( boolean b )
-	{
-		init();
+    protected abstract boolean handleOk();
 
-		if( b )
-			beforeShow();
-		else
-			beforeHide();
+    @Override
+    public void setVisible(boolean b) {
+        init();
 
-		UISupport.centerDialog( this );
-		super.setVisible( b );
+        if (b) {
+            beforeShow();
+        } else {
+            beforeHide();
+        }
 
-		if( b )
-			afterShow();
-		else
-			afterHide();
-	}
+        UISupport.centerDialog(this);
+        super.setVisible(b);
 
-	protected void afterHide()
-	{
-	}
+        if (b) {
+            afterShow();
+        } else {
+            afterHide();
+        }
+    }
 
-	protected void afterShow()
-	{
-	}
+    protected void afterHide() {
+    }
 
-	protected void beforeHide()
-	{
-	}
+    protected void afterShow() {
+    }
 
-	protected void beforeShow()
-	{
-	}
+    protected void beforeHide() {
+    }
 
-	protected boolean handleCancel()
-	{
-		return true;
-	}
+    protected void beforeShow() {
+    }
 
-	protected final class OKAction extends AbstractAction
-	{
-		public OKAction()
-		{
-			super( "OK" );
-		}
+    protected boolean handleCancel() {
+        return true;
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( handleOk() )
-			{
-				setVisible( false );
-			}
-		}
-	}
+    protected final class OKAction extends AbstractAction {
+        public OKAction() {
+            super("OK");
+        }
 
-	protected final class CancelAction extends AbstractAction
-	{
-		public CancelAction()
-		{
-			super( "Cancel" );
-		}
+        public void actionPerformed(ActionEvent e) {
+            if (handleOk()) {
+                setVisible(false);
+            }
+        }
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( handleCancel() )
-			{
-				setVisible( false );
-			}
-		}
-	}
+    protected final class CancelAction extends AbstractAction {
+        public CancelAction() {
+            super("Cancel");
+        }
 
-	public final class HelpAction extends AbstractAction implements HelpActionMarker
-	{
-		private final String url;
+        public void actionPerformed(ActionEvent e) {
+            if (handleCancel()) {
+                setVisible(false);
+            }
+        }
+    }
 
-		public HelpAction( String url )
-		{
-			this( "Online Help", url, UISupport.getKeyStroke( "F1" ) );
-		}
+    public final class HelpAction extends AbstractAction implements HelpActionMarker {
+        private final String url;
 
-		public HelpAction( String title, String url )
-		{
-			this( title, url, null );
-		}
+        public HelpAction(String url) {
+            this("Online Help", url, UISupport.getKeyStroke("F1"));
+        }
 
-		public HelpAction( String title, String url, KeyStroke accelerator )
-		{
-			super( title );
-			this.url = url;
-			putValue( Action.SHORT_DESCRIPTION, "Show online help" );
-			if( accelerator != null )
-				putValue( Action.ACCELERATOR_KEY, accelerator );
+        public HelpAction(String title, String url) {
+            this(title, url, null);
+        }
 
-			putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
-		}
+        public HelpAction(String title, String url, KeyStroke accelerator) {
+            super(title);
+            this.url = url;
+            putValue(Action.SHORT_DESCRIPTION, "Show online help");
+            if (accelerator != null) {
+                putValue(Action.ACCELERATOR_KEY, accelerator);
+            }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			Tools.openURL( url );
-		}
-	}
+            putValue(Action.SMALL_ICON, UISupport.HELP_ICON);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            Tools.openURL(url);
+        }
+    }
 }

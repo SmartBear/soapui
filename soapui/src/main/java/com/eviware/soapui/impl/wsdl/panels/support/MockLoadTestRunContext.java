@@ -22,38 +22,33 @@ import com.eviware.soapui.model.testsuite.LoadTestRunContext;
 import com.eviware.soapui.model.testsuite.LoadTestRunner;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 
-public class MockLoadTestRunContext extends AbstractSubmitContext<WsdlLoadTest> implements LoadTestRunContext
-{
-	private final MockLoadTestRunner mockTestRunner;
+public class MockLoadTestRunContext extends AbstractSubmitContext<WsdlLoadTest> implements LoadTestRunContext {
+    private final MockLoadTestRunner mockTestRunner;
 
-	public MockLoadTestRunContext( MockLoadTestRunner mockTestRunner )
-	{
-		super( mockTestRunner.getLoadTest() );
-		this.mockTestRunner = mockTestRunner;
-	}
+    public MockLoadTestRunContext(MockLoadTestRunner mockTestRunner) {
+        super(mockTestRunner.getLoadTest());
+        this.mockTestRunner = mockTestRunner;
+    }
 
-	public LoadTestRunner getLoadTestRunner()
-	{
-		return mockTestRunner;
-	}
+    public LoadTestRunner getLoadTestRunner() {
+        return mockTestRunner;
+    }
 
-	public Object getProperty( String name )
-	{
-		if( "loadTestRunner".equals( name ) )
-			return getLoadTestRunner();
+    public Object getProperty(String name) {
+        if ("loadTestRunner".equals(name)) {
+            return getLoadTestRunner();
+        }
 
-		return get( name );
-	}
+        return get(name);
+    }
 
-	public Object getProperty( String testStep, String propertyName )
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public Object getProperty(String testStep, String propertyName) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 
-	public TestCaseRunner getTestRunner()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public TestCaseRunner getTestRunner() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

@@ -30,110 +30,98 @@ import com.eviware.soapui.model.testsuite.TestStep;
 /**
  * ComboBox-model used by combo in the WsdlGotoTestStep desktop panel for
  * selecting a conditions target teststep
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class GotoTestStepsComboBoxModel extends AbstractListModel implements ComboBoxModel
-{
-	private final TestCase testCase;
-	private GotoCondition condition;
-	private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();;
-	private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
+public class GotoTestStepsComboBoxModel extends AbstractListModel implements ComboBoxModel {
+    private final TestCase testCase;
+    private GotoCondition condition;
+    private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
+    ;
+    private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
 
-	public GotoTestStepsComboBoxModel( TestCase testCase, GotoCondition condition )
-	{
-		super();
-		this.testCase = testCase;
-		this.condition = condition;
+    public GotoTestStepsComboBoxModel(TestCase testCase, GotoCondition condition) {
+        super();
+        this.testCase = testCase;
+        this.condition = condition;
 
-		testCase.getTestSuite().addTestSuiteListener( testSuiteListener );
+        testCase.getTestSuite().addTestSuiteListener(testSuiteListener);
 
-		if( condition != null )
-			condition.addPropertyChangeListener( GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener );
+        if (condition != null) {
+            condition.addPropertyChangeListener(GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener);
+        }
 
-		for( int c = 0; c < testCase.getTestStepCount(); c++ )
-		{
-			testCase.getTestStepAt( c ).addPropertyChangeListener( TestStep.NAME_PROPERTY, propertyChangeListener );
-		}
-	}
+        for (int c = 0; c < testCase.getTestStepCount(); c++) {
+            testCase.getTestStepAt(c).addPropertyChangeListener(TestStep.NAME_PROPERTY, propertyChangeListener);
+        }
+    }
 
-	public GotoCondition getCondition()
-	{
-		return condition;
-	}
+    public GotoCondition getCondition() {
+        return condition;
+    }
 
-	public void setCondition( GotoCondition condition )
-	{
-		if( this.condition != null )
-			this.condition.removePropertyChangeListener( GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener );
+    public void setCondition(GotoCondition condition) {
+        if (this.condition != null) {
+            this.condition.removePropertyChangeListener(GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener);
+        }
 
-		this.condition = condition;
+        this.condition = condition;
 
-		if( condition != null )
-			condition.addPropertyChangeListener( GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener );
+        if (condition != null) {
+            condition.addPropertyChangeListener(GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener);
+        }
 
-		fireContentsChanged( this, 0, getSize() );
-	}
+        fireContentsChanged(this, 0, getSize());
+    }
 
-	public void setSelectedItem( Object anItem )
-	{
-		if( condition != null )
-			condition.setTargetStep( anItem == null ? null : anItem.toString() );
-	}
+    public void setSelectedItem(Object anItem) {
+        if (condition != null) {
+            condition.setTargetStep(anItem == null ? null : anItem.toString());
+        }
+    }
 
-	public Object getSelectedItem()
-	{
-		return condition == null ? null : condition.getTargetStep();
-	}
+    public Object getSelectedItem() {
+        return condition == null ? null : condition.getTargetStep();
+    }
 
-	public int getSize()
-	{
-		return testCase.getTestStepCount();
-	}
+    public int getSize() {
+        return testCase.getTestStepCount();
+    }
 
-	public Object getElementAt( int index )
-	{
-		return testCase.getTestStepAt( index ).getName();
-	}
+    public Object getElementAt(int index) {
+        return testCase.getTestStepAt(index).getName();
+    }
 
-	private class InternalTestSuiteListener extends TestSuiteListenerAdapter
-	{
-		public void testStepAdded( TestStep testStep, int index )
-		{
-			if( testStep.getTestCase() == testCase )
-			{
-				fireContentsChanged( GotoTestStepsComboBoxModel.this, 0, getSize() );
-			}
-		}
+    private class InternalTestSuiteListener extends TestSuiteListenerAdapter {
+        public void testStepAdded(TestStep testStep, int index) {
+            if (testStep.getTestCase() == testCase) {
+                fireContentsChanged(GotoTestStepsComboBoxModel.this, 0, getSize());
+            }
+        }
 
-		public void testStepRemoved( TestStep testStep, int index )
-		{
-			if( testStep.getTestCase() == testCase )
-			{
-				fireContentsChanged( GotoTestStepsComboBoxModel.this, 0, getSize() );
-			}
-		}
-	}
+        public void testStepRemoved(TestStep testStep, int index) {
+            if (testStep.getTestCase() == testCase) {
+                fireContentsChanged(GotoTestStepsComboBoxModel.this, 0, getSize());
+            }
+        }
+    }
 
-	private class InternalPropertyChangeListener implements PropertyChangeListener
-	{
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			fireContentsChanged( GotoTestStepsComboBoxModel.this, 0, getSize() );
-		}
-	}
+    private class InternalPropertyChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            fireContentsChanged(GotoTestStepsComboBoxModel.this, 0, getSize());
+        }
+    }
 
-	public void release()
-	{
-		testCase.getTestSuite().removeTestSuiteListener( testSuiteListener );
+    public void release() {
+        testCase.getTestSuite().removeTestSuiteListener(testSuiteListener);
 
-		if( condition != null )
-			condition.removePropertyChangeListener( GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener );
+        if (condition != null) {
+            condition.removePropertyChangeListener(GotoCondition.TARGET_STEP_PROPERTY, propertyChangeListener);
+        }
 
-		for( int c = 0; c < testCase.getTestStepCount(); c++ )
-		{
-			testCase.getTestStepAt( c ).removePropertyChangeListener( TestStep.NAME_PROPERTY, propertyChangeListener );
-		}
-	}
+        for (int c = 0; c < testCase.getTestStepCount(); c++) {
+            testCase.getTestStepAt(c).removePropertyChangeListener(TestStep.NAME_PROPERTY, propertyChangeListener);
+        }
+    }
 }

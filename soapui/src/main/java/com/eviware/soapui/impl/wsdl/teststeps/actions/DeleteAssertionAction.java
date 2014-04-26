@@ -22,23 +22,19 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Deletes the specified WsdlMessageAssertion from its Assertable
- * 
+ *
  * @author ole.matzura
  */
 
-public class DeleteAssertionAction extends AbstractSoapUIAction<WsdlMessageAssertion>
-{
-	public DeleteAssertionAction()
-	{
-		super( "Remove", "Removes this assertion from its request" );
-	}
+public class DeleteAssertionAction extends AbstractSoapUIAction<WsdlMessageAssertion> {
+    public DeleteAssertionAction() {
+        super("Remove", "Removes this assertion from its request");
+    }
 
-	public void perform( WsdlMessageAssertion target, Object param )
-	{
-		if( UISupport.confirm( "Remove assertion [" + target.getName() + "] from ["
-				+ target.getAssertable().getModelItem().getName() + "]", "Remove Assertion" ) )
-		{
-			target.getAssertable().removeAssertion( target );
-		}
-	}
+    public void perform(WsdlMessageAssertion target, Object param) {
+        if (UISupport.confirm("Remove assertion [" + target.getName() + "] from ["
+                + target.getAssertable().getModelItem().getName() + "]", "Remove Assertion")) {
+            target.getAssertable().removeAssertion(target);
+        }
+    }
 }

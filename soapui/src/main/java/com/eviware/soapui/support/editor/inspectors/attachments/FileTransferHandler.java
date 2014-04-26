@@ -31,69 +31,58 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Handles drop of files on the AttachmentPanel
- * 
+ *
  * @author emibre
  */
 
-public class FileTransferHandler extends TransferHandler
-{
-	private DataFlavor fileFlavor;
-	private AttachmentTableModel attachmentModel;
+public class FileTransferHandler extends TransferHandler {
+    private DataFlavor fileFlavor;
+    private AttachmentTableModel attachmentModel;
 
-	/** Creates a new instance of FileTransferHandler */
-	public FileTransferHandler( AttachmentTableModel attachmentModel )
-	{
-		fileFlavor = DataFlavor.javaFileListFlavor;
-		this.attachmentModel = attachmentModel;
-	}
+    /**
+     * Creates a new instance of FileTransferHandler
+     */
+    public FileTransferHandler(AttachmentTableModel attachmentModel) {
+        fileFlavor = DataFlavor.javaFileListFlavor;
+        this.attachmentModel = attachmentModel;
+    }
 
-	public boolean canImport( JComponent c, DataFlavor[] flavors )
-	{
-		return hasFileFlavor( flavors );
-	}
+    public boolean canImport(JComponent c, DataFlavor[] flavors) {
+        return hasFileFlavor(flavors);
+    }
 
-	private boolean hasFileFlavor( DataFlavor[] flavors )
-	{
-		for( int i = 0; i < flavors.length; i++ )
-		{
-			if( fileFlavor.equals( flavors[i] ) )
-			{
-				return true;
-			}
-		}
-		return false;
-	}
+    private boolean hasFileFlavor(DataFlavor[] flavors) {
+        for (int i = 0; i < flavors.length; i++) {
+            if (fileFlavor.equals(flavors[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public boolean importData( JComponent c, Transferable t )
-	{
-		try
-		{
-			List<File> files = ( List<File> )t.getTransferData( fileFlavor );
-			for( File f : files )
-			{
-				System.out.println( "Got a file: " + f.getName() );
-				Boolean retval = UISupport.confirmOrCancel( "Cache attachment in request?", "Att Attachment" );
-				if( retval == null )
-					return false;
+    @SuppressWarnings("unchecked")
+    public boolean importData(JComponent c, Transferable t) {
+        try {
+            List<File> files = (List<File>) t.getTransferData(fileFlavor);
+            for (File f : files) {
+                System.out.println("Got a file: " + f.getName());
+                Boolean retval = UISupport.confirmOrCancel("Cache attachment in request?", "Att Attachment");
+                if (retval == null) {
+                    return false;
+                }
 
-				attachmentModel.addFile( f, retval );
-			}
+                attachmentModel.addFile(f, retval);
+            }
 
-		}
-		catch( IOException ex )
-		{
-			SoapUI.logError( ex );
-		}
-		catch( UnsupportedFlavorException ex )
-		{
-			SoapUI.logError( ex );
-		}
-		return false;
-	}
+        } catch (IOException ex) {
+            SoapUI.logError(ex);
+        } catch (UnsupportedFlavorException ex) {
+            SoapUI.logError(ex);
+        }
+        return false;
+    }
 
-	public int getSourceActions( JComponent c )
-	{
-		return COPY_OR_MOVE;
-	}
+    public int getSourceActions(JComponent c) {
+        return COPY_OR_MOVE;
+    }
 }

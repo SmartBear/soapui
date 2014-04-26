@@ -24,55 +24,54 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 
 import javax.annotation.Nonnull;
 
-public interface WssContainer extends PropertyExpansionContainer
-{
-	public ModelItem getModelItem();
+public interface WssContainer extends PropertyExpansionContainer {
+    public ModelItem getModelItem();
 
-	public void addWssContainerListener( WssContainerListener listener );
+    public void addWssContainerListener(WssContainerListener listener);
 
-	public void removeWssContainerListener( WssContainerListener listener );
+    public void removeWssContainerListener(WssContainerListener listener);
 
-	public List<WssCrypto> getCryptoList();
+    public List<WssCrypto> getCryptoList();
 
-	public WssCrypto addCrypto( String source, String password, @Nonnull CryptoType type );
+    public WssCrypto addCrypto(String source, String password, @Nonnull CryptoType type);
 
-	public int getCryptoCount();
+    public int getCryptoCount();
 
-	public void removeCrypto( @Nonnull WssCrypto crypto );
+    public void removeCrypto(@Nonnull WssCrypto crypto);
 
-	public List<IncomingWss> getIncomingWssList();
+    public List<IncomingWss> getIncomingWssList();
 
-	public IncomingWss addIncomingWss( String label );
+    public IncomingWss addIncomingWss(String label);
 
-	public int getIncomingWssCount();
+    public int getIncomingWssCount();
 
-	public IncomingWss getIncomingWssAt( int index );
+    public IncomingWss getIncomingWssAt(int index);
 
-	public void removeIncomingWssAt( int row );
+    public void removeIncomingWssAt(int row);
 
-	public List<OutgoingWss> getOutgoingWssList();
+    public List<OutgoingWss> getOutgoingWssList();
 
-	public OutgoingWss addOutgoingWss( String label );
+    public OutgoingWss addOutgoingWss(String label);
 
-	public int getOutgoingWssCount();
+    public int getOutgoingWssCount();
 
-	public OutgoingWss getOutgoingWssAt( int index );
+    public OutgoingWss getOutgoingWssAt(int index);
 
-	public void removeOutgoingWssAt( int row );
+    public void removeOutgoingWssAt(int row);
 
-	public WssCrypto getCryptoByName( String cryptoName );
+    public WssCrypto getCryptoByName(String cryptoName);
 
-	public WssCrypto getCryptoByName( String cryptoName, boolean outgoingWSSConfig );
+    public WssCrypto getCryptoByName(String cryptoName, boolean outgoingWSSConfig);
 
-	public OutgoingWss getOutgoingWssByName( String outgoingName );
+    public OutgoingWss getOutgoingWssByName(String outgoingName);
 
-	public IncomingWss getIncomingWssByName( String incomingName );
+    public IncomingWss getIncomingWssByName(String incomingName);
 
-	public String[] getCryptoNames();
+    public String[] getCryptoNames();
 
-	public String[] getOutgoingWssNames();
+    public String[] getOutgoingWssNames();
 
-	public String[] getIncomingWssNames();
+    public String[] getIncomingWssNames();
 
-	public void importConfig( WssContainer wssContainer );
+    public void importConfig(WssContainer wssContainer);
 }

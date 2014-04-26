@@ -22,15 +22,14 @@ import com.eviware.soapui.support.components.SimpleForm;
 
 /**
  * Behavior for an implementation of the soapui core model
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface ModelImplementation
-{
-	public SimpleForm[] getOptions();
+public interface ModelImplementation {
+    public SimpleForm[] getOptions();
 
-	public ActionList getActions();
+    public ActionList getActions();
 
-	public Project buildProject( String path );
+    public Project buildProject(String path);
 }

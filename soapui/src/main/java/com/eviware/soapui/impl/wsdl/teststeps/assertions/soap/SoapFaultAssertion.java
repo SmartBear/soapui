@@ -36,77 +36,65 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 /**
  * Assertion that checks that the associated WsdlTestRequests response is a SOAP
  * Fault
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SoapFaultAssertion extends WsdlMessageAssertion implements ResponseAssertion
-{
-	public static final String ID = "Not SOAP Fault Assertion";
-	public static final String LABEL = "SOAP Fault";
-	public static final String DESCRIPTION = "Validates that the last received message is a SOAP Fault. Applicable to SOAP TestSteps.";
+public class SoapFaultAssertion extends WsdlMessageAssertion implements ResponseAssertion {
+    public static final String ID = "Not SOAP Fault Assertion";
+    public static final String LABEL = "SOAP Fault";
+    public static final String DESCRIPTION = "Validates that the last received message is a SOAP Fault. Applicable to SOAP TestSteps.";
 
-	public SoapFaultAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
-	{
-		super( assertionConfig, assertable, false, false, false, true );
-	}
+    public SoapFaultAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
+        super(assertionConfig, assertable, false, false, false, true);
+    }
 
-	public String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		String responseContent = messageExchange.getResponseContent();
-		try
-		{
-			SoapVersion soapVersion = ( ( WsdlMessageExchange )messageExchange ).getOperation().getInterface()
-					.getSoapVersion();
+    public String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        String responseContent = messageExchange.getResponseContent();
+        try {
+            SoapVersion soapVersion = ((WsdlMessageExchange) messageExchange).getOperation().getInterface()
+                    .getSoapVersion();
 
-			if( !SoapUtils.isSoapFault( responseContent, soapVersion ) )
-				throw new AssertionException( new AssertionError( "Response is not a SOAP Fault" ) );
-		}
-		catch( Exception e )
-		{
-			throw new AssertionException( new AssertionError( e.getMessage() ) );
-		}
+            if (!SoapUtils.isSoapFault(responseContent, soapVersion)) {
+                throw new AssertionException(new AssertionError("Response is not a SOAP Fault"));
+            }
+        } catch (Exception e) {
+            throw new AssertionException(new AssertionError(e.getMessage()));
+        }
 
-		return "Response is a SOAP Fault";
-	}
+        return "Response is a SOAP Fault";
+    }
 
-	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		return null;
-	}
+    @Override
+    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        return null;
+    }
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
-			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
-	{
-		return null;
-	}
+    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
+                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
+        return null;
+    }
 
-	public static class Factory extends AbstractTestAssertionFactory
-	{
-		public Factory()
-		{
-			super( SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.class, WsdlRequest.class );
-		}
+    public static class Factory extends AbstractTestAssertionFactory {
+        public Factory() {
+            super(SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.class, WsdlRequest.class);
+        }
 
-		@Override
-		public String getCategory()
-		{
-			return AssertionCategoryMapping.STATUS_CATEGORY;
-		}
+        @Override
+        public String getCategory() {
+            return AssertionCategoryMapping.STATUS_CATEGORY;
+        }
 
-		@Override
-		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
-		{
-			return SoapFaultAssertion.class;
-		}
+        @Override
+        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
+            return SoapFaultAssertion.class;
+        }
 
-		@Override
-		public AssertionListEntry getAssertionListEntry()
-		{
-			return new AssertionListEntry( SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.DESCRIPTION );
-		}
-	}
+        @Override
+        public AssertionListEntry getAssertionListEntry() {
+            return new AssertionListEntry(SoapFaultAssertion.ID, SoapFaultAssertion.LABEL, SoapFaultAssertion.DESCRIPTION);
+        }
+    }
 }
