@@ -45,6 +45,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Editor<T extends EditorDocument> extends JPanel implements PropertyChangeListener,
         EditorLocationListener<T> {
+    public final static String OUTLINE_TABLE_PROPERTY = Editor.class.getSimpleName() + "@outlineTable";
     private JTabbedPane inputTabs;
     private List<EditorView<T>> views = new ArrayList<EditorView<T>>();
     private EditorView<T> currentView;
@@ -102,6 +103,9 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
             }
 
             inputTabs.setTitleAt(ix, (String) evt.getNewValue());
+        }
+        if (evt.getPropertyName().equals(OUTLINE_TABLE_PROPERTY)) {
+            inputTabsChangeListener.refreshVisibleInspectors();
         }
     }
 
@@ -226,6 +230,19 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
                 }
             }
 
+            refreshVisibleInspectors();
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    if (currentView != null) {
+                        currentView.getComponent().requestFocus();
+                    }
+                }
+            });
+        }
+
+        private void refreshVisibleInspectors() {
             EditorInspector<T> currentInspector = (EditorInspector<T>) inspectorPanel.getCurrentInspector();
 
             if (currentInspector != null) {
@@ -246,15 +263,6 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
             } else {
                 currentInspector = null;
             }
-
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    if (currentView != null) {
-                        currentView.getComponent().requestFocus();
-                    }
-                }
-            });
         }
     }
 
