@@ -15,10 +15,33 @@
 */
 package com.eviware.soapui.impl;
 
-import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.rest.RestRequest;
+import com.eviware.soapui.impl.rest.RestResource;
+import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockResponse;
+import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.rest.panels.mock.RestMockResponsePanelBuilder;
+import com.eviware.soapui.impl.rest.panels.mock.RestMockServicePanelBuilder;
+import com.eviware.soapui.impl.rest.panels.request.RestRequestPanelBuilder;
+import com.eviware.soapui.impl.rest.panels.resource.RestResourcePanelBuilder;
+import com.eviware.soapui.impl.rest.panels.service.RestServicePanelBuilder;
+import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.impl.wsdl.panels.iface.WsdlInterfacePanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.mock.WsdlMockServicePanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockOperationPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponsePanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.operation.WsdlOperationPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.project.WsdlProjectPanelBuilder;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.MockResponseStepPanelBuilder;
-import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
+import com.eviware.soapui.impl.wsdl.panels.request.WsdlRequestPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCasePanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.*;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequestTestStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.testsuite.WsdlTestSuitePanelBuilder;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.impl.wsdl.teststeps.*;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.support.components.JPropertiesTable;
@@ -30,7 +53,9 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import static junit.framework.Assert.fail;
-import static org.mockito.Mockito.*;
+import static org.junit.runners.Parameterized.Parameters;
+import static org.mockito.Mockito.RETURNS_MOCKS;
+import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
 public class GenericPanelBuilderTest {
@@ -46,7 +71,7 @@ public class GenericPanelBuilderTest {
     }
 
     @Test
-    public void shouldMatchBuilderValuesWithModel() throws IllegalAccessException, InstantiationException {
+    public void builderValuesShouldMatchModel() throws IllegalAccessException, InstantiationException {
         PanelBuilder builder = panelBuilderClass.newInstance();
         ModelItem model = mock(modelClass, RETURNS_MOCKS);
         JPropertiesTable table = (JPropertiesTable) builder.buildOverviewPanel(model);
@@ -54,11 +79,11 @@ public class GenericPanelBuilderTest {
 
         int numberOfProperties = tableModel.getRowCount();
         for (int i = 0; i < numberOfProperties; i++) {
-            assertOneProperty(builder, tableModel, i);
+            assertOneProperty(tableModel, i);
         }
     }
 
-    private void assertOneProperty(PanelBuilder builder, JPropertiesTable.PropertiesTableModel tableModel, int index) {
+    private void assertOneProperty(JPropertiesTable.PropertiesTableModel tableModel, int index) {
         Object propertyValue = tableModel.getValueAt(index, VALUE_INDEX);
 
         // at this point I was expecting an exception but
@@ -75,11 +100,35 @@ public class GenericPanelBuilderTest {
         return "The panel builder " + builderName + " fails for the property " + key;
     }
 
-    @Parameterized.Parameters
+    @Parameters(name= "{index} - {0}")
     public static Collection<Object[]> panelModelCombinations() {
         return Arrays.asList(new Object[][]{
+                {AMFRequestTestStepPanelBuilder.class, AMFRequestTestStep.class},
+                {DelayTestStepPanelBuilder.class, WsdlDelayTestStep.class},
+                {HttpTestRequestPanelBuilder.class, HttpTestRequestStep.class},
+                {JdbcRequestTestStepPanelBuilder.class, JdbcRequestTestStep.class},
                 {MockResponseStepPanelBuilder.class, WsdlMockResponseTestStep.class},
-                {WsdlProjectPanelBuilder.class, WsdlProject.class}
+                {PropertiesStepPanelBuilder.class, WsdlPropertiesTestStep.class},
+                //{RestMethodPanelBuilder.class, RestMethod.class},
+                //{RestMockActionPanelBuilder.class, RestMockAction.class},
+                {RestMockResponsePanelBuilder.class, RestMockResponse.class},
+                {RestMockServicePanelBuilder.class, RestMockService.class},
+                {RestRequestPanelBuilder.class, RestRequest.class},
+                {RestResourcePanelBuilder.class, RestResource.class},
+                {RestServicePanelBuilder.class, RestService.class},
+                {RestTestRequestPanelBuilder.class, RestTestRequestStep.class},
+                {WorkspaceImplPanelBuilder.class, WorkspaceImpl.class},
+                {WsdlInterfacePanelBuilder.class, WsdlInterface.class},
+                {WsdlMockOperationPanelBuilder.class, WsdlMockOperation.class},
+                //{WsdlMockResponsePanelBuilder.class, WsdlMockResponse.class},
+                //{WsdlMockServicePanelBuilder.class, WsdlMockService.class},
+                {WsdlOperationPanelBuilder.class, WsdlOperation.class},
+                {WsdlProjectPanelBuilder.class, WsdlProject.class},
+                {WsdlRequestPanelBuilder.class, WsdlRequest.class},
+                {WsdlRunTestCaseTestStepPanelBuilder.class, WsdlRunTestCaseTestStep.class},
+                {WsdlTestCasePanelBuilder.class, WsdlTestCase.class},
+                //{WsdlTestRequestPanelBuilder.class, WsdlTestRequest.class},
+                {WsdlTestSuitePanelBuilder.class, WsdlTestSuite.class}
                 // add more panel builders here
         });
     }
