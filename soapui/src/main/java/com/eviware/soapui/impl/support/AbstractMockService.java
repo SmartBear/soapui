@@ -19,6 +19,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.BaseMockServiceConfig;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
@@ -94,8 +95,8 @@ public abstract class AbstractMockService<MockOperationType extends MockOperatio
 
     // Implements MockService
     @Override
-    public Project getProject() {
-        return (Project) getParent();
+    public WsdlProject getProject() {
+        return (WsdlProject) getParent();
     }
 
     @Override

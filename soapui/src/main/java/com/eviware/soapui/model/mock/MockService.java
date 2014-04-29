@@ -17,6 +17,7 @@
 package com.eviware.soapui.model.mock;
 
 import com.eviware.soapui.impl.support.HasHelpUrl;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.model.Releasable;
@@ -38,7 +39,7 @@ public interface MockService extends TestModelItem, Releasable, AnimatableItem, 
     public final static String PATH_PROPERTY = MockService.class.getName() + "@path";
     public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
 
-    public Project getProject();
+    public WsdlProject getProject();
 
     public List<MockOperation> getMockOperationList();
 
