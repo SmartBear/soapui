@@ -29,8 +29,7 @@ import javax.annotation.Nonnull;
  * @author ole.matzura
  */
 
-public interface XmlDocument extends PropertyChangeNotifier, EditorDocument {
-    public final static String DOCUMENT_PROPERTY = XmlDocument.class.getName() + "@content";
+public interface XmlDocument extends EditorDocument {
 
     /**
      * Use #getDocumentContent instead.

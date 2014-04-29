@@ -56,6 +56,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
     public Editor(T document) {
         super(new BorderLayout());
         this.document = document;
+        document.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
 
         setBackground(Color.LIGHT_GRAY);
         inputTabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -104,7 +105,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 
             inputTabs.setTitleAt(ix, (String) evt.getNewValue());
         }
-        if (evt.getPropertyName().equals(OUTLINE_TABLE_PROPERTY)) {
+        if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             inputTabsChangeListener.refreshVisibleInspectors();
         }
     }
@@ -148,13 +149,16 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
     public final void setDocument(T document) {
         if (this.document != null) {
             this.document.release();
+            this.document.removePropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
         }
 
         this.document = document;
+        this.document.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
 
         for (EditorView<T> view : views) {
             view.setDocument(document);
         }
+        inputTabsChangeListener.refreshVisibleInspectors();
     }
 
     public final EditorView<T> getCurrentView() {
@@ -191,6 +195,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 
     public void addInspector(EditorInspector<T> inspector) {
         inspectorPanel.addInspector(inspector);
+        inspector.init(this);
         inspectorPanel
                 .setInspectorVisible(inspector, currentView == null ? true : inspector.isEnabledFor(currentView));
     }

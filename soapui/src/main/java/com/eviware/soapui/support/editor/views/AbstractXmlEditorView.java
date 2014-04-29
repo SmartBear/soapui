@@ -119,14 +119,14 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 
     public void setDocument(T xmlDocument) {
         if (this.xmlDocument != null) {
-            this.xmlDocument.removePropertyChangeListener(XmlDocument.DOCUMENT_PROPERTY, this);
+            this.xmlDocument.removePropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
         }
 
         this.xmlDocument = xmlDocument;
         editorDocumentChanged = false;
 
         if (xmlDocument != null) {
-            this.xmlDocument.addPropertyChangeListener(XmlDocument.DOCUMENT_PROPERTY, this);
+            this.xmlDocument.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
             if (isActive()) {
                 documentUpdated();
             } else {
@@ -142,7 +142,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(XmlDocument.DOCUMENT_PROPERTY)) {
+        if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             if (isActive()) {
                 documentUpdated();
             } else {
@@ -159,7 +159,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 
     public void release() {
         if (this.xmlDocument != null) {
-            this.xmlDocument.removePropertyChangeListener(XmlDocument.DOCUMENT_PROPERTY, this);
+            this.xmlDocument.removePropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
             this.xmlDocument = null;
         }
     }
