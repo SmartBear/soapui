@@ -106,7 +106,7 @@ public class WsdlMockRequest extends AbstractMockRequest {
     private void addWSSResult(WsdlMockRunContext context, String requestContent) throws IOException {
         WsdlMockService mockService = (WsdlMockService) context.getMockService();
         if (StringUtils.hasContent(mockService.getIncomingWss())) {
-            IncomingWss incoming = ((WsdlProject) mockService.getProject()).getWssContainer()
+            IncomingWss incoming = mockService.getProject().getWssContainer()
                     .getIncomingWssByName(mockService.getIncomingWss());
             if (incoming != null) {
                 Document dom = XmlUtils.parseXml(requestContent);

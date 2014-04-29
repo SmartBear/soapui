@@ -56,7 +56,7 @@ public class WsdlMockServicePanelBuilder extends EmptyPanelBuilder<WsdlMockServi
         table.addProperty("Require SOAP Action", "requireSoapAction", JPropertiesTable.BOOLEAN_OPTIONS);
         table.addProperty("Dispatch Responses", "dispatchResponseMessages", JPropertiesTable.BOOLEAN_OPTIONS);
 
-        WsdlProject project = (WsdlProject) mockService.getProject();
+        WsdlProject project = mockService.getProject();
         StringList incomingNames = new StringList(project.getWssContainer().getIncomingWssNames());
         incomingNames.add("");
         table.addProperty("Incoming WSS", "incomingWss", incomingNames.toStringArray());

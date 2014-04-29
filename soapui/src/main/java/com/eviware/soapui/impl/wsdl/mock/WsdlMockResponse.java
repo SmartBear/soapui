@@ -330,7 +330,7 @@ public class WsdlMockResponse extends AbstractMockResponse<MockResponseConfig> i
         }
 
         if (StringUtils.hasContent(outgoingWss)) {
-            OutgoingWss outgoing = ((WsdlProject) getMockOperation().getMockService().getProject()).getWssContainer()
+            OutgoingWss outgoing = getMockOperation().getMockService().getProject().getWssContainer()
                     .getOutgoingWssByName(outgoingWss);
             if (outgoing != null) {
                 Document dom = XmlUtils.parseXml(responseContent);

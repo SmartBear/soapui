@@ -348,16 +348,16 @@ public class PropertyExpansionUtils {
             project = (WsdlProject) modelItem;
         } else if (modelItem instanceof WsdlMockService) {
             mockService = (WsdlMockService) modelItem;
-            project = (WsdlProject) mockService.getProject();
+            project = mockService.getProject();
         } else if (modelItem instanceof AbstractHttpRequestInterface<?>) {
             project = ((AbstractHttpRequest<?>) modelItem).getOperation().getInterface().getProject();
         } else if (modelItem instanceof WsdlMockOperation) {
             mockService = ((WsdlMockOperation) modelItem).getMockService();
-            project = (WsdlProject) mockService.getProject();
+            project = mockService.getProject();
         } else if (modelItem instanceof WsdlMockResponse) {
             mockResponse = (WsdlMockResponse) modelItem;
             mockService = mockResponse.getMockOperation().getMockService();
-            project = (WsdlProject) mockService.getProject();
+            project = mockService.getProject();
         } else if (modelItem instanceof SecurityTest) {
             securityTest = (SecurityTest) modelItem;
             testCase = securityTest.getTestCase();

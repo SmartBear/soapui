@@ -57,7 +57,7 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
             dialog.getFormField(Form.INTERFACE).addFormFieldListener(new XFormFieldListener() {
 
                 public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                    WsdlProject project = (WsdlProject) testStep.getMockService().getProject();
+                    WsdlProject project = testStep.getMockService().getProject();
                     dialog.setOptions(Form.OPERATION,
                             ModelSupport.getNames(project.getInterfaceByName(newValue).getOperationList()));
                     WsdlOperation operation = testStep.getOperation();
@@ -80,7 +80,7 @@ public class ChangeMockOperationAction extends AbstractSoapUIAction<WsdlMockOper
         }
 
         WsdlOperation operation = testStep.getOperation();
-        WsdlProject project = (WsdlProject) testStep.getMockService().getProject();
+        WsdlProject project = testStep.getMockService().getProject();
         String[] interfaceNames = ModelSupport.getNames(project.getInterfaceList(),
                 new ModelSupport.InterfaceTypeFilter(WsdlInterfaceFactory.WSDL_TYPE));
         dialog.setOptions(Form.INTERFACE, interfaceNames);

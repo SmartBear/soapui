@@ -44,7 +44,7 @@ public class AddEndpointToInterfaceAction extends AbstractSoapUIAction<WsdlMockS
                 null);
 
         if (ifaceName != null) {
-            WsdlProject project = (WsdlProject) mockService.getProject();
+            WsdlProject project = mockService.getProject();
             AbstractInterface<?> iface = project.getInterfaceByName(ifaceName);
             if (iface != null) {
                 iface.addEndpoint(mockService.getLocalEndpoint());
