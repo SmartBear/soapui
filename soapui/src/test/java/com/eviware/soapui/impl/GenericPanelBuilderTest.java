@@ -15,11 +15,15 @@
 */
 package com.eviware.soapui.impl;
 
+import com.eviware.soapui.impl.rest.RestMethod;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.rest.RestResource;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.rest.mock.RestMockAction;
 import com.eviware.soapui.impl.rest.mock.RestMockResponse;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
+import com.eviware.soapui.impl.rest.panels.method.RestMethodPanelBuilder;
+import com.eviware.soapui.impl.rest.panels.mock.RestMockActionPanelBuilder;
 import com.eviware.soapui.impl.rest.panels.mock.RestMockResponsePanelBuilder;
 import com.eviware.soapui.impl.rest.panels.mock.RestMockServicePanelBuilder;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestPanelBuilder;
@@ -45,10 +49,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.*;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.support.components.JPropertiesTable;
+import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -59,22 +65,19 @@ import static org.mockito.Mockito.mock;
 
 @RunWith(Parameterized.class)
 public class GenericPanelBuilderTest {
-    private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
 
-    private Class<? extends PanelBuilder> panelBuilderClass;
-    private Class<? extends ModelItem> modelClass;
+    private PanelBuilder panelBuilder;
+    private ModelItem modelItem;
 
-    public GenericPanelBuilderTest(Class panelBuilderClass, Class modelClass) {
-        this.panelBuilderClass = panelBuilderClass;
-        this.modelClass = modelClass;
+    public GenericPanelBuilderTest(Class<? extends PanelBuilder> panelBuilderClass, Class<? extends ModelItem> modelClass) throws Exception {
+        this.panelBuilder = panelBuilderClass.newInstance();
+        this.modelItem = mock(modelClass, RETURNS_MOCKS);
     }
 
     @Test
-    public void builderValuesShouldMatchModel() throws IllegalAccessException, InstantiationException {
-        PanelBuilder builder = panelBuilderClass.newInstance();
-        ModelItem model = mock(modelClass, RETURNS_MOCKS);
-        JPropertiesTable table = (JPropertiesTable) builder.buildOverviewPanel(model);
+    public void builderValuesShouldMatchModel() throws Exception {
+        JPropertiesTable table = (JPropertiesTable) panelBuilder.buildOverviewPanel(modelItem);
         JPropertiesTable.PropertiesTableModel tableModel = table.getTableModel();
 
         int numberOfProperties = tableModel.getRowCount();
@@ -83,20 +86,30 @@ public class GenericPanelBuilderTest {
         }
     }
 
-    private void assertOneProperty(JPropertiesTable.PropertiesTableModel tableModel, int index) {
+    private void assertOneProperty(JPropertiesTable.PropertiesTableModel tableModel, int index) throws Exception {
+        String key = tableModel.getPropertyDescriptorAt(index).getName();
         Object propertyValue = tableModel.getValueAt(index, VALUE_INDEX);
 
-        // at this point I was expecting an exception but
+        // at this point I was expecting an exception in case of failure but
         // the exception is swallowed and null is returned
 
-        if (propertyValue == null) {
-            Object key = tableModel.getValueAt(index, KEY_INDEX);
+        if (propertyValue == null && !isEnum(key)) {
             fail(failureMessage(key));
         }
     }
 
+    private boolean isEnum(String key) {
+        try {
+            Method getter = modelItem.getClass().getMethod("get" + StringUtils.capitalize(key));
+            boolean isEnum = getter.getReturnType().isEnum();
+            return isEnum;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
     private String failureMessage(Object key) {
-        String builderName = this.panelBuilderClass.getName();
+        String builderName = this.panelBuilder.getClass().getName();
         return "The panel builder " + builderName + " fails for the property " + key;
     }
 
@@ -109,8 +122,8 @@ public class GenericPanelBuilderTest {
                 {JdbcRequestTestStepPanelBuilder.class, JdbcRequestTestStep.class},
                 {MockResponseStepPanelBuilder.class, WsdlMockResponseTestStep.class},
                 {PropertiesStepPanelBuilder.class, WsdlPropertiesTestStep.class},
-                //{RestMethodPanelBuilder.class, RestMethod.class},
-                //{RestMockActionPanelBuilder.class, RestMockAction.class},
+                {RestMethodPanelBuilder.class, RestMethod.class},
+                {RestMockActionPanelBuilder.class, RestMockAction.class},
                 {RestMockResponsePanelBuilder.class, RestMockResponse.class},
                 {RestMockServicePanelBuilder.class, RestMockService.class},
                 {RestRequestPanelBuilder.class, RestRequest.class},
@@ -120,14 +133,14 @@ public class GenericPanelBuilderTest {
                 {WorkspaceImplPanelBuilder.class, WorkspaceImpl.class},
                 {WsdlInterfacePanelBuilder.class, WsdlInterface.class},
                 {WsdlMockOperationPanelBuilder.class, WsdlMockOperation.class},
-                //{WsdlMockResponsePanelBuilder.class, WsdlMockResponse.class},
-                //{WsdlMockServicePanelBuilder.class, WsdlMockService.class},
+                {WsdlMockResponsePanelBuilder.class, WsdlMockResponse.class},
+                {WsdlMockServicePanelBuilder.class, WsdlMockService.class},
                 {WsdlOperationPanelBuilder.class, WsdlOperation.class},
                 {WsdlProjectPanelBuilder.class, WsdlProject.class},
                 {WsdlRequestPanelBuilder.class, WsdlRequest.class},
                 {WsdlRunTestCaseTestStepPanelBuilder.class, WsdlRunTestCaseTestStep.class},
                 {WsdlTestCasePanelBuilder.class, WsdlTestCase.class},
-                //{WsdlTestRequestPanelBuilder.class, WsdlTestRequest.class},
+                {WsdlTestRequestPanelBuilder.class, WsdlTestRequestStep.class},
                 {WsdlTestSuitePanelBuilder.class, WsdlTestSuite.class}
                 // add more panel builders here
         });
