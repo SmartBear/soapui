@@ -16,12 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.config.AssertionEntryConfig;
 import com.eviware.soapui.config.GroupAssertionListConfig;
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -44,6 +38,10 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.ImageIcon;
+import java.util.List;
 
 /**
  * Base class for WsdlAssertions
@@ -69,6 +67,9 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
     protected WsdlMessageAssertion(TestAssertionConfig assertionConfig, Assertable modelItem, boolean cloneable,
                                    boolean configurable, boolean multiple, boolean requiresResponseContent) {
         this.assertionConfig = assertionConfig;
+        if (assertionConfig != null && !assertionConfig.isSetId()) {
+            assertionConfig.setId(ModelSupport.generateModelItemID());
+        }
         this.assertable = modelItem;
         this.cloneable = cloneable;
         this.configurable = configurable;
