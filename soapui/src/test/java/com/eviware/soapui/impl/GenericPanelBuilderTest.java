@@ -75,44 +75,6 @@ public class GenericPanelBuilderTest {
         this.modelItem = mock(modelClass, RETURNS_MOCKS);
     }
 
-    @Test
-    public void builderValuesShouldMatchModel() throws Exception {
-        JPropertiesTable table = (JPropertiesTable) panelBuilder.buildOverviewPanel(modelItem);
-        JPropertiesTable.PropertiesTableModel tableModel = table.getTableModel();
-
-        int numberOfProperties = tableModel.getRowCount();
-        for (int i = 0; i < numberOfProperties; i++) {
-            assertOneProperty(tableModel, i);
-        }
-    }
-
-    private void assertOneProperty(JPropertiesTable.PropertiesTableModel tableModel, int index) throws Exception {
-        String key = tableModel.getPropertyDescriptorAt(index).getName();
-        Object propertyValue = tableModel.getValueAt(index, VALUE_INDEX);
-
-        // at this point I was expecting an exception in case of failure but
-        // the exception is swallowed and null is returned
-
-        if (propertyValue == null && !isEnum(key)) {
-            fail(failureMessage(key));
-        }
-    }
-
-    private boolean isEnum(String key) {
-        try {
-            Method getter = modelItem.getClass().getMethod("get" + StringUtils.capitalize(key));
-            boolean isEnum = getter.getReturnType().isEnum();
-            return isEnum;
-        } catch (NoSuchMethodException e) {
-            return false;
-        }
-    }
-
-    private String failureMessage(Object key) {
-        String builderName = this.panelBuilder.getClass().getName();
-        return "The panel builder " + builderName + " fails for the property " + key;
-    }
-
     @Parameters(name= "{index} - {0}")
     public static Collection<Object[]> panelModelCombinations() {
         return Arrays.asList(new Object[][]{
@@ -145,4 +107,40 @@ public class GenericPanelBuilderTest {
                 // add more panel builders here
         });
     }
+
+    @Test
+    public void builderValuesShouldMatchModel() throws Exception {
+        JPropertiesTable table = (JPropertiesTable) panelBuilder.buildOverviewPanel(modelItem);
+        JPropertiesTable.PropertiesTableModel tableModel = table.getTableModel();
+
+        int numberOfProperties = tableModel.getRowCount();
+        for (int i = 0; i < numberOfProperties; i++) {
+            assertPropertyExist(tableModel, i);
+        }
+    }
+
+    private void assertPropertyExist(JPropertiesTable.PropertiesTableModel tableModel, int index) throws Exception {
+        String key = tableModel.getPropertyDescriptorAt(index).getName();
+        Object propertyValue = tableModel.getValueAt(index, VALUE_INDEX);
+
+        if (propertyValue == null && !isEnum(key)) {
+            fail(failureMessage(key));
+        }
+    }
+
+    private boolean isEnum(String key) {
+        try {
+            Method getter = modelItem.getClass().getMethod("get" + StringUtils.capitalize(key));
+            boolean isEnum = getter.getReturnType().isEnum();
+            return isEnum;
+        } catch (NoSuchMethodException e) {
+            return false;
+        }
+    }
+
+    private String failureMessage(Object key) {
+        String builderName = this.panelBuilder.getClass().getName();
+        return "The panel builder " + builderName + " fails for the property " + key;
+    }
+
 }
