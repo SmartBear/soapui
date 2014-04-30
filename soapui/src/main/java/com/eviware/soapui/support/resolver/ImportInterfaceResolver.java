@@ -16,10 +16,6 @@
 
 package com.eviware.soapui.support.resolver;
 
-import java.io.File;
-
-import javax.swing.JOptionPane;
-
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
@@ -32,6 +28,9 @@ import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.ProjectDirProvider;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
+
+import javax.swing.JOptionPane;
+import java.io.File;
 
 public abstract class ImportInterfaceResolver implements Resolver {
     private boolean resolved = false;
@@ -167,7 +166,7 @@ public abstract class ImportInterfaceResolver implements Resolver {
     }
 
     public String getDescription() {
-        return "Resolve: Import inteface";
+        return "Resolve: Import interface";
     }
 
     @Override
