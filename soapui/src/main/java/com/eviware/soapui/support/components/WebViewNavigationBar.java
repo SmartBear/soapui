@@ -45,6 +45,7 @@ class WebViewNavigationBar {
     private ForwardAction forwardAction;
     private BackAction backAction;
     private Color originalFontColor;
+    private String hintText = "Enter URL here";
 
     WebViewNavigationBar() {
         this.toolbar = createNavigationBar();
@@ -103,7 +104,7 @@ class WebViewNavigationBar {
         toolbar.add(new ReloadAction());
         toolbar.add(urlField);
         urlField.addActionListener(new UrlEnteredActionListener());
-        urlField.setText("Enter URL here");
+        urlField.setText(hintText);
         urlField.setFont(urlField.getFont().deriveFont(Font.ITALIC));
         originalFontColor = urlField.getForeground();
         urlField.setForeground(new Color(170, 170, 170));
@@ -125,9 +126,13 @@ class WebViewNavigationBar {
     }
 
     private void removeHintText() {
-        if (urlField.getText().equals("Enter URL here")) {
-            urlField.setText("");
-        }
+        final String textWithOutHint = urlField.getText().replaceFirst(hintText, "");
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                urlField.setText(textWithOutHint);
+            }
+        });
         resetTextFieldDefaults();
     }
 
