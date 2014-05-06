@@ -102,7 +102,7 @@ public class Navigator extends JPanel
 		mainTree.getSelectionModel().setSelectionMode( TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION );
 		mainTree.addKeyListener( new TreeKeyListener() );
 
-		ToolTipManager.sharedInstance().registerComponent( mainTree );
+		// ToolTipManager.sharedInstance().registerComponent( mainTree );
 
 		add( new JScrollPane( mainTree ), BorderLayout.CENTER );
 		add( buildToolbar(), BorderLayout.NORTH );
