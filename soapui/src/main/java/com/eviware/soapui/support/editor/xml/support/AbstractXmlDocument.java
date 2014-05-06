@@ -59,12 +59,4 @@ public abstract class AbstractXmlDocument implements XmlDocument {
     public SchemaTypeSystem getTypeSystem() {
         return XmlBeans.getBuiltinTypeSystem();
     }
-
-    @Override
-    public void setDocumentContent(DocumentContent documentContent) {
-        setXml(documentContent.getContentAsString());
-    }
-
-    @Deprecated
-    protected abstract void setXml(String contentAsString);
 }

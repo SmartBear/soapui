@@ -85,11 +85,6 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             return request;
         }
 
-        @Deprecated
-        public String getXml() {
-            return getRequest().getRequestContent();
-        }
-
         @Nonnull
         @Override
         public DocumentContent getDocumentContent(Format format) {
@@ -102,16 +97,18 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             request.removePropertyChangeListener(this);
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             if (!updating) {
                 updating = true;
                 try {
-                    if (seemsToBeJsonContentType(getRequest().getMediaType()) && XmlUtils.seemsToBeXml(xml)) {
-                        JSON json = new JsonXmlSerializer().read(xml);
+                    String contentAsString = documentContent.getContentAsString();
+                    if (seemsToBeJsonContentType(getRequest().getMediaType()) && XmlUtils.seemsToBeXml(contentAsString)) {
+                        JSON json = new JsonXmlSerializer().read(contentAsString);
                         processNullsAndEmptyValuesIn(json);
                         request.setRequestContent(json.toString(3, 0));
                     } else {
-                        request.setRequestContent(xml);
+                        request.setRequestContent(contentAsString);
                     }
                 } finally {
                     updating = false;
@@ -189,20 +186,17 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             return modelItem;
         }
 
-        public String getXml() {
-            return modelItem.getResponseContentAsXml();
-        }
-
         @Nonnull
         @Override
         public DocumentContent getDocumentContent(Format format) {
             return extractContentFrom(modelItem.getResponse(), format);
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             HttpResponse response = getRequest().getResponse();
             if (response != null) {
-                response.setResponseContent(xml);
+                response.setResponseContent(documentContent.getContentAsString());
             }
         }
 

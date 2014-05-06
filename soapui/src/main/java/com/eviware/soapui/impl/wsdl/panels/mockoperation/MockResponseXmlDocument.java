@@ -65,12 +65,9 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
         return XmlBeans.getBuiltinTypeSystem();
     }
 
-    public String getXml() {
-        return mockResponse.getResponseContent();
-    }
-
-    public void setXml(String xml) {
-        mockResponse.setResponseContent(xml);
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        mockResponse.setResponseContent(documentContent.getContentAsString());
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {

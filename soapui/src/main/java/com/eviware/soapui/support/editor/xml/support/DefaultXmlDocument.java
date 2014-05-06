@@ -58,14 +58,10 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
         }
     }
 
-    public String getXml() {
-        return xml;
-    }
-
-    public void setXml(String xml) {
-        String oldXml = this.xml;
-        this.xml = xml;
-        if ("<not-xml/>".equals(xml)) {
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        this.xml = documentContent.getContentAsString();
+        if ("<not-xml/>".equals(documentContent.getContentAsString())) {
             fireContentChanged();
         }
 

@@ -46,14 +46,11 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
         request.addPropertyChangeListener(WsdlRequest.REQUEST_PROPERTY, this);
     }
 
-    public String getXml() {
-        return request.getRequestContent();
-    }
-
-    public void setXml(String xml) {
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
         if (!updating) {
             updating = true;
-            request.setRequestContent(xml);
+            request.setRequestContent(documentContent.getContentAsString());
             fireContentChanged();
             updating = false;
         }

@@ -61,15 +61,11 @@ public class MockRequestXmlDocument extends AbstractXmlDocument {
         return XmlBeans.getBuiltinTypeSystem();
     }
 
-    public String getXml() {
-        MockResult mockResult = mockResponse.getMockResult();
-        return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();
-    }
-
-    public void setXml(String xml) {
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
         MockResult mockResult = mockResponse.getMockResult();
         if (mockResult != null) {
-            mockResult.getMockRequest().setRequestContent(xml);
+            mockResult.getMockRequest().setRequestContent(documentContent.getContentAsString());
             fireContentChanged();
         } else {
             fireContentChanged();

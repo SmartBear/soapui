@@ -30,15 +30,5 @@ import javax.annotation.Nonnull;
  */
 
 public interface XmlDocument extends EditorDocument {
-
-    /**
-     * Use #getDocumentContent instead.
-     *
-     * @return content as string, sometimes XML, sometimes JSON, sometimes something else
-     */
-    @Deprecated
-    public String getXml();
-
     public SchemaTypeSystem getTypeSystem();
-
 }

@@ -48,11 +48,6 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
         request.addPropertyChangeListener(this);
     }
 
-    public String getXml() {
-        Response response = request.getResponse();
-        return response == null ? null : response.getContentAsString();
-    }
-
     @Nonnull
     @Override
     public DocumentContent getDocumentContent(Format format) {
@@ -60,12 +55,13 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
         return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getContentAsString());
     }
 
-    public void setXml(String xml) {
-        HttpResponse response = (HttpResponse) request.getResponse();
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        HttpResponse response = request.getResponse();
         if (response != null) {
             try {
                 settingResponse = true;
-                response.setResponseContent(xml);
+                response.setResponseContent(documentContent.getContentAsString());
                 fireContentChanged();
             } finally {
                 settingResponse = false;
@@ -85,7 +81,7 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
     }
 
     public SchemaTypeSystem getTypeSystem() {
-        WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
+        WsdlInterface iface = request.getOperation().getInterface();
         WsdlContext wsdlContext = iface.getWsdlContext();
         try {
             return wsdlContext.getSchemaTypeSystem();

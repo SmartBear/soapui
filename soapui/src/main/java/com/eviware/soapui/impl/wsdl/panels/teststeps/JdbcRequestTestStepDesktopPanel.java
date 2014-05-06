@@ -543,14 +543,10 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
             fireContentChanged();
         }
 
-        public String getXml() {
-            JdbcResponse response = jdbcRequestTestStep.getJdbcRequest().getResponse();
-            return response == null ? null : response.getContentAsString();
-        }
-
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             if (jdbcRequestTestStep.getJdbcRequest().getResponse() != null) {
-                jdbcRequestTestStep.getJdbcRequest().getResponse().setContentAsString(xml);
+                jdbcRequestTestStep.getJdbcRequest().getResponse().setContentAsString(documentContent.getContentAsString());
             }
         }
 

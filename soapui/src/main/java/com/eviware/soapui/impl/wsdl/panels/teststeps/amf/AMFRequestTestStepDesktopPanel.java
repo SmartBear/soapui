@@ -579,11 +579,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             fireContentChanged();
         }
 
-        public String getXml() {
-            AMFResponse response = amfRequestTestStep.getAMFRequest().getResponse();
-            return response == null ? null : response.getResponseContentXML();
-        }
-
         @Override
         @Nonnull
         public DocumentContent getDocumentContent(Format format) {
@@ -591,9 +586,10 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getResponseContentXML());
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             if (amfRequestTestStep.getAMFRequest().getResponse() != null) {
-                amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(xml);
+                amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(documentContent.getContentAsString());
             }
         }
 
@@ -612,11 +608,6 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             fireContentChanged();
         }
 
-        public String getXml() {
-            AMFRequest request = amfRequestTestStep.getAMFRequest();
-            return request == null ? null : request.requestAsXML();
-        }
-
         @Override
         @Nonnull
         public DocumentContent getDocumentContent(Format format) {
@@ -624,7 +615,8 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             return new DocumentContent(null, request == null ? null : request.requestAsXML());
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
         }
 
         public void release() {
