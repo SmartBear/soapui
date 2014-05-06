@@ -23,15 +23,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -65,6 +57,8 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 	private JProjectTestSuiteList testSuiteList;
 	private RunAction runAction = new RunAction();
 	private CancelAction cancelAction = new CancelAction();
+    private JButton runButton;
+    private JButton cancelButton;
 	private JToggleButton sequentialButton;
 	private JToggleButton parallellButton;
 	private final InternalProjectListener testSuiteListener = new InternalProjectListener();
@@ -127,7 +121,9 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 	private JComponent buildToolbar()
 	{
 		cancelAction.setEnabled( false );
+        cancelButton.setVisible( false );
 		runAction.setEnabled( project.getTestSuiteCount() > 0 );
+        runButton.setVisible(project.getTestSuiteCount() > 0);
 
 		JXToolBar toolbar = UISupport.createToolbar();
 
@@ -148,8 +144,11 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 
 	protected void addToolbarActions( JXToolBar toolbar )
 	{
-		toolbar.add( UISupport.createToolbarButton( runAction ) );
-		toolbar.add( UISupport.createToolbarButton( cancelAction ) );
+		runButton = UISupport.createToolbarButton( runAction );
+        toolbar.add( runButton );
+		cancelButton = UISupport.createToolbarButton( cancelAction );
+        toolbar.add( cancelButton );
+        cancelButton.setVisible( false );
 
 		toolbar.addRelatedGap();
 
@@ -266,7 +265,10 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 	protected void beforeRun()
 	{
 		runAction.setEnabled( false );
-		cancelAction.setEnabled( true );
+        runButton.setVisible( false );
+        cancelAction.setEnabled( true );
+        cancelButton.setVisible( true );
+
 		testSuiteList.setEnabled( false );
 		progressBar.setForeground( Color.GREEN.darker() );
 	}
@@ -274,8 +276,11 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 	protected void afterRun()
 	{
 		runAction.setEnabled( true );
-		cancelAction.setEnabled( false );
-		testSuiteList.setEnabled( true );
+        runButton.setVisible( true );
+        cancelAction.setEnabled( false );
+        cancelButton.setVisible( false );
+
+        testSuiteList.setEnabled( true );
 
 		progressBar.setString( projectRunner.getStatus().toString() );
 		progressBar.setForeground( projectRunner.isFailed() ? Color.RED : Color.GREEN.darker() );
@@ -285,12 +290,16 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel
 	{
 		public void testSuiteAdded( TestSuite testSuite )
 		{
-			runAction.setEnabled( project.getTestSuiteCount() > 0 );
-		}
+            runAction.setEnabled( project.getTestSuiteCount() > 0 );
+            runButton.setVisible( project.getTestSuiteCount() > 0 );
+            cancelButton.setVisible( false );
+        }
 
 		public void testSuiteRemoved( TestSuite testSuite )
 		{
-			runAction.setEnabled( project.getTestSuiteCount() > 0 );
+            runAction.setEnabled( project.getTestSuiteCount() > 0 );
+            runButton.setVisible( project.getTestSuiteCount() > 0 );
+            cancelButton.setVisible( false );
 		}
 	}
 

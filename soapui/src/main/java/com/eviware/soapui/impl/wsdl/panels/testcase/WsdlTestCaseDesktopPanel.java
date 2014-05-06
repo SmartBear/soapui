@@ -302,6 +302,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 				TestCaseOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/options.gif" ) );
 		optionsButton.setText( null );
 		cancelButton = UISupport.createToolbarButton( new CancelRunTestCaseAction(), false );
+        cancelButton.setVisible( false );
 
 		loopButton = new JToggleButton( UISupport.createImageIcon( "/loop.gif" ) );
 		loopButton.setPreferredSize( UISupport.getPreferredButtonSize() );
@@ -412,7 +413,10 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 				return;
 
 			runButton.setEnabled( false );
+            runButton.setVisible( false );
 			cancelButton.setEnabled( true );
+            cancelButton.setVisible( true );
+
 			testStepList.setEnabled( false );
 			testStepList.setSelectedIndex( -1 );
 			testCaseLog.clear();
@@ -524,7 +528,10 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		{
 			// make sure state is correct
 			runButton.setEnabled( true );
+            runButton.setVisible( true );
 			cancelButton.setEnabled( false );
+            cancelButton.setVisible( false );
+
 			testStepList.setEnabled( true );
 			return;
 		}
@@ -630,7 +637,10 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	protected void afterRun()
 	{
 		runButton.setEnabled( true );
+        runButton.setVisible( true );
 		cancelButton.setEnabled( false );
+        cancelButton.setVisible( false );
+
 		testStepList.setEnabled( true );
 	}
 

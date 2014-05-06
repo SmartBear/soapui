@@ -206,6 +206,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		// ButtonBarBuilder builder = new ButtonBarBuilder();
 		runButton = UISupport.createToolbarButton( new RunLoadTestAction() );
 		cancelButton = UISupport.createToolbarButton( new CancelRunTestCaseAction(), false );
+        cancelButton.setVisible( false );
 		resetButton = UISupport.createToolbarButton( new ResetAction() );
 		exportButton = UISupport.createToolbarButton( new ExportStatisticsAction( loadTest.getStatisticsModel() ) );
 
@@ -418,6 +419,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			}
 
 			runButton.setEnabled( false );
+            runButton.setVisible( false );
 			runner = loadtest.run();
 		}
 	}
@@ -485,6 +487,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			{
 				runner.cancel( "Canceled" );
 				cancelButton.setEnabled( false );
+                cancelButton.setVisible( false );
 			}
 		}
 	}
@@ -528,7 +531,9 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			progressBar.setStringPainted( true );
 
 			runButton.setEnabled( false );
+            runButton.setVisible( false );
 			cancelButton.setEnabled( true );
+            cancelButton.setVisible( true );
 			strategyCombo.setEnabled( false );
 			limitTypeCombo.setEnabled( false );
 			optionsButton.setEnabled( false );
@@ -540,8 +545,10 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 		public void afterLoadTest( LoadTestRunner testRunner, LoadTestRunContext context )
 		{
 			runButton.setEnabled( true );
-
+            runButton.setVisible( true );
 			cancelButton.setEnabled( false );
+            cancelButton.setVisible( false );
+
 			strategyCombo.setEnabled( true );
 			limitTypeCombo.setEnabled( true );
 			threadsSpinner.setEnabled( true );

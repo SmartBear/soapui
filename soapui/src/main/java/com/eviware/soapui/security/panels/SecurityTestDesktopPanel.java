@@ -355,6 +355,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 				SecurityTestOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/options.gif" ) );
 		optionsButton.setText( null );
 		cancelButton = UISupport.createToolbarButton( new CancelRunSecuritytestAction(), false );
+        cancelButton.setVisible( false );
 
 		// loopButton = new JToggleButton( UISupport.createImageIcon( "/loop.gif"
 		// ) );
@@ -415,12 +416,17 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
 			// make sure state is correct
 			runButton.setEnabled( true );
+            runButton.setVisible( true );
 			cancelButton.setEnabled( false );
+            cancelButton.setVisible( false );
 			return;
 		}
 
 		runButton.setEnabled( false );
+        runButton.setVisible( false );
 		cancelButton.setEnabled( true );
+        cancelButton.setVisible( true );
+
 		StringToObjectMap properties = new StringToObjectMap();
 		// properties.put( "loopButton", loopButton );
 		properties.put( TestCaseRunContext.INTERACTIVE, Boolean.TRUE );
@@ -528,7 +534,10 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 	protected void afterRun()
 	{
 		runButton.setEnabled( true );
+        runButton.setVisible( true );
 		cancelButton.setEnabled( false );
+        cancelButton.setVisible( false );
+
 		testStepList.setEnabled( true );
 	}
 
@@ -690,7 +699,10 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 			functionalTestLog.clear();
 
 			runButton.setEnabled( false );
+            runButton.setVisible( false );
 			cancelButton.setEnabled( true );
+            cancelButton.setVisible( true );
+
 			testStepList.setEnabled( false );
 			// testStepList.setSelectedIndex( -1 );
 			String start = DateUtil.formatExtraFull( new Date() );

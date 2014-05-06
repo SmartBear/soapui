@@ -51,17 +51,7 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
+import javax.swing.*;
 import javax.swing.text.Document;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -83,6 +73,8 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 	private JTestSuiteTestCaseList testCaseList;
 	private RunAction runAction = new RunAction();
 	private CancelAction cancelAction = new CancelAction();
+    private JButton runButton;
+    private JButton cancelButton;
 	private JToggleButton sequentialButton;
 	private JToggleButton parallellButton;
 	private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
@@ -142,7 +134,9 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 	private JComponent buildToolbar()
 	{
 		cancelAction.setEnabled( false );
+        cancelButton.setVisible( false );
 		runAction.setEnabled( getModelItem().getTestCaseCount() > 0 );
+        runButton.setVisible( getModelItem().getTestCaseCount() > 0 );
 
 		JXToolBar toolbar = UISupport.createToolbar();
 
@@ -163,8 +157,11 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
 	protected void addToolbarActions( JXToolBar toolbar )
 	{
-		toolbar.add( UISupport.createToolbarButton( runAction ) );
-		toolbar.add( UISupport.createToolbarButton( cancelAction ) );
+        runButton = UISupport.createToolbarButton( runAction );
+		toolbar.add( runButton );
+        cancelButton = UISupport.createToolbarButton( cancelAction );
+		toolbar.add( cancelButton );
+        cancelButton.setVisible( false );
 
 		ButtonGroup buttonGroup = new ButtonGroup();
 
@@ -328,7 +325,10 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 	protected void beforeRun()
 	{
 		runAction.setEnabled( false );
+        runButton.setVisible( false );
 		cancelAction.setEnabled( testSuiteRunner != null );
+        cancelButton.setEnabled( testSuiteRunner != null );
+
 		testCaseList.setEnabled( false );
 		progressBar.setForeground( Color.GREEN.darker() );
 	}
@@ -336,7 +336,10 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 	protected void afterRun( WsdlTestSuiteRunner testSuiteRunner )
 	{
 		runAction.setEnabled( true );
+        runButton.setEnabled( true );
 		cancelAction.setEnabled( false );
+        cancelButton.setEnabled( false );
+
 		testCaseList.setEnabled( true );
 
 		progressBar.setString( String.valueOf( testSuiteRunner.getStatus() ) );
@@ -348,11 +351,15 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 		public void testCaseAdded( TestCase testCase )
 		{
 			runAction.setEnabled( getModelItem().getTestCaseCount() > 0 );
+            runButton.setVisible( getModelItem().getTestCaseCount() > 0 );
+            cancelButton.setVisible( false );
 		}
 
 		public void testCaseRemoved( TestCase testCase )
 		{
 			runAction.setEnabled( getModelItem().getTestCaseCount() > 0 );
+            runButton.setVisible( getModelItem().getTestCaseCount() > 0 );
+            cancelButton.setVisible( false );
 		}
 	}
 

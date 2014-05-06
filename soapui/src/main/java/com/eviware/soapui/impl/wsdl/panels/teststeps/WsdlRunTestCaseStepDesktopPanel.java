@@ -13,6 +13,21 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
+/*
+ * Copyright 2004-2014 SmartBear Software
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
+ * versions of the EUPL (the "Licence");
+ * You may not use this work except in compliance with the Licence.
+ * You may obtain a copy of the Licence at:
+ *
+ * http://ec.europa.eu/idabc/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+ * express or implied. See the Licence for the specific language governing permissions and limitations
+ * under the Licence.
+*/
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
@@ -24,11 +39,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 import com.eviware.soapui.SoapUI;
@@ -74,6 +85,8 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private TitledBorder titledBorder;
 	private OptionsAction optionsAction;
 	private RunAction runAction;
+    private JButton runButton;
+    private JButton cancelButton;
 	private OpenTestCaseAction openTestCaseAction;
 	private JTestRunLog testRunLog;
 	private CancelRunTestCaseAction cancelAction;
@@ -116,6 +129,8 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	private void setEnabledState()
 	{
 		runAction.setEnabled( getModelItem().getTargetTestCase() != null );
+        runButton.setVisible( getModelItem().getTargetTestCase() != null );
+        cancelButton.setVisible( false );
 		openTestCaseAction.setEnabled( getModelItem().getTargetTestCase() != null );
 	}
 
@@ -163,8 +178,11 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 	{
 		JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.add( UISupport.createToolbarButton( runAction = new RunAction() ) );
-		toolbar.add( UISupport.createToolbarButton( cancelAction = new CancelRunTestCaseAction(), false ) );
+        runButton = UISupport.createToolbarButton( runAction = new RunAction() );
+		toolbar.add( runButton );
+        cancelButton = UISupport.createToolbarButton( cancelAction = new CancelRunTestCaseAction(), false );
+		toolbar.add( cancelButton );
+        cancelButton.setVisible( false );
 		toolbar.add( UISupport.createToolbarButton( optionsAction = new OptionsAction() ) );
 		toolbar.add( UISupport.createToolbarButton( openTestCaseAction = new OpenTestCaseAction() ) );
 
@@ -219,7 +237,9 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		public void actionPerformed( ActionEvent e )
 		{
 			runAction.setEnabled( false );
+            runButton.setVisible( false );
 			cancelAction.setEnabled( true );
+            cancelButton.setVisible( false );
 
 			new Thread( new Runnable()
 			{
@@ -251,7 +271,9 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 					{
 						testStep.removeTestRunListener( testRunListener );
 						runAction.setEnabled( true );
+                        runButton.setVisible( false );
 						cancelAction.setEnabled( false );
+                        cancelButton.setVisible( false );
 					}
 				}
 			} ).start();
@@ -477,13 +499,17 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			runAction.setEnabled( false );
+            runButton.setVisible( false );
 			cancelAction.setEnabled( true );
+            cancelButton.setVisible( false );
 		}
 
 		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
 		{
 			runAction.setEnabled( true );
+            runButton.setVisible( true );
 			cancelAction.setEnabled( false );
+            cancelButton.setEnabled( false );
 		}
 	}
 
