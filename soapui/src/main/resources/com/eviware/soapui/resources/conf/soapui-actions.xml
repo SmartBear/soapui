@@ -1087,6 +1087,7 @@
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddEmptyRestMockResourceAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="RenameMockResponseAction" keyStroke="F2"/>
         <tns:actionMapping actionId="DeleteMockServiceAction" keyStroke="DELETE"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ShowOnlineSoapUIHelp"
