@@ -339,19 +339,19 @@ public class SoapUI {
         mainToolbar.add(new NewWsdlProjectActionDelegate());
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
-        mainToolbar.addSpace(2);
+        mainToolbar.addSpace(8);
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.FORUMS_HELP_URL,
                 "Opens the SoapUI Forum in a browser", "/group_go.png"));
-        mainToolbar.addSpace(2);
+        mainToolbar.addSpace(8);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
                 "/favicon.png"));
-        mainToolbar.addSpace(2);
+        mainToolbar.addSpace(8);
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
 
         mainToolbar.addGlue();
-
+        /* SOAPUI-4110
         searchField = new JTextField(20);
         searchField.addKeyListener(new KeyAdapter() {
             @Override
@@ -371,6 +371,7 @@ public class SoapUI {
         mainToolbar.addSeparator(new Dimension(3, 3));
         mainToolbar.addFixed(searchField);
         mainToolbar.add(new ToolbarForumSearchAction());
+        */
         mainToolbar.add(new ShowOnlineHelpAction(HelpUrls.USERGUIDE_HELP_URL));
 
         for (int i = 0; i < mainToolbar.getComponentCount(); i++) {
