@@ -23,34 +23,29 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
 /**
  * Factory for creation Delay steps
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DelayStepFactory extends WsdlTestStepFactory
-{
-	public static final String DELAY_TYPE = "delay";
+public class DelayStepFactory extends WsdlTestStepFactory {
+    public static final String DELAY_TYPE = "delay";
 
-	public DelayStepFactory()
-	{
-		super( DELAY_TYPE, "Delay", "Delays TestCase execution for a specified number of milliseconds", "/wait.gif" );
-	}
+    public DelayStepFactory() {
+        super(DELAY_TYPE, "Delay", "Delays TestCase execution for a specified number of milliseconds", "/wait.gif");
+    }
 
-	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-	{
-		return new WsdlDelayTestStep( testCase, config, forLoadTest );
-	}
+    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
+        return new WsdlDelayTestStep(testCase, config, forLoadTest);
+    }
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
-	{
-		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( DELAY_TYPE );
-		testStepConfig.setName( name );
-		return testStepConfig;
-	}
+    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
+        TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+        testStepConfig.setType(DELAY_TYPE);
+        testStepConfig.setName(name);
+        return testStepConfig;
+    }
 
-	public boolean canCreate()
-	{
-		return true;
-	}
+    public boolean canCreate() {
+        return true;
+    }
 }

@@ -27,39 +27,33 @@ import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 
 /**
  * DataSource for an existing WsdlRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class RestRequestDataSource implements DataSource
-{
-	private final HttpRequestInterface<?> restRequest;
-	private final String requestContent;
+public class RestRequestDataSource implements DataSource {
+    private final HttpRequestInterface<?> restRequest;
+    private final String requestContent;
 
-	public RestRequestDataSource( HttpRequestInterface<?> restRequest, String requestContent )
-	{
-		this.restRequest = restRequest;
-		this.requestContent = requestContent;
-	}
+    public RestRequestDataSource(HttpRequestInterface<?> restRequest, String requestContent) {
+        this.restRequest = restRequest;
+        this.requestContent = requestContent;
+    }
 
-	public String getContentType()
-	{
-		return restRequest.getMediaType();
-	}
+    public String getContentType() {
+        return restRequest.getMediaType();
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		byte[] bytes = requestContent.getBytes( "UTF-8" );
-		return new ByteArrayInputStream( bytes );
-	}
+    public InputStream getInputStream() throws IOException {
+        byte[] bytes = requestContent.getBytes("UTF-8");
+        return new ByteArrayInputStream(bytes);
+    }
 
-	public String getName()
-	{
-		return restRequest.getName();
-	}
+    public String getName() {
+        return restRequest.getName();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

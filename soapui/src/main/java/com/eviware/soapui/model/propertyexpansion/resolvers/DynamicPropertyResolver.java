@@ -24,48 +24,41 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.ProjectDirProvider;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.WorkspaceDirProvider;
 
-public class DynamicPropertyResolver implements PropertyResolver
-{
-	private static Map<String, ValueProvider> providers = new HashMap<String, ValueProvider>();
+public class DynamicPropertyResolver implements PropertyResolver {
+    private static Map<String, ValueProvider> providers = new HashMap<String, ValueProvider>();
 
-	static
-	{
-		addProvider( "projectDir", new ProjectDirProvider() );
-		addProvider( "workspaceDir", new WorkspaceDirProvider() );
+    static {
+        addProvider("projectDir", new ProjectDirProvider());
+        addProvider("workspaceDir", new WorkspaceDirProvider());
 
-		for( ValueProviderFactory obj : SoapUI.getFactoryRegistry().getFactories( ValueProviderFactory.class ) )
-		{
-			addProvider( obj.getValueId(), obj.createValueProvider() );
-		}
-	}
+        for (ValueProviderFactory obj : SoapUI.getFactoryRegistry().getFactories(ValueProviderFactory.class)) {
+            addProvider(obj.getValueId(), obj.createValueProvider());
+        }
+    }
 
-	public DynamicPropertyResolver()
-	{
-	}
+    public DynamicPropertyResolver() {
+    }
 
-	public String resolveProperty( PropertyExpansionContext context, String name, boolean globalOverride )
-	{
-		ValueProvider provider = providers.get( name );
-		if( provider != null )
-			return provider.getValue( context );
+    public String resolveProperty(PropertyExpansionContext context, String name, boolean globalOverride) {
+        ValueProvider provider = providers.get(name);
+        if (provider != null) {
+            return provider.getValue(context);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public static void addProvider( String propertyName, ValueProvider provider )
-	{
-		providers.put( propertyName, provider );
-	}
+    public static void addProvider(String propertyName, ValueProvider provider) {
+        providers.put(propertyName, provider);
+    }
 
-	public interface ValueProvider
-	{
-		String getValue( PropertyExpansionContext context );
-	}
+    public interface ValueProvider {
+        String getValue(PropertyExpansionContext context);
+    }
 
-	public interface ValueProviderFactory
-	{
-		public ValueProvider createValueProvider();
+    public interface ValueProviderFactory {
+        public ValueProvider createValueProvider();
 
-		public String getValueId();
-	}
+        public String getValueId();
+    }
 }

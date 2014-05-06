@@ -39,150 +39,131 @@ import java.util.List;
 
 /**
  * @author Erik R. Yverling
- * 
+ *         <p/>
  *         Displays a table of SAML attribute values
  */
-public class SAMLAttributeValuesTable extends JPanel
-{
-	private final List<StringToStringMap> attributeValues;
-	private WssEntryBase entry;
-	private AttributeValuesTableModel attributeValuesTableModel;
-	private JTable attributeValuesTable;
-	private JButton removeAttributeValueButton;
-	private JButton createAttributeValueButton;
+public class SAMLAttributeValuesTable extends JPanel {
+    private final List<StringToStringMap> attributeValues;
+    private WssEntryBase entry;
+    private AttributeValuesTableModel attributeValuesTableModel;
+    private JTable attributeValuesTable;
+    private JButton removeAttributeValueButton;
+    private JButton createAttributeValueButton;
 
-	public SAMLAttributeValuesTable( List<StringToStringMap> attributeValues, WssEntryBase entry )
-	{
-		super( new BorderLayout() );
-		this.attributeValues = attributeValues;
-		this.entry = entry;
+    public SAMLAttributeValuesTable(List<StringToStringMap> attributeValues, WssEntryBase entry) {
+        super(new BorderLayout());
+        this.attributeValues = attributeValues;
+        this.entry = entry;
 
-		attributeValuesTableModel = new AttributeValuesTableModel();
-		attributeValuesTable = JTableFactory.getInstance().makeJTable( attributeValuesTableModel );
-		attributeValuesTable.setTableHeader( null );
-		attributeValuesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-		{
+        attributeValuesTableModel = new AttributeValuesTableModel();
+        attributeValuesTable = JTableFactory.getInstance().makeJTable(attributeValuesTableModel);
+        attributeValuesTable.setTableHeader(null);
+        attributeValuesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-			public void valueChanged( ListSelectionEvent e )
-			{
-				removeAttributeValueButton.setEnabled( attributeValuesTable.getSelectedRow() != -1 );
-			}
-		} );
+            public void valueChanged(ListSelectionEvent e) {
+                removeAttributeValueButton.setEnabled(attributeValuesTable.getSelectedRow() != -1);
+            }
+        });
 
-		JScrollPane scrollPane = new JScrollPane( attributeValuesTable );
-		scrollPane.setBackground( Color.WHITE );
-		scrollPane.setOpaque( true );
-		add( scrollPane, BorderLayout.CENTER );
-		add( buildToolbar(), BorderLayout.NORTH );
+        JScrollPane scrollPane = new JScrollPane(attributeValuesTable);
+        scrollPane.setBackground(Color.WHITE);
+        scrollPane.setOpaque(true);
+        add(scrollPane, BorderLayout.CENTER);
+        add(buildToolbar(), BorderLayout.NORTH);
 
-		setPreferredSize( new Dimension( 175, 150 ) );
-	}
+        setPreferredSize(new Dimension(175, 150));
+    }
 
-	@Override
-	public void setEnabled( boolean b )
-	{
-		attributeValuesTable.setEnabled( b );
-		createAttributeValueButton.setEnabled( b );
-		removeAttributeValueButton.setEnabled( b );
-	}
+    @Override
+    public void setEnabled(boolean b) {
+        attributeValuesTable.setEnabled(b);
+        createAttributeValueButton.setEnabled(b);
+        removeAttributeValueButton.setEnabled(b);
+    }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createSmallToolbar();
+    private Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		createAttributeValueButton = UISupport.createToolbarButton( new AddAttributeValueAction() );
-		toolbar.addFixed( createAttributeValueButton );
-		removeAttributeValueButton = UISupport.createToolbarButton( new RemoveAttributeValueAction() );
-		toolbar.addFixed( removeAttributeValueButton );
+        createAttributeValueButton = UISupport.createToolbarButton(new AddAttributeValueAction());
+        toolbar.addFixed(createAttributeValueButton);
+        removeAttributeValueButton = UISupport.createToolbarButton(new RemoveAttributeValueAction());
+        toolbar.addFixed(removeAttributeValueButton);
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	private class AttributeValuesTableModel extends AbstractTableModel
-	{
-		public int getColumnCount()
-		{
-			return 1;
-		}
+    private class AttributeValuesTableModel extends AbstractTableModel {
+        public int getColumnCount() {
+            return 1;
+        }
 
-		public int getRowCount()
-		{
-			return attributeValues.size();
-		}
+        public int getRowCount() {
+            return attributeValues.size();
+        }
 
-		@Override
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			return true;
-		}
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return true;
+        }
 
-		@Override
-		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-		{
-			StringToStringMap attributeValue = attributeValues.get( rowIndex );
-			if( aValue == null )
-				aValue = "";
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            StringToStringMap attributeValue = attributeValues.get(rowIndex);
+            if (aValue == null) {
+                aValue = "";
+            }
 
-			fireTableCellUpdated( rowIndex, 1 );
-			attributeValue.put( "value", aValue.toString() );
+            fireTableCellUpdated(rowIndex, 1);
+            attributeValue.put("value", aValue.toString());
 
-			entry.saveConfig();
-		}
+            entry.saveConfig();
+        }
 
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			StringToStringMap attributeValue = attributeValues.get( rowIndex );
-			return attributeValue.get( "value" );
-		}
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            StringToStringMap attributeValue = attributeValues.get(rowIndex);
+            return attributeValue.get("value");
+        }
 
-		public void remove( int row )
-		{
-			attributeValues.remove( row );
-			fireTableRowsDeleted( row, row );
-		}
+        public void remove(int row) {
+            attributeValues.remove(row);
+            fireTableRowsDeleted(row, row);
+        }
 
-		public void addAttributeValues( StringToStringMap map )
-		{
-			attributeValues.add( map );
-			fireTableRowsInserted( attributeValues.size() - 1, attributeValues.size() - 1 );
-		}
-	}
+        public void addAttributeValues(StringToStringMap map) {
+            attributeValues.add(map);
+            fireTableRowsInserted(attributeValues.size() - 1, attributeValues.size() - 1);
+        }
+    }
 
-	private class AddAttributeValueAction extends AbstractAction
-	{
-		public AddAttributeValueAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Adds a new attribute value" );
-		}
+    private class AddAttributeValueAction extends AbstractAction {
+        public AddAttributeValueAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SHORT_DESCRIPTION, "Adds a new attribute value");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			attributeValuesTableModel.addAttributeValues( new StringToStringMap() );
-			entry.saveConfig();
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            attributeValuesTableModel.addAttributeValues(new StringToStringMap());
+            entry.saveConfig();
+        }
+    }
 
-	private class RemoveAttributeValueAction extends AbstractAction
-	{
-		public RemoveAttributeValueAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Removes the attribute value" );
-			setEnabled( false );
-		}
+    private class RemoveAttributeValueAction extends AbstractAction {
+        public RemoveAttributeValueAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SHORT_DESCRIPTION, "Removes the attribute value");
+            setEnabled(false);
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			int row = attributeValuesTable.getSelectedRow();
-			if( row == -1 )
-				return;
+        public void actionPerformed(ActionEvent e) {
+            int row = attributeValuesTable.getSelectedRow();
+            if (row == -1) {
+                return;
+            }
 
-			if( UISupport.confirm( "Remove selected attribute value?", "Remove attribute value" ) )
-			{
-				attributeValuesTableModel.remove( row );
-				entry.saveConfig();
-			}
-		}
-	}
+            if (UISupport.confirm("Remove selected attribute value?", "Remove attribute value")) {
+                attributeValuesTableModel.remove(row);
+                entry.saveConfig();
+            }
+        }
+    }
 }

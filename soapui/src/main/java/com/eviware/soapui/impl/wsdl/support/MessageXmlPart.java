@@ -27,53 +27,46 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
 
 /**
  * Wrapper for WSDL parts
- * 
+ *
  * @author ole.matzura
  */
 
-public class MessageXmlPart
-{
-	private XmlObject partXmlObject;
-	private final XmlObject sourceXmlObject;
-	private final Part part;
-	private final BindingOperation bindingOperation;
-	private final boolean isRequest;
-	private final SchemaType type;
+public class MessageXmlPart {
+    private XmlObject partXmlObject;
+    private final XmlObject sourceXmlObject;
+    private final Part part;
+    private final BindingOperation bindingOperation;
+    private final boolean isRequest;
+    private final SchemaType type;
 
-	public MessageXmlPart( XmlObject sourceXmlObject, SchemaType type, Part part, BindingOperation bindingOperation,
-			boolean isRequest )
-	{
-		this.sourceXmlObject = sourceXmlObject;
-		this.type = type;
-		this.part = part;
-		this.bindingOperation = bindingOperation;
-		this.isRequest = isRequest;
-		partXmlObject = type == null ? sourceXmlObject.copy() : sourceXmlObject.copy().changeType( type );
-	}
+    public MessageXmlPart(XmlObject sourceXmlObject, SchemaType type, Part part, BindingOperation bindingOperation,
+                          boolean isRequest) {
+        this.sourceXmlObject = sourceXmlObject;
+        this.type = type;
+        this.part = part;
+        this.bindingOperation = bindingOperation;
+        this.isRequest = isRequest;
+        partXmlObject = type == null ? sourceXmlObject.copy() : sourceXmlObject.copy().changeType(type);
+    }
 
-	public void update()
-	{
-		sourceXmlObject.set( partXmlObject );
-	}
+    public void update() {
+        sourceXmlObject.set(partXmlObject);
+    }
 
-	public XmlCursor newCursor()
-	{
-		return partXmlObject.newCursor();
-	}
+    public XmlCursor newCursor() {
+        return partXmlObject.newCursor();
+    }
 
-	public boolean isAttachmentPart()
-	{
-		return isRequest ? WsdlUtils.isAttachmentInputPart( part, bindingOperation ) : WsdlUtils.isAttachmentOutputPart(
-				part, bindingOperation );
-	}
+    public boolean isAttachmentPart() {
+        return isRequest ? WsdlUtils.isAttachmentInputPart(part, bindingOperation) : WsdlUtils.isAttachmentOutputPart(
+                part, bindingOperation);
+    }
 
-	public Part getPart()
-	{
-		return part;
-	}
+    public Part getPart() {
+        return part;
+    }
 
-	public SchemaType getSchemaType()
-	{
-		return type;
-	}
+    public SchemaType getSchemaType() {
+        return type;
+    }
 }

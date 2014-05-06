@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.scan;
+*/
+package com.eviware.soapui.security.scan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,134 +34,114 @@ import com.eviware.soapui.security.support.SecurityCheckedParameterImpl;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
- * 
  * These are for Security Scans that mutate parameters.
- * 
+ *
  * @author robert
- * 
  */
 public abstract class AbstractSecurityScanWithProperties extends AbstractSecurityScan implements
-		XPathReferenceContainer
-{
-	public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
-	private SecurityCheckedParameterHolder parameterHolder;
+        XPathReferenceContainer {
+    public static final String SECURITY_CHANGED_PARAMETERS = "SecurityChangedParameters";
+    private SecurityCheckedParameterHolder parameterHolder;
 
-	public AbstractSecurityScanWithProperties( TestStep testStep, SecurityScanConfig config, ModelItem parent,
-			String icon )
-	{
-		super( testStep, config, parent, icon );
+    public AbstractSecurityScanWithProperties(TestStep testStep, SecurityScanConfig config, ModelItem parent,
+                                              String icon) {
+        super(testStep, config, parent, icon);
 
-		setParameterHolder( new SecurityCheckedParameterHolder( this, getConfig().getCheckedParameters() ) );
-	}
+        setParameterHolder(new SecurityCheckedParameterHolder(this, getConfig().getCheckedParameters()));
+    }
 
-	public SecurityCheckedParameterHolder getParameterHolder()
-	{
-		return this.parameterHolder;
-	}
+    public SecurityCheckedParameterHolder getParameterHolder() {
+        return this.parameterHolder;
+    }
 
-	protected void setParameterHolder( SecurityCheckedParameterHolder parameterHolder )
-	{
-		this.parameterHolder = parameterHolder;
-	}
+    protected void setParameterHolder(SecurityCheckedParameterHolder parameterHolder) {
+        this.parameterHolder = parameterHolder;
+    }
 
-	@Override
-	public void copyConfig( SecurityScanConfig config )
-	{
-		super.copyConfig( config );
-		getConfig().setCheckedParameters( config.getCheckedParameters() );
-		if( parameterHolder != null )
-			parameterHolder.release();
+    @Override
+    public void copyConfig(SecurityScanConfig config) {
+        super.copyConfig(config);
+        getConfig().setCheckedParameters(config.getCheckedParameters());
+        if (parameterHolder != null) {
+            parameterHolder.release();
+        }
 
-		parameterHolder = new SecurityCheckedParameterHolder( this, config.getCheckedParameters() );
-	}
+        parameterHolder = new SecurityCheckedParameterHolder(this, config.getCheckedParameters());
+    }
 
-	public XPathReference[] getXPathReferences()
-	{
-		List<XPathReference> result = new ArrayList<XPathReference>();
+    public XPathReference[] getXPathReferences() {
+        List<XPathReference> result = new ArrayList<XPathReference>();
 
-		for( SecurityCheckedParameter param : getParameterHolder().getParameterList() )
-		{
-			TestStep t = getTestStep();
-			if( t instanceof WsdlTestRequestStep )
-			{
-				if( param != null )
-					result.add( new XPathReferenceImpl( "SecurityScan Parameter " + param.getLabel() + " in \""
-							+ getTestStep().getName() + "\"", ( ( WsdlTestRequestStep )t ).getOperation(), true, param,
-							"xpath" ) );
-			}
-		}
+        for (SecurityCheckedParameter param : getParameterHolder().getParameterList()) {
+            TestStep t = getTestStep();
+            if (t instanceof WsdlTestRequestStep) {
+                if (param != null) {
+                    result.add(new XPathReferenceImpl("SecurityScan Parameter " + param.getLabel() + " in \""
+                            + getTestStep().getName() + "\"", ((WsdlTestRequestStep) t).getOperation(), true, param,
+                            "xpath"));
+                }
+            }
+        }
 
-		return result.toArray( new XPathReference[result.size()] );
-	}
+        return result.toArray(new XPathReference[result.size()]);
+    }
 
-	@Override
-	public void updateSecurityConfig( SecurityScanConfig config )
-	{
-		super.updateSecurityConfig( config );
+    @Override
+    public void updateSecurityConfig(SecurityScanConfig config) {
+        super.updateSecurityConfig(config);
 
-		if( getParameterHolder() != null && getConfig().getCheckedParameters() != null )
-		{
-			getParameterHolder().updateConfig( config.getCheckedParameters() );
-		}
-	}
+        if (getParameterHolder() != null && getConfig().getCheckedParameters() != null) {
+            getParameterHolder().updateConfig(config.getCheckedParameters());
+        }
+    }
 
-	public SecurityCheckedParameter getParameterAt( int i )
-	{
-		if( !getParameterHolder().getParameterList().isEmpty() && getParameterHolder().getParameterList().size() > i )
-			return getParameterHolder().getParameterList().get( i );
-		else
-			return null;
-	}
+    public SecurityCheckedParameter getParameterAt(int i) {
+        if (!getParameterHolder().getParameterList().isEmpty() && getParameterHolder().getParameterList().size() > i) {
+            return getParameterHolder().getParameterList().get(i);
+        } else {
+            return null;
+        }
+    }
 
-	public SecurityCheckedParameter getParameterByLabel( String label )
-	{
-		return parameterHolder.getParametarByLabel( label );
-	}
+    public SecurityCheckedParameter getParameterByLabel(String label) {
+        return parameterHolder.getParametarByLabel(label);
+    }
 
-	public boolean importParameter( SecurityCheckedParameter source, boolean overwrite, String newLabel )
-	{
-		// TODO double check if this needs to return newly added parameter
-		// also maybe add label checking to holder.addParam...
-		// and use overwrite also
-		SecurityCheckedParameterImpl param = ( SecurityCheckedParameterImpl )getParameterHolder().getParametarByLabel(
-				newLabel );
-		if( param != null )
-		{
-			if( overwrite )
-			{
-				param.setName( source.getName() );
-				param.setXpath( source.getXpath() );
-				param.setChecked( source.isChecked() );
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-		else
-		{
-			return getParameterHolder().addParameter( newLabel, source.getName(), source.getXpath(), source.isChecked() );
-		}
-	}
+    public boolean importParameter(SecurityCheckedParameter source, boolean overwrite, String newLabel) {
+        // TODO double check if this needs to return newly added parameter
+        // also maybe add label checking to holder.addParam...
+        // and use overwrite also
+        SecurityCheckedParameterImpl param = (SecurityCheckedParameterImpl) getParameterHolder().getParametarByLabel(
+                newLabel);
+        if (param != null) {
+            if (overwrite) {
+                param.setName(source.getName());
+                param.setXpath(source.getXpath());
+                param.setChecked(source.isChecked());
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return getParameterHolder().addParameter(newLabel, source.getName(), source.getXpath(), source.isChecked());
+        }
+    }
 
-	protected void createMessageExchange( StringToStringMap updatedParams, MessageExchange message,
-			SecurityTestRunContext context )
-	{
-		for( Map.Entry<String, String> param : updatedParams.entrySet() )
-		{
-			String value = context.expand( param.getValue() );
-			updatedParams.put( param.getKey(), value );
-		}
-		message.getProperties().put( SECURITY_CHANGED_PARAMETERS, updatedParams.toXml() );
-		getSecurityScanRequestResult().setMessageExchange( message );
-	}
+    protected void createMessageExchange(StringToStringMap updatedParams, MessageExchange message,
+                                         SecurityTestRunContext context) {
+        for (Map.Entry<String, String> param : updatedParams.entrySet()) {
+            String value = context.expand(param.getValue());
+            updatedParams.put(param.getKey(), value);
+        }
+        message.getProperties().put(SECURITY_CHANGED_PARAMETERS, updatedParams.toXml());
+        getSecurityScanRequestResult().setMessageExchange(message);
+    }
 
-	@Override
-	public void release()
-	{
-		if( parameterHolder != null )
-			parameterHolder.release();
-		super.release();
-	}
+    @Override
+    public void release() {
+        if (parameterHolder != null) {
+            parameterHolder.release();
+        }
+        super.release();
+    }
 }

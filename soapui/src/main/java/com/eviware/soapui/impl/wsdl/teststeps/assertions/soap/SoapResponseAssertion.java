@@ -35,84 +35,70 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 
 /**
  * Asserts that the specified message is a valid SOAP Message
- * 
+ *
  * @author ole.matzura
  */
 
-public class SoapResponseAssertion extends WsdlMessageAssertion implements ResponseAssertion
-{
-	public static final String ID = "SOAP Response";
-	public static final String LABEL = "SOAP Response";
-	public static final String DESCRIPTION = "Validates that the last received response is a valid SOAP Response. Applicable to SOAP TestRequest Steps only.";
+public class SoapResponseAssertion extends WsdlMessageAssertion implements ResponseAssertion {
+    public static final String ID = "SOAP Response";
+    public static final String LABEL = "SOAP Response";
+    public static final String DESCRIPTION = "Validates that the last received response is a valid SOAP Response. Applicable to SOAP TestRequest Steps only.";
 
-	public SoapResponseAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
-	{
-		super( assertionConfig, assertable, false, false, false, true );
-	}
+    public SoapResponseAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
+        super(assertionConfig, assertable, false, false, false, true);
+    }
 
-	@Override
-	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		WsdlContext wsdlContext = ( ( WsdlMessageExchange )messageExchange ).getOperation().getInterface()
-				.getWsdlContext();
-		WsdlValidator validator = new WsdlValidator( wsdlContext );
+    @Override
+    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        WsdlContext wsdlContext = ((WsdlMessageExchange) messageExchange).getOperation().getInterface()
+                .getWsdlContext();
+        WsdlValidator validator = new WsdlValidator(wsdlContext);
 
-		try
-		{
-			AssertionError[] errors = validator.assertResponse( ( WsdlMessageExchange )messageExchange, true );
-			if( errors.length > 0 )
-				throw new AssertionException( errors );
-		}
-		catch( AssertionException e )
-		{
-			throw e;
-		}
-		catch( Exception e )
-		{
-			throw new AssertionException( new AssertionError( e.getMessage() ) );
-		}
+        try {
+            AssertionError[] errors = validator.assertResponse((WsdlMessageExchange) messageExchange, true);
+            if (errors.length > 0) {
+                throw new AssertionException(errors);
+            }
+        } catch (AssertionException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new AssertionException(new AssertionError(e.getMessage()));
+        }
 
-		return "Response Envelope OK";
-	}
+        return "Response Envelope OK";
+    }
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
-			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
-	{
-		return null;
-	}
+    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
+                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
+        return null;
+    }
 
-	public static class Factory extends AbstractTestAssertionFactory
-	{
-		public Factory()
-		{
-			super( SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class, WsdlRequest.class );
-		}
+    public static class Factory extends AbstractTestAssertionFactory {
+        public Factory() {
+            super(SoapResponseAssertion.ID, SoapResponseAssertion.LABEL, SoapResponseAssertion.class, WsdlRequest.class);
+        }
 
-		@Override
-		public String getCategory()
-		{
-			return AssertionCategoryMapping.STATUS_CATEGORY;
-		}
+        @Override
+        public String getCategory() {
+            return AssertionCategoryMapping.STATUS_CATEGORY;
+        }
 
-		@Override
-		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
-		{
-			return SoapResponseAssertion.class;
-		}
+        @Override
+        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
+            return SoapResponseAssertion.class;
+        }
 
-		@Override
-		public AssertionListEntry getAssertionListEntry()
-		{
-			return new AssertionListEntry( SoapResponseAssertion.ID, SoapResponseAssertion.LABEL,
-					SoapResponseAssertion.DESCRIPTION );
-		}
-	}
+        @Override
+        public AssertionListEntry getAssertionListEntry() {
+            return new AssertionListEntry(SoapResponseAssertion.ID, SoapResponseAssertion.LABEL,
+                    SoapResponseAssertion.DESCRIPTION);
+        }
+    }
 
-	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		return null;
-	}
+    @Override
+    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        return null;
+    }
 }

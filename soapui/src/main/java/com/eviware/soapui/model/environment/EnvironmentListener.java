@@ -16,9 +16,8 @@
 
 package com.eviware.soapui.model.environment;
 
-public interface EnvironmentListener
-{
+public interface EnvironmentListener {
 
-	public void propertyValueChanged( Property property );
+    public void propertyValueChanged(Property property);
 
 }

@@ -24,116 +24,106 @@ import java.util.Set;
 
 import com.eviware.x.form.validators.RequiredValidator;
 
-public abstract class AbstractXFormField<T> implements XFormField
-{
-	private Set<XFormFieldListener> listeners;
-	private List<XFormFieldValidator> validators;
-	private RequiredValidator requiredValidator;
-	private ComponentEnabler enabler = null;
+public abstract class AbstractXFormField<T> implements XFormField {
+    private Set<XFormFieldListener> listeners;
+    private List<XFormFieldValidator> validators;
+    private RequiredValidator requiredValidator;
+    private ComponentEnabler enabler = null;
 
-	public AbstractXFormField()
-	{
-	}
+    public AbstractXFormField() {
+    }
 
-	@Override
-	public boolean isVisible()
-	{
-		return true;
-	}
+    @Override
+    public boolean isVisible() {
+        return true;
+    }
 
-	public abstract T getComponent();
+    public abstract T getComponent();
 
-	public void addFormFieldListener( XFormFieldListener listener )
-	{
-		if( listeners == null )
-			listeners = new HashSet<XFormFieldListener>();
+    public void addFormFieldListener(XFormFieldListener listener) {
+        if (listeners == null) {
+            listeners = new HashSet<XFormFieldListener>();
+        }
 
-		listeners.add( listener );
-	}
+        listeners.add(listener);
+    }
 
-	public void addFormFieldValidator( XFormFieldValidator validator )
-	{
-		if( validators == null )
-			validators = new ArrayList<XFormFieldValidator>();
+    public void addFormFieldValidator(XFormFieldValidator validator) {
+        if (validators == null) {
+            validators = new ArrayList<XFormFieldValidator>();
+        }
 
-		validators.add( validator );
-	}
+        validators.add(validator);
+    }
 
-	public void addComponentEnabler( XFormField tf, String value )
-	{
-		if( enabler == null )
-		{
-			enabler = new ComponentEnabler( this );
-		}
-		enabler.add( tf, value );
-	}
+    public void addComponentEnabler(XFormField tf, String value) {
+        if (enabler == null) {
+            enabler = new ComponentEnabler(this);
+        }
+        enabler.add(tf, value);
+    }
 
-	public boolean isRequired()
-	{
-		return requiredValidator != null;
-	}
+    public boolean isRequired() {
+        return requiredValidator != null;
+    }
 
-	public void removeFieldListener( XFormFieldListener listener )
-	{
-		if( listeners != null )
-			listeners.remove( listener );
-	}
+    public void removeFieldListener(XFormFieldListener listener) {
+        if (listeners != null) {
+            listeners.remove(listener);
+        }
+    }
 
-	public void removeFormFieldValidator( XFormFieldValidator validator )
-	{
-		if( validators != null )
-			validators.remove( validator );
-	}
+    public void removeFormFieldValidator(XFormFieldValidator validator) {
+        if (validators != null) {
+            validators.remove(validator);
+        }
+    }
 
-	public void setRequired( boolean required, String message )
-	{
-		if( requiredValidator != null )
-			removeFormFieldValidator( requiredValidator );
+    public void setRequired(boolean required, String message) {
+        if (requiredValidator != null) {
+            removeFormFieldValidator(requiredValidator);
+        }
 
-		if( required )
-		{
-			requiredValidator = new RequiredValidator( message );
-			addFormFieldValidator( requiredValidator );
-		}
-	}
+        if (required) {
+            requiredValidator = new RequiredValidator(message);
+            addFormFieldValidator(requiredValidator);
+        }
+    }
 
-	public ValidationMessage[] validate()
-	{
-		if( validators == null || validators.isEmpty() )
-			return null;
+    public ValidationMessage[] validate() {
+        if (validators == null || validators.isEmpty()) {
+            return null;
+        }
 
-		ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
+        ArrayList<ValidationMessage> messages = new ArrayList<ValidationMessage>();
 
-		for( XFormFieldValidator validator : validators )
-		{
-			ValidationMessage[] validateField = validator.validateField( this );
-			if( validateField != null && validateField.length > 0 )
-				messages.addAll( Arrays.asList( validateField ) );
-		}
+        for (XFormFieldValidator validator : validators) {
+            ValidationMessage[] validateField = validator.validateField(this);
+            if (validateField != null && validateField.length > 0) {
+                messages.addAll(Arrays.asList(validateField));
+            }
+        }
 
-		return messages.toArray( new ValidationMessage[messages.size()] );
-	}
+        return messages.toArray(new ValidationMessage[messages.size()]);
+    }
 
-	protected void fireValueChanged( String newValue, String oldValue )
-	{
-		if( listeners == null )
-			return;
+    protected void fireValueChanged(String newValue, String oldValue) {
+        if (listeners == null) {
+            return;
+        }
 
-		for( XFormFieldListener listener : listeners )
-		{
-			listener.valueChanged( this, newValue, oldValue );
-		}
-	}
+        for (XFormFieldListener listener : listeners) {
+            listener.valueChanged(this, newValue, oldValue);
+        }
+    }
 
-	public Object getProperty( String name )
-	{
-		return null;
-	}
+    public Object getProperty(String name) {
+        return null;
+    }
 
-	public abstract void setProperty( String name, Object value );
+    public abstract void setProperty(String name, Object value);
 
-	public boolean isMultiRow()
-	{
-		return false;
-	}
+    public boolean isMultiRow() {
+        return false;
+    }
 }

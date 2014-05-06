@@ -22,23 +22,21 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Renames a WsdlLoadTest
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RenameLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest>
-{
-	public RenameLoadTestAction()
-	{
-		super( "Rename", "Renames this LoadTest" );
-	}
+public class RenameLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest> {
+    public RenameLoadTestAction() {
+        super("Rename", "Renames this LoadTest");
+    }
 
-	public void perform( WsdlLoadTest loadTest, Object param )
-	{
-		String name = UISupport.prompt( "Specify name of LoadTest", "Rename LoadTest", loadTest.getName() );
-		if( name == null || name.equals( loadTest.getName() ) )
-			return;
+    public void perform(WsdlLoadTest loadTest, Object param) {
+        String name = UISupport.prompt("Specify name of LoadTest", "Rename LoadTest", loadTest.getName());
+        if (name == null || name.equals(loadTest.getName())) {
+            return;
+        }
 
-		loadTest.setName( name );
-	}
+        loadTest.setName(name);
+    }
 }

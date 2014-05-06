@@ -31,16 +31,13 @@ import org.apache.http.protocol.HttpContext;
  * will be visible in raw request and accessible for users in Groovy scripts.
  *
  * @author robert.nemet
- *
  */
-public class HeaderRequestInterceptor implements HttpRequestInterceptor
-{
-	public static final String SOAPUI_REQUEST_HEADERS = "soapui.request.headers";
+public class HeaderRequestInterceptor implements HttpRequestInterceptor {
+    public static final String SOAPUI_REQUEST_HEADERS = "soapui.request.headers";
 
-	@Override
-	public void process( HttpRequest request, HttpContext context ) throws HttpException, IOException
-	{
-		List<Header> wHeaders = Arrays.asList( request.getAllHeaders() );
-		context.setAttribute( SOAPUI_REQUEST_HEADERS, wHeaders );
-	}
+    @Override
+    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
+        List<Header> wHeaders = Arrays.asList(request.getAllHeaders());
+        context.setAttribute(SOAPUI_REQUEST_HEADERS, wHeaders);
+    }
 }

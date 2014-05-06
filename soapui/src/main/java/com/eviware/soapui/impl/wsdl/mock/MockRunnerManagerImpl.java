@@ -26,109 +26,86 @@ import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.testsuite.TestCase;
 
-public class MockRunnerManagerImpl implements MockRunnerManager
-{
-	private final static Logger log = Logger.getLogger( MockRunnerManagerImpl.class );
+public class MockRunnerManagerImpl implements MockRunnerManager {
+    private final static Logger log = Logger.getLogger(MockRunnerManagerImpl.class);
 
-	private static Map<String, MockRunnerManager> managers = new HashMap<String, MockRunnerManager>();
+    private static Map<String, MockRunnerManager> managers = new HashMap<String, MockRunnerManager>();
 
-	private Map<String, WsdlMockService> mockServices = new HashMap<String, WsdlMockService>();
+    private Map<String, WsdlMockService> mockServices = new HashMap<String, WsdlMockService>();
 
-	private Vector<WsdlMockRunner> mockRunners = new Vector<WsdlMockRunner>();
+    private Vector<WsdlMockRunner> mockRunners = new Vector<WsdlMockRunner>();
 
-	private Project project;
+    private Project project;
 
-	private MockRunnerManagerImpl( Project project )
-	{
-		this.project = project;
-	}
+    private MockRunnerManagerImpl(Project project) {
+        this.project = project;
+    }
 
-	public static MockRunnerManager getInstance( TestCase testCase )
-	{
-		if( managers.containsKey( testCase.getId() ) )
-		{
-			return managers.get( testCase.getId() );
-		}
-		else
-		{
-			MockRunnerManager manager = new MockRunnerManagerImpl( testCase.getTestSuite().getProject() );
-			managers.put( testCase.getId(), manager );
+    public static MockRunnerManager getInstance(TestCase testCase) {
+        if (managers.containsKey(testCase.getId())) {
+            return managers.get(testCase.getId());
+        } else {
+            MockRunnerManager manager = new MockRunnerManagerImpl(testCase.getTestSuite().getProject());
+            managers.put(testCase.getId(), manager);
 
-			return manager;
-		}
-	}
+            return manager;
+        }
+    }
 
-	public WsdlMockService getMockService( int port, String path )
-	{
-		String key = port + path;
+    public WsdlMockService getMockService(int port, String path) {
+        String key = port + path;
 
-		WsdlMockService service = mockServices.get( key );
-		if( service == null )
-		{
-			MockServiceConfig mockServiceConfig = MockServiceConfig.Factory.newInstance();
-			mockServiceConfig.setPath( path );
-			mockServiceConfig.setPort( port );
-			mockServiceConfig.setName( port + ":" + path );
-			service = new WsdlMockService( project, mockServiceConfig );
-			mockServices.put( key, service );
-		}
+        WsdlMockService service = mockServices.get(key);
+        if (service == null) {
+            MockServiceConfig mockServiceConfig = MockServiceConfig.Factory.newInstance();
+            mockServiceConfig.setPath(path);
+            mockServiceConfig.setPort(port);
+            mockServiceConfig.setName(port + ":" + path);
+            service = new WsdlMockService(project, mockServiceConfig);
+            mockServices.put(key, service);
+        }
 
-		return service;
-	}
+        return service;
+    }
 
-	public void start() throws MockRunnerManagerException
-	{
-		if( log.isDebugEnabled() )
-		{
-			log.debug( "Starting MockRunnerManager" );
-		}
+    public void start() throws MockRunnerManagerException {
+        if (log.isDebugEnabled()) {
+            log.debug("Starting MockRunnerManager");
+        }
 
-		for( WsdlMockService mockService : mockServices.values() )
-		{
-			try
-			{
-				mockRunners.add( mockService.start() );
-			}
-			catch( Exception e )
-			{
-				throw new MockRunnerManagerException( "Failed to create a WsdlMockRunner", e );
-			}
-		}
-	}
+        for (WsdlMockService mockService : mockServices.values()) {
+            try {
+                mockRunners.add(mockService.start());
+            } catch (Exception e) {
+                throw new MockRunnerManagerException("Failed to create a WsdlMockRunner", e);
+            }
+        }
+    }
 
-	public void stop()
-	{
-		if( log.isDebugEnabled() )
-		{
-			log.debug( "Stopping MockRunnerManager" );
-		}
+    public void stop() {
+        if (log.isDebugEnabled()) {
+            log.debug("Stopping MockRunnerManager");
+        }
 
-		for( WsdlMockRunner runner : mockRunners )
-		{
-			try
-			{
-				runner.stop();
-			}
-			catch( Exception e )
-			{
-				log.error( e );
-			}
-		}
+        for (WsdlMockRunner runner : mockRunners) {
+            try {
+                runner.stop();
+            } catch (Exception e) {
+                log.error(e);
+            }
+        }
 
-		mockServices.clear();
-		mockRunners.clear();
-	}
+        mockServices.clear();
+        mockRunners.clear();
+    }
 
-	public boolean isStarted()
-	{
-		for( WsdlMockRunner runner : mockRunners )
-		{
-			if( runner.isRunning() )
-			{
-				return true;
-			}
-		}
+    public boolean isStarted() {
+        for (WsdlMockRunner runner : mockRunners) {
+            if (runner.isRunning()) {
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

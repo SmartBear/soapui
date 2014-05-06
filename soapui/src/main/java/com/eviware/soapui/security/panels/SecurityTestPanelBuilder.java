@@ -25,34 +25,29 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for SecurityTests
- * 
+ *
  * @author dragica.soldo
  */
 
-public class SecurityTestPanelBuilder<T extends SecurityTest> extends EmptyPanelBuilder<T>
-{
-	public SecurityTestPanelBuilder()
-	{
-	}
+public class SecurityTestPanelBuilder<T extends SecurityTest> extends EmptyPanelBuilder<T> {
+    public SecurityTestPanelBuilder() {
+    }
 
-	public DesktopPanel buildDesktopPanel( T securityTest )
-	{
-		return new SecurityTestDesktopPanel( securityTest );
-	}
+    public DesktopPanel buildDesktopPanel(T securityTest) {
+        return new SecurityTestDesktopPanel(securityTest);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	public Component buildOverviewPanel( T modelItem )
-	{
-		JPropertiesTable<SecurityTest> table = new JPropertiesTable<SecurityTest>( "SecurityTest Properties", modelItem );
+    public Component buildOverviewPanel(T modelItem) {
+        JPropertiesTable<SecurityTest> table = new JPropertiesTable<SecurityTest>("SecurityTest Properties", modelItem);
 
-		table.addProperty( "Name", "name", true );
+        table.addProperty("Name", "name", true);
 
-		table.setPropertyObject( modelItem );
+        table.setPropertyObject(modelItem);
 
-		return table;
-	}
+        return table;
+    }
 }

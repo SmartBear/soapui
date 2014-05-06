@@ -32,68 +32,58 @@ import java.util.List;
 
 /**
  * Adds a new WsdlMockOperation to a WsdlMockService
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class AddNewMockOperationAction extends AbstractSoapUIAction<WsdlMockService>
-{
-	public final static String SOAPUI_ACTION_ID = "AddNewMockOperationAction";
+public class AddNewMockOperationAction extends AbstractSoapUIAction<WsdlMockService> {
+    public final static String SOAPUI_ACTION_ID = "AddNewMockOperationAction";
 
-	public AddNewMockOperationAction()
-	{
-		super( "New MockOperation", "Creates a new MockOperation for this MockService" );
-	}
+    public AddNewMockOperationAction() {
+        super("New MockOperation", "Creates a new MockOperation for this MockService");
+    }
 
-	public void perform( WsdlMockService mockService, Object param )
-	{
-		List<OperationWrapper> operations = new ArrayList<OperationWrapper>();
+    public void perform(WsdlMockService mockService, Object param) {
+        List<OperationWrapper> operations = new ArrayList<OperationWrapper>();
 
-		WsdlProject project = (WsdlProject)mockService.getProject();
-		List<AbstractInterface<?>> interfaces = project.getInterfaces( WsdlInterfaceFactory.WSDL_TYPE );
+        WsdlProject project = mockService.getProject();
+        List<AbstractInterface<?>> interfaces = project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE);
 
-		for( Interface iface : interfaces )
-		{
-			for( int i = 0; i < iface.getOperationCount(); i++ )
-			{
-				if( !mockService.hasMockOperation( iface.getOperationAt( i ) ) )
-					operations.add( new OperationWrapper( ( WsdlOperation )iface.getOperationAt( i ) ) );
-			}
-		}
+        for (Interface iface : interfaces) {
+            for (int i = 0; i < iface.getOperationCount(); i++) {
+                if (!mockService.hasMockOperation(iface.getOperationAt(i))) {
+                    operations.add(new OperationWrapper((WsdlOperation) iface.getOperationAt(i)));
+                }
+            }
+        }
 
-		if( operations.isEmpty() )
-		{
-			UISupport.showErrorMessage( "No unique operations to mock in project!" );
-			return;
-		}
+        if (operations.isEmpty()) {
+            UISupport.showErrorMessage("No unique operations to mock in project!");
+            return;
+        }
 
-		Object result = UISupport.prompt( "Select Operation to Mock", "New MockOperation", operations.toArray() );
-		if( result != null )
-		{
-			WsdlOperation operation = (( OperationWrapper )result ).getOperation();
-			WsdlMockOperation mockOperation = (WsdlMockOperation)mockService.addNewMockOperation( operation );
-			WsdlMockResponse mockResponse = mockOperation.addNewMockResponse( "Response 1", true );
-			UISupport.selectAndShow( mockResponse );
-		}
-	}
+        Object result = UISupport.prompt("Select Operation to Mock", "New MockOperation", operations.toArray());
+        if (result != null) {
+            WsdlOperation operation = ((OperationWrapper) result).getOperation();
+            WsdlMockOperation mockOperation = (WsdlMockOperation) mockService.addNewMockOperation(operation);
+            WsdlMockResponse mockResponse = mockOperation.addNewMockResponse("Response 1", true);
+            UISupport.selectAndShow(mockResponse);
+        }
+    }
 
-	public class OperationWrapper
-	{
-		private final WsdlOperation operation;
+    public class OperationWrapper {
+        private final WsdlOperation operation;
 
-		public OperationWrapper( WsdlOperation operation )
-		{
-			this.operation = operation;
-		}
+        public OperationWrapper(WsdlOperation operation) {
+            this.operation = operation;
+        }
 
-		public WsdlOperation getOperation()
-		{
-			return operation;
-		}
+        public WsdlOperation getOperation() {
+            return operation;
+        }
 
-		public String toString()
-		{
-			return operation.getInterface().getName() + " - " + operation.getName();
-		}
-	}
+        public String toString() {
+            return operation.getInterface().getName() + " - " + operation.getName();
+        }
+    }
 }

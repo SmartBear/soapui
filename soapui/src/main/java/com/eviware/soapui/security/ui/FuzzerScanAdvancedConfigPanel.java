@@ -25,123 +25,103 @@ import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.impl.swing.JFormDialog;
 
-public class FuzzerScanAdvancedConfigPanel
-{
-	private JFormDialog dialog;
-	private FuzzerScanConfig fuzzerScanConfig;
+public class FuzzerScanAdvancedConfigPanel {
+    private JFormDialog dialog;
+    private FuzzerScanConfig fuzzerScanConfig;
 
-	public FuzzerScanAdvancedConfigPanel( FuzzerScanConfig fuzzerScanConfig )
-	{
-		this.fuzzerScanConfig = fuzzerScanConfig;
-		initDialog();
-	}
+    public FuzzerScanAdvancedConfigPanel(FuzzerScanConfig fuzzerScanConfig) {
+        this.fuzzerScanConfig = fuzzerScanConfig;
+        initDialog();
+    }
 
-	public JFormDialog getDialog()
-	{
-		return dialog;
-	}
+    public JFormDialog getDialog() {
+        return dialog;
+    }
 
-	private JFormDialog initDialog()
-	{
-		dialog = ( JFormDialog )ADialogBuilder.buildDialog( AdvancedSettings.class );
-		minimalField( fuzzerScanConfig );
-		maximalField( fuzzerScanConfig );
-		numberOfRequestField( fuzzerScanConfig );
-		return dialog;
-	}
+    private JFormDialog initDialog() {
+        dialog = (JFormDialog) ADialogBuilder.buildDialog(AdvancedSettings.class);
+        minimalField(fuzzerScanConfig);
+        maximalField(fuzzerScanConfig);
+        numberOfRequestField(fuzzerScanConfig);
+        return dialog;
+    }
 
-	private void minimalField( final FuzzerScanConfig fuzzerScanConfig )
-	{
-		XFormField minimal = dialog.getFormField( AdvancedSettings.MINIMAL );
-		minimal.setValue( String.valueOf( fuzzerScanConfig.getMinimal() ) );
+    private void minimalField(final FuzzerScanConfig fuzzerScanConfig) {
+        XFormField minimal = dialog.getFormField(AdvancedSettings.MINIMAL);
+        minimal.setValue(String.valueOf(fuzzerScanConfig.getMinimal()));
 
-		minimal.addFormFieldListener( new XFormFieldListener()
-		{
+        minimal.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				try
-				{
-					if( "".equals( newValue ) )
-						return;
-					Integer.valueOf( newValue );
-					fuzzerScanConfig.setMinimal( Integer.valueOf( newValue ) );
-				}
-				catch( Exception e )
-				{
-					UISupport.showErrorMessage( "Value must be integer number" );
-				}
-			}
-		} );
-	}
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                try {
+                    if ("".equals(newValue)) {
+                        return;
+                    }
+                    Integer.valueOf(newValue);
+                    fuzzerScanConfig.setMinimal(Integer.valueOf(newValue));
+                } catch (Exception e) {
+                    UISupport.showErrorMessage("Value must be integer number");
+                }
+            }
+        });
+    }
 
-	private void maximalField( final FuzzerScanConfig fuzzerScanConfig )
-	{
-		XFormField maximal = dialog.getFormField( AdvancedSettings.MAXIMAL );
-		maximal.setValue( String.valueOf( fuzzerScanConfig.getMaximal() ) );
+    private void maximalField(final FuzzerScanConfig fuzzerScanConfig) {
+        XFormField maximal = dialog.getFormField(AdvancedSettings.MAXIMAL);
+        maximal.setValue(String.valueOf(fuzzerScanConfig.getMaximal()));
 
-		maximal.addFormFieldListener( new XFormFieldListener()
-		{
+        maximal.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				try
-				{
-					if( "".equals( newValue ) )
-						return;
-					Integer.valueOf( newValue );
-					fuzzerScanConfig.setMaximal( Integer.valueOf( newValue ) );
-				}
-				catch( Exception e )
-				{
-					UISupport.showErrorMessage( "Value must be integer number" );
-				}
-			}
-		} );
-	}
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                try {
+                    if ("".equals(newValue)) {
+                        return;
+                    }
+                    Integer.valueOf(newValue);
+                    fuzzerScanConfig.setMaximal(Integer.valueOf(newValue));
+                } catch (Exception e) {
+                    UISupport.showErrorMessage("Value must be integer number");
+                }
+            }
+        });
+    }
 
-	private void numberOfRequestField( final FuzzerScanConfig fuzzerScanConfig )
-	{
-		XFormField numberOfRequest = dialog.getFormField( AdvancedSettings.NUMBER_OF_REQUEST );
-		numberOfRequest.setValue( String.valueOf( fuzzerScanConfig.getNumberOfRequest() ) );
+    private void numberOfRequestField(final FuzzerScanConfig fuzzerScanConfig) {
+        XFormField numberOfRequest = dialog.getFormField(AdvancedSettings.NUMBER_OF_REQUEST);
+        numberOfRequest.setValue(String.valueOf(fuzzerScanConfig.getNumberOfRequest()));
 
-		numberOfRequest.addFormFieldListener( new XFormFieldListener()
-		{
+        numberOfRequest.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				try
-				{
-					if( "".equals( newValue ) )
-						return;
-					Integer.valueOf( newValue );
-					fuzzerScanConfig.setNumberOfRequest( Integer.valueOf( newValue ) );
-				}
-				catch( Exception e )
-				{
-					UISupport.showErrorMessage( "Value must be integer number" );
-				}
-			}
-		} );
-	}
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                try {
+                    if ("".equals(newValue)) {
+                        return;
+                    }
+                    Integer.valueOf(newValue);
+                    fuzzerScanConfig.setNumberOfRequest(Integer.valueOf(newValue));
+                } catch (Exception e) {
+                    UISupport.showErrorMessage("Value must be integer number");
+                }
+            }
+        });
+    }
 
 
-	@AForm( description = "Fuzzer Scan", name = "Fuzzer Scan" )
-	protected interface AdvancedSettings
-	{
+    @AForm(description = "Fuzzer Scan", name = "Fuzzer Scan")
+    protected interface AdvancedSettings {
 
-		@AField( description = "Minimal length of Fuzzed value", name = "Minimal length", type = AFieldType.INT )
-		public final static String MINIMAL = "Minimal length";
+        @AField(description = "Minimal length of Fuzzed value", name = "Minimal length", type = AFieldType.INT)
+        public final static String MINIMAL = "Minimal length";
 
-		@AField( description = "Maximal length of Fuzzed value", name = "Maximal length", type = AFieldType.INT )
-		public final static String MAXIMAL = "Maximal length";
+        @AField(description = "Maximal length of Fuzzed value", name = "Maximal length", type = AFieldType.INT)
+        public final static String MAXIMAL = "Maximal length";
 
-		@AField( description = "Number of Fuzzed Requests to do", name = "Number of Requests", type = AFieldType.INT )
-		public final static String NUMBER_OF_REQUEST = "Number of Requests";
+        @AField(description = "Number of Fuzzed Requests to do", name = "Number of Requests", type = AFieldType.INT)
+        public final static String NUMBER_OF_REQUEST = "Number of Requests";
 
-	}
+    }
 
 }

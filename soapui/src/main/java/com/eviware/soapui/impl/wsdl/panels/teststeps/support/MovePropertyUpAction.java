@@ -27,30 +27,26 @@ import java.awt.event.ActionEvent;
 /**
  * Action that moves a property up in the display order of a table.
  */
-public class MovePropertyUpAction extends AbstractAction
-{
+public class MovePropertyUpAction extends AbstractAction {
     public static final String MOVE_PROPERTY_UP_ACTION_NAME = "Move Property up";
     private final JTable propertyTable;
-	private final MutableTestPropertyHolder propertyHolder;
+    private final MutableTestPropertyHolder propertyHolder;
 
-	public MovePropertyUpAction( JTable propertyTable, MutableTestPropertyHolder propertyHolder, String description )
-	{
+    public MovePropertyUpAction(JTable propertyTable, MutableTestPropertyHolder propertyHolder, String description) {
         super(MOVE_PROPERTY_UP_ACTION_NAME);
-		this.propertyTable = propertyTable;
-		this.propertyHolder = propertyHolder;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/up_arrow.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, description );
-		setEnabled( false );
-	}
+        this.propertyTable = propertyTable;
+        this.propertyHolder = propertyHolder;
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/up_arrow.gif"));
+        putValue(Action.SHORT_DESCRIPTION, description);
+        setEnabled(false);
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		int ix = propertyTable.getSelectedRow();
-		if( ix != -1 )
-		{
-			String propName = ( String )propertyTable.getValueAt( ix, 0 );
-			( ( PropertyHolderTableModel )propertyTable.getModel() ).moveProperty( propName, ix, ix - 1 );
-			propertyTable.setRowSelectionInterval( ix - 1, ix - 1 );
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        int ix = propertyTable.getSelectedRow();
+        if (ix != -1) {
+            String propName = (String) propertyTable.getValueAt(ix, 0);
+            ((PropertyHolderTableModel) propertyTable.getModel()).moveProperty(propName, ix, ix - 1);
+            propertyTable.setRowSelectionInterval(ix - 1, ix - 1);
+        }
+    }
 }

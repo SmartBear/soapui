@@ -22,17 +22,16 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * Behaviour for building ModelItem-related UI panels
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface PanelBuilder<T extends ModelItem>
-{
-	public boolean hasOverviewPanel();
+public interface PanelBuilder<T extends ModelItem> {
+    public boolean hasOverviewPanel();
 
-	public Component buildOverviewPanel( T modelItem );
+    public Component buildOverviewPanel(T modelItem);
 
-	public boolean hasDesktopPanel();
+    public boolean hasDesktopPanel();
 
-	public DesktopPanel buildDesktopPanel( T modelItem );
+    public DesktopPanel buildDesktopPanel(T modelItem);
 }

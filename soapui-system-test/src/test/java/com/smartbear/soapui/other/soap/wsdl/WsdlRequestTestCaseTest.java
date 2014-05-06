@@ -26,41 +26,39 @@ import org.junit.experimental.categories.Category;
 
 import static org.junit.Assert.assertNotNull;
 
-@Category( IntegrationTest.class )
-public class WsdlRequestTestCaseTest extends JettyTestCaseBase
-{
+@Category(IntegrationTest.class)
+public class WsdlRequestTestCaseTest extends JettyTestCaseBase {
 
-	@Test
-	public void testRequest() throws Exception
-	{
-		replaceInFile( "wsdls/test1/TestService.wsdl","8082","" + getPort());
-		replaceInFile( "wsdls/test1/TestService.wsdl","www.eviware.com","localhost:" + getPort());
+    @Test
+    public void testRequest() throws Exception {
+        replaceInFile("wsdls/test1/TestService.wsdl", "8082", "" + getPort());
+        replaceInFile("wsdls/test1/TestService.wsdl", "www.eviware.com", "localhost:" + getPort());
 
-		// create new project
-		WsdlProject project = new WsdlProject();
+        // create new project
+        WsdlProject project = new WsdlProject();
 
-		// import amazon wsdl
-		WsdlInterface iface = WsdlInterfaceFactory.importWsdl( project, "http://localhost:" + getPort() + "/wsdls/test1/TestService.wsdl",
-true )[0];
+        // import amazon wsdl
+        WsdlInterface iface = WsdlInterfaceFactory.importWsdl(project, "http://localhost:" + getPort() + "/wsdls/test1/TestService.wsdl",
+                true)[0];
 
-		// get "Help" operation
-		WsdlOperation operation = ( WsdlOperation )iface.getOperationByName( "GetPage" );
+        // get "Help" operation
+        WsdlOperation operation = (WsdlOperation) iface.getOperationByName("GetPage");
 
-		// create a new empty request for that operation
-		WsdlRequest request = operation.addNewRequest( "My request" );
+        // create a new empty request for that operation
+        WsdlRequest request = operation.addNewRequest("My request");
 
-		// generate the request content from the schema
-		request.setRequestContent( operation.createRequest( true ) );
+        // generate the request content from the schema
+        request.setRequestContent(operation.createRequest(true));
 
-		// submit the request
-		WsdlSubmit submit = ( WsdlSubmit )request.submit( new WsdlSubmitContext( request ), false );
+        // submit the request
+        WsdlSubmit submit = (WsdlSubmit) request.submit(new WsdlSubmitContext(request), false);
 
-		// wait for the response
-		Response response = submit.getResponse();
+        // wait for the response
+        Response response = submit.getResponse();
 
-		// print the response
-		String content = response.getContentAsString();
-		// System.out.println( content );
-		assertNotNull( content );
-	}
+        // print the response
+        String content = response.getContentAsString();
+        // System.out.println( content );
+        assertNotNull(content);
+    }
 }

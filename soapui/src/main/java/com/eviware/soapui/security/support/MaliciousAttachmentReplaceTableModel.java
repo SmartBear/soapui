@@ -12,110 +12,92 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.support;
+*/
+package com.eviware.soapui.security.support;
 
 import java.io.File;
 
 import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.support.UISupport;
 
-public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTableModel
-{
+public class MaliciousAttachmentReplaceTableModel extends MaliciousAttachmentTableModel {
 
-	public Class<?> getColumnClass( int columnIndex )
-	{
-		return columnIndex == 3 ? Boolean.class : columnIndex == 2 ? String.class : String.class;
-	}
+    public Class<?> getColumnClass(int columnIndex) {
+        return columnIndex == 3 ? Boolean.class : columnIndex == 2 ? String.class : String.class;
+    }
 
-	public boolean isCellEditable( int row, int col )
-	{
-		if( col > 1 )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    public boolean isCellEditable(int row, int col) {
+        if (col > 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public int getColumnCount()
-	{
-		return 4;
-	}
+    public int getColumnCount() {
+        return 4;
+    }
 
-	public String getColumnName( int column )
-	{
-		switch( column )
-		{
-		case 0 :
-			return "With";
-		case 1 :
-			return "Size";
-		case 2 :
-			return "Content type";
-		case 3 :
-			return "Enable";
-		}
+    public String getColumnName(int column) {
+        switch (column) {
+            case 0:
+                return "With";
+            case 1:
+                return "Size";
+            case 2:
+                return "Content type";
+            case 3:
+                return "Enable";
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public Object getValueAt( int rowIndex, int columnIndex )
-	{
-		MaliciousAttachmentConfig element = holder.getList().get( rowIndex );
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        MaliciousAttachmentConfig element = holder.getList().get(rowIndex);
 
-		if( element != null )
-		{
-			switch( columnIndex )
-			{
-			case 0 :
-				return ( element.getCached() ) ? new File( element.getFilename() ).getName() : new File(
-						element.getFilename() ).getAbsolutePath();
-			case 1 :
-				return element.getSize();
-			case 2 :
-				return element.getContentType();
-			case 3 :
-				return element.getEnabled();
-			}
-		}
+        if (element != null) {
+            switch (columnIndex) {
+                case 0:
+                    return (element.getCached()) ? new File(element.getFilename()).getName() : new File(
+                            element.getFilename()).getAbsolutePath();
+                case 1:
+                    return element.getSize();
+                case 2:
+                    return element.getContentType();
+                case 3:
+                    return element.getEnabled();
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void setValueAt( Object aValue, int row, int column )
-	{
-		if( holder.getList().isEmpty() )
-		{
-			return;
-		}
+    public void setValueAt(Object aValue, int row, int column) {
+        if (holder.getList().isEmpty()) {
+            return;
+        }
 
-		MaliciousAttachmentConfig element = holder.getList().get( row );
+        MaliciousAttachmentConfig element = holder.getList().get(row);
 
-		switch( column )
-		{
-		case 2 :
-			element.setContentType( ( String )aValue );
-			break;
-		case 3 :
-			element.setEnabled( ( Boolean )aValue );
-			break;
-		}
-	}
+        switch (column) {
+            case 2:
+                element.setContentType((String) aValue);
+                break;
+            case 3:
+                element.setEnabled((Boolean) aValue);
+                break;
+        }
+    }
 
-	public void addResult( MaliciousAttachmentConfig config )
-	{
-		try
-		{
-			holder.addElement( config );
-			// addFile( file, cached );
-			fireTableDataChanged();
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
-	}
+    public void addResult(MaliciousAttachmentConfig config) {
+        try {
+            holder.addElement(config);
+            // addFile( file, cached );
+            fireTableDataChanged();
+        } catch (Exception e) {
+            UISupport.showErrorMessage(e);
+        }
+    }
 
 }

@@ -17,32 +17,29 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics;
 
 /**
- * 
  * We are using this instead of org.apache.commons.lang.time.Stopwatch because
  * we want nanosecond precision
- * 
  */
-public interface Stopwatch
-{
+public interface Stopwatch {
 
-	long getStart();
+    long getStart();
 
-	long getStop();
+    long getStop();
 
-	void start();
+    void start();
 
-	void stop();
+    void stop();
 
-	long getDuration();
+    long getDuration();
 
-	void reset();
+    void reset();
 
-	void add( long value );
+    void add(long value);
 
-	boolean isStarted();
+    boolean isStarted();
 
-	boolean isStopped();
+    boolean isStopped();
 
-	void set( long start, long end );
+    void set(long start, long end);
 
 }

@@ -53,436 +53,370 @@ import java.util.List;
 
 /**
  * Utility for resolving items
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ResolveDialog
-{
+public class ResolveDialog {
 
-	private JDialog dialog;
-	private ResolveContextTableModel resolveContextTableModel;
-	private boolean showOkMessage;
-	private String title;
-	private String description;
-	private String helpUrl;
-	private JXTable table;
+    private JDialog dialog;
+    private ResolveContextTableModel resolveContextTableModel;
+    private boolean showOkMessage;
+    private String title;
+    private String description;
+    private String helpUrl;
+    private JXTable table;
 
-	public ResolveDialog( String title, String description, String helpUrl )
-	{
-		this.title = title;
+    public ResolveDialog(String title, String description, String helpUrl) {
+        this.title = title;
 
-		this.description = description;
-		this.helpUrl = helpUrl;
+        this.description = description;
+        this.helpUrl = helpUrl;
 
-	}
+    }
 
-	@SuppressWarnings( "serial" )
-	private void buildDialog()
-	{
-		dialog = new SimpleDialog( title, description, helpUrl, true )
-		{
-			@Override
-			protected Component buildContent()
-			{
-				JPanel panel = new JPanel( new BorderLayout() );
-				table = JTableFactory.getInstance().makeJXTable( resolveContextTableModel );
-				table.setHorizontalScrollEnabled( true );
-				table.setDefaultRenderer( JComboBox.class, new ResolverRenderer() );
-				table.setDefaultEditor( JComboBox.class, new ResolverEditor() );
-				table.getColumn( 2 ).setCellRenderer( new PathCellRenderer() );
-				table.getColumn( 3 ).setWidth( 100 );
-				table.addMouseListener( new MouseAdapter()
-				{
-					@Override
-					public void mouseClicked( MouseEvent e )
-					{
-						if( e.getClickCount() > 1 )
-						{
-							int ix = table.getSelectedRow();
-							if( ix != -1 )
-							{
-								ResolveContext.PathToResolve pathToResolve = resolveContextTableModel.getContext()
-										.getPathsToResolve().get( ix );
+    @SuppressWarnings("serial")
+    private void buildDialog() {
+        dialog = new SimpleDialog(title, description, helpUrl, true) {
+            @Override
+            protected Component buildContent() {
+                JPanel panel = new JPanel(new BorderLayout());
+                table = JTableFactory.getInstance().makeJXTable(resolveContextTableModel);
+                table.setHorizontalScrollEnabled(true);
+                table.setDefaultRenderer(JComboBox.class, new ResolverRenderer());
+                table.setDefaultEditor(JComboBox.class, new ResolverEditor());
+                table.getColumn(2).setCellRenderer(new PathCellRenderer());
+                table.getColumn(3).setWidth(100);
+                table.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        if (e.getClickCount() > 1) {
+                            int ix = table.getSelectedRow();
+                            if (ix != -1) {
+                                ResolveContext.PathToResolve pathToResolve = resolveContextTableModel.getContext()
+                                        .getPathsToResolve().get(ix);
 
-								if( pathToResolve != null )
-									UISupport.selectAndShow( pathToResolve.getOwner() );
-							}
-						}
-					}
-				} );
+                                if (pathToResolve != null) {
+                                    UISupport.selectAndShow(pathToResolve.getOwner());
+                                }
+                            }
+                        }
+                    }
+                });
 
-				panel.add( new JScrollPane( table ), BorderLayout.CENTER );
-				panel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+                panel.add(new JScrollPane(table), BorderLayout.CENTER);
+                panel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-				return panel;
-			}
+                return panel;
+            }
 
-			/*
-			 * Change Cancel into Update
-			 */
-			@Override
-			protected void modifyButtons()
-			{
-				super.modifyButtons();
-				Component[] components = buttons.getComponents();
-				for( Component component : components )
-				{
-					if( component instanceof JButton )
-					{
-						JButton button = ( JButton )component;
-						if( button.getText().equals( "Cancel" ) )
-						{
-							button.setText( "Update" );
-						}
-					}
-				}
-			}
+            /*
+             * Change Cancel into Update
+             */
+            @Override
+            protected void modifyButtons() {
+                super.modifyButtons();
+                Component[] components = buttons.getComponents();
+                for (Component component : components) {
+                    if (component instanceof JButton) {
+                        JButton button = (JButton) component;
+                        if (button.getText().equals("Cancel")) {
+                            button.setText("Update");
+                        }
+                    }
+                }
+            }
 
-			@Override
-			protected boolean handleCancel()
-			{
-				return handleUpdate();
-			}
+            @Override
+            protected boolean handleCancel() {
+                return handleUpdate();
+            }
 
-			@SuppressWarnings( "unchecked" )
-			private boolean handleUpdate()
-			{
-				for( PathToResolve otherPath : resolveContextTableModel.getContext().getPathsToResolve() )
-				{
-					if( !otherPath.isResolved() )
-					{
-						otherPath.getOwner().afterLoad();
-						otherPath.getOwner().resolve( resolveContextTableModel.getContext() );
-					}
-				}
+            @SuppressWarnings("unchecked")
+            private boolean handleUpdate() {
+                for (PathToResolve otherPath : resolveContextTableModel.getContext().getPathsToResolve()) {
+                    if (!otherPath.isResolved()) {
+                        otherPath.getOwner().afterLoad();
+                        otherPath.getOwner().resolve(resolveContextTableModel.getContext());
+                    }
+                }
 
-				dialog = null;
-				setVisible( false );
-				resolve( resolveContextTableModel.getContext().getModelItem() );
-				return true;
-			}
+                dialog = null;
+                setVisible(false);
+                resolve(resolveContextTableModel.getContext().getModelItem());
+                return true;
+            }
 
-			@SuppressWarnings( "unchecked" )
-			@Override
-			protected boolean handleOk()
-			{
-				for( PathToResolve path : resolveContextTableModel.getContext().getPathsToResolve() )
-				{
-					if( !path.isResolved() )
-					{
-						if( UISupport.confirm( "There are unresolved paths, continue?", "Unresolved paths - Warning" ) )
-						{
-							return true;
-						}
-						return false;
-					}
-				}
-				return true;
-			}
+            @SuppressWarnings("unchecked")
+            @Override
+            protected boolean handleOk() {
+                for (PathToResolve path : resolveContextTableModel.getContext().getPathsToResolve()) {
+                    if (!path.isResolved()) {
+                        if (UISupport.confirm("There are unresolved paths, continue?", "Unresolved paths - Warning")) {
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return true;
+            }
 
-		};
+        };
 
-		dialog.setSize( 550, 300 );
-		dialog.setModal( false );
-		dialog.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
-		dialog.addWindowListener( new WindowAdapter()
-		{
+        dialog.setSize(550, 300);
+        dialog.setModal(false);
+        dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        dialog.addWindowListener(new WindowAdapter() {
 
-			@SuppressWarnings( "unchecked" )
-			@Override
-			public void windowClosing( WindowEvent arg0 )
-			{
-				for( PathToResolve path : resolveContextTableModel.getContext().getPathsToResolve() )
-				{
-					if( !path.isResolved() )
-					{
-						if( UISupport.confirm( "There are unresolved paths, continue?", "Unresolved paths - Warning" ) )
-						{
-							dialog.setVisible( false );
-						}
-						break;
-					}
-				}
-			}
-		} );
+            @SuppressWarnings("unchecked")
+            @Override
+            public void windowClosing(WindowEvent arg0) {
+                for (PathToResolve path : resolveContextTableModel.getContext().getPathsToResolve()) {
+                    if (!path.isResolved()) {
+                        if (UISupport.confirm("There are unresolved paths, continue?", "Unresolved paths - Warning")) {
+                            dialog.setVisible(false);
+                        }
+                        break;
+                    }
+                }
+            }
+        });
 
-	}
+    }
 
-	public boolean isShowOkMessage()
-	{
-		return showOkMessage;
-	}
+    public boolean isShowOkMessage() {
+        return showOkMessage;
+    }
 
-	public void setShowOkMessage( boolean showOkMessage )
-	{
-		this.showOkMessage = showOkMessage;
-	}
+    public void setShowOkMessage(boolean showOkMessage) {
+        this.showOkMessage = showOkMessage;
+    }
 
-	public ResolveContext<?> resolve( AbstractWsdlModelItem<?> modelItem )
-	{
-		ResolveContext<?> context = new ResolveContext<AbstractWsdlModelItem<?>>( modelItem );
-		modelItem.resolve( context );
-		if( context.isEmpty() )
-		{
-			if( isShowOkMessage() )
-			{
-				UISupport.showInfoMessage( "No resolve problems found", title );
-			}
-		}
-		else
-		{
-			resolveContextTableModel = new ResolveContextTableModel( context );
-			if( dialog == null )
-				buildDialog();
-			else
-				table.setModel( resolveContextTableModel );
+    public ResolveContext<?> resolve(AbstractWsdlModelItem<?> modelItem) {
+        ResolveContext<?> context = new ResolveContext<AbstractWsdlModelItem<?>>(modelItem);
+        modelItem.resolve(context);
+        if (context.isEmpty()) {
+            if (isShowOkMessage()) {
+                UISupport.showInfoMessage("No resolve problems found", title);
+            }
+        } else {
+            resolveContextTableModel = new ResolveContextTableModel(context);
+            if (dialog == null) {
+                buildDialog();
+            } else {
+                table.setModel(resolveContextTableModel);
+            }
 
-			UISupport.centerDialog( dialog );
-			dialog.setVisible( true );
-		}
+            UISupport.centerDialog(dialog);
+            dialog.setVisible(true);
+        }
 
-		return context;
-	}
+        return context;
+    }
 
-	@SuppressWarnings( "serial" )
-	private class ResolveContextTableModel extends AbstractTableModel
-	{
-		private ResolveContext<?> context;
-		private ArrayList<JComboBox> jbcList = new ArrayList<JComboBox>();
+    @SuppressWarnings("serial")
+    private class ResolveContextTableModel extends AbstractTableModel {
+        private ResolveContext<?> context;
+        private ArrayList<JComboBox> jbcList = new ArrayList<JComboBox>();
 
-		@SuppressWarnings( "unchecked" )
-		public ResolveContextTableModel( ResolveContext<?> context2 )
-		{
-			context = context2;
-			for( PathToResolve path : context.getPathsToResolve() )
-			{
-				ArrayList<Object> resolversAndDefaultAction = new ArrayList<Object>();
-				resolversAndDefaultAction.add( "Choose one..." );
-				for( Object resolver : path.getResolvers() )
-				{
-					resolversAndDefaultAction.add( resolver );
-				}
-				JComboBox jbc = new JComboBox( resolversAndDefaultAction.toArray() );
-				jbcList.add( jbc );
-			}
+        @SuppressWarnings("unchecked")
+        public ResolveContextTableModel(ResolveContext<?> context2) {
+            context = context2;
+            for (PathToResolve path : context.getPathsToResolve()) {
+                ArrayList<Object> resolversAndDefaultAction = new ArrayList<Object>();
+                resolversAndDefaultAction.add("Choose one...");
+                for (Object resolver : path.getResolvers()) {
+                    resolversAndDefaultAction.add(resolver);
+                }
+                JComboBox jbc = new JComboBox(resolversAndDefaultAction.toArray());
+                jbcList.add(jbc);
+            }
 
-		}
+        }
 
-		public JComboBox getResolversAndActions( int row )
-		{
-			return jbcList.get( row );
-		}
+        public JComboBox getResolversAndActions(int row) {
+            return jbcList.get(row);
+        }
 
-		public int getColumnCount()
-		{
-			return 4;
-		}
+        public int getColumnCount() {
+            return 4;
+        }
 
-		public void setContext( ResolveContext<?> context )
-		{
-			this.context = context;
-			fireTableDataChanged();
-		}
+        public void setContext(ResolveContext<?> context) {
+            this.context = context;
+            fireTableDataChanged();
+        }
 
-		@Override
-		public String getColumnName( int column )
-		{
-			switch( column )
-			{
-			case 0 :
-				return "Item";
-			case 1 :
-				return "Description";
-			case 2 :
-				return "Value";
-			case 3 :
-				return "Action";
-			}
+        @Override
+        public String getColumnName(int column) {
+            switch (column) {
+                case 0:
+                    return "Item";
+                case 1:
+                    return "Description";
+                case 2:
+                    return "Value";
+                case 3:
+                    return "Action";
+            }
 
-			return super.getColumnName( column );
-		}
+            return super.getColumnName(column);
+        }
 
-		@Override
-		public Class<?> getColumnClass( int arg0 )
-		{
-			if( arg0 == 3 )
-				return JComboBox.class;
-			else
-				return String.class;
-		}
+        @Override
+        public Class<?> getColumnClass(int arg0) {
+            if (arg0 == 3) {
+                return JComboBox.class;
+            } else {
+                return String.class;
+            }
+        }
 
-		public int getRowCount()
-		{
-			return context.getPathsToResolve().size();
-		}
+        public int getRowCount() {
+            return context.getPathsToResolve().size();
+        }
 
-		@Override
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			return columnIndex == 3;
-		}
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return columnIndex == 3;
+        }
 
-		@SuppressWarnings( "unchecked" )
-		public Object getValueAt( int arg0, int arg1 )
-		{
-			PathToResolve ptr = context.getPathsToResolve().get( arg0 );
-			switch( arg1 )
-			{
-			case 0 :
-				return createItemName( ptr );
-			case 1 :
-				return ptr.getDescription();
-			case 2 :
-				return ptr.getPath();
+        @SuppressWarnings("unchecked")
+        public Object getValueAt(int arg0, int arg1) {
+            PathToResolve ptr = context.getPathsToResolve().get(arg0);
+            switch (arg1) {
+                case 0:
+                    return createItemName(ptr);
+                case 1:
+                    return ptr.getDescription();
+                case 2:
+                    return ptr.getPath();
 
-			}
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		@SuppressWarnings( "unchecked" )
-		private String createItemName( PathToResolve ptr )
-		{
-			String name = "";
-			ModelItem modelItem = ptr.getOwner();
-			try
-			{
-				name = modelItem.getName();
-			}
-			catch( Exception e )
-			{
-				e.getStackTrace();
-			}
+        @SuppressWarnings("unchecked")
+        private String createItemName(PathToResolve ptr) {
+            String name = "";
+            ModelItem modelItem = ptr.getOwner();
+            try {
+                name = modelItem.getName();
+            } catch (Exception e) {
+                e.getStackTrace();
+            }
 
-			while( modelItem.getParent() != null && !( modelItem.getParent() instanceof Project ) )
-			{
-				modelItem = modelItem.getParent();
-				name = modelItem.getName() + " - " + name;
-			}
+            while (modelItem.getParent() != null && !(modelItem.getParent() instanceof Project)) {
+                modelItem = modelItem.getParent();
+                name = modelItem.getName() + " - " + name;
+            }
 
-			return name;
-		}
+            return name;
+        }
 
-		public ResolveContext<?> getContext()
-		{
-			return context;
-		}
+        public ResolveContext<?> getContext() {
+            return context;
+        }
 
-		@SuppressWarnings( "unchecked" )
-		public void setResolver( int pathIndex, Object resolveOrDefaultAction )
-		{
-			PathToResolve path = context.getPathsToResolve().get( pathIndex );
-			if( resolveOrDefaultAction instanceof Resolver )
-			{
-				path.setResolver( resolveOrDefaultAction );
-			}
+        @SuppressWarnings("unchecked")
+        public void setResolver(int pathIndex, Object resolveOrDefaultAction) {
+            PathToResolve path = context.getPathsToResolve().get(pathIndex);
+            if (resolveOrDefaultAction instanceof Resolver) {
+                path.setResolver(resolveOrDefaultAction);
+            }
 
-		}
-	}
+        }
+    }
 
-	private class ResolverRenderer implements TableCellRenderer
-	{
+    private class ResolverRenderer implements TableCellRenderer {
 
-		public Component getTableCellRendererComponent( JTable table, Object value, boolean isSelected, boolean hasFocus,
-				int row, int column )
-		{
-			return ( ( ResolveContextTableModel )table.getModel() ).getResolversAndActions( row );
-		}
-	}
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
+                                                       int row, int column) {
+            return ((ResolveContextTableModel) table.getModel()).getResolversAndActions(row);
+        }
+    }
 
-	@SuppressWarnings( "serial" )
-	private class ResolverEditor extends AbstractCellEditor implements TableCellEditor
-	{
-		private JComboBox jbc = new JComboBox();
+    @SuppressWarnings("serial")
+    private class ResolverEditor extends AbstractCellEditor implements TableCellEditor {
+        private JComboBox jbc = new JComboBox();
 
-		@SuppressWarnings( "unchecked" )
-		public Component getTableCellEditorComponent( final JTable table, Object value, boolean isSelected, int row,
-				int column )
-		{
-			jbc = ( ( ResolveContextTableModel )table.getModel() ).getResolversAndActions( row );
-			final PathToResolve path = resolveContextTableModel.getContext().getPathsToResolve().get( row );
+        @SuppressWarnings("unchecked")
+        public Component getTableCellEditorComponent(final JTable table, Object value, boolean isSelected, int row,
+                                                     int column) {
+            jbc = ((ResolveContextTableModel) table.getModel()).getResolversAndActions(row);
+            final PathToResolve path = resolveContextTableModel.getContext().getPathsToResolve().get(row);
 
-			jbc.addActionListener( new ActionListener()
-			{
+            jbc.addActionListener(new ActionListener() {
 
-				public void actionPerformed( ActionEvent e )
-				{
-					Object key = jbc.getSelectedItem();
-					if( key instanceof Resolver )
-					{
-						path.setResolver( key );
-					}
-					if( path.resolve() )
-					{
-						path.setSolved( true );
-						jbc.addItem( "Resolved" );
-						jbc.setSelectedIndex( jbc.getItemCount() - 1 );
+                public void actionPerformed(ActionEvent e) {
+                    Object key = jbc.getSelectedItem();
+                    if (key instanceof Resolver) {
+                        path.setResolver(key);
+                    }
+                    if (path.resolve()) {
+                        path.setSolved(true);
+                        jbc.addItem("Resolved");
+                        jbc.setSelectedIndex(jbc.getItemCount() - 1);
 
-						// for (int cnt = 0; cnt <
-						// resolveContextTableModel.getContext().getPathsToResolve().size();
-						// cnt++)
-						// {
-						// PathToResolve otherPath =
-						// resolveContextTableModel.getContext().getPathsToResolve().get(cnt);
-						// if (path != otherPath & !otherPath.isResolved())
-						// {
-						// otherPath.getOwner().afterLoad();
-						// otherPath.getOwner().resolve(resolveContextTableModel.getContext());
-						// if (otherPath.isResolved())
-						// {
-						// JComboBox jbcOther = ((ResolveContextTableModel)
-						// table.getModel())
-						// .getResolversAndActions(cnt);
-						// jbcOther.addItem("Resolved");
-						// jbcOther.setSelectedIndex(jbcOther.getItemCount() - 1);
-						// }
-						// }
-						// }
-					}
-				}
+                        // for (int cnt = 0; cnt <
+                        // resolveContextTableModel.getContext().getPathsToResolve().size();
+                        // cnt++)
+                        // {
+                        // PathToResolve otherPath =
+                        // resolveContextTableModel.getContext().getPathsToResolve().get(cnt);
+                        // if (path != otherPath & !otherPath.isResolved())
+                        // {
+                        // otherPath.getOwner().afterLoad();
+                        // otherPath.getOwner().resolve(resolveContextTableModel.getContext());
+                        // if (otherPath.isResolved())
+                        // {
+                        // JComboBox jbcOther = ((ResolveContextTableModel)
+                        // table.getModel())
+                        // .getResolversAndActions(cnt);
+                        // jbcOther.addItem("Resolved");
+                        // jbcOther.setSelectedIndex(jbcOther.getItemCount() - 1);
+                        // }
+                        // }
+                        // }
+                    }
+                }
 
-			} );
-			return jbc;
-		}
+            });
+            return jbc;
+        }
 
-		public Object getCellEditorValue()
-		{
-			return null;
-		}
+        public Object getCellEditorValue() {
+            return null;
+        }
 
-	}
+    }
 
-	@SuppressWarnings( "serial" )
-	private class PathCellRenderer extends DefaultTableCellRenderer
-	{
-		private Color greenColor = Color.GREEN.darker().darker();
-		private Color redColor = Color.RED.darker().darker();
+    @SuppressWarnings("serial")
+    private class PathCellRenderer extends DefaultTableCellRenderer {
+        private Color greenColor = Color.GREEN.darker().darker();
+        private Color redColor = Color.RED.darker().darker();
 
-		@SuppressWarnings( "unchecked" )
-		@Override
-		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
-				int arg5 )
-		{
-			Component comp = super.getTableCellRendererComponent( arg0, arg1, arg2, arg3, arg4, arg5 );
+        @SuppressWarnings("unchecked")
+        @Override
+        public Component getTableCellRendererComponent(JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
+                                                       int arg5) {
+            Component comp = super.getTableCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5);
 
-			List<? extends PathToResolve> paths = resolveContextTableModel.getContext().getPathsToResolve();
-			PathToResolve ptr = arg4 >= paths.size() ? null : paths.get( arg4 );
-			// boolean resolved = ptr.getResolver() != null &&
-			// ptr.getResolver().isResolved();
+            List<? extends PathToResolve> paths = resolveContextTableModel.getContext().getPathsToResolve();
+            PathToResolve ptr = arg4 >= paths.size() ? null : paths.get(arg4);
+            // boolean resolved = ptr.getResolver() != null &&
+            // ptr.getResolver().isResolved();
 
-			if( ptr != null && ptr.isResolved() )
-			{
-				comp.setForeground( greenColor );
-				setText( ptr.getPath() );
-			}
-			else
-			{
-				comp.setForeground( redColor );
-			}
+            if (ptr != null && ptr.isResolved()) {
+                comp.setForeground(greenColor);
+                setText(ptr.getPath());
+            } else {
+                comp.setForeground(redColor);
+            }
 
-			return comp;
-		}
-	}
+            return comp;
+        }
+    }
 
 }

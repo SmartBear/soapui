@@ -22,13 +22,12 @@ import com.eviware.soapui.impl.wsdl.WsdlRequest;
 
 /**
  * WSDL-specific extension to response
- * 
+ *
  * @author ole.matzura
  */
 
-public interface WsdlResponse extends HttpResponse
-{
-	public Vector<?> getWssResult();
+public interface WsdlResponse extends HttpResponse {
+    public Vector<?> getWssResult();
 
-	public WsdlRequest getRequest();
+    public WsdlRequest getRequest();
 }

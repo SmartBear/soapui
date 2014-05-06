@@ -47,79 +47,71 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
  * @author Ole.Matzura
  */
 
-public class NewRestMethodAction extends AbstractSoapUIAction<RestResource>
-{
-	public static final String SOAPUI_ACTION_ID = "NewRestMethodAction";
-	public static final MessageSupport messages = MessageSupport.getMessages( NewRestMethodAction.class );
-	private XFormDialog dialog;
+public class NewRestMethodAction extends AbstractSoapUIAction<RestResource> {
+    public static final String SOAPUI_ACTION_ID = "NewRestMethodAction";
+    public static final MessageSupport messages = MessageSupport.getMessages(NewRestMethodAction.class);
+    private XFormDialog dialog;
 
-	public NewRestMethodAction()
-	{
-		super( messages.get( "title" ), messages.get( "description" ) );
-	}
+    public NewRestMethodAction() {
+        super(messages.get("title"), messages.get("description"));
+    }
 
-	public void perform( RestResource resource, Object param )
-	{
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
-			dialog.setBooleanValue( Form.CREATEREQUEST, true );
-		}
+    public void perform(RestResource resource, Object param) {
+        if (dialog == null) {
+            dialog = ADialogBuilder.buildDialog(Form.class);
+            dialog.setBooleanValue(Form.CREATEREQUEST, true);
+        }
 
-		dialog.setValue( Form.RESOURCENAME, "Method " + ( resource.getRestMethodCount() + 1 ) );
+        dialog.setValue(Form.RESOURCENAME, "Method " + (resource.getRestMethodCount() + 1));
 
-		XmlBeansRestParamsTestPropertyHolder params;
-		if( param instanceof XmlBeansRestParamsTestPropertyHolder )
-			params = ( XmlBeansRestParamsTestPropertyHolder )param;
-		else
-			params = new XmlBeansRestParamsTestPropertyHolder( null, RestParametersConfig.Factory.newInstance(), ParamLocation.METHOD );
+        XmlBeansRestParamsTestPropertyHolder params;
+        if (param instanceof XmlBeansRestParamsTestPropertyHolder) {
+            params = (XmlBeansRestParamsTestPropertyHolder) param;
+        } else {
+            params = new XmlBeansRestParamsTestPropertyHolder(null, RestParametersConfig.Factory.newInstance(), ParamLocation.METHOD);
+        }
 
 
-		RestParamsTableModel paramsTableModel = new RestParamsTableModel( params, RestParamsTableModel.Mode.MEDIUM );
-		RestParamsTable paramsTable = new RestParamsTable( params, false, paramsTableModel, ParamLocation.METHOD, true, false );
+        RestParamsTableModel paramsTableModel = new RestParamsTableModel(params, RestParamsTableModel.Mode.MEDIUM);
+        RestParamsTable paramsTable = new RestParamsTable(params, false, paramsTableModel, ParamLocation.METHOD, true, false);
 
-		dialog.getFormField( Form.PARAMSTABLE ).setProperty( "component", paramsTable );
+        dialog.getFormField(Form.PARAMSTABLE).setProperty("component", paramsTable);
 
-		if( dialog.show() )
-		{
-			RestMethod method = resource.addNewMethod( dialog.getValue( Form.RESOURCENAME ) );
-			method.setMethod( RestRequestInterface.HttpMethod.valueOf( dialog.getValue( Form.METHOD ) ) );
-			paramsTable.extractParams( method.getParams(), ParamLocation.METHOD );
-			method.addPropertyChangeListener( paramsTableModel );
-			UISupport.select( method );
+        if (dialog.show()) {
+            RestMethod method = resource.addNewMethod(dialog.getValue(Form.RESOURCENAME));
+            method.setMethod(RestRequestInterface.HttpMethod.valueOf(dialog.getValue(Form.METHOD)));
+            paramsTable.extractParams(method.getParams(), ParamLocation.METHOD);
+            method.addPropertyChangeListener(paramsTableModel);
+            UISupport.select(method);
 
-			if( dialog.getBooleanValue( Form.CREATEREQUEST ) )
-			{
-				createRequest( method, method.getParams() );
-			}
-		}
-	}
+            if (dialog.getBooleanValue(Form.CREATEREQUEST)) {
+                createRequest(method, method.getParams());
+            }
+        }
+    }
 
-	protected void createRequest( RestMethod method, RestParamsPropertyHolder params )
-	{
-		RestRequest request = method.addNewRequest( "Request " + ( method.getRequestCount() + 1 ) );
-		for ( TestProperty param : params.getProperties().values())
-		{
-			( ( RestParamProperty )param ).addPropertyChangeListener( request );
-		}
+    protected void createRequest(RestMethod method, RestParamsPropertyHolder params) {
+        RestRequest request = method.addNewRequest("Request " + (method.getRequestCount() + 1));
+        for (TestProperty param : params.getProperties().values()) {
+            ((RestParamProperty) param).addPropertyChangeListener(request);
+        }
 
-		UISupport.showDesktopPanel( request );
-	}
+        UISupport.showDesktopPanel(request);
+    }
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-	public interface Form
-	{
-		@AField( description = "Form.ResourceName.Description", type = AFieldType.STRING )
-		public final static String RESOURCENAME = messages.get( "Form.ResourceName.Label" );
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    public interface Form {
+        @AField(description = "Form.ResourceName.Description", type = AFieldType.STRING)
+        public final static String RESOURCENAME = messages.get("Form.ResourceName.Label");
 
-		@AField( description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = { "GET", "POST", "PUT",
-				"DELETE", "HEAD", "PATCH" } )
-		public final static String METHOD = messages.get( "Form.Method.Label" );
+        @AField(description = "Form.Method.Description", type = AFieldType.ENUMERATION, values = {"GET", "POST", "PUT",
+                "DELETE", "HEAD", "PATCH"})
+        public final static String METHOD = messages.get("Form.Method.Label");
 
-		@AField( description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT )
-		public final static String PARAMSTABLE = messages.get( "Form.ParamsTable.Label" );
+        @AField(description = "Form.ParamsTable.Description", type = AFieldType.COMPONENT)
+        public final static String PARAMSTABLE = messages.get("Form.ParamsTable.Label");
 
-		@AField( description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN )
-		public final static String CREATEREQUEST = messages.get( "Form.CreateRequest.Label" );
-	}
+        @AField(description = "Form.CreateRequest.Description", type = AFieldType.BOOLEAN)
+        public final static String CREATEREQUEST = messages.get("Form.CreateRequest.Label");
+    }
 }

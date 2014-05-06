@@ -23,21 +23,17 @@ import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 
-public class AuthInspectorFactory implements RequestInspectorFactory
-{
-	public static final String INSPECTOR_ID = "Auth";
+public class AuthInspectorFactory implements RequestInspectorFactory {
+    public static final String INSPECTOR_ID = "Auth";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof AbstractHttpRequestInterface<?> )
-		{
-			return new ProfileSelectionForm( ( AbstractHttpRequest )modelItem );
-		}
-		return null;
-	}
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof AbstractHttpRequestInterface<?>) {
+            return new ProfileSelectionForm((AbstractHttpRequest) modelItem);
+        }
+        return null;
+    }
 }

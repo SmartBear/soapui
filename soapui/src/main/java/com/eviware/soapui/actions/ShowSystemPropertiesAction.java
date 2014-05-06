@@ -28,42 +28,39 @@ import javax.swing.Action;
 
 import com.eviware.soapui.support.UISupport;
 
-public class ShowSystemPropertiesAction extends AbstractAction
-{
-	public ShowSystemPropertiesAction()
-	{
-		super( "System Properties" );
-		putValue( Action.SHORT_DESCRIPTION, "Shows the current systems properties" );
-	}
+public class ShowSystemPropertiesAction extends AbstractAction {
+    public ShowSystemPropertiesAction() {
+        super("System Properties");
+        putValue(Action.SHORT_DESCRIPTION, "Shows the current systems properties");
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		StringBuffer buffer = new StringBuffer();
-		Properties properties = System.getProperties();
+    public void actionPerformed(ActionEvent e) {
+        StringBuffer buffer = new StringBuffer();
+        Properties properties = System.getProperties();
 
-		List<String> keys = new ArrayList<String>();
-		for( Object key : properties.keySet() )
-			keys.add( key.toString() );
+        List<String> keys = new ArrayList<String>();
+        for (Object key : properties.keySet()) {
+            keys.add(key.toString());
+        }
 
-		Collections.sort( keys );
+        Collections.sort(keys);
 
-		String lastKey = null;
+        String lastKey = null;
 
-		for( String key : keys )
-		{
-			if( lastKey != null )
-			{
-				if( !key.startsWith( lastKey ) )
-					buffer.append( "\r\n" );
-			}
+        for (String key : keys) {
+            if (lastKey != null) {
+                if (!key.startsWith(lastKey)) {
+                    buffer.append("\r\n");
+                }
+            }
 
-			int ix = key.indexOf( '.' );
-			lastKey = ix == -1 ? key : key.substring( 0, ix );
+            int ix = key.indexOf('.');
+            lastKey = ix == -1 ? key : key.substring(0, ix);
 
-			buffer.append( key ).append( '=' ).append( properties.get( key ) ).append( "\r\n" );
-		}
+            buffer.append(key).append('=').append(properties.get(key)).append("\r\n");
+        }
 
-		UISupport.showExtendedInfo( "System Properties", "Current system properties", "<html><body><pre><font size=-1>"
-				+ buffer.toString() + "</font></pre></body></html>", new Dimension( 600, 400 ) );
-	}
+        UISupport.showExtendedInfo("System Properties", "Current system properties", "<html><body><pre><font size=-1>"
+                + buffer.toString() + "</font></pre></body></html>", new Dimension(600, 400));
+    }
 }

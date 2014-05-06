@@ -25,39 +25,35 @@ import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSch
 import com.eviware.soapui.impl.support.definition.support.AbstractDefinitionLoader;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader
-{
-	private RestService restService;
+public class GeneratedWadlDefinitionLoader extends AbstractDefinitionLoader {
+    private RestService restService;
 
-	public GeneratedWadlDefinitionLoader( RestService restService )
-	{
-		this.restService = restService;
-	}
+    public GeneratedWadlDefinitionLoader(RestService restService) {
+        this.restService = restService;
+    }
 
-	public XmlObject loadXmlObject( String wsdlUrl, XmlOptions options ) throws Exception
-	{
-		if( wsdlUrl.toLowerCase().endsWith( ".xsd" ) )
-			// return XmlObject.Factory.parse(
-			// InferredSchemaManager.getInferredSchema( restService
-			// ).getXsdForNamespace(
-			// InferredSchemaManager.namespaceForFilename( wsdlUrl ) ) );
-			return XmlUtils.createXmlObject( InferredSchemaManager.getInferredSchema( restService ).getXsdForNamespace(
-					InferredSchemaManager.namespaceForFilename( wsdlUrl ) ) );
-		return new WadlGenerator( restService ).generateWadl();
-	}
+    public XmlObject loadXmlObject(String wsdlUrl, XmlOptions options) throws Exception {
+        if (wsdlUrl.toLowerCase().endsWith(".xsd"))
+        // return XmlObject.Factory.parse(
+        // InferredSchemaManager.getInferredSchema( restService
+        // ).getXsdForNamespace(
+        // InferredSchemaManager.namespaceForFilename( wsdlUrl ) ) );
+        {
+            return XmlUtils.createXmlObject(InferredSchemaManager.getInferredSchema(restService).getXsdForNamespace(
+                    InferredSchemaManager.namespaceForFilename(wsdlUrl)));
+        }
+        return new WadlGenerator(restService).generateWadl();
+    }
 
-	public String getBaseURI()
-	{
-		return restService.getName() + ".wadl";
-	}
+    public String getBaseURI() {
+        return restService.getName() + ".wadl";
+    }
 
-	public void setNewBaseURI( String uri )
-	{
-		// not implemented
-	}
+    public void setNewBaseURI(String uri) {
+        // not implemented
+    }
 
-	public String getFirstNewURI()
-	{
-		return getBaseURI();
-	}
+    public String getFirstNewURI() {
+        return getBaseURI();
+    }
 }

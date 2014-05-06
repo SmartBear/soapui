@@ -31,49 +31,46 @@ import com.eviware.soapui.support.UISupport;
 /**
  * Recreates an SOAP response message for WsdlMockResponse from its WSDL/XSD
  * definition
- * 
+ *
  * @author ole.matzura
  */
 
-public class RecreateMockResponseAction extends AbstractAction
-{
-	private final MockResponse mockResponse;
+public class RecreateMockResponseAction extends AbstractAction {
+    private final MockResponse mockResponse;
 
-	public RecreateMockResponseAction( MockResponse mockResponse )
-	{
-		super( "Recreate response" );
-		this.mockResponse = mockResponse;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/recreate_request.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, "Recreates a default response from the schema" );
-	}
+    public RecreateMockResponseAction(MockResponse mockResponse) {
+        super("Recreate response");
+        this.mockResponse = mockResponse;
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/recreate_request.gif"));
+        putValue(Action.SHORT_DESCRIPTION, "Recreates a default response from the schema");
+    }
 
-	public void actionPerformed( ActionEvent arg0 )
-	{
-		Operation operation = mockResponse.getMockOperation().getOperation();
-		if( operation == null )
-		{
-			UISupport.showErrorMessage( "Missing operation for this mock response" );
-			return;
-		}
+    public void actionPerformed(ActionEvent arg0) {
+        Operation operation = mockResponse.getMockOperation().getOperation();
+        if (operation == null) {
+            UISupport.showErrorMessage("Missing operation for this mock response");
+            return;
+        }
 
-		String response = mockResponse.getResponseContent();
-		if( response != null && response.trim().length() > 0
-				&& !UISupport.confirm( "Overwrite current response?", "Recreate response" ) )
-			return;
+        String response = mockResponse.getResponseContent();
+        if (response != null && response.trim().length() > 0
+                && !UISupport.confirm("Overwrite current response?", "Recreate response")) {
+            return;
+        }
 
-		boolean createOptional = mockResponse.getSettings().getBoolean(
-				WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS );
-		if( !createOptional )
-			createOptional = UISupport.confirm( "Create optional elements in schema?", "Create Request" );
+        boolean createOptional = mockResponse.getSettings().getBoolean(
+                WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS);
+        if (!createOptional) {
+            createOptional = UISupport.confirm("Create optional elements in schema?", "Create Request");
+        }
 
-		String req = operation.createResponse( createOptional );
-		if( req == null )
-		{
-			UISupport.showErrorMessage( "Response creation failed" );
-			return;
-		}
+        String req = operation.createResponse(createOptional);
+        if (req == null) {
+            UISupport.showErrorMessage("Response creation failed");
+            return;
+        }
 
-		mockResponse.setResponseContent( req );
-	}
+        mockResponse.setResponseContent(req);
+    }
 
 }

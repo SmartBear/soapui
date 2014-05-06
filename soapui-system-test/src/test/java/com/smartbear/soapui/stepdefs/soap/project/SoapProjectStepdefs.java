@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.stepdefs.soap.project;
+*/
+package com.smartbear.soapui.stepdefs.soap.project;
 
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
@@ -25,32 +26,27 @@ import org.fest.swing.fixture.FrameFixture;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.SoapProjectUtils.openRequestEditor;
 
-public class SoapProjectStepdefs
-{
-	private Robot robot;
-	private FrameFixture rootWindow;
+public class SoapProjectStepdefs {
+    private Robot robot;
+    private FrameFixture rootWindow;
 
-	public SoapProjectStepdefs( ScenarioRobot runner )
-	{
-		robot = runner.getRobot();
-		rootWindow = getMainWindow( robot );
-	}
+    public SoapProjectStepdefs(ScenarioRobot runner) {
+        robot = runner.getRobot();
+        rootWindow = getMainWindow(robot);
+    }
 
-	@Given( "^a new SOAP project is created$" )
-	public void createNewSoapProject()
-	{
-		SoapProjectUtils.createNewSoapProject( rootWindow, robot );
-	}
+    @Given("^a new SOAP project is created$")
+    public void createNewSoapProject() {
+        SoapProjectUtils.createNewSoapProject(rootWindow, robot);
+    }
 
-	@When( "^the user opens the SOAP request editor$" )
-	public void openSoapRequestEditor()
-	{
-		openRequestEditor( rootWindow );
-	}
+    @When("^the user opens the SOAP request editor$")
+    public void openSoapRequestEditor() {
+        openRequestEditor(rootWindow);
+    }
 
-	@When("^clicks on the Auth tab$")
-	public void clickOnTheAuthTab()
-	{
-		rootWindow.toggleButton( AuthInspectorFactory.INSPECTOR_ID ).click();
-	}
+    @When("^clicks on the Auth tab$")
+    public void clickOnTheAuthTab() {
+        rootWindow.toggleButton(AuthInspectorFactory.INSPECTOR_ID).click();
+    }
 }

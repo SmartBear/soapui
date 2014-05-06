@@ -22,38 +22,35 @@ import java.util.List;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.testsuite.MessageExchangeTestStepResult;
 
-public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implements MessageExchangeTestStepResult
-{
-	private List<MessageExchange> exchanges = new ArrayList<MessageExchange>();
+public class WsdlMessageExchangeTestStepResult extends WsdlTestStepResult implements MessageExchangeTestStepResult {
+    private List<MessageExchange> exchanges = new ArrayList<MessageExchange>();
 
-	public WsdlMessageExchangeTestStepResult( WsdlTestStep testStep )
-	{
-		super( testStep );
-	}
+    public WsdlMessageExchangeTestStepResult(WsdlTestStep testStep) {
+        super(testStep);
+    }
 
-	public MessageExchange[] getMessageExchanges()
-	{
-		return exchanges == null ? new MessageExchange[0] : exchanges.toArray( new MessageExchange[exchanges.size()] );
-	}
+    public MessageExchange[] getMessageExchanges() {
+        return exchanges == null ? new MessageExchange[0] : exchanges.toArray(new MessageExchange[exchanges.size()]);
+    }
 
-	public void addMessageExchange( MessageExchange messageExchange )
-	{
-		if( exchanges != null )
-			exchanges.add( messageExchange );
-	}
+    public void addMessageExchange(MessageExchange messageExchange) {
+        if (exchanges != null) {
+            exchanges.add(messageExchange);
+        }
+    }
 
-	public void addMessages( MessageExchange[] messageExchanges )
-	{
-		if( exchanges != null )
-			for( MessageExchange messageExchange : messageExchanges )
-				exchanges.add( messageExchange );
-	}
+    public void addMessages(MessageExchange[] messageExchanges) {
+        if (exchanges != null) {
+            for (MessageExchange messageExchange : messageExchanges) {
+                exchanges.add(messageExchange);
+            }
+        }
+    }
 
-	@Override
-	public void discard()
-	{
-		super.discard();
+    @Override
+    public void discard() {
+        super.discard();
 
-		exchanges = null;
-	}
+        exchanges = null;
+    }
 }

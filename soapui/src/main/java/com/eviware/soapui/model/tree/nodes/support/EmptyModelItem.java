@@ -28,66 +28,55 @@ import com.eviware.soapui.model.support.AbstractModelItem;
 
 /**
  * Empty ModelItem used by intermediary TreeNodes
- * 
+ *
  * @author ole.matzura
  */
 
-public class EmptyModelItem extends AbstractModelItem
-{
-	private String name;
-	private ImageIcon icon;
+public class EmptyModelItem extends AbstractModelItem {
+    private String name;
+    private ImageIcon icon;
 
-	public EmptyModelItem( String name, ImageIcon icon )
-	{
-		this.name = name;
-		this.icon = icon;
-	}
+    public EmptyModelItem(String name, ImageIcon icon) {
+        this.name = name;
+        this.icon = icon;
+    }
 
-	public void setName( String name )
-	{
-		String oldName = this.name;
-		this.name = name;
+    public void setName(String name) {
+        String oldName = this.name;
+        this.name = name;
 
-		notifyPropertyChanged( ModelItem.NAME_PROPERTY, oldName, name );
-	}
+        notifyPropertyChanged(ModelItem.NAME_PROPERTY, oldName, name);
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public ImageIcon getIcon()
-	{
-		return icon;
-	}
+    public ImageIcon getIcon() {
+        return icon;
+    }
 
-	public String getDescription()
-	{
-		return name;
-	}
+    public String getDescription() {
+        return name;
+    }
 
-	public Settings getSettings()
-	{
-		return SoapUI.getSettings();
-	}
+    public Settings getSettings() {
+        return SoapUI.getSettings();
+    }
 
-	public void release()
-	{
-	}
+    public void release() {
+    }
 
-	public String getId()
-	{
-		return String.valueOf( hashCode() );
-	}
+    public String getId() {
+        return String.valueOf(hashCode());
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public List<? extends ModelItem> getChildren()
-	{
-		return Collections.EMPTY_LIST;
-	}
+    @SuppressWarnings("unchecked")
+    public List<? extends ModelItem> getChildren() {
+        return Collections.EMPTY_LIST;
+    }
 
-	public ModelItem getParent()
-	{
-		return null;
-	}
+    public ModelItem getParent() {
+        return null;
+    }
 }

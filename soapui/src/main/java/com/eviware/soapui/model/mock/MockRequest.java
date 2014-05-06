@@ -27,37 +27,36 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * A Request to a MockService
- * 
+ *
  * @author ole.matzura
  */
 
-public interface MockRequest
-{
-	public Attachment[] getRequestAttachments();
+public interface MockRequest {
+    public Attachment[] getRequestAttachments();
 
-	public HttpServletRequest getHttpRequest();
+    public HttpServletRequest getHttpRequest();
 
-	public StringToStringsMap getRequestHeaders();
+    public StringToStringsMap getRequestHeaders();
 
-	public String getRequestContent();
+    public String getRequestContent();
 
-	public MockRunContext getContext();
+    public MockRunContext getContext();
 
-	public MockRunContext getRequestContext();
+    public MockRunContext getRequestContext();
 
-	public RestRequestInterface.HttpMethod getMethod();
+    public RestRequestInterface.HttpMethod getMethod();
 
-	public XmlObject getContentElement() throws XmlException;
+    public XmlObject getContentElement() throws XmlException;
 
-	public String getPath();
+    public String getPath();
 
-	public byte[] getRawRequestData();
+    public byte[] getRawRequestData();
 
-	public String getProtocol();
+    public String getProtocol();
 
-	public HttpServletResponse getHttpResponse();
+    public HttpServletResponse getHttpResponse();
 
-	public XmlObject getRequestXmlObject() throws XmlException;
+    public XmlObject getRequestXmlObject() throws XmlException;
 
-	public void setRequestContent( String xml );
+    public void setRequestContent(String xml);
 }

@@ -33,129 +33,120 @@ import com.jgoodies.forms.layout.Sizes;
 
 /**
  * A simple status bar for editors
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class JEditorStatusBar extends JPanel implements CaretListener
-{
-	private JLabel caretLabel;
-	private JLabel infoLabel;
-	private JEditorStatusBarTarget target;
-	private JPanel statusPanel;
+public class JEditorStatusBar extends JPanel implements CaretListener {
+    private JLabel caretLabel;
+    private JLabel infoLabel;
+    private JEditorStatusBarTarget target;
+    private JPanel statusPanel;
 
-	public JEditorStatusBar()
-	{
-		this( null );
-	}
+    public JEditorStatusBar() {
+        this(null);
+    }
 
-	public JEditorStatusBar( JEditorStatusBarTarget target )
-	{
-		this.target = target;
+    public JEditorStatusBar(JEditorStatusBarTarget target) {
+        this.target = target;
 
-		caretLabel = new JLabel();
-		caretLabel.setPreferredSize( new Dimension( 60, 16 ) );
+        caretLabel = new JLabel();
+        caretLabel.setPreferredSize(new Dimension(60, 16));
 
-		infoLabel = new JLabel();
-		infoLabel.setVisible( false );
+        infoLabel = new JLabel();
+        infoLabel.setVisible(false);
 
-		caretLabel.setBorder( BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.LIGHT_GRAY ),
-				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.WHITE ) ) );
+        caretLabel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY),
+                BorderFactory.createMatteBorder(0, 1, 0, 0, Color.WHITE)));
 
-		ButtonBarBuilder builder = new ButtonBarBuilder( this );
-		builder.addGriddedGrowing( infoLabel );
-		builder.addStrut( Sizes.pixel( 2 ) );
+        ButtonBarBuilder builder = new ButtonBarBuilder(this);
+        builder.addGriddedGrowing(infoLabel);
+        builder.addStrut(Sizes.pixel(2));
 
-		statusPanel = new JPanel( new BorderLayout() );
-		statusPanel.setPreferredSize( new Dimension( 60, 16 ) );
+        statusPanel = new JPanel(new BorderLayout());
+        statusPanel.setPreferredSize(new Dimension(60, 16));
 
-		statusPanel.setBorder( BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.LIGHT_GRAY ),
-				BorderFactory.createMatteBorder( 0, 1, 0, 0, Color.WHITE ) ) );
+        statusPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 1, 0, 0, Color.LIGHT_GRAY),
+                BorderFactory.createMatteBorder(0, 1, 0, 0, Color.WHITE)));
 
-		builder.addFixed( statusPanel );
-		builder.addFixed( caretLabel );
-		builder.getPanel();
-	}
+        builder.addFixed(statusPanel);
+        builder.addFixed(caretLabel);
+        builder.getPanel();
+    }
 
-	public void addNotify()
-	{
-		super.addNotify();
+    public void addNotify() {
+        super.addNotify();
 
-		if( target != null )
-			target.addCaretListener( this );
-	}
+        if (target != null) {
+            target.addCaretListener(this);
+        }
+    }
 
-	public void removeNotify()
-	{
-		super.removeNotify();
+    public void removeNotify() {
+        super.removeNotify();
 
-		if( target != null )
-			target.removeCaretListener( this );
-	}
+        if (target != null) {
+            target.removeCaretListener(this);
+        }
+    }
 
-	public void caretUpdate( CaretEvent e )
-	{
-		try
-		{
-			if( target == null )
-				caretLabel.setText( "" );
-			else
-			{
-				int offset = target.getCaretPosition();
-				int line = target.getLineOfOffset( offset );
-				int column = offset - target.getLineStartOffset( line );
+    public void caretUpdate(CaretEvent e) {
+        try {
+            if (target == null) {
+                caretLabel.setText("");
+            } else {
+                int offset = target.getCaretPosition();
+                int line = target.getLineOfOffset(offset);
+                int column = offset - target.getLineStartOffset(line);
 
-				caretLabel.setText( " " + ( line + 1 ) + " : " + ( column + 1 ) );
-			}
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-		}
-	}
+                caretLabel.setText(" " + (line + 1) + " : " + (column + 1));
+            }
+        } catch (Exception e1) {
+            SoapUI.logError(e1);
+        }
+    }
 
-	public void setTarget( JEditorStatusBarTarget target )
-	{
-		if( this.target != null )
-			this.target.removeCaretListener( this );
+    public void setTarget(JEditorStatusBarTarget target) {
+        if (this.target != null) {
+            this.target.removeCaretListener(this);
+        }
 
-		this.target = target;
-		this.target.addCaretListener( this );
+        this.target = target;
+        this.target.addCaretListener(this);
 
-		caretUpdate( null );
-	}
+        caretUpdate(null);
+    }
 
-	public void setInfo( String txt )
-	{
-		infoLabel.setText( txt );
-		infoLabel.setVisible( txt != null );
-	}
+    public void setInfo(String txt) {
+        infoLabel.setText(txt);
+        infoLabel.setVisible(txt != null);
+    }
 
-	public void setStatusComponent( JComponent statusComponent )
-	{
-		statusPanel.removeAll();
-		statusPanel.add( statusComponent, BorderLayout.CENTER );
-		statusPanel.revalidate();
-	}
+    public void setStatusComponent(JComponent statusComponent) {
+        statusPanel.removeAll();
+        statusPanel.add(statusComponent, BorderLayout.CENTER);
+        statusPanel.revalidate();
+    }
 
-	/**
-	 * Target for caret-status
-	 * 
-	 * @author Ole.Matzura
-	 */
+    /**
+     * Target for caret-status
+     *
+     * @author Ole.Matzura
+     */
 
-	public interface JEditorStatusBarTarget
-	{
-		void addCaretListener( CaretListener listener );
+    public interface JEditorStatusBarTarget {
+        void addCaretListener(CaretListener listener);
 
-		int getCaretPosition();
+        int getCaretPosition();
 
-		void removeCaretListener( CaretListener listener );
+        void removeCaretListener(CaretListener listener);
 
-		int getLineStartOffset( int line ) throws Exception;
+        int getLineStartOffset(int line) throws Exception;
 
-		int getLineOfOffset( int offset ) throws Exception;;
-	}
+        int getLineOfOffset(int offset) throws Exception;
+
+        ;
+    }
 }

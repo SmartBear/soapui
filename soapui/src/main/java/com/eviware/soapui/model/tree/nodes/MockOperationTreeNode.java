@@ -27,67 +27,58 @@ import com.eviware.soapui.model.tree.SoapUITreeNode;
 
 /**
  * SoapUITreeNode for TestStep implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class MockOperationTreeNode extends AbstractModelItemTreeNode<MockOperation>
-{
-	private List<MockResponseTreeNode> mockResponseNodes = new ArrayList<MockResponseTreeNode>();
+public class MockOperationTreeNode extends AbstractModelItemTreeNode<MockOperation> {
+    private List<MockResponseTreeNode> mockResponseNodes = new ArrayList<MockResponseTreeNode>();
 
-	public MockOperationTreeNode( MockOperation mockOperation, SoapUITreeModel treeModel )
-	{
-		super( mockOperation, mockOperation.getMockService(), treeModel );
+    public MockOperationTreeNode(MockOperation mockOperation, SoapUITreeModel treeModel) {
+        super(mockOperation, mockOperation.getMockService(), treeModel);
 
-		for( int c = 0; c < mockOperation.getMockResponseCount(); c++ )
-		{
-			MockResponse mockResponse = mockOperation.getMockResponseAt( c );
-			mockResponseNodes.add( new MockResponseTreeNode( mockResponse, getTreeModel() ) );
-		}
+        for (int c = 0; c < mockOperation.getMockResponseCount(); c++) {
+            MockResponse mockResponse = mockOperation.getMockResponseAt(c);
+            mockResponseNodes.add(new MockResponseTreeNode(mockResponse, getTreeModel()));
+        }
 
-		treeModel.mapModelItems( mockResponseNodes );
-	}
+        treeModel.mapModelItems(mockResponseNodes);
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		for( MockResponseTreeNode treeNode : mockResponseNodes )
-			treeNode.release();
-	}
+        for (MockResponseTreeNode treeNode : mockResponseNodes) {
+            treeNode.release();
+        }
+    }
 
-	public int getChildCount()
-	{
-		return mockResponseNodes.size();
-	}
+    public int getChildCount() {
+        return mockResponseNodes.size();
+    }
 
-	public int getIndexOfChild( Object child )
-	{
-		return mockResponseNodes.indexOf( child );
-	}
+    public int getIndexOfChild(Object child) {
+        return mockResponseNodes.indexOf(child);
+    }
 
-	public SoapUITreeNode getChildNode( int index )
-	{
-		return mockResponseNodes.get( index );
-	}
+    public SoapUITreeNode getChildNode(int index) {
+        return mockResponseNodes.get(index);
+    }
 
-	public void mockResponseAdded( MockResponse mockResponse )
-	{
-		MockResponseTreeNode treeNode = new MockResponseTreeNode( mockResponse, getTreeModel() );
-		mockResponseNodes.add( treeNode );
-		getTreeModel().notifyNodeInserted( treeNode );
-	}
+    public void mockResponseAdded(MockResponse mockResponse) {
+        MockResponseTreeNode treeNode = new MockResponseTreeNode(mockResponse, getTreeModel());
+        mockResponseNodes.add(treeNode);
+        getTreeModel().notifyNodeInserted(treeNode);
+    }
 
-	public void mockResponseRemoved( MockResponse mockResponse )
-	{
-		SoapUITreeNode treeNode = getTreeModel().getTreeNode( mockResponse );
-		if( mockResponseNodes.contains( treeNode ) )
-		{
-			getTreeModel().notifyNodeRemoved( treeNode );
-			mockResponseNodes.remove( treeNode );
-		}
-		else
-			throw new RuntimeException( "Removing unkown mockResponse; " + mockResponse.getName() );
-	}
+    public void mockResponseRemoved(MockResponse mockResponse) {
+        SoapUITreeNode treeNode = getTreeModel().getTreeNode(mockResponse);
+        if (mockResponseNodes.contains(treeNode)) {
+            getTreeModel().notifyNodeRemoved(treeNode);
+            mockResponseNodes.remove(treeNode);
+        } else {
+            throw new RuntimeException("Removing unkown mockResponse; " + mockResponse.getName());
+        }
+    }
 }

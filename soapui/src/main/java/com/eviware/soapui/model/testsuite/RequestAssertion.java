@@ -22,11 +22,10 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 
 /**
  * Behaviour for a assertion for the request in a WsdlMessageExchange
- * 
+ *
  * @author ole.matzura
  */
 
-public interface RequestAssertion
-{
-	public AssertionStatus assertRequest( MessageExchange messageExchange, SubmitContext context );
+public interface RequestAssertion {
+    public AssertionStatus assertRequest(MessageExchange messageExchange, SubmitContext context);
 }

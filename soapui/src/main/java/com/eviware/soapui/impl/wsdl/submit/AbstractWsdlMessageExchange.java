@@ -26,84 +26,73 @@ import com.eviware.soapui.model.iface.Attachment;
 
 /**
  * MessageExchange for WSDL-based exchanges
- * 
+ *
  * @author ole.matzura
  */
 
 public abstract class AbstractWsdlMessageExchange<T extends ModelItem> extends AbstractMessageExchange<T> implements
-		WsdlMessageExchange
-{
-	public AbstractWsdlMessageExchange( T modelItem )
-	{
-		super( modelItem );
-	}
+        WsdlMessageExchange {
+    public AbstractWsdlMessageExchange(T modelItem) {
+        super(modelItem);
+    }
 
-	public boolean hasResponse()
-	{
-		String responseContent = getResponseContent();
-		return responseContent != null && responseContent.trim().length() > 0;
-	}
+    public boolean hasResponse() {
+        String responseContent = getResponseContent();
+        return responseContent != null && responseContent.trim().length() > 0;
+    }
 
-	public abstract WsdlOperation getOperation();
+    public abstract WsdlOperation getOperation();
 
-	public Attachment[] getResponseAttachmentsForPart( String name )
-	{
-		List<Attachment> result = new ArrayList<Attachment>();
+    public Attachment[] getResponseAttachmentsForPart(String name) {
+        List<Attachment> result = new ArrayList<Attachment>();
 
-		if( getResponseAttachments() != null )
-		{
-			for( Attachment attachment : getResponseAttachments() )
-			{
-				if( attachment.getPart().equals( name ) )
-					result.add( attachment );
-			}
-		}
+        if (getResponseAttachments() != null) {
+            for (Attachment attachment : getResponseAttachments()) {
+                if (attachment.getPart().equals(name)) {
+                    result.add(attachment);
+                }
+            }
+        }
 
-		return result.toArray( new Attachment[result.size()] );
-	}
+        return result.toArray(new Attachment[result.size()]);
+    }
 
-	public Attachment[] getRequestAttachmentsForPart( String name )
-	{
-		List<Attachment> result = new ArrayList<Attachment>();
+    public Attachment[] getRequestAttachmentsForPart(String name) {
+        List<Attachment> result = new ArrayList<Attachment>();
 
-		for( Attachment attachment : getRequestAttachments() )
-		{
-			if( attachment.getPart().equals( name ) )
-				result.add( attachment );
-		}
+        for (Attachment attachment : getRequestAttachments()) {
+            if (attachment.getPart().equals(name)) {
+                result.add(attachment);
+            }
+        }
 
-		return result.toArray( new Attachment[result.size()] );
-	}
+        return result.toArray(new Attachment[result.size()]);
+    }
 
-	public boolean hasRequest( boolean ignoreEmpty )
-	{
-		String requestContent = getRequestContent();
-		return !( requestContent == null || ( ignoreEmpty && requestContent.trim().length() == 0 ) );
-	}
+    public boolean hasRequest(boolean ignoreEmpty) {
+        String requestContent = getRequestContent();
+        return !(requestContent == null || (ignoreEmpty && requestContent.trim().length() == 0));
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange#getSoapVersion()
-	 */
-	public SoapVersion getSoapVersion()
-	{
-		return getOperation().getInterface().getSoapVersion();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.eviware.soapui.impl.wsdl.submit.WsdlMessageExchange#getSoapVersion()
+     */
+    public SoapVersion getSoapVersion() {
+        return getOperation().getInterface().getSoapVersion();
+    }
 
-	public boolean hasRawData()
-	{
-		return false;
-	}
+    public boolean hasRawData() {
+        return false;
+    }
 
-	public byte[] getRawRequestData()
-	{
-		return null;
-	}
+    public byte[] getRawRequestData() {
+        return null;
+    }
 
-	public byte[] getRawResponseData()
-	{
-		return null;
-	}
+    public byte[] getRawResponseData() {
+        return null;
+    }
 }

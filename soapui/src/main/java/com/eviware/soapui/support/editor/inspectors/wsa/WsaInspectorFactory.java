@@ -24,28 +24,26 @@ import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
-public class WsaInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
-{
-	public static final String INSPECTOR_ID = "WS-A";
+public class WsaInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory {
+    public static final String INSPECTOR_ID = "WS-A";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof WsdlRequest )
-			return new WsdlRequestWsaInspector( ( ( WsdlRequest )modelItem ) );
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof WsdlRequest) {
+            return new WsdlRequestWsaInspector(((WsdlRequest) modelItem));
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof WsdlMockResponse )
-			return new WsdlMockresponseWsaInspector( ( ( WsdlMockResponse )modelItem ) );
+    public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof WsdlMockResponse) {
+            return new WsdlMockresponseWsaInspector(((WsdlMockResponse) modelItem));
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

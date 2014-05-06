@@ -24,72 +24,62 @@ import org.apache.xmlbeans.SchemaType;
 
 /**
  * A message part in a Request
- * 
+ *
  * @author ole.matzura
  */
 
-public interface MessagePart
-{
-	public String getName();
+public interface MessagePart {
+    public String getName();
 
-	public String getDescription();
+    public String getDescription();
 
-	public PartType getPartType();
+    public PartType getPartType();
 
-	public enum PartType
-	{
-		HEADER, CONTENT, ATTACHMENT, FAULT, PARAMETER
-	};
+    public enum PartType {
+        HEADER, CONTENT, ATTACHMENT, FAULT, PARAMETER
+    }
 
-	public abstract static class ContentPart implements MessagePart
-	{
-		public abstract SchemaType getSchemaType();
+    ;
 
-		public abstract QName getPartElementName();
+    public abstract static class ContentPart implements MessagePart {
+        public abstract SchemaType getSchemaType();
 
-		public abstract SchemaGlobalElement getPartElement();
+        public abstract QName getPartElementName();
 
-		public PartType getPartType()
-		{
-			return PartType.CONTENT;
-		}
-	}
+        public abstract SchemaGlobalElement getPartElement();
 
-	public abstract static class AttachmentPart implements MessagePart
-	{
-		public abstract String[] getContentTypes();
+        public PartType getPartType() {
+            return PartType.CONTENT;
+        }
+    }
 
-		public abstract boolean isAnonymous();
+    public abstract static class AttachmentPart implements MessagePart {
+        public abstract String[] getContentTypes();
 
-		public PartType getPartType()
-		{
-			return PartType.ATTACHMENT;
-		}
-	}
+        public abstract boolean isAnonymous();
 
-	public abstract static class HeaderPart extends ContentPart
-	{
-		public PartType getPartType()
-		{
-			return PartType.HEADER;
-		}
-	}
+        public PartType getPartType() {
+            return PartType.ATTACHMENT;
+        }
+    }
 
-	public abstract static class ParameterPart extends ContentPart
-	{
-		public PartType getPartType()
-		{
-			return PartType.PARAMETER;
-		}
-	}
+    public abstract static class HeaderPart extends ContentPart {
+        public PartType getPartType() {
+            return PartType.HEADER;
+        }
+    }
 
-	public abstract static class FaultPart extends ContentPart
-	{
-		public PartType getPartType()
-		{
-			return PartType.FAULT;
-		}
+    public abstract static class ParameterPart extends ContentPart {
+        public PartType getPartType() {
+            return PartType.PARAMETER;
+        }
+    }
 
-		public abstract Part[] getWsdlParts();
-	}
+    public abstract static class FaultPart extends ContentPart {
+        public PartType getPartType() {
+            return PartType.FAULT;
+        }
+
+        public abstract Part[] getWsdlParts();
+    }
 }

@@ -26,77 +26,67 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.editor.inspectors.AbstractXmlInspector;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public interface AMFHeadersInspectorModel
-{
-	public StringToStringMap getHeaders();
+public interface AMFHeadersInspectorModel {
+    public StringToStringMap getHeaders();
 
-	public void addPropertyChangeListener( PropertyChangeListener listener );
+    public void addPropertyChangeListener(PropertyChangeListener listener);
 
-	public void setHeaders( StringToStringMap headers );
+    public void setHeaders(StringToStringMap headers);
 
-	public void removePropertyChangeListener( PropertyChangeListener listener );
+    public void removePropertyChangeListener(PropertyChangeListener listener);
 
-	public boolean isReadOnly();
+    public boolean isReadOnly();
 
-	public void release();
+    public void release();
 
-	public void setInspector( AbstractXmlInspector inspector );
+    public void setInspector(AbstractXmlInspector inspector);
 
-	public static abstract class AbstractHeadersModel<T extends ModelItem> implements AMFHeadersInspectorModel,
-			PropertyChangeListener
-	{
-		private boolean readOnly;
-		private PropertyChangeSupport propertyChangeSupport;
-		private final T modelItem;
-		private final String propertyName;
+    public static abstract class AbstractHeadersModel<T extends ModelItem> implements AMFHeadersInspectorModel,
+            PropertyChangeListener {
+        private boolean readOnly;
+        private PropertyChangeSupport propertyChangeSupport;
+        private final T modelItem;
+        private final String propertyName;
 
-		protected AbstractHeadersModel( boolean readOnly, T modelItem, String propertyName )
-		{
-			this.readOnly = readOnly;
-			this.modelItem = modelItem;
-			this.propertyName = propertyName;
-			propertyChangeSupport = new PropertyChangeSupport( this );
-			modelItem.addPropertyChangeListener( propertyName, this );
-		}
+        protected AbstractHeadersModel(boolean readOnly, T modelItem, String propertyName) {
+            this.readOnly = readOnly;
+            this.modelItem = modelItem;
+            this.propertyName = propertyName;
+            propertyChangeSupport = new PropertyChangeSupport(this);
+            modelItem.addPropertyChangeListener(propertyName, this);
+        }
 
-		public void addPropertyChangeListener( PropertyChangeListener listener )
-		{
-			propertyChangeSupport.addPropertyChangeListener( listener );
-		}
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+            propertyChangeSupport.addPropertyChangeListener(listener);
+        }
 
-		public boolean isReadOnly()
-		{
-			return readOnly;
-		}
+        public boolean isReadOnly() {
+            return readOnly;
+        }
 
-		public void removePropertyChangeListener( PropertyChangeListener listener )
-		{
-			propertyChangeSupport.removePropertyChangeListener( listener );
-		}
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+            propertyChangeSupport.removePropertyChangeListener(listener);
+        }
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			propertyChangeSupport.firePropertyChange( evt );
-		}
+        public void propertyChange(PropertyChangeEvent evt) {
+            propertyChangeSupport.firePropertyChange(evt);
+        }
 
-		public void release()
-		{
-			modelItem.removePropertyChangeListener( propertyName, this );
-		}
+        public void release() {
+            modelItem.removePropertyChangeListener(propertyName, this);
+        }
 
-		public T getModelItem()
-		{
-			return modelItem;
-		}
+        public T getModelItem() {
+            return modelItem;
+        }
 
-		public void setHeaders( StringToStringMap headers )
-		{
-			if( !readOnly )
-				throw new NotImplementedException();
-		}
+        public void setHeaders(StringToStringMap headers) {
+            if (!readOnly) {
+                throw new NotImplementedException();
+            }
+        }
 
-		public void setInspector( AbstractXmlInspector inspector )
-		{
-		}
-	}
+        public void setInspector(AbstractXmlInspector inspector) {
+        }
+    }
 }

@@ -24,28 +24,23 @@ import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
-public class JMSHeaderInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
-{
-	public static final String INSPECTOR_ID = "JMS Header";
+public class JMSHeaderInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory {
+    public static final String INSPECTOR_ID = "JMS Header";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof AbstractHttpRequest )
-		{
-			RequestJMSHeaderInspector inspector = new RequestJMSHeaderInspector( ( ( AbstractHttpRequest<?> )modelItem ) );
-			inspector.setEnabled( JMSUtils.checkIfJMS( modelItem ) );
-			return inspector;
-		}
-		return null;
-	}
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof AbstractHttpRequest) {
+            RequestJMSHeaderInspector inspector = new RequestJMSHeaderInspector(((AbstractHttpRequest<?>) modelItem));
+            inspector.setEnabled(JMSUtils.checkIfJMS(modelItem));
+            return inspector;
+        }
+        return null;
+    }
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		return null;
-	}
+    public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem) {
+        return null;
+    }
 }

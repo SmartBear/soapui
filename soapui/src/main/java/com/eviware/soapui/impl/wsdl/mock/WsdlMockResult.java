@@ -26,42 +26,36 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * The result of a handled WsdlMockRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlMockResult extends BaseMockResult<WsdlMockRequest, WsdlMockOperation>
-{
-	public WsdlMockResult( WsdlMockRequest request )
-	{
-		super(request);
-	}
+public class WsdlMockResult extends BaseMockResult<WsdlMockRequest, WsdlMockOperation> {
+    public WsdlMockResult(WsdlMockRequest request) {
+        super(request);
+    }
 
-	public Vector<?> getRequestWssResult()
-	{
-		return getMockRequest().getWssResult();
-	}
+    public Vector<?> getRequestWssResult() {
+        return getMockRequest().getWssResult();
+    }
 
-	@Override
-	public ActionList getActions()
-	{
-		ActionList actionList = super.getActions();
+    @Override
+    public ActionList getActions() {
+        ActionList actionList = super.getActions();
 
-		actionList.setDefaultAction( createMessageExchangeAction() );
+        actionList.setDefaultAction(createMessageExchangeAction());
 
-		return actionList;
-	}
+        return actionList;
+    }
 
-	private ShowMessageExchangeAction createMessageExchangeAction()
-	{
-		return new ShowMessageExchangeAction( createMessageExchange(), "MockResult" );
-	}
+    private ShowMessageExchangeAction createMessageExchangeAction() {
+        return new ShowMessageExchangeAction(createMessageExchange(), "MockResult");
+    }
 
-	private WsdlMockResultMessageExchange createMessageExchange()
-	{
-		WsdlMockResponse mockResponse = ( WsdlMockResponse )getMockResponse();
-		return new WsdlMockResultMessageExchange( this, mockResponse );
-	}
+    private WsdlMockResultMessageExchange createMessageExchange() {
+        WsdlMockResponse mockResponse = (WsdlMockResponse) getMockResponse();
+        return new WsdlMockResultMessageExchange(this, mockResponse);
+    }
 
 
 }

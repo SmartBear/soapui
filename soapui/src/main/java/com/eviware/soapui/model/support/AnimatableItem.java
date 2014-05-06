@@ -18,11 +18,10 @@ package com.eviware.soapui.model.support;
 
 import javax.swing.*;
 
-public interface AnimatableItem
-{
+public interface AnimatableItem {
 
-	void setIcon( ImageIcon icon );
+    void setIcon(ImageIcon icon);
 
-	String getName();
+    String getName();
 
 }

@@ -50,14 +50,11 @@ import org.apache.http.HttpStatus;
 import org.apache.http.auth.AUTH;
 import org.apache.http.protocol.HttpContext;
 
-public class ResponseBasicUnauthorized implements HttpResponseInterceptor
-{
-	public void process( final HttpResponse response, final HttpContext context ) throws HttpException, IOException
-	{
-		if( response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED )
-		{
-			response.addHeader( AUTH.WWW_AUTH, "Basic realm=\"test realm\"" );
-		}
-	}
+public class ResponseBasicUnauthorized implements HttpResponseInterceptor {
+    public void process(final HttpResponse response, final HttpContext context) throws HttpException, IOException {
+        if (response.getStatusLine().getStatusCode() == HttpStatus.SC_UNAUTHORIZED) {
+            response.addHeader(AUTH.WWW_AUTH, "Basic realm=\"test realm\"");
+        }
+    }
 
 }

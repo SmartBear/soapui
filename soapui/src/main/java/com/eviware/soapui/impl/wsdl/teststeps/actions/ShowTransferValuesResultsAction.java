@@ -39,111 +39,95 @@ import java.util.Arrays;
 
 /**
  * Shows a desktop-panel with the TestStepResult for a ValueTransferResult
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ShowTransferValuesResultsAction extends AbstractAction
-{
-	private final PropertyTransferResult result;
-	private DefaultDesktopPanel desktopPanel;
+public class ShowTransferValuesResultsAction extends AbstractAction {
+    private final PropertyTransferResult result;
+    private DefaultDesktopPanel desktopPanel;
 
-	public ShowTransferValuesResultsAction( WsdlTestStepResult result )
-	{
-		this.result = ( PropertyTransferResult )result;
-	}
+    public ShowTransferValuesResultsAction(WsdlTestStepResult result) {
+        this.result = (PropertyTransferResult) result;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		try
-		{
-			if( result.isDiscarded() )
-				UISupport.showInfoMessage( "Request has been discarded.." );
-			else
-				showDesktopPanel();
-		}
-		catch( Exception ex )
-		{
-			SoapUI.logError( ex );
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if (result.isDiscarded()) {
+                UISupport.showInfoMessage("Request has been discarded..");
+            } else {
+                showDesktopPanel();
+            }
+        } catch (Exception ex) {
+            SoapUI.logError(ex);
+        }
+    }
 
-	public DesktopPanel showDesktopPanel()
-	{
-		return UISupport.showDesktopPanel( buildFrame() );
-	}
+    public DesktopPanel showDesktopPanel() {
+        return UISupport.showDesktopPanel(buildFrame());
+    }
 
-	private DesktopPanel buildFrame()
-	{
-		if( desktopPanel == null )
-		{
-			desktopPanel = new DefaultDesktopPanel( "TestStep Result", "TestStep result for "
-					+ result.getTestStep().getName(), buildContent() );
-		}
+    private DesktopPanel buildFrame() {
+        if (desktopPanel == null) {
+            desktopPanel = new DefaultDesktopPanel("TestStep Result", "TestStep result for "
+                    + result.getTestStep().getName(), buildContent());
+        }
 
-		return desktopPanel;
-	}
+        return desktopPanel;
+    }
 
-	private JComponent buildContent()
-	{
-		JPanel panel = new JPanel( new BorderLayout() );
-		JXTable table = JTableFactory.getInstance().makeJXTable( new TransfersTableModel() );
+    private JComponent buildContent() {
+        JPanel panel = new JPanel(new BorderLayout());
+        JXTable table = JTableFactory.getInstance().makeJXTable(new TransfersTableModel());
 
-		table.setHorizontalScrollEnabled( true );
-		table.packAll();
+        table.setHorizontalScrollEnabled(true);
+        table.packAll();
 
-		Component descriptionPanel = UISupport.buildDescription( "PropertyTransfer Results",
-				"See the result of each performed transfer below", null );
-		panel.add( descriptionPanel, BorderLayout.NORTH );
+        Component descriptionPanel = UISupport.buildDescription("PropertyTransfer Results",
+                "See the result of each performed transfer below", null);
+        panel.add(descriptionPanel, BorderLayout.NORTH);
 
-		JScrollPane scrollPane = new JScrollPane( table );
-		scrollPane.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ),
-				scrollPane.getBorder() ) );
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3),
+                scrollPane.getBorder()));
 
-		panel.add( scrollPane, BorderLayout.CENTER );
-		panel.setPreferredSize( new Dimension( 550, 300 ) );
+        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.setPreferredSize(new Dimension(550, 300));
 
-		return panel;
-	}
+        return panel;
+    }
 
-	private class TransfersTableModel extends AbstractTableModel
-	{
-		public int getRowCount()
-		{
-			return result.getTransferCount();
-		}
+    private class TransfersTableModel extends AbstractTableModel {
+        public int getRowCount() {
+            return result.getTransferCount();
+        }
 
-		public int getColumnCount()
-		{
-			return 2;
-		}
+        public int getColumnCount() {
+            return 2;
+        }
 
-		public String getColumnName( int column )
-		{
-			switch( column )
-			{
-			case 0 :
-				return "Transfer Name";
-			case 1 :
-				return "Transferred Values";
-			}
+        public String getColumnName(int column) {
+            switch (column) {
+                case 0:
+                    return "Transfer Name";
+                case 1:
+                    return "Transferred Values";
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			switch( columnIndex )
-			{
-			case 0 :
-				return result.getTransferAt( rowIndex ).getName();
-			case 1 :
-				return Arrays.toString( result.getTransferredValuesAt( rowIndex ) );
-			}
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            switch (columnIndex) {
+                case 0:
+                    return result.getTransferAt(rowIndex).getName();
+                case 1:
+                    return Arrays.toString(result.getTransferredValuesAt(rowIndex));
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-	}
+    }
 
 }

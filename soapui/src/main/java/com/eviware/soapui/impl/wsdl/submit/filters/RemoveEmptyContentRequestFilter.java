@@ -33,124 +33,113 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * RequestFilter for removing empty elements/attributes
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter
-{
-	@SuppressWarnings( "unused" )
-	private final static Logger log = Logger.getLogger( RemoveEmptyContentRequestFilter.class );
+public class RemoveEmptyContentRequestFilter extends AbstractRequestFilter {
+    @SuppressWarnings("unused")
+    private final static Logger log = Logger.getLogger(RemoveEmptyContentRequestFilter.class);
 
-	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> wsdlRequest )
-	{
-		if( wsdlRequest != null && !wsdlRequest.isRemoveEmptyContent() )
-			return;
+    public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> wsdlRequest) {
+        if (wsdlRequest != null && !wsdlRequest.isRemoveEmptyContent()) {
+            return;
+        }
 
-		String content = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		if( !StringUtils.hasContent( content ) )
-			return;
+        String content = (String) context.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        if (!StringUtils.hasContent(content)) {
+            return;
+        }
 
-		String soapNamespace = null;
-		String newContent = null;
+        String soapNamespace = null;
+        String newContent = null;
 
-		if( wsdlRequest instanceof WsdlRequest )
-			soapNamespace = ( ( WsdlRequest )wsdlRequest ).getOperation().getInterface().getSoapVersion()
-					.getEnvelopeNamespace();
+        if (wsdlRequest instanceof WsdlRequest) {
+            soapNamespace = ((WsdlRequest) wsdlRequest).getOperation().getInterface().getSoapVersion()
+                    .getEnvelopeNamespace();
+        }
 
-		while( !content.equals( newContent ) )
-		{
-			if( newContent != null )
-				content = newContent;
+        while (!content.equals(newContent)) {
+            if (newContent != null) {
+                content = newContent;
+            }
 
-			newContent = removeEmptyContent( content, soapNamespace, context.hasProperty( "RemoveEmptyXsiNil" ) );
-			if( !context.hasProperty( "RemoveEmptyRecursive" ) )
-				break;
-		}
+            newContent = removeEmptyContent(content, soapNamespace, context.hasProperty("RemoveEmptyXsiNil"));
+            if (!context.hasProperty("RemoveEmptyRecursive")) {
+                break;
+            }
+        }
 
-		if( newContent != null )
-			context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, newContent );
-	}
+        if (newContent != null) {
+            context.setProperty(BaseHttpRequestTransport.REQUEST_CONTENT, newContent);
+        }
+    }
 
-	public static String removeEmptyContent( String content, String soapNamespace, boolean removeXsiNil )
-	{
-		XmlCursor cursor = null;
+    public static String removeEmptyContent(String content, String soapNamespace, boolean removeXsiNil) {
+        XmlCursor cursor = null;
 
-		try
-		{
-			// XmlObject xmlObject = XmlObject.Factory.parse( content );
-			XmlObject xmlObject = XmlUtils.createXmlObject( content );
-			cursor = xmlObject.newCursor();
+        try {
+            // XmlObject xmlObject = XmlObject.Factory.parse( content );
+            XmlObject xmlObject = XmlUtils.createXmlObject(content);
+            cursor = xmlObject.newCursor();
 
-			cursor.toNextToken();
+            cursor.toNextToken();
 
-			// skip root element
-			cursor.toNextToken();
-			boolean removed = false;
+            // skip root element
+            cursor.toNextToken();
+            boolean removed = false;
 
-			while( !cursor.isEnddoc() )
-			{
-				boolean flag = false;
-				if( cursor.isContainer()
-						&& ( soapNamespace == null || !soapNamespace.equals( cursor.getName().getNamespaceURI() ) ) )
-				{
-					Element elm = ( Element )cursor.getDomNode();
-					NamedNodeMap attributes = elm.getAttributes();
-					if( attributes != null && attributes.getLength() > 0 )
-					{
-						for( int c = 0; c < attributes.getLength(); c++ )
-						{
-							Node node = attributes.item( c );
-							if( node.getNodeValue() == null || node.getNodeValue().trim().length() == 0 )
-							{
-								cursor.removeAttribute( XmlUtils.getQName( node ) );
-								removed = true;
-							}
-						}
-					}
+            while (!cursor.isEnddoc()) {
+                boolean flag = false;
+                if (cursor.isContainer()
+                        && (soapNamespace == null || !soapNamespace.equals(cursor.getName().getNamespaceURI()))) {
+                    Element elm = (Element) cursor.getDomNode();
+                    NamedNodeMap attributes = elm.getAttributes();
+                    if (attributes != null && attributes.getLength() > 0) {
+                        for (int c = 0; c < attributes.getLength(); c++) {
+                            Node node = attributes.item(c);
+                            if (node.getNodeValue() == null || node.getNodeValue().trim().length() == 0) {
+                                cursor.removeAttribute(XmlUtils.getQName(node));
+                                removed = true;
+                            }
+                        }
+                    }
 
-					if( removeXsiNil && attributes.getNamedItem( "xsi:nil" ) != null )
-					{
-						if( attributes.getLength() == 1
-								|| ( attributes.getLength() == 2 && attributes.getNamedItem( "xmlns:xsi" ) != null ) )
-						{
-							attributes.removeNamedItem( "xsi:nil" );
-							attributes.removeNamedItem( "xmlns:xsi" );
-							removed = true;
-						}
-					}
+                    if (removeXsiNil && attributes.getNamedItem("xsi:nil") != null) {
+                        if (attributes.getLength() == 1
+                                || (attributes.getLength() == 2 && attributes.getNamedItem("xmlns:xsi") != null)) {
+                            attributes.removeNamedItem("xsi:nil");
+                            attributes.removeNamedItem("xmlns:xsi");
+                            removed = true;
+                        }
+                    }
 
-					if( attributes.getLength() == 0
-							&& ( cursor.getTextValue() == null || cursor.getTextValue().trim().length() == 0 )
-							&& XmlUtils.getFirstChildElement( elm ) == null )
-					{
-						if( cursor.removeXml() )
-						{
-							removed = true;
-							flag = true;
-						}
-					}
-				}
+                    if (attributes.getLength() == 0
+                            && (cursor.getTextValue() == null || cursor.getTextValue().trim().length() == 0)
+                            && XmlUtils.getFirstChildElement(elm) == null) {
+                        if (cursor.removeXml()) {
+                            removed = true;
+                            flag = true;
+                        }
+                    }
+                }
 
-				if( !flag )
-					cursor.toNextToken();
-			}
+                if (!flag) {
+                    cursor.toNextToken();
+                }
+            }
 
-			if( removed )
-			{
-				return xmlObject.xmlText();
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			if( cursor != null )
-				cursor.dispose();
-		}
+            if (removed) {
+                return xmlObject.xmlText();
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        } finally {
+            if (cursor != null) {
+                cursor.dispose();
+            }
+        }
 
-		return content;
-	}
+        return content;
+    }
 }

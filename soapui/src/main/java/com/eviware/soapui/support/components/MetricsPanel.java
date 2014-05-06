@@ -38,267 +38,233 @@ import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MetricsPanel extends JPanel
-{
-	private Map<String, Metric> metrics = new HashMap<String, Metric>();
-	private Map<String, MetricsSection> sections = new HashMap<String, MetricsSection>();
+public class MetricsPanel extends JPanel {
+    private Map<String, Metric> metrics = new HashMap<String, Metric>();
+    private Map<String, MetricsSection> sections = new HashMap<String, MetricsSection>();
 
-	public MetricsPanel()
-	{
-		super( new VerticalLayout() );
-		setBackground( Color.WHITE );
-	}
+    public MetricsPanel() {
+        super(new VerticalLayout());
+        setBackground(Color.WHITE);
+    }
 
-	public MetricsSection addSection( String name )
-	{
-		MetricsSection section = new MetricsSection( name );
-		sections.put( name, section );
-		add( section );
-		return section;
-	}
+    public MetricsSection addSection(String name) {
+        MetricsSection section = new MetricsSection(name);
+        sections.put(name, section);
+        add(section);
+        return section;
+    }
 
-	public enum MetricType
-	{
-		STRING, URL
-	};
+    public enum MetricType {
+        STRING, URL
+    }
 
-	public class Metric
-	{
-		private final JLabel label;
+    ;
 
-		public Metric( JLabel label )
-		{
-			this.label = label;
-		}
+    public class Metric {
+        private final JLabel label;
 
-		public void set( String value )
-		{
-			label.setText( value );
-		}
+        public Metric(JLabel label) {
+            this.label = label;
+        }
 
-		public void set( int value )
-		{
-			set( String.valueOf( value ) );
-		}
-	}
+        public void set(String value) {
+            label.setText(value);
+        }
 
-	public class MetricsSection extends JCollapsiblePanel
-	{
-		private MetricsForm form;
+        public void set(int value) {
+            set(String.valueOf(value));
+        }
+    }
 
-		public MetricsSection( String name )
-		{
-			super( name );
+    public class MetricsSection extends JCollapsiblePanel {
+        private MetricsForm form;
 
-			form = new MetricsForm();
-			setContentPanel( form.getPanel() );
-		}
+        public MetricsSection(String name) {
+            super(name);
 
-		public Metric addMetric( ImageIcon icon, String label, MetricType type )
-		{
-			return form.addMetric( label, icon, type == MetricType.URL );
-		}
+            form = new MetricsForm();
+            setContentPanel(form.getPanel());
+        }
 
-		public Metric addMetric( ImageIcon icon, String label )
-		{
-			return addMetric( icon, label, MetricType.STRING );
-		}
+        public Metric addMetric(ImageIcon icon, String label, MetricType type) {
+            return form.addMetric(label, icon, type == MetricType.URL);
+        }
 
-		public Metric addMetric( String label )
-		{
-			return addMetric( null, label, MetricType.STRING );
-		}
+        public Metric addMetric(ImageIcon icon, String label) {
+            return addMetric(icon, label, MetricType.STRING);
+        }
 
-		public void finish()
-		{
-			form.finish();
-		}
+        public Metric addMetric(String label) {
+            return addMetric(null, label, MetricType.STRING);
+        }
 
-		public MetricsSection clear()
-		{
-			form = new MetricsForm();
-			setContentPanel( form.getPanel() );
+        public void finish() {
+            form.finish();
+        }
 
-			return this;
-		}
+        public MetricsSection clear() {
+            form = new MetricsForm();
+            setContentPanel(form.getPanel());
 
-		public Metric addMetric( String label, MetricType type )
-		{
-			return addMetric( null, label, type );
-		}
+            return this;
+        }
 
-		public JXTable addTable( TableModel model )
-		{
-			JXTable table = JTableFactory.getInstance().makeJXTable( model );
-			table.setBorder( null );
-			table.setShowGrid( false );
-			table.setAutoResizeMode( JTable.AUTO_RESIZE_OFF );
-			table.setSortable( false );
-			table.getColumn( 0 ).setWidth( 195 );
-			table.getColumn( 0 ).setMinWidth( 195 );
+        public Metric addMetric(String label, MetricType type) {
+            return addMetric(null, label, type);
+        }
 
-			InternalHeaderRenderer internalHeaderRenderer = new InternalHeaderRenderer( table.getTableHeader()
-					.getBackground() );
-			InternalCellRenderer internalCellRenderer = new InternalCellRenderer();
+        public JXTable addTable(TableModel model) {
+            JXTable table = JTableFactory.getInstance().makeJXTable(model);
+            table.setBorder(null);
+            table.setShowGrid(false);
+            table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+            table.setSortable(false);
+            table.getColumn(0).setWidth(195);
+            table.getColumn(0).setMinWidth(195);
 
-			for( int c = 0; c < table.getColumnCount(); c++ )
-			{
-				table.getColumn( c ).setHeaderRenderer( internalHeaderRenderer );
-				table.getColumn( c ).setCellRenderer( internalCellRenderer );
-			}
+            InternalHeaderRenderer internalHeaderRenderer = new InternalHeaderRenderer(table.getTableHeader()
+                    .getBackground());
+            InternalCellRenderer internalCellRenderer = new InternalCellRenderer();
 
-			table.getTableHeader().setReorderingAllowed( false );
-			table.getTableHeader().setBackground( Color.WHITE );
+            for (int c = 0; c < table.getColumnCount(); c++) {
+                table.getColumn(c).setHeaderRenderer(internalHeaderRenderer);
+                table.getColumn(c).setCellRenderer(internalCellRenderer);
+            }
 
-			JScrollPane scrollPane = new JScrollPane( table );
-			scrollPane.setBorder( BorderFactory.createEmptyBorder( 0, 14, 0, 14 ) );
-			form.addComponent( scrollPane );
-			table.setPreferredScrollableViewportSize( new Dimension( 100, 250 ) );
-			scrollPane.setBackground( Color.WHITE );
-			scrollPane.getViewport().setBackground( Color.WHITE );
-			scrollPane.setOpaque( true );
+            table.getTableHeader().setReorderingAllowed(false);
+            table.getTableHeader().setBackground(Color.WHITE);
 
-			table.setBackground( Color.WHITE );
-			table.setOpaque( true );
+            JScrollPane scrollPane = new JScrollPane(table);
+            scrollPane.setBorder(BorderFactory.createEmptyBorder(0, 14, 0, 14));
+            form.addComponent(scrollPane);
+            table.setPreferredScrollableViewportSize(new Dimension(100, 250));
+            scrollPane.setBackground(Color.WHITE);
+            scrollPane.getViewport().setBackground(Color.WHITE);
+            scrollPane.setOpaque(true);
 
-			return table;
-		}
-	}
+            table.setBackground(Color.WHITE);
+            table.setOpaque(true);
 
-	public MetricsSection getSection( String name )
-	{
-		return sections.get( name );
-	}
+            return table;
+        }
+    }
 
-	public boolean setMetric( String label, int value )
-	{
-		return setMetric( label, String.valueOf( value ) );
-	}
+    public MetricsSection getSection(String name) {
+        return sections.get(name);
+    }
 
-	public boolean setMetric( String label, String value )
-	{
-		if( !hasMetric( label ) )
-			return false;
+    public boolean setMetric(String label, int value) {
+        return setMetric(label, String.valueOf(value));
+    }
 
-		metrics.get( label ).set( value );
-		return true;
-	}
+    public boolean setMetric(String label, String value) {
+        if (!hasMetric(label)) {
+            return false;
+        }
 
-	public boolean hasMetric( String name )
-	{
-		return metrics.containsKey( name );
-	}
+        metrics.get(label).set(value);
+        return true;
+    }
 
-	private class MetricsForm extends SimpleForm
-	{
-		private Dimension labelDimensions = new Dimension( 200, 16 );
+    public boolean hasMetric(String name) {
+        return metrics.containsKey(name);
+    }
 
-		public MetricsForm()
-		{
-			super();
+    private class MetricsForm extends SimpleForm {
+        private Dimension labelDimensions = new Dimension(200, 16);
 
-			addSpace( 7 );
-			setRowSpacing( 3 );
-		}
+        public MetricsForm() {
+            super();
 
-		public JPanel finish()
-		{
-			addSpace( 7 );
+            addSpace(7);
+            setRowSpacing(3);
+        }
 
-			JPanel formPanel = getPanel();
-			formPanel.setBackground( Color.WHITE );
-			formPanel.setOpaque( true );
+        public JPanel finish() {
+            addSpace(7);
 
-			return formPanel;
-		}
+            JPanel formPanel = getPanel();
+            formPanel.setBackground(Color.WHITE);
+            formPanel.setOpaque(true);
 
-		public Metric addMetric( String labelText, ImageIcon icon, boolean isHyperlink )
-		{
-			return addMetric( labelText, "", icon, isHyperlink );
-		}
+            return formPanel;
+        }
 
-		public Metric addMetric( String labelText, ImageIcon icon )
-		{
-			return addMetric( labelText, "", icon, false );
-		}
+        public Metric addMetric(String labelText, ImageIcon icon, boolean isHyperlink) {
+            return addMetric(labelText, "", icon, isHyperlink);
+        }
 
-		public Metric addMetric( String labelText, String text, ImageIcon icon, boolean isHyperlink )
-		{
-			JLabel label = new JLabel( labelText, icon, SwingConstants.LEFT );
-			UISupport.setFixedSize( label, labelDimensions );
-			label.setIconTextGap( 5 );
+        public Metric addMetric(String labelText, ImageIcon icon) {
+            return addMetric(labelText, "", icon, false);
+        }
 
-			label.setBorder( BorderFactory.createEmptyBorder( 2, icon == null ? 16 : 14, 0, 0 ) );
+        public Metric addMetric(String labelText, String text, ImageIcon icon, boolean isHyperlink) {
+            JLabel label = new JLabel(labelText, icon, SwingConstants.LEFT);
+            UISupport.setFixedSize(label, labelDimensions);
+            label.setIconTextGap(5);
 
-			JLabel textField = null;
+            label.setBorder(BorderFactory.createEmptyBorder(2, icon == null ? 16 : 14, 0, 0));
 
-			if( isHyperlink )
-			{
-				textField = append( labelText, label, new JHyperlinkLabel( text ) );
-			}
-			else
-			{
-				textField = append( labelText, label, new JLabel( text ) );
-			}
+            JLabel textField = null;
 
-			textField.setBorder( BorderFactory.createEmptyBorder( 2, 0, 0, 0 ) );
-			textField.setBackground( Color.WHITE );
+            if (isHyperlink) {
+                textField = append(labelText, label, new JHyperlinkLabel(text));
+            } else {
+                textField = append(labelText, label, new JLabel(text));
+            }
 
-			Metric metric = new Metric( textField );
-			metrics.put( labelText, metric );
-			return metric;
-		}
-	}
+            textField.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
+            textField.setBackground(Color.WHITE);
 
-	public static class InternalHeaderRenderer extends DefaultTableCellRenderer
-	{
-		private Font boldFont;
-		private final Color color;
+            Metric metric = new Metric(textField);
+            metrics.put(labelText, metric);
+            return metric;
+        }
+    }
 
-		public InternalHeaderRenderer( Color color )
-		{
-			super();
-			this.color = color;
+    public static class InternalHeaderRenderer extends DefaultTableCellRenderer {
+        private Font boldFont;
+        private final Color color;
 
-			setHorizontalAlignment( SwingConstants.LEFT );
-			boldFont = getFont().deriveFont( Font.BOLD );
-		}
+        public InternalHeaderRenderer(Color color) {
+            super();
+            this.color = color;
 
-		public InternalHeaderRenderer()
-		{
-			this( null );
-		}
+            setHorizontalAlignment(SwingConstants.LEFT);
+            boldFont = getFont().deriveFont(Font.BOLD);
+        }
 
-		@Override
-		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
-				int arg5 )
-		{
-			JComponent result = ( JComponent )super.getTableCellRendererComponent( arg0, arg1, arg2, arg3, arg4, arg5 );
-			setFont( boldFont );
-			if( color != null )
-				setBackground( color );
-			setBorder( BorderFactory.createCompoundBorder( BorderFactory.createEtchedBorder(),
-					BorderFactory.createEmptyBorder( 0, 2, 1, 2 ) ) );
-			return result;
-		}
-	}
+        public InternalHeaderRenderer() {
+            this(null);
+        }
 
-	private class InternalCellRenderer extends DefaultTableCellRenderer
-	{
-		public InternalCellRenderer()
-		{
-			super();
+        @Override
+        public Component getTableCellRendererComponent(JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
+                                                       int arg5) {
+            JComponent result = (JComponent) super.getTableCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5);
+            setFont(boldFont);
+            if (color != null) {
+                setBackground(color);
+            }
+            setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(),
+                    BorderFactory.createEmptyBorder(0, 2, 1, 2)));
+            return result;
+        }
+    }
 
-			setHorizontalAlignment( SwingConstants.LEFT );
-		}
+    private class InternalCellRenderer extends DefaultTableCellRenderer {
+        public InternalCellRenderer() {
+            super();
 
-		@Override
-		public Component getTableCellRendererComponent( JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
-				int arg5 )
-		{
-			Component result = super.getTableCellRendererComponent( arg0, arg1, arg2, arg3, arg4, arg5 );
-			setBorder( BorderFactory.createEmptyBorder( 3, 1, 3, 2 ) );
-			return result;
-		}
-	}
+            setHorizontalAlignment(SwingConstants.LEFT);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable arg0, Object arg1, boolean arg2, boolean arg3, int arg4,
+                                                       int arg5) {
+            Component result = super.getTableCellRendererComponent(arg0, arg1, arg2, arg3, arg4, arg5);
+            setBorder(BorderFactory.createEmptyBorder(3, 1, 3, 2));
+            return result;
+        }
+    }
 }

@@ -26,37 +26,35 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class TunnelServletUnitTest
-{
+public class TunnelServletUnitTest {
 
-	private TunnelServlet tunnelServlet;
+    private TunnelServlet tunnelServlet;
 
-	@Before
-	public void setUp()
-	{
-		WsdlProject project = Mockito.mock( WsdlProject.class );
-		XmlBeansSettingsImpl settings = Mockito.mock( XmlBeansSettingsImpl.class );
-		Mockito.when( project.getSettings() ).thenReturn( settings );
+    @Before
+    public void setUp() {
+        WsdlProject project = Mockito.mock(WsdlProject.class);
+        XmlBeansSettingsImpl settings = Mockito.mock(XmlBeansSettingsImpl.class);
+        Mockito.when(project.getSettings()).thenReturn(settings);
 
-		String sslEndPoint = "Dummy End point";
-		SoapMonitorListenerCallBack listenerCallBack = Mockito.mock( SoapMonitorListenerCallBack.class );
-		tunnelServlet =  new TunnelServlet( project, sslEndPoint, listenerCallBack );
-	}
+        String sslEndPoint = "Dummy End point";
+        SoapMonitorListenerCallBack listenerCallBack = Mockito.mock(SoapMonitorListenerCallBack.class);
+        tunnelServlet = new TunnelServlet(project, sslEndPoint, listenerCallBack);
+    }
 
-	@Test
-	public void shouldSetHttpProtocolVersion_1_1_ToRequest(){
-		ExtendedPostMethod extendedPostMethod = new ExtendedPostMethod(  );
-		tunnelServlet.setProtocolversion( extendedPostMethod, HttpVersion.HTTP_1_1.toString() );
-		Assert.assertEquals( "The copied version doesn't match with the provided version string",
-				HttpVersion.HTTP_1_1, extendedPostMethod.getProtocolVersion() );
-	}
+    @Test
+    public void shouldSetHttpProtocolVersion_1_1_ToRequest() {
+        ExtendedPostMethod extendedPostMethod = new ExtendedPostMethod();
+        tunnelServlet.setProtocolversion(extendedPostMethod, HttpVersion.HTTP_1_1.toString());
+        Assert.assertEquals("The copied version doesn't match with the provided version string",
+                HttpVersion.HTTP_1_1, extendedPostMethod.getProtocolVersion());
+    }
 
-	@Test
-	public void shouldSetHttpProtocolVersion_1_0_ToRequest(){
-		ExtendedPostMethod extendedPostMethod = new ExtendedPostMethod(  );
-		tunnelServlet.setProtocolversion( extendedPostMethod, HttpVersion.HTTP_1_0.toString() );
-		Assert.assertEquals( "The copied version doesn't match with the provided version string",
-				HttpVersion.HTTP_1_0, extendedPostMethod.getProtocolVersion() );
-	}
+    @Test
+    public void shouldSetHttpProtocolVersion_1_0_ToRequest() {
+        ExtendedPostMethod extendedPostMethod = new ExtendedPostMethod();
+        tunnelServlet.setProtocolversion(extendedPostMethod, HttpVersion.HTTP_1_0.toString());
+        Assert.assertEquals("The copied version doesn't match with the provided version string",
+                HttpVersion.HTTP_1_0, extendedPostMethod.getProtocolVersion());
+    }
 
 }

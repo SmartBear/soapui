@@ -33,8 +33,8 @@ import javax.swing.tree.TreePath;
 
 /**
  * @author Santhosh Kumar T
- * @email  santhosh@in.fiorano.com
+ * @email santhosh@in.fiorano.com
  */
-public interface TreePathSelectable{
-    public boolean isSelectable( TreePath path );
+public interface TreePathSelectable {
+    public boolean isSelectable(TreePath path);
 }

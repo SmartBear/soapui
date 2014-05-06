@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-settings xmlns:con="http://eviware.com/soapui/config">
+    <con:setting id="WsdlSettings@excluded-types">&lt;con:entry
+        xmlns:con="http://eviware.com/soapui/config">schema@http://www.w3.org/2001/XMLSchema&lt;/con:entry>
+    </con:setting>
+    <con:setting id="WsdlSettings@name-with-binding">true</con:setting>
+    <con:setting id="HttpSettings@http_version">1.1</con:setting>
+    <con:setting id="HttpSettings@max_total_connections">2000</con:setting>
+    <con:setting id="HttpSettings@response-compression">true</con:setting>
+    <con:setting id="HttpSettings@leave_mockengine">true</con:setting>
+    <con:setting id="UISettings@auto_save_projects_on_exit">true</con:setting>
+    <con:setting id="UISettings@show_descriptions">true</con:setting>
+    <con:setting id="WsdlSettings@xml-generation-always-include-optional-elements">true</con:setting>
+    <con:setting id="WsaSettings@useDefaultRelatesTo">true</con:setting>
+    <con:setting id="WsaSettings@useDefaultRelationshipType">true</con:setting>
+    <con:setting id="UISettings@show_startup_page">true</con:setting>
+    <con:setting id="UISettings@gc_interval">60</con:setting>
+    <con:setting id="WsdlSettings@cache-wsdls">true</con:setting>
+    <con:setting id="WsdlSettings@pretty-print-response-xml">true</con:setting>
+    <con:setting id="HttpSettings@include_request_in_time_taken">true</con:setting>
+    <con:setting id="HttpSettings@include_response_in_time_taken">true</con:setting>
+    <con:setting id="HttpSettings@start_mock_service">true</con:setting>
+    <con:setting id="UISettings@auto_save_interval">0</con:setting>
+    <con:setting id="WsaSettings@soapActionOverridesWsaAction">true</con:setting>
+    <con:setting id="WsaSettings@overrideExistingHeaders">true</con:setting>
+    <con:setting id="WsaSettings@enableForOptional">true</con:setting>
+    <con:setting id="VersionUpdateSettings@auto-check-version-update">true</con:setting>
+    <con:setting id="ProxySettings@autoProxy">true</con:setting>
+    <con:setting id="ProxySettings@enableProxy">true</con:setting>
+    <con:setting id="SoapUIProSettings@default_request_editor">Form</con:setting>
+    <con:setting id="SoapUIProSettings@default_response_editor">Outline</con:setting>
+    <con:setting id="SoapUIProSettings@outline_editor_limit">400000</con:setting>
+    <con:setting id="SoapUIProSettings@form_editor_limit">200000</con:setting>
+    <con:setting id="Script Library">/home/shadid/SmartBear/SoapUI-Pro-5.0.0/bin/scripts</con:setting>
+    <con:setting id="UISettings@desktop-type">Tabbed</con:setting>
+    <con:setting id="CodeTemplates"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="grut" value="def groovyUtils = new com.eviware.soapui.support.GroovyUtils( context )\n|"/>
+  <con:entry key="xhre" value="def holder = groovyUtils.getXmlHolder( &quot;|#Response&quot; )\n"/>
+</xml-fragment>]]></con:setting>
+    <con:setting id="GlobalPropertySettings@properties">&lt;xml-fragment/></con:setting>
+</con:soapui-settings>

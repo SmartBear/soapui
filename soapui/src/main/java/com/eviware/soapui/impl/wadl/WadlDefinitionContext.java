@@ -30,74 +30,64 @@ import com.eviware.soapui.support.StringUtils;
 import org.apache.xmlbeans.SchemaTypeSystem;
 
 public class WadlDefinitionContext extends
-		AbstractDefinitionContext<RestService, DefinitionLoader, WadlInterfaceDefinition>
-{
+        AbstractDefinitionContext<RestService, DefinitionLoader, WadlInterfaceDefinition> {
 
-	public WadlDefinitionContext( String url, RestService iface )
-	{
-		super( url, iface );
-	}
+    public WadlDefinitionContext(String url, RestService iface) {
+        super(url, iface);
+    }
 
-	public WadlDefinitionContext( String wadlUrl )
-	{
-		super( wadlUrl );
-	}
+    public WadlDefinitionContext(String wadlUrl) {
+        super(wadlUrl);
+    }
 
-	protected DefinitionLoader createDefinitionLoader( DefinitionCache restServiceDefinitionCache )
-	{
-		if( getInterface() != null
-				&& ( getInterface().isGenerated() || StringUtils.isNullOrEmpty( getInterface().getWadlUrl() )
-					|| getInterface().exportChanges()) )
-			return new GeneratedWadlDefinitionLoader( getInterface() );
-		else
-			return new InterfaceCacheDefinitionLoader( restServiceDefinitionCache );
-	}
+    protected DefinitionLoader createDefinitionLoader(DefinitionCache restServiceDefinitionCache) {
+        if (getInterface() != null
+                && (getInterface().isGenerated() || StringUtils.isNullOrEmpty(getInterface().getWadlUrl())
+                || getInterface().exportChanges())) {
+            return new GeneratedWadlDefinitionLoader(getInterface());
+        } else {
+            return new InterfaceCacheDefinitionLoader(restServiceDefinitionCache);
+        }
+    }
 
-	protected DefinitionLoader createDefinitionLoader( String url )
-	{
-		if( ( getInterface() != null && getInterface().isGenerated() ) || StringUtils.isNullOrEmpty( url )
-					|| (getInterface() != null && getInterface().exportChanges() ))
-			return new GeneratedWadlDefinitionLoader( getInterface() );
-		else
-			return new UrlWsdlLoader( url, getInterface() );
-	}
+    protected DefinitionLoader createDefinitionLoader(String url) {
+        if ((getInterface() != null && getInterface().isGenerated()) || StringUtils.isNullOrEmpty(url)
+                || (getInterface() != null && getInterface().exportChanges())) {
+            return new GeneratedWadlDefinitionLoader(getInterface());
+        } else {
+            return new UrlWsdlLoader(url, getInterface());
+        }
+    }
 
-	protected WadlInterfaceDefinition loadDefinition( DefinitionLoader loader ) throws Exception
-	{
-		return new WadlInterfaceDefinition( getInterface() ).load( loader );
-	}
+    protected WadlInterfaceDefinition loadDefinition(DefinitionLoader loader) throws Exception {
+        return new WadlInterfaceDefinition(getInterface()).load(loader);
+    }
 
-	public String export( String path ) throws Exception
-	{
-		return new WadlDefinitionExporter( getInterface() ).export( path );
-	}
+    public String export(String path) throws Exception {
+        return new WadlDefinitionExporter(getInterface()).export(path);
+    }
 
-	public WadlInterfaceDefinition regenerateWadl()
-	{
-		try
-		{
-				reload();
+    public WadlInterfaceDefinition regenerateWadl() {
+        try {
+            reload();
 
-			return getInterfaceDefinition();
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
+            return getInterfaceDefinition();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public boolean hasSchemaTypes()
-	{
-		return( super.hasSchemaTypes() || InferredSchemaManager.getInferredSchema( getInterface() ).getNamespaces().length > 0 );
-	}
+    public boolean hasSchemaTypes() {
+        return (super.hasSchemaTypes() || InferredSchemaManager.getInferredSchema(getInterface()).getNamespaces().length > 0);
+    }
 
-	public SchemaTypeSystem getSchemaTypeSystem() throws Exception
-	{
-		if( super.hasSchemaTypes() )
-			return InferredSchemaManager.getInferredSchema( getInterface() ).getSchemaTypeSystem(
-					super.getSchemaTypeSystem() );
-		return InferredSchemaManager.getInferredSchema( getInterface() ).getSchemaTypeSystem();
-	}
+    public SchemaTypeSystem getSchemaTypeSystem() throws Exception {
+        if (super.hasSchemaTypes()) {
+            return InferredSchemaManager.getInferredSchema(getInterface()).getSchemaTypeSystem(
+                    super.getSchemaTypeSystem());
+        }
+        return InferredSchemaManager.getInferredSchema(getInterface()).getSchemaTypeSystem();
+    }
 }

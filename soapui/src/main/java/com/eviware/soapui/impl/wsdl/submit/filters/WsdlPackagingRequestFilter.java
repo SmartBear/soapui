@@ -42,116 +42,103 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-public class WsdlPackagingRequestFilter extends AbstractRequestFilter
-{
+public class WsdlPackagingRequestFilter extends AbstractRequestFilter {
 
-	@Override
-	public void filterWsdlRequest( SubmitContext context, WsdlRequest request )
-	{
-		ExtendedPostMethod postMethod = ( ExtendedPostMethod )context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
-		String requestContent = ( String )context.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
+    @Override
+    public void filterWsdlRequest(SubmitContext context, WsdlRequest request) {
+        ExtendedPostMethod postMethod = (ExtendedPostMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
+        String requestContent = (String) context.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
 
-		try
-		{
-			String content = initWsdlRequest( request, postMethod, requestContent );
-			if( content != null )
-				context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+        try {
+            String content = initWsdlRequest(request, postMethod, requestContent);
+            if (content != null) {
+                context.setProperty(BaseHttpRequestTransport.REQUEST_CONTENT, content);
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	protected String initWsdlRequest( WsdlRequest wsdlRequest, ExtendedPostMethod postMethod, String requestContent )
-			throws Exception
-	{
-		MimeMultipart mp = null;
+    protected String initWsdlRequest(WsdlRequest wsdlRequest, ExtendedPostMethod postMethod, String requestContent)
+            throws Exception {
+        MimeMultipart mp = null;
 
-		StringToStringMap contentIds = new StringToStringMap();
-		boolean isXOP = wsdlRequest.isMtomEnabled() && wsdlRequest.isForceMtom();
+        StringToStringMap contentIds = new StringToStringMap();
+        boolean isXOP = wsdlRequest.isMtomEnabled() && wsdlRequest.isForceMtom();
 
-		// preprocess only if neccessary
-		if( wsdlRequest.isMtomEnabled() || wsdlRequest.isInlineFilesEnabled() || wsdlRequest.getAttachmentCount() > 0 )
-		{
-			try
-			{
-				mp = new MimeMultipart();
+        // preprocess only if neccessary
+        if (wsdlRequest.isMtomEnabled() || wsdlRequest.isInlineFilesEnabled() || wsdlRequest.getAttachmentCount() > 0) {
+            try {
+                mp = new MimeMultipart();
 
-				MessageXmlObject requestXmlObject = new MessageXmlObject( wsdlRequest.getOperation(), requestContent, true );
-				MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
-				for( MessageXmlPart requestPart : requestParts )
-				{
-					if( AttachmentUtils.prepareMessagePart( wsdlRequest, mp, requestPart, contentIds ) )
-						isXOP = true;
-				}
-				requestContent = requestXmlObject.getMessageContent();
-			}
-			catch( Throwable e )
-			{
-				SoapUI.log.warn( "Failed to process inline/MTOM attachments; " + e );
-			}
-		}
+                MessageXmlObject requestXmlObject = new MessageXmlObject(wsdlRequest.getOperation(), requestContent, true);
+                MessageXmlPart[] requestParts = requestXmlObject.getMessageParts();
+                for (MessageXmlPart requestPart : requestParts) {
+                    if (AttachmentUtils.prepareMessagePart(wsdlRequest, mp, requestPart, contentIds)) {
+                        isXOP = true;
+                    }
+                }
+                requestContent = requestXmlObject.getMessageContent();
+            } catch (Throwable e) {
+                SoapUI.log.warn("Failed to process inline/MTOM attachments; " + e);
+            }
+        }
 
-		// non-multipart request?
-		if( !isXOP && ( mp == null || mp.getCount() == 0 ) && hasContentAttachmentsOnly( wsdlRequest ) )
-		{
-			String encoding = System.getProperty( "soapui.request.encoding",
-					StringUtils.unquote( wsdlRequest.getEncoding() ) );
-			byte[] content = StringUtils.isNullOrEmpty( encoding ) ? requestContent.getBytes() : requestContent
-					.getBytes( encoding );
-			postMethod.setEntity( new ByteArrayEntity( content ) );
-		}
-		else
-		{
-			// make sure..
-			if( mp == null )
-				mp = new MimeMultipart();
+        // non-multipart request?
+        if (!isXOP && (mp == null || mp.getCount() == 0) && hasContentAttachmentsOnly(wsdlRequest)) {
+            String encoding = System.getProperty("soapui.request.encoding",
+                    StringUtils.unquote(wsdlRequest.getEncoding()));
+            byte[] content = StringUtils.isNullOrEmpty(encoding) ? requestContent.getBytes() : requestContent
+                    .getBytes(encoding);
+            postMethod.setEntity(new ByteArrayEntity(content));
+        } else {
+            // make sure..
+            if (mp == null) {
+                mp = new MimeMultipart();
+            }
 
-			// init root part
-			initRootPart( wsdlRequest, requestContent, mp, isXOP );
+            // init root part
+            initRootPart(wsdlRequest, requestContent, mp, isXOP);
 
-			// init mimeparts
-			AttachmentUtils.addMimeParts( wsdlRequest, Arrays.asList( wsdlRequest.getAttachments() ), mp, contentIds );
+            // init mimeparts
+            AttachmentUtils.addMimeParts(wsdlRequest, Arrays.asList(wsdlRequest.getAttachments()), mp, contentIds);
 
-			// create request message
-			MimeMessage message = new MimeMessage( AttachmentUtils.JAVAMAIL_SESSION );
-			message.setContent( mp );
-			message.saveChanges();
-			WsdlRequestMimeMessageRequestEntity mimeMessageRequestEntity = new WsdlRequestMimeMessageRequestEntity(
-					message, isXOP, wsdlRequest );
-			postMethod.setEntity( mimeMessageRequestEntity );
-			postMethod.setHeader( mimeMessageRequestEntity.getContentType() );
-			postMethod.setHeader( "MIME-Version", "1.0" );
-		}
+            // create request message
+            MimeMessage message = new MimeMessage(AttachmentUtils.JAVAMAIL_SESSION);
+            message.setContent(mp);
+            message.saveChanges();
+            WsdlRequestMimeMessageRequestEntity mimeMessageRequestEntity = new WsdlRequestMimeMessageRequestEntity(
+                    message, isXOP, wsdlRequest);
+            postMethod.setEntity(mimeMessageRequestEntity);
+            postMethod.setHeader(mimeMessageRequestEntity.getContentType());
+            postMethod.setHeader("MIME-Version", "1.0");
+        }
 
-		return requestContent;
-	}
+        return requestContent;
+    }
 
-	private boolean hasContentAttachmentsOnly( WsdlRequest wsdlRequest )
-	{
-		for( Attachment attachment : wsdlRequest.getAttachments() )
-		{
-			if( attachment.getAttachmentType() != Attachment.AttachmentType.CONTENT
-					&& !( attachment.getAttachmentType() == AttachmentType.UNKNOWN && wsdlRequest.isInlineFilesEnabled() ) )
-				return false;
-		}
+    private boolean hasContentAttachmentsOnly(WsdlRequest wsdlRequest) {
+        for (Attachment attachment : wsdlRequest.getAttachments()) {
+            if (attachment.getAttachmentType() != Attachment.AttachmentType.CONTENT
+                    && !(attachment.getAttachmentType() == AttachmentType.UNKNOWN && wsdlRequest.isInlineFilesEnabled())) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/**
-	 * Creates root BodyPart containing message
-	 */
+    /**
+     * Creates root BodyPart containing message
+     */
 
-	protected void initRootPart( WsdlRequest wsdlRequest, String requestContent, MimeMultipart mp, boolean isXOP )
-			throws MessagingException
-	{
-		MimeBodyPart rootPart = new PreencodedMimeBodyPart( System.getProperty( "soapui.bodypart.encoding", "8bit" ) );
-		rootPart.setContentID( AttachmentUtils.ROOTPART_SOAPUI_ORG );
-		mp.addBodyPart( rootPart, 0 );
+    protected void initRootPart(WsdlRequest wsdlRequest, String requestContent, MimeMultipart mp, boolean isXOP)
+            throws MessagingException {
+        MimeBodyPart rootPart = new PreencodedMimeBodyPart(System.getProperty("soapui.bodypart.encoding", "8bit"));
+        rootPart.setContentID(AttachmentUtils.ROOTPART_SOAPUI_ORG);
+        mp.addBodyPart(rootPart, 0);
 
-		DataHandler dataHandler = new DataHandler( new WsdlRequestDataSource( wsdlRequest, requestContent, isXOP ) );
-		rootPart.setDataHandler( dataHandler );
-	}
+        DataHandler dataHandler = new DataHandler(new WsdlRequestDataSource(wsdlRequest, requestContent, isXOP));
+        rootPart.setDataHandler(dataHandler);
+    }
 }

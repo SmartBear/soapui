@@ -25,27 +25,22 @@ import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResol
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.workspace.Workspace;
 
-public class WorkspaceDirProvider implements ValueProvider
-{
-	public String getValue( PropertyExpansionContext context )
-	{
-		Workspace workspace = SoapUI.getWorkspace();
+public class WorkspaceDirProvider implements ValueProvider {
+    public String getValue(PropertyExpansionContext context) {
+        Workspace workspace = SoapUI.getWorkspace();
 
-		if( workspace == null )
-		{
-			ModelItem modelItem = context.getModelItem();
-			if( modelItem instanceof Workspace )
-			{
-				workspace = ( Workspace )modelItem;
-			}
-			else
-			{
-				Project project = ModelSupport.getModelItemProject( modelItem );
-				if( project != null )
-					workspace = project.getWorkspace();
-			}
-		}
+        if (workspace == null) {
+            ModelItem modelItem = context.getModelItem();
+            if (modelItem instanceof Workspace) {
+                workspace = (Workspace) modelItem;
+            } else {
+                Project project = ModelSupport.getModelItemProject(modelItem);
+                if (project != null) {
+                    workspace = project.getWorkspace();
+                }
+            }
+        }
 
-		return workspace == null ? null : PathUtils.getAbsoluteFolder( workspace.getPath() );
-	}
+        return workspace == null ? null : PathUtils.getAbsoluteFolder(workspace.getPath());
+    }
 }

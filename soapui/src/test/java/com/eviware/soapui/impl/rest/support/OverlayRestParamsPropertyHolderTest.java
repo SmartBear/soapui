@@ -28,40 +28,36 @@ import static org.mockito.Mockito.when;
  *
  * @author : Shadid Chowdhury
  */
-public class OverlayRestParamsPropertyHolderTest
-{
-	OverlayRestParamsPropertyHolder propertyHolder;
+public class OverlayRestParamsPropertyHolderTest {
+    OverlayRestParamsPropertyHolder propertyHolder;
 
-	@Before
-	public void setUP()
-	{
-		RestRequestParamsPropertyHolder.InternalRestParamProperty mockedParamProperty =
-				mock( RestRequestParamsPropertyHolder.InternalRestParamProperty.class );
+    @Before
+    public void setUP() {
+        RestRequestParamsPropertyHolder.InternalRestParamProperty mockedParamProperty =
+                mock(RestRequestParamsPropertyHolder.InternalRestParamProperty.class);
 
-		RestParamsPropertyHolder overlay = mock( RestParamsPropertyHolder.class );
-		when( overlay.containsKey( "paramOverLay" ) ).thenReturn( true ).thenReturn( false );
-		when( overlay.removeProperty( "paramOverLay" ) ).thenReturn( mockedParamProperty ).thenReturn( null );
+        RestParamsPropertyHolder overlay = mock(RestParamsPropertyHolder.class);
+        when(overlay.containsKey("paramOverLay")).thenReturn(true).thenReturn(false);
+        when(overlay.removeProperty("paramOverLay")).thenReturn(mockedParamProperty).thenReturn(null);
 
-		RestParamsPropertyHolder parent = mock( RestParamsPropertyHolder.class );
-		when( parent.containsKey( "paramOverLay" ) ).thenReturn( true ).thenReturn( false );
-		when( parent.removeProperty( "paramParent" ) ).thenReturn( mockedParamProperty ).thenReturn( null );
+        RestParamsPropertyHolder parent = mock(RestParamsPropertyHolder.class);
+        when(parent.containsKey("paramOverLay")).thenReturn(true).thenReturn(false);
+        when(parent.removeProperty("paramParent")).thenReturn(mockedParamProperty).thenReturn(null);
 
-		propertyHolder = new OverlayRestParamsPropertyHolder( parent, overlay );
-	}
+        propertyHolder = new OverlayRestParamsPropertyHolder(parent, overlay);
+    }
 
-	@Test
-	public void testRemoveProperty() throws Exception
-	{
-		assertNotNull( propertyHolder.removeProperty( "paramOverLay" ) );
-		assertNull( propertyHolder.removeProperty( "paramOverLay" ) );
-		assertNotNull( propertyHolder.removeProperty( "paramParent" ) );
-		assertNull( propertyHolder.removeProperty( "paramParent" ) );
-	}
+    @Test
+    public void testRemoveProperty() throws Exception {
+        assertNotNull(propertyHolder.removeProperty("paramOverLay"));
+        assertNull(propertyHolder.removeProperty("paramOverLay"));
+        assertNotNull(propertyHolder.removeProperty("paramParent"));
+        assertNull(propertyHolder.removeProperty("paramParent"));
+    }
 
-	@After
-	public void tearDown()
-	{
-		propertyHolder = null;
-	}
+    @After
+    public void tearDown() {
+        propertyHolder = null;
+    }
 
 }

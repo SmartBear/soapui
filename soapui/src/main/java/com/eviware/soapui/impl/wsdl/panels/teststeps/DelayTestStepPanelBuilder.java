@@ -24,21 +24,18 @@ import com.eviware.soapui.support.components.JPropertiesTable;
 
 /**
  * PanelBuilder for WsdlGotoTestStep
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DelayTestStepPanelBuilder extends EmptyPanelBuilder<WsdlDelayTestStep>
-{
-	public DelayTestStepPanelBuilder()
-	{
-	}
+public class DelayTestStepPanelBuilder extends EmptyPanelBuilder<WsdlDelayTestStep> {
+    public DelayTestStepPanelBuilder() {
+    }
 
-	@Override
-	public Component buildOverviewPanel( WsdlDelayTestStep modelItem )
-	{
-		JPropertiesTable<WsdlDelayTestStep> table = buildDefaultProperties( modelItem, "Delay Properties" );
-		table.addProperty( "Delay", "delayString", true );
-		return table;
-	}
+    @Override
+    public Component buildOverviewPanel(WsdlDelayTestStep modelItem) {
+        JPropertiesTable<WsdlDelayTestStep> table = buildDefaultProperties(modelItem, "Delay Properties");
+        table.addProperty("Delay", "delayString", true);
+        return table;
+    }
 }

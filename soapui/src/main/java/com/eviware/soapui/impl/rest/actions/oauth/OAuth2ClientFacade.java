@@ -22,11 +22,10 @@ import org.apache.http.client.methods.HttpRequestBase;
 
 import java.net.URISyntaxException;
 
-public interface OAuth2ClientFacade
-{
-	void requestAccessToken( OAuth2Profile profile ) throws OAuth2Exception;
+public interface OAuth2ClientFacade {
+    void requestAccessToken(OAuth2Profile profile) throws OAuth2Exception;
 
-	void applyAccessToken( OAuth2Profile profile, HttpRequestBase request, String requestContent );
+    void applyAccessToken(OAuth2Profile profile, HttpRequestBase request, String requestContent);
 
-	void refreshAccessToken( OAuth2Profile profile ) throws Exception;
+    void refreshAccessToken(OAuth2Profile profile) throws Exception;
 }

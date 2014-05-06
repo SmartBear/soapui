@@ -22,11 +22,10 @@ import com.eviware.soapui.support.editor.EditorView;
 
 /**
  * Interface fore request editor views
- * 
+ *
  * @author ole.matzura
  */
 
-public interface RequestEditorViewFactory extends EditorViewFactory
-{
-	EditorView<?> createRequestEditorView( Editor<?> editor, ModelItem modelItem );
+public interface RequestEditorViewFactory extends EditorViewFactory {
+    EditorView<?> createRequestEditorView(Editor<?> editor, ModelItem modelItem);
 }

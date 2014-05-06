@@ -25,34 +25,29 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for WsdlTestSuite
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WsdlTestSuitePanelBuilder<T extends WsdlTestSuite> extends EmptyPanelBuilder<T>
-{
-	public WsdlTestSuitePanelBuilder()
-	{
-	}
+public class WsdlTestSuitePanelBuilder<T extends WsdlTestSuite> extends EmptyPanelBuilder<T> {
+    public WsdlTestSuitePanelBuilder() {
+    }
 
-	public DesktopPanel buildDesktopPanel( T testSuite )
-	{
-		return new WsdlTestSuiteDesktopPanel( testSuite );
-	}
+    public DesktopPanel buildDesktopPanel(T testSuite) {
+        return new WsdlTestSuiteDesktopPanel(testSuite);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	public Component buildOverviewPanel( T modelItem )
-	{
-		JPropertiesTable<WsdlTestSuite> table = new JPropertiesTable<WsdlTestSuite>( "TestSuite Properties", modelItem );
+    public Component buildOverviewPanel(T modelItem) {
+        JPropertiesTable<WsdlTestSuite> table = new JPropertiesTable<WsdlTestSuite>("TestSuite Properties", modelItem);
 
-		table.addProperty( "Name", "name", true );
+        table.addProperty("Name", "name", true);
 
-		table.setPropertyObject( modelItem );
+        table.setPropertyObject(modelItem);
 
-		return table;
-	}
+        return table;
+    }
 }

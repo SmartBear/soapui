@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.stepdefs;
+*/
+package com.smartbear.soapui.stepdefs;
 
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.Robot;
@@ -20,19 +21,16 @@ import org.fest.swing.core.Robot;
 import static com.smartbear.soapui.utils.fest.FestMatchers.frameWithTitle;
 
 /**
-	A wapper for an AWT robot that's instantiated once per scenario and passed to  stepDefs using constructor injection
+ * A wapper for an AWT robot that's instantiated once per scenario and passed to  stepDefs using constructor injection
  */
-public final class ScenarioRobot
-{
-	private final Robot robot;
+public final class ScenarioRobot {
+    private final Robot robot;
 
-	public ScenarioRobot()
-	{
-		robot = BasicRobot.robotWithNewAwtHierarchy();
-	}
+    public ScenarioRobot() {
+        robot = BasicRobot.robotWithNewAwtHierarchy();
+    }
 
-	public Robot getRobot()
-	{
-		return robot;
-	}
+    public Robot getRobot() {
+        return robot;
+    }
 }
