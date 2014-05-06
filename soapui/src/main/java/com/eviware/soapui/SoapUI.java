@@ -329,7 +329,7 @@ public class SoapUI
 		frame.setDefaultCloseOperation( JFrame.DO_NOTHING_ON_CLOSE );
 
 		mainInspector.setDividerLocation( 250 );
-		mainInspector.setResizeWeight( 0.1 );
+		mainInspector.setResizeWeight( 0.9 );
 		navigator.selectModelItem( workspace );
 
 		desktop.addDesktopListener( internalDesktopListener );
@@ -356,19 +356,22 @@ public class SoapUI
 		mainToolbar.add( new NewWsdlProjectActionDelegate() );
 		mainToolbar.add( new ImportWsdlProjectActionDelegate() );
 		mainToolbar.add( new SaveAllActionDelegate() );
-		mainToolbar.addSpace( 2 );
+		mainToolbar.addSpace( 8 );
+        /* SOAPUI-4110
 		mainToolbar.add( new ShowOnlineHelpAction( "Forum", HelpUrls.FORUMS_HELP_URL,
 				"Opens the SoapUI Forum in a browser", "/group_go.png" ) );
-		mainToolbar.addSpace( 2 );
+		mainToolbar.addSpace( 8 );
+		*/
 		mainToolbar.add( new ShowOnlineHelpAction( "Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
 				"/favicon.png" ) );
-		mainToolbar.addSpace( 2 );
+		mainToolbar.addSpace( 8 );
 		mainToolbar.add( new PreferencesActionDelegate() );
 		applyProxyButton = ( JToggleButton )mainToolbar.add( new JToggleButton( new ApplyProxyButtonAction() ) );
 		updateProxyButtonAndTooltip();
 
 		mainToolbar.addGlue();
 
+        /* SOAPUI-4110
 		searchField = new JTextField( 20 );
 		searchField.addKeyListener( new KeyAdapter()
 		{
@@ -391,6 +394,7 @@ public class SoapUI
 		mainToolbar.addSeparator( new Dimension( 3, 3 ) );
 		mainToolbar.addFixed( searchField );
 		mainToolbar.add( new ToolbarForumSearchAction() );
+		*/
 		mainToolbar.add( new ShowOnlineHelpAction( HelpUrls.USERGUIDE_HELP_URL ) );
 
 		for( int i = 0; i < mainToolbar.getComponentCount(); i++ )
@@ -572,8 +576,8 @@ public class SoapUI
 	private JComponent buildMainPanel()
 	{
 		JInspectorPanel inspectorPanel = JInspectorPanelFactory.build( navigator );
-		inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildOverviewPanel(), "Properties",
-				"Properties for the currently selected item", true ) );
+        inspectorPanel.addInspector( new JComponentInspector<JComponent>( buildOverviewPanel(), "Properties",
+                "Properties for the currently selected item", true ) );
 		inspectorPanel.setDividerLocation( 500 );
 		inspectorPanel.setResizeWeight( 0.6 );
 		inspectorPanel.setCurrentInspector( "Properties" );
