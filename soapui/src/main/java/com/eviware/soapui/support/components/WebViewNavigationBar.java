@@ -126,13 +126,18 @@ class WebViewNavigationBar {
     }
 
     private void removeHintText() {
-        final String textWithOutHint = urlField.getText().replaceFirst(hintText, "");
 
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                urlField.setText(textWithOutHint);
-            }
-        });
+        String urlFieldText = urlField.getText();
+
+        if (urlFieldText.contains(hintText)) {
+            final String textWithOutHint = urlFieldText.replaceFirst(hintText, "");
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    urlField.setText(textWithOutHint);
+                }
+            });
+        }
+
         resetTextFieldDefaults();
     }
 
