@@ -83,13 +83,13 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
         return mapping;
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
         try {
             mapping.getAction().perform(target, param == null ? mapping.getParam() : param);
-        } catch (Throwable t) {
-            SoapUI.logError(t);
+        } catch (Exception exception) {
+            SoapUI.logError(exception);
         } finally {
             state.restore();
         }

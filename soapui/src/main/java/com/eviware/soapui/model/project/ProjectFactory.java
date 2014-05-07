@@ -17,7 +17,9 @@
 package com.eviware.soapui.model.project;
 
 import java.io.IOException;
+import java.io.InputStream;
 
+import com.eviware.soapui.impl.WorkspaceImpl;
 import org.apache.xmlbeans.XmlException;
 
 import com.eviware.soapui.model.workspace.Workspace;
@@ -34,9 +36,8 @@ public interface ProjectFactory<T extends Project> {
 
     public T createNew(String path, Workspace workspace);
 
-    public T createNew(String path, Workspace workspace, boolean create);
-
-    public T createNew(String path, Workspace workspace, boolean create, boolean open, String tempName,
+    public T createNew(String path, Workspace workspace, boolean open, String tempName,
                        String projectPassword);
 
+    public T createNew(InputStream inputStream, WorkspaceImpl workspace);
 }

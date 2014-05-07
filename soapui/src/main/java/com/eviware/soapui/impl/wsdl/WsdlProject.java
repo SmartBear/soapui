@@ -113,6 +113,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * WSDL project implementation
@@ -184,22 +185,42 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public WsdlProject(String projectFile, String projectPassword) {
-        this(projectFile, null, true, true, null, projectPassword);
+        this(projectFile, null, true, null, projectPassword);
     }
 
     public WsdlProject(WorkspaceImpl workspace) {
-        this(null, workspace, true);
+        this((String) null, workspace);
     }
 
     public WsdlProject(String path, WorkspaceImpl workspace) {
-        this(path, workspace, true);
+        this(path, workspace, true, null, null);
     }
 
-    public WsdlProject(String path, WorkspaceImpl workspace, boolean create) {
-        this(path, workspace, create, true, null, null);
+    public WsdlProject(InputStream inputStream, WorkspaceImpl workspace) {
+        super(null, workspace, ICON_NAME);
+
+        this.workspace = workspace;
+        this.open = true;
+        this.endpointSupport = new EndpointSupport();
+
+        addProjectListeners();
+
+        loadProject(inputStream);
+        lastModified = System.currentTimeMillis();
+
+        initProjectIcons();
+
+        if (getConfig() != null) {
+            endpointStrategy.init(this);
+        }
+        if (getConfig() != null && this.environment == null) {
+            setActiveEnvironment(DefaultEnvironment.getInstance());
+        }
+
+        addPropertyChangeListener(this);
     }
 
-    public WsdlProject(String path, WorkspaceImpl workspace, boolean create, boolean open, String tempName,
+    public WsdlProject(String path, WorkspaceImpl workspace, boolean open, String tempName,
                        String projectPassword) {
         super(null, workspace, ICON_NAME);
 
@@ -208,13 +229,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         this.projectPassword = projectPassword;
         endpointSupport = new EndpointSupport();
 
-        for (ProjectListener listener : SoapUI.getListenerRegistry().getListeners(ProjectListener.class)) {
-            addProjectListener(listener);
-        }
-
-        for (ProjectRunListener listener : SoapUI.getListenerRegistry().getListeners(ProjectRunListener.class)) {
-            addProjectRunListener(listener);
-        }
+        addProjectListeners();
 
         try {
             if (path != null && open) {
@@ -227,6 +242,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                         SoapUI.logError(e);
                         disabled = true;
                     }
+
                 } else {
                     try {
                         if (!PathUtils.isHttpPath(path)) {
@@ -245,11 +261,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             SoapUI.logError(e);
             disabled = true;
         } finally {
-            closedIcon = UISupport.createImageIcon("/closedProject.gif");
-            remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
-            disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
-            openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
-            closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
+            initProjectIcons();
 
             this.open = open && !disabled && (this.encrypted != -1);
 
@@ -263,7 +275,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                 setPropertiesConfig(getConfig().addNewProperties());
                 wssContainer = new DefaultWssContainer(this, getConfig().addNewWssContainer());
                 oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().addNewOAuth2ProfileContainer());
-                // setResourceRoot("${projectDir}");
             }
 
             if (getConfig() != null) {
@@ -295,85 +306,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             UrlWsdlLoader loader = new UrlWsdlLoader(file.toString(), this);
             loader.setUseWorker(false);
             InputStream inputStream = loader.load();
-            projectDocument = SoapuiProjectDocumentConfig.Factory.parse(inputStream);
-            inputStream.close();
-
-            // see if there is encoded data
-            this.encrypted = checkForEncodedData(projectDocument.getSoapuiProject());
-
-            setConfig(projectDocument.getSoapuiProject());
-
-            // removed cached definitions if caching is disabled
-            if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS)) {
-                removeDefinitionCaches(projectDocument);
-            }
-
+            loadProjectFromInputStream(inputStream);
             log.info("Loaded project from [" + file.toString() + "]");
-
-            try {
-                int majorVersion = Integer
-                        .parseInt(projectDocument.getSoapuiProject().getSoapuiVersion().split("\\.")[0]);
-                if (majorVersion > Integer.parseInt(SoapUI.SOAPUI_VERSION.split("\\.")[0])) {
-                    log.warn("Project '" + projectDocument.getSoapuiProject().getName() + "' is from a newer version ("
-                            + projectDocument.getSoapuiProject().getSoapuiVersion() + ") of SoapUI than this ("
-                            + SoapUI.SOAPUI_VERSION + ") and parts of it may be incompatible or incorrect. "
-                            + "Saving this project with this version of SoapUI may cause it to function differently.");
-                }
-            } catch (Exception e) {
-            }
-
-            if (!getConfig().isSetProperties()) {
-                getConfig().addNewProperties();
-            }
-
-            setPropertiesConfig(getConfig().getProperties());
-
-            List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
-            for (InterfaceConfig config : interfaceConfigs) {
-                AbstractInterface<?> iface = InterfaceFactoryRegistry.build(this, config);
-                interfaces.add(iface);
-            }
-
-            List<TestSuiteConfig> testSuiteConfigs = getConfig().getTestSuiteList();
-            for (TestSuiteConfig config : testSuiteConfigs) {
-                testSuites.add(buildTestSuite(config));
-            }
-
-            List<MockServiceConfig> mockServiceConfigs = getConfig().getMockServiceList();
-            for (MockServiceConfig config : mockServiceConfigs) {
-                addWsdlMockService(new WsdlMockService(this, config));
-            }
-
-            List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
-            for (RESTMockServiceConfig config : restMockServiceConfigs) {
-                addRestMockService(new RestMockService(this, config));
-            }
-
-            if (!getConfig().isSetWssContainer()) {
-                getConfig().addNewWssContainer();
-            }
-
-            wssContainer = new DefaultWssContainer(this, getConfig().getWssContainer());
-
-            if (!getConfig().isSetOAuth2ProfileContainer()) {
-                getConfig().addNewOAuth2ProfileContainer();
-            }
-            oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().getOAuth2ProfileContainer());
-
-
-            endpointStrategy.init(this);
-
-            setActiveEnvironment(DefaultEnvironment.getInstance());
-
-            if (!getConfig().isSetAbortOnError()) {
-                getConfig().setAbortOnError(false);
-            }
-
-            if (!getConfig().isSetRunType()) {
-                getConfig().setRunType(TestSuiteRunTypesConfig.SEQUENTIAL);
-            }
-
-            afterLoad();
         } catch (Exception e) {
             if (e instanceof XmlException) {
                 XmlException xe = (XmlException) e;
@@ -393,6 +327,103 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         } finally {
             UISupport.resetCursor();
         }
+    }
+
+    public void loadProject(InputStream inputStream) {
+        UISupport.setHourglassCursor();
+        try {
+            loadProjectFromInputStream(inputStream);
+        } catch (XmlException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } finally {
+            UISupport.resetCursor();
+        }
+    }
+
+    public SoapuiProjectDocumentConfig loadProjectFromInputStream(InputStream inputStream) throws XmlException, IOException, GeneralSecurityException {
+        projectDocument = SoapuiProjectDocumentConfig.Factory.parse(inputStream);
+        inputStream.close();
+
+        // see if there is encoded data
+        this.encrypted = checkForEncodedData(projectDocument.getSoapuiProject());
+
+        setConfig(projectDocument.getSoapuiProject());
+
+        // removed cached definitions if caching is disabled
+        if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS)) {
+            removeDefinitionCaches(projectDocument);
+        }
+
+        try {
+            int majorVersion = Integer
+                    .parseInt(projectDocument.getSoapuiProject().getSoapuiVersion().split("\\.")[0]);
+            if (majorVersion > Integer.parseInt(SoapUI.SOAPUI_VERSION.split("\\.")[0])) {
+                log.warn("Project '" + projectDocument.getSoapuiProject().getName() + "' is from a newer version ("
+                        + projectDocument.getSoapuiProject().getSoapuiVersion() + ") of SoapUI than this ("
+                        + SoapUI.SOAPUI_VERSION + ") and parts of it may be incompatible or incorrect. "
+                        + "Saving this project with this version of SoapUI may cause it to function differently.");
+            }
+        } catch (Exception e) {
+        }
+
+        if (!getConfig().isSetProperties()) {
+            getConfig().addNewProperties();
+        }
+
+        setPropertiesConfig(getConfig().getProperties());
+
+        List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
+        for (InterfaceConfig config : interfaceConfigs) {
+            AbstractInterface<?> iface = InterfaceFactoryRegistry.build(this, config);
+            interfaces.add(iface);
+        }
+
+        List<TestSuiteConfig> testSuiteConfigs = getConfig().getTestSuiteList();
+        for (TestSuiteConfig config : testSuiteConfigs) {
+            testSuites.add(buildTestSuite(config));
+        }
+
+        List<MockServiceConfig> mockServiceConfigs = getConfig().getMockServiceList();
+        for (MockServiceConfig config : mockServiceConfigs) {
+            addWsdlMockService(new WsdlMockService(this, config));
+        }
+
+        List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
+        for (RESTMockServiceConfig config : restMockServiceConfigs) {
+            addRestMockService(new RestMockService(this, config));
+        }
+
+        if (!getConfig().isSetWssContainer()) {
+            getConfig().addNewWssContainer();
+        }
+
+        wssContainer = new DefaultWssContainer(this, getConfig().getWssContainer());
+
+        if (!getConfig().isSetOAuth2ProfileContainer()) {
+            getConfig().addNewOAuth2ProfileContainer();
+        }
+        oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().getOAuth2ProfileContainer());
+
+
+        endpointStrategy.init(this);
+
+        setActiveEnvironment(DefaultEnvironment.getInstance());
+
+        if (!getConfig().isSetAbortOnError()) {
+            getConfig().setAbortOnError(false);
+        }
+
+        if (!getConfig().isSetRunType()) {
+            getConfig().setRunType(TestSuiteRunTypesConfig.SEQUENTIAL);
+        }
+
+        afterLoad();
+
+        return projectDocument;
     }
 
     public Environment getActiveEnvironment() {
@@ -531,6 +562,14 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         return getConfig().getResourceRoot();
     }
 
+    private void initProjectIcons() {
+        closedIcon = UISupport.createImageIcon("/closedProject.gif");
+        remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
+        disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
+        openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
+        closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
+    }
+
     @Override
     public ImageIcon getIcon() {
         if (isDisabled()) {
@@ -553,6 +592,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     private String getNameFromPath() {
         int ix = path.lastIndexOf(isRemote() ? '/' : File.separatorChar);
         return ix == -1 ? path : path.substring(ix + 1);
+    }
+
+    private void addProjectListeners() {
+        for (ProjectListener listener : SoapUI.getListenerRegistry().getListeners(ProjectListener.class)) {
+            addProjectListener(listener);
+        }
+
+        for (ProjectRunListener listener : SoapUI.getListenerRegistry().getListeners(ProjectRunListener.class)) {
+            addProjectRunListener(listener);
+        }
     }
 
     @Override
@@ -1053,6 +1102,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     public WsdlTestSuite getTestSuiteByName(String testSuiteName) {
         return (WsdlTestSuite) getWsdlModelItemByName(testSuites, testSuiteName);
+    }
+
+    @Override
+    public TestSuite getTestSuiteById(UUID testSuiteId) {
+        return null;
     }
 
     public WsdlTestSuite addNewTestSuite(String name) {

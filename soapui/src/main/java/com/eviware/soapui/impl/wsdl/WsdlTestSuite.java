@@ -16,6 +16,17 @@
 
 package com.eviware.soapui.impl.wsdl;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
@@ -44,16 +55,6 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * TestSuite implementation for WSDL projects.
@@ -142,6 +143,11 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
     public WsdlTestCase getTestCaseByName(String testCaseName) {
         return (WsdlTestCase) getWsdlModelItemByName(testCases, testCaseName);
+    }
+
+    @Override
+    public TestCase getTestCaseById(UUID testCaseId) {
+        return (WsdlTestCase) getWsdlModelItemById(testCases, testCaseId);
     }
 
     public WsdlTestCase cloneTestCase(WsdlTestCase testCase, String name) {
