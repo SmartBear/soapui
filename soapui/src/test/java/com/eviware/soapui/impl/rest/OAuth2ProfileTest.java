@@ -37,6 +37,14 @@ public class OAuth2ProfileTest {
     }
 
     @Test
+    public void trimsAccessTokenWhenSettingIt() throws Exception {
+        String accessTokenWithoutWhitespace = "wuryew2347234987";
+        profile.setAccessToken("\t" + accessTokenWithoutWhitespace + " \n");
+
+        assertThat(profile.getAccessToken(), is(accessTokenWithoutWhitespace));
+    }
+
+    @Test
     public void waitsForAccessTokenStatusChange() throws Exception {
         final String accessToken = "mock token";
         profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);

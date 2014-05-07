@@ -16,7 +16,13 @@
 
 package com.eviware.soapui.impl.rest;
 
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.AccessTokenPositionConfig;
+import com.eviware.soapui.config.AccessTokenStatusConfig;
+import com.eviware.soapui.config.OAuth2FlowConfig;
+import com.eviware.soapui.config.OAuth2ProfileConfig;
+import com.eviware.soapui.config.RefreshAccessTokenMethodConfig;
+import com.eviware.soapui.config.StringListConfig;
+import com.eviware.soapui.config.TimeUnitConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
@@ -26,7 +32,9 @@ import org.apache.commons.lang.StringUtils;
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
@@ -223,9 +231,10 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     private boolean doSetAccessToken(String accessToken) {
         String oldValue = configuration.getAccessToken();
-        if (!StringUtils.equals(oldValue, accessToken)) {
-            configuration.setAccessToken(accessToken);
-            pcs.firePropertyChange(ACCESS_TOKEN_PROPERTY, oldValue, accessToken);
+        String newValue = accessToken == null ? null : accessToken.trim();
+        if (!StringUtils.equals(oldValue, newValue)) {
+            configuration.setAccessToken(newValue);
+            pcs.firePropertyChange(ACCESS_TOKEN_PROPERTY, oldValue, newValue);
             return true;
         }
         return false;
