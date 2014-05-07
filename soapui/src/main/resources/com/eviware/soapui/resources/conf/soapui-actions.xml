@@ -64,6 +64,7 @@
     <tns:action id="ExportDefinitionAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction"/>
     <tns:action id="RemoveInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.RemoveInterfaceAction"/>
     <tns:action id="WSIAnalyzeAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction"/>
+    <tns:action id="RenameInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.RenameInterfaceAction"/>
     <tns:action id="CloneInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CloneInterfaceAction"/>
     <tns:action id="CreateWsdlDocumentationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CreateWsdlDocumentationAction"/>
     <tns:action id="AddJMSEndpointAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction"/>
@@ -347,6 +348,7 @@
         <tns:actionMapping actionId="UpdateInterfaceAction" keyStroke="F5" iconPath="/updateDefinition.gif"/>
         <tns:actionMapping actionId="ExportDefinitionAction" keyStroke="menu P" iconPath="/exportDefinition.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
+        <tns:actionMapping actionId="RenameInterfaceAction" keyStroke=""/>
         <tns:actionMapping actionId="CloneInterfaceAction" keyStroke="F9"/>
         <tns:actionMapping actionId="RemoveInterfaceAction" keyStroke="DELETE"/>
 
