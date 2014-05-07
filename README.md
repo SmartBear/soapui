@@ -44,18 +44,17 @@ As SoapUI is using a standard Maven 3 setup, building and running SoapUI from an
 
 **Getting started using Intellij IDEA (version 13)**
 
-* [Clone the project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3#getting-the-source-code-for-the-first-time)
-* In the main menu select *File* 
-* Then click *Import project* 
-* At *Root directory* enter the path to the root folder of the SoapUI project
-* In the dialog window select *Import project from external model* and select *Maven*
-* Finish the wizard by just clicking *Next* and then finally *Finish*
-* After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run*. 
+* Clone the project
+* In the main menu select *File* -> *Open...*
+* Enter the path to the root folder of the SoapUI project
+* Run `mvn compile` in order to auto generate necessary source files
+* After you have created the IDEA project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run*.
 * To get the latest changes right click on the root folder in the *Project* view and select *Git* -> *Repository* -> *Pull...*
+* To get the same code style settings as the SoapUI team select *File* -> *Import Settings...* and import the file intellij-codestyle.jar located in the root folder of the SoapUI project
 
 **Getting started using Eclipse (version 4 / Juno)**
 
-* [Clone the project](https://github.com/SmartBear/soapui/tree/SOAPUI-3838-Convert-to-maven3#getting-the-source-code-for-the-first-time)
+* Clone the project
 * In the main menu select *File* -> *Import* -> *Maven* -> *Existing Maven projects* and at *Root directory* enter the path to the root folder of the SoapUI project and then finish the wizard.
 * After you have created the Eclipse project sucessfully, navigate to the main class `com.eviware.soapui.SoapUI` right click and select *Run as* -> *Java application*
 * To get the latest changes right click on the root folder in the *Package explorer* view and select *Team* -> *Pull*
