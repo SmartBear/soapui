@@ -246,10 +246,15 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     public void setAuthorizationURI(String authorizationURI) {
         String oldValue = configuration.getAuthorizationURI();
-        if (!StringUtils.equals(oldValue, authorizationURI)) {
-            configuration.setAuthorizationURI(authorizationURI);
-            pcs.firePropertyChange(AUTHORIZATION_URI_PROPERTY, oldValue, authorizationURI);
+        String newValue = nullSafeTrim(authorizationURI);
+        if (!StringUtils.equals(oldValue, newValue)) {
+            configuration.setAuthorizationURI(newValue);
+            pcs.firePropertyChange(AUTHORIZATION_URI_PROPERTY, oldValue, newValue);
         }
+    }
+
+    private String nullSafeTrim(String inputString) {
+        return inputString == null ? null : inputString.trim();
     }
 
     public String getClientID() {
@@ -258,9 +263,10 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     public void setClientID(String clientID) {
         String oldValue = configuration.getClientID();
-        if (!StringUtils.equals(oldValue, clientID)) {
-            configuration.setClientID(clientID);
-            pcs.firePropertyChange(CLIENT_ID_PROPERTY, oldValue, clientID);
+        String newValue = nullSafeTrim(clientID);
+        if (!StringUtils.equals(oldValue, newValue)) {
+            configuration.setClientID(newValue);
+            pcs.firePropertyChange(CLIENT_ID_PROPERTY, oldValue, newValue);
         }
     }
 
@@ -310,9 +316,10 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     public void setAccessTokenURI(String accessTokenURI) {
         String oldValue = configuration.getAccessTokenURI();
-        if (!StringUtils.equals(oldValue, accessTokenURI)) {
-            configuration.setAccessTokenURI(accessTokenURI);
-            pcs.firePropertyChange(ACCESS_TOKEN_URI_PROPERTY, oldValue, accessTokenURI);
+        String newValue = nullSafeTrim(accessTokenURI);
+        if (!StringUtils.equals(oldValue, newValue)) {
+            configuration.setAccessTokenURI(newValue);
+            pcs.firePropertyChange(ACCESS_TOKEN_URI_PROPERTY, oldValue, newValue);
         }
     }
 
