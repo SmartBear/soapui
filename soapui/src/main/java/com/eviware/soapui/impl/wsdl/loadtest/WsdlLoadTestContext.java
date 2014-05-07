@@ -23,41 +23,36 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 
 /**
  * LoadTestRunContext implementation for WsdlLoadTests
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WsdlLoadTestContext extends DefaultPropertyExpansionContext implements LoadTestRunContext
-{
-	private final LoadTestRunner runner;
+public class WsdlLoadTestContext extends DefaultPropertyExpansionContext implements LoadTestRunContext {
+    private final LoadTestRunner runner;
 
-	public WsdlLoadTestContext( LoadTestRunner runner )
-	{
-		super( runner.getLoadTest().getTestCase() );
-		this.runner = runner;
-	}
+    public WsdlLoadTestContext(LoadTestRunner runner) {
+        super(runner.getLoadTest().getTestCase());
+        this.runner = runner;
+    }
 
-	public LoadTestRunner getLoadTestRunner()
-	{
-		return runner;
-	}
+    public LoadTestRunner getLoadTestRunner() {
+        return runner;
+    }
 
-	@Override
-	public Object get( Object key )
-	{
-		if( "loadTestRunner".equals( key ) )
-			return runner;
+    @Override
+    public Object get(Object key) {
+        if ("loadTestRunner".equals(key)) {
+            return runner;
+        }
 
-		return super.get( key );
-	}
+        return super.get(key);
+    }
 
-	public Object getProperty( String testStep, String propertyName )
-	{
-		return null;
-	}
+    public Object getProperty(String testStep, String propertyName) {
+        return null;
+    }
 
-	public TestCaseRunner getTestRunner()
-	{
-		return null;
-	}
+    public TestCaseRunner getTestRunner() {
+        return null;
+    }
 }

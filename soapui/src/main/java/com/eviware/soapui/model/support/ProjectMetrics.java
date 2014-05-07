@@ -24,121 +24,100 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public class ProjectMetrics
-{
-	private final Project project;
+public class ProjectMetrics {
+    private final Project project;
 
-	public ProjectMetrics( Project project )
-	{
-		this.project = project;
-	}
+    public ProjectMetrics(Project project) {
+        this.project = project;
+    }
 
-	public int getTestCaseCount()
-	{
-		int result = 0;
+    public int getTestCaseCount() {
+        int result = 0;
 
-		for( TestSuite testSuite : project.getTestSuiteList() )
-			result += testSuite.getTestCaseCount();
+        for (TestSuite testSuite : project.getTestSuiteList()) {
+            result += testSuite.getTestCaseCount();
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getTestStepCount()
-	{
-		int result = 0;
+    public int getTestStepCount() {
+        int result = 0;
 
-		for( TestSuite testSuite : project.getTestSuiteList() )
-		{
-			for( TestCase testCase : testSuite.getTestCaseList() )
-			{
-				result += testCase.getTestStepCount();
-			}
-		}
+        for (TestSuite testSuite : project.getTestSuiteList()) {
+            for (TestCase testCase : testSuite.getTestCaseList()) {
+                result += testCase.getTestStepCount();
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getAssertionCount()
-	{
-		int result = 0;
+    public int getAssertionCount() {
+        int result = 0;
 
-		for( TestSuite testSuite : project.getTestSuiteList() )
-		{
-			for( TestCase testCase : testSuite.getTestCaseList() )
-			{
-				for( TestStep testStep : testCase.getTestStepList() )
-				{
-					if( testStep instanceof Assertable )
-					{
-						result += ( ( Assertable )testStep ).getAssertionCount();
-					}
-				}
-			}
-		}
+        for (TestSuite testSuite : project.getTestSuiteList()) {
+            for (TestCase testCase : testSuite.getTestCaseList()) {
+                for (TestStep testStep : testCase.getTestStepList()) {
+                    if (testStep instanceof Assertable) {
+                        result += ((Assertable) testStep).getAssertionCount();
+                    }
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getLoadTestCount()
-	{
-		int result = 0;
+    public int getLoadTestCount() {
+        int result = 0;
 
-		for( TestSuite testSuite : project.getTestSuiteList() )
-		{
-			for( TestCase testCase : testSuite.getTestCaseList() )
-			{
-				result += testCase.getLoadTestCount();
-			}
-		}
+        for (TestSuite testSuite : project.getTestSuiteList()) {
+            for (TestCase testCase : testSuite.getTestCaseList()) {
+                result += testCase.getLoadTestCount();
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getMockOperationCount()
-	{
-		int result = 0;
+    public int getMockOperationCount() {
+        int result = 0;
 
-		for( MockService mockService : project.getMockServiceList() )
-			result += mockService.getMockOperationCount();
+        for (MockService mockService : project.getMockServiceList()) {
+            result += mockService.getMockOperationCount();
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getMockResponseCount()
-	{
-		int result = 0;
+    public int getMockResponseCount() {
+        int result = 0;
 
-		for( MockService mockService : project.getMockServiceList() )
-		{
-			for( MockOperation mockOperation : mockService.getMockOperationList() )
-			{
-				result += mockOperation.getMockResponseCount();
-			}
-		}
+        for (MockService mockService : project.getMockServiceList()) {
+            for (MockOperation mockOperation : mockService.getMockOperationList()) {
+                result += mockOperation.getMockResponseCount();
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getRestMockActionCount()
-	{
-		int restMockActionCount = 0;
-		for( MockService mockService : project.getRestMockServiceList())
-		{
-			restMockActionCount += mockService.getMockOperationCount();
-		}
-		return restMockActionCount;
-	}
+    public int getRestMockActionCount() {
+        int restMockActionCount = 0;
+        for (MockService mockService : project.getRestMockServiceList()) {
+            restMockActionCount += mockService.getMockOperationCount();
+        }
+        return restMockActionCount;
+    }
 
-	public int getRestMockResponseCount()
-	{
-		int restMockResponseCount = 0;
-		for( MockService mockService : project.getRestMockServiceList())
-		{
-			for( MockOperation mockOperation : mockService.getMockOperationList() )
-			{
-				restMockResponseCount += mockOperation.getMockResponseCount();
-			}
-		}
-		return restMockResponseCount;
-	}
+    public int getRestMockResponseCount() {
+        int restMockResponseCount = 0;
+        for (MockService mockService : project.getRestMockServiceList()) {
+            for (MockOperation mockOperation : mockService.getMockOperationList()) {
+                restMockResponseCount += mockOperation.getMockResponseCount();
+            }
+        }
+        return restMockResponseCount;
+    }
 }

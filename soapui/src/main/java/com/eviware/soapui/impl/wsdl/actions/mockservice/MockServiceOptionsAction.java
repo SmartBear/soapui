@@ -30,70 +30,65 @@ import com.eviware.x.form.support.AForm;
 
 /**
  * Displays the options for the specified WsdlMockService
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockService>
-{
-	private XFormDialog dialog;
+public class MockServiceOptionsAction extends AbstractSoapUIAction<WsdlMockService> {
+    private XFormDialog dialog;
 
-	public MockServiceOptionsAction()
-	{
-		super( "Options", "Sets options for this MockService" );
-	}
+    public MockServiceOptionsAction() {
+        super("Options", "Sets options for this MockService");
+    }
 
-	public void perform( WsdlMockService mockService, Object param )
-	{
-		if( mockService.getMockRunner() != null && mockService.getMockRunner().isRunning() )
-		{
-			UISupport.showErrorMessage( "Can not set MockService options while running" );
-			return;
-		}
+    public void perform(WsdlMockService mockService, Object param) {
+        if (mockService.getMockRunner() != null && mockService.getMockRunner().isRunning()) {
+            UISupport.showErrorMessage("Can not set MockService options while running");
+            return;
+        }
 
-		if( dialog == null )
-			dialog = ADialogBuilder.buildDialog( OptionsForm.class );
+        if (dialog == null) {
+            dialog = ADialogBuilder.buildDialog(OptionsForm.class);
+        }
 
-		dialog.setValue( OptionsForm.PATH, mockService.getPath() );
-		dialog.setValue( OptionsForm.HOST, mockService.getHost() );
-		dialog.setIntValue( OptionsForm.PORT, mockService.getPort() );
-		dialog.setBooleanValue( OptionsForm.HOSTONLY, mockService.getBindToHostOnly() );
-		dialog.setValue( OptionsForm.DOCROOT, mockService.getDocroot() );
-		dialog.setOptions( OptionsForm.FAULT_OPERATION,
-				ModelSupport.getNames( new String[] { "- none -" }, mockService.getMockOperationList() ) );
-		dialog.setValue( OptionsForm.FAULT_OPERATION, String.valueOf( mockService.getFaultMockOperation() ) );
+        dialog.setValue(OptionsForm.PATH, mockService.getPath());
+        dialog.setValue(OptionsForm.HOST, mockService.getHost());
+        dialog.setIntValue(OptionsForm.PORT, mockService.getPort());
+        dialog.setBooleanValue(OptionsForm.HOSTONLY, mockService.getBindToHostOnly());
+        dialog.setValue(OptionsForm.DOCROOT, mockService.getDocroot());
+        dialog.setOptions(OptionsForm.FAULT_OPERATION,
+                ModelSupport.getNames(new String[]{"- none -"}, mockService.getMockOperationList()));
+        dialog.setValue(OptionsForm.FAULT_OPERATION, String.valueOf(mockService.getFaultMockOperation()));
 
-		if( dialog.show() )
-		{
-			mockService.setPath( dialog.getValue( OptionsForm.PATH ) );
-			mockService.setPort( dialog.getIntValue( OptionsForm.PORT, mockService.getPort() ) );
-			mockService.setHost( dialog.getValue( OptionsForm.HOST ) );
-			mockService.setBindToHostOnly( dialog.getBooleanValue( OptionsForm.HOSTONLY ) );
-			mockService.setDocroot( dialog.getValue( OptionsForm.DOCROOT ) );
-			mockService.setFaultMockOperation( ( WsdlMockOperation )mockService.getMockOperationByName( dialog
-					.getValue( OptionsForm.FAULT_OPERATION ) ) );
-		}
-	}
+        if (dialog.show()) {
+            mockService.setPath(dialog.getValue(OptionsForm.PATH));
+            mockService.setPort(dialog.getIntValue(OptionsForm.PORT, mockService.getPort()));
+            mockService.setHost(dialog.getValue(OptionsForm.HOST));
+            mockService.setBindToHostOnly(dialog.getBooleanValue(OptionsForm.HOSTONLY));
+            mockService.setDocroot(dialog.getValue(OptionsForm.DOCROOT));
+            mockService.setFaultMockOperation((WsdlMockOperation) mockService.getMockOperationByName(dialog
+                    .getValue(OptionsForm.FAULT_OPERATION)));
+        }
+    }
 
-	@AForm( name = "SOAP MockService Options", description = "Set options for this SOAP mock service", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH )
-	private class OptionsForm
-	{
-		@AField( name = "Path", description = "The path this MockService will mount on" )
-		public final static String PATH = "Path";
+    @AForm(name = "SOAP MockService Options", description = "Set options for this SOAP mock service", helpUrl = HelpUrls.MOCKSERVICEOPTIONS_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH)
+    private class OptionsForm {
+        @AField(name = "Path", description = "The path this MockService will mount on")
+        public final static String PATH = "Path";
 
-		@AField( name = "Port", description = "The port this MockService will mount on", type = AFieldType.INT )
-		public final static String PORT = "Port";
+        @AField(name = "Port", description = "The port this MockService will mount on", type = AFieldType.INT)
+        public final static String PORT = "Port";
 
-		@AField( name = "Host", description = "The local host to bind to and use in Port endpoints" )
-		public final static String HOST = "Host";
+        @AField(name = "Host", description = "The local host to bind to and use in Port endpoints")
+        public final static String HOST = "Host";
 
-		@AField( name = "Host Only", description = "Only binds to specified host", type = AFieldType.BOOLEAN )
-		public final static String HOSTONLY = "Host Only";
+        @AField(name = "Host Only", description = "Only binds to specified host", type = AFieldType.BOOLEAN)
+        public final static String HOSTONLY = "Host Only";
 
-		@AField( name = "Docroot", description = "The document root to serve (empty = none)", type = AFieldType.FOLDER )
-		public final static String DOCROOT = "Docroot";
+        @AField(name = "Docroot", description = "The document root to serve (empty = none)", type = AFieldType.FOLDER)
+        public final static String DOCROOT = "Docroot";
 
-		@AField( name = "Fault Operation", description = "The MockOperation that should handle incoming SOAP Faults", type = AFieldType.ENUMERATION )
-		public final static String FAULT_OPERATION = "Fault Operation";
-	}
+        @AField(name = "Fault Operation", description = "The MockOperation that should handle incoming SOAP Faults", type = AFieldType.ENUMERATION)
+        public final static String FAULT_OPERATION = "Fault Operation";
+    }
 }

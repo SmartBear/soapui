@@ -25,17 +25,16 @@ import com.eviware.soapui.config.WSSEntryConfig;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.registry.RegistryEntry;
 
-public interface WssEntry extends RegistryEntry<WSSEntryConfig, OutgoingWss>
-{
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context );
+public interface WssEntry extends RegistryEntry<WSSEntryConfig, OutgoingWss> {
+    public void process(WSSecHeader secHeader, Document doc, PropertyExpansionContext context);
 
-	public JComponent getConfigurationPanel();
+    public JComponent getConfigurationPanel();
 
-	public String getLabel();
+    public String getLabel();
 
-	public OutgoingWss getOutgoingWss();
+    public OutgoingWss getOutgoingWss();
 
-	public void updateEntryConfig( WSSEntryConfig config );
+    public void updateEntryConfig(WSSEntryConfig config);
 
-	public void release();
+    public void release();
 }

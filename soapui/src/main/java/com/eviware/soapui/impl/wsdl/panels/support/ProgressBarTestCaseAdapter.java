@@ -35,148 +35,125 @@ import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * Class that keeps a JProgressBars state in sync with a TestCase
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ProgressBarTestCaseAdapter
-{
-	private final JProgressBar progressBar;
-	private final WsdlTestCase testCase;
-	private InternalTestRunListener internalTestRunListener;
-	private InternalTestMonitorListener internalTestMonitorListener;
+public class ProgressBarTestCaseAdapter {
+    private final JProgressBar progressBar;
+    private final WsdlTestCase testCase;
+    private InternalTestRunListener internalTestRunListener;
+    private InternalTestMonitorListener internalTestMonitorListener;
 
-	public ProgressBarTestCaseAdapter( JProgressBar progressBar, WsdlTestCase testCase )
-	{
-		this.progressBar = progressBar;
-		this.testCase = testCase;
+    public ProgressBarTestCaseAdapter(JProgressBar progressBar, WsdlTestCase testCase) {
+        this.progressBar = progressBar;
+        this.testCase = testCase;
 
-		setLoadTestingState();
-		setSecurityTestingState();
+        setLoadTestingState();
+        setSecurityTestingState();
 
-		internalTestRunListener = new InternalTestRunListener();
-		testCase.addTestRunListener( internalTestRunListener );
-		internalTestMonitorListener = new InternalTestMonitorListener();
-		SoapUI.getTestMonitor().addTestMonitorListener( internalTestMonitorListener );
-	}
+        internalTestRunListener = new InternalTestRunListener();
+        testCase.addTestRunListener(internalTestRunListener);
+        internalTestMonitorListener = new InternalTestMonitorListener();
+        SoapUI.getTestMonitor().addTestMonitorListener(internalTestMonitorListener);
+    }
 
-	public void release()
-	{
-		testCase.removeTestRunListener( internalTestRunListener );
-		SoapUI.getTestMonitor().removeTestMonitorListener( internalTestMonitorListener );
-	}
+    public void release() {
+        testCase.removeTestRunListener(internalTestRunListener);
+        SoapUI.getTestMonitor().removeTestMonitorListener(internalTestMonitorListener);
+    }
 
-	private void setLoadTestingState()
-	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testCase ) )
-		{
-			progressBar.setIndeterminate( true );
-			progressBar.setString( "load testing" );
-		}
-		else
-		{
-			progressBar.setIndeterminate( false );
-			progressBar.setString( "" );
-		}
-	}
+    private void setLoadTestingState() {
+        if (SoapUI.getTestMonitor().hasRunningLoadTest(testCase)) {
+            progressBar.setIndeterminate(true);
+            progressBar.setString("load testing");
+        } else {
+            progressBar.setIndeterminate(false);
+            progressBar.setString("");
+        }
+    }
 
-	private void setSecurityTestingState()
-	{
-		if( SoapUI.getTestMonitor().hasRunningSecurityTest( testCase ) )
-		{
-			progressBar.setIndeterminate( true );
-			progressBar.setString( "security testing" );
-		}
-		else
-		{
-			progressBar.setIndeterminate( false );
-			progressBar.setString( "" );
-		}
-	}
+    private void setSecurityTestingState() {
+        if (SoapUI.getTestMonitor().hasRunningSecurityTest(testCase)) {
+            progressBar.setIndeterminate(true);
+            progressBar.setString("security testing");
+        } else {
+            progressBar.setIndeterminate(false);
+            progressBar.setString("");
+        }
+    }
 
-	private class InternalTestMonitorListener extends TestMonitorListenerAdapter
-	{
-		public void loadTestStarted( LoadTestRunner loadTestRunner )
-		{
-			setLoadTestingState();
-		}
+    private class InternalTestMonitorListener extends TestMonitorListenerAdapter {
+        public void loadTestStarted(LoadTestRunner loadTestRunner) {
+            setLoadTestingState();
+        }
 
-		public void loadTestFinished( LoadTestRunner loadTestRunner )
-		{
-			setLoadTestingState();
-		}
+        public void loadTestFinished(LoadTestRunner loadTestRunner) {
+            setLoadTestingState();
+        }
 
-		public void securityTestStarted( SecurityTestRunner securityTestRunner )
-		{
-			setSecurityTestingState();
-		}
+        public void securityTestStarted(SecurityTestRunner securityTestRunner) {
+            setSecurityTestingState();
+        }
 
-		public void securityTestFinished( SecurityTestRunner securityTestRunner )
-		{
-			setSecurityTestingState();
-		}
-	}
+        public void securityTestFinished(SecurityTestRunner securityTestRunner) {
+            setSecurityTestingState();
+        }
+    }
 
-	public class InternalTestRunListener extends TestRunListenerAdapter
-	{
-		public void beforeRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
-		{
-			if( progressBar.isIndeterminate() )
-				return;
+    public class InternalTestRunListener extends TestRunListenerAdapter {
+        public void beforeRun(TestCaseRunner testRunner, TestCaseRunContext runContext) {
+            if (progressBar.isIndeterminate()) {
+                return;
+            }
 
-			progressBar.getModel().setMaximum( testRunner.getTestCase().getTestStepCount() );
-			progressBar.setForeground( Color.GREEN.darker() );
-			progressBar.setValue( 0 );
-			progressBar.setString( "" );
-		}
+            progressBar.getModel().setMaximum(testRunner.getTestCase().getTestStepCount());
+            progressBar.setForeground(Color.GREEN.darker());
+            progressBar.setValue(0);
+            progressBar.setString("");
+        }
 
-		public void beforeStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep )
-		{
-			if( progressBar.isIndeterminate() )
-				return;
+        public void beforeStep(TestCaseRunner testRunner, TestCaseRunContext runContext, TestStep testStep) {
+            if (progressBar.isIndeterminate()) {
+                return;
+            }
 
-			if( testStep != null )
-			{
-				progressBar.setString( testStep.getName() );
-				progressBar.setValue( runContext.getCurrentStepIndex() );
-			}
-		}
+            if (testStep != null) {
+                progressBar.setString(testStep.getName());
+                progressBar.setValue(runContext.getCurrentStepIndex());
+            }
+        }
 
-		public void afterStep( TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result )
-		{
-			if( progressBar.isIndeterminate() )
-				return;
+        public void afterStep(TestCaseRunner testRunner, TestCaseRunContext runContext, TestStepResult result) {
+            if (progressBar.isIndeterminate()) {
+                return;
+            }
 
-			if( result.getStatus() == TestStepStatus.FAILED )
-			{
-				progressBar.setForeground( Color.RED );
-			}
-			else if( !testCase.getFailTestCaseOnErrors() )
-			{
-				progressBar.setForeground( Color.GREEN.darker() );
-			}
+            if (result.getStatus() == TestStepStatus.FAILED) {
+                progressBar.setForeground(Color.RED);
+            } else if (!testCase.getFailTestCaseOnErrors()) {
+                progressBar.setForeground(Color.GREEN.darker());
+            }
 
-			progressBar.setValue( runContext.getCurrentStepIndex() + 1 );
-		}
+            progressBar.setValue(runContext.getCurrentStepIndex() + 1);
+        }
 
-		public void afterRun( TestCaseRunner testRunner, TestCaseRunContext runContext )
-		{
-			if( testRunner.getStatus() == Status.FAILED )
-			{
-				progressBar.setForeground( Color.RED );
-			}
-			else if( testRunner.getStatus() == Status.FINISHED )
-			{
-				progressBar.setForeground( Color.GREEN.darker() );
-			}
+        public void afterRun(TestCaseRunner testRunner, TestCaseRunContext runContext) {
+            if (testRunner.getStatus() == Status.FAILED) {
+                progressBar.setForeground(Color.RED);
+            } else if (testRunner.getStatus() == Status.FINISHED) {
+                progressBar.setForeground(Color.GREEN.darker());
+            }
 
-			if( progressBar.isIndeterminate() )
-				return;
+            if (progressBar.isIndeterminate()) {
+                return;
+            }
 
-			if( testRunner.getStatus() == TestCaseRunner.Status.FINISHED )
-				progressBar.setValue( testRunner.getTestCase().getTestStepCount() );
+            if (testRunner.getStatus() == TestCaseRunner.Status.FINISHED) {
+                progressBar.setValue(testRunner.getTestCase().getTestStepCount());
+            }
 
-			progressBar.setString( testRunner.getStatus().toString() );
-		}
-	}
+            progressBar.setString(testRunner.getStatus().toString());
+        }
+    }
 }

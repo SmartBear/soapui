@@ -23,59 +23,58 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * An exchange of a request and response message
- * 
+ *
  * @author ole.matzura
  */
 
-public interface MessageExchange extends ResultContainer
-{
-	public Operation getOperation();
+public interface MessageExchange extends ResultContainer {
+    public Operation getOperation();
 
-	public ModelItem getModelItem();
+    public ModelItem getModelItem();
 
-	public long getTimestamp();
+    public long getTimestamp();
 
-	public long getTimeTaken();
+    public long getTimeTaken();
 
-	public String getEndpoint();
+    public String getEndpoint();
 
-	public StringToStringMap getProperties();
+    public StringToStringMap getProperties();
 
-	public String getRequestContent();
+    public String getRequestContent();
 
-	public String getResponseContent();
+    public String getResponseContent();
 
-	public String getRequestContentAsXml();
+    public String getRequestContentAsXml();
 
-	public String getResponseContentAsXml();
+    public String getResponseContentAsXml();
 
-	public StringToStringsMap getRequestHeaders();
+    public StringToStringsMap getRequestHeaders();
 
-	public StringToStringsMap getResponseHeaders();
+    public StringToStringsMap getResponseHeaders();
 
-	public Attachment[] getRequestAttachments();
+    public Attachment[] getRequestAttachments();
 
-	public Attachment[] getResponseAttachments();
+    public Attachment[] getResponseAttachments();
 
-	public String[] getMessages();
+    public String[] getMessages();
 
-	public boolean isDiscarded();
+    public boolean isDiscarded();
 
-	public boolean hasRawData();
+    public boolean hasRawData();
 
-	public byte[] getRawRequestData();
+    public byte[] getRawRequestData();
 
-	public byte[] getRawResponseData();
+    public byte[] getRawResponseData();
 
-	public Attachment[] getRequestAttachmentsForPart( String partName );
+    public Attachment[] getRequestAttachmentsForPart(String partName);
 
-	public Attachment[] getResponseAttachmentsForPart( String partName );
+    public Attachment[] getResponseAttachmentsForPart(String partName);
 
-	public boolean hasRequest( boolean ignoreEmpty );
+    public boolean hasRequest(boolean ignoreEmpty);
 
-	public boolean hasResponse();
+    public boolean hasResponse();
 
-	public Response getResponse();
+    public Response getResponse();
 
-	public String getProperty( String name );
+    public String getProperty(String name);
 }

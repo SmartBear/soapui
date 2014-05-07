@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.components;
+*/
+package com.eviware.soapui.support.components;
 
 import com.google.common.base.Preconditions;
 
@@ -23,38 +24,32 @@ import javax.swing.*;
 /**
  * A wrapper class to accociate
  */
-public final class PropertyComponent
-{
-	@Nullable
-	private final String property;
-	@Nonnull
-	private final JComponent component;
+public final class PropertyComponent {
+    @Nullable
+    private final String property;
+    @Nonnull
+    private final JComponent component;
 
-	public PropertyComponent( JComponent component )
-	{
-		this( null, component );
-	}
+    public PropertyComponent(JComponent component) {
+        this(null, component);
+    }
 
-	public PropertyComponent( String property, JComponent component )
-	{
-		this.property = property;
+    public PropertyComponent(String property, JComponent component) {
+        this.property = property;
 
-		Preconditions.checkNotNull( "You must provide a component", component );
-		this.component = component;
-	}
+        Preconditions.checkNotNull("You must provide a component", component);
+        this.component = component;
+    }
 
-	public String getProperty()
-	{
-		return property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public JComponent getComponent()
-	{
-		return component;
-	}
+    public JComponent getComponent() {
+        return component;
+    }
 
-	public boolean hasProperty()
-	{
-		return property != null;
-	}
+    public boolean hasProperty() {
+        return property != null;
+    }
 }

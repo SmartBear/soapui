@@ -29,100 +29,76 @@ import java.awt.dnd.DropTargetListener;
 
 import com.eviware.soapui.SoapUI;
 
-public abstract class AbstractSoapUIDropTarget implements DropTargetListener
-{
-	public AbstractSoapUIDropTarget()
-	{
-	}
+public abstract class AbstractSoapUIDropTarget implements DropTargetListener {
+    public AbstractSoapUIDropTarget() {
+    }
 
-	public void dragEnter( DropTargetDragEvent dtde )
-	{
-		if( !isAcceptable( dtde.getTransferable(), dtde.getLocation() ) )
-			dtde.rejectDrag();
-	}
+    public void dragEnter(DropTargetDragEvent dtde) {
+        if (!isAcceptable(dtde.getTransferable(), dtde.getLocation())) {
+            dtde.rejectDrag();
+        }
+    }
 
-	public void dragExit( DropTargetEvent dtde )
-	{
-	}
+    public void dragExit(DropTargetEvent dtde) {
+    }
 
-	public void dragOver( DropTargetDragEvent dtde )
-	{
-		if( !isAcceptable( dtde.getTransferable(), dtde.getLocation() ) )
-		{
-			dtde.rejectDrag();
-		}
-		else
-		{
-			dtde.acceptDrag( dtde.getDropAction() );
-		}
-	}
+    public void dragOver(DropTargetDragEvent dtde) {
+        if (!isAcceptable(dtde.getTransferable(), dtde.getLocation())) {
+            dtde.rejectDrag();
+        } else {
+            dtde.acceptDrag(dtde.getDropAction());
+        }
+    }
 
-	public void drop( DropTargetDropEvent dtde )
-	{
-		if( !isAcceptable( dtde.getTransferable(), dtde.getLocation() ) )
-		{
-			dtde.rejectDrop();
-		}
-		else
-		{
-			try
-			{
-				Object testCase = getTransferData( dtde.getTransferable() );
-				if( testCase != null )
-				{
-					dtde.acceptDrop( dtde.getDropAction() );
+    public void drop(DropTargetDropEvent dtde) {
+        if (!isAcceptable(dtde.getTransferable(), dtde.getLocation())) {
+            dtde.rejectDrop();
+        } else {
+            try {
+                Object testCase = getTransferData(dtde.getTransferable());
+                if (testCase != null) {
+                    dtde.acceptDrop(dtde.getDropAction());
 
-					handleDrop( testCase, dtde.getLocation() );
+                    handleDrop(testCase, dtde.getLocation());
 
-					dtde.dropComplete( true );
-				}
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+                    dtde.dropComplete(true);
+                }
+            } catch (Exception e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 
-	protected abstract boolean handleDrop( Object target, Point point );
+    protected abstract boolean handleDrop(Object target, Point point);
 
-	protected abstract boolean isAcceptable( Object target, Point point );
+    protected abstract boolean isAcceptable(Object target, Point point);
 
-	public void dropActionChanged( DropTargetDragEvent dtde )
-	{
-	}
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+    }
 
-	public boolean isAcceptable( Transferable transferable, Point point )
-	{
-		return isAcceptable( getTransferData( transferable ), point );
-	}
+    public boolean isAcceptable(Transferable transferable, Point point) {
+        return isAcceptable(getTransferData(transferable), point);
+    }
 
-	@SuppressWarnings( "unchecked" )
-	private Object getTransferData( Transferable transferable )
-	{
-		DataFlavor[] flavors = transferable.getTransferDataFlavors();
-		for( int i = 0; i < flavors.length; i++ )
-		{
-			DataFlavor flavor = flavors[i];
-			if( flavor.isMimeTypeEqual( DataFlavor.javaJVMLocalObjectMimeType ) )
-			{
-				try
-				{
-					return transferable.getTransferData( flavor );
-				}
-				catch( Exception ex )
-				{
-					SoapUI.logError( ex );
-				}
-			}
-		}
+    @SuppressWarnings("unchecked")
+    private Object getTransferData(Transferable transferable) {
+        DataFlavor[] flavors = transferable.getTransferDataFlavors();
+        for (int i = 0; i < flavors.length; i++) {
+            DataFlavor flavor = flavors[i];
+            if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType)) {
+                try {
+                    return transferable.getTransferData(flavor);
+                } catch (Exception ex) {
+                    SoapUI.logError(ex);
+                }
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public static void addDropTarget( Component component, AbstractSoapUIDropTarget target )
-	{
-		DropTarget dropTarget = new DropTarget( component, target );
-		dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
-	}
+    public static void addDropTarget(Component component, AbstractSoapUIDropTarget target) {
+        DropTarget dropTarget = new DropTarget(component, target);
+        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
+    }
 }

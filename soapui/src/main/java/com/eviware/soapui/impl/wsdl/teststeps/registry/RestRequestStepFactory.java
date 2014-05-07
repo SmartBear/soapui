@@ -41,219 +41,196 @@ import com.eviware.soapui.support.types.TupleList;
 
 /**
  * Factory for WsdlTestRequestSteps
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RestRequestStepFactory extends WsdlTestStepFactory
-{
-	public static final String RESTREQUEST_TYPE = "restrequest";
-	public static final String STEP_NAME = "Name";
+public class RestRequestStepFactory extends WsdlTestStepFactory {
+    public static final String RESTREQUEST_TYPE = "restrequest";
+    public static final String STEP_NAME = "Name";
 
-	// private XFormDialog dialog;
-	// private StringToStringMap dialogValues = new StringToStringMap();
+    // private XFormDialog dialog;
+    // private StringToStringMap dialogValues = new StringToStringMap();
 
-	public RestRequestStepFactory()
-	{
-		super( RESTREQUEST_TYPE, "REST Test Request", "Submits a REST-style Request and validates its response",
-				"/rest_request.gif" );
-	}
+    public RestRequestStepFactory() {
+        super(RESTREQUEST_TYPE, "REST Test Request", "Submits a REST-style Request and validates its response",
+                "/rest_request.gif");
+    }
 
-	public static class ItemDeletedException extends Exception
-	{
+    public static class ItemDeletedException extends Exception {
 
-	}
+    }
 
-	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-	{
-		try
-		{
-			return new RestTestRequestStep( testCase, config, forLoadTest );
-		}
-		catch( ItemDeletedException e )
-		{
-			return null;
-		}
-	}
+    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
+        try {
+            return new RestTestRequestStep(testCase, config, forLoadTest);
+        } catch (ItemDeletedException e) {
+            return null;
+        }
+    }
 
-	public static TestStepConfig createConfig( RestRequest request, String stepName )
-	{
-		request.beforeSave(); //SOAP-1098
-		RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
+    public static TestStepConfig createConfig(RestRequest request, String stepName) {
+        request.beforeSave(); //SOAP-1098
+        RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
 
-		requestStepConfig.setService( request.getOperation().getInterface().getName() );
-		requestStepConfig.setResourcePath( request.getOperation().getFullPath() );
-		requestStepConfig.setMethodName( request.getRestMethod().getName() );
-		requestStepConfig.addNewRestRequest().set( request.getConfig().copy() );
+        requestStepConfig.setService(request.getOperation().getInterface().getName());
+        requestStepConfig.setResourcePath(request.getOperation().getFullPath());
+        requestStepConfig.setMethodName(request.getRestMethod().getName());
+        requestStepConfig.addNewRestRequest().set(request.getConfig().copy());
 
-		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-		testStep.setType( RESTREQUEST_TYPE );
-		testStep.setConfig( requestStepConfig );
-		testStep.setName( stepName );
+        TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+        testStep.setType(RESTREQUEST_TYPE);
+        testStep.setConfig(requestStepConfig);
+        testStep.setName(stepName);
 
-		return testStep;
-	}
+        return testStep;
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
-	{
-		// build list of available interfaces / restResources
-		Project project = testCase.getTestSuite().getProject();
-		List<String> options = new ArrayList<String>();
-		TupleList<RestMethod, RestRequest> restMethods = new TupleList<RestMethod, RestRequest>();
+    @SuppressWarnings("unchecked")
+    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
+        // build list of available interfaces / restResources
+        Project project = testCase.getTestSuite().getProject();
+        List<String> options = new ArrayList<String>();
+        TupleList<RestMethod, RestRequest> restMethods = new TupleList<RestMethod, RestRequest>();
 
-		for( int c = 0; c < project.getInterfaceCount(); c++ )
-		{
-			Interface iface = project.getInterfaceAt( c );
-			if( iface instanceof RestService )
-			{
-				List<RestResource> resources = ( ( RestService )iface ).getAllResources();
+        for (int c = 0; c < project.getInterfaceCount(); c++) {
+            Interface iface = project.getInterfaceAt(c);
+            if (iface instanceof RestService) {
+                List<RestResource> resources = ((RestService) iface).getAllResources();
 
-				for( RestResource resource : resources )
-				{
-					// options.add( iface.getName() + " -> " + resource.getPath() );
-					// restMethods.add( resource, null );
+                for (RestResource resource : resources) {
+                    // options.add( iface.getName() + " -> " + resource.getPath() );
+                    // restMethods.add( resource, null );
 
-					for( RestMethod method : resource.getRestMethodList() )
-					{
-						String methodStr = iface.getName() + " -> " + resource.getPath() + " -> " + method.getName();
-						restMethods.add( method, null );
-						options.add( methodStr );
+                    for (RestMethod method : resource.getRestMethodList()) {
+                        String methodStr = iface.getName() + " -> " + resource.getPath() + " -> " + method.getName();
+                        restMethods.add(method, null);
+                        options.add(methodStr);
 
-						for( RestRequest request : method.getRequestList() )
-						{
-							restMethods.add( method, request );
-							options.add( methodStr + " -> " + request.getName() );
-						}
-					}
-				}
-			}
-		}
+                        for (RestRequest request : method.getRequestList()) {
+                            restMethods.add(method, request);
+                            options.add(methodStr + " -> " + request.getName());
+                        }
+                    }
+                }
+            }
+        }
 
-		if( restMethods.size() == 0 )
-		{
-			UISupport.showErrorMessage( "Missing REST Methods in project" );
-			return null;
-		}
+        if (restMethods.size() == 0) {
+            UISupport.showErrorMessage("Missing REST Methods in project");
+            return null;
+        }
 
-		Object op = UISupport.prompt( "Select REST method to invoke for request", "New RestRequest", options.toArray() );
-		if( op != null )
-		{
-			int ix = options.indexOf( op );
-			if( ix != -1 )
-			{
-				TupleList<RestMethod, RestRequest>.Tuple tuple = restMethods.get( ix );
+        Object op = UISupport.prompt("Select REST method to invoke for request", "New RestRequest", options.toArray());
+        if (op != null) {
+            int ix = options.indexOf(op);
+            if (ix != -1) {
+                TupleList<RestMethod, RestRequest>.Tuple tuple = restMethods.get(ix);
 
-				// if( dialog == null )
-				// buildDialog();
-				//
-				// dialogValues.put( STEP_NAME, name );
-				// dialogValues = dialog.show( dialogValues );
-				// if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
-				// return null;
+                // if( dialog == null )
+                // buildDialog();
+                //
+                // dialogValues.put( STEP_NAME, name );
+                // dialogValues = dialog.show( dialogValues );
+                // if( dialog.getReturnValue() != XFormDialog.OK_OPTION )
+                // return null;
 
-				return tuple.getValue2() == null ? createNewTestStep( tuple.getValue1(), name ) : createConfig(
-						tuple.getValue2(), name );
-			}
-		}
+                return tuple.getValue2() == null ? createNewTestStep(tuple.getValue1(), name) : createConfig(
+                        tuple.getValue2(), name);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public TestStepConfig createNewTestStep( RestMethod restMethod, String name )
-	{
-		RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
-		RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
+    public TestStepConfig createNewTestStep(RestMethod restMethod, String name) {
+        RestRequestStepConfig requestStepConfig = RestRequestStepConfig.Factory.newInstance();
+        RestRequestConfig testRequestConfig = requestStepConfig.addNewRestRequest();
 
-		testRequestConfig.setName( name );
-		testRequestConfig.setEncoding( "UTF-8" );
+        testRequestConfig.setName(name);
+        testRequestConfig.setEncoding("UTF-8");
 
-		if( restMethod != null )
-		{
-			requestStepConfig.setService( restMethod.getInterface().getName() );
-			requestStepConfig.setMethodName( restMethod.getName() );
-			requestStepConfig.setResourcePath( restMethod.getOperation().getFullPath() );
+        if (restMethod != null) {
+            requestStepConfig.setService(restMethod.getInterface().getName());
+            requestStepConfig.setMethodName(restMethod.getName());
+            requestStepConfig.setResourcePath(restMethod.getOperation().getFullPath());
 
-			String[] endpoints = restMethod.getInterface().getEndpoints();
-			if( endpoints.length > 0 )
-				testRequestConfig.setEndpoint( endpoints[0] );
+            String[] endpoints = restMethod.getInterface().getEndpoints();
+            if (endpoints.length > 0) {
+                testRequestConfig.setEndpoint(endpoints[0]);
+            }
 
-			testRequestConfig.addNewRequest();
-			StringToStringMapConfig parametersConfig = testRequestConfig.addNewParameters();
+            testRequestConfig.addNewRequest();
+            StringToStringMapConfig parametersConfig = testRequestConfig.addNewParameters();
 
-			for( RestParamProperty property : restMethod.getDefaultParams() )
-			{
-				if( StringUtils.hasContent( property.getDefaultValue() ) )
-				{
-					Entry entry = parametersConfig.addNewEntry();
-					entry.setKey( property.getName() );
-					entry.setValue( property.getDefaultValue() );
-				}
-			}
-		}
+            for (RestParamProperty property : restMethod.getDefaultParams()) {
+                if (StringUtils.hasContent(property.getDefaultValue())) {
+                    Entry entry = parametersConfig.addNewEntry();
+                    entry.setKey(property.getName());
+                    entry.setValue(property.getDefaultValue());
+                }
+            }
+        }
 
-		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( RESTREQUEST_TYPE );
-		testStepConfig.setConfig( requestStepConfig );
-		testStepConfig.setName( name );
+        TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+        testStepConfig.setType(RESTREQUEST_TYPE);
+        testStepConfig.setConfig(requestStepConfig);
+        testStepConfig.setName(name);
 
-		return testStepConfig;
-	}
+        return testStepConfig;
+    }
 
-	public boolean canCreate()
-	{
-		return true;
-	}
+    public boolean canCreate() {
+        return true;
+    }
 
-	public TestStepConfig createConfig( WsdlMonitorMessageExchange me, String stepName )
-	{
-		RestRequestConfig testRequestConfig = RestRequestConfig.Factory.newInstance();
+    public TestStepConfig createConfig(WsdlMonitorMessageExchange me, String stepName) {
+        RestRequestConfig testRequestConfig = RestRequestConfig.Factory.newInstance();
 
-		testRequestConfig.setName( stepName );
-		testRequestConfig.setEncoding( "UTF-8" );
-		testRequestConfig.setEndpoint( me.getEndpoint() );
-		// testRequestConfig.setParameters(
-		// set parameters
+        testRequestConfig.setName(stepName);
+        testRequestConfig.setEncoding("UTF-8");
+        testRequestConfig.setEndpoint(me.getEndpoint());
+        // testRequestConfig.setParameters(
+        // set parameters
 
-		String requestContent = me.getRequestContent();
-		testRequestConfig.addNewRequest().setStringValue( requestContent );
+        String requestContent = me.getRequestContent();
+        testRequestConfig.addNewRequest().setStringValue(requestContent);
 
-		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-		testStep.setType( RESTREQUEST_TYPE );
-		testStep.setConfig( testRequestConfig );
-		testStep.setName( stepName );
-		return testStep;
-	}
+        TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+        testStep.setType(RESTREQUEST_TYPE);
+        testStep.setConfig(testRequestConfig);
+        testStep.setName(stepName);
+        return testStep;
+    }
 
-	// private void buildDialog()
-	// {
-	// XFormDialogBuilder builder = XFormFactory.createDialogBuilder(
-	// "Add REST Request to TestCase" );
-	// XForm mainForm = builder.createForm( "Basic" );
-	//
-	// mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL
-	// ).setWidth( 30 );
-	//
-	// dialog = builder.buildDialog( builder.buildOkCancelActions(),
-	// "Specify options for adding a new REST Request to a TestCase",
-	// UISupport.OPTIONS_ICON );
-	// }
+    // private void buildDialog()
+    // {
+    // XFormDialogBuilder builder = XFormFactory.createDialogBuilder(
+    // "Add REST Request to TestCase" );
+    // XForm mainForm = builder.createForm( "Basic" );
+    //
+    // mainForm.addTextField( STEP_NAME, "Name of TestStep", XForm.FieldType.URL
+    // ).setWidth( 30 );
+    //
+    // dialog = builder.buildDialog( builder.buildOkCancelActions(),
+    // "Specify options for adding a new REST Request to a TestCase",
+    // UISupport.OPTIONS_ICON );
+    // }
 
-	@Override
-	public boolean canAddTestStepToTestCase( WsdlTestCase testCase )
-	{
-		for( Interface iface : testCase.getTestSuite().getProject().getInterfaceList() )
-		{
-			if( iface instanceof RestService )
-			{
-				for( RestResource resource : ( ( RestService )iface ).getAllResources() )
-					if( resource.getRestMethodCount() > 0 )
-						return true;
-			}
-		}
+    @Override
+    public boolean canAddTestStepToTestCase(WsdlTestCase testCase) {
+        for (Interface iface : testCase.getTestSuite().getProject().getInterfaceList()) {
+            if (iface instanceof RestService) {
+                for (RestResource resource : ((RestService) iface).getAllResources()) {
+                    if (resource.getRestMethodCount() > 0) {
+                        return true;
+                    }
+                }
+            }
+        }
 
-		UISupport.showErrorMessage( "Missing REST Methods in Project" );
-		return false;
+        UISupport.showErrorMessage("Missing REST Methods in Project");
+        return false;
 
-	}
+    }
 }

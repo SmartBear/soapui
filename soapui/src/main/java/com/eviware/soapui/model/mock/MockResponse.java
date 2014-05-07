@@ -29,70 +29,69 @@ import com.eviware.soapui.support.types.StringToStringsMap;
  * @author ole.matzura
  */
 
-public interface MockResponse extends TestModelItem, Releasable
-{
-	public final static String RESPONSE_CONTENT_PROPERTY = MockResponse.class.getName() + "@responsecontent";
-	public final static String MTOM_NABLED_PROPERTY = MockResponse.class.getName() + "@mtom_enabled";
+public interface MockResponse extends TestModelItem, Releasable {
+    public final static String RESPONSE_CONTENT_PROPERTY = MockResponse.class.getName() + "@responsecontent";
+    public final static String MTOM_NABLED_PROPERTY = MockResponse.class.getName() + "@mtom_enabled";
 
-	public String getResponseContent();
+    public String getResponseContent();
 
-	public void setResponseContent( String responseContent );
+    public void setResponseContent(String responseContent);
 
-	public String getContentType();
+    public String getContentType();
 
-	public String getEncoding();
+    public String getEncoding();
 
-	public boolean isMtomEnabled();
+    public boolean isMtomEnabled();
 
-	public Attachment[] getAttachments();
+    public Attachment[] getAttachments();
 
-	public int getAttachmentCount();
+    public int getAttachmentCount();
 
-	public MockOperation getMockOperation();
+    public MockOperation getMockOperation();
 
-	/**
-	 * Gets HTTP Headers for this response.
-	 *
-	 * This is the persisted set of headers for a mock response. More headers may be added when doing a real
-	 * request to a mock service.
-	 *
-	 * @return StringToStringsMap with all the headers.
-	 */
-	public StringToStringsMap getResponseHeaders();
+    /**
+     * Gets HTTP Headers for this response.
+     * <p/>
+     * This is the persisted set of headers for a mock response. More headers may be added when doing a real
+     * request to a mock service.
+     *
+     * @return StringToStringsMap with all the headers.
+     */
+    public StringToStringsMap getResponseHeaders();
 
-	/**
-	 * Sets ALL the response headers for this mock response. The headers should be persisted along with
-	 * this response when it is saved in a project.
-	 *
-	 * @param headers a StringToStringsMap containing all the headers. A current version of persisted headers can be
-	 * fetched with getResponseHeaders.
-	 */
-	public void setResponseHeaders( StringToStringsMap headers );
+    /**
+     * Sets ALL the response headers for this mock response. The headers should be persisted along with
+     * this response when it is saved in a project.
+     *
+     * @param headers a StringToStringsMap containing all the headers. A current version of persisted headers can be
+     *                fetched with getResponseHeaders.
+     */
+    public void setResponseHeaders(StringToStringsMap headers);
 
-	public MockResult getMockResult();
+    public MockResult getMockResult();
 
-	public void evaluateScript( MockRequest request ) throws Exception;
+    public void evaluateScript(MockRequest request) throws Exception;
 
-	public String getScript();
+    public String getScript();
 
-	public void setScript( String script );
+    public void setScript(String script);
 
-	/**
-	 * Sets the HTTP status for this response. This should be a valid status code as documented in
-	 * RFC1945 and RFC2616
-	 *
-	 * @param httpStatus a valid status code.
-	 */
-	public void setResponseHttpStatus( int httpStatus );
+    /**
+     * Sets the HTTP status for this response. This should be a valid status code as documented in
+     * RFC1945 and RFC2616
+     *
+     * @param httpStatus a valid status code.
+     */
+    public void setResponseHttpStatus(int httpStatus);
 
-	/**
-	 * Gets the HTTP status for this response.
-	 *
-	 * @return a valid status code.
-	 */
-	public int getResponseHttpStatus();
+    /**
+     * Gets the HTTP status for this response.
+     *
+     * @return a valid status code.
+     */
+    public int getResponseHttpStatus();
 
-	public MockResult execute( MockRequest request, MockResult result ) throws DispatchException;
+    public MockResult execute(MockRequest request, MockResult result) throws DispatchException;
 
-	String getScriptHelpUrl();
+    String getScriptHelpUrl();
 }

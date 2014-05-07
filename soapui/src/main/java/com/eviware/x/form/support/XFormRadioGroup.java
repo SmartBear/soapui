@@ -18,9 +18,7 @@ package com.eviware.x.form.support;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.AbstractButton;
 import javax.swing.BoxLayout;
@@ -35,102 +33,94 @@ import com.eviware.x.impl.swing.AbstractSwingXFormField;
 
 /**
  * Swing-specific RadioGroup
- * 
+ *
  * @author ole.matzura
  */
 
-public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements XFormOptionsField
-{
-	protected ButtonGroup buttonGroup;
-	protected Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
-	protected StringList items = new StringList();
+public class XFormRadioGroup extends AbstractSwingXFormField<JPanel> implements XFormOptionsField {
+    protected ButtonGroup buttonGroup;
+    protected Map<String, ButtonModel> models = new HashMap<String, ButtonModel>();
+    protected List<Object> items = new ArrayList<Object>();
 
-	public XFormRadioGroup( String[] values )
-	{
-		super( new JPanel() );
+    public XFormRadioGroup(String[] values) {
+        super(new JPanel());
 
-		buttonGroup = new ButtonGroup();
-		getComponent().setLayout( new BoxLayout( getComponent(), BoxLayout.Y_AXIS ) );
+        buttonGroup = new ButtonGroup();
+        getComponent().setLayout(new BoxLayout(getComponent(), BoxLayout.Y_AXIS));
 
-		for( String value : values )
-		{
-			addItem( value );
-		}
-	}
+        for (String value : values) {
+            addItem(value);
+        }
+    }
 
-	public String getValue()
-	{
-		ButtonModel selection = buttonGroup.getSelection();
-		return selection == null ? null : selection.getActionCommand();
-	}
+    public String getValue() {
+        ButtonModel selection = buttonGroup.getSelection();
+        return selection == null ? null : selection.getActionCommand();
+    }
 
-	public void setValue( String value )
-	{
-		buttonGroup.setSelected( models.get( value ), true );
-	}
+    public void setValue(String value) {
+        buttonGroup.setSelected(models.get(value), true);
+    }
 
-	public void addItem( Object value )
-	{
-		JRadioButton button = new JRadioButton( String.valueOf( value ) );
+    public void addItem(Object value) {
+        JRadioButton button;
+        if (value instanceof Enum) {
+            button = new JRadioButton(value.toString());
+            button.setActionCommand(((Enum) value).name());
+            models.put(((Enum) value).name(), button.getModel());
+        } else {
+            button = new JRadioButton(String.valueOf(value));
+            button.setActionCommand(String.valueOf(value));
+            models.put(String.valueOf(value), button.getModel());
+        }
 
-		button.setActionCommand( String.valueOf( value ) );
-		button.setName( String.valueOf( value ) );
-		button.setFocusPainted( false );
-		button.addActionListener( new ActionListener()
-		{
+        button.setName(String.valueOf(value));
+        button.setFocusPainted(false);
+        button.addActionListener(new ActionListener() {
 
-			public void actionPerformed( ActionEvent e )
-			{
-				fireValueChanged( e.getActionCommand(), null );
-			}
-		} );
+            public void actionPerformed(ActionEvent e) {
+                fireValueChanged(e.getActionCommand(), null);
+            }
+        });
 
-		getComponent().add( button );
-		buttonGroup.add( button );
-		models.put( String.valueOf( value ), button.getModel() );
-		items.add( String.valueOf( value ) );
-	}
+        getComponent().add(button);
+        buttonGroup.add(button);
+        items.add(value);
+    }
 
-	public Object[] getOptions()
-	{
-		return items.toStringArray();
-	}
+    public Object[] getOptions() {
+        return items.toArray();
+    }
 
-	public Object[] getSelectedOptions()
-	{
-		return new String[] { getValue() };
-	}
+    public Object[] getSelectedOptions() {
+        return new String[]{getValue()};
+    }
 
-	public void setOptions( Object[] values )
-	{
-		while( buttonGroup.getButtonCount() > 0 )
-			buttonGroup.remove( buttonGroup.getElements().nextElement() );
+    public void setOptions(Object[] values) {
+        while (buttonGroup.getButtonCount() > 0) {
+            buttonGroup.remove(buttonGroup.getElements().nextElement());
+        }
 
-		models.clear();
-		items.clear();
-		getComponent().removeAll();
+        models.clear();
+        items.clear();
+        getComponent().removeAll();
 
-		for( Object value : values )
-		{
-			addItem( value.toString() );
-		}
-	}
+        for (Object value : values) {
+            addItem(value);
+        }
+    }
 
-	public void setSelectedOptions( Object[] options )
-	{
+    public void setSelectedOptions(Object[] options) {
 
-	}
+    }
 
-	public int[] getSelectedIndexes()
-	{
-		return new int[] { items.indexOf( getValue() ) };
-	}
+    public int[] getSelectedIndexes() {
+        return new int[]{items.indexOf(getValue())};
+    }
 
-	public void setDisabled()
-	{
-		for( Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); )
-		{
-			buttons.nextElement().setEnabled( false );
-		}
-	}
+    public void setDisabled() {
+        for (Enumeration<AbstractButton> buttons = buttonGroup.getElements(); buttons.hasMoreElements(); ) {
+            buttons.nextElement().setEnabled(false);
+        }
+    }
 }

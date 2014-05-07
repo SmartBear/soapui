@@ -29,104 +29,88 @@ import javax.swing.plaf.ColorUIResource;
 import java.awt.Color;
 import java.awt.Insets;
 
-public class StandaloneSoapUICore extends SwingSoapUICore
-{
+public class StandaloneSoapUICore extends SwingSoapUICore {
 
-	public StandaloneSoapUICore( boolean init )
-	{
-		super();
+    public StandaloneSoapUICore(boolean init) {
+        super();
 
-		if( init )
-			init( DEFAULT_SETTINGS_FILE );
-	}
+        if (init) {
+            init(DEFAULT_SETTINGS_FILE);
+        }
+    }
 
-	public StandaloneSoapUICore( String settingsFile )
-	{
-		super( null, settingsFile );
+    public StandaloneSoapUICore(String settingsFile) {
+        super(null, settingsFile);
 
-	}
+    }
 
-	public StandaloneSoapUICore( boolean init, String soapUISettingsPassword )
-	{
-		super( true, soapUISettingsPassword );
+    public StandaloneSoapUICore(boolean init, String soapUISettingsPassword) {
+        super(true, soapUISettingsPassword);
 
-		if( init )
-			init( DEFAULT_SETTINGS_FILE );
-	}
+        if (init) {
+            init(DEFAULT_SETTINGS_FILE);
+        }
+    }
 
-	@Override
-	public void prepareUI()
-	{
-		super.prepareUI();
+    @Override
+    public void prepareUI() {
+        super.prepareUI();
 
-		initSoapUILookAndFeel();
-		DesktopRegistry.getInstance().addDesktop( SoapUI.DEFAULT_DESKTOP, new StandaloneDesktopFactory() );
+        initSoapUILookAndFeel();
+        DesktopRegistry.getInstance().addDesktop(SoapUI.DEFAULT_DESKTOP, new StandaloneDesktopFactory());
 
-		ToolTipManager.sharedInstance().setEnabled( !getSettings().getBoolean( UISettings.DISABLE_TOOLTIPS ) );
-	}
+        ToolTipManager.sharedInstance().setEnabled(!getSettings().getBoolean(UISettings.DISABLE_TOOLTIPS));
+    }
 
-	public void initSoapUILookAndFeel()
-	{
-		try
-		{
-			// Enabling native look & feel by default on Mac OS X
-			if( UISupport.isMac() )
-			{
-				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-				getSettings().setBoolean( UISettings.NATIVE_LAF, true );
-				log.info( "Defaulting to native L&F for Mac OS X" );
-			}
-			else if( getSettings().getBoolean( UISettings.NATIVE_LAF ) )
-			{
-				javax.swing.UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName() );
-			}
-			else
-			{
-				SoapUITheme theme = new SoapUITheme();
+    public void initSoapUILookAndFeel() {
+        try {
+            // Enabling native look & feel by default on Mac OS X
+            if (UISupport.isMac()) {
+                javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                getSettings().setBoolean(UISettings.NATIVE_LAF, true);
+                log.info("Defaulting to native L&F for Mac OS X");
+            } else if (getSettings().getBoolean(UISettings.NATIVE_LAF)) {
+                javax.swing.UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } else {
+                SoapUITheme theme = new SoapUITheme();
 
-				PlasticXPLookAndFeel.setCurrentTheme( theme );
-				PlasticXPLookAndFeel.setTabStyle( "Metal" );
+                PlasticXPLookAndFeel.setCurrentTheme(theme);
+                PlasticXPLookAndFeel.setTabStyle("Metal");
 
-				UIManager.setLookAndFeel( new PlasticXPLookAndFeel() );
-				UIManager.put( "TabbedPane.tabAreaInsets", new Insets( 3, 2, 0, 0 ) );
-				UIManager.put( "TabbedPane.unselectedBackground", new Color( 220, 220, 220 ) );
-				UIManager.put( "TabbedPane.selected", new Color( 240, 240, 240 ) );
+                UIManager.setLookAndFeel(new PlasticXPLookAndFeel());
+                UIManager.put("TabbedPane.tabAreaInsets", new Insets(3, 2, 0, 0));
+                UIManager.put("TabbedPane.unselectedBackground", new Color(220, 220, 220));
+                UIManager.put("TabbedPane.selected", new Color(240, 240, 240));
 
-				PlasticXPLookAndFeel.setPlasticTheme( theme );
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e, "Error initializing Look and Feel" );
-		}
-	}
+                PlasticXPLookAndFeel.setPlasticTheme(theme);
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e, "Error initializing Look and Feel");
+        }
+    }
 
-	/**
-	 * Adapted theme for SoapUI Look and Feel
-	 * 
-	 * @author ole.matzura
-	 */
+    /**
+     * Adapted theme for SoapUI Look and Feel
+     *
+     * @author ole.matzura
+     */
 
-	public static class SoapUITheme extends SkyBluer
-	{
-		public static final Color BACKGROUND_COLOR = new Color( 240, 240, 240 );
+    public static class SoapUITheme extends SkyBluer {
+        public static final Color BACKGROUND_COLOR = new Color(240, 240, 240);
 
-		@Override
-		public ColorUIResource getControl()
-		{
-			return new ColorUIResource( BACKGROUND_COLOR );
-		}
+        @Override
+        public ColorUIResource getControl() {
+            return new ColorUIResource(BACKGROUND_COLOR);
+        }
 
-		@Override
-		public ColorUIResource getMenuBackground()
-		{
-			return getControl();
-		}
+        @Override
+        public ColorUIResource getMenuBackground() {
+            return getControl();
+        }
 
-		@Override
-		public ColorUIResource getMenuItemBackground()
-		{
-			return new ColorUIResource( new Color( 248, 248, 248 ) );
-		}
-	}
+        @Override
+        public ColorUIResource getMenuItemBackground() {
+            return new ColorUIResource(new Color(248, 248, 248));
+        }
+    }
 }

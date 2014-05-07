@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.tools;
+*/
+package com.eviware.soapui.tools;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,63 +26,55 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Anders Jaensson
  */
-public class CaseInsensitiveFileFilterTest
-{
+public class CaseInsensitiveFileFilterTest {
 
-	private MockAsWar.CaseInsensitiveFileFilter caseInsensitiveFileFilter;
+    private MockAsWar.CaseInsensitiveFileFilter caseInsensitiveFileFilter;
 
-	@Before
-	public void setup()
-	{
-		caseInsensitiveFileFilter = new MockAsWar.CaseInsensitiveFileFilter();
-	}
+    @Before
+    public void setup() {
+        caseInsensitiveFileFilter = new MockAsWar.CaseInsensitiveFileFilter();
+    }
 
-	@Test
-	public void doesNotAcceptNullFile()
-	{
-		boolean fileAccepted = caseInsensitiveFileFilter.accept( null );
+    @Test
+    public void doesNotAcceptNullFile() {
+        boolean fileAccepted = caseInsensitiveFileFilter.accept(null);
 
-		assertThat( fileAccepted, is( false ) );
-	}
+        assertThat(fileAccepted, is(false));
+    }
 
-	@Test
-	public void doesNotAcceptEmptyFile()
-	{
-		boolean fileAccepted = caseInsensitiveFileFilter.accept( new File( "" ) );
+    @Test
+    public void doesNotAcceptEmptyFile() {
+        boolean fileAccepted = caseInsensitiveFileFilter.accept(new File(""));
 
-		assertThat( fileAccepted, is( false ) );
-	}
+        assertThat(fileAccepted, is(false));
+    }
 
-	@Test
-	public void doesNotAcceptExcludedFileEvenIfCaseDoesNotMatch()
-	{
-		boolean fileAccepted = caseInsensitiveFileFilter.accept( new File( "SomeServletThing" ) );
+    @Test
+    public void doesNotAcceptExcludedFileEvenIfCaseDoesNotMatch() {
+        boolean fileAccepted = caseInsensitiveFileFilter.accept(new File("SomeServletThing"));
 
-		assertThat( fileAccepted, is( false ) );
-	}
+        assertThat(fileAccepted, is(false));
+    }
 
-	@Test
-	public void doesNotAcceptExcludedFileIfExactMatch()
-	{
-		boolean fileAccepted = caseInsensitiveFileFilter.accept( new File( "servlet" ) );
+    @Test
+    public void doesNotAcceptExcludedFileIfExactMatch() {
+        boolean fileAccepted = caseInsensitiveFileFilter.accept(new File("servlet"));
 
-		assertThat( fileAccepted, is( false ) );
-	}
+        assertThat(fileAccepted, is(false));
+    }
 
-	@Test
-	public void acceptsFileIfOnlyPartOfFilenameMatches()
-	{
-		boolean fileAccepted = caseInsensitiveFileFilter.accept( new File( "servlek" ) );
+    @Test
+    public void acceptsFileIfOnlyPartOfFilenameMatches() {
+        boolean fileAccepted = caseInsensitiveFileFilter.accept(new File("servlek"));
 
-		assertThat( fileAccepted, is( true ) );
-	}
+        assertThat(fileAccepted, is(true));
+    }
 
-	@Test
-	public void acceptsFileThatIsNotExcluded()
-	{
-		boolean fileAccepted = caseInsensitiveFileFilter.accept( new File( "FileToInclude" ) );
+    @Test
+    public void acceptsFileThatIsNotExcluded() {
+        boolean fileAccepted = caseInsensitiveFileFilter.accept(new File("FileToInclude"));
 
-		assertThat( fileAccepted, is( true ) );
-	}
+        assertThat(fileAccepted, is(true));
+    }
 
 }

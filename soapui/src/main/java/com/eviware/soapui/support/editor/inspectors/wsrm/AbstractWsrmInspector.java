@@ -31,48 +31,44 @@ import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.jgoodies.binding.PresentationModel;
 
-public abstract class AbstractWsrmInspector extends AbstractXmlInspector
-{
+public abstract class AbstractWsrmInspector extends AbstractXmlInspector {
 
-	private JPanel mainPanel;
-	private SimpleBindingForm form;
-	private final WsrmContainer wsrmContainer;
+    private JPanel mainPanel;
+    private SimpleBindingForm form;
+    private final WsrmContainer wsrmContainer;
 
-	protected AbstractWsrmInspector( WsrmContainer wsrmContainer )
-	{
-		super( "WS-RM", "WS-Reliable Messaging related settings", true, WsrmInspectorFactory.INSPECTOR_ID );
-		this.wsrmContainer = wsrmContainer;
-	}
+    protected AbstractWsrmInspector(WsrmContainer wsrmContainer) {
+        super("WS-RM", "WS-Reliable Messaging related settings", true, WsrmInspectorFactory.INSPECTOR_ID);
+        this.wsrmContainer = wsrmContainer;
+    }
 
-	public JComponent getComponent()
-	{
-		if( mainPanel == null )
-		{
-			mainPanel = new JPanel( new BorderLayout() );
-			form = new SimpleBindingForm( new PresentationModel<AbstractHttpRequest<?>>( wsrmContainer.getWsrmConfig() ) );
-			buildContent( form );
-			mainPanel.add( new JScrollPane( form.getPanel() ), BorderLayout.CENTER );
-		}
-		return mainPanel;
-	}
+    public JComponent getComponent() {
+        if (mainPanel == null) {
+            mainPanel = new JPanel(new BorderLayout());
+            form = new SimpleBindingForm(new PresentationModel<AbstractHttpRequest<?>>(wsrmContainer.getWsrmConfig()));
+            buildContent(form);
+            mainPanel.add(new JScrollPane(form.getPanel()), BorderLayout.CENTER);
+        }
+        return mainPanel;
+    }
 
-	public void buildContent( SimpleBindingForm form )
-	{
-	};
+    public void buildContent(SimpleBindingForm form) {
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    ;
 
-		if( form != null )
-			form.getPresentationModel().release();
-	}
+    @Override
+    public void release() {
+        super.release();
 
-	@Override
-	public boolean isEnabledFor( EditorView<XmlDocument> view )
-	{
-		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
-	}
+        if (form != null) {
+            form.getPresentationModel().release();
+        }
+    }
+
+    @Override
+    public boolean isEnabledFor(EditorView<XmlDocument> view) {
+        return !view.getViewId().equals(RawXmlEditorFactory.VIEW_ID);
+    }
 
 }

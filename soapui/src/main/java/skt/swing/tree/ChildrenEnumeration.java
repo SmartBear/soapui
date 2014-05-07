@@ -36,15 +36,15 @@ import java.util.NoSuchElementException;
 
 /**
  * @author Santhosh Kumar T
- * @email  santhosh@in.fiorano.com
+ * @email santhosh@in.fiorano.com
  */
-public class ChildrenEnumeration implements Enumeration{
+public class ChildrenEnumeration implements Enumeration {
     private TreePath path;
     private TreeModel model;
     private int position = 0;
     private int childCount;
 
-    public ChildrenEnumeration(TreePath path, TreeModel model){
+    public ChildrenEnumeration(TreePath path, TreeModel model) {
         this.path = path;
         this.model = model;
         childCount = model.getChildCount(path.getLastPathComponent());
@@ -55,8 +55,9 @@ public class ChildrenEnumeration implements Enumeration{
     }
 
     public Object nextElement() {
-        if(!hasMoreElements())
+        if (!hasMoreElements()) {
             throw new NoSuchElementException();
+        }
         return path.pathByAddingChild(model.getChild(path.getLastPathComponent(), position++));
     }
 }

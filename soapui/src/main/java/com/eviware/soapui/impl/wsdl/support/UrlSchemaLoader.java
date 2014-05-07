@@ -24,23 +24,19 @@ import org.apache.xmlbeans.XmlOptions;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaLoader;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class UrlSchemaLoader implements SchemaLoader
-{
-	private String baseURI;
+public class UrlSchemaLoader implements SchemaLoader {
+    private String baseURI;
 
-	public UrlSchemaLoader( String baseURI )
-	{
-		this.baseURI = baseURI;
-	}
+    public UrlSchemaLoader(String baseURI) {
+        this.baseURI = baseURI;
+    }
 
-	public XmlObject loadXmlObject( String wsdlUrl, XmlOptions options ) throws Exception
-	{
-		// return XmlObject.Factory.parse( new URL( wsdlUrl ), options );
-		return XmlUtils.createXmlObject( new URL( wsdlUrl ), options );
-	}
+    public XmlObject loadXmlObject(String wsdlUrl, XmlOptions options) throws Exception {
+        // return XmlObject.Factory.parse( new URL( wsdlUrl ), options );
+        return XmlUtils.createXmlObject(new URL(wsdlUrl), options);
+    }
 
-	public String getBaseURI()
-	{
-		return baseURI;
-	}
+    public String getBaseURI() {
+        return baseURI;
+    }
 }

@@ -25,60 +25,54 @@ import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.x.form.XFormTextField;
 
-public class JTextFieldFormField extends AbstractSwingXFormField<JUndoableTextField> implements XFormTextField
-{
-	private boolean updating;
-	private String oldValue;
+public class JTextFieldFormField extends AbstractSwingXFormField<JUndoableTextField> implements XFormTextField {
+    private boolean updating;
+    private String oldValue;
 
-	public JTextFieldFormField()
-	{
-		super( new JUndoableTextField() );
+    public JTextFieldFormField() {
+        super(new JUndoableTextField());
 
-		getComponent().getDocument().addDocumentListener( new DocumentListenerAdapter()
-		{
+        getComponent().getDocument().addDocumentListener(new DocumentListenerAdapter() {
 
-			@Override
-			public void update( Document document )
-			{
-				String text = getComponent().getText();
+            @Override
+            public void update(Document document) {
+                String text = getComponent().getText();
 
-				if( !updating )
-					fireValueChanged( text, oldValue );
+                if (!updating) {
+                    fireValueChanged(text, oldValue);
+                }
 
-				oldValue = text;
-			}
-		} );
-	}
+                oldValue = text;
+            }
+        });
+    }
 
-	public void setRequired( boolean required, String message )
-	{
-		super.setRequired( required, message );
+    public void setRequired(boolean required, String message) {
+        super.setRequired(required, message);
 
-		if( required )
-			getComponent().setBorder(
-					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.RED ),
-							BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
-		else
-			getComponent().setBorder(
-					BorderFactory.createCompoundBorder( BorderFactory.createLineBorder( Color.GRAY ),
-							BorderFactory.createEmptyBorder( 2, 2, 2, 2 ) ) );
-	}
+        if (required) {
+            getComponent().setBorder(
+                    BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.RED),
+                            BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+        } else {
+            getComponent().setBorder(
+                    BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.GRAY),
+                            BorderFactory.createEmptyBorder(2, 2, 2, 2)));
+        }
+    }
 
-	public void setValue( String value )
-	{
-		updating = true;
-		oldValue = null;
-		getComponent().setText( value );
-		updating = false;
-	}
+    public void setValue(String value) {
+        updating = true;
+        oldValue = null;
+        getComponent().setText(value);
+        updating = false;
+    }
 
-	public String getValue()
-	{
-		return getComponent().getText();
-	}
+    public String getValue() {
+        return getComponent().getText();
+    }
 
-	public void setWidth( int columns )
-	{
-		getComponent().setColumns( columns );
-	}
+    public void setWidth(int columns) {
+        getComponent().setColumns(columns);
+    }
 }

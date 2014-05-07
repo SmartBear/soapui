@@ -25,40 +25,34 @@ import java.awt.Component;
 
 /**
  * PanelBuilder for WsdlInterface
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RestMethodPanelBuilder extends EmptyPanelBuilder<RestMethod>
-{
-	public RestMethodPanelBuilder()
-	{
-	}
+public class RestMethodPanelBuilder extends EmptyPanelBuilder<RestMethod> {
+    public RestMethodPanelBuilder() {
+    }
 
-	public RestMethodDesktopPanel buildDesktopPanel( RestMethod method )
-	{
-		return new RestMethodDesktopPanel( method );
-	}
+    public RestMethodDesktopPanel buildDesktopPanel(RestMethod method) {
+        return new RestMethodDesktopPanel(method);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	public Component buildOverviewPanel( RestMethod method )
-	{
-		JPropertiesTable<RestMethod> table = new JPropertiesTable<RestMethod>( "Method Properties" );
-		table.addProperty( "Name", "name", true );
-		table.addProperty( "Description", "description", true );
-		table.addProperty( "HTTP Method", "method", RestRequestInterface.HttpMethod.getMethods() );
+    public Component buildOverviewPanel(RestMethod method) {
+        JPropertiesTable<RestMethod> table = new JPropertiesTable<RestMethod>("Method Properties");
+        table.addProperty("Name", "name", true);
+        table.addProperty("Description", "description", true);
+        table.addProperty("HTTP Method", "method", RestRequestInterface.HttpMethod.getMethods());
 
-		table.setPropertyObject( method );
+        table.setPropertyObject(method);
 
-		return table;
-	}
+        return table;
+    }
 
-	public boolean hasOverviewPanel()
-	{
-		return true;
-	}
+    public boolean hasOverviewPanel() {
+        return true;
+    }
 }

@@ -24,14 +24,13 @@ import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockResult;
 
-public interface MockOperationDispatcher extends Releasable
-{
-	public MockResponse selectMockResponse( MockRequest request, MockResult result )
-			throws DispatchException;
+public interface MockOperationDispatcher extends Releasable {
+    public MockResponse selectMockResponse(MockRequest request, MockResult result)
+            throws DispatchException;
 
-	public JComponent getEditorComponent();
+    public JComponent getEditorComponent();
 
-	public void releaseEditorComponent();
+    public void releaseEditorComponent();
 
-	public boolean hasDefaultResponse();
+    public boolean hasDefaultResponse();
 }

@@ -27,27 +27,24 @@ import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.RequestEditorViewFactory;
 
-public class HttpRequestContentViewFactory implements RequestEditorViewFactory
-{
-	public final static String VIEW_ID = "HTTP Content";
+public class HttpRequestContentViewFactory implements RequestEditorViewFactory {
+    public final static String VIEW_ID = "HTTP Content";
 
-	public EditorView<?> createRequestEditorView( Editor<?> editor, ModelItem modelItem )
-	{
-		if( editor instanceof AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor && modelItem instanceof HttpRequestInterface<?> )
-		{
-			if( modelItem instanceof RestTestRequestInterface )
-				return new RestTestRequestContentView( ( HttpRequestMessageEditor )editor, ( RestRequestInterface )modelItem );
-			else if( modelItem instanceof RestRequestInterface )
-				return new RestRequestContentView( ( HttpRequestMessageEditor )editor, ( RestRequestInterface )modelItem );
-			else
-				return new HttpRequestContentView( ( HttpRequestMessageEditor )editor, ( HttpRequestInterface<?> )modelItem );
-		}
+    public EditorView<?> createRequestEditorView(Editor<?> editor, ModelItem modelItem) {
+        if (editor instanceof AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor && modelItem instanceof HttpRequestInterface<?>) {
+            if (modelItem instanceof RestTestRequestInterface) {
+                return new RestTestRequestContentView((HttpRequestMessageEditor) editor, (RestRequestInterface) modelItem);
+            } else if (modelItem instanceof RestRequestInterface) {
+                return new RestRequestContentView((HttpRequestMessageEditor) editor, (RestRequestInterface) modelItem);
+            } else {
+                return new HttpRequestContentView((HttpRequestMessageEditor) editor, (HttpRequestInterface<?>) modelItem);
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public String getViewId()
-	{
-		return VIEW_ID;
-	}
+    public String getViewId() {
+        return VIEW_ID;
+    }
 }

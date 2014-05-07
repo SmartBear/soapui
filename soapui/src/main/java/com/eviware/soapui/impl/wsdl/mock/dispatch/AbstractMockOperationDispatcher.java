@@ -28,63 +28,52 @@ import org.apache.xmlbeans.XmlObject;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 
-public abstract class AbstractMockOperationDispatcher implements PropertyChangeNotifier, MockOperationDispatcher
-{
-	private MockOperation mockOperation;
-	private PropertyChangeSupport propertyChangeSupport;
+public abstract class AbstractMockOperationDispatcher implements PropertyChangeNotifier, MockOperationDispatcher {
+    private MockOperation mockOperation;
+    private PropertyChangeSupport propertyChangeSupport;
 
-	protected AbstractMockOperationDispatcher( MockOperation mockOperation )
-	{
-		this.mockOperation = mockOperation;
-		propertyChangeSupport = new PropertyChangeSupport( this );
-	}
+    protected AbstractMockOperationDispatcher(MockOperation mockOperation) {
+        this.mockOperation = mockOperation;
+        propertyChangeSupport = new PropertyChangeSupport(this);
+    }
 
-	@Override
-	public JComponent getEditorComponent()
-	{
-		return new JPanel();
-	}
+    @Override
+    public JComponent getEditorComponent() {
+        return new JPanel();
+    }
 
-	@Override
-	public void releaseEditorComponent()
-	{
-	}
+    @Override
+    public void releaseEditorComponent() {
+    }
 
-	@Override
-	public void release()
-	{
-		// TODO : the following line causes NullPointerException when getSettings
-		// TODO : will removing it cause a memory leak?
-		//mockOperation = null;
-	}
+    @Override
+    public void release() {
+        // TODO : the following line causes NullPointerException when getSettings
+        // TODO : will removing it cause a memory leak?
+        //mockOperation = null;
+    }
 
-	public MockOperation getMockOperation()
-	{
-		return mockOperation;
-	}
+    public MockOperation getMockOperation() {
+        return mockOperation;
+    }
 
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-	}
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( listener );
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( listener );
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-	}
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
 
-	protected PropertyChangeSupport getPropertyChangeSupport()
-	{
-		return propertyChangeSupport;
-	}
+    protected PropertyChangeSupport getPropertyChangeSupport() {
+        return propertyChangeSupport;
+    }
 }

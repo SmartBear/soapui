@@ -41,101 +41,91 @@ import static org.junit.Assert.assertThat;
 /**
  *
  */
-public class PropertyExpansionRequestFilterTest
-{
-	private static final String REQUEST_CONTENT = "<type>${#TestCase#StoreType}</type>";
+public class PropertyExpansionRequestFilterTest {
+    private static final String REQUEST_CONTENT = "<type>${#TestCase#StoreType}</type>";
 
-	private static final String EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION = "<type>shoe_Store</type>";
+    private static final String EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION = "<type>shoe_Store</type>";
 
-	private SubmitContext submitContext;
-	private PropertyExpansionRequestFilter requestFilter;
-
-
-	@Before
-	public void setUp() throws SoapUIException
-	{
-		requestFilter = new PropertyExpansionRequestFilter();
-		submitContext = createSubmitContext();
-	}
-
-	@Test
-	public void performsPropertyExpansionOnWsdlTestRequestContent() throws SoapUIException
-	{
-		AbstractHttpRequest request = mockRequest( WsdlTestRequest.class );
-
-		requestFilter.filterAbstractHttpRequest( submitContext, request );
-
-		String contentAfterPropertyExpansion = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		assertThat( contentAfterPropertyExpansion, is( EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION ) );
-	}
-
-	@Test
-	public void performsPropertyExpansionOnRestTestRequestContent() throws SoapUIException
-	{
-		AbstractHttpRequest request = mockRequest( RestTestRequest.class );
-		requestFilter.filterAbstractHttpRequest( submitContext, request );
-
-		String contentAfterPropertyExpansion = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		assertThat( contentAfterPropertyExpansion, is( EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION ) );
-	}
-
-	@Test
-	public void performsPropertyExpansionOnHttpTestRequestContent() throws SoapUIException
-	{
-		AbstractHttpRequest request = mockRequest( HttpTestRequest.class );
-		requestFilter.filterAbstractHttpRequest( submitContext, request );
-
-		String contentAfterPropertyExpansion = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		assertThat( contentAfterPropertyExpansion, is( EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION ) );
-	}
-
-	@Test
-	public void performsPropertyExpansionOnWsdlRequestContent() throws SoapUIException
-	{
-		AbstractHttpRequest request = mockRequest( WsdlRequest.class );
-		requestFilter.filterAbstractHttpRequest( submitContext, request );
-
-		String contentAfterPropertyExpansion = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		assertThat( contentAfterPropertyExpansion, is( EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION ) );
-	}
-
-	@Test
-	public void performsPropertyExpansionOnRestRequestContent() throws SoapUIException
-	{
-		AbstractHttpRequest request = mockRequest( RestRequest.class );
-		requestFilter.filterAbstractHttpRequest( submitContext, request );
-
-		String contentAfterPropertyExpansion = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		assertThat( contentAfterPropertyExpansion, is( EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION ) );
-	}
-
-	@Test
-	public void performsPropertyExpansionOnHttpRequestContent() throws SoapUIException
-	{
-		AbstractHttpRequest request = mockRequest( HttpRequest.class );
-		requestFilter.filterAbstractHttpRequest( submitContext, request );
-
-		String contentAfterPropertyExpansion = ( String )submitContext.getProperty( BaseHttpRequestTransport.REQUEST_CONTENT );
-		assertThat( contentAfterPropertyExpansion, is( EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION ) );
-	}
+    private SubmitContext submitContext;
+    private PropertyExpansionRequestFilter requestFilter;
 
 
-	private SubmitContext createSubmitContext() throws SoapUIException
-	{
-		WsdlTestRequestStep requestStep = ModelItemFactory.makeTestRequestStep();
-		requestStep.getTestCase().setPropertyValue( "StoreType", "shoe_Store" );
-		SubmitContext context = new WsdlSubmitContext( requestStep );
+    @Before
+    public void setUp() throws SoapUIException {
+        requestFilter = new PropertyExpansionRequestFilter();
+        submitContext = createSubmitContext();
+    }
 
-		context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, REQUEST_CONTENT );
-		return context;
-	}
+    @Test
+    public void performsPropertyExpansionOnWsdlTestRequestContent() throws SoapUIException {
+        AbstractHttpRequest request = mockRequest(WsdlTestRequest.class);
 
-	private <T extends AbstractHttpRequest> AbstractHttpRequest mockRequest( Class<T> type )
-	{
-		AbstractHttpRequest request = Mockito.mock( type );
-		XmlBeansSettingsImpl settings = Mockito.mock( XmlBeansSettingsImpl.class );
-		Mockito.when( settings.getBoolean( CommonSettings.ENTITIZE_PROPERTIES ) ).thenReturn( false );
-		Mockito.when( request.getSettings() ).thenReturn( settings );
-		return request;
-	}
+        requestFilter.filterAbstractHttpRequest(submitContext, request);
+
+        String contentAfterPropertyExpansion = (String) submitContext.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        assertThat(contentAfterPropertyExpansion, is(EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION));
+    }
+
+    @Test
+    public void performsPropertyExpansionOnRestTestRequestContent() throws SoapUIException {
+        AbstractHttpRequest request = mockRequest(RestTestRequest.class);
+        requestFilter.filterAbstractHttpRequest(submitContext, request);
+
+        String contentAfterPropertyExpansion = (String) submitContext.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        assertThat(contentAfterPropertyExpansion, is(EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION));
+    }
+
+    @Test
+    public void performsPropertyExpansionOnHttpTestRequestContent() throws SoapUIException {
+        AbstractHttpRequest request = mockRequest(HttpTestRequest.class);
+        requestFilter.filterAbstractHttpRequest(submitContext, request);
+
+        String contentAfterPropertyExpansion = (String) submitContext.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        assertThat(contentAfterPropertyExpansion, is(EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION));
+    }
+
+    @Test
+    public void performsPropertyExpansionOnWsdlRequestContent() throws SoapUIException {
+        AbstractHttpRequest request = mockRequest(WsdlRequest.class);
+        requestFilter.filterAbstractHttpRequest(submitContext, request);
+
+        String contentAfterPropertyExpansion = (String) submitContext.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        assertThat(contentAfterPropertyExpansion, is(EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION));
+    }
+
+    @Test
+    public void performsPropertyExpansionOnRestRequestContent() throws SoapUIException {
+        AbstractHttpRequest request = mockRequest(RestRequest.class);
+        requestFilter.filterAbstractHttpRequest(submitContext, request);
+
+        String contentAfterPropertyExpansion = (String) submitContext.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        assertThat(contentAfterPropertyExpansion, is(EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION));
+    }
+
+    @Test
+    public void performsPropertyExpansionOnHttpRequestContent() throws SoapUIException {
+        AbstractHttpRequest request = mockRequest(HttpRequest.class);
+        requestFilter.filterAbstractHttpRequest(submitContext, request);
+
+        String contentAfterPropertyExpansion = (String) submitContext.getProperty(BaseHttpRequestTransport.REQUEST_CONTENT);
+        assertThat(contentAfterPropertyExpansion, is(EXPECTED_REQUEST_CONTENT_AFTER_PROPERTY_EXPANSION));
+    }
+
+
+    private SubmitContext createSubmitContext() throws SoapUIException {
+        WsdlTestRequestStep requestStep = ModelItemFactory.makeTestRequestStep();
+        requestStep.getTestCase().setPropertyValue("StoreType", "shoe_Store");
+        SubmitContext context = new WsdlSubmitContext(requestStep);
+
+        context.setProperty(BaseHttpRequestTransport.REQUEST_CONTENT, REQUEST_CONTENT);
+        return context;
+    }
+
+    private <T extends AbstractHttpRequest> AbstractHttpRequest mockRequest(Class<T> type) {
+        AbstractHttpRequest request = Mockito.mock(type);
+        XmlBeansSettingsImpl settings = Mockito.mock(XmlBeansSettingsImpl.class);
+        Mockito.when(settings.getBoolean(CommonSettings.ENTITIZE_PROPERTIES)).thenReturn(false);
+        Mockito.when(request.getSettings()).thenReturn(settings);
+        return request;
+    }
 }

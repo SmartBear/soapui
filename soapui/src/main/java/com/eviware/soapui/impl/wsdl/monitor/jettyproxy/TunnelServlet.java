@@ -55,223 +55,199 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
-public class TunnelServlet extends ProxyServlet
-{
-	private String sslEndPoint;
-	private int sslPort = 443;
-	private String prot = "https://";
+public class TunnelServlet extends ProxyServlet {
+    private String sslEndPoint;
+    private int sslPort = 443;
+    private String prot = "https://";
 
-	public TunnelServlet( WsdlProject project, String sslEndpoint, SoapMonitorListenerCallBack listenerCallBack )
-	{
-		super( project, listenerCallBack );
+    public TunnelServlet(WsdlProject project, String sslEndpoint, SoapMonitorListenerCallBack listenerCallBack) {
+        super(project, listenerCallBack);
 
-		if( !sslEndpoint.startsWith( "https" ) )
-		{
-			this.prot = "http://";
-		}
-		int prefix = sslEndpoint.indexOf( "://" );
-		int c = sslEndpoint.indexOf( prefix, ':' );
-		if( c > 0 )
-		{
-			this.sslPort = Integer.parseInt( sslEndpoint.substring( c + 1 ) );
-			this.sslEndPoint = sslEndpoint.substring( prefix, c );
-		}
-		else
-		{
-			if( prefix > 0 )
-				this.sslEndPoint = sslEndpoint.substring( prefix + 3 );
-		}
-	}
+        if (!sslEndpoint.startsWith("https")) {
+            this.prot = "http://";
+        }
+        int prefix = sslEndpoint.indexOf("://");
+        int c = sslEndpoint.indexOf(prefix, ':');
+        if (c > 0) {
+            this.sslPort = Integer.parseInt(sslEndpoint.substring(c + 1));
+            this.sslEndPoint = sslEndpoint.substring(prefix, c);
+        } else {
+            if (prefix > 0) {
+                this.sslEndPoint = sslEndpoint.substring(prefix + 3);
+            }
+        }
+    }
 
-	@Override
-	public void init( ServletConfig config ) throws ServletException
-	{
-		this.config = config;
-		this.context = config.getServletContext();
-	}
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        this.config = config;
+        this.context = config.getServletContext();
+    }
 
-	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
-	{
-		listenerCallBack.fireOnRequest( project, request, response );
-		if( response.isCommitted() )
-			return;
+    public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+        listenerCallBack.fireOnRequest(project, request, response);
+        if (response.isCommitted()) {
+            return;
+        }
 
-		ExtendedHttpMethod postMethod;
+        ExtendedHttpMethod postMethod;
 
-		// for this create ui server and port, properties.
-		InetSocketAddress inetAddress = new InetSocketAddress( sslEndPoint, sslPort );
-		HttpServletRequest httpRequest = ( HttpServletRequest )request;
-		if( httpRequest.getMethod().equals( "GET" ) )
-			postMethod = new ExtendedGetMethod();
-		else
-			postMethod = new ExtendedPostMethod();
+        // for this create ui server and port, properties.
+        InetSocketAddress inetAddress = new InetSocketAddress(sslEndPoint, sslPort);
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if (httpRequest.getMethod().equals("GET")) {
+            postMethod = new ExtendedGetMethod();
+        } else {
+            postMethod = new ExtendedPostMethod();
+        }
 
-		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
-		capturedData.setRequestHost( httpRequest.getRemoteHost() );
-		capturedData.setRequestHeader( httpRequest );
-		capturedData.setHttpRequestParameters( httpRequest );
-		capturedData.setTargetURL( this.prot + inetAddress.getHostName() );
+        JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange(project);
+        capturedData.setRequestHost(httpRequest.getRemoteHost());
+        capturedData.setRequestHeader(httpRequest);
+        capturedData.setHttpRequestParameters(httpRequest);
+        capturedData.setTargetURL(this.prot + inetAddress.getHostName());
 
-		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
+        CaptureInputStream capture = new CaptureInputStream(httpRequest.getInputStream());
 
-		long contentLength = -1;
-		// copy headers
-		Enumeration<?> headerNames = httpRequest.getHeaderNames();
-		while( headerNames.hasMoreElements() )
-		{
-			String hdr = ( String )headerNames.nextElement();
-			String lhdr = hdr.toLowerCase();
+        long contentLength = -1;
+        // copy headers
+        Enumeration<?> headerNames = httpRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String hdr = (String) headerNames.nextElement();
+            String lhdr = hdr.toLowerCase();
 
-			if( "content-length".equals( lhdr ) ) {
-				String val = httpRequest.getHeader( hdr );
-				contentLength =  Long.parseLong( val );
-				continue;
-			}
+            if ("content-length".equals(lhdr)) {
+                String val = httpRequest.getHeader(hdr);
+                contentLength = Long.parseLong(val);
+                continue;
+            }
 
-			if( "transfer-encoding".equals( lhdr ) )
-				continue;
+            if ("transfer-encoding".equals(lhdr)) {
+                continue;
+            }
 
-			if( "host".equals( lhdr ) )
-			{
-				Enumeration<?> vals = httpRequest.getHeaders( hdr );
-				while( vals.hasMoreElements() )
-				{
-					String val = ( String )vals.nextElement();
-					if( val.startsWith( "127.0.0.1" ) )
-					{
-						postMethod.addHeader( hdr, sslEndPoint );
-					}
-				}
-				continue;
-			}
+            if ("host".equals(lhdr)) {
+                Enumeration<?> vals = httpRequest.getHeaders(hdr);
+                while (vals.hasMoreElements()) {
+                    String val = (String) vals.nextElement();
+                    if (val.startsWith("127.0.0.1")) {
+                        postMethod.addHeader(hdr, sslEndPoint);
+                    }
+                }
+                continue;
+            }
 
-			Enumeration<?> vals = httpRequest.getHeaders( hdr );
-			while( vals.hasMoreElements() )
-			{
-				String val = ( String )vals.nextElement();
-				if( val != null )
-				{
-					postMethod.addHeader( hdr, val );
-				}
-			}
-		}
+            Enumeration<?> vals = httpRequest.getHeaders(hdr);
+            while (vals.hasMoreElements()) {
+                String val = (String) vals.nextElement();
+                if (val != null) {
+                    postMethod.addHeader(hdr, val);
+                }
+            }
+        }
 
-		if( postMethod instanceof ExtendedPostMethod )
-		{
-			InputStreamEntity entity = new InputStreamEntity( capture, contentLength);
-			entity.setContentType( request.getContentType() );
-			( ( ExtendedPostMethod )postMethod ).setEntity( entity );
-		}
+        if (postMethod instanceof ExtendedPostMethod) {
+            InputStreamEntity entity = new InputStreamEntity(capture, contentLength);
+            entity.setContentType(request.getContentType());
+            ((ExtendedPostMethod) postMethod).setEntity(entity);
+        }
 
-		java.net.URI uri = null;
-		try
-		{
-			uri = new java.net.URI( this.prot + sslEndPoint );
-		}
-		catch( URISyntaxException e )
-		{
-			SoapUI.logError( e );
-		}
+        java.net.URI uri = null;
+        try {
+            uri = new java.net.URI(this.prot + sslEndPoint);
+        } catch (URISyntaxException e) {
+            SoapUI.logError(e);
+        }
 
-		postMethod.getParams().setParameter(
-				SoapUIHttpRoute.SOAPUI_SSL_CONFIG,
-				settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "" ) + " "
-						+ settings.getString( SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, "" ) );
+        postMethod.getParams().setParameter(
+                SoapUIHttpRoute.SOAPUI_SSL_CONFIG,
+                settings.getString(SecurityTabForm.SSLTUNNEL_KEYSTOREPATH, "") + " "
+                        + settings.getString(SecurityTabForm.SSLTUNNEL_KEYSTOREPASSWORD, ""));
 
-		setProtocolversion( postMethod, request.getProtocol() );
+        setProtocolversion(postMethod, request.getProtocol());
 
-		String path = null;
-		if( !sslEndPoint.contains( "/" ) )
-			path = "/";
-		else
-			path = sslEndPoint.substring( sslEndPoint.indexOf( "/" ), sslEndPoint.length() );
+        String path = null;
+        if (!sslEndPoint.contains("/")) {
+            path = "/";
+        } else {
+            path = sslEndPoint.substring(sslEndPoint.indexOf("/"), sslEndPoint.length());
+        }
 
-		if( uri != null )
-		{
-			try
-			{
-				postMethod.setURI( URIUtils.createURI( uri.getScheme(), uri.getHost(), uri.getPort(), path, uri.getQuery(),
-						uri.getFragment() ) );
-			}
-			catch( URISyntaxException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
+        if (uri != null) {
+            try {
+                postMethod.setURI(URIUtils.createURI(uri.getScheme(), uri.getHost(), uri.getPort(), path, uri.getQuery(),
+                        uri.getFragment()));
+            } catch (URISyntaxException e) {
+                SoapUI.logError(e);
+            }
+        }
 
-		listenerCallBack.fireBeforeProxy( project, request, response, postMethod );
+        listenerCallBack.fireBeforeProxy(project, request, response, postMethod);
 
-		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
-		{
-			if( httpState == null )
-				httpState = new BasicHttpContext();
-			HttpClientSupport.execute( postMethod, httpState );
-		}
-		else
-		{
-			HttpClientSupport.execute( postMethod );
-		}
-		capturedData.stopCapture();
+        if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE)) {
+            if (httpState == null) {
+                httpState = new BasicHttpContext();
+            }
+            HttpClientSupport.execute(postMethod, httpState);
+        } else {
+            HttpClientSupport.execute(postMethod);
+        }
+        capturedData.stopCapture();
 
-		capturedData.setRequest( capture.getCapturedData() );
-		capturedData.setRawResponseBody( postMethod.getResponseBody() );
-		capturedData.setResponseHeader( postMethod.getHttpResponse() );
-		capturedData.setRawRequestData( getRequestToBytes( request.toString(), postMethod, capture ) );
-		capturedData.setRawResponseData( getResponseToBytes( response.toString(), postMethod,
-				capturedData.getRawResponseBody() ) );
+        capturedData.setRequest(capture.getCapturedData());
+        capturedData.setRawResponseBody(postMethod.getResponseBody());
+        capturedData.setResponseHeader(postMethod.getHttpResponse());
+        capturedData.setRawRequestData(getRequestToBytes(request.toString(), postMethod, capture));
+        capturedData.setRawResponseData(getResponseToBytes(response.toString(), postMethod,
+                capturedData.getRawResponseBody()));
 
-		listenerCallBack.fireAfterProxy( project, request, response, postMethod, capturedData );
+        listenerCallBack.fireAfterProxy(project, request, response, postMethod, capturedData);
 
-		StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
-		// copy headers to response
-		HttpServletResponse httpServletResponse = ( HttpServletResponse )response;
-		for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
-		{
-			for( String header : headerEntry.getValue() )
-				httpServletResponse.addHeader( headerEntry.getKey(), header );
+        StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
+        // copy headers to response
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        for (Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet()) {
+            for (String header : headerEntry.getValue()) {
+                httpServletResponse.addHeader(headerEntry.getKey(), header);
+            }
 
-		}
+        }
 
-		IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpServletResponse.getOutputStream() );
+        IO.copy(new ByteArrayInputStream(capturedData.getRawResponseBody()), httpServletResponse.getOutputStream());
 
-		synchronized( this )
-		{
-			listenerCallBack.fireAddMessageExchange( capturedData );
-		}
+        synchronized (this) {
+            listenerCallBack.fireAddMessageExchange(capturedData);
+        }
 
-	}
+    }
 
 
-	private byte[] getResponseToBytes( String footer, ExtendedHttpMethod postMethod, byte[] res )
-	{
-		String response = footer;
+    private byte[] getResponseToBytes(String footer, ExtendedHttpMethod postMethod, byte[] res) {
+        String response = footer;
 
-		if( postMethod.hasHttpResponse() )
-		{
-			Header[] headers = postMethod.getHttpResponse().getAllHeaders();
-			for( Header header : headers )
-			{
-				response += header.toString().trim() + "\n";
-			}
-			response += "\n";
-			response += XmlUtils.prettyPrintXml( new String( res ) );
-		}
-		return response.getBytes();
-	}
+        if (postMethod.hasHttpResponse()) {
+            Header[] headers = postMethod.getHttpResponse().getAllHeaders();
+            for (Header header : headers) {
+                response += header.toString().trim() + "\n";
+            }
+            response += "\n";
+            response += XmlUtils.prettyPrintXml(new String(res));
+        }
+        return response.getBytes();
+    }
 
-	private byte[] getRequestToBytes( String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture )
-	{
-		String request = footer;
+    private byte[] getRequestToBytes(String footer, ExtendedHttpMethod postMethod, CaptureInputStream capture) {
+        String request = footer;
 
-		// Header[] headers = postMethod.getRequestHeaders();
-		// for (Header header : headers)
-		// {
-		// request += header.toString();
-		// }
-		request += "\n";
-		request += XmlUtils.prettyPrintXml( new String( capture.getCapturedData() ) );
+        // Header[] headers = postMethod.getRequestHeaders();
+        // for (Header header : headers)
+        // {
+        // request += header.toString();
+        // }
+        request += "\n";
+        request += XmlUtils.prettyPrintXml(new String(capture.getCapturedData()));
 
-		return request.getBytes();
-	}
+        return request.getBytes();
+    }
 
 }

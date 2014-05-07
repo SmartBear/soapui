@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.editor.inspectors.httpheaders;
+*/
+package com.eviware.soapui.support.editor.inspectors.httpheaders;
 
 import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -20,27 +21,22 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class MockResponseHeadersModel extends HttpHeadersInspectorModel.AbstractHeadersModel<MockResponse> implements HasHelpUrl
-{
-	public MockResponseHeadersModel( MockResponse mockResponse )
-	{
-		super( false, mockResponse, WsdlMockResponse.HEADERS_PROPERTY );
-	}
+public class MockResponseHeadersModel extends HttpHeadersInspectorModel.AbstractHeadersModel<MockResponse> implements HasHelpUrl {
+    public MockResponseHeadersModel(MockResponse mockResponse) {
+        super(false, mockResponse, WsdlMockResponse.HEADERS_PROPERTY);
+    }
 
-	public StringToStringsMap getHeaders()
-	{
-		return getModelItem().getResponseHeaders();
-	}
+    public StringToStringsMap getHeaders() {
+        return getModelItem().getResponseHeaders();
+    }
 
-	public void setHeaders( StringToStringsMap headers )
-	{
-		getModelItem().setResponseHeaders( headers );
-	}
+    public void setHeaders(StringToStringsMap headers) {
+        getModelItem().setResponseHeaders(headers);
+    }
 
-	@Override
-	public String getHelpUrl()
-	{
-		return HelpUrls.REST_MOCK_RESPONSE_EDITOR_HEADER;
-	}
+    @Override
+    public String getHelpUrl() {
+        return HelpUrls.REST_MOCK_RESPONSE_EDITOR_HEADER;
+    }
 
 }

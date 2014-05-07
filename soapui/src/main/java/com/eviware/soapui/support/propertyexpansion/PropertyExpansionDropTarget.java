@@ -32,116 +32,99 @@ import com.eviware.soapui.model.tree.nodes.PropertyTreeNode.PropertyModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public final class PropertyExpansionDropTarget implements DropTargetListener
-{
-	private final PropertyExpansionTarget target;
+public final class PropertyExpansionDropTarget implements DropTargetListener {
+    private final PropertyExpansionTarget target;
 
-	public PropertyExpansionDropTarget( PropertyExpansionTarget target )
-	{
-		this.target = target;
-	}
+    public PropertyExpansionDropTarget(PropertyExpansionTarget target) {
+        this.target = target;
+    }
 
-	public void dragEnter( DropTargetDragEvent dtde )
-	{
-		if( !isAcceptable( dtde.getTransferable() ) )
-			dtde.rejectDrag();
-	}
+    public void dragEnter(DropTargetDragEvent dtde) {
+        if (!isAcceptable(dtde.getTransferable())) {
+            dtde.rejectDrag();
+        }
+    }
 
-	public void dragExit( DropTargetEvent dtde )
-	{
-		if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
-			( ( JTextComponent )dtde.getDropTargetContext().getComponent() ).getCaret().setVisible( false );
-	}
+    public void dragExit(DropTargetEvent dtde) {
+        if (dtde.getDropTargetContext().getComponent() instanceof JTextComponent) {
+            ((JTextComponent) dtde.getDropTargetContext().getComponent()).getCaret().setVisible(false);
+        }
+    }
 
-	public void dragOver( DropTargetDragEvent dtde )
-	{
-		if( !isAcceptable( dtde.getTransferable() ) )
-			dtde.rejectDrag();
+    public void dragOver(DropTargetDragEvent dtde) {
+        if (!isAcceptable(dtde.getTransferable())) {
+            dtde.rejectDrag();
+        }
 
-		if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
-		{
-			JTextComponent textField = ( JTextComponent )dtde.getDropTargetContext().getComponent();
-			int pos = textField.viewToModel( dtde.getLocation() );
-			if( pos != -1 )
-			{
-				textField.setCaretPosition( pos );
-				textField.getCaret().setVisible( true );
-			}
-		}
+        if (dtde.getDropTargetContext().getComponent() instanceof JTextComponent) {
+            JTextComponent textField = (JTextComponent) dtde.getDropTargetContext().getComponent();
+            int pos = textField.viewToModel(dtde.getLocation());
+            if (pos != -1) {
+                textField.setCaretPosition(pos);
+                textField.getCaret().setVisible(true);
+            }
+        }
 
-		dtde.acceptDrag( dtde.getDropAction() );
-	}
+        dtde.acceptDrag(dtde.getDropAction());
+    }
 
-	public void drop( DropTargetDropEvent dtde )
-	{
-		if( !isAcceptable( dtde.getTransferable() ) )
-			dtde.rejectDrop();
-		else
-		{
-			try
-			{
-				Transferable transferable = dtde.getTransferable();
-				Object transferData = transferable.getTransferData( transferable.getTransferDataFlavors()[0] );
-				if( transferData instanceof PropertyModelItem )
-				{
-					dtde.acceptDrop( dtde.getDropAction() );
-					PropertyModelItem modelItem = ( PropertyModelItem )transferData;
+    public void drop(DropTargetDropEvent dtde) {
+        if (!isAcceptable(dtde.getTransferable())) {
+            dtde.rejectDrop();
+        } else {
+            try {
+                Transferable transferable = dtde.getTransferable();
+                Object transferData = transferable.getTransferData(transferable.getTransferDataFlavors()[0]);
+                if (transferData instanceof PropertyModelItem) {
+                    dtde.acceptDrop(dtde.getDropAction());
+                    PropertyModelItem modelItem = (PropertyModelItem) transferData;
 
-					String xpath = modelItem.getXPath();
-					if( xpath == null && XmlUtils.seemsToBeXml( modelItem.getProperty().getValue() ) )
-					{
-						xpath = UISupport.selectXPath( "Create PropertyExpansion", "Select XPath below", modelItem
-								.getProperty().getValue(), null );
+                    String xpath = modelItem.getXPath();
+                    if (xpath == null && XmlUtils.seemsToBeXml(modelItem.getProperty().getValue())) {
+                        xpath = UISupport.selectXPath("Create PropertyExpansion", "Select XPath below", modelItem
+                                .getProperty().getValue(), null);
 
-						if( xpath != null )
-							xpath = PropertyExpansionUtils.shortenXPathForPropertyExpansion( xpath, modelItem.getProperty()
-									.getValue() );
-					}
+                        if (xpath != null) {
+                            xpath = PropertyExpansionUtils.shortenXPathForPropertyExpansion(xpath, modelItem.getProperty()
+                                    .getValue());
+                        }
+                    }
 
-					target.insertPropertyExpansion( new PropertyExpansionImpl( modelItem.getProperty(), xpath ),
-							dtde.getLocation() );
+                    target.insertPropertyExpansion(new PropertyExpansionImpl(modelItem.getProperty(), xpath),
+                            dtde.getLocation());
 
-					dtde.dropComplete( true );
-				}
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
+                    dtde.dropComplete(true);
+                }
+            } catch (Exception e) {
+                SoapUI.logError(e);
+            }
 
-			if( dtde.getDropTargetContext().getComponent() instanceof JTextComponent )
-				( ( JTextComponent )dtde.getDropTargetContext().getComponent() ).getCaret().setVisible( false );
-		}
-	}
+            if (dtde.getDropTargetContext().getComponent() instanceof JTextComponent) {
+                ((JTextComponent) dtde.getDropTargetContext().getComponent()).getCaret().setVisible(false);
+            }
+        }
+    }
 
-	public void dropActionChanged( DropTargetDragEvent dtde )
-	{
-	}
+    public void dropActionChanged(DropTargetDragEvent dtde) {
+    }
 
-	public boolean isAcceptable( Transferable transferable )
-	{
-		DataFlavor[] flavors = transferable.getTransferDataFlavors();
-		for( int i = 0; i < flavors.length; i++ )
-		{
-			DataFlavor flavor = flavors[i];
-			if( flavor.isMimeTypeEqual( DataFlavor.javaJVMLocalObjectMimeType ) )
-			{
-				try
-				{
-					Object modelItem = transferable.getTransferData( flavor );
-					if( modelItem instanceof PropertyModelItem )
-					{
-						return PropertyExpansionUtils.canExpandProperty( target.getContextModelItem(),
-								( ( PropertyModelItem )modelItem ).getProperty() );
-					}
-				}
-				catch( Exception ex )
-				{
-					SoapUI.logError( ex );
-				}
-			}
-		}
+    public boolean isAcceptable(Transferable transferable) {
+        DataFlavor[] flavors = transferable.getTransferDataFlavors();
+        for (int i = 0; i < flavors.length; i++) {
+            DataFlavor flavor = flavors[i];
+            if (flavor.isMimeTypeEqual(DataFlavor.javaJVMLocalObjectMimeType)) {
+                try {
+                    Object modelItem = transferable.getTransferData(flavor);
+                    if (modelItem instanceof PropertyModelItem) {
+                        return PropertyExpansionUtils.canExpandProperty(target.getContextModelItem(),
+                                ((PropertyModelItem) modelItem).getProperty());
+                    }
+                } catch (Exception ex) {
+                    SoapUI.logError(ex);
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 }

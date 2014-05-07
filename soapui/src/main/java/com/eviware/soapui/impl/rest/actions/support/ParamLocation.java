@@ -12,16 +12,16 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.support;
+*/
+package com.eviware.soapui.impl.rest.actions.support;
 
 /**
-* Created with IntelliJ IDEA.
-* User: manne
-* Date: 11/18/13
-* Time: 1:34 PM
-* To change this template use File | Settings | File Templates.
-*/
-public enum ParamLocation
-{
-	RESOURCE, METHOD
+ * Created with IntelliJ IDEA.
+ * User: manne
+ * Date: 11/18/13
+ * Time: 1:34 PM
+ * To change this template use File | Settings | File Templates.
+ */
+public enum ParamLocation {
+    RESOURCE, METHOD
 }

@@ -32,204 +32,167 @@ import com.eviware.soapui.config.SoapUIListenerConfig;
 import com.eviware.soapui.config.SoapUIListenersConfig;
 import com.eviware.soapui.config.SoapuiListenersDocumentConfig;
 
-public class SoapUIListenerRegistry
-{
-	private Map<Class<?>, List<Class<?>>> listeners = new HashMap<Class<?>, List<Class<?>>>();
-	private Map<Class<?>, List<Object>> singletonListeners = new HashMap<Class<?>, List<Object>>();
-	private Map<Class<?>, SoapUIListenerConfig> listenerConfigs = new HashMap<Class<?>, SoapUIListenerConfig>();
-	private final static Logger log = Logger.getLogger( SoapUIListenerRegistry.class );
+public class SoapUIListenerRegistry {
+    private Map<Class<?>, List<Class<?>>> listeners = new HashMap<Class<?>, List<Class<?>>>();
+    private Map<Class<?>, List<Object>> singletonListeners = new HashMap<Class<?>, List<Object>>();
+    private Map<Class<?>, SoapUIListenerConfig> listenerConfigs = new HashMap<Class<?>, SoapUIListenerConfig>();
+    private final static Logger log = Logger.getLogger(SoapUIListenerRegistry.class);
 
-	public void addListener( Class<?> listenerInterface, Class<?> listenerClass, SoapUIListenerConfig config )
-	{
-		List<Class<?>> classes = null;
-		if( listeners.containsKey( listenerInterface ) )
-		{
-			classes = listeners.get( listenerInterface );
-		}
-		if( classes == null )
-		{
-			classes = new ArrayList<Class<?>>();
-		}
-		classes.add( listenerClass );
-		listeners.put( listenerInterface, classes );
+    public void addListener(Class<?> listenerInterface, Class<?> listenerClass, SoapUIListenerConfig config) {
+        List<Class<?>> classes = null;
+        if (listeners.containsKey(listenerInterface)) {
+            classes = listeners.get(listenerInterface);
+        }
+        if (classes == null) {
+            classes = new ArrayList<Class<?>>();
+        }
+        classes.add(listenerClass);
+        listeners.put(listenerInterface, classes);
 
-		if( config != null )
-		{
-			listenerConfigs.put( listenerClass, config );
-		}
-	}
+        if (config != null) {
+            listenerConfigs.put(listenerClass, config);
+        }
+    }
 
-	public void removeListener( Class<?> listenerInterface, Class<?> listenerClass )
-	{
-		List<Class<?>> classes = null;
-		if( listeners.containsKey( listenerInterface ) )
-		{
-			classes = listeners.get( listenerInterface );
-		}
-		if( classes != null )
-		{
-			classes.remove( listenerClass );
-		}
-		if( classes == null || classes.size() == 0 )
-		{
-			listeners.remove( listenerInterface );
-		}
+    public void removeListener(Class<?> listenerInterface, Class<?> listenerClass) {
+        List<Class<?>> classes = null;
+        if (listeners.containsKey(listenerInterface)) {
+            classes = listeners.get(listenerInterface);
+        }
+        if (classes != null) {
+            classes.remove(listenerClass);
+        }
+        if (classes == null || classes.size() == 0) {
+            listeners.remove(listenerInterface);
+        }
 
-		listenerConfigs.remove( listenerClass );
-	}
+        listenerConfigs.remove(listenerClass);
+    }
 
-	public SoapUIListenerRegistry( InputStream config )
-	{
-		if( config != null )
-			addConfig( config, getClass().getClassLoader() );
-	}
+    public SoapUIListenerRegistry(InputStream config) {
+        if (config != null) {
+            addConfig(config, getClass().getClassLoader());
+        }
+    }
 
-	public void addConfig( InputStream config, ClassLoader classLoader )
-	{
-		try
-		{
-			SoapuiListenersDocumentConfig configDocument = SoapuiListenersDocumentConfig.Factory.parse( config );
-			SoapUIListenersConfig soapuiListeners = configDocument.getSoapuiListeners();
+    public void addConfig(InputStream config, ClassLoader classLoader) {
+        try {
+            SoapuiListenersDocumentConfig configDocument = SoapuiListenersDocumentConfig.Factory.parse(config);
+            SoapUIListenersConfig soapuiListeners = configDocument.getSoapuiListeners();
 
-			for( SoapUIListenerConfig listenerConfig : soapuiListeners.getListenerList() )
-			{
-				try
-				{
-					String listenerInterfaceName = listenerConfig.getListenerInterface();
-					String listenerClassName = listenerConfig.getListenerClass();
+            for (SoapUIListenerConfig listenerConfig : soapuiListeners.getListenerList()) {
+                try {
+                    String listenerInterfaceName = listenerConfig.getListenerInterface();
+                    String listenerClassName = listenerConfig.getListenerClass();
 
-					Class<?> listenerInterface = Class.forName( listenerInterfaceName, true, classLoader );
-					Class<?> listenerClass = Class.forName( listenerClassName, true, classLoader );
-					if( !listenerInterface.isInterface() )
-					{
-						throw new RuntimeException( "Listener interface: " + listenerInterfaceName + " must be an interface" );
-					}
-					if( !listenerInterface.isAssignableFrom( listenerClass ) )
-					{
-						throw new RuntimeException( "Listener class: " + listenerClassName + " must implement interface: "
-								+ listenerInterfaceName );
-					}
-					// make sure the class can be instantiated even if factory
-					// will instantiate interfaces only on demand
-					Object obj = listenerClass.newInstance();
-					if( listenerConfig.getSingleton() )
-					{
-						if( obj instanceof InitializableListener )
-						{
-							( ( InitializableListener )obj ).init( listenerConfig );
-						}
+                    Class<?> listenerInterface = Class.forName(listenerInterfaceName, true, classLoader);
+                    Class<?> listenerClass = Class.forName(listenerClassName, true, classLoader);
+                    if (!listenerInterface.isInterface()) {
+                        throw new RuntimeException("Listener interface: " + listenerInterfaceName + " must be an interface");
+                    }
+                    if (!listenerInterface.isAssignableFrom(listenerClass)) {
+                        throw new RuntimeException("Listener class: " + listenerClassName + " must implement interface: "
+                                + listenerInterfaceName);
+                    }
+                    // make sure the class can be instantiated even if factory
+                    // will instantiate interfaces only on demand
+                    Object obj = listenerClass.newInstance();
+                    if (listenerConfig.getSingleton()) {
+                        if (obj instanceof InitializableListener) {
+                            ((InitializableListener) obj).init(listenerConfig);
+                        }
 
-						getLog().info( "Adding singleton listener [" + listenerClass + "]" );
-						addSingletonListener( listenerInterface, obj );
-					}
-					else
-					{
-						// class can be instantiated, register it
-						getLog().info( "Adding listener [" + listenerClass + "]" );
-						addListener( listenerInterface, listenerClass, listenerConfig );
-					}
-				}
-				catch( Exception e )
-				{
-					System.err.println( "Error initializing Listener: " + e );
-				}
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-		finally
-		{
-			try
-			{
-				config.close();
-			}
-			catch( IOException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+                        getLog().info("Adding singleton listener [" + listenerClass + "]");
+                        addSingletonListener(listenerInterface, obj);
+                    } else {
+                        // class can be instantiated, register it
+                        getLog().info("Adding listener [" + listenerClass + "]");
+                        addListener(listenerInterface, listenerClass, listenerConfig);
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error initializing Listener: " + e);
+                }
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        } finally {
+            try {
+                config.close();
+            } catch (IOException e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 
-	private Logger getLog()
-	{
-		return DefaultSoapUICore.log == null ? log : DefaultSoapUICore.log;
-	}
+    private Logger getLog() {
+        return DefaultSoapUICore.log == null ? log : DefaultSoapUICore.log;
+    }
 
-	public void addSingletonListener( Class<?> listenerInterface, Object listener )
-	{
-		if( !singletonListeners.containsKey( listenerInterface ) )
-			singletonListeners.put( listenerInterface, new ArrayList<Object>() );
+    public void addSingletonListener(Class<?> listenerInterface, Object listener) {
+        if (!singletonListeners.containsKey(listenerInterface)) {
+            singletonListeners.put(listenerInterface, new ArrayList<Object>());
+        }
 
-		singletonListeners.get( listenerInterface ).add( listener );
-	}
+        singletonListeners.get(listenerInterface).add(listener);
+    }
 
-	public void removeSingletonListener( Class<?> listenerInterface, Object listener )
-	{
-		if( singletonListeners.containsKey( listenerInterface ) )
-			singletonListeners.get( listenerInterface ).remove( listener );
-	}
+    public void removeSingletonListener(Class<?> listenerInterface, Object listener) {
+        if (singletonListeners.containsKey(listenerInterface)) {
+            singletonListeners.get(listenerInterface).remove(listener);
+        }
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public <T extends Object> List<T> getListeners( Class<T> listenerType )
-	{
-		List<T> result = new ArrayList<T>();
-		if( listeners.containsKey( listenerType ) )
-		{
-			List<Class<?>> list = listeners.get( listenerType );
-			for( Class<?> listenerClass : list )
-			{
-				try
-				{
-					T listener = ( T )listenerClass.newInstance();
-					if( listenerConfigs.containsKey( listenerClass ) && listener instanceof InitializableListener )
-						( ( InitializableListener )listener ).init( listenerConfigs.get( listenerClass ) );
+    @SuppressWarnings("unchecked")
+    public <T extends Object> List<T> getListeners(Class<T> listenerType) {
+        List<T> result = new ArrayList<T>();
+        if (listeners.containsKey(listenerType)) {
+            List<Class<?>> list = listeners.get(listenerType);
+            for (Class<?> listenerClass : list) {
+                try {
+                    T listener = (T) listenerClass.newInstance();
+                    if (listenerConfigs.containsKey(listenerClass) && listener instanceof InitializableListener) {
+                        ((InitializableListener) listener).init(listenerConfigs.get(listenerClass));
+                    }
 
-					result.add( listener );
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-		}
+                    result.add(listener);
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
+            }
+        }
 
-		if( singletonListeners.containsKey( listenerType ) )
-			result.addAll( ( Collection<? extends T> )singletonListeners.get( listenerType ) );
+        if (singletonListeners.containsKey(listenerType)) {
+            result.addAll((Collection<? extends T>) singletonListeners.get(listenerType));
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public <T extends Object> List<T> joinListeners( Class<T> listenerType, Collection<T> existing )
-	{
-		List<T> result = new ArrayList<T>();
-		if( listeners.containsKey( listenerType ) )
-		{
-			List<Class<?>> list = listeners.get( listenerType );
-			for( Class<?> listenerClass : list )
-			{
-				try
-				{
-					T listener = ( T )listenerClass.newInstance();
-					if( listenerConfigs.containsKey( listenerClass ) && listener instanceof InitializableListener )
-						( ( InitializableListener )listener ).init( listenerConfigs.get( listenerClass ) );
+    @SuppressWarnings("unchecked")
+    public <T extends Object> List<T> joinListeners(Class<T> listenerType, Collection<T> existing) {
+        List<T> result = new ArrayList<T>();
+        if (listeners.containsKey(listenerType)) {
+            List<Class<?>> list = listeners.get(listenerType);
+            for (Class<?> listenerClass : list) {
+                try {
+                    T listener = (T) listenerClass.newInstance();
+                    if (listenerConfigs.containsKey(listenerClass) && listener instanceof InitializableListener) {
+                        ((InitializableListener) listener).init(listenerConfigs.get(listenerClass));
+                    }
 
-					result.add( listener );
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-		}
+                    result.add(listener);
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
+            }
+        }
 
-		if( singletonListeners.containsKey( listenerType ) )
-			result.addAll( ( Collection<? extends T> )singletonListeners.get( listenerType ) );
+        if (singletonListeners.containsKey(listenerType)) {
+            result.addAll((Collection<? extends T>) singletonListeners.get(listenerType));
+        }
 
-		result.addAll( existing );
+        result.addAll(existing);
 
-		return result;
-	}
+        return result;
+    }
 }

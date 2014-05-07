@@ -32,63 +32,48 @@ import com.eviware.soapui.support.Tools;
 /**
  * Utility class for compressing/decompressing strings stored with
  * CompressedString
- * 
+ *
  * @author ole.matzura
  */
 
-public class CompressedStringSupport
-{
-	public static String getString( CompressedStringConfig compressedStringConfig )
-	{
-		synchronized( compressedStringConfig )
-		{
-			String compression = compressedStringConfig.getCompression();
-			if( "gzip".equals( compression ) )
-			{
-				try
-				{
-					byte[] bytes = Base64.decodeBase64( compressedStringConfig.getStringValue().getBytes() );
-					GZIPInputStream in = new GZIPInputStream( new ByteArrayInputStream( bytes ) );
-					return Tools.readAll( in, -1 ).toString();
-				}
-				catch( IOException e )
-				{
-					SoapUI.logError( e );
-				}
-			}
+public class CompressedStringSupport {
+    public static String getString(CompressedStringConfig compressedStringConfig) {
+        synchronized (compressedStringConfig) {
+            String compression = compressedStringConfig.getCompression();
+            if ("gzip".equals(compression)) {
+                try {
+                    byte[] bytes = Base64.decodeBase64(compressedStringConfig.getStringValue().getBytes());
+                    GZIPInputStream in = new GZIPInputStream(new ByteArrayInputStream(bytes));
+                    return Tools.readAll(in, -1).toString();
+                } catch (IOException e) {
+                    SoapUI.logError(e);
+                }
+            }
 
-			return compressedStringConfig.getStringValue();
-		}
-	}
+            return compressedStringConfig.getStringValue();
+        }
+    }
 
-	public static void setString( CompressedStringConfig compressedStringConfig, String value )
-	{
-		synchronized( compressedStringConfig )
-		{
-			long limit = SoapUI.getSettings().getLong( WsdlSettings.COMPRESSION_LIMIT, 0 );
-			if( limit > 0 && value.length() >= limit )
-			{
-				try
-				{
-					ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-					GZIPOutputStream out = new GZIPOutputStream( byteOut );
-					out.write( value.getBytes() );
-					out.finish();
-					value = new String( Base64.encodeBase64( byteOut.toByteArray() ) );
-					compressedStringConfig.setCompression( "gzip" );
-				}
-				catch( IOException e )
-				{
-					SoapUI.logError( e );
-					compressedStringConfig.unsetCompression();
-				}
-			}
-			else if( compressedStringConfig.isSetCompression() )
-			{
-				compressedStringConfig.unsetCompression();
-			}
+    public static void setString(CompressedStringConfig compressedStringConfig, String value) {
+        synchronized (compressedStringConfig) {
+            long limit = SoapUI.getSettings().getLong(WsdlSettings.COMPRESSION_LIMIT, 0);
+            if (limit > 0 && value.length() >= limit) {
+                try {
+                    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+                    GZIPOutputStream out = new GZIPOutputStream(byteOut);
+                    out.write(value.getBytes());
+                    out.finish();
+                    value = new String(Base64.encodeBase64(byteOut.toByteArray()));
+                    compressedStringConfig.setCompression("gzip");
+                } catch (IOException e) {
+                    SoapUI.logError(e);
+                    compressedStringConfig.unsetCompression();
+                }
+            } else if (compressedStringConfig.isSetCompression()) {
+                compressedStringConfig.unsetCompression();
+            }
 
-			compressedStringConfig.setStringValue( value );
-		}
-	}
+            compressedStringConfig.setStringValue(value);
+        }
+    }
 }

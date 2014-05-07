@@ -23,63 +23,52 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 
-@SuppressWarnings( "serial" )
-public class SecurityTreeRootNode extends DefaultMutableTreeNode implements PropertyChangeListener
-{
+@SuppressWarnings("serial")
+public class SecurityTreeRootNode extends DefaultMutableTreeNode implements PropertyChangeListener {
 
-	private SecurityTest securityTest;
+    private SecurityTest securityTest;
 
-	public SecurityTreeRootNode( SecurityTest securityTest )
-	{
-		this.securityTest = securityTest;
+    public SecurityTreeRootNode(SecurityTest securityTest) {
+        this.securityTest = securityTest;
 
-		securityTest.addPropertyChangeListener( this );
+        securityTest.addPropertyChangeListener(this);
 
-		initRoot();
-	}
+        initRoot();
+    }
 
-	private void initRoot()
-	{
-		parent = null;
-		initChildren();
-		allowsChildren = true;
-	}
+    private void initRoot() {
+        parent = null;
+        initChildren();
+        allowsChildren = true;
+    }
 
-	private void initChildren()
-	{
-		for( TestStep step : securityTest.getTestCase().getTestStepList() )
-		{
-			add( new TestStepNode( this, step, securityTest.getSecurityScansMap().get( step.getId() ) ) );
-		}
-	}
+    private void initChildren() {
+        for (TestStep step : securityTest.getTestCase().getTestStepList()) {
+            add(new TestStepNode(this, step, securityTest.getSecurityScansMap().get(step.getId())));
+        }
+    }
 
-	@Override
-	public String toString()
-	{
-		return securityTest.toString();
-	}
+    @Override
+    public String toString() {
+        return securityTest.toString();
+    }
 
-	@Override
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		// System.out.println(evt.toString());
-	}
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        // System.out.println(evt.toString());
+    }
 
-	public SecurityTest getSecurityTest()
-	{
-		return securityTest;
-	}
+    public SecurityTest getSecurityTest() {
+        return securityTest;
+    }
 
-	public void add( TestStep testStep )
-	{
-		new TestStepNode( this, testStep, securityTest.getSecurityScansMap().get( testStep.getId() ) );
-	}
+    public void add(TestStep testStep) {
+        new TestStepNode(this, testStep, securityTest.getSecurityScansMap().get(testStep.getId()));
+    }
 
-	public void release()
-	{
-		if( securityTest != null )
-		{
-			securityTest.removePropertyChangeListener( this );
-		}
-	}
+    public void release() {
+        if (securityTest != null) {
+            securityTest.removePropertyChangeListener(this);
+        }
+    }
 }

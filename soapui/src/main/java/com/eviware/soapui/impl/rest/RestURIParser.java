@@ -24,23 +24,22 @@ import com.eviware.soapui.impl.URIParser;
  * @author Shadid Chowdhury
  * @since 4.5.6
  */
-public interface RestURIParser extends URIParser
-{
+public interface RestURIParser extends URIParser {
 
-	/**
-	 * This method returns the decoded endpoint of the URI.
-	 * Endpoint is composed of [HTTP/HTTPS] followed by hostname and port.
-	 *
-	 * @return decoded endpoint of the URI or empty space if there is no endpoint in the URI
-	 */
-	public String getEndpoint();
+    /**
+     * This method returns the decoded endpoint of the URI.
+     * Endpoint is composed of [HTTP/HTTPS] followed by hostname and port.
+     *
+     * @return decoded endpoint of the URI or empty space if there is no endpoint in the URI
+     */
+    public String getEndpoint();
 
-	/**
-	 * This method returns the resource name.
-	 * Resource name is taken from the path, usually the last part of the path.
-	 *
-	 * @return decoded resourceName of the URI or empty space if there is no path in the URI
-	 */
-	public String getResourceName();
+    /**
+     * This method returns the resource name.
+     * Resource name is taken from the path, usually the last part of the path.
+     *
+     * @return decoded resourceName of the URI or empty space if there is no path in the URI
+     */
+    public String getResourceName();
 
 }

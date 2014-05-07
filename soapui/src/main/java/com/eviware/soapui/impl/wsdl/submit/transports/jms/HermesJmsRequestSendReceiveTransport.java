@@ -27,47 +27,39 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 
-public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransport
-{
+public class HermesJmsRequestSendReceiveTransport extends HermesJmsRequestTransport {
 
-	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
-	{
-		Session queueSession = null;
-		JMSConnectionHolder jmsConnectionHolder = null;
-		try
-		{
-			init( submitContext, request );
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, false, clientID, username, password );
+    public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception {
+        Session queueSession = null;
+        JMSConnectionHolder jmsConnectionHolder = null;
+        try {
+            init(submitContext, request);
+            jmsConnectionHolder = new JMSConnectionHolder(jmsEndpoint, hermes, false, clientID, username, password);
 
-			// session
-			queueSession = jmsConnectionHolder.getSession();
+            // session
+            queueSession = jmsConnectionHolder.getSession();
 
-			// queue
-			Queue queueSend = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getSend() );
-			Queue queueReceive = jmsConnectionHolder.getQueue( jmsConnectionHolder.getJmsEndpoint().getReceive() );
+            // queue
+            Queue queueSend = jmsConnectionHolder.getQueue(jmsConnectionHolder.getJmsEndpoint().getSend());
+            Queue queueReceive = jmsConnectionHolder.getQueue(jmsConnectionHolder.getJmsEndpoint().getReceive());
 
-			Message messageSend = messageSend( submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
-					queueSend, queueReceive );
-			MessageConsumer messageConsumer = queueSession.createConsumer( queueReceive,
-					submitContext.expand( messageSelector ) );
+            Message messageSend = messageSend(submitContext, request, queueSession, jmsConnectionHolder.getHermes(),
+                    queueSend, queueReceive);
+            MessageConsumer messageConsumer = queueSession.createConsumer(queueReceive,
+                    submitContext.expand(messageSelector));
 
-			return makeResponse( submitContext, request, timeStarted, messageSend, messageConsumer );
-		}
-		catch( JMSException jmse )
-		{
-			return errorResponse( submitContext, request, timeStarted, jmse );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-		finally
-		{
-			if( jmsConnectionHolder != null )
-				jmsConnectionHolder.closeAll();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
-					queueSession );
-		}
-		return null;
-	}
+            return makeResponse(submitContext, request, timeStarted, messageSend, messageConsumer);
+        } catch (JMSException jmse) {
+            return errorResponse(submitContext, request, timeStarted, jmse);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        } finally {
+            if (jmsConnectionHolder != null) {
+                jmsConnectionHolder.closeAll();
+            }
+            closeSessionAndConnection(jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+                    queueSession);
+        }
+        return null;
+    }
 }

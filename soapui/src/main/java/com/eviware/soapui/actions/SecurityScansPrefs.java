@@ -30,110 +30,96 @@ import java.awt.*;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 
-public class SecurityScansPrefs implements Prefs
-{
+public class SecurityScansPrefs implements Prefs {
 
-	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
-	private SimpleForm securityScansForm;
-	private final String title;
+    public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
+    private SimpleForm securityScansForm;
+    private final String title;
 
-	public SecurityScansPrefs( String title )
-	{
-		this.title = title;
-	}
+    public SecurityScansPrefs(String title) {
+        this.title = title;
+    }
 
-	public SimpleForm getForm()
-	{
-		if( securityScansForm == null )
-		{
-			securityScansForm = new SimpleForm();
+    public SimpleForm getForm() {
+        if (securityScansForm == null) {
+            securityScansForm = new SimpleForm();
 
-			PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
-					SecurityScanUtil.getGlobalSensitiveInformationExposureTokens() )
-			{
-				protected JTable buildPropertiesTable()
-				{
-					propertiesModel = new DefaultPropertyHolderTableModel( holder )
-					{
-						@Override
-						public String getColumnName( int columnIndex )
-						{
-							switch( columnIndex )
-							{
-							case 0 :
-								return "Token";
-							case 1 :
-								return "Description";
-							}
+            PropertyHolderTable propertyHolderTable = new PropertyHolderTable(
+                    SecurityScanUtil.getGlobalSensitiveInformationExposureTokens()) {
+                protected JTable buildPropertiesTable() {
+                    propertiesModel = new DefaultPropertyHolderTableModel(holder) {
+                        @Override
+                        public String getColumnName(int columnIndex) {
+                            switch (columnIndex) {
+                                case 0:
+                                    return "Token";
+                                case 1:
+                                    return "Description";
+                            }
 
-							return null;
-						}
+                            return null;
+                        }
 
-					};
-					propertiesTable = new PropertiesHolderJTable();
-					propertiesTable.setSurrendersFocusOnKeystroke( true );
+                    };
+                    propertiesTable = new PropertiesHolderJTable();
+                    propertiesTable.setSurrendersFocusOnKeystroke(true);
 
-					propertiesTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
-					propertiesTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-					{
-						public void valueChanged( ListSelectionEvent e )
-						{
-							int selectedRow = propertiesTable.getSelectedRow();
-							if( removePropertyAction != null )
-								removePropertyAction.setEnabled( selectedRow != -1 );
+                    propertiesTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+                    propertiesTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                        public void valueChanged(ListSelectionEvent e) {
+                            int selectedRow = propertiesTable.getSelectedRow();
+                            if (removePropertyAction != null) {
+                                removePropertyAction.setEnabled(selectedRow != -1);
+                            }
 
-							if( movePropertyUpAction != null )
-								movePropertyUpAction.setEnabled( selectedRow > 0 );
+                            if (movePropertyUpAction != null) {
+                                movePropertyUpAction.setEnabled(selectedRow > 0);
+                            }
 
-							if( movePropertyDownAction != null )
-								movePropertyDownAction.setEnabled( selectedRow >= 0
-										&& selectedRow < propertiesTable.getRowCount() - 1 );
-						}
-					} );
+                            if (movePropertyDownAction != null) {
+                                movePropertyDownAction.setEnabled(selectedRow >= 0
+                                        && selectedRow < propertiesTable.getRowCount() - 1);
+                            }
+                        }
+                    });
 
-					propertiesTable.setDragEnabled( true );
-					propertiesTable.setTransferHandler( new TransferHandler( "testProperty" ) );
+                    propertiesTable.setDragEnabled(true);
+                    propertiesTable.setTransferHandler(new TransferHandler("testProperty"));
 
-					if( getHolder().getModelItem() != null )
-					{
-						DropTarget dropTarget = new DropTarget( propertiesTable,
-								new PropertyHolderTablePropertyExpansionDropTarget() );
-						dropTarget.setDefaultActions( DnDConstants.ACTION_COPY_OR_MOVE );
-					}
+                    if (getHolder().getModelItem() != null) {
+                        DropTarget dropTarget = new DropTarget(propertiesTable,
+                                new PropertyHolderTablePropertyExpansionDropTarget());
+                        dropTarget.setDefaultActions(DnDConstants.ACTION_COPY_OR_MOVE);
+                    }
 
-					return propertiesTable;
-				}
-			};
-			propertyHolderTable.setPreferredSize( new Dimension( 200, 300 ) );
-			securityScansForm.append( new JLabel( title ) );
-			securityScansForm.addSpace();
-			securityScansForm.addComponent( propertyHolderTable );
-		}
+                    return propertiesTable;
+                }
+            };
+            propertyHolderTable.setPreferredSize(new Dimension(200, 300));
+            securityScansForm.append(new JLabel(title));
+            securityScansForm.addSpace();
+            securityScansForm.addComponent(propertyHolderTable);
+        }
 
-		return securityScansForm;
-	}
+        return securityScansForm;
+    }
 
-	public void getFormValues( Settings settings )
-	{
-		SecurityScanUtil.saveGlobalSecuritySettings();
-	}
+    public void getFormValues(Settings settings) {
+        SecurityScanUtil.saveGlobalSecuritySettings();
+    }
 
-	public String getTitle()
-	{
-		return GLOBAL_SENSITIVE_INFORMATION_TOKENS;
-	}
+    public String getTitle() {
+        return GLOBAL_SENSITIVE_INFORMATION_TOKENS;
+    }
 
-	public StringToStringMap getValues( Settings settings )
-	{
-		return null;
-	}
+    public StringToStringMap getValues(Settings settings) {
+        return null;
+    }
 
-	public void setFormValues( Settings settings )
-	{
+    public void setFormValues(Settings settings) {
 
-	}
+    }
 
-	public void storeValues( StringToStringMap values, Settings settings )
-	{
-	}
+    public void storeValues(StringToStringMap values, Settings settings) {
+    }
 }

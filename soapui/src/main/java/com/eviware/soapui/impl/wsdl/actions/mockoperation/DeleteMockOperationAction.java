@@ -24,27 +24,23 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Deletes a WsdlMockOperation from its WsdlMockService
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DeleteMockOperationAction extends AbstractSoapUIAction<MockOperation>
-{
-	public DeleteMockOperationAction()
-	{
-		super( "Remove", "Removes this node" );
-	}
+public class DeleteMockOperationAction extends AbstractSoapUIAction<MockOperation> {
+    public DeleteMockOperationAction() {
+        super("Remove", "Removes this node");
+    }
 
-	public void perform( MockOperation mockOperation, Object param )
-	{
+    public void perform(MockOperation mockOperation, Object param) {
 
-		String opEquivalentName = mockOperation instanceof RestMockAction ? "Mock Action" : "Mock Operation";
+        String opEquivalentName = mockOperation instanceof RestMockAction ? "Mock Action" : "Mock Operation";
 
-		if( UISupport.confirm( "Remove "+ opEquivalentName +" [" + mockOperation.getName() + "] from MockService ["
-				+ mockOperation.getMockService().getName() + "]", "Remove "+ opEquivalentName ) )
-		{
-			MockService mockService = mockOperation.getMockService();
-			mockService.removeMockOperation( mockOperation );
-		}
-	}
+        if (UISupport.confirm("Remove " + opEquivalentName + " [" + mockOperation.getName() + "] from MockService ["
+                + mockOperation.getMockService().getName() + "]", "Remove " + opEquivalentName)) {
+            MockService mockService = mockOperation.getMockService();
+            mockService.removeMockOperation(mockOperation);
+        }
+    }
 }

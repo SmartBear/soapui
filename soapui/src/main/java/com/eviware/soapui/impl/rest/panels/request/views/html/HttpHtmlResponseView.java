@@ -38,155 +38,125 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 @SuppressWarnings("unchecked")
-public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
-{
-	private HttpRequestInterface<?> httpRequest;
-	private JPanel panel= new JPanel( new BorderLayout() );
-	private WebViewBasedBrowserComponent browser;
-	private MessageExchangeModelItem messageExchangeModelItem;
-	private boolean initialized = false;
+public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener {
+    private HttpRequestInterface<?> httpRequest;
+    private JPanel panel = new JPanel(new BorderLayout());
+    private WebViewBasedBrowserComponent browser;
+    private MessageExchangeModelItem messageExchangeModelItem;
+    private boolean initialized = false;
 
-	public HttpHtmlResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
-	{
-		super( "HTML", httpRequestMessageEditor, HttpHtmlResponseViewFactory.VIEW_ID );
-		this.httpRequest = httpRequest;
-		httpRequest.addPropertyChangeListener( this );
-	}
+    public HttpHtmlResponseView(HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest) {
+        super("HTML", httpRequestMessageEditor, HttpHtmlResponseViewFactory.VIEW_ID);
+        this.httpRequest = httpRequest;
+        httpRequest.addPropertyChangeListener(this);
+    }
 
-	public JComponent getComponent()
-	{
-		return panel;
-	}
+    public JComponent getComponent() {
+        return panel;
+    }
 
-	@Override
-	public boolean activate( EditorLocation<HttpResponseDocument> location )
-	{
-		boolean activated = super.activate( location );
-		if (activated)
-		{
-			ensureComponentIsInitialized();
-			HttpResponse response = httpRequest.getResponse();
-			if( response != null )
-			{
-				setEditorContent( response );
-			}
-		}
-		return activated;
-	}
+    @Override
+    public boolean activate(EditorLocation<HttpResponseDocument> location) {
+        boolean activated = super.activate(location);
+        if (activated) {
+            ensureComponentIsInitialized();
+            HttpResponse response = httpRequest.getResponse();
+            if (response != null) {
+                setEditorContent(response);
+            }
+        }
+        return activated;
+    }
 
-	private void ensureComponentIsInitialized()
-	{
-		if( !initialized )
-		{
-			if( SoapUI.isBrowserDisabled() )
-			{
-				panel.add( new JLabel( "Browser component is disabled." ) );
-			}
-			else
-			{
-				browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
-				Component component = browser.getComponent();
-				component.setMinimumSize( new Dimension( 100, 100 ) );
-				panel.add( component, BorderLayout.CENTER );
-			}
-			initialized = true;
-		}
-	}
+    private void ensureComponentIsInitialized() {
+        if (!initialized) {
+            if (SoapUI.isBrowserDisabled()) {
+                panel.add(new JLabel("Browser component is disabled."));
+            } else {
+                browser = WebViewBasedBrowserComponentFactory.createBrowserComponent(false);
+                Component component = browser.getComponent();
+                component.setMinimumSize(new Dimension(100, 100));
+                panel.add(component, BorderLayout.CENTER);
+            }
+            initialized = true;
+        }
+    }
 
-	@Override
-	public boolean deactivate()
-	{
-		boolean deactivated = super.deactivate();
-		if( deactivated )
-		{
-			browser.setContent( "" );
-		}
-		return deactivated;
-	}
+    @Override
+    public boolean deactivate() {
+        boolean deactivated = super.deactivate();
+        if (deactivated) {
+            browser.setContent("");
+        }
+        return deactivated;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		if( browser != null )
-			browser.close( true );
+        if (browser != null) {
+            browser.close(true);
+        }
 
-		if( messageExchangeModelItem != null )
-			messageExchangeModelItem.removePropertyChangeListener( this );
-		else
-			httpRequest.removePropertyChangeListener( this );
+        if (messageExchangeModelItem != null) {
+            messageExchangeModelItem.removePropertyChangeListener(this);
+        } else {
+            httpRequest.removePropertyChangeListener(this);
+        }
 
-		httpRequest = null;
-		messageExchangeModelItem = null;
-	}
+        httpRequest = null;
+        messageExchangeModelItem = null;
+    }
 
-	protected void setEditorContent( HttpResponse httpResponse )
-	{
-		if( httpResponse == null || SoapUI.isBrowserDisabled())
-		{
-			return;
-		}
-		String content = httpResponse.getContentAsString();
-		if( content != null )
-		{
-			String contentType = httpResponse.getContentType();
+    protected void setEditorContent(HttpResponse httpResponse) {
+        if (httpResponse == null || SoapUI.isBrowserDisabled()) {
+            return;
+        }
+        String content = httpResponse.getContentAsString();
+        if (content != null) {
+            String contentType = httpResponse.getContentType();
 
-			if( contentType != null && isSupportedContentType( contentType ) )
-			{
-				try
-				{
-					browser.setContent( content, contentType);
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e, "Could not display response from " + httpResponse.getURL() + " as HTML" );
-				}
-			}
-			else
-			{
-				browser.setContent( "unsupported content-type [" + contentType + "]" );
-			}
-		}
-		else
-		{
-			browser.setContent( "<missing content>" );
-		}
-	}
+            if (contentType != null && isSupportedContentType(contentType)) {
+                try {
+                    browser.setContent(content, contentType);
+                } catch (Exception e) {
+                    SoapUI.logError(e, "Could not display response from " + httpResponse.getURL() + " as HTML");
+                }
+            } else {
+                browser.setContent("unsupported content-type [" + contentType + "]");
+            }
+        } else {
+            browser.setContent("<missing content>");
+        }
+    }
 
 
+    private boolean isSupportedContentType(String contentType) {
+        return contentType != null && (contentType.trim().toLowerCase().startsWith("text") ||
+                contentType.trim().toLowerCase().startsWith("image"));
+    }
 
-	private boolean isSupportedContentType( String contentType )
-	{
-		return contentType != null && ( contentType.trim().toLowerCase().startsWith( "text" ) ||
-				contentType.trim().toLowerCase().startsWith( "image" ) );
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(AbstractHttpRequestInterface.RESPONSE_PROPERTY)) {
+            if (browser != null) {
+                setEditorContent(((HttpResponse) evt.getNewValue()));
+            }
+        }
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( AbstractHttpRequestInterface.RESPONSE_PROPERTY ) )
-		{
-			if( browser != null )
-				setEditorContent( ( ( HttpResponse )evt.getNewValue() ) );
-		}
-	}
+    @Override
+    public void setXml(String xml) {
+    }
 
-	@Override
-	public void setXml( String xml )
-	{
-	}
+    public boolean saveDocument(boolean validate) {
+        return false;
+    }
 
-	public boolean saveDocument( boolean validate )
-	{
-		return false;
-	}
+    public void setEditable(boolean enabled) {
+    }
 
-	public void setEditable( boolean enabled )
-	{
-	}
-
-	public HttpRequestInterface<?> getHttpRequest()
-	{
-		return httpRequest;
-	}
+    public HttpRequestInterface<?> getHttpRequest() {
+        return httpRequest;
+    }
 }

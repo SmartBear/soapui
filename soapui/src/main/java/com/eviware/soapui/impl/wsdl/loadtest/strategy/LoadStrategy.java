@@ -28,27 +28,26 @@ import com.eviware.soapui.model.testsuite.LoadTestRunner;
 
 /**
  * Strategy used by WsdlLoadTest for controlling requests in each thread
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface LoadStrategy extends LoadTestRunListener
-{
-	public final static String CONFIGURATION_PROPERTY = "configuration_property";
+public interface LoadStrategy extends LoadTestRunListener {
+    public final static String CONFIGURATION_PROPERTY = "configuration_property";
 
-	public void addConfigurationChangeListener( PropertyChangeListener listener );
+    public void addConfigurationChangeListener(PropertyChangeListener listener);
 
-	public void removeConfigurationChangeListener( PropertyChangeListener listener );
+    public void removeConfigurationChangeListener(PropertyChangeListener listener);
 
-	public XmlObject getConfig();
+    public XmlObject getConfig();
 
-	public String getType();
+    public String getType();
 
-	public JComponent getConfigurationPanel();
+    public JComponent getConfigurationPanel();
 
-	public void updateConfig( XmlObject config );
+    public void updateConfig(XmlObject config);
 
-	public boolean allowThreadCountChangeDuringRun();
+    public boolean allowThreadCountChangeDuringRun();
 
-	public void recalculate( LoadTestRunner loadTestRunner, LoadTestRunContext context );
+    public void recalculate(LoadTestRunner loadTestRunner, LoadTestRunContext context);
 }

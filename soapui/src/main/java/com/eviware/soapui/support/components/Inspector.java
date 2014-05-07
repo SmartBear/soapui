@@ -21,32 +21,31 @@ import java.beans.PropertyChangeListener;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 
-public interface Inspector
-{
-	public final static String TITLE_PROPERTY = Inspector.class.getName() + "@title";
-	public final static String ICON_PROPERTY = Inspector.class.getName() + "@icon";
-	public final static String DESCRIPTION_PROPERTY = Inspector.class.getName() + "@description";
-	public final static String ENABLED_PROPERTY = Inspector.class.getName() + "@enabled";
+public interface Inspector {
+    public final static String TITLE_PROPERTY = Inspector.class.getName() + "@title";
+    public final static String ICON_PROPERTY = Inspector.class.getName() + "@icon";
+    public final static String DESCRIPTION_PROPERTY = Inspector.class.getName() + "@description";
+    public final static String ENABLED_PROPERTY = Inspector.class.getName() + "@enabled";
 
-	public abstract String getTitle();
+    public abstract String getTitle();
 
-	public abstract ImageIcon getIcon();
+    public abstract ImageIcon getIcon();
 
-	public abstract JComponent getComponent();
+    public abstract JComponent getComponent();
 
-	public abstract String getDescription();
+    public abstract String getDescription();
 
-	public abstract boolean isEnabled();
+    public abstract boolean isEnabled();
 
-	public abstract void addPropertyChangeListener( PropertyChangeListener listener );
+    public abstract void addPropertyChangeListener(PropertyChangeListener listener);
 
-	public abstract void removePropertyChangeListener( PropertyChangeListener listener );
+    public abstract void removePropertyChangeListener(PropertyChangeListener listener);
 
-	public abstract String getInspectorId();
+    public abstract String getInspectorId();
 
-	public abstract void release();
+    public abstract void release();
 
-	public abstract void activate();
+    public abstract void activate();
 
-	public abstract void deactivate();
+    public abstract void deactivate();
 }

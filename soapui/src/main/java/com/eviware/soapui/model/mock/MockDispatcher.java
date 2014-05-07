@@ -12,26 +12,26 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.model.mock;
+*/
+package com.eviware.soapui.model.mock;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public interface MockDispatcher
-{
+public interface MockDispatcher {
 
-	public MockResult dispatchRequest( HttpServletRequest request, HttpServletResponse response )
-			throws DispatchException;
+    public MockResult dispatchRequest(HttpServletRequest request, HttpServletResponse response)
+            throws DispatchException;
 
-	public int getMockResultCount();
+    public int getMockResultCount();
 
-	public MockResult getMockResultAt( int index );
+    public MockResult getMockResultAt(int index);
 
-	public void setLogEnabled( boolean logEnabled );
+    public void setLogEnabled(boolean logEnabled);
 
-	public void clearResults();
+    public void clearResults();
 
-	public void setMaxResults( long maxNumberOfResults );
+    public void setMaxResults(long maxNumberOfResults);
 }

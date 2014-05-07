@@ -21,10 +21,9 @@ import com.eviware.soapui.model.testsuite.Assertable.AssertionStatus;
 
 /**
  * Behaviour for a assertion for the property in the WsdlMessageAssertion
- * 
+ *
  * @author nebojsa.tasic
  */
-public interface PropertyAssertion
-{
-	public AssertionStatus assertProperty( String propertyName, MessageExchange messageExchange , SubmitContext context );
+public interface PropertyAssertion {
+    public AssertionStatus assertProperty(String propertyName, MessageExchange messageExchange, SubmitContext context);
 }

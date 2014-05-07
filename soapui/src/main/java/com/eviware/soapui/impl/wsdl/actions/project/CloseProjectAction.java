@@ -29,50 +29,37 @@ import java.io.IOException;
  * @author Ole.Matzura
  */
 
-public class CloseProjectAction extends AbstractSoapUIAction<WsdlProject>
-{
-	public static final String SOAPUI_ACTION_ID = "CloseProjectAction";
+public class CloseProjectAction extends AbstractSoapUIAction<WsdlProject> {
+    public static final String SOAPUI_ACTION_ID = "CloseProjectAction";
 
-	public CloseProjectAction()
-	{
-		super( "Close Project", "Closes this project" );
-	}
+    public CloseProjectAction() {
+        super("Close Project", "Closes this project");
+    }
 
-	public void perform( WsdlProject project, Object param )
-	{
-		if( project.isRemote() )
-		{
-			if( UISupport.confirm( "Close remote project? (changes will be lost)", getName() ) )
-			{
-				project.getWorkspace().closeProject( project );
-			}
-		}
-		else
-		{
-			Boolean saveProject = UISupport.confirmOrCancel( "Save project [" + project.getName() + "] before closing?",
-					"Close Project" );
+    public void perform(WsdlProject project, Object param) {
+        if (project.isRemote()) {
+            if (UISupport.confirm("Close remote project? (changes will be lost)", getName())) {
+                project.getWorkspace().closeProject(project);
+            }
+        } else {
+            Boolean saveProject = UISupport.confirmOrCancel("Save project [" + project.getName() + "] before closing?",
+                    "Close Project");
 
-			if( saveProject == null )
-			{
-				return;
-			}
+            if (saveProject == null) {
+                return;
+            }
 
-			try
-			{
-				if( saveProject )
-				{
-					SaveStatus status = project.save();
-					if( status == SaveStatus.CANCELLED || status == SaveStatus.FAILED )
-					{
-						return;
-					}
-				}
-				project.getWorkspace().closeProject( project );
-			}
-			catch( IOException e )
-			{
-				UISupport.showErrorMessage( e );
-			}
-		}
-	}
+            try {
+                if (saveProject) {
+                    SaveStatus status = project.save();
+                    if (status == SaveStatus.CANCELLED || status == SaveStatus.FAILED) {
+                        return;
+                    }
+                }
+                project.getWorkspace().closeProject(project);
+            } catch (IOException e) {
+                UISupport.showErrorMessage(e);
+            }
+        }
+    }
 }

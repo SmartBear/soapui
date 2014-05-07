@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.preferences;
+*/
+package com.eviware.soapui.support.preferences;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -30,63 +31,56 @@ import static org.junit.Assert.assertThat;
 /**
  * Unit tests for the UserPreferences class.
  */
-public class UserPreferencesTest
-{
+public class UserPreferencesTest {
 
-	private static Rectangle originalBounds;
+    private static Rectangle originalBounds;
 
-	@BeforeClass
-	public static void saveOriginalBounds()
-	{
-		originalBounds = new UserPreferences().getSoapUIWindowBounds();
-	}
+    @BeforeClass
+    public static void saveOriginalBounds() {
+        originalBounds = new UserPreferences().getSoapUIWindowBounds();
+    }
 
-	@AfterClass
-	public static void restoreOriginalBounds() throws BackingStoreException
-	{
-		new UserPreferences().setSoapUIWindowBounds( originalBounds );
-	}
+    @AfterClass
+    public static void restoreOriginalBounds() throws BackingStoreException {
+        new UserPreferences().setSoapUIWindowBounds(originalBounds);
+    }
 
-	private UserPreferences preferences;
+    private UserPreferences preferences;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		preferences = new UserPreferences();
-	}
+    @Before
+    public void setUp() throws Exception {
+        preferences = new UserPreferences();
+    }
 
-	@Test
-	public void savesAndRetrievesWindowBounds() throws Exception
-	{
-		Rectangle windowBounds = new Rectangle( 150, 120, 1024, 768 );
-		preferences.setSoapUIWindowBounds( windowBounds );
+    @Test
+    public void savesAndRetrievesWindowBounds() throws Exception {
+        Rectangle windowBounds = new Rectangle(150, 120, 1024, 768);
+        preferences.setSoapUIWindowBounds(windowBounds);
 
-		UserPreferences independentPreferences = new UserPreferences();
-		assertThat( independentPreferences.getSoapUIWindowBounds(), is( windowBounds ) );
+        UserPreferences independentPreferences = new UserPreferences();
+        assertThat(independentPreferences.getSoapUIWindowBounds(), is(windowBounds));
 
-	}
+    }
 
-	@Test
-	public void clearsWindowBoundsWhenSettingNull() throws Exception
-	{
-		Rectangle windowBounds = new Rectangle( 150, 120, 1024, 768 );
-		preferences.setSoapUIWindowBounds( windowBounds );
+    @Test
+    public void clearsWindowBoundsWhenSettingNull() throws Exception {
+        Rectangle windowBounds = new Rectangle(150, 120, 1024, 768);
+        preferences.setSoapUIWindowBounds(windowBounds);
 
-		UserPreferences independentPreferences = new UserPreferences();
-		independentPreferences.setSoapUIWindowBounds( null );
+        UserPreferences independentPreferences = new UserPreferences();
+        independentPreferences.setSoapUIWindowBounds(null);
 
-		UserPreferences reader = new UserPreferences();
-		assertThat( reader.getSoapUIWindowBounds(), is( nullValue() ) );
+        UserPreferences reader = new UserPreferences();
+        assertThat(reader.getSoapUIWindowBounds(), is(nullValue()));
 
-	}
+    }
 
-	@Test
-	public void returnsNullWhenPreferencesValuesAreBroken() throws Exception
-	{
-		preferences.setSoapUIWindowBounds( new Rectangle(0, 0, 200, 300) );
-		Preferences.userRoot().node( UserPreferences.ROOT_NODE_NAME ).put(UserPreferences.WINDOW_X, "blablabla");
+    @Test
+    public void returnsNullWhenPreferencesValuesAreBroken() throws Exception {
+        preferences.setSoapUIWindowBounds(new Rectangle(0, 0, 200, 300));
+        Preferences.userRoot().node(UserPreferences.ROOT_NODE_NAME).put(UserPreferences.WINDOW_X, "blablabla");
 
-		assertThat(preferences.getSoapUIWindowBounds(), is(nullValue()));
+        assertThat(preferences.getSoapUIWindowBounds(), is(nullValue()));
 
-	}
+    }
 }

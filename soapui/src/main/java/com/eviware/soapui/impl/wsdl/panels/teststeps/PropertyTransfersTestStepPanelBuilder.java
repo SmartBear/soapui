@@ -24,29 +24,24 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for TransferResponseValuesTestStep
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class PropertyTransfersTestStepPanelBuilder extends EmptyPanelBuilder<PropertyTransfersTestStep>
-{
-	public PropertyTransfersTestStepPanelBuilder()
-	{
-	}
+public class PropertyTransfersTestStepPanelBuilder extends EmptyPanelBuilder<PropertyTransfersTestStep> {
+    public PropertyTransfersTestStepPanelBuilder() {
+    }
 
-	public DesktopPanel buildDesktopPanel( PropertyTransfersTestStep testStep )
-	{
-		return new PropertyTransfersDesktopPanel( testStep );
-	}
+    public DesktopPanel buildDesktopPanel(PropertyTransfersTestStep testStep) {
+        return new PropertyTransfersDesktopPanel(testStep);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	@Override
-	public Component buildOverviewPanel( PropertyTransfersTestStep modelItem )
-	{
-		return buildDefaultProperties( modelItem, "PropertyTransfer Properties" );
-	}
+    @Override
+    public Component buildOverviewPanel(PropertyTransfersTestStep modelItem) {
+        return buildDefaultProperties(modelItem, "PropertyTransfer Properties");
+    }
 }

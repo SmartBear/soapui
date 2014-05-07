@@ -22,19 +22,18 @@ import com.eviware.soapui.model.iface.SubmitContext;
 
 /**
  * Filter for modifying a request before it is sent
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface RequestFilter
-{
-	public void filterRequest( SubmitContext context, Request request );
+public interface RequestFilter {
+    public void filterRequest(SubmitContext context, Request request);
 
-	public void afterRequest( SubmitContext context, Request request );
+    public void afterRequest(SubmitContext context, Request request);
 
-	/**
-	 * @deprecated
-	 */
+    /**
+     * @deprecated
+     */
 
-	public void afterRequest( SubmitContext context, Response response );
+    public void afterRequest(SubmitContext context, Response response);
 }

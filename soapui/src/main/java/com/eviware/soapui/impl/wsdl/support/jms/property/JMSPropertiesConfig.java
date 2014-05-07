@@ -24,76 +24,65 @@ import com.eviware.soapui.config.JMSPropertiesConfConfig;
 import com.eviware.soapui.config.JMSPropertyConfig;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 
-public class JMSPropertiesConfig implements PropertyChangeNotifier
-{
+public class JMSPropertiesConfig implements PropertyChangeNotifier {
 
-	private JMSPropertiesConfConfig jmsPropertiesConfConfig;
+    private JMSPropertiesConfConfig jmsPropertiesConfConfig;
 
-	private PropertyChangeSupport propertyChangeSupport;
+    private PropertyChangeSupport propertyChangeSupport;
 
-	private final JMSPropertyContainer container;
+    private final JMSPropertyContainer container;
 
-	public JMSPropertiesConfig( JMSPropertiesConfConfig jmsPropertiesConfConfig, JMSPropertyContainer container )
-	{
-		this.jmsPropertiesConfConfig = jmsPropertiesConfConfig;
-		this.container = container;
-		// propertyChangeSupport = new PropertyChangeSupport(this);
-		// if (!jmsPropertyConfConfig.isSetJMSDeliveryMode())
-		// {
-		// jmsPropertyConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.PERSISTENT);
-		// }
-	}
+    public JMSPropertiesConfig(JMSPropertiesConfConfig jmsPropertiesConfConfig, JMSPropertyContainer container) {
+        this.jmsPropertiesConfConfig = jmsPropertiesConfConfig;
+        this.container = container;
+        // propertyChangeSupport = new PropertyChangeSupport(this);
+        // if (!jmsPropertyConfConfig.isSetJMSDeliveryMode())
+        // {
+        // jmsPropertyConfConfig.setJMSDeliveryMode(JMSDeliveryModeTypeConfig.PERSISTENT);
+        // }
+    }
 
-	public JMSPropertiesConfConfig getJmsPropertyConfConfig()
-	{
-		return jmsPropertiesConfConfig;
-	}
+    public JMSPropertiesConfConfig getJmsPropertyConfConfig() {
+        return jmsPropertiesConfConfig;
+    }
 
-	public void setJmsPropertyConfConfig( JMSPropertiesConfConfig jmsPropertiesConfConfig )
-	{
-		this.jmsPropertiesConfConfig = jmsPropertiesConfConfig;
-	}
+    public void setJmsPropertyConfConfig(JMSPropertiesConfConfig jmsPropertiesConfConfig) {
+        this.jmsPropertiesConfConfig = jmsPropertiesConfConfig;
+    }
 
-	public JMSPropertyContainer getContainer()
-	{
-		return container;
-	}
+    public JMSPropertyContainer getContainer() {
+        return container;
+    }
 
-	public List<JMSPropertyConfig> getJMSProperties()
-	{
-		return jmsPropertiesConfConfig.getJmsPropertiesList();
-	}
+    public List<JMSPropertyConfig> getJMSProperties() {
+        return jmsPropertiesConfConfig.getJmsPropertiesList();
+    }
 
-	public void setJMSProperties( List<JMSPropertyConfig> map )
-	{
+    public void setJMSProperties(List<JMSPropertyConfig> map) {
 
-		// List<JMSPropertyConfig> propertyList =
-		// jmsPropertiesConfConfig.getJmsPropertiesList();
-		// StringToStringMap stringToStringMap = new
-		// StringToStringMap(propertyList.size());
-		// for (JMSPropertyConfig jmsProperty:propertyList){
-		// stringToStringMap
-		// }
-	}
+        // List<JMSPropertyConfig> propertyList =
+        // jmsPropertiesConfConfig.getJmsPropertiesList();
+        // StringToStringMap stringToStringMap = new
+        // StringToStringMap(propertyList.size());
+        // for (JMSPropertyConfig jmsProperty:propertyList){
+        // stringToStringMap
+        // }
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( listener );
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-	}
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( listener );
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-	}
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
 
 }

@@ -23,12 +23,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 
-interface MockAsWarCoreInterface
-{
+interface MockAsWarCoreInterface {
 
-	public void dispatchRequest( HttpServletRequest request, HttpServletResponse response ) throws DispatchException,
-			IOException;
+    public void dispatchRequest(HttpServletRequest request, HttpServletResponse response) throws DispatchException,
+            IOException;
 
-	public void stop();
+    public void stop();
 
 }

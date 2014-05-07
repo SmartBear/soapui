@@ -20,13 +20,12 @@ import java.util.List;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 
-public interface AssertableConfig
-{
-	List<TestAssertionConfig> getAssertionList();
+public interface AssertableConfig {
+    List<TestAssertionConfig> getAssertionList();
 
-	void removeAssertion( int ix );
+    void removeAssertion(int ix);
 
-	TestAssertionConfig addNewAssertion();
+    TestAssertionConfig addNewAssertion();
 
-	TestAssertionConfig insertAssertion( TestAssertionConfig newAssertion, int ix );
+    TestAssertionConfig insertAssertion(TestAssertionConfig newAssertion, int ix);
 }

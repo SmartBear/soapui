@@ -37,132 +37,112 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings("unchecked")
 public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpResponseDocument> implements
-		PropertyChangeListener
-{
-	private final MessageExchangeModelItem messageExchangeModelItem;
-	private JPanel contentPanel;
-	private RSyntaxTextArea contentEditor;
-	private boolean updatingRequest;
-	private JPanel panel;
+        PropertyChangeListener {
+    private final MessageExchangeModelItem messageExchangeModelItem;
+    private JPanel contentPanel;
+    private RSyntaxTextArea contentEditor;
+    private boolean updatingRequest;
+    private JPanel panel;
 
-	public JsonResponseMessageExchangeView( XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem )
-	{
-		super( "JSON", editor, JsonResponseViewFactory.VIEW_ID );
-		this.messageExchangeModelItem = messageExchangeModelItem;
+    public JsonResponseMessageExchangeView(XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem) {
+        super("JSON", editor, JsonResponseViewFactory.VIEW_ID);
+        this.messageExchangeModelItem = messageExchangeModelItem;
 
-		messageExchangeModelItem.addPropertyChangeListener( this );
-	}
+        messageExchangeModelItem.addPropertyChangeListener(this);
+    }
 
-	public JComponent getComponent()
-	{
-		if( panel == null )
-		{
-			panel = new JPanel( new BorderLayout() );
+    public JComponent getComponent() {
+        if (panel == null) {
+            panel = new JPanel(new BorderLayout());
 
-			panel.add( buildToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
-		}
+            panel.add(buildToolbar(), BorderLayout.NORTH);
+            panel.add(buildContent(), BorderLayout.CENTER);
+            panel.add(buildStatus(), BorderLayout.SOUTH);
+        }
 
-		return panel;
-	}
+        return panel;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		messageExchangeModelItem.removePropertyChangeListener( this );
-	}
+        messageExchangeModelItem.removePropertyChangeListener(this);
+    }
 
-	private Component buildStatus()
-	{
-		return new JPanel();
-	}
+    private Component buildStatus() {
+        return new JPanel();
+    }
 
-	private Component buildContent()
-	{
-		contentPanel = new JPanel( new BorderLayout() );
+    private Component buildContent() {
+        contentPanel = new JPanel(new BorderLayout());
 
-		contentEditor = SyntaxEditorUtil.createDefaultJsonSyntaxTextArea();
-		MessageExchange me = messageExchangeModelItem.getMessageExchange();
-		if( me != null )
-			setEditorContent( me );
+        contentEditor = SyntaxEditorUtil.createDefaultJsonSyntaxTextArea();
+        MessageExchange me = messageExchangeModelItem.getMessageExchange();
+        if (me != null) {
+            setEditorContent(me);
+        }
 
-		RTextScrollPane scrollPane = new RTextScrollPane( contentEditor );
-		scrollPane.setLineNumbersEnabled( true );
-		scrollPane.setFoldIndicatorEnabled( true );
-		contentPanel.add( scrollPane );
-		contentEditor.setEditable( false );
+        RTextScrollPane scrollPane = new RTextScrollPane(contentEditor);
+        scrollPane.setLineNumbersEnabled(true);
+        scrollPane.setFoldIndicatorEnabled(true);
+        contentPanel.add(scrollPane);
+        contentEditor.setEditable(false);
 
-		return contentPanel;
-	}
+        return contentPanel;
+    }
 
-	protected void setEditorContent( MessageExchange me )
-	{
-		if( me == null )
-		{
-			contentEditor.setText( "" );
-		}
-		else
-		{
-			String content = "<Not JSON content>";
+    protected void setEditorContent(MessageExchange me) {
+        if (me == null) {
+            contentEditor.setText("");
+        } else {
+            String content = "<Not JSON content>";
 
-			if( JsonMediaTypeHandler.seemsToBeJsonContentType( me.getResponseHeaders().get( "Content-Type", "" ) ) )
-			{
-				try
-				{
-					JSON json = JSONSerializer.toJSON( me.getResponseContent() );
-					if( json.isEmpty() )
-						content = "<Empty JSON content>";
-					else
-						content = json.toString( 3 );
-				}
-				catch( Throwable e )
-				{
-					if( !"Invalid JSON String".equals( e.getMessage() ) )
-						e.printStackTrace();
-					else
-						content = me.getResponseContent();
-				}
+            if (JsonMediaTypeHandler.seemsToBeJsonContentType(me.getResponseHeaders().get("Content-Type", ""))) {
+                try {
+                    JSON json = JSONSerializer.toJSON(me.getResponseContent());
+                    if (json.isEmpty()) {
+                        content = "<Empty JSON content>";
+                    } else {
+                        content = json.toString(3);
+                    }
+                } catch (Throwable e) {
+                    if (!"Invalid JSON String".equals(e.getMessage())) {
+                        e.printStackTrace();
+                    } else {
+                        content = me.getResponseContent();
+                    }
+                }
 
-				contentEditor.setText( content );
-			}
-			else
-			{
-				contentEditor.setText( "<Not JSON content>" );
-			}
-		}
-	}
+                contentEditor.setText(content);
+            } else {
+                contentEditor.setText("<Not JSON content>");
+            }
+        }
+    }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+    private Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( "messageExchange" ) && !updatingRequest )
-		{
-			setEditorContent( ( ( MessageExchange )evt.getNewValue() ) );
-		}
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("messageExchange") && !updatingRequest) {
+            setEditorContent(((MessageExchange) evt.getNewValue()));
+        }
+    }
 
-	@Override
-	public void setXml( String xml )
-	{
-	}
+    @Override
+    public void setXml(String xml) {
+    }
 
-	public boolean saveDocument( boolean validate )
-	{
-		return false;
-	}
+    public boolean saveDocument(boolean validate) {
+        return false;
+    }
 
-	public void setEditable( boolean enabled )
-	{
-	}
+    public void setEditable(boolean enabled) {
+    }
 }

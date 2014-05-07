@@ -20,43 +20,38 @@ import java.util.ArrayList;
 
 import com.eviware.soapui.model.ModelItem;
 
-public class PropertyExpansionsResult extends ArrayList<PropertyExpansion>
-{
-	private final ModelItem modelItem;
-	private final Object defaultTarget;
+public class PropertyExpansionsResult extends ArrayList<PropertyExpansion> {
+    private final ModelItem modelItem;
+    private final Object defaultTarget;
 
-	public PropertyExpansionsResult( ModelItem modelItem )
-	{
-		this( modelItem, modelItem );
-	}
+    public PropertyExpansionsResult(ModelItem modelItem) {
+        this(modelItem, modelItem);
+    }
 
-	public PropertyExpansionsResult( ModelItem modelItem, Object defaultTarget )
-	{
-		this.modelItem = modelItem;
-		this.defaultTarget = defaultTarget;
-	}
+    public PropertyExpansionsResult(ModelItem modelItem, Object defaultTarget) {
+        this.modelItem = modelItem;
+        this.defaultTarget = defaultTarget;
+    }
 
-	public boolean extractAndAddAll( Object target, String propertyName )
-	{
-		return addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, target, propertyName ) );
-	}
+    public boolean extractAndAddAll(Object target, String propertyName) {
+        return addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, target, propertyName));
+    }
 
-	public boolean extractAndAddAll( String propertyName )
-	{
-		return addAll( PropertyExpansionUtils.extractPropertyExpansions( modelItem, defaultTarget, propertyName ) );
-	}
+    public boolean extractAndAddAll(String propertyName) {
+        return addAll(PropertyExpansionUtils.extractPropertyExpansions(modelItem, defaultTarget, propertyName));
+    }
 
-	public PropertyExpansion[] toArray()
-	{
-		return toArray( new PropertyExpansion[size()] );
-	}
+    public PropertyExpansion[] toArray() {
+        return toArray(new PropertyExpansion[size()]);
+    }
 
-	public void addAll( PropertyExpansion[] propertyExpansions )
-	{
-		if( propertyExpansions == null )
-			return;
+    public void addAll(PropertyExpansion[] propertyExpansions) {
+        if (propertyExpansions == null) {
+            return;
+        }
 
-		for( PropertyExpansion pe : propertyExpansions )
-			add( pe );
-	}
+        for (PropertyExpansion pe : propertyExpansions) {
+            add(pe);
+        }
+    }
 }

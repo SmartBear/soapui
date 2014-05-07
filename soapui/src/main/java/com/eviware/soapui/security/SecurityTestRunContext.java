@@ -25,121 +25,111 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * Context information for a securitytest run session
- * 
+ *
  * @author dragica.soldo
  */
 
-public class SecurityTestRunContext extends WsdlTestRunContext
-{
+public class SecurityTestRunContext extends WsdlTestRunContext {
 
-	// holds currentScan index on TestStep level
-	private int currentScanIndex;
+    // holds currentScan index on TestStep level
+    private int currentScanIndex;
 
-	private TestStepResult originalTestStepResult;
+    private TestStepResult originalTestStepResult;
 
-	// holds currentScan index out of summary number of scans on a SecurityTest
-	// level
-	private int currentScanOnSecurityTestIndex;
-	private SecurityTest securityTest;
+    // holds currentScan index out of summary number of scans on a SecurityTest
+    // level
+    private int currentScanOnSecurityTestIndex;
+    private SecurityTest securityTest;
 
-	public SecurityTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties )
-	{
-		super( testRunner, properties, ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest() );
-		if( testRunner instanceof SecurityTestRunnerImpl )
-		{
-			securityTest = ( ( SecurityTestRunnerImpl )testRunner ).getSecurityTest();
-		}
-		// this.testRunner = testRunner;
-	}
+    public SecurityTestRunContext(TestCaseRunner testRunner, StringToObjectMap properties) {
+        super(testRunner, properties, ((SecurityTestRunnerImpl) testRunner).getSecurityTest());
+        if (testRunner instanceof SecurityTestRunnerImpl) {
+            securityTest = ((SecurityTestRunnerImpl) testRunner).getSecurityTest();
+        }
+        // this.testRunner = testRunner;
+    }
 
-	public int getCurrentScanOnSecurityTestIndex()
-	{
-		return currentScanOnSecurityTestIndex;
-	}
+    public int getCurrentScanOnSecurityTestIndex() {
+        return currentScanOnSecurityTestIndex;
+    }
 
-	public void setCurrentScanOnSecurityTestIndex( int currentScanOnSecurityTestIndex )
-	{
-		this.currentScanOnSecurityTestIndex = currentScanOnSecurityTestIndex;
-	}
+    public void setCurrentScanOnSecurityTestIndex(int currentScanOnSecurityTestIndex) {
+        this.currentScanOnSecurityTestIndex = currentScanOnSecurityTestIndex;
+    }
 
-	/**
-	 * Holds result of SecurityScans on a TestStep level
-	 */
-	private SecurityTestStepResult currentSecurityStepResult;
+    /**
+     * Holds result of SecurityScans on a TestStep level
+     */
+    private SecurityTestStepResult currentSecurityStepResult;
 
-	public int getCurrentScanIndex()
-	{
-		return currentScanIndex;
-	}
+    public int getCurrentScanIndex() {
+        return currentScanIndex;
+    }
 
-	public void setCurrentScanIndex( int currentScanIndex )
-	{
-		this.currentScanIndex = currentScanIndex;
-	}
+    public void setCurrentScanIndex(int currentScanIndex) {
+        this.currentScanIndex = currentScanIndex;
+    }
 
-	@Override
-	public Object get( Object key )
-	{
-		if( "currentStep".equals( key ) )
-			return getCurrentStep();
+    @Override
+    public Object get(Object key) {
+        if ("currentStep".equals(key)) {
+            return getCurrentStep();
+        }
 
-		if( "currentStepIndex".equals( key ) )
-			return getCurrentStepIndex();
+        if ("currentStepIndex".equals(key)) {
+            return getCurrentStepIndex();
+        }
 
-		if( "settings".equals( key ) )
-			return getSettings();
+        if ("settings".equals(key)) {
+            return getSettings();
+        }
 
-		if( "testCase".equals( key ) )
-			return getTestCase();
+        if ("testCase".equals(key)) {
+            return getTestCase();
+        }
 
-		if( "testRunner".equals( key ) )
-			return getTestRunner();
+        if ("testRunner".equals(key)) {
+            return getTestRunner();
+        }
 
-		Object result = getProperty( key.toString() );
+        Object result = getProperty(key.toString());
 
-		if( result == null )
-		{
-			result = super.get( key );
-		}
+        if (result == null) {
+            result = super.get(key);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public void setCurrentSecurityStepResult( SecurityTestStepResult result )
-	{
-		currentSecurityStepResult = result;
-	}
+    public void setCurrentSecurityStepResult(SecurityTestStepResult result) {
+        currentSecurityStepResult = result;
+    }
 
-	public SecurityTestStepResult getCurrentSecurityStepResult()
-	{
-		return currentSecurityStepResult;
-	}
+    public SecurityTestStepResult getCurrentSecurityStepResult() {
+        return currentSecurityStepResult;
+    }
 
-	protected TestStepResult getOriginalTestStepResult()
-	{
-		return originalTestStepResult;
-	}
+    protected TestStepResult getOriginalTestStepResult() {
+        return originalTestStepResult;
+    }
 
-	protected void setOriginalTestStepResult( TestStepResult originalTestStepResult )
-	{
-		this.originalTestStepResult = originalTestStepResult;
-	}
+    protected void setOriginalTestStepResult(TestStepResult originalTestStepResult) {
+        this.originalTestStepResult = originalTestStepResult;
+    }
 
-	public SecurityScan getCurrentScan()
-	{
-		int testStepScanCount = 0;
-		if( securityTest != null )
-		{
-			testStepScanCount = securityTest.getSecurityScanCount();
-		}
-		if( currentScanIndex < 0 || currentScanIndex >= testStepScanCount )
-			return null;
+    public SecurityScan getCurrentScan() {
+        int testStepScanCount = 0;
+        if (securityTest != null) {
+            testStepScanCount = securityTest.getSecurityScanCount();
+        }
+        if (currentScanIndex < 0 || currentScanIndex >= testStepScanCount) {
+            return null;
+        }
 
-		if( securityTest != null )
-		{
-			return securityTest.getTestStepSecurityScanAt( getCurrentStep().getId(), getCurrentScanIndex() );
-		}
-		return null;
-	}
+        if (securityTest != null) {
+            return securityTest.getTestStepSecurityScanAt(getCurrentStep().getId(), getCurrentScanIndex());
+        }
+        return null;
+    }
 
 }

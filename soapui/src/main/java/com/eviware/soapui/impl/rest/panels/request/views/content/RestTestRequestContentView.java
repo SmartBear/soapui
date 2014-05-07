@@ -23,52 +23,44 @@ import com.eviware.soapui.impl.rest.panels.resource.RestParamsTableModel;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel;
 
-public class RestTestRequestContentView extends RestRequestContentView
-{
+public class RestTestRequestContentView extends RestRequestContentView {
 
-	public RestTestRequestContentView( AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest )
-	{
-		super( restRequestMessageEditor, restRequest );
-	}
+    public RestTestRequestContentView(AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest) {
+        super(restRequestMessageEditor, restRequest);
+    }
 
-	@Override
-	protected RestParamsTable buildParamsTable()
-	{
-		RestParamsTableModel restTestParamsTableModel = new RestParamsTableModel( super.getRestRequest().getParams() )
-		{
-			public int getColumnCount()
-			{
-				return 4;
-			}
+    @Override
+    protected RestParamsTable buildParamsTable() {
+        RestParamsTableModel restTestParamsTableModel = new RestParamsTableModel(super.getRestRequest().getParams()) {
+            public int getColumnCount() {
+                return 4;
+            }
 
-			@Override
-			public void setValueAt( Object value, int rowIndex, int columnIndex )
-			{
-				RestParamProperty prop = params.getProperty( ( String )getValueAt( rowIndex, 0 ) );
-				if( columnIndex == 1 )
-					prop.setValue( value.toString() );
-			}
+            @Override
+            public void setValueAt(Object value, int rowIndex, int columnIndex) {
+                RestParamProperty prop = params.getProperty((String) getValueAt(rowIndex, 0));
+                if (columnIndex == 1) {
+                    prop.setValue(value.toString());
+                }
+            }
 
-			@Override
-			public String getColumnName( int columnIndex )
-			{
-				if( columnIndex == 1 )
-				{
-					return "Value";
-				}
+            @Override
+            public String getColumnName(int columnIndex) {
+                if (columnIndex == 1) {
+                    return "Value";
+                }
 
-				return super.getColumnName( columnIndex );
-			}
+                return super.getColumnName(columnIndex);
+            }
 
-			@Override
-			public boolean isCellEditable( int rowIndex, int columnIndex )
-			{
-				// Only value is editable
-				return columnIndex == 1;
-			}
-		};
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                // Only value is editable
+                return columnIndex == 1;
+            }
+        };
 
-		return new RestParamsTable( super.getRestRequest().getParams(), false, restTestParamsTableModel, NewRestResourceActionBase.ParamLocation.RESOURCE, false, true );
-	}
+        return new RestParamsTable(super.getRestRequest().getParams(), false, restTestParamsTableModel, NewRestResourceActionBase.ParamLocation.RESOURCE, false, true);
+    }
 
 }

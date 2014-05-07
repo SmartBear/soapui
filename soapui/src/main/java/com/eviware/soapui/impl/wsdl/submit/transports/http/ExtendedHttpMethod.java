@@ -28,65 +28,64 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
-public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest
-{
-	long getMaxSize();
+public interface ExtendedHttpMethod extends HttpRequest, HttpUriRequest {
+    long getMaxSize();
 
-	void setMaxSize( long maxSize );
+    void setMaxSize(long maxSize);
 
-	long getResponseReadTime();
+    long getResponseReadTime();
 
-	long getResponseReadTimeNanos();
+    long getResponseReadTimeNanos();
 
-	void initStartTime();
+    void initStartTime();
 
-	long getTimeTaken();
+    long getTimeTaken();
 
-	long getStartTime();
+    long getStartTime();
 
-	SSLInfo getSSLInfo();
+    SSLInfo getSSLInfo();
 
-	String getResponseCharSet();
+    String getResponseCharSet();
 
-	String getResponseContentType();
+    String getResponseContentType();
 
-	String getMethod();
+    String getMethod();
 
-	void setDumpFile( String dumpFile );
+    void setDumpFile(String dumpFile);
 
-	void setFailed( Throwable t );
+    void setFailed(Throwable t);
 
-	boolean isFailed();
+    boolean isFailed();
 
-	Throwable getFailureCause();
+    Throwable getFailureCause();
 
-	boolean hasResponse();
+    boolean hasResponse();
 
-	byte[] getDecompressedResponseBody() throws IOException;
+    byte[] getDecompressedResponseBody() throws IOException;
 
-	void setDecompress( boolean decompress );
+    void setDecompress(boolean decompress);
 
-	void setURI( URI uri );
+    void setURI(URI uri);
 
-	void setHttpResponse( org.apache.http.HttpResponse httpResponse );
+    void setHttpResponse(org.apache.http.HttpResponse httpResponse);
 
-	org.apache.http.HttpResponse getHttpResponse();
+    org.apache.http.HttpResponse getHttpResponse();
 
-	boolean hasHttpResponse();
+    boolean hasHttpResponse();
 
-	byte[] getResponseBody() throws IOException;
+    byte[] getResponseBody() throws IOException;
 
-	String getResponseBodyAsString() throws IOException;
+    String getResponseBodyAsString() throws IOException;
 
-	HttpEntity getRequestEntity();
+    HttpEntity getRequestEntity();
 
-	void afterReadResponse( SSLSession session );
+    void afterReadResponse(SSLSession session);
 
-	void afterWriteRequest();
+    void afterWriteRequest();
 
-	SoapUIMetrics getMetrics();
+    SoapUIMetrics getMetrics();
 
-	Header[] getAllResponseHeaders();
+    Header[] getAllResponseHeaders();
 
-	URL getURL() throws MalformedURLException;
+    URL getURL() throws MalformedURLException;
 }
