@@ -384,7 +384,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 
     private final class DeclareNamespacesAction extends AbstractAction {
         public DeclareNamespacesAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/declareNs.gif"));
+            super("Declare");
             putValue(Action.SHORT_DESCRIPTION, "Declare available response namespaces in condition expression");
         }
 
