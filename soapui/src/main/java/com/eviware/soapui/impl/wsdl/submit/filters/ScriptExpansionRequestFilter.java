@@ -22,15 +22,13 @@ import com.eviware.soapui.model.iface.SubmitContext;
 /**
  * RequestFilter that expands scripts in request content - not used for now, we
  * need to fix validations first
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ScriptExpansionRequestFilter extends AbstractRequestFilter
-{
-	public void filterRequest( SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest )
-	{
-		/*
+public class ScriptExpansionRequestFilter extends AbstractRequestFilter {
+    public void filterRequest(SubmitContext context, AbstractHttpRequestInterface<?> wsdlRequest) {
+        /*
 		 * String content = (String) context.getProperty(
 		 * BaseHttpRequestTransport.REQUEST_CONTENT );
 		 * 
@@ -38,11 +36,10 @@ public class ScriptExpansionRequestFilter extends AbstractRequestFilter
 		 * context.setProperty( BaseHttpRequestTransport.REQUEST_CONTENT, content
 		 * );
 		 */
-	}
+    }
 
-	public static String expandScripts( SubmitContext context, String content )
-	{
-		return content;
+    public static String expandScripts(SubmitContext context, String content) {
+        return content;
 
 		/*
 		 * try { XmlObject obj = XmlObject.Factory.parse(content); XmlCursor
@@ -86,5 +83,5 @@ public class ScriptExpansionRequestFilter extends AbstractRequestFilter
 		 * return replaced ? obj.toString() : null; } catch (Exception e) {
 		 * UISupport.logError( e ); return null; }
 		 */
-	}
+    }
 }

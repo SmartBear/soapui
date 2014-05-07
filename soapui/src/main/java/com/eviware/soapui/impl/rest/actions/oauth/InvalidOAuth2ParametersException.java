@@ -12,16 +12,15 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.oauth;
+*/
+package com.eviware.soapui.impl.rest.actions.oauth;
 
 /**
  * Thrown when an OAuth2Profile instance holds invalid values.
  */
-public class InvalidOAuth2ParametersException extends IllegalArgumentException
-{
+public class InvalidOAuth2ParametersException extends IllegalArgumentException {
 
-	public InvalidOAuth2ParametersException( String s )
-	{
-		super( s );
-	}
+    public InvalidOAuth2ParametersException(String s) {
+        super(s);
+    }
 }

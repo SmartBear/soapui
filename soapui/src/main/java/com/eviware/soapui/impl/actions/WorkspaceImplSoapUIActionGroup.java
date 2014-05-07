@@ -27,42 +27,37 @@ import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 /**
  * SoapUIActionGroup for WsdlProjects, returns different actions depending on if
  * the project is disabled or not.
- * 
+ *
  * @author ole.matzura
  */
 
-public class WorkspaceImplSoapUIActionGroup extends DefaultSoapUIActionGroup<WorkspaceImpl>
-{
-	public WorkspaceImplSoapUIActionGroup( String id, String name )
-	{
-		super( id, name );
-	}
+public class WorkspaceImplSoapUIActionGroup extends DefaultSoapUIActionGroup<WorkspaceImpl> {
+    public WorkspaceImplSoapUIActionGroup(String id, String name) {
+        super(id, name);
+    }
 
-	public SoapUIActionMappingList<WorkspaceImpl> getActionMappings( WorkspaceImpl workspace )
-	{
-		SoapUIActionMappingList<WorkspaceImpl> mappings = super.getActionMappings( workspace );
+    public SoapUIActionMappingList<WorkspaceImpl> getActionMappings(WorkspaceImpl workspace) {
+        SoapUIActionMappingList<WorkspaceImpl> mappings = super.getActionMappings(workspace);
 
-		SoapUIActionMapping<WorkspaceImpl> openMapping = mappings.getMapping( OpenClosedProjectsAction.SOAPUI_ACTION_ID );
-		openMapping.setEnabled( false );
-		SoapUIActionMapping<WorkspaceImpl> closeMapping = mappings.getMapping( CloseOpenProjectsAction.SOAPUI_ACTION_ID );
-		closeMapping.setEnabled( false );
+        SoapUIActionMapping<WorkspaceImpl> openMapping = mappings.getMapping(OpenClosedProjectsAction.SOAPUI_ACTION_ID);
+        openMapping.setEnabled(false);
+        SoapUIActionMapping<WorkspaceImpl> closeMapping = mappings.getMapping(CloseOpenProjectsAction.SOAPUI_ACTION_ID);
+        closeMapping.setEnabled(false);
 
-		for( Project project : workspace.getProjectList() )
-		{
-			if( project.isOpen() )
-			{
-				closeMapping.setEnabled( true );
-				if( openMapping.isEnabled() )
-					break;
-			}
-			else if( !project.isDisabled() )
-			{
-				openMapping.setEnabled( true );
-				if( closeMapping.isEnabled() )
-					break;
-			}
-		}
+        for (Project project : workspace.getProjectList()) {
+            if (project.isOpen()) {
+                closeMapping.setEnabled(true);
+                if (openMapping.isEnabled()) {
+                    break;
+                }
+            } else if (!project.isDisabled()) {
+                openMapping.setEnabled(true);
+                if (closeMapping.isEnabled()) {
+                    break;
+                }
+            }
+        }
 
-		return mappings;
-	}
+        return mappings;
+    }
 }

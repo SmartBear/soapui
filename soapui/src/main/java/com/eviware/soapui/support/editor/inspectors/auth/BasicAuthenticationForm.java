@@ -25,109 +25,92 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class BasicAuthenticationForm<T extends AbstractHttpRequest>  extends AbstractAuthenticationForm
-{
-	protected T request;
-	private JRadioButton globalButton;
-	private JRadioButton preemptiveButton;
+public class BasicAuthenticationForm<T extends AbstractHttpRequest> extends AbstractAuthenticationForm {
+    protected T request;
+    private JRadioButton globalButton;
+    private JRadioButton preemptiveButton;
 
-	public BasicAuthenticationForm( T request )
-	{
-		this.request = request;
-	}
+    public BasicAuthenticationForm(T request) {
+        this.request = request;
+    }
 
-	@Override
-	protected JPanel buildUI()
-	{
-		SimpleBindingForm basicAuthenticationForm = new SimpleBindingForm( new PresentationModel<T>( request ) );
-		populateBasicForm( basicAuthenticationForm );
+    @Override
+    protected JPanel buildUI() {
+        SimpleBindingForm basicAuthenticationForm = new SimpleBindingForm(new PresentationModel<T>(request));
+        populateBasicForm(basicAuthenticationForm);
 
-		JPanel panel = basicAuthenticationForm.getPanel();
-		setBorderAndBackgroundColorOnPanel( panel );
+        JPanel panel = basicAuthenticationForm.getPanel();
+        setBorderAndBackgroundColorOnPanel(panel);
 
-		return panel;
-	}
+        return panel;
+    }
 
-	public void setButtonGroupVisibility( boolean visible )
-	{
-		globalButton.setVisible( visible );
-		preemptiveButton.setVisible( visible );
-	}
+    public void setButtonGroupVisibility(boolean visible) {
+        globalButton.setVisible(visible);
+        preemptiveButton.setVisible(visible);
+    }
 
-	protected void populateBasicForm( SimpleBindingForm basicConfigurationForm )
-	{
-		initForm( basicConfigurationForm );
+    protected void populateBasicForm(SimpleBindingForm basicConfigurationForm) {
+        initForm(basicConfigurationForm);
 
-		basicConfigurationForm.addSpace( TOP_SPACING );
+        basicConfigurationForm.addSpace(TOP_SPACING);
 
-		basicConfigurationForm.appendTextField( "username", "Username", "The username to use for HTTP Authentication" );
-		basicConfigurationForm.appendPasswordField( "password", "Password", "The password to use for HTTP Authentication" );
-		basicConfigurationForm.appendTextField( "domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)" );
+        basicConfigurationForm.appendTextField("username", "Username", "The username to use for HTTP Authentication");
+        basicConfigurationForm.appendPasswordField("password", "Password", "The password to use for HTTP Authentication");
+        basicConfigurationForm.appendTextField("domain", "Domain", "The domain to use for Authentication(NTLM/Kerberos)");
 
-		ButtonGroup buttonGroup = new ButtonGroup();
-		globalButton = basicConfigurationForm.appendRadioButton( "Pre-emptive auth", "Use global preference", buttonGroup, false );
-		globalButton.setBackground( CARD_BACKGROUND_COLOR );
-		preemptiveButton = basicConfigurationForm.appendRadioButton( "", "Authenticate pre-emptively", buttonGroup, false );
-		preemptiveButton.setBackground( CARD_BACKGROUND_COLOR );
+        ButtonGroup buttonGroup = new ButtonGroup();
+        globalButton = basicConfigurationForm.appendRadioButton("Pre-emptive auth", "Use global preference", buttonGroup, false);
+        globalButton.setBackground(CARD_BACKGROUND_COLOR);
+        preemptiveButton = basicConfigurationForm.appendRadioButton("", "Authenticate pre-emptively", buttonGroup, false);
+        preemptiveButton.setBackground(CARD_BACKGROUND_COLOR);
 
-		selectCorrectRadioButton();
+        selectCorrectRadioButton();
 
-		globalButton.addActionListener( new UseGlobalSettingsRadioButtonListener( globalButton ) );
-		preemptiveButton.addActionListener( new PreemptiveRadioButtonListener( preemptiveButton ) );
-	}
+        globalButton.addActionListener(new UseGlobalSettingsRadioButtonListener(globalButton));
+        preemptiveButton.addActionListener(new PreemptiveRadioButtonListener(preemptiveButton));
+    }
 
-	private void selectCorrectRadioButton()
-	{
-		if( request.getPreemptive() )
-		{
-			preemptiveButton.setSelected( true );
-		}
-		else
-		{
-			globalButton.setSelected( true );
-		}
-	}
+    private void selectCorrectRadioButton() {
+        if (request.getPreemptive()) {
+            preemptiveButton.setSelected(true);
+        } else {
+            globalButton.setSelected(true);
+        }
+    }
 
-	private class PreemptiveRadioButtonListener implements ActionListener
-	{
-		private final JRadioButton preemptiveButton;
+    private class PreemptiveRadioButtonListener implements ActionListener {
+        private final JRadioButton preemptiveButton;
 
-		public PreemptiveRadioButtonListener( JRadioButton preemptiveButton )
-		{
-			this.preemptiveButton = preemptiveButton;
-		}
+        public PreemptiveRadioButtonListener(JRadioButton preemptiveButton) {
+            this.preemptiveButton = preemptiveButton;
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			if( preemptiveButton.isSelected() )
-			{
-				request.setSelectedAuthProfileAndAuthType( AbstractHttpRequest.BASIC_AUTH_PROFILE,
-						CredentialsConfig.AuthType.PREEMPTIVE );
-				request.setPreemptive( true );
-			}
-		}
-	}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (preemptiveButton.isSelected()) {
+                request.setSelectedAuthProfileAndAuthType(AbstractHttpRequest.BASIC_AUTH_PROFILE,
+                        CredentialsConfig.AuthType.PREEMPTIVE);
+                request.setPreemptive(true);
+            }
+        }
+    }
 
-	private class UseGlobalSettingsRadioButtonListener implements ActionListener
-	{
-		private final JRadioButton globalButton;
+    private class UseGlobalSettingsRadioButtonListener implements ActionListener {
+        private final JRadioButton globalButton;
 
-		public UseGlobalSettingsRadioButtonListener( JRadioButton globalButton )
-		{
-			this.globalButton = globalButton;
-		}
+        public UseGlobalSettingsRadioButtonListener(JRadioButton globalButton) {
+            this.globalButton = globalButton;
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			if( globalButton.isSelected() )
-			{
-				request.setSelectedAuthProfileAndAuthType( AbstractHttpRequest.BASIC_AUTH_PROFILE,
-						CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS );
-				request.setPreemptive( false );
-			}
-		}
-	}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (globalButton.isSelected()) {
+                request.setSelectedAuthProfileAndAuthType(AbstractHttpRequest.BASIC_AUTH_PROFILE,
+                        CredentialsConfig.AuthType.GLOBAL_HTTP_SETTINGS);
+                request.setPreemptive(false);
+            }
+        }
+    }
 
 }

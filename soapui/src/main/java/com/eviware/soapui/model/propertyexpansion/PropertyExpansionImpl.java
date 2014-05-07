@@ -28,82 +28,76 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 
-public class PropertyExpansionImpl implements PropertyExpansion
-{
-	private String xpath;
-	private TestProperty property;
-	private String containerInfo;
+public class PropertyExpansionImpl implements PropertyExpansion {
+    private String xpath;
+    private TestProperty property;
+    private String containerInfo;
 
-	public PropertyExpansionImpl( TestProperty property, String xpath )
-	{
-		this.property = property;
-		this.xpath = xpath;
+    public PropertyExpansionImpl(TestProperty property, String xpath) {
+        this.property = property;
+        this.xpath = xpath;
 
-		containerInfo = property.getName();
-		if( property.getModelItem() != null )
-			containerInfo += " in " + property.getModelItem().getName();
-	}
+        containerInfo = property.getName();
+        if (property.getModelItem() != null) {
+            containerInfo += " in " + property.getModelItem().getName();
+        }
+    }
 
-	public TestProperty getProperty()
-	{
-		return property;
-	}
+    public TestProperty getProperty() {
+        return property;
+    }
 
-	public String toString()
-	{
-		StringBuffer result = new StringBuffer();
-		result.append( "${" );
+    public String toString() {
+        StringBuffer result = new StringBuffer();
+        result.append("${");
 
-		ModelItem modelItem = property.getModelItem();
+        ModelItem modelItem = property.getModelItem();
 
-		if( modelItem instanceof Project )
-			result.append( PropertyExpansionImpl.PROJECT_REFERENCE );
-		else if( modelItem instanceof TestSuite )
-			result.append( PropertyExpansionImpl.TESTSUITE_REFERENCE );
-		else if( modelItem instanceof TestCase )
-			result.append( PropertyExpansionImpl.TESTCASE_REFERENCE );
-		else if( modelItem instanceof SecurityTest )
-			result.append( PropertyExpansionImpl.SECURITYTEST_REFERENCE );
-		else if( modelItem instanceof MockService )
-			result.append( PropertyExpansionImpl.MOCKSERVICE_REFERENCE );
-		else if( modelItem instanceof MockResponse )
-			result.append( PropertyExpansionImpl.MOCKRESPONSE_REFERENCE );
-		else if( modelItem instanceof TestStep )
-			result.append( modelItem.getName() ).append( PROPERTY_SEPARATOR );
-		else if( modelItem instanceof TestRequest )
-			result.append( ( ( TestRequest )modelItem ).getTestStep().getName() ).append( PROPERTY_SEPARATOR );
+        if (modelItem instanceof Project) {
+            result.append(PropertyExpansionImpl.PROJECT_REFERENCE);
+        } else if (modelItem instanceof TestSuite) {
+            result.append(PropertyExpansionImpl.TESTSUITE_REFERENCE);
+        } else if (modelItem instanceof TestCase) {
+            result.append(PropertyExpansionImpl.TESTCASE_REFERENCE);
+        } else if (modelItem instanceof SecurityTest) {
+            result.append(PropertyExpansionImpl.SECURITYTEST_REFERENCE);
+        } else if (modelItem instanceof MockService) {
+            result.append(PropertyExpansionImpl.MOCKSERVICE_REFERENCE);
+        } else if (modelItem instanceof MockResponse) {
+            result.append(PropertyExpansionImpl.MOCKRESPONSE_REFERENCE);
+        } else if (modelItem instanceof TestStep) {
+            result.append(modelItem.getName()).append(PROPERTY_SEPARATOR);
+        } else if (modelItem instanceof TestRequest) {
+            result.append(((TestRequest) modelItem).getTestStep().getName()).append(PROPERTY_SEPARATOR);
+        }
 
-		result.append( property.getName() );
-		if( StringUtils.hasContent( xpath ) )
-			result.append( PROPERTY_SEPARATOR ).append( xpath );
+        result.append(property.getName());
+        if (StringUtils.hasContent(xpath)) {
+            result.append(PROPERTY_SEPARATOR).append(xpath);
+        }
 
-		result.append( '}' );
+        result.append('}');
 
-		return result.toString();
-	}
+        return result.toString();
+    }
 
-	public String getXPath()
-	{
-		return xpath;
-	}
+    public String getXPath() {
+        return xpath;
+    }
 
-	public String getContainerInfo()
-	{
-		return containerInfo;
-	}
+    public String getContainerInfo() {
+        return containerInfo;
+    }
 
-	public void setContainerInfo( String containerInfo )
-	{
-		this.containerInfo = containerInfo;
-	}
+    public void setContainerInfo(String containerInfo) {
+        this.containerInfo = containerInfo;
+    }
 
-	protected void setProperty( TestProperty property )
-	{
-		this.property = property;
-	}
+    protected void setProperty(TestProperty property) {
+        this.property = property;
+    }
 
-	protected void setXPath( String xpath )
-	{
-		this.xpath = xpath;
-	}
+    protected void setXPath(String xpath) {
+        this.xpath = xpath;
+    }
 }

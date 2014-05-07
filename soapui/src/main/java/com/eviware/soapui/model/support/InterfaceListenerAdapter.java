@@ -22,29 +22,23 @@ import com.eviware.soapui.model.iface.Request;
 
 /**
  * Adapter for InterfaceListener implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class InterfaceListenerAdapter implements InterfaceListener
-{
-	public void operationAdded( Operation operation )
-	{
-	}
+public class InterfaceListenerAdapter implements InterfaceListener {
+    public void operationAdded(Operation operation) {
+    }
 
-	public void operationRemoved( Operation operation )
-	{
-	}
+    public void operationRemoved(Operation operation) {
+    }
 
-	public void requestAdded( Request request )
-	{
-	}
+    public void requestAdded(Request request) {
+    }
 
-	public void requestRemoved( Request request )
-	{
-	}
+    public void requestRemoved(Request request) {
+    }
 
-	public void operationUpdated( Operation operation )
-	{
-	}
+    public void operationUpdated(Operation operation) {
+    }
 }

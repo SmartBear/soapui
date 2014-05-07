@@ -26,45 +26,36 @@ import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
 import com.eviware.soapui.impl.support.definition.support.XmlSchemaBasedInterfaceDefinition;
 
-public class WadlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<RestService>
-{
-	private ApplicationDocument applicationDocument;
-	private Logger log = Logger.getLogger( WadlInterfaceDefinition.class );
+public class WadlInterfaceDefinition extends XmlSchemaBasedInterfaceDefinition<RestService> {
+    private ApplicationDocument applicationDocument;
+    private Logger log = Logger.getLogger(WadlInterfaceDefinition.class);
 
-	public WadlInterfaceDefinition( RestService iface )
-	{
-		super( iface );
-	}
+    public WadlInterfaceDefinition(RestService iface) {
+        super(iface);
+    }
 
-	public WadlInterfaceDefinition load( DefinitionLoader loader ) throws Exception
-	{
-		try
-		{
-		XmlObject obj = loader.loadXmlObject( loader.getBaseURI(), null );
-		applicationDocument = ( ApplicationDocument )obj.changeType( ApplicationDocument.type );
-		}
-		catch( Exception e )
-		{
-			throw new InvalidDefinitionException( e );
-		}
+    public WadlInterfaceDefinition load(DefinitionLoader loader) throws Exception {
+        try {
+            XmlObject obj = loader.loadXmlObject(loader.getBaseURI(), null);
+            applicationDocument = (ApplicationDocument) obj.changeType(ApplicationDocument.type);
+        } catch (Exception e) {
+            throw new InvalidDefinitionException(e);
+        }
 
-		if( !loader.isAborted() )
-		{
-			super.loadSchemaTypes( loader );
-		}
-		else
-			throw new Exception( "Loading of WADL from [" + loader.getBaseURI() + "] was aborted" );
+        if (!loader.isAborted()) {
+            super.loadSchemaTypes(loader);
+        } else {
+            throw new Exception("Loading of WADL from [" + loader.getBaseURI() + "] was aborted");
+        }
 
-		return this;
-	}
+        return this;
+    }
 
-	public String getTargetNamespace()
-	{
-		return null;
-	}
+    public String getTargetNamespace() {
+        return null;
+    }
 
-	public ApplicationDocument.Application getApplication()
-	{
-		return applicationDocument.getApplication();
-	}
+    public ApplicationDocument.Application getApplication() {
+        return applicationDocument.getApplication();
+    }
 }

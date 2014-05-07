@@ -39,189 +39,167 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;
 
-public class WSPartsTable extends JPanel
-{
-	private final List<StringToStringMap> parts;
-	private WssEntryBase entry;
-	private PartsTableModel partsTableModel;
-	private JTable partsTable;
-	private JButton removePartButton;
+public class WSPartsTable extends JPanel {
+    private final List<StringToStringMap> parts;
+    private WssEntryBase entry;
+    private PartsTableModel partsTableModel;
+    private JTable partsTable;
+    private JButton removePartButton;
 
-	public WSPartsTable( List<StringToStringMap> parts, WssEntryBase entry )
-	{
-		super( new BorderLayout() );
-		this.parts = parts;
-		this.entry = entry;
+    public WSPartsTable(List<StringToStringMap> parts, WssEntryBase entry) {
+        super(new BorderLayout());
+        this.parts = parts;
+        this.entry = entry;
 
-		partsTableModel = new PartsTableModel();
-		partsTable = JTableFactory.getInstance().makeJTable( partsTableModel );
-		partsTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-		{
+        partsTableModel = new PartsTableModel();
+        partsTable = JTableFactory.getInstance().makeJTable(partsTableModel);
+        partsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-			public void valueChanged( ListSelectionEvent e )
-			{
-				removePartButton.setEnabled( partsTable.getSelectedRow() != -1 );
-			}
-		} );
+            public void valueChanged(ListSelectionEvent e) {
+                removePartButton.setEnabled(partsTable.getSelectedRow() != -1);
+            }
+        });
 
-		partsTable.getColumnModel().getColumn( 3 )
-				.setCellEditor( new DefaultCellEditor( new JComboBox( new String[] { "Content", "Element" } ) ) );
+        partsTable.getColumnModel().getColumn(3)
+                .setCellEditor(new DefaultCellEditor(new JComboBox(new String[]{"Content", "Element"})));
 
-		JScrollPane scrollPane = new JScrollPane( partsTable );
-		scrollPane.setBackground( Color.WHITE );
-		scrollPane.setOpaque( true );
-		add( scrollPane, BorderLayout.CENTER );
-		add( buildToolbar(), BorderLayout.NORTH );
+        JScrollPane scrollPane = new JScrollPane(partsTable);
+        scrollPane.setBackground(Color.WHITE);
+        scrollPane.setOpaque(true);
+        add(scrollPane, BorderLayout.CENTER);
+        add(buildToolbar(), BorderLayout.NORTH);
 
-		setPreferredSize( new Dimension( 350, 150 ) );
-	}
+        setPreferredSize(new Dimension(350, 150));
+    }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createSmallToolbar();
+    private Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createSmallToolbar();
 
-		toolbar.addFixed( UISupport.createToolbarButton( new AddPartAction() ) );
-		removePartButton = UISupport.createToolbarButton( new RemovePartAction() );
-		toolbar.addFixed( removePartButton );
+        toolbar.addFixed(UISupport.createToolbarButton(new AddPartAction()));
+        removePartButton = UISupport.createToolbarButton(new RemovePartAction());
+        toolbar.addFixed(removePartButton);
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	private class PartsTableModel extends AbstractTableModel
-	{
-		public int getColumnCount()
-		{
-			return 4;
-		}
+    private class PartsTableModel extends AbstractTableModel {
+        public int getColumnCount() {
+            return 4;
+        }
 
-		public int getRowCount()
-		{
-			return parts.size();
-		}
+        public int getRowCount() {
+            return parts.size();
+        }
 
-		@Override
-		public boolean isCellEditable( int rowIndex, int columnIndex )
-		{
-			return true;
-		}
+        @Override
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+            return true;
+        }
 
-		@Override
-		public String getColumnName( int column )
-		{
-			switch( column )
-			{
-			case 0 :
-				return "ID";
-			case 1 :
-				return "Name";
-			case 2 :
-				return "Namespace";
-			case 3 :
-				return "Encode";
-			}
+        @Override
+        public String getColumnName(int column) {
+            switch (column) {
+                case 0:
+                    return "ID";
+                case 1:
+                    return "Name";
+                case 2:
+                    return "Namespace";
+                case 3:
+                    return "Encode";
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		@Override
-		public void setValueAt( Object aValue, int rowIndex, int columnIndex )
-		{
-			StringToStringMap part = parts.get( rowIndex );
-			if( aValue == null )
-				aValue = "";
+        @Override
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+            StringToStringMap part = parts.get(rowIndex);
+            if (aValue == null) {
+                aValue = "";
+            }
 
-			switch( columnIndex )
-			{
-			case 0 :
-				part.put( "name", "" );
-				fireTableCellUpdated( rowIndex, 1 );
-				part.put( "id", aValue.toString() );
-				break;
-			case 1 :
-				part.put( "id", "" );
-				fireTableCellUpdated( rowIndex, 0 );
-				part.put( "name", aValue.toString() );
-				break;
-			case 2 :
-				part.put( "id", "" );
-				fireTableCellUpdated( rowIndex, 0 );
-				part.put( "namespace", aValue.toString() );
-				break;
-			case 3 :
-				part.put( "enc", aValue.toString() );
-				break;
-			}
+            switch (columnIndex) {
+                case 0:
+                    part.put("name", "");
+                    fireTableCellUpdated(rowIndex, 1);
+                    part.put("id", aValue.toString());
+                    break;
+                case 1:
+                    part.put("id", "");
+                    fireTableCellUpdated(rowIndex, 0);
+                    part.put("name", aValue.toString());
+                    break;
+                case 2:
+                    part.put("id", "");
+                    fireTableCellUpdated(rowIndex, 0);
+                    part.put("namespace", aValue.toString());
+                    break;
+                case 3:
+                    part.put("enc", aValue.toString());
+                    break;
+            }
 
-			entry.saveConfig();
-		}
+            entry.saveConfig();
+        }
 
-		public Object getValueAt( int rowIndex, int columnIndex )
-		{
-			StringToStringMap part = parts.get( rowIndex );
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            StringToStringMap part = parts.get(rowIndex);
 
-			switch( columnIndex )
-			{
-			case 0 :
-				return part.get( "id" );
-			case 1 :
-				return part.get( "name" );
-			case 2 :
-				return part.get( "namespace" );
-			case 3 :
-				return part.get( "enc" );
-			}
+            switch (columnIndex) {
+                case 0:
+                    return part.get("id");
+                case 1:
+                    return part.get("name");
+                case 2:
+                    return part.get("namespace");
+                case 3:
+                    return part.get("enc");
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public void remove( int row )
-		{
-			parts.remove( row );
-			fireTableRowsDeleted( row, row );
-		}
+        public void remove(int row) {
+            parts.remove(row);
+            fireTableRowsDeleted(row, row);
+        }
 
-		public void addParts( StringToStringMap map )
-		{
-			parts.add( map );
-			fireTableRowsInserted( parts.size() - 1, parts.size() - 1 );
-		}
-	}
+        public void addParts(StringToStringMap map) {
+            parts.add(map);
+            fireTableRowsInserted(parts.size() - 1, parts.size() - 1);
+        }
+    }
 
-	private class AddPartAction extends AbstractAction
-	{
-		public AddPartAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Adds a new part" );
-		}
+    private class AddPartAction extends AbstractAction {
+        public AddPartAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SHORT_DESCRIPTION, "Adds a new part");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			partsTableModel.addParts( new StringToStringMap() );
-			entry.saveConfig();
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            partsTableModel.addParts(new StringToStringMap());
+            entry.saveConfig();
+        }
+    }
 
-	private class RemovePartAction extends AbstractAction
-	{
-		public RemovePartAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( SHORT_DESCRIPTION, "Removes the selected part" );
-			setEnabled( false );
-		}
+    private class RemovePartAction extends AbstractAction {
+        public RemovePartAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SHORT_DESCRIPTION, "Removes the selected part");
+            setEnabled(false);
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			int row = partsTable.getSelectedRow();
-			if( row == -1 )
-				return;
+        public void actionPerformed(ActionEvent e) {
+            int row = partsTable.getSelectedRow();
+            if (row == -1) {
+                return;
+            }
 
-			if( UISupport.confirm( "Remove selected Part?", "Remove Part" ) )
-			{
-				partsTableModel.remove( row );
-				entry.saveConfig();
-			}
-		}
-	}
+            if (UISupport.confirm("Remove selected Part?", "Remove Part")) {
+                partsTableModel.remove(row);
+                entry.saveConfig();
+            }
+        }
+    }
 }

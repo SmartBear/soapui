@@ -36,42 +36,37 @@ import static org.mockito.MockitoAnnotations.initMocks;
 /**
  * @author joel.jonsson
  */
-public class ProxyServletContentTypeTest
-{
-	private ProxyServlet proxyServlet;
+public class ProxyServletContentTypeTest {
+    private ProxyServlet proxyServlet;
 
-	@Mock
-	private SoapMonitorListenerCallBack listenerCallBack;
-	@Mock
-	private WsdlProject project;
+    @Mock
+    private SoapMonitorListenerCallBack listenerCallBack;
+    @Mock
+    private WsdlProject project;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		initMocks( this );
-		proxyServlet = new ProxyServlet( project, listenerCallBack );
-	}
+    @Before
+    public void setUp() throws Exception {
+        initMocks(this);
+        proxyServlet = new ProxyServlet(project, listenerCallBack);
+    }
 
-	@Test
-	public void noContentTypeMatchesRequestWithNoContentType()
-	{
-		proxyServlet.setIncludedContentTypes( ContentTypes.of( "" ) );
-		ExtendedHttpMethod request = createRequestWithContentTypes( );
-		assertThat( proxyServlet.contentTypeMatches( request ), is(true));
-	}
+    @Test
+    public void noContentTypeMatchesRequestWithNoContentType() {
+        proxyServlet.setIncludedContentTypes(ContentTypes.of(""));
+        ExtendedHttpMethod request = createRequestWithContentTypes();
+        assertThat(proxyServlet.contentTypeMatches(request), is(true));
+    }
 
-	private ExtendedHttpMethod createRequestWithContentTypes( String... contentTypes )
-	{
-		ExtendedHttpMethod method = mock( ExtendedHttpMethod.class );
-		HttpResponse httpResponse = mock( HttpResponse.class );
-		when( method.hasHttpResponse() ).thenReturn( true );
-		when( method.getHttpResponse() ).thenReturn( httpResponse );
-		Header[] headers = new Header[contentTypes.length];
-		for( int i = 0; i < headers.length; i++ )
-		{
-			headers[i] = new BasicHeader( "Content-Type", contentTypes[i] );
-		}
-		when( httpResponse.getHeaders( eq( "Content-Type" ) ) ).thenReturn( headers );
-		return method;
-	}
+    private ExtendedHttpMethod createRequestWithContentTypes(String... contentTypes) {
+        ExtendedHttpMethod method = mock(ExtendedHttpMethod.class);
+        HttpResponse httpResponse = mock(HttpResponse.class);
+        when(method.hasHttpResponse()).thenReturn(true);
+        when(method.getHttpResponse()).thenReturn(httpResponse);
+        Header[] headers = new Header[contentTypes.length];
+        for (int i = 0; i < headers.length; i++) {
+            headers[i] = new BasicHeader("Content-Type", contentTypes[i]);
+        }
+        when(httpResponse.getHeaders(eq("Content-Type"))).thenReturn(headers);
+        return method;
+    }
 }

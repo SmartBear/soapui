@@ -26,95 +26,77 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<WsdlMockOperation>
-{
-	private final WsdlMockRequest request;
+public class WsdlMockRequestMessageExchange extends AbstractWsdlMessageExchange<WsdlMockOperation> {
+    private final WsdlMockRequest request;
 
-	public WsdlMockRequestMessageExchange( WsdlMockRequest request, WsdlMockOperation mockOperation )
-	{
-		super( mockOperation );
-		this.request = request;
-	}
+    public WsdlMockRequestMessageExchange(WsdlMockRequest request, WsdlMockOperation mockOperation) {
+        super(mockOperation);
+        this.request = request;
+    }
 
-	public String getEndpoint()
-	{
-		return request.getHttpRequest().getRequestURI();
-	}
+    public String getEndpoint() {
+        return request.getHttpRequest().getRequestURI();
+    }
 
-	@Override
-	public Response getResponse()
-	{
-		return null;
-	}
+    @Override
+    public Response getResponse() {
+        return null;
+    }
 
-	@Override
-	public WsdlOperation getOperation()
-	{
-		return getModelItem().getOperation();
-	}
+    @Override
+    public WsdlOperation getOperation() {
+        return getModelItem().getOperation();
+    }
 
-	public Vector<?> getRequestWssResult()
-	{
-		return null;
-	}
+    public Vector<?> getRequestWssResult() {
+        return null;
+    }
 
-	public Vector<?> getResponseWssResult()
-	{
-		return null;
-	}
+    public Vector<?> getResponseWssResult() {
+        return null;
+    }
 
-	public Attachment[] getRequestAttachments()
-	{
-		return request.getRequestAttachments();
-	}
+    public Attachment[] getRequestAttachments() {
+        return request.getRequestAttachments();
+    }
 
-	public String getRequestContent()
-	{
-		return request.getRequestContent();
-	}
+    public String getRequestContent() {
+        return request.getRequestContent();
+    }
 
-	public StringToStringsMap getRequestHeaders()
-	{
-		return request.getRequestHeaders();
-	}
+    public StringToStringsMap getRequestHeaders() {
+        return request.getRequestHeaders();
+    }
 
-	public Attachment[] getResponseAttachments()
-	{
-		return null;
-	}
+    public Attachment[] getResponseAttachments() {
+        return null;
+    }
 
-	public String getResponseContent()
-	{
-		return null;
-	}
+    public String getResponseContent() {
+        return null;
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		return new StringToStringsMap();
-	}
+    public StringToStringsMap getResponseHeaders() {
+        return new StringToStringsMap();
+    }
 
-	public long getTimeTaken()
-	{
-		return 0;
-	}
+    public long getTimeTaken() {
+        return 0;
+    }
 
-	public long getTimestamp()
-	{
-		return 0;
-	}
+    public long getTimestamp() {
+        return 0;
+    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+    public boolean isDiscarded() {
+        return false;
+    }
 
-	public int getResponseStatusCode()
-	{
-		return 0;
-	}
+    public int getResponseStatusCode() {
+        return 0;
+    }
 
-	public String getResponseContentType()
-	{
-		return null;
-	}
+    public String getResponseContentType() {
+        return null;
+    }
 }

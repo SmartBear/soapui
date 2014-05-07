@@ -36,62 +36,54 @@ import com.eviware.soapui.settings.WsdlSettings;
 
 /**
  * BindingImporter that can import a WsdlInterface from an SOAP 1.2/HTTP binding
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter
-{
-	private final static Logger log = Logger.getLogger( Soap12HttpBindingImporter.class );
+public class Soap12HttpBindingImporter extends AbstractSoapBindingImporter {
+    private final static Logger log = Logger.getLogger(Soap12HttpBindingImporter.class);
 
-	public boolean canImport( Binding binding )
-	{
-		List<?> list = binding.getExtensibilityElements();
-		SOAP12Binding soapBinding = WsdlUtils.getExtensiblityElement( list, SOAP12Binding.class );
-		return soapBinding == null ? false : soapBinding.getTransportURI().startsWith( Constants.SOAP_HTTP_TRANSPORT )
-				|| soapBinding.getTransportURI().startsWith( Constants.SOAP12_HTTP_BINDING_NS )
-				|| soapBinding.getTransportURI().startsWith( Constants.SOAP_MICROSOFT_TCP );
-	}
+    public boolean canImport(Binding binding) {
+        List<?> list = binding.getExtensibilityElements();
+        SOAP12Binding soapBinding = WsdlUtils.getExtensiblityElement(list, SOAP12Binding.class);
+        return soapBinding == null ? false : soapBinding.getTransportURI().startsWith(Constants.SOAP_HTTP_TRANSPORT)
+                || soapBinding.getTransportURI().startsWith(Constants.SOAP12_HTTP_BINDING_NS)
+                || soapBinding.getTransportURI().startsWith(Constants.SOAP_MICROSOFT_TCP);
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public WsdlInterface importBinding( WsdlProject project, WsdlContext wsdlContext, Binding binding ) throws Exception
-	{
-		String name = project.getSettings().getBoolean( WsdlSettings.NAME_WITH_BINDING ) ? binding.getQName()
-				.getLocalPart() : binding.getPortType().getQName().getLocalPart();
+    @SuppressWarnings("unchecked")
+    public WsdlInterface importBinding(WsdlProject project, WsdlContext wsdlContext, Binding binding) throws Exception {
+        String name = project.getSettings().getBoolean(WsdlSettings.NAME_WITH_BINDING) ? binding.getQName()
+                .getLocalPart() : binding.getPortType().getQName().getLocalPart();
 
-		WsdlInterface iface = ( WsdlInterface )project.addNewInterface( name, WsdlInterfaceFactory.WSDL_TYPE );
-		iface.setBindingName( binding.getQName() );
-		iface.setSoapVersion( SoapVersion.Soap12 );
+        WsdlInterface iface = (WsdlInterface) project.addNewInterface(name, WsdlInterfaceFactory.WSDL_TYPE);
+        iface.setBindingName(binding.getQName());
+        iface.setSoapVersion(SoapVersion.Soap12);
 
-		String[] endpoints = WsdlUtils.getEndpointsForBinding( wsdlContext.getDefinition(), binding );
-		for( int i = 0; i < endpoints.length; i++ )
-		{
-			log.info( "importing endpoint " + endpoints[i] );
-			iface.addEndpoint( endpoints[i] );
-		}
+        String[] endpoints = WsdlUtils.getEndpointsForBinding(wsdlContext.getDefinition(), binding);
+        for (int i = 0; i < endpoints.length; i++) {
+            log.info("importing endpoint " + endpoints[i]);
+            iface.addEndpoint(endpoints[i]);
+        }
 
-		List<BindingOperation> list = binding.getBindingOperations();
-		Collections.sort( list, new BindingOperationComparator() );
+        List<BindingOperation> list = binding.getBindingOperations();
+        Collections.sort(list, new BindingOperationComparator());
 
-		for( Iterator<BindingOperation> iter = list.iterator(); iter.hasNext(); )
-		{
-			BindingOperation operation = ( BindingOperation )iter.next();
+        for (Iterator<BindingOperation> iter = list.iterator(); iter.hasNext(); ) {
+            BindingOperation operation = (BindingOperation) iter.next();
 
-			// sanity check
-			if( operation.getOperation() == null || operation.getOperation().isUndefined() )
-			{
-				log.error( "BindingOperation [" + operation.getName() + "] is missing or referring to an invalid operation" );
-			}
-			else
-			{
-				log.info( "importing operation " + operation.getName() );
-				iface.addNewOperation( operation );
-			}
-		}
+            // sanity check
+            if (operation.getOperation() == null || operation.getOperation().isUndefined()) {
+                log.error("BindingOperation [" + operation.getName() + "] is missing or referring to an invalid operation");
+            } else {
+                log.info("importing operation " + operation.getName());
+                iface.addNewOperation(operation);
+            }
+        }
 
-		initWsAddressing( binding, iface, wsdlContext.getDefinition() );
+        initWsAddressing(binding, iface, wsdlContext.getDefinition());
 
-		return iface;
-	}
+        return iface;
+    }
 
 }

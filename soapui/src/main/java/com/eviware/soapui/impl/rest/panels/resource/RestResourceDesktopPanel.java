@@ -34,102 +34,90 @@ import java.beans.PropertyChangeEvent;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
-public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource>
-{
-	public static final String REST_RESOURCE_EDITOR = "rest-resource-editor";
-	// package protected to facilitate unit testing
-	JTextField pathTextField;
+public class RestResourceDesktopPanel extends ModelItemDesktopPanel<RestResource> {
+    public static final String REST_RESOURCE_EDITOR = "rest-resource-editor";
+    // package protected to facilitate unit testing
+    JTextField pathTextField;
 
-	private MutableBoolean updating = new MutableBoolean();
-	private RestParamsTable paramsTable;
+    private MutableBoolean updating = new MutableBoolean();
+    private RestParamsTable paramsTable;
 
-	public RestResourceDesktopPanel( RestResource modelItem )
-	{
-		super( modelItem );
-		setName( REST_RESOURCE_EDITOR );
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildContent(), BorderLayout.CENTER );
-	}
+    public RestResourceDesktopPanel(RestResource modelItem) {
+        super(modelItem);
+        setName(REST_RESOURCE_EDITOR);
+        add(buildToolbar(), BorderLayout.NORTH);
+        add(buildContent(), BorderLayout.CENTER);
+    }
 
-	private Component buildContent()
-	{
-		JTabbedPane tabs = new JTabbedPane();
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.RESOURCE, true, false );
-		tabs.addTab( "Resource Parameters", paramsTable );
-		return UISupport.createTabPanel( tabs, false );
-	}
+    private Component buildContent() {
+        JTabbedPane tabs = new JTabbedPane();
+        paramsTable = new RestParamsTable(getModelItem().getParams(), true, ParamLocation.RESOURCE, true, false);
+        tabs.addTab("Resource Parameters", paramsTable);
+        return UISupport.createTabPanel(tabs, false);
+    }
 
-	@Override
-	public String getTitle()
-	{
-		return getName( getModelItem() );
-	}
+    @Override
+    public String getTitle() {
+        return getName(getModelItem());
+    }
 
-	public RestParamsTable getParamsTable()
-	{
-		return paramsTable;
-	}
+    public RestParamsTable getParamsTable() {
+        return paramsTable;
+    }
 
-	@Override
-	protected boolean release()
-	{
-		paramsTable.release();
-		return super.release();
-	}
+    @Override
+    protected boolean release() {
+        paramsTable.release();
+        return super.release();
+    }
 
-	private String getName( RestResource modelItem )
-	{
-		if( modelItem.getParentResource() != null )
-			return getName( modelItem.getParentResource() ) + "/" + modelItem.getName();
-		else
-			return modelItem.getName();
-	}
+    private String getName(RestResource modelItem) {
+        if (modelItem.getParentResource() != null) {
+            return getName(modelItem.getParentResource()) + "/" + modelItem.getName();
+        } else {
+            return modelItem.getName();
+        }
+    }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+    private Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.addFixed( createActionButton( SwingActionDelegate.createDelegate( NewRestMethodAction.SOAPUI_ACTION_ID,
-				getModelItem(), null, "/create_empty_method.gif" ), true ) );
+        toolbar.addFixed(createActionButton(SwingActionDelegate.createDelegate(NewRestMethodAction.SOAPUI_ACTION_ID,
+                getModelItem(), null, "/create_empty_method.gif"), true));
 
-		toolbar.addSeparator();
+        toolbar.addSeparator();
 
-		pathTextField = new RestResourceEditor( getModelItem(), updating );
+        pathTextField = new RestResourceEditor(getModelItem(), updating);
 
-		toolbar.addFixed( new JLabel( "Resource Path" ) );
-		toolbar.addSeparator( new Dimension( 3, 3 ) );
-		toolbar.addWithOnlyMinimumHeight( pathTextField );
+        toolbar.addFixed(new JLabel("Resource Path"));
+        toolbar.addSeparator(new Dimension(3, 3));
+        toolbar.addWithOnlyMinimumHeight(pathTextField);
 
-		toolbar.addGlue();
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.RESTRESOURCEEDITOR_HELPURL ) ) );
+        toolbar.addGlue();
+        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.RESTRESOURCEEDITOR_HELPURL)));
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	@Override
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return getModelItem().dependsOn( modelItem );
-	}
+    @Override
+    public boolean dependsOn(ModelItem modelItem) {
+        return getModelItem().dependsOn(modelItem);
+    }
 
-	public boolean onClose( boolean canCancel )
-	{
-		return release();
-	}
+    public boolean onClose(boolean canCancel) {
+        return release();
+    }
 
-	@Override
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( "path" ) )
-		{
-			if( !updating.booleanValue() )
-			{
-				updating.setValue( true );
-				pathTextField.setText( getModelItem().getFullPath() );
-				updating.setValue( false );
-			}
-		}
-		paramsTable.refresh();
-		super.propertyChange( evt );
-	}
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("path")) {
+            if (!updating.booleanValue()) {
+                updating.setValue(true);
+                pathTextField.setText(getModelItem().getFullPath());
+                updating.setValue(false);
+            }
+        }
+        paramsTable.refresh();
+        super.propertyChange(evt);
+    }
 }

@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.submit.transports.http;
+*/
+package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -44,133 +45,115 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for the HttpClientRequestTransport class.
  */
-public class HttpClientRequestTransportTest
-{
+public class HttpClientRequestTransportTest {
 
-	private HttpClientRequestTransport httpTransport;
-	private ExtendedHttpMethod methodExecuted;
-	private HttpContext contextUsed;
+    private HttpClientRequestTransport httpTransport;
+    private ExtendedHttpMethod methodExecuted;
+    private HttpContext contextUsed;
 
-	@Before
-	public void setUp() {
-		httpTransport = new TestableHttpClientRequestTransport();
-		httpTransport.addRequestFilter( new StubbedRequestSetupFilter() );
-		methodExecuted = null;
-		contextUsed = null;
-	}
+    @Before
+    public void setUp() {
+        httpTransport = new TestableHttpClientRequestTransport();
+        httpTransport.addRequestFilter(new StubbedRequestSetupFilter());
+        methodExecuted = null;
+        contextUsed = null;
+    }
 
-	@Test
-	public void processesRequestCorrectly() throws Exception
-	{
-		StringToStringsMap emptyHeaders = new StringToStringsMap();
-		AbstractHttpRequest request = prepareRequestWithHeaders( emptyHeaders );
-		SubmitContext submitContext = new StubbedSubmitContext( request );
+    @Test
+    public void processesRequestCorrectly() throws Exception {
+        StringToStringsMap emptyHeaders = new StringToStringsMap();
+        AbstractHttpRequest request = prepareRequestWithHeaders(emptyHeaders);
+        SubmitContext submitContext = new StubbedSubmitContext(request);
 
-		httpTransport.sendRequest( submitContext, request );
-		assertThat( methodExecuted, is(notNullValue()) );
-		assertThat( contextUsed, is( notNullValue() ) );
-	}
+        httpTransport.sendRequest(submitContext, request);
+        assertThat(methodExecuted, is(notNullValue()));
+        assertThat(contextUsed, is(notNullValue()));
+    }
 
-	@Test
-	public void expandsPropertiesInHeaderName() throws Exception
-	{
-		StringToStringsMap headers = new StringToStringsMap();
-		String headerValue = "The value";
-		headers.add("Header-for-${request}", headerValue );
-		AbstractHttpRequest request = prepareRequestWithHeaders( headers );
-		SubmitContext submitContext = new StubbedSubmitContext( request );
-		String requestName = "Fin-fin request";
-		submitContext.setProperty( "request", requestName );
+    @Test
+    public void expandsPropertiesInHeaderName() throws Exception {
+        StringToStringsMap headers = new StringToStringsMap();
+        String headerValue = "The value";
+        headers.add("Header-for-${request}", headerValue);
+        AbstractHttpRequest request = prepareRequestWithHeaders(headers);
+        SubmitContext submitContext = new StubbedSubmitContext(request);
+        String requestName = "Fin-fin request";
+        submitContext.setProperty("request", requestName);
 
-		httpTransport.sendRequest( submitContext, request );
-		String expectedHeaderName = "Header-for-" + requestName;
-		Header[] modifiedHeaders = methodExecuted.getHeaders( expectedHeaderName );
-		assertThat( modifiedHeaders.length, is( 1 ) );
-		assertThat( modifiedHeaders[0].getName(), is( expectedHeaderName ) );
-		assertThat( modifiedHeaders[0].getValue(), is( headerValue ) );
-	}
+        httpTransport.sendRequest(submitContext, request);
+        String expectedHeaderName = "Header-for-" + requestName;
+        Header[] modifiedHeaders = methodExecuted.getHeaders(expectedHeaderName);
+        assertThat(modifiedHeaders.length, is(1));
+        assertThat(modifiedHeaders[0].getName(), is(expectedHeaderName));
+        assertThat(modifiedHeaders[0].getValue(), is(headerValue));
+    }
 
-	private AbstractHttpRequest prepareRequestWithHeaders( StringToStringsMap headers )
-	{
-		AbstractHttpRequest request = mock( AbstractHttpRequest.class );
-		when(request.getRequestHeaders()).thenReturn( headers );
-		XmlBeansSettingsImpl emptySettings = mock(XmlBeansSettingsImpl.class);
-		when(request.getSettings()).thenReturn( emptySettings );
-		return request;
-	}
+    private AbstractHttpRequest prepareRequestWithHeaders(StringToStringsMap headers) {
+        AbstractHttpRequest request = mock(AbstractHttpRequest.class);
+        when(request.getRequestHeaders()).thenReturn(headers);
+        XmlBeansSettingsImpl emptySettings = mock(XmlBeansSettingsImpl.class);
+        when(request.getSettings()).thenReturn(emptySettings);
+        return request;
+    }
 
-	private class TestableHttpClientRequestTransport extends HttpClientRequestTransport
-	{
-		@Override
-		protected HttpClientSupport.SoapUIHttpClient getSoapUIHttpClient()
-		{
-			return mock(HttpClientSupport.SoapUIHttpClient.class);
-		}
+    private class TestableHttpClientRequestTransport extends HttpClientRequestTransport {
+        @Override
+        protected HttpClientSupport.SoapUIHttpClient getSoapUIHttpClient() {
+            return mock(HttpClientSupport.SoapUIHttpClient.class);
+        }
 
-		@Override
-		protected int getDefaultHttpPort( ExtendedHttpMethod httpMethod, HttpClient httpClient )
-		{
-			return 80;
-		}
+        @Override
+        protected int getDefaultHttpPort(ExtendedHttpMethod httpMethod, HttpClient httpClient) {
+            return 80;
+        }
 
-		@Override
-		protected HttpResponse submitRequest( ExtendedHttpMethod httpMethod, HttpContext httpContext ) throws IOException
-		{
-			methodExecuted = httpMethod;
-			contextUsed = httpContext;
-			return makeSuccessfulResponse();
-		}
+        @Override
+        protected HttpResponse submitRequest(ExtendedHttpMethod httpMethod, HttpContext httpContext) throws IOException {
+            methodExecuted = httpMethod;
+            contextUsed = httpContext;
+            return makeSuccessfulResponse();
+        }
 
-		private HttpResponse makeSuccessfulResponse()
-		{
-			HttpResponse mockResponse = mock( HttpResponse.class);
-			StatusLine mockedStatusLine = mock(StatusLine.class);
-			when(mockResponse.getStatusLine()).thenReturn( mockedStatusLine );
-			when(mockedStatusLine.getStatusCode()).thenReturn(200);
-			return mockResponse;
-		}
-	}
+        private HttpResponse makeSuccessfulResponse() {
+            HttpResponse mockResponse = mock(HttpResponse.class);
+            StatusLine mockedStatusLine = mock(StatusLine.class);
+            when(mockResponse.getStatusLine()).thenReturn(mockedStatusLine);
+            when(mockedStatusLine.getStatusCode()).thenReturn(200);
+            return mockResponse;
+        }
+    }
 
-	private class StubbedRequestSetupFilter implements RequestFilter
-	{
-		@Override
-		public void filterRequest( SubmitContext context, Request request )
-		{
-			ExtendedHttpMethod httpMethod = (ExtendedHttpMethod) context.getProperty( BaseHttpRequestTransport.HTTP_METHOD );
-			try
-			{
-				httpMethod.setURI( new URI("/index.html") );
-			}
-			catch( URISyntaxException e )
-			{
-				throw new Error(e);
-			}
-		}
+    private class StubbedRequestSetupFilter implements RequestFilter {
+        @Override
+        public void filterRequest(SubmitContext context, Request request) {
+            ExtendedHttpMethod httpMethod = (ExtendedHttpMethod) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
+            try {
+                httpMethod.setURI(new URI("/index.html"));
+            } catch (URISyntaxException e) {
+                throw new Error(e);
+            }
+        }
 
-		@Override
-		public void afterRequest( SubmitContext context, Request request )
-		{
-		}
+        @Override
+        public void afterRequest(SubmitContext context, Request request) {
+        }
 
-		@Override
-		public void afterRequest( SubmitContext context, Response response )
-		{
-		}
-	}
+        @Override
+        public void afterRequest(SubmitContext context, Response response) {
+        }
+    }
 
 
-	private class StubbedSubmitContext extends AbstractSubmitContext<Request>
-	{
+    private class StubbedSubmitContext extends AbstractSubmitContext<Request> {
 
-		public StubbedSubmitContext( Request modelItem )
-		{
-			super( modelItem );
-		}
-		@Override
-		public Object getProperty( String name )
-		{
-			return getProperty(name, null, null);
-		}
+        public StubbedSubmitContext(Request modelItem) {
+            super(modelItem);
+        }
 
-	}
+        @Override
+        public Object getProperty(String name) {
+            return getProperty(name, null, null);
+        }
+
+    }
 }

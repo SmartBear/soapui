@@ -26,37 +26,32 @@ import java.awt.event.ActionEvent;
 
 /**
  * Creates an empty SOAP response message for WsdlMockResponse
- * 
+ *
  * @author ole.matzura
  */
 
-public class CreateEmptyWsdlMockResponseAction extends AbstractAction
-{
-	private final MockResponse mockResponse;
+public class CreateEmptyWsdlMockResponseAction extends AbstractAction {
+    private final MockResponse mockResponse;
 
-	public CreateEmptyWsdlMockResponseAction( MockResponse mockResponse )
-	{
-		super( "Create Empty" );
-		this.mockResponse = mockResponse;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_empty_request.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, "Creates an empty SOAP response" );
-	}
+    public CreateEmptyWsdlMockResponseAction(MockResponse mockResponse) {
+        super("Create Empty");
+        this.mockResponse = mockResponse;
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/create_empty_request.gif"));
+        putValue(Action.SHORT_DESCRIPTION, "Creates an empty SOAP response");
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		//FIXME for rest mocking action
-		WsdlOperation operation = ( WsdlOperation )mockResponse.getMockOperation().getOperation();
+    public void actionPerformed(ActionEvent e) {
+        //FIXME for rest mocking action
+        WsdlOperation operation = (WsdlOperation) mockResponse.getMockOperation().getOperation();
 
-		if( operation == null )
-		{
-			UISupport.showErrorMessage( "Missing operation for this mock response" );
-			return;
-		}
+        if (operation == null) {
+            UISupport.showErrorMessage("Missing operation for this mock response");
+            return;
+        }
 
-		if( UISupport.confirm( "Overwrite current response with empty one?", "Create Empty" ) )
-		{
-			WsdlInterface iface = operation.getInterface();
-			mockResponse.setResponseContent( iface.getMessageBuilder().buildEmptyMessage() );
-		}
-	}
+        if (UISupport.confirm("Overwrite current response with empty one?", "Create Empty")) {
+            WsdlInterface iface = operation.getInterface();
+            mockResponse.setResponseContent(iface.getMessageBuilder().buildEmptyMessage());
+        }
+    }
 }

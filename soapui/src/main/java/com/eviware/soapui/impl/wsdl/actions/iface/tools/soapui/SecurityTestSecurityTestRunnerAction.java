@@ -23,20 +23,17 @@ import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SecurityTestRunnerAction;
 
-public class SecurityTestSecurityTestRunnerAction extends AbstractSoapUIAction<SecurityTest>
-{
+public class SecurityTestSecurityTestRunnerAction extends AbstractSoapUIAction<SecurityTest> {
 
-	public SecurityTestSecurityTestRunnerAction()
-	{
-		super( "Launch SecurityTestRunner", "Launch command-line SecurityTestRunner for this SecurityTest" );
-	}
+    public SecurityTestSecurityTestRunnerAction() {
+        super("Launch SecurityTestRunner", "Launch command-line SecurityTestRunner for this SecurityTest");
+    }
 
-	@Override
-	public void perform( SecurityTest target, Object param )
-	{
-		SoapUIAction<ModelItem> action = SoapUI.getActionRegistry().getAction( SecurityTestRunnerAction.SOAPUI_ACTION_ID );
-		SoapUI.setLaunchedTestRunner( true );
-		action.perform( target.getTestCase().getTestSuite().getProject(), target );
-	}
+    @Override
+    public void perform(SecurityTest target, Object param) {
+        SoapUIAction<ModelItem> action = SoapUI.getActionRegistry().getAction(SecurityTestRunnerAction.SOAPUI_ACTION_ID);
+        SoapUI.setLaunchedTestRunner(true);
+        action.perform(target.getTestCase().getTestSuite().getProject(), target);
+    }
 
 }

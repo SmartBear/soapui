@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.teststeps.registry;
+*/
+package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
 import com.eviware.soapui.config.RestRequestStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -27,19 +28,17 @@ import static org.junit.Assert.assertThat;
 /**
  *
  */
-public class RestRequestStepFactoryTest
-{
-	@Test
-	public void copiesRESTRequestBody() throws Exception
-	{
-		RestRequest restRequest = ModelItemFactory.makeRestRequest();
-		restRequest.setMethod( RestRequestInterface.HttpMethod.POST );
-		String requestBody = "Some meaningful data";
-		restRequest.setRequestContent( requestBody );
+public class RestRequestStepFactoryTest {
+    @Test
+    public void copiesRESTRequestBody() throws Exception {
+        RestRequest restRequest = ModelItemFactory.makeRestRequest();
+        restRequest.setMethod(RestRequestInterface.HttpMethod.POST);
+        String requestBody = "Some meaningful data";
+        restRequest.setRequestContent(requestBody);
 
-		TestStepConfig testStepConfig = RestRequestStepFactory.createConfig( restRequest, "Rest Request" );
-		RestRequestStepConfig config = ( RestRequestStepConfig )  testStepConfig.getConfig();
+        TestStepConfig testStepConfig = RestRequestStepFactory.createConfig(restRequest, "Rest Request");
+        RestRequestStepConfig config = (RestRequestStepConfig) testStepConfig.getConfig();
 
-		assertThat( config.getRestRequest().getRequest().getStringValue(), is( requestBody ) );
-	}
+        assertThat(config.getRestRequest().getRequest().getStringValue(), is(requestBody));
+    }
 }

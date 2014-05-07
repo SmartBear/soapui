@@ -21,14 +21,13 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestStep;
 
-public interface TestRequest extends Request, Assertable
-{
-	public TestStep getTestStep();
+public interface TestRequest extends Request, Assertable {
+    public TestStep getTestStep();
 
-	public boolean isDiscardResponse();
+    public boolean isDiscardResponse();
 
-	public WsdlMessageAssertion importAssertion( WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
-			String newName );
+    public WsdlMessageAssertion importAssertion(WsdlMessageAssertion source, boolean overwrite, boolean createCopy,
+                                                String newName);
 
-	public Response getResponse();
+    public Response getResponse();
 }

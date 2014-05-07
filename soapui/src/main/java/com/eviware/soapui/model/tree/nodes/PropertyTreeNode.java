@@ -32,97 +32,81 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 
-public class PropertyTreeNode extends AbstractModelItemTreeNode<PropertyTreeNode.PropertyModelItem>
-{
-	private boolean readOnly;
-	private final TestProperty property;
+public class PropertyTreeNode extends AbstractModelItemTreeNode<PropertyTreeNode.PropertyModelItem> {
+    private boolean readOnly;
+    private final TestProperty property;
 
-	protected PropertyTreeNode( TestProperty property, ModelItem parent, TestPropertyHolder holder,
-			SoapUITreeModel treeModel )
-	{
-		super( new PropertyModelItem( property, property.isReadOnly() ), parent, treeModel );
-		this.property = property;
-		readOnly = property.isReadOnly();
-	}
+    protected PropertyTreeNode(TestProperty property, ModelItem parent, TestPropertyHolder holder,
+                               SoapUITreeModel treeModel) {
+        super(new PropertyModelItem(property, property.isReadOnly()), parent, treeModel);
+        this.property = property;
+        readOnly = property.isReadOnly();
+    }
 
-	public static String buildName( TestProperty property )
-	{
-		String name = property.getName();
-		String value = property.getValue();
-		if( value == null )
-			value = "";
-		else
-		{
-			if( value.length() > 12 )
-				value = value.substring( 0, 12 ) + "..";
+    public static String buildName(TestProperty property) {
+        String name = property.getName();
+        String value = property.getValue();
+        if (value == null) {
+            value = "";
+        } else {
+            if (value.length() > 12) {
+                value = value.substring(0, 12) + "..";
+            }
 
-			value = "'" + value + "'";
-		}
+            value = "'" + value + "'";
+        }
 
-		return name + " : " + value;
-	}
+        return name + " : " + value;
+    }
 
-	@Override
-	public ActionList getActions()
-	{
-		if( !readOnly )
-		{
-			DefaultActionList actions = new DefaultActionList();
-			SetPropertyValueAction setPropertyValueAction = new SetPropertyValueAction();
-			actions.addAction( setPropertyValueAction );
-			actions.setDefaultAction( setPropertyValueAction );
-			return actions;
-		}
-		else
-		{
-			return super.getActions();
-		}
-	}
+    @Override
+    public ActionList getActions() {
+        if (!readOnly) {
+            DefaultActionList actions = new DefaultActionList();
+            SetPropertyValueAction setPropertyValueAction = new SetPropertyValueAction();
+            actions.addAction(setPropertyValueAction);
+            actions.setDefaultAction(setPropertyValueAction);
+            return actions;
+        } else {
+            return super.getActions();
+        }
+    }
 
-	public static class PropertyModelItem extends EmptyModelItem
-	{
-		private final TestProperty property;
-		private String xpath;
+    public static class PropertyModelItem extends EmptyModelItem {
+        private final TestProperty property;
+        private String xpath;
 
-		public PropertyModelItem( TestProperty property, boolean readOnly )
-		{
-			super( buildName( property ), readOnly ? UISupport.createImageIcon( "/bullet_black.gif" ) : UISupport
-					.createImageIcon( "/bullet_green.gif" ) );
+        public PropertyModelItem(TestProperty property, boolean readOnly) {
+            super(buildName(property), readOnly ? UISupport.createImageIcon("/bullet_black.gif") : UISupport
+                    .createImageIcon("/bullet_green.gif"));
 
-			this.property = property;
-		}
+            this.property = property;
+        }
 
-		public TestProperty getProperty()
-		{
-			return property;
-		}
+        public TestProperty getProperty() {
+            return property;
+        }
 
-		public String getXPath()
-		{
-			return xpath;
-		}
+        public String getXPath() {
+            return xpath;
+        }
 
-		public void setXPath( String xpath )
-		{
-			this.xpath = xpath;
-		}
-	}
+        public void setXPath(String xpath) {
+            this.xpath = xpath;
+        }
+    }
 
-	private class SetPropertyValueAction extends AbstractAction
-	{
-		public SetPropertyValueAction()
-		{
-			super( "Set Value" );
-			putValue( Action.SHORT_DESCRIPTION, "Prompts to set the value of this property" );
-		}
+    private class SetPropertyValueAction extends AbstractAction {
+        public SetPropertyValueAction() {
+            super("Set Value");
+            putValue(Action.SHORT_DESCRIPTION, "Prompts to set the value of this property");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			String value = UISupport.prompt( "Specify property value", "Set Value", property.getValue() );
-			if( StringUtils.hasContent( value ) )
-			{
-				property.setValue( value );
-			}
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            String value = UISupport.prompt("Specify property value", "Set Value", property.getValue());
+            if (StringUtils.hasContent(value)) {
+                property.setValue(value);
+            }
+        }
+    }
 }

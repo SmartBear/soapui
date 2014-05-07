@@ -22,21 +22,19 @@ import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorInspector;
 import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 
-public class WsrmPiggybackInspectorFactory implements RequestInspectorFactory
-{
+public class WsrmPiggybackInspectorFactory implements RequestInspectorFactory {
 
-	public static final String INSPECTOR_ID = "WS-RM_Piggyback";
+    public static final String INSPECTOR_ID = "WS-RM_Piggyback";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof WsdlRequest )
-			return new WsdlRequestWsrmPiggybackInspector( ( ( WsdlRequest )modelItem ) );
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof WsdlRequest) {
+            return new WsdlRequestWsrmPiggybackInspector(((WsdlRequest) modelItem));
+        }
 
-		return null;
-	}
+        return null;
+    }
 }

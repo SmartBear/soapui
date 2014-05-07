@@ -16,32 +16,33 @@
 
    $Id: xmlmime.xsd,v 1.1 2005/04/25 17:08:35 hugo Exp $
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" targetNamespace="http://www.w3.org/2005/05/xmlmime">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
+           targetNamespace="http://www.w3.org/2005/05/xmlmime">
 
-  <xs:attribute name="contentType">
-    <xs:simpleType>
-      <xs:restriction base="xs:string">
-      <xs:minLength value="3"/>
-      </xs:restriction>
-    </xs:simpleType>
-  </xs:attribute>
+    <xs:attribute name="contentType">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+                <xs:minLength value="3"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
 
-  <xs:attribute name="expectedContentTypes" type="xs:string"/>
+    <xs:attribute name="expectedContentTypes" type="xs:string"/>
 
-  <xs:complexType name="base64Binary">
-    <xs:simpleContent>
-        <xs:extension base="xs:base64Binary">
-            <xs:attribute ref="xmime:contentType"/>
-        </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
+    <xs:complexType name="base64Binary">
+        <xs:simpleContent>
+            <xs:extension base="xs:base64Binary">
+                <xs:attribute ref="xmime:contentType"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
-  <xs:complexType name="hexBinary">
-    <xs:simpleContent>
-        <xs:extension base="xs:hexBinary">
-            <xs:attribute ref="xmime:contentType"/>
-        </xs:extension>
-    </xs:simpleContent>
-  </xs:complexType>
+    <xs:complexType name="hexBinary">
+        <xs:simpleContent>
+            <xs:extension base="xs:hexBinary">
+                <xs:attribute ref="xmime:contentType"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
 </xs:schema>

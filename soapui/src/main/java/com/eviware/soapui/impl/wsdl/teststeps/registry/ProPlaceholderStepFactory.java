@@ -28,58 +28,48 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Factory for creation of placeholder steps
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ProPlaceholderStepFactory extends WsdlTestStepFactory
-{
-	public ProPlaceholderStepFactory( String type, String name, String image )
-	{
-		super( type, name, "Placeholder for SoapUI Pro " + name + " TestStep", image );
-	}
+public class ProPlaceholderStepFactory extends WsdlTestStepFactory {
+    public ProPlaceholderStepFactory(String type, String name, String image) {
+        super(type, name, "Placeholder for SoapUI Pro " + name + " TestStep", image);
+    }
 
-	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-	{
-		return new WsdlProPlaceholderTestStep( testCase, config, forLoadTest, getTestStepIconPath(),
-				getTestStepDescription() );
-	}
+    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
+        return new WsdlProPlaceholderTestStep(testCase, config, forLoadTest, getTestStepIconPath(),
+                getTestStepDescription());
+    }
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
-	{
-		return null;
-	}
+    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
+        return null;
+    }
 
-	public boolean canCreate()
-	{
-		return false;
-	}
+    public boolean canCreate() {
+        return false;
+    }
 
-	public static class WsdlProPlaceholderTestStep extends WsdlTestStepWithProperties
-	{
-		private final String description;
+    public static class WsdlProPlaceholderTestStep extends WsdlTestStepWithProperties {
+        private final String description;
 
-		protected WsdlProPlaceholderTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest,
-				String iconPath, String description )
-		{
-			super( testCase, config, false, forLoadTest );
-			this.description = description;
+        protected WsdlProPlaceholderTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest,
+                                             String iconPath, String description) {
+            super(testCase, config, false, forLoadTest);
+            this.description = description;
 
-			if( !forLoadTest )
-			{
-				setIcon( UISupport.createImageIcon( iconPath ) );
-			}
-		}
+            if (!forLoadTest) {
+                setIcon(UISupport.createImageIcon(iconPath));
+            }
+        }
 
-		public TestStepResult run( TestCaseRunner testRunner, TestCaseRunContext testRunContext )
-		{
-			return new WsdlTestStepResult( this );
-		}
+        public TestStepResult run(TestCaseRunner testRunner, TestCaseRunContext testRunContext) {
+            return new WsdlTestStepResult(this);
+        }
 
-		@Override
-		public String getDescription()
-		{
-			return description;
-		}
-	}
+        @Override
+        public String getDescription() {
+            return description;
+        }
+    }
 }

@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.utils;
+*/
+package com.eviware.soapui.utils;
 
 import com.eviware.soapui.impl.rest.RestRequest;
 import org.hamcrest.Description;
@@ -21,36 +22,31 @@ import org.junit.internal.matchers.TypeSafeMatcher;
 /**
  * A matcher for REST requests with parameters.
  */
-public class RestRequestWithParamsMatcher extends TypeSafeMatcher<RestRequest>
-{
+public class RestRequestWithParamsMatcher extends TypeSafeMatcher<RestRequest> {
 
-	private RestRequestParamsMatcher parametersMatcher;
-	private String parameterName;
+    private RestRequestParamsMatcher parametersMatcher;
+    private String parameterName;
 
 
-	RestRequestWithParamsMatcher( String parameterName )
-	{
-		this.parameterName = parameterName;
-		this.parametersMatcher = new RestRequestParamsMatcher( parameterName );
-	}
+    RestRequestWithParamsMatcher(String parameterName) {
+        this.parameterName = parameterName;
+        this.parametersMatcher = new RestRequestParamsMatcher(parameterName);
+    }
 
-	public RestRequestWithParamsMatcher withValue(String value)
-	{
-		RestRequestWithParamsMatcher matcherToReturn = new RestRequestWithParamsMatcher( parameterName );
-		matcherToReturn.parametersMatcher = new RestRequestParamsMatcher( parameterName ).withValue( value );
-		return matcherToReturn;
-	}
+    public RestRequestWithParamsMatcher withValue(String value) {
+        RestRequestWithParamsMatcher matcherToReturn = new RestRequestWithParamsMatcher(parameterName);
+        matcherToReturn.parametersMatcher = new RestRequestParamsMatcher(parameterName).withValue(value);
+        return matcherToReturn;
+    }
 
-	@Override
-	public boolean matchesSafely( RestRequest restRequest )
-	{
-		return parametersMatcher.matchesSafely( restRequest.getParams() );
-	}
+    @Override
+    public boolean matchesSafely(RestRequest restRequest) {
+        return parametersMatcher.matchesSafely(restRequest.getParams());
+    }
 
-	@Override
-	public void describeTo( Description description )
-	{
-		description.appendText( "a REST request with " );
-		parametersMatcher.describeTo( description );
-	}
+    @Override
+    public void describeTo(Description description) {
+        description.appendText("a REST request with ");
+        parametersMatcher.describeTo(description);
+    }
 }

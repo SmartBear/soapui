@@ -42,241 +42,197 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
  * Abstract SoapUIDesktop implementation for extension
- * 
+ *
  * @author ole.matzura
  */
 
-public abstract class AbstractSoapUIDesktop implements SoapUIDesktop
-{
-	private final Workspace workspace;
-	private final InternalProjectListener projectListener = new InternalProjectListener();
-	private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
-	private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
-	private final InternalMockServiceListener mockServiceListener = new InternalMockServiceListener();
-	private Set<DesktopListener> listeners = new HashSet<DesktopListener>();
-	private InternalWorkspaceListener workspaceListener = new InternalWorkspaceListener();
+public abstract class AbstractSoapUIDesktop implements SoapUIDesktop {
+    private final Workspace workspace;
+    private final InternalProjectListener projectListener = new InternalProjectListener();
+    private final InternalInterfaceListener interfaceListener = new InternalInterfaceListener();
+    private final InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
+    private final InternalMockServiceListener mockServiceListener = new InternalMockServiceListener();
+    private Set<DesktopListener> listeners = new HashSet<DesktopListener>();
+    private InternalWorkspaceListener workspaceListener = new InternalWorkspaceListener();
 
-	public AbstractSoapUIDesktop( Workspace workspace )
-	{
-		this.workspace = workspace;
+    public AbstractSoapUIDesktop(Workspace workspace) {
+        this.workspace = workspace;
 
-		initListeners();
-	}
+        initListeners();
+    }
 
-	private void initListeners()
-	{
-		workspace.addWorkspaceListener( workspaceListener );
+    private void initListeners() {
+        workspace.addWorkspaceListener(workspaceListener);
 
-		for( int c = 0; c < workspace.getProjectCount(); c++ )
-		{
-			listenToProject( workspace.getProjectAt( c ) );
-		}
-	}
+        for (int c = 0; c < workspace.getProjectCount(); c++) {
+            listenToProject(workspace.getProjectAt(c));
+        }
+    }
 
-	public ActionList getActions()
-	{
-		return null;
-	}
+    public ActionList getActions() {
+        return null;
+    }
 
-	private void listenToProject( Project project )
-	{
-		project.addProjectListener( projectListener );
+    private void listenToProject(Project project) {
+        project.addProjectListener(projectListener);
 
-		for( int i = 0; i < project.getInterfaceCount(); i++ )
-		{
-			project.getInterfaceAt( i ).addInterfaceListener( interfaceListener );
-		}
+        for (int i = 0; i < project.getInterfaceCount(); i++) {
+            project.getInterfaceAt(i).addInterfaceListener(interfaceListener);
+        }
 
-		for( int i = 0; i < project.getTestSuiteCount(); i++ )
-		{
-			project.getTestSuiteAt( i ).addTestSuiteListener( testSuiteListener );
-		}
+        for (int i = 0; i < project.getTestSuiteCount(); i++) {
+            project.getTestSuiteAt(i).addTestSuiteListener(testSuiteListener);
+        }
 
-		for( int i = 0; i < project.getMockServiceCount(); i++ )
-		{
-			project.getMockServiceAt( i ).addMockServiceListener( mockServiceListener );
-		}
-	}
+        for (int i = 0; i < project.getMockServiceCount(); i++) {
+            project.getMockServiceAt(i).addMockServiceListener(mockServiceListener);
+        }
+    }
 
-	public void addDesktopListener( DesktopListener listener )
-	{
-		listeners.add( listener );
-	}
+    public void addDesktopListener(DesktopListener listener) {
+        listeners.add(listener);
+    }
 
-	public void removeDesktopListener( DesktopListener listener )
-	{
-		listeners.remove( listener );
-	}
+    public void removeDesktopListener(DesktopListener listener) {
+        listeners.remove(listener);
+    }
 
-	public void closeDependantPanels( ModelItem modelItem )
-	{
-		DesktopPanel[] panels = getDesktopPanels();
+    public void closeDependantPanels(ModelItem modelItem) {
+        DesktopPanel[] panels = getDesktopPanels();
 
-		for( int c = 0; c < panels.length; c++ )
-		{
-			if( panels[c].dependsOn( modelItem ) )
-			{
-				closeDesktopPanel( panels[c] );
-			}
-		}
-	}
+        for (int c = 0; c < panels.length; c++) {
+            if (panels[c].dependsOn(modelItem)) {
+                closeDesktopPanel(panels[c]);
+            }
+        }
+    }
 
-	protected void fireDesktopPanelCreated( DesktopPanel desktopPanel )
-	{
-		if( !listeners.isEmpty() )
-		{
-			DesktopListener[] array = listeners.toArray( new DesktopListener[listeners.size()] );
-			for( DesktopListener listener : array )
-				listener.desktopPanelCreated( desktopPanel );
-		}
-	}
+    protected void fireDesktopPanelCreated(DesktopPanel desktopPanel) {
+        if (!listeners.isEmpty()) {
+            DesktopListener[] array = listeners.toArray(new DesktopListener[listeners.size()]);
+            for (DesktopListener listener : array) {
+                listener.desktopPanelCreated(desktopPanel);
+            }
+        }
+    }
 
-	protected void fireDesktopPanelSelected( DesktopPanel desktopPanel )
-	{
-		if( !listeners.isEmpty() )
-		{
-			DesktopListener[] array = listeners.toArray( new DesktopListener[listeners.size()] );
-			for( DesktopListener listener : array )
-				listener.desktopPanelSelected( desktopPanel );
-		}
-	}
+    protected void fireDesktopPanelSelected(DesktopPanel desktopPanel) {
+        if (!listeners.isEmpty()) {
+            DesktopListener[] array = listeners.toArray(new DesktopListener[listeners.size()]);
+            for (DesktopListener listener : array) {
+                listener.desktopPanelSelected(desktopPanel);
+            }
+        }
+    }
 
-	protected void fireDesktopPanelClosed( DesktopPanel desktopPanel )
-	{
-		if( !listeners.isEmpty() )
-		{
-			DesktopListener[] array = listeners.toArray( new DesktopListener[listeners.size()] );
-			for( DesktopListener listener : array )
-				listener.desktopPanelClosed( desktopPanel );
-		}
-	}
+    protected void fireDesktopPanelClosed(DesktopPanel desktopPanel) {
+        if (!listeners.isEmpty()) {
+            DesktopListener[] array = listeners.toArray(new DesktopListener[listeners.size()]);
+            for (DesktopListener listener : array) {
+                listener.desktopPanelClosed(desktopPanel);
+            }
+        }
+    }
 
-	private class InternalWorkspaceListener extends WorkspaceListenerAdapter
-	{
-		public void projectRemoved( Project project )
-		{
-			project.removeProjectListener( projectListener );
-			closeDependantPanels( project );
-		}
+    private class InternalWorkspaceListener extends WorkspaceListenerAdapter {
+        public void projectRemoved(Project project) {
+            project.removeProjectListener(projectListener);
+            closeDependantPanels(project);
+        }
 
-		public void projectAdded( Project project )
-		{
-			listenToProject( project );
-		}
-	}
+        public void projectAdded(Project project) {
+            listenToProject(project);
+        }
+    }
 
-	private class InternalProjectListener extends ProjectListenerAdapter
-	{
-		public void interfaceRemoved( Interface iface )
-		{
-			iface.removeInterfaceListener( interfaceListener );
-			closeDependantPanels( iface );
-		}
+    private class InternalProjectListener extends ProjectListenerAdapter {
+        public void interfaceRemoved(Interface iface) {
+            iface.removeInterfaceListener(interfaceListener);
+            closeDependantPanels(iface);
+        }
 
-		public void testSuiteRemoved( TestSuite testSuite )
-		{
-			testSuite.removeTestSuiteListener( testSuiteListener );
-			closeDependantPanels( testSuite );
-		}
+        public void testSuiteRemoved(TestSuite testSuite) {
+            testSuite.removeTestSuiteListener(testSuiteListener);
+            closeDependantPanels(testSuite);
+        }
 
-		public void interfaceAdded( Interface iface )
-		{
-			iface.addInterfaceListener( interfaceListener );
-		}
+        public void interfaceAdded(Interface iface) {
+            iface.addInterfaceListener(interfaceListener);
+        }
 
-		public void testSuiteAdded( TestSuite testSuite )
-		{
-			testSuite.addTestSuiteListener( testSuiteListener );
-		}
+        public void testSuiteAdded(TestSuite testSuite) {
+            testSuite.addTestSuiteListener(testSuiteListener);
+        }
 
-		public void mockServiceAdded( MockService mockService )
-		{
-			mockService.addMockServiceListener( mockServiceListener );
-		}
+        public void mockServiceAdded(MockService mockService) {
+            mockService.addMockServiceListener(mockServiceListener);
+        }
 
-		public void mockServiceRemoved( MockService mockService )
-		{
-			mockService.removeMockServiceListener( mockServiceListener );
-			closeDependantPanels( mockService );
-		}
-	}
+        public void mockServiceRemoved(MockService mockService) {
+            mockService.removeMockServiceListener(mockServiceListener);
+            closeDependantPanels(mockService);
+        }
+    }
 
-	private class InternalInterfaceListener extends InterfaceListenerAdapter
-	{
-		public void operationRemoved( Operation operation )
-		{
-			closeDependantPanels( operation );
-		}
+    private class InternalInterfaceListener extends InterfaceListenerAdapter {
+        public void operationRemoved(Operation operation) {
+            closeDependantPanels(operation);
+        }
 
-		public void requestRemoved( Request request )
-		{
-			closeDependantPanels( request );
-		}
-	}
+        public void requestRemoved(Request request) {
+            closeDependantPanels(request);
+        }
+    }
 
-	private class InternalTestSuiteListener extends TestSuiteListenerAdapter
-	{
-		public void testCaseRemoved( TestCase testCase )
-		{
-			closeDependantPanels( testCase );
-		}
+    private class InternalTestSuiteListener extends TestSuiteListenerAdapter {
+        public void testCaseRemoved(TestCase testCase) {
+            closeDependantPanels(testCase);
+        }
 
-		public void testStepRemoved( TestStep testStep, int index )
-		{
-			closeDependantPanels( testStep );
-		}
+        public void testStepRemoved(TestStep testStep, int index) {
+            closeDependantPanels(testStep);
+        }
 
-		public void loadTestRemoved( LoadTest loadTest )
-		{
-			closeDependantPanels( loadTest );
-		}
+        public void loadTestRemoved(LoadTest loadTest) {
+            closeDependantPanels(loadTest);
+        }
 
-		public void securityTestRemoved( SecurityTest securityTest )
-		{
-			closeDependantPanels( securityTest );
-		}
-	}
+        public void securityTestRemoved(SecurityTest securityTest) {
+            closeDependantPanels(securityTest);
+        }
+    }
 
-	private class InternalMockServiceListener extends MockServiceListenerAdapter
-	{
-		public void mockOperationRemoved( MockOperation operation )
-		{
-			closeDependantPanels( operation );
-		}
+    private class InternalMockServiceListener extends MockServiceListenerAdapter {
+        public void mockOperationRemoved(MockOperation operation) {
+            closeDependantPanels(operation);
+        }
 
-		public void mockResponseRemoved( MockResponse request )
-		{
-			closeDependantPanels( request );
-		}
-	}
+        public void mockResponseRemoved(MockResponse request) {
+            closeDependantPanels(request);
+        }
+    }
 
-	public void release()
-	{
-		for( int c = 0; c < workspace.getProjectCount(); c++ )
-		{
-			Project project = workspace.getProjectAt( c );
-			project.removeProjectListener( projectListener );
+    public void release() {
+        for (int c = 0; c < workspace.getProjectCount(); c++) {
+            Project project = workspace.getProjectAt(c);
+            project.removeProjectListener(projectListener);
 
-			for( int i = 0; i < project.getInterfaceCount(); i++ )
-			{
-				project.getInterfaceAt( i ).removeInterfaceListener( interfaceListener );
-			}
+            for (int i = 0; i < project.getInterfaceCount(); i++) {
+                project.getInterfaceAt(i).removeInterfaceListener(interfaceListener);
+            }
 
-			for( int i = 0; i < project.getTestSuiteCount(); i++ )
-			{
-				project.getTestSuiteAt( i ).removeTestSuiteListener( testSuiteListener );
-			}
+            for (int i = 0; i < project.getTestSuiteCount(); i++) {
+                project.getTestSuiteAt(i).removeTestSuiteListener(testSuiteListener);
+            }
 
-			for( int i = 0; i < project.getMockServiceCount(); i++ )
-			{
-				project.getMockServiceAt( i ).removeMockServiceListener( mockServiceListener );
-			}
-		}
+            for (int i = 0; i < project.getMockServiceCount(); i++) {
+                project.getMockServiceAt(i).removeMockServiceListener(mockServiceListener);
+            }
+        }
 
-		workspace.removeWorkspaceListener( workspaceListener );
-	}
+        workspace.removeWorkspaceListener(workspaceListener);
+    }
 
-	public void init()
-	{
-	}
+    public void init() {
+    }
 }

@@ -25,23 +25,20 @@ import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 
 /**
  * @author Dain.Nilsson
- * 
  */
-public class InferredSchemaInspectorFactory implements ResponseInspectorFactory
-{
-	public static final String INSPECTOR_ID = "InferredSchema";
+public class InferredSchemaInspectorFactory implements ResponseInspectorFactory {
+    public static final String INSPECTOR_ID = "InferredSchema";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof RestRequestInterface )
-			return new InferredSchemaInspector( ( RestRequest )modelItem );
+    public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof RestRequestInterface) {
+            return new InferredSchemaInspector((RestRequest) modelItem);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
 }

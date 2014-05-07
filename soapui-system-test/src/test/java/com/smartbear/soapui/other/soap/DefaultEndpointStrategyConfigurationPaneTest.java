@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.other.soap;
+*/
+package com.smartbear.soapui.other.soap;
 
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategy;
@@ -31,62 +32,54 @@ import org.junit.experimental.categories.Category;
  * FEST-based test verifying parts of the functionality of DefaultEndpointStrategyConfigurationPaneTest.
  */
 @Category(IntegrationTest.class)
-public class DefaultEndpointStrategyConfigurationPaneTest
-{
-	private static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
-	private Robot robot;
-	private RestService restService;
+public class DefaultEndpointStrategyConfigurationPaneTest {
+    private static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
+    private Robot robot;
+    private RestService restService;
 
-	private com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategyConfigurationPanel configurationPanel;
+    private com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategyConfigurationPanel configurationPanel;
 
-	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
+    private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 
-	@BeforeClass
-	public static void setUpOnce()
-	{
-		System.out.println("Installing jvm exit protection");
-		noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager( new ExitCallHook()
-		{
-			@Override
-			public void exitCalled( int status )
-			{
-				System.out.print( "Exit status : " + status );
-			}
-		} );
-	}
+    @BeforeClass
+    public static void setUpOnce() {
+        System.out.println("Installing jvm exit protection");
+        noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager(new ExitCallHook() {
+            @Override
+            public void exitCalled(int status) {
+                System.out.print("Exit status : " + status);
+            }
+        });
+    }
 
-	@AfterClass
-	public static void classTearDown() throws InterruptedException
-	{
-		Thread.sleep( WAIT_FOR_LAST_TEST_TO_SHUTDOWN );
-		System.out.println( "Shuting down jvm exit protection" );
-		noExitSecurityManagerInstaller.uninstall();
-	}
+    @AfterClass
+    public static void classTearDown() throws InterruptedException {
+        Thread.sleep(WAIT_FOR_LAST_TEST_TO_SHUTDOWN);
+        System.out.println("Shuting down jvm exit protection");
+        noExitSecurityManagerInstaller.uninstall();
+    }
 
-	@Before
-	public void setUp() throws SoapUIException
-	{
-		robot = BasicRobot.robotWithCurrentAwtHierarchy();
-		restService = ModelItemFactory.makeRestService();
-		DefaultEndpointStrategy strategy = new DefaultEndpointStrategy();
-		strategy.init( restService.getProject() );
-		configurationPanel = new com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategyConfigurationPanel( restService, strategy );
-	}
+    @Before
+    public void setUp() throws SoapUIException {
+        robot = BasicRobot.robotWithCurrentAwtHierarchy();
+        restService = ModelItemFactory.makeRestService();
+        DefaultEndpointStrategy strategy = new DefaultEndpointStrategy();
+        strategy.init(restService.getProject());
+        configurationPanel = new com.eviware.soapui.impl.wsdl.endpoint.DefaultEndpointStrategyConfigurationPanel(restService, strategy);
+    }
 
-	@Test
-	public void updatesTableWithNewEndpoint() throws Exception
-	{
-		JTableFixture tableFixture = new JTableFixture( robot, configurationPanel.table );
+    @Test
+    public void updatesTableWithNewEndpoint() throws Exception {
+        JTableFixture tableFixture = new JTableFixture(robot, configurationPanel.table);
 
-		String endpoint = "http://sljll.com";
-		restService.addEndpoint( endpoint );
-		// this call will fail if the new endpoint is not found in the table
-		tableFixture.cell( endpoint );
-	}
+        String endpoint = "http://sljll.com";
+        restService.addEndpoint(endpoint);
+        // this call will fail if the new endpoint is not found in the table
+        tableFixture.cell(endpoint);
+    }
 
-	@After
-	public void tearDown()
-	{
-		robot.cleanUp();
-	}
+    @After
+    public void tearDown() {
+        robot.cleanUp();
+    }
 }

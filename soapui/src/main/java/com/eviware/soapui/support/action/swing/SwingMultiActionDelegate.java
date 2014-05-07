@@ -35,94 +35,79 @@ import com.eviware.soapui.support.action.SoapUIMultiAction;
 /**
  * Delegates a SwingAction to a SoapUIActionMapping containgin a
  * SoapUIMultiAction
- * 
+ *
  * @author ole.matzura
  */
 
-public class SwingMultiActionDelegate extends AbstractAction implements PropertyChangeListener, SoapUIActionMarker
-{
-	private final SoapUIActionMapping<?> mapping;
-	private ModelItem[] targets;
+public class SwingMultiActionDelegate extends AbstractAction implements PropertyChangeListener, SoapUIActionMarker {
+    private final SoapUIActionMapping<?> mapping;
+    private ModelItem[] targets;
 
-	public SwingMultiActionDelegate( SoapUIActionMapping<?> mapping, ModelItem[] targets )
-	{
-		super( mapping.getName() );
-		this.mapping = mapping;
-		this.targets = targets;
+    public SwingMultiActionDelegate(SoapUIActionMapping<?> mapping, ModelItem[] targets) {
+        super(mapping.getName());
+        this.mapping = mapping;
+        this.targets = targets;
 
-		if( mapping.getDescription() != null )
-			putValue( Action.SHORT_DESCRIPTION, mapping.getDescription() );
+        if (mapping.getDescription() != null) {
+            putValue(Action.SHORT_DESCRIPTION, mapping.getDescription());
+        }
 
-		if( mapping.getIconPath() != null )
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( mapping.getIconPath() ) );
+        if (mapping.getIconPath() != null) {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon(mapping.getIconPath()));
+        }
 
-		if( mapping.getKeyStroke() != null )
-			putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( mapping.getKeyStroke() ) );
+        if (mapping.getKeyStroke() != null) {
+            putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke(mapping.getKeyStroke()));
+        }
 
-		setEnabled( mapping.getAction().isEnabled() );
+        setEnabled(mapping.getAction().isEnabled());
 
-		String name = mapping.getName();
-		int ix = name.indexOf( '&' );
-		if( ix >= 0 )
-		{
-			putValue( Action.NAME, name.substring( 0, ix ) + name.substring( ix + 1 ) );
-			// This doesn't seem to work in Java 5:
-			// putValue( Action.DISPLAYED_MNEMONIC_INDEX_KEY, new Integer( ix ));
-			putValue( Action.MNEMONIC_KEY, new Integer( name.charAt( ix + 1 ) ) );
-		}
-	}
+        String name = mapping.getName();
+        int ix = name.indexOf('&');
+        if (ix >= 0) {
+            putValue(Action.NAME, name.substring(0, ix) + name.substring(ix + 1));
+            // This doesn't seem to work in Java 5:
+            // putValue( Action.DISPLAYED_MNEMONIC_INDEX_KEY, new Integer( ix ));
+            putValue(Action.MNEMONIC_KEY, new Integer(name.charAt(ix + 1)));
+        }
+    }
 
-	public SoapUIActionMapping<?> getMapping()
-	{
-		return mapping;
-	}
+    public SoapUIActionMapping<?> getMapping() {
+        return mapping;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		// required by IDE plugins
-		if( SwingActionDelegate.switchClassloader )
-		{
-			SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
+    public void actionPerformed(ActionEvent e) {
+        // required by IDE plugins
+        if (SwingActionDelegate.switchClassloader) {
+            SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
-			try
-			{
-				( ( SoapUIMultiAction )mapping.getAction() ).perform( targets, mapping.getParam() );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-			finally
-			{
-				state.restore();
-			}
-		}
-		else
-		{
-			try
-			{
-				( ( SoapUIMultiAction )mapping.getAction() ).perform( targets, mapping.getParam() );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
+            try {
+                ((SoapUIMultiAction) mapping.getAction()).perform(targets, mapping.getParam());
+            } catch (Throwable t) {
+                SoapUI.logError(t);
+            } finally {
+                state.restore();
+            }
+        } else {
+            try {
+                ((SoapUIMultiAction) mapping.getAction()).perform(targets, mapping.getParam());
+            } catch (Throwable t) {
+                SoapUI.logError(t);
+            }
+        }
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( SoapUIAction.ENABLED_PROPERTY ) )
-			setEnabled( ( ( Boolean )evt.getNewValue() ).booleanValue() );
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(SoapUIAction.ENABLED_PROPERTY)) {
+            setEnabled(((Boolean) evt.getNewValue()).booleanValue());
+        }
+    }
 
-	public ModelItem[] getTargets()
-	{
-		return targets;
-	}
+    public ModelItem[] getTargets() {
+        return targets;
+    }
 
-	public SoapUIAction<?> getSoapUIAction()
-	{
-		return mapping.getAction();
-	}
+    public SoapUIAction<?> getSoapUIAction() {
+        return mapping.getAction();
+    }
 }

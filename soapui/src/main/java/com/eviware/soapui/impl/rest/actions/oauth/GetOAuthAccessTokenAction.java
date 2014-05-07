@@ -27,41 +27,31 @@ import java.awt.event.ActionEvent;
 /**
  * Action for retrieving an OAuth2 access token using the values in the OAuth2Profile object.
  */
-public class GetOAuthAccessTokenAction extends AbstractAction
-{
+public class GetOAuthAccessTokenAction extends AbstractAction {
 
-	private OAuth2Profile target;
+    private OAuth2Profile target;
 
-	public GetOAuthAccessTokenAction( OAuth2Profile target )
-	{
-		this.target = target;
-		putValue(Action.NAME, "Get Access Token");
-		putValue( Action.SHORT_DESCRIPTION, "Gets an OAuth 2 access token and stores it in this profile" );
-	}
+    public GetOAuthAccessTokenAction(OAuth2Profile target) {
+        this.target = target;
+        putValue(Action.NAME, "Get Access Token");
+        putValue(Action.SHORT_DESCRIPTION, "Gets an OAuth 2 access token and stores it in this profile");
+    }
 
-	public void actionPerformed(ActionEvent event)
-	{
-		try
-		{
-			getOAuthClientFacade().requestAccessToken( target );
-		}
-		catch (InvalidOAuth2ParametersException e)
-		{
-			UISupport.showErrorMessage( "Invalid OAuth 2 parameters: " + e.getMessage() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e, "Error retrieving OAuth 2 access token" );
-			UISupport.showErrorMessage( "Could not retrieve access token. Check the SoapUI log for details" );
-		}
-	}
+    public void actionPerformed(ActionEvent event) {
+        try {
+            getOAuthClientFacade().requestAccessToken(target);
+        } catch (InvalidOAuth2ParametersException e) {
+            UISupport.showErrorMessage("Invalid OAuth 2 parameters: " + e.getMessage());
+        } catch (Exception e) {
+            SoapUI.logError(e, "Error retrieving OAuth 2 access token");
+            UISupport.showErrorMessage("Could not retrieve access token. Check the SoapUI log for details");
+        }
+    }
 
 
-
-	protected OAuth2ClientFacade getOAuthClientFacade()
-	{
-		return new OltuOAuth2ClientFacade();
-	}
+    protected OAuth2ClientFacade getOAuthClientFacade() {
+        return new OltuOAuth2ClientFacade();
+    }
 
 
 }

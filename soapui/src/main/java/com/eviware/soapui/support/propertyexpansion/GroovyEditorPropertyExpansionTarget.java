@@ -27,70 +27,63 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.support.UISupport;
 
-public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansionTarget
-{
-	private final RSyntaxTextArea textField;
+public class GroovyEditorPropertyExpansionTarget extends AbstractPropertyExpansionTarget {
+    private final RSyntaxTextArea textField;
 
-	public GroovyEditorPropertyExpansionTarget( GroovyEditor textField, ModelItem modelItem )
-	{
-		super( modelItem );
-		this.textField = textField.getEditArea();
-	}
+    public GroovyEditorPropertyExpansionTarget(GroovyEditor textField, ModelItem modelItem) {
+        super(modelItem);
+        this.textField = textField.getEditArea();
+    }
 
-	public void insertPropertyExpansion( PropertyExpansion expansion, Point pt )
-	{
-		int pos = pt == null ? -1 : textField.viewToModel( pt );
-		if( pos == -1 )
-			pos = textField.getCaretPosition();
+    public void insertPropertyExpansion(PropertyExpansion expansion, Point pt) {
+        int pos = pt == null ? -1 : textField.viewToModel(pt);
+        if (pos == -1) {
+            pos = textField.getCaretPosition();
+        }
 
-		String name = expansion.getProperty().getName();
-		String javaName = createJavaName( name );
+        String name = expansion.getProperty().getName();
+        String javaName = createJavaName(name);
 
-		javaName = UISupport.prompt( "Specify name of variable for property", "Get Property", javaName );
-		if( javaName == null )
-			return;
+        javaName = UISupport.prompt("Specify name of variable for property", "Get Property", javaName);
+        if (javaName == null) {
+            return;
+        }
 
-		String txt = createContextExpansion( javaName, expansion );
+        String txt = createContextExpansion(javaName, expansion);
 
-		try
-		{
-			int line = textField.getLineOfOffset( pos );
-			pos = textField.getLineStartOffset( line );
+        try {
+            int line = textField.getLineOfOffset(pos);
+            pos = textField.getLineStartOffset(line);
 
-			textField.setCaretPosition( pos );
-			textField.insert( txt, pos );
-			textField.setSelectionStart( pos );
-			textField.setSelectionEnd( pos + txt.length() );
-			textField.requestFocusInWindow();
-		}
-		catch( BadLocationException e )
-		{
-			e.printStackTrace();
-		}
-	}
+            textField.setCaretPosition(pos);
+            textField.insert(txt, pos);
+            textField.setSelectionStart(pos);
+            textField.setSelectionEnd(pos + txt.length());
+            textField.requestFocusInWindow();
+        } catch (BadLocationException e) {
+            e.printStackTrace();
+        }
+    }
 
-	private String createJavaName( String name )
-	{
-		StringBuffer buf = new StringBuffer();
-		for( int c = 0; c < name.length(); c++ )
-		{
-			char ch = c == 0 ? name.toLowerCase().charAt( c ) : name.charAt( c );
-			if( buf.length() == 0 && Character.isJavaIdentifierStart( ch ) )
-				buf.append( ch );
-			else if( buf.length() > 0 && Character.isJavaIdentifierPart( ch ) )
-				buf.append( ch );
-		}
+    private String createJavaName(String name) {
+        StringBuffer buf = new StringBuffer();
+        for (int c = 0; c < name.length(); c++) {
+            char ch = c == 0 ? name.toLowerCase().charAt(c) : name.charAt(c);
+            if (buf.length() == 0 && Character.isJavaIdentifierStart(ch)) {
+                buf.append(ch);
+            } else if (buf.length() > 0 && Character.isJavaIdentifierPart(ch)) {
+                buf.append(ch);
+            }
+        }
 
-		return buf.toString();
-	}
+        return buf.toString();
+    }
 
-	public String getValueForCreation()
-	{
-		return textField.getSelectedText();
-	}
+    public String getValueForCreation() {
+        return textField.getSelectedText();
+    }
 
-	public String getNameForCreation()
-	{
-		return null;
-	}
+    public String getNameForCreation() {
+        return null;
+    }
 }

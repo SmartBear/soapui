@@ -41,164 +41,143 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class JMSPropertyInspector extends AbstractXmlInspector implements PropertyChangeListener
-{
-	private StringToStringMapTableModel headersTableModel;
-	private final JMSPropertyInspectorModel model;
-	private JTable headersTable;
-	private JPanel panel;
-	private JButton removeButton;
-	public boolean changing;
+public class JMSPropertyInspector extends AbstractXmlInspector implements PropertyChangeListener {
+    private StringToStringMapTableModel headersTableModel;
+    private final JMSPropertyInspectorModel model;
+    private JTable headersTable;
+    private JPanel panel;
+    private JButton removeButton;
+    public boolean changing;
 
-	protected JMSPropertyInspector( JMSPropertyInspectorModel model )
-	{
-		super( "JMS Properties (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() ) + ")",
-				"Additional JMS Property for this message", true, JMSPropertyInspectorFactory.INSPECTOR_ID );
+    protected JMSPropertyInspector(JMSPropertyInspectorModel model) {
+        super("JMS Properties (" + (model.getJMSProperties() == null ? "0" : model.getJMSProperties().size()) + ")",
+                "Additional JMS Property for this message", true, JMSPropertyInspectorFactory.INSPECTOR_ID);
 
-		this.model = model;
+        this.model = model;
 
-		model.addPropertyChangeListener( this );
-		model.setInspector( this );
-	}
+        model.addPropertyChangeListener(this);
+        model.setInspector(this);
+    }
 
-	public JComponent getComponent()
-	{
-		if( panel != null )
-			return panel;
+    public JComponent getComponent() {
+        if (panel != null) {
+            return panel;
+        }
 
-		headersTableModel = new StringToStringMapTableModel( model.getJMSProperties(), "Key", "Value",
-				!model.isReadOnly() );
-		headersTableModel.addTableModelListener( new TableModelListener()
-		{
-			public void tableChanged( TableModelEvent arg0 )
-			{
-				model.setJMSProperties( headersTableModel.getData() );
-				setTitle( "JMS Property (" + ( model.getJMSProperties() == null ? "0" : model.getJMSProperties().size() )
-						+ ")" );
-			}
-		} );
+        headersTableModel = new StringToStringMapTableModel(model.getJMSProperties(), "Key", "Value",
+                !model.isReadOnly());
+        headersTableModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent arg0) {
+                model.setJMSProperties(headersTableModel.getData());
+                setTitle("JMS Property (" + (model.getJMSProperties() == null ? "0" : model.getJMSProperties().size())
+                        + ")");
+            }
+        });
 
-		headersTable = JTableFactory.getInstance().makeJTable( headersTableModel );
+        headersTable = JTableFactory.getInstance().makeJTable(headersTableModel);
 
-		panel = new JPanel( new BorderLayout() );
-		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );
+        panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(headersTable), BorderLayout.CENTER);
 
-		if( !model.isReadOnly() )
-		{
-			headersTable.setSurrendersFocusOnKeystroke( true );
-			headersTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
+        if (!model.isReadOnly()) {
+            headersTable.setSurrendersFocusOnKeystroke(true);
+            headersTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 
-			JXToolBar builder = UISupport.createSmallToolbar();
-			builder.addFixed( UISupport.createToolbarButton( new AddAction() ) );
-			removeButton = UISupport.createToolbarButton( new RemoveAction() );
-			builder.addFixed( removeButton );
-			builder.addGlue();
-			// builder.addFixed( UISupport.createToolbarButton( new
-			// ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
+            JXToolBar builder = UISupport.createSmallToolbar();
+            builder.addFixed(UISupport.createToolbarButton(new AddAction()));
+            removeButton = UISupport.createToolbarButton(new RemoveAction());
+            builder.addFixed(removeButton);
+            builder.addGlue();
+            // builder.addFixed( UISupport.createToolbarButton( new
+            // ShowOnlineHelpAction( HelpUrls.HEADERS_HELP_URL ) ) );
 
-			panel.add( builder, BorderLayout.NORTH );
+            panel.add(builder, BorderLayout.NORTH);
 
-			headersTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-			{
+            headersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-				public void valueChanged( ListSelectionEvent e )
-				{
-					removeButton.setEnabled( headersTable.getSelectedRow() != -1 );
-				}
-			} );
+                public void valueChanged(ListSelectionEvent e) {
+                    removeButton.setEnabled(headersTable.getSelectedRow() != -1);
+                }
+            });
 
-			if( headersTable.getRowCount() > 0 )
-				headersTable.setRowSelectionInterval( 0, 0 );
-			else
-				removeButton.setEnabled( false );
-		}
+            if (headersTable.getRowCount() > 0) {
+                headersTable.setRowSelectionInterval(0, 0);
+            } else {
+                removeButton.setEnabled(false);
+            }
+        }
 
-		return panel;
-	}
+        return panel;
+    }
 
-	public JTable getHeadersTable()
-	{
-		return headersTable;
-	}
+    public JTable getHeadersTable() {
+        return headersTable;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		model.release();
-		model.removePropertyChangeListener( this );
-	}
+    @Override
+    public void release() {
+        super.release();
+        model.release();
+        model.removePropertyChangeListener(this);
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( !changing )
-			headersTableModel.setData( model.getJMSProperties() );
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!changing) {
+            headersTableModel.setData(model.getJMSProperties());
+        }
+    }
 
-	private final class RemoveAction extends AbstractAction
-	{
-		private RemoveAction()
-		{
-			super();
-			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom JMS Property from this message" );
-		}
+    private final class RemoveAction extends AbstractAction {
+        private RemoveAction() {
+            super();
+            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom JMS Property from this message");
+        }
 
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			int row = headersTable.getSelectedRow();
-			if( row != -1 && UISupport.confirm( "Delete selected JMS Property?", "Remove JMS Property" ) )
-			{
-				changing = true;
-				headersTableModel.remove( row );
-				changing = false;
-			}
-		}
-	}
+        public void actionPerformed(ActionEvent arg0) {
+            int row = headersTable.getSelectedRow();
+            if (row != -1 && UISupport.confirm("Delete selected JMS Property?", "Remove JMS Property")) {
+                changing = true;
+                headersTableModel.remove(row);
+                changing = false;
+            }
+        }
+    }
 
-	private final class AddAction extends AbstractAction
-	{
-		private AddAction()
-		{
-			super();
-			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom JMS Property to this message" );
-		}
+    private final class AddAction extends AbstractAction {
+        private AddAction() {
+            super();
+            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(AbstractAction.SHORT_DESCRIPTION, "Adds a custom JMS Property to this message");
+        }
 
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			Object header = UISupport.prompt( "Specify name of JMS Property to add", "Add JMS Property", "" );
-			if( header != null )
-			{
-				changing = true;
-				headersTableModel.add( header.toString(), "" );
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						int row = headersTable.getRowCount() - 1;
-						headersTable.scrollRectToVisible( headersTable.getCellRect( row, 1, true ) );
-						headersTable.setRowSelectionInterval( row, row );
+        public void actionPerformed(ActionEvent arg0) {
+            Object header = UISupport.prompt("Specify name of JMS Property to add", "Add JMS Property", "");
+            if (header != null) {
+                changing = true;
+                headersTableModel.add(header.toString(), "");
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        int row = headersTable.getRowCount() - 1;
+                        headersTable.scrollRectToVisible(headersTable.getCellRect(row, 1, true));
+                        headersTable.setRowSelectionInterval(row, row);
 
-						SwingUtilities.invokeLater( new Runnable()
-						{
-							public void run()
-							{
-								headersTable.editCellAt( headersTable.getRowCount() - 1, 1 );
-								headersTable.getEditorComponent().requestFocusInWindow();
-							}
-						} );
-					}
-				} );
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                headersTable.editCellAt(headersTable.getRowCount() - 1, 1);
+                                headersTable.getEditorComponent().requestFocusInWindow();
+                            }
+                        });
+                    }
+                });
 
-				changing = false;
-			}
-		}
-	}
+                changing = false;
+            }
+        }
+    }
 
-	@Override
-	public boolean isEnabledFor( EditorView<XmlDocument> view )
-	{
-		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
-	}
+    @Override
+    public boolean isEnabledFor(EditorView<XmlDocument> view) {
+        return !view.getViewId().equals(RawXmlEditorFactory.VIEW_ID);
+    }
 }

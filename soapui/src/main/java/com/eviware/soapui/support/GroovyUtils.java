@@ -47,167 +47,139 @@ import com.eviware.soapui.model.testsuite.TestCaseRunContext;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class GroovyUtils
-{
-	protected final PropertyExpansionContext context;
+public class GroovyUtils {
+    protected final PropertyExpansionContext context;
 
-	public GroovyUtils( PropertyExpansionContext context )
-	{
-		this.context = context;
-	}
+    public GroovyUtils(PropertyExpansionContext context) {
+        this.context = context;
+    }
 
-	public final String getProjectPath()
-	{
-		Project project = ModelSupport.getModelItemProject( context.getModelItem() );
+    public final String getProjectPath() {
+        Project project = ModelSupport.getModelItemProject(context.getModelItem());
 
-		String path = project.getPath();
-		int ix = path.lastIndexOf( File.separatorChar );
-		return ix == -1 ? "" : path.substring( 0, ix );
-	}
+        String path = project.getPath();
+        int ix = path.lastIndexOf(File.separatorChar);
+        return ix == -1 ? "" : path.substring(0, ix);
+    }
 
-	public final XmlHolder getXmlHolder( String xmlPropertyOrString ) throws Exception
-	{
-		try
-		{
-			// return new XmlHolder( XmlObject.Factory.parse( xmlPropertyOrString )
-			// );
-			return new XmlHolder( XmlUtils.createXmlObject( xmlPropertyOrString ) );
-		}
-		catch( Exception e )
-		{
-			return new XmlHolder( context, xmlPropertyOrString );
-		}
-	}
+    public final XmlHolder getXmlHolder(String xmlPropertyOrString) throws Exception {
+        try {
+            // return new XmlHolder( XmlObject.Factory.parse( xmlPropertyOrString )
+            // );
+            return new XmlHolder(XmlUtils.createXmlObject(xmlPropertyOrString));
+        } catch (Exception e) {
+            return new XmlHolder(context, xmlPropertyOrString);
+        }
+    }
 
-	public final String expand( String property )
-	{
-		return PropertyExpander.expandProperties( context, property );
-	}
+    public final String expand(String property) {
+        return PropertyExpander.expandProperties(context, property);
+    }
 
-	public final void setPropertyValue( String testStep, String property, String value ) throws Exception
-	{
-		if( !( context instanceof TestCaseRunContext ) )
-			return;
+    public final void setPropertyValue(String testStep, String property, String value) throws Exception {
+        if (!(context instanceof TestCaseRunContext)) {
+            return;
+        }
 
-		TestStep step = ( ( TestCaseRunContext )context ).getTestCase().getTestStepByName( testStep );
-		if( step != null )
-		{
-			step.setPropertyValue( property, value );
-		}
-		else
-		{
-			throw new Exception( "Missing TestStep [" + testStep + "] in TestCase" );
-		}
-	}
+        TestStep step = ((TestCaseRunContext) context).getTestCase().getTestStepByName(testStep);
+        if (step != null) {
+            step.setPropertyValue(property, value);
+        } else {
+            throw new Exception("Missing TestStep [" + testStep + "] in TestCase");
+        }
+    }
 
-	public final String getXml( Node node ) throws XmlException
-	{
-		// return XmlObject.Factory.parse( node ).xmlText();
-		return XmlUtils.createXmlObject( node ).xmlText();
-	}
+    public final String getXml(Node node) throws XmlException {
+        // return XmlObject.Factory.parse( node ).xmlText();
+        return XmlUtils.createXmlObject(node).xmlText();
+    }
 
-	private static final ConcurrentHashMap<String,Boolean> registeredDrivers = new ConcurrentHashMap<String,Boolean>();
-	private static final Object[] mutex = new Object[0];
+    private static final ConcurrentHashMap<String, Boolean> registeredDrivers = new ConcurrentHashMap<String, Boolean>();
+    private static final Object[] mutex = new Object[0];
 
-	public static void registerJdbcDriver( String name )
-	{
-		if( registeredDrivers.containsKey( name ) )
-			return;
+    public static void registerJdbcDriver(String name) {
+        if (registeredDrivers.containsKey(name)) {
+            return;
+        }
 
-		try
-		{
-			synchronized (mutex){
-				Class driverClass = Class.forName( name, true, SoapUI.getSoapUICore().getExtensionClassLoader() );
-				Driver d = ( Driver )driverClass.newInstance();
-				DriverManager.registerDriver( new DriverProxy( d ) );
-			}
-			registeredDrivers.putIfAbsent( name , Boolean.TRUE);
-		}
-		catch( Exception e )
-		{
-			e.printStackTrace();
-		}
-	}
+        try {
+            synchronized (mutex) {
+                Class driverClass = Class.forName(name, true, SoapUI.getSoapUICore().getExtensionClassLoader());
+                Driver d = (Driver) driverClass.newInstance();
+                DriverManager.registerDriver(new DriverProxy(d));
+            }
+            registeredDrivers.putIfAbsent(name, Boolean.TRUE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * extracts error line number from groovy stact trace
-	 * 
-	 * @return line number
-	 */
-	public static String extractErrorLineNumber( Throwable t )
-	{
-		try
-		{
-			Writer wresult = new StringWriter();
-			PrintWriter printWriter = new PrintWriter( wresult );
-			t.printStackTrace( printWriter );
-			String stackTrace = wresult.toString();
+    /**
+     * extracts error line number from groovy stact trace
+     *
+     * @return line number
+     */
+    public static String extractErrorLineNumber(Throwable t) {
+        try {
+            Writer wresult = new StringWriter();
+            PrintWriter printWriter = new PrintWriter(wresult);
+            t.printStackTrace(printWriter);
+            String stackTrace = wresult.toString();
 
-			Pattern p = Pattern.compile( "at Script\\d+\\.run\\(Script\\d+\\.groovy:(\\d+)\\)" );
-			Matcher m = p.matcher( stackTrace );
-			m.find();
-			String b = m.group( 1 );
-			return b;
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e, "cannot get error line number!" );
-			return null;
-		}
-	}
+            Pattern p = Pattern.compile("at Script\\d+\\.run\\(Script\\d+\\.groovy:(\\d+)\\)");
+            Matcher m = p.matcher(stackTrace);
+            m.find();
+            String b = m.group(1);
+            return b;
+        } catch (Exception e) {
+            SoapUI.logError(e, "cannot get error line number!");
+            return null;
+        }
+    }
 
-	static class DriverProxy implements Driver
-	{
-		private Driver driver;
+    static class DriverProxy implements Driver {
+        private Driver driver;
 
-		DriverProxy( Driver d )
-		{
-			this.driver = d;
-		}
+        DriverProxy(Driver d) {
+            this.driver = d;
+        }
 
-		public boolean acceptsURL( String u ) throws SQLException
-		{
-			return this.driver.acceptsURL( u );
-		}
+        public boolean acceptsURL(String u) throws SQLException {
+            return this.driver.acceptsURL(u);
+        }
 
-		public Connection connect( String u, Properties p ) throws SQLException
-		{
-			return this.driver.connect( u, p );
-		}
+        public Connection connect(String u, Properties p) throws SQLException {
+            return this.driver.connect(u, p);
+        }
 
-		public int getMajorVersion()
-		{
-			return this.driver.getMajorVersion();
-		}
+        public int getMajorVersion() {
+            return this.driver.getMajorVersion();
+        }
 
-		public int getMinorVersion()
-		{
-			return this.driver.getMinorVersion();
-		}
+        public int getMinorVersion() {
+            return this.driver.getMinorVersion();
+        }
 
-		public DriverPropertyInfo[] getPropertyInfo( String u, Properties p ) throws SQLException
-		{
-			return this.driver.getPropertyInfo( u, p );
-		}
+        public DriverPropertyInfo[] getPropertyInfo(String u, Properties p) throws SQLException {
+            return this.driver.getPropertyInfo(u, p);
+        }
 
-		public boolean jdbcCompliant()
-		{
-			return this.driver.jdbcCompliant();
-		}
+        public boolean jdbcCompliant() {
+            return this.driver.jdbcCompliant();
+        }
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.sql.Driver#getParentLogger()
-		 * 
-		 * Java 7 issue
-		 * 
-		 * this method is need by java.sql.Driver interface in Java 7
-		 */
-		public Logger getParentLogger() throws SQLFeatureNotSupportedException
-		{
-			// TODO Auto-generated method stub
-			return null;
-		}
-	}
+        /*
+         * (non-Javadoc)
+         *
+         * @see java.sql.Driver#getParentLogger()
+         *
+         * Java 7 issue
+         *
+         * this method is need by java.sql.Driver interface in Java 7
+         */
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            // TODO Auto-generated method stub
+            return null;
+        }
+    }
 }

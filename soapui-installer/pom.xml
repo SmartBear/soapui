@@ -7,7 +7,7 @@
     <parent>
         <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
-        <version>5.0.0</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>soapui-installer</artifactId>
@@ -20,10 +20,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <!-- TODO Not sure if this is needed -->
-                    <exclude>src/main/resources/com/eviware/soapui/resources/conf/soapui-log4j.xml</exclude>
-                </excludes>
             </resource>
         </resources>
 

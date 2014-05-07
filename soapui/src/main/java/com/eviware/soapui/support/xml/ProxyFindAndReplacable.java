@@ -22,162 +22,130 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.support.actions.FindAndReplaceable;
 
-public class ProxyFindAndReplacable implements FindAndReplaceable
-{
-	protected FindAndReplaceable proxytarget;
-	protected boolean isReplaceAll = false;
-	protected StringBuilder sbtartget;
-	protected String oldValue;
-	protected String newValue;
-	protected int start;
-	protected int end;
+public class ProxyFindAndReplacable implements FindAndReplaceable {
+    protected FindAndReplaceable proxytarget;
+    protected boolean isReplaceAll = false;
+    protected StringBuilder sbtartget;
+    protected String oldValue;
+    protected String newValue;
+    protected int start;
+    protected int end;
 
-	public ProxyFindAndReplacable( FindAndReplaceable proxytarget )
-	{
-		this.proxytarget = proxytarget;
-	}
+    public ProxyFindAndReplacable(FindAndReplaceable proxytarget) {
+        this.proxytarget = proxytarget;
+    }
 
-	public void setSBTarget()
-	{
-		this.sbtartget = new StringBuilder();
-		this.sbtartget.append( proxytarget.getText() );
-	}
+    public void setSBTarget() {
+        this.sbtartget = new StringBuilder();
+        this.sbtartget.append(proxytarget.getText());
+    }
 
-	public FindAndReplaceable getProxytarget()
-	{
-		return proxytarget;
-	}
+    public FindAndReplaceable getProxytarget() {
+        return proxytarget;
+    }
 
-	public int getCaretPosition()
-	{
-		return proxytarget.getCaretPosition();
-	}
+    public int getCaretPosition() {
+        return proxytarget.getCaretPosition();
+    }
 
-	public String getSelectedText()
-	{
-		return proxytarget.getSelectedText();
-	}
+    public String getSelectedText() {
+        return proxytarget.getSelectedText();
+    }
 
-	public int getSelectionEnd()
-	{
-		return proxytarget.getSelectionEnd();
-	}
+    public int getSelectionEnd() {
+        return proxytarget.getSelectionEnd();
+    }
 
-	public int getSelectionStart()
-	{
-		return proxytarget.getSelectionStart();
-	}
+    public int getSelectionStart() {
+        return proxytarget.getSelectionStart();
+    }
 
-	public String getText()
-	{
-		if( isReplaceAll )
-		{
-			return sbtartget.toString();
-		}
-		else
-			return proxytarget.getText();
+    public String getText() {
+        if (isReplaceAll) {
+            return sbtartget.toString();
+        } else {
+            return proxytarget.getText();
+        }
 
-	}
+    }
 
-	public String getDialogText()
-	{
-		return proxytarget.getText();
-	}
+    public String getDialogText() {
+        return proxytarget.getText();
+    }
 
-	public boolean isEditable()
-	{
-		return proxytarget.isEditable();
-	}
+    public boolean isEditable() {
+        return proxytarget.isEditable();
+    }
 
-	public void select( int start, int end )
-	{
-		if( isReplaceAll )
-		{
-			this.start = start;
-			this.end = end;
-		}
-		else
-			proxytarget.select( start, end );
+    public void select(int start, int end) {
+        if (isReplaceAll) {
+            this.start = start;
+            this.end = end;
+        } else {
+            proxytarget.select(start, end);
+        }
 
-	}
+    }
 
-	public void setSelectedText( String txt )
-	{
-		if( isReplaceAll )
-		{
-			sbtartget.replace( this.start, this.end, newValue );
-		}
-		else
-			proxytarget.setSelectedText( txt );
+    public void setSelectedText(String txt) {
+        if (isReplaceAll) {
+            sbtartget.replace(this.start, this.end, newValue);
+        } else {
+            proxytarget.setSelectedText(txt);
+        }
 
-	}
+    }
 
-	public boolean isReplaceAll()
-	{
-		return isReplaceAll;
-	}
+    public boolean isReplaceAll() {
+        return isReplaceAll;
+    }
 
-	public void setReplaceAll( boolean isReplaceAll )
-	{
-		if( proxytarget instanceof RSyntaxTextArea )
-		{
-			this.isReplaceAll = isReplaceAll;
-		}
-		else
-		{
-			this.isReplaceAll = false;
-		}
-	}
+    public void setReplaceAll(boolean isReplaceAll) {
+        if (proxytarget instanceof RSyntaxTextArea) {
+            this.isReplaceAll = isReplaceAll;
+        } else {
+            this.isReplaceAll = false;
+        }
+    }
 
-	public String getOldValue()
-	{
-		return oldValue;
-	}
+    public String getOldValue() {
+        return oldValue;
+    }
 
-	public void setOldValue( String oldValue )
-	{
-		this.oldValue = oldValue;
-	}
+    public void setOldValue(String oldValue) {
+        this.oldValue = oldValue;
+    }
 
-	public String getNewValue()
-	{
-		return newValue;
-	}
+    public String getNewValue() {
+        return newValue;
+    }
 
-	public void setNewValue( String newValue )
-	{
-		this.newValue = newValue;
-	}
+    public void setNewValue(String newValue) {
+        this.newValue = newValue;
+    }
 
-	public void flushSBText()
-	{
-		if( proxytarget instanceof RSyntaxTextArea )
-		{
-			( ( RSyntaxTextArea )proxytarget ).setText( sbtartget.toString() );
-		}
+    public void flushSBText() {
+        if (proxytarget instanceof RSyntaxTextArea) {
+            ((RSyntaxTextArea) proxytarget).setText(sbtartget.toString());
+        }
 
-	}
+    }
 
-	public void setCarretPosition( boolean forward )
-	{
-		if( proxytarget instanceof RSyntaxTextArea )
-		{
-			( ( RSyntaxTextArea )proxytarget ).setCaretPosition( forward ? getEnd() : getStart() );
-		}
-	}
+    public void setCarretPosition(boolean forward) {
+        if (proxytarget instanceof RSyntaxTextArea) {
+            ((RSyntaxTextArea) proxytarget).setCaretPosition(forward ? getEnd() : getStart());
+        }
+    }
 
-	public int getStart()
-	{
-		return start;
-	}
+    public int getStart() {
+        return start;
+    }
 
-	public int getEnd()
-	{
-		return end;
-	}
+    public int getEnd() {
+        return end;
+    }
 
-	public JComponent getEditComponent()
-	{
-		return proxytarget.getEditComponent();
-	}
+    public JComponent getEditComponent() {
+        return proxytarget.getEditComponent();
+    }
 }

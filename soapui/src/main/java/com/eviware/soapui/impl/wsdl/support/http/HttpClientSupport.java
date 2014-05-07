@@ -56,373 +56,315 @@ import java.security.cert.CertificateException;
  * @author Ole.Matzura
  */
 
-public class HttpClientSupport
-{
-	private final static Helper helper = new Helper();
-	static {
-		ProxyUtils.setGlobalProxy( SoapUI.getSettings() );
-	}
+public class HttpClientSupport {
+    private final static Helper helper = new Helper();
 
-	/**
-	 * Internal helper to ensure synchronized access..
-	 */
+    static {
+        ProxyUtils.setGlobalProxy(SoapUI.getSettings());
+    }
 
-	public static class SoapUIHttpClient extends DefaultHttpClient
-	{
-		public SoapUIHttpClient( final ClientConnectionManager conman )
-		{
-			super( conman, null );
-		}
+    /**
+     * Internal helper to ensure synchronized access..
+     */
 
-		@Override
-		protected HttpRequestExecutor createRequestExecutor()
-		{
-			return new SoapUIHttpRequestExecutor();
-		}
+    public static class SoapUIHttpClient extends DefaultHttpClient {
+        public SoapUIHttpClient(final ClientConnectionManager conman) {
+            super(conman, null);
+        }
 
-	}
+        @Override
+        protected HttpRequestExecutor createRequestExecutor() {
+            return new SoapUIHttpRequestExecutor();
+        }
 
-	public static class SoapUIHttpRequestExecutor extends HttpRequestExecutor
-	{
+    }
 
-		@Override
-		public void preProcess( final HttpRequest request, final HttpProcessor processor, final HttpContext context )
-				throws HttpException, IOException
-		{
-			HttpRequest original = request;
+    public static class SoapUIHttpRequestExecutor extends HttpRequestExecutor {
 
-			if( original instanceof RequestWrapper )
-			{
-				RequestWrapper w = ( RequestWrapper )request;
-				original = w.getOriginal();
-			}
+        @Override
+        public void preProcess(final HttpRequest request, final HttpProcessor processor, final HttpContext context)
+                throws HttpException, IOException {
+            HttpRequest original = request;
 
-			if( original instanceof ExtendedHttpMethod )
-			{
-				SoapUIMetrics metrics = ( ( ExtendedHttpMethod )original ).getMetrics();
-				metrics.getConnectTimer().stop();
-				metrics.getTimeToFirstByteTimer().start();
-			}
-			super.preProcess( request, processor, context );
-		}
+            if (original instanceof RequestWrapper) {
+                RequestWrapper w = (RequestWrapper) request;
+                original = w.getOriginal();
+            }
 
-		@Override
-		protected HttpResponse doSendRequest( HttpRequest request, HttpClientConnection conn, HttpContext context )
-				throws IOException, HttpException
-		{
-			HttpResponse response = super.doSendRequest( request, conn, context );
-			return response;
-		}
+            if (original instanceof ExtendedHttpMethod) {
+                SoapUIMetrics metrics = ((ExtendedHttpMethod) original).getMetrics();
+                metrics.getConnectTimer().stop();
+                metrics.getTimeToFirstByteTimer().start();
+            }
+            super.preProcess(request, processor, context);
+        }
 
-		@Override
-		protected HttpResponse doReceiveResponse( final HttpRequest request, final HttpClientConnection conn,
-																final HttpContext context ) throws HttpException, IOException
-		{
-			if( request == null )
-			{
-				throw new IllegalArgumentException( "HTTP request may not be null" );
-			}
-			if( conn == null )
-			{
-				throw new IllegalArgumentException( "HTTP connection may not be null" );
-			}
-			if( context == null )
-			{
-				throw new IllegalArgumentException( "HTTP context may not be null" );
-			}
+        @Override
+        protected HttpResponse doSendRequest(HttpRequest request, HttpClientConnection conn, HttpContext context)
+                throws IOException, HttpException {
+            HttpResponse response = super.doSendRequest(request, conn, context);
+            return response;
+        }
 
-			HttpResponse response = null;
-			int statuscode = 0;
+        @Override
+        protected HttpResponse doReceiveResponse(final HttpRequest request, final HttpClientConnection conn,
+                                                 final HttpContext context) throws HttpException, IOException {
+            if (request == null) {
+                throw new IllegalArgumentException("HTTP request may not be null");
+            }
+            if (conn == null) {
+                throw new IllegalArgumentException("HTTP connection may not be null");
+            }
+            if (context == null) {
+                throw new IllegalArgumentException("HTTP context may not be null");
+            }
 
-			HttpRequest original = request;
+            HttpResponse response = null;
+            int statuscode = 0;
 
-			if( original instanceof RequestWrapper )
-			{
-				RequestWrapper w = ( RequestWrapper )request;
-				original = w.getOriginal();
-			}
+            HttpRequest original = request;
 
-			while( response == null || statuscode < HttpStatus.SC_OK )
-			{
-				response = conn.receiveResponseHeader();
+            if (original instanceof RequestWrapper) {
+                RequestWrapper w = (RequestWrapper) request;
+                original = w.getOriginal();
+            }
 
-				SoapUIMetrics metrics = null;
-				if( original instanceof ExtendedHttpMethod )
-				{
-					metrics = ( ( ExtendedHttpMethod )original ).getMetrics();
-					metrics.getTimeToFirstByteTimer().stop();
-					metrics.getReadTimer().start();
-				}
+            while (response == null || statuscode < HttpStatus.SC_OK) {
+                response = conn.receiveResponseHeader();
 
-				if( canResponseHaveBody( request, response ) )
-				{
-					conn.receiveResponseEntity( response );
-					//	if( metrics != null ) {
-					//	metrics.getReadTimer().stop();
-					// }
-				}
+                SoapUIMetrics metrics = null;
+                if (original instanceof ExtendedHttpMethod) {
+                    metrics = ((ExtendedHttpMethod) original).getMetrics();
+                    metrics.getTimeToFirstByteTimer().stop();
+                    metrics.getReadTimer().start();
+                }
 
-				statuscode = response.getStatusLine().getStatusCode();
+                if (canResponseHaveBody(request, response)) {
+                    conn.receiveResponseEntity(response);
+                    //	if( metrics != null ) {
+                    //	metrics.getReadTimer().stop();
+                    // }
+                }
 
-				if( conn.getMetrics() instanceof SoapUIMetrics )
-				{
-					SoapUIMetrics connectionMetrics = ( SoapUIMetrics )conn.getMetrics();
+                statuscode = response.getStatusLine().getStatusCode();
 
-					if( metrics != null && connectionMetrics != null && !connectionMetrics.isDone() )
-					{
-						metrics.getDNSTimer().set( connectionMetrics.getDNSTimer().getStart(),
-								connectionMetrics.getDNSTimer().getStop() );
-						// reset connection-level metrics
-						connectionMetrics.reset();
-					}
-				}
+                if (conn.getMetrics() instanceof SoapUIMetrics) {
+                    SoapUIMetrics connectionMetrics = (SoapUIMetrics) conn.getMetrics();
 
-			} // while intermediate response
+                    if (metrics != null && connectionMetrics != null && !connectionMetrics.isDone()) {
+                        metrics.getDNSTimer().set(connectionMetrics.getDNSTimer().getStart(),
+                                connectionMetrics.getDNSTimer().getStop());
+                        // reset connection-level metrics
+                        connectionMetrics.reset();
+                    }
+                }
 
-			if( original instanceof ExtendedHttpMethod )
-			{
-				ExtendedHttpMethod extendedHttpMethod = ( ExtendedHttpMethod )original;
-				extendedHttpMethod.afterReadResponse( ( ( SoapUIMultiThreadedHttpConnectionManager.SoapUIBasicPooledConnAdapter )conn ).getSSLSession() );
-			}
+            } // while intermediate response
 
-			return response;
-		}
-	}
+            if (original instanceof ExtendedHttpMethod) {
+                ExtendedHttpMethod extendedHttpMethod = (ExtendedHttpMethod) original;
+                extendedHttpMethod.afterReadResponse(((SoapUIMultiThreadedHttpConnectionManager.SoapUIBasicPooledConnAdapter) conn).getSSLSession());
+            }
 
-	private static class Helper
-	{
-		private final SoapUIHttpClient httpClient;
-		private final static Logger log = Logger.getLogger( HttpClientSupport.Helper.class );
-		private final SoapUIMultiThreadedHttpConnectionManager connectionManager;
-		private final SchemeRegistry registry;
+            return response;
+        }
+    }
 
-		public Helper()
-		{
-			Settings settings = SoapUI.getSettings();
-			registry = new SchemeRegistry();
+    private static class Helper {
+        private final SoapUIHttpClient httpClient;
+        private final static Logger log = Logger.getLogger(HttpClientSupport.Helper.class);
+        private final SoapUIMultiThreadedHttpConnectionManager connectionManager;
+        private final SchemeRegistry registry;
 
-			registry.register( new Scheme( "http", 80, PlainSocketFactory.getSocketFactory() ) );
+        public Helper() {
+            Settings settings = SoapUI.getSettings();
+            registry = new SchemeRegistry();
 
-			try
-			{
-				SoapUISSLSocketFactory socketFactory = initSocketFactory();
-				registry.register( new Scheme( "https", 443, socketFactory ) );
-			}
-			catch( Throwable e )
-			{
-				SoapUI.logError( e );
-			}
+            registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
 
-			connectionManager = new SoapUIMultiThreadedHttpConnectionManager( registry );
-			connectionManager.setMaxTotal( ( int )settings.getLong( HttpSettings.MAX_TOTAL_CONNECTIONS, 2000 ) );
-			connectionManager
-					.setDefaultMaxPerRoute( ( int )settings.getLong( HttpSettings.MAX_CONNECTIONS_PER_HOST, 500 ) );
+            try {
+                SoapUISSLSocketFactory socketFactory = initSocketFactory();
+                registry.register(new Scheme("https", 443, socketFactory));
+            } catch (Throwable e) {
+                SoapUI.logError(e);
+            }
 
-			httpClient = new SoapUIHttpClient( connectionManager );
+            connectionManager = new SoapUIMultiThreadedHttpConnectionManager(registry);
+            connectionManager.setMaxTotal((int) settings.getLong(HttpSettings.MAX_TOTAL_CONNECTIONS, 2000));
+            connectionManager
+                    .setDefaultMaxPerRoute((int) settings.getLong(HttpSettings.MAX_CONNECTIONS_PER_HOST, 500));
 
-			// this interceptor needs to be last one added and executed.
-			httpClient.addRequestInterceptor( new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount() );
+            httpClient = new SoapUIHttpClient(connectionManager);
 
-			settings.addSettingsListener( new SSLSettingsListener() );
-		}
+            // this interceptor needs to be last one added and executed.
+            httpClient.addRequestInterceptor(new HeaderRequestInterceptor(), httpClient.getRequestInterceptorCount());
 
-		public SoapUIHttpClient getHttpClient()
-		{
-			return httpClient;
-		}
+            settings.addSettingsListener(new SSLSettingsListener());
+        }
 
-		private SchemeRegistry getRegistry()
-		{
-			return registry;
-		}
+        public SoapUIHttpClient getHttpClient() {
+            return httpClient;
+        }
 
-		public HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext ) throws ClientProtocolException,
-				IOException
-		{
-			method.afterWriteRequest();
-			if( method.getMetrics() != null )
-			{
-				method.getMetrics().getConnectTimer().start();
-			}
-			HttpResponse httpResponse = httpClient.execute( method, httpContext );
-			method.setHttpResponse( httpResponse );
+        private SchemeRegistry getRegistry() {
+            return registry;
+        }
 
-			return httpResponse;
-		}
+        public HttpResponse execute(ExtendedHttpMethod method, HttpContext httpContext) throws ClientProtocolException,
+                IOException {
+            method.afterWriteRequest();
+            if (method.getMetrics() != null) {
+                method.getMetrics().getConnectTimer().start();
+            }
+            HttpResponse httpResponse = httpClient.execute(method, httpContext);
+            method.setHttpResponse(httpResponse);
 
-		public HttpResponse execute( ExtendedHttpMethod method ) throws ClientProtocolException, IOException
-		{
-			method.afterWriteRequest();
-			if( method.getMetrics() != null )
-			{
-				method.getMetrics().getConnectTimer().start();
-			}
-			HttpResponse httpResponse = httpClient.execute( method );
-			method.setHttpResponse( httpResponse );
-			return httpResponse;
-		}
+            return httpResponse;
+        }
 
-		public final class SSLSettingsListener implements SettingsListener
-		{
-			@Override
-			public void settingChanged( String name, String newValue, String oldValue )
-			{
+        public HttpResponse execute(ExtendedHttpMethod method) throws ClientProtocolException, IOException {
+            method.afterWriteRequest();
+            if (method.getMetrics() != null) {
+                method.getMetrics().getConnectTimer().start();
+            }
+            HttpResponse httpResponse = httpClient.execute(method);
+            method.setHttpResponse(httpResponse);
+            return httpResponse;
+        }
 
-				if( name.equals( SSLSettings.KEYSTORE ) || name.equals( SSLSettings.KEYSTORE_PASSWORD ) )
-				{
-					try
-					{
-						log.info( "Updating keyStore.." );
-						registry.register( new Scheme( "https", 443, initSocketFactory() ) );
-					}
-					catch( Throwable e )
-					{
-						SoapUI.logError( e );
-					}
-				}
-				else if( name.equals( HttpSettings.MAX_CONNECTIONS_PER_HOST ) )
-				{
-					log.info( "Updating max connections per host to " + newValue );
-					connectionManager.setDefaultMaxPerRoute( Integer.parseInt( newValue ) );
-				}
-				else if( name.equals( HttpSettings.MAX_TOTAL_CONNECTIONS ) )
-				{
-					log.info( "Updating max total connections host to " + newValue );
-					connectionManager.setMaxTotal( Integer.parseInt( newValue ) );
-				}
-			}
+        public final class SSLSettingsListener implements SettingsListener {
+            @Override
+            public void settingChanged(String name, String newValue, String oldValue) {
 
-			@Override
-			public void settingsReloaded()
-			{
-				try
-				{
-					log.info( "Updating keyStore.." );
-					registry.register( new Scheme( "https", 443, initSocketFactory() ) );
-				}
-				catch( Throwable e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-		}
+                if (name.equals(SSLSettings.KEYSTORE) || name.equals(SSLSettings.KEYSTORE_PASSWORD)) {
+                    try {
+                        log.info("Updating keyStore..");
+                        registry.register(new Scheme("https", 443, initSocketFactory()));
+                    } catch (Throwable e) {
+                        SoapUI.logError(e);
+                    }
+                } else if (name.equals(HttpSettings.MAX_CONNECTIONS_PER_HOST)) {
+                    log.info("Updating max connections per host to " + newValue);
+                    connectionManager.setDefaultMaxPerRoute(Integer.parseInt(newValue));
+                } else if (name.equals(HttpSettings.MAX_TOTAL_CONNECTIONS)) {
+                    log.info("Updating max total connections host to " + newValue);
+                    connectionManager.setMaxTotal(Integer.parseInt(newValue));
+                }
+            }
 
-		public SoapUISSLSocketFactory initSocketFactory() throws KeyStoreException, NoSuchAlgorithmException,
-				CertificateException, IOException, UnrecoverableKeyException, KeyManagementException
-		{
-			KeyStore keyStore = null;
-			Settings settings = SoapUI.getSettings();
+            @Override
+            public void settingsReloaded() {
+                try {
+                    log.info("Updating keyStore..");
+                    registry.register(new Scheme("https", 443, initSocketFactory()));
+                } catch (Throwable e) {
+                    SoapUI.logError(e);
+                }
+            }
+        }
 
-			String keyStoreUrl = System.getProperty( SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_LOCATION,
-					settings.getString( SSLSettings.KEYSTORE, null ) );
+        public SoapUISSLSocketFactory initSocketFactory() throws KeyStoreException, NoSuchAlgorithmException,
+                CertificateException, IOException, UnrecoverableKeyException, KeyManagementException {
+            KeyStore keyStore = null;
+            Settings settings = SoapUI.getSettings();
 
-			keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
+            String keyStoreUrl = System.getProperty(SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_LOCATION,
+                    settings.getString(SSLSettings.KEYSTORE, null));
 
-			String pass = System.getProperty( SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_PASSWORD,
-					settings.getString( SSLSettings.KEYSTORE_PASSWORD, "" ) );
+            keyStoreUrl = keyStoreUrl != null ? keyStoreUrl.trim() : "";
 
-			char[] pwd = pass.toCharArray();
+            String pass = System.getProperty(SoapUISystemProperties.SOAPUI_SSL_KEYSTORE_PASSWORD,
+                    settings.getString(SSLSettings.KEYSTORE_PASSWORD, ""));
 
-			if( keyStoreUrl.trim().length() > 0 )
-			{
-				File f = new File( keyStoreUrl );
-				if( f.exists() )
-				{
-					log.info( "Initializing KeyStore" );
+            char[] pwd = pass.toCharArray();
 
-					try
-					{
-						KeyMaterial km = new KeyMaterial( f, pwd );
-						keyStore = km.getKeyStore();
-					}
-					catch( Exception e )
-					{
-						SoapUI.logError( e );
-					}
-				}
-			}
+            if (keyStoreUrl.trim().length() > 0) {
+                File f = new File(keyStoreUrl);
+                if (f.exists()) {
+                    log.info("Initializing KeyStore");
 
-			return new SoapUISSLSocketFactory( keyStore, pass );
-		}
-	}
+                    try {
+                        KeyMaterial km = new KeyMaterial(f, pwd);
+                        keyStore = km.getKeyStore();
+                    } catch (Exception e) {
+                        SoapUI.logError(e);
+                    }
+                }
+            }
 
-	public static SoapUIHttpClient getHttpClient()
-	{
-		return helper.getHttpClient();
-	}
+            return new SoapUISSLSocketFactory(keyStore, pass);
+        }
+    }
 
-	public static void setProxySelector( ProxySelector proxySelector )
-	{
-		getHttpClient().setRoutePlanner( new OverridableProxySelectorRoutePlanner( helper.getRegistry(), proxySelector ) );
-	}
+    public static SoapUIHttpClient getHttpClient() {
+        return helper.getHttpClient();
+    }
 
-	public static HttpResponse execute( ExtendedHttpMethod method, HttpContext httpContext )
-			throws ClientProtocolException, IOException
-	{
-		return helper.execute( method, httpContext );
-	}
+    public static void setProxySelector(ProxySelector proxySelector) {
+        getHttpClient().setRoutePlanner(new OverridableProxySelectorRoutePlanner(helper.getRegistry(), proxySelector));
+    }
 
-	public static HttpResponse execute( ExtendedHttpMethod method ) throws ClientProtocolException, IOException
-	{
-		return helper.execute( method );
-	}
+    public static HttpResponse execute(ExtendedHttpMethod method, HttpContext httpContext)
+            throws ClientProtocolException, IOException {
+        return helper.execute(method, httpContext);
+    }
 
-	public static void applyHttpSettings( HttpRequest httpMethod, Settings settings )
-	{
-		// user agent?
-		String userAgent = settings.getString( HttpSettings.USER_AGENT, null );
-		if( userAgent != null && userAgent.length() > 0 )
-			httpMethod.setHeader( "User-Agent", userAgent );
+    public static HttpResponse execute(ExtendedHttpMethod method) throws ClientProtocolException, IOException {
+        return helper.execute(method);
+    }
 
-		// timeout?
-		long timeout = settings.getLong( HttpSettings.SOCKET_TIMEOUT, HttpSettings.DEFAULT_SOCKET_TIMEOUT );
-		httpMethod.getParams().setParameter( CoreConnectionPNames.SO_TIMEOUT, ( int )timeout );
-	}
+    public static void applyHttpSettings(HttpRequest httpMethod, Settings settings) {
+        // user agent?
+        String userAgent = settings.getString(HttpSettings.USER_AGENT, null);
+        if (userAgent != null && userAgent.length() > 0) {
+            httpMethod.setHeader("User-Agent", userAgent);
+        }
 
-	public static String getResponseCompressionType( HttpResponse httpResponse )
-	{
-		Header contentType = null;
-		if( httpResponse.getEntity() != null )
-		{
-			contentType = httpResponse.getEntity().getContentType();
-		}
+        // timeout?
+        long timeout = settings.getLong(HttpSettings.SOCKET_TIMEOUT, HttpSettings.DEFAULT_SOCKET_TIMEOUT);
+        httpMethod.getParams().setParameter(CoreConnectionPNames.SO_TIMEOUT, (int) timeout);
+    }
 
-		Header contentEncoding = null;
-		if( httpResponse.getEntity() != null )
-		{
-			contentEncoding = httpResponse.getEntity().getContentEncoding();
-		}
+    public static String getResponseCompressionType(HttpResponse httpResponse) {
+        Header contentType = null;
+        if (httpResponse.getEntity() != null) {
+            contentType = httpResponse.getEntity().getContentType();
+        }
 
-		return getCompressionType( contentType == null ? null : contentType.getValue(), contentEncoding == null ? null
-				: contentEncoding.getValue() );
-	}
+        Header contentEncoding = null;
+        if (httpResponse.getEntity() != null) {
+            contentEncoding = httpResponse.getEntity().getContentEncoding();
+        }
 
-	public static String getCompressionType( String contentType, String contentEncoding )
-	{
-		String compressionAlg = contentType == null ? null : CompressionSupport.getAvailableAlgorithm( contentType );
-		if( compressionAlg != null )
-			return compressionAlg;
+        return getCompressionType(contentType == null ? null : contentType.getValue(), contentEncoding == null ? null
+                : contentEncoding.getValue());
+    }
 
-		if( contentEncoding == null )
-			return null;
-		else
-			return CompressionSupport.getAvailableAlgorithm( contentEncoding );
-	}
+    public static String getCompressionType(String contentType, String contentEncoding) {
+        String compressionAlg = contentType == null ? null : CompressionSupport.getAvailableAlgorithm(contentType);
+        if (compressionAlg != null) {
+            return compressionAlg;
+        }
 
-	public static void addSSLListener( Settings settings )
-	{
-		settings.addSettingsListener( helper.new SSLSettingsListener() );
-	}
+        if (contentEncoding == null) {
+            return null;
+        } else {
+            return CompressionSupport.getAvailableAlgorithm(contentEncoding);
+        }
+    }
 
-	public static BasicHttpContext createEmptyContext()
-	{
-		BasicHttpContext httpContext = new BasicHttpContext();
+    public static void addSSLListener(Settings settings) {
+        settings.addSettingsListener(helper.new SSLSettingsListener());
+    }
 
-		// always use local cookie store so we don't share cookies with other threads/executions/requests
-		CookieStore cookieStore = new BasicCookieStore();
-		httpContext.setAttribute( ClientContext.COOKIE_STORE, cookieStore );
+    public static BasicHttpContext createEmptyContext() {
+        BasicHttpContext httpContext = new BasicHttpContext();
 
-		return httpContext;
-	}
+        // always use local cookie store so we don't share cookies with other threads/executions/requests
+        CookieStore cookieStore = new BasicCookieStore();
+        httpContext.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
+
+        return httpContext;
+    }
 
 }

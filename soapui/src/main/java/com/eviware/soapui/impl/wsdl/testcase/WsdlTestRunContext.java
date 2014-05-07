@@ -32,143 +32,131 @@ import com.eviware.soapui.support.types.StringToObjectMap;
 
 /**
  * TestRunContext for WsdlTestCase runners
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> implements TestCaseRunContext
-{
-	private final TestCaseRunner testRunner;
-	private int currentStepIndex;
-	private TestCase testCase;
-	private PropertyChangeSupport pcs = new PropertyChangeSupport( this );
+public class WsdlTestRunContext extends AbstractSubmitContext<TestModelItem> implements TestCaseRunContext {
+    private final TestCaseRunner testRunner;
+    private int currentStepIndex;
+    private TestCase testCase;
+    private PropertyChangeSupport pcs = new PropertyChangeSupport(this);
 
-	public WsdlTestRunContext( TestCaseRunner testRunner, StringToObjectMap properties, TestModelItem testModelItem )
-	{
-		super( testModelItem, properties );
-		this.testRunner = testRunner;
-	}
+    public WsdlTestRunContext(TestCaseRunner testRunner, StringToObjectMap properties, TestModelItem testModelItem) {
+        super(testModelItem, properties);
+        this.testRunner = testRunner;
+    }
 
-	public WsdlTestRunContext( TestStep testStep )
-	{
-		super( testStep );
+    public WsdlTestRunContext(TestStep testStep) {
+        super(testStep);
 
-		testRunner = null;
-		testCase = testStep.getTestCase();
-		currentStepIndex = testCase.getIndexOfTestStep( testStep );
-	}
+        testRunner = null;
+        testCase = testStep.getTestCase();
+        currentStepIndex = testCase.getIndexOfTestStep(testStep);
+    }
 
-	public TestStep getCurrentStep()
-	{
-		if( currentStepIndex < 0 || currentStepIndex >= getTestCase().getTestStepCount() )
-			return null;
+    public TestStep getCurrentStep() {
+        if (currentStepIndex < 0 || currentStepIndex >= getTestCase().getTestStepCount()) {
+            return null;
+        }
 
-		return getTestCase().getTestStepAt( currentStepIndex );
-	}
+        return getTestCase().getTestStepAt(currentStepIndex);
+    }
 
-	@Override
-	public void setProperty( String name, Object value )
-	{
-		Object oldValue = new Object();
-		super.setProperty( name, value, getTestCase() );
-		if( pcs != null )
-			pcs.firePropertyChange( name, oldValue, value );
-	}
+    @Override
+    public void setProperty(String name, Object value) {
+        Object oldValue = new Object();
+        super.setProperty(name, value, getTestCase());
+        if (pcs != null) {
+            pcs.firePropertyChange(name, oldValue, value);
+        }
+    }
 
-	public int getCurrentStepIndex()
-	{
-		return currentStepIndex;
-	}
+    public int getCurrentStepIndex() {
+        return currentStepIndex;
+    }
 
-	public void setCurrentStep( int index )
-	{
-		currentStepIndex = index;
-	}
+    public void setCurrentStep(int index) {
+        currentStepIndex = index;
+    }
 
-	public TestCaseRunner getTestRunner()
-	{
-		return testRunner;
-	}
+    public TestCaseRunner getTestRunner() {
+        return testRunner;
+    }
 
-	public Object getProperty( String testStepName, String propertyName )
-	{
-		TestStep testStep = getTestCase().getTestStepByName( testStepName );
-		return testStep == null ? null : testStep.getPropertyValue( propertyName );
-	}
+    public Object getProperty(String testStepName, String propertyName) {
+        TestStep testStep = getTestCase().getTestStepByName(testStepName);
+        return testStep == null ? null : testStep.getPropertyValue(propertyName);
+    }
 
-	public TestCase getTestCase()
-	{
-		return testRunner == null ? testCase : testRunner.getTestCase();
-	}
+    public TestCase getTestCase() {
+        return testRunner == null ? testCase : testRunner.getTestCase();
+    }
 
-	@Override
-	public Object get( Object key )
-	{
-		if( "currentStep".equals( key ) )
-			return getCurrentStep();
+    @Override
+    public Object get(Object key) {
+        if ("currentStep".equals(key)) {
+            return getCurrentStep();
+        }
 
-		if( "currentStepIndex".equals( key ) )
-			return getCurrentStepIndex();
+        if ("currentStepIndex".equals(key)) {
+            return getCurrentStepIndex();
+        }
 
-		if( "settings".equals( key ) )
-			return getSettings();
+        if ("settings".equals(key)) {
+            return getSettings();
+        }
 
-		if( "testCase".equals( key ) )
-			return getTestCase();
+        if ("testCase".equals(key)) {
+            return getTestCase();
+        }
 
-		if( "testRunner".equals( key ) )
-			return getTestRunner();
+        if ("testRunner".equals(key)) {
+            return getTestRunner();
+        }
 
-		Object result = getProperty( key.toString() );
+        Object result = getProperty(key.toString());
 
-		if( result == null )
-		{
-			result = super.get( key );
-		}
+        if (result == null) {
+            result = super.get(key);
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	@Override
-	public Object put( String key, Object value )
-	{
-		Object oldValue = get( key );
-		setProperty( key, value );
-		return oldValue;
-	}
+    @Override
+    public Object put(String key, Object value) {
+        Object oldValue = get(key);
+        setProperty(key, value);
+        return oldValue;
+    }
 
-	public Object getProperty( String name )
-	{
-		WsdlTestCase testCase = ( WsdlTestCase )getTestCase();
-		TestStep testStep = currentStepIndex >= 0 && currentStepIndex < testCase.getTestStepCount() ? testCase
-				.getTestStepAt( currentStepIndex ) : null;
+    public Object getProperty(String name) {
+        WsdlTestCase testCase = (WsdlTestCase) getTestCase();
+        TestStep testStep = currentStepIndex >= 0 && currentStepIndex < testCase.getTestStepCount() ? testCase
+                .getTestStepAt(currentStepIndex) : null;
 
-		return getProperty( name, testStep, testCase );
-	}
+        return getProperty(name, testStep, testCase);
+    }
 
-	public void reset()
-	{
-		resetProperties();
-		currentStepIndex = 0;
-	}
+    public void reset() {
+        resetProperties();
+        currentStepIndex = 0;
+    }
 
-	public String expand( String content )
-	{
-		return PropertyExpander.expandProperties( this, content );
-	}
+    public String expand(String content) {
+        return PropertyExpander.expandProperties(this, content);
+    }
 
-	public Settings getSettings()
-	{
-		return testCase == null ? SoapUI.getSettings() : testCase.getSettings();
-	}
+    public Settings getSettings() {
+        return testCase == null ? SoapUI.getSettings() : testCase.getSettings();
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		pcs.addPropertyChangeListener( listener );
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        pcs.addPropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		pcs.removePropertyChangeListener( listener );
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        pcs.removePropertyChangeListener(listener);
+    }
 }

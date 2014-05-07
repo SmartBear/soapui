@@ -22,14 +22,12 @@ import javax.swing.JPanel;
 
 import com.eviware.soapui.support.components.SimpleForm;
 
-public abstract class SecurityScanConfigPanel extends JPanel
-{
-	protected SimpleForm form;
+public abstract class SecurityScanConfigPanel extends JPanel {
+    protected SimpleForm form;
 
-	public SecurityScanConfigPanel( BorderLayout borderLayout )
-	{
-		super( borderLayout );
-	}
+    public SecurityScanConfigPanel(BorderLayout borderLayout) {
+        super(borderLayout);
+    }
 
-	public abstract void save();
+    public abstract void save();
 }

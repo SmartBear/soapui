@@ -23,29 +23,24 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Uses the SoapUI Settings to locate the specified tools
- * 
+ *
  * @author ole.matzura
  */
 
-public class SettingsToolLocatorImpl implements ToolLocator
-{
-	public String getAntDir( boolean mandatory )
-	{
-		String antDir = SoapUI.getSettings().getString( ToolsSettings.ANT_LOCATION, null );
-		if( mandatory && antDir == null )
-		{
-			UISupport.showErrorMessage( "ANT 1.6.5 (or later) directory must be set in global preferences" );
-		}
-		return antDir;
-	}
+public class SettingsToolLocatorImpl implements ToolLocator {
+    public String getAntDir(boolean mandatory) {
+        String antDir = SoapUI.getSettings().getString(ToolsSettings.ANT_LOCATION, null);
+        if (mandatory && antDir == null) {
+            UISupport.showErrorMessage("ANT 1.6.5 (or later) directory must be set in global preferences");
+        }
+        return antDir;
+    }
 
-	public String getJavacLocation( boolean mandatory )
-	{
-		String javac = SoapUI.getSettings().getString( ToolsSettings.JAVAC_LOCATION, null );
-		if( mandatory && javac == null )
-		{
-			UISupport.showErrorMessage( "javac location must be set in global preferences" );
-		}
-		return javac;
-	}
+    public String getJavacLocation(boolean mandatory) {
+        String javac = SoapUI.getSettings().getString(ToolsSettings.JAVAC_LOCATION, null);
+        if (mandatory && javac == null) {
+            UISupport.showErrorMessage("javac location must be set in global preferences");
+        }
+        return javac;
+    }
 }

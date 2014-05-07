@@ -12,12 +12,12 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.support;
+*/
+package com.eviware.soapui.impl.support;
 
 /**
  * @author joel.jonsson
  */
-public interface HasHelpUrl
-{
-	String getHelpUrl();
+public interface HasHelpUrl {
+    String getHelpUrl();
 }

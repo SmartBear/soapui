@@ -23,37 +23,29 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.scripting.SoapUIScriptGenerator;
 
-public abstract class AbstractPropertyExpansionTarget implements PropertyExpansionTarget
-{
-	private ModelItem modelItem;
+public abstract class AbstractPropertyExpansionTarget implements PropertyExpansionTarget {
+    private ModelItem modelItem;
 
-	public AbstractPropertyExpansionTarget( ModelItem modelItem )
-	{
-		this.modelItem = modelItem;
-	}
+    public AbstractPropertyExpansionTarget(ModelItem modelItem) {
+        this.modelItem = modelItem;
+    }
 
-	public ModelItem getContextModelItem()
-	{
-		if( modelItem instanceof WsdlTestRequest )
-		{
-			modelItem = ( ( WsdlTestRequest )modelItem ).getTestStep();
-		}
-		else if( modelItem instanceof HttpTestRequestInterface<?> )
-		{
-			modelItem = ( ( HttpTestRequestInterface<?> )modelItem ).getTestStep();
-		}
+    public ModelItem getContextModelItem() {
+        if (modelItem instanceof WsdlTestRequest) {
+            modelItem = ((WsdlTestRequest) modelItem).getTestStep();
+        } else if (modelItem instanceof HttpTestRequestInterface<?>) {
+            modelItem = ((HttpTestRequestInterface<?>) modelItem).getTestStep();
+        }
 
-		return modelItem;
-	}
+        return modelItem;
+    }
 
-	public ModelItem getModelItem()
-	{
-		return modelItem;
-	}
+    public ModelItem getModelItem() {
+        return modelItem;
+    }
 
-	protected String createContextExpansion( String name, PropertyExpansion expansion )
-	{
-		SoapUIScriptGenerator scriptGenerator = SoapUIScriptEngineRegistry.createScriptGenerator( getModelItem() );
-		return scriptGenerator.createContextExpansion( name, expansion );
-	}
+    protected String createContextExpansion(String name, PropertyExpansion expansion) {
+        SoapUIScriptGenerator scriptGenerator = SoapUIScriptEngineRegistry.createScriptGenerator(getModelItem());
+        return scriptGenerator.createContextExpansion(name, expansion);
+    }
 }

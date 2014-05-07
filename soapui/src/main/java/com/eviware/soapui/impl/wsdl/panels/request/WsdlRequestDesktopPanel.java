@@ -28,51 +28,45 @@ import com.eviware.soapui.support.components.JXToolBar;
 
 /**
  * DesktopPanel for standard WsdlRequests
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<WsdlRequest, WsdlRequest>
-{
-	private JButton addToTestCaseButton;
-	private JButton addAsMockResponseStepToTestCaseButton;
+public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<WsdlRequest, WsdlRequest> {
+    private JButton addToTestCaseButton;
+    private JButton addAsMockResponseStepToTestCaseButton;
 
-	public WsdlRequestDesktopPanel( WsdlRequest request )
-	{
-		super( request, request );
-	}
+    public WsdlRequestDesktopPanel(WsdlRequest request) {
+        super(request, request);
+    }
 
-	@Override
-	protected void init( WsdlRequest request )
-	{
-		addToTestCaseButton = createActionButton( SwingActionDelegate.createDelegate(
-				AddRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif" ), true );
+    @Override
+    protected void init(WsdlRequest request) {
+        addToTestCaseButton = createActionButton(SwingActionDelegate.createDelegate(
+                AddRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif"), true);
 
-		super.init( request );
-	}
+        super.init(request);
+    }
 
-	protected String getHelpUrl()
-	{
-		return HelpUrls.REQUESTEDITOR_HELP_URL;
-	}
+    protected String getHelpUrl() {
+        return HelpUrls.REQUESTEDITOR_HELP_URL;
+    }
 
-	public void setEnabled( boolean enabled )
-	{
-		super.setEnabled( enabled );
-		addToTestCaseButton.setEnabled( enabled );
-		addAsMockResponseStepToTestCaseButton.setEnabled( enabled );
-	}
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        addToTestCaseButton.setEnabled(enabled);
+        addAsMockResponseStepToTestCaseButton.setEnabled(enabled);
+    }
 
-	protected void insertButtons( JXToolBar toolbar )
-	{
-		toolbar.add( addToTestCaseButton );
+    protected void insertButtons(JXToolBar toolbar) {
+        toolbar.add(addToTestCaseButton);
 
-		super.insertButtons( toolbar );
+        super.insertButtons(toolbar);
 
-		AbstractAction delegate = SwingActionDelegate.createDelegate(
-				AddRequestAsMockResponseStepAction.SOAPUI_ACTION_ID, getRequest(), null, "/addAsMockResponseStep.gif" );
-		addAsMockResponseStepToTestCaseButton = createActionButton( delegate, true );
+        AbstractAction delegate = SwingActionDelegate.createDelegate(
+                AddRequestAsMockResponseStepAction.SOAPUI_ACTION_ID, getRequest(), null, "/addAsMockResponseStep.gif");
+        addAsMockResponseStepToTestCaseButton = createActionButton(delegate, true);
 
-		toolbar.add( addAsMockResponseStepToTestCaseButton );
-	}
+        toolbar.add(addAsMockResponseStepToTestCaseButton);
+    }
 }

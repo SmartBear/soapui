@@ -38,161 +38,140 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class HttpHeadersInspector extends AbstractXmlInspector implements PropertyChangeListener
-{
-	private StringToStringsMapTableModel headersTableModel;
-	private final HttpHeadersInspectorModel model;
-	private JTable headersTable;
-	private JPanel panel;
-	private JButton removeButton;
-	public boolean changing;
+public class HttpHeadersInspector extends AbstractXmlInspector implements PropertyChangeListener {
+    private StringToStringsMapTableModel headersTableModel;
+    private final HttpHeadersInspectorModel model;
+    private JTable headersTable;
+    private JPanel panel;
+    private JButton removeButton;
+    public boolean changing;
 
-	public HttpHeadersInspector( HttpHeadersInspectorModel model )
-	{
-		super( "Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().valueCount() ) + ")",
-				"Additional HTTP Headers for this message", true, HttpHeadersInspectorFactory.INSPECTOR_ID );
-		this.model = model;
-		model.setInspector( this );
+    public HttpHeadersInspector(HttpHeadersInspectorModel model) {
+        super("Headers (" + (model.getHeaders() == null ? "0" : model.getHeaders().valueCount()) + ")",
+                "Additional HTTP Headers for this message", true, HttpHeadersInspectorFactory.INSPECTOR_ID);
+        this.model = model;
+        model.setInspector(this);
 
-		model.addPropertyChangeListener( this );
-	}
+        model.addPropertyChangeListener(this);
+    }
 
-	public JComponent getComponent()
-	{
-		if( panel != null )
-			return panel;
+    public JComponent getComponent() {
+        if (panel != null) {
+            return panel;
+        }
 
-		headersTableModel = new StringToStringsMapTableModel( model.getHeaders(), "Header", "Value", !model.isReadOnly() );
-		headersTableModel.addTableModelListener( new TableModelListener()
-		{
-			public void tableChanged( TableModelEvent arg0 )
-			{
-				model.setHeaders( headersTableModel.getData() );
-				setTitle( "Headers (" + ( model.getHeaders() == null ? "0" : model.getHeaders().valueCount() ) + ")" );
-			}
-		} );
+        headersTableModel = new StringToStringsMapTableModel(model.getHeaders(), "Header", "Value", !model.isReadOnly());
+        headersTableModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent arg0) {
+                model.setHeaders(headersTableModel.getData());
+                setTitle("Headers (" + (model.getHeaders() == null ? "0" : model.getHeaders().valueCount()) + ")");
+            }
+        });
 
-		headersTable = JTableFactory.getInstance().makeJTable( headersTableModel );
+        headersTable = JTableFactory.getInstance().makeJTable(headersTableModel);
 
-		panel = new JPanel( new BorderLayout() );
-		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );
+        panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(headersTable), BorderLayout.CENTER);
 
-		if( !model.isReadOnly() )
-		{
-			headersTable.setSurrendersFocusOnKeystroke( true );
-			headersTable.putClientProperty( "terminateEditOnFocusLost", Boolean.TRUE );
+        if (!model.isReadOnly()) {
+            headersTable.setSurrendersFocusOnKeystroke(true);
+            headersTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
 
-			JXToolBar builder = UISupport.createSmallToolbar();
-			builder.addFixed( UISupport.createToolbarButton( new AddAction() ) );
-			removeButton = UISupport.createToolbarButton( new RemoveAction() );
-			builder.addFixed( removeButton );
-			builder.addGlue();
-			String helpUrl = model instanceof HasHelpUrl ? ((HasHelpUrl)model).getHelpUrl() : HelpUrls.HEADERS_HELP_URL;
-			builder.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( helpUrl ) ) );
+            JXToolBar builder = UISupport.createSmallToolbar();
+            builder.addFixed(UISupport.createToolbarButton(new AddAction()));
+            removeButton = UISupport.createToolbarButton(new RemoveAction());
+            builder.addFixed(removeButton);
+            builder.addGlue();
+            String helpUrl = model instanceof HasHelpUrl ? ((HasHelpUrl) model).getHelpUrl() : HelpUrls.HEADERS_HELP_URL;
+            builder.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(helpUrl)));
 
-			panel.add( builder, BorderLayout.NORTH );
+            panel.add(builder, BorderLayout.NORTH);
 
-			headersTable.getSelectionModel().addListSelectionListener( new ListSelectionListener()
-			{
+            headersTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
-				public void valueChanged( ListSelectionEvent e )
-				{
-					removeButton.setEnabled( headersTable.getSelectedRow() != -1 );
-				}
-			} );
+                public void valueChanged(ListSelectionEvent e) {
+                    removeButton.setEnabled(headersTable.getSelectedRow() != -1);
+                }
+            });
 
-			if( headersTable.getRowCount() > 0 )
-				headersTable.setRowSelectionInterval( 0, 0 );
-			else
-				removeButton.setEnabled( false );
-		}
+            if (headersTable.getRowCount() > 0) {
+                headersTable.setRowSelectionInterval(0, 0);
+            } else {
+                removeButton.setEnabled(false);
+            }
+        }
 
-		return panel;
-	}
+        return panel;
+    }
 
-	public JTable getHeadersTable()
-	{
-		return headersTable;
-	}
+    public JTable getHeadersTable() {
+        return headersTable;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		model.release();
-		model.removePropertyChangeListener( this );
-	}
+    @Override
+    public void release() {
+        super.release();
+        model.release();
+        model.removePropertyChangeListener(this);
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( !changing )
-			headersTableModel.setData( model.getHeaders() );
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!changing) {
+            headersTableModel.setData(model.getHeaders());
+        }
+    }
 
-	private final class RemoveAction extends AbstractAction
-	{
-		private RemoveAction()
-		{
-			super();
-			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom HTTP Header from this message" );
-		}
+    private final class RemoveAction extends AbstractAction {
+        private RemoveAction() {
+            super();
+            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom HTTP Header from this message");
+        }
 
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			int row = headersTable.getSelectedRow();
-			if( row != -1 && UISupport.confirm( "Delete selected header?", "Remove Header" ) )
-			{
-				changing = true;
-				headersTableModel.remove( row );
-				changing = false;
-			}
-		}
-	}
+        public void actionPerformed(ActionEvent arg0) {
+            int row = headersTable.getSelectedRow();
+            if (row != -1 && UISupport.confirm("Delete selected header?", "Remove Header")) {
+                changing = true;
+                headersTableModel.remove(row);
+                changing = false;
+            }
+        }
+    }
 
-	private final class AddAction extends AbstractAction
-	{
-		private AddAction()
-		{
-			super();
-			putValue( AbstractAction.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( AbstractAction.SHORT_DESCRIPTION, "Adds a custom HTTP Header to this message" );
-		}
+    private final class AddAction extends AbstractAction {
+        private AddAction() {
+            super();
+            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(AbstractAction.SHORT_DESCRIPTION, "Adds a custom HTTP Header to this message");
+        }
 
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			Object header = UISupport.prompt( "Specify name of header to add", "Add HTTP Header", "" );
-			if( header != null )
-			{
-				changing = true;
-				headersTableModel.add( header.toString(), "" );
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						int row = headersTable.getRowCount() - 1;
-						headersTable.scrollRectToVisible( headersTable.getCellRect( row, 1, true ) );
-						headersTable.setRowSelectionInterval( row, row );
+        public void actionPerformed(ActionEvent arg0) {
+            Object header = UISupport.prompt("Specify name of header to add", "Add HTTP Header", "");
+            if (header != null) {
+                changing = true;
+                headersTableModel.add(header.toString(), "");
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        int row = headersTable.getRowCount() - 1;
+                        headersTable.scrollRectToVisible(headersTable.getCellRect(row, 1, true));
+                        headersTable.setRowSelectionInterval(row, row);
 
-						SwingUtilities.invokeLater( new Runnable()
-						{
-							public void run()
-							{
-								headersTable.editCellAt( headersTable.getRowCount() - 1, 1 );
-								headersTable.getEditorComponent().requestFocusInWindow();
-							}
-						} );
-					}
-				} );
+                        SwingUtilities.invokeLater(new Runnable() {
+                            public void run() {
+                                headersTable.editCellAt(headersTable.getRowCount() - 1, 1);
+                                headersTable.getEditorComponent().requestFocusInWindow();
+                            }
+                        });
+                    }
+                });
 
-				changing = false;
-			}
-		}
-	}
+                changing = false;
+            }
+        }
+    }
 
-	@Override
-	public boolean isEnabledFor( EditorView<XmlDocument> view )
-	{
-		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
-	}
+    @Override
+    public boolean isEnabledFor(EditorView<XmlDocument> view) {
+        return !view.getViewId().equals(RawXmlEditorFactory.VIEW_ID);
+    }
 }

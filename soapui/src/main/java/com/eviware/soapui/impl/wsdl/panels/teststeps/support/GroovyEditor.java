@@ -47,229 +47,197 @@ import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
 
 /**
  * Groovy editor wrapper
- * 
+ *
  * @author ole.matzura
  */
 
-public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, PropertyChangeListener
-{
-	private final RSyntaxTextArea editArea;
-	private final GoToLineAction goToLineAction;
-	private final EnableLineNumbersAction enableLineNumbersAction;
-	private FindAndReplaceDialogView findAndReplaceDialog;
-	private FormatXmlAction formatXmlAction;
-	private GroovyEditorModel model;
-	private final InternalSettingsListener settingsListener;
-	private final GroovyDocumentListener groovyDocumentListener;
-	private final RTextScrollPane scrollPane;
-	private boolean updating;
+public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, PropertyChangeListener {
+    private final RSyntaxTextArea editArea;
+    private final GoToLineAction goToLineAction;
+    private final EnableLineNumbersAction enableLineNumbersAction;
+    private FindAndReplaceDialogView findAndReplaceDialog;
+    private FormatXmlAction formatXmlAction;
+    private GroovyEditorModel model;
+    private final InternalSettingsListener settingsListener;
+    private final GroovyDocumentListener groovyDocumentListener;
+    private final RTextScrollPane scrollPane;
+    private boolean updating;
 
-	public GroovyEditor( GroovyEditorModel model )
-	{
-		super( new BorderLayout() );
-		this.model = model;
+    public GroovyEditor(GroovyEditorModel model) {
+        super(new BorderLayout());
+        this.model = model;
 
-		model.addPropertyChangeListener( this );
+        model.addPropertyChangeListener(this);
 
-		Settings settings = model.getSettings();
-		Font editorFont = UISupport.getEditorFont( settings );
+        Settings settings = model.getSettings();
+        Font editorFont = UISupport.getEditorFont(settings);
 
-		editArea = new RSyntaxTextArea();
-		editArea.restoreDefaultSyntaxScheme();
+        editArea = new RSyntaxTextArea();
+        editArea.restoreDefaultSyntaxScheme();
 
-		String defaultScriptLanguage = ( ( WsdlProject )ModelSupport.getModelItemProject( model.getModelItem() ) )
-				.getDefaultScriptLanguage();
-		if( defaultScriptLanguage.equals( GroovyScriptEngineFactory.ID ) )
-			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_GROOVY );
-		else if( defaultScriptLanguage.equals( JsScriptEngineFactory.ID ) )
-			editArea.setSyntaxEditingStyle( SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT );
+        String defaultScriptLanguage = ((WsdlProject) ModelSupport.getModelItemProject(model.getModelItem()))
+                .getDefaultScriptLanguage();
+        if (defaultScriptLanguage.equals(GroovyScriptEngineFactory.ID)) {
+            editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_GROOVY);
+        } else if (defaultScriptLanguage.equals(JsScriptEngineFactory.ID)) {
+            editArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
+        }
 
-		editArea.setFont( editorFont );
-		editArea.setBorder( BorderFactory.createMatteBorder( 0, 2, 0, 0, Color.WHITE ) );
+        editArea.setFont(editorFont);
+        editArea.setBorder(BorderFactory.createMatteBorder(0, 2, 0, 0, Color.WHITE));
 
-		editArea.setText( model.getScript() );
-		editArea.setCaretPosition( 0 );
-		editArea.setHighlightCurrentLine( false );
-		Action runAction = model.getRunAction();
-		if( runAction != null )
-		{
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "alt ENTER" ), "run-action" );
-			editArea.getActionMap().put( "run-action", runAction );
-		}
+        editArea.setText(model.getScript());
+        editArea.setCaretPosition(0);
+        editArea.setHighlightCurrentLine(false);
+        Action runAction = model.getRunAction();
+        if (runAction != null) {
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("alt ENTER"), "run-action");
+            editArea.getActionMap().put("run-action", runAction);
+        }
 
-		groovyDocumentListener = new GroovyDocumentListener();
-		editArea.getDocument().addDocumentListener( groovyDocumentListener );
+        groovyDocumentListener = new GroovyDocumentListener();
+        editArea.getDocument().addDocumentListener(groovyDocumentListener);
 
-		settingsListener = new InternalSettingsListener();
-		settings.addSettingsListener( settingsListener );
+        settingsListener = new InternalSettingsListener();
+        settings.addSettingsListener(settingsListener);
 
-		scrollPane = new RTextScrollPane( editArea, true );
-		scrollPane.setPreferredSize( new Dimension( 500, 300 ) );
-		add( scrollPane );
+        scrollPane = new RTextScrollPane(editArea, true);
+        scrollPane.setPreferredSize(new Dimension(500, 300));
+        add(scrollPane);
 
-		UISupport.addPreviewCorner( scrollPane, true );
+        UISupport.addPreviewCorner(scrollPane, true);
 
-		addFocusListener( new FocusAdapter()
-		{
-			public void focusGained( FocusEvent e )
-			{
-				editArea.requestFocusInWindow();
-			}
-		} );
+        addFocusListener(new FocusAdapter() {
+            public void focusGained(FocusEvent e) {
+                editArea.requestFocusInWindow();
+            }
+        });
 
-		JPopupMenu popup = editArea.getPopupMenu();
-		findAndReplaceDialog = new FindAndReplaceDialogView( editArea );
-		if( UISupport.isMac() )
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "meta F" ), findAndReplaceDialog );
-		else
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "ctrl F" ), findAndReplaceDialog );
-		popup.add( findAndReplaceDialog );
-		popup.addSeparator();
-		goToLineAction = new GoToLineAction( editArea, "Go To Line" );
-		enableLineNumbersAction = new EnableLineNumbersAction( scrollPane, "Show Line Numbers" );
+        JPopupMenu popup = editArea.getPopupMenu();
+        findAndReplaceDialog = new FindAndReplaceDialogView(editArea);
+        if (UISupport.isMac()) {
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("meta F"), findAndReplaceDialog);
+        } else {
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F"), findAndReplaceDialog);
+        }
+        popup.add(findAndReplaceDialog);
+        popup.addSeparator();
+        goToLineAction = new GoToLineAction(editArea, "Go To Line");
+        enableLineNumbersAction = new EnableLineNumbersAction(scrollPane, "Show Line Numbers");
 
-		popup.add( goToLineAction );
-		popup.add( enableLineNumbersAction );
+        popup.add(goToLineAction);
+        popup.add(enableLineNumbersAction);
 
-		if( UISupport.isMac() )
-		{
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control meta L" ), goToLineAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
-		}
-		else
-		{
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control alt L" ), goToLineAction );
-			editArea.getInputMap().put( KeyStroke.getKeyStroke( "control L" ), enableLineNumbersAction );
-		}
-		editArea.setComponentPopupMenu( popup );
-	}
+        if (UISupport.isMac()) {
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control meta L"), goToLineAction);
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
+        } else {
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control alt L"), goToLineAction);
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
+        }
+        editArea.setComponentPopupMenu(popup);
+    }
 
-	@Override
-	public void setEnabled( boolean enabled )
-	{
-		super.setEnabled( enabled );
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
 
-		editArea.setEnabled( enabled );
-	}
+        editArea.setEnabled(enabled);
+    }
 
-	public RSyntaxTextArea getEditArea()
-	{
-		return editArea;
-	}
+    public RSyntaxTextArea getEditArea() {
+        return editArea;
+    }
 
-	public void release()
-	{
-		if( model != null )
-		{
-			model.getSettings().removeSettingsListener( settingsListener );
-			model.removePropertyChangeListener( this );
-		}
+    public void release() {
+        if (model != null) {
+            model.getSettings().removeSettingsListener(settingsListener);
+            model.removePropertyChangeListener(this);
+        }
 
-		model = null;
-		editArea.getDocument().removeDocumentListener( groovyDocumentListener );
-	}
+        model = null;
+        editArea.getDocument().removeDocumentListener(groovyDocumentListener);
+    }
 
-	public void selectError( String message )
-	{
-		int ix = message == null ? -1 : message.indexOf( "@ line " );
-		if( ix >= 0 )
-		{
-			try
-			{
-				int ix2 = message.indexOf( ',', ix );
-				int line = ix2 == -1 ? Integer.parseInt( message.substring( ix + 6 ).trim() ) : Integer.parseInt( message
-						.substring( ix + 6, ix2 ).trim() );
-				int column = 0;
-				if( ix2 != -1 )
-				{
-					ix = message.indexOf( "column ", ix2 );
-					if( ix >= 0 )
-					{
-						ix2 = message.indexOf( '.', ix );
-						column = ix2 == -1 ? Integer.parseInt( message.substring( ix + 7 ).trim() ) : Integer
-								.parseInt( message.substring( ix + 7, ix2 ).trim() );
-					}
-				}
+    public void selectError(String message) {
+        int ix = message == null ? -1 : message.indexOf("@ line ");
+        if (ix >= 0) {
+            try {
+                int ix2 = message.indexOf(',', ix);
+                int line = ix2 == -1 ? Integer.parseInt(message.substring(ix + 6).trim()) : Integer.parseInt(message
+                        .substring(ix + 6, ix2).trim());
+                int column = 0;
+                if (ix2 != -1) {
+                    ix = message.indexOf("column ", ix2);
+                    if (ix >= 0) {
+                        ix2 = message.indexOf('.', ix);
+                        column = ix2 == -1 ? Integer.parseInt(message.substring(ix + 7).trim()) : Integer
+                                .parseInt(message.substring(ix + 7, ix2).trim());
+                    }
+                }
 
-				editArea.setCaretPosition( editArea.getLineStartOffset( line - 1 ) + column - 1 );
-			}
-			catch( Exception ex )
-			{
-			}
+                editArea.setCaretPosition(editArea.getLineStartOffset(line - 1) + column - 1);
+            } catch (Exception ex) {
+            }
 
-			editArea.requestFocus();
-		}
-	}
+            editArea.requestFocus();
+        }
+    }
 
-	private final class GroovyDocumentListener extends DocumentListenerAdapter
-	{
-		public void update( Document document )
-		{
-			if( !updating )
-			{
-				GroovyEditor.this.model.setScript( editArea.getText() );
-			}
-		}
-	}
+    private final class GroovyDocumentListener extends DocumentListenerAdapter {
+        public void update(Document document) {
+            if (!updating) {
+                GroovyEditor.this.model.setScript(editArea.getText());
+            }
+        }
+    }
 
-	private final class InternalSettingsListener implements SettingsListener
-	{
-		public void settingChanged( String name, String newValue, String oldValue )
-		{
-			if( name.equals( UISettings.EDITOR_FONT ) )
-			{
-				Font newFont = Font.decode( newValue );
-				setEditorFont( newFont );
-				invalidate();
-			}
-		}
+    private final class InternalSettingsListener implements SettingsListener {
+        public void settingChanged(String name, String newValue, String oldValue) {
+            if (name.equals(UISettings.EDITOR_FONT)) {
+                Font newFont = Font.decode(newValue);
+                setEditorFont(newFont);
+                invalidate();
+            }
+        }
 
-		@Override
-		public void settingsReloaded()
-		{
-			// TODO Auto-generated method stub
+        @Override
+        public void settingsReloaded() {
+            // TODO Auto-generated method stub
 
-		}
-	}
+        }
+    }
 
-	public void setEditorFont( Font newFont )
-	{
-		editArea.setFont( newFont );
-	}
+    public void setEditorFont(Font newFont) {
+        editArea.setFont(newFont);
+    }
 
-	public void addCaretListener( CaretListener listener )
-	{
-		editArea.addCaretListener( listener );
-	}
+    public void addCaretListener(CaretListener listener) {
+        editArea.addCaretListener(listener);
+    }
 
-	public int getCaretPosition()
-	{
-		return editArea.getCaretPosition();
-	}
+    public int getCaretPosition() {
+        return editArea.getCaretPosition();
+    }
 
-	public int getLineOfOffset( int offset ) throws Exception
-	{
-		return editArea.getLineOfOffset( offset );
-	}
+    public int getLineOfOffset(int offset) throws Exception {
+        return editArea.getLineOfOffset(offset);
+    }
 
-	public int getLineStartOffset( int line ) throws Exception
-	{
-		return editArea.getLineStartOffset( line );
-	}
+    public int getLineStartOffset(int line) throws Exception {
+        return editArea.getLineStartOffset(line);
+    }
 
-	public void removeCaretListener( CaretListener listener )
-	{
-		editArea.removeCaretListener( listener );
-	}
+    public void removeCaretListener(CaretListener listener) {
+        editArea.removeCaretListener(listener);
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( SCRIPT_PROPERTY ) )
-		{
-			updating = true;
-			editArea.setText( String.valueOf( evt.getNewValue() ) );
-			updating = false;
-		}
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(SCRIPT_PROPERTY)) {
+            updating = true;
+            editArea.setText(String.valueOf(evt.getNewValue()));
+            updating = false;
+        }
+    }
 
 }

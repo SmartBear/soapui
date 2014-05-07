@@ -26,183 +26,163 @@ import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.types.StringToStringsMap;
 
-public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpRequestInterface<?>>
-{
-	private HttpResponse response;
-	private String requestContent;
+public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpRequestInterface<?>> {
+    private HttpResponse response;
+    private String requestContent;
 
-	public HttpResponseMessageExchange( HttpRequestInterface<?> request )
-	{
-		super( request );
+    public HttpResponseMessageExchange(HttpRequestInterface<?> request) {
+        super(request);
 
-		response = request.getResponse();
-		if( response != null )
-		{
-			for( String key : response.getPropertyNames() )
-			{
-				addProperty( key, response.getProperty( key ) );
-			}
-		}
-	}
+        response = request.getResponse();
+        if (response != null) {
+            for (String key : response.getPropertyNames()) {
+                addProperty(key, response.getProperty(key));
+            }
+        }
+    }
 
-	public String getEndpoint()
-	{
-		return response == null ? null : response.getURL().toString();
-	}
+    public String getEndpoint() {
+        return response == null ? null : response.getURL().toString();
+    }
 
-	public String getRequestContent()
-	{
-		if( requestContent != null )
-			return requestContent;
+    public String getRequestContent() {
+        if (requestContent != null) {
+            return requestContent;
+        }
 
-		if( response == null )
-			response = getModelItem().getResponse();
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
-	}
+        return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
+    }
 
-	@Override
-	public String getResponseContentAsXml()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    @Override
+    public String getResponseContentAsXml() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response.getContentAsXml();
-	}
+        return response.getContentAsXml();
+    }
 
-	public StringToStringsMap getRequestHeaders()
-	{
-		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
-	}
+    public StringToStringsMap getRequestHeaders() {
+        return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
+    }
 
-	public Attachment[] getRequestAttachments()
-	{
-		return getModelItem().getAttachments();
-	}
+    public Attachment[] getRequestAttachments() {
+        return getModelItem().getAttachments();
+    }
 
-	public Attachment[] getResponseAttachments()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public Attachment[] getResponseAttachments() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getAttachments();
-	}
+        return response == null ? null : response.getAttachments();
+    }
 
-	public String getResponseContent()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public String getResponseContent() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getContentAsString();
-	}
+        return response == null ? null : response.getContentAsString();
+    }
 
-	public HttpResponse getResponse()
-	{
-		return response;
-	}
+    public HttpResponse getResponse() {
+        return response;
+    }
 
-	public void setResponse( HttpResponse response )
-	{
-		this.response = response;
-	}
+    public void setResponse(HttpResponse response) {
+        this.response = response;
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public StringToStringsMap getResponseHeaders() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? new StringToStringsMap() : response.getResponseHeaders();
-	}
+        return response == null ? new StringToStringsMap() : response.getResponseHeaders();
+    }
 
-	public long getTimeTaken()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public long getTimeTaken() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? 0 : response.getTimeTaken();
-	}
+        return response == null ? 0 : response.getTimeTaken();
+    }
 
-	public long getTimestamp()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public long getTimestamp() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? 0 : response.getTimestamp();
-	}
+        return response == null ? 0 : response.getTimestamp();
+    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+    public boolean isDiscarded() {
+        return false;
+    }
 
-	public Operation getOperation()
-	{
-		return null;
-	}
+    public Operation getOperation() {
+        return null;
+    }
 
-	public int getResponseStatusCode()
-	{
-		return response == null ? 0 : response.getStatusCode();
-	}
+    public int getResponseStatusCode() {
+        return response == null ? 0 : response.getStatusCode();
+    }
 
-	public String getResponseContentType()
-	{
-		return response == null ? null : response.getContentType();
-	}
+    public String getResponseContentType() {
+        return response == null ? null : response.getContentType();
+    }
 
-	public boolean hasRawData()
-	{
-		return response != null;
-	}
+    public boolean hasRawData() {
+        return response != null;
+    }
 
-	public byte[] getRawRequestData()
-	{
-		return response == null ? null : response.getRawRequestData();
-	}
+    public byte[] getRawRequestData() {
+        return response == null ? null : response.getRawRequestData();
+    }
 
-	public byte[] getRawResponseData()
-	{
-		return response == null ? null : response.getRawResponseData();
-	}
+    public byte[] getRawResponseData() {
+        return response == null ? null : response.getRawResponseData();
+    }
 
-	public Attachment[] getResponseAttachmentsForPart( String name )
-	{
-		List<Attachment> result = new ArrayList<Attachment>();
+    public Attachment[] getResponseAttachmentsForPart(String name) {
+        List<Attachment> result = new ArrayList<Attachment>();
 
-		if( getResponseAttachments() != null )
-		{
-			for( Attachment attachment : getResponseAttachments() )
-			{
-				if( attachment.getPart().equals( name ) )
-					result.add( attachment );
-			}
-		}
+        if (getResponseAttachments() != null) {
+            for (Attachment attachment : getResponseAttachments()) {
+                if (attachment.getPart().equals(name)) {
+                    result.add(attachment);
+                }
+            }
+        }
 
-		return result.toArray( new Attachment[result.size()] );
-	}
+        return result.toArray(new Attachment[result.size()]);
+    }
 
-	public Attachment[] getRequestAttachmentsForPart( String name )
-	{
-		List<Attachment> result = new ArrayList<Attachment>();
+    public Attachment[] getRequestAttachmentsForPart(String name) {
+        List<Attachment> result = new ArrayList<Attachment>();
 
-		for( Attachment attachment : getRequestAttachments() )
-		{
-			if( attachment.getPart().equals( name ) )
-				result.add( attachment );
-		}
+        for (Attachment attachment : getRequestAttachments()) {
+            if (attachment.getPart().equals(name)) {
+                result.add(attachment);
+            }
+        }
 
-		return result.toArray( new Attachment[result.size()] );
-	}
+        return result.toArray(new Attachment[result.size()]);
+    }
 
-	public boolean hasRequest( boolean ignoreEmpty )
-	{
-		String requestContent = getRequestContent();
-		return !( requestContent == null || ( ignoreEmpty && requestContent.trim().length() == 0 ) );
-	}
+    public boolean hasRequest(boolean ignoreEmpty) {
+        String requestContent = getRequestContent();
+        return !(requestContent == null || (ignoreEmpty && requestContent.trim().length() == 0));
+    }
 
-	public boolean hasResponse()
-	{
-		String responseContent = getResponseContent();
-		return responseContent != null && responseContent.trim().length() > 0;
-	}
+    public boolean hasResponse() {
+        String responseContent = getResponseContent();
+        return responseContent != null && responseContent.trim().length() > 0;
+    }
 }

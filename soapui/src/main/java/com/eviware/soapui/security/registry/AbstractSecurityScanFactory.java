@@ -23,55 +23,49 @@ import com.eviware.soapui.security.scan.AbstractSecurityScan;
 
 /**
  * Abstract factory behaviour for SecurityScan factories
- * 
+ *
  * @author soapui team
  */
 
-public abstract class AbstractSecurityScanFactory implements SecurityScanFactory
-{
-	private final String type;
-	private final String name;
-	private final String description;
-	protected final String pathToIcon;
+public abstract class AbstractSecurityScanFactory implements SecurityScanFactory {
+    private final String type;
+    private final String name;
+    private final String description;
+    protected final String pathToIcon;
 
-	public AbstractSecurityScanFactory( String typeName, String name, String description, String pathToIcon )
-	{
-		this.type = typeName;
-		this.name = name;
-		this.description = description;
-		this.pathToIcon = pathToIcon;
-	}
+    public AbstractSecurityScanFactory(String typeName, String name, String description, String pathToIcon) {
+        this.type = typeName;
+        this.name = name;
+        this.description = description;
+        this.pathToIcon = pathToIcon;
+    }
 
-	public abstract SecurityScanConfig createNewSecurityScan( String name );
+    public abstract SecurityScanConfig createNewSecurityScan(String name);
 
-	public abstract AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config,
-			ModelItem parent );
+    public abstract AbstractSecurityScan buildSecurityScan(TestStep testStep, SecurityScanConfig config,
+                                                           ModelItem parent);
 
-	public String getSecurityScanType()
-	{
-		return type;
-	}
+    public String getSecurityScanType() {
+        return type;
+    }
 
-	/**
-	 * True for test step on which this scan could be aplied.
-	 * 
-	 * @return
-	 */
-	public abstract boolean canCreate( TestStep testStep );
+    /**
+     * True for test step on which this scan could be aplied.
+     *
+     * @return
+     */
+    public abstract boolean canCreate(TestStep testStep);
 
-	public String getSecurityScanName()
-	{
-		return name;
-	}
+    public String getSecurityScanName() {
+        return name;
+    }
 
-	public String getSecurityScanDescription()
-	{
-		return description;
-	}
+    public String getSecurityScanDescription() {
+        return description;
+    }
 
-	public String getSecurityScanIconPath()
-	{
-		return pathToIcon;
-	}
+    public String getSecurityScanIconPath() {
+        return pathToIcon;
+    }
 
 }

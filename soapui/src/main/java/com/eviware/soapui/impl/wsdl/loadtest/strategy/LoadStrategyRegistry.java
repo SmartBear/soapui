@@ -23,43 +23,38 @@ import com.eviware.soapui.support.StringUtils;
 
 /**
  * Registry of LoadFactorys
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class LoadStrategyRegistry
-{
-	private static LoadStrategyRegistry instance;
-	private Map<String, LoadStrategyFactory> factories = new HashMap<String, LoadStrategyFactory>();
+public class LoadStrategyRegistry {
+    private static LoadStrategyRegistry instance;
+    private Map<String, LoadStrategyFactory> factories = new HashMap<String, LoadStrategyFactory>();
 
-	public LoadStrategyRegistry()
-	{
-		addFactory( new SimpleLoadStrategy.Factory() );
-		addFactory( new BurstLoadStrategy.Factory() );
-		addFactory( new VarianceLoadStrategy.Factory() );
-		addFactory( new ThreadCountChangeLoadStrategy.Factory() );
-	}
+    public LoadStrategyRegistry() {
+        addFactory(new SimpleLoadStrategy.Factory());
+        addFactory(new BurstLoadStrategy.Factory());
+        addFactory(new VarianceLoadStrategy.Factory());
+        addFactory(new ThreadCountChangeLoadStrategy.Factory());
+    }
 
-	public void addFactory( LoadStrategyFactory factory )
-	{
-		factories.put( factory.getType(), factory );
-	}
+    public void addFactory(LoadStrategyFactory factory) {
+        factories.put(factory.getType(), factory);
+    }
 
-	public String[] getStrategies()
-	{
-		return StringUtils.sortNames( factories.keySet().toArray( new String[factories.size()] ) );
-	}
+    public String[] getStrategies() {
+        return StringUtils.sortNames(factories.keySet().toArray(new String[factories.size()]));
+    }
 
-	public static LoadStrategyRegistry getInstance()
-	{
-		if( instance == null )
-			instance = new LoadStrategyRegistry();
+    public static LoadStrategyRegistry getInstance() {
+        if (instance == null) {
+            instance = new LoadStrategyRegistry();
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	public LoadStrategyFactory getFactory( String type )
-	{
-		return factories.get( type );
-	}
+    public LoadStrategyFactory getFactory(String type) {
+        return factories.get(type);
+    }
 }

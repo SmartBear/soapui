@@ -20,20 +20,17 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 
 /**
  * Exception thrown during assertion
- * 
- * @deprecated moved to com.eviware.soapui.model.testsuite.AssertionException
+ *
  * @author Ole.Matzura
+ * @deprecated moved to com.eviware.soapui.model.testsuite.AssertionException
  */
 
-public class AssertionException extends com.eviware.soapui.model.testsuite.AssertionException
-{
-	public AssertionException( AssertionError[] errors )
-	{
-		super( errors );
-	}
+public class AssertionException extends com.eviware.soapui.model.testsuite.AssertionException {
+    public AssertionException(AssertionError[] errors) {
+        super(errors);
+    }
 
-	public AssertionException( AssertionError error )
-	{
-		super( error );
-	}
+    public AssertionException(AssertionError error) {
+        super(error);
+    }
 }

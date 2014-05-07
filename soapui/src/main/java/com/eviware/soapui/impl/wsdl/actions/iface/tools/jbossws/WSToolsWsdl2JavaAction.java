@@ -55,240 +55,209 @@ import com.eviware.x.form.XFormTextField;
 
 /**
  * Invokes jbossws wsdl2java tools
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WSToolsWsdl2JavaAction extends AbstractToolsAction<Interface>
-{
-	public static final String SOAPUI_ACTION_ID = "WSToolsWsdl2JavaAction";
+public class WSToolsWsdl2JavaAction extends AbstractToolsAction<Interface> {
+    public static final String SOAPUI_ACTION_ID = "WSToolsWsdl2JavaAction";
 
-	private static final String NAMESPACE_MAPPING = "Namespace mapping";
-	private static final String OUTPUT = "Output Directory";
-	private static final String MAPPING = "Mapping file";
-	private static final String UNWRAP = "Unwrap";
-	private static final String APPEND = "Append";
-	private static final String SERVLET_LINK = "Servlet Link";
-	private static final String EJB_LINK = "EJB Link";
-	private XFormTextField ejbLinkField;
-	private XFormTextField servletLinkField;
-	private XFormField appendField;
+    private static final String NAMESPACE_MAPPING = "Namespace mapping";
+    private static final String OUTPUT = "Output Directory";
+    private static final String MAPPING = "Mapping file";
+    private static final String UNWRAP = "Unwrap";
+    private static final String APPEND = "Append";
+    private static final String SERVLET_LINK = "Servlet Link";
+    private static final String EJB_LINK = "EJB Link";
+    private XFormTextField ejbLinkField;
+    private XFormTextField servletLinkField;
+    private XFormField appendField;
 
-	public WSToolsWsdl2JavaAction()
-	{
-		super( "JBossWS Artifacts", "Generates JBossWS artifacts using the jboss wstools utility" );
-	}
+    public WSToolsWsdl2JavaAction() {
+        super("JBossWS Artifacts", "Generates JBossWS artifacts using the jboss wstools utility");
+    }
 
-	@Override
-	public boolean applies( Interface target )
-	{
-		Interface iface = ( Interface )target;
-		return !iface.getProject().hasNature( Project.JBOSSWS_NATURE_ID );
-	}
+    @Override
+    public boolean applies(Interface target) {
+        Interface iface = (Interface) target;
+        return !iface.getProject().hasNature(Project.JBOSSWS_NATURE_ID);
+    }
 
-	@Override
-	protected StringToStringMap initValues( Interface modelItem, Object param )
-	{
-		StringToStringMap values = super.initValues( modelItem, param );
+    @Override
+    protected StringToStringMap initValues(Interface modelItem, Object param) {
+        StringToStringMap values = super.initValues(modelItem, param);
 
-		boolean hasEjbLink = values.get( EJB_LINK, "" ).length() > 0;
-		boolean hasServletLink = values.get( SERVLET_LINK, "" ).length() > 0;
+        boolean hasEjbLink = values.get(EJB_LINK, "").length() > 0;
+        boolean hasServletLink = values.get(SERVLET_LINK, "").length() > 0;
 
-		if( !hasEjbLink && !hasServletLink )
-		{
-			ejbLinkField.setEnabled( true );
-			servletLinkField.setEnabled( true );
-		}
-		else
-		{
-			ejbLinkField.setEnabled( hasEjbLink && !hasServletLink );
-			servletLinkField.setEnabled( hasServletLink && !hasEjbLink );
+        if (!hasEjbLink && !hasServletLink) {
+            ejbLinkField.setEnabled(true);
+            servletLinkField.setEnabled(true);
+        } else {
+            ejbLinkField.setEnabled(hasEjbLink && !hasServletLink);
+            servletLinkField.setEnabled(hasServletLink && !hasEjbLink);
 
-			if( hasEjbLink && hasServletLink )
-				values.put( SERVLET_LINK, "" );
-		}
+            if (hasEjbLink && hasServletLink) {
+                values.put(SERVLET_LINK, "");
+            }
+        }
 
-		appendField.setEnabled( hasEjbLink || hasServletLink );
+        appendField.setEnabled(hasEjbLink || hasServletLink);
 
-		return values;
-	}
+        return values;
+    }
 
-	protected XFormDialog buildDialog( Interface modelItem )
-	{
-		XFormDialogBuilder builder = XFormFactory.createDialogBuilder( "JBossWS Artifacts" );
+    protected XFormDialog buildDialog(Interface modelItem) {
+        XFormDialogBuilder builder = XFormFactory.createDialogBuilder("JBossWS Artifacts");
 
-		XForm mainForm = builder.createForm( "Basic" );
-		addWSDLFields( mainForm, modelItem );
+        XForm mainForm = builder.createForm("Basic");
+        addWSDLFields(mainForm, modelItem);
 
-		mainForm.addTextField( OUTPUT, "The root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER );
-		mainForm.addTextField( MAPPING, "mapping file to generate", XForm.FieldType.PROJECT_FILE );
-		mainForm.addCheckBox( UNWRAP, "unwrap doc-literal operations" );
+        mainForm.addTextField(OUTPUT, "The root directory for all emitted files.", XForm.FieldType.PROJECT_FOLDER);
+        mainForm.addTextField(MAPPING, "mapping file to generate", XForm.FieldType.PROJECT_FILE);
+        mainForm.addCheckBox(UNWRAP, "unwrap doc-literal operations");
 
-		mainForm.addNameSpaceTable( NAMESPACE_MAPPING, modelItem );
+        mainForm.addNameSpaceTable(NAMESPACE_MAPPING, modelItem);
 
-		mainForm.addSeparator( "webservices.xml generation options" );
-		ejbLinkField = mainForm.addTextField( EJB_LINK, "The ejb-jar.xml ejb-link for Stateless Session Bean endpoints",
-				XForm.FieldType.TEXT );
-		ejbLinkField.addFormFieldListener( new XFormFieldListener()
-		{
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				servletLinkField.setEnabled( newValue.length() == 0 );
-				appendField.setEnabled( newValue.length() > 0 );
-			}
-		} );
+        mainForm.addSeparator("webservices.xml generation options");
+        ejbLinkField = mainForm.addTextField(EJB_LINK, "The ejb-jar.xml ejb-link for Stateless Session Bean endpoints",
+                XForm.FieldType.TEXT);
+        ejbLinkField.addFormFieldListener(new XFormFieldListener() {
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                servletLinkField.setEnabled(newValue.length() == 0);
+                appendField.setEnabled(newValue.length() > 0);
+            }
+        });
 
-		servletLinkField = mainForm.addTextField( SERVLET_LINK,
-				"The web.xml servlet-link that is used by Java Service Endpoints (WAR)", XForm.FieldType.TEXT );
-		servletLinkField.addFormFieldListener( new XFormFieldListener()
-		{
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				ejbLinkField.setEnabled( newValue.length() == 0 );
-				appendField.setEnabled( newValue.length() > 0 );
-			}
-		} );
+        servletLinkField = mainForm.addTextField(SERVLET_LINK,
+                "The web.xml servlet-link that is used by Java Service Endpoints (WAR)", XForm.FieldType.TEXT);
+        servletLinkField.addFormFieldListener(new XFormFieldListener() {
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                ejbLinkField.setEnabled(newValue.length() == 0);
+                appendField.setEnabled(newValue.length() > 0);
+            }
+        });
 
-		appendField = mainForm.addCheckBox( APPEND, "append to existing file" );
-		appendField.setEnabled( false );
-		buildArgsForm( builder, false, "wstools" );
+        appendField = mainForm.addCheckBox(APPEND, "append to existing file");
+        appendField.setEnabled(false);
+        buildArgsForm(builder, false, "wstools");
 
-		ActionList actions = buildDefaultActions( HelpUrls.WSTOOLS_HELP_URL, modelItem );
-		actions.addAction( new JBossWSShowConfigFileAction( "JBossWS Wsdl2Java",
-				"Contents of generated wsconfig.xml file", modelItem ) );
-		return builder.buildDialog( actions, "Specify arguments for JBossWS wstools wsdl2java functionality",
-				UISupport.TOOL_ICON );
-	}
+        ActionList actions = buildDefaultActions(HelpUrls.WSTOOLS_HELP_URL, modelItem);
+        actions.addAction(new JBossWSShowConfigFileAction("JBossWS Wsdl2Java",
+                "Contents of generated wsconfig.xml file", modelItem));
+        return builder.buildDialog(actions, "Specify arguments for JBossWS wstools wsdl2java functionality",
+                UISupport.TOOL_ICON);
+    }
 
-	protected void generate( StringToStringMap values, ToolHost toolHost, Interface modelItem ) throws Exception
-	{
-		String wstoolsDir = SoapUI.getSettings().getString( ToolsSettings.JBOSSWS_WSTOOLS_LOCATION, null );
-		if( Tools.isEmpty( wstoolsDir ) )
-		{
-			UISupport.showErrorMessage( "wstools directory must be set in global preferences" );
-			return;
-		}
+    protected void generate(StringToStringMap values, ToolHost toolHost, Interface modelItem) throws Exception {
+        String wstoolsDir = SoapUI.getSettings().getString(ToolsSettings.JBOSSWS_WSTOOLS_LOCATION, null);
+        if (Tools.isEmpty(wstoolsDir)) {
+            UISupport.showErrorMessage("wstools directory must be set in global preferences");
+            return;
+        }
 
-		String wsToolsExtension = UISupport.isWindows() ? ".bat" : ".sh";
+        String wsToolsExtension = UISupport.isWindows() ? ".bat" : ".sh";
 
-		File wstoolsFile = new File( wstoolsDir + File.separatorChar + "wstools" + wsToolsExtension );
-		if( !wstoolsFile.exists() )
-		{
-			UISupport.showErrorMessage( "Could not find wstools script at [" + wstoolsFile + "]" );
-			return;
-		}
+        File wstoolsFile = new File(wstoolsDir + File.separatorChar + "wstools" + wsToolsExtension);
+        if (!wstoolsFile.exists()) {
+            UISupport.showErrorMessage("Could not find wstools script at [" + wstoolsFile + "]");
+            return;
+        }
 
-		ProcessBuilder builder = new ProcessBuilder();
-		ArgumentBuilder args = buildArgs( values, UISupport.isWindows(), modelItem );
-		builder.command( args.getArgs() );
-		builder.directory( new File( wstoolsDir ) );
+        ProcessBuilder builder = new ProcessBuilder();
+        ArgumentBuilder args = buildArgs(values, UISupport.isWindows(), modelItem);
+        builder.command(args.getArgs());
+        builder.directory(new File(wstoolsDir));
 
-		toolHost.run( new ProcessToolRunner( builder, "JBossWS wstools", modelItem, args ) );
-	}
+        toolHost.run(new ProcessToolRunner(builder, "JBossWS wstools", modelItem, args));
+    }
 
-	private ArgumentBuilder buildArgs( StringToStringMap values, boolean isWindows, Interface modelItem )
-			throws IOException
-	{
-		values.put( OUTPUT, Tools.ensureDir( values.get( OUTPUT ), "" ) );
+    private ArgumentBuilder buildArgs(StringToStringMap values, boolean isWindows, Interface modelItem)
+            throws IOException {
+        values.put(OUTPUT, Tools.ensureDir(values.get(OUTPUT), ""));
 
-		ArgumentBuilder builder = new ArgumentBuilder( values );
-		builder.startScript( "wstools" );
+        ArgumentBuilder builder = new ArgumentBuilder(values);
+        builder.startScript("wstools");
 
-		builder.addArgs( "-config", buildConfigFile( values, modelItem ) );
-		builder.addString( OUTPUT, "-dest" );
-		addToolArgs( values, builder );
-		return builder;
-	}
+        builder.addArgs("-config", buildConfigFile(values, modelItem));
+        builder.addString(OUTPUT, "-dest");
+        addToolArgs(values, builder);
+        return builder;
+    }
 
-	private String buildConfigFile( StringToStringMap values, Interface modelItem ) throws IOException
-	{
-		File file = File.createTempFile( "wstools-config", ".xml" );
-		ConfigurationDocument configDocument = createConfigFile( values, modelItem );
+    private String buildConfigFile(StringToStringMap values, Interface modelItem) throws IOException {
+        File file = File.createTempFile("wstools-config", ".xml");
+        ConfigurationDocument configDocument = createConfigFile(values, modelItem);
 
-		configDocument.save( file );
+        configDocument.save(file);
 
-		return file.getAbsolutePath();
-	}
+        return file.getAbsolutePath();
+    }
 
-	private ConfigurationDocument createConfigFile( StringToStringMap values, Interface modelItem )
-	{
-		ConfigurationDocument configDocument = ConfigurationDocument.Factory.newInstance();
-		ConfigurationType config = configDocument.addNewConfiguration();
+    private ConfigurationDocument createConfigFile(StringToStringMap values, Interface modelItem) {
+        ConfigurationDocument configDocument = ConfigurationDocument.Factory.newInstance();
+        ConfigurationType config = configDocument.addNewConfiguration();
 
-		try
-		{
-			StringToStringMap nsMappings = StringToStringMap.fromXml( values.get( NAMESPACE_MAPPING ) );
-			if( !nsMappings.isEmpty() )
-			{
-				GlobalType global = config.addNewGlobal();
+        try {
+            StringToStringMap nsMappings = StringToStringMap.fromXml(values.get(NAMESPACE_MAPPING));
+            if (!nsMappings.isEmpty()) {
+                GlobalType global = config.addNewGlobal();
 
-				for( Map.Entry<String, String> namespaceEntry : nsMappings.entrySet() )
-				{
-					PkgNSType entry = global.addNewPackageNamespace();
-					entry.setNamespace( namespaceEntry.getKey() );
-					entry.setPackage( namespaceEntry.getValue() );
-				}
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
+                for (Map.Entry<String, String> namespaceEntry : nsMappings.entrySet()) {
+                    PkgNSType entry = global.addNewPackageNamespace();
+                    entry.setNamespace(namespaceEntry.getKey());
+                    entry.setPackage(namespaceEntry.getValue());
+                }
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
 
-		WsdlToJavaType wsdl2Java = config.addNewWsdlJava();
+        WsdlToJavaType wsdl2Java = config.addNewWsdlJava();
 
-		String wsdlUrl = getWsdlUrl( values, modelItem );
-		try
-		{
-			new URL( wsdlUrl );
-			wsdl2Java.setLocation( wsdlUrl );
-		}
-		catch( MalformedURLException e )
-		{
-			( ( Element )wsdl2Java.getDomNode() ).setAttribute( "file", wsdlUrl );
-		}
+        String wsdlUrl = getWsdlUrl(values, modelItem);
+        try {
+            new URL(wsdlUrl);
+            wsdl2Java.setLocation(wsdlUrl);
+        } catch (MalformedURLException e) {
+            ((Element) wsdl2Java.getDomNode()).setAttribute("file", wsdlUrl);
+        }
 
-		if( values.getBoolean( UNWRAP ) )
-			wsdl2Java.setParameterStyle( ParameterStyle.BARE );
-		else
-			wsdl2Java.setParameterStyle( ParameterStyle.WRAPPED );
+        if (values.getBoolean(UNWRAP)) {
+            wsdl2Java.setParameterStyle(ParameterStyle.BARE);
+        } else {
+            wsdl2Java.setParameterStyle(ParameterStyle.WRAPPED);
+        }
 
-		if( values.get( EJB_LINK ) != null && values.get( EJB_LINK ).length() > 0 )
-		{
-			WsxmlType webservices = wsdl2Java.addNewWebservices();
-			webservices.setEjbLink( values.get( EJB_LINK ) );
-			webservices.setAppend( values.getBoolean( APPEND ) );
-		}
-		else if( values.get( SERVLET_LINK ) != null && values.get( SERVLET_LINK ).length() > 0 )
-		{
-			WsxmlType webservices = wsdl2Java.addNewWebservices();
-			webservices.setServletLink( values.get( SERVLET_LINK ) );
-			webservices.setAppend( values.getBoolean( APPEND ) );
-		}
+        if (values.get(EJB_LINK) != null && values.get(EJB_LINK).length() > 0) {
+            WsxmlType webservices = wsdl2Java.addNewWebservices();
+            webservices.setEjbLink(values.get(EJB_LINK));
+            webservices.setAppend(values.getBoolean(APPEND));
+        } else if (values.get(SERVLET_LINK) != null && values.get(SERVLET_LINK).length() > 0) {
+            WsxmlType webservices = wsdl2Java.addNewWebservices();
+            webservices.setServletLink(values.get(SERVLET_LINK));
+            webservices.setAppend(values.getBoolean(APPEND));
+        }
 
-		String mappingFile = values.get( MAPPING ).toString().trim();
-		if( mappingFile.length() > 0 )
-		{
-			wsdl2Java.addNewMapping().setFile( mappingFile );
-		}
-		return configDocument;
-	}
+        String mappingFile = values.get(MAPPING).toString().trim();
+        if (mappingFile.length() > 0) {
+            wsdl2Java.addNewMapping().setFile(mappingFile);
+        }
+        return configDocument;
+    }
 
-	private final class JBossWSShowConfigFileAction extends ShowConfigFileAction
-	{
-		private final Interface modelItem;
+    private final class JBossWSShowConfigFileAction extends ShowConfigFileAction {
+        private final Interface modelItem;
 
-		private JBossWSShowConfigFileAction( String title, String description, Interface modelItem )
-		{
-			super( title, description );
-			this.modelItem = modelItem;
-		}
+        private JBossWSShowConfigFileAction(String title, String description, Interface modelItem) {
+            super(title, description);
+            this.modelItem = modelItem;
+        }
 
-		protected String getConfigFile()
-		{
-			ConfigurationDocument configDocument = createConfigFile( getDialog().getValues(), modelItem );
-			return configDocument.toString();
-		}
-	}
+        protected String getConfigFile() {
+            ConfigurationDocument configDocument = createConfigFile(getDialog().getValues(), modelItem);
+            return configDocument.toString();
+        }
+    }
 
 }

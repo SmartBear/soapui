@@ -58,398 +58,345 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings( "serial" )
-public class SecurityCheckedParametersTablePanel extends JPanel implements ListSelectionListener
-{
+@SuppressWarnings("serial")
+public class SecurityCheckedParametersTablePanel extends JPanel implements ListSelectionListener {
 
-	protected static final int LABEL_NAME_COLUMN_WIDTH = 120;
-	protected static final int ENABLE_COLUMN_WIDTH = 70;
-	static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
-	protected SecurityParametersTableModel model;
-	protected JXToolBar toolbar;
-	protected JXTable table;
-	protected Map<String, TestProperty> properties;
-	protected DefaultActionList actionList;
-	protected JUndoableTextArea pathPane;
-	protected XFormDialog dialog;
-	protected AbstractSecurityScanWithProperties securityScan;
+    protected static final int LABEL_NAME_COLUMN_WIDTH = 120;
+    protected static final int ENABLE_COLUMN_WIDTH = 70;
+    static final String CHOOSE_TEST_PROPERTY = "Choose Test Property";
+    protected SecurityParametersTableModel model;
+    protected JXToolBar toolbar;
+    protected JXTable table;
+    protected Map<String, TestProperty> properties;
+    protected DefaultActionList actionList;
+    protected JUndoableTextArea pathPane;
+    protected XFormDialog dialog;
+    protected AbstractSecurityScanWithProperties securityScan;
 
-	public SecurityCheckedParametersTablePanel( SecurityParametersTableModel model,
-			Map<String, TestProperty> properties, AbstractSecurityScanWithProperties securityCheck )
-	{
-		this.securityScan = securityCheck;
-		this.model = model;
-		initRequestPartProperties( properties );
-		init();
-		defineColumnWidth();
-		setPreferredSize( new Dimension( 100, 100 ) );
-	}
+    public SecurityCheckedParametersTablePanel(SecurityParametersTableModel model,
+                                               Map<String, TestProperty> properties, AbstractSecurityScanWithProperties securityCheck) {
+        this.securityScan = securityCheck;
+        this.model = model;
+        initRequestPartProperties(properties);
+        init();
+        defineColumnWidth();
+        setPreferredSize(new Dimension(100, 100));
+    }
 
-	private void initRequestPartProperties( Map<String, TestProperty> properties )
-	{
-		this.properties = new HashMap<String, TestProperty>();
-		for( Map.Entry<String, TestProperty> entry : properties.entrySet() )
-		{
-			if( properties.get( entry.getKey() ).isRequestPart() )
-				this.properties.put( entry.getKey(), entry.getValue() );
-		}
-	}
+    private void initRequestPartProperties(Map<String, TestProperty> properties) {
+        this.properties = new HashMap<String, TestProperty>();
+        for (Map.Entry<String, TestProperty> entry : properties.entrySet()) {
+            if (properties.get(entry.getKey()).isRequestPart()) {
+                this.properties.put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
 
-	protected void init()
-	{
+    protected void init() {
 
-		setLayout( new BorderLayout() );
-		toolbar = UISupport.createToolbar();
+        setLayout(new BorderLayout());
+        toolbar = UISupport.createToolbar();
 
-		toolbar.add( UISupport.createToolbarButton( new AddNewParameterAction() ) );
-		toolbar.add( UISupport.createToolbarButton( new RemoveParameterAction() ) );
-		toolbar.add( UISupport.createToolbarButton( new CopyParameterAction() ) );
-		toolbar.add( UISupport.createToolbarButton( new CloneParametersAction( securityScan ) ) );
-		toolbar.addGlue();
+        toolbar.add(UISupport.createToolbarButton(new AddNewParameterAction()));
+        toolbar.add(UISupport.createToolbarButton(new RemoveParameterAction()));
+        toolbar.add(UISupport.createToolbarButton(new CopyParameterAction()));
+        toolbar.add(UISupport.createToolbarButton(new CloneParametersAction(securityScan)));
+        toolbar.addGlue();
 
-		add( toolbar, BorderLayout.NORTH );
-		table = JTableFactory.getInstance().makeJXTable( model );
-		table.getSelectionModel().addListSelectionListener( this );
-		defineColumnWidth();
-		table.setDefaultEditor( String.class, getDefaultCellEditor() );
+        add(toolbar, BorderLayout.NORTH);
+        table = JTableFactory.getInstance().makeJXTable(model);
+        table.getSelectionModel().addListSelectionListener(this);
+        defineColumnWidth();
+        table.setDefaultEditor(String.class, getDefaultCellEditor());
 
-		JScrollPane scrollPane = new JScrollPane( table );
-		add( scrollPane, BorderLayout.CENTER );
+        JScrollPane scrollPane = new JScrollPane(table);
+        add(scrollPane, BorderLayout.CENTER);
 
-		pathPane = new JUndoableTextArea();
-		if( securityScan instanceof BoundarySecurityScan )
-		{
-			( ( BoundarySecurityScan )securityScan ).refreshRestrictionLabel( -1 );
-		}
-		if( securityScan instanceof InvalidTypesSecurityScan )
-		{
-			( ( InvalidTypesSecurityScan )securityScan ).refreshRestrictionLabel( -1 );
-		}
-	}
+        pathPane = new JUndoableTextArea();
+        if (securityScan instanceof BoundarySecurityScan) {
+            ((BoundarySecurityScan) securityScan).refreshRestrictionLabel(-1);
+        }
+        if (securityScan instanceof InvalidTypesSecurityScan) {
+            ((InvalidTypesSecurityScan) securityScan).refreshRestrictionLabel(-1);
+        }
+    }
 
-	/**
-	 * 
-	 */
-	protected void defineColumnWidth()
-	{
-		// enable column
-		TableColumn col = table.getColumnModel().getColumn( 3 );
-		col.setMaxWidth( ENABLE_COLUMN_WIDTH );
-		col.setPreferredWidth( ENABLE_COLUMN_WIDTH );
-		col.setMinWidth( ENABLE_COLUMN_WIDTH );
-		// label
-		col = table.getColumnModel().getColumn( 0 );
-		col.setMaxWidth( LABEL_NAME_COLUMN_WIDTH );
-		col.setPreferredWidth( LABEL_NAME_COLUMN_WIDTH );
-		col.setMinWidth( LABEL_NAME_COLUMN_WIDTH );
-		// name
-		col = table.getColumnModel().getColumn( 1 );
-		col.setMaxWidth( LABEL_NAME_COLUMN_WIDTH );
-		col.setPreferredWidth( LABEL_NAME_COLUMN_WIDTH );
-		col.setMinWidth( LABEL_NAME_COLUMN_WIDTH );
-	}
+    /**
+     *
+     */
+    protected void defineColumnWidth() {
+        // enable column
+        TableColumn col = table.getColumnModel().getColumn(3);
+        col.setMaxWidth(ENABLE_COLUMN_WIDTH);
+        col.setPreferredWidth(ENABLE_COLUMN_WIDTH);
+        col.setMinWidth(ENABLE_COLUMN_WIDTH);
+        // label
+        col = table.getColumnModel().getColumn(0);
+        col.setMaxWidth(LABEL_NAME_COLUMN_WIDTH);
+        col.setPreferredWidth(LABEL_NAME_COLUMN_WIDTH);
+        col.setMinWidth(LABEL_NAME_COLUMN_WIDTH);
+        // name
+        col = table.getColumnModel().getColumn(1);
+        col.setMaxWidth(LABEL_NAME_COLUMN_WIDTH);
+        col.setPreferredWidth(LABEL_NAME_COLUMN_WIDTH);
+        col.setMinWidth(LABEL_NAME_COLUMN_WIDTH);
+    }
 
-	/**
-	 * this will return cell editor when editing xpath
-	 * 
-	 * @return
-	 */
-	protected TableCellEditor getDefaultCellEditor()
-	{
-		return new XPathCellRender();
-	}
+    /**
+     * this will return cell editor when editing xpath
+     *
+     * @return
+     */
+    protected TableCellEditor getDefaultCellEditor() {
+        return new XPathCellRender();
+    }
 
-	public XFormDialog getDialog()
-	{
-		return dialog;
-	}
+    public XFormDialog getDialog() {
+        return dialog;
+    }
 
-	/*
-	 * Creates dialog
-	 */
-	protected XFormDialog createAddParameterDialog()
-	{
-		actionList = new DefaultActionList();
-		AddAction addAction = new AddAction();
-		actionList.addAction( addAction, true );
-		AddAndCopy addAndCopy = new AddAndCopy();
-		actionList.addAction( addAndCopy );
-		Close closeAction = new Close();
-		actionList.addAction( closeAction );
+    /*
+     * Creates dialog
+     */
+    protected XFormDialog createAddParameterDialog() {
+        actionList = new DefaultActionList();
+        AddAction addAction = new AddAction();
+        actionList.addAction(addAction, true);
+        AddAndCopy addAndCopy = new AddAndCopy();
+        actionList.addAction(addAndCopy);
+        Close closeAction = new Close();
+        actionList.addAction(closeAction);
 
-		dialog = ADialogBuilder.buildDialog( AddParameterDialog.class, actionList, false );
+        dialog = ADialogBuilder.buildDialog(AddParameterDialog.class, actionList, false);
 
-		dialog.getFormField( AddParameterDialog.PATH ).setProperty( "component", buildPathSelector() );
+        dialog.getFormField(AddParameterDialog.PATH).setProperty("component", buildPathSelector());
 
-		closeAction.setDialog( dialog );
-		addAction.setDialog( dialog );
-		addAndCopy.setDialog( dialog );
+        closeAction.setDialog(dialog);
+        addAction.setDialog(dialog);
+        addAndCopy.setDialog(dialog);
 
-		final JTextFieldFormField labelField = ( JTextFieldFormField )dialog.getFormField( AddParameterDialog.LABEL );
-		labelField.getComponent().setColumns( 30 );
-		labelField.setEnabled( false );
-		JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
-		enablePathField( false );
-		nameField.addFormFieldListener( new XFormFieldListener()
-		{
+        final JTextFieldFormField labelField = (JTextFieldFormField) dialog.getFormField(AddParameterDialog.LABEL);
+        labelField.getComponent().setColumns(30);
+        labelField.setEnabled(false);
+        JComboBoxFormField nameField = (JComboBoxFormField) dialog.getFormField(AddParameterDialog.NAME);
+        enablePathField(false);
+        nameField.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				if( !newValue.equals( CHOOSE_TEST_PROPERTY ) )
-				{
-					labelField.setEnabled( true );
-					enablePathField( true );
-				}
-				else
-				{
-					labelField.setEnabled( false );
-					enablePathField( false );
-				}
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                if (!newValue.equals(CHOOSE_TEST_PROPERTY)) {
+                    labelField.setEnabled(true);
+                    enablePathField(true);
+                } else {
+                    labelField.setEnabled(false);
+                    enablePathField(false);
+                }
 
-			}
-		} );
-		ArrayList<String> options = new ArrayList<String>();
-		options.add( CHOOSE_TEST_PROPERTY );
-		options.addAll( properties.keySet() );
-		nameField.setOptions( options.toArray( new String[0] ) );
+            }
+        });
+        ArrayList<String> options = new ArrayList<String>();
+        options.add(CHOOSE_TEST_PROPERTY);
+        options.addAll(properties.keySet());
+        nameField.setOptions(options.toArray(new String[0]));
 
-		( ( JFormDialog )dialog ).getDialog().setResizable( false );
+        ((JFormDialog) dialog).getDialog().setResizable(false);
 
-		return dialog;
-	}
+        return dialog;
+    }
 
-	protected JPanel buildPathSelector()
-	{
-		JPanel sourcePanel = new JPanel( new BorderLayout() );
-		sourcePanel.add( new JScrollPane( pathPane ), BorderLayout.CENTER );
-		sourcePanel.setBorder( BorderFactory.createEmptyBorder( 0, 3, 3, 3 ) );
-		return sourcePanel;
-	}
+    protected JPanel buildPathSelector() {
+        JPanel sourcePanel = new JPanel(new BorderLayout());
+        sourcePanel.add(new JScrollPane(pathPane), BorderLayout.CENTER);
+        sourcePanel.setBorder(BorderFactory.createEmptyBorder(0, 3, 3, 3));
+        return sourcePanel;
+    }
 
-	/**
-	 * @param pathField
-	 */
-	protected void enablePathField( boolean enable )
-	{
-		pathPane.setEnabled( enable );
-	}
+    /**
+     * @param pathField
+     */
+    protected void enablePathField(boolean enable) {
+        pathPane.setEnabled(enable);
+    }
 
-	class AddNewParameterAction extends AbstractAction
-	{
-		public AddNewParameterAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Adds a parameter to security scan" );
-		}
+    class AddNewParameterAction extends AbstractAction {
+        public AddNewParameterAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Adds a parameter to security scan");
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			XFormDialog dialog = createAddParameterDialog();
-			dialog.show();
-			model.fireTableDataChanged();
-		}
-	}
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            XFormDialog dialog = createAddParameterDialog();
+            dialog.show();
+            model.fireTableDataChanged();
+        }
+    }
 
-	class RemoveParameterAction extends AbstractAction
-	{
-		public RemoveParameterAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/remove_property.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Removes parameter from security scan" );
-		}
+    class RemoveParameterAction extends AbstractAction {
+        public RemoveParameterAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Removes parameter from security scan");
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			model.removeRows( table.getSelectedRows() );
-			model.fireTableDataChanged();
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            model.removeRows(table.getSelectedRows());
+            model.fireTableDataChanged();
+        }
 
-	}
+    }
 
-	public class AddAndCopy extends AbstractAction
-	{
+    public class AddAndCopy extends AbstractAction {
 
-		private XFormDialog dialog;
+        private XFormDialog dialog;
 
-		public AddAndCopy()
-		{
-			super( "Add&Copy" );
-		}
+        public AddAndCopy() {
+            super("Add&Copy");
+        }
 
-		public void setDialog( XFormDialog dialog )
-		{
-			this.dialog = dialog;
-		}
+        public void setDialog(XFormDialog dialog) {
+            this.dialog = dialog;
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			if( dialog.getValue( AddParameterDialog.LABEL ) == null
-					|| dialog.getValue( AddParameterDialog.LABEL ).trim().length() == 0 )
-			{
-				UISupport.showErrorMessage( "Label is required!" );
-			}
-			else
-			{
-				if( !model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
-					UISupport.showErrorMessage( "Label have to be unique!" );
-			}
-		}
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (dialog.getValue(AddParameterDialog.LABEL) == null
+                    || dialog.getValue(AddParameterDialog.LABEL).trim().length() == 0) {
+                UISupport.showErrorMessage("Label is required!");
+            } else {
+                if (!model.addParameter(dialog.getValue(AddParameterDialog.LABEL),
+                        dialog.getValue(AddParameterDialog.NAME), pathPane.getText())) {
+                    UISupport.showErrorMessage("Label have to be unique!");
+                }
+            }
+        }
 
-	}
+    }
 
-	private class Close extends AbstractAction
-	{
+    private class Close extends AbstractAction {
 
-		private XFormDialog dialog;
+        private XFormDialog dialog;
 
-		public Close()
-		{
-			super( "Close" );
-		}
+        public Close() {
+            super("Close");
+        }
 
-		public void setDialog( XFormDialog dialog )
-		{
-			this.dialog = dialog;
-		}
+        public void setDialog(XFormDialog dialog) {
+            this.dialog = dialog;
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			if( dialog != null )
-			{
-				( ( SwingXFormDialog )dialog ).setReturnValue( XFormDialog.CANCEL_OPTION );
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (dialog != null) {
+                ((SwingXFormDialog) dialog).setReturnValue(XFormDialog.CANCEL_OPTION);
 
-				JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
-				nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
-				dialog.setValue( AddParameterDialog.LABEL, "" );
-				pathPane.setText( "" );
+                JComboBoxFormField nameField = (JComboBoxFormField) dialog.getFormField(AddParameterDialog.NAME);
+                nameField.setSelectedOptions(new Object[]{nameField.getOptions()[0]});
+                dialog.setValue(AddParameterDialog.LABEL, "");
+                pathPane.setText("");
 
-				dialog.setVisible( false );
-			}
+                dialog.setVisible(false);
+            }
 
-		}
+        }
 
-	}
+    }
 
-	class CopyParameterAction extends AbstractAction
-	{
+    class CopyParameterAction extends AbstractAction {
 
-		public CopyParameterAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/copy_parameters.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Copies parameter" );
-		}
+        public CopyParameterAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/copy_parameters.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Copies parameter");
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			if( table.getSelectedRow() > -1 )
-			{
-				XFormDialog dialog = createAddParameterDialog();
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (table.getSelectedRow() > -1) {
+                XFormDialog dialog = createAddParameterDialog();
 
-				int row = table.getSelectedRow();
-				initDialogForCopy( dialog, row );
+                int row = table.getSelectedRow();
+                initDialogForCopy(dialog, row);
 
-				dialog.show();
-				model.fireTableDataChanged();
-			}
-		}
+                dialog.show();
+                model.fireTableDataChanged();
+            }
+        }
 
-	}
+    }
 
-	private void initDialogForCopy( XFormDialog dialog, int row )
-	{
-		dialog.setValue( AddParameterDialog.LABEL, ( String )model.getValueAt( row, 0 ) );
-		dialog.setValue( AddParameterDialog.NAME, ( String )model.getValueAt( row, 1 ) );
-		pathPane.setText( ( String )model.getValueAt( row, 2 ) );
-	}
+    private void initDialogForCopy(XFormDialog dialog, int row) {
+        dialog.setValue(AddParameterDialog.LABEL, (String) model.getValueAt(row, 0));
+        dialog.setValue(AddParameterDialog.NAME, (String) model.getValueAt(row, 1));
+        pathPane.setText((String) model.getValueAt(row, 2));
+    }
 
-	public JUndoableTextArea getPathPane()
-	{
-		return pathPane;
-	}
+    public JUndoableTextArea getPathPane() {
+        return pathPane;
+    }
 
-	private class AddAction extends AbstractAction
-	{
+    private class AddAction extends AbstractAction {
 
-		private XFormDialog dialog;
+        private XFormDialog dialog;
 
-		public AddAction()
-		{
-			super( "Add" );
-		}
+        public AddAction() {
+            super("Add");
+        }
 
-		public void setDialog( XFormDialog dialog )
-		{
-			this.dialog = dialog;
-		}
+        public void setDialog(XFormDialog dialog) {
+            this.dialog = dialog;
+        }
 
-		@Override
-		public void actionPerformed( ActionEvent arg0 )
-		{
-			if( dialog.getValue( AddParameterDialog.LABEL ) == null
-					|| dialog.getValue( AddParameterDialog.LABEL ).trim().length() == 0 )
-			{
-				UISupport.showErrorMessage( "Label is required!" );
-			}
-			else
-			{
-				if( model.addParameter( dialog.getValue( AddParameterDialog.LABEL ),
-						dialog.getValue( AddParameterDialog.NAME ), pathPane.getText() ) )
-				{
-					JComboBoxFormField nameField = ( JComboBoxFormField )dialog.getFormField( AddParameterDialog.NAME );
-					nameField.setSelectedOptions( new Object[] { nameField.getOptions()[0] } );
-					dialog.setValue( AddParameterDialog.LABEL, "" );
-					pathPane.setText( "" );
-				}
-				else
-					UISupport.showErrorMessage( "Label have to be unique!" );
-			}
-		}
+        @Override
+        public void actionPerformed(ActionEvent arg0) {
+            if (dialog.getValue(AddParameterDialog.LABEL) == null
+                    || dialog.getValue(AddParameterDialog.LABEL).trim().length() == 0) {
+                UISupport.showErrorMessage("Label is required!");
+            } else {
+                if (model.addParameter(dialog.getValue(AddParameterDialog.LABEL),
+                        dialog.getValue(AddParameterDialog.NAME), pathPane.getText())) {
+                    JComboBoxFormField nameField = (JComboBoxFormField) dialog.getFormField(AddParameterDialog.NAME);
+                    nameField.setSelectedOptions(new Object[]{nameField.getOptions()[0]});
+                    dialog.setValue(AddParameterDialog.LABEL, "");
+                    pathPane.setText("");
+                } else {
+                    UISupport.showErrorMessage("Label have to be unique!");
+                }
+            }
+        }
 
-	}
+    }
 
-	public JUndoableTextField getLabel()
-	{
-		return ( ( JTextFieldFormField )dialog.getFormField( AddParameterDialog.LABEL ) ).getComponent();
-	}
+    public JUndoableTextField getLabel() {
+        return ((JTextFieldFormField) dialog.getFormField(AddParameterDialog.LABEL)).getComponent();
+    }
 
-	@AForm( description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters", helpUrl = HelpUrls.SECURITY_SCANS_OVERVIEW )
-	interface AddParameterDialog
-	{
-		@AField( description = "Parameter Name", name = "Parameter Name", type = AFieldType.ENUMERATION )
-		static String NAME = "Parameter Name";
+    @AForm(description = "Add New Security Test Step Parameter", name = "Configure Security Test Step Parameters", helpUrl = HelpUrls.SECURITY_SCANS_OVERVIEW)
+    interface AddParameterDialog {
+        @AField(description = "Parameter Name", name = "Parameter Name", type = AFieldType.ENUMERATION)
+        static String NAME = "Parameter Name";
 
-		@AField( description = "Parameter Label", name = "Parameter Label", type = AFieldType.STRING )
-		static String LABEL = "Parameter Label";
+        @AField(description = "Parameter Label", name = "Parameter Label", type = AFieldType.STRING)
+        static String LABEL = "Parameter Label";
 
-		@AField( description = "Parameter XPath", name = "XPath", type = AFieldType.COMPONENT )
-		static String PATH = "XPath";
-	}
+        @AField(description = "Parameter XPath", name = "XPath", type = AFieldType.COMPONENT)
+        static String PATH = "XPath";
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event
-	 * .ListSelectionEvent)
-	 */
-	@Override
-	public void valueChanged( ListSelectionEvent lse )
-	{
-		DefaultListSelectionModel dlsm = ( ( DefaultListSelectionModel )lse.getSource() );
-		if( securityScan instanceof BoundarySecurityScan )
-		{
-			( ( BoundarySecurityScan )securityScan ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
-		}
-		if( securityScan instanceof InvalidTypesSecurityScan )
-		{
-			( ( InvalidTypesSecurityScan )securityScan ).refreshRestrictionLabel( dlsm.getAnchorSelectionIndex() );
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event
+     * .ListSelectionEvent)
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent lse) {
+        DefaultListSelectionModel dlsm = ((DefaultListSelectionModel) lse.getSource());
+        if (securityScan instanceof BoundarySecurityScan) {
+            ((BoundarySecurityScan) securityScan).refreshRestrictionLabel(dlsm.getAnchorSelectionIndex());
+        }
+        if (securityScan instanceof InvalidTypesSecurityScan) {
+            ((InvalidTypesSecurityScan) securityScan).refreshRestrictionLabel(dlsm.getAnchorSelectionIndex());
+        }
+    }
 }

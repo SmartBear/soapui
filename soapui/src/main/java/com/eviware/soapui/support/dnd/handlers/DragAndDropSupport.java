@@ -16,121 +16,113 @@
 
 package com.eviware.soapui.support.dnd.handlers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.UISupport;
 
-public class DragAndDropSupport
-{
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
-	public static boolean copyTestStep( WsdlTestStep source, WsdlTestCase target, int defaultPosition )
-	{
-		String name = UISupport.prompt( "Enter name for copied TestStep", "Copy TestStep",
-				target == source.getTestCase() ? "Copy of " + source.getName() : source.getName() );
-		if( name == null )
-			return false;
+public class DragAndDropSupport {
 
-		WsdlProject sourceProject = source.getTestCase().getTestSuite().getProject();
-		WsdlProject targetProject = target.getTestSuite().getProject();
+    public static boolean copyTestStep(WsdlTestStep source, WsdlTestCase target, int defaultPosition) {
+        String name = UISupport.prompt("Enter name for copied TestStep", "Copy TestStep",
+                target == source.getTestCase() ? "Copy of " + source.getName() : source.getName());
+        if (name == null) {
+            return false;
+        }
 
-		if( sourceProject != targetProject )
-		{
-			if( !importRequiredInterfaces( targetProject, new HashSet<Interface>( source.getRequiredInterfaces() ),
-					"Copy Test Step" ) )
-				return false;
-		}
+        WsdlProject sourceProject = source.getTestCase().getTestSuite().getProject();
+        WsdlProject targetProject = target.getTestSuite().getProject();
 
-		target.importTestStep( source, name, defaultPosition, true );
+        if (sourceProject != targetProject) {
+            if (!importRequiredInterfaces(targetProject, new HashSet<Interface>(source.getRequiredInterfaces()),
+                    "Copy Test Step")) {
+                return false;
+            }
+        }
 
-		return true;
-	}
+        target.importTestStep(source, name, defaultPosition, true);
 
-	public static boolean importRequiredInterfaces( WsdlProject project, Set<Interface> requiredInterfaces, String title )
-	{
-		if( requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0 )
-		{
-			Map<String, Interface> bindings = new HashMap<String, Interface>();
-			for( Interface iface : requiredInterfaces )
-			{
-				bindings.put( iface.getTechnicalId(), iface );
-			}
+        return true;
+    }
 
-			for( Interface iface : project.getInterfaceList() )
-			{
-				bindings.remove( iface.getTechnicalId() );
-			}
+    public static boolean importRequiredInterfaces(Project project, Set<Interface> requiredInterfaces, String title) {
+        if (requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0) {
+            Map<String, Interface> bindings = new HashMap<String, Interface>();
+            for (Interface iface : requiredInterfaces) {
+                bindings.put(iface.getTechnicalId(), iface);
+            }
 
-			requiredInterfaces.retainAll( bindings.values() );
-		}
+            for (Interface iface : project.getInterfaceList()) {
+                bindings.remove(iface.getTechnicalId());
+            }
 
-		if( requiredInterfaces.size() > 0 )
-		{
-			String msg = "Target project [" + project.getName() + "] is missing required Interfaces;\r\n\r\n";
-			for( Interface iface : requiredInterfaces )
-			{
-				msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
-			}
-			msg += "\r\nThese will be cloned to the target project as well";
+            requiredInterfaces.retainAll(bindings.values());
+        }
 
-			if( !UISupport.confirm( msg, title ) )
-				return false;
+        if (requiredInterfaces.size() > 0) {
+            String msg = "Target project [" + project.getName() + "] is missing required Interfaces;\r\n\r\n";
+            for (Interface iface : requiredInterfaces) {
+                msg += iface.getName() + " [" + iface.getTechnicalId() + "]\r\n";
+            }
+            msg += "\r\nThese will be cloned to the target project as well";
 
-			for( Interface iface : requiredInterfaces )
-			{
-				project.importInterface( ( AbstractInterface<?> )iface, true, true );
-			}
-		}
+            if (!UISupport.confirm(msg, title)) {
+                return false;
+            }
 
-		return true;
-	}
+            for (Interface iface : requiredInterfaces) {
+                ((WsdlProject) project).importInterface((AbstractInterface<?>) iface, true, true);
+            }
+        }
 
-	public static boolean moveTestStep( WsdlTestStep source, WsdlTestCase target, int defaultPosition )
-	{
-		if( source.getTestCase() == target )
-		{
-			int ix = target.getIndexOfTestStep( source );
+        return true;
+    }
 
-			if( defaultPosition == -1 )
-			{
-				target.moveTestStep( ix, target.getTestStepCount() - ix );
-			}
-			else if( ix >= 0 && defaultPosition != ix )
-			{
-				int offset = defaultPosition - ix;
-				if( offset > 0 )
-					offset-- ;
-				target.moveTestStep( ix, offset );
-			}
-		}
-		else
-		{
-			String name = UISupport.prompt( "Enter name for moved TestStep", "Move TestStep", source.getName() );
-			if( name == null )
-				return false;
+    public static boolean moveTestStep(WsdlTestStep source, WsdlTestCase target, int defaultPosition) {
+        if (source.getTestCase() == target) {
+            int ix = target.getIndexOfTestStep(source);
 
-			WsdlProject sourceProject = source.getTestCase().getTestSuite().getProject();
-			WsdlProject targetProject = target.getTestSuite().getProject();
+            if (defaultPosition == -1) {
+                target.moveTestStep(ix, target.getTestStepCount() - ix);
+            } else if (ix >= 0 && defaultPosition != ix) {
+                int offset = defaultPosition - ix;
+                if (offset > 0) {
+                    offset--;
+                }
+                target.moveTestStep(ix, offset);
+            }
+        } else {
+            String name = UISupport.prompt("Enter name for moved TestStep", "Move TestStep", source.getName());
+            if (name == null) {
+                return false;
+            }
 
-			if( sourceProject != targetProject )
-			{
-				if( !importRequiredInterfaces( targetProject, new HashSet<Interface>( source.getRequiredInterfaces() ),
-						"Move Test Step" ) )
-					return false;
-			}
+            WsdlProject sourceProject = source.getTestCase().getTestSuite().getProject();
+            WsdlProject targetProject = target.getTestSuite().getProject();
 
-			target.importTestStep( source, name, defaultPosition, false );
-			source.getTestCase().removeTestStep( source );
-		}
+            if (sourceProject != targetProject) {
+                if (!importRequiredInterfaces(targetProject, new HashSet<Interface>(source.getRequiredInterfaces()),
+                        "Move Test Step")) {
+                    return false;
+                }
+            }
 
-		return true;
-	}
+            final WsdlTestStep result = target.importTestStep(source, name, defaultPosition, false);
+            if (result == null) {
+                return false;
+            }
+            source.getTestCase().removeTestStep(source);
+        }
+
+        return true;
+    }
 
 }
