@@ -45,7 +45,6 @@ import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-import com.eviware.x.impl.swing.JFormDialog;
 
 import javax.swing.*;
 import javax.swing.event.TreeModelEvent;
@@ -107,8 +106,8 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
 
     private Component buildSecConfigTab() {
         sensitiveInfoPanel = new ProjectSensitiveInformationPanel(getModelItem().getConfig());
-        sensitiveInfoPanel.build();
-        return ((JFormDialog) sensitiveInfoPanel.getDialog()).getPanel();
+
+        return sensitiveInfoPanel.getMainPanel();
     }
 
     public WsdlProjectTestSuitesTabPanel getTestSuitesPanel() {

@@ -17,7 +17,6 @@ package com.eviware.soapui.security.panels;
 
 import com.eviware.soapui.config.ProjectConfig;
 import com.eviware.soapui.config.SensitiveInformationConfig;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.security.SensitiveInformationTableModel;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.SensitiveInformationPropertyHolder;
@@ -27,11 +26,6 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.swing.JTableFactory;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AField.AFieldType;
-import com.eviware.x.form.support.AForm;
 import org.apache.xmlbeans.XmlObject;
 import org.jdesktop.swingx.JXTable;
 
@@ -40,20 +34,19 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProjectSensitiveInformationPanel {
 
-    private XFormDialog dialog;
+    private JPanel mainpanel;
     private SensitiveInformationConfig config;
     private List<String> projectSpecificExposureList;
     public static final String PROJECT_SPECIFIC_EXPOSURE_LIST = "ProjectSpecificExposureList";
     private SensitiveInformationTableModel sensitiveInformationTableModel;
     private JXTable tokenTable;
-    private JPanel sensitiveInfoTableForm;
 
     public ProjectSensitiveInformationPanel(ProjectConfig projectConfig) {
         config = projectConfig.getSensitiveInformation();
@@ -84,12 +77,22 @@ public class ProjectSensitiveInformationPanel {
         sensitiveInformationTableModel = new SensitiveInformationTableModel(siph);
     }
 
-    public boolean build() {
-        if (dialog == null) {
-            buildDialog();
+    public Component getMainPanel() {
+        if (mainpanel == null) {
+            mainpanel = new JPanel(new BorderLayout());
+
+            JXToolBar toolbar = UISupport.createToolbar();
+
+            toolbar.add(UISupport.createToolbarButton(new AddTokenAction()));
+            toolbar.add(UISupport.createToolbarButton(new RemoveTokenAction()));
+
+            tokenTable = JTableFactory.getInstance().makeJXTable(sensitiveInformationTableModel);
+
+            mainpanel.add(toolbar, BorderLayout.NORTH);
+            mainpanel.add(new JScrollPane(tokenTable), BorderLayout.CENTER);
         }
 
-        return false;
+        return mainpanel;
     }
 
     public void save() {
@@ -113,44 +116,8 @@ public class ProjectSensitiveInformationPanel {
         return builder.finish();
     }
 
-    protected void buildDialog() {
-        dialog = ADialogBuilder.buildDialog(SensitiveInformationConfigDialog.class);
-        dialog.getFormField(SensitiveInformationConfigDialog.TOKENS).setProperty("component", getForm());
-
-    }
-
-    // TODO : update help URL
-    @AForm(description = "Configure Sensitive Information Exposure Assertion", name = "Sensitive Information Exposure Assertion", helpUrl = HelpUrls.SECURITY_SENSITIVE_INFORMATION_EXPOSURE_ASSERTION_HELP)
-    protected interface SensitiveInformationConfigDialog {
-
-        @AField(description = "Sensitive informations to check. Use ~ as prefix for values that are regular expressions.", name = "Sensitive Information Tokens", type = AFieldType.COMPONENT)
-        public final static String TOKENS = "Sensitive Information Tokens";
-    }
-
     public void setConfiguration(XmlObject configuration) {
         config.set(configuration);
-    }
-
-    public XFormDialog getDialog() {
-        return dialog;
-    }
-
-    public JPanel getForm() {
-        if (sensitiveInfoTableForm == null) {
-            sensitiveInfoTableForm = new JPanel(new BorderLayout());
-
-            JXToolBar toolbar = UISupport.createToolbar();
-
-            toolbar.add(UISupport.createToolbarButton(new AddTokenAction()));
-            toolbar.add(UISupport.createToolbarButton(new RemoveTokenAction()));
-
-            tokenTable = JTableFactory.getInstance().makeJXTable(sensitiveInformationTableModel);
-            tokenTable.setPreferredSize(new Dimension(200, 100));
-            sensitiveInfoTableForm.add(toolbar, BorderLayout.NORTH);
-            sensitiveInfoTableForm.add(new JScrollPane(tokenTable), BorderLayout.CENTER);
-        }
-
-        return sensitiveInfoTableForm;
     }
 
     class AddTokenAction extends AbstractAction {
@@ -188,8 +155,6 @@ public class ProjectSensitiveInformationPanel {
     }
 
     public void release() {
-        if (dialog != null) {
-            dialog.release();
-        }
+        //
     }
 }
