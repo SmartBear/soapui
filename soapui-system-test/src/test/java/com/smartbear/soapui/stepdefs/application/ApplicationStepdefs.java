@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.stepdefs.application;
+*/
+package com.smartbear.soapui.stepdefs.application;
 
 import com.eviware.soapui.support.ConsoleDialogs;
 import com.eviware.soapui.support.UISupport;
@@ -26,37 +27,29 @@ import org.fest.swing.fixture.FrameFixture;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.closeApplicationWithoutSaving;
 import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 
-public class ApplicationStepdefs
-{
-	private Robot robot;
+public class ApplicationStepdefs {
+    private Robot robot;
 
-	public ApplicationStepdefs( ScenarioRobot runner )
-	{
-		robot = runner.getRobot();
-	}
+    public ApplicationStepdefs(ScenarioRobot runner) {
+        robot = runner.getRobot();
+    }
 
-	@Before
-	public void startSoapUI()
-	{
-		ApplicationUtils.startSoapUI();
-	}
+    @Before
+    public void startSoapUI() {
+        ApplicationUtils.startSoapUI();
+    }
 
-	@After
-	public void closeSoapUIIfRunning()
-	{
-		try
-		{
-			FrameFixture mainWindow = getMainWindow( robot );
-			if( mainWindow != null )
-			{
-				closeApplicationWithoutSaving( mainWindow, robot );
-			}
-		}
-		catch( Exception e )
-		{
-			//Most probably SoapUI is not running.
-		}
-		robot.cleanUp();
-		UISupport.setDialogs( new ConsoleDialogs() );
-	}
+    @After
+    public void closeSoapUIIfRunning() {
+        try {
+            FrameFixture mainWindow = getMainWindow(robot);
+            if (mainWindow != null) {
+                closeApplicationWithoutSaving(mainWindow, robot);
+            }
+        } catch (Exception e) {
+            //Most probably SoapUI is not running.
+        }
+        robot.cleanUp();
+        UISupport.setDialogs(new ConsoleDialogs());
+    }
 }

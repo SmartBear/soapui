@@ -22,41 +22,40 @@ import com.eviware.soapui.support.PropertyChangeNotifier;
 
 /**
  * Views available for the XmlDocument of a XmlEditor
- * 
+ *
  * @author ole.matzura
  */
 
-public interface EditorView<T extends EditorDocument> extends PropertyChangeNotifier, EditorLocationListener<T>
-{
-	public final static String TITLE_PROPERTY = EditorView.class.getName() + "@title";
+public interface EditorView<T extends EditorDocument> extends PropertyChangeNotifier, EditorLocationListener<T> {
+    public final static String TITLE_PROPERTY = EditorView.class.getName() + "@title";
 
-	public Editor<T> getEditor();
+    public Editor<T> getEditor();
 
-	public String getTitle();
+    public String getTitle();
 
-	public JComponent getComponent();
+    public JComponent getComponent();
 
-	public boolean deactivate();
+    public boolean deactivate();
 
-	public boolean activate( EditorLocation<T> location );
+    public boolean activate(EditorLocation<T> location);
 
-	public EditorLocation<T> getEditorLocation();
+    public EditorLocation<T> getEditorLocation();
 
-	public void setLocation( EditorLocation<T> location );
+    public void setLocation(EditorLocation<T> location);
 
-	public void setDocument( T document );
+    public void setDocument(T document);
 
-	public T getDocument();
+    public T getDocument();
 
-	public void addLocationListener( EditorLocationListener<T> listener );
+    public void addLocationListener(EditorLocationListener<T> listener);
 
-	public void removeLocationListener( EditorLocationListener<T> listener );
+    public void removeLocationListener(EditorLocationListener<T> listener);
 
-	public void release();
+    public void release();
 
-	public void setEditable( boolean enabled );
+    public void setEditable(boolean enabled);
 
-	public String getViewId();
+    public String getViewId();
 
-	public void requestFocus();
+    public void requestFocus();
 }

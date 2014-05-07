@@ -27,157 +27,138 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * WsdlMessageExchange for a WsdlRequest and its response
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<WsdlRequest>
-{
-	private WsdlResponse response;
-	private String requestContent;
+public class WsdlResponseMessageExchange extends AbstractWsdlMessageExchange<WsdlRequest> {
+    private WsdlResponse response;
+    private String requestContent;
 
-	public WsdlResponseMessageExchange( WsdlRequest request )
-	{
-		super( request );
-		response = request.getResponse();
+    public WsdlResponseMessageExchange(WsdlRequest request) {
+        super(request);
+        response = request.getResponse();
 
-		if( response != null )
-		{
-			for( String key : response.getPropertyNames() )
-			{
-				addProperty( key, response.getProperty( key ) );
-			}
-		}
-	}
+        if (response != null) {
+            for (String key : response.getPropertyNames()) {
+                addProperty(key, response.getProperty(key));
+            }
+        }
+    }
 
-	public String getEndpoint()
-	{
-		return String.valueOf( response.getURL() );
-	}
+    public String getEndpoint() {
+        return String.valueOf(response.getURL());
+    }
 
-	public WsdlRequest getRequest()
-	{
-		return getModelItem();
-	}
+    public WsdlRequest getRequest() {
+        return getModelItem();
+    }
 
-	public WsdlResponse getResponse()
-	{
-		return response;
-	}
+    public WsdlResponse getResponse() {
+        return response;
+    }
 
-	public boolean hasRawData()
-	{
-		return response != null;
-	}
+    public boolean hasRawData() {
+        return response != null;
+    }
 
-	public byte[] getRawRequestData()
-	{
-		return response == null ? null : response.getRawRequestData();
-	}
+    public byte[] getRawRequestData() {
+        return response == null ? null : response.getRawRequestData();
+    }
 
-	public byte[] getRawResponseData()
-	{
-		return response == null ? null : response.getRawResponseData();
-	}
+    public byte[] getRawResponseData() {
+        return response == null ? null : response.getRawResponseData();
+    }
 
-	public void setResponse( WsdlResponse response )
-	{
-		this.response = response;
-	}
+    public void setResponse(WsdlResponse response) {
+        this.response = response;
+    }
 
-	public String getRequestContent()
-	{
-		if( requestContent != null )
-			return requestContent;
+    public String getRequestContent() {
+        if (requestContent != null) {
+            return requestContent;
+        }
 
-		if( response == null )
-			response = getModelItem().getResponse();
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
-	}
+        return response == null ? getModelItem().getRequestContent() : response.getRequestContent();
+    }
 
-	public StringToStringsMap getRequestHeaders()
-	{
-		return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
-	}
+    public StringToStringsMap getRequestHeaders() {
+        return response == null ? getModelItem().getRequestHeaders() : response.getRequestHeaders();
+    }
 
-	public Attachment[] getRequestAttachments()
-	{
-		return getModelItem().getAttachments();
-	}
+    public Attachment[] getRequestAttachments() {
+        return getModelItem().getAttachments();
+    }
 
-	public Attachment[] getResponseAttachments()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public Attachment[] getResponseAttachments() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getAttachments();
-	}
+        return response == null ? null : response.getAttachments();
+    }
 
-	public String getResponseContent()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public String getResponseContent() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? null : response.getContentAsString();
-	}
+        return response == null ? null : response.getContentAsString();
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public StringToStringsMap getResponseHeaders() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? new StringToStringsMap() : response.getResponseHeaders();
-	}
+        return response == null ? new StringToStringsMap() : response.getResponseHeaders();
+    }
 
-	public WsdlOperation getOperation()
-	{
-		return getModelItem().getOperation();
-	}
+    public WsdlOperation getOperation() {
+        return getModelItem().getOperation();
+    }
 
-	public long getTimeTaken()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public long getTimeTaken() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? 0 : response.getTimeTaken();
-	}
+        return response == null ? 0 : response.getTimeTaken();
+    }
 
-	public long getTimestamp()
-	{
-		if( response == null )
-			response = getModelItem().getResponse();
+    public long getTimestamp() {
+        if (response == null) {
+            response = getModelItem().getResponse();
+        }
 
-		return response == null ? 0 : response.getTimestamp();
-	}
+        return response == null ? 0 : response.getTimestamp();
+    }
 
-	public void setRequestContent( String requestContent )
-	{
-		this.requestContent = requestContent;
-	}
+    public void setRequestContent(String requestContent) {
+        this.requestContent = requestContent;
+    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+    public boolean isDiscarded() {
+        return false;
+    }
 
-	public Vector<?> getRequestWssResult()
-	{
-		return null;
-	}
+    public Vector<?> getRequestWssResult() {
+        return null;
+    }
 
-	public Vector<?> getResponseWssResult()
-	{
-		return response.getWssResult();
-	}
+    public Vector<?> getResponseWssResult() {
+        return response.getWssResult();
+    }
 
-	public String getResponseContentType()
-	{
-		return response.getContentType();
-	}
+    public String getResponseContentType() {
+        return response.getContentType();
+    }
 
-	public int getResponseStatusCode()
-	{
-		return response.getStatusCode();
-	}
+    public int getResponseStatusCode() {
+        return response.getStatusCode();
+    }
 }

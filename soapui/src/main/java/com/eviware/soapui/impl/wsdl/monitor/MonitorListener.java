@@ -22,14 +22,13 @@ import javax.servlet.ServletResponse;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import org.apache.http.HttpRequest;
 
-public interface MonitorListener
-{
-	void onRequest( WsdlProject project, ServletRequest request, ServletResponse response );
+public interface MonitorListener {
+    void onRequest(WsdlProject project, ServletRequest request, ServletResponse response);
 
-	void onMessageExchange( WsdlMonitorMessageExchange messageExchange );
+    void onMessageExchange(WsdlMonitorMessageExchange messageExchange);
 
-	void beforeProxy( WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest );
+    void beforeProxy(WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest);
 
-	void afterProxy( WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest,
-			WsdlMonitorMessageExchange capturedData );
+    void afterProxy(WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest,
+                    WsdlMonitorMessageExchange capturedData);
 }

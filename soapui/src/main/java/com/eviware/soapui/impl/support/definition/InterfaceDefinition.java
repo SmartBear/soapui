@@ -26,21 +26,20 @@ import org.apache.xmlbeans.SchemaTypeSystem;
 
 import com.eviware.soapui.model.iface.Interface;
 
-public interface InterfaceDefinition<T extends Interface>
-{
-	public String getTargetNamespace();
+public interface InterfaceDefinition<T extends Interface> {
+    public String getTargetNamespace();
 
-	public SchemaTypeLoader getSchemaTypeLoader();
+    public SchemaTypeLoader getSchemaTypeLoader();
 
-	public SchemaTypeSystem getSchemaTypeSystem();
+    public SchemaTypeSystem getSchemaTypeSystem();
 
-	public boolean hasSchemaTypes();
+    public boolean hasSchemaTypes();
 
-	public Collection<String> getDefinedNamespaces() throws Exception;
+    public Collection<String> getDefinedNamespaces() throws Exception;
 
-	public SchemaType findType( QName name );
+    public SchemaType findType(QName name);
 
-	public DefinitionCache getDefinitionCache();
+    public DefinitionCache getDefinitionCache();
 
-	public T getInterface();
+    public T getInterface();
 }

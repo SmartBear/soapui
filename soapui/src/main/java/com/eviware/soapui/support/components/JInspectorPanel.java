@@ -20,41 +20,40 @@ import java.util.List;
 
 import javax.swing.JComponent;
 
-public interface JInspectorPanel
-{
-	public <T extends Inspector> T addInspector( final T inspector );
+public interface JInspectorPanel {
+    public <T extends Inspector> T addInspector(final T inspector);
 
-	JComponent getComponent();
+    JComponent getComponent();
 
-	void setDefaultDividerLocation( float v );
+    void setDefaultDividerLocation(float v);
 
-	public void activate( Inspector inspector );
+    public void activate(Inspector inspector);
 
-	void setCurrentInspector( String s );
+    void setCurrentInspector(String s);
 
-	void setDividerLocation( int i );
+    void setDividerLocation(int i);
 
-	void setResizeWeight( double v );
+    void setResizeWeight(double v);
 
-	List<Inspector> getInspectors();
+    List<Inspector> getInspectors();
 
-	Inspector getCurrentInspector();
+    Inspector getCurrentInspector();
 
-	Inspector getInspectorByTitle( String title );
+    Inspector getInspectorByTitle(String title);
 
-	void deactivate();
+    void deactivate();
 
-	void removeInspector( Inspector inspector );
+    void removeInspector(Inspector inspector);
 
-	void setContentComponent( JComponent component );
+    void setContentComponent(JComponent component);
 
-	int getDividerLocation();
+    int getDividerLocation();
 
-	Inspector getInspector( String inspectorId );
+    Inspector getInspector(String inspectorId);
 
-	void setInspectorVisible( Inspector inspector, boolean b );
+    void setInspectorVisible(Inspector inspector, boolean b);
 
-	void setResetDividerLocation();
+    void setResetDividerLocation();
 
-	void release();
+    void release();
 }

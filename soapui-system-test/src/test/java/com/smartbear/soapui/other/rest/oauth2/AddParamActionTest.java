@@ -40,128 +40,113 @@ import static org.junit.Assert.assertThat;
 /**
  * @author Prakash
  */
-@Category( IntegrationTest.class )
-public class AddParamActionTest
-{
-	public static final String PARAM = "Param";
-	private static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
+@Category(IntegrationTest.class)
+public class AddParamActionTest {
+    public static final String PARAM = "Param";
+    private static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
 
-	private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
+    private static NoExitSecurityManagerInstaller noExitSecurityManagerInstaller;
 
-	private JTable paramTable;
-	private RestParamsPropertyHolder params;
-	private static Robot robot;
+    private JTable paramTable;
+    private RestParamsPropertyHolder params;
+    private static Robot robot;
 
-	@BeforeClass
-	public static void setUpOnce()
-	{
-		noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager( new ExitCallHook()
-		{
-			@Override
-			public void exitCalled( int status )
-			{
-				System.out.print( "Exit status : " + status );
-			}
-		} );
-	}
+    @BeforeClass
+    public static void setUpOnce() {
+        noExitSecurityManagerInstaller = NoExitSecurityManagerInstaller.installNoExitSecurityManager(new ExitCallHook() {
+            @Override
+            public void exitCalled(int status) {
+                System.out.print("Exit status : " + status);
+            }
+        });
+    }
 
-	@AfterClass
-	public static void classTearDown() throws InterruptedException
-	{
-		// TODO This is needed to ensure that the last test have stopped before uninstalling, we need a more
-		// clever way to wait for the test though
-		Thread.sleep( WAIT_FOR_LAST_TEST_TO_SHUTDOWN );
-		noExitSecurityManagerInstaller.uninstall();
-	}
+    @AfterClass
+    public static void classTearDown() throws InterruptedException {
+        // TODO This is needed to ensure that the last test have stopped before uninstalling, we need a more
+        // clever way to wait for the test though
+        Thread.sleep(WAIT_FOR_LAST_TEST_TO_SHUTDOWN);
+        noExitSecurityManagerInstaller.uninstall();
+    }
 
 
-	@Before
-	public void setUp() throws SoapUIException
-	{
-		robot = BasicRobot.robotWithCurrentAwtHierarchy();
-		params = ModelItemFactory.makeRestRequest().getParams();
-		paramTable = new JTable( new RestParamsTableModel( params ) );
-	}
+    @Before
+    public void setUp() throws SoapUIException {
+        robot = BasicRobot.robotWithCurrentAwtHierarchy();
+        params = ModelItemFactory.makeRestRequest().getParams();
+        paramTable = new JTable(new RestParamsTableModel(params));
+    }
 
-	@After
-	public void tearDown()
-	{
-		robot.cleanUp();
-	}
+    @After
+    public void tearDown() {
+        robot.cleanUp();
+    }
 
-	@Test
-	public void editsTheValueCellAfterNameCell() throws Exception
-	{
-		setCellEditorForNameAndValueColumns( PARAM );
+    @Test
+    public void editsTheValueCellAfterNameCell() throws Exception {
+        setCellEditorForNameAndValueColumns(PARAM);
 
-		invokeAddParamAction();
+        invokeAddParamAction();
 
-		JTableFixture jTableFixture = new JTableFixture( robot, paramTable );
+        JTableFixture jTableFixture = new JTableFixture(robot, paramTable);
 
-		verifyEditingCell( 0, 0 );
+        verifyEditingCell(0, 0);
 
-		jTableFixture.cell( row( 0 ).column( 0 ) ).stopEditing();
+        jTableFixture.cell(row(0).column(0)).stopEditing();
 
-		verifyEditingCell( 0, 1 );
+        verifyEditingCell(0, 1);
 
-		jTableFixture.cell( row( 0 ).column( 1 ) ).stopEditing();
+        jTableFixture.cell(row(0).column(1)).stopEditing();
 
-	}
+    }
 
-	@Test
-	public void removesThePropertyIfPropertyNameIsEmpty() throws Exception
-	{
-		setCellEditorForNameAndValueColumns( "" );
+    @Test
+    public void removesThePropertyIfPropertyNameIsEmpty() throws Exception {
+        setCellEditorForNameAndValueColumns("");
 
-		invokeAddParamAction();
+        invokeAddParamAction();
 
-		JTableFixture jTableFixture = new JTableFixture( robot, paramTable );
+        JTableFixture jTableFixture = new JTableFixture(robot, paramTable);
 
-		verifyEditingCell( 0, 0 );
+        verifyEditingCell(0, 0);
 
-		jTableFixture.cell( row( 0 ).column( 0 ) ).stopEditing();
+        jTableFixture.cell(row(0).column(0)).stopEditing();
 
-		assertThat( params.getPropertyCount(), is( 0 ) );
-	}
+        assertThat(params.getPropertyCount(), is(0));
+    }
 
-	@Test
-	public void removesThePropertyIfEditingIsCancelledOnNameCell() throws Exception
-	{
-		setCellEditorForNameAndValueColumns( "" );
+    @Test
+    public void removesThePropertyIfEditingIsCancelledOnNameCell() throws Exception {
+        setCellEditorForNameAndValueColumns("");
 
-		invokeAddParamAction();
+        invokeAddParamAction();
 
-		JTableFixture jTableFixture = new JTableFixture( robot, paramTable );
+        JTableFixture jTableFixture = new JTableFixture(robot, paramTable);
 
-		verifyEditingCell( 0, 0 );
+        verifyEditingCell(0, 0);
 
-		jTableFixture.cell( row( 0 ).column( 0 ) ).cancelEditing();
+        jTableFixture.cell(row(0).column(0)).cancelEditing();
 
-		assertThat( params.getPropertyCount(), is( 0 ) );
-	}
+        assertThat(params.getPropertyCount(), is(0));
+    }
 
-	private void setCellEditorForNameAndValueColumns( final String value )
-	{
-		paramTable.setDefaultEditor( String.class, new DefaultCellEditor( new JTextField() )
-		{
-			@Override
-			public Object getCellEditorValue()
-			{
-				return value;
-			}
-		} );
-	}
+    private void setCellEditorForNameAndValueColumns(final String value) {
+        paramTable.setDefaultEditor(String.class, new DefaultCellEditor(new JTextField()) {
+            @Override
+            public Object getCellEditorValue() {
+                return value;
+            }
+        });
+    }
 
-	private void invokeAddParamAction()
-	{
-		ActionEvent actionEvent = Mockito.mock( ActionEvent.class );
-		new com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction( paramTable, params, "Add Param" ).actionPerformed( actionEvent );
-	}
+    private void invokeAddParamAction() {
+        ActionEvent actionEvent = Mockito.mock(ActionEvent.class);
+        new com.eviware.soapui.impl.wsdl.panels.teststeps.support.AddParamAction(paramTable, params, "Add Param").actionPerformed(actionEvent);
+    }
 
-	private void verifyEditingCell( int row, int column ) throws InterruptedException
-	{
-		robot.waitForIdle();
-		assertThat( paramTable.getEditingRow(), is( row ) );
-		assertThat( paramTable.getEditingColumn(), is( column ) );
-	}
+    private void verifyEditingCell(int row, int column) throws InterruptedException {
+        robot.waitForIdle();
+        assertThat(paramTable.getEditingRow(), is(row));
+        assertThat(paramTable.getEditingColumn(), is(column));
+    }
 }

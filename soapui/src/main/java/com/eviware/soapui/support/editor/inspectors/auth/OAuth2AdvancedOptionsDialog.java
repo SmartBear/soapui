@@ -25,98 +25,81 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
-import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.*;
 
-/**
- *
- */
-public class OAuth2AdvancedOptionsDialog
-{
-	public static final MessageSupport messages = MessageSupport.getMessages( OAuth2AdvancedOptionsDialog.class );
-	private ExpirationTimeChooser expirationTimeComponent;
-	private JButton refreshAccessTokenButton;
+public class OAuth2AdvancedOptionsDialog {
+    public static final MessageSupport messages = MessageSupport.getMessages(OAuth2AdvancedOptionsDialog.class);
+    private ExpirationTimeChooser expirationTimeComponent;
+    private JButton refreshAccessTokenButton;
 
+    public OAuth2AdvancedOptionsDialog(OAuth2Profile profile, JButton refreshAccessTokenButton) {
+        this.refreshAccessTokenButton = refreshAccessTokenButton;
+        expirationTimeComponent = new ExpirationTimeChooser(profile);
+        XFormDialog dialog = ADialogBuilder.buildDialog(Form.class);
 
-	public OAuth2AdvancedOptionsDialog( OAuth2Profile profile, JButton refreshAccessTokenButton )
-	{
-		this.refreshAccessTokenButton = refreshAccessTokenButton;
-		expirationTimeComponent = new ExpirationTimeChooser( profile );
-		XFormDialog dialog = ADialogBuilder.buildDialog( Form.class );
+        dialog.getFormField(Form.ACCESS_TOKEN_EXPIRATION_TIME).setProperty("component", expirationTimeComponent);
 
-		dialog.getFormField( Form.ACCESS_TOKEN_EXPIRATION_TIME ).setProperty( "component", expirationTimeComponent );
+        setAccessTokenOptions(profile, dialog);
 
+        setRefreshAccessTokenOptions(profile, dialog);
 
-		setAccessTokenOptions( profile, dialog );
+        if (dialog.show()) {
+            String accessTokenPosition = dialog.getValue(Form.ACCESS_TOKEN_POSITION);
+            profile.setAccessTokenPosition(AccessTokenPosition.valueOf(accessTokenPosition));
 
-		setRefreshAccessTokenOptions( profile, dialog );
+            String refreshAccessTokenMethod = dialog.getValue(Form.AUTOMATIC_ACCESS_TOKEN_REFRESH);
+            profile.setRefreshAccessTokenMethod(OAuth2Profile.RefreshAccessTokenMethods.valueOf(refreshAccessTokenMethod.toUpperCase()));
 
-		if( dialog.show() )
-		{
-			String accessTokenPosition = dialog.getValue( Form.ACCESS_TOKEN_POSITION );
-			profile.setAccessTokenPosition( AccessTokenPosition.valueOf( accessTokenPosition ) );
+            String manualExpirationTime = expirationTimeComponent.getAccessTokenExpirationTime();
+            TimeUnitConfig.Enum expirationTimeUnit = expirationTimeComponent.getAccessTokenExpirationTimeUnit();
+            profile.setManualAccessTokenExpirationTime(manualExpirationTime);
+            profile.setManualAccessTokenExpirationTimeUnit(expirationTimeUnit);
 
-			String refreshAccessTokenMethod = dialog.getValue( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
-			profile.setRefreshAccessTokenMethod( OAuth2Profile.RefreshAccessTokenMethods.valueOf( refreshAccessTokenMethod.toUpperCase() ) );
+            if (expirationTimeComponent.manualExpirationTimeIsSelected()) {
+                profile.setUseManualAccessTokenExpirationTime(true);
+            } else {
+                profile.setUseManualAccessTokenExpirationTime(false);
+            }
 
-			String manualExpirationTime = expirationTimeComponent.getAccessTokenExpirationTime();
-			TimeUnitConfig.Enum expirationTimeUnit = expirationTimeComponent.getAccessTokenExpirationTimeUnit();
-			profile.setManualAccessTokenExpirationTime( manualExpirationTime );
-			profile.setManualAccessTokenExpirationTimeUnit( expirationTimeUnit );
+            enableRefreshAccessTokenButton(profile);
+        }
+    }
 
-			if( expirationTimeComponent.manualExpirationTimeIsSelected() )
-			{
-				profile.setUseManualAccessTokenExpirationTime( true );
-			}
-			else
-			{
-				profile.setUseManualAccessTokenExpirationTime( false );
-			}
+    private void enableRefreshAccessTokenButton(OAuth2Profile profile) {
+        boolean enabled = profile.getRefreshAccessTokenMethod() == OAuth2Profile.RefreshAccessTokenMethods.MANUAL
+                && (!org.apache.commons.lang.StringUtils.isEmpty(profile.getRefreshToken()));
+        refreshAccessTokenButton.setEnabled(enabled);
+        refreshAccessTokenButton.setVisible(enabled);
+    }
 
-			enableRefreshAccessTokenButton( profile );
-		}
-	}
+    private void setRefreshAccessTokenOptions(OAuth2Profile profile, XFormDialog dialog) {
+        XFormRadioGroup refreshOptions = (XFormRadioGroup) dialog.getFormField(Form.AUTOMATIC_ACCESS_TOKEN_REFRESH);
+        refreshOptions.setOptions(OAuth2Profile.RefreshAccessTokenMethods.values());
+        refreshOptions.setValue(profile.getRefreshAccessTokenMethod().name());
+    }
 
-	private void enableRefreshAccessTokenButton( OAuth2Profile profile )
-	{
-		boolean enabled = profile.getRefreshAccessTokenMethod().equals( OAuth2Profile.RefreshAccessTokenMethods.MANUAL )
-				&& ( !org.apache.commons.lang.StringUtils.isEmpty( profile.getRefreshToken() ) );
-		refreshAccessTokenButton.setEnabled( enabled );
-		refreshAccessTokenButton.setVisible( enabled );
-	}
+    private void setAccessTokenOptions(OAuth2Profile profile, XFormDialog dialog) {
+        XFormRadioGroup accessTokenPositionField = (XFormRadioGroup) dialog.getFormField(Form.ACCESS_TOKEN_POSITION);
 
-	private void setRefreshAccessTokenOptions( OAuth2Profile profile, XFormDialog dialog )
-	{
-		XFormRadioGroup refreshOptions = ( XFormRadioGroup )dialog.getFormField( Form.AUTOMATIC_ACCESS_TOKEN_REFRESH );
-		refreshOptions.setOptions( OAuth2Profile.RefreshAccessTokenMethods.values() );
-		refreshOptions.setValue( profile.getRefreshAccessTokenMethod().toString() );
-	}
+        // TODO We're explicity removing the BODY option. Why?
+        AccessTokenPosition[] accessTokenPositions = new AccessTokenPosition[]{AccessTokenPosition.HEADER, AccessTokenPosition.QUERY};
+        accessTokenPositionField.setOptions(accessTokenPositions);
 
-	private void setAccessTokenOptions( OAuth2Profile target, XFormDialog dialog )
-	{
-		XFormRadioGroup accessTokenPositionField = ( XFormRadioGroup )dialog.getFormField( Form.ACCESS_TOKEN_POSITION );
-		String[] accessTokenPositions = new String[] { AccessTokenPosition.HEADER.toString(),
-				AccessTokenPosition.QUERY.toString() };
+        dialog.setValue(Form.ACCESS_TOKEN_POSITION, profile.getAccessTokenPosition().name());
+    }
 
-		accessTokenPositionField.setOptions( accessTokenPositions );
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.OAUTH_ADVANCED_OPTIONS)
+    public interface Form {
+        @AField(description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP)
+        public final static String ACCESS_TOKEN_POSITION = messages.get("Form.AccessTokenPosition.Label");
 
-		dialog.setValue( Form.ACCESS_TOKEN_POSITION, target.getAccessTokenPosition().toString() );
-	}
+        @AField(description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP)
+        public final static String AUTOMATIC_ACCESS_TOKEN_REFRESH = messages.get("Form.AutomaticRefreshAccessToken.Label");
 
-	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.OAUTH_ADVANCED_OPTIONS)
-	public interface Form
-	{
-		@AField(description = "Form.AccessTokenPosition.Description", type = AField.AFieldType.RADIOGROUP)
-		public final static String ACCESS_TOKEN_POSITION = messages.get( "Form.AccessTokenPosition.Label" );
-
-		@AField(description = "Form.AutomaticRefreshAccessToken.Description", type = AField.AFieldType.RADIOGROUP)
-		public final static String AUTOMATIC_ACCESS_TOKEN_REFRESH = messages.get( "Form.AutomaticRefreshAccessToken.Label" );
-
-		@AField(description = "Form.AccessTokenExpirationTime.Description", type = AField.AFieldType.COMPONENT)
-		public final static String ACCESS_TOKEN_EXPIRATION_TIME = messages.get( "Form.AccessTokenExpirationTime.Label" );
-	}
+        @AField(description = "Form.AccessTokenExpirationTime.Description", type = AField.AFieldType.COMPONENT)
+        public final static String ACCESS_TOKEN_EXPIRATION_TIME = messages.get("Form.AccessTokenExpirationTime.Label");
+    }
 }

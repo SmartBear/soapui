@@ -22,23 +22,21 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Renames a WsdlRequest
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RenameRestResourceAction extends AbstractSoapUIAction<RestResource>
-{
-	public RenameRestResourceAction()
-	{
-		super( "Rename", "Renames this Resource" );
-	}
+public class RenameRestResourceAction extends AbstractSoapUIAction<RestResource> {
+    public RenameRestResourceAction() {
+        super("Rename", "Renames this Resource");
+    }
 
-	public void perform( RestResource request, Object param )
-	{
-		String name = UISupport.prompt( "Specify new name for Resource", "Rename Resource", request.getName() );
-		if( name == null || name.equals( request.getName() ) )
-			return;
+    public void perform(RestResource request, Object param) {
+        String name = UISupport.prompt("Specify new name for Resource", "Rename Resource", request.getName());
+        if (name == null || name.equals(request.getName())) {
+            return;
+        }
 
-		request.setName( name );
-	}
+        request.setName(name);
+    }
 }

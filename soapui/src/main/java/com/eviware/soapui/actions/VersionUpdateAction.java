@@ -22,19 +22,16 @@ import javax.swing.Action;
 
 import com.eviware.soapui.support.SoapUIVersionUpdate;
 
-public class VersionUpdateAction extends AbstractAction
-{
+public class VersionUpdateAction extends AbstractAction {
 
-	public VersionUpdateAction()
-	{
-		super( "Check for updates" );
-		putValue( Action.SHORT_DESCRIPTION, "Checks if newer version is available" );
-	}
+    public VersionUpdateAction() {
+        super("Check for updates");
+        putValue(Action.SHORT_DESCRIPTION, "Checks if newer version is available");
+    }
 
-	@Override
-	public void actionPerformed( ActionEvent e )
-	{
-		new SoapUIVersionUpdate().checkForNewVersion( true );
-	}
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        new SoapUIVersionUpdate().checkForNewVersion(true);
+    }
 
 }

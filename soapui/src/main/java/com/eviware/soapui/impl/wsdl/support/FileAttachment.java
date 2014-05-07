@@ -44,298 +44,257 @@ import com.eviware.soapui.support.resolver.ResolveContext;
 
 /**
  * Attachments cached locally for each request
- * 
+ *
  * @author Ole.Matzura
  */
 
-public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> implements WsdlAttachment
-{
-	private AttachmentConfig config;
-	private final static Logger log = Logger.getLogger( FileAttachment.class );
-	private final T modelItem;
-	private BeanPathPropertySupport urlProperty;
+public abstract class FileAttachment<T extends AbstractWsdlModelItem<?>> implements WsdlAttachment {
+    private AttachmentConfig config;
+    private final static Logger log = Logger.getLogger(FileAttachment.class);
+    private final T modelItem;
+    private BeanPathPropertySupport urlProperty;
 
-	public FileAttachment( T modelItem, AttachmentConfig config )
-	{
-		this.modelItem = modelItem;
-		this.config = config;
+    public FileAttachment(T modelItem, AttachmentConfig config) {
+        this.modelItem = modelItem;
+        this.config = config;
 
-		if( config.getTempFilename() != null )
-		{
-			try
-			{
-				log.info( "Moving locally cached file [" + config.getTempFilename() + "] to internal cache.." );
-				File tempFile = new File( config.getTempFilename() );
-				cacheFileLocally( tempFile );
-			}
-			catch( IOException e )
-			{
-				if( !config.isSetData() )
-				{
-					config.setData( new byte[0] );
-					config.setSize( 0 );
-				}
+        if (config.getTempFilename() != null) {
+            try {
+                log.info("Moving locally cached file [" + config.getTempFilename() + "] to internal cache..");
+                File tempFile = new File(config.getTempFilename());
+                cacheFileLocally(tempFile);
+            } catch (IOException e) {
+                if (!config.isSetData()) {
+                    config.setData(new byte[0]);
+                    config.setSize(0);
+                }
 
-				SoapUI.logError( e );
-			}
-		}
+                SoapUI.logError(e);
+            }
+        }
 
-		if( isCached() )
-		{
-			if( config.isSetTempFilename() )
-				config.unsetTempFilename();
+        if (isCached()) {
+            if (config.isSetTempFilename()) {
+                config.unsetTempFilename();
+            }
 
-			if( config.isSetUrl() )
-				config.unsetUrl();
-		}
+            if (config.isSetUrl()) {
+                config.unsetUrl();
+            }
+        }
 
-		urlProperty = new BeanPathPropertySupport( modelItem, config, "url" );
-	}
+        urlProperty = new BeanPathPropertySupport(modelItem, config, "url");
+    }
 
-	public FileAttachment( T modelItem, File file, boolean cache, AttachmentConfig config ) throws IOException
-	{
-		this( modelItem, config );
+    public FileAttachment(T modelItem, File file, boolean cache, AttachmentConfig config) throws IOException {
+        this(modelItem, config);
 
-		config.setName( file.getName() );
-		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
-		config.setContentId( file.getName() );
-		config.setId( UUID.randomUUID().toString() );
+        config.setName(file.getName());
+        config.setContentType(ContentTypeHandler.getContentTypeFromFilename(file.getName()));
+        config.setContentId(file.getName());
+        config.setId(UUID.randomUUID().toString());
 
-		// cache locally if specified
-		if( cache )
-		{
-			cacheFileLocally( file );
-		}
+        // cache locally if specified
+        if (cache) {
+            cacheFileLocally(file);
+        }
 
-		urlProperty.set( file.getPath(), false );
-	}
+        urlProperty.set(file.getPath(), false);
+    }
 
-	public void setName( String value )
-	{
-		config.setName( value );
-	}
+    public void setName(String value) {
+        config.setName(value);
+    }
 
-	public void setUrl( String url )
-	{
-		urlProperty.set( url, true );
-	}
+    public void setUrl(String url) {
+        urlProperty.set(url, true);
+    }
 
-	public void reload( File file, boolean cache ) throws IOException
-	{
-		config.setName( file.getName() );
-		config.setContentType( ContentTypeHandler.getContentTypeFromFilename( file.getName() ) );
-		config.setContentId( file.getName() );
+    public void reload(File file, boolean cache) throws IOException {
+        config.setName(file.getName());
+        config.setContentType(ContentTypeHandler.getContentTypeFromFilename(file.getName()));
+        config.setContentId(file.getName());
 
-		// cache locally if specified
-		if( cache )
-		{
-			cacheFileLocally( file );
-		}
-		else
-		{
-			urlProperty.set( file.getPath(), false );
-			config.unsetData();
-		}
-	}
+        // cache locally if specified
+        if (cache) {
+            cacheFileLocally(file);
+        } else {
+            urlProperty.set(file.getPath(), false);
+            config.unsetData();
+        }
+    }
 
-	public T getModelItem()
-	{
-		return modelItem;
-	}
+    public T getModelItem() {
+        return modelItem;
+    }
 
-	public void cacheFileLocally( File file ) throws FileNotFoundException, IOException
-	{
-		// write attachment-data to tempfile
-		ByteArrayOutputStream data = new ByteArrayOutputStream();
-		ZipOutputStream out = new ZipOutputStream( data );
-		out.putNextEntry( new ZipEntry( config.getName() ) );
+    public void cacheFileLocally(File file) throws FileNotFoundException, IOException {
+        // write attachment-data to tempfile
+        ByteArrayOutputStream data = new ByteArrayOutputStream();
+        ZipOutputStream out = new ZipOutputStream(data);
+        out.putNextEntry(new ZipEntry(config.getName()));
 
-		InputStream in = new FileInputStream( file );
-		long sz = file.length();
-		config.setSize( sz );
+        InputStream in = new FileInputStream(file);
+        long sz = file.length();
+        config.setSize(sz);
 
-		Tools.writeAll( out, in );
+        Tools.writeAll(out, in);
 
-		in.close();
-		out.closeEntry();
-		out.finish();
-		out.close();
-		data.close();
+        in.close();
+        out.closeEntry();
+        out.finish();
+        out.close();
+        data.close();
 
-		config.setData( data.toByteArray() );
-	}
+        config.setData(data.toByteArray());
+    }
 
-	public String getContentType()
-	{
-		AttachmentEncoding encoding = getEncoding();
-		if( encoding == AttachmentEncoding.NONE )
-			return config.getContentType();
-		else
-			return "application/octet-stream";
-	}
+    public String getContentType() {
+        AttachmentEncoding encoding = getEncoding();
+        if (encoding == AttachmentEncoding.NONE) {
+            return config.getContentType();
+        } else {
+            return "application/octet-stream";
+        }
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		BufferedInputStream inputStream = null;
+    public InputStream getInputStream() throws IOException {
+        BufferedInputStream inputStream = null;
 
-		if( isCached() )
-		{
-			ZipInputStream zipInputStream = new ZipInputStream( new ByteArrayInputStream( config.getData() ) );
-			zipInputStream.getNextEntry();
-			inputStream = new BufferedInputStream( zipInputStream );
-		}
-		else
-		{
-			String url = urlProperty.expand();
-			inputStream = new BufferedInputStream( url == null ? new ByteArrayInputStream( new byte[0] )
-					: new FileInputStream( url ) );
-		}
+        if (isCached()) {
+            ZipInputStream zipInputStream = new ZipInputStream(new ByteArrayInputStream(config.getData()));
+            zipInputStream.getNextEntry();
+            inputStream = new BufferedInputStream(zipInputStream);
+        } else {
+            String url = urlProperty.expand();
+            inputStream = new BufferedInputStream(url == null ? new ByteArrayInputStream(new byte[0])
+                    : new FileInputStream(url));
+        }
 
-		AttachmentEncoding encoding = getEncoding();
-		if( encoding == AttachmentEncoding.BASE64 )
-		{
-			ByteArrayOutputStream data = Tools.readAll( inputStream, Tools.READ_ALL );
-			return new ByteArrayInputStream( Base64.encodeBase64( data.toByteArray() ) );
-		}
-		else if( encoding == AttachmentEncoding.HEX )
-		{
-			ByteArrayOutputStream data = Tools.readAll( inputStream, Tools.READ_ALL );
-			return new ByteArrayInputStream( new String( Hex.encodeHex( data.toByteArray() ) ).getBytes() );
-		}
+        AttachmentEncoding encoding = getEncoding();
+        if (encoding == AttachmentEncoding.BASE64) {
+            ByteArrayOutputStream data = Tools.readAll(inputStream, Tools.READ_ALL);
+            return new ByteArrayInputStream(Base64.encodeBase64(data.toByteArray()));
+        } else if (encoding == AttachmentEncoding.HEX) {
+            ByteArrayOutputStream data = Tools.readAll(inputStream, Tools.READ_ALL);
+            return new ByteArrayInputStream(new String(Hex.encodeHex(data.toByteArray())).getBytes());
+        }
 
-		return inputStream;
-	}
+        return inputStream;
+    }
 
-	public String getName()
-	{
-		return config.getName();
-	}
+    public String getName() {
+        return config.getName();
+    }
 
-	public long getSize()
-	{
-		if( isCached() )
-		{
-			return config.getSize();
-		}
-		else
-		{
-			String url = urlProperty.expand();
-			if( url != null )
-			{
-				File file = new File( url );
-				if( file.exists() )
-					return file.length();
-			}
-		}
+    public long getSize() {
+        if (isCached()) {
+            return config.getSize();
+        } else {
+            String url = urlProperty.expand();
+            if (url != null) {
+                File file = new File(url);
+                if (file.exists()) {
+                    return file.length();
+                }
+            }
+        }
 
-		return -1;
-	}
+        return -1;
+    }
 
-	public void release()
-	{
-		if( isCached() )
-			new File( config.getTempFilename() ).delete();
-	}
+    public void release() {
+        if (isCached()) {
+            new File(config.getTempFilename()).delete();
+        }
+    }
 
-	public String getPart()
-	{
-		return config.getPart();
-	}
+    public String getPart() {
+        return config.getPart();
+    }
 
-	public void setContentType( String contentType )
-	{
-		config.setContentType( contentType );
-	}
+    public void setContentType(String contentType) {
+        config.setContentType(contentType);
+    }
 
-	public void setPart( String part )
-	{
-		config.setPart( part );
-	}
+    public void setPart(String part) {
+        config.setPart(part);
+    }
 
-	public void setData( byte[] data )
-	{
-		try
-		{
-			// write attachment-data to tempfile
-			ByteArrayOutputStream tempData = new ByteArrayOutputStream();
-			ZipOutputStream out = new ZipOutputStream( tempData );
-			out.putNextEntry( new ZipEntry( config.getName() ) );
-			config.setSize( data.length );
-			out.write( data );
-			out.closeEntry();
-			out.finish();
-			out.close();
-			config.setData( tempData.toByteArray() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+    public void setData(byte[] data) {
+        try {
+            // write attachment-data to tempfile
+            ByteArrayOutputStream tempData = new ByteArrayOutputStream();
+            ZipOutputStream out = new ZipOutputStream(tempData);
+            out.putNextEntry(new ZipEntry(config.getName()));
+            config.setSize(data.length);
+            out.write(data);
+            out.closeEntry();
+            out.finish();
+            out.close();
+            config.setData(tempData.toByteArray());
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	public byte[] getData() throws IOException
-	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		Tools.writeAll( out, getInputStream() );
-		return out.toByteArray();
-	}
+    public byte[] getData() throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Tools.writeAll(out, getInputStream());
+        return out.toByteArray();
+    }
 
-	public String getUrl()
-	{
-		return urlProperty.get();
-	}
+    public String getUrl() {
+        return urlProperty.get();
+    }
 
-	public boolean isCached()
-	{
-		return config.isSetData();
-	}
+    public boolean isCached() {
+        return config.isSetData();
+    }
 
-	abstract public AttachmentType getAttachmentType();
+    abstract public AttachmentType getAttachmentType();
 
-	public void updateConfig( AttachmentConfig config )
-	{
-		this.config = config;
-		urlProperty.setConfig( config );
-	}
+    public void updateConfig(AttachmentConfig config) {
+        this.config = config;
+        urlProperty.setConfig(config);
+    }
 
-	public AttachmentConfig getConfig()
-	{
-		return config;
-	}
+    public AttachmentConfig getConfig() {
+        return config;
+    }
 
-	public void setContentID( String contentID )
-	{
-		if( ( contentID == null || contentID.length() == 0 ) && config.isSetContentId() )
-			config.unsetContentId();
-		else
-			config.setContentId( contentID );
-	}
+    public void setContentID(String contentID) {
+        if ((contentID == null || contentID.length() == 0) && config.isSetContentId()) {
+            config.unsetContentId();
+        } else {
+            config.setContentId(contentID);
+        }
+    }
 
-	public String getContentID()
-	{
-		return config.getContentId();
-	}
+    public String getContentID() {
+        return config.getContentId();
+    }
 
-	public void resolve( ResolveContext<?> context )
-	{
-		if( !isCached() )
-			urlProperty.resolveFile( context, "Missing attachment [" + getName() + "]", null, null, false );
-	}
+    public void resolve(ResolveContext<?> context) {
+        if (!isCached()) {
+            urlProperty.resolveFile(context, "Missing attachment [" + getName() + "]", null, null, false);
+        }
+    }
 
-	public String getContentEncoding()
-	{
-		AttachmentEncoding encoding = getEncoding();
-		if( encoding == AttachmentEncoding.BASE64 )
-			return "base64";
-		else if( encoding == AttachmentEncoding.HEX )
-			return "hex";
-		else
-			return "binary";
-	}
+    public String getContentEncoding() {
+        AttachmentEncoding encoding = getEncoding();
+        if (encoding == AttachmentEncoding.BASE64) {
+            return "base64";
+        } else if (encoding == AttachmentEncoding.HEX) {
+            return "hex";
+        } else {
+            return "binary";
+        }
+    }
 
-	public void addExternalDependency( List<ExternalDependency> dependencies )
-	{
-		if( !isCached() )
-			dependencies.add( new PathPropertyExternalDependency( urlProperty ) );
-	}
+    public void addExternalDependency(List<ExternalDependency> dependencies) {
+        if (!isCached()) {
+            dependencies.add(new PathPropertyExternalDependency(urlProperty));
+        }
+    }
 }

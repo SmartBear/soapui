@@ -22,14 +22,13 @@ package com.eviware.soapui.settings;
  * @author Ole.Matzura
  */
 
-public interface LoadUISettings
-{
-	public final static String LOADUI_PATH = LoadUISettings.class.getSimpleName() + "@" + "loadui_path";
-	public final static String LOADUI_CAJO_SERVER = LoadUISettings.class.getSimpleName() + "@" + "cajo_server_name";
-	public final static String LOADUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_port";
-	public final static String LOADUI_CAJO_ITEM_NAME = LoadUISettings.class.getSimpleName() + "@" + "cajo_item_name";
-	public final static String SOAPUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_soapui_port";
+public interface LoadUISettings {
+    public final static String LOADUI_PATH = LoadUISettings.class.getSimpleName() + "@" + "loadui_path";
+    public final static String LOADUI_CAJO_SERVER = LoadUISettings.class.getSimpleName() + "@" + "cajo_server_name";
+    public final static String LOADUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_port";
+    public final static String LOADUI_CAJO_ITEM_NAME = LoadUISettings.class.getSimpleName() + "@" + "cajo_item_name";
+    public final static String SOAPUI_CAJO_PORT = LoadUISettings.class.getSimpleName() + "@" + "cajo_soapui_port";
 
-	public final static String START_CAJO_SERVER_AT_STARTUP = LoadUISettings.class.getSimpleName() + "@" + "start_cajo_server_at_startup";
+    public final static String START_CAJO_SERVER_AT_STARTUP = LoadUISettings.class.getSimpleName() + "@" + "start_cajo_server_at_startup";
 
 }

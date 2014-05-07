@@ -12,46 +12,42 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.panels.request;
+*/
+package com.eviware.soapui.impl.rest.panels.request;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class TextPanelWithTopLabel extends JPanel
-{
+public class TextPanelWithTopLabel extends JPanel {
 
-	JLabel textLabel;
-	JTextField textField;
+    JLabel textLabel;
+    JTextField textField;
 
 
-	public TextPanelWithTopLabel( String label, String text, JTextField textField )
-	{
-		textLabel = new JLabel( label );
-		this.textField = textField;
-		textField.setText( text );
-		setToolTipText( text );
-		super.setLayout( new BorderLayout() );
-		super.add( textLabel, BorderLayout.NORTH );
-		super.add( textField, BorderLayout.SOUTH );
+    public TextPanelWithTopLabel(String label, String text, JTextField textField) {
+        textLabel = new JLabel(label);
+        this.textField = textField;
+        textField.setText(text);
+        setToolTipText(text);
+        super.setLayout(new BorderLayout());
+        super.add(textLabel, BorderLayout.NORTH);
+        super.add(textField, BorderLayout.SOUTH);
 
-	}
+    }
 
-	public String getText()
-	{
-		return textField.getText();
-	}
+    public String getText() {
+        return textField.getText();
+    }
 
-	public void setText( String text )
-	{
-		textField.setText( text );
-		setToolTipText( text );
-	}
+    public void setText(String text) {
+        textField.setText(text);
+        setToolTipText(text);
+    }
 
-	@Override
-	public void setToolTipText( String text )
-	{
-		super.setToolTipText( text );
-		textLabel.setToolTipText( text );
-		textField.setToolTipText( text );
-	}
+    @Override
+    public void setToolTipText(String text) {
+        super.setToolTipText(text);
+        textLabel.setToolTipText(text);
+        textField.setToolTipText(text);
+    }
 }

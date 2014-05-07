@@ -29,34 +29,28 @@ import java.net.ProxySelector;
 /**
  * @author Joel
  */
-public class OverridableProxySelectorRoutePlanner extends ProxySelectorRoutePlanner
-{
-	private static final String FORCE_DIRECT_CONNECTION = "FORCE_DIRECT_CONNECTION";
+public class OverridableProxySelectorRoutePlanner extends ProxySelectorRoutePlanner {
+    private static final String FORCE_DIRECT_CONNECTION = "FORCE_DIRECT_CONNECTION";
 
-	static void setForceDirectConnection( HttpParams params )
-	{
-		params.setBooleanParameter( FORCE_DIRECT_CONNECTION, true );
-	}
+    static void setForceDirectConnection(HttpParams params) {
+        params.setBooleanParameter(FORCE_DIRECT_CONNECTION, true);
+    }
 
-	public OverridableProxySelectorRoutePlanner( SchemeRegistry registry, ProxySelector proxySelector )
-	{
-		super( registry, proxySelector );
-	}
+    public OverridableProxySelectorRoutePlanner(SchemeRegistry registry, ProxySelector proxySelector) {
+        super(registry, proxySelector);
+    }
 
-	@Override
-	protected HttpHost determineProxy( HttpHost target, HttpRequest request, HttpContext context ) throws HttpException
-	{
-		if( request.getParams().getBooleanParameter( FORCE_DIRECT_CONNECTION, false ) )
-		{
-			return null;
-		}
-		final HttpHost proxy = ConnRouteParams.getDefaultProxy( request.getParams() );
-		// Proxy should be able to be set for a request with ConnRoutePNames.DEFAULT_PROXY
-		if( proxy != null )
-		{
-			return proxy;
-		}
+    @Override
+    protected HttpHost determineProxy(HttpHost target, HttpRequest request, HttpContext context) throws HttpException {
+        if (request.getParams().getBooleanParameter(FORCE_DIRECT_CONNECTION, false)) {
+            return null;
+        }
+        final HttpHost proxy = ConnRouteParams.getDefaultProxy(request.getParams());
+        // Proxy should be able to be set for a request with ConnRoutePNames.DEFAULT_PROXY
+        if (proxy != null) {
+            return proxy;
+        }
 
-		return super.determineProxy( target, request, context );
-	}
+        return super.determineProxy(target, request, context);
+    }
 }

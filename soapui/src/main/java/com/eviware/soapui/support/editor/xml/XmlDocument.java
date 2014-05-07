@@ -23,17 +23,16 @@ import com.eviware.soapui.support.editor.EditorDocument;
 
 /**
  * Document class used by XmlEditors
- * 
+ *
  * @author ole.matzura
  */
 
-public interface XmlDocument extends PropertyChangeNotifier, EditorDocument
-{
-	public final static String XML_PROPERTY = XmlDocument.class.getName() + "@xml";
+public interface XmlDocument extends PropertyChangeNotifier, EditorDocument {
+    public final static String XML_PROPERTY = XmlDocument.class.getName() + "@xml";
 
-	public String getXml();
+    public String getXml();
 
-	public void setXml( String xml );
+    public void setXml(String xml);
 
-	public SchemaTypeSystem getTypeSystem();
+    public SchemaTypeSystem getTypeSystem();
 }

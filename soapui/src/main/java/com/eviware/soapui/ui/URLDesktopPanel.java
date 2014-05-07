@@ -26,65 +26,55 @@ import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.lang.reflect.InvocationTargetException;
 
-public class URLDesktopPanel extends DefaultDesktopPanel
-{
-	private WebViewBasedBrowserComponent browser;
-	private boolean closed;
+public class URLDesktopPanel extends DefaultDesktopPanel {
+    private WebViewBasedBrowserComponent browser;
+    private boolean closed;
 
-	public URLDesktopPanel( String title, String description, String url ) throws InterruptedException,
-			InvocationTargetException
-	{
-		super( title, description, new JPanel( new BorderLayout() ) );
+    public URLDesktopPanel(String title, String description, String url) throws InterruptedException,
+            InvocationTargetException {
+        super(title, description, new JPanel(new BorderLayout()));
 
-		JPanel panel = ( JPanel )getComponent();
+        JPanel panel = (JPanel) getComponent();
 
-		browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER );
-		panel.add( browser.getComponent(), BorderLayout.CENTER );
+        browser = WebViewBasedBrowserComponentFactory.createBrowserComponent(false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER);
+        panel.add(browser.getComponent(), BorderLayout.CENTER);
 
-		if( StringUtils.hasContent( url ) )
-			navigate( url, null, true );
-	}
+        if (StringUtils.hasContent(url)) {
+            navigate(url, null, true);
+        }
+    }
 
-	public void navigate( String url, String errorUrl, boolean async )
-	{
-		if( async )
-		{
-			SwingUtilities.invokeLater( new Navigator( url, errorUrl ) );
-		}
-		else
-		{
-			browser.navigate( url );
-		}
-	}
+    public void navigate(String url, String errorUrl, boolean async) {
+        if (async) {
+            SwingUtilities.invokeLater(new Navigator(url, errorUrl));
+        } else {
+            browser.navigate(url);
+        }
+    }
 
-	public boolean onClose( boolean canCancel )
-	{
-		browser.close( true );
-		closed = true;
-		return super.onClose( canCancel );
-	}
+    public boolean onClose(boolean canCancel) {
+        browser.close(true);
+        closed = true;
+        return super.onClose(canCancel);
+    }
 
-	public boolean isClosed()
-	{
-		return closed;
-	}
+    public boolean isClosed() {
+        return closed;
+    }
 
-	private class Navigator implements Runnable
-	{
-		private final String url;
-		private final String errorUrl;
+    private class Navigator implements Runnable {
+        private final String url;
+        private final String errorUrl;
 
-		public Navigator( String url, String errorUrl )
-		{
-			this.url = url;
-			this.errorUrl = errorUrl;
-		}
+        public Navigator(String url, String errorUrl) {
+            this.url = url;
+            this.errorUrl = errorUrl;
+        }
 
-		public void run()
-		{
+        public void run() {
 
-			browser.navigate( url );
+            browser.navigate(url);
 
-		}
-	}
+        }
+    }
 }

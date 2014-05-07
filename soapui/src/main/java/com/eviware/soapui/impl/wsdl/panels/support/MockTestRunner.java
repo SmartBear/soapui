@@ -29,61 +29,50 @@ import com.eviware.soapui.model.testsuite.TestStepResult;
 
 /**
  * Dummy TestRunner used when executing TestSteps one by one
- * 
+ *
  * @author ole.matzura
  */
 
-public class MockTestRunner extends AbstractMockTestRunner<WsdlTestCase> implements TestCaseRunner
-{
-	private MockTestRunContext mockRunContext;
+public class MockTestRunner extends AbstractMockTestRunner<WsdlTestCase> implements TestCaseRunner {
+    private MockTestRunContext mockRunContext;
 
-	public MockTestRunner( WsdlTestCase testCase )
-	{
-		this( testCase, null );
-	}
+    public MockTestRunner(WsdlTestCase testCase) {
+        this(testCase, null);
+    }
 
-	public MockTestRunner( WsdlTestCase testCase, Logger logger )
-	{
-		super( testCase, logger );
-	}
+    public MockTestRunner(WsdlTestCase testCase, Logger logger) {
+        super(testCase, logger);
+    }
 
-	public WsdlTestCase getTestCase()
-	{
-		return getTestRunnable();
-	}
+    public WsdlTestCase getTestCase() {
+        return getTestRunnable();
+    }
 
-	public List<TestStepResult> getResults()
-	{
-		return new ArrayList<TestStepResult>();
-	}
+    public List<TestStepResult> getResults() {
+        return new ArrayList<TestStepResult>();
+    }
 
-	public TestCaseRunContext getRunContext()
-	{
-		return mockRunContext;
-	}
+    public TestCaseRunContext getRunContext() {
+        return mockRunContext;
+    }
 
-	public TestStepResult runTestStep( TestStep testStep )
-	{
-		return testStep.run( this, mockRunContext );
-	}
+    public TestStepResult runTestStep(TestStep testStep) {
+        return testStep.run(this, mockRunContext);
+    }
 
-	public TestStepResult runTestStepByName( String name )
-	{
-		return getTestCase().getTestStepByName( name ).run( this, mockRunContext );
-	}
+    public TestStepResult runTestStepByName(String name) {
+        return getTestCase().getTestStepByName(name).run(this, mockRunContext);
+    }
 
-	public void gotoStep( int index )
-	{
-		getLog().info( "Going to step " + index + " [" + getTestCase().getTestStepAt( index ).getName() + "]" );
-	}
+    public void gotoStep(int index) {
+        getLog().info("Going to step " + index + " [" + getTestCase().getTestStepAt(index).getName() + "]");
+    }
 
-	public void gotoStepByName( String stepName )
-	{
-		getLog().info( "Going to step [" + stepName + "]" );
-	}
+    public void gotoStepByName(String stepName) {
+        getLog().info("Going to step [" + stepName + "]");
+    }
 
-	public void setMockRunContext( MockTestRunContext mockRunContext )
-	{
-		this.mockRunContext = mockRunContext;
-	}
+    public void setMockRunContext(MockTestRunContext mockRunContext) {
+        this.mockRunContext = mockRunContext;
+    }
 }

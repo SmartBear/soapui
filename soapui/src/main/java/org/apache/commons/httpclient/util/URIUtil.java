@@ -57,7 +57,7 @@ import org.apache.commons.httpclient.URIException;
  * than {@link org.apache.commons.httpclient.URI}.
  *
  * @author <a href="mailto:jericho@apache.org">Sung-Gu</a>
- * @version $Revision: 507321 $ $Date: 2002/03/14 15:14:01 
+ * @version $Revision: 507321 $ $Date: 2002/03/14 15:14:01
  */
 public class URIUtil {
 
@@ -74,7 +74,9 @@ public class URIUtil {
      * @return the basename string; an empty string if the path ends with slash
      */
     public static String getName(String uri) {
-        if (uri == null || uri.length() == 0) { return uri; } 
+        if (uri == null || uri.length() == 0) {
+            return uri;
+        }
         String path = URIUtil.getPath(uri);
         int at = path.lastIndexOf("/");
         int to = path.length();
@@ -89,12 +91,14 @@ public class URIUtil {
      * @return the query string; <code>null</code> if empty or undefined
      */
     public static String getQuery(String uri) {
-        if (uri == null || uri.length() == 0) { return null; } 
+        if (uri == null || uri.length() == 0) {
+            return null;
+        }
         // consider of net_path
         int at = uri.indexOf("//");
         int from = uri.indexOf(
-            "/", 
-            at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
+                "/",
+                at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
         );
         // the authority part of URI ignored
         int to = uri.length();
@@ -123,12 +127,12 @@ public class URIUtil {
     public static String getPath(String uri) {
         if (uri == null) {
             return null;
-        } 
+        }
         // consider of net_path
         int at = uri.indexOf("//");
         int from = uri.indexOf(
-            "/", 
-            at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
+                "/",
+                at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
         );
         // the authority part of URI ignored 
         int to = uri.length();
@@ -154,12 +158,12 @@ public class URIUtil {
     public static String getPathQuery(String uri) {
         if (uri == null) {
             return null;
-        } 
+        }
         // consider of net_path
         int at = uri.indexOf("//");
         int from = uri.indexOf(
-            "/", 
-            at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
+                "/",
+                at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
         );
         // the authority part of URI ignored
         int to = uri.length();
@@ -182,12 +186,12 @@ public class URIUtil {
     public static String getFromPath(String uri) {
         if (uri == null) {
             return null;
-        } 
+        }
         // consider of net_path
         int at = uri.indexOf("//");
         int from = uri.indexOf(
-            "/", 
-            at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
+                "/",
+                at >= 0 ? (uri.lastIndexOf("/", at - 1) >= 0 ? 0 : at + 2) : 0
         );
         // get the path and its rest.
         return (from < 0) ? (at >= 0 ? "/" : uri) : uri.substring(from);
@@ -202,16 +206,14 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     *
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
     public static String encodeAll(String unescaped) throws URIException {
         return encodeAll(unescaped, URI.getDefaultProtocolCharset());
     }
- 
+
 
     /**
      * Get the all escaped and encoded string with a given charset.
@@ -219,19 +221,17 @@ public class URIUtil {
      * empty, String charset)</code>.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodeAll(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, empty, charset);
     }
-  
+
 
     /**
      * Escape and encode a string regarded as within the authority component of
@@ -241,14 +241,12 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
     public static String encodeWithinAuthority(String unescaped)
-        throws URIException {
+            throws URIException {
 
         return encodeWithinAuthority(unescaped, URI.getDefaultProtocolCharset());
     }
@@ -261,15 +259,13 @@ public class URIUtil {
      * "/" are reserved.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodeWithinAuthority(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, URI.allowed_within_authority, charset);
     }
@@ -281,9 +277,7 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
@@ -297,23 +291,21 @@ public class URIUtil {
      * an URI with a given charset.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodePathQuery(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         int at = unescaped.indexOf('?');
         if (at < 0) {
             return encode(unescaped, URI.allowed_abs_path, charset);
         }
         // else
-        return  encode(unescaped.substring(0, at), URI.allowed_abs_path, charset)
-            + '?' + encode(unescaped.substring(at + 1), URI.allowed_query, charset);
+        return encode(unescaped.substring(0, at), URI.allowed_abs_path, charset)
+                + '?' + encode(unescaped.substring(at + 1), URI.allowed_query, charset);
     }
 
 
@@ -326,14 +318,12 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
     public static String encodeWithinPath(String unescaped)
-        throws URIException {
+            throws URIException {
 
         return encodeWithinPath(unescaped, URI.getDefaultProtocolCharset());
     }
@@ -347,15 +337,13 @@ public class URIUtil {
      * "/", ";", "=", and "?" are reserved.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodeWithinPath(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, URI.allowed_within_path, charset);
     }
@@ -367,9 +355,7 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
@@ -383,15 +369,13 @@ public class URIUtil {
      * a given charset.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodePath(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, URI.allowed_abs_path, charset);
     }
@@ -406,14 +390,12 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
     public static String encodeWithinQuery(String unescaped)
-        throws URIException {
+            throws URIException {
 
         return encodeWithinQuery(unescaped, URI.getDefaultProtocolCharset());
     }
@@ -427,15 +409,13 @@ public class URIUtil {
      * within a query component are being included in encoding the query.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodeWithinQuery(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, URI.allowed_within_query, charset);
     }
@@ -450,9 +430,7 @@ public class URIUtil {
      *
      * @param unescaped an unescaped string
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      * @see #encode
      */
@@ -469,15 +447,13 @@ public class URIUtil {
      * is recommended to use in encoding the whole query.
      *
      * @param unescaped an unescaped string
-     * @param charset the charset
+     * @param charset   the charset
      * @return the escaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see #encode
      */
     public static String encodeQuery(String unescaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, URI.allowed_query, charset);
     }
@@ -488,15 +464,13 @@ public class URIUtil {
      * escaped and the default protocol charset.
      *
      * @param unescaped a string
-     * @param allowed allowed characters not to be escaped
+     * @param allowed   allowed characters not to be escaped
      * @return the escaped string
-     * 
      * @throws URIException if the default protocol charset is not supported
-     * 
      * @see URI#getDefaultProtocolCharset
      */
     public static String encode(String unescaped, BitSet allowed)
-        throws URIException {
+            throws URIException {
 
         return encode(unescaped, allowed, URI.getDefaultProtocolCharset());
     }
@@ -507,14 +481,14 @@ public class URIUtil {
      * escaped and a given charset.
      *
      * @param unescaped a string
-     * @param allowed allowed characters not to be escaped
-     * @param charset the charset
+     * @param allowed   allowed characters not to be escaped
+     * @param charset   the charset
      * @return the escaped string
      */
     public static String encode(String unescaped, BitSet allowed,
-            String charset) throws URIException {
-        byte[] rawdata = URLCodec.encodeUrl(allowed, 
-            EncodingUtil.getBytes(unescaped, charset));
+                                String charset) throws URIException {
+        byte[] rawdata = URLCodec.encodeUrl(allowed,
+                EncodingUtil.getBytes(unescaped, charset));
         return EncodingUtil.getAsciiString(rawdata);
     }
 
@@ -525,9 +499,7 @@ public class URIUtil {
      *
      * @param escaped a string
      * @return the unescaped string
-     * 
      * @throws URIException if the string cannot be decoded (invalid)
-     * 
      * @see URI#getDefaultProtocolCharset
      */
     public static String decode(String escaped) throws URIException {
@@ -545,13 +517,11 @@ public class URIUtil {
      * @param escaped a string
      * @param charset the charset
      * @return the unescaped string
-     * 
      * @throws URIException if the charset is not supported
-     * 
      * @see Coder#decode
      */
     public static String decode(String escaped, String charset)
-        throws URIException {
+            throws URIException {
 
         return Coder.decode(escaped.toCharArray(), charset);
     }
@@ -561,7 +531,7 @@ public class URIUtil {
     /**
      * The basic and internal utility for URI escape and character encoding and
      * decoding.
-     * 
+     *
      * @deprecated use org.apache.commons.codec.net.URLCodec
      */
     protected static class Coder extends URI {
@@ -571,16 +541,14 @@ public class URIUtil {
          * escaped.
          *
          * @param unescapedComponent an unescaped component
-         * @param allowed allowed characters not to be escaped
-         * @param charset the charset to encode
+         * @param allowed            allowed characters not to be escaped
+         * @param charset            the charset to encode
          * @return the escaped and encoded string
-         * 
          * @throws URIException if the charset is not supported
-         * 
          * @deprecated use org.apache.commons.codec.net.URLCodec
          */
-        public static char[] encode(String unescapedComponent, BitSet allowed, String charset) 
-            throws URIException {
+        public static char[] encode(String unescapedComponent, BitSet allowed, String charset)
+                throws URIException {
 
             return URI.encode(unescapedComponent, allowed, charset);
         }
@@ -590,15 +558,13 @@ public class URIUtil {
          * Unescape and decode a given string.
          *
          * @param escapedComponent an being-unescaped component
-         * @param charset the charset to decode
+         * @param charset          the charset to decode
          * @return the escaped and encoded string
-         * 
          * @throws URIException if the charset is not supported
-         * 
          * @deprecated use org.apache.commons.codec.net.URLCodec
          */
         public static String decode(char[] escapedComponent, String charset)
-            throws URIException {
+                throws URIException {
 
             return URI.decode(escapedComponent, charset);
         }
@@ -616,8 +582,8 @@ public class URIUtil {
                 if (c > 128) {
                     return false;
                 } else if (c == '%') {
-                    if (Character.digit(original[++i], 16) == -1 
-                        || Character.digit(original[++i], 16) == -1) {
+                    if (Character.digit(original[++i], 16) == -1
+                            || Character.digit(original[++i], 16) == -1) {
                         return false;
                     }
                 }
@@ -631,8 +597,8 @@ public class URIUtil {
          * for a given string.
          *
          * @param original a given string
-         * @param from a replacing character array
-         * @param to a replaced character array
+         * @param from     a replacing character array
+         * @param to       a replaced character array
          * @return the replaced string
          */
         public static String replace(String original, char[] from, char[] to) {
@@ -647,8 +613,8 @@ public class URIUtil {
          * Replace from a given character to given character for a given string.
          *
          * @param original a given string
-         * @param from a replacing character array
-         * @param to a replaced character array
+         * @param from     a replacing character array
+         * @param to       a replaced character array
          * @return the replaced string
          */
         public static String replace(String original, char from, char to) {

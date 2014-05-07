@@ -36,102 +36,99 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction<WsdlMockResponse>
-{
-	public final static String SOAPUI_ACTION_ID = "AddMockResponseToTestCaseAction";
-	private XFormDialog dialog;
+public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction<WsdlMockResponse> {
+    public final static String SOAPUI_ACTION_ID = "AddMockResponseToTestCaseAction";
+    private XFormDialog dialog;
 
-	public AddMockResponseToTestCaseAction()
-	{
-		super( "Add to TestCase", "Adds this MockResponse to a TestCase" );
-	}
+    public AddMockResponseToTestCaseAction() {
+        super("Add to TestCase", "Adds this MockResponse to a TestCase");
+    }
 
-	public void perform( WsdlMockResponse mockResponse, Object param )
-	{
-		WsdlMockService mockService = mockResponse.getMockOperation().getMockService();
-		WsdlTestCase testCase = getTargetTestCase( (WsdlProject)mockService.getProject() );
-		if( testCase == null )
-			return;
+    public void perform(WsdlMockResponse mockResponse, Object param) {
+        WsdlMockService mockService = mockResponse.getMockOperation().getMockService();
+        WsdlTestCase testCase = getTargetTestCase(mockService.getProject());
+        if (testCase == null) {
+            return;
+        }
 
-		addMockResponseToTestCase( mockResponse, testCase, -1 );
-	}
+        addMockResponseToTestCase(mockResponse, testCase, -1);
+    }
 
-	public void addMockResponseToTestCase( WsdlMockResponse mockResponse, WsdlTestCase testCase, int index )
-	{
-		if( mockResponse.getMockOperation().getOperation() == null )
-		{
-			UISupport.showErrorMessage( "Missing operation for this mock response" );
-			return;
-		}
+    public void addMockResponseToTestCase(WsdlMockResponse mockResponse, WsdlTestCase testCase, int index) {
+        if (mockResponse.getMockOperation().getOperation() == null) {
+            UISupport.showErrorMessage("Missing operation for this mock response");
+            return;
+        }
 
-		WsdlMockService mockService = mockResponse.getMockOperation().getMockService();
+        WsdlMockService mockService = mockResponse.getMockOperation().getMockService();
 
-		if( dialog == null )
-			dialog = ADialogBuilder.buildDialog( Form.class );
+        if (dialog == null) {
+            dialog = ADialogBuilder.buildDialog(Form.class);
+        }
 
-		dialog.setValue( Form.STEP_NAME, mockResponse.getMockOperation().getName() );
-		dialog.setBooleanValue( Form.CLOSE_EDITOR, true );
-		dialog.setBooleanValue( Form.SHOW_TESTCASE, true );
-		dialog.setIntValue( Form.PORT, mockService.getPort() );
-		dialog.setValue( Form.PATH, mockService.getPath() );
+        dialog.setValue(Form.STEP_NAME, mockResponse.getMockOperation().getName());
+        dialog.setBooleanValue(Form.CLOSE_EDITOR, true);
+        dialog.setBooleanValue(Form.SHOW_TESTCASE, true);
+        dialog.setIntValue(Form.PORT, mockService.getPort());
+        dialog.setValue(Form.PATH, mockService.getPath());
 
-		SoapUIDesktop desktop = SoapUI.getDesktop();
-		dialog.getFormField( Form.CLOSE_EDITOR ).setEnabled( desktop != null && desktop.hasDesktopPanel( mockResponse ) );
+        SoapUIDesktop desktop = SoapUI.getDesktop();
+        dialog.getFormField(Form.CLOSE_EDITOR).setEnabled(desktop != null && desktop.hasDesktopPanel(mockResponse));
 
-		if( !dialog.show() )
-			return;
+        if (!dialog.show()) {
+            return;
+        }
 
-		TestStepConfig config = WsdlMockResponseStepFactory.createConfig( mockResponse.getMockOperation().getOperation(),
-				false );
-		MockResponseStepConfig mockResponseStepConfig = ( ( MockResponseStepConfig )config.getConfig() );
+        TestStepConfig config = WsdlMockResponseStepFactory.createConfig(mockResponse.getMockOperation().getOperation(),
+                false);
+        MockResponseStepConfig mockResponseStepConfig = ((MockResponseStepConfig) config.getConfig());
 
-		config.setName( dialog.getValue( Form.STEP_NAME ) );
-		mockResponseStepConfig.setPath( dialog.getValue( Form.PATH ) );
-		mockResponseStepConfig.setPort( dialog.getIntValue( Form.PORT, mockService.getPort() ) );
+        config.setName(dialog.getValue(Form.STEP_NAME));
+        mockResponseStepConfig.setPath(dialog.getValue(Form.PATH));
+        mockResponseStepConfig.setPort(dialog.getIntValue(Form.PORT, mockService.getPort()));
 
-		mockResponse.beforeSave();
-		mockResponseStepConfig.getResponse().set( mockResponse.getConfig() );
+        mockResponse.beforeSave();
+        mockResponseStepConfig.getResponse().set(mockResponse.getConfig());
 
-		WsdlMockResponseTestStep testStep = ( WsdlMockResponseTestStep )testCase.insertTestStep( config, -1 );
-		if( testStep == null )
-			return;
+        WsdlMockResponseTestStep testStep = (WsdlMockResponseTestStep) testCase.insertTestStep(config, -1);
+        if (testStep == null) {
+            return;
+        }
 
-		if( dialog.getBooleanValue( Form.ADD_SCHEMA_ASSERTION ) )
-			testStep.addAssertion( SchemaComplianceAssertion.ID );
+        if (dialog.getBooleanValue(Form.ADD_SCHEMA_ASSERTION)) {
+            testStep.addAssertion(SchemaComplianceAssertion.ID);
+        }
 
-		UISupport.selectAndShow( testStep );
+        UISupport.selectAndShow(testStep);
 
-		if( dialog.getBooleanValue( Form.CLOSE_EDITOR ) && desktop != null )
-		{
-			desktop.closeDesktopPanel( mockResponse );
-		}
+        if (dialog.getBooleanValue(Form.CLOSE_EDITOR) && desktop != null) {
+            desktop.closeDesktopPanel(mockResponse);
+        }
 
-		if( dialog.getBooleanValue( Form.SHOW_TESTCASE ) )
-		{
-			UISupport.selectAndShow( testCase );
-		}
-	}
+        if (dialog.getBooleanValue(Form.SHOW_TESTCASE)) {
+            UISupport.selectAndShow(testCase);
+        }
+    }
 
-	@AForm( name = "Add MockResponse to TestCase", description = "Options for adding this MockResponse to a "
-			+ "TestCase", helpUrl = HelpUrls.ADDMOCKRESPONSETOTESTCASE_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-	private interface Form
-	{
-		@AField( name = "Name", description = "Unique name of MockResponse Step" )
-		public final static String STEP_NAME = "Name";
+    @AForm(name = "Add MockResponse to TestCase", description = "Options for adding this MockResponse to a "
+            + "TestCase", helpUrl = HelpUrls.ADDMOCKRESPONSETOTESTCASE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    private interface Form {
+        @AField(name = "Name", description = "Unique name of MockResponse Step")
+        public final static String STEP_NAME = "Name";
 
-		@AField( name = "Path", description = "Path to listen on" )
-		public final static String PATH = "Path";
+        @AField(name = "Path", description = "Path to listen on")
+        public final static String PATH = "Path";
 
-		@AField( name = "Port", description = "Port to listen on", type = AFieldType.INT )
-		public final static String PORT = "Port";
+        @AField(name = "Port", description = "Port to listen on", type = AFieldType.INT)
+        public final static String PORT = "Port";
 
-		@AField( name = "Add Schema Assertion", description = "Adds SchemaCompliance Assertion for request", type = AFieldType.BOOLEAN )
-		public final static String ADD_SCHEMA_ASSERTION = "Add Schema Assertion";
+        @AField(name = "Add Schema Assertion", description = "Adds SchemaCompliance Assertion for request", type = AFieldType.BOOLEAN)
+        public final static String ADD_SCHEMA_ASSERTION = "Add Schema Assertion";
 
-		@AField( name = "Close MockResponse Window", description = "Closes the MockResponse editor if visible", type = AFieldType.BOOLEAN )
-		public final static String CLOSE_EDITOR = "Close MockResponse Window";
+        @AField(name = "Close MockResponse Window", description = "Closes the MockResponse editor if visible", type = AFieldType.BOOLEAN)
+        public final static String CLOSE_EDITOR = "Close MockResponse Window";
 
-		@AField( name = "Shows TestCase Editor", description = "Shows the target steps TestCase editor", type = AFieldType.BOOLEAN )
-		public final static String SHOW_TESTCASE = "Shows TestCase Editor";
-	}
+        @AField(name = "Shows TestCase Editor", description = "Shows the target steps TestCase editor", type = AFieldType.BOOLEAN)
+        public final static String SHOW_TESTCASE = "Shows TestCase Editor";
+    }
 }

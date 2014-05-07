@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
+*/
+package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.support.UISupport;
@@ -31,63 +32,56 @@ import static org.junit.Assert.assertThat;
 /**
  * Unit tests for SchemaComplianceAssertion.
  */
-public class SchemaComplianceAssertionTest
-{
+public class SchemaComplianceAssertionTest {
 
-	private SchemaComplianceAssertion assertion;
-	private XDialogs originalDialogs;
-	private StubbedDialogs stubbedDialogs;
+    private SchemaComplianceAssertion assertion;
+    private XDialogs originalDialogs;
+    private StubbedDialogs stubbedDialogs;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		assertion = new SchemaComplianceAssertion( TestAssertionConfig.Factory.newInstance(), ModelItemFactory.makeTestRequestStep() );
-		originalDialogs = UISupport.getDialogs();
-		stubbedDialogs = new StubbedDialogs();
-		UISupport.setDialogs( stubbedDialogs );
-	}
+    @Before
+    public void setUp() throws Exception {
+        assertion = new SchemaComplianceAssertion(TestAssertionConfig.Factory.newInstance(), ModelItemFactory.makeTestRequestStep());
+        originalDialogs = UISupport.getDialogs();
+        stubbedDialogs = new StubbedDialogs();
+        UISupport.setDialogs(stubbedDialogs);
+    }
 
-	@After
-	public void tearDown() throws Exception
-	{
-		UISupport.setDialogs( originalDialogs );
-	}
+    @After
+    public void tearDown() throws Exception {
+        UISupport.setDialogs(originalDialogs);
+    }
 
-	@Test
-	public void configureAbortedWithErrorMessageWhenNoValidDefinitionSelected() throws Exception
-	{
-		stubbedDialogs.mockPromptWithReturnValue( "<invalid URL>" );
+    @Test
+    public void configureAbortedWithErrorMessageWhenNoValidDefinitionSelected() throws Exception {
+        stubbedDialogs.mockPromptWithReturnValue("<invalid URL>");
 
-		assertThat( assertion.configure(), is( false ) );
-		assertThat( stubbedDialogs.getErrorMessages(), is (not(anEmptyCollection())) );
-	}
+        assertThat(assertion.configure(), is(false));
+        assertThat(stubbedDialogs.getErrorMessages(), is(not(anEmptyCollection())));
+    }
 
-	@Test
-	public void noErrorMessageShownWhenConfigureIsCancelled() throws Exception
-	{
-		stubbedDialogs.mockPromptWithReturnValue( null );
+    @Test
+    public void noErrorMessageShownWhenConfigureIsCancelled() throws Exception {
+        stubbedDialogs.mockPromptWithReturnValue(null);
 
-		assertThat( assertion.configure(), is( false ) );
-		assertThat( stubbedDialogs.getErrorMessages(), is (anEmptyCollection()) );
-	}
+        assertThat(assertion.configure(), is(false));
+        assertThat(stubbedDialogs.getErrorMessages(), is(anEmptyCollection()));
+    }
 
-	@Test
-	public void canBeConfiguredWithAValidWSDL() throws Exception
-	{
-		String validWsdlURL = SchemaComplianceAssertionTest.class.getResource( "/attachment-test.wsdl" ).toString();
-		stubbedDialogs.mockPromptWithReturnValue( validWsdlURL );
+    @Test
+    public void canBeConfiguredWithAValidWSDL() throws Exception {
+        String validWsdlURL = SchemaComplianceAssertionTest.class.getResource("/attachment-test.wsdl").toString();
+        stubbedDialogs.mockPromptWithReturnValue(validWsdlURL);
 
-		assertThat( assertion.configure(), is( true ) );
-		assertThat( stubbedDialogs.getErrorMessages(), is (anEmptyCollection())) ;
-	}
+        assertThat(assertion.configure(), is(true));
+        assertThat(stubbedDialogs.getErrorMessages(), is(anEmptyCollection()));
+    }
 
-	@Test
-	public void canBeConfiguredWithAValidWADL() throws Exception
-	{
-		String validWadlURL = SchemaComplianceAssertionTest.class.getResource( "/wadl/YahooSearch.wadl" ).toString();
-		stubbedDialogs.mockPromptWithReturnValue( validWadlURL );
+    @Test
+    public void canBeConfiguredWithAValidWADL() throws Exception {
+        String validWadlURL = SchemaComplianceAssertionTest.class.getResource("/wadl/YahooSearch.wadl").toString();
+        stubbedDialogs.mockPromptWithReturnValue(validWadlURL);
 
-		assertThat( assertion.configure(), is( true ) );
-		assertThat( stubbedDialogs.getErrorMessages(), is (anEmptyCollection())) ;
-	}
+        assertThat(assertion.configure(), is(true));
+        assertThat(stubbedDialogs.getErrorMessages(), is(anEmptyCollection()));
+    }
 }

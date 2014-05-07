@@ -28,34 +28,32 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Opens a URL in the external browser
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class OpenUrlAction extends AbstractAction implements HelpActionMarker
-{
-	private final String url;
+public class OpenUrlAction extends AbstractAction implements HelpActionMarker {
+    private final String url;
 
-	public OpenUrlAction( String title, String url )
-	{
-		this( title, url, null );
-	}
+    public OpenUrlAction(String title, String url) {
+        this(title, url, null);
+    }
 
-	public OpenUrlAction( String title, String url, KeyStroke accelerator )
-	{
-		super( title );
-		this.url = url;
+    public OpenUrlAction(String title, String url, KeyStroke accelerator) {
+        super(title);
+        this.url = url;
 
-		putValue( Action.SHORT_DESCRIPTION, title );
-		if( accelerator != null )
-			putValue( Action.ACCELERATOR_KEY, accelerator );
-	}
+        putValue(Action.SHORT_DESCRIPTION, title);
+        if (accelerator != null) {
+            putValue(Action.ACCELERATOR_KEY, accelerator);
+        }
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		if( url == null )
-			UISupport.showErrorMessage( "Missing url" );
-		else
-			Tools.openURL( url );
-	}
+    public void actionPerformed(ActionEvent e) {
+        if (url == null) {
+            UISupport.showErrorMessage("Missing url");
+        } else {
+            Tools.openURL(url);
+        }
+    }
 }

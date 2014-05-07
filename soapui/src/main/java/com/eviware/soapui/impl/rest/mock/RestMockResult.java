@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.mock;
+*/
+package com.eviware.soapui.impl.rest.mock;
 
 import com.eviware.soapui.impl.support.BaseMockResult;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
@@ -20,10 +21,8 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.model.mock.MockRequest;
 
-public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockAction>
-{
-	public RestMockResult( RestMockRequest request )
-	{
-		super( request );
-	}
+public class RestMockResult extends BaseMockResult<RestMockRequest, RestMockAction> {
+    public RestMockResult(RestMockRequest request) {
+        super(request);
+    }
 }

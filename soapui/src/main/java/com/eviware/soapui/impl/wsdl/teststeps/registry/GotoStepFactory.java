@@ -24,36 +24,31 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
 /**
  * Factory for creation TransferValue steps
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class GotoStepFactory extends WsdlTestStepFactory
-{
-	public static final String GOTO_TYPE = "goto";
+public class GotoStepFactory extends WsdlTestStepFactory {
+    public static final String GOTO_TYPE = "goto";
 
-	public GotoStepFactory()
-	{
-		super( GOTO_TYPE, "Conditional Goto", "Transfers the execution to another TestStep based on xpath expressions",
-				"/goto.gif" );
-	}
+    public GotoStepFactory() {
+        super(GOTO_TYPE, "Conditional Goto", "Transfers the execution to another TestStep based on xpath expressions",
+                "/goto.gif");
+    }
 
-	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-	{
-		return new WsdlGotoTestStep( testCase, config, forLoadTest );
-	}
+    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
+        return new WsdlGotoTestStep(testCase, config, forLoadTest);
+    }
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
-	{
-		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( GOTO_TYPE );
-		testStepConfig.setName( name );
-		testStepConfig.setConfig( GotoStepConfig.Factory.newInstance() );
-		return testStepConfig;
-	}
+    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
+        TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+        testStepConfig.setType(GOTO_TYPE);
+        testStepConfig.setName(name);
+        testStepConfig.setConfig(GotoStepConfig.Factory.newInstance());
+        return testStepConfig;
+    }
 
-	public boolean canCreate()
-	{
-		return true;
-	}
+    public boolean canCreate() {
+        return true;
+    }
 }

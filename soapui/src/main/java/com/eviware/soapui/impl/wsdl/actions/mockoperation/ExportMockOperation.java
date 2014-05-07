@@ -22,27 +22,26 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
-public class ExportMockOperation extends AbstractSoapUIAction<WsdlMockOperation>
-{
-	public ExportMockOperation()
-	{
-		super( "Export", "Exports the mock operation" );
-	}
+public class ExportMockOperation extends AbstractSoapUIAction<WsdlMockOperation> {
+    public ExportMockOperation() {
+        super("Export", "Exports the mock operation");
+    }
 
-	public void perform( WsdlMockOperation mOperation, Object param )
-	{
-		mOperation.beforeSave();
-		String defaultFileName = System.getProperty( "user.home", "." ) + File.separator + mOperation.getName() + ".xml";
-		File file = UISupport.getFileDialogs().saveAs( this, "Select test case file", "xml", "XML",
-				new File( defaultFileName ) );
+    public void perform(WsdlMockOperation mOperation, Object param) {
+        mOperation.beforeSave();
+        String defaultFileName = System.getProperty("user.home", ".") + File.separator + mOperation.getName() + ".xml";
+        File file = UISupport.getFileDialogs().saveAs(this, "Select test case file", "xml", "XML",
+                new File(defaultFileName));
 
-		if( file == null )
-			return;
+        if (file == null) {
+            return;
+        }
 
-		String fileName = file.getAbsolutePath();
-		if( fileName == null )
-			return;
+        String fileName = file.getAbsolutePath();
+        if (fileName == null) {
+            return;
+        }
 
-		mOperation.exportMockOperation( file );
-	}
+        mOperation.exportMockOperation(file);
+    }
 }

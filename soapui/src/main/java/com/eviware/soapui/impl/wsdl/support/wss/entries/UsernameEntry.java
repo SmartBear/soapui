@@ -36,127 +36,113 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.jgoodies.binding.PresentationModel;
 
-public class UsernameEntry extends WssEntryBase
-{
-	private static final String PASSWORD_DIGEST_EXT = "PasswordDigest Ext";
+public class UsernameEntry extends WssEntryBase {
+    private static final String PASSWORD_DIGEST_EXT = "PasswordDigest Ext";
 
-	private static final String PASSWORD_DIGEST = "PasswordDigest";
+    private static final String PASSWORD_DIGEST = "PasswordDigest";
 
-	private static final String PASSWORD_TEXT = "PasswordText";
+    private static final String PASSWORD_TEXT = "PasswordText";
 
-	public static final String TYPE = "Username";
+    public static final String TYPE = "Username";
 
-	private boolean addCreated;
-	private boolean addNonce;
-	private String passwordType;
+    private boolean addCreated;
+    private boolean addNonce;
+    private String passwordType;
 
-	public void init( WSSEntryConfig config, OutgoingWss container )
-	{
-		super.init( config, container, TYPE );
-	}
+    public void init(WSSEntryConfig config, OutgoingWss container) {
+        super.init(config, container, TYPE);
+    }
 
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
-	{
-		WSSecUsernameToken token = new WSSecUsernameToken();
-		if( addCreated )
-			token.addCreated();
+    public void process(WSSecHeader secHeader, Document doc, PropertyExpansionContext context) {
+        WSSecUsernameToken token = new WSSecUsernameToken();
+        if (addCreated) {
+            token.addCreated();
+        }
 
-		if( addNonce )
-			token.addNonce();
+        if (addNonce) {
+            token.addNonce();
+        }
 
-		if( StringUtils.hasContent( passwordType ) )
-		{
-			if( passwordType.equals( PASSWORD_TEXT ) )
-				token.setPasswordType( WSConstants.PASSWORD_TEXT );
-			else if( passwordType.equals( PASSWORD_DIGEST ) || passwordType.equals( PASSWORD_DIGEST_EXT ) )
-				token.setPasswordType( WSConstants.PASSWORD_DIGEST );
-		}
+        if (StringUtils.hasContent(passwordType)) {
+            if (passwordType.equals(PASSWORD_TEXT)) {
+                token.setPasswordType(WSConstants.PASSWORD_TEXT);
+            } else if (passwordType.equals(PASSWORD_DIGEST) || passwordType.equals(PASSWORD_DIGEST_EXT)) {
+                token.setPasswordType(WSConstants.PASSWORD_DIGEST);
+            }
+        }
 
-		String password = context.expand( getPassword() );
+        String password = context.expand(getPassword());
 
-		if( PASSWORD_DIGEST_EXT.equals( password ) )
-		{
-			try
-			{
-				MessageDigest sha = MessageDigest.getInstance( "SHA-1" );
-				sha.reset();
-				sha.update( password.getBytes( "UTF-8" ) );
-				password = Base64.encode( sha.digest() );
-			}
-			catch( Exception e )
-			{
-				SoapUI.logError( e );
-			}
-		}
+        if (PASSWORD_DIGEST_EXT.equals(password)) {
+            try {
+                MessageDigest sha = MessageDigest.getInstance("SHA-1");
+                sha.reset();
+                sha.update(password.getBytes("UTF-8"));
+                password = Base64.encode(sha.digest());
+            } catch (Exception e) {
+                SoapUI.logError(e);
+            }
+        }
 
-		token.setUserInfo( context.expand( getUsername() ), password );
+        token.setUserInfo(context.expand(getUsername()), password);
 
-		token.build( doc, secHeader );
-	}
+        token.build(doc, secHeader);
+    }
 
-	@Override
-	protected JComponent buildUI()
-	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<UsernameEntry>( this ) );
-		form.addSpace( 5 );
-		form.appendTextField( "username", "Username", "The username for this token" );
-		form.appendPasswordField( "password", "Password", "The password for this token" );
+    @Override
+    protected JComponent buildUI() {
+        SimpleBindingForm form = new SimpleBindingForm(new PresentationModel<UsernameEntry>(this));
+        form.addSpace(5);
+        form.appendTextField("username", "Username", "The username for this token");
+        form.appendPasswordField("password", "Password", "The password for this token");
 
-		form.appendCheckBox( "addNonce", "Add Nonce", "Adds a nonce" );
-		form.appendCheckBox( "addCreated", "Add Created", "Adds a created" );
+        form.appendCheckBox("addNonce", "Add Nonce", "Adds a nonce");
+        form.appendCheckBox("addCreated", "Add Created", "Adds a created");
 
-		form.appendComboBox( "passwordType", "Password Type", new String[] { PASSWORD_TEXT, PASSWORD_DIGEST,
-				PASSWORD_DIGEST_EXT }, "The password type to generate" );
+        form.appendComboBox("passwordType", "Password Type", new String[]{PASSWORD_TEXT, PASSWORD_DIGEST,
+                PASSWORD_DIGEST_EXT}, "The password type to generate");
 
-		return form.getPanel();
-	}
+        return form.getPanel();
+    }
 
-	@Override
-	protected void load( XmlObjectConfigurationReader reader )
-	{
-		addCreated = reader.readBoolean( "addCreated", true );
-		addNonce = reader.readBoolean( "addNonce", true );
-		passwordType = reader.readString( "passwordType", WSConstants.PASSWORD_DIGEST );
-	}
+    @Override
+    protected void load(XmlObjectConfigurationReader reader) {
+        addCreated = reader.readBoolean("addCreated", true);
+        addNonce = reader.readBoolean("addNonce", true);
+        passwordType = reader.readString("passwordType", WSConstants.PASSWORD_DIGEST);
+    }
 
-	@Override
-	protected void save( XmlObjectConfigurationBuilder builder )
-	{
-		builder.add( "addCreated", addCreated );
-		builder.add( "addNonce", addNonce );
-		builder.add( "passwordType", passwordType );
-	}
+    @Override
+    protected void save(XmlObjectConfigurationBuilder builder) {
+        builder.add("addCreated", addCreated);
+        builder.add("addNonce", addNonce);
+        builder.add("passwordType", passwordType);
+    }
 
-	public boolean isAddCreated()
-	{
-		return addCreated;
-	}
+    public boolean isAddCreated() {
+        return addCreated;
+    }
 
-	public void setAddCreated( boolean addCreated )
-	{
-		this.addCreated = addCreated;
-		saveConfig();
-	}
+    public void setAddCreated(boolean addCreated) {
+        this.addCreated = addCreated;
+        saveConfig();
+    }
 
-	public boolean isAddNonce()
-	{
-		return addNonce;
-	}
+    public boolean isAddNonce() {
+        return addNonce;
+    }
 
-	public void setAddNonce( boolean addNonce )
-	{
-		this.addNonce = addNonce;
-		saveConfig();
-	}
+    public void setAddNonce(boolean addNonce) {
+        this.addNonce = addNonce;
+        saveConfig();
+    }
 
-	public String getPasswordType()
-	{
-		return passwordType;
-	}
+    public String getPasswordType() {
+        return passwordType;
+    }
 
-	public void setPasswordType( String passwordType )
-	{
-		this.passwordType = passwordType;
-		saveConfig();
-	}
+    public void setPasswordType(String passwordType) {
+        this.passwordType = passwordType;
+        saveConfig();
+    }
 }

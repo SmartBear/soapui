@@ -48,122 +48,107 @@ import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
 
 /**
  * Abstract DesktopPanel for WsdlRequests
- * 
+ *
  * @author Ole.Matzura
  */
 
 public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 extends WsdlRequest> extends
-		AbstractHttpRequestDesktopPanel<T, T2> implements SubmitListener
-{
-	private JButton recreateButton;
-	private JButton cloneButton;
-	private JButton createEmptyButton;
-	private JButton addToMockServiceButton;
-	private AbstractAction wsiValidateAction;
+        AbstractHttpRequestDesktopPanel<T, T2> implements SubmitListener {
+    private JButton recreateButton;
+    private JButton cloneButton;
+    private JButton createEmptyButton;
+    private JButton addToMockServiceButton;
+    private AbstractAction wsiValidateAction;
 
-	public AbstractWsdlRequestDesktopPanel( T modelItem, T2 request )
-	{
-		super( modelItem, request );
-	}
+    public AbstractWsdlRequestDesktopPanel(T modelItem, T2 request) {
+        super(modelItem, request);
+    }
 
-	@Override
-	protected void init( T2 request )
-	{
-		recreateButton = createActionButton( new RecreateRequestAction( request ), true );
-		addToMockServiceButton = createActionButton( SwingActionDelegate.createDelegate(
-				AddRequestToMockServiceAction.SOAPUI_ACTION_ID, request, null, "/addToMockService.gif" ), true );
+    @Override
+    protected void init(T2 request) {
+        recreateButton = createActionButton(new RecreateRequestAction(request), true);
+        addToMockServiceButton = createActionButton(SwingActionDelegate.createDelegate(
+                AddRequestToMockServiceAction.SOAPUI_ACTION_ID, request, null, "/addToMockService.gif"), true);
 
-		cloneButton = createActionButton( SwingActionDelegate.createDelegate( CloneRequestAction.SOAPUI_ACTION_ID,
-				request, null, "/clone_request.gif" ), true );
+        cloneButton = createActionButton(SwingActionDelegate.createDelegate(CloneRequestAction.SOAPUI_ACTION_ID,
+                request, null, "/clone_request.gif"), true);
 
-		createEmptyButton = createActionButton( new CreateEmptyRequestAction( request ), true );
+        createEmptyButton = createActionButton(new CreateEmptyRequestAction(request), true);
 
-		wsiValidateAction = SwingActionDelegate.createDelegate( new WSIValidateRequestAction(), request, "alt W" );
-		wsiValidateAction.setEnabled( request.getResponse() != null );
+        wsiValidateAction = SwingActionDelegate.createDelegate(new WSIValidateRequestAction(), request, "alt W");
+        wsiValidateAction.setEnabled(request.getResponse() != null);
 
-		super.init( request );
-	}
+        super.init(request);
+    }
 
-	protected ModelItemXmlEditor<?, ?> buildResponseEditor()
-	{
-		return new WsdlResponseMessageEditor( new ResponseXmlDocument( getRequest() ) );
-	}
+    protected ModelItemXmlEditor<?, ?> buildResponseEditor() {
+        return new WsdlResponseMessageEditor(new ResponseXmlDocument(getRequest()));
+    }
 
-	protected ModelItemXmlEditor<?, ?> buildRequestEditor()
-	{
-		return new WsdlRequestMessageEditor( new RequestXmlDocument( getRequest() ) );
-	}
+    protected ModelItemXmlEditor<?, ?> buildRequestEditor() {
+        return new WsdlRequestMessageEditor(new RequestXmlDocument(getRequest()));
+    }
 
-	public static class OneWayResponseMessageEditor extends ModelItemXmlEditor<ModelItem, DefaultXmlDocument>
-	{
-		public OneWayResponseMessageEditor( ModelItem modelItem )
-		{
-			super( new DefaultXmlDocument(), modelItem );
-		}
-	}
+    public static class OneWayResponseMessageEditor extends ModelItemXmlEditor<ModelItem, DefaultXmlDocument> {
+        public OneWayResponseMessageEditor(ModelItem modelItem) {
+            super(new DefaultXmlDocument(), modelItem);
+        }
+    }
 
-	protected void insertButtons( JXToolBar toolbar )
-	{
-		toolbar.add( addToMockServiceButton );
-		toolbar.add( recreateButton );
-		toolbar.add( createEmptyButton );
-		toolbar.add( cloneButton );
-	}
+    protected void insertButtons(JXToolBar toolbar) {
+        toolbar.add(addToMockServiceButton);
+        toolbar.add(recreateButton);
+        toolbar.add(createEmptyButton);
+        toolbar.add(cloneButton);
+    }
 
-	public void setEnabled( boolean enabled )
-	{
-		super.setEnabled( enabled );
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
 
-		recreateButton.setEnabled( enabled );
-		createEmptyButton.setEnabled( enabled );
-		cloneButton.setEnabled( enabled );
-	}
+        recreateButton.setEnabled(enabled);
+        createEmptyButton.setEnabled(enabled);
+        cloneButton.setEnabled(enabled);
+    }
 
-	public class WsdlRequestMessageEditor extends
-			AbstractHttpRequestDesktopPanel<T, T2>.AbstractHttpRequestMessageEditor<XmlDocument>
-	{
-		public WsdlRequestMessageEditor( XmlDocument document )
-		{
-			super( document );
+    public class WsdlRequestMessageEditor extends
+            AbstractHttpRequestDesktopPanel<T, T2>.AbstractHttpRequestMessageEditor<XmlDocument> {
+        public WsdlRequestMessageEditor(XmlDocument document) {
+            super(document);
 
-			XmlSourceEditorView<?> editor = getSourceEditor();
-			RSyntaxTextArea inputArea = editor.getInputArea();
-			inputArea.getInputMap().put( KeyStroke.getKeyStroke( "F5" ), recreateButton.getAction() );
-		}
-	}
+            XmlSourceEditorView<?> editor = getSourceEditor();
+            RSyntaxTextArea inputArea = editor.getInputArea();
+            inputArea.getInputMap().put(KeyStroke.getKeyStroke("F5"), recreateButton.getAction());
+        }
+    }
 
-	public class WsdlResponseMessageEditor extends
-			AbstractHttpRequestDesktopPanel<T, T2>.AbstractHttpResponseMessageEditor<XmlDocument>
-	{
-		public WsdlResponseMessageEditor( XmlDocument document )
-		{
-			super( document );
+    public class WsdlResponseMessageEditor extends
+            AbstractHttpRequestDesktopPanel<T, T2>.AbstractHttpResponseMessageEditor<XmlDocument> {
+        public WsdlResponseMessageEditor(XmlDocument document) {
+            super(document);
 
-			XmlSourceEditorView<?> editor = getSourceEditor();
+            XmlSourceEditorView<?> editor = getSourceEditor();
 
-			JPopupMenu inputPopup = editor.getEditorPopup();
-			inputPopup.insert( new JSeparator(), 2 );
-			inputPopup.insert( wsiValidateAction, 3 );
-			inputPopup.insert( new JSeparator(), 4 );
-		}
-	}
+            JPopupMenu inputPopup = editor.getEditorPopup();
+            inputPopup.insert(new JSeparator(), 2);
+            inputPopup.insert(wsiValidateAction, 3);
+            inputPopup.insert(new JSeparator(), 4);
+        }
+    }
 
-	protected Submit doSubmit() throws SubmitException
-	{
-		return getRequest().submit( new WsdlSubmitContext( getModelItem() ), true );
-	}
+    protected Submit doSubmit() throws SubmitException {
+        return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
+    }
 
-	public boolean beforeSubmit( Submit submit, SubmitContext context )
-	{
-		boolean result = super.beforeSubmit( submit, context );
-		wsiValidateAction.setEnabled( !result );
-		return result;
-	}
+    public boolean beforeSubmit(Submit submit, SubmitContext context) {
+        boolean result = super.beforeSubmit(submit, context);
+        wsiValidateAction.setEnabled(!result);
+        return result;
+    }
 
-	public void afterSubmit( Submit submit, SubmitContext context )
-	{
-		super.afterSubmit( submit, context );
-		if( !isHasClosed() )
-			wsiValidateAction.setEnabled( submit.getResponse() != null );
-	}
+    public void afterSubmit(Submit submit, SubmitContext context) {
+        super.afterSubmit(submit, context);
+        if (!isHasClosed()) {
+            wsiValidateAction.setEnabled(submit.getResponse() != null);
+        }
+    }
 }

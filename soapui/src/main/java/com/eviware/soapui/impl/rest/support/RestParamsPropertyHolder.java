@@ -24,42 +24,40 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import java.util.Map;
 import java.util.Properties;
 
-public interface RestParamsPropertyHolder extends MutableTestPropertyHolder, Map<String, TestProperty>
-{
+public interface RestParamsPropertyHolder extends MutableTestPropertyHolder, Map<String, TestProperty> {
 
-	public RestParamProperty getProperty( String name );
+    public RestParamProperty getProperty(String name);
 
-	public void resetValues();
+    public void resetValues();
 
-	public int getPropertyIndex( String name );
+    public int getPropertyIndex(String name);
 
-	public void saveTo( Properties props );
+    public void saveTo(Properties props);
 
-	public RestParamProperty getPropertyAt( int index );
+    public RestParamProperty getPropertyAt(int index);
 
-	public PropertyExpansion[] getPropertyExpansions();
+    public PropertyExpansion[] getPropertyExpansions();
 
-	public void setPropertiesLabel( String propertiesLabel );
+    public void setPropertiesLabel(String propertiesLabel);
 
-	public RestParamProperty addProperty( String name );
+    public RestParamProperty addProperty(String name);
 
-	public RestParamProperty removeProperty( String propertyName );
+    public RestParamProperty removeProperty(String propertyName);
 
-	public RestParamProperty get( Object key );
+    public RestParamProperty get(Object key);
 
-	public void addParameter( RestParamProperty prop );
+    public void addParameter(RestParamProperty prop);
 
-	void setParameterLocation( RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation );
+    void setParameterLocation(RestParamProperty parameter, NewRestResourceActionBase.ParamLocation newLocation);
 
-	/**
-	 * Internal property class
-	 * 
-	 * @author ole
-	 */
+    /**
+     * Internal property class
+     *
+     * @author ole
+     */
 
-	public enum ParameterStyle
-	{
-		MATRIX, HEADER, QUERY, TEMPLATE, PLAIN
-	}
+    public enum ParameterStyle {
+        MATRIX, HEADER, QUERY, TEMPLATE, PLAIN
+    }
 
 }

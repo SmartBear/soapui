@@ -40,103 +40,90 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
  */
 
 public abstract class ModelItemDesktopPanel<T extends ModelItem> extends JPanel implements DesktopPanel,
-		PropertyChangeListener
-{
-	private final T modelItem;
+        PropertyChangeListener {
+    private final T modelItem;
 
-	public ModelItemDesktopPanel( T modelItem )
-	{
-		super( new BorderLayout() );
-		this.modelItem = modelItem;
+    public ModelItemDesktopPanel(T modelItem) {
+        super(new BorderLayout());
+        this.modelItem = modelItem;
 
-		modelItem.addPropertyChangeListener( this );
-	}
+        modelItem.addPropertyChangeListener(this);
+    }
 
-	protected boolean release()
-	{
-		modelItem.removePropertyChangeListener( this );
-		return true;
-	}
+    protected boolean release() {
+        modelItem.removePropertyChangeListener(this);
+        return true;
+    }
 
-	public JComponent getComponent()
-	{
-		return this;
-	}
+    public JComponent getComponent() {
+        return this;
+    }
 
-	final public T getModelItem()
-	{
-		return modelItem;
-	}
+    final public T getModelItem() {
+        return modelItem;
+    }
 
-	public Icon getIcon()
-	{
-		return modelItem.getIcon();
-	}
+    public Icon getIcon() {
+        return modelItem.getIcon();
+    }
 
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return ModelSupport.dependsOn( getModelItem(), modelItem );
-	}
+    public boolean dependsOn(ModelItem modelItem) {
+        return ModelSupport.dependsOn(getModelItem(), modelItem);
+    }
 
-	public String getTitle()
-	{
-		return modelItem.getName();
-	}
+    public String getTitle() {
+        return modelItem.getName();
+    }
 
-	public final String getDescription()
-	{
-		TreePath treePath = SoapUI.getNavigator().getTreePath( modelItem );
+    public final String getDescription() {
+        TreePath treePath = SoapUI.getNavigator().getTreePath(modelItem);
 
-		if( treePath == null )
-		{
-			return modelItem.getDescription();
-		}
-		else
-		{
-			String str = modelItem.getName() + " [";
+        if (treePath == null) {
+            return modelItem.getDescription();
+        } else {
+            String str = modelItem.getName() + " [";
 
-			for( int c = 1; c < treePath.getPathCount(); c++ )
-			{
-				SoapUITreeNode comp = ( SoapUITreeNode )treePath.getPathComponent( c );
-				if( comp.getModelItem() instanceof EmptyModelItem )
-					continue;
+            for (int c = 1; c < treePath.getPathCount(); c++) {
+                SoapUITreeNode comp = (SoapUITreeNode) treePath.getPathComponent(c);
+                if (comp.getModelItem() instanceof EmptyModelItem) {
+                    continue;
+                }
 
-				if( c > 1 )
-					str += "/";
+                if (c > 1) {
+                    str += "/";
+                }
 
-				str += comp.toString();
-			}
+                str += comp.toString();
+            }
 
-			str += "]";
+            str += "]";
 
-			return str;
-		}
-	}
+            return str;
+        }
+    }
 
-	public static JButton createActionButton( Action action, boolean enabled )
-	{
-		JButton button = UISupport.createToolbarButton( action, enabled );
-		action.putValue( Action.NAME, null );
-		return button;
-	}
+    public static JButton createActionButton(Action action, boolean enabled) {
+        JButton button = UISupport.createToolbarButton(action, enabled);
+        action.putValue(Action.NAME, null);
+        return button;
+    }
 
-	public void notifyPropertyChange( String propertyName, Object oldValue, Object newValue )
-	{
-		firePropertyChange( propertyName, oldValue, newValue );
-	}
+    public void notifyPropertyChange(String propertyName, Object oldValue, Object newValue) {
+        firePropertyChange(propertyName, oldValue, newValue);
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( ModelItem.NAME_PROPERTY ) )
-			notifyPropertyChange( DesktopPanel.TITLE_PROPERTY, null, getTitle() );
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(ModelItem.NAME_PROPERTY)) {
+            notifyPropertyChange(DesktopPanel.TITLE_PROPERTY, null, getTitle());
+        }
 
-		if( evt.getPropertyName().equals( ModelItem.ICON_PROPERTY ) )
-			notifyPropertyChange( DesktopPanel.ICON_PROPERTY, null, getIcon() );
-	}
+        if (evt.getPropertyName().equals(ModelItem.ICON_PROPERTY)) {
+            notifyPropertyChange(DesktopPanel.ICON_PROPERTY, null, getIcon());
+        }
+    }
 
-	@Override
-	public boolean onClose( boolean canCancel )
-	{
-		return release();
-	}
+    @Override
+    public boolean onClose(boolean canCancel) {
+        return release();
+    }
 }

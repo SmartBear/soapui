@@ -30,71 +30,57 @@ import org.codehaus.jettison.json.JSONException;
 /**
  *
  */
-public class OAuth2AccessTokenResponse extends OAuthAccessTokenResponse
-{
+public class OAuth2AccessTokenResponse extends OAuthAccessTokenResponse {
 
-	private static final String EXPIRES = "expires";
+    private static final String EXPIRES = "expires";
 
-	@Override
-	public String getAccessToken()
-	{
-		return getParam( OAuth.OAUTH_ACCESS_TOKEN );
-	}
+    @Override
+    public String getAccessToken() {
+        return getParam(OAuth.OAUTH_ACCESS_TOKEN);
+    }
 
-	@Override
-	public Long getExpiresIn()
-	{
-		String value = getParam( OAuth.OAUTH_EXPIRES_IN ) == null ? getParam( EXPIRES ) : getParam( OAuth.OAUTH_EXPIRES_IN );
-		return value == null ? null : Long.valueOf( value );
-	}
+    @Override
+    public Long getExpiresIn() {
+        String value = getParam(OAuth.OAUTH_EXPIRES_IN) == null ? getParam(EXPIRES) : getParam(OAuth.OAUTH_EXPIRES_IN);
+        return value == null ? null : Long.valueOf(value);
+    }
 
-	public String getScope()
-	{
-		return getParam( OAuth.OAUTH_SCOPE );
-	}
+    public String getScope() {
+        return getParam(OAuth.OAUTH_SCOPE);
+    }
 
-	public OAuthToken getOAuthToken()
-	{
-		return new BasicOAuthToken( getAccessToken(), getExpiresIn(), getRefreshToken(), getScope() );
-	}
+    public OAuthToken getOAuthToken() {
+        return new BasicOAuthToken(getAccessToken(), getExpiresIn(), getRefreshToken(), getScope());
+    }
 
-	public String getRefreshToken()
-	{
-		return getParam( OAuth.OAUTH_REFRESH_TOKEN );
-	}
+    public String getRefreshToken() {
+        return getParam(OAuth.OAUTH_REFRESH_TOKEN);
+    }
 
-	protected void setBody( String body ) throws OAuthProblemException
-	{
+    protected void setBody(String body) throws OAuthProblemException {
 
-		try
-		{
-			this.body = body;
-			parameters = JSONUtils.parseJSON( body );
-		}
-		catch( JSONException e )
-		{
-			if( body.startsWith( "#" ) )
-			{
-				body = body.substring( 1 );
-			}
-			parameters = OAuthUtils.decodeForm( body );
-			if( StringUtils.isNullOrEmpty( getAccessToken() ) )
-			{
-				throw OAuthProblemException.error( OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE,
-						"Invalid response! Response body is not " + OAuth.ContentType.JSON + " encoded or form-url-encoded" );
-			}
-		}
-	}
+        try {
+            this.body = body;
+            parameters = JSONUtils.parseJSON(body);
+        } catch (JSONException e) {
+            if (body.startsWith("#")) {
+                body = body.substring(1);
+            }
+            parameters = OAuthUtils.decodeForm(body);
+            if (StringUtils.isNullOrEmpty(getAccessToken())) {
+                throw OAuthProblemException.error(OAuthError.CodeResponse.UNSUPPORTED_RESPONSE_TYPE,
+                        "Invalid response! Response body is not " + OAuth.ContentType.JSON + " encoded or form-url-encoded");
+            }
+        }
+    }
 
-	protected void setContentType( String contentType )
-	{
-		this.contentType = contentType;
-	}
+    protected void setContentType(String contentType) {
+        this.contentType = contentType;
+    }
 
 
-	protected void setResponseCode( int code )
-	{
-		this.responseCode = code;
-	}
+    protected void setResponseCode(int code) {
+        this.responseCode = code;
+    }
 
 }

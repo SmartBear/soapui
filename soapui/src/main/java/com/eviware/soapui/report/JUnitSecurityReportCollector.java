@@ -36,105 +36,90 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Collects Security Test results and creates JUnitReports
- * 
+ *
  * @author nebojsa.tasic
  */
 
-public class JUnitSecurityReportCollector extends JUnitReportCollector implements SecurityTestRunListener
-{
-	@Override
-	public void afterOriginalStep( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityTestStepResult result )
-	{
-	}
+public class JUnitSecurityReportCollector extends JUnitReportCollector implements SecurityTestRunListener {
+    @Override
+    public void afterOriginalStep(TestCaseRunner testRunner, SecurityTestRunContext runContext,
+                                  SecurityTestStepResult result) {
+    }
 
-	@Override
-	public void afterRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
-	{
-		TestCase testCase = testRunner.getTestCase();
+    @Override
+    public void afterRun(TestCaseRunner testRunner, SecurityTestRunContext runContext) {
+        TestCase testCase = testRunner.getTestCase();
 
-		SecurityTest securityTest = ( ( SecurityTestRunner )testRunner ).getSecurityTest();
+        SecurityTest securityTest = ((SecurityTestRunner) testRunner).getSecurityTest();
 
-		JUnitReport report = new JUnitReport();
-		String reportName = securityTest.getName();
-		report.setTestSuiteName( reportName );
-		report.setPackage( testCase.getTestSuite().getProject().getName() );
-		int errorCount = 0;
+        JUnitReport report = new JUnitReport();
+        String reportName = securityTest.getName();
+        report.setTestSuiteName(reportName);
+        report.setPackage(testCase.getTestSuite().getProject().getName());
+        int errorCount = 0;
 
-		for( TestStep ts : testCase.getTestStepList() )
-		{
-			SecurityTestStepResult secuTestStepResult = securityTest.getSecurityTestStepResultMap().get( ts );
-			if( secuTestStepResult != null )
-			{
-				for( SecurityScanResult scanResult : secuTestStepResult.getSecurityScanResultList() )
-				{
-					List<SecurityScanRequestResult> resultList = scanResult.getSecurityRequestResultList();
-					Testcase secTestCase = report.addTestCase( ts.getName() + " - " + scanResult.getSecurityScanName(),
-							scanResult.getTimeTaken() );
+        for (TestStep ts : testCase.getTestStepList()) {
+            SecurityTestStepResult secuTestStepResult = securityTest.getSecurityTestStepResultMap().get(ts);
+            if (secuTestStepResult != null) {
+                for (SecurityScanResult scanResult : secuTestStepResult.getSecurityScanResultList()) {
+                    List<SecurityScanRequestResult> resultList = scanResult.getSecurityRequestResultList();
+                    Testcase secTestCase = report.addTestCase(ts.getName() + " - " + scanResult.getSecurityScanName(),
+                            scanResult.getTimeTaken());
 
-					secTestCase.setPackage( testCase.getTestSuite().getProject().getName() );
+                    secTestCase.setPackage(testCase.getTestSuite().getProject().getName());
 
-					for( int i = 0; i < resultList.size(); i++ )
-					{
-						SecurityScanRequestResult scanRequestResult = resultList.get( i );
-						if( scanRequestResult.getStatus() == ResultStatus.FAILED )
-						{
-							StringBuffer result = new StringBuffer();
-							result.append( "<pre>" )
-									.append( XmlUtils.entitize( scanRequestResult.getChangedParamsInfo( i + 1 ) ) )
-									.append( "</pre>" );
+                    for (int i = 0; i < resultList.size(); i++) {
+                        SecurityScanRequestResult scanRequestResult = resultList.get(i);
+                        if (scanRequestResult.getStatus() == ResultStatus.FAILED) {
+                            StringBuffer result = new StringBuffer();
+                            result.append("<pre>")
+                                    .append(XmlUtils.entitize(scanRequestResult.getChangedParamsInfo(i + 1)))
+                                    .append("</pre>");
 
-							for( String message : scanRequestResult.getMessages() )
-							{
-								result.append( "<pre>" ).append( XmlUtils.entitize( message ) ).append( "</pre>" );
-							}
+                            for (String message : scanRequestResult.getMessages()) {
+                                result.append("<pre>").append(XmlUtils.entitize(message)).append("</pre>");
+                            }
 
-							secTestCase.addNewError().setStringValue( result.toString() );
-							errorCount++ ;
-						}
-					}
-				}
-			}
+                            secTestCase.addNewError().setStringValue(result.toString());
+                            errorCount++;
+                        }
+                    }
+                }
+            }
 
-			report.setNoofErrorsInTestSuite( errorCount );
-			report.setTotalTime( testRunner.getTimeTaken() );
+            report.setNoofErrorsInTestSuite(errorCount);
+            report.setTotalTime(testRunner.getTimeTaken());
 
-			reports.put( reportName, report );
-		}
-	}
+            reports.put(reportName, report);
+        }
+    }
 
-	@Override
-	public void afterSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityScanResult securityScanResult )
-	{
+    @Override
+    public void afterSecurityScan(TestCaseRunner testRunner, SecurityTestRunContext runContext,
+                                  SecurityScanResult securityScanResult) {
 
-	}
+    }
 
-	@Override
-	public void afterSecurityScanRequest( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityScanRequestResult securityScanReqResult )
-	{
-	}
+    @Override
+    public void afterSecurityScanRequest(TestCaseRunner testRunner, SecurityTestRunContext runContext,
+                                         SecurityScanRequestResult securityScanReqResult) {
+    }
 
-	@Override
-	public void afterStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result )
-	{
-	}
+    @Override
+    public void afterStep(TestCaseRunner testRunner, SecurityTestRunContext runContext, SecurityTestStepResult result) {
+    }
 
-	@Override
-	public void beforeRun( TestCaseRunner testRunner, SecurityTestRunContext runContext )
-	{
+    @Override
+    public void beforeRun(TestCaseRunner testRunner, SecurityTestRunContext runContext) {
 
-	}
+    }
 
-	@Override
-	public void beforeSecurityScan( TestCaseRunner testRunner, SecurityTestRunContext runContext,
-			SecurityScan securityScan )
-	{
-	}
+    @Override
+    public void beforeSecurityScan(TestCaseRunner testRunner, SecurityTestRunContext runContext,
+                                   SecurityScan securityScan) {
+    }
 
-	@Override
-	public void beforeStep( TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult testStepResult )
-	{
-	}
+    @Override
+    public void beforeStep(TestCaseRunner testRunner, SecurityTestRunContext runContext, TestStepResult testStepResult) {
+    }
 }

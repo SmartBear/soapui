@@ -22,55 +22,53 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
  * A TestStep result
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface TestStepResult
-{
-	public enum TestStepStatus
-	{
-		UNKNOWN, OK, FAILED, CANCELED
-	}
+public interface TestStepResult {
+    public enum TestStepStatus {
+        UNKNOWN, OK, FAILED, CANCELED
+    }
 
-	public TestStepStatus getStatus();
+    public TestStepStatus getStatus();
 
-	public TestStep getTestStep();
+    public TestStep getTestStep();
 
-	/**
-	 * Returns a list of actions that can be applied to this result
-	 */
+    /**
+     * Returns a list of actions that can be applied to this result
+     */
 
-	public ActionList getActions();
+    public ActionList getActions();
 
-	public String[] getMessages();
+    public String[] getMessages();
 
-	public Throwable getError();
+    public Throwable getError();
 
-	public long getTimeTaken();
+    public long getTimeTaken();
 
-	public long getTimeStamp();
+    public long getTimeStamp();
 
-	/**
-	 * Used for calculating throughput
-	 * 
-	 * @return the number of bytes in this result
-	 */
+    /**
+     * Used for calculating throughput
+     *
+     * @return the number of bytes in this result
+     */
 
-	public long getSize();
+    public long getSize();
 
-	/**
-	 * Writes this result to the specified writer, used for logging.
-	 */
+    /**
+     * Writes this result to the specified writer, used for logging.
+     */
 
-	public void writeTo( PrintWriter writer );
+    public void writeTo(PrintWriter writer);
 
-	/**
-	 * Can discard any result data that may be taking up memory. Timing-values
-	 * must not be discarded.
-	 */
+    /**
+     * Can discard any result data that may be taking up memory. Timing-values
+     * must not be discarded.
+     */
 
-	public void discard();
+    public void discard();
 
-	public boolean isDiscarded();
+    public boolean isDiscarded();
 }

@@ -21,64 +21,54 @@ import com.eviware.soapui.model.mock.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class SequenceMockOperationDispatcher extends AbstractMockOperationDispatcher implements MockRunListener
-{
-	private int currentDispatchIndex;
+public class SequenceMockOperationDispatcher extends AbstractMockOperationDispatcher implements MockRunListener {
+    private int currentDispatchIndex;
 
-	public SequenceMockOperationDispatcher( MockOperation mockOperation )
-	{
-		super( mockOperation );
+    public SequenceMockOperationDispatcher(MockOperation mockOperation) {
+        super(mockOperation);
 
-		mockOperation.getMockService().addMockRunListener( this );
-	}
+        mockOperation.getMockService().addMockRunListener(this);
+    }
 
-	public MockResponse selectMockResponse( MockRequest request, MockResult result )
-	{
-		if( currentDispatchIndex >= getMockOperation().getMockResponseCount() )
-			currentDispatchIndex = 0;
+    public MockResponse selectMockResponse(MockRequest request, MockResult result) {
+        if (currentDispatchIndex >= getMockOperation().getMockResponseCount()) {
+            currentDispatchIndex = 0;
+        }
 
-		MockResponse mockResponse = getMockOperation().getMockResponseAt( currentDispatchIndex );
+        MockResponse mockResponse = getMockOperation().getMockResponseAt(currentDispatchIndex);
 
-		currentDispatchIndex++ ;
-		return mockResponse;
-	}
+        currentDispatchIndex++;
+        return mockResponse;
+    }
 
-	@Override
-	public boolean hasDefaultResponse()
-	{
-		return false;
-	}
+    @Override
+    public boolean hasDefaultResponse() {
+        return false;
+    }
 
-	@Override
-	public void release()
-	{
-		getMockOperation().getMockService().removeMockRunListener( this );
-		super.release();
-	}
+    @Override
+    public void release() {
+        getMockOperation().getMockService().removeMockRunListener(this);
+        super.release();
+    }
 
-	public void onMockRunnerStart( MockRunner mockRunner )
-	{
-		currentDispatchIndex = 0;
-	}
+    public void onMockRunnerStart(MockRunner mockRunner) {
+        currentDispatchIndex = 0;
+    }
 
-	public void onMockResult( MockResult result )
-	{
-	}
+    public void onMockResult(MockResult result) {
+    }
 
-	public void onMockRunnerStop( MockRunner mockRunner )
-	{
-	}
+    public void onMockRunnerStop(MockRunner mockRunner) {
+    }
 
-	public MockResult onMockRequest( MockRunner runner, HttpServletRequest request, HttpServletResponse response )
-	{
-		return null;
-	}
+    public MockResult onMockRequest(MockRunner runner, HttpServletRequest request, HttpServletResponse response) {
+        return null;
+    }
 
-	public static class Factory implements MockOperationDispatchFactory
-	{
-		public MockOperationDispatcher build( MockOperation mockOperation )
-		{
-			return new SequenceMockOperationDispatcher( mockOperation );
-		}
-	}
+    public static class Factory implements MockOperationDispatchFactory {
+        public MockOperationDispatcher build(MockOperation mockOperation) {
+            return new SequenceMockOperationDispatcher(mockOperation);
+        }
+    }
 }

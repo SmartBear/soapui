@@ -24,66 +24,56 @@ import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
 
 public class MessageExchangeRequestMessageEditor extends
-		RequestMessageXmlEditor<MessageExchangeModelItem, DefaultXmlDocument>
-{
-	private final MessageExchangeModelItem messageExchangeModelItem;
+        RequestMessageXmlEditor<MessageExchangeModelItem, DefaultXmlDocument> {
+    private final MessageExchangeModelItem messageExchangeModelItem;
 
-	public MessageExchangeRequestMessageEditor( MessageExchange messageExchange )
-	{
-		this( new MessageExchangeModelItem( "message exchange request", messageExchange ) );
-	}
+    public MessageExchangeRequestMessageEditor(MessageExchange messageExchange) {
+        this(new MessageExchangeModelItem("message exchange request", messageExchange));
+    }
 
-	public MessageExchangeRequestMessageEditor( MessageExchangeModelItem messageExchangeModelItem )
-	{
-		super( new DefaultXmlDocument(), messageExchangeModelItem );
-		this.messageExchangeModelItem = messageExchangeModelItem;
+    public MessageExchangeRequestMessageEditor(MessageExchangeModelItem messageExchangeModelItem) {
+        super(new DefaultXmlDocument(), messageExchangeModelItem);
+        this.messageExchangeModelItem = messageExchangeModelItem;
 
-		if( messageExchangeModelItem.getMessageExchange() != null )
-			updateXml();
+        if (messageExchangeModelItem.getMessageExchange() != null) {
+            updateXml();
+        }
 
-		messageExchangeModelItem.addPropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
+        messageExchangeModelItem.addPropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this);
 
-		setEditable( false );
-	}
+        setEditable(false);
+    }
 
-	public void updateXml()
-	{
-		try
-		{
-			MessageExchange messageExchange = messageExchangeModelItem.getMessageExchange();
-			DefaultXmlDocument defaultXmlDocument = getDocument();
+    public void updateXml() {
+        try {
+            MessageExchange messageExchange = messageExchangeModelItem.getMessageExchange();
+            DefaultXmlDocument defaultXmlDocument = getDocument();
 
-			if( messageExchange != null && messageExchange.getOperation() != null )
-				defaultXmlDocument.setTypeSystem( messageExchange.getOperation().getInterface().getDefinitionContext()
-						.getInterfaceDefinition().getSchemaTypeSystem() );
+            if (messageExchange != null && messageExchange.getOperation() != null) {
+                defaultXmlDocument.setTypeSystem(messageExchange.getOperation().getInterface().getDefinitionContext()
+                        .getInterfaceDefinition().getSchemaTypeSystem());
+            }
 
-			defaultXmlDocument.setXml( messageExchange == null ? null : messageExchange.getRequestContentAsXml() );
-		}
-		catch( Throwable e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+            defaultXmlDocument.setXml(messageExchange == null ? null : messageExchange.getRequestContentAsXml());
+        } catch (Throwable e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	@Override
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getSource() == messageExchangeModelItem
-				&& evt.getPropertyName().equals( MessageExchangeModelItem.MESSAGE_EXCHANGE ) )
-		{
-			updateXml();
-		}
-		else
-		{
-			super.propertyChange( evt );
-		}
-	}
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getSource() == messageExchangeModelItem
+                && evt.getPropertyName().equals(MessageExchangeModelItem.MESSAGE_EXCHANGE)) {
+            updateXml();
+        } else {
+            super.propertyChange(evt);
+        }
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		messageExchangeModelItem.removePropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
-	}
+        messageExchangeModelItem.removePropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this);
+    }
 }

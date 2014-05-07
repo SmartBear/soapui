@@ -29,121 +29,99 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * WsdlMessageExchange for a WsdlMockResponse, required for validations
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange<WsdlMockResponse>
-{
-	public WsdlMockResponseMessageExchange( WsdlMockResponse mockResponse )
-	{
-		super( mockResponse );
-	}
+public class WsdlMockResponseMessageExchange extends AbstractWsdlMessageExchange<WsdlMockResponse> {
+    public WsdlMockResponseMessageExchange(WsdlMockResponse mockResponse) {
+        super(mockResponse);
+    }
 
-	public Attachment[] getRequestAttachments()
-	{
-		return null;
-	}
+    public Attachment[] getRequestAttachments() {
+        return null;
+    }
 
-	@Override
-	public Response getResponse()
-	{
-		return null;
-	}
+    @Override
+    public Response getResponse() {
+        return null;
+    }
 
-	public String getEndpoint()
-	{
-		return getWsdlMockResult().getMockRequest().getHttpRequest().getRequestURI();
-	}
+    public String getEndpoint() {
+        return getWsdlMockResult().getMockRequest().getHttpRequest().getRequestURI();
+    }
 
-	public String getRequestContent()
-	{
-		WsdlMockResult mockResult = getWsdlMockResult();
-		WsdlMockRequest mockRequest = mockResult.getMockRequest();
-		return mockRequest.getRequestContent();
-	}
+    public String getRequestContent() {
+        WsdlMockResult mockResult = getWsdlMockResult();
+        WsdlMockRequest mockRequest = mockResult.getMockRequest();
+        return mockRequest.getRequestContent();
+    }
 
-	public StringToStringsMap getRequestHeaders()
-	{
-		return null;
-	}
+    public StringToStringsMap getRequestHeaders() {
+        return null;
+    }
 
-	public Attachment[] getResponseAttachments()
-	{
-		return getModelItem().getAttachments();
-	}
+    public Attachment[] getResponseAttachments() {
+        return getModelItem().getAttachments();
+    }
 
-	public String getResponseContent()
-	{
-		return getModelItem().getResponseContent();
-	}
+    public String getResponseContent() {
+        return getModelItem().getResponseContent();
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		return getModelItem().getResponseHeaders();
-	}
+    public StringToStringsMap getResponseHeaders() {
+        return getModelItem().getResponseHeaders();
+    }
 
-	@Override
-	public WsdlOperation getOperation()
-	{
-		return getModelItem().getMockOperation().getOperation();
-	}
+    @Override
+    public WsdlOperation getOperation() {
+        return getModelItem().getMockOperation().getOperation();
+    }
 
-	public long getTimeTaken()
-	{
-		return 0;
-	}
+    public long getTimeTaken() {
+        return 0;
+    }
 
-	public long getTimestamp()
-	{
-		return 0;
-	}
+    public long getTimestamp() {
+        return 0;
+    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+    public boolean isDiscarded() {
+        return false;
+    }
 
-	public Vector<?> getRequestWssResult()
-	{
-		return getWsdlMockResult().getRequestWssResult();
-	}
+    public Vector<?> getRequestWssResult() {
+        return getWsdlMockResult().getRequestWssResult();
+    }
 
-	public Vector<?> getResponseWssResult()
-	{
-		return null;
-	}
+    public Vector<?> getResponseWssResult() {
+        return null;
+    }
 
-	public int getResponseStatusCode()
-	{
-		return getModelItem().getResponseHttpStatus();
-	}
+    public int getResponseStatusCode() {
+        return getModelItem().getResponseHttpStatus();
+    }
 
-	public String getResponseContentType()
-	{
-		return getWsdlMockResult().getResponseContentType();
-	}
+    public String getResponseContentType() {
+        return getWsdlMockResult().getResponseContentType();
+    }
 
-	@Override
-	public boolean hasRawData()
-	{
-		return true;
-	}
+    @Override
+    public boolean hasRawData() {
+        return true;
+    }
 
-	@Override
-	public byte[] getRawResponseData()
-	{
-		return getWsdlMockResult().getRawResponseData();
-	}
+    @Override
+    public byte[] getRawResponseData() {
+        return getWsdlMockResult().getRawResponseData();
+    }
 
-	public byte[] getRawRequestData()
-	{
-		return getModelItem().getMockResult().getMockRequest().getRawRequestData();
-	}
+    public byte[] getRawRequestData() {
+        return getModelItem().getMockResult().getMockRequest().getRawRequestData();
+    }
 
-	public WsdlMockResult getWsdlMockResult()
-	{
-		return (WsdlMockResult)getModelItem().getMockResult();
-	}
+    public WsdlMockResult getWsdlMockResult() {
+        return (WsdlMockResult) getModelItem().getMockResult();
+    }
 
 }

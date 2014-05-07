@@ -25,114 +25,94 @@ import java.util.Set;
 
 /**
  * Default Settings implementation
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SettingsImpl implements Settings
-{
-	private final Settings parent;
-	private final StringToStringMap values = new StringToStringMap();
-	private final Set<SettingsListener> listeners = new HashSet<SettingsListener>();
+public class SettingsImpl implements Settings {
+    private final Settings parent;
+    private final StringToStringMap values = new StringToStringMap();
+    private final Set<SettingsListener> listeners = new HashSet<SettingsListener>();
 
-	public SettingsImpl()
-	{
-		this( null );
-	}
+    public SettingsImpl() {
+        this(null);
+    }
 
-	public SettingsImpl( Settings parent )
-	{
-		this.parent = parent;
-	}
+    public SettingsImpl(Settings parent) {
+        this.parent = parent;
+    }
 
-	public boolean isSet( String id )
-	{
-		return values.containsKey( id );
-	}
+    public boolean isSet(String id) {
+        return values.containsKey(id);
+    }
 
-	public String getString( String id, String defaultValue )
-	{
-		if( values.containsKey( id ) )
-			return values.get( id );
-		return parent == null ? defaultValue : parent.getString( id, defaultValue );
-	}
+    public String getString(String id, String defaultValue) {
+        if (values.containsKey(id)) {
+            return values.get(id);
+        }
+        return parent == null ? defaultValue : parent.getString(id, defaultValue);
+    }
 
-	public void setString( String id, String value )
-	{
-		String oldValue = getString( id, null );
-		values.put( id, value );
+    public void setString(String id, String value) {
+        String oldValue = getString(id, null);
+        values.put(id, value);
 
-		for( SettingsListener listener : listeners )
-		{
-			listener.settingChanged( id, value, oldValue );
-		}
-	}
+        for (SettingsListener listener : listeners) {
+            listener.settingChanged(id, value, oldValue);
+        }
+    }
 
-	public void reloadSettings()
-	{
-		for( SettingsListener listener : listeners )
-		{
-			listener.settingsReloaded();
-		}
-	}
+    public void reloadSettings() {
+        for (SettingsListener listener : listeners) {
+            listener.settingsReloaded();
+        }
+    }
 
-	public boolean getBoolean( String id )
-	{
-		return getBoolean( id, false );
-	}
+    public boolean getBoolean(String id) {
+        return getBoolean(id, false);
+    }
 
-	@Override
-	public boolean getBoolean( String id, boolean defaultValue )
-	{
-		if( values.containsKey( id ) )
-			return Boolean.parseBoolean( values.get( id ) );
-		return parent == null ? defaultValue : parent.getBoolean( id );
-	}
+    @Override
+    public boolean getBoolean(String id, boolean defaultValue) {
+        if (values.containsKey(id)) {
+            return Boolean.parseBoolean(values.get(id));
+        }
+        return parent == null ? defaultValue : parent.getBoolean(id);
+    }
 
-	public void setBoolean( String id, boolean value )
-	{
-		String oldValue = getString( id, null );
-		values.put( id, Boolean.toString( value ) );
+    public void setBoolean(String id, boolean value) {
+        String oldValue = getString(id, null);
+        values.put(id, Boolean.toString(value));
 
-		for( SettingsListener listener : listeners )
-		{
-			listener.settingChanged( id, Boolean.toString( value ), oldValue );
-		}
-	}
+        for (SettingsListener listener : listeners) {
+            listener.settingChanged(id, Boolean.toString(value), oldValue);
+        }
+    }
 
-	public long getLong( String id, long defaultValue )
-	{
-		if( values.containsKey( id ) )
-		{
-			try
-			{
-				return Long.parseLong( values.get( id ) );
-			}
-			catch( NumberFormatException e )
-			{
-			}
-		}
+    public long getLong(String id, long defaultValue) {
+        if (values.containsKey(id)) {
+            try {
+                return Long.parseLong(values.get(id));
+            } catch (NumberFormatException e) {
+            }
+        }
 
-		return defaultValue;
-	}
+        return defaultValue;
+    }
 
-	public void addSettingsListener( SettingsListener listener )
-	{
-		listeners.add( listener );
-	}
+    public void addSettingsListener(SettingsListener listener) {
+        listeners.add(listener);
+    }
 
-	public void removeSettingsListener( SettingsListener listener )
-	{
-		listeners.remove( listener );
-	}
+    public void removeSettingsListener(SettingsListener listener) {
+        listeners.remove(listener);
+    }
 
-	public void clearSetting( String id )
-	{
-		values.remove( id );
-	}
+    public void clearSetting(String id) {
+        values.remove(id);
+    }
 
-	public void setLong( String id, long value )
-	{
-		values.put( id, Long.toString( value ) );
-	}
+    public void setLong(String id, long value) {
+        values.put(id, Long.toString(value));
+    }
 }

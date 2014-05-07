@@ -12,34 +12,30 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.oauth;
+*/
+package com.eviware.soapui.impl.rest.actions.oauth;
 
 /**
  * A no-op adapter for the BrowserListener interface.
  */
-public class BrowserListenerAdapter implements BrowserListener
-{
-	@Override
-	public void locationChanged( String newLocation )
-	{
+public class BrowserListenerAdapter implements BrowserListener {
+    @Override
+    public void locationChanged(String newLocation) {
 
-	}
+    }
 
-	@Override
-	public void contentChanged( String newContent )
-	{
+    @Override
+    public void contentChanged(String newContent) {
 
-	}
+    }
 
-	@Override
-	public void javaScriptExecuted( String script, String errorLocation, Exception error )
-	{
+    @Override
+    public void javaScriptExecuted(String script, String errorLocation, Exception error) {
 
-	}
+    }
 
-	@Override
-	public void browserClosed()
-	{
+    @Override
+    public void browserClosed() {
 
-	}
+    }
 }

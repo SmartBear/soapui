@@ -39,126 +39,111 @@ import java.beans.PropertyChangeEvent;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
-public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod>
-{
-	public static final String REST_METHOD_EDITOR = "rest-method-editor";
-	private RestParamsTable paramsTable;
-	private boolean updatingRequest;
-	private JComboBox methodCombo;
-	private RestRepresentationsTable restRepresentationsTable;
+public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod> {
+    public static final String REST_METHOD_EDITOR = "rest-method-editor";
+    private RestParamsTable paramsTable;
+    private boolean updatingRequest;
+    private JComboBox methodCombo;
+    private RestRepresentationsTable restRepresentationsTable;
 
-	public RestMethodDesktopPanel( RestMethod modelItem )
-	{
-		super( modelItem );
-		setName( REST_METHOD_EDITOR );
-		add( buildToolbar(), BorderLayout.NORTH );
-		add( buildContent(), BorderLayout.CENTER );
-	}
+    public RestMethodDesktopPanel(RestMethod modelItem) {
+        super(modelItem);
+        setName(REST_METHOD_EDITOR);
+        add(buildToolbar(), BorderLayout.NORTH);
+        add(buildContent(), BorderLayout.CENTER);
+    }
 
-	private Component buildContent()
-	{
-		JTabbedPane tabs = new JTabbedPane();
+    private Component buildContent() {
+        JTabbedPane tabs = new JTabbedPane();
 
-		paramsTable = new RestParamsTable( getModelItem().getParams(), true, ParamLocation.METHOD, true, false );
+        paramsTable = new RestParamsTable(getModelItem().getParams(), true, ParamLocation.METHOD, true, false);
 
-		tabs.addTab( "Method Parameters", paramsTable );
+        tabs.addTab("Method Parameters", paramsTable);
 
-		restRepresentationsTable = new RestRepresentationsTable( getModelItem(), new RestRepresentation.Type[] {
-				RestRepresentation.Type.REQUEST, RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT }, false );
+        restRepresentationsTable = new RestRepresentationsTable(getModelItem(), new RestRepresentation.Type[]{
+                RestRepresentation.Type.REQUEST, RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT}, false);
 
-		tabs.addTab( "Representations", restRepresentationsTable );
+        tabs.addTab("Representations", restRepresentationsTable);
 
 		/*
-		 * tabs.addTab("Response Representations", new RestRepresentationsTable(
+         * tabs.addTab("Response Representations", new RestRepresentationsTable(
 		 * getModelItem(), new RestRepresentation.Type[] {
 		 * RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT },
 		 * false));
 		 */
 
-		return UISupport.createTabPanel( tabs, false );
-	}
+        return UISupport.createTabPanel(tabs, false);
+    }
 
-	@Override
-	public String getTitle()
-	{
-		return getName( getModelItem() );
-	}
+    @Override
+    public String getTitle() {
+        return getName(getModelItem());
+    }
 
-	public RestParamsTable getParamsTable()
-	{
-		return paramsTable;
-	}
+    public RestParamsTable getParamsTable() {
+        return paramsTable;
+    }
 
-	@Override
-	protected boolean release()
-	{
-		paramsTable.release();
-		restRepresentationsTable.release();
-		return super.release();
-	}
+    @Override
+    protected boolean release() {
+        paramsTable.release();
+        restRepresentationsTable.release();
+        return super.release();
+    }
 
-	private String getName( RestMethod modelItem )
-	{
-		return modelItem.getName();
-	}
+    private String getName(RestMethod modelItem) {
+        return modelItem.getName();
+    }
 
-	private Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+    private Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		methodCombo = new JComboBox( RestRequestInterface.HttpMethod.getMethods() );
+        methodCombo = new JComboBox(RestRequestInterface.HttpMethod.getMethods());
 
-		methodCombo.setSelectedItem( getModelItem().getMethod() );
-		methodCombo.setToolTipText( "Set desired HTTP method" );
-		methodCombo.addItemListener( new ItemListener()
-		{
-			public void itemStateChanged( ItemEvent e )
-			{
-				updatingRequest = true;
-				getModelItem().setMethod( ( RestRequestInterface.HttpMethod )methodCombo.getSelectedItem() );
-				updatingRequest = false;
-			}
-		} );
+        methodCombo.setSelectedItem(getModelItem().getMethod());
+        methodCombo.setToolTipText("Set desired HTTP method");
+        methodCombo.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) {
+                updatingRequest = true;
+                getModelItem().setMethod((RestRequestInterface.HttpMethod) methodCombo.getSelectedItem());
+                updatingRequest = false;
+            }
+        });
 
-		toolbar.addLabeledFixed( "HTTP method", methodCombo );
-		toolbar.addSeparator();
+        toolbar.addLabeledFixed("HTTP method", methodCombo);
+        toolbar.addSeparator();
 
-		toolbar.addFixed( createActionButton( SwingActionDelegate.createDelegate( NewRestRequestAction.SOAPUI_ACTION_ID,
-				getModelItem(), null, "/create_empty_request.gif" ), true ) );
+        toolbar.addFixed(createActionButton(SwingActionDelegate.createDelegate(NewRestRequestAction.SOAPUI_ACTION_ID,
+                getModelItem(), null, "/create_empty_request.gif"), true));
 
-		toolbar.addSeparator();
+        toolbar.addSeparator();
 
-		toolbar.addGlue();
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.RESTMETHODEDITOR_HELP_URL ) ) );
+        toolbar.addGlue();
+        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.RESTMETHODEDITOR_HELP_URL)));
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	@Override
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return getModelItem().dependsOn( modelItem );
-	}
+    @Override
+    public boolean dependsOn(ModelItem modelItem) {
+        return getModelItem().dependsOn(modelItem);
+    }
 
-	public boolean onClose( boolean canCancel )
-	{
-		return release();
-	}
+    public boolean onClose(boolean canCancel) {
+        return release();
+    }
 
-	@Override
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		super.propertyChange( evt );
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        super.propertyChange(evt);
 
-		if( evt.getPropertyName().equals( "method" ) && !updatingRequest )
-		{
-			methodCombo.setSelectedItem( evt.getNewValue() );
-		}
+        if (evt.getPropertyName().equals("method") && !updatingRequest) {
+            methodCombo.setSelectedItem(evt.getNewValue());
+        }
 
-		if( paramsTable != null )
-		{
-			paramsTable.refresh();
-		}
-	}
+        if (paramsTable != null) {
+            paramsTable.refresh();
+        }
+    }
 
 }

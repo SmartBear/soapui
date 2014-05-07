@@ -27,181 +27,154 @@ import com.eviware.soapui.model.testsuite.RenameableTestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepProperty;
 
-/***
+/**
  * Default implementation of TestStepProperty interface
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DefaultTestStepProperty implements TestStepProperty, RenameableTestProperty
-{
-	private String name;
-	private boolean isReadOnly;
-	private String description;
-	private PropertyHandler handler;
-	private final WsdlTestStep testStep;
-	private boolean requestPart;
+public class DefaultTestStepProperty implements TestStepProperty, RenameableTestProperty {
+    private String name;
+    private boolean isReadOnly;
+    private String description;
+    private PropertyHandler handler;
+    private final WsdlTestStep testStep;
+    private boolean requestPart;
 
-	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep )
-	{
-		this.name = name;
-		this.isReadOnly = isReadOnly;
-		this.handler = handler;
-		this.testStep = testStep;
-	}
+    public DefaultTestStepProperty(String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep) {
+        this.name = name;
+        this.isReadOnly = isReadOnly;
+        this.handler = handler;
+        this.testStep = testStep;
+    }
 
-	public DefaultTestStepProperty( String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep,
-			boolean requestPart )
-	{
-		this.name = name;
-		this.isReadOnly = isReadOnly;
-		this.handler = handler;
-		this.testStep = testStep;
-		this.requestPart = requestPart;
-	}
+    public DefaultTestStepProperty(String name, boolean isReadOnly, PropertyHandler handler, WsdlTestStep testStep,
+                                   boolean requestPart) {
+        this.name = name;
+        this.isReadOnly = isReadOnly;
+        this.handler = handler;
+        this.testStep = testStep;
+        this.requestPart = requestPart;
+    }
 
-	public DefaultTestStepProperty( String name, WsdlTestStep testStep )
-	{
-		this( name, false, new SimplePropertyHandler(), testStep );
-	}
+    public DefaultTestStepProperty(String name, WsdlTestStep testStep) {
+        this(name, false, new SimplePropertyHandler(), testStep);
+    }
 
-	public DefaultTestStepProperty( String name, boolean isReadOnly, WsdlTestStep testStep )
-	{
-		this( name, isReadOnly, new SimplePropertyHandler(), testStep );
-	}
+    public DefaultTestStepProperty(String name, boolean isReadOnly, WsdlTestStep testStep) {
+        this(name, isReadOnly, new SimplePropertyHandler(), testStep);
+    }
 
-	public String getDescription()
-	{
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setDescription( String description )
-	{
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName( String name )
-	{
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setIsReadOnly( boolean isReadOnly )
-	{
-		this.isReadOnly = isReadOnly;
-	}
+    public void setIsReadOnly(boolean isReadOnly) {
+        this.isReadOnly = isReadOnly;
+    }
 
-	public boolean isReadOnly()
-	{
-		return isReadOnly;
-	}
+    public boolean isReadOnly() {
+        return isReadOnly;
+    }
 
-	public void setPropertyHandler( PropertyHandler handler )
-	{
-		this.handler = handler;
-	}
+    public void setPropertyHandler(PropertyHandler handler) {
+        this.handler = handler;
+    }
 
-	public String getValue()
-	{
-		return handler == null ? null : handler.getValue( this );
-	}
+    public String getValue() {
+        return handler == null ? null : handler.getValue(this);
+    }
 
-	public void setValue( String value )
-	{
-		if( isReadOnly() )
-			throw new RuntimeException( "Trying to set read-only property [" + getName() + "]" );
+    public void setValue(String value) {
+        if (isReadOnly()) {
+            throw new RuntimeException("Trying to set read-only property [" + getName() + "]");
+        }
 
-		if( handler != null )
-		{
-			handler.setValue( this, value );
-		}
-	}
+        if (handler != null) {
+            handler.setValue(this, value);
+        }
+    }
 
-	public TestStep getTestStep()
-	{
-		return testStep;
-	}
+    public TestStep getTestStep() {
+        return testStep;
+    }
 
-	/**
-	 * Handler for providing and setting property values
-	 * 
-	 * @author Ole.Matzura
-	 */
+    /**
+     * Handler for providing and setting property values
+     *
+     * @author Ole.Matzura
+     */
 
-	public interface PropertyHandler
-	{
-		public String getValue( DefaultTestStepProperty property );
+    public interface PropertyHandler {
+        public String getValue(DefaultTestStepProperty property);
 
-		public void setValue( DefaultTestStepProperty property, String value );
-	}
+        public void setValue(DefaultTestStepProperty property, String value);
+    }
 
-	/**
-	 * Empty implementation of PropertyHandler interface
-	 * 
-	 * @author Ole.Matzura
-	 */
+    /**
+     * Empty implementation of PropertyHandler interface
+     *
+     * @author Ole.Matzura
+     */
 
-	public static class PropertyHandlerAdapter implements PropertyHandler
-	{
-		public String getValue( DefaultTestStepProperty property )
-		{
-			return null;
-		}
+    public static class PropertyHandlerAdapter implements PropertyHandler {
+        public String getValue(DefaultTestStepProperty property) {
+            return null;
+        }
 
-		public void setValue( DefaultTestStepProperty property, String value )
-		{
-		}
-	}
+        public void setValue(DefaultTestStepProperty property, String value) {
+        }
+    }
 
-	/**
-	 * Simple implementation of PropertyHandler interface
-	 * 
-	 * @author Ole.Matzura
-	 */
+    /**
+     * Simple implementation of PropertyHandler interface
+     *
+     * @author Ole.Matzura
+     */
 
-	public static class SimplePropertyHandler implements PropertyHandler
-	{
-		private String value;
+    public static class SimplePropertyHandler implements PropertyHandler {
+        private String value;
 
-		public String getValue( DefaultTestStepProperty property )
-		{
-			return value;
-		}
+        public String getValue(DefaultTestStepProperty property) {
+            return value;
+        }
 
-		public void setValue( DefaultTestStepProperty property, String value )
-		{
-			this.value = value;
-		}
-	}
+        public void setValue(DefaultTestStepProperty property, String value) {
+            this.value = value;
+        }
+    }
 
-	public QName getType()
-	{
-		return XmlString.type.getName();
-	}
+    public QName getType() {
+        return XmlString.type.getName();
+    }
 
-	public ModelItem getModelItem()
-	{
-		return testStep;
-	}
+    public ModelItem getModelItem() {
+        return testStep;
+    }
 
-	public String getDefaultValue()
-	{
-		return null;
-	}
+    public String getDefaultValue() {
+        return null;
+    }
 
-	public boolean isRequestPart()
-	{
-		return requestPart;
-	}
+    public boolean isRequestPart() {
+        return requestPart;
+    }
 
-	@Override
-	public SchemaType getSchemaType()
-	{
-		return XmlString.type;
-	}
+    @Override
+    public SchemaType getSchemaType() {
+        return XmlString.type;
+    }
 
 }

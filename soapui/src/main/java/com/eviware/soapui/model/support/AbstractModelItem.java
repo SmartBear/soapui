@@ -27,160 +27,112 @@ import java.util.List;
 
 /**
  * Base-class for ModelItem implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public abstract class AbstractModelItem implements ModelItem
-{
-	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
+public abstract class AbstractModelItem implements ModelItem {
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		try
-		{
-			propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        try {
+            propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		try
-		{
-			propertyChangeSupport.addPropertyChangeListener( listener );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        try {
+            propertyChangeSupport.addPropertyChangeListener(listener);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		try
-		{
-			propertyChangeSupport.removePropertyChangeListener( listener );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        try {
+            propertyChangeSupport.removePropertyChangeListener(listener);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		try
-		{
-			propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        try {
+            propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void notifyPropertyChanged( String name, Object oldValue, Object newValue )
-	{
-		try
-		{
-			propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void notifyPropertyChanged(String name, Object oldValue, Object newValue) {
+        try {
+            propertyChangeSupport.firePropertyChange(name, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void notifyPropertyChanged( String name, String oldValue, String newValue )
-	{
-		try
-		{
-			propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void notifyPropertyChanged(String name, String oldValue, String newValue) {
+        try {
+            propertyChangeSupport.firePropertyChange(name, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void notifyPropertyChanged( String name, int oldValue, int newValue )
-	{
-		try
-		{
-			propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void notifyPropertyChanged(String name, int oldValue, int newValue) {
+        try {
+            propertyChangeSupport.firePropertyChange(name, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void notifyPropertyChanged( String name, boolean oldValue, boolean newValue )
-	{
-		try
-		{
-			propertyChangeSupport.firePropertyChange( name, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void notifyPropertyChanged(String name, boolean oldValue, boolean newValue) {
+        try {
+            propertyChangeSupport.firePropertyChange(name, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void fireIndexedPropertyChange( String propertyName, int index, boolean oldValue, boolean newValue )
-	{
-		try
-		{
-			propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void fireIndexedPropertyChange(String propertyName, int index, boolean oldValue, boolean newValue) {
+        try {
+            propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void fireIndexedPropertyChange( String propertyName, int index, int oldValue, int newValue )
-	{
-		try
-		{
-			propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void fireIndexedPropertyChange(String propertyName, int index, int oldValue, int newValue) {
+        try {
+            propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	public void fireIndexedPropertyChange( String propertyName, int index, Object oldValue, Object newValue )
-	{
-		try
-		{
-			propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-	}
+    public void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
+        try {
+            propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        }
+    }
 
-	@SuppressWarnings( "unchecked" )
-	public List<? extends ModelItem> getChildren()
-	{
-		return Collections.EMPTY_LIST;
-	}
+    @SuppressWarnings("unchecked")
+    public List<? extends ModelItem> getChildren() {
+        return Collections.EMPTY_LIST;
+    }
 
-	@Override
-	public Project getProject()
-	{
-		Project project = ModelSupport.getModelItemProject( this );
-		if (project == null)
-		{
-			throw new UnsupportedOperationException( this + " is not associated with a project" );
-		}
-		return project;
-	}
+    @Override
+    public Project getProject() {
+        Project project = ModelSupport.getModelItemProject(this);
+        if (project == null) {
+            throw new UnsupportedOperationException(this + " is not associated with a project");
+        }
+        return project;
+    }
 }

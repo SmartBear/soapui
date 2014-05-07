@@ -27,35 +27,30 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Adds the specified WsdlMockServices local endpoint to a WsdlInterface
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class AddEndpointToInterfaceAction extends AbstractSoapUIAction<WsdlMockService>
-{
-	public AddEndpointToInterfaceAction()
-	{
-		super( "Add Endpoint to Interface", "Adds this MockService's endpoint to the selected Interface" );
-	}
+public class AddEndpointToInterfaceAction extends AbstractSoapUIAction<WsdlMockService> {
+    public AddEndpointToInterfaceAction() {
+        super("Add Endpoint to Interface", "Adds this MockService's endpoint to the selected Interface");
+    }
 
-	public void perform( WsdlMockService mockService, Object param )
-	{
-		String[] names = ModelSupport.getNames( mockService.getProject().getInterfaceList(),
-				new ModelSupport.InterfaceTypeFilter( WsdlInterfaceFactory.WSDL_TYPE ) );
+    public void perform(WsdlMockService mockService, Object param) {
+        String[] names = ModelSupport.getNames(mockService.getProject().getInterfaceList(),
+                new ModelSupport.InterfaceTypeFilter(WsdlInterfaceFactory.WSDL_TYPE));
 
-		String ifaceName = UISupport.prompt( "Select Interface to add MockService endpoint to", "Add Endpoint", names,
-				null );
+        String ifaceName = UISupport.prompt("Select Interface to add MockService endpoint to", "Add Endpoint", names,
+                null);
 
-		if( ifaceName != null )
-		{
-			WsdlProject project = (WsdlProject)mockService.getProject();
-			AbstractInterface<?> iface = project.getInterfaceByName( ifaceName );
-			if( iface != null )
-			{
-				iface.addEndpoint( mockService.getLocalEndpoint() );
-				UISupport.showInfoMessage( "Add endpoint [" + mockService.getLocalEndpoint() + "] to " + "Interface ["
-						+ ifaceName + "]" );
-			}
-		}
-	}
+        if (ifaceName != null) {
+            WsdlProject project = mockService.getProject();
+            AbstractInterface<?> iface = project.getInterfaceByName(ifaceName);
+            if (iface != null) {
+                iface.addEndpoint(mockService.getLocalEndpoint());
+                UISupport.showInfoMessage("Add endpoint [" + mockService.getLocalEndpoint() + "] to " + "Interface ["
+                        + ifaceName + "]");
+            }
+        }
+    }
 }

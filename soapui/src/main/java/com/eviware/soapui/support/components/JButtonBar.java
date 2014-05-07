@@ -25,57 +25,53 @@ import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.swing.JXButtonPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 
-public class JButtonBar extends JXButtonPanel
-{
-	private ButtonBarBuilder builder;
-	private JButton defaultButton;
+public class JButtonBar extends JXButtonPanel {
+    private ButtonBarBuilder builder;
+    private JButton defaultButton;
 
-	public JButtonBar()
-	{
-		builder = new ButtonBarBuilder( this );
-	}
+    public JButtonBar() {
+        builder = new ButtonBarBuilder(this);
+    }
 
-	public void addActions( ActionList actions )
-	{
-		for( int c = 0; c < actions.getActionCount(); c++ )
-		{
-			Action action = actions.getActionAt( c );
+    public void addActions(ActionList actions) {
+        for (int c = 0; c < actions.getActionCount(); c++) {
+            Action action = actions.getActionAt(c);
 
-			if( !( action instanceof HelpActionMarker ) && c == 0 )
-			{
-				if( getComponentCount() == 0 )
-					builder.addGlue();
-				else
-					builder.addUnrelatedGap();
-			}
+            if (!(action instanceof HelpActionMarker) && c == 0) {
+                if (getComponentCount() == 0) {
+                    builder.addGlue();
+                } else {
+                    builder.addUnrelatedGap();
+                }
+            }
 
-			if( action == ActionSupport.SEPARATOR_ACTION )
-			{
-				builder.addUnrelatedGap();
-			}
-			else
-			{
-				if( c > 0 )
-					builder.addRelatedGap();
+            if (action == ActionSupport.SEPARATOR_ACTION) {
+                builder.addUnrelatedGap();
+            } else {
+                if (c > 0) {
+                    builder.addRelatedGap();
+                }
 
-				JButton button = new JButton( action );
-				button.setName( (String) action.getValue( Action.NAME ) );
-				if( c == 0 || actions.getDefaultAction() == action )
-					defaultButton = button;
+                JButton button = new JButton(action);
+                button.setName((String) action.getValue(Action.NAME));
+                if (c == 0 || actions.getDefaultAction() == action) {
+                    defaultButton = button;
+                }
 
-				if( action.getValue( Action.SMALL_ICON ) != null )
-					button.setText( null );
+                if (action.getValue(Action.SMALL_ICON) != null) {
+                    button.setText(null);
+                }
 
-				builder.addFixed( button );
-			}
+                builder.addFixed(button);
+            }
 
-			if( action instanceof HelpActionMarker && c == 0 )
-				builder.addGlue();
-		}
-	}
+            if (action instanceof HelpActionMarker && c == 0) {
+                builder.addGlue();
+            }
+        }
+    }
 
-	public JButton getDefaultButton()
-	{
-		return defaultButton;
-	}
+    public JButton getDefaultButton() {
+        return defaultButton;
+    }
 }

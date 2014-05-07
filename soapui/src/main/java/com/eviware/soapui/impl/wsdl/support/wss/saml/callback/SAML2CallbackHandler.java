@@ -33,82 +33,64 @@ import com.eviware.soapui.impl.wsdl.support.wss.entries.AutomaticSAMLEntry;
 
 /**
  * @author Erik R. Yverling
- * 
+ *         <p/>
  *         A Callback Handler implementation for a SAML 2 assertion. By default
  *         it creates an authentication assertion using Sender Vouches.
  */
-public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler
-{
-	/**
-	 * Use this for signed assertion
-	 */
-	public SAML2CallbackHandler( Crypto crypto, String alias, String assertionTypeFriendlyName,
-			String confirmationMethodFriendlyName ) throws Exception
-	{
-		super( crypto, alias, assertionTypeFriendlyName, confirmationMethodFriendlyName );
+public class SAML2CallbackHandler extends AbstractSAMLCallbackHandler {
+    /**
+     * Use this for signed assertion
+     */
+    public SAML2CallbackHandler(Crypto crypto, String alias, String assertionTypeFriendlyName,
+                                String confirmationMethodFriendlyName) throws Exception {
+        super(crypto, alias, assertionTypeFriendlyName, confirmationMethodFriendlyName);
 
-		if( certs == null )
-		{
-			CryptoType cryptoType = new CryptoType( CryptoType.TYPE.ALIAS );
-			cryptoType.setAlias( alias );
-			certs = crypto.getX509Certificates( cryptoType );
-		}
-	}
+        if (certs == null) {
+            CryptoType cryptoType = new CryptoType(CryptoType.TYPE.ALIAS);
+            cryptoType.setAlias(alias);
+            certs = crypto.getX509Certificates(cryptoType);
+        }
+    }
 
-	/**
-	 * Use this is for unsigned assertions
-	 */
-	public SAML2CallbackHandler( String assertionTypeFriendlyName, String confirmationMethodFriendlyName )
-	{
-		super( assertionTypeFriendlyName, confirmationMethodFriendlyName );
-	}
+    /**
+     * Use this is for unsigned assertions
+     */
+    public SAML2CallbackHandler(String assertionTypeFriendlyName, String confirmationMethodFriendlyName) {
+        super(assertionTypeFriendlyName, confirmationMethodFriendlyName);
+    }
 
-	public void handle( Callback[] callbacks ) throws IOException, UnsupportedCallbackException
-	{
-		for( int i = 0; i < callbacks.length; i++ )
-		{
-			if( callbacks[i] instanceof SAMLCallback )
-			{
-				SAMLCallback callback = ( SAMLCallback )callbacks[i];
-				callback.setSamlVersion( SAMLVersion.VERSION_20 );
-				callback.setIssuer( issuer );
-				SubjectBean subjectBean = new SubjectBean( subjectName, subjectQualifier, confirmationMethod );
-				if( subjectNameIDFormat != null )
-				{
-					subjectBean.setSubjectNameIDFormat( subjectNameIDFormat );
-				}
-				if( SAML2Constants.CONF_HOLDER_KEY.equals( confirmationMethod ) )
-				{
-					try
-					{
-						KeyInfoBean keyInfo = createKeyInfo();
-						subjectBean.setKeyInfo( keyInfo );
-					}
-					catch( Exception ex )
-					{
-						throw new IOException( "Problem creating KeyInfo: " + ex.getMessage() );
-					}
-				}
-				callback.setSubject( subjectBean );
-				createAndSetStatement( null, callback );
-			}
-			else
-			{
-				throw new UnsupportedCallbackException( callbacks[i], "Unrecognized Callback" );
-			}
-		}
-	}
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+        for (int i = 0; i < callbacks.length; i++) {
+            if (callbacks[i] instanceof SAMLCallback) {
+                SAMLCallback callback = (SAMLCallback) callbacks[i];
+                callback.setSamlVersion(SAMLVersion.VERSION_20);
+                callback.setIssuer(issuer);
+                SubjectBean subjectBean = new SubjectBean(subjectName, subjectQualifier, confirmationMethod);
+                if (subjectNameIDFormat != null) {
+                    subjectBean.setSubjectNameIDFormat(subjectNameIDFormat);
+                }
+                if (SAML2Constants.CONF_HOLDER_KEY.equals(confirmationMethod)) {
+                    try {
+                        KeyInfoBean keyInfo = createKeyInfo();
+                        subjectBean.setKeyInfo(keyInfo);
+                    } catch (Exception ex) {
+                        throw new IOException("Problem creating KeyInfo: " + ex.getMessage());
+                    }
+                }
+                callback.setSubject(subjectBean);
+                createAndSetStatement(null, callback);
+            } else {
+                throw new UnsupportedCallbackException(callbacks[i], "Unrecognized Callback");
+            }
+        }
+    }
 
-	@Override
-	public void setConfirmationMethod( String confirmationMethodFriendlyName )
-	{
-		if( confirmationMethodFriendlyName.equals( AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD ) )
-		{
-			confirmationMethod = SAML2Constants.CONF_HOLDER_KEY;
-		}
-		else if( confirmationMethodFriendlyName.equals( AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD ) )
-		{
-			confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
-		}
-	}
+    @Override
+    public void setConfirmationMethod(String confirmationMethodFriendlyName) {
+        if (confirmationMethodFriendlyName.equals(AutomaticSAMLEntry.HOLDER_OF_KEY_CONFIRMATION_METHOD)) {
+            confirmationMethod = SAML2Constants.CONF_HOLDER_KEY;
+        } else if (confirmationMethodFriendlyName.equals(AutomaticSAMLEntry.SENDER_VOUCHES_CONFIRMATION_METHOD)) {
+            confirmationMethod = SAML2Constants.CONF_SENDER_VOUCHES;
+        }
+    }
 }

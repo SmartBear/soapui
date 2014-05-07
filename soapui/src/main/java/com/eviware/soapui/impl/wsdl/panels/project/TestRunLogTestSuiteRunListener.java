@@ -29,67 +29,63 @@ import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.support.DateUtil;
 
-public class TestRunLogTestSuiteRunListener extends TestRunLogTestRunListener implements TestSuiteRunListener
-{
-	public TestRunLogTestSuiteRunListener( JTestRunLog runLog, boolean clearOnRun )
-	{
-		super( runLog, clearOnRun );
-	}
+public class TestRunLogTestSuiteRunListener extends TestRunLogTestRunListener implements TestSuiteRunListener {
+    public TestRunLogTestSuiteRunListener(JTestRunLog runLog, boolean clearOnRun) {
+        super(runLog, clearOnRun);
+    }
 
-	public void beforeRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
-	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestSuite() ) )
-			return;
+    public void beforeRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
+        if (SoapUI.getTestMonitor().hasRunningLoadTest(testRunner.getTestSuite())) {
+            return;
+        }
 
-		if( clearOnRun )
-			runLog.clear();
+        if (clearOnRun) {
+            runLog.clear();
+        }
 
-		String testSuiteName = testRunner.getTestRunnable().getName();
-		runLog.addBoldText( "TestSuite [" + testSuiteName + "] started at " + DateUtil.formatFull( new Date() ) );
-		runLog.setStepIndex( 0 );
-	}
+        String testSuiteName = testRunner.getTestRunnable().getName();
+        runLog.addBoldText("TestSuite [" + testSuiteName + "] started at " + DateUtil.formatFull(new Date()));
+        runLog.setStepIndex(0);
+    }
 
-	public void afterRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
-	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestSuite() ) )
-			return;
+    public void afterRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
+        if (SoapUI.getTestMonitor().hasRunningLoadTest(testRunner.getTestSuite())) {
+            return;
+        }
 
-		WsdlTestSuiteRunner wsdlRunner = ( WsdlTestSuiteRunner )testRunner;
+        WsdlTestSuiteRunner wsdlRunner = (WsdlTestSuiteRunner) testRunner;
 
-		String testSuiteName = testRunner.getTestRunnable().getName();
-		if( testRunner.getStatus() == TestCaseRunner.Status.CANCELED )
-			runLog.addText( "TestSuite [" + testSuiteName + "] canceled [" + testRunner.getReason() + "], time taken = "
-					+ wsdlRunner.getTimeTaken() );
+        String testSuiteName = testRunner.getTestRunnable().getName();
+        if (testRunner.getStatus() == TestCaseRunner.Status.CANCELED) {
+            runLog.addText("TestSuite [" + testSuiteName + "] canceled [" + testRunner.getReason() + "], time taken = "
+                    + wsdlRunner.getTimeTaken());
+        } else if (testRunner.getStatus() == TestCaseRunner.Status.FAILED) {
+            String msg = wsdlRunner.getReason();
+            if (wsdlRunner.getError() != null) {
+                if (msg != null) {
+                    msg += ":";
+                }
 
-		else if( testRunner.getStatus() == TestCaseRunner.Status.FAILED )
-		{
-			String msg = wsdlRunner.getReason();
-			if( wsdlRunner.getError() != null )
-			{
-				if( msg != null )
-					msg += ":";
+                msg += wsdlRunner.getError();
+            }
 
-				msg += wsdlRunner.getError();
-			}
+            runLog.addText("TestSuite [" + testSuiteName + "] failed [" + msg + "], time taken = "
+                    + wsdlRunner.getTimeTaken());
+        } else {
+            runLog.addText("TestSuite [" + testSuiteName + "] finished with status [" + testRunner.getStatus()
+                    + "], time taken = " + wsdlRunner.getTimeTaken());
+        }
+    }
 
-			runLog.addText( "TestSuite [" + testSuiteName + "] failed [" + msg + "], time taken = "
-					+ wsdlRunner.getTimeTaken() );
-		}
-		else
-			runLog.addText( "TestSuite [" + testSuiteName + "] finished with status [" + testRunner.getStatus()
-					+ "], time taken = " + wsdlRunner.getTimeTaken() );
-	}
+    public void beforeTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCase testCase) {
+        if (SoapUI.getTestMonitor().hasRunningLoadTest(testRunner.getTestSuite())) {
+            return;
+        }
 
-	public void beforeTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCase testCase )
-	{
-		if( SoapUI.getTestMonitor().hasRunningLoadTest( testRunner.getTestSuite() ) )
-			return;
+        testCase.addTestRunListener(this);
+    }
 
-		testCase.addTestRunListener( this );
-	}
-
-	public void afterTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCaseRunner testCaseRunner )
-	{
-		testCaseRunner.getTestCase().removeTestRunListener( this );
-	}
+    public void afterTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCaseRunner testCaseRunner) {
+        testCaseRunner.getTestCase().removeTestRunListener(this);
+    }
 }

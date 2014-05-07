@@ -20,6 +20,5 @@ import javax.wsdl.xml.WSDLLocator;
 
 import com.eviware.soapui.impl.support.definition.DefinitionLoader;
 
-public interface WsdlDefinitionLoader extends WSDLLocator, DefinitionLoader
-{
+public interface WsdlDefinitionLoader extends WSDLLocator, DefinitionLoader {
 }

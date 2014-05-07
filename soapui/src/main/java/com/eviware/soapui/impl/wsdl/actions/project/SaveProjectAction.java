@@ -25,31 +25,26 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Saves a WsdlProject
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SaveProjectAction extends AbstractSoapUIAction<WsdlProject>
-{
-	public static final String SOAPUI_ACTION_ID = "SaveProjectAction";
+public class SaveProjectAction extends AbstractSoapUIAction<WsdlProject> {
+    public static final String SOAPUI_ACTION_ID = "SaveProjectAction";
 
-	public SaveProjectAction()
-	{
-		super( "Save Project", "Saves this project" );
-	}
+    public SaveProjectAction() {
+        super("Save Project", "Saves this project");
+    }
 
-	public void perform( WsdlProject project, Object param )
-	{
-		try
-		{
-			if( StringUtils.hasContent( project.getPath() ) || project.getWorkspace() == null )
-				project.save();
-			else
-				project.save( project.getWorkspace().getProjectRoot() );
-		}
-		catch( IOException e1 )
-		{
-			UISupport.showErrorMessage( "Failed to save project; " + e1 );
-		}
-	}
+    public void perform(WsdlProject project, Object param) {
+        try {
+            if (StringUtils.hasContent(project.getPath()) || project.getWorkspace() == null) {
+                project.save();
+            } else {
+                project.save(project.getWorkspace().getProjectRoot());
+            }
+        } catch (IOException e1) {
+            UISupport.showErrorMessage("Failed to save project; " + e1);
+        }
+    }
 }

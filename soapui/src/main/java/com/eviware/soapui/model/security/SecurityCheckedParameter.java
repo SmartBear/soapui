@@ -12,36 +12,36 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.model.security;
+*/
+package com.eviware.soapui.model.security;
 
-public interface SecurityCheckedParameter
-{
+public interface SecurityCheckedParameter {
 
-	/**
-	 * @return parameter name
-	 */
-	String getName();
+    /**
+     * @return parameter name
+     */
+    String getName();
 
-	/**
-	 * @return parameter xpath
-	 */
-	String getXpath();
+    /**
+     * @return parameter xpath
+     */
+    String getXpath();
 
-	/**
-	 * @return parameter type
-	 */
-	String getType();
+    /**
+     * @return parameter type
+     */
+    String getType();
 
-	/**
-	 * Do we apply this parameter in security check.
-	 * 
-	 * @return is parameter checked
-	 */
-	boolean isChecked();
+    /**
+     * Do we apply this parameter in security check.
+     *
+     * @return is parameter checked
+     */
+    boolean isChecked();
 
-	/**
-	 * @return parameter label
-	 */
-	String getLabel();
+    /**
+     * @return parameter label
+     */
+    String getLabel();
 
 }

@@ -28,61 +28,46 @@ import com.eviware.soapui.SoapUI;
 
 /**
  * DataSource for a BodyPart
- * 
+ *
  * @author ole.matzura
  */
 
-public class BodyPartDataSource implements DataSource
-{
-	private final BodyPart bodyPart;
+public class BodyPartDataSource implements DataSource {
+    private final BodyPart bodyPart;
 
-	public BodyPartDataSource( BodyPart bodyPart )
-	{
-		this.bodyPart = bodyPart;
-	}
+    public BodyPartDataSource(BodyPart bodyPart) {
+        this.bodyPart = bodyPart;
+    }
 
-	public String getContentType()
-	{
-		try
-		{
-			return bodyPart.getContentType();
-		}
-		catch( MessagingException e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+    public String getContentType() {
+        try {
+            return bodyPart.getContentType();
+        } catch (MessagingException e) {
+            SoapUI.logError(e);
+            return null;
+        }
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		try
-		{
-			return bodyPart.getInputStream();
-		}
-		catch( MessagingException e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+    public InputStream getInputStream() throws IOException {
+        try {
+            return bodyPart.getInputStream();
+        } catch (MessagingException e) {
+            SoapUI.logError(e);
+            return null;
+        }
+    }
 
-	public String getName()
-	{
-		try
-		{
-			return bodyPart.getHeader( "Content-ID" )[0];
-		}
-		catch( MessagingException e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+    public String getName() {
+        try {
+            return bodyPart.getHeader("Content-ID")[0];
+        } catch (MessagingException e) {
+            SoapUI.logError(e);
+            return null;
+        }
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 
 }

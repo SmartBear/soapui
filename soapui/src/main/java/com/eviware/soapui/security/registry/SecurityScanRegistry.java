@@ -30,177 +30,156 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Registry of SecurityScan factories
- * 
+ *
  * @author SoapUI team
  */
 
-public class SecurityScanRegistry
-{
-	protected static SecurityScanRegistry instance;
-	private Map<String, SecurityScanFactory> availableSecurityChecks = new HashMap<String, SecurityScanFactory>();
-	private StringToStringMap securityCheckNames = new StringToStringMap();
+public class SecurityScanRegistry {
+    protected static SecurityScanRegistry instance;
+    private Map<String, SecurityScanFactory> availableSecurityChecks = new HashMap<String, SecurityScanFactory>();
+    private StringToStringMap securityCheckNames = new StringToStringMap();
 
-	public SecurityScanRegistry()
-	{
-		addFactory( new GroovySecurityScanFactory() );
-		addFactory( new CrossSiteScriptingScanFactory() );
-		addFactory( new XmlBombSecurityScanFactory() );
-		addFactory( new MaliciousAttachmentSecurityScanFactory() );
-		addFactory( new XPathInjectionSecurityScanFactory() );
-		addFactory( new InvalidTypesSecurityScanFactory() );
-		addFactory( new BoundarySecurityScanFactory() );
-		addFactory( new SQLInjectionScanFactory() );
-		addFactory( new MalformedXmlSecurityScanFactory() );
-		addFactory( new FuzzerSecurityScanFactory() );
-		
-		for( SecurityScanFactory factory : SoapUI.getFactoryRegistry().getFactories( SecurityScanFactory.class ) )
-		{
-			addFactory( factory );
-		}
+    public SecurityScanRegistry() {
+        addFactory(new GroovySecurityScanFactory());
+        addFactory(new CrossSiteScriptingScanFactory());
+        addFactory(new XmlBombSecurityScanFactory());
+        addFactory(new MaliciousAttachmentSecurityScanFactory());
+        addFactory(new XPathInjectionSecurityScanFactory());
+        addFactory(new InvalidTypesSecurityScanFactory());
+        addFactory(new BoundarySecurityScanFactory());
+        addFactory(new SQLInjectionScanFactory());
+        addFactory(new MalformedXmlSecurityScanFactory());
+        addFactory(new FuzzerSecurityScanFactory());
 
-	}
+        for (SecurityScanFactory factory : SoapUI.getFactoryRegistry().getFactories(SecurityScanFactory.class)) {
+            addFactory(factory);
+        }
 
-	/**
-	 * Gets the right SecurityScan Factory, depending on the type
-	 * 
-	 * @param type
-	 *           The securityScan to get the factory for
-	 * @return
-	 */
-	public SecurityScanFactory getFactory( String type )
-	{
-		for( String cc : availableSecurityChecks.keySet() )
-		{
-			SecurityScanFactory scf = availableSecurityChecks.get( cc );
-			if( scf.getSecurityScanType().equals( type ) )
-				return scf;
+    }
 
-		}
-		return null;
-	}
+    /**
+     * Gets the right SecurityScan Factory, depending on the type
+     *
+     * @param type The securityScan to get the factory for
+     * @return
+     */
+    public SecurityScanFactory getFactory(String type) {
+        for (String cc : availableSecurityChecks.keySet()) {
+            SecurityScanFactory scf = availableSecurityChecks.get(cc);
+            if (scf.getSecurityScanType().equals(type)) {
+                return scf;
+            }
 
-	/**
-	 * Gets the right SecurityScan Factory using name
-	 * 
-	 * @param name
-	 *           The securityScan name to get the factory for
-	 * @return
-	 */
-	public SecurityScanFactory getFactoryByName( String name )
-	{
-		String type = getSecurityScanTypeForName( name );
+        }
+        return null;
+    }
 
-		if( type != null )
-		{
-			return getFactory( type );
-		}
+    /**
+     * Gets the right SecurityScan Factory using name
+     *
+     * @param name The securityScan name to get the factory for
+     * @return
+     */
+    public SecurityScanFactory getFactoryByName(String name) {
+        String type = getSecurityScanTypeForName(name);
 
-		return null;
-	}
+        if (type != null) {
+            return getFactory(type);
+        }
 
-	/**
-	 * Adding a new factory to the registry
-	 * 
-	 * @param factory
-	 */
-	public void addFactory( SecurityScanFactory factory )
-	{
-		removeFactory( factory.getSecurityScanType() );
-		availableSecurityChecks.put( factory.getSecurityScanName(), factory );
-		securityCheckNames.put( factory.getSecurityScanName(), factory.getSecurityScanType() );
-	}
+        return null;
+    }
 
-	/**
-	 * Removing a factory from the registry
-	 * 
-	 * @param type
-	 */
-	public void removeFactory( String type )
-	{
-		for( String scfName : availableSecurityChecks.keySet() )
-		{
-			SecurityScanFactory csf = availableSecurityChecks.get( scfName );
-			if( csf.getSecurityScanType().equals( type ) )
-			{
-				availableSecurityChecks.remove( scfName );
-				securityCheckNames.remove( scfName );
-				break;
-			}
-		}
-	}
+    /**
+     * Adding a new factory to the registry
+     *
+     * @param factory
+     */
+    public void addFactory(SecurityScanFactory factory) {
+        removeFactory(factory.getSecurityScanType());
+        availableSecurityChecks.put(factory.getSecurityScanName(), factory);
+        securityCheckNames.put(factory.getSecurityScanName(), factory.getSecurityScanType());
+    }
 
-	/**
-	 * 
-	 * @return The registry instance
-	 */
-	public static synchronized SecurityScanRegistry getInstance()
-	{
-		if( instance == null )
-			instance = new SecurityScanRegistry();
+    /**
+     * Removing a factory from the registry
+     *
+     * @param type
+     */
+    public void removeFactory(String type) {
+        for (String scfName : availableSecurityChecks.keySet()) {
+            SecurityScanFactory csf = availableSecurityChecks.get(scfName);
+            if (csf.getSecurityScanType().equals(type)) {
+                availableSecurityChecks.remove(scfName);
+                securityCheckNames.remove(scfName);
+                break;
+            }
+        }
+    }
 
-		return instance;
-	}
+    /**
+     * @return The registry instance
+     */
+    public static synchronized SecurityScanRegistry getInstance() {
+        if (instance == null) {
+            instance = new SecurityScanRegistry();
+        }
 
-	/**
-	 * Checking if the registry contains a factory.
-	 * 
-	 * @param config
-	 *           A configuration to check the factory for
-	 * @return
-	 */
-	public boolean hasFactory( SecurityScanConfig config )
-	{
-		return getFactory( config.getType() ) != null;
-	}
+        return instance;
+    }
 
-	/**
-	 * Returns the list of available scans
-	 * 
-	 * @param monitorOnly
-	 *           Set this to true to get only the list of scans which can be
-	 *           used in the http monitor
-	 * @return A String Array containing the names of all the scans
-	 */
-	public String[] getAvailableSecurityScansNames()
-	{
-		List<String> result = new ArrayList<String>();
+    /**
+     * Checking if the registry contains a factory.
+     *
+     * @param config A configuration to check the factory for
+     * @return
+     */
+    public boolean hasFactory(SecurityScanConfig config) {
+        return getFactory(config.getType()) != null;
+    }
 
-		for( SecurityScanFactory securityCheck : availableSecurityChecks.values() )
-		{
-			result.add( securityCheck.getSecurityScanName() );
-		}
+    /**
+     * Returns the list of available scans
+     *
+     * @param monitorOnly Set this to true to get only the list of scans which can be
+     *                    used in the http monitor
+     * @return A String Array containing the names of all the scans
+     */
+    public String[] getAvailableSecurityScansNames() {
+        List<String> result = new ArrayList<String>();
 
-		String[] sortedResult = result.toArray( new String[result.size()] );
-		Arrays.sort( sortedResult );
+        for (SecurityScanFactory securityCheck : availableSecurityChecks.values()) {
+            result.add(securityCheck.getSecurityScanName());
+        }
 
-		return sortedResult;
-	}
+        String[] sortedResult = result.toArray(new String[result.size()]);
+        Arrays.sort(sortedResult);
 
-	// TODO drso: test and implement properly
-	public String[] getAvailableSecurityScansNames( TestStep testStep )
-	{
-		List<String> result = new ArrayList<String>();
+        return sortedResult;
+    }
 
-		for( SecurityScanFactory securityCheck : availableSecurityChecks.values() )
-		{
-			if( securityCheck.canCreate( testStep ) )
-				result.add( securityCheck.getSecurityScanName() );
-		}
+    // TODO drso: test and implement properly
+    public String[] getAvailableSecurityScansNames(TestStep testStep) {
+        List<String> result = new ArrayList<String>();
 
-		String[] sortedResult = result.toArray( new String[result.size()] );
-		Arrays.sort( sortedResult );
+        for (SecurityScanFactory securityCheck : availableSecurityChecks.values()) {
+            if (securityCheck.canCreate(testStep)) {
+                result.add(securityCheck.getSecurityScanName());
+            }
+        }
 
-		return sortedResult;
-	}
+        String[] sortedResult = result.toArray(new String[result.size()]);
+        Arrays.sort(sortedResult);
 
-	public SecurityConfigurationDialogBuilder getUIBuilder()
-	{
-		return new SecurityConfigurationDialogBuilder();
-	}
+        return sortedResult;
+    }
 
-	public String getSecurityScanTypeForName( String name )
-	{
-		return securityCheckNames.get( name );
-	}
+    public SecurityConfigurationDialogBuilder getUIBuilder() {
+        return new SecurityConfigurationDialogBuilder();
+    }
+
+    public String getSecurityScanTypeForName(String name) {
+        return securityCheckNames.get(name);
+    }
 
 }

@@ -28,34 +28,28 @@ import com.eviware.soapui.model.propertyexpansion.DefaultPropertyExpansionContex
 
 /**
  * Adds WS-A headers to the specified WsdlRequests requestContent
- * 
+ *
  * @author dragica.soldo
  */
 
-public class AddWsaHeadersToRequestAction extends AbstractAction
-{
-	private final WsdlRequest request;
+public class AddWsaHeadersToRequestAction extends AbstractAction {
+    private final WsdlRequest request;
 
-	public AddWsaHeadersToRequestAction( WsdlRequest request )
-	{
-		super( "Add WS-A headers" );
-		this.request = request;
-	}
+    public AddWsaHeadersToRequestAction(WsdlRequest request) {
+        super("Add WS-A headers");
+        this.request = request;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		try
-		{
-			SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
-			String content = request.getRequestContent();
-			WsaUtils wsaUtils = new WsaUtils( content, soapVersion, request.getOperation(),
-					new DefaultPropertyExpansionContext( request ) );
-			content = wsaUtils.addWSAddressingRequest( request );
-			request.setRequestContent( content );
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        try {
+            SoapVersion soapVersion = request.getOperation().getInterface().getSoapVersion();
+            String content = request.getRequestContent();
+            WsaUtils wsaUtils = new WsaUtils(content, soapVersion, request.getOperation(),
+                    new DefaultPropertyExpansionContext(request));
+            content = wsaUtils.addWSAddressingRequest(request);
+            request.setRequestContent(content);
+        } catch (Exception e1) {
+            SoapUI.logError(e1);
+        }
+    }
 }

@@ -20,30 +20,29 @@ import com.eviware.soapui.settings.Setting.SettingType;
 
 /**
  * HTTP-Proxy settings constants
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface ProxySettings
-{
-	@Setting( name = "Host", description = "proxy host to use" )
-	public final static String HOST = ProxySettings.class.getSimpleName() + "@" + "host";
+public interface ProxySettings {
+    @Setting(name = "Host", description = "proxy host to use")
+    public final static String HOST = ProxySettings.class.getSimpleName() + "@" + "host";
 
-	@Setting( name = "Port", description = "proxy port to use", type = SettingType.INT )
-	public final static String PORT = ProxySettings.class.getSimpleName() + "@" + "port";
+    @Setting(name = "Port", description = "proxy port to use", type = SettingType.INT)
+    public final static String PORT = ProxySettings.class.getSimpleName() + "@" + "port";
 
-	@Setting( name = "Username", description = "proxy username to use" )
-	public final static String USERNAME = ProxySettings.class.getSimpleName() + "@" + "username";
+    @Setting(name = "Username", description = "proxy username to use")
+    public final static String USERNAME = ProxySettings.class.getSimpleName() + "@" + "username";
 
-	@Setting( name = "Password", description = "proxy password to use", type = SettingType.PASSWORD )
-	public final static String PASSWORD = ProxySettings.class.getSimpleName() + "@" + "password";
+    @Setting(name = "Password", description = "proxy password to use", type = SettingType.PASSWORD)
+    public final static String PASSWORD = ProxySettings.class.getSimpleName() + "@" + "password";
 
-	@Setting( name = "Excludes", description = "Comma-seperated list of hosts to exclude" )
-	public final static String EXCLUDES = ProxySettings.class.getSimpleName() + "@" + "excludes";
+    @Setting(name = "Excludes", description = "Comma-seperated list of hosts to exclude")
+    public final static String EXCLUDES = ProxySettings.class.getSimpleName() + "@" + "excludes";
 
-	@Setting( name = "Enable Proxy", description = "enable using proxy", type = SettingType.BOOLEAN, defaultValue = "true" )
-	public final static String ENABLE_PROXY = ProxySettings.class.getSimpleName() + "@" + "enableProxy";
+    @Setting(name = "Enable Proxy", description = "enable using proxy", type = SettingType.BOOLEAN, defaultValue = "true")
+    public final static String ENABLE_PROXY = ProxySettings.class.getSimpleName() + "@" + "enableProxy";
 
-	@Setting( name = "Auto Proxy", description = "use automatic proxy detection", type = SettingType.BOOLEAN, defaultValue = "true" )
-	public final static String AUTO_PROXY = ProxySettings.class.getSimpleName() + "@" + "autoProxy";
+    @Setting(name = "Auto Proxy", description = "use automatic proxy detection", type = SettingType.BOOLEAN, defaultValue = "true")
+    public final static String AUTO_PROXY = ProxySettings.class.getSimpleName() + "@" + "autoProxy";
 }

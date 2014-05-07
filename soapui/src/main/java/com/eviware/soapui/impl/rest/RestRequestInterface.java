@@ -24,54 +24,50 @@ import org.apache.log4j.Logger;
 
 import java.beans.PropertyChangeListener;
 
-public interface RestRequestInterface extends HttpRequestInterface<RestRequestConfig>, PropertyChangeListener
-{
+public interface RestRequestInterface extends HttpRequestInterface<RestRequestConfig>, PropertyChangeListener {
 
-	/**
-	 * Each value in this enumeration represents an officially supported HTTP method ("verb").
-	 */
-	enum HttpMethod
-	{
-		GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH;
+    /**
+     * Each value in this enumeration represents an officially supported HTTP method ("verb").
+     */
+    enum HttpMethod {
+        GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH;
 
-		public static String[] getMethodsAsStringArray()
-		{
-			return new String[] { GET.toString(), POST.toString(), PUT.toString(), DELETE.toString(), HEAD.toString(),
-					OPTIONS.toString(), TRACE.toString(), PATCH.toString() };
-		}
+        public static String[] getMethodsAsStringArray() {
+            return new String[]{GET.toString(), POST.toString(), PUT.toString(), DELETE.toString(), HEAD.toString(),
+                    OPTIONS.toString(), TRACE.toString(), PATCH.toString()};
+        }
 
-		public static HttpMethod[] getMethods()
-		{
-			return new HttpMethod[] { GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH };
-		}
-	}
+        public static HttpMethod[] getMethods() {
+            return new HttpMethod[]{GET, POST, PUT, DELETE, HEAD, OPTIONS, TRACE, PATCH};
+        }
+    }
 
-	public final static Logger log = Logger.getLogger( RestRequest.class );
-	public static final String DEFAULT_MEDIATYPE = "application/xml";
-	public static final String REST_XML_REQUEST = "restXmlRequest";
+    public final static Logger log = Logger.getLogger(RestRequest.class);
+    public static final String DEFAULT_MEDIATYPE = "application/xml";
+    public static final String REST_XML_REQUEST = "restXmlRequest";
 
-	RestMethod getRestMethod();
+    RestMethod getRestMethod();
 
-	RestRepresentation[] getRepresentations();
+    RestRepresentation[] getRepresentations();
 
-	RestRepresentation[] getRepresentations( RestRepresentation.Type type );
+    RestRepresentation[] getRepresentations(RestRepresentation.Type type);
 
-	RestRepresentation[] getRepresentations( RestRepresentation.Type type, String mediaType );
+    RestRepresentation[] getRepresentations(RestRepresentation.Type type, String mediaType);
 
-	String getAccept();
+    String getAccept();
 
-	void setAccept( String acceptEncoding );
+    void setAccept(String acceptEncoding);
 
-	String[] getResponseMediaTypes();
+    String[] getResponseMediaTypes();
 
-	RestResource getResource();
+    RestResource getResource();
 
-	void setPath( String fullPath );
+    void setPath(String fullPath);
 
-	void setResponse( HttpResponse response, SubmitContext context );
+    void setResponse(HttpResponse response, SubmitContext context);
 
-	void release();
+    void release();
 
-	boolean hasEndpoint();
+    boolean hasEndpoint();
 
 }

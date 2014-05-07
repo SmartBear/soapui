@@ -44,159 +44,123 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
-{
-	public static final String SOAPUI_ACTION_ID = "NewWadlProjectAction";
-	public static final String DEFAULT_PROJECT_NAME = "REST Project";
-	private XFormDialog dialog;
+public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
+    public static final String SOAPUI_ACTION_ID = "NewWadlProjectAction";
+    public static final String DEFAULT_PROJECT_NAME = "REST Project";
+    private XFormDialog dialog;
 
-	public static final MessageSupport messages = MessageSupport.getMessages( NewWadlProjectAction.class );
+    public static final MessageSupport messages = MessageSupport.getMessages(NewWadlProjectAction.class);
 
-	public NewWadlProjectAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    public NewWadlProjectAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
-		}
+    public void perform(WorkspaceImpl workspace, Object param) {
+        if (dialog == null) {
+            dialog = ADialogBuilder.buildDialog(Form.class);
+        }
 
-		if( param instanceof String )
-		{
-			dialog.setValue( Form.INITIALWADL, param.toString() );
-		}
-		else
-		{
-			dialog.setValue( Form.INITIALWADL, "" );
-		}
+        if (param instanceof String) {
+            dialog.setValue(Form.INITIALWADL, param.toString());
+        } else {
+            dialog.setValue(Form.INITIALWADL, "");
+        }
 
-		while( dialog.show() )
-		{
-			WsdlProject project = null;
-			try
-			{
-				String projectName = createProjectName( dialog.getFormField( Form.INITIALWADL ).getValue(), workspace.getProjectList() );
+        while (dialog.show()) {
+            WsdlProject project = null;
+            try {
+                String projectName = createProjectName(dialog.getFormField(Form.INITIALWADL).getValue(), workspace.getProjectList());
 
-				if( projectName.length() == 0 )
-				{
-					UISupport.showErrorMessage( messages.get( "MissingProjectNameError" ) );
-				}
-				else
-				{
-					project = workspace.createProject( projectName, null );
+                if (projectName.length() == 0) {
+                    UISupport.showErrorMessage(messages.get("MissingProjectNameError"));
+                } else {
+                    project = workspace.createProject(projectName, null);
 
-					if( project != null )
-					{
-						UISupport.select( project );
-						String url = dialog.getValue( Form.INITIALWADL ).trim();
+                    if (project != null) {
+                        UISupport.select(project);
+                        String url = dialog.getValue(Form.INITIALWADL).trim();
 
-						if( url.length() > 0 )
-						{
-							if( new File( url ).exists() )
-							{
-								url = new File( url ).toURI().toURL().toString();
-							}
+                        if (url.length() > 0) {
+                            if (new File(url).exists()) {
+                                url = new File(url).toURI().toURL().toString();
+                            }
 
-							if( url.toUpperCase().endsWith( "WADL" ) )
-							{
-								importWadl( project, url );
-							}
-						}
-						showDeepestEditor( project );
-						break;
-					}
-				}
-			}
-			catch( InvalidDefinitionException ex )
-			{
-				ex.show();
-			}
-			catch( Exception ex )
-			{
-				UISupport.showErrorMessage( ex );
-				if( project != null )
-				{
-					workspace.removeProject( project );
-				}
-			}
-		}
-	}
+                            if (url.toUpperCase().endsWith("WADL")) {
+                                importWadl(project, url);
+                            }
+                        }
+                        showDeepestEditor(project);
+                        break;
+                    }
+                }
+            } catch (InvalidDefinitionException ex) {
+                ex.show();
+            } catch (Exception ex) {
+                UISupport.showErrorMessage(ex);
+                if (project != null) {
+                    workspace.removeProject(project);
+                }
+            }
+        }
+    }
 
-	private void showDeepestEditor( WsdlProject project )
-	{
-		ModelItem item = findLeafItem( project );
+    private void showDeepestEditor(WsdlProject project) {
+        ModelItem item = findLeafItem(project);
 
-		if( item != null )
-		{
-			UISupport.select( item );
-			UISupport.showDesktopPanel( item );
-		}
-	}
+        if (item != null) {
+            UISupport.select(item);
+            UISupport.showDesktopPanel(item);
+        }
+    }
 
-	private ModelItem findLeafItem( ModelItem item )
-	{
-		if( item.getChildren().isEmpty() )
-		{
-			return item;
-		}
+    private ModelItem findLeafItem(ModelItem item) {
+        if (item.getChildren().isEmpty()) {
+            return item;
+        }
 
-		return findLeafItem( item.getChildren().get( 0 ) );
-	}
+        return findLeafItem(item.getChildren().get(0));
+    }
 
-	public String createProjectName( String filePath, List<? extends Project> projectList )
-	{
-		if( StringUtils.hasContent( filePath ) )
-		{
-			String projectName = filePath;
+    public String createProjectName(String filePath, List<? extends Project> projectList) {
+        if (StringUtils.hasContent(filePath)) {
+            String projectName = filePath;
 
-			int ix = projectName.lastIndexOf( '.' );
-			if( ix > 0 )
-			{
-				projectName = projectName.substring( 0, ix );
-			}
+            int ix = projectName.lastIndexOf('.');
+            if (ix > 0) {
+                projectName = projectName.substring(0, ix);
+            }
 
-			ix = projectName.lastIndexOf( '/' );
-			if( ix == -1 )
-			{
-				ix = projectName.lastIndexOf( '\\' );
-			}
+            ix = projectName.lastIndexOf('/');
+            if (ix == -1) {
+                ix = projectName.lastIndexOf('\\');
+            }
 
-			if( ix != -1 )
-			{
-				projectName = projectName.substring( ix + 1 );
-			}
+            if (ix != -1) {
+                projectName = projectName.substring(ix + 1);
+            }
 
-			if( !StringUtils.isNullOrEmpty( projectName ) )
-			{
-				return projectName;
-			}
-		}
-		return ModelItemNamer.createName( DEFAULT_PROJECT_NAME, projectList );
-	}
+            if (!StringUtils.isNullOrEmpty(projectName)) {
+                return projectName;
+            }
+        }
+        return ModelItemNamer.createName(DEFAULT_PROJECT_NAME, projectList);
+    }
 
-	private void importWadl( WsdlProject project, String url )
-	{
-		RestService restService = ( RestService )project
-				.addNewInterface( project.getName(), RestServiceFactory.REST_TYPE );
-		UISupport.select( restService );
-		try
-		{
-			new WadlImporter( restService ).initFromWadl( url );
+    private void importWadl(WsdlProject project, String url) {
+        RestService restService = (RestService) project
+                .addNewInterface(project.getName(), RestServiceFactory.REST_TYPE);
+        UISupport.select(restService);
+        try {
+            new WadlImporter(restService).initFromWadl(url);
 
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
-	}
+        } catch (Exception e) {
+            UISupport.showErrorMessage(e);
+        }
+    }
 
-	@AForm( name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEW_WADL_PROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-	public interface Form
-	{
-		@AField( description = "Form.InitialWadl.Description", type = AField.AFieldType.FILE )
-		public final static String INITIALWADL = messages.get( "Form.InitialWadl.Label" );
-	}
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEW_WADL_PROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    public interface Form {
+        @AField(description = "Form.InitialWadl.Description", type = AField.AFieldType.FILE)
+        public final static String INITIALWADL = messages.get("Form.InitialWadl.Label");
+    }
 }

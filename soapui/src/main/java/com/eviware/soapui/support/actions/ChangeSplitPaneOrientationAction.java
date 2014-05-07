@@ -26,29 +26,26 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Changes the orientation of a JSplitPane
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ChangeSplitPaneOrientationAction extends AbstractAction
-{
-	private final JSplitPane splitPane;
+public class ChangeSplitPaneOrientationAction extends AbstractAction {
+    private final JSplitPane splitPane;
 
-	public ChangeSplitPaneOrientationAction( JSplitPane splitPane )
-	{
-		super();
-		this.splitPane = splitPane;
+    public ChangeSplitPaneOrientationAction(JSplitPane splitPane) {
+        super();
+        this.splitPane = splitPane;
 
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/split_request_pane.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, "Changes the orientation of the request pane split" );
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt O" ) );
-	}
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/split_request_pane.gif"));
+        putValue(Action.SHORT_DESCRIPTION, "Changes the orientation of the request pane split");
+        putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt O"));
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		int orientation = splitPane.getOrientation();
-		splitPane.setOrientation( orientation == JSplitPane.HORIZONTAL_SPLIT ? JSplitPane.VERTICAL_SPLIT
-				: JSplitPane.HORIZONTAL_SPLIT );
-		splitPane.resetToPreferredSizes();
-	}
+    public void actionPerformed(ActionEvent e) {
+        int orientation = splitPane.getOrientation();
+        splitPane.setOrientation(orientation == JSplitPane.HORIZONTAL_SPLIT ? JSplitPane.VERTICAL_SPLIT
+                : JSplitPane.HORIZONTAL_SPLIT);
+        splitPane.resetToPreferredSizes();
+    }
 }

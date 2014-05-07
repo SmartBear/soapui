@@ -25,27 +25,22 @@ import com.eviware.soapui.support.editor.Editor;
 import com.eviware.soapui.support.editor.EditorView;
 import com.eviware.soapui.support.editor.registry.ResponseEditorViewFactory;
 
-public class HttpHtmlResponseViewFactory implements ResponseEditorViewFactory
-{
-	public final static String VIEW_ID = "HTML Response";
+public class HttpHtmlResponseViewFactory implements ResponseEditorViewFactory {
+    public final static String VIEW_ID = "HTML Response";
 
-	@SuppressWarnings( "unchecked" )
-	public EditorView<?> createResponseEditorView( Editor<?> editor, ModelItem modelItem )
-	{
-		if( editor instanceof HttpResponseMessageEditor && modelItem instanceof HttpRequestInterface<?> )
-		{
-			return new HttpHtmlResponseView( ( HttpResponseMessageEditor )editor, ( HttpRequestInterface<?> )modelItem );
-		}
-		if( modelItem instanceof MessageExchangeModelItem )
-		{
-			return new HttpHtmlMessageExchangeResponseView( ( MessageExchangeResponseMessageEditor )editor,
-					( MessageExchangeModelItem )modelItem );
-		}
-		return null;
-	}
+    @SuppressWarnings("unchecked")
+    public EditorView<?> createResponseEditorView(Editor<?> editor, ModelItem modelItem) {
+        if (editor instanceof HttpResponseMessageEditor && modelItem instanceof HttpRequestInterface<?>) {
+            return new HttpHtmlResponseView((HttpResponseMessageEditor) editor, (HttpRequestInterface<?>) modelItem);
+        }
+        if (modelItem instanceof MessageExchangeModelItem) {
+            return new HttpHtmlMessageExchangeResponseView((MessageExchangeResponseMessageEditor) editor,
+                    (MessageExchangeModelItem) modelItem);
+        }
+        return null;
+    }
 
-	public String getViewId()
-	{
-		return VIEW_ID;
-	}
+    public String getViewId() {
+        return VIEW_ID;
+    }
 }

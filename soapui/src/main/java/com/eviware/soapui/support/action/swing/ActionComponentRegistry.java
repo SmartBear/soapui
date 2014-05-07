@@ -24,19 +24,17 @@ import javax.swing.JComponent;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.SoapUIAction;
 
-public class ActionComponentRegistry
-{
-	static public <T extends ModelItem> JComponent buildActionComponent( SoapUIAction<T> action, T modelItem )
-	{
-		if( factories.containsKey( action.getId() ) )
-			return factories.get( action.getId() ).buildActionComponent( action, modelItem );
+public class ActionComponentRegistry {
+    static public <T extends ModelItem> JComponent buildActionComponent(SoapUIAction<T> action, T modelItem) {
+        if (factories.containsKey(action.getId())) {
+            return factories.get(action.getId()).buildActionComponent(action, modelItem);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	private static Map<String, ActionComponentFactory> factories = new HashMap<String, ActionComponentFactory>();
+    private static Map<String, ActionComponentFactory> factories = new HashMap<String, ActionComponentFactory>();
 
-	static
-	{
-	}
+    static {
+    }
 }

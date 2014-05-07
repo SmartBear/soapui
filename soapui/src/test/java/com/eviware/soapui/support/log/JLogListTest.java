@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.log;
+*/
+package com.eviware.soapui.support.log;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,74 +26,61 @@ import static org.junit.Assert.assertThat;
 /**
  * Unit tests for JLogList.
  */
-public class JLogListTest
-{
+public class JLogListTest {
 
-	private JLogList logList;
-	private ListModel model;
+    private JLogList logList;
+    private ListModel model;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		logList = new JLogList( "Test log list" );
-		model = logList.getLogList().getModel();
-	}
+    @Before
+    public void setUp() throws Exception {
+        logList = new JLogList("Test log list");
+        model = logList.getLogList().getModel();
+    }
 
-	@Test
-	public void limitsTheNumberOfRows() throws Exception
-	{
-		final int maxRows = 10;
-		logList.setMaxRows( 10 );
-		for( int i = 0; i < maxRows + 1; i++ )
-		{
-			logList.addLine( "Line " + i );
-		}
-			waitForUpdaterThread();
+    @Test
+    public void limitsTheNumberOfRows() throws Exception {
+        final int maxRows = 10;
+        logList.setMaxRows(10);
+        for (int i = 0; i < maxRows + 1; i++) {
+            logList.addLine("Line " + i);
+        }
+        waitForUpdaterThread();
 
-		assertThat( model.getSize(), is( maxRows ) );
-		assertThat( ( String )model.getElementAt( 0 ), is( "Line 1" ) );
-	}
+        assertThat(model.getSize(), is(maxRows));
+        assertThat((String) model.getElementAt(0), is("Line 1"));
+    }
 
-	@Test
-	public void addsLogLinesInCorrectOrder() throws Exception
-	{
-		for( int i = 0; i < 20 + 1; i++ )
-		{
-			logList.addLine( "Line " + i );
-		}
-		waitForUpdaterThread();
+    @Test
+    public void addsLogLinesInCorrectOrder() throws Exception {
+        for (int i = 0; i < 20 + 1; i++) {
+            logList.addLine("Line " + i);
+        }
+        waitForUpdaterThread();
 
-		for( int i = 0; i < 20 + 1; i++ )
-		{
-			assertThat( (String)model.getElementAt( i ), is( "Line " + i ) );
-		}
-	}
+        for (int i = 0; i < 20 + 1; i++) {
+            assertThat((String) model.getElementAt(i), is("Line " + i));
+        }
+    }
 
-	@Test
-	public void clearsLogListCorrectly() throws Exception
-	{
-		for( int i = 0; i < 20 + 1; i++ )
-		{
-			logList.addLine( "Line " + i );
-		}
-		waitForUpdaterThread();
-		logList.clear();
-		waitForUpdaterThread();
+    @Test
+    public void clearsLogListCorrectly() throws Exception {
+        for (int i = 0; i < 20 + 1; i++) {
+            logList.addLine("Line " + i);
+        }
+        waitForUpdaterThread();
+        logList.clear();
+        waitForUpdaterThread();
 
-		assertThat(model.getSize(), is(0));
-	}
+        assertThat(model.getSize(), is(0));
+    }
 
 
-	private void waitForUpdaterThread()
-	{
-		try
-		{
-			Thread.sleep( 100 );
-		}
-		catch( InterruptedException ignore )
-		{
+    private void waitForUpdaterThread() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException ignore) {
 
-		}
-	}
+        }
+    }
 
 }
