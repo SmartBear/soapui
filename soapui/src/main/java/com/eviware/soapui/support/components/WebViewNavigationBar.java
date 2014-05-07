@@ -35,227 +35,196 @@ import java.awt.event.MouseEvent;
 /**
  * @author joel.jonsson
  */
-class WebViewNavigationBar
-{
-	private final JComponent toolbar;
+class WebViewNavigationBar {
+    private final JComponent toolbar;
 
-	private WebEngine webEngine;
-	private EnabledWebViewBasedBrowserComponent webViewBasedBrowserComponent;
+    private WebEngine webEngine;
+    private EnabledWebViewBasedBrowserComponent webViewBasedBrowserComponent;
 
-	private JTextField urlField;
-	private ForwardAction forwardAction;
-	private BackAction backAction;
-	private Color originalFontColor;
+    private JTextField urlField;
+    private ForwardAction forwardAction;
+    private BackAction backAction;
+    private Color originalFontColor;
+    private String hintText = "Enter URL here";
 
-	WebViewNavigationBar( )
-	{
-		this.toolbar = createNavigationBar();
-	}
+    WebViewNavigationBar() {
+        this.toolbar = createNavigationBar();
+    }
 
-	void initialize( final WebEngine webEngine, EnabledWebViewBasedBrowserComponent webViewBasedBrowserComponent )
-	{
-		this.webEngine = webEngine;
-		this.webViewBasedBrowserComponent = webViewBasedBrowserComponent;
+    void initialize(final WebEngine webEngine, EnabledWebViewBasedBrowserComponent webViewBasedBrowserComponent) {
+        this.webEngine = webEngine;
+        this.webViewBasedBrowserComponent = webViewBasedBrowserComponent;
 
-		webEngine.getHistory().currentIndexProperty().addListener( new ChangeListener<Number>()
-		{
-			@Override
-			public void changed( ObservableValue<? extends Number> observableValue, Number oldHistoryIndex, Number newHistoryIndex )
-			{
-				if( backAction != null )
-				{
-					backAction.setEnabled( observableValue.getValue().intValue() > 0 );
-				}
-				if( forwardAction != null )
-				{
-					forwardAction.setEnabled( observableValue.getValue().intValue() < webEngine.getHistory().getEntries().size() - 1 );
-				}
-			}
-		} );
+        webEngine.getHistory().currentIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldHistoryIndex, Number newHistoryIndex) {
+                if (backAction != null) {
+                    backAction.setEnabled(observableValue.getValue().intValue() > 0);
+                }
+                if (forwardAction != null) {
+                    forwardAction.setEnabled(observableValue.getValue().intValue() < webEngine.getHistory().getEntries().size() - 1);
+                }
+            }
+        });
 
 
-		webEngine.locationProperty().addListener( new ChangeListener<String>()
-		{
-			@Override
-			public void changed( ObservableValue<? extends String> observableValue, String oldLocation,
-										final String newLocation )
-			{
-				if( urlField != null )
-				{
-					SwingUtilities.invokeLater( new Runnable()
-					{
-						public void run()
-						{
-							if( StringUtils.hasContent(newLocation) )
-							{
-								urlField.setText( newLocation );
-							}
-							resetTextFieldDefaults();
-							urlField.setFocusable( false );
-							urlField.setFocusable( true );
-						}
-					} );
-				}
-			}
-		} );
-	}
+        webEngine.locationProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observableValue, String oldLocation,
+                                final String newLocation) {
+                if (urlField != null) {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        public void run() {
+                            if (StringUtils.hasContent(newLocation)) {
+                                urlField.setText(newLocation);
+                            }
+                            resetTextFieldDefaults();
+                            urlField.setFocusable(false);
+                            urlField.setFocusable(true);
+                        }
+                    });
+                }
+            }
+        });
+    }
 
-	public void focusUrlField()
-	{
-		urlField.requestFocus();
-	}
+    public void focusUrlField() {
+        urlField.requestFocus();
+    }
 
-	private JComponent createNavigationBar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
-		urlField = new JTextField();
-		backAction = new BackAction();
-		backAction.setEnabled( false );
-		toolbar.add( backAction );
-		forwardAction = new ForwardAction();
-		forwardAction.setEnabled( false );
-		toolbar.add( forwardAction );
-		toolbar.add( new ReloadAction() );
-		toolbar.add( urlField );
-		urlField.addActionListener( new UrlEnteredActionListener() );
-		urlField.setText( "Enter URL here" );
-		urlField.setFont( urlField.getFont().deriveFont( Font.ITALIC ) );
-		originalFontColor = urlField.getForeground();
-		urlField.setForeground( new Color( 170, 170, 170 ) );
-		urlField.getDocument().addDocumentListener( new DocumentListenerAdapter()
-		{
-			@Override
-			public void update( Document document )
-			{
-				removeHintText();
-				urlField.getDocument().removeDocumentListener( this );
-			}
-		} );
-		urlField.addMouseListener( new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				removeHintText();
-				urlField.removeMouseListener( this );
-			}
-		} );
-		return toolbar;
-	}
+    private JComponent createNavigationBar() {
+        JXToolBar toolbar = UISupport.createToolbar();
+        urlField = new JTextField();
+        backAction = new BackAction();
+        backAction.setEnabled(false);
+        toolbar.add(backAction);
+        forwardAction = new ForwardAction();
+        forwardAction.setEnabled(false);
+        toolbar.add(forwardAction);
+        toolbar.add(new ReloadAction());
+        toolbar.add(urlField);
+        urlField.addActionListener(new UrlEnteredActionListener());
+        urlField.setText(hintText);
+        urlField.setFont(urlField.getFont().deriveFont(Font.ITALIC));
+        originalFontColor = urlField.getForeground();
+        urlField.setForeground(new Color(170, 170, 170));
+        urlField.getDocument().addDocumentListener(new DocumentListenerAdapter() {
+            @Override
+            public void update(Document document) {
+                removeHintText();
+                urlField.getDocument().removeDocumentListener(this);
+            }
+        });
+        urlField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                removeHintText();
+                urlField.removeMouseListener(this);
+            }
+        });
+        return toolbar;
+    }
 
-	private void removeHintText()
-	{
-		if (urlField.getText().equals("Enter URL here"))
-		{
-			urlField.setText( "" );
-		}
-		resetTextFieldDefaults();
-	}
+    private void removeHintText() {
 
-	private void resetTextFieldDefaults()
-	{
-		urlField.setFont(urlField.getFont().deriveFont( Font.PLAIN ));
-		urlField.setForeground( originalFontColor );
-	}
+        String urlFieldText = urlField.getText();
 
-	Component getComponent()
-	{
-		return toolbar;
-	}
+        if (urlFieldText.contains(hintText)) {
+            final String textWithOutHint = urlFieldText.replaceFirst(hintText, "");
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    urlField.setText(textWithOutHint);
+                }
+            });
+        }
 
-	private class BackAction extends AbstractAction
-	{
-		public BackAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_left.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Go back" );
-		}
+        resetTextFieldDefaults();
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( webEngine == null ) return;
-			final WebHistory history = webEngine.getHistory();
-			if( history.getCurrentIndex() == 0 )
-			{
-				Toolkit.getDefaultToolkit().beep();
-			}
-			else
-			{
-				Platform.runLater( new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						history.go( -1 );
-					}
-				} );
-			}
-		}
-	}
+    private void resetTextFieldDefaults() {
+        urlField.setFont(urlField.getFont().deriveFont(Font.PLAIN));
+        urlField.setForeground(originalFontColor);
+    }
 
-	private class ForwardAction extends AbstractAction
-	{
-		public ForwardAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/arrow_right.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Go forward" );
-		}
+    Component getComponent() {
+        return toolbar;
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( webEngine == null ) return;
-			final WebHistory history = webEngine.getHistory();
-			if( history.getCurrentIndex() >= history.getEntries().size() - 1 )
-			{
-				Toolkit.getDefaultToolkit().beep();
-			}
-			else
-			{
-				Platform.runLater( new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						history.go( 1 );
-					}
-				} );
-			}
-		}
-	}
+    private class BackAction extends AbstractAction {
+        public BackAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/arrow_left.png"));
+            putValue(Action.SHORT_DESCRIPTION, "Go back");
+        }
 
-	private class ReloadAction extends AbstractAction
-	{
-		public ReloadAction()
-		{
-			putValue( SMALL_ICON, UISupport.createImageIcon( "/reload_properties.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Reload page" );
-		}
+        public void actionPerformed(ActionEvent e) {
+            if (webEngine == null) {
+                return;
+            }
+            final WebHistory history = webEngine.getHistory();
+            if (history.getCurrentIndex() == 0) {
+                Toolkit.getDefaultToolkit().beep();
+            } else {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        history.go(-1);
+                    }
+                });
+            }
+        }
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( webEngine == null ) return;
-			Platform.runLater( new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					webEngine.reload();
-				}
-			} );
-		}
-	}
+    private class ForwardAction extends AbstractAction {
+        public ForwardAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/arrow_right.png"));
+            putValue(Action.SHORT_DESCRIPTION, "Go forward");
+        }
 
-	private class UrlEnteredActionListener implements ActionListener
-	{
-		@Override
-		public void actionPerformed( ActionEvent e )
-		{
-			String url = urlField.getText();
-			if( !urlField.getText().contains( "://" ) )
-			{
-				url = "http://" + url;
-			}
-			webViewBasedBrowserComponent.navigate( url );
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            if (webEngine == null) {
+                return;
+            }
+            final WebHistory history = webEngine.getHistory();
+            if (history.getCurrentIndex() >= history.getEntries().size() - 1) {
+                Toolkit.getDefaultToolkit().beep();
+            } else {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        history.go(1);
+                    }
+                });
+            }
+        }
+    }
+
+    private class ReloadAction extends AbstractAction {
+        public ReloadAction() {
+            putValue(SMALL_ICON, UISupport.createImageIcon("/reload_properties.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Reload page");
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            if (webEngine == null) {
+                return;
+            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    webEngine.reload();
+                }
+            });
+        }
+    }
+
+    private class UrlEnteredActionListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            String url = urlField.getText();
+            if (!urlField.getText().contains("://")) {
+                url = "http://" + url;
+            }
+            webViewBasedBrowserComponent.navigate(url);
+        }
+    }
 }

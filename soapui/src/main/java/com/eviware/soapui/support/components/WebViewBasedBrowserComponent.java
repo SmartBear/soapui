@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.components;
+*/
+package com.eviware.soapui.support.components;
 
 import com.eviware.soapui.impl.rest.actions.oauth.BrowserListener;
 
@@ -21,25 +22,24 @@ import java.awt.*;
 /**
  * @author joel.jonsson
  */
-public interface WebViewBasedBrowserComponent
-{
-	public enum PopupStrategy {
-		INTERNAL_BROWSER_NEW_WINDOW, INTERNAL_BROWSER_REUSE_WINDOW, EXTERNAL_BROWSER, DISABLED
-	}
+public interface WebViewBasedBrowserComponent {
+    public enum PopupStrategy {
+        INTERNAL_BROWSER_NEW_WINDOW, INTERNAL_BROWSER_REUSE_WINDOW, EXTERNAL_BROWSER, DISABLED
+    }
 
-	Component getComponent();
+    Component getComponent();
 
-	void navigate( String url );
+    void navigate(String url);
 
-	void setContent( String contentAsString );
+    void setContent(String contentAsString);
 
-	void setContent( String contentAsString, String contentType );
+    void setContent(String contentAsString, String contentType);
 
-	void close( boolean cascade );
+    void close(boolean cascade);
 
-	void addBrowserStateListener( BrowserListener listener );
+    void addBrowserStateListener(BrowserListener listener);
 
-	void removeBrowserStateListener( BrowserListener listener );
+    void removeBrowserStateListener(BrowserListener listener);
 
-	void executeJavaScript( String script );
+    void executeJavaScript(String script);
 }

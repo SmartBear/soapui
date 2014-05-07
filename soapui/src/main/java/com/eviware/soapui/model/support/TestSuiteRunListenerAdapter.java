@@ -22,23 +22,18 @@ import com.eviware.soapui.model.testsuite.TestSuiteRunContext;
 import com.eviware.soapui.model.testsuite.TestSuiteRunListener;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 
-public class TestSuiteRunListenerAdapter implements TestSuiteRunListener
-{
+public class TestSuiteRunListenerAdapter implements TestSuiteRunListener {
 
-	public void afterRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
-	{
-	}
+    public void afterRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
+    }
 
-	public void afterTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCaseRunner testCaseRunner )
-	{
-	}
+    public void afterTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCaseRunner testCaseRunner) {
+    }
 
-	public void beforeRun( TestSuiteRunner testRunner, TestSuiteRunContext runContext )
-	{
-	}
+    public void beforeRun(TestSuiteRunner testRunner, TestSuiteRunContext runContext) {
+    }
 
-	public void beforeTestCase( TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCase testCase )
-	{
-	}
+    public void beforeTestCase(TestSuiteRunner testRunner, TestSuiteRunContext runContext, TestCase testCase) {
+    }
 
 }

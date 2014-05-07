@@ -42,248 +42,197 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@SuppressWarnings( "unchecked" )
+@SuppressWarnings("unchecked")
 public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements
-		PropertyChangeListener
-{
-	private final MessageExchangeModelItem messageExchangeModelItem;
-	private JPanel panel;
-	private WebViewBasedBrowserComponent browser;
-	private JPanel contentPanel;
-	private boolean initialized = false;
+        PropertyChangeListener {
+    private final MessageExchangeModelItem messageExchangeModelItem;
+    private JPanel panel;
+    private WebViewBasedBrowserComponent browser;
+    private JPanel contentPanel;
+    private boolean initialized = false;
 
-	public HttpHtmlMessageExchangeResponseView( XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem )
-	{
-		super( "HTML", editor, HttpHtmlResponseViewFactory.VIEW_ID );
-		this.messageExchangeModelItem = messageExchangeModelItem;
+    public HttpHtmlMessageExchangeResponseView(XmlEditor editor, MessageExchangeModelItem messageExchangeModelItem) {
+        super("HTML", editor, HttpHtmlResponseViewFactory.VIEW_ID);
+        this.messageExchangeModelItem = messageExchangeModelItem;
 
-		messageExchangeModelItem.addPropertyChangeListener( this );
-	}
+        messageExchangeModelItem.addPropertyChangeListener(this);
+    }
 
-	public JComponent getComponent()
-	{
-		if( panel == null )
-		{
-			panel = new JPanel( new BorderLayout() );
+    public JComponent getComponent() {
+        if (panel == null) {
+            panel = new JPanel(new BorderLayout());
 
-			panel.add( buildToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
-		}
+            panel.add(buildToolbar(), BorderLayout.NORTH);
+            panel.add(buildContent(), BorderLayout.CENTER);
+            panel.add(buildStatus(), BorderLayout.SOUTH);
+        }
 
-		return panel;
-	}
+        return panel;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
+    @Override
+    public void release() {
+        super.release();
 
-		if( browser != null )
-			browser.close( true );
+        if (browser != null) {
+            browser.close(true);
+        }
 
-		messageExchangeModelItem.removePropertyChangeListener( this );
-	}
+        messageExchangeModelItem.removePropertyChangeListener(this);
+    }
 
-	private Component buildStatus()
-	{
-		JLabel statusLabel = new JLabel();
-		statusLabel.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
-		return statusLabel;
-	}
+    private Component buildStatus() {
+        JLabel statusLabel = new JLabel();
+        statusLabel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        return statusLabel;
+    }
 
-	private Component buildContent()
-	{
+    private Component buildContent() {
 
-		contentPanel = new JPanel( new BorderLayout() );
-		return contentPanel;
-	}
+        contentPanel = new JPanel(new BorderLayout());
+        return contentPanel;
+    }
 
-	@Override
-	public boolean activate( EditorLocation<HttpResponseDocument> location )
-	{
-		boolean activated = super.activate( location );
-		if( activated && !initialized )
-		{
-			initialized = true;
-			if( SoapUI.isBrowserDisabled() )
-			{
-				contentPanel.add( new JLabel( "Browser component is disabled." ) );
-			}
-			else
-			{
-				browser = WebViewBasedBrowserComponentFactory.createBrowserComponent( false );
-				Component component = browser.getComponent();
-				component.setMinimumSize( new Dimension( 100, 100 ) );
-				contentPanel.add( new JScrollPane( component ) );
+    @Override
+    public boolean activate(EditorLocation<HttpResponseDocument> location) {
+        boolean activated = super.activate(location);
+        if (activated && !initialized) {
+            initialized = true;
+            if (SoapUI.isBrowserDisabled()) {
+                contentPanel.add(new JLabel("Browser component is disabled."));
+            } else {
+                browser = WebViewBasedBrowserComponentFactory.createBrowserComponent(false);
+                Component component = browser.getComponent();
+                component.setMinimumSize(new Dimension(100, 100));
+                contentPanel.add(new JScrollPane(component));
 
-				setEditorContent( messageExchangeModelItem );
-			}
-		}
-		return activated;
-	}
+                setEditorContent(messageExchangeModelItem);
+            }
+        }
+        return activated;
+    }
 
-	@Override
-	public boolean deactivate()
-	{
-		boolean deactivated = super.deactivate();
-		if(deactivated && browser != null){
-			browser.setContent( "" );
-		}
-		return deactivated;
-	}
+    @Override
+    public boolean deactivate() {
+        boolean deactivated = super.deactivate();
+        if (deactivated && browser != null) {
+            browser.setContent("");
+        }
+        return deactivated;
+    }
 
-	protected void setEditorContent( JProxyServletWsdlMonitorMessageExchange jproxyServletWsdlMonitorMessageExchange )
-	{
-		if( browser == null )
-		{
-			return;
-		}
-		if( jproxyServletWsdlMonitorMessageExchange != null )
-		{
-			String contentType = jproxyServletWsdlMonitorMessageExchange.getResponseContentType();
-			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
-			{
-				try
-				{
-					String content = jproxyServletWsdlMonitorMessageExchange.getResponseContent();
-					browser.setContent( content, contentType );
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
-			}
-			else if( isSupportedContentType( contentType ) )
-			{
-				try
-				{
-					String ext = ContentTypeHandler.getExtensionForContentType( contentType );
-					File temp = File.createTempFile( "response", "." + ext );
-					FileOutputStream fileOutputStream = new FileOutputStream( temp );
-					writeHttpBody( jproxyServletWsdlMonitorMessageExchange.getRawResponseData(), fileOutputStream );
-					fileOutputStream.close();
-					browser.navigate( temp.toURI().toURL().toString() );
-					temp.deleteOnExit();
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
-			}
-			else
-			{
-				browser.setContent( "unsupported content-type [" + contentType + "]" );
-			}
-		}
-		else
-		{
-			browser.setContent( "-missing content-" );
-		}
-	}
+    protected void setEditorContent(JProxyServletWsdlMonitorMessageExchange jproxyServletWsdlMonitorMessageExchange) {
+        if (browser == null) {
+            return;
+        }
+        if (jproxyServletWsdlMonitorMessageExchange != null) {
+            String contentType = jproxyServletWsdlMonitorMessageExchange.getResponseContentType();
+            if (contentType.contains("html") || contentType.contains("text")) {
+                try {
+                    String content = jproxyServletWsdlMonitorMessageExchange.getResponseContent();
+                    browser.setContent(content, contentType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (isSupportedContentType(contentType)) {
+                try {
+                    String ext = ContentTypeHandler.getExtensionForContentType(contentType);
+                    File temp = File.createTempFile("response", "." + ext);
+                    FileOutputStream fileOutputStream = new FileOutputStream(temp);
+                    writeHttpBody(jproxyServletWsdlMonitorMessageExchange.getRawResponseData(), fileOutputStream);
+                    fileOutputStream.close();
+                    browser.navigate(temp.toURI().toURL().toString());
+                    temp.deleteOnExit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                browser.setContent("unsupported content-type [" + contentType + "]");
+            }
+        } else {
+            browser.setContent("-missing content-");
+        }
+    }
 
-	private boolean isSupportedContentType( String contentType )
-	{
-		return contentType.toLowerCase().contains( "image" );
-	}
+    private boolean isSupportedContentType(String contentType) {
+        return contentType.toLowerCase().contains("image");
+    }
 
-	protected void setEditorContent( MessageExchangeModelItem messageExchangeModelItem2 )
-	{
-		if( browser == null )
-		{
-			return;
-		}
-		if( messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange() != null )
-		{
-			String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders()
-					.get( "Content-Type", "" );
-			if( contentType.contains( "html" ) || contentType.contains( "text" ) )
-			{
-				try
-				{
+    protected void setEditorContent(MessageExchangeModelItem messageExchangeModelItem2) {
+        if (browser == null) {
+            return;
+        }
+        if (messageExchangeModelItem2 != null && messageExchangeModelItem2.getMessageExchange() != null) {
+            String contentType = messageExchangeModelItem2.getMessageExchange().getResponseHeaders()
+                    .get("Content-Type", "");
+            if (contentType.contains("html") || contentType.contains("text")) {
+                try {
 
-					final String content = messageExchangeModelItem2.getMessageExchange().getResponseContent();
-					browser.setContent( content, contentType );
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
-			}
-			else if( !contentType.contains( "xml" ) )
-			{
-				try
-				{
-					String ext = ContentTypeHandler.getExtensionForContentType( contentType );
-					File temp = File.createTempFile( "response", "." + ext );
-					FileOutputStream fileOutputStream = new FileOutputStream( temp );
-					writeHttpBody( messageExchangeModelItem2.getMessageExchange().getRawResponseData(), fileOutputStream );
-					fileOutputStream.close();
-					browser.navigate( temp.toURI().toURL().toString() );
-					temp.deleteOnExit();
-				}
-				catch( Exception e )
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-		else
-		{
-			browser.setContent( "<missing content>" );
-		}
-	}
+                    final String content = messageExchangeModelItem2.getMessageExchange().getResponseContent();
+                    browser.setContent(content, contentType);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (!contentType.contains("xml")) {
+                try {
+                    String ext = ContentTypeHandler.getExtensionForContentType(contentType);
+                    File temp = File.createTempFile("response", "." + ext);
+                    FileOutputStream fileOutputStream = new FileOutputStream(temp);
+                    writeHttpBody(messageExchangeModelItem2.getMessageExchange().getRawResponseData(), fileOutputStream);
+                    fileOutputStream.close();
+                    browser.navigate(temp.toURI().toURL().toString());
+                    temp.deleteOnExit();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            browser.setContent("<missing content>");
+        }
+    }
 
 
-	private void writeHttpBody( byte[] rawResponse, FileOutputStream out ) throws IOException
-	{
-		int index = 0;
-		byte[] divider = "\r\n\r\n".getBytes();
-		for(; index < ( rawResponse.length - divider.length ); index++ )
-		{
-			int i;
-			for( i = 0; i < divider.length; i++ )
-			{
-				if( rawResponse[index + i] != divider[i] )
-					break;
-			}
+    private void writeHttpBody(byte[] rawResponse, FileOutputStream out) throws IOException {
+        int index = 0;
+        byte[] divider = "\r\n\r\n".getBytes();
+        for (; index < (rawResponse.length - divider.length); index++) {
+            int i;
+            for (i = 0; i < divider.length; i++) {
+                if (rawResponse[index + i] != divider[i]) {
+                    break;
+                }
+            }
 
-			if( i == divider.length )
-			{
-				out.write( rawResponse, index + divider.length, rawResponse.length - ( index + divider.length ) );
-				return;
-			}
-		}
+            if (i == divider.length) {
+                out.write(rawResponse, index + divider.length, rawResponse.length - (index + divider.length));
+                return;
+            }
+        }
 
-		out.write( rawResponse );
-	}
+        out.write(rawResponse);
+    }
 
-	private Component buildToolbar()
-	{
-		return UISupport.createToolbar();
-	}
+    private Component buildToolbar() {
+        return UISupport.createToolbar();
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( "messageExchange" ) )
-		{
-			if( browser != null && evt.getNewValue() != null && isActive())
-				setEditorContent( ( ( JProxyServletWsdlMonitorMessageExchange )evt.getNewValue() ) );
-		}
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals("messageExchange")) {
+            if (browser != null && evt.getNewValue() != null && isActive()) {
+                setEditorContent(((JProxyServletWsdlMonitorMessageExchange) evt.getNewValue()));
+            }
+        }
+    }
 
-	@Override
-	public void setXml( String xml )
-	{
-	}
+    @Override
+    public void setXml(String xml) {
+    }
 
-	public boolean saveDocument( boolean validate )
-	{
-		return false;
-	}
+    public boolean saveDocument(boolean validate) {
+        return false;
+    }
 
-	public void setEditable( boolean enabled )
-	{
-	}
+    public void setEditable(boolean enabled) {
+    }
 
 }

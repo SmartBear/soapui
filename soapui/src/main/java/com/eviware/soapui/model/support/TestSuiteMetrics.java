@@ -21,58 +21,47 @@ import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
-public class TestSuiteMetrics
-{
-	final private TestSuite testSuite;
+public class TestSuiteMetrics {
+    final private TestSuite testSuite;
 
-	public TestSuiteMetrics( TestSuite testSuite )
-	{
-		this.testSuite = testSuite;
-	}
+    public TestSuiteMetrics(TestSuite testSuite) {
+        this.testSuite = testSuite;
+    }
 
-	public int getTestCaseCount()
-	{
-		return testSuite.getTestCaseCount();
-	}
+    public int getTestCaseCount() {
+        return testSuite.getTestCaseCount();
+    }
 
-	public int getTestStepCount()
-	{
-		int result = 0;
+    public int getTestStepCount() {
+        int result = 0;
 
-		for( TestCase testCase : testSuite.getTestCaseList() )
-		{
-			result += testCase.getTestStepCount();
-		}
+        for (TestCase testCase : testSuite.getTestCaseList()) {
+            result += testCase.getTestStepCount();
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getAssertionCount()
-	{
-		int result = 0;
+    public int getAssertionCount() {
+        int result = 0;
 
-		for( TestCase testCase : testSuite.getTestCaseList() )
-		{
-			for( TestStep testStep : testCase.getTestStepList() )
-			{
-				if( testStep instanceof Assertable )
-				{
-					result += ( ( Assertable )testStep ).getAssertionCount();
-				}
-			}
-		}
+        for (TestCase testCase : testSuite.getTestCaseList()) {
+            for (TestStep testStep : testCase.getTestStepList()) {
+                if (testStep instanceof Assertable) {
+                    result += ((Assertable) testStep).getAssertionCount();
+                }
+            }
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public int getLoadTestCount()
-	{
-		int result = 0;
-		for( TestCase testCase : testSuite.getTestCaseList() )
-		{
-			result += testCase.getLoadTestCount();
-		}
-		return result;
-	}
+    public int getLoadTestCount() {
+        int result = 0;
+        for (TestCase testCase : testSuite.getTestCaseList()) {
+            result += testCase.getLoadTestCount();
+        }
+        return result;
+    }
 
 }

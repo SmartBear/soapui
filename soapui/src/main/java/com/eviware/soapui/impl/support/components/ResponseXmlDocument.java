@@ -32,86 +32,71 @@ import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 
 /**
  * XmlDocument for the response to a WsdlRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class ResponseXmlDocument extends AbstractXmlDocument implements PropertyChangeListener
-{
-	private final WsdlRequest request;
-	private boolean settingResponse;
+public class ResponseXmlDocument extends AbstractXmlDocument implements PropertyChangeListener {
+    private final WsdlRequest request;
+    private boolean settingResponse;
 
-	public ResponseXmlDocument( WsdlRequest request )
-	{
-		this.request = request;
-		request.addPropertyChangeListener( this );
-	}
+    public ResponseXmlDocument(WsdlRequest request) {
+        this.request = request;
+        request.addPropertyChangeListener(this);
+    }
 
-	public String getXml()
-	{
-		Response response = request.getResponse();
-		return response == null ? null : response.getContentAsString();
-	}
+    public String getXml() {
+        Response response = request.getResponse();
+        return response == null ? null : response.getContentAsString();
+    }
 
-	public void setXml( String xml )
-	{
-		HttpResponse response = ( HttpResponse )request.getResponse();
-		if( response != null )
-		{
-			try
-			{
-				settingResponse = true;
-				String oldXml = response.getContentAsString();
-				response.setResponseContent( xml );
-				fireXmlChanged( oldXml, xml );
-			}
-			finally
-			{
-				settingResponse = false;
-			}
-		}
-	}
+    public void setXml(String xml) {
+        HttpResponse response = (HttpResponse) request.getResponse();
+        if (response != null) {
+            try {
+                settingResponse = true;
+                String oldXml = response.getContentAsString();
+                response.setResponseContent(xml);
+                fireXmlChanged(oldXml, xml);
+            } finally {
+                settingResponse = false;
+            }
+        }
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( settingResponse )
-			return;
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (settingResponse) {
+            return;
+        }
 
-		if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_PROPERTY ) )
-		{
-			Response oldResponse = ( Response )evt.getOldValue();
-			Response newResponse = ( Response )evt.getNewValue();
+        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
+            Response oldResponse = (Response) evt.getOldValue();
+            Response newResponse = (Response) evt.getNewValue();
 
-			fireXmlChanged( oldResponse == null ? null : oldResponse.getContentAsString(), newResponse == null ? null
-					: newResponse.getContentAsString() );
-		}
+            fireXmlChanged(oldResponse == null ? null : oldResponse.getContentAsString(), newResponse == null ? null
+                    : newResponse.getContentAsString());
+        }
 
-		if( evt.getPropertyName().equals( WsdlRequest.RESPONSE_CONTENT_PROPERTY ) )
-		{
-			String oldResponse = ( String )evt.getOldValue();
-			String newResponse = ( String )evt.getNewValue();
+        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_CONTENT_PROPERTY)) {
+            String oldResponse = (String) evt.getOldValue();
+            String newResponse = (String) evt.getNewValue();
 
-			fireXmlChanged( oldResponse, newResponse );
-		}
-	}
+            fireXmlChanged(oldResponse, newResponse);
+        }
+    }
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		WsdlInterface iface = ( WsdlInterface )request.getOperation().getInterface();
-		WsdlContext wsdlContext = iface.getWsdlContext();
-		try
-		{
-			return wsdlContext.getSchemaTypeSystem();
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-			return XmlBeans.getBuiltinTypeSystem();
-		}
-	}
+    public SchemaTypeSystem getTypeSystem() {
+        WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
+        WsdlContext wsdlContext = iface.getWsdlContext();
+        try {
+            return wsdlContext.getSchemaTypeSystem();
+        } catch (Exception e1) {
+            SoapUI.logError(e1);
+            return XmlBeans.getBuiltinTypeSystem();
+        }
+    }
 
-	public void release()
-	{
-		request.removePropertyChangeListener( this );
-	}
+    public void release() {
+        request.removePropertyChangeListener(this);
+    }
 }

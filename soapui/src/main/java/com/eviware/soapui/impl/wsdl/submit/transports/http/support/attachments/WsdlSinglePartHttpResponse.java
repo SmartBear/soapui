@@ -30,51 +30,42 @@ import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implements WsdlResponse
-{
-	private Vector<Object> wssResult;
+public class WsdlSinglePartHttpResponse extends SinglePartHttpResponse implements WsdlResponse {
+    private Vector<Object> wssResult;
 
-	public WsdlSinglePartHttpResponse( WsdlRequest wsdlRequest, ExtendedHttpMethod postMethod, String requestContent,
-			PropertyExpansionContext context )
-	{
-		super( wsdlRequest, postMethod, requestContent, context );
+    public WsdlSinglePartHttpResponse(WsdlRequest wsdlRequest, ExtendedHttpMethod postMethod, String requestContent,
+                                      PropertyExpansionContext context) {
+        super(wsdlRequest, postMethod, requestContent, context);
 
-		processIncomingWss( wsdlRequest, context );
-	}
+        processIncomingWss(wsdlRequest, context);
+    }
 
-	private void processIncomingWss( WsdlRequest wsdlRequest, PropertyExpansionContext context )
-	{
-		IncomingWss incomingWss = ( IncomingWss )context.getProperty( WssRequestFilter.INCOMING_WSS_PROPERTY );
-		if( incomingWss != null )
-		{
-			try
-			{
-				Document document = XmlUtils.parseXml( getResponseContent() );
-				wssResult = incomingWss.processIncoming( document, context );
-				if( wssResult != null && wssResult.size() > 0 )
-				{
-					StringWriter writer = new StringWriter();
-					XmlUtils.serialize( document, writer );
-					setResponseContent( writer.toString() );
-				}
-			}
-			catch( Exception e )
-			{
-				if( wssResult == null )
-					wssResult = new Vector<Object>();
-				wssResult.add( e );
-			}
-		}
-	}
+    private void processIncomingWss(WsdlRequest wsdlRequest, PropertyExpansionContext context) {
+        IncomingWss incomingWss = (IncomingWss) context.getProperty(WssRequestFilter.INCOMING_WSS_PROPERTY);
+        if (incomingWss != null) {
+            try {
+                Document document = XmlUtils.parseXml(getResponseContent());
+                wssResult = incomingWss.processIncoming(document, context);
+                if (wssResult != null && wssResult.size() > 0) {
+                    StringWriter writer = new StringWriter();
+                    XmlUtils.serialize(document, writer);
+                    setResponseContent(writer.toString());
+                }
+            } catch (Exception e) {
+                if (wssResult == null) {
+                    wssResult = new Vector<Object>();
+                }
+                wssResult.add(e);
+            }
+        }
+    }
 
-	public Vector<?> getWssResult()
-	{
-		return wssResult;
-	}
+    public Vector<?> getWssResult() {
+        return wssResult;
+    }
 
-	@Override
-	public WsdlRequest getRequest()
-	{
-		return ( WsdlRequest )super.getRequest();
-	}
+    @Override
+    public WsdlRequest getRequest() {
+        return (WsdlRequest) super.getRequest();
+    }
 }

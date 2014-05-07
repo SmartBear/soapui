@@ -25,47 +25,41 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 
 /**
  * Factory for creation TransferValue steps
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class AMFRequestStepFactory extends WsdlTestStepFactory
-{
-	public static final String AMF_REQUEST_TYPE = "amfrequest";
+public class AMFRequestStepFactory extends WsdlTestStepFactory {
+    public static final String AMF_REQUEST_TYPE = "amfrequest";
 
-	public AMFRequestStepFactory()
-	{
-		super( AMF_REQUEST_TYPE, "AMF Request", "Submits a AMF Request and validates its response", "/amf_request.gif" );
-	}
+    public AMFRequestStepFactory() {
+        super(AMF_REQUEST_TYPE, "AMF Request", "Submits a AMF Request and validates its response", "/amf_request.gif");
+    }
 
-	public WsdlTestStep buildTestStep( WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest )
-	{
-		return new AMFRequestTestStep( testCase, config, forLoadTest );
-	}
+    public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
+        return new AMFRequestTestStep(testCase, config, forLoadTest);
+    }
 
-	public TestStepConfig createNewTestStep( WsdlTestCase testCase, String name )
-	{
-		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( AMF_REQUEST_TYPE );
-		testStepConfig.setName( name );
-		return testStepConfig;
-	}
+    public TestStepConfig createNewTestStep(WsdlTestCase testCase, String name) {
+        TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+        testStepConfig.setType(AMF_REQUEST_TYPE);
+        testStepConfig.setName(name);
+        return testStepConfig;
+    }
 
-	public boolean canCreate()
-	{
-		return true;
-	}
+    public boolean canCreate() {
+        return true;
+    }
 
-	public TestStepConfig createConfig( WsdlMonitorMessageExchange me, String stepName )
-	{
-		AMFRequestTestStepConfig testRequestConfig = AMFRequestTestStepConfig.Factory.newInstance();
+    public TestStepConfig createConfig(WsdlMonitorMessageExchange me, String stepName) {
+        AMFRequestTestStepConfig testRequestConfig = AMFRequestTestStepConfig.Factory.newInstance();
 
-		testRequestConfig.setEndpoint( me.getEndpoint() );
+        testRequestConfig.setEndpoint(me.getEndpoint());
 
-		TestStepConfig testStep = TestStepConfig.Factory.newInstance();
-		testStep.setType( AMF_REQUEST_TYPE );
-		testStep.setConfig( testRequestConfig );
-		testStep.setName( stepName );
-		return testStep;
-	}
+        TestStepConfig testStep = TestStepConfig.Factory.newInstance();
+        testStep.setType(AMF_REQUEST_TYPE);
+        testStep.setConfig(testRequestConfig);
+        testStep.setName(stepName);
+        return testStep;
+    }
 }

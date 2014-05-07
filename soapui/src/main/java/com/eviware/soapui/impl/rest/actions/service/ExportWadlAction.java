@@ -25,51 +25,43 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Exports the definition (wsdls and xsds) of a WsdlInterface to the file system
- * 
+ *
  * @author Ole.Matzura
  */
 
-@SuppressWarnings( "unchecked" )
-public class ExportWadlAction extends AbstractSoapUIAction<RestService>
-{
-	public static final String SOAPUI_ACTION_ID = "ExportWadlAction";
+@SuppressWarnings("unchecked")
+public class ExportWadlAction extends AbstractSoapUIAction<RestService> {
+    public static final String SOAPUI_ACTION_ID = "ExportWadlAction";
 
-	public ExportWadlAction()
-	{
-		super( "Export WADL", "Exports the entire WADL and included/imported files to a local directory" );
-	}
+    public ExportWadlAction() {
+        super("Export WADL", "Exports the entire WADL and included/imported files to a local directory");
+    }
 
-	public void perform( RestService iface, Object param )
-	{
-		try
-		{
-			String path = exportDefinition( null, iface );
-			if( path != null )
-			{
-				UISupport.showInfoMessage( "WADL exported succesfully to [" + path + "]", "Export WADL" );
-			}
-		}
-		catch( Exception e1 )
-		{
-			UISupport.showErrorMessage( e1 );
-		}
-	}
+    public void perform(RestService iface, Object param) {
+        try {
+            String path = exportDefinition(null, iface);
+            if (path != null) {
+                UISupport.showInfoMessage("WADL exported succesfully to [" + path + "]", "Export WADL");
+            }
+        } catch (Exception e1) {
+            UISupport.showErrorMessage(e1);
+        }
+    }
 
-	public String exportDefinition( String location, RestService iface ) throws Exception
-	{
-		if(!iface.isGenerated())
-		{
-			boolean exportChanges = UISupport.confirm( "Do you want the exported WADL to contain recent changes?", "WADL export option" );
-			iface.setExportChanges( exportChanges );
-		}
+    public String exportDefinition(String location, RestService iface) throws Exception {
+        if (!iface.isGenerated()) {
+            boolean exportChanges = UISupport.confirm("Do you want the exported WADL to contain recent changes?", "WADL export option");
+            iface.setExportChanges(exportChanges);
+        }
 
-		File folderName = location == null ? UISupport.getFileDialogs().openDirectory( this, "Select output directory",
-				null ) : new File( location );
+        File folderName = location == null ? UISupport.getFileDialogs().openDirectory(this, "Select output directory",
+                null) : new File(location);
 
-		if( folderName == null )
-			return null;
+        if (folderName == null) {
+            return null;
+        }
 
-		WadlDefinitionExporter exporter = new WadlDefinitionExporter( iface );
-		return exporter.export( folderName.getAbsolutePath() );
-	}
+        WadlDefinitionExporter exporter = new WadlDefinitionExporter(iface);
+        return exporter.export(folderName.getAbsolutePath());
+    }
 }

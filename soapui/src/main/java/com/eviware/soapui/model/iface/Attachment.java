@@ -20,47 +20,44 @@ import java.io.InputStream;
 
 /**
  * Attachment for Requests and their responses
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface Attachment
-{
-	public String getName();
+public interface Attachment {
+    public String getName();
 
-	public String getContentType();
+    public String getContentType();
 
-	public void setContentType( String contentType );
+    public void setContentType(String contentType);
 
-	public long getSize();
+    public long getSize();
 
-	public String getPart();
+    public String getPart();
 
-	public void setPart( String part );
+    public void setPart(String part);
 
-	public InputStream getInputStream() throws Exception;
+    public InputStream getInputStream() throws Exception;
 
-	public String getUrl();
+    public String getUrl();
 
-	public boolean isCached();
+    public boolean isCached();
 
-	public AttachmentType getAttachmentType();
+    public AttachmentType getAttachmentType();
 
-	public enum AttachmentType
-	{
-		MIME, XOP, CONTENT, SWAREF, UNKNOWN
-	}
+    public enum AttachmentType {
+        MIME, XOP, CONTENT, SWAREF, UNKNOWN
+    }
 
-	public String getContentID();
+    public String getContentID();
 
-	public enum AttachmentEncoding
-	{
-		BASE64, HEX, NONE
-	}
+    public enum AttachmentEncoding {
+        BASE64, HEX, NONE
+    }
 
-	public AttachmentEncoding getEncoding();
+    public AttachmentEncoding getEncoding();
 
-	public String getContentEncoding();
-	
-	public String getId();
+    public String getContentEncoding();
+
+    public String getId();
 }

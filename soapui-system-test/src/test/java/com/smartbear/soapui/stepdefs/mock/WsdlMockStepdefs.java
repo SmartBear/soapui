@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.stepdefs.mock;
+*/
+package com.smartbear.soapui.stepdefs.mock;
 
 import com.smartbear.soapui.stepdefs.ScenarioRobot;
 import cucumber.api.java.en.Then;
@@ -26,35 +27,29 @@ import static com.smartbear.soapui.utils.fest.ApplicationUtils.getMainWindow;
 import static com.smartbear.soapui.utils.fest.SoapProjectUtils.findSoapOperationPopupMenu;
 import static org.junit.Assert.assertTrue;
 
-public class WsdlMockStepdefs
-{
-	private Robot robot;
-	private FrameFixture rootWindow;
-	private JTreeNodeFixture rightClickMenu;
+public class WsdlMockStepdefs {
+    private Robot robot;
+    private FrameFixture rootWindow;
+    private JTreeNodeFixture rightClickMenu;
 
-	public WsdlMockStepdefs( ScenarioRobot runner )
-	{
-		robot = runner.getRobot();
-	}
+    public WsdlMockStepdefs(ScenarioRobot runner) {
+        robot = runner.getRobot();
+    }
 
-	@When( "^in rest (.*) context$" )
-	public void in_rest_tree_node_context(String context) throws Throwable
-	{
-	}
+    @When("^in rest (.*) context$")
+    public void in_rest_tree_node_context(String context) throws Throwable {
+    }
 
-	@When( "^in soap (.*) context$" )
-	public void in_soap_tree_node_context(String context) throws Throwable
-	{
-		Thread.sleep( 200 );
-		if( "operation".equals( context ) )
-		{
-			rightClickMenu = findSoapOperationPopupMenu( getMainWindow( robot ) );
-		}
-	}
+    @When("^in soap (.*) context$")
+    public void in_soap_tree_node_context(String context) throws Throwable {
+        Thread.sleep(200);
+        if ("operation".equals(context)) {
+            rightClickMenu = findSoapOperationPopupMenu(getMainWindow(robot));
+        }
+    }
 
-	@Then( "^“(.*)” option is available$" )
-	public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable
-	{
-		assertTrue( "Didn't find the " + menuItemLabel + " menu item", doesLabelExist( rightClickMenu, menuItemLabel ) );
-	}
+    @Then("^“(.*)” option is available$")
+    public void _add_to_mock_service_option_is_available(String menuItemLabel) throws Throwable {
+        assertTrue("Didn't find the " + menuItemLabel + " menu item", doesLabelExist(rightClickMenu, menuItemLabel));
+    }
 }

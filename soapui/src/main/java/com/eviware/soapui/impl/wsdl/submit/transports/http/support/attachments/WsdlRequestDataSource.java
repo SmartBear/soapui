@@ -28,50 +28,41 @@ import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 
 /**
  * DataSource for an existing WsdlRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlRequestDataSource implements DataSource
-{
-	private final WsdlRequest wsdlRequest;
-	private final String requestContent;
-	private final boolean isXOP;
+public class WsdlRequestDataSource implements DataSource {
+    private final WsdlRequest wsdlRequest;
+    private final String requestContent;
+    private final boolean isXOP;
 
-	public WsdlRequestDataSource( WsdlRequest wsdlRequest, String requestContent, boolean isXOP )
-	{
-		this.wsdlRequest = wsdlRequest;
-		this.requestContent = requestContent;
-		this.isXOP = isXOP;
-	}
+    public WsdlRequestDataSource(WsdlRequest wsdlRequest, String requestContent, boolean isXOP) {
+        this.wsdlRequest = wsdlRequest;
+        this.requestContent = requestContent;
+        this.isXOP = isXOP;
+    }
 
-	public String getContentType()
-	{
-		SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
+    public String getContentType() {
+        SoapVersion soapVersion = wsdlRequest.getOperation().getInterface().getSoapVersion();
 
-		if( isXOP )
-		{
-			return AttachmentUtils.buildRootPartContentType( wsdlRequest.getOperation().getName(), soapVersion );
-		}
-		else
-		{
-			return soapVersion.getContentType() + "; charset=UTF-8";
-		}
-	}
+        if (isXOP) {
+            return AttachmentUtils.buildRootPartContentType(wsdlRequest.getOperation().getName(), soapVersion);
+        } else {
+            return soapVersion.getContentType() + "; charset=UTF-8";
+        }
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		byte[] bytes = requestContent.getBytes( "UTF-8" );
-		return new ByteArrayInputStream( bytes );
-	}
+    public InputStream getInputStream() throws IOException {
+        byte[] bytes = requestContent.getBytes("UTF-8");
+        return new ByteArrayInputStream(bytes);
+    }
 
-	public String getName()
-	{
-		return wsdlRequest.getName();
-	}
+    public String getName() {
+        return wsdlRequest.getName();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

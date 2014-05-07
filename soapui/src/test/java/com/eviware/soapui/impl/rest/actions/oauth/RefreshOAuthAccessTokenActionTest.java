@@ -42,88 +42,78 @@ import static org.mockito.Mockito.mock;
 /**
  * Unit tests for RefreshOAuthAccessTokenAction
  */
-public class RefreshOAuthAccessTokenActionTest
-{
+public class RefreshOAuthAccessTokenActionTest {
 
-	public static final ActionEvent DUMMY_ACTION_EVENT = new ActionEvent( new Object(), 0, "click" );
-	private XDialogs originalDialogs;
-	private StubbedDialogs stubbedDialogs;
-	private OAuth2Profile profile;
-	private RefreshOAuthAccessTokenAction action;
-	private OAuth2ClientFacade clientFacade;
+    public static final ActionEvent DUMMY_ACTION_EVENT = new ActionEvent(new Object(), 0, "click");
+    private XDialogs originalDialogs;
+    private StubbedDialogs stubbedDialogs;
+    private OAuth2Profile profile;
+    private RefreshOAuthAccessTokenAction action;
+    private OAuth2ClientFacade clientFacade;
 
 
-	@Before
-	public void setUp() throws Exception
-	{
-		originalDialogs = UISupport.getDialogs();
-		stubbedDialogs = new StubbedDialogs();
-		UISupport.setDialogs( stubbedDialogs );
-		OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
-		profile = new OAuth2Profile( ModelItemFactory.makeOAuth2ProfileContainer(), configuration );
+    @Before
+    public void setUp() throws Exception {
+        originalDialogs = UISupport.getDialogs();
+        stubbedDialogs = new StubbedDialogs();
+        UISupport.setDialogs(stubbedDialogs);
+        OAuth2ProfileConfig configuration = OAuth2ProfileConfig.Factory.newInstance();
+        profile = new OAuth2Profile(ModelItemFactory.makeOAuth2ProfileContainer(), configuration);
 
-		clientFacade = mock(OAuth2ClientFacade.class);
-		action = new RefreshOAuthAccessTokenAction(profile){
-			@Override
-			protected OAuth2ClientFacade getOAuthClientFacade()
-			{
-				return clientFacade;
-			}
-		};
-	}
+        clientFacade = mock(OAuth2ClientFacade.class);
+        action = new RefreshOAuthAccessTokenAction(profile) {
+            @Override
+            protected OAuth2ClientFacade getOAuthClientFacade() {
+                return clientFacade;
+            }
+        };
+    }
 
-	@After
-	public void tearDown() throws Exception
-	{
-		UISupport.setDialogs( originalDialogs );
-	}
+    @After
+    public void tearDown() throws Exception {
+        UISupport.setDialogs(originalDialogs);
+    }
 
-	@Test
-	public void savesAccessTokenInProfile() throws Exception
-	{
+    @Test
+    public void savesAccessTokenInProfile() throws Exception {
 
-		final String accessToken = "4/98789adfc8234278243987";
-		doAnswer( new Answer()
-		{
-			@Override
-			public Object answer( InvocationOnMock invocationOnMock ) throws Throwable
-			{
-				profile.setAccessToken( accessToken );
-				return null;
-			}
-		} ).when( clientFacade ).refreshAccessToken( profile );
-		action.actionPerformed( DUMMY_ACTION_EVENT );
-		assertThat( profile.getAccessToken(), is(accessToken) );
-	}
+        final String accessToken = "4/98789adfc8234278243987";
+        doAnswer(new Answer() {
+            @Override
+            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
+                profile.setAccessToken(accessToken);
+                return null;
+            }
+        }).when(clientFacade).refreshAccessToken(profile);
+        action.actionPerformed(DUMMY_ACTION_EVENT);
+        assertThat(profile.getAccessToken(), is(accessToken));
+    }
 
-	@Test
-	public void showsAnErrorMessageWhenGetAccessTokenFails() throws Exception
-	{
-		Mockito.doThrow( new OAuth2Exception( new RuntimeException (  )) ).when(clientFacade).refreshAccessToken( profile );
+    @Test
+    public void showsAnErrorMessageWhenGetAccessTokenFails() throws Exception {
+        Mockito.doThrow(new OAuth2Exception(new RuntimeException())).when(clientFacade).refreshAccessToken(profile);
 
-		action.actionPerformed(DUMMY_ACTION_EVENT);
-		assertThat( stubbedDialogs.getErrorMessages(), is( aCollectionWithSize( 1 ) ) );
-	}
+        action.actionPerformed(DUMMY_ACTION_EVENT);
+        assertThat(stubbedDialogs.getErrorMessages(), is(aCollectionWithSize(1)));
+    }
 
-	@Test
-	public void displaysValidationErrorWhenValidationFails() throws Exception
-	{
-		String theMessage = "Client ID is empty";
-		Mockito.doThrow( new InvalidOAuth2ParametersException ( theMessage  )).when( clientFacade ).refreshAccessToken( profile );
+    @Test
+    public void displaysValidationErrorWhenValidationFails() throws Exception {
+        String theMessage = "Client ID is empty";
+        Mockito.doThrow(new InvalidOAuth2ParametersException(theMessage)).when(clientFacade).refreshAccessToken(profile);
 
-		action.actionPerformed( DUMMY_ACTION_EVENT );
-		assertThat( stubbedDialogs.getErrorMessages(), is( aCollectionWithSize( 1 ) ) );
-		assertThat( stubbedDialogs.getErrorMessages().get(0), containsString(theMessage) );
-	}
+        action.actionPerformed(DUMMY_ACTION_EVENT);
+        assertThat(stubbedDialogs.getErrorMessages(), is(aCollectionWithSize(1)));
+        assertThat(stubbedDialogs.getErrorMessages().get(0), containsString(theMessage));
+    }
 
-	@Ignore("Ignored until requirement is clarified - see comment in RefreshOAuthAccessTokenAction.isEnabled()")
-	@Test
-	public void disabledIfAndOnlyIfRefreshTokenIsEmpty() throws Exception
-	{
-		profile.setRefreshToken( "" );
-		action = new RefreshOAuthAccessTokenAction( profile );
-		assertThat(action.isEnabled(), is(false));
-		profile.setRefreshToken( "some_refresh_token" );
-		assertThat( action.isEnabled(), is(true));
-	}
+    @Ignore("Ignored until requirement is clarified - see comment in RefreshOAuthAccessTokenAction.isEnabled()")
+    @Test
+    public void disabledIfAndOnlyIfRefreshTokenIsEmpty() throws Exception {
+        profile.setRefreshToken("");
+        action = new RefreshOAuthAccessTokenAction(profile);
+        assertThat(action.isEnabled(), is(false));
+        profile.setRefreshToken("some_refresh_token");
+        assertThat(action.isEnabled(), is(true));
+    }
 }

@@ -1,4 +1,4 @@
-@Automated @Acceptance
+@wip @Automated @Acceptance
 Feature: OAuth2 Advanced options
 
   Scenario Outline: Changes selected in OAuth2 advanced options dialog are set to profile
@@ -15,6 +15,6 @@ Feature: OAuth2 Advanced options
 
   Examples:
   |accessTokenPosition  | refreshMethod |
-  | QUERY               | MANUAL        |
-  | HEADER              | AUTOMATIC     |
+  | Query               | Manual        |
+  | Header              | Automatic     |
 

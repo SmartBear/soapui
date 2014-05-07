@@ -22,11 +22,10 @@ import com.eviware.soapui.support.editor.EditorInspector;
 
 /**
  * Interface fore request inspectors
- * 
+ *
  * @author ole.matzura
  */
 
-public interface RequestInspectorFactory extends InspectorFactory
-{
-	EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem );
+public interface RequestInspectorFactory extends InspectorFactory {
+    EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem);
 }

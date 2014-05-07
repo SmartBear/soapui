@@ -36,94 +36,81 @@ import com.jgoodies.forms.factories.ButtonBarFactory;
 
 /**
  * Set the credentials for all requests in a testcase
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SetCredentialsAction extends AbstractAction
-{
-	private final WsdlTestCase testCase;
-	private JDialog dialog;
-	private SimpleForm form;
+public class SetCredentialsAction extends AbstractAction {
+    private final WsdlTestCase testCase;
+    private JDialog dialog;
+    private SimpleForm form;
 
-	private static final String DOMAIN = "Domain";
-	private static final String PASSWORD = "Password";
-	private static final String USERNAME = "Username";
+    private static final String DOMAIN = "Domain";
+    private static final String PASSWORD = "Password";
+    private static final String USERNAME = "Username";
 
-	public SetCredentialsAction( WsdlTestCase testCase )
-	{
-		this.testCase = testCase;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/set_credentials.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, "Sets the credentials for all requests in this testcase" );
-	}
+    public SetCredentialsAction(WsdlTestCase testCase) {
+        this.testCase = testCase;
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/set_credentials.gif"));
+        putValue(Action.SHORT_DESCRIPTION, "Sets the credentials for all requests in this testcase");
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		if( dialog == null )
-		{
-			buildDialog();
-		}
+    public void actionPerformed(ActionEvent e) {
+        if (dialog == null) {
+            buildDialog();
+        }
 
-		UISupport.showDialog( dialog );
-	}
+        UISupport.showDialog(dialog);
+    }
 
-	private void buildDialog()
-	{
-		dialog = new JDialog( UISupport.getMainFrame(), "Set TestCase Credentials" );
-		form = new SimpleForm();
-		form.appendTextField( USERNAME, "Username to use for authentication" );
-		form.appendPasswordField( PASSWORD, "Password to use for authentication" );
-		form.appendTextField( DOMAIN, "Domain to specify (for NTLM)" );
-		form.getPanel().setBorder( BorderFactory.createEmptyBorder( 0, 0, 10, 0 ) );
+    private void buildDialog() {
+        dialog = new JDialog(UISupport.getMainFrame(), "Set TestCase Credentials");
+        form = new SimpleForm();
+        form.appendTextField(USERNAME, "Username to use for authentication");
+        form.appendPasswordField(PASSWORD, "Password to use for authentication");
+        form.appendTextField(DOMAIN, "Domain to specify (for NTLM)");
+        form.getPanel().setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
 
-		JPanel panel = new JPanel( new BorderLayout() );
-		panel.add( form.getPanel(), BorderLayout.CENTER );
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(form.getPanel(), BorderLayout.CENTER);
 
-		JPanel buttonBar = ButtonBarFactory.buildOKCancelBar( new JButton( new OkAction() ), new JButton(
-				new CancelAction() ) );
-		panel.add( buttonBar, BorderLayout.SOUTH );
-		panel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) );
-		panel.setPreferredSize( new Dimension( 270, ( int )panel.getPreferredSize().getHeight() ) );
+        JPanel buttonBar = ButtonBarFactory.buildOKCancelBar(new JButton(new OkAction()), new JButton(
+                new CancelAction()));
+        panel.add(buttonBar, BorderLayout.SOUTH);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panel.setPreferredSize(new Dimension(270, (int) panel.getPreferredSize().getHeight()));
 
-		dialog.getContentPane().add( panel );
-		dialog.pack();
-	}
+        dialog.getContentPane().add(panel);
+        dialog.pack();
+    }
 
-	private class OkAction extends AbstractAction
-	{
-		public OkAction()
-		{
-			super( "OK" );
-		}
+    private class OkAction extends AbstractAction {
+        public OkAction() {
+            super("OK");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			for( int c = 0; c < testCase.getTestStepCount(); c++ )
-			{
-				TestStep step = testCase.getTestStepAt( c );
-				if( step instanceof WsdlTestRequestStep )
-				{
-					WsdlTestRequestStep requestStep = ( WsdlTestRequestStep )step;
-					requestStep.getTestRequest().setUsername( form.getComponentValue( USERNAME ) );
-					requestStep.getTestRequest().setPassword( form.getComponentValue( PASSWORD ) );
-					requestStep.getTestRequest().setDomain( form.getComponentValue( DOMAIN ) );
-				}
-			}
+        public void actionPerformed(ActionEvent e) {
+            for (int c = 0; c < testCase.getTestStepCount(); c++) {
+                TestStep step = testCase.getTestStepAt(c);
+                if (step instanceof WsdlTestRequestStep) {
+                    WsdlTestRequestStep requestStep = (WsdlTestRequestStep) step;
+                    requestStep.getTestRequest().setUsername(form.getComponentValue(USERNAME));
+                    requestStep.getTestRequest().setPassword(form.getComponentValue(PASSWORD));
+                    requestStep.getTestRequest().setDomain(form.getComponentValue(DOMAIN));
+                }
+            }
 
-			dialog.setVisible( false );
-		}
-	}
+            dialog.setVisible(false);
+        }
+    }
 
-	private class CancelAction extends AbstractAction
-	{
-		public CancelAction()
-		{
-			super( "Cancel" );
-		}
+    private class CancelAction extends AbstractAction {
+        public CancelAction() {
+            super("Cancel");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			dialog.setVisible( false );
-		}
-	}
+        public void actionPerformed(ActionEvent e) {
+            dialog.setVisible(false);
+        }
+    }
 }

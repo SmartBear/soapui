@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest;
+*/
+package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.SoapUIException;
@@ -26,55 +27,51 @@ import java.util.Map;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
-public class RestServiceTest
-{
+public class RestServiceTest {
 
-	private RestService restService;
-	RestResource restResource;
+    private RestService restService;
+    RestResource restResource;
 
-	@Before
-	public void setUp() throws XmlException, IOException, SoapUIException
-	{
-		WsdlProject project = new WsdlProject();
-		restService = ( RestService )project.addNewInterface( "Test", RestServiceFactory.REST_TYPE );
-		restResource = restService.addNewResource( "Resource", "/test" );
-	}
+    @Before
+    public void setUp() throws XmlException, IOException, SoapUIException {
+        WsdlProject project = new WsdlProject();
+        restService = (RestService) project.addNewInterface("Test", RestServiceFactory.REST_TYPE);
+        restResource = restService.addNewResource("Resource", "/test");
+    }
 
-	@Test
-	public void deletingResourceDeletesAllChildResources() throws Exception
-	{
-		// restResource -> childResourceA
-		RestResource childResourceA = restResource.addNewChildResource( "ChildA", "/childPath" );
+    @Test
+    public void deletingResourceDeletesAllChildResources() throws Exception {
+        // restResource -> childResourceA
+        RestResource childResourceA = restResource.addNewChildResource("ChildA", "/childPath");
 
-		// childResourceA -> grandChildAA, grandChildAB
-		RestResource grandChildAA = childResourceA.addNewChildResource( "GrandChildAA", "/grandChildPathAA" );
-		childResourceA.addNewChildResource( "GrandChildAB", "/grandChildPathAB" );
+        // childResourceA -> grandChildAA, grandChildAB
+        RestResource grandChildAA = childResourceA.addNewChildResource("GrandChildAA", "/grandChildPathAA");
+        childResourceA.addNewChildResource("GrandChildAB", "/grandChildPathAB");
 
-		// grandChildAA -> greatGrandChildAAA
-		grandChildAA.addNewChildResource( "GreatGrandChildAAA", "/greatGrandChildAAA" );
+        // grandChildAA -> greatGrandChildAAA
+        grandChildAA.addNewChildResource("GreatGrandChildAAA", "/greatGrandChildAAA");
 
-		restService.deleteResource( restResource );
+        restService.deleteResource(restResource);
 
-		assertThat( restService.getChildren().size(), is( 0 ) );
-		assertThat( restResource.getChildResourceList().size(), is( 0 ) );
-		assertThat( childResourceA.getChildResourceList().size(), is( 0 ) );
-		assertThat( grandChildAA.getChildResourceList().size(), is( 0 ) );
+        assertThat(restService.getChildren().size(), is(0));
+        assertThat(restResource.getChildResourceList().size(), is(0));
+        assertThat(childResourceA.getChildResourceList().size(), is(0));
+        assertThat(grandChildAA.getChildResourceList().size(), is(0));
 
-	}
+    }
 
-	@Test
-	public void deletingResourceDoesNotDeleteSiblings() throws Exception
-	{
-		Map<String, RestResource> expectedResourceList = restService.getResources();
+    @Test
+    public void deletingResourceDoesNotDeleteSiblings() throws Exception {
+        Map<String, RestResource> expectedResourceList = restService.getResources();
 
-		RestResource siblingResourceA = restService.addNewResource( "SiblingA", "/siblingPath" );
+        RestResource siblingResourceA = restService.addNewResource("SiblingA", "/siblingPath");
 
-		assertThat( restService.getChildren().size(), is( 2 ) );
+        assertThat(restService.getChildren().size(), is(2));
 
-		restService.deleteResource( siblingResourceA );
+        restService.deleteResource(siblingResourceA);
 
-		assertThat( restService.getChildren().size(), is( 1 ) );
-		assertThat( restService.getResources(), is( expectedResourceList ) );
+        assertThat(restService.getChildren().size(), is(1));
+        assertThat(restService.getResources(), is(expectedResourceList));
 
-	}
+    }
 }

@@ -22,36 +22,30 @@ import org.mortbay.thread.ThreadPool;
 
 import com.eviware.soapui.SoapUI;
 
-public final class SoapUIJettyThreadPool implements ThreadPool
-{
-	@Override
-	public boolean dispatch( Runnable arg0 )
-	{
-		SoapUI.getThreadPool().execute( arg0 );
-		return true;
-	}
+public final class SoapUIJettyThreadPool implements ThreadPool {
+    @Override
+    public boolean dispatch(Runnable arg0) {
+        SoapUI.getThreadPool().execute(arg0);
+        return true;
+    }
 
-	@Override
-	public int getIdleThreads()
-	{
-		return 0;
-	}
+    @Override
+    public int getIdleThreads() {
+        return 0;
+    }
 
-	@Override
-	public int getThreads()
-	{
-		return SoapUI.getThreadPool().getActiveCount();
-	}
+    @Override
+    public int getThreads() {
+        return SoapUI.getThreadPool().getActiveCount();
+    }
 
-	@Override
-	public boolean isLowOnThreads()
-	{
-		return false;
-	}
+    @Override
+    public boolean isLowOnThreads() {
+        return false;
+    }
 
-	@Override
-	public void join() throws InterruptedException
-	{
-		SoapUI.getThreadPool().awaitTermination( 30, TimeUnit.SECONDS );
-	}
+    @Override
+    public void join() throws InterruptedException {
+        SoapUI.getThreadPool().awaitTermination(30, TimeUnit.SECONDS);
+    }
 }

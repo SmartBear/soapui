@@ -27,38 +27,33 @@ import com.eviware.soapui.security.scan.FuzzerSecurityScan;
 
 /**
  * Factory for creation Fuzzer scan
- * 
+ *
  * @author nebojsa.tasic
  */
 
-public class FuzzerSecurityScanFactory extends AbstractSecurityScanFactory
-{
+public class FuzzerSecurityScanFactory extends AbstractSecurityScanFactory {
 
-	public FuzzerSecurityScanFactory()
-	{
-		super( FuzzerSecurityScan.TYPE, FuzzerSecurityScan.NAME, "Executes the specified fuzzer security scan",
-				"/fuzzer_security_scan.gif" );
-	}
+    public FuzzerSecurityScanFactory() {
+        super(FuzzerSecurityScan.TYPE, FuzzerSecurityScan.NAME, "Executes the specified fuzzer security scan",
+                "/fuzzer_security_scan.gif");
+    }
 
-	@Override
-	public SecurityScanConfig createNewSecurityScan( String name )
-	{
-		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
-		securityCheckConfig.setType( FuzzerSecurityScan.TYPE );
-		securityCheckConfig.setName( name );
-		return securityCheckConfig;
-	}
+    @Override
+    public SecurityScanConfig createNewSecurityScan(String name) {
+        SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
+        securityCheckConfig.setType(FuzzerSecurityScan.TYPE);
+        securityCheckConfig.setName(name);
+        return securityCheckConfig;
+    }
 
-	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
-	{
-		return new FuzzerSecurityScan( testStep, config, parent, "/fuzzer_security_scan.gif" );
-	}
+    @Override
+    public AbstractSecurityScan buildSecurityScan(TestStep testStep, SecurityScanConfig config, ModelItem parent) {
+        return new FuzzerSecurityScan(testStep, config, parent, "/fuzzer_security_scan.gif");
+    }
 
-	@Override
-	public boolean canCreate( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
-				|| testStep instanceof HttpTestRequestStep;
-	}
+    @Override
+    public boolean canCreate(TestStep testStep) {
+        return testStep instanceof WsdlTestRequestStep || testStep instanceof RestTestRequestStep
+                || testStep instanceof HttpTestRequestStep;
+    }
 }

@@ -26,57 +26,47 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for WsdlProject. Only builds an overview panel.
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject>
-{
-	public WsdlProjectPanelBuilder()
-	{
-	}
+public class WsdlProjectPanelBuilder extends EmptyPanelBuilder<WsdlProject> {
+    public WsdlProjectPanelBuilder() {
+    }
 
-	public JPanel buildOverviewPanel( WsdlProject project )
-	{
-		JPropertiesTable<WsdlProject> table = new JPropertiesTable<WsdlProject>( "Project Properties", project );
+    public JPanel buildOverviewPanel(WsdlProject project) {
+        JPropertiesTable<WsdlProject> table = new JPropertiesTable<WsdlProject>("Project Properties", project);
 
-		if( project.isOpen() )
-		{
-			table.addProperty( "Name", "name", true );
-			table.addProperty( "Description", "description", true );
-			table.addProperty( "File", "path" );
+        if (project.isOpen()) {
+            table.addProperty("Name", "name", true);
+            table.addProperty("Description", "description", true);
+            table.addProperty("File", "path");
 
-			if( !project.isDisabled() )
-			{
-				table.addProperty( "Resource Root", "resourceRoot",
-						new String[] { null, "${projectDir}", "${workspaceDir}" } );
-				table.addProperty( "Cache Definitions", "cacheDefinitions", JPropertiesTable.BOOLEAN_OPTIONS );
-				table.addPropertyShadow( "Project Password", "shadowPassword", true );
-				table.addProperty( "Script Language", "defaultScriptLanguage",
-						SoapUIScriptEngineRegistry.getAvailableEngineIds() );
-				table.addProperty( "Hermes Config", "hermesConfig", true );
-			}
-		}
-		else
-		{
-			table.addProperty( "File", "path" );
-		}
+            if (!project.isDisabled()) {
+                table.addProperty("Resource Root", "resourceRoot",
+                        new String[]{null, "${projectDir}", "${workspaceDir}"});
+                table.addProperty("Cache Definitions", "cacheDefinitions", JPropertiesTable.BOOLEAN_OPTIONS);
+                table.addPropertyShadow("Project Password", "shadowPassword", true);
+                table.addProperty("Script Language", "defaultScriptLanguage",
+                        SoapUIScriptEngineRegistry.getAvailableEngineIds());
+                table.addProperty("Hermes Config", "hermesConfig", true);
+            }
+        } else {
+            table.addProperty("File", "path");
+        }
 
-		return table;
-	}
+        return table;
+    }
 
-	public boolean hasOverviewPanel()
-	{
-		return true;
-	}
+    public boolean hasOverviewPanel() {
+        return true;
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	public DesktopPanel buildDesktopPanel( WsdlProject modelItem )
-	{
-		return new WsdlProjectDesktopPanel( modelItem );
-	}
+    public DesktopPanel buildDesktopPanel(WsdlProject modelItem) {
+        return new WsdlProjectDesktopPanel(modelItem);
+    }
 }

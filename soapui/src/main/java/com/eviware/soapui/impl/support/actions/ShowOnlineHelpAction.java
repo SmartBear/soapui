@@ -28,60 +28,53 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Shows an online help page
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMarker
-{
-	private final String url;
+public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMarker {
+    private final String url;
 
-	public ShowOnlineHelpAction( String url )
-	{
-		this( "Online Help", url, UISupport.getKeyStroke( "F1" ) );
-	}
+    public ShowOnlineHelpAction(String url) {
+        this("Online Help", url, UISupport.getKeyStroke("F1"));
+    }
 
-	public ShowOnlineHelpAction( String title, String url )
-	{
-		this( title, url, null, null, null );
-	}
+    public ShowOnlineHelpAction(String title, String url) {
+        this(title, url, null, null, null);
+    }
 
-	public ShowOnlineHelpAction( String title, String url, String description )
-	{
-		this( title, url, null, description, null );
-	}
+    public ShowOnlineHelpAction(String title, String url, String description) {
+        this(title, url, null, description, null);
+    }
 
-	public ShowOnlineHelpAction( String title, String url, String description, String iconPath )
-	{
-		this( title, url, null, description, iconPath );
-	}
+    public ShowOnlineHelpAction(String title, String url, String description, String iconPath) {
+        this(title, url, null, description, iconPath);
+    }
 
-	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator )
-	{
-		this( title, url, accelerator, null );
-	}
+    public ShowOnlineHelpAction(String title, String url, KeyStroke accelerator) {
+        this(title, url, accelerator, null);
+    }
 
-	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator, String description )
-	{
-		this( title, url, accelerator, description, null );
-	}
+    public ShowOnlineHelpAction(String title, String url, KeyStroke accelerator, String description) {
+        this(title, url, accelerator, description, null);
+    }
 
-	public ShowOnlineHelpAction( String title, String url, KeyStroke accelerator, String description, String iconPath )
-	{
-		super( title );
-		this.url = url;
-		putValue( Action.SHORT_DESCRIPTION, description == null ? "Show online help" : description );
-		if( accelerator != null )
-			putValue( Action.ACCELERATOR_KEY, accelerator );
+    public ShowOnlineHelpAction(String title, String url, KeyStroke accelerator, String description, String iconPath) {
+        super(title);
+        this.url = url;
+        putValue(Action.SHORT_DESCRIPTION, description == null ? "Show online help" : description);
+        if (accelerator != null) {
+            putValue(Action.ACCELERATOR_KEY, accelerator);
+        }
 
-		putValue( Action.SMALL_ICON, iconPath == null ? UISupport.HELP_ICON : UISupport.createImageIcon( iconPath ) );
-	}
+        putValue(Action.SMALL_ICON, iconPath == null ? UISupport.HELP_ICON : UISupport.createImageIcon(iconPath));
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		if( url == null )
-			UISupport.showErrorMessage( "Missing help URL" );
-		else
-			Tools.openURL( url );
-	}
+    public void actionPerformed(ActionEvent e) {
+        if (url == null) {
+            UISupport.showErrorMessage("Missing help URL");
+        } else {
+            Tools.openURL(url);
+        }
+    }
 }

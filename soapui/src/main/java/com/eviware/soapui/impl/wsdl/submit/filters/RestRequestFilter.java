@@ -21,15 +21,13 @@ import com.eviware.soapui.model.iface.SubmitContext;
 
 /**
  * RequestFilter that affects REST requests
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RestRequestFilter extends HttpRequestFilter
-{
-	@Override
-	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
-	{
-		filterHttpRequest( context, request );
-	}
+public class RestRequestFilter extends HttpRequestFilter {
+    @Override
+    public void filterRestRequest(SubmitContext context, RestRequestInterface request) {
+        filterHttpRequest(context, request);
+    }
 }

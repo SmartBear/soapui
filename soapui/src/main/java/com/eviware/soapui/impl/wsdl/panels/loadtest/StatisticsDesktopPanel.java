@@ -48,206 +48,176 @@ import com.eviware.soapui.ui.support.DefaultDesktopPanel;
 
 /**
  * DesktopPanel for Statistics Graphs
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class StatisticsDesktopPanel extends DefaultDesktopPanel
-{
-	private JPanel panel;
-	private final WsdlLoadTest loadTest;
-	private JStatisticsGraph statisticsGraph;
-	private JButton exportButton;
-	private SelectStepComboBoxModel selectStepComboBoxModel;
-	private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
-	private JComboBox resolutionCombo;
+public class StatisticsDesktopPanel extends DefaultDesktopPanel {
+    private JPanel panel;
+    private final WsdlLoadTest loadTest;
+    private JStatisticsGraph statisticsGraph;
+    private JButton exportButton;
+    private SelectStepComboBoxModel selectStepComboBoxModel;
+    private InternalPropertyChangeListener propertyChangeListener = new InternalPropertyChangeListener();
+    private JComboBox resolutionCombo;
 
-	public StatisticsDesktopPanel( WsdlLoadTest loadTest )
-	{
-		super( "Statistics for [" + loadTest.getName() + "]", null, null );
-		this.loadTest = loadTest;
+    public StatisticsDesktopPanel(WsdlLoadTest loadTest) {
+        super("Statistics for [" + loadTest.getName() + "]", null, null);
+        this.loadTest = loadTest;
 
-		loadTest.addPropertyChangeListener( propertyChangeListener );
+        loadTest.addPropertyChangeListener(propertyChangeListener);
 
-		buildUI();
-	}
+        buildUI();
+    }
 
-	private void buildUI()
-	{
-		statisticsGraph = new JStatisticsGraph( loadTest );
+    private void buildUI() {
+        statisticsGraph = new JStatisticsGraph(loadTest);
 
-		JScrollPane scrollPane = new JScrollPane( statisticsGraph );
-		scrollPane.getViewport().setBackground( Color.WHITE );
-		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS );
+        JScrollPane scrollPane = new JScrollPane(statisticsGraph);
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 
-		panel = UISupport.buildPanelWithToolbarAndStatusBar( buildToolbar(), scrollPane, statisticsGraph.getLegend() );
-		panel.setPreferredSize( new Dimension( 600, 400 ) );
-	}
+        panel = UISupport.buildPanelWithToolbarAndStatusBar(buildToolbar(), scrollPane, statisticsGraph.getLegend());
+        panel.setPreferredSize(new Dimension(600, 400));
+    }
 
-	private JComponent buildToolbar()
-	{
-		exportButton = UISupport.createToolbarButton( new ExportStatisticsHistoryAction( statisticsGraph ) );
+    private JComponent buildToolbar() {
+        exportButton = UISupport.createToolbarButton(new ExportStatisticsHistoryAction(statisticsGraph));
 
-		JXToolBar toolbar = UISupport.createToolbar();
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.addSpace( 5 );
-		toolbar.addLabeledFixed( "Select Step:", buildSelectStepCombo() );
-		toolbar.addUnrelatedGap();
-		toolbar.addLabeledFixed( "Resolution:", buildResolutionCombo() );
-		toolbar.addGlue();
-		toolbar.addFixed( exportButton );
-		toolbar.addFixed( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.STATISTICSGRAPH_HELP_URL ) ) );
+        toolbar.addSpace(5);
+        toolbar.addLabeledFixed("Select Step:", buildSelectStepCombo());
+        toolbar.addUnrelatedGap();
+        toolbar.addLabeledFixed("Resolution:", buildResolutionCombo());
+        toolbar.addGlue();
+        toolbar.addFixed(exportButton);
+        toolbar.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.STATISTICSGRAPH_HELP_URL)));
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	private JComponent buildResolutionCombo()
-	{
-		resolutionCombo = new JComboBox( new String[] { "data", "250", "500", "1000" } );
-		resolutionCombo.setEditable( true );
-		resolutionCombo.setToolTipText( "Sets update interval of graph in milliseconds" );
-		long resolution = statisticsGraph.getResolution();
-		resolutionCombo.setSelectedItem( resolution == 0 ? "data" : String.valueOf( resolution ) );
-		resolutionCombo.addItemListener( new ItemListener()
-		{
+    private JComponent buildResolutionCombo() {
+        resolutionCombo = new JComboBox(new String[]{"data", "250", "500", "1000"});
+        resolutionCombo.setEditable(true);
+        resolutionCombo.setToolTipText("Sets update interval of graph in milliseconds");
+        long resolution = statisticsGraph.getResolution();
+        resolutionCombo.setSelectedItem(resolution == 0 ? "data" : String.valueOf(resolution));
+        resolutionCombo.addItemListener(new ItemListener() {
 
-			public void itemStateChanged( ItemEvent e )
-			{
-				try
-				{
-					String value = resolutionCombo.getSelectedItem().toString();
-					long resolution = value.equals( "data" ) ? 0 : Long.parseLong( value );
-					if( resolution != statisticsGraph.getResolution() )
-					{
-						statisticsGraph.setResolution( resolution );
-					}
-				}
-				catch( Exception ex )
-				{
-					long resolution = statisticsGraph.getResolution();
-					resolutionCombo.setSelectedItem( resolution == 0 ? "data" : String.valueOf( resolution ) );
-				}
-			}
-		} );
-		return resolutionCombo;
-	}
+            public void itemStateChanged(ItemEvent e) {
+                try {
+                    String value = resolutionCombo.getSelectedItem().toString();
+                    long resolution = value.equals("data") ? 0 : Long.parseLong(value);
+                    if (resolution != statisticsGraph.getResolution()) {
+                        statisticsGraph.setResolution(resolution);
+                    }
+                } catch (Exception ex) {
+                    long resolution = statisticsGraph.getResolution();
+                    resolutionCombo.setSelectedItem(resolution == 0 ? "data" : String.valueOf(resolution));
+                }
+            }
+        });
+        return resolutionCombo;
+    }
 
-	private JComponent buildSelectStepCombo()
-	{
-		selectStepComboBoxModel = new SelectStepComboBoxModel();
-		JComboBox selectStepCombo = new JComboBox( selectStepComboBoxModel );
-		selectStepCombo.setRenderer( new TestStepCellRenderer() );
-		return selectStepCombo;
-	}
+    private JComponent buildSelectStepCombo() {
+        selectStepComboBoxModel = new SelectStepComboBoxModel();
+        JComboBox selectStepCombo = new JComboBox(selectStepComboBoxModel);
+        selectStepCombo.setRenderer(new TestStepCellRenderer());
+        return selectStepCombo;
+    }
 
-	public JComponent getComponent()
-	{
-		return panel;
-	}
+    public JComponent getComponent() {
+        return panel;
+    }
 
-	private final class InternalPropertyChangeListener implements PropertyChangeListener
-	{
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			if( evt.getPropertyName().equals( WsdlLoadTest.NAME_PROPERTY ) )
-			{
-				setTitle( "Statistics for [" + loadTest.getName() + "]" );
-			}
-		}
-	}
+    private final class InternalPropertyChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals(WsdlLoadTest.NAME_PROPERTY)) {
+                setTitle("Statistics for [" + loadTest.getName() + "]");
+            }
+        }
+    }
 
-	private class SelectStepComboBoxModel extends AbstractListModel implements ComboBoxModel
-	{
-		private TestStep selectedStep;
-		private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
+    private class SelectStepComboBoxModel extends AbstractListModel implements ComboBoxModel {
+        private TestStep selectedStep;
+        private InternalTestSuiteListener testSuiteListener = new InternalTestSuiteListener();
 
-		public SelectStepComboBoxModel()
-		{
-			loadTest.getTestCase().getTestSuite().addTestSuiteListener( testSuiteListener );
-		}
+        public SelectStepComboBoxModel() {
+            loadTest.getTestCase().getTestSuite().addTestSuiteListener(testSuiteListener);
+        }
 
-		public void setSelectedItem( Object anItem )
-		{
-			if( anItem == selectedStep )
-				return;
+        public void setSelectedItem(Object anItem) {
+            if (anItem == selectedStep) {
+                return;
+            }
 
-			if( anItem == null || anItem.equals( "Total" ) )
-				selectedStep = null;
+            if (anItem == null || anItem.equals("Total")) {
+                selectedStep = null;
+            }
 
-			if( anItem instanceof TestStep )
-			{
-				selectedStep = ( TestStep )anItem;
-			}
+            if (anItem instanceof TestStep) {
+                selectedStep = (TestStep) anItem;
+            }
 
-			statisticsGraph.setTestStep( selectedStep );
-		}
+            statisticsGraph.setTestStep(selectedStep);
+        }
 
-		public Object getSelectedItem()
-		{
-			return selectedStep == null ? "Total" : selectedStep;
-		}
+        public Object getSelectedItem() {
+            return selectedStep == null ? "Total" : selectedStep;
+        }
 
-		public int getSize()
-		{
-			return loadTest.getTestCase().getTestStepCount() + 1;
-		}
+        public int getSize() {
+            return loadTest.getTestCase().getTestStepCount() + 1;
+        }
 
-		public Object getElementAt( int index )
-		{
-			return index == getSize() - 1 ? "Total" : loadTest.getTestCase().getTestStepAt( index );
-		}
+        public Object getElementAt(int index) {
+            return index == getSize() - 1 ? "Total" : loadTest.getTestCase().getTestStepAt(index);
+        }
 
-		private final class InternalTestSuiteListener extends TestSuiteListenerAdapter
-		{
-			public void testStepAdded( TestStep testStep, int index )
-			{
-				if( testStep.getTestCase() == loadTest.getTestCase() )
-				{
-					fireIntervalAdded( SelectStepComboBoxModel.this, index, index );
-				}
-			}
+        private final class InternalTestSuiteListener extends TestSuiteListenerAdapter {
+            public void testStepAdded(TestStep testStep, int index) {
+                if (testStep.getTestCase() == loadTest.getTestCase()) {
+                    fireIntervalAdded(SelectStepComboBoxModel.this, index, index);
+                }
+            }
 
-			public void testStepRemoved( TestStep testStep, int index )
-			{
-				if( testStep.getTestCase() == loadTest.getTestCase() )
-				{
-					if( selectedStep == testStep )
-					{
-						setSelectedItem( null );
-						fireContentsChanged( SelectStepComboBoxModel.this, -1, -1 );
-					}
+            public void testStepRemoved(TestStep testStep, int index) {
+                if (testStep.getTestCase() == loadTest.getTestCase()) {
+                    if (selectedStep == testStep) {
+                        setSelectedItem(null);
+                        fireContentsChanged(SelectStepComboBoxModel.this, -1, -1);
+                    }
 
-					fireIntervalRemoved( SelectStepComboBoxModel.this, index, index );
-				}
-			}
-		}
+                    fireIntervalRemoved(SelectStepComboBoxModel.this, index, index);
+                }
+            }
+        }
 
-		public void release()
-		{
-			loadTest.getTestCase().getTestSuite().removeTestSuiteListener( testSuiteListener );
-		}
-	}
+        public void release() {
+            loadTest.getTestCase().getTestSuite().removeTestSuiteListener(testSuiteListener);
+        }
+    }
 
-	private final static class TestStepCellRenderer extends DefaultListCellRenderer
-	{
-		public Component getListCellRendererComponent( JList list, Object value, int index, boolean isSelected,
-				boolean cellHasFocus )
-		{
-			JLabel label = ( JLabel )super.getListCellRendererComponent( list, value, index, isSelected, cellHasFocus );
+    private final static class TestStepCellRenderer extends DefaultListCellRenderer {
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
+                                                      boolean cellHasFocus) {
+            JLabel label = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-			if( value instanceof TestStep )
-				label.setText( ( ( TestStep )value ).getName() );
+            if (value instanceof TestStep) {
+                label.setText(((TestStep) value).getName());
+            }
 
-			return label;
-		}
-	}
+            return label;
+        }
+    }
 
-	public boolean onClose( boolean canCancel )
-	{
-		selectStepComboBoxModel.release();
-		loadTest.removePropertyChangeListener( propertyChangeListener );
-		statisticsGraph.release();
+    public boolean onClose(boolean canCancel) {
+        selectStepComboBoxModel.release();
+        loadTest.removePropertyChangeListener(propertyChangeListener);
+        statisticsGraph.release();
 
-		return super.onClose( canCancel );
-	}
+        return super.onClose(canCancel);
+    }
 }

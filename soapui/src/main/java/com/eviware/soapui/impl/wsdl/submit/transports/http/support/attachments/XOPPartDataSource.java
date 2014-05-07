@@ -38,73 +38,57 @@ import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandl
 
 /**
  * DataSource for XOP/MTOM attachments
- * 
+ *
  * @author ole.matzura
  */
 
-public final class XOPPartDataSource implements DataSource
-{
-	private String content;
-	private final String contentType;
-	private final SchemaType schemaType;
-	private File source;
+public final class XOPPartDataSource implements DataSource {
+    private String content;
+    private final String contentType;
+    private final SchemaType schemaType;
+    private File source;
 
-	public XOPPartDataSource( String content, String contentType, SchemaType schemaType )
-	{
-		this.content = content;
-		this.contentType = contentType;
-		this.schemaType = schemaType;
-	}
+    public XOPPartDataSource(String content, String contentType, SchemaType schemaType) {
+        this.content = content;
+        this.contentType = contentType;
+        this.schemaType = schemaType;
+    }
 
-	public XOPPartDataSource( File source, String contentType, SchemaType schemaType )
-	{
-		this.source = source;
-		this.contentType = contentType;
-		this.schemaType = schemaType;
-	}
+    public XOPPartDataSource(File source, String contentType, SchemaType schemaType) {
+        this.source = source;
+        this.contentType = contentType;
+        this.schemaType = schemaType;
+    }
 
-	public String getContentType()
-	{
-		return StringUtils.isNullOrEmpty( contentType ) ? ContentTypeHandler.DEFAULT_CONTENTTYPE : contentType;
-	}
+    public String getContentType() {
+        return StringUtils.isNullOrEmpty(contentType) ? ContentTypeHandler.DEFAULT_CONTENTTYPE : contentType;
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		try
-		{
-			if( source != null )
-			{
-				return new FileInputStream( source );
-			}
-			if( SchemaUtils.isInstanceOf( schemaType, XmlHexBinary.type ) )
-			{
-				return new ByteArrayInputStream( Hex.decodeHex( content.toCharArray() ) );
-			}
-			else if( SchemaUtils.isInstanceOf( schemaType, XmlBase64Binary.type ) )
-			{
-				return new ByteArrayInputStream( Base64.decodeBase64( content.getBytes() ) );
-			}
-			else if( SchemaUtils.isAnyType( schemaType ) )
-			{
-				return new ByteArrayInputStream( content.getBytes() );
-			}
-			else
-				throw new IOException( "Invalid type for XOPPartDataSource; " + schemaType.getName() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			throw new IOException( e.toString() );
-		}
-	}
+    public InputStream getInputStream() throws IOException {
+        try {
+            if (source != null) {
+                return new FileInputStream(source);
+            }
+            if (SchemaUtils.isInstanceOf(schemaType, XmlHexBinary.type)) {
+                return new ByteArrayInputStream(Hex.decodeHex(content.toCharArray()));
+            } else if (SchemaUtils.isInstanceOf(schemaType, XmlBase64Binary.type)) {
+                return new ByteArrayInputStream(Base64.decodeBase64(content.getBytes()));
+            } else if (SchemaUtils.isAnyType(schemaType)) {
+                return new ByteArrayInputStream(content.getBytes());
+            } else {
+                throw new IOException("Invalid type for XOPPartDataSource; " + schemaType.getName());
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            throw new IOException(e.toString());
+        }
+    }
 
-	public String getName()
-	{
-		return String.valueOf( schemaType.getName() );
-	}
+    public String getName() {
+        return String.valueOf(schemaType.getName());
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

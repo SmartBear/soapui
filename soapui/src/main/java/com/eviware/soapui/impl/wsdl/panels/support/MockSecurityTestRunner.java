@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.panels.support;
+*/
+package com.eviware.soapui.impl.wsdl.panels.support;
 
 import org.apache.log4j.Logger;
 
@@ -29,52 +30,43 @@ import com.eviware.soapui.security.SecurityTestRunContext;
 import com.eviware.soapui.security.SecurityTestRunner;
 import com.eviware.soapui.security.result.SecurityScanResult;
 
-public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest> implements SecurityTestRunner
-{
+public class MockSecurityTestRunner extends AbstractMockTestRunner<SecurityTest> implements SecurityTestRunner {
 
-	private SecurityTest securityTest;
+    private SecurityTest securityTest;
 
-	public MockSecurityTestRunner( SecurityTest modelItem )
-	{
-		super( modelItem, null );
-	}
+    public MockSecurityTestRunner(SecurityTest modelItem) {
+        super(modelItem, null);
+    }
 
-	public MockSecurityTestRunner( SecurityTest modelItem, Logger logger )
-	{
-		super( modelItem, logger );
-		this.securityTest = modelItem;
-	}
+    public MockSecurityTestRunner(SecurityTest modelItem, Logger logger) {
+        super(modelItem, logger);
+        this.securityTest = modelItem;
+    }
 
-	@Override
-	public SecurityTest getSecurityTest()
-	{
-		return securityTest;
-	}
+    @Override
+    public SecurityTest getSecurityTest() {
+        return securityTest;
+    }
 
-	@Override
-	public SecurityScanResult runTestStepSecurityScan( SecurityTestRunContext runContext, TestStep testStep,
-			SecurityScan securityCheck )
-	{
-		return securityCheck.run( cloneForSecurityScan( ( WsdlTestStep )testStep ), runContext, null );
-	}
+    @Override
+    public SecurityScanResult runTestStepSecurityScan(SecurityTestRunContext runContext, TestStep testStep,
+                                                      SecurityScan securityCheck) {
+        return securityCheck.run(cloneForSecurityScan((WsdlTestStep) testStep), runContext, null);
+    }
 
-	private TestStep cloneForSecurityScan( WsdlTestStep sourceTestStep )
-	{
-		WsdlTestStep clonedTestStep = null;
-		TestStepConfig testStepConfig = ( TestStepConfig )sourceTestStep.getConfig().copy();
-		WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory( testStepConfig.getType() );
-		if( factory != null )
-		{
-			clonedTestStep = factory.buildTestStep( securityTest.getTestCase(), testStepConfig, false );
-			if( clonedTestStep instanceof Assertable )
-			{
-				for( TestAssertion assertion : ( ( Assertable )clonedTestStep ).getAssertionList() )
-				{
-					( ( Assertable )clonedTestStep ).removeAssertion( assertion );
-				}
-			}
-		}
-		return clonedTestStep;
-	}
+    private TestStep cloneForSecurityScan(WsdlTestStep sourceTestStep) {
+        WsdlTestStep clonedTestStep = null;
+        TestStepConfig testStepConfig = (TestStepConfig) sourceTestStep.getConfig().copy();
+        WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory(testStepConfig.getType());
+        if (factory != null) {
+            clonedTestStep = factory.buildTestStep(securityTest.getTestCase(), testStepConfig, false);
+            if (clonedTestStep instanceof Assertable) {
+                for (TestAssertion assertion : ((Assertable) clonedTestStep).getAssertionList()) {
+                    ((Assertable) clonedTestStep).removeAssertion(assertion);
+                }
+            }
+        }
+        return clonedTestStep;
+    }
 
 }

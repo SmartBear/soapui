@@ -32,42 +32,34 @@ import com.eviware.soapui.support.xml.XmlUtils;
 /**
  * Prompts to add a WSS Username Token to the specified WsdlRequests
  * requestContent
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ApplyOutgoingWSSToMockResponseAction extends AbstractAction
-{
-	private final WsdlMockResponse mockResponse;
-	private final OutgoingWss outgoing;
+public class ApplyOutgoingWSSToMockResponseAction extends AbstractAction {
+    private final WsdlMockResponse mockResponse;
+    private final OutgoingWss outgoing;
 
-	public ApplyOutgoingWSSToMockResponseAction( WsdlMockResponse mockResponse, OutgoingWss outgoing )
-	{
-		super( "Apply \" " + outgoing.getName() + " \"" );
-		this.mockResponse = mockResponse;
-		this.outgoing = outgoing;
-	}
+    public ApplyOutgoingWSSToMockResponseAction(WsdlMockResponse mockResponse, OutgoingWss outgoing) {
+        super("Apply \" " + outgoing.getName() + " \"");
+        this.mockResponse = mockResponse;
+        this.outgoing = outgoing;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		String req = mockResponse.getResponseContent();
+    public void actionPerformed(ActionEvent e) {
+        String req = mockResponse.getResponseContent();
 
-		try
-		{
-			UISupport.setHourglassCursor();
-			Document dom = XmlUtils.parseXml( req );
-			outgoing.processOutgoing( dom, new DefaultPropertyExpansionContext( mockResponse ) );
-			StringWriter writer = new StringWriter();
-			XmlUtils.serialize( dom, writer );
-			mockResponse.setResponseContent( writer.toString() );
-		}
-		catch( Exception e1 )
-		{
-			UISupport.showErrorMessage( e1 );
-		}
-		finally
-		{
-			UISupport.resetCursor();
-		}
-	}
+        try {
+            UISupport.setHourglassCursor();
+            Document dom = XmlUtils.parseXml(req);
+            outgoing.processOutgoing(dom, new DefaultPropertyExpansionContext(mockResponse));
+            StringWriter writer = new StringWriter();
+            XmlUtils.serialize(dom, writer);
+            mockResponse.setResponseContent(writer.toString());
+        } catch (Exception e1) {
+            UISupport.showErrorMessage(e1);
+        } finally {
+            UISupport.resetCursor();
+        }
+    }
 }

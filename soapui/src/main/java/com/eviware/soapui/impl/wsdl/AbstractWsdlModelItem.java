@@ -29,220 +29,206 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * Abstract base class for WSDL-implementation classes
- * 
+ *
  * @author Ole.Matzura
  */
 
 public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
-		extends AbstractModelItem
-		implements Releasable, AnimatableItem
-{
-	private XmlBeansSettingsImpl settings;
-	private T config;
-	private ImageIcon icon;
-	private final ModelItem parent;
+        extends AbstractModelItem
+        implements Releasable, AnimatableItem {
+    private XmlBeansSettingsImpl settings;
+    private T config;
+    private ImageIcon icon;
+    private final ModelItem parent;
 
-	protected AbstractWsdlModelItem( T config, ModelItem parent, String icon )
-	{
-		this.parent = parent;
-		if( config != null )
-			setConfig( config );
+    protected AbstractWsdlModelItem(T config, ModelItem parent, String icon) {
+        this.parent = parent;
+        if (config != null) {
+            setConfig(config);
+            ensureIdIsSet();
+        }
 
-		if( icon != null )
-			this.icon = UISupport.createImageIcon( icon );
-	}
+        if (icon != null) {
+            this.icon = UISupport.createImageIcon(icon);
+        }
+    }
 
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return ModelSupport.dependsOn( this, modelItem );
-	}
+    public boolean dependsOn(ModelItem modelItem) {
+        return ModelSupport.dependsOn(this, modelItem);
+    }
 
-	public ModelItem getParent()
-	{
-		return parent;
-	}
+    public ModelItem getParent() {
+        return parent;
+    }
 
-	public ImageIcon getIcon()
-	{
-		return icon;
-	}
+    public ImageIcon getIcon() {
+        return icon;
+    }
 
-	@Override
-	public void setIcon( ImageIcon icon )
-	{
-		if( icon == this.icon )
-			return;
+    @Override
+    public void setIcon(ImageIcon icon) {
+        if (icon == this.icon) {
+            return;
+        }
 
-		ImageIcon oldIcon = this.icon;
-		this.icon = icon;
-		notifyPropertyChanged( ICON_PROPERTY, oldIcon, icon );
-	}
+        ImageIcon oldIcon = this.icon;
+        this.icon = icon;
+        notifyPropertyChanged(ICON_PROPERTY, oldIcon, icon);
+    }
 
-	public String getDescription()
-	{
-		String description = config.getDescription();
-		return StringUtils.hasContent( description ) ? description : "";
-	}
+    public String getDescription() {
+        String description = config.getDescription();
+        return StringUtils.hasContent(description) ? description : "";
+    }
 
-	public void setDescription( String description )
-	{
-		String old = getDescription();
-		if( String.valueOf( old ).equals( description ) )
-			return;
+    public void setDescription(String description) {
+        String old = getDescription();
+        if (String.valueOf(old).equals(description)) {
+            return;
+        }
 
-		config.setDescription( description );
-		notifyPropertyChanged( DESCRIPTION_PROPERTY, old, description );
-	}
+        config.setDescription(description);
+        notifyPropertyChanged(DESCRIPTION_PROPERTY, old, description);
+    }
 
-	public String getName()
-	{
-		return config.getName();
-	}
+    public String getName() {
+        return config.getName();
+    }
 
-	public void setName( String name )
-	{
-		String old = getName();
-		name = name.trim();
-		config.setName( name );
-		notifyPropertyChanged( NAME_PROPERTY, old, name );
-	}
+    public void setName(String name) {
+        String old = getName();
+        name = name.trim();
+        config.setName(name);
+        notifyPropertyChanged(NAME_PROPERTY, old, name);
+    }
 
-	public XmlBeansSettingsImpl getSettings()
-	{
-		return settings;
-	}
+    public XmlBeansSettingsImpl getSettings() {
+        return settings;
+    }
 
-	public T getConfig()
-	{
-		return config;
-	}
+    public T getConfig() {
+        return config;
+    }
 
-	public void setConfig( T config )
-	{
-		this.config = config;
+    public void setConfig(T config) {
+        this.config = config;
 
-		if( config != null && config.isSetName() )
-		{
-			config.setName( config.getName().trim() );
-		}
+        if (config != null) {
+            ensureIdIsSet();
+            if (config.isSetName()) {
+                config.setName(config.getName().trim());
+            }
+        }
 
-		if( settings != null )
-			settings.release();
+        if (settings != null) {
+            settings.release();
+        }
 
-		if( !config.isSetSettings() )
-			config.addNewSettings();
+        if (!config.isSetSettings()) {
+            config.addNewSettings();
+        }
 
-		settings = new XmlBeansSettingsImpl( this, parent == null ? SoapUI.getSettings() : parent.getSettings(),
-				this.config.getSettings() );
-	}
+        settings = new XmlBeansSettingsImpl(this, parent == null ? SoapUI.getSettings() : parent.getSettings(),
+                this.config.getSettings());
+    }
 
-	public String getId()
-	{
-		if( !config.isSetId() )
-			config.setId( ModelSupport.generateModelItemID() );
+    public String getId() {
+        return config.getId();
+    }
 
-		return config.getId();
-	}
+    private void ensureIdIsSet() {
+        if (!config.isSetId()) {
+            config.setId(ModelSupport.generateModelItemID());
+        }
+    }
 
-	protected void setSettings( XmlBeansSettingsImpl settings )
-	{
-		if( this.settings != null )
-			this.settings.release();
+    protected void setSettings(XmlBeansSettingsImpl settings) {
+        if (this.settings != null) {
+            this.settings.release();
+        }
 
-		this.settings = settings;
-	}
+        this.settings = settings;
+    }
 
-	public ModelItem getWsdlModelItemByName( Collection<? extends ModelItem> items,
-			String name )
-	{
-		for( ModelItem item : items )
-		{
-			if( item.getName() != null && item.getName().equals( name ) )
-				return item;
-		}
+    public ModelItem getWsdlModelItemByName(Collection<? extends ModelItem> items,
+                                            String name) {
+        for (ModelItem item : items) {
+            if (item.getName() != null && item.getName().equals(name)) {
+                return item;
+            }
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public void release()
-	{
-		if( settings != null )
-		{
-			settings.release();
-		}
-	}
+    public void release() {
+        if (settings != null) {
+            settings.release();
+        }
+    }
 
-	public void resolve( ResolveContext<?> context )
-	{
-		List<? extends ModelItem> children = getChildren();
-		if( children == null )
-			return;
+    public void resolve(ResolveContext<?> context) {
+        List<? extends ModelItem> children = getChildren();
+        if (children == null) {
+            return;
+        }
 
-		for( ModelItem modelItem : children )
-		{
-			if( modelItem instanceof AbstractWsdlModelItem<?> )
-			{
-				( ( AbstractWsdlModelItem<?> )modelItem ).resolve( context );
-			}
-		}
-	}
+        for (ModelItem modelItem : children) {
+            if (modelItem instanceof AbstractWsdlModelItem<?>) {
+                ((AbstractWsdlModelItem<?>) modelItem).resolve(context);
+            }
+        }
+    }
 
-	public List<ExternalDependency> getExternalDependencies()
-	{
-		List<ExternalDependency> result = new ArrayList<ExternalDependency>();
-		addExternalDependencies( result );
-		return result;
-	}
+    public List<ExternalDependency> getExternalDependencies() {
+        List<ExternalDependency> result = new ArrayList<ExternalDependency>();
+        addExternalDependencies(result);
+        return result;
+    }
 
-	protected void addExternalDependencies( List<ExternalDependency> dependencies )
-	{
-		List<? extends ModelItem> children = getChildren();
-		if( children == null )
-			return;
+    protected void addExternalDependencies(List<ExternalDependency> dependencies) {
+        List<? extends ModelItem> children = getChildren();
+        if (children == null) {
+            return;
+        }
 
-		for( ModelItem modelItem : children )
-		{
-			if( modelItem instanceof AbstractWsdlModelItem<?> )
-			{
-				( ( AbstractWsdlModelItem<?> )modelItem ).addExternalDependencies( dependencies );
-			}
-		}
-	}
+        for (ModelItem modelItem : children) {
+            if (modelItem instanceof AbstractWsdlModelItem<?>) {
+                ((AbstractWsdlModelItem<?>) modelItem).addExternalDependencies(dependencies);
+            }
+        }
+    }
 
-	public void beforeSave()
-	{
-		List<? extends ModelItem> children = getChildren();
-		if( children == null )
-			return;
+    public void beforeSave() {
+        List<? extends ModelItem> children = getChildren();
+        if (children == null) {
+            return;
+        }
 
-		for( ModelItem modelItem : children )
-		{
-			if( modelItem instanceof AbstractWsdlModelItem<?> )
-			{
-				( ( AbstractWsdlModelItem<?> )modelItem ).beforeSave();
-			}
-		}
-	}
+        for (ModelItem modelItem : children) {
+            if (modelItem instanceof AbstractWsdlModelItem<?>) {
+                ((AbstractWsdlModelItem<?>) modelItem).beforeSave();
+            }
+        }
+    }
 
-	public void afterLoad()
-	{
-		List<? extends ModelItem> children = getChildren();
-		if( children == null )
-			return;
+    public void afterLoad() {
+        List<? extends ModelItem> children = getChildren();
+        if (children == null) {
+            return;
+        }
 
-		for( ModelItem modelItem : children )
-		{
-			if( modelItem instanceof AbstractWsdlModelItem<?> )
-			{
-				( ( AbstractWsdlModelItem<?> )modelItem ).afterLoad();
-			}
-		}
-	}
+        for (ModelItem modelItem : children) {
+            if (modelItem instanceof AbstractWsdlModelItem<?>) {
+                ((AbstractWsdlModelItem<?>) modelItem).afterLoad();
+            }
+        }
+    }
 }

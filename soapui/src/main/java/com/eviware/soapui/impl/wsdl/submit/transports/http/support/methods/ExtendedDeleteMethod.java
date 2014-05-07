@@ -35,178 +35,143 @@ import java.net.URL;
 /**
  * Extended PostMethod that supports limiting of response size and detailed
  * timestamps
- * 
+ *
  * @author Ole.Matzura
  */
 
-public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHttpMethod
-{
-	private HttpMethodSupport httpMethodSupport;
+public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHttpMethod {
+    private HttpMethodSupport httpMethodSupport;
 
-	public ExtendedDeleteMethod()
-	{
-		httpMethodSupport = new HttpMethodSupport();
-	}
+    public ExtendedDeleteMethod() {
+        httpMethodSupport = new HttpMethodSupport();
+    }
 
-	public String getDumpFile()
-	{
-		return httpMethodSupport.getDumpFile();
-	}
+    public String getDumpFile() {
+        return httpMethodSupport.getDumpFile();
+    }
 
-	public void setDumpFile( String dumpFile )
-	{
-		httpMethodSupport.setDumpFile( dumpFile );
-	}
+    public void setDumpFile(String dumpFile) {
+        httpMethodSupport.setDumpFile(dumpFile);
+    }
 
-	public void afterReadResponse( SSLSession session )
-	{
-		httpMethodSupport.afterReadResponse( session );
-	}
+    public void afterReadResponse(SSLSession session) {
+        httpMethodSupport.afterReadResponse(session);
+    }
 
-	@Override
-	public String getResponseCharSet()
-	{
-		return httpMethodSupport.getResponseCharset();
-	}
+    @Override
+    public String getResponseCharSet() {
+        return httpMethodSupport.getResponseCharset();
+    }
 
-	public HttpEntity getRequestEntity()
-	{
-		return null;
-	}
+    public HttpEntity getRequestEntity() {
+        return null;
+    }
 
-	public long getMaxSize()
-	{
-		return httpMethodSupport.getMaxSize();
-	}
+    public long getMaxSize() {
+        return httpMethodSupport.getMaxSize();
+    }
 
-	public void setMaxSize( long maxSize )
-	{
-		httpMethodSupport.setMaxSize( maxSize );
-	}
+    public void setMaxSize(long maxSize) {
+        httpMethodSupport.setMaxSize(maxSize);
+    }
 
-	public long getResponseReadTime()
-	{
-		return httpMethodSupport.getResponseReadTime();
-	}
+    public long getResponseReadTime() {
+        return httpMethodSupport.getResponseReadTime();
+    }
 
-	public long getResponseReadTimeNanos()
-	{
-		return httpMethodSupport.getResponseReadTimeNanos();
-	}
+    public long getResponseReadTimeNanos() {
+        return httpMethodSupport.getResponseReadTimeNanos();
+    }
 
-	public boolean hasResponse()
-	{
-		return httpMethodSupport.hasResponse();
-	}
+    public boolean hasResponse() {
+        return httpMethodSupport.hasResponse();
+    }
 
-	public void afterWriteRequest()
-	{
-		httpMethodSupport.afterWriteRequest();
-	}
+    public void afterWriteRequest() {
+        httpMethodSupport.afterWriteRequest();
+    }
 
-	public void initStartTime()
-	{
-		httpMethodSupport.initStartTime();
-	}
+    public void initStartTime() {
+        httpMethodSupport.initStartTime();
+    }
 
-	public long getTimeTaken()
-	{
-		return httpMethodSupport.getTimeTaken();
-	}
+    public long getTimeTaken() {
+        return httpMethodSupport.getTimeTaken();
+    }
 
-	public long getStartTime()
-	{
-		return httpMethodSupport.getStartTime();
-	}
+    public long getStartTime() {
+        return httpMethodSupport.getStartTime();
+    }
 
-	public SSLInfo getSSLInfo()
-	{
-		return httpMethodSupport.getSSLInfo();
-	}
+    public SSLInfo getSSLInfo() {
+        return httpMethodSupport.getSSLInfo();
+    }
 
-	public String getResponseContentType()
-	{
-		return httpMethodSupport.getResponseContentType();
-	}
+    public String getResponseContentType() {
+        return httpMethodSupport.getResponseContentType();
+    }
 
-	public String getMethod()
-	{
-		return RestRequestInterface.HttpMethod.DELETE.toString();
-	}
+    public String getMethod() {
+        return RestRequestInterface.HttpMethod.DELETE.toString();
+    }
 
-	public Throwable getFailureCause()
-	{
-		return httpMethodSupport.getFailureCause();
-	}
+    public Throwable getFailureCause() {
+        return httpMethodSupport.getFailureCause();
+    }
 
-	public boolean isFailed()
-	{
-		return httpMethodSupport.isFailed();
-	}
+    public boolean isFailed() {
+        return httpMethodSupport.isFailed();
+    }
 
-	public void setFailed( Throwable t )
-	{
-		httpMethodSupport.setFailed( t );
-	}
+    public void setFailed(Throwable t) {
+        httpMethodSupport.setFailed(t);
+    }
 
-	public byte[] getDecompressedResponseBody() throws IOException
-	{
-		return httpMethodSupport.getDecompressedResponseBody();
-	}
+    public byte[] getDecompressedResponseBody() throws IOException {
+        return httpMethodSupport.getDecompressedResponseBody();
+    }
 
-	public void setDecompress( boolean decompress )
-	{
-		httpMethodSupport.setDecompress( decompress );
-	}
+    public void setDecompress(boolean decompress) {
+        httpMethodSupport.setDecompress(decompress);
+    }
 
-	public void setHttpResponse( HttpResponse httpResponse )
-	{
-		httpMethodSupport.setHttpResponse( httpResponse );
-	}
+    public void setHttpResponse(HttpResponse httpResponse) {
+        httpMethodSupport.setHttpResponse(httpResponse);
+    }
 
-	public HttpResponse getHttpResponse()
-	{
-		return httpMethodSupport.getHttpResponse();
-	}
+    public HttpResponse getHttpResponse() {
+        return httpMethodSupport.getHttpResponse();
+    }
 
-	public boolean hasHttpResponse()
-	{
-		return httpMethodSupport.hasHttpResponse();
-	}
+    public boolean hasHttpResponse() {
+        return httpMethodSupport.hasHttpResponse();
+    }
 
-	public byte[] getResponseBody() throws IOException
-	{
-		return httpMethodSupport.getResponseBody();
-	}
+    public byte[] getResponseBody() throws IOException {
+        return httpMethodSupport.getResponseBody();
+    }
 
-	public String getResponseBodyAsString() throws IOException
-	{
-		byte[] rawdata = getResponseBody();
-		if( rawdata != null )
-		{
-			return EncodingUtil.getString( rawdata, getResponseCharSet() );
-		}
-		else
-		{
-			return null;
-		}
-	}
+    public String getResponseBodyAsString() throws IOException {
+        byte[] rawdata = getResponseBody();
+        if (rawdata != null) {
+            return EncodingUtil.getString(rawdata, getResponseCharSet());
+        } else {
+            return null;
+        }
+    }
 
-	public SoapUIMetrics getMetrics()
-	{
-		return httpMethodSupport.getMetrics();
-	}
+    public SoapUIMetrics getMetrics() {
+        return httpMethodSupport.getMetrics();
+    }
 
-	@Override
-	public Header[] getAllResponseHeaders()
-	{
-		return httpMethodSupport.getAllResponseHeaders();
-	}
+    @Override
+    public Header[] getAllResponseHeaders() {
+        return httpMethodSupport.getAllResponseHeaders();
+    }
 
-	@Override
-	public URL getURL() throws MalformedURLException
-	{
-		return getURI().toURL();
-	}
+    @Override
+    public URL getURL() throws MalformedURLException {
+        return getURI().toURL();
+    }
 
 }

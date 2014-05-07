@@ -18,94 +18,93 @@ package com.eviware.soapui.model.testsuite;
 
 /**
  * Listener for LoadTest run events
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface LoadTestRunListener
-{
-	/**
-	 * Called before a load-test is about to be run
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 */
+public interface LoadTestRunListener {
+    /**
+     * Called before a load-test is about to be run
+     *
+     * @param loadTestRunner
+     * @param context
+     */
 
-	public void beforeLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context );
+    public void beforeLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context);
 
-	/**
-	 * Called after all initial loadtest threads have been started
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 */
+    /**
+     * Called after all initial loadtest threads have been started
+     *
+     * @param loadTestRunner
+     * @param context
+     */
 
-	public void loadTestStarted( LoadTestRunner loadTestRunner, LoadTestRunContext context );
+    public void loadTestStarted(LoadTestRunner loadTestRunner, LoadTestRunContext context);
 
-	/**
-	 * Called before the execution of a testcase
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 * @param testRunner
-	 * @param runContext
-	 */
+    /**
+     * Called before the execution of a testcase
+     *
+     * @param loadTestRunner
+     * @param context
+     * @param testRunner
+     * @param runContext
+     */
 
-	public void beforeTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext );
+    public void beforeTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                               TestCaseRunContext runContext);
 
-	/**
-	 * Called before the execution of a teststep
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 * @param testRunner
-	 * @param runContext
-	 * @param testStep
-	 */
+    /**
+     * Called before the execution of a teststep
+     *
+     * @param loadTestRunner
+     * @param context
+     * @param testRunner
+     * @param runContext
+     * @param testStep
+     */
 
-	public void beforeTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext, TestStep testStep );
+    public void beforeTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                               TestCaseRunContext runContext, TestStep testStep);
 
-	/**
-	 * Called after the execution of a teststep
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 * @param testRunner
-	 * @param runContext
-	 * @param testStepResult
-	 */
+    /**
+     * Called after the execution of a teststep
+     *
+     * @param loadTestRunner
+     * @param context
+     * @param testRunner
+     * @param runContext
+     * @param testStepResult
+     */
 
-	public void afterTestStep( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext, TestStepResult testStepResult );
+    public void afterTestStep(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                              TestCaseRunContext runContext, TestStepResult testStepResult);
 
-	/**
-	 * Called after the execution of a testcase
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 * @param testRunner
-	 * @param runContext
-	 */
+    /**
+     * Called after the execution of a testcase
+     *
+     * @param loadTestRunner
+     * @param context
+     * @param testRunner
+     * @param runContext
+     */
 
-	public void afterTestCase( LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
-			TestCaseRunContext runContext );
+    public void afterTestCase(LoadTestRunner loadTestRunner, LoadTestRunContext context, TestCaseRunner testRunner,
+                              TestCaseRunContext runContext);
 
-	/**
-	 * Called when a loadtest has been stopped for some reason
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 */
+    /**
+     * Called when a loadtest has been stopped for some reason
+     *
+     * @param loadTestRunner
+     * @param context
+     */
 
-	public void loadTestStopped( LoadTestRunner loadTestRunner, LoadTestRunContext context );
+    public void loadTestStopped(LoadTestRunner loadTestRunner, LoadTestRunContext context);
 
-	/**
-	 * Called after the execution of a loadtest when all threads have terminated
-	 * 
-	 * @param loadTestRunner
-	 * @param context
-	 */
-	public void afterLoadTest( LoadTestRunner loadTestRunner, LoadTestRunContext context );
+    /**
+     * Called after the execution of a loadtest when all threads have terminated
+     *
+     * @param loadTestRunner
+     * @param context
+     */
+    public void afterLoadTest(LoadTestRunner loadTestRunner, LoadTestRunContext context);
 }

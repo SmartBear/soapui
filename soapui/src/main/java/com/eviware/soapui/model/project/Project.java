@@ -34,87 +34,86 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public interface Project extends TestModelItem
-{
-	/**
-	 * The id of the JBossWS project nature
-	 */
-	public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
+public interface Project extends TestModelItem {
+    /**
+     * The id of the JBossWS project nature
+     */
+    public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
 
-	/**
-	 * The id of the SoapUI project nature
-	 */
-	public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
+    /**
+     * The id of the SoapUI project nature
+     */
+    public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
 
-	public Workspace getWorkspace();
+    public Workspace getWorkspace();
 
-	public Interface getInterfaceAt( int index );
+    public Interface getInterfaceAt(int index);
 
-	public Interface getInterfaceByName( String interfaceName );
+    public Interface getInterfaceByName(String interfaceName);
 
-	public int getInterfaceCount();
+    public int getInterfaceCount();
 
-	public void addProjectListener( ProjectListener listener );
+    public void addProjectListener(ProjectListener listener);
 
-	public void removeProjectListener( ProjectListener listener );
+    public void removeProjectListener(ProjectListener listener);
 
-	public int getTestSuiteCount();
+    public int getTestSuiteCount();
 
-	public TestSuite getTestSuiteAt( int index );
+    public TestSuite getTestSuiteAt(int index);
 
-	public TestSuite getTestSuiteByName( String testSuiteName );
+    public TestSuite getTestSuiteByName(String testSuiteName);
 
-	public TestSuite addNewTestSuite( String name );
+    public TestSuite addNewTestSuite(String name);
 
-	public int getMockServiceCount();
+    public int getMockServiceCount();
 
-	public int getRestMockServiceCount();
+    public int getRestMockServiceCount();
 
-	public MockService getMockServiceAt( int index );
+    public MockService getMockServiceAt(int index);
 
-	public MockService getRestMockServiceAt( int index );
+    public MockService getRestMockServiceAt(int index);
 
-   public MockService getMockServiceByName( String mockServiceName );
+    public MockService getMockServiceByName(String mockServiceName);
 
-   public RestMockService getRestMockServiceByName( String mockServiceName );
+    public RestMockService getRestMockServiceByName(String mockServiceName);
 
-   public MockService addNewMockService( String name );
+    public MockService addNewMockService(String name);
 
-   public RestMockService addNewRestMockService( String name );
+    public RestMockService addNewRestMockService(String name);
 
-	public void removeMockService( MockService service);
+    public void removeMockService(MockService service);
 
-   public SaveStatus save() throws IOException;
+    public SaveStatus save() throws IOException;
 
-	public List<TestSuite> getTestSuiteList();
+    public List<TestSuite> getTestSuiteList();
 
-	public List<WsdlMockService> getMockServiceList();
+    public List<WsdlMockService> getMockServiceList();
 
-	public List<RestMockService> getRestMockServiceList();
+    public List<RestMockService> getRestMockServiceList();
 
-	public List<Interface> getInterfaceList();
+    public List<Interface> getInterfaceList();
 
-	public boolean hasNature( String natureId );
+    public boolean hasNature(String natureId);
 
-	public EndpointStrategy getEndpointStrategy();
+    public EndpointStrategy getEndpointStrategy();
 
-	public void release();
+    public void release();
 
-	public boolean isOpen();
+    public boolean isOpen();
 
-	public boolean isDisabled();
+    public boolean isDisabled();
 
-	public String getPath();
+    public String getPath();
 
-	public String getResourceRoot();
+    public String getResourceRoot();
 
-	public String getShadowPassword();
+    public String getShadowPassword();
 
-	public void setShadowPassword( String password );
+    public void setShadowPassword(String password);
 
-	public void inspect();
+    public void inspect();
 
-	public int getIndexOfTestSuite( TestSuite testSuite );
+    public int getIndexOfTestSuite(TestSuite testSuite);
 
-	OAuth2ProfileContainer getOAuth2ProfileContainer();
+    OAuth2ProfileContainer getOAuth2ProfileContainer();
 }

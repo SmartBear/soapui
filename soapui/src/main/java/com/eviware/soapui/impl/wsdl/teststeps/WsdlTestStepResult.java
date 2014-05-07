@@ -34,228 +34,201 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 
 /**
  * Default implementation of TestStepResult interface
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class WsdlTestStepResult implements TestStepResult
-{
-	private static final String[] EMPTY_MESSAGES = new String[0];
-	private final WsdlTestStep testStep;
-	private List<String> messages = new ArrayList<String>();
-	private Throwable error;
-	private TestStepStatus status = TestStepStatus.UNKNOWN;
-	private long timeTaken;
-	private long timeStamp;
-	private long size;
-	private DefaultActionList actionList;
-	private long startTime;
-	private boolean discarded;
-	private String testStepName;
+public class WsdlTestStepResult implements TestStepResult {
+    private static final String[] EMPTY_MESSAGES = new String[0];
+    private final WsdlTestStep testStep;
+    private List<String> messages = new ArrayList<String>();
+    private Throwable error;
+    private TestStepStatus status = TestStepStatus.UNKNOWN;
+    private long timeTaken;
+    private long timeStamp;
+    private long size;
+    private DefaultActionList actionList;
+    private long startTime;
+    private boolean discarded;
+    private String testStepName;
 
-	private static DefaultActionList discardedActionList = new DefaultActionList( null );
+    private static DefaultActionList discardedActionList = new DefaultActionList(null);
 
-	static
-	{
-		discardedActionList.setDefaultAction( new AbstractAction()
-		{
-			public void actionPerformed( ActionEvent arg0 )
-			{
-				UISupport.showErrorMessage( "Result has been discarded" );
-			}
-		} );
-	}
+    static {
+        discardedActionList.setDefaultAction(new AbstractAction() {
+            public void actionPerformed(ActionEvent arg0) {
+                UISupport.showErrorMessage("Result has been discarded");
+            }
+        });
+    }
 
-	public WsdlTestStepResult( WsdlTestStep testStep )
-	{
-		this.testStep = testStep;
-		testStepName = testStep.getName();
-		timeStamp = System.currentTimeMillis();
-	}
+    public WsdlTestStepResult(WsdlTestStep testStep) {
+        this.testStep = testStep;
+        testStepName = testStep.getName();
+        timeStamp = System.currentTimeMillis();
+    }
 
-	public TestStepStatus getStatus()
-	{
-		return status;
-	}
+    public TestStepStatus getStatus() {
+        return status;
+    }
 
-	public void setStatus( TestStepStatus status )
-	{
-		this.status = status;
-	}
+    public void setStatus(TestStepStatus status) {
+        this.status = status;
+    }
 
-	public TestStep getTestStep()
-	{
-		try
-		{
-			if( testStep != null )
-				testStep.getName();
+    public TestStep getTestStep() {
+        try {
+            if (testStep != null) {
+                testStep.getName();
+            }
 
-			return testStep;
-		}
-		catch( Throwable t )
-		{
-		}
+            return testStep;
+        } catch (Throwable t) {
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public ActionList getActions()
-	{
-		if( isDiscarded() )
-			return discardedActionList;
+    public ActionList getActions() {
+        if (isDiscarded()) {
+            return discardedActionList;
+        }
 
-		if( actionList == null )
-		{
-			actionList = new DefaultActionList( testStepName );
-			actionList.setDefaultAction( new AbstractAction()
-			{
+        if (actionList == null) {
+            actionList = new DefaultActionList(testStepName);
+            actionList.setDefaultAction(new AbstractAction() {
 
-				public void actionPerformed( ActionEvent e )
-				{
-					if( getMessages().length > 0 )
-					{
-						StringBuffer buf = new StringBuffer( "<html><body>" );
-						if( getError() != null )
-							buf.append( getError().toString() ).append( "<br/>" );
+                public void actionPerformed(ActionEvent e) {
+                    if (getMessages().length > 0) {
+                        StringBuffer buf = new StringBuffer("<html><body>");
+                        if (getError() != null) {
+                            buf.append(getError().toString()).append("<br/>");
+                        }
 
-						for( String s : getMessages() )
-							buf.append( s ).append( "<br/>" );
+                        for (String s : getMessages()) {
+                            buf.append(s).append("<br/>");
+                        }
 
-						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
-								+ getStatus() + "]", buf.toString(), null );
-					}
-					else if( getError() != null )
-					{
-						UISupport.showExtendedInfo( "TestStep Result", "Step [" + testStepName + "] ran with status ["
-								+ getStatus() + "]", getError().toString(), null );
-					}
-					else
-					{
-						UISupport.showInfoMessage( "Step [" + testStepName + "] ran with status [" + getStatus() + "]",
-								"TestStep Result" );
-					}
-				}
-			} );
-		}
+                        UISupport.showExtendedInfo("TestStep Result", "Step [" + testStepName + "] ran with status ["
+                                + getStatus() + "]", buf.toString(), null);
+                    } else if (getError() != null) {
+                        UISupport.showExtendedInfo("TestStep Result", "Step [" + testStepName + "] ran with status ["
+                                + getStatus() + "]", getError().toString(), null);
+                    } else {
+                        UISupport.showInfoMessage("Step [" + testStepName + "] ran with status [" + getStatus() + "]",
+                                "TestStep Result");
+                    }
+                }
+            });
+        }
 
-		return actionList;
-	}
+        return actionList;
+    }
 
-	public void addAction( Action action, boolean isDefault )
-	{
-		if( isDiscarded() )
-			return;
+    public void addAction(Action action, boolean isDefault) {
+        if (isDiscarded()) {
+            return;
+        }
 
-		if( actionList == null )
-		{
-			actionList = new DefaultActionList( testStepName );
-		}
+        if (actionList == null) {
+            actionList = new DefaultActionList(testStepName);
+        }
 
-		actionList.addAction( action );
-		if( isDefault )
-			actionList.setDefaultAction( action );
-	}
+        actionList.addAction(action);
+        if (isDefault) {
+            actionList.setDefaultAction(action);
+        }
+    }
 
-	public Throwable getError()
-	{
-		return error;
-	}
+    public Throwable getError() {
+        return error;
+    }
 
-	public void setError( Throwable error )
-	{
-		this.error = error;
-	}
+    public void setError(Throwable error) {
+        this.error = error;
+    }
 
-	public String[] getMessages()
-	{
-		return messages == null ? EMPTY_MESSAGES : messages.toArray( new String[messages.size()] );
-	}
+    public String[] getMessages() {
+        return messages == null ? EMPTY_MESSAGES : messages.toArray(new String[messages.size()]);
+    }
 
-	public void addMessage( String message )
-	{
-		if( messages != null )
-			messages.add( message );
-	}
+    public void addMessage(String message) {
+        if (messages != null) {
+            messages.add(message);
+        }
+    }
 
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
+    public long getTimeTaken() {
+        return timeTaken;
+    }
 
-	public void setTimeTaken( long timeTaken )
-	{
-		this.timeTaken = timeTaken;
-	}
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
+    }
 
-	public long getTimeStamp()
-	{
-		return timeStamp;
-	}
+    public long getTimeStamp() {
+        return timeStamp;
+    }
 
-	public void setTimeStamp( long timeStamp )
-	{
-		this.timeStamp = timeStamp;
-	}
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
+    }
 
-	public void setSize( long size )
-	{
-		this.size = size;
-	}
+    public void setSize(long size) {
+        this.size = size;
+    }
 
-	public long getSize()
-	{
-		return size;
-	}
+    public long getSize() {
+        return size;
+    }
 
-	public void writeTo( PrintWriter writer )
-	{
-		writer.println( "Status: " + getStatus() );
-		writer.println( "Time Taken: " + getTimeTaken() );
-		writer.println( "Size: " + getSize() );
-		writer.println( "Timestamp: " + new Date( getTimeStamp() ).toString() );
-		writer.println( "TestStep: " + getTestStep().getName() );
-		if( error != null )
-			writer.println( "Error:" + error.toString() );
+    public void writeTo(PrintWriter writer) {
+        writer.println("Status: " + getStatus());
+        writer.println("Time Taken: " + getTimeTaken());
+        writer.println("Size: " + getSize());
+        writer.println("Timestamp: " + new Date(getTimeStamp()).toString());
+        writer.println("TestStep: " + getTestStep().getName());
+        if (error != null) {
+            writer.println("Error:" + error.toString());
+        }
 
-		if( messages != null )
-		{
-			writer.println( "\r\n----------------- Messages ------------------------------" );
-			for( String message : messages )
-				if( message != null )
-					writer.println( message );
-		}
+        if (messages != null) {
+            writer.println("\r\n----------------- Messages ------------------------------");
+            for (String message : messages) {
+                if (message != null) {
+                    writer.println(message);
+                }
+            }
+        }
 
-		if( isDiscarded() )
-			writer.println( "Result has been Discarded!" );
-	}
+        if (isDiscarded()) {
+            writer.println("Result has been Discarded!");
+        }
+    }
 
-	public void startTimer()
-	{
-		startTime = System.nanoTime();
-	}
+    public void startTimer() {
+        startTime = System.nanoTime();
+    }
 
-	public void stopTimer()
-	{
-		timeTaken = ( ( System.nanoTime() - startTime ) / 1000000 );
-	}
+    public void stopTimer() {
+        timeTaken = ((System.nanoTime() - startTime) / 1000000);
+    }
 
-	public void discard()
-	{
-		discarded = true;
+    public void discard() {
+        discarded = true;
 
-		messages = null;
-		error = null;
-		actionList = null;
-	}
+        messages = null;
+        error = null;
+        actionList = null;
+    }
 
-	public boolean isDiscarded()
-	{
-		return discarded;
-	}
+    public boolean isDiscarded() {
+        return discarded;
+    }
 
-	public void addMessages( String[] messages )
-	{
-		if( this.messages != null )
-			this.messages.addAll( Arrays.asList( messages ) );
-	}
+    public void addMessages(String[] messages) {
+        if (this.messages != null) {
+            this.messages.addAll(Arrays.asList(messages));
+        }
+    }
 }

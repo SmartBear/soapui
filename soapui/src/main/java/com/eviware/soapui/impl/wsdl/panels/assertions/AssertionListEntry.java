@@ -12,52 +12,45 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.panels.assertions;
+*/
+package com.eviware.soapui.impl.wsdl.panels.assertions;
 
-public class AssertionListEntry implements Comparable<AssertionListEntry>
-{
-	private String typeId;
-	private String name;
-	private String description;
+public class AssertionListEntry implements Comparable<AssertionListEntry> {
+    private String typeId;
+    private String name;
+    private String description;
 
-	public AssertionListEntry( String typeId, String name, String description )
-	{
-		this.typeId = typeId;
-		this.name = name;
-		this.description = description;
-	}
+    public AssertionListEntry(String typeId, String name, String description) {
+        this.typeId = typeId;
+        this.name = name;
+        this.description = description;
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getDescription()
-	{
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	public String toString()
-	{
-		return name + " " + description;
-	}
+    @Override
+    public String toString() {
+        return name + " " + description;
+    }
 
-	@Override
-	public int hashCode()
-	{
-		return name.length() + description.length();
-	}
+    @Override
+    public int hashCode() {
+        return name.length() + description.length();
+    }
 
-	@Override
-	public int compareTo( AssertionListEntry o )
-	{
-		return name.compareToIgnoreCase( o.getName() );
-	}
+    @Override
+    public int compareTo(AssertionListEntry o) {
+        return name.compareToIgnoreCase(o.getName());
+    }
 
-	public String getTypeId()
-	{
-		return typeId;
-	}
+    public String getTypeId() {
+        return typeId;
+    }
 
 }

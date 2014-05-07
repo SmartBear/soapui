@@ -28,34 +28,27 @@ import com.eviware.soapui.support.UISupport;
 /**
  * Removes all WSS outgoing Tokens from the specified MockResponse
  * requestContent
- * 
+ *
  * @author dragica.soldo
  */
 
-public class RemoveAllOutgoingWSSFromMockResponseAction extends AbstractAction
-{
-	private final WsdlMockResponse response;
+public class RemoveAllOutgoingWSSFromMockResponseAction extends AbstractAction {
+    private final WsdlMockResponse response;
 
-	public RemoveAllOutgoingWSSFromMockResponseAction( WsdlMockResponse response )
-	{
-		super( "Remove all outgoing wss" );
-		this.response = response;
-	}
+    public RemoveAllOutgoingWSSFromMockResponseAction(WsdlMockResponse response) {
+        super("Remove all outgoing wss");
+        this.response = response;
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		try
-		{
-			if( UISupport.confirm( "Remove all outgoing wss", "Remove all outgoing wss" ) )
-			{
-				String content = response.getResponseContent();
-				response.setResponseContent( WssUtils.removeWSSOutgoing( content, response ) );
-			}
-		}
-		catch( Exception e1 )
-		{
-			SoapUI.logError( e1 );
-		}
+    public void actionPerformed(ActionEvent e) {
+        try {
+            if (UISupport.confirm("Remove all outgoing wss", "Remove all outgoing wss")) {
+                String content = response.getResponseContent();
+                response.setResponseContent(WssUtils.removeWSSOutgoing(content, response));
+            }
+        } catch (Exception e1) {
+            SoapUI.logError(e1);
+        }
 
-	}
+    }
 }

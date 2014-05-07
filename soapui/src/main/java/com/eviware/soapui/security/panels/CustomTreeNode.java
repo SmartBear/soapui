@@ -12,13 +12,13 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.panels;
+*/
+package com.eviware.soapui.security.panels;
 
-public interface CustomTreeNode
-{
-	void setExpandedIcon( boolean exp );
+public interface CustomTreeNode {
+    void setExpandedIcon(boolean exp);
 
-	void updateLabel();
+    void updateLabel();
 
-	void setSelected( boolean selected );
+    void setSelected(boolean selected);
 }

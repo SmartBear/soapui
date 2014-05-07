@@ -22,30 +22,28 @@ import com.eviware.soapui.model.settings.SettingsListener;
 
 /**
  * Weak listener to settingChanged
- * 
+ *
  * @author ole.matzura
  */
 
-public final class WeakSettingsListener implements SettingsListener
-{
-	private final WeakReference<SettingsListener> listenerReference;
+public final class WeakSettingsListener implements SettingsListener {
+    private final WeakReference<SettingsListener> listenerReference;
 
-	public WeakSettingsListener( SettingsListener listener )
-	{
-		listenerReference = new WeakReference<SettingsListener>( listener );
-	}
+    public WeakSettingsListener(SettingsListener listener) {
+        listenerReference = new WeakReference<SettingsListener>(listener);
+    }
 
-	public void settingChanged( String name, String newValue, String oldValue )
-	{
-		if( listenerReference.get() != null )
-			listenerReference.get().settingChanged( name, newValue, oldValue );
-	}
+    public void settingChanged(String name, String newValue, String oldValue) {
+        if (listenerReference.get() != null) {
+            listenerReference.get().settingChanged(name, newValue, oldValue);
+        }
+    }
 
-	@Override
-	public void settingsReloaded()
-	{
-		if( listenerReference.get() != null )
-			listenerReference.get().settingsReloaded();
+    @Override
+    public void settingsReloaded() {
+        if (listenerReference.get() != null) {
+            listenerReference.get().settingsReloaded();
+        }
 
-	}
+    }
 }

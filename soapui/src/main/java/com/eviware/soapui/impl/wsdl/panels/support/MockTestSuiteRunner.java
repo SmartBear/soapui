@@ -24,21 +24,17 @@ import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 
-public class MockTestSuiteRunner extends AbstractMockTestRunner<WsdlTestSuite> implements TestSuiteRunner
-{
-	public MockTestSuiteRunner( WsdlTestSuite testSuite )
-	{
-		super( testSuite, null );
-		setRunContext( new MockTestSuiteRunContext( this ) );
-	}
+public class MockTestSuiteRunner extends AbstractMockTestRunner<WsdlTestSuite> implements TestSuiteRunner {
+    public MockTestSuiteRunner(WsdlTestSuite testSuite) {
+        super(testSuite, null);
+        setRunContext(new MockTestSuiteRunContext(this));
+    }
 
-	public List<TestCaseRunner> getResults()
-	{
-		return new ArrayList<TestCaseRunner>();
-	}
+    public List<TestCaseRunner> getResults() {
+        return new ArrayList<TestCaseRunner>();
+    }
 
-	public TestSuite getTestSuite()
-	{
-		return getTestRunnable();
-	}
+    public TestSuite getTestSuite() {
+        return getTestRunnable();
+    }
 }

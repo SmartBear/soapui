@@ -21,19 +21,18 @@ import java.awt.Rectangle;
 
 import javax.swing.JComponent;
 
-public interface SoapUIDragAndDropable<T>
-{
-	public JComponent getComponent();
+public interface SoapUIDragAndDropable<T> {
+    public JComponent getComponent();
 
-	public void setDragInfo( String dropInfo );
+    public void setDragInfo(String dropInfo);
 
-	public void selectModelItem( T modelItem );
+    public void selectModelItem(T modelItem);
 
-	public T getModelItemForLocation( int x, int y );
+    public T getModelItemForLocation(int x, int y);
 
-	public Rectangle getModelItemBounds( T modelItem );
+    public Rectangle getModelItemBounds(T modelItem);
 
-	public Component getRenderer( T modelItem );
+    public Component getRenderer(T modelItem);
 
-	public void toggleExpansion( T modelItem );
+    public void toggleExpansion(T modelItem);
 }

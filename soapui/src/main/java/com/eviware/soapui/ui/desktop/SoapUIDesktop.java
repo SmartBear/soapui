@@ -23,43 +23,42 @@ import com.eviware.soapui.support.action.swing.ActionList;
 
 /**
  * Behaviour for a SoapUI Desktop implementation
- * 
+ *
  * @author ole.matzura
  */
 
-public interface SoapUIDesktop
-{
-	public boolean closeDesktopPanel( DesktopPanel desktopPanel );
+public interface SoapUIDesktop {
+    public boolean closeDesktopPanel(DesktopPanel desktopPanel);
 
-	public boolean hasDesktopPanel( ModelItem modelItem );
+    public boolean hasDesktopPanel(ModelItem modelItem);
 
-	public void addDesktopListener( DesktopListener listener );
+    public void addDesktopListener(DesktopListener listener);
 
-	public void removeDesktopListener( DesktopListener listener );
+    public void removeDesktopListener(DesktopListener listener);
 
-	public DesktopPanel showDesktopPanel( ModelItem modelItem );
+    public DesktopPanel showDesktopPanel(ModelItem modelItem);
 
-	public boolean closeDesktopPanel( ModelItem modelItem );
+    public boolean closeDesktopPanel(ModelItem modelItem);
 
-	public ActionList getActions();
+    public ActionList getActions();
 
-	public DesktopPanel[] getDesktopPanels();
+    public DesktopPanel[] getDesktopPanels();
 
-	public DesktopPanel getDesktopPanel( ModelItem modelItem );
+    public DesktopPanel getDesktopPanel(ModelItem modelItem);
 
-	public DesktopPanel showDesktopPanel( DesktopPanel desktopPanel );
+    public DesktopPanel showDesktopPanel(DesktopPanel desktopPanel);
 
-	public JComponent getDesktopComponent();
+    public JComponent getDesktopComponent();
 
-	public void transferTo( SoapUIDesktop newDesktop );
+    public void transferTo(SoapUIDesktop newDesktop);
 
-	public boolean closeAll();
+    public boolean closeAll();
 
-	public void release();
+    public void release();
 
-	public void init();
+    public void init();
 
-	public void minimize( DesktopPanel desktopPanel );
+    public void minimize(DesktopPanel desktopPanel);
 
-	public void maximize( DesktopPanel dp );
+    public void maximize(DesktopPanel dp);
 }

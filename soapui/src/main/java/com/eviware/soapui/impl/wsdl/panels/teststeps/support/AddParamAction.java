@@ -29,95 +29,79 @@ import java.awt.event.ActionEvent;
 /**
  * @author Prakash
  */
-public class AddParamAction extends AbstractAction
-{
-	public static final String EMPTY_STRING = "";
-	public static final String ADD_PARAM_ACTION_NAME = "Add Param";
-	private MutableTestPropertyHolder propertyHolder;
-	private JTable parameterTable;
+public class AddParamAction extends AbstractAction {
+    public static final String EMPTY_STRING = "";
+    public static final String ADD_PARAM_ACTION_NAME = "Add Param";
+    private MutableTestPropertyHolder propertyHolder;
+    private JTable parameterTable;
 
-	public AddParamAction( JTable parameterTable, MutableTestPropertyHolder propertyHolder, String description )
-	{
-		super( ADD_PARAM_ACTION_NAME );
-		this.parameterTable = parameterTable;
-		this.propertyHolder = propertyHolder;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/add_property.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, description );
-	}
+    public AddParamAction(JTable parameterTable, MutableTestPropertyHolder propertyHolder, String description) {
+        super(ADD_PARAM_ACTION_NAME);
+        this.parameterTable = parameterTable;
+        this.propertyHolder = propertyHolder;
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+        putValue(Action.SHORT_DESCRIPTION, description);
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		// If already in the process of adding a parameter then don't add another at the same time.
-		if( propertyHolder.getProperty( EMPTY_STRING ) != null )
-		{
-			return;
-		}
-		propertyHolder.addProperty( EMPTY_STRING );
+    public void actionPerformed(ActionEvent e) {
+        // If already in the process of adding a parameter then don't add another at the same time.
+        if (propertyHolder.getProperty(EMPTY_STRING) != null) {
+            return;
+        }
+        propertyHolder.addProperty(EMPTY_STRING);
 
-		final int row = parameterTable.getModel().getRowCount()-1;
-		SwingUtilities.invokeLater( new Runnable()
-		{
-			public void run()
-			{
-				editTableCell( row, 0 );
+        final int row = parameterTable.getModel().getRowCount() - 1;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                editTableCell(row, 0);
 
-				final TableCellEditor cellEditor1 = parameterTable.getCellEditor( row, 0 );
-				cellEditor1.addCellEditorListener( new CellEditorListener()
-				{
-					@Override
-					public void editingStopped( ChangeEvent e )
-					{
-						cellEditor1.removeCellEditorListener( this );
-						if( parameterTable.getRowCount() > row &&
-								parameterTable.getValueAt( row, 0 ).toString().equals( EMPTY_STRING ) )
-						{
-							propertyHolder.removeProperty( EMPTY_STRING );
-							return;
-						}
-						editTableCell( row, 1 );
-					}
+                final TableCellEditor cellEditor1 = parameterTable.getCellEditor(row, 0);
+                cellEditor1.addCellEditorListener(new CellEditorListener() {
+                    @Override
+                    public void editingStopped(ChangeEvent e) {
+                        cellEditor1.removeCellEditorListener(this);
+                        if (parameterTable.getRowCount() > row &&
+                                parameterTable.getValueAt(row, 0).toString().equals(EMPTY_STRING)) {
+                            propertyHolder.removeProperty(EMPTY_STRING);
+                            return;
+                        }
+                        editTableCell(row, 1);
+                    }
 
-					@Override
-					public void editingCanceled( ChangeEvent e )
-					{
-						cellEditor1.removeCellEditorListener( this );
-						propertyHolder.removeProperty( EMPTY_STRING );
-					}
-				} );
-			}
-		} );
-	}
+                    @Override
+                    public void editingCanceled(ChangeEvent e) {
+                        cellEditor1.removeCellEditorListener(this);
+                        propertyHolder.removeProperty(EMPTY_STRING);
+                    }
+                });
+            }
+        });
+    }
 
-	private void editTableCell( final int row, final int column )
-	{
-		TableCellEditor cellEditor = parameterTable.getCellEditor();
-		if( cellEditor != null )
-		{
-			cellEditor.stopCellEditing();
-		}
+    private void editTableCell(final int row, final int column) {
+        TableCellEditor cellEditor = parameterTable.getCellEditor();
+        if (cellEditor != null) {
+            cellEditor.stopCellEditing();
+        }
 
-		SwingUtilities.invokeLater( new Runnable()
-		{
-			public void run()
-			{
-				parameterTable.requestFocusInWindow();
-				if( parameterTable.getRowCount() > row )
-				{
-					parameterTable.setRowSelectionInterval( row, row );
-				}
-				parameterTable.scrollRectToVisible( parameterTable.getCellRect( row, column, true ) );
-				SwingUtilities.invokeLater( new Runnable()
-				{
-					public void run()
-					{
-						parameterTable.editCellAt( row, column );
-						Component editorComponent = parameterTable.getEditorComponent();
-						if( editorComponent != null )
-							editorComponent.requestFocusInWindow();
-					}
-				} );
-			}
-		} );
-	}
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                parameterTable.requestFocusInWindow();
+                if (parameterTable.getRowCount() > row) {
+                    parameterTable.setRowSelectionInterval(row, row);
+                }
+                parameterTable.scrollRectToVisible(parameterTable.getCellRect(row, column, true));
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        parameterTable.editCellAt(row, column);
+                        Component editorComponent = parameterTable.getEditorComponent();
+                        if (editorComponent != null) {
+                            editorComponent.requestFocusInWindow();
+                        }
+                    }
+                });
+            }
+        });
+    }
 
 }

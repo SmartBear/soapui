@@ -27,60 +27,52 @@ import com.eviware.soapui.support.xml.XPathData;
 
 /**
  * Factory for creating Groovy ScriptEngines
- * 
+ *
  * @author ole.matzura
  */
 
-public class GroovyScriptEngineFactory implements SoapUIScriptEngineFactory, SoapUIScriptGenerator
-{
-	public static final String ID = "Groovy";
+public class GroovyScriptEngineFactory implements SoapUIScriptEngineFactory, SoapUIScriptGenerator {
+    public static final String ID = "Groovy";
 
-	public SoapUIScriptEngine createScriptEngine( ModelItem modelItem )
-	{
-		return new SoapUIGroovyScriptEngine( SoapUI.getSoapUICore().getExtensionClassLoader() );
-	}
+    public SoapUIScriptEngine createScriptEngine(ModelItem modelItem) {
+        return new SoapUIGroovyScriptEngine(SoapUI.getSoapUICore().getExtensionClassLoader());
+    }
 
-	public SoapUIScriptGenerator createCodeGenerator( ModelItem modelItem )
-	{
-		return this;
-	}
+    public SoapUIScriptGenerator createCodeGenerator(ModelItem modelItem) {
+        return this;
+    }
 
-	public String createContextExpansion( String name, PropertyExpansion expansion )
-	{
-		String exp = expansion.toString();
-		StringBuffer buf = new StringBuffer();
+    public String createContextExpansion(String name, PropertyExpansion expansion) {
+        String exp = expansion.toString();
+        StringBuffer buf = new StringBuffer();
 
-		for( int c = 0; c < exp.length(); c++ )
-		{
-			char ch = exp.charAt( c );
+        for (int c = 0; c < exp.length(); c++) {
+            char ch = exp.charAt(c);
 
-			switch( ch )
-			{
-			case '\'' :
-			case '\\' :
-				buf.append( '\\' );
-			default :
-				buf.append( ch );
-			}
-		}
+            switch (ch) {
+                case '\'':
+                case '\\':
+                    buf.append('\\');
+                default:
+                    buf.append(ch);
+            }
+        }
 
-		return "def " + name + " = context.expand( '" + buf.toString() + "' )\n";
-	}
+        return "def " + name + " = context.expand( '" + buf.toString() + "' )\n";
+    }
 
-	public String createScriptAssertionForExists( XPathData xpathData )
-	{
-		String script = "import com.eviware.soapui.support.XmlHolder\n\n"
-				+ "def holder = new XmlHolder( messageExchange.responseContentAsXml )\n";
+    public String createScriptAssertionForExists(XPathData xpathData) {
+        String script = "import com.eviware.soapui.support.XmlHolder\n\n"
+                + "def holder = new XmlHolder( messageExchange.responseContentAsXml )\n";
 
-		StringToStringMap nsMap = xpathData.getNamespaceMap();
-		for( String ns : nsMap.keySet() )
-		{
-			script += "holder.namespaces[\"" + nsMap.get( ns ) + "\"] = \"" + ns + "\"\n";
-		}
+        StringToStringMap nsMap = xpathData.getNamespaceMap();
+        for (String ns : nsMap.keySet()) {
+            script += "holder.namespaces[\"" + nsMap.get(ns) + "\"] = \"" + ns + "\"\n";
+        }
 
-		script += "def node = holder.getDomNode( \"" + xpathData.getPath() + "\" )\n";
-		script += "\nassert node != null\n";
+        script += "def node = holder.getDomNode( \"" + xpathData.getPath() + "\" )\n";
+        script += "\nassert node != null\n";
 
-		return script;
-	}
+        return script;
+    }
 }

@@ -32,114 +32,99 @@ import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
 import com.eviware.soapui.support.swing.ModelItemListCellRenderer;
 
-public abstract class ChangeOperationResolver implements Resolver
-{
-	private boolean resolved = false;
-	private WsdlProject project;
-	private Operation selectedOperation;
-	private String operationType;
+public abstract class ChangeOperationResolver implements Resolver {
+    private boolean resolved = false;
+    private WsdlProject project;
+    private Operation selectedOperation;
+    private String operationType;
 
-	public ChangeOperationResolver( WsdlTestStep testStep, String operationType )
-	{
-		this.project = testStep.getTestCase().getTestSuite().getProject();
+    public ChangeOperationResolver(WsdlTestStep testStep, String operationType) {
+        this.project = testStep.getTestCase().getTestSuite().getProject();
 
-		this.operationType = operationType;
-	}
+        this.operationType = operationType;
+    }
 
-	public String getResolvedPath()
-	{
-		return "";
-	}
+    public String getResolvedPath() {
+        return "";
+    }
 
-	public boolean isResolved()
-	{
-		return resolved;
-	}
+    public boolean isResolved() {
+        return resolved;
+    }
 
-	public boolean resolve()
-	{
-		PropertyChangeDialog pDialog = new PropertyChangeDialog( "Resolve " + operationType );
-		pDialog.setVisible( true );
-		resolved = update();
-		return resolved;
-	}
+    public boolean resolve() {
+        PropertyChangeDialog pDialog = new PropertyChangeDialog("Resolve " + operationType);
+        pDialog.setVisible(true);
+        resolved = update();
+        return resolved;
+    }
 
-	public abstract boolean update();
+    public abstract boolean update();
 
-	protected abstract Interface[] getInterfaces( WsdlProject project );
+    protected abstract Interface[] getInterfaces(WsdlProject project);
 
-	public String getDescription()
-	{
-		return "Resolve: Select another " + operationType;
-	}
+    public String getDescription() {
+        return "Resolve: Select another " + operationType;
+    }
 
-	@Override
-	public String toString()
-	{
-		return getDescription();
-	}
+    @Override
+    public String toString() {
+        return getDescription();
+    }
 
-	@SuppressWarnings( "serial" )
-	private class PropertyChangeDialog extends SimpleDialog
-	{
-		private JComboBox sourceStepCombo;
-		private JComboBox propertiesCombo;
+    @SuppressWarnings("serial")
+    private class PropertyChangeDialog extends SimpleDialog {
+        private JComboBox sourceStepCombo;
+        private JComboBox propertiesCombo;
 
-		public PropertyChangeDialog( String title )
-		{
-			super( title, getDescription(), null );
-		}
+        public PropertyChangeDialog(String title) {
+            super(title, getDescription(), null);
+        }
 
-		protected Component buildContent()
-		{
-			SimpleForm form = new SimpleForm();
+        protected Component buildContent() {
+            SimpleForm form = new SimpleForm();
 
-			form.addSpace( 5 );
-			Interface[] ifaces = getInterfaces( project );
-			DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
-			sourceStepCombo = form.appendComboBox( "Interfaces", sourceStepComboModel, "Target Interface" );
-			sourceStepCombo.setRenderer( new ModelItemListCellRenderer() );
-			for( Interface element : ifaces )
-				sourceStepComboModel.addElement( element );
+            form.addSpace(5);
+            Interface[] ifaces = getInterfaces(project);
+            DefaultComboBoxModel sourceStepComboModel = new DefaultComboBoxModel();
+            sourceStepCombo = form.appendComboBox("Interfaces", sourceStepComboModel, "Target Interface");
+            sourceStepCombo.setRenderer(new ModelItemListCellRenderer());
+            for (Interface element : ifaces) {
+                sourceStepComboModel.addElement(element);
+            }
 
-			propertiesCombo = form.appendComboBox( operationType, ( ( Interface )sourceStepCombo.getSelectedItem() )
-					.getOperationList().toArray(), "Target " + operationType );
-			propertiesCombo.setRenderer( new ModelItemListCellRenderer() );
+            propertiesCombo = form.appendComboBox(operationType, ((Interface) sourceStepCombo.getSelectedItem())
+                    .getOperationList().toArray(), "Target " + operationType);
+            propertiesCombo.setRenderer(new ModelItemListCellRenderer());
 
-			sourceStepCombo.addActionListener( new ActionListener()
-			{
-				public void actionPerformed( ActionEvent e )
-				{
-					Interface iface = project.getInterfaceByName( ( ( Interface )sourceStepCombo.getSelectedItem() )
-							.getName() );
-					propertiesCombo.removeAllItems();
-					if( iface != null )
-					{
-						propertiesCombo.setEnabled( true );
-						for( Operation op : iface.getOperationList() )
-							propertiesCombo.addItem( op );
-					}
-					else
-					{
-						propertiesCombo.setEnabled( false );
-					}
-				}
-			} );
+            sourceStepCombo.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    Interface iface = project.getInterfaceByName(((Interface) sourceStepCombo.getSelectedItem())
+                            .getName());
+                    propertiesCombo.removeAllItems();
+                    if (iface != null) {
+                        propertiesCombo.setEnabled(true);
+                        for (Operation op : iface.getOperationList()) {
+                            propertiesCombo.addItem(op);
+                        }
+                    } else {
+                        propertiesCombo.setEnabled(false);
+                    }
+                }
+            });
 
-			form.addSpace( 5 );
-			return form.getPanel();
-		}
+            form.addSpace(5);
+            return form.getPanel();
+        }
 
-		protected boolean handleOk()
-		{
-			selectedOperation = ( Operation )propertiesCombo.getSelectedItem();
-			return true;
-		}
-	}
+        protected boolean handleOk() {
+            selectedOperation = (Operation) propertiesCombo.getSelectedItem();
+            return true;
+        }
+    }
 
-	public Operation getSelectedOperation()
-	{
-		return selectedOperation;
-	}
+    public Operation getSelectedOperation() {
+        return selectedOperation;
+    }
 
 }

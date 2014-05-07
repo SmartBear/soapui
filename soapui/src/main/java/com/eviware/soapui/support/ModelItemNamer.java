@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support;
+*/
+package com.eviware.soapui.support;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.project.Project;
@@ -21,49 +22,40 @@ import java.util.List;
 
 /**
  * Utility class to create unique names for model items
- *
+ * <p/>
  * Creates a new name from the baseName and the next available number.
- *
+ * <p/>
  * Example:
- * 	Given
- *	 		baseName: "Project"
- * 		items: "Project 1", "Project 2", "Project 3", "Project 5"
- * 	Then
- * 		Returns the name "Project 6"
+ * Given
+ * baseName: "Project"
+ * items: "Project 1", "Project 2", "Project 3", "Project 5"
+ * Then
+ * Returns the name "Project 6"
  *
  * @author Anders Jaensson
  * @author Prakash Jat
  */
-public class ModelItemNamer
-{
-	private ModelItemNamer()
-	{
-	}
+public class ModelItemNamer {
+    private ModelItemNamer() {
+    }
 
-	public static String createName( String baseName, List<? extends ModelItem> modelItems )
-	{
-		int maxExistingIndex = 0;
-		for( ModelItem modelItem : modelItems )
-		{
-			String name = modelItem.getName();
-			if( name.contains( baseName ) )
-			{
-				try
-				{
-					int beginIndex = name.indexOf( baseName ) + baseName.length();
-					int indexInProjectName = Integer.parseInt( name.substring( beginIndex ).trim() );
-					if( indexInProjectName > maxExistingIndex )
-					{
-						maxExistingIndex = indexInProjectName;
-					}
-				}
-				catch( Exception e )
-				{
-					//Do nothing, at worst it will create the modelItem with same name
-				}
-			}
-		}
+    public static String createName(String baseName, List<? extends ModelItem> modelItems) {
+        int maxExistingIndex = 0;
+        for (ModelItem modelItem : modelItems) {
+            String name = modelItem.getName();
+            if (name.contains(baseName)) {
+                try {
+                    int beginIndex = name.indexOf(baseName) + baseName.length();
+                    int indexInProjectName = Integer.parseInt(name.substring(beginIndex).trim());
+                    if (indexInProjectName > maxExistingIndex) {
+                        maxExistingIndex = indexInProjectName;
+                    }
+                } catch (Exception e) {
+                    //Do nothing, at worst it will create the modelItem with same name
+                }
+            }
+        }
 
-		return baseName + " " + ( ++maxExistingIndex );
-	}
+        return baseName + " " + (++maxExistingIndex);
+    }
 }

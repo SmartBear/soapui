@@ -30,63 +30,55 @@ import javax.swing.JTabbedPane;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
-public class SoapMonitorDesktopPanel extends DefaultDesktopPanel implements SoapMonitorContainer
-{
-	private SoapMonitor soapMonitor;
-	private final WsdlProject project;
+public class SoapMonitorDesktopPanel extends DefaultDesktopPanel implements SoapMonitorContainer {
+    private SoapMonitor soapMonitor;
+    private final WsdlProject project;
 
-	public SoapMonitorDesktopPanel( WsdlProject project, int sourcePort, String incomingRequestWss,
-			String incomingResponseWss, boolean setAsProxy, String sslEndpoint )
-	{
-		super( "HTTP Monitor [" + project.getName() + "]", null, new JPanel( new BorderLayout() ) );
-		this.project = project;
+    public SoapMonitorDesktopPanel(WsdlProject project, int sourcePort, String incomingRequestWss,
+                                   String incomingResponseWss, boolean setAsProxy, String sslEndpoint) {
+        super("HTTP Monitor [" + project.getName() + "]", null, new JPanel(new BorderLayout()));
+        this.project = project;
 
-		JPanel p = ( JPanel )getComponent();
-		JTabbedPane tabs = new JTabbedPane();
+        JPanel p = (JPanel) getComponent();
+        JTabbedPane tabs = new JTabbedPane();
 
-		JXToolBar toolbar = UISupport.createToolbar();
-		soapMonitor = new SoapMonitor( project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
-				sslEndpoint );
+        JXToolBar toolbar = UISupport.createToolbar();
+        soapMonitor = new SoapMonitor(project, sourcePort, incomingRequestWss, incomingResponseWss, toolbar, setAsProxy,
+                sslEndpoint);
 
-		tabs.add( soapMonitor, "Traffic Log" );
+        tabs.add(soapMonitor, "Traffic Log");
 
-		toolbar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( HelpUrls.SOAPMONITOR_MONITOR ) ) );
+        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.SOAPMONITOR_MONITOR)));
 
-		p.add( toolbar, BorderLayout.NORTH );
-		p.add( UISupport.createTabPanel( tabs, true ), BorderLayout.CENTER );
+        p.add(toolbar, BorderLayout.NORTH);
+        p.add(UISupport.createTabPanel(tabs, true), BorderLayout.CENTER);
 
-		p.setPreferredSize( new Dimension( 700, 600 ) );
-	}
+        p.setPreferredSize(new Dimension(700, 600));
+    }
 
-	@Override
-	public boolean onClose( boolean canCancel )
-	{
-		if( soapMonitor.isRunning() && canCancel )
-		{
-			if( !UISupport.confirm( "Close and stop HTTP Monitor", "Close HTTP Monitor" ) )
-			{
-				return false;
-			}
-		}
+    @Override
+    public boolean onClose(boolean canCancel) {
+        if (soapMonitor.isRunning() && canCancel) {
+            if (!UISupport.confirm("Close and stop HTTP Monitor", "Close HTTP Monitor")) {
+                return false;
+            }
+        }
 
-		soapMonitor.stop();
-		soapMonitor.release();
-		return true;
-	}
+        soapMonitor.stop();
+        soapMonitor.release();
+        return true;
+    }
 
-	@Override
-	public boolean dependsOn( ModelItem modelItem )
-	{
-		return modelItem == project;
-	}
+    @Override
+    public boolean dependsOn(ModelItem modelItem) {
+        return modelItem == project;
+    }
 
-	public WsdlProject getProject()
-	{
-		return project;
-	}
+    public WsdlProject getProject() {
+        return project;
+    }
 
-	public SoapMonitor getSoapMonitor()
-	{
-		return soapMonitor;
-	}
+    public SoapMonitor getSoapMonitor() {
+        return soapMonitor;
+    }
 }

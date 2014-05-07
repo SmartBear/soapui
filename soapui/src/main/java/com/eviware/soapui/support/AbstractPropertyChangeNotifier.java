@@ -20,76 +20,66 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
-public abstract class AbstractPropertyChangeNotifier implements PropertyChangeNotifier
-{
-	private PropertyChangeSupport propertyChangeSupport;
+public abstract class AbstractPropertyChangeNotifier implements PropertyChangeNotifier {
+    private PropertyChangeSupport propertyChangeSupport;
 
-	protected AbstractPropertyChangeNotifier()
-	{
-		propertyChangeSupport = new PropertyChangeSupport( this );
-	}
+    protected AbstractPropertyChangeNotifier() {
+        propertyChangeSupport = new PropertyChangeSupport(this);
+    }
 
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport != null )
-			propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-	}
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (propertyChangeSupport != null) {
+            propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+        }
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport != null )
-			propertyChangeSupport.addPropertyChangeListener( listener );
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        if (propertyChangeSupport != null) {
+            propertyChangeSupport.addPropertyChangeListener(listener);
+        }
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport != null )
-			propertyChangeSupport.removePropertyChangeListener( listener );
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (propertyChangeSupport != null) {
+            propertyChangeSupport.removePropertyChangeListener(listener);
+        }
+    }
 
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		if( propertyChangeSupport != null )
-			propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-	}
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        if (propertyChangeSupport != null) {
+            propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+        }
+    }
 
-	public void firePropertyChange( String propertyName, Object oldValue, Object newValue )
-	{
-		propertyChangeSupport.firePropertyChange( propertyName, oldValue, newValue );
-	}
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
 
-	public void firePropertyChange( String propertyName, int oldValue, int newValue )
-	{
-		propertyChangeSupport.firePropertyChange( propertyName, oldValue, newValue );
-	}
+    public void firePropertyChange(String propertyName, int oldValue, int newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
 
-	public void firePropertyChange( String propertyName, boolean oldValue, boolean newValue )
-	{
-		propertyChangeSupport.firePropertyChange( propertyName, oldValue, newValue );
-	}
+    public void firePropertyChange(String propertyName, boolean oldValue, boolean newValue) {
+        propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+    }
 
-	public void firePropertyChange( PropertyChangeEvent evt )
-	{
-		propertyChangeSupport.firePropertyChange( evt );
-	}
+    public void firePropertyChange(PropertyChangeEvent evt) {
+        propertyChangeSupport.firePropertyChange(evt);
+    }
 
-	public void fireIndexedPropertyChange( String propertyName, int index, Object oldValue, Object newValue )
-	{
-		propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
-	}
+    public void fireIndexedPropertyChange(String propertyName, int index, Object oldValue, Object newValue) {
+        propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    }
 
-	public void fireIndexedPropertyChange( String propertyName, int index, int oldValue, int newValue )
-	{
-		propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
-	}
+    public void fireIndexedPropertyChange(String propertyName, int index, int oldValue, int newValue) {
+        propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    }
 
-	public void fireIndexedPropertyChange( String propertyName, int index, boolean oldValue, boolean newValue )
-	{
-		propertyChangeSupport.fireIndexedPropertyChange( propertyName, index, oldValue, newValue );
-	}
+    public void fireIndexedPropertyChange(String propertyName, int index, boolean oldValue, boolean newValue) {
+        propertyChangeSupport.fireIndexedPropertyChange(propertyName, index, oldValue, newValue);
+    }
 
-	protected PropertyChangeSupport getPropertyChangeSupport()
-	{
-		return propertyChangeSupport;
-	}
+    protected PropertyChangeSupport getPropertyChangeSupport() {
+        return propertyChangeSupport;
+    }
 }

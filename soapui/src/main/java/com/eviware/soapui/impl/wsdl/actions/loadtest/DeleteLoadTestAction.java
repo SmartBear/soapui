@@ -23,28 +23,23 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 /**
  * Removes a WsdlLoadTest from its WsdlTestCase
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class DeleteLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest>
-{
-	public DeleteLoadTestAction()
-	{
-		super( "Remove", "Removes this Test Schedule from the test-case" );
-	}
+public class DeleteLoadTestAction extends AbstractSoapUIAction<WsdlLoadTest> {
+    public DeleteLoadTestAction() {
+        super("Remove", "Removes this Test Schedule from the test-case");
+    }
 
-	public void perform( WsdlLoadTest loadTest, Object param )
-	{
-		if( loadTest.isRunning() )
-		{
-			UISupport.showErrorMessage( "Can not remove running LoadTest" );
-			return;
-		}
+    public void perform(WsdlLoadTest loadTest, Object param) {
+        if (loadTest.isRunning()) {
+            UISupport.showErrorMessage("Can not remove running LoadTest");
+            return;
+        }
 
-		if( UISupport.confirm( "Remove LoadTest [" + loadTest.getName() + "] from test-casee", "Remove LoadTest" ) )
-		{
-			( ( WsdlTestCase )loadTest.getTestCase() ).removeLoadTest( loadTest );
-		}
-	}
+        if (UISupport.confirm("Remove LoadTest [" + loadTest.getName() + "] from test-casee", "Remove LoadTest")) {
+            ((WsdlTestCase) loadTest.getTestCase()).removeLoadTest(loadTest);
+        }
+    }
 }

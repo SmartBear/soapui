@@ -34,62 +34,51 @@ import java.awt.event.ActionEvent;
  * @author Shadid Chowdhury
  */
 
-public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
-{
-	public static final String SOAPUI_ACTION_ID = "NewRestProjectAction";
+public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
+    public static final String SOAPUI_ACTION_ID = "NewRestProjectAction";
 
-	private static final String DEFAULT_PROJECT_NAME = "REST Project";
-	private static final MessageSupport messages = MessageSupport.getMessages( NewRestProjectAction.class );
-
-
-	private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
-	private XFormDialog dialog;
-	private RestServiceBuilder serviceBuilder = new RestServiceBuilder();
+    private static final String DEFAULT_PROJECT_NAME = "REST Project";
+    private static final MessageSupport messages = MessageSupport.getMessages(NewRestProjectAction.class);
 
 
-	public NewRestProjectAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    private RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
+    private XFormDialog dialog;
+    private RestServiceBuilder serviceBuilder = new RestServiceBuilder();
 
 
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		dialog = dialogBuilder.buildDialog( messages, new AbstractAction( "Import WADL..." )
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				dialog.setVisible( false );
-				SoapUI.getActionRegistry().getAction( NewWadlProjectAction.SOAPUI_ACTION_ID ).perform( SoapUI.getWorkspace(), null );
-			}
-		} );
-		while( dialog.show() )
-		{
-			WsdlProject project = null;
-			try
-			{
-				String uri = dialogBuilder.getUri();
-				if( uri != null )
-				{
-					project = workspace.createProject( ModelItemNamer.createName( DEFAULT_PROJECT_NAME, workspace.getProjectList() ), null );
-					serviceBuilder.createRestService( project, uri );
-				}
-				// If there is no exception or error we break out
-				break;
+    public NewRestProjectAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
-			}
-			catch( Exception ex )
-			{
-				UISupport.showErrorMessage( ex.getMessage() );
-				if( project != null )
-				{
-					workspace.removeProject( project );
-				}
-				dialogBuilder.resetUriField();
-			}
-		}
-	}
+
+    public void perform(WorkspaceImpl workspace, Object param) {
+        dialog = dialogBuilder.buildDialog(messages, new AbstractAction("Import WADL...") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.setVisible(false);
+                SoapUI.getActionRegistry().getAction(NewWadlProjectAction.SOAPUI_ACTION_ID).perform(SoapUI.getWorkspace(), null);
+            }
+        });
+        while (dialog.show()) {
+            WsdlProject project = null;
+            try {
+                String uri = dialogBuilder.getUri();
+                if (uri != null) {
+                    project = workspace.createProject(ModelItemNamer.createName(DEFAULT_PROJECT_NAME, workspace.getProjectList()), null);
+                    serviceBuilder.createRestService(project, uri);
+                }
+                // If there is no exception or error we break out
+                break;
+
+            } catch (Exception ex) {
+                UISupport.showErrorMessage(ex.getMessage());
+                if (project != null) {
+                    workspace.removeProject(project);
+                }
+                dialogBuilder.resetUriField();
+            }
+        }
+    }
 
 
 }

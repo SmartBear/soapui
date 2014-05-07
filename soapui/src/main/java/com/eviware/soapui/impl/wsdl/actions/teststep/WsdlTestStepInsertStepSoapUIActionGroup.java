@@ -25,39 +25,34 @@ import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 /**
  * SoapUIAction group for dynamically creating the "Insert TestStep" popup menu
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlTestStepInsertStepSoapUIActionGroup extends DefaultSoapUIActionGroup<WsdlTestStep>
-{
-	public WsdlTestStepInsertStepSoapUIActionGroup( String id, String name )
-	{
-		super( id, name );
-	}
+public class WsdlTestStepInsertStepSoapUIActionGroup extends DefaultSoapUIActionGroup<WsdlTestStep> {
+    public WsdlTestStepInsertStepSoapUIActionGroup(String id, String name) {
+        super(id, name);
+    }
 
-	public SoapUIActionMappingList<WsdlTestStep> getActionMappings( WsdlTestStep modelItem )
-	{
-		SoapUIActionMappingList<WsdlTestStep> actions = new SoapUIActionMappingList<WsdlTestStep>();
+    public SoapUIActionMappingList<WsdlTestStep> getActionMappings(WsdlTestStep modelItem) {
+        SoapUIActionMappingList<WsdlTestStep> actions = new SoapUIActionMappingList<WsdlTestStep>();
 
-		WsdlTestStepRegistry registry = WsdlTestStepRegistry.getInstance();
-		WsdlTestStepFactory[] factories = ( WsdlTestStepFactory[] )registry.getFactories();
+        WsdlTestStepRegistry registry = WsdlTestStepRegistry.getInstance();
+        WsdlTestStepFactory[] factories = (WsdlTestStepFactory[]) registry.getFactories();
 
-		for( int c = 0; c < factories.length; c++ )
-		{
-			WsdlTestStepFactory factory = factories[c];
-			if( factory.canCreate() )
-			{
-				DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
-						InsertWsdlTestStepAction.SOAPUI_ACTION_ID, null, factory.getTestStepIconPath(), false, factory );
+        for (int c = 0; c < factories.length; c++) {
+            WsdlTestStepFactory factory = factories[c];
+            if (factory.canCreate()) {
+                DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
+                        InsertWsdlTestStepAction.SOAPUI_ACTION_ID, null, factory.getTestStepIconPath(), false, factory);
 
-				actionMapping.setName( factory.getTestStepName() );
-				actionMapping.setDescription( factory.getTestStepDescription() );
+                actionMapping.setName(factory.getTestStepName());
+                actionMapping.setDescription(factory.getTestStepDescription());
 
-				actions.add( actionMapping );
-			}
-		}
+                actions.add(actionMapping);
+            }
+        }
 
-		return actions;
-	}
+        return actions;
+    }
 }

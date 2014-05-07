@@ -17,10 +17,8 @@
 package com.eviware.soapui.actions;
 
 /**
- * 
  * @author lars
  */
-public interface UpdateableAction
-{
-	public void update();
+public interface UpdateableAction {
+    public void update();
 }

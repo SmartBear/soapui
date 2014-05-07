@@ -17,91 +17,99 @@
 
 <!-- Regular expressions for finding sensitive information -->
 <searchPatterns xmlns="http://eviware.com/soapui/config">
-	<Regex>
-		<name>Stacktrace</name>
-		<description>Can give hackers information about which software or language you are using</description>
-		<message>Found text that looks like a stacktrace</message>
+    <Regex>
+        <name>Stacktrace</name>
+        <description>Can give hackers information about which software or language you are using</description>
+        <message>Found text that looks like a stacktrace</message>
 
-		<!-- General -->
-		<pattern>(s|S)tack ?(t|T)race</pattern>
-		<pattern>STACK\s?TRACE</pattern>
-		<pattern>(s|S)tack:</pattern>
-		<pattern>(s|S)yntax (e|E)rror\s</pattern>
-		<pattern>((I|i)ncorrect|(I|i)nvalid) (s|S)yntax</pattern>
-		<pattern>Runtime (E|e)rror</pattern>
+        <!-- General -->
+        <pattern>(s|S)tack ?(t|T)race</pattern>
+        <pattern>STACK\s?TRACE</pattern>
+        <pattern>(s|S)tack:</pattern>
+        <pattern>(s|S)yntax (e|E)rror\s</pattern>
+        <pattern>((I|i)ncorrect|(I|i)nvalid) (s|S)yntax</pattern>
+        <pattern>Runtime (E|e)rror</pattern>
 
-		<pattern>((I|i)ncorrect|(I|i)nvalid) (s|S)yntax</pattern>
+        <pattern>((I|i)ncorrect|(I|i)nvalid) (s|S)yntax</pattern>
 
-		<!-- Erlang -->
-		<pattern>Error in process &lt;\d+\.\d+\.\d+&gt; with exit value:</pattern>
+        <!-- Erlang -->
+        <pattern>Error in process &lt;\d+\.\d+\.\d+&gt; with exit value:</pattern>
 
-		<!-- JVM -->
-		<pattern>at [a-zA-Z][\w\$]*(\.[a-zA-Z][\w\$]*)+\((Unknown Source|Native Method|[a-zA-Z][\w\$]*\.([a-zA-Z]{3,5}):\d+)\)</pattern>
-		<!-- example matches: at org.apache.xmlbeans.impl.schema.SchemaTypeLoaderBase.parse(SchemaTypeLoaderBase.java:345) 
-			at com.eviware.soapui.config.SoapuiProjectDocumentConfig$Factory.parse(Unknown 
-			Source) at clojure.main$repl__7403$read_eval_print__7415.invoke(main.clj:183) -->
+        <!-- JVM -->
+        <pattern>at [a-zA-Z][\w\$]*(\.[a-zA-Z][\w\$]*)+\((Unknown Source|Native
+            Method|[a-zA-Z][\w\$]*\.([a-zA-Z]{3,5}):\d+)\)
+        </pattern>
+        <!-- example matches: at org.apache.xmlbeans.impl.schema.SchemaTypeLoaderBase.parse(SchemaTypeLoaderBase.java:345)
+            at com.eviware.soapui.config.SoapuiProjectDocumentConfig$Factory.parse(Unknown
+            Source) at clojure.main$repl__7403$read_eval_print__7415.invoke(main.clj:183) -->
 
-		<!-- JAX-WS -->
-		<pattern>&lt;\w+:frame\s*class=".*"\s*line=".*"\s*method=".*"\s*/&gt;</pattern>
+        <!-- JAX-WS -->
+        <pattern>&lt;\w+:frame\s*class=".*"\s*line=".*"\s*method=".*"\s*/&gt;</pattern>
 
-		<!-- Ruby -->
-		<pattern>[^\s]+\.rb:\d+:in `.+'</pattern>
-		<!-- example: matches /Users/test/src/ruby/test_httpproxy.rb:162:in `block 
-			(2 levels) in test_connect' p043raise.rb:4:in `raise_exception': An error 
-			has occured (RuntimeError) -->
+        <!-- Ruby -->
+        <pattern>[^\s]+\.rb:\d+:in `.+'</pattern>
+        <!-- example: matches /Users/test/src/ruby/test_httpproxy.rb:162:in `block
+            (2 levels) in test_connect' p043raise.rb:4:in `raise_exception': An error
+            has occured (RuntimeError) -->
 
-		<!-- .NET -->
-		<pattern>at [\w\$]+(\.[\w\$&lt;&gt;\[\],]+|\.\.ctor)+(\((([\w\$&lt;&gt;\`\[\]]+ [\w\$&lt;&gt;]+, )*(([\w\$&lt;&gt;\`\[\]]+ [\w\$&lt;&gt;]+)))\)|\(\))</pattern>
-		<!-- example matches: at System.IO.StreamReader..ctor(String str) at System.Web.Mvc.ControllerActionInvoker.<>c__DisplayClassa.<InvokeActionMethodWithFilters>b__7() 
-			at Microsoft.Scripting.Actions.MatchCaller.Call1[T0,TRet](Func`3 target, 
-			CallSite site, Object[] args) -->
-		<pattern>from [\w\$]+(\.[\w\$&lt;&gt;]+)+:\d+:in `.+'</pattern>
-		<!-- example match: from IronRuby.Libraries.Yaml:0:in `FetchMoreTokens' -->
+        <!-- .NET -->
+        <pattern>at [\w\$]+(\.[\w\$&lt;&gt;\[\],]+|\.\.ctor)+(\((([\w\$&lt;&gt;\`\[\]]+ [\w\$&lt;&gt;]+, )*(([\w\$&lt;&gt;\`\[\]]+
+            [\w\$&lt;&gt;]+)))\)|\(\))
+        </pattern>
+        <!-- example matches: at System.IO.StreamReader..ctor(String str) at System.Web.Mvc.ControllerActionInvoker.<>c__DisplayClassa.<InvokeActionMethodWithFilters>b__7()
+            at Microsoft.Scripting.Actions.MatchCaller.Call1[T0,TRet](Func`3 target,
+            CallSite site, Object[] args) -->
+        <pattern>from [\w\$]+(\.[\w\$&lt;&gt;]+)+:\d+:in `.+'</pattern>
+        <!-- example match: from IronRuby.Libraries.Yaml:0:in `FetchMoreTokens' -->
 
-		<!-- PHP -->
-		<pattern>Warning: [\w]+\(\) .+ in .+ on line \d{1,6}</pattern>
-		<!-- example matches: Warning: mysql_query(): supplied argument is not 
-			a valid MySQL-Link resource in /home/rymate/public_html/canary/groups.p... 
-			on line 16 Warning: ereg() [function.ereg]: REG_BADBR in C:\Program Files\EasyPHP 
-			2.0b1\www\polydotnet\controler\verif_formulaire.php on line 35 emaill- Email 
-			incorrecte Warning: mysql_num_rows() expects parameter 1 to be resource, 
-			boolean given in /home/patrickm129/patthepcwizard.com/login02.php on line 
-			25 -->
+        <!-- PHP -->
+        <pattern>Warning: [\w]+\(\) .+ in .+ on line \d{1,6}</pattern>
+        <!-- example matches: Warning: mysql_query(): supplied argument is not
+            a valid MySQL-Link resource in /home/rymate/public_html/canary/groups.p...
+            on line 16 Warning: ereg() [function.ereg]: REG_BADBR in C:\Program Files\EasyPHP
+            2.0b1\www\polydotnet\controler\verif_formulaire.php on line 35 emaill- Email
+            incorrecte Warning: mysql_num_rows() expects parameter 1 to be resource,
+            boolean given in /home/patrickm129/patthepcwizard.com/login02.php on line
+            25 -->
 
-		<!-- Python -->
-		<pattern>Traceback \(most recent call last\):</pattern>
-		<pattern>File ".+", line [0-9]{1,6}, in </pattern>
-		<!-- example match: File "/usr/lib/python2.5/site-packages/django/template/debug.py", 
-			line 71, in render_node -->
-	</Regex>
+        <!-- Python -->
+        <pattern>Traceback \(most recent call last\):</pattern>
+        <pattern>File ".+", line [0-9]{1,6}, in</pattern>
+        <!-- example match: File "/usr/lib/python2.5/site-packages/django/template/debug.py",
+            line 71, in render_node -->
+    </Regex>
 
-	<Regex>
-		<name>Version x.y.z</name>
-		<description>Exposing version numbers gives 
-			unnecessary hints on your systems vulnerabilities</description>
-		<message>Found text that looks like a software version number</message>
+    <Regex>
+        <name>Version x.y.z</name>
+        <description>Exposing version numbers gives
+            unnecessary hints on your systems vulnerabilities
+        </description>
+        <message>Found text that looks like a software version number</message>
 
-		<pattern>(v|V)ersion:? \d\.\d{1,2}\.{1,3}-?</pattern>
-		<!-- example match: version 4.7.11 -->
+        <pattern>(v|V)ersion:? \d\.\d{1,2}\.{1,3}-?</pattern>
+        <!-- example match: version 4.7.11 -->
 
-		<pattern>(p|P)owered by:? ([a-zA-Z]+)( [a-zA-Z]+){0,3}( |/)\d\.\d{1,2}\.\d{1,3}</pattern>
-		<!-- example match: Powered by: Foo Bar 4.71.1 -->
+        <pattern>(p|P)owered by:? ([a-zA-Z]+)( [a-zA-Z]+){0,3}( |/)\d\.\d{1,2}\.\d{1,3}</pattern>
+        <!-- example match: Powered by: Foo Bar 4.71.1 -->
 
-		<pattern>((A|a)pache|vBulletin|MySQL|PostgreSQL|phpBB|Internet Information Services)( |/)\d{1,2}(\.\d{1,3})+</pattern>
-		<!-- example match: apache/2.4.2 -->
+        <pattern>((A|a)pache|vBulletin|MySQL|PostgreSQL|phpBB|Internet Information Services)( |/)\d{1,2}(\.\d{1,3})+
+        </pattern>
+        <!-- example match: apache/2.4.2 -->
 
-		<pattern>\w+/\d{1,2}(\.\d{1,3})+</pattern>
-		<!-- example match: mod_ssl/2.2.17 -->
-	</Regex>
+        <pattern>\w+/\d{1,2}(\.\d{1,3})+</pattern>
+        <!-- example match: mod_ssl/2.2.17 -->
+    </Regex>
 
-	<Regex>
-		<name>Database error messages</name>
-		<description>Internal database information can be misused by hackers</description>
-		<message>Found text that looks like an error message from a database</message>
+    <Regex>
+        <name>Database error messages</name>
+        <description>Internal database information can be misused by hackers</description>
+        <message>Found text that looks like an error message from a database</message>
 
-		<pattern>SQLSTATE: [A-Z0-9] </pattern>
-		<pattern>Invalid column name\s</pattern>
-		<pattern>(e|E)rror was:\s</pattern>
-		<pattern>(ORA|EXP|IMP|KUP|UDE|UDI|DBV|LCD|QSM|OCI|RMAN|LFI|PLS|PLQ|AMD|CLSR|PROC|PROT|TNS|NNC|NLP|NNF|NMP|NCR|NZE|O2F|O2I|O2U|PCB|PCC|SQL|AUD|IMG|VID|DRG|LPX|LSX)-\d{5}\s</pattern>
-	</Regex>
+        <pattern>SQLSTATE: [A-Z0-9]</pattern>
+        <pattern>Invalid column name\s</pattern>
+        <pattern>(e|E)rror was:\s</pattern>
+        <pattern>
+            (ORA|EXP|IMP|KUP|UDE|UDI|DBV|LCD|QSM|OCI|RMAN|LFI|PLS|PLQ|AMD|CLSR|PROC|PROT|TNS|NNC|NLP|NNF|NMP|NCR|NZE|O2F|O2I|O2U|PCB|PCC|SQL|AUD|IMG|VID|DRG|LPX|LSX)-\d{5}\s
+        </pattern>
+    </Regex>
 </searchPatterns>

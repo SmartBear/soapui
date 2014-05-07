@@ -52,324 +52,290 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-public class ProxyServlet implements Servlet
-{
-	protected ServletConfig config;
-	protected ServletContext context;
-	protected WsdlProject project;
-	protected HttpContext httpState = new BasicHttpContext();
-	protected Settings settings;
-	protected final SoapMonitorListenerCallBack listenerCallBack;
-	private ContentTypes includedContentTypes = SoapMonitorAction.defaultContentTypes();
-	static HashSet<String> dontProxyHeaders = new HashSet<String>();
-	static {
-		dontProxyHeaders.add( "proxy-connection" );
-		dontProxyHeaders.add( "connection" );
-		dontProxyHeaders.add( "keep-alive" );
-		dontProxyHeaders.add( "transfer-encoding" );
-		dontProxyHeaders.add( "te" );
-		dontProxyHeaders.add( "trailer" );
-		dontProxyHeaders.add( "proxy-authorization" );
-		dontProxyHeaders.add( "proxy-authenticate" );
-		dontProxyHeaders.add( "upgrade" );
-		dontProxyHeaders.add( "content-length" );
-	}
+public class ProxyServlet implements Servlet {
+    protected ServletConfig config;
+    protected ServletContext context;
+    protected WsdlProject project;
+    protected HttpContext httpState = new BasicHttpContext();
+    protected Settings settings;
+    protected final SoapMonitorListenerCallBack listenerCallBack;
+    private ContentTypes includedContentTypes = SoapMonitorAction.defaultContentTypes();
+    static HashSet<String> dontProxyHeaders = new HashSet<String>();
 
-	public ProxyServlet( final WsdlProject project, final SoapMonitorListenerCallBack listenerCallBack )
-	{
-		this.listenerCallBack = listenerCallBack;
-		this.project = project;
-		settings = project.getSettings();
-	}
+    static {
+        dontProxyHeaders.add("proxy-connection");
+        dontProxyHeaders.add("connection");
+        dontProxyHeaders.add("keep-alive");
+        dontProxyHeaders.add("transfer-encoding");
+        dontProxyHeaders.add("te");
+        dontProxyHeaders.add("trailer");
+        dontProxyHeaders.add("proxy-authorization");
+        dontProxyHeaders.add("proxy-authenticate");
+        dontProxyHeaders.add("upgrade");
+        dontProxyHeaders.add("content-length");
+    }
 
-	public void destroy()
-	{
-	}
+    public ProxyServlet(final WsdlProject project, final SoapMonitorListenerCallBack listenerCallBack) {
+        this.listenerCallBack = listenerCallBack;
+        this.project = project;
+        settings = project.getSettings();
+    }
 
-	public ServletConfig getServletConfig()
-	{
-		return config;
-	}
+    public void destroy() {
+    }
 
-	public String getServletInfo()
-	{
-		return "SoapUI Monitor";
-	}
+    public ServletConfig getServletConfig() {
+        return config;
+    }
 
-	public void setIncludedContentTypes( ContentTypes includedContentTypes )
-	{
-		this.includedContentTypes = includedContentTypes != null
-				? includedContentTypes
-				: SoapMonitorAction.defaultContentTypes();
-	}
+    public String getServletInfo() {
+        return "SoapUI Monitor";
+    }
 
-	public void init( ServletConfig config ) throws ServletException
-	{
-		this.config = config;
-		this.context = config.getServletContext();
-	}
+    public void setIncludedContentTypes(ContentTypes includedContentTypes) {
+        this.includedContentTypes = includedContentTypes != null
+                ? includedContentTypes
+                : SoapMonitorAction.defaultContentTypes();
+    }
 
-	public void service( ServletRequest request, ServletResponse response ) throws ServletException, IOException
-	{
-		listenerCallBack.fireOnRequest( project, request, response );
-		if( response.isCommitted() )
-			return;
+    public void init(ServletConfig config) throws ServletException {
+        this.config = config;
+        this.context = config.getServletContext();
+    }
 
-		ExtendedHttpMethod method;
-		HttpServletRequest httpRequest = ( HttpServletRequest )request;
-		if( httpRequest.getMethod().equals( "GET" ) )
-			method = new ExtendedGetMethod();
-		else if( httpRequest.getMethod().equals( "POST" ) )
-			method = new ExtendedPostMethod();
-		else if( httpRequest.getMethod().equals( "PUT" ) )
-			method = new ExtendedPutMethod();
-		else if( httpRequest.getMethod().equals( "HEAD" ) )
-			method = new ExtendedHeadMethod();
-		else if( httpRequest.getMethod().equals( "OPTIONS" ) )
-			method = new ExtendedOptionsMethod();
-		else if( httpRequest.getMethod().equals( "TRACE" ) )
-			method = new ExtendedTraceMethod();
-		else if( httpRequest.getMethod().equals( "PATCH" ) )
-			method = new ExtendedPatchMethod();
-		else
-			method = new ExtendedGenericMethod( httpRequest.getMethod() );
+    public void service(ServletRequest request, ServletResponse response) throws ServletException, IOException {
+        listenerCallBack.fireOnRequest(project, request, response);
+        if (response.isCommitted()) {
+            return;
+        }
 
-		method.setDecompress( false );
+        ExtendedHttpMethod method;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        if (httpRequest.getMethod().equals("GET")) {
+            method = new ExtendedGetMethod();
+        } else if (httpRequest.getMethod().equals("POST")) {
+            method = new ExtendedPostMethod();
+        } else if (httpRequest.getMethod().equals("PUT")) {
+            method = new ExtendedPutMethod();
+        } else if (httpRequest.getMethod().equals("HEAD")) {
+            method = new ExtendedHeadMethod();
+        } else if (httpRequest.getMethod().equals("OPTIONS")) {
+            method = new ExtendedOptionsMethod();
+        } else if (httpRequest.getMethod().equals("TRACE")) {
+            method = new ExtendedTraceMethod();
+        } else if (httpRequest.getMethod().equals("PATCH")) {
+            method = new ExtendedPatchMethod();
+        } else {
+            method = new ExtendedGenericMethod(httpRequest.getMethod());
+        }
 
-		ByteArrayOutputStream requestBody = null;
-		if( method instanceof HttpEntityEnclosingRequest )
-		{
-			requestBody = Tools.readAll( request.getInputStream(), 0 );
-			ByteArrayEntity entity = new ByteArrayEntity( requestBody.toByteArray() );
-			entity.setContentType( request.getContentType() );
-			( ( HttpEntityEnclosingRequest )method ).setEntity( entity );
-		}
+        method.setDecompress(false);
 
-		// for this create ui server and port, properties.
-		JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange( project );
-		capturedData.setRequestHost( httpRequest.getServerName() );
-		capturedData.setRequestMethod( httpRequest.getMethod() );
-		capturedData.setRequestHeader( httpRequest );
-		capturedData.setHttpRequestParameters( httpRequest );
-		capturedData.setQueryParameters( httpRequest.getQueryString() );
-		capturedData.setTargetURL( httpRequest.getRequestURL().toString() );
+        ByteArrayOutputStream requestBody = null;
+        if (method instanceof HttpEntityEnclosingRequest) {
+            requestBody = Tools.readAll(request.getInputStream(), 0);
+            ByteArrayEntity entity = new ByteArrayEntity(requestBody.toByteArray());
+            entity.setContentType(request.getContentType());
+            ((HttpEntityEnclosingRequest) method).setEntity(entity);
+        }
 
-		//		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
+        // for this create ui server and port, properties.
+        JProxyServletWsdlMonitorMessageExchange capturedData = new JProxyServletWsdlMonitorMessageExchange(project);
+        capturedData.setRequestHost(httpRequest.getServerName());
+        capturedData.setRequestMethod(httpRequest.getMethod());
+        capturedData.setRequestHeader(httpRequest);
+        capturedData.setHttpRequestParameters(httpRequest);
+        capturedData.setQueryParameters(httpRequest.getQueryString());
+        capturedData.setTargetURL(httpRequest.getRequestURL().toString());
 
-		// check connection header
-		String connectionHeader = httpRequest.getHeader( "Connection" );
-		if( connectionHeader != null )
-		{
-			connectionHeader = connectionHeader.toLowerCase();
-			if( !connectionHeader.contains( "keep-alive" ) && !connectionHeader.contains( "close" ) )
-				connectionHeader = null;
-		}
+        //		CaptureInputStream capture = new CaptureInputStream( httpRequest.getInputStream() );
 
-		// copy headers
-		boolean xForwardedFor = false;
-		@SuppressWarnings( "unused" )
-		Enumeration<?> headerNames = httpRequest.getHeaderNames();
-		while( headerNames.hasMoreElements() )
-		{
-			String hdr = ( String )headerNames.nextElement();
-			String lhdr = hdr.toLowerCase();
+        // check connection header
+        String connectionHeader = httpRequest.getHeader("Connection");
+        if (connectionHeader != null) {
+            connectionHeader = connectionHeader.toLowerCase();
+            if (!connectionHeader.contains("keep-alive") && !connectionHeader.contains("close")) {
+                connectionHeader = null;
+            }
+        }
 
-			if( dontProxyHeaders.contains( lhdr ) )
-				continue;
-			if( connectionHeader != null && connectionHeader.contains( lhdr ) )
-				continue;
+        // copy headers
+        boolean xForwardedFor = false;
+        @SuppressWarnings("unused")
+        Enumeration<?> headerNames = httpRequest.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String hdr = (String) headerNames.nextElement();
+            String lhdr = hdr.toLowerCase();
 
-			Enumeration<?> vals = httpRequest.getHeaders( hdr );
-			while( vals.hasMoreElements() )
-			{
-				String val = ( String )vals.nextElement();
-				if( val != null )
-				{
-					method.setHeader( lhdr, val );
-					xForwardedFor |= "X-Forwarded-For".equalsIgnoreCase( hdr );
-				}
-			}
-		}
+            if (dontProxyHeaders.contains(lhdr)) {
+                continue;
+            }
+            if (connectionHeader != null && connectionHeader.contains(lhdr)) {
+                continue;
+            }
 
-		// Proxy headers
-		method.setHeader( "Via", "SoapUI Monitor" );
-		if( !xForwardedFor )
-			method.addHeader( "X-Forwarded-For", request.getRemoteAddr() );
+            Enumeration<?> vals = httpRequest.getHeaders(hdr);
+            while (vals.hasMoreElements()) {
+                String val = (String) vals.nextElement();
+                if (val != null) {
+                    method.setHeader(lhdr, val);
+                    xForwardedFor |= "X-Forwarded-For".equalsIgnoreCase(hdr);
+                }
+            }
+        }
 
-		StringBuffer url = new StringBuffer( "http://" );
-		url.append( httpRequest.getServerName() );
-		if( httpRequest.getServerPort() != 80 )
-			url.append( ":" + httpRequest.getServerPort() );
+        // Proxy headers
+        method.setHeader("Via", "SoapUI Monitor");
+        if (!xForwardedFor) {
+            method.addHeader("X-Forwarded-For", request.getRemoteAddr());
+        }
 
-		if( httpRequest.getServletPath() != null )
-		{
-			url.append( httpRequest.getServletPath() );
-			try
-			{
-				method.setURI( new java.net.URI( url.toString().replaceAll( " ", "%20" ) ) );
-			}
-			catch( URISyntaxException e )
-			{
-				SoapUI.logError( e );
-			}
+        StringBuffer url = new StringBuffer("http://");
+        url.append(httpRequest.getServerName());
+        if (httpRequest.getServerPort() != 80) {
+            url.append(":" + httpRequest.getServerPort());
+        }
 
-			if( httpRequest.getQueryString() != null )
-			{
-				url.append( "?" + httpRequest.getQueryString() );
-				try
-				{
-					method.setURI( new java.net.URI( url.toString() ) );
-				}
-				catch( URISyntaxException e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-		}
+        if (httpRequest.getServletPath() != null) {
+            url.append(httpRequest.getServletPath());
+            try {
+                method.setURI(new java.net.URI(url.toString().replaceAll(" ", "%20")));
+            } catch (URISyntaxException e) {
+                SoapUI.logError(e);
+            }
 
-		method.getParams().setParameter( ClientPNames.HANDLE_REDIRECTS, false );
-		setProtocolversion( method, request.getProtocol() );
-		ProxyUtils.setForceDirectConnection( method.getParams() );
-		listenerCallBack.fireBeforeProxy( project, request, response, method );
+            if (httpRequest.getQueryString() != null) {
+                url.append("?" + httpRequest.getQueryString());
+                try {
+                    method.setURI(new java.net.URI(url.toString()));
+                } catch (URISyntaxException e) {
+                    SoapUI.logError(e);
+                }
+            }
+        }
 
-		if( settings.getBoolean( LaunchForm.SSLTUNNEL_REUSESTATE ) )
-		{
-			if( httpState == null )
-				httpState = new BasicHttpContext();
-			HttpClientSupport.execute( method, httpState );
-		}
-		else
-		{
-			HttpClientSupport.execute( method );
-		}
+        method.getParams().setParameter(ClientPNames.HANDLE_REDIRECTS, false);
+        setProtocolversion(method, request.getProtocol());
+        ProxyUtils.setForceDirectConnection(method.getParams());
+        listenerCallBack.fireBeforeProxy(project, request, response, method);
 
-		// wait for transaction to end and store it.
-		capturedData.stopCapture();
+        if (settings.getBoolean(LaunchForm.SSLTUNNEL_REUSESTATE)) {
+            if (httpState == null) {
+                httpState = new BasicHttpContext();
+            }
+            HttpClientSupport.execute(method, httpState);
+        } else {
+            HttpClientSupport.execute(method);
+        }
 
-		capturedData.setRequest( requestBody == null ? null : requestBody.toByteArray() );
-		capturedData.setRawResponseBody( method.getResponseBody() );
-		capturedData.setResponseHeader( method.getHttpResponse() );
-		capturedData.setRawRequestData( getRequestToBytes( request.toString(), requestBody ) );
-		capturedData.setRawResponseData( getResponseToBytes( method, capturedData.getRawResponseBody() ) );
-		byte[] decompressedResponseBody = method.getDecompressedResponseBody();
-		capturedData.setResponseContent( decompressedResponseBody != null ? new String( decompressedResponseBody ) : "" );
-		capturedData.setResponseStatusCode( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
-				.getStatusCode() : null );
-		capturedData.setResponseStatusLine( method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
-				.toString() : null );
+        // wait for transaction to end and store it.
+        capturedData.stopCapture();
 
-		listenerCallBack.fireAfterProxy( project, request, response, method, capturedData );
+        capturedData.setRequest(requestBody == null ? null : requestBody.toByteArray());
+        capturedData.setRawResponseBody(method.getResponseBody());
+        capturedData.setResponseHeader(method.getHttpResponse());
+        capturedData.setRawRequestData(getRequestToBytes(request.toString(), requestBody));
+        capturedData.setRawResponseData(getResponseToBytes(method, capturedData.getRawResponseBody()));
+        byte[] decompressedResponseBody = method.getDecompressedResponseBody();
+        capturedData.setResponseContent(decompressedResponseBody != null ? new String(decompressedResponseBody) : "");
+        capturedData.setResponseStatusCode(method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
+                .getStatusCode() : null);
+        capturedData.setResponseStatusLine(method.hasHttpResponse() ? method.getHttpResponse().getStatusLine()
+                .toString() : null);
 
-		( ( HttpServletResponse )response ).setStatus( method.hasHttpResponse() ? method.getHttpResponse()
-				.getStatusLine().getStatusCode() : null );
+        listenerCallBack.fireAfterProxy(project, request, response, method, capturedData);
 
-		if( !response.isCommitted() )
-		{
-			StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
-			// capturedData = null;
+        ((HttpServletResponse) response).setStatus(method.hasHttpResponse() ? method.getHttpResponse()
+                .getStatusLine().getStatusCode() : null);
 
-			// copy headers to response
-			HttpServletResponse httpServletResponse = ( HttpServletResponse )response;
-			for( Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet() )
-			{
-				for( String header : headerEntry.getValue() )
-					httpServletResponse.addHeader( headerEntry.getKey(), header );
-			}
+        if (!response.isCommitted()) {
+            StringToStringsMap responseHeaders = capturedData.getResponseHeaders();
+            // capturedData = null;
 
-			if( capturedData.getRawResponseBody() != null )
-			{
-				IO.copy( new ByteArrayInputStream( capturedData.getRawResponseBody() ), httpServletResponse.getOutputStream() );
-			}
-		}
+            // copy headers to response
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            for (Map.Entry<String, List<String>> headerEntry : responseHeaders.entrySet()) {
+                for (String header : headerEntry.getValue()) {
+                    httpServletResponse.addHeader(headerEntry.getKey(), header);
+                }
+            }
 
-		synchronized( this )
-		{
-			if( contentTypeMatches( method ) )
-			{
-				listenerCallBack.fireAddMessageExchange( capturedData );
-			}
-		}
-	}
+            if (capturedData.getRawResponseBody() != null) {
+                IO.copy(new ByteArrayInputStream(capturedData.getRawResponseBody()), httpServletResponse.getOutputStream());
+            }
+        }
 
-	protected boolean contentTypeMatches( ExtendedHttpMethod method) {
-		if( method.hasHttpResponse() )
-		{
-			Header[] headers = method.getHttpResponse().getHeaders( "Content-Type" );
-			if( headers.length == 0 )
-				return true;
+        synchronized (this) {
+            if (contentTypeMatches(method)) {
+                listenerCallBack.fireAddMessageExchange(capturedData);
+            }
+        }
+    }
 
-			for( Header header : headers )
-			{
-				if(includedContentTypes.matches(header.getValue())){
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+    protected boolean contentTypeMatches(ExtendedHttpMethod method) {
+        if (method.hasHttpResponse()) {
+            Header[] headers = method.getHttpResponse().getHeaders("Content-Type");
+            if (headers.length == 0) {
+                return true;
+            }
 
-	private byte[] getResponseToBytes( ExtendedHttpMethod method, byte[] res )
-	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		StringBuilder response = new StringBuilder();
+            for (Header header : headers) {
+                if (includedContentTypes.matches(header.getValue())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
-		if( method.hasHttpResponse() )
-		{
-			response.append( method.getHttpResponse().getStatusLine().toString() );
-			response.append( "\r\n" );
+    private byte[] getResponseToBytes(ExtendedHttpMethod method, byte[] res) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        StringBuilder response = new StringBuilder();
 
-			Header[] headers = method.getHttpResponse().getAllHeaders();
-			for( Header header : headers )
-			{
-				response.append( header.toString().trim() ).append( "\r\n" );
-			}
-			response.append( "\r\n" );
+        if (method.hasHttpResponse()) {
+            response.append(method.getHttpResponse().getStatusLine().toString());
+            response.append("\r\n");
 
-			try
-			{
-				out.write( response.toString().getBytes() );
-				if( res != null )
-				{
-					out.write( res );
-				}
-			}
-			catch( IOException e )
-			{
-				e.printStackTrace();
-			}
-		}
-		return out.toByteArray();
-	}
+            Header[] headers = method.getHttpResponse().getAllHeaders();
+            for (Header header : headers) {
+                response.append(header.toString().trim()).append("\r\n");
+            }
+            response.append("\r\n");
 
-	private byte[] getRequestToBytes( String footer, ByteArrayOutputStream requestBody )
-	{
-		ByteArrayOutputStream out = new ByteArrayOutputStream();
+            try {
+                out.write(response.toString().getBytes());
+                if (res != null) {
+                    out.write(res);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return out.toByteArray();
+    }
 
-		try
-		{
-			out.write( footer.trim().getBytes() );
-			out.write( "\r\n\r\n".getBytes() );
-			if( requestBody != null )
-				out.write( requestBody.toByteArray() );
-		}
-		catch( IOException e )
-		{
-			e.printStackTrace();
-		}
+    private byte[] getRequestToBytes(String footer, ByteArrayOutputStream requestBody) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
 
-		return out.toByteArray();
-	}
+        try {
+            out.write(footer.trim().getBytes());
+            out.write("\r\n\r\n".getBytes());
+            if (requestBody != null) {
+                out.write(requestBody.toByteArray());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-	protected void setProtocolversion( ExtendedHttpMethod postMethod, String protocolVersion )
-	{
-		if( protocolVersion.equals( HttpVersion.HTTP_1_1.toString() ) )
-		{
-			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1 );
-		}
-		else if(protocolVersion.equals( HttpVersion.HTTP_1_0.toString() ) )
-		{
-			postMethod.getParams().setParameter( CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0 );
-		}
-	}
+        return out.toByteArray();
+    }
+
+    protected void setProtocolversion(ExtendedHttpMethod postMethod, String protocolVersion) {
+        if (protocolVersion.equals(HttpVersion.HTTP_1_1.toString())) {
+            postMethod.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        } else if (protocolVersion.equals(HttpVersion.HTTP_1_0.toString())) {
+            postMethod.getParams().setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_0);
+        }
+    }
 
 }
