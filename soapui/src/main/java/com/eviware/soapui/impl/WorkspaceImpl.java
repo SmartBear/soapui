@@ -50,6 +50,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
 
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus;
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
+
 /**
  * Default Workspace implementation
  *
@@ -283,7 +286,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
             }
 
             if (!project.isOpen()) {
-                if (project.getEncrypted() == 0) {
+                if (project.getEncryptionStatus() == NOT_ENCRYPTED) {
                     wpc.setStatus(Status.CLOSED);
                 } else {
                     wpc.setStatus(Status.CLOSED_AND_ENCRYPTED);
@@ -543,7 +546,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
     }
 
     public void closeProject(Project project) {
-        int oldProjectEncrypt = ((WsdlProject) project).getEncrypted();
+        ProjectEncryptionStatus oldProjectEncrypt = ((WsdlProject) project).getEncryptionStatus();
         int ix = projectList.indexOf(project);
         if (ix == -1) {
             throw new RuntimeException("Project [" + project.getName() + "] not available in workspace for close");
@@ -559,7 +562,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         try {
             project = ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE).createNew(
                     project.getPath(), this, false, name, null);
-            ((WsdlProject) project).setEncrypted(oldProjectEncrypt);
+            ((WsdlProject) project).setEncryptionStatus(oldProjectEncrypt);
             projectList.add(ix, project);
             fireProjectAdded(project);
         } catch (Exception e) {
