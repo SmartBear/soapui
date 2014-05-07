@@ -46,125 +46,107 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 
-public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestService>
-{
-	public static final String SOAPUI_ACTION_ID = "CreateWadlDocumentationAction";
+public class CreateWadlDocumentationAction extends AbstractSoapUIAction<RestService> {
+    public static final String SOAPUI_ACTION_ID = "CreateWadlDocumentationAction";
 
-	private static final String REPORT_DIRECTORY_SETTING = CreateWadlDocumentationAction.class.getSimpleName()
-			+ "@report-directory";
-	private XFormDialog dialog;
-	private static Map<String, Transformer> transformers;
+    private static final String REPORT_DIRECTORY_SETTING = CreateWadlDocumentationAction.class.getSimpleName()
+            + "@report-directory";
+    private XFormDialog dialog;
+    private static Map<String, Transformer> transformers;
 
-	public CreateWadlDocumentationAction()
-	{
-		super( "CreateWadlDocumentationAction", "Create Documentation",
-				"Generate simple HTML Documentation for this WADL" );
-	}
+    public CreateWadlDocumentationAction() {
+        super("CreateWadlDocumentationAction", "Create Documentation",
+                "Generate simple HTML Documentation for this WADL");
+    }
 
-	public void perform( RestService target, Object param )
-	{
-		try
-		{
-			if( dialog == null )
-			{
-				dialog = ADialogBuilder.buildDialog( Form.class );
-			}
+    public void perform(RestService target, Object param) {
+        try {
+            if (dialog == null) {
+                dialog = ADialogBuilder.buildDialog(Form.class);
+            }
 
-			Settings settings = target.getSettings();
-			dialog.setValue( Form.OUTPUT_FOLDER, settings.getString( REPORT_DIRECTORY_SETTING, "" ) );
+            Settings settings = target.getSettings();
+            dialog.setValue(Form.OUTPUT_FOLDER, settings.getString(REPORT_DIRECTORY_SETTING, ""));
 
-			if( !dialog.show() )
-			{
-				return;
-			}
+            if (!dialog.show()) {
+                return;
+            }
 
-			settings.setString( REPORT_DIRECTORY_SETTING, dialog.getValue( Form.OUTPUT_FOLDER ) );
+            settings.setString(REPORT_DIRECTORY_SETTING, dialog.getValue(Form.OUTPUT_FOLDER));
 
-			final File reportDirectory = new File( settings.getString( REPORT_DIRECTORY_SETTING, "" ) );
-			String reportDirAbsolutePath = reportDirectory.getAbsolutePath();
-			String filename = reportDirAbsolutePath + File.separatorChar + "report.xml";
-			String reportUrl = transform( target, reportDirAbsolutePath, filename );
-			Tools.openURL( reportUrl );
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
-	}
+            final File reportDirectory = new File(settings.getString(REPORT_DIRECTORY_SETTING, ""));
+            String reportDirAbsolutePath = reportDirectory.getAbsolutePath();
+            String filename = reportDirAbsolutePath + File.separatorChar + "report.xml";
+            String reportUrl = transform(target, reportDirAbsolutePath, filename);
+            Tools.openURL(reportUrl);
+        } catch (Exception e) {
+            UISupport.showErrorMessage(e);
+        }
+    }
 
-	private static String transform( RestService target, final String reportDirAbsolutePath, String filename )
-			throws Exception
-	{
-		if( transformers == null )
-		{
-			initTransformers();
-		}
+    private static String transform(RestService target, final String reportDirAbsolutePath, String filename)
+            throws Exception {
+        if (transformers == null) {
+            initTransformers();
+        }
 
-		Transformer transformer = transformers.get( "WADL" );
-		if( transformer == null )
-		{
-			throw new Exception( "Missing transformer for format [" + target + "]" );
-		}
+        Transformer transformer = transformers.get("WADL");
+        if (transformer == null) {
+            throw new Exception("Missing transformer for format [" + target + "]");
+        }
 
-		transformer.setParameter( "output.dir", reportDirAbsolutePath );
+        transformer.setParameter("output.dir", reportDirAbsolutePath);
 
-		String reportFile = reportDirAbsolutePath + File.separatorChar + "wadl-report.html";
-		StreamResult result = new StreamResult( new FileWriter( reportFile ) );
+        String reportFile = reportDirAbsolutePath + File.separatorChar + "wadl-report.html";
+        StreamResult result = new StreamResult(new FileWriter(reportFile));
 
-		WadlDefinitionExporter exporter = new WadlDefinitionExporter( target );
-		String infile = exporter.export( reportDirAbsolutePath );
+        WadlDefinitionExporter exporter = new WadlDefinitionExporter(target);
+        String infile = exporter.export(reportDirAbsolutePath);
 
-		transformer.setURIResolver( new FileUriResolver( reportDirAbsolutePath ) );
-		transformer.transform( new StreamSource( new FileReader( infile ) ), result );
+        transformer.setURIResolver(new FileUriResolver(reportDirAbsolutePath));
+        transformer.transform(new StreamSource(new FileReader(infile)), result);
 
-		String reportUrl = new File( reportFile ).toURI().toURL().toString();
-		return reportUrl;
-	}
+        String reportUrl = new File(reportFile).toURI().toURL().toString();
+        return reportUrl;
+    }
 
-	protected static void initTransformers() throws Exception
-	{
-		transformers = new HashMap<String, Transformer>();
-		TransformerFactory xformFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+    protected static void initTransformers() throws Exception {
+        transformers = new HashMap<String, Transformer>();
+        TransformerFactory xformFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
 
-		transformers.put(
-				"WADL",
-				xformFactory.newTemplates(
-						new StreamSource( SoapUI.class
-								.getResourceAsStream( "/com/eviware/soapui/resources/doc/wadl_documentation.xsl" ) ) )
-						.newTransformer() );
-	}
+        transformers.put(
+                "WADL",
+                xformFactory.newTemplates(
+                        new StreamSource(SoapUI.class
+                                .getResourceAsStream("/com/eviware/soapui/resources/doc/wadl_documentation.xsl")))
+                        .newTransformer());
+    }
 
-	@AForm( description = "Creates an HTML-Report for the current WADL", name = "Create Report", helpUrl = HelpUrls.CREATEWADLDOC_HELP_URL, icon = UISupport.TOOL_ICON_PATH )
-	public interface Form
-	{
-		@AField( name = "Output Folder", description = "The folder where to create the report", type = AFieldType.FOLDER )
-		public final static String OUTPUT_FOLDER = "Output Folder";
-	}
+    @AForm(description = "Creates an HTML-Report for the current WADL", name = "Create Report", helpUrl = HelpUrls.CREATEWADLDOC_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    public interface Form {
+        @AField(name = "Output Folder", description = "The folder where to create the report", type = AFieldType.FOLDER)
+        public final static String OUTPUT_FOLDER = "Output Folder";
+    }
 
-	public static class FileUriResolver implements URIResolver
-	{
-		private final String basePath;
+    public static class FileUriResolver implements URIResolver {
+        private final String basePath;
 
-		public FileUriResolver( String basePath )
-		{
-			this.basePath = basePath;
-		}
+        public FileUriResolver(String basePath) {
+            this.basePath = basePath;
+        }
 
-		public Source resolve( String href, String base ) throws TransformerException
-		{
-			try
-			{
-				if( PathUtils.isHttpPath( href ) )
-					return new StreamSource( new URL( href ).openStream() );
+        public Source resolve(String href, String base) throws TransformerException {
+            try {
+                if (PathUtils.isHttpPath(href)) {
+                    return new StreamSource(new URL(href).openStream());
+                }
 
-				File file = PathUtils.isAbsolutePath( href ) ? new File( href ) : new File( basePath, href );
-				FileReader reader = new FileReader( file );
-				return new StreamSource( reader );
-			}
-			catch( Exception e )
-			{
-				return null;
-			}
-		}
-	}
+                File file = PathUtils.isAbsolutePath(href) ? new File(href) : new File(basePath, href);
+                FileReader reader = new FileReader(file);
+                return new StreamSource(reader);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
 }

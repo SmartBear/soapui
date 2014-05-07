@@ -21,19 +21,18 @@ import java.net.URL;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.model.iface.Response;
 
-public interface HttpResponse extends Response
-{
-	public abstract AbstractHttpRequestInterface<?> getRequest();
+public interface HttpResponse extends Response {
+    public abstract AbstractHttpRequestInterface<?> getRequest();
 
-	public abstract void setResponseContent( String responseContent );
+    public abstract void setResponseContent(String responseContent);
 
-	public abstract SSLInfo getSSLInfo();
+    public abstract SSLInfo getSSLInfo();
 
-	public abstract URL getURL();
+    public abstract URL getURL();
 
-	public String getMethod();
+    public String getMethod();
 
-	public String getHttpVersion();
+    public String getHttpVersion();
 
-	public abstract int getStatusCode();
+    public abstract int getStatusCode();
 }

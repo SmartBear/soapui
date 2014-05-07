@@ -25,38 +25,37 @@ import java.util.List;
 
 /**
  * General behaviour for all soapui model items
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface ModelItem extends PropertyChangeNotifier
-{
-	public final static String NAME_PROPERTY = ModelItem.class.getName() + "@name";
-	public final static String ICON_PROPERTY = ModelItem.class.getName() + "@icon";
-	public final static String DESCRIPTION_PROPERTY = ModelItem.class.getName() + "@description";
-	public final static String LABEL_PROPERTY = ModelItem.class.getName() + "@label";
+public interface ModelItem extends PropertyChangeNotifier {
+    public final static String NAME_PROPERTY = ModelItem.class.getName() + "@name";
+    public final static String ICON_PROPERTY = ModelItem.class.getName() + "@icon";
+    public final static String DESCRIPTION_PROPERTY = ModelItem.class.getName() + "@description";
+    public final static String LABEL_PROPERTY = ModelItem.class.getName() + "@label";
 
-	public String getName();
+    public String getName();
 
-	public String getId();
+    public String getId();
 
-	public ImageIcon getIcon();
+    public ImageIcon getIcon();
 
-	public String getDescription();
+    public String getDescription();
 
-	public Settings getSettings();
+    public Settings getSettings();
 
 
-	public List<? extends ModelItem> getChildren();
+    public List<? extends ModelItem> getChildren();
 
-	public ModelItem getParent();
+    public ModelItem getParent();
 
-	/**
-	 * Gets the project that this ModelItem object is part of. If this model item is not part of a project,
-	 * e.g. if this is a {@code Workspace} object, an {@code UnsupportedOperationException} is thrown.
-	 *
-	 * @return The Project object that this ModelItem is a descendant of
-	 * @throws UnsupportedOperationException If this model item is not the descendant of a project
-	 */
-	public Project getProject();
+    /**
+     * Gets the project that this ModelItem object is part of. If this model item is not part of a project,
+     * e.g. if this is a {@code Workspace} object, an {@code UnsupportedOperationException} is thrown.
+     *
+     * @return The Project object that this ModelItem is a descendant of
+     * @throws UnsupportedOperationException If this model item is not the descendant of a project
+     */
+    public Project getProject();
 }

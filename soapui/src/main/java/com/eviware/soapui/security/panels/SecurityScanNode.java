@@ -12,30 +12,27 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.panels;
+*/
+package com.eviware.soapui.security.panels;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.eviware.soapui.model.security.SecurityScan;
 
-public class SecurityScanNode extends DefaultMutableTreeNode
-{
+public class SecurityScanNode extends DefaultMutableTreeNode {
 
-	private SecurityScan securityCheck;
+    private SecurityScan securityCheck;
 
-	public SecurityScanNode( SecurityScan sc )
-	{
-		this.securityCheck = sc;
-	}
+    public SecurityScanNode(SecurityScan sc) {
+        this.securityCheck = sc;
+    }
 
-	@Override
-	public String toString()
-	{
-		return securityCheck.toString();
-	}
+    @Override
+    public String toString() {
+        return securityCheck.toString();
+    }
 
-	public SecurityScan getSecurityScan()
-	{
-		return securityCheck;
-	}
+    public SecurityScan getSecurityScan() {
+        return securityCheck;
+    }
 }

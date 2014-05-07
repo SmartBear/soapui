@@ -16,26 +16,26 @@
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:xmime="http://www.w3.org/2004/11/xmlmime"
-           targetNamespace="http://www.w3.org/2004/11/xmlmime" >
+           targetNamespace="http://www.w3.org/2004/11/xmlmime">
 
-<xs:attribute name="contentType" type="xs:string" />
+    <xs:attribute name="contentType" type="xs:string"/>
 
-<xs:attribute name="expectedMediaType" type="xs:string" />
+    <xs:attribute name="expectedMediaType" type="xs:string"/>
 
-<xs:complexType name="base64Binary" >
-    <xs:simpleContent>
-        <xs:extension base="xs:base64Binary" >
-            <xs:attribute ref="xmime:contentType" />
-        </xs:extension>
-    </xs:simpleContent>
-</xs:complexType>
+    <xs:complexType name="base64Binary">
+        <xs:simpleContent>
+            <xs:extension base="xs:base64Binary">
+                <xs:attribute ref="xmime:contentType"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
-<xs:complexType name="hexBinary" >
-    <xs:simpleContent>
-        <xs:extension base="xs:hexBinary" >
-            <xs:attribute ref="xmime:contentType" />
-        </xs:extension>
-    </xs:simpleContent>
-</xs:complexType>
+    <xs:complexType name="hexBinary">
+        <xs:simpleContent>
+            <xs:extension base="xs:hexBinary">
+                <xs:attribute ref="xmime:contentType"/>
+            </xs:extension>
+        </xs:simpleContent>
+    </xs:complexType>
 
 </xs:schema>

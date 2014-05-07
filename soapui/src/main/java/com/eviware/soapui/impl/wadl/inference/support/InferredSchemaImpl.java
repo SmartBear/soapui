@@ -33,88 +33,69 @@ import com.eviware.soapui.impl.wadl.inference.schema.SchemaSystem;
 import com.eviware.soapui.inferredSchema.SchemaSetConfig;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class InferredSchemaImpl implements InferredSchema
-{
-	private SchemaSystem ss;
+public class InferredSchemaImpl implements InferredSchema {
+    private SchemaSystem ss;
 
-	public InferredSchemaImpl()
-	{
-		ss = new SchemaSystem();
-	}
+    public InferredSchemaImpl() {
+        ss = new SchemaSystem();
+    }
 
-	public InferredSchemaImpl( InputStream is ) throws XmlException, IOException
-	{
-		ss = new SchemaSystem( SchemaSetConfig.Factory.parse( is ) );
-	}
+    public InferredSchemaImpl(InputStream is) throws XmlException, IOException {
+        ss = new SchemaSystem(SchemaSetConfig.Factory.parse(is));
+    }
 
-	public String[] getNamespaces()
-	{
-		return ss.getNamespaces().toArray( new String[0] );
-	}
+    public String[] getNamespaces() {
+        return ss.getNamespaces().toArray(new String[0]);
+    }
 
-	public SchemaTypeSystem getSchemaTypeSystem()
-	{
-		return getSchemaTypeSystem( XmlBeans.getBuiltinTypeSystem() );
-	}
+    public SchemaTypeSystem getSchemaTypeSystem() {
+        return getSchemaTypeSystem(XmlBeans.getBuiltinTypeSystem());
+    }
 
-	public SchemaTypeSystem getSchemaTypeSystem( SchemaTypeSystem sts )
-	{
-		List<XmlObject> schemas = new ArrayList<XmlObject>();
-		try
-		{
-			for( String namespace : getNamespaces() )
-			{
-				// schemas.add( XmlObject.Factory.parse( getXsdForNamespace(
-				// namespace ).toString() ) );
-				schemas.add( XmlUtils.createXmlObject( getXsdForNamespace( namespace ).toString() ) );
-			}
-			return XmlBeans.compileXsd( sts, schemas.toArray( new XmlObject[0] ), XmlBeans.getBuiltinTypeSystem(), null );
-		}
-		catch( XmlException e )
-		{
-			e.printStackTrace();
-			return null;
-		}
-	}
+    public SchemaTypeSystem getSchemaTypeSystem(SchemaTypeSystem sts) {
+        List<XmlObject> schemas = new ArrayList<XmlObject>();
+        try {
+            for (String namespace : getNamespaces()) {
+                // schemas.add( XmlObject.Factory.parse( getXsdForNamespace(
+                // namespace ).toString() ) );
+                schemas.add(XmlUtils.createXmlObject(getXsdForNamespace(namespace).toString()));
+            }
+            return XmlBeans.compileXsd(sts, schemas.toArray(new XmlObject[0]), XmlBeans.getBuiltinTypeSystem(), null);
+        } catch (XmlException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
-	public String getXsdForNamespace( String namespace )
-	{
-		return ss.getSchemaForNamespace( namespace ).toString();
-	}
+    public String getXsdForNamespace(String namespace) {
+        return ss.getSchemaForNamespace(namespace).toString();
+    }
 
-	public void learningValidate( XmlObject xml, ConflictHandler handler ) throws XmlException
-	{
-		ss.validate( xml, handler );
-	}
+    public void learningValidate(XmlObject xml, ConflictHandler handler) throws XmlException {
+        ss.validate(xml, handler);
+    }
 
-	public void processValidXml( XmlObject xml ) throws XmlException
-	{
-		ss.validate( xml, new AllowAll() );
-	}
+    public void processValidXml(XmlObject xml) throws XmlException {
+        ss.validate(xml, new AllowAll());
+    }
 
-	public void save( OutputStream os ) throws IOException
-	{
-		SchemaSetConfig xml = SchemaSetConfig.Factory.newInstance();
-		ss.save( xml );
-		xml.save( os );
-	}
+    public void save(OutputStream os) throws IOException {
+        SchemaSetConfig xml = SchemaSetConfig.Factory.newInstance();
+        ss.save(xml);
+        xml.save(os);
+    }
 
-	public boolean validate( XmlObject xml )
-	{
-		try
-		{
-			ss.validate( xml, new DenyAll() );
-			return true;
-		}
-		catch( XmlException e )
-		{
-			return false;
-		}
-	}
+    public boolean validate(XmlObject xml) {
+        try {
+            ss.validate(xml, new DenyAll());
+            return true;
+        } catch (XmlException e) {
+            return false;
+        }
+    }
 
-	public void deleteNamespace( String ns )
-	{
-		ss.deleteNamespace( ns );
-	}
+    public void deleteNamespace(String ns) {
+        ss.deleteNamespace(ns);
+    }
 
 }

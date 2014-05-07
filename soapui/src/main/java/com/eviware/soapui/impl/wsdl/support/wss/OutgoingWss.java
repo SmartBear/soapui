@@ -36,219 +36,189 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionsResult;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-public class OutgoingWss implements PropertyExpansionContainer
-{
-	private static final String OLD_MANUAL_SAML_ENTRY_TYPE = "SAML";
+public class OutgoingWss implements PropertyExpansionContainer {
+    private static final String OLD_MANUAL_SAML_ENTRY_TYPE = "SAML";
 
-	public static final String WSSENTRY_PROPERTY = OutgoingWss.class.getName() + "@wssEntry";
+    public static final String WSSENTRY_PROPERTY = OutgoingWss.class.getName() + "@wssEntry";
 
-	private static final int MOVE_DOWN = 1;
-	private static final int MOVE_UP = -1;
+    private static final int MOVE_DOWN = 1;
+    private static final int MOVE_UP = -1;
 
-	private OutgoingWssConfig config;
-	private List<WssEntry> entries = new ArrayList<WssEntry>();
-	private final DefaultWssContainer container;
+    private OutgoingWssConfig config;
+    private List<WssEntry> entries = new ArrayList<WssEntry>();
+    private final DefaultWssContainer container;
 
-	public OutgoingWss( OutgoingWssConfig config, DefaultWssContainer container )
-	{
-		this.config = config;
-		this.container = container;
+    public OutgoingWss(OutgoingWssConfig config, DefaultWssContainer container) {
+        this.config = config;
+        this.container = container;
 
-		for( WSSEntryConfig entryConfig : config.getEntryList() )
-		{
+        for (WSSEntryConfig entryConfig : config.getEntryList()) {
 
-			convertOldManualSAMLEntry( entryConfig );
+            convertOldManualSAMLEntry(entryConfig);
 
-			WssEntry entry = WssEntryRegistry.get().build( entryConfig, this );
-			if( entry != null )
-				entries.add( entry );
-		}
-	}
+            WssEntry entry = WssEntryRegistry.get().build(entryConfig, this);
+            if (entry != null) {
+                entries.add(entry);
+            }
+        }
+    }
 
-	public WssContainer getWssContainer()
-	{
-		return container;
-	}
+    public WssContainer getWssContainer() {
+        return container;
+    }
 
-	public String getName()
-	{
-		return config.getName();
-	}
+    public String getName() {
+        return config.getName();
+    }
 
-	public String getPassword()
-	{
-		return config.getPassword();
-	}
+    public String getPassword() {
+        return config.getPassword();
+    }
 
-	public String getUsername()
-	{
-		return config.getUsername();
-	}
+    public String getUsername() {
+        return config.getUsername();
+    }
 
-	public void setName( String arg0 )
-	{
-		config.setName( arg0 );
-	}
+    public void setName(String arg0) {
+        config.setName(arg0);
+    }
 
-	public void setPassword( String arg0 )
-	{
-		config.setPassword( arg0 );
-	}
+    public void setPassword(String arg0) {
+        config.setPassword(arg0);
+    }
 
-	public void setUsername( String arg0 )
-	{
-		config.setUsername( arg0 );
-	}
+    public void setUsername(String arg0) {
+        config.setUsername(arg0);
+    }
 
-	public String getActor()
-	{
-		return config.getActor();
-	}
+    public String getActor() {
+        return config.getActor();
+    }
 
-	public boolean getMustUnderstand()
-	{
-		return config.getMustUnderstand();
-	}
+    public boolean getMustUnderstand() {
+        return config.getMustUnderstand();
+    }
 
-	public void setActor( String arg0 )
-	{
-		config.setActor( arg0 );
-	}
+    public void setActor(String arg0) {
+        config.setActor(arg0);
+    }
 
-	public void setMustUnderstand( boolean arg0 )
-	{
-		config.setMustUnderstand( arg0 );
-	}
+    public void setMustUnderstand(boolean arg0) {
+        config.setMustUnderstand(arg0);
+    }
 
-	public WssEntry addEntry( String type )
-	{
-		WssEntry newEntry = WssEntryRegistry.get().create( type, this );
-		entries.add( newEntry );
+    public WssEntry addEntry(String type) {
+        WssEntry newEntry = WssEntryRegistry.get().create(type, this);
+        entries.add(newEntry);
 
-		container.fireWssEntryAdded( newEntry );
+        container.fireWssEntryAdded(newEntry);
 
-		return newEntry;
-	}
+        return newEntry;
+    }
 
-	public void removeEntry( WssEntry entry )
-	{
-		int index = entries.indexOf( entry );
+    public void removeEntry(WssEntry entry) {
+        int index = entries.indexOf(entry);
 
-		container.fireWssEntryRemoved( entries.remove( index ) );
-		config.removeEntry( index );
-		entry.release();
-	}
+        container.fireWssEntryRemoved(entries.remove(index));
+        config.removeEntry(index);
+        entry.release();
+    }
 
-	public void moveEntry( WssEntry entry, int offset )
-	{
-		int indexBeforeMove = entries.indexOf( entry );
-		if( ( offset == MOVE_UP && indexBeforeMove > 0 )
-				|| ( offset == MOVE_DOWN && indexBeforeMove < entries.size() - 1 ) )
-		{
-			WssEntry adjacentEntry = entries.get( indexBeforeMove + offset );
+    public void moveEntry(WssEntry entry, int offset) {
+        int indexBeforeMove = entries.indexOf(entry);
+        if ((offset == MOVE_UP && indexBeforeMove > 0)
+                || (offset == MOVE_DOWN && indexBeforeMove < entries.size() - 1)) {
+            WssEntry adjacentEntry = entries.get(indexBeforeMove + offset);
 
-			entries.set( indexBeforeMove + offset, entry );
-			entries.set( indexBeforeMove, adjacentEntry );
+            entries.set(indexBeforeMove + offset, entry);
+            entries.set(indexBeforeMove, adjacentEntry);
 
-			WSSEntryConfig entryConfig = ( WSSEntryConfig )config.getEntryList().get( indexBeforeMove ).copy();
-			WSSEntryConfig adjacentEntryConfig = ( WSSEntryConfig )config.getEntryList().get( indexBeforeMove + offset )
-					.copy();
+            WSSEntryConfig entryConfig = (WSSEntryConfig) config.getEntryList().get(indexBeforeMove).copy();
+            WSSEntryConfig adjacentEntryConfig = (WSSEntryConfig) config.getEntryList().get(indexBeforeMove + offset)
+                    .copy();
 
-			config.getEntryList().set( indexBeforeMove + offset, entryConfig );
-			config.getEntryList().set( indexBeforeMove, adjacentEntryConfig );
+            config.getEntryList().set(indexBeforeMove + offset, entryConfig);
+            config.getEntryList().set(indexBeforeMove, adjacentEntryConfig);
 
-			entry.updateEntryConfig( config.getEntryList().get( indexBeforeMove + offset ) );
-			adjacentEntry.updateEntryConfig( config.getEntryList().get( indexBeforeMove ) );
+            entry.updateEntryConfig(config.getEntryList().get(indexBeforeMove + offset));
+            adjacentEntry.updateEntryConfig(config.getEntryList().get(indexBeforeMove));
 
-			container.fireWssEntryMoved( entry, offset );
-		}
-	}
+            container.fireWssEntryMoved(entry, offset);
+        }
+    }
 
-	public OutgoingWssConfig getConfig()
-	{
-		return config;
-	}
+    public OutgoingWssConfig getConfig() {
+        return config;
+    }
 
-	public void processOutgoing( Document soapDocument, PropertyExpansionContext context ) throws WSSecurityException
-	{
-		Element header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(),
-				false );
+    public void processOutgoing(Document soapDocument, PropertyExpansionContext context) throws WSSecurityException {
+        Element header = WSSecurityUtil.findWsseSecurityHeaderBlock(soapDocument, soapDocument.getDocumentElement(),
+                false);
 
-		while( header != null )
-		{
-			header.getParentNode().removeChild( header );
-			header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(), false );
-		}
+        while (header != null) {
+            header.getParentNode().removeChild(header);
+            header = WSSecurityUtil.findWsseSecurityHeaderBlock(soapDocument, soapDocument.getDocumentElement(), false);
+        }
 
-		WSSecHeader secHeader = new WSSecHeader();
+        WSSecHeader secHeader = new WSSecHeader();
 
-		if( StringUtils.hasContent( getActor() ) )
-			secHeader.setActor( getActor() );
+        if (StringUtils.hasContent(getActor())) {
+            secHeader.setActor(getActor());
+        }
 
-		secHeader.setMustUnderstand( getMustUnderstand() );
+        secHeader.setMustUnderstand(getMustUnderstand());
 
-		secHeader.insertSecurityHeader( soapDocument );
+        secHeader.insertSecurityHeader(soapDocument);
 
-		for( WssEntry entry : entries )
-		{
-			try
-			{
-				entry.process( secHeader, soapDocument, context );
-			}
-			catch( Throwable e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+        for (WssEntry entry : entries) {
+            try {
+                entry.process(secHeader, soapDocument, context);
+            } catch (Throwable e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 
-	public List<WssEntry> getEntries()
-	{
-		return entries;
-	}
+    public List<WssEntry> getEntries() {
+        return entries;
+    }
 
-	public void updateConfig( OutgoingWssConfig config )
-	{
-		this.config = config;
+    public void updateConfig(OutgoingWssConfig config) {
+        this.config = config;
 
-		for( int c = 0; c < entries.size(); c++ )
-		{
-			entries.get( c ).updateEntryConfig( this.config.getEntryArray( c ) );
-		}
-	}
+        for (int c = 0; c < entries.size(); c++) {
+            entries.get(c).updateEntryConfig(this.config.getEntryArray(c));
+        }
+    }
 
-	public void release()
-	{
-		for( WssEntry entry : entries )
-			entry.release();
-	}
+    public void release() {
+        for (WssEntry entry : entries) {
+            entry.release();
+        }
+    }
 
-	public PropertyExpansion[] getPropertyExpansions()
-	{
-		PropertyExpansionsResult result = new PropertyExpansionsResult( getWssContainer().getModelItem(), this );
+    public PropertyExpansion[] getPropertyExpansions() {
+        PropertyExpansionsResult result = new PropertyExpansionsResult(getWssContainer().getModelItem(), this);
 
-		result.extractAndAddAll( "username" );
-		result.extractAndAddAll( "password" );
+        result.extractAndAddAll("username");
+        result.extractAndAddAll("password");
 
-		for( WssEntry entry : entries )
-		{
-			if( entry instanceof PropertyExpansionContainer )
-				result.addAll( ( ( PropertyExpansionContainer )entry ).getPropertyExpansions() );
-		}
+        for (WssEntry entry : entries) {
+            if (entry instanceof PropertyExpansionContainer) {
+                result.addAll(((PropertyExpansionContainer) entry).getPropertyExpansions());
+            }
+        }
 
-		return result.toArray();
-	}
+        return result.toArray();
+    }
 
-	public void resolve( ResolveContext<?> context )
-	{
-	}
+    public void resolve(ResolveContext<?> context) {
+    }
 
-	// Used to support backwards compatibility (< 4.5 - 4.5)
-	private void convertOldManualSAMLEntry( WSSEntryConfig entryConfig )
-	{
-		if( entryConfig.getType().equals( OLD_MANUAL_SAML_ENTRY_TYPE ) )
-		{
-			entryConfig.setType( ManualSAMLEntry.TYPE );
-		}
-	}
+    // Used to support backwards compatibility (< 4.5 - 4.5)
+    private void convertOldManualSAMLEntry(WSSEntryConfig entryConfig) {
+        if (entryConfig.getType().equals(OLD_MANUAL_SAML_ENTRY_TYPE)) {
+            entryConfig.setType(ManualSAMLEntry.TYPE);
+        }
+    }
 }

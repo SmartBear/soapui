@@ -20,9 +20,8 @@ import java.util.List;
 
 import com.eviware.soapui.model.project.Project;
 
-public interface ProjectRunner extends TestRunner
-{
-	public Project getProject();
+public interface ProjectRunner extends TestRunner {
+    public Project getProject();
 
-	public List<TestSuiteRunner> getResults();
+    public List<TestSuiteRunner> getResults();
 }

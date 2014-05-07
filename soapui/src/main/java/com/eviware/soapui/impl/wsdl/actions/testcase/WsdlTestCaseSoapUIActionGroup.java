@@ -23,45 +23,36 @@ import com.eviware.soapui.support.action.support.SoapUIActionMappingList;
 
 /**
  * SoapUIActionGroup for WsdlTestSteps
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlTestCaseSoapUIActionGroup extends DefaultSoapUIActionGroup<WsdlTestCase>
-{
-	public WsdlTestCaseSoapUIActionGroup( String id, String name )
-	{
-		super( id, name );
-	}
+public class WsdlTestCaseSoapUIActionGroup extends DefaultSoapUIActionGroup<WsdlTestCase> {
+    public WsdlTestCaseSoapUIActionGroup(String id, String name) {
+        super(id, name);
+    }
 
-	public SoapUIActionMappingList<WsdlTestCase> getActionMappings( WsdlTestCase modelItem )
-	{
-		SoapUIActionMappingList<WsdlTestCase> actions = super.getActionMappings( modelItem );
-		SoapUIActionMapping<WsdlTestCase> toggleDisabledActionMapping = null;
+    public SoapUIActionMappingList<WsdlTestCase> getActionMappings(WsdlTestCase modelItem) {
+        SoapUIActionMappingList<WsdlTestCase> actions = super.getActionMappings(modelItem);
+        SoapUIActionMapping<WsdlTestCase> toggleDisabledActionMapping = null;
 
-		for( int c = 0; c < actions.size(); c++ )
-		{
-			if( actions.get( c ).getActionId().equals( ToggleDisableTestCaseAction.SOAPUI_ACTION_ID ) )
-			{
-				toggleDisabledActionMapping = actions.get( c );
-				break;
-			}
-		}
+        for (int c = 0; c < actions.size(); c++) {
+            if (actions.get(c).getActionId().equals(ToggleDisableTestCaseAction.SOAPUI_ACTION_ID)) {
+                toggleDisabledActionMapping = actions.get(c);
+                break;
+            }
+        }
 
-		if( toggleDisabledActionMapping != null )
-		{
-			if( modelItem.isDisabled() )
-			{
-				toggleDisabledActionMapping.setName( "Enable TestCase" );
-				toggleDisabledActionMapping.setDescription( "Enable this TestCase" );
-			}
-			else
-			{
-				toggleDisabledActionMapping.setName( "Disable TestCase" );
-				toggleDisabledActionMapping.setDescription( "Disables this TestCase" );
-			}
-		}
+        if (toggleDisabledActionMapping != null) {
+            if (modelItem.isDisabled()) {
+                toggleDisabledActionMapping.setName("Enable TestCase");
+                toggleDisabledActionMapping.setDescription("Enable this TestCase");
+            } else {
+                toggleDisabledActionMapping.setName("Disable TestCase");
+                toggleDisabledActionMapping.setDescription("Disables this TestCase");
+            }
+        }
 
-		return actions;
-	}
+        return actions;
+    }
 }

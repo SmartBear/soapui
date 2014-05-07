@@ -43,221 +43,198 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.XFormRadioGroup;
 import com.eviware.x.impl.swing.JFormDialog;
 
-public class SecurityConfigurationDialog extends SimpleDialog
-{
-	private SecurityScan securityCheck;
-	private boolean result;
-	private JTabbedPane tabs;
-	private SecurityCheckedParametersTablePanel parametersTable;
-	private SecurityAssertionPanel securityAssertionPanel;
-	private XFormDialog strategyDialog;
+public class SecurityConfigurationDialog extends SimpleDialog {
+    private SecurityScan securityCheck;
+    private boolean result;
+    private JTabbedPane tabs;
+    private SecurityCheckedParametersTablePanel parametersTable;
+    private SecurityAssertionPanel securityAssertionPanel;
+    private XFormDialog strategyDialog;
 
-	public SecurityConfigurationDialog( SecurityScan securityCheck )
-	{
-		super( securityCheck.getName(), securityCheck.getDescription(), securityCheck.getHelpURL() );
+    public SecurityConfigurationDialog(SecurityScan securityCheck) {
+        super(securityCheck.getName(), securityCheck.getDescription(), securityCheck.getHelpURL());
 
-		this.securityCheck = securityCheck;
-	}
+        this.securityCheck = securityCheck;
+    }
 
-	public SecurityScan getSecurityScan()
-	{
-		return securityCheck;
-	}
+    public SecurityScan getSecurityScan() {
+        return securityCheck;
+    }
 
-	@Override
-	protected Component buildContent()
-	{
-		JPanel mainPanel = new JPanel();
+    @Override
+    protected Component buildContent() {
+        JPanel mainPanel = new JPanel();
 
-		if( securityCheck instanceof AbstractSecurityScanWithProperties )
-		{
-			mainPanel.setLayout( new BoxLayout( mainPanel, BoxLayout.Y_AXIS ) );
-			mainPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+        if (securityCheck instanceof AbstractSecurityScanWithProperties) {
+            mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-			JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 0 );
-			topPanel.add( buildParametersTable(), BorderLayout.CENTER );
+            JPanel topPanel = UISupport.createEmptyPanel(0, 0, 10, 0);
+            topPanel.add(buildParametersTable(), BorderLayout.CENTER);
 
-			JPanel p = UISupport.createEmptyPanel( 5, 0, 5, 0 );
-			JLabel jLabel = new JLabel( "Parameters:" );
-			jLabel.setPreferredSize( new Dimension( 72, 20 ) );
-			p.add( jLabel, BorderLayout.NORTH );
+            JPanel p = UISupport.createEmptyPanel(5, 0, 5, 0);
+            JLabel jLabel = new JLabel("Parameters:");
+            jLabel.setPreferredSize(new Dimension(72, 20));
+            p.add(jLabel, BorderLayout.NORTH);
 
-			topPanel.add( p, BorderLayout.NORTH );
+            topPanel.add(p, BorderLayout.NORTH);
 
-			JComponent component = securityCheck.getComponent();
-			if( component != null )
-				topPanel.add( component, BorderLayout.SOUTH );
+            JComponent component = securityCheck.getComponent();
+            if (component != null) {
+                topPanel.add(component, BorderLayout.SOUTH);
+            }
 
-			mainPanel.add( topPanel );
-		}
-		else
-		{
-			mainPanel.setLayout( new BorderLayout() );
-			mainPanel.setBorder( BorderFactory.createEmptyBorder( 5, 5, 5, 5 ) );
+            mainPanel.add(topPanel);
+        } else {
+            mainPanel.setLayout(new BorderLayout());
+            mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-			JComponent component = securityCheck.getComponent();
-			if( component != null )
-			{
-				JPanel topPanel = UISupport.createEmptyPanel( 0, 0, 10, 10 );
-				topPanel.add( component, BorderLayout.SOUTH );
-				mainPanel.add( topPanel, BorderLayout.NORTH );
-			}
-		}
+            JComponent component = securityCheck.getComponent();
+            if (component != null) {
+                JPanel topPanel = UISupport.createEmptyPanel(0, 0, 10, 10);
+                topPanel.add(component, BorderLayout.SOUTH);
+                mainPanel.add(topPanel, BorderLayout.NORTH);
+            }
+        }
 
-		Dimension prefSize = mainPanel.getPreferredSize();
-		int prefHeight = ( int )( prefSize.getHeight() + 170 );
-		int prefWidth = ( int )Math.max( prefSize.getWidth(), 600 );
+        Dimension prefSize = mainPanel.getPreferredSize();
+        int prefHeight = (int) (prefSize.getHeight() + 170);
+        int prefWidth = (int) Math.max(prefSize.getWidth(), 600);
 
-		mainPanel.setPreferredSize( new Dimension( prefWidth, prefHeight ) );
+        mainPanel.setPreferredSize(new Dimension(prefWidth, prefHeight));
 
-		mainPanel.add( buildTabs(), BorderLayout.CENTER );
+        mainPanel.add(buildTabs(), BorderLayout.CENTER);
 
-		return mainPanel;
-	}
+        return mainPanel;
+    }
 
-	protected Component buildParametersTable()
-	{
-		parametersTable = new SecurityCheckedParametersTablePanel( new SecurityParametersTableModel(
-				( ( AbstractSecurityScanWithProperties )securityCheck ).getParameterHolder() ), securityCheck.getTestStep()
-				.getProperties(), ( AbstractSecurityScanWithProperties )securityCheck );
+    protected Component buildParametersTable() {
+        parametersTable = new SecurityCheckedParametersTablePanel(new SecurityParametersTableModel(
+                ((AbstractSecurityScanWithProperties) securityCheck).getParameterHolder()), securityCheck.getTestStep()
+                .getProperties(), (AbstractSecurityScanWithProperties) securityCheck);
 
-		parametersTable.setPreferredSize( new Dimension( 400, 150 ) );
-		parametersTable.setMinimumSize( new Dimension( 400, 150 ) );
-		parametersTable.setMaximumSize( new Dimension( Integer.MAX_VALUE, Integer.MAX_VALUE ) );
+        parametersTable.setPreferredSize(new Dimension(400, 150));
+        parametersTable.setMinimumSize(new Dimension(400, 150));
+        parametersTable.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-		return parametersTable;
-	}
+        return parametersTable;
+    }
 
-	protected Component buildTabs()
-	{
-		tabs = new JTabbedPane();
-		securityAssertionPanel = new SecurityAssertionPanel( securityCheck );
-		tabs.addTab( "Assertions", securityAssertionPanel );
-		tabs.addTab( "Strategy", buildStrategyTab() );
+    protected Component buildTabs() {
+        tabs = new JTabbedPane();
+        securityAssertionPanel = new SecurityAssertionPanel(securityCheck);
+        tabs.addTab("Assertions", securityAssertionPanel);
+        tabs.addTab("Strategy", buildStrategyTab());
 
-		JComponent advancedSettingsPanel = securityCheck.getAdvancedSettingsPanel();
-		if( advancedSettingsPanel != null )
-			tabs.addTab( "Advanced", new JScrollPane( advancedSettingsPanel ) );
+        JComponent advancedSettingsPanel = securityCheck.getAdvancedSettingsPanel();
+        if (advancedSettingsPanel != null) {
+            tabs.addTab("Advanced", new JScrollPane(advancedSettingsPanel));
+        }
 
-		tabs.setMaximumSize( new Dimension( Integer.MAX_VALUE, Integer.MAX_VALUE ) );
-		tabs.setPreferredSize( new Dimension( 400, 150 ) );
+        tabs.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        tabs.setPreferredSize(new Dimension(400, 150));
 
-		return tabs;
-	}
+        return tabs;
+    }
 
-	protected Component buildStrategyTab()
-	{
-		strategyDialog = ADialogBuilder.buildDialog( SecurityConfigurationDialogBuilder.Strategy.class, null );
+    protected Component buildStrategyTab() {
+        strategyDialog = ADialogBuilder.buildDialog(SecurityConfigurationDialogBuilder.Strategy.class, null);
 
-		XFormRadioGroup strategy = ( XFormRadioGroup )strategyDialog.getFormField( Strategy.STRATEGY );
-		final String[] strategyOptions = new String[] { "One by One", "All At Once" };
-		strategy.setOptions( strategyOptions );
+        XFormRadioGroup strategy = (XFormRadioGroup) strategyDialog.getFormField(Strategy.STRATEGY);
+        final String[] strategyOptions = new String[]{"One by One", "All At Once"};
+        strategy.setOptions(strategyOptions);
 
-		if( securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.NO_STRATEGY )
-			strategy.setEnabled( false );
-		else
-		{
-			if( securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE )
-				strategy.setValue( strategyOptions[0] );
-			else
-				strategy.setValue( strategyOptions[1] );
-		}
+        if (securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.NO_STRATEGY) {
+            strategy.setEnabled(false);
+        } else {
+            if (securityCheck.getExecutionStrategy().getStrategy() == StrategyTypeConfig.ONE_BY_ONE) {
+                strategy.setValue(strategyOptions[0]);
+            } else {
+                strategy.setValue(strategyOptions[1]);
+            }
+        }
 
-		// default is ONE_BY_ONE
-		if( securityCheck.getExecutionStrategy().getImmutable() )
-		{
-			strategy.setDisabled();
-		}
+        // default is ONE_BY_ONE
+        if (securityCheck.getExecutionStrategy().getImmutable()) {
+            strategy.setDisabled();
+        }
 
-		strategy.addFormFieldListener( new XFormFieldListener()
-		{
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
+        strategy.addFormFieldListener(new XFormFieldListener() {
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
 
-				if( newValue.equals( strategyOptions[0] ) )
-					securityCheck.getExecutionStrategy().setStrategy( StrategyTypeConfig.ONE_BY_ONE );
-				else
-					securityCheck.getExecutionStrategy().setStrategy( StrategyTypeConfig.ALL_AT_ONCE );
+                if (newValue.equals(strategyOptions[0])) {
+                    securityCheck.getExecutionStrategy().setStrategy(StrategyTypeConfig.ONE_BY_ONE);
+                } else {
+                    securityCheck.getExecutionStrategy().setStrategy(StrategyTypeConfig.ALL_AT_ONCE);
+                }
 
-			}
-		} );
+            }
+        });
 
-		XFormField delay = strategyDialog.getFormField( Strategy.DELAY );
-		delay.setValue( String.valueOf( securityCheck.getExecutionStrategy().getDelay() ) );
+        XFormField delay = strategyDialog.getFormField(Strategy.DELAY);
+        delay.setValue(String.valueOf(securityCheck.getExecutionStrategy().getDelay()));
 
-		delay.addFormFieldListener( new XFormFieldListener()
-		{
+        delay.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				try
-				{
-					if( "".equals( newValue ) )
-						return;
-					Integer.valueOf( newValue );
-					securityCheck.getExecutionStrategy().setDelay( Integer.valueOf( newValue ) );
-				}
-				catch( Exception e )
-				{
-					UISupport.showErrorMessage( "Delay value must be integer number" );
-				}
-			}
-		} );
-		XFormField applyToFailedTests = strategyDialog.getFormField( Strategy.APPLY_TO_FAILED_STEPS );
-		applyToFailedTests.setValue( String.valueOf( securityCheck.isApplyForFailedStep() ) );
-		applyToFailedTests.addFormFieldListener( new XFormFieldListener()
-		{
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                try {
+                    if ("".equals(newValue)) {
+                        return;
+                    }
+                    Integer.valueOf(newValue);
+                    securityCheck.getExecutionStrategy().setDelay(Integer.valueOf(newValue));
+                } catch (Exception e) {
+                    UISupport.showErrorMessage("Delay value must be integer number");
+                }
+            }
+        });
+        XFormField applyToFailedTests = strategyDialog.getFormField(Strategy.APPLY_TO_FAILED_STEPS);
+        applyToFailedTests.setValue(String.valueOf(securityCheck.isApplyForFailedStep()));
+        applyToFailedTests.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				securityCheck.setApplyForFailedTestStep( Boolean.parseBoolean( newValue ) );
-			}
-		} );
-		XFormField runOnlyOnce = strategyDialog.getFormField( Strategy.RUN_ONLY_ONCE );
-		runOnlyOnce.setValue( String.valueOf( securityCheck.isRunOnlyOnce() ) );
-		runOnlyOnce.addFormFieldListener( new XFormFieldListener()
-		{
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                securityCheck.setApplyForFailedTestStep(Boolean.parseBoolean(newValue));
+            }
+        });
+        XFormField runOnlyOnce = strategyDialog.getFormField(Strategy.RUN_ONLY_ONCE);
+        runOnlyOnce.setValue(String.valueOf(securityCheck.isRunOnlyOnce()));
+        runOnlyOnce.addFormFieldListener(new XFormFieldListener() {
 
-			@Override
-			public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-			{
-				securityCheck.setRunOnlyOnce( Boolean.parseBoolean( newValue ) );
-			}
-		} );
+            @Override
+            public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                securityCheck.setRunOnlyOnce(Boolean.parseBoolean(newValue));
+            }
+        });
 
-		return ( ( JFormDialog )strategyDialog ).getPanel();
-	}
+        return ((JFormDialog) strategyDialog).getPanel();
+    }
 
-	@Override
-	protected boolean handleOk()
-	{
-		result = true;
-		return true;
-	}
+    @Override
+    protected boolean handleOk() {
+        result = true;
+        return true;
+    }
 
-	public boolean configure()
-	{
-		result = false;
-		setVisible( true );
-		return result;
-	}
+    public boolean configure() {
+        result = false;
+        setVisible(true);
+        return result;
+    }
 
-	public void release()
-	{
-		if( strategyDialog != null )
-		{
-			strategyDialog.release();
-			strategyDialog = null;
-		}
+    public void release() {
+        if (strategyDialog != null) {
+            strategyDialog.release();
+            strategyDialog = null;
+        }
 
-		securityAssertionPanel.release();
-		securityAssertionPanel = null;
-		securityCheck = null;
-		tabs.removeAll();
-		tabs = null;
-		dispose();
-	}
+        securityAssertionPanel.release();
+        securityAssertionPanel = null;
+        securityCheck = null;
+        tabs.removeAll();
+        tabs = null;
+        dispose();
+    }
 }

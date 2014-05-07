@@ -27,28 +27,24 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * Creates an empty WsdlRequest containing a SOAP Envelope and empty Body
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class CreateEmptyRequestAction extends AbstractAction
-{
-	private final WsdlRequest request;
+public class CreateEmptyRequestAction extends AbstractAction {
+    private final WsdlRequest request;
 
-	public CreateEmptyRequestAction( WsdlRequest request )
-	{
-		super( "Create empty" );
-		this.request = request;
-		putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/create_empty_request.gif" ) );
-		putValue( Action.SHORT_DESCRIPTION, "Creates an empty SOAP request" );
-	}
+    public CreateEmptyRequestAction(WsdlRequest request) {
+        super("Create empty");
+        this.request = request;
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/create_empty_request.gif"));
+        putValue(Action.SHORT_DESCRIPTION, "Creates an empty SOAP request");
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		if( UISupport.confirm( "Overwrite existing request?", "Create Empty" ) )
-		{
-			WsdlInterface iface = ( WsdlInterface )request.getOperation().getInterface();
-			request.setRequestContent( iface.getMessageBuilder().buildEmptyMessage() );
-		}
-	}
+    public void actionPerformed(ActionEvent e) {
+        if (UISupport.confirm("Overwrite existing request?", "Create Empty")) {
+            WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
+            request.setRequestContent(iface.getMessageBuilder().buildEmptyMessage());
+        }
+    }
 }

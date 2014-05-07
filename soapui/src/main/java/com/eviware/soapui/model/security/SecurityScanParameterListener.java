@@ -12,19 +12,19 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.model.security;
+*/
+package com.eviware.soapui.model.security;
 
-public interface SecurityScanParameterListener
-{
+public interface SecurityScanParameterListener {
 
-	void parameterNameChanged( SecurityCheckedParameter parameter, String oldName, String newName );
+    void parameterNameChanged(SecurityCheckedParameter parameter, String oldName, String newName);
 
-	void parameterLabelChanged( SecurityCheckedParameter parameter, String oldLabel, String newLabel );
+    void parameterLabelChanged(SecurityCheckedParameter parameter, String oldLabel, String newLabel);
 
-	void parameterXPathChanged( SecurityCheckedParameter parameter, String oldXPath, String newXPath );
+    void parameterXPathChanged(SecurityCheckedParameter parameter, String oldXPath, String newXPath);
 
-	void parameterCheckedChanged( SecurityCheckedParameter parameter );
+    void parameterCheckedChanged(SecurityCheckedParameter parameter);
 
-	void parameterTypeChanged( SecurityCheckedParameter paramter, String oldType, String newType );
+    void parameterTypeChanged(SecurityCheckedParameter paramter, String oldType, String newType);
 
 }

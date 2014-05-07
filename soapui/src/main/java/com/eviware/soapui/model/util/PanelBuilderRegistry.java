@@ -90,63 +90,58 @@ import com.eviware.soapui.support.SoapUIException;
 
 /**
  * Registry of PanelBuilders
- * 
+ *
  * @author ole.matzura
  */
 
-public class PanelBuilderRegistry
-{
-	private static Map<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>> builders = new HashMap<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>>();
+public class PanelBuilderRegistry {
+    private static Map<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>> builders = new HashMap<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>>();
 
-	@SuppressWarnings( "unchecked" )
-	public static <T extends ModelItem> PanelBuilder<T> getPanelBuilder( T modelItem )
-	{
-		return ( PanelBuilder<T> )builders.get( modelItem.getClass() );
-	}
+    @SuppressWarnings("unchecked")
+    public static <T extends ModelItem> PanelBuilder<T> getPanelBuilder(T modelItem) {
+        return (PanelBuilder<T>) builders.get(modelItem.getClass());
+    }
 
-	public static <T extends ModelItem> void register( Class<T> modelItemClass, PanelBuilder<T> panelBuilder )
-	{
-		builders.put( modelItemClass, panelBuilder );
-	}
+    public static <T extends ModelItem> void register(Class<T> modelItemClass, PanelBuilder<T> panelBuilder) {
+        builders.put(modelItemClass, panelBuilder);
+    }
 
-	static
-	{
-		register( WorkspaceImpl.class, new WorkspaceImplPanelBuilder() );
-		register( WsdlProject.class, new WsdlProjectPanelBuilder() );
-		register( WsdlInterface.class, new WsdlInterfacePanelBuilder() );
-		register( RestService.class, new RestServicePanelBuilder() );
-		register( WsdlOperation.class, new WsdlOperationPanelBuilder() );
-		register( RestResource.class, new RestResourcePanelBuilder() );
-		register( RestMethod.class, new RestMethodPanelBuilder() );
-		register( WsdlRequest.class, new WsdlRequestPanelBuilder() );
-		register( RestRequest.class, new RestRequestPanelBuilder() );
-		register( WsdlTestSuite.class, new WsdlTestSuitePanelBuilder<WsdlTestSuite>() );
-		register( WsdlTestCase.class, new WsdlTestCasePanelBuilder<WsdlTestCase>() );
-		register( WsdlLoadTest.class, new WsdlLoadTestPanelBuilder<WsdlLoadTest>() );
-		register( WsdlMockService.class, new WsdlMockServicePanelBuilder() );
-		register( WsdlMockOperation.class, new WsdlMockOperationPanelBuilder() );
-		register( WsdlMockResponse.class, new WsdlMockResponsePanelBuilder() );
-		register( RestMockService.class, new RestMockServicePanelBuilder() );
-		register( RestMockAction.class, new RestMockActionPanelBuilder() );
-		register( RestMockResponse.class, new RestMockResponsePanelBuilder() );
-		register( WsdlGotoTestStep.class, new GotoStepPanelBuilder() );
-		register( WsdlDelayTestStep.class, new DelayTestStepPanelBuilder() );
-		register( ManualTestStep.class, new ManualTestStepPanelBuilder() );
-		register( RestTestRequestStep.class, new RestTestRequestPanelBuilder() );
-		register( HttpTestRequestStep.class, new HttpTestRequestPanelBuilder() );
-		register( WsdlTestRequestStep.class, new WsdlTestRequestPanelBuilder() );
-		register( WsdlPropertiesTestStep.class, new PropertiesStepPanelBuilder() );
-		register( WsdlGroovyScriptTestStep.class, new GroovyScriptStepPanelBuilder() );
-		register( PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder() );
-		register( WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder() );
-		register( WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder() );
-		register( JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder() );
-		register( AMFRequestTestStep.class, new AMFRequestTestStepPanelBuilder() );
-		register( SecurityTest.class, new SecurityTestPanelBuilder<SecurityTest>() );
+    static {
+        register(WorkspaceImpl.class, new WorkspaceImplPanelBuilder());
+        register(WsdlProject.class, new WsdlProjectPanelBuilder());
+        register(WsdlInterface.class, new WsdlInterfacePanelBuilder());
+        register(RestService.class, new RestServicePanelBuilder());
+        register(WsdlOperation.class, new WsdlOperationPanelBuilder());
+        register(RestResource.class, new RestResourcePanelBuilder());
+        register(RestMethod.class, new RestMethodPanelBuilder());
+        register(WsdlRequest.class, new WsdlRequestPanelBuilder());
+        register(RestRequest.class, new RestRequestPanelBuilder());
+        register(WsdlTestSuite.class, new WsdlTestSuitePanelBuilder<WsdlTestSuite>());
+        register(WsdlTestCase.class, new WsdlTestCasePanelBuilder<WsdlTestCase>());
+        register(WsdlLoadTest.class, new WsdlLoadTestPanelBuilder<WsdlLoadTest>());
+        register(WsdlMockService.class, new WsdlMockServicePanelBuilder());
+        register(WsdlMockOperation.class, new WsdlMockOperationPanelBuilder());
+        register(WsdlMockResponse.class, new WsdlMockResponsePanelBuilder());
+        register(RestMockService.class, new RestMockServicePanelBuilder());
+        register(RestMockAction.class, new RestMockActionPanelBuilder());
+        register(RestMockResponse.class, new RestMockResponsePanelBuilder());
+        register(WsdlGotoTestStep.class, new GotoStepPanelBuilder());
+        register(WsdlDelayTestStep.class, new DelayTestStepPanelBuilder());
+        register(ManualTestStep.class, new ManualTestStepPanelBuilder());
+        register(RestTestRequestStep.class, new RestTestRequestPanelBuilder());
+        register(HttpTestRequestStep.class, new HttpTestRequestPanelBuilder());
+        register(WsdlTestRequestStep.class, new WsdlTestRequestPanelBuilder());
+        register(WsdlPropertiesTestStep.class, new PropertiesStepPanelBuilder());
+        register(WsdlGroovyScriptTestStep.class, new GroovyScriptStepPanelBuilder());
+        register(PropertyTransfersTestStep.class, new PropertyTransfersTestStepPanelBuilder());
+        register(WsdlRunTestCaseTestStep.class, new WsdlRunTestCaseTestStepPanelBuilder());
+        register(WsdlMockResponseTestStep.class, new MockResponseStepPanelBuilder());
+        register(JdbcRequestTestStep.class, new JdbcRequestTestStepPanelBuilder());
+        register(AMFRequestTestStep.class, new AMFRequestTestStepPanelBuilder());
+        register(SecurityTest.class, new SecurityTestPanelBuilder<SecurityTest>());
 
-		for( PanelBuilderFactory factory : SoapUI.getFactoryRegistry().getFactories( PanelBuilderFactory.class ) )
-		{
-			register( factory.getTargetModelItem(), factory.createPanelBuilder() );
-		}
-	}
+        for (PanelBuilderFactory factory : SoapUI.getFactoryRegistry().getFactories(PanelBuilderFactory.class)) {
+            register(factory.getTargetModelItem(), factory.createPanelBuilder());
+        }
+    }
 }

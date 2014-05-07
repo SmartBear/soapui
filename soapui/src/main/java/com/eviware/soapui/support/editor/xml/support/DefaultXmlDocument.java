@@ -23,64 +23,55 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Default XmlDocument that works on a standard xml string
- * 
+ *
  * @author ole.matzura
  */
 
-public class DefaultXmlDocument extends AbstractXmlDocument
-{
-	private String xml;
-	private SchemaTypeSystem typeSystem;
+public class DefaultXmlDocument extends AbstractXmlDocument {
+    private String xml;
+    private SchemaTypeSystem typeSystem;
 
-	public DefaultXmlDocument( String xml )
-	{
-		this.xml = xml;
-	}
+    public DefaultXmlDocument(String xml) {
+        this.xml = xml;
+    }
 
-	public DefaultXmlDocument()
-	{
-	}
+    public DefaultXmlDocument() {
+    }
 
-	public void setTypeSystem( SchemaTypeSystem typeSystem )
-	{
-		this.typeSystem = typeSystem;
-	}
+    public void setTypeSystem(SchemaTypeSystem typeSystem) {
+        this.typeSystem = typeSystem;
+    }
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		if( typeSystem != null )
-			return typeSystem;
+    public SchemaTypeSystem getTypeSystem() {
+        if (typeSystem != null) {
+            return typeSystem;
+        }
 
-		try
-		{
-			// typeSystem = XmlObject.Factory.parse( xml
-			// ).schemaType().getTypeSystem();
-			typeSystem = XmlUtils.createXmlObject( xml ).schemaType().getTypeSystem();
-			return typeSystem;
-		}
-		catch( Exception e )
-		{
-			return XmlBeans.getBuiltinTypeSystem();
-		}
-	}
+        try {
+            // typeSystem = XmlObject.Factory.parse( xml
+            // ).schemaType().getTypeSystem();
+            typeSystem = XmlUtils.createXmlObject(xml).schemaType().getTypeSystem();
+            return typeSystem;
+        } catch (Exception e) {
+            return XmlBeans.getBuiltinTypeSystem();
+        }
+    }
 
-	public String getXml()
-	{
-		return xml;
-	}
+    public String getXml() {
+        return xml;
+    }
 
-	public void setXml( String xml )
-	{
-		String oldXml = this.xml;
-		this.xml = xml;
-		if( "<not-xml/>".equals( xml ) )
-			fireXmlChanged( "", xml );
+    public void setXml(String xml) {
+        String oldXml = this.xml;
+        this.xml = xml;
+        if ("<not-xml/>".equals(xml)) {
+            fireXmlChanged("", xml);
+        }
 
-		fireXmlChanged( oldXml, xml );
-	}
+        fireXmlChanged(oldXml, xml);
+    }
 
-	public void release()
-	{
-		typeSystem = null;
-	}
+    public void release() {
+        typeSystem = null;
+    }
 }

@@ -26,39 +26,30 @@ import java.awt.event.ActionEvent;
 /**
  * Action for retrieving an OAuth2 access token using the values in the OAuth2Profile object.
  */
-public class RefreshOAuthAccessTokenAction extends AbstractAction
-{
+public class RefreshOAuthAccessTokenAction extends AbstractAction {
 
-	private OAuth2Profile profile;
+    private OAuth2Profile profile;
 
-	public RefreshOAuthAccessTokenAction( OAuth2Profile profile )
-	{
-		super( "Refresh OAuth 2 access token" );
-		this.profile = profile;
-		putValue( Action.SHORT_DESCRIPTION, "Refreshes an OAuth 2 the access token in the profile using the refresh token" );
-	}
+    public RefreshOAuthAccessTokenAction(OAuth2Profile profile) {
+        super("Refresh OAuth 2 access token");
+        this.profile = profile;
+        putValue(Action.SHORT_DESCRIPTION, "Refreshes an OAuth 2 the access token in the profile using the refresh token");
+    }
 
-	public void actionPerformed( ActionEvent event )
-	{
-		try
-		{
-			getOAuthClientFacade().refreshAccessToken( profile );
-		}
-		catch( InvalidOAuth2ParametersException e )
-		{
-			UISupport.showErrorMessage( "Invalid OAuth2 parameters: " + e.getMessage() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e, "Error refreshing OAuth 2 access token" );
-			UISupport.showErrorMessage( "Could not refresh access token. Check the SoapUI log for details" );
-		}
-	}
+    public void actionPerformed(ActionEvent event) {
+        try {
+            getOAuthClientFacade().refreshAccessToken(profile);
+        } catch (InvalidOAuth2ParametersException e) {
+            UISupport.showErrorMessage("Invalid OAuth2 parameters: " + e.getMessage());
+        } catch (Exception e) {
+            SoapUI.logError(e, "Error refreshing OAuth 2 access token");
+            UISupport.showErrorMessage("Could not refresh access token. Check the SoapUI log for details");
+        }
+    }
 
-	protected OAuth2ClientFacade getOAuthClientFacade()
-	{
-		return new OltuOAuth2ClientFacade();
-	}
+    protected OAuth2ClientFacade getOAuthClientFacade() {
+        return new OltuOAuth2ClientFacade();
+    }
 
 
 }

@@ -46,170 +46,142 @@ import java.io.File;
  * @author Ole.Matzura
  */
 
-public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
-{
-	public static final String SOAPUI_ACTION_ID = "NewWsdlProjectAction";
-	private XFormDialog dialog;
+public class NewWsdlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
+    public static final String SOAPUI_ACTION_ID = "NewWsdlProjectAction";
+    private XFormDialog dialog;
 
-	public static final MessageSupport messages = MessageSupport.getMessages( NewWsdlProjectAction.class );
+    public static final MessageSupport messages = MessageSupport.getMessages(NewWsdlProjectAction.class);
 
-	public NewWsdlProjectAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    public NewWsdlProjectAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
-	public void perform( WorkspaceImpl workspace, Object param )
-	{
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
-			dialog.setValue( Form.CREATEREQUEST, Boolean.toString( true ) );
-			dialog.getFormField( Form.INITIALWSDL ).addFormFieldListener( new XFormFieldListener()
-			{
-				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-				{
-					String value = newValue.toLowerCase().trim();
+    public void perform(WorkspaceImpl workspace, Object param) {
+        if (dialog == null) {
+            dialog = ADialogBuilder.buildDialog(Form.class);
+            dialog.setValue(Form.CREATEREQUEST, Boolean.toString(true));
+            dialog.getFormField(Form.INITIALWSDL).addFormFieldListener(new XFormFieldListener() {
+                public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                    String value = newValue.toLowerCase().trim();
 
-					dialog.getFormField( Form.CREATEREQUEST )
-							.setEnabled( value.length() > 0 && !newValue.endsWith( ".wadl" ) );
-					dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
+                    dialog.getFormField(Form.CREATEREQUEST)
+                            .setEnabled(value.length() > 0 && !newValue.endsWith(".wadl"));
+                    dialog.getFormField(Form.GENERATETESTSUITE).setEnabled(newValue.trim().length() > 0);
 
-					initProjectName( newValue );
-				}
-			} );
-		}
-		else
-		{
-			dialog.setValue( Form.INITIALWSDL, "" );
-			dialog.setValue( Form.PROJECTNAME, "" );
+                    initProjectName(newValue);
+                }
+            });
+        } else {
+            dialog.setValue(Form.INITIALWSDL, "");
+            dialog.setValue(Form.PROJECTNAME, "");
 
-			dialog.getFormField( Form.CREATEREQUEST ).setEnabled( false );
-			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
-		}
+            dialog.getFormField(Form.CREATEREQUEST).setEnabled(false);
+            dialog.getFormField(Form.GENERATETESTSUITE).setEnabled(false);
+        }
 
-		if( param instanceof String )
-		{
-			dialog.setValue( Form.INITIALWSDL, param.toString() );
-			initProjectName( param.toString() );
-		}
+        if (param instanceof String) {
+            dialog.setValue(Form.INITIALWSDL, param.toString());
+            initProjectName(param.toString());
+        }
 
-		while( dialog.show() )
-		{
-			WsdlProject project = null;
-			try
-			{
-				String projectName = dialog.getValue( Form.PROJECTNAME ).trim();
-				if( projectName.length() == 0 )
-				{
-					UISupport.showErrorMessage( messages.get( "MissingProjectNameError" ) );
-				}
-				else
-				{
-					project = workspace.createProject( projectName, null );
+        while (dialog.show()) {
+            WsdlProject project = null;
+            try {
+                String projectName = dialog.getValue(Form.PROJECTNAME).trim();
+                if (projectName.length() == 0) {
+                    UISupport.showErrorMessage(messages.get("MissingProjectNameError"));
+                } else {
+                    project = workspace.createProject(projectName, null);
 
-					if( project != null )
-					{
-						UISupport.select( project );
-						String url = dialog.getValue( Form.INITIALWSDL ).trim();
+                    if (project != null) {
+                        UISupport.select(project);
+                        String url = dialog.getValue(Form.INITIALWSDL).trim();
 
-						if( dialog.getBooleanValue( Form.RELATIVEPATHS ) )
-						{
-							String folder = workspace.getProjectRoot();
+                        if (dialog.getBooleanValue(Form.RELATIVEPATHS)) {
+                            String folder = workspace.getProjectRoot();
 
-							if( PathUtils.isFilePath( url ) && PathUtils.isAbsolutePath( url ) )
-							{
-								folder = new File( url ).getParent();
-							}
+                            if (PathUtils.isFilePath(url) && PathUtils.isAbsolutePath(url)) {
+                                folder = new File(url).getParent();
+                            }
 
-							if( project.save( folder ) != SaveStatus.SUCCESS )
-							{
-								UISupport
-										.showErrorMessage( "Project was not saved, paths will not be stored relatively until configured." );
-							}
-							else
-							{
-								project.setResourceRoot( "${projectDir}" );
-							}
-						}
+                            if (project.save(folder) != SaveStatus.SUCCESS) {
+                                UISupport
+                                        .showErrorMessage("Project was not saved, paths will not be stored relatively until configured.");
+                            } else {
+                                project.setResourceRoot("${projectDir}");
+                            }
+                        }
 
-						if( url.length() > 0 )
-						{
-							if( new File( url ).exists() )
-								url = new File( url ).toURI().toURL().toString();
+                        if (url.length() > 0) {
+                            if (new File(url).exists()) {
+                                url = new File(url).toURI().toURL().toString();
+                            }
 
-							importWsdl( project, url );
-						}
+                            importWsdl(project, url);
+                        }
 
-						break;
-					}
-				}
-			}
-			catch( InvalidDefinitionException ex )
-			{
-				ex.show();
-			}
-			catch( Exception ex )
-			{
-				UISupport.showErrorMessage( ex );
-				if( project != null )
-				{
-					workspace.removeProject( project );
-				}
-			}
-		}
-	}
+                        break;
+                    }
+                }
+            } catch (InvalidDefinitionException ex) {
+                ex.show();
+            } catch (Exception ex) {
+                UISupport.showErrorMessage(ex);
+                if (project != null) {
+                    workspace.removeProject(project);
+                }
+            }
+        }
+    }
 
-	public void initProjectName( String newValue )
-	{
-		if( StringUtils.isNullOrEmpty( dialog.getValue( Form.PROJECTNAME ) ) && StringUtils.hasContent( newValue ) )
-		{
-			int ix = newValue.lastIndexOf( '.' );
-			if( ix > 0 )
-				newValue = newValue.substring( 0, ix );
+    public void initProjectName(String newValue) {
+        if (StringUtils.isNullOrEmpty(dialog.getValue(Form.PROJECTNAME)) && StringUtils.hasContent(newValue)) {
+            int ix = newValue.lastIndexOf('.');
+            if (ix > 0) {
+                newValue = newValue.substring(0, ix);
+            }
 
-			ix = newValue.lastIndexOf( '/' );
-			if( ix == -1 )
-				ix = newValue.lastIndexOf( '\\' );
+            ix = newValue.lastIndexOf('/');
+            if (ix == -1) {
+                ix = newValue.lastIndexOf('\\');
+            }
 
-			if( ix != -1 )
-				dialog.setValue( Form.PROJECTNAME, newValue.substring( ix + 1 ) );
-		}
-	}
+            if (ix != -1) {
+                dialog.setValue(Form.PROJECTNAME, newValue.substring(ix + 1));
+            }
+        }
+    }
 
-	private void importWsdl( WsdlProject project, String url ) throws SoapUIException
-	{
-		WsdlInterface[] results = WsdlInterfaceFactory.importWsdl( project, url, dialog.getValue( Form.CREATEREQUEST )
-				.equals( "true" ) );
-		for( WsdlInterface iface : results )
-		{
-			UISupport.select( iface );
+    private void importWsdl(WsdlProject project, String url) throws SoapUIException {
+        WsdlInterface[] results = WsdlInterfaceFactory.importWsdl(project, url, dialog.getValue(Form.CREATEREQUEST)
+                .equals("true"));
+        for (WsdlInterface iface : results) {
+            UISupport.select(iface);
 
-			if( dialog.getBooleanValue( Form.GENERATETESTSUITE ) )
-			{
-				GenerateWsdlTestSuiteAction generateTestSuiteAction = new GenerateWsdlTestSuiteAction();
-				generateTestSuiteAction.generateTestSuite( iface, true );
-			}
+            if (dialog.getBooleanValue(Form.GENERATETESTSUITE)) {
+                GenerateWsdlTestSuiteAction generateTestSuiteAction = new GenerateWsdlTestSuiteAction();
+                generateTestSuiteAction.generateTestSuite(iface, true);
+            }
 
-		}
-	}
+        }
+    }
 
-	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
-	public interface Form
-	{
-		@AField(description = "Form.ProjectName.Description", type = AFieldType.STRING)
-		public final static String PROJECTNAME = messages.get( "Form.ProjectName.Label" );
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    public interface Form {
+        @AField(description = "Form.ProjectName.Description", type = AFieldType.STRING)
+        public final static String PROJECTNAME = messages.get("Form.ProjectName.Label");
 
-		@AField(description = "Form.InitialWsdl.Description", type = AFieldType.FILE)
-		public final static String INITIALWSDL = messages.get( "Form.InitialWsdl.Label" );
+        @AField(description = "Form.InitialWsdl.Description", type = AFieldType.FILE)
+        public final static String INITIALWSDL = messages.get("Form.InitialWsdl.Label");
 
-		@AField(description = "Form.CreateRequests.Description", type = AFieldType.BOOLEAN, enabled = false)
-		public final static String CREATEREQUEST = messages.get( "Form.CreateRequests.Label" );
+        @AField(description = "Form.CreateRequests.Description", type = AFieldType.BOOLEAN, enabled = false)
+        public final static String CREATEREQUEST = messages.get("Form.CreateRequests.Label");
 
-		@AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
-		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
+        @AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
+        public final static String GENERATETESTSUITE = messages.get("Form.GenerateTestSuite.Label");
 
-		@AField(description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true)
-		public final static String RELATIVEPATHS = messages.get( "Form.RelativePaths.Label" );
+        @AField(description = "Form.RelativePaths.Description", type = AFieldType.BOOLEAN, enabled = true)
+        public final static String RELATIVEPATHS = messages.get("Form.RelativePaths.Label");
 
-	}
+    }
 }

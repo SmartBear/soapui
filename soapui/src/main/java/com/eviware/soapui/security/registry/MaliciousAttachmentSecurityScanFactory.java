@@ -26,39 +26,34 @@ import com.eviware.soapui.security.scan.MaliciousAttachmentSecurityScan;
 
 /**
  * Factory for creation GroovyScript steps
- * 
+ *
  * @author SoapUI team
  */
 
-public class MaliciousAttachmentSecurityScanFactory extends AbstractSecurityScanFactory
-{
+public class MaliciousAttachmentSecurityScanFactory extends AbstractSecurityScanFactory {
 
-	public MaliciousAttachmentSecurityScanFactory()
-	{
-		super( MaliciousAttachmentSecurityScan.TYPE, MaliciousAttachmentSecurityScan.NAME,
-				"Performs a scan for Malicious Attachment Vulnerabilities", "/malicious_attachment_scan.gif" );
-	}
+    public MaliciousAttachmentSecurityScanFactory() {
+        super(MaliciousAttachmentSecurityScan.TYPE, MaliciousAttachmentSecurityScan.NAME,
+                "Performs a scan for Malicious Attachment Vulnerabilities", "/malicious_attachment_scan.gif");
+    }
 
-	public boolean canCreate( TestStep testStep )
-	{
-		return testStep instanceof WsdlTestRequestStep;
-	}
+    public boolean canCreate(TestStep testStep) {
+        return testStep instanceof WsdlTestRequestStep;
+    }
 
-	@Override
-	public AbstractSecurityScan buildSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent )
-	{
-		return new MaliciousAttachmentSecurityScan( testStep, config, parent, "/malicious_attachment_scan.gif" );
-	}
+    @Override
+    public AbstractSecurityScan buildSecurityScan(TestStep testStep, SecurityScanConfig config, ModelItem parent) {
+        return new MaliciousAttachmentSecurityScan(testStep, config, parent, "/malicious_attachment_scan.gif");
+    }
 
-	@Override
-	public SecurityScanConfig createNewSecurityScan( String name )
-	{
-		SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
-		securityCheckConfig.setType( MaliciousAttachmentSecurityScan.TYPE );
-		securityCheckConfig.setName( name );
-		MaliciousAttachmentSecurityScanConfig sic = MaliciousAttachmentSecurityScanConfig.Factory.newInstance();
-		securityCheckConfig.setConfig( sic );
-		return securityCheckConfig;
-	}
+    @Override
+    public SecurityScanConfig createNewSecurityScan(String name) {
+        SecurityScanConfig securityCheckConfig = SecurityScanConfig.Factory.newInstance();
+        securityCheckConfig.setType(MaliciousAttachmentSecurityScan.TYPE);
+        securityCheckConfig.setName(name);
+        MaliciousAttachmentSecurityScanConfig sic = MaliciousAttachmentSecurityScanConfig.Factory.newInstance();
+        securityCheckConfig.setConfig(sic);
+        return securityCheckConfig;
+    }
 
 }

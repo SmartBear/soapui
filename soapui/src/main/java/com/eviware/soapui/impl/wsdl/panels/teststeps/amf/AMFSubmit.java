@@ -33,287 +33,228 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 import flex.messaging.io.amf.client.exceptions.ClientStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException;
 
-public class AMFSubmit implements Submit, Runnable
-{
-	public static final String AMF_CONNECTION = "AMF_CONNECTION";
-	private volatile Future<?> future;
-	private SubmitContext context;
-	private Status status;
-	private SubmitListener[] listeners;
-	private Exception error;
-	private long timestamp;
-	private final AMFRequest request;
-	private AMFResponse response;
-	private AMFCredentials credentials;
+public class AMFSubmit implements Submit, Runnable {
+    public static final String AMF_CONNECTION = "AMF_CONNECTION";
+    private volatile Future<?> future;
+    private SubmitContext context;
+    private Status status;
+    private SubmitListener[] listeners;
+    private Exception error;
+    private long timestamp;
+    private final AMFRequest request;
+    private AMFResponse response;
+    private AMFCredentials credentials;
 
-	public AMFSubmit( AMFRequest request, SubmitContext submitContext, boolean async )
-	{
-		this.request = request;
-		this.context = submitContext;
+    public AMFSubmit(AMFRequest request, SubmitContext submitContext, boolean async) {
+        this.request = request;
+        this.context = submitContext;
 
-		List<SubmitListener> regListeners = SoapUI.getListenerRegistry().getListeners( SubmitListener.class );
+        List<SubmitListener> regListeners = SoapUI.getListenerRegistry().getListeners(SubmitListener.class);
 
-		SubmitListener[] submitListeners = request.getSubmitListeners();
-		this.listeners = new SubmitListener[submitListeners.length + regListeners.size()];
-		for( int c = 0; c < submitListeners.length; c++ )
-			this.listeners[c] = submitListeners[c];
+        SubmitListener[] submitListeners = request.getSubmitListeners();
+        this.listeners = new SubmitListener[submitListeners.length + regListeners.size()];
+        for (int c = 0; c < submitListeners.length; c++) {
+            this.listeners[c] = submitListeners[c];
+        }
 
-		for( int c = 0; c < regListeners.size(); c++ )
-			this.listeners[submitListeners.length + c] = regListeners.get( c );
+        for (int c = 0; c < regListeners.size(); c++) {
+            this.listeners[submitListeners.length + c] = regListeners.get(c);
+        }
 
-		error = null;
-		status = Status.INITIALIZED;
-		timestamp = System.currentTimeMillis();
+        error = null;
+        status = Status.INITIALIZED;
+        timestamp = System.currentTimeMillis();
 
-		if( async )
-			future = SoapUI.getThreadPool().submit( this );
-		else
-			run();
-	}
+        if (async) {
+            future = SoapUI.getThreadPool().submit(this);
+        } else {
+            run();
+        }
+    }
 
-	public void cancel()
-	{
-		if( status == Status.CANCELED )
-			return;
+    public void cancel() {
+        if (status == Status.CANCELED) {
+            return;
+        }
 
-		SoapUI.log.info( "Canceling request.." );
+        SoapUI.log.info("Canceling request..");
 
-		status = Status.CANCELED;
+        status = Status.CANCELED;
 
-		for( int i = 0; i < listeners.length; i++ )
-		{
-			try
-			{
-				listeners[i].afterSubmit( this, context );
-			}
-			catch( Throwable e )
-			{
-				SoapUI.logError( e );
-			}
-		}
-	}
+        for (int i = 0; i < listeners.length; i++) {
+            try {
+                listeners[i].afterSubmit(this, context);
+            } catch (Throwable e) {
+                SoapUI.logError(e);
+            }
+        }
+    }
 
-	public Status waitUntilFinished()
-	{
-		if( future != null )
-		{
-			if( !future.isDone() )
-			{
-				try
-				{
-					future.get();
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-		}
-		else
-			throw new RuntimeException( "cannot wait on null future" );
+    public Status waitUntilFinished() {
+        if (future != null) {
+            if (!future.isDone()) {
+                try {
+                    future.get();
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
+            }
+        } else {
+            throw new RuntimeException("cannot wait on null future");
+        }
 
-		return getStatus();
-	}
+        return getStatus();
+    }
 
-	public void run()
-	{
-		try
-		{
-			for( int i = 0; i < listeners.length; i++ )
-			{
-				if( !listeners[i].beforeSubmit( this, context ) )
-				{
-					status = Status.CANCELED;
-					SoapUI.log.error( "listener cancelled submit.." );
-					return;
-				}
-			}
+    public void run() {
+        try {
+            for (int i = 0; i < listeners.length; i++) {
+                if (!listeners[i].beforeSubmit(this, context)) {
+                    status = Status.CANCELED;
+                    SoapUI.log.error("listener cancelled submit..");
+                    return;
+                }
+            }
 
-			status = Status.RUNNING;
-			Object responseContent = executeAmfCall( getRequest() );
-			createResponse( responseContent );
+            status = Status.RUNNING;
+            Object responseContent = executeAmfCall(getRequest());
+            createResponse(responseContent);
 
-			if( status != Status.CANCELED && status != Status.ERROR )
-			{
-				status = Status.FINISHED;
-			}
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( "There's been an error in executing query " + e.toString() );
-			error = e;
-		}
-		finally
-		{
+            if (status != Status.CANCELED && status != Status.ERROR) {
+                status = Status.FINISHED;
+            }
+        } catch (Exception e) {
+            UISupport.showErrorMessage("There's been an error in executing query " + e.toString());
+            error = e;
+        } finally {
 
-			if( status != Status.CANCELED )
-			{
-				for( int i = 0; i < listeners.length; i++ )
-				{
-					try
-					{
-						listeners[i].afterSubmit( this, context );
-					}
-					catch( Throwable e )
-					{
-						SoapUI.logError( e );
-					}
-				}
-			}
-		}
-	}
+            if (status != Status.CANCELED) {
+                for (int i = 0; i < listeners.length; i++) {
+                    try {
+                        listeners[i].afterSubmit(this, context);
+                    } catch (Throwable e) {
+                        SoapUI.logError(e);
+                    }
+                }
+            }
+        }
+    }
 
-	protected void createResponse( Object responseContent )
-	{
-		try
-		{
-			response = new AMFResponse( request, context, responseContent );
-			response.setTimestamp( timestamp );
-			response.setTimeTaken( System.currentTimeMillis() - timestamp );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
+    protected void createResponse(Object responseContent) {
+        try {
+            response = new AMFResponse(request, context, responseContent);
+            response.setTimestamp(timestamp);
+            response.setTimeTaken(System.currentTimeMillis() - timestamp);
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
 
-	}
+    }
 
-	private Object executeAmfCall( AMFRequest amfRequest ) throws ClientStatusException, ServerStatusException
-	{
-		SoapUIAMFConnection amfConnection = null;
-		try
-		{
-			amfConnection = getConnection( amfRequest );
-			addAmfHeaders( amfRequest, amfConnection );
-			addHttpHeaders( amfRequest, amfConnection );
-			Object result = amfConnection.call( context, amfRequest.getAmfCall(), amfRequest.argumentsToArray() );
+    private Object executeAmfCall(AMFRequest amfRequest) throws ClientStatusException, ServerStatusException {
+        SoapUIAMFConnection amfConnection = null;
+        try {
+            amfConnection = getConnection(amfRequest);
+            addAmfHeaders(amfRequest, amfConnection);
+            addHttpHeaders(amfRequest, amfConnection);
+            Object result = amfConnection.call(context, amfRequest.getAmfCall(), amfRequest.argumentsToArray());
 
-			return result;
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			error = e;
-			status = Status.ERROR;
-		}
-		finally
-		{
-			amfRequest.clearArguments();
-			if( context.getModelItem() instanceof AMFRequestTestStep )
-			{
-				if( credentials != null && credentials.isLoggedIn() )
-				{
-					credentials.logout();
-					credentials = null;
-				}
-				else
-				{
-					amfConnection.close();
-				}
-			}
-		}
-		return null;
+            return result;
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            error = e;
+            status = Status.ERROR;
+        } finally {
+            amfRequest.clearArguments();
+            if (context.getModelItem() instanceof AMFRequestTestStep) {
+                if (credentials != null && credentials.isLoggedIn()) {
+                    credentials.logout();
+                    credentials = null;
+                } else {
+                    amfConnection.close();
+                }
+            }
+        }
+        return null;
 
-	}
+    }
 
-	private SoapUIAMFConnection getConnection( AMFRequest amfRequest ) throws Exception
-	{
-		SoapUIAMFConnection amfConnection = null;
-		if( isAuthorisationEnabled( amfRequest ) && ( context.getModelItem() instanceof WsdlTestCase ) )
-		{
-			if( ( amfConnection = ( SoapUIAMFConnection )context.getProperty( AMF_CONNECTION ) ) != null )
-			{
-				return amfConnection;
-			}
-			else
-			{
-				throw new Exception( "amf session connection error! " );
-			}
-		}
-		else if( isAuthorisationEnabled( amfRequest ) && ( context.getModelItem() instanceof AMFRequestTestStep ) )
-		{
-			String endpoint = context.expand( getTestCaseConfig( amfRequest ).getAmfEndpoint() );
-			String username = context.expand( getTestCaseConfig( amfRequest ).getAmfLogin() );
-			String password = context.expand( getTestCaseConfig( amfRequest ).getAmfPassword() );
+    private SoapUIAMFConnection getConnection(AMFRequest amfRequest) throws Exception {
+        SoapUIAMFConnection amfConnection = null;
+        if (isAuthorisationEnabled(amfRequest) && (context.getModelItem() instanceof WsdlTestCase)) {
+            if ((amfConnection = (SoapUIAMFConnection) context.getProperty(AMF_CONNECTION)) != null) {
+                return amfConnection;
+            } else {
+                throw new Exception("amf session connection error! ");
+            }
+        } else if (isAuthorisationEnabled(amfRequest) && (context.getModelItem() instanceof AMFRequestTestStep)) {
+            String endpoint = context.expand(getTestCaseConfig(amfRequest).getAmfEndpoint());
+            String username = context.expand(getTestCaseConfig(amfRequest).getAmfLogin());
+            String password = context.expand(getTestCaseConfig(amfRequest).getAmfPassword());
 
-			if( StringUtils.hasContent( endpoint ) && StringUtils.hasContent( username ) )
-			{
-				credentials = new AMFCredentials( endpoint, username, password, context );
-				amfConnection = credentials.login();
-			}
-			else
-			{
-				amfConnection = new SoapUIAMFConnection();
-				amfConnection.connect( context.expand( amfRequest.getEndpoint() ) );
-			}
+            if (StringUtils.hasContent(endpoint) && StringUtils.hasContent(username)) {
+                credentials = new AMFCredentials(endpoint, username, password, context);
+                amfConnection = credentials.login();
+            } else {
+                amfConnection = new SoapUIAMFConnection();
+                amfConnection.connect(context.expand(amfRequest.getEndpoint()));
+            }
 
-			context.setProperty( AMF_CONNECTION, amfConnection );
-			return amfConnection;
-		}
-		else
-		{
-			amfConnection = new SoapUIAMFConnection();
-			amfConnection.connect( context.expand( amfRequest.getEndpoint() ) );
-			return amfConnection;
-		}
-	}
+            context.setProperty(AMF_CONNECTION, amfConnection);
+            return amfConnection;
+        } else {
+            amfConnection = new SoapUIAMFConnection();
+            amfConnection.connect(context.expand(amfRequest.getEndpoint()));
+            return amfConnection;
+        }
+    }
 
-	private boolean isAuthorisationEnabled( AMFRequest amfRequest )
-	{
-		return getTestCaseConfig( amfRequest ).getAmfAuthorisation();
-	}
+    private boolean isAuthorisationEnabled(AMFRequest amfRequest) {
+        return getTestCaseConfig(amfRequest).getAmfAuthorisation();
+    }
 
-	private TestCaseConfig getTestCaseConfig( AMFRequest amfRequest )
-	{
-		return amfRequest.getTestStep().getTestCase().getConfig();
-	}
+    private TestCaseConfig getTestCaseConfig(AMFRequest amfRequest) {
+        return amfRequest.getTestStep().getTestCase().getConfig();
+    }
 
-	private void addHttpHeaders( AMFRequest amfRequest, SoapUIAMFConnection amfConnection )
-	{
-		StringToStringsMap httpHeaders = amfRequest.getHttpHeaders();
-		if( httpHeaders != null )
-		{
-			for( String key : httpHeaders.getKeys() )
-			{
-				for( String value : httpHeaders.get( key ) )
-					amfConnection.addHttpRequestHeader( key, context.expand( value ) );
-			}
-		}
-	}
+    private void addHttpHeaders(AMFRequest amfRequest, SoapUIAMFConnection amfConnection) {
+        StringToStringsMap httpHeaders = amfRequest.getHttpHeaders();
+        if (httpHeaders != null) {
+            for (String key : httpHeaders.getKeys()) {
+                for (String value : httpHeaders.get(key)) {
+                    amfConnection.addHttpRequestHeader(key, context.expand(value));
+                }
+            }
+        }
+    }
 
-	private void addAmfHeaders( AMFRequest amfRequest, SoapUIAMFConnection amfConnection )
-	{
-		if( amfRequest.getAmfHeaders() != null )
-		{
-			for( String key : amfRequest.getAmfHeaders().keySet() )
-			{
-				Object data = amfRequest.getAmfHeaders().get( key );
-				if( data instanceof String )
-					data = context.expand( ( String )data );
+    private void addAmfHeaders(AMFRequest amfRequest, SoapUIAMFConnection amfConnection) {
+        if (amfRequest.getAmfHeaders() != null) {
+            for (String key : amfRequest.getAmfHeaders().keySet()) {
+                Object data = amfRequest.getAmfHeaders().get(key);
+                if (data instanceof String) {
+                    data = context.expand((String) data);
+                }
 
-				amfConnection.addAmfHeader( key, data );
-			}
-		}
-	}
+                amfConnection.addAmfHeader(key, data);
+            }
+        }
+    }
 
-	public Exception getError()
-	{
-		return error;
-	}
+    public Exception getError() {
+        return error;
+    }
 
-	public AMFRequest getRequest()
-	{
-		return request;
-	}
+    public AMFRequest getRequest() {
+        return request;
+    }
 
-	public AMFResponse getResponse()
-	{
-		return response;
-	}
+    public AMFResponse getResponse() {
+        return response;
+    }
 
-	public Status getStatus()
-	{
-		return status;
-	}
+    public Status getStatus() {
+        return status;
+    }
 
 }

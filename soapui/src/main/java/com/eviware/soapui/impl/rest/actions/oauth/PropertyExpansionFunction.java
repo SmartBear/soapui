@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.actions.oauth;
+*/
+package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -23,28 +24,25 @@ import javax.annotation.Nullable;
 /**
  * Guava function that expands properties in a string, using a ModelItem as context.
  */
-public class PropertyExpansionFunction implements Function<String,String>
-{
+public class PropertyExpansionFunction implements Function<String, String> {
 
-	private ModelItem contextModelItem;
+    private ModelItem contextModelItem;
 
-	/**
-	 * Constructs a function object
-	 * @param contextModelItem the model item to be used as context
-	 */
-	public PropertyExpansionFunction( ModelItem contextModelItem )
-	{
-		this.contextModelItem = contextModelItem;
-	}
+    /**
+     * Constructs a function object
+     *
+     * @param contextModelItem the model item to be used as context
+     */
+    public PropertyExpansionFunction(ModelItem contextModelItem) {
+        this.contextModelItem = contextModelItem;
+    }
 
-	@Nullable
-	@Override
-	public String apply( @Nullable String unexpandedString )
-	{
-		if (unexpandedString == null)
-		{
-			return null;
-		}
-		return PropertyExpander.expandProperties(contextModelItem, unexpandedString);
-	}
+    @Nullable
+    @Override
+    public String apply(@Nullable String unexpandedString) {
+        if (unexpandedString == null) {
+            return null;
+        }
+        return PropertyExpander.expandProperties(contextModelItem, unexpandedString);
+    }
 }

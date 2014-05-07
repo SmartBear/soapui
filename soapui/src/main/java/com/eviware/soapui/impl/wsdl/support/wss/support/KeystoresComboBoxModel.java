@@ -30,149 +30,127 @@ import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
 import com.eviware.soapui.impl.wsdl.support.wss.WssEntry;
 import com.eviware.soapui.impl.wsdl.support.wss.crypto.CryptoType;
 
-public class KeystoresComboBoxModel extends AbstractListModel implements ComboBoxModel, WssContainerListener
-{
-	private List<WssCrypto> cryptos = new ArrayList<WssCrypto>();
-	private WssCrypto selectedCrypto;
-	private final WssContainer container;
-	private final boolean outgoingConfig;
+public class KeystoresComboBoxModel extends AbstractListModel implements ComboBoxModel, WssContainerListener {
+    private List<WssCrypto> cryptos = new ArrayList<WssCrypto>();
+    private WssCrypto selectedCrypto;
+    private final WssContainer container;
+    private final boolean outgoingConfig;
 
-	public KeystoresComboBoxModel( WssContainer container, WssCrypto selectedCrypto, boolean outgoingWSSConfig )
-	{
-		this.container = container;
-		this.selectedCrypto = selectedCrypto;
-		this.outgoingConfig = outgoingWSSConfig;
+    public KeystoresComboBoxModel(WssContainer container, WssCrypto selectedCrypto, boolean outgoingWSSConfig) {
+        this.container = container;
+        this.selectedCrypto = selectedCrypto;
+        this.outgoingConfig = outgoingWSSConfig;
 
-		List<WssCrypto> currentCryptos = container.getCryptoList();
+        List<WssCrypto> currentCryptos = container.getCryptoList();
 
-		// Only allow keystores for outgoing configuration
-		if( outgoingWSSConfig )
-		{
-			for( WssCrypto currentCrypto : currentCryptos )
-			{
-				if( currentCrypto.getType() == CryptoType.KEYSTORE )
-				{
-					cryptos.add( currentCrypto );
-				}
-			}
-		}
-		else
-		{
-			cryptos.addAll( currentCryptos );
-		}
+        // Only allow keystores for outgoing configuration
+        if (outgoingWSSConfig) {
+            for (WssCrypto currentCrypto : currentCryptos) {
+                if (currentCrypto.getType() == CryptoType.KEYSTORE) {
+                    cryptos.add(currentCrypto);
+                }
+            }
+        } else {
+            cryptos.addAll(currentCryptos);
+        }
 
-		container.addWssContainerListener( this );
-	}
+        container.addWssContainerListener(this);
+    }
 
-	public String getSelectedItem()
-	{
-		return selectedCrypto == null ? null : selectedCrypto.getLabel();
-	}
+    public String getSelectedItem() {
+        return selectedCrypto == null ? null : selectedCrypto.getLabel();
+    }
 
-	public void setSelectedItem( Object anItem )
-	{
-		selectedCrypto = null;
+    public void setSelectedItem(Object anItem) {
+        selectedCrypto = null;
 
-		for( WssCrypto crypto : cryptos )
-			if( crypto.getLabel().equals( anItem ) )
-				selectedCrypto = crypto;
-	}
+        for (WssCrypto crypto : cryptos) {
+            if (crypto.getLabel().equals(anItem)) {
+                selectedCrypto = crypto;
+            }
+        }
+    }
 
-	public Object getElementAt( int index )
-	{
-		return cryptos.get( index ).getLabel();
-	}
+    public Object getElementAt(int index) {
+        return cryptos.get(index).getLabel();
+    }
 
-	public int getSize()
-	{
-		return cryptos == null ? 0 : cryptos.size();
-	}
+    public int getSize() {
+        return cryptos == null ? 0 : cryptos.size();
+    }
 
-	public void release()
-	{
-		container.removeWssContainerListener( this );
-		cryptos = null;
-		selectedCrypto = null;
-	}
+    public void release() {
+        container.removeWssContainerListener(this);
+        cryptos = null;
+        selectedCrypto = null;
+    }
 
-	@Override
-	public void cryptoAdded( WssCrypto crypto )
-	{
-		// Only allow adding keystores if this is outgoing configuration
-		if( !outgoingConfig || ( outgoingConfig && crypto.getType() == CryptoType.KEYSTORE ) )
-		{
-			cryptos.add( crypto );
-			fireIntervalAdded( this, getSize() - 1, getSize() - 1 );
-		}
-	}
+    @Override
+    public void cryptoAdded(WssCrypto crypto) {
+        // Only allow adding keystores if this is outgoing configuration
+        if (!outgoingConfig || (outgoingConfig && crypto.getType() == CryptoType.KEYSTORE)) {
+            cryptos.add(crypto);
+            fireIntervalAdded(this, getSize() - 1, getSize() - 1);
+        }
+    }
 
-	@Override
-	public void cryptoRemoved( WssCrypto crypto )
-	{
-		// Only allow removing keystores if this is outgoing configuration
-		if( !outgoingConfig || ( outgoingConfig && crypto.getType() == CryptoType.KEYSTORE ) )
-		{
-			int index = cryptos.indexOf( crypto );
-			cryptos.remove( index );
-			fireIntervalRemoved( this, index, index );
-		}
-	}
+    @Override
+    public void cryptoRemoved(WssCrypto crypto) {
+        // Only allow removing keystores if this is outgoing configuration
+        if (!outgoingConfig || (outgoingConfig && crypto.getType() == CryptoType.KEYSTORE)) {
+            int index = cryptos.indexOf(crypto);
+            cryptos.remove(index);
+            fireIntervalRemoved(this, index, index);
+        }
+    }
 
-	// FIXME Add adapter to remove this empty methods
+    // FIXME Add adapter to remove this empty methods
 
-	@Override
-	public void outgoingWssAdded( OutgoingWss outgoingWss )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void outgoingWssAdded(OutgoingWss outgoingWss) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void outgoingWssRemoved( OutgoingWss outgoingWss )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void outgoingWssRemoved(OutgoingWss outgoingWss) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void outgoingWssEntryAdded( WssEntry entry )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void outgoingWssEntryAdded(WssEntry entry) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void outgoingWssEntryMoved( WssEntry entry, int offset )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void outgoingWssEntryMoved(WssEntry entry, int offset) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void outgoingWssEntryRemoved( WssEntry entry )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void outgoingWssEntryRemoved(WssEntry entry) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void incomingWssAdded( IncomingWss incomingWss )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void incomingWssAdded(IncomingWss incomingWss) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void incomingWssRemoved( IncomingWss incomingWss )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void incomingWssRemoved(IncomingWss incomingWss) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void cryptoUpdated( WssCrypto crypto )
-	{
-		// TODO Auto-generated method stub
+    @Override
+    public void cryptoUpdated(WssCrypto crypto) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 }

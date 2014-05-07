@@ -34,71 +34,60 @@ import com.eviware.soapui.model.testsuite.ResponseAssertion;
 
 /**
  * Asserts JMS connection
- * 
+ *
  * @author nebojsa.tasic
  */
 
-public class JMSStatusAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion
-{
-	public static final String ID = "JMS Status";
-	public static final String LABEL = "JMS Status";
-	public static final String DESCRIPTION = "Validates that the JMS request of the target TestStep executed successfully. Applicable to Request TestSteps with a JMS endpoint.";
+public class JMSStatusAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion {
+    public static final String ID = "JMS Status";
+    public static final String LABEL = "JMS Status";
+    public static final String DESCRIPTION = "Validates that the JMS request of the target TestStep executed successfully. Applicable to Request TestSteps with a JMS endpoint.";
 
-	public JMSStatusAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
-	{
-		super( assertionConfig, assertable, false, false, false, true );
-	}
+    public JMSStatusAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
+        super(assertionConfig, assertable, false, false, false, true);
+    }
 
-	@Override
-	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
+    @Override
+    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
 
-		Exception exception = ( Exception )context.getProperty( HermesJmsRequestTransport.JMS_ERROR );
-		if( exception != null )
-		{
-			throw new AssertionException( new AssertionError( exception.getMessage() ) );
-		}
+        Exception exception = (Exception) context.getProperty(HermesJmsRequestTransport.JMS_ERROR);
+        if (exception != null) {
+            throw new AssertionException(new AssertionError(exception.getMessage()));
+        }
 
-		return "JMS Status OK";
-	}
+        return "JMS Status OK";
+    }
 
-	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		return "JMS Status OK";
-	}
+    @Override
+    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        return "JMS Status OK";
+    }
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
-			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
-	{
-		return null;
-	}
+    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
+                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
+        return null;
+    }
 
-	public static class Factory extends AbstractTestAssertionFactory
-	{
-		public Factory()
-		{
-			super( JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.class, WsdlRequest.class );
-		}
+    public static class Factory extends AbstractTestAssertionFactory {
+        public Factory() {
+            super(JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.class, WsdlRequest.class);
+        }
 
-		@Override
-		public String getCategory()
-		{
-			return AssertionCategoryMapping.JMS_CATEGORY;
-		}
+        @Override
+        public String getCategory() {
+            return AssertionCategoryMapping.JMS_CATEGORY;
+        }
 
-		@Override
-		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
-		{
-			return JMSStatusAssertion.class;
-		}
+        @Override
+        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
+            return JMSStatusAssertion.class;
+        }
 
-		@Override
-		public AssertionListEntry getAssertionListEntry()
-		{
-			return new AssertionListEntry( JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.DESCRIPTION );
-		}
-	}
+        @Override
+        public AssertionListEntry getAssertionListEntry() {
+            return new AssertionListEntry(JMSStatusAssertion.ID, JMSStatusAssertion.LABEL, JMSStatusAssertion.DESCRIPTION);
+        }
+    }
 }

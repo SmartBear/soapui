@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.scripting.groovy;
+*/
+package com.eviware.soapui.support.scripting.groovy;
 
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
@@ -26,21 +27,19 @@ import static org.mockito.Mockito.mock;
 /**
  * Test verifying that the Groovy support in SoapUI is working
  */
-public class GroovyScriptEngineFactoryTest
-{
+public class GroovyScriptEngineFactoryTest {
 
 
-	@Test
-	public void supportsGroovy2() throws Exception
-	{
-		DefaultSoapUICore soapUICore = new DefaultSoapUICore();
-		DefaultSoapUICore.log = mock(Logger.class);
-		SoapUI.setSoapUICore( soapUICore, true );
-		GroovyScriptEngineFactory scriptEngineFactory = new GroovyScriptEngineFactory(  );
-		SoapUIScriptEngine scriptEngine = scriptEngineFactory.createScriptEngine( ModelItemFactory.makeWsdlProject() );
-		// binary literals are new to Groovy 2
-		scriptEngine.setScript("assert 0b10 == 2");
-		scriptEngine.run();
+    @Test
+    public void supportsGroovy2() throws Exception {
+        DefaultSoapUICore soapUICore = new DefaultSoapUICore();
+        DefaultSoapUICore.log = mock(Logger.class);
+        SoapUI.setSoapUICore(soapUICore, true);
+        GroovyScriptEngineFactory scriptEngineFactory = new GroovyScriptEngineFactory();
+        SoapUIScriptEngine scriptEngine = scriptEngineFactory.createScriptEngine(ModelItemFactory.makeWsdlProject());
+        // binary literals are new to Groovy 2
+        scriptEngine.setScript("assert 0b10 == 2");
+        scriptEngine.run();
 
-	}
+    }
 }

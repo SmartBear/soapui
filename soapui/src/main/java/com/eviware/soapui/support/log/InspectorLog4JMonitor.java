@@ -30,214 +30,173 @@ import com.eviware.soapui.support.components.JInspectorPanelFactory;
 
 /**
  * JTabbedPane that displays Log4J output in different tabs
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class InspectorLog4JMonitor implements JInspectorPanel, Log4JMonitor
-{
-	private JLogList defaultLogArea;
-	private JInspectorPanel inspectorPanel;
+public class InspectorLog4JMonitor implements JInspectorPanel, Log4JMonitor {
+    private JLogList defaultLogArea;
+    private JInspectorPanel inspectorPanel;
 
-	public InspectorLog4JMonitor( JComponent content )
-	{
-		inspectorPanel = JInspectorPanelFactory.build( content );
+    public InspectorLog4JMonitor(JComponent content) {
+        inspectorPanel = JInspectorPanelFactory.build(content);
 
-		setResizeWeight( 0.9F );
-	}
+        setResizeWeight(0.9F);
+    }
 
-	public JLogList addLogArea( String title, String loggerName, boolean isDefault )
-	{
-		JLogList logArea = new JLogList( title );
-		logArea.addLogger( loggerName, !isDefault );
-		JComponentInspector<JLogList> inspector = new JComponentInspector<JLogList>( logArea, title, null, true );
-		addInspector( inspector );
+    public JLogList addLogArea(String title, String loggerName, boolean isDefault) {
+        JLogList logArea = new JLogList(title);
+        logArea.addLogger(loggerName, !isDefault);
+        JComponentInspector<JLogList> inspector = new JComponentInspector<JLogList>(logArea, title, null, true);
+        addInspector(inspector);
 
-		if( isDefault )
-		{
-			defaultLogArea = logArea;
-			activate( inspector );
-			setDividerLocation( 500 );
-		}
+        if (isDefault) {
+            defaultLogArea = logArea;
+            activate(inspector);
+            setDividerLocation(500);
+        }
 
-		return logArea;
-	}
+        return logArea;
+    }
 
-	public void logEvent( Object msg )
-	{
-		if( msg instanceof LoggingEvent )
-		{
-			LoggingEvent event = ( LoggingEvent )msg;
-			String loggerName = event.getLoggerName();
+    public void logEvent(Object msg) {
+        if (msg instanceof LoggingEvent) {
+            LoggingEvent event = (LoggingEvent) msg;
+            String loggerName = event.getLoggerName();
 
-			for( Inspector inspector : inspectorPanel.getInspectors() )
-			{
-				Component tabComponent = inspector.getComponent();
-				if( tabComponent instanceof JLogList )
-				{
-					JLogList logArea = ( JLogList )tabComponent;
-					if( logArea.monitors( loggerName ) )
-					{
-						logArea.addLine( msg );
-					}
-				}
-			}
-		}
-		else if( defaultLogArea != null )
-		{
-			defaultLogArea.addLine( msg );
-		}
-	}
+            for (Inspector inspector : inspectorPanel.getInspectors()) {
+                Component tabComponent = inspector.getComponent();
+                if (tabComponent instanceof JLogList) {
+                    JLogList logArea = (JLogList) tabComponent;
+                    if (logArea.monitors(loggerName)) {
+                        logArea.addLine(msg);
+                    }
+                }
+            }
+        } else if (defaultLogArea != null) {
+            defaultLogArea.addLine(msg);
+        }
+    }
 
-	public JLogList getLogArea( String title )
-	{
-		Inspector inspector = inspectorPanel.getInspectorByTitle( title );
-		return ( JLogList )( title == null ? null : inspector.getComponent() );
-	}
+    public JLogList getLogArea(String title) {
+        Inspector inspector = inspectorPanel.getInspectorByTitle(title);
+        return (JLogList) (title == null ? null : inspector.getComponent());
+    }
 
-	public boolean hasLogArea( String loggerName )
-	{
-		for( Inspector inspector : getInspectors() )
-		{
-			Component tabComponent = inspector.getComponent();
-			if( tabComponent instanceof JLogList )
-			{
-				JLogList logArea = ( JLogList )tabComponent;
-				if( logArea.monitors( loggerName ) )
-				{
-					return true;
-				}
-			}
-		}
+    public boolean hasLogArea(String loggerName) {
+        for (Inspector inspector : getInspectors()) {
+            Component tabComponent = inspector.getComponent();
+            if (tabComponent instanceof JLogList) {
+                JLogList logArea = (JLogList) tabComponent;
+                if (logArea.monitors(loggerName)) {
+                    return true;
+                }
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public JComponent getComponent()
-	{
-		return inspectorPanel.getComponent();
-	}
+    public JComponent getComponent() {
+        return inspectorPanel.getComponent();
+    }
 
-	public Inspector getCurrentInspector()
-	{
-		return inspectorPanel.getCurrentInspector();
-	}
+    public Inspector getCurrentInspector() {
+        return inspectorPanel.getCurrentInspector();
+    }
 
-	public Inspector getInspectorByTitle( String title )
-	{
-		return inspectorPanel.getInspectorByTitle( title );
-	}
+    public Inspector getInspectorByTitle(String title) {
+        return inspectorPanel.getInspectorByTitle(title);
+    }
 
-	public List<Inspector> getInspectors()
-	{
-		return inspectorPanel.getInspectors();
-	}
+    public List<Inspector> getInspectors() {
+        return inspectorPanel.getInspectors();
+    }
 
-	public void setCurrentInspector( String s )
-	{
-		inspectorPanel.setCurrentInspector( s );
-	}
+    public void setCurrentInspector(String s) {
+        inspectorPanel.setCurrentInspector(s);
+    }
 
-	public void setDefaultDividerLocation( float v )
-	{
-		inspectorPanel.setDefaultDividerLocation( v );
-	}
+    public void setDefaultDividerLocation(float v) {
+        inspectorPanel.setDefaultDividerLocation(v);
+    }
 
-	public void setDividerLocation( int i )
-	{
-		inspectorPanel.setDividerLocation( i );
-	}
+    public void setDividerLocation(int i) {
+        inspectorPanel.setDividerLocation(i);
+    }
 
-	public void setResizeWeight( double v )
-	{
-		inspectorPanel.setResizeWeight( v );
-	}
+    public void setResizeWeight(double v) {
+        inspectorPanel.setResizeWeight(v);
+    }
 
-	public void setCurrentLog( JLogList lastLog )
-	{
-		for( Inspector inspector : getInspectors() )
-		{
-			Component tabComponent = inspector.getComponent();
-			if( tabComponent == lastLog )
-			{
-				activate( inspector );
-				return;
-			}
-		}
+    public void setCurrentLog(JLogList lastLog) {
+        for (Inspector inspector : getInspectors()) {
+            Component tabComponent = inspector.getComponent();
+            if (tabComponent == lastLog) {
+                activate(inspector);
+                return;
+            }
+        }
 
-		inspectorPanel.deactivate();
-	}
+        inspectorPanel.deactivate();
+    }
 
-	public void activate( Inspector inspector )
-	{
-		inspectorPanel.activate( inspector );
-	}
+    public void activate(Inspector inspector) {
+        inspectorPanel.activate(inspector);
+    }
 
-	public <T extends Inspector> T addInspector( T inspector )
-	{
-		return inspectorPanel.addInspector( inspector );
-	}
+    public <T extends Inspector> T addInspector(T inspector) {
+        return inspectorPanel.addInspector(inspector);
+    }
 
-	public void deactivate()
-	{
-		inspectorPanel.deactivate();
-	}
+    public void deactivate() {
+        inspectorPanel.deactivate();
+    }
 
-	public void removeInspector( Inspector inspector )
-	{
-		inspectorPanel.removeInspector( inspector );
-	}
+    public void removeInspector(Inspector inspector) {
+        inspectorPanel.removeInspector(inspector);
+    }
 
-	public JLogList getCurrentLog()
-	{
-		return ( JLogList )( inspectorPanel.getCurrentInspector() == null ? null : inspectorPanel.getCurrentInspector()
-				.getComponent() );
-	}
+    public JLogList getCurrentLog() {
+        return (JLogList) (inspectorPanel.getCurrentInspector() == null ? null : inspectorPanel.getCurrentInspector()
+                .getComponent());
+    }
 
-	public boolean removeLogArea( String loggerName )
-	{
-		for( Inspector inspector : getInspectors() )
-		{
-			JLogList logList = ( ( JLogList )( ( JComponentInspector<?> )inspector ).getComponent() );
-			if( logList.getLogger( loggerName ) != null )
-			{
-				logList.removeLogger( loggerName );
-				inspectorPanel.removeInspector( inspector );
+    public boolean removeLogArea(String loggerName) {
+        for (Inspector inspector : getInspectors()) {
+            JLogList logList = ((JLogList) ((JComponentInspector<?>) inspector).getComponent());
+            if (logList.getLogger(loggerName) != null) {
+                logList.removeLogger(loggerName);
+                inspectorPanel.removeInspector(inspector);
 
-				return true;
-			}
-		}
+                return true;
+            }
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public int getDividerLocation()
-	{
-		return inspectorPanel.getDividerLocation();
-	}
+    public int getDividerLocation() {
+        return inspectorPanel.getDividerLocation();
+    }
 
-	public void setContentComponent( JComponent component )
-	{
-		inspectorPanel.setContentComponent( component );
-	}
+    public void setContentComponent(JComponent component) {
+        inspectorPanel.setContentComponent(component);
+    }
 
-	public void release()
-	{
-		inspectorPanel.release();
-	}
+    public void release() {
+        inspectorPanel.release();
+    }
 
-	public void setResetDividerLocation()
-	{
-		inspectorPanel.setResetDividerLocation();
-	}
+    public void setResetDividerLocation() {
+        inspectorPanel.setResetDividerLocation();
+    }
 
-	public void setInspectorVisible( Inspector inspector, boolean b )
-	{
-		inspectorPanel.setInspectorVisible( inspector, b );
-	}
+    public void setInspectorVisible(Inspector inspector, boolean b) {
+        inspectorPanel.setInspectorVisible(inspector, b);
+    }
 
-	public Inspector getInspector( String inspectorId )
-	{
-		return inspectorPanel.getInspector( inspectorId );
-	}
+    public Inspector getInspector(String inspectorId) {
+        return inspectorPanel.getInspector(inspectorId);
+    }
 }

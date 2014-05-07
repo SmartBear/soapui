@@ -43,98 +43,78 @@ import java.io.File;
  * @author Ole.Matzura
  */
 
-public class AddWadlAction extends AbstractSoapUIAction<WsdlProject>
-{
-	public static final String SOAPUI_ACTION_ID = "NewWsdlProjectAction";
-	private XFormDialog dialog;
+public class AddWadlAction extends AbstractSoapUIAction<WsdlProject> {
+    public static final String SOAPUI_ACTION_ID = "NewWsdlProjectAction";
+    private XFormDialog dialog;
 
-	public static final MessageSupport messages = MessageSupport.getMessages( AddWadlAction.class );
+    public static final MessageSupport messages = MessageSupport.getMessages(AddWadlAction.class);
 
-	public AddWadlAction()
-	{
-		super( messages.get( "Title" ), messages.get( "Description" ) );
-	}
+    public AddWadlAction() {
+        super(messages.get("Title"), messages.get("Description"));
+    }
 
-	public void perform( WsdlProject project, Object param )
-	{
-		createOrUpdateDialog();
+    public void perform(WsdlProject project, Object param) {
+        createOrUpdateDialog();
 
-		while( dialog.show() )
-		{
-			try
-			{
-				String url = dialog.getValue( Form.INITIALWSDL ).trim();
-				if( StringUtils.hasContent( url ) )
-				{
-					String expandedUrl = PathUtils.expandPath( url, project );
+        while (dialog.show()) {
+            try {
+                String url = dialog.getValue(Form.INITIALWSDL).trim();
+                if (StringUtils.hasContent(url)) {
+                    String expandedUrl = PathUtils.expandPath(url, project);
 
-					if( new File( expandedUrl ).exists() )
-						expandedUrl = new File( expandedUrl ).toURI().toURL().toString();
+                    if (new File(expandedUrl).exists()) {
+                        expandedUrl = new File(expandedUrl).toURI().toURL().toString();
+                    }
 
-					RestService result = importWadl( project, expandedUrl );
-					if( !url.equals( expandedUrl ) && result != null )
-					{
-						result.setWadlUrl( url );
-						if (dialog.getBooleanValue( Form.GENERATETESTSUITE ))
-						{
-							new GenerateRestTestSuiteAction().perform( result, true );
-						}
-					}
-					break;
-				}
-			}
-			catch( Exception ex )
-			{
-				UISupport.showErrorMessage( ex );
-			}
-		}
-	}
+                    RestService result = importWadl(project, expandedUrl);
+                    if (!url.equals(expandedUrl) && result != null) {
+                        result.setWadlUrl(url);
+                        if (dialog.getBooleanValue(Form.GENERATETESTSUITE)) {
+                            new GenerateRestTestSuiteAction().perform(result, true);
+                        }
+                    }
+                    break;
+                }
+            } catch (Exception ex) {
+                UISupport.showErrorMessage(ex);
+            }
+        }
+    }
 
-	private void createOrUpdateDialog()
-	{
-		if( dialog == null )
-		{
-			dialog = ADialogBuilder.buildDialog( Form.class );
-			dialog.getFormField( Form.INITIALWSDL ).addFormFieldListener( new XFormFieldListener()
-			{
-				public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-				{
+    private void createOrUpdateDialog() {
+        if (dialog == null) {
+            dialog = ADialogBuilder.buildDialog(Form.class);
+            dialog.getFormField(Form.INITIALWSDL).addFormFieldListener(new XFormFieldListener() {
+                public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
 
-					dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( newValue.trim().length() > 0 );
-				}
-			} );
-		}
-		else
-		{
-			dialog.setValue( Form.INITIALWSDL, "" );
-			dialog.getFormField( Form.GENERATETESTSUITE ).setEnabled( false );
-		}
-	}
+                    dialog.getFormField(Form.GENERATETESTSUITE).setEnabled(newValue.trim().length() > 0);
+                }
+            });
+        } else {
+            dialog.setValue(Form.INITIALWSDL, "");
+            dialog.getFormField(Form.GENERATETESTSUITE).setEnabled(false);
+        }
+    }
 
-	private RestService importWadl( WsdlProject project, String url )
-	{
-		RestService restService = ( RestService )project
-				.addNewInterface( project.getName(), RestServiceFactory.REST_TYPE );
-		UISupport.select( restService );
-		try
-		{
-			new WadlImporter( restService ).initFromWadl( url );
-		}
-		catch( Exception e )
-		{
-			UISupport.showErrorMessage( e );
-		}
+    private RestService importWadl(WsdlProject project, String url) {
+        RestService restService = (RestService) project
+                .addNewInterface(project.getName(), RestServiceFactory.REST_TYPE);
+        UISupport.select(restService);
+        try {
+            new WadlImporter(restService).initFromWadl(url);
+        } catch (Exception e) {
+            UISupport.showErrorMessage(e);
+        }
 
-		return restService;
-	}
+        return restService;
+    }
 
-	@AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
-	public interface Form
-	{
-		@AField(description = "Form.InitialWadl.Description", type = AFieldType.FILE)
-		public final static String INITIALWSDL = messages.get( "Form.InitialWadl.Label" );
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWPROJECT_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    public interface Form {
+        @AField(description = "Form.InitialWadl.Description", type = AFieldType.FILE)
+        public final static String INITIALWSDL = messages.get("Form.InitialWadl.Label");
 
-		@AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
-		public final static String GENERATETESTSUITE = messages.get( "Form.GenerateTestSuite.Label" );
-	}
+        @AField(description = "Form.GenerateTestSuite.Description", type = AFieldType.BOOLEAN, enabled = false)
+        public final static String GENERATETESTSUITE = messages.get("Form.GenerateTestSuite.Label");
+    }
 }

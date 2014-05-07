@@ -25,66 +25,55 @@ import com.eviware.soapui.support.editor.xml.XmlDocument;
 
 /**
  * Adapter for XmlDocument implementations/sources
- * 
+ *
  * @author ole.matzura
  */
 
-public class XmlDocumentAdapter implements XmlDocument
-{
-	private String xml;
-	private SchemaTypeSystem typeSystem;
-	private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport( this );
+public class XmlDocumentAdapter implements XmlDocument {
+    private String xml;
+    private SchemaTypeSystem typeSystem;
+    private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		return typeSystem;
-	}
+    public SchemaTypeSystem getTypeSystem() {
+        return typeSystem;
+    }
 
-	public void setTypeSystem( SchemaTypeSystem typeSystem )
-	{
-		this.typeSystem = typeSystem;
-	}
+    public void setTypeSystem(SchemaTypeSystem typeSystem) {
+        this.typeSystem = typeSystem;
+    }
 
-	public String getXml()
-	{
-		return xml;
-	}
+    public String getXml() {
+        return xml;
+    }
 
-	public boolean hasTypeSystem()
-	{
-		return typeSystem != null;
-	}
+    public boolean hasTypeSystem() {
+        return typeSystem != null;
+    }
 
-	public void setXml( String xml )
-	{
-		String oldXml = this.xml;
-		this.xml = xml;
+    public void setXml(String xml) {
+        String oldXml = this.xml;
+        this.xml = xml;
 
-		propertyChangeSupport.firePropertyChange( XML_PROPERTY, oldXml, xml );
-	}
+        propertyChangeSupport.firePropertyChange(XML_PROPERTY, oldXml, xml);
+    }
 
-	public void addPropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( propertyName, listener );
-	}
+    public void addPropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+    }
 
-	public void addPropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.addPropertyChangeListener( listener );
-	}
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.addPropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( listener );
-	}
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(listener);
+    }
 
-	public void removePropertyChangeListener( String propertyName, PropertyChangeListener listener )
-	{
-		propertyChangeSupport.removePropertyChangeListener( propertyName, listener );
-	}
+    public void removePropertyChangeListener(String propertyName, PropertyChangeListener listener) {
+        propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+    }
 
-	public void release()
-	{
-		typeSystem = null;
-	}
+    public void release() {
+        typeSystem = null;
+    }
 }

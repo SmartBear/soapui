@@ -18,27 +18,26 @@ package com.eviware.soapui.model.support;
 
 import com.eviware.soapui.model.iface.Operation;
 
-public interface XPathReference
-{
-	public String getXPath();
+public interface XPathReference {
+    public String getXPath();
 
-	public void setXPath( String xpath );
+    public void setXPath(String xpath);
 
-	public String getLabel();
+    public String getLabel();
 
-	public Operation getOperation();
+    public Operation getOperation();
 
-	public boolean isRequest();
+    public boolean isRequest();
 
-	/**
-	 * Gets the property this xpath selects from
-	 */
+    /**
+     * Gets the property this xpath selects from
+     */
 
-	// public TestProperty getTargetProperty();
+    // public TestProperty getTargetProperty();
 
-	/**
-	 * apply updates
-	 */
+    /**
+     * apply updates
+     */
 
-	public void update();
+    public void update();
 }

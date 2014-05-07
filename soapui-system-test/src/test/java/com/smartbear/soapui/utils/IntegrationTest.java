@@ -12,11 +12,11 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.utils;
+*/
+package com.smartbear.soapui.utils;
 
 /**
-	Marker interface used to annotate a test as an integration test
+ * Marker interface used to annotate a test as an integration test
  */
-public interface IntegrationTest
-{
+public interface IntegrationTest {
 }

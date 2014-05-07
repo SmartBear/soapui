@@ -58,216 +58,187 @@ import org.apache.http.protocol.HttpRequestHandler;
 
 /**
  * A handler that generates random data.
- * 
- * 
- * 
+ * <p/>
+ * <p/>
+ * <p/>
  * <!-- empty lines to avoid 'svn diff' problems -->
  */
-public class RandomHandler implements HttpRequestHandler
-{
-	// public default constructor
+public class RandomHandler implements HttpRequestHandler {
+    // public default constructor
 
-	/**
-	 * Handles a request by generating random data. The length of the response
-	 * can be specified in the request URI as a number after the last /. For
-	 * example /random/whatever/20 will generate 20 random bytes in the printable
-	 * ASCII range. If the request URI ends with /, a random number of random
-	 * bytes is generated, but at least one.
-	 * 
-	 * @param request
-	 *           the request
-	 * @param response
-	 *           the response
-	 * @param context
-	 *           the context
-	 * 
-	 * @throws HttpException
-	 *            in case of a problem
-	 * @throws IOException
-	 *            in case of an IO problem
-	 */
-	public void handle( final HttpRequest request, final HttpResponse response, final HttpContext context )
-			throws HttpException, IOException
-	{
+    /**
+     * Handles a request by generating random data. The length of the response
+     * can be specified in the request URI as a number after the last /. For
+     * example /random/whatever/20 will generate 20 random bytes in the printable
+     * ASCII range. If the request URI ends with /, a random number of random
+     * bytes is generated, but at least one.
+     *
+     * @param request  the request
+     * @param response the response
+     * @param context  the context
+     * @throws HttpException in case of a problem
+     * @throws IOException   in case of an IO problem
+     */
+    public void handle(final HttpRequest request, final HttpResponse response, final HttpContext context)
+            throws HttpException, IOException {
 
-		String method = request.getRequestLine().getMethod().toUpperCase( Locale.ENGLISH );
-		if( !"GET".equals( method ) && !"HEAD".equals( method ) )
-		{
-			throw new MethodNotSupportedException( method + " not supported by " + getClass().getName() );
-		}
+        String method = request.getRequestLine().getMethod().toUpperCase(Locale.ENGLISH);
+        if (!"GET".equals(method) && !"HEAD".equals(method)) {
+            throw new MethodNotSupportedException(method + " not supported by " + getClass().getName());
+        }
 
-		String uri = request.getRequestLine().getUri();
-		int slash = uri.lastIndexOf( '/' );
-		int length = -1;
-		if( slash < uri.length() - 1 )
-		{
-			try
-			{
-				// no more than Integer, 2 GB ought to be enough for anybody
-				length = Integer.parseInt( uri.substring( slash + 1 ) );
+        String uri = request.getRequestLine().getUri();
+        int slash = uri.lastIndexOf('/');
+        int length = -1;
+        if (slash < uri.length() - 1) {
+            try {
+                // no more than Integer, 2 GB ought to be enough for anybody
+                length = Integer.parseInt(uri.substring(slash + 1));
 
-				if( length < 0 )
-				{
-					response.setStatusCode( HttpStatus.SC_BAD_REQUEST );
-					response.setReasonPhrase( "LENGTH " + length );
-				}
-			}
-			catch( NumberFormatException nfx )
-			{
-				response.setStatusCode( HttpStatus.SC_BAD_REQUEST );
-				response.setReasonPhrase( nfx.toString() );
-			}
-		}
-		else
-		{
-			// random length, but make sure at least something is sent
-			length = 1 + ( int )( Math.random() * 79.0 );
-		}
+                if (length < 0) {
+                    response.setStatusCode(HttpStatus.SC_BAD_REQUEST);
+                    response.setReasonPhrase("LENGTH " + length);
+                }
+            } catch (NumberFormatException nfx) {
+                response.setStatusCode(HttpStatus.SC_BAD_REQUEST);
+                response.setReasonPhrase(nfx.toString());
+            }
+        } else {
+            // random length, but make sure at least something is sent
+            length = 1 + (int) (Math.random() * 79.0);
+        }
 
-		if( length >= 0 )
-		{
+        if (length >= 0) {
 
-			response.setStatusCode( HttpStatus.SC_OK );
+            response.setStatusCode(HttpStatus.SC_OK);
 
-			if( !"HEAD".equals( method ) )
-			{
-				RandomEntity entity = new RandomEntity( length );
-				entity.setContentType( "text/plain; charset=US-ASCII" );
-				response.setEntity( entity );
-			}
-			else
-			{
-				response.setHeader( "Content-Type", "text/plain; charset=US-ASCII" );
-				response.setHeader( "Content-Length", String.valueOf( length ) );
-			}
-		}
+            if (!"HEAD".equals(method)) {
+                RandomEntity entity = new RandomEntity(length);
+                entity.setContentType("text/plain; charset=US-ASCII");
+                response.setEntity(entity);
+            } else {
+                response.setHeader("Content-Type", "text/plain; charset=US-ASCII");
+                response.setHeader("Content-Length", String.valueOf(length));
+            }
+        }
 
-	} // handle
+    } // handle
 
-	/**
-	 * An entity that generates random data. This is an outgoing entity, it
-	 * supports {@link #writeTo writeTo} but not {@link #getContent getContent}.
-	 */
-	public static class RandomEntity extends AbstractHttpEntity
-	{
+    /**
+     * An entity that generates random data. This is an outgoing entity, it
+     * supports {@link #writeTo writeTo} but not {@link #getContent getContent}.
+     */
+    public static class RandomEntity extends AbstractHttpEntity {
 
-		/** The range from which to generate random data. */
-		private final static byte[] RANGE;
-		static
-		{
-			byte[] range = null;
-			try
-			{
-				range = ( "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789" )
-						.getBytes( "US-ASCII" );
-			}
-			catch( UnsupportedEncodingException uex )
-			{
-				// never, US-ASCII is guaranteed
-			}
-			RANGE = range;
-		}
+        /**
+         * The range from which to generate random data.
+         */
+        private final static byte[] RANGE;
 
-		/** The length of the random data to generate. */
-		protected final long length;
+        static {
+            byte[] range = null;
+            try {
+                range = ("abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ" + "0123456789")
+                        .getBytes("US-ASCII");
+            } catch (UnsupportedEncodingException uex) {
+                // never, US-ASCII is guaranteed
+            }
+            RANGE = range;
+        }
 
-		/**
-		 * Creates a new entity generating the given amount of data.
-		 * 
-		 * @param len
-		 *           the number of random bytes to generate, 0 to maxint
-		 */
-		public RandomEntity( long len )
-		{
-			if( len < 0L )
-				throw new IllegalArgumentException( "Length must not be negative" );
-			if( len > Integer.MAX_VALUE )
-				throw new IllegalArgumentException( "Length must not exceed Integer.MAX_VALUE" );
+        /**
+         * The length of the random data to generate.
+         */
+        protected final long length;
 
-			length = len;
-		}
+        /**
+         * Creates a new entity generating the given amount of data.
+         *
+         * @param len the number of random bytes to generate, 0 to maxint
+         */
+        public RandomEntity(long len) {
+            if (len < 0L) {
+                throw new IllegalArgumentException("Length must not be negative");
+            }
+            if (len > Integer.MAX_VALUE) {
+                throw new IllegalArgumentException("Length must not exceed Integer.MAX_VALUE");
+            }
 
-		/**
-		 * Tells that this entity is not streaming.
-		 * 
-		 * @return false
-		 */
-		public final boolean isStreaming()
-		{
-			return false;
-		}
+            length = len;
+        }
 
-		/**
-		 * Tells that this entity is repeatable, in a way. Repetitions will
-		 * generate different random data, unless perchance the same random data
-		 * is generated twice.
-		 * 
-		 * @return <code>true</code>
-		 */
-		public boolean isRepeatable()
-		{
-			return true;
-		}
+        /**
+         * Tells that this entity is not streaming.
+         *
+         * @return false
+         */
+        public final boolean isStreaming() {
+            return false;
+        }
 
-		/**
-		 * Obtains the size of the random data.
-		 * 
-		 * @return the number of random bytes to generate
-		 */
-		public long getContentLength()
-		{
-			return length;
-		}
+        /**
+         * Tells that this entity is repeatable, in a way. Repetitions will
+         * generate different random data, unless perchance the same random data
+         * is generated twice.
+         *
+         * @return <code>true</code>
+         */
+        public boolean isRepeatable() {
+            return true;
+        }
 
-		/**
-		 * Not supported. This method throws an exception.
-		 * 
-		 * @return never anything
-		 */
-		public InputStream getContent()
-		{
-			throw new UnsupportedOperationException();
-		}
+        /**
+         * Obtains the size of the random data.
+         *
+         * @return the number of random bytes to generate
+         */
+        public long getContentLength() {
+            return length;
+        }
 
-		/**
-		 * Generates the random content.
-		 * 
-		 * @param out
-		 *           where to write the content to
-		 */
-		public void writeTo( OutputStream out ) throws IOException
-		{
+        /**
+         * Not supported. This method throws an exception.
+         *
+         * @return never anything
+         */
+        public InputStream getContent() {
+            throw new UnsupportedOperationException();
+        }
 
-			final int blocksize = 2048;
-			int remaining = ( int )length; // range checked in constructor
-			byte[] data = new byte[Math.min( remaining, blocksize )];
+        /**
+         * Generates the random content.
+         *
+         * @param out where to write the content to
+         */
+        public void writeTo(OutputStream out) throws IOException {
 
-			while( remaining > 0 )
-			{
-				final int end = Math.min( remaining, data.length );
+            final int blocksize = 2048;
+            int remaining = (int) length; // range checked in constructor
+            byte[] data = new byte[Math.min(remaining, blocksize)];
 
-				double value = 0.0;
-				for( int i = 0; i < end; i++ )
-				{
-					// we get 5 random characters out of one random value
-					if( i % 5 == 0 )
-					{
-						value = Math.random();
-					}
-					value = value * RANGE.length;
-					int d = ( int )value;
-					value = value - d;
-					data[i] = RANGE[d];
-				}
-				out.write( data, 0, end );
-				out.flush();
+            while (remaining > 0) {
+                final int end = Math.min(remaining, data.length);
 
-				remaining = remaining - end;
-			}
-			out.close();
+                double value = 0.0;
+                for (int i = 0; i < end; i++) {
+                    // we get 5 random characters out of one random value
+                    if (i % 5 == 0) {
+                        value = Math.random();
+                    }
+                    value = value * RANGE.length;
+                    int d = (int) value;
+                    value = value - d;
+                    data[i] = RANGE[d];
+                }
+                out.write(data, 0, end);
+                out.flush();
 
-		} // writeTo
+                remaining = remaining - end;
+            }
+            out.close();
 
-	} // class RandomEntity
+        } // writeTo
+
+    } // class RandomEntity
 
 } // class RandomHandler

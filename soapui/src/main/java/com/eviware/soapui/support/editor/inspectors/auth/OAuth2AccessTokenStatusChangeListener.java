@@ -12,23 +12,23 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.support.editor.inspectors.auth;
+*/
+package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface OAuth2AccessTokenStatusChangeListener
-{
-	/**
-	 * @param status The new Access Token status
-	 */
-	void onAccessTokenStatusChanged( @Nullable OAuth2Profile.AccessTokenStatus status );
+public interface OAuth2AccessTokenStatusChangeListener {
+    /**
+     * @param status The new Access Token status
+     */
+    void onAccessTokenStatusChanged(@Nullable OAuth2Profile.AccessTokenStatus status);
 
-	/**
-	 * @return The OAuth 2 profile accociated with the listener
-	 */
-	@Nonnull
-	OAuth2Profile getProfile();
+    /**
+     * @return The OAuth 2 profile accociated with the listener
+     */
+    @Nonnull
+    OAuth2Profile getProfile();
 }

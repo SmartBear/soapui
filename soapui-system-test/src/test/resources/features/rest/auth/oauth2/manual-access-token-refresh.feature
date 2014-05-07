@@ -12,7 +12,7 @@ Feature: Manual access token refresh
     And the user clicks on the Auth tab
     And the user creates an OAuth 2.0 profile with name OAuth 2.0 - Profile
     And there is a refresh token in the profile with name OAuth 2.0 - Profile
-    And sets refresh method to MANUAL
+    And sets refresh method to Manual
     Then refresh button is visible
 
   Scenario: Refresh button is not showing when the refresh token is present and refresh method is automatic
@@ -20,5 +20,5 @@ Feature: Manual access token refresh
     And the user clicks on the Auth tab
     And the user creates an OAuth 2.0 profile with name OAuth 2.0 - Profile
     And there is a refresh token in the profile with name OAuth 2.0 - Profile
-    And sets refresh method to AUTOMATIC
+    And sets refresh method to Automatic
     Then refresh button is not visible

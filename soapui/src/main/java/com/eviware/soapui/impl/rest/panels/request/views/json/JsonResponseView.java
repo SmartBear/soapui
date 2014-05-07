@@ -38,124 +38,100 @@ import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-@SuppressWarnings( "unchecked" )
-public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener
-{
-	private final HttpRequestInterface<?> httpRequest;
-	private RSyntaxTextArea contentEditor;
-	private boolean updatingRequest;
-	private JPanel panel;
+@SuppressWarnings("unchecked")
+public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument> implements PropertyChangeListener {
+    private final HttpRequestInterface<?> httpRequest;
+    private RSyntaxTextArea contentEditor;
+    private boolean updatingRequest;
+    private JPanel panel;
 
-	public JsonResponseView( HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest )
-	{
-		super( "JSON", httpRequestMessageEditor, JsonResponseViewFactory.VIEW_ID );
-		this.httpRequest = httpRequest;
+    public JsonResponseView(HttpResponseMessageEditor httpRequestMessageEditor, HttpRequestInterface<?> httpRequest) {
+        super("JSON", httpRequestMessageEditor, JsonResponseViewFactory.VIEW_ID);
+        this.httpRequest = httpRequest;
 
-		httpRequest.addPropertyChangeListener( this );
-	}
+        httpRequest.addPropertyChangeListener(this);
+    }
 
-	public JComponent getComponent()
-	{
-		if( panel == null )
-		{
-			panel = new JPanel( new BorderLayout() );
+    public JComponent getComponent() {
+        if (panel == null) {
+            panel = new JPanel(new BorderLayout());
 
-			panel.add( UISupport.createToolbar(), BorderLayout.NORTH );
-			panel.add( buildContent(), BorderLayout.CENTER );
-			panel.add( buildStatus(), BorderLayout.SOUTH );
-		}
+            panel.add(UISupport.createToolbar(), BorderLayout.NORTH);
+            panel.add(buildContent(), BorderLayout.CENTER);
+            panel.add(buildStatus(), BorderLayout.SOUTH);
+        }
 
-		return panel;
-	}
+        return panel;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		httpRequest.removePropertyChangeListener( this );
-	}
+    @Override
+    public void release() {
+        super.release();
+        httpRequest.removePropertyChangeListener(this);
+    }
 
-	private Component buildStatus()
-	{
-		return new JPanel();
-	}
+    private Component buildStatus() {
+        return new JPanel();
+    }
 
-	private Component buildContent()
-	{
-		JPanel contentPanel = new JPanel( new BorderLayout() );
+    private Component buildContent() {
+        JPanel contentPanel = new JPanel(new BorderLayout());
 
-		contentEditor = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
-		HttpResponse response = httpRequest.getResponse();
-		if( response != null )
-			setEditorContent( response );
+        contentEditor = SyntaxEditorUtil.createDefaultJavaScriptSyntaxTextArea();
+        HttpResponse response = httpRequest.getResponse();
+        if (response != null) {
+            setEditorContent(response);
+        }
 
-		RTextScrollPane scrollPane = new RTextScrollPane( contentEditor );
-		scrollPane.setFoldIndicatorEnabled( true );
-		scrollPane.setLineNumbersEnabled( true );
-		contentPanel.add( scrollPane );
-		contentEditor.setEditable( false );
+        RTextScrollPane scrollPane = new RTextScrollPane(contentEditor);
+        scrollPane.setFoldIndicatorEnabled(true);
+        scrollPane.setLineNumbersEnabled(true);
+        contentPanel.add(scrollPane);
+        contentEditor.setEditable(false);
 
-		return contentPanel;
-	}
+        return contentPanel;
+    }
 
-	protected void setEditorContent( HttpResponse httpResponse )
-	{
-		if( httpResponse == null )
-		{
-			contentEditor.setText( "" );
-		}
-		else
-		{
-			String content;
+    protected void setEditorContent(HttpResponse httpResponse) {
+        if (httpResponse == null) {
+            contentEditor.setText("");
+        } else {
+            String content;
 
-			if( JsonMediaTypeHandler.seemsToBeJsonContentType( httpResponse.getContentType() ) )
-			{
-				try
-				{
-					JSON json = JSONSerializer.toJSON( httpResponse.getContentAsString() );
-					if( json.isEmpty() )
-					{
-						content = "<Empty JSON content>";
-					}
-					else
-					{
-						content = json.toString( 3 );
-					}
-				}
-				catch( JSONException e )
-				{
-					content = httpResponse.getContentAsString();
-				}
-				contentEditor.setText( content );
-			}
-			else
-			{
-				contentEditor.setText( "<Not JSON content>" );
-			}
-		}
-	}
+            if (JsonMediaTypeHandler.seemsToBeJsonContentType(httpResponse.getContentType())) {
+                try {
+                    JSON json = JSONSerializer.toJSON(httpResponse.getContentAsString());
+                    if (json.isEmpty()) {
+                        content = "<Empty JSON content>";
+                    } else {
+                        content = json.toString(3);
+                    }
+                } catch (JSONException e) {
+                    content = httpResponse.getContentAsString();
+                }
+                contentEditor.setText(content);
+            } else {
+                contentEditor.setText("<Not JSON content>");
+            }
+        }
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( AbstractHttpRequestInterface.RESPONSE_PROPERTY ) && !updatingRequest )
-		{
-			updatingRequest = true;
-			setEditorContent( ( ( HttpResponse )evt.getNewValue() ) );
-			updatingRequest = false;
-		}
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(AbstractHttpRequestInterface.RESPONSE_PROPERTY) && !updatingRequest) {
+            updatingRequest = true;
+            setEditorContent(((HttpResponse) evt.getNewValue()));
+            updatingRequest = false;
+        }
+    }
 
-	@Override
-	public void setXml( String xml )
-	{
-	}
+    @Override
+    public void setXml(String xml) {
+    }
 
-	public boolean saveDocument( boolean validate )
-	{
-		return false;
-	}
+    public boolean saveDocument(boolean validate) {
+        return false;
+    }
 
-	public void setEditable( boolean enabled )
-	{
-	}
+    public void setEditable(boolean enabled) {
+    }
 }

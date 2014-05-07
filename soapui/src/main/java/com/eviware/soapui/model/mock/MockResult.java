@@ -23,39 +23,38 @@ import java.io.IOException;
 
 /**
  * Resulting MessageExchange for a request to a MockService
- * 
+ *
  * @author ole.matzura
  */
 
-public interface MockResult
-{
-	public MockRequest getMockRequest();
+public interface MockResult {
+    public MockRequest getMockRequest();
 
-	public StringToStringsMap getResponseHeaders();
+    public StringToStringsMap getResponseHeaders();
 
-	public String getResponseContent();
+    public String getResponseContent();
 
-	public MockResponse getMockResponse();
+    public MockResponse getMockResponse();
 
-	public MockOperation getMockOperation();
+    public MockOperation getMockOperation();
 
-	public ActionList getActions();
+    public ActionList getActions();
 
-	public long getTimeTaken();
+    public long getTimeTaken();
 
-	public long getTimestamp();
+    public long getTimestamp();
 
-	public void finish();
+    public void finish();
 
-	public byte[] getRawResponseData();
+    public byte[] getRawResponseData();
 
-	public void addHeader( String name, String value );
+    public void addHeader(String name, String value);
 
-	public boolean isCommitted();
+    public boolean isCommitted();
 
-	public void setResponseContent( String responseContent );
+    public void setResponseContent(String responseContent);
 
-	public void setContentType( String contentTypeHttpHeader );
+    public void setContentType(String contentTypeHttpHeader);
 
-	public void writeRawResponseData( byte[] data ) throws IOException;
+    public void writeRawResponseData(byte[] data) throws IOException;
 }

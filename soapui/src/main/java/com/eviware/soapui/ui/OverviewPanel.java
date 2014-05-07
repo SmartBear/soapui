@@ -20,11 +20,10 @@ import javax.swing.JComponent;
 
 import com.eviware.soapui.model.ModelItem;
 
-public interface OverviewPanel
-{
-	public JComponent getComponent();
+public interface OverviewPanel {
+    public JComponent getComponent();
 
-	public ModelItem getModelItem();
+    public ModelItem getModelItem();
 
-	public void setModelItem( ModelItem modelItem );
+    public void setModelItem(ModelItem modelItem);
 }

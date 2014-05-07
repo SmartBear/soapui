@@ -31,72 +31,70 @@ import com.eviware.soapui.support.StringUtils;
 
 /**
  * Public behaviour for a SOAP Version
- * 
+ *
  * @author ole.matzura
  */
 
-public interface SoapVersion
-{
-	public static final SoapVersion11 Soap11 = SoapVersion11.instance;
-	public static final SoapVersion12 Soap12 = SoapVersion12.instance;
+public interface SoapVersion {
+    public static final SoapVersion11 Soap11 = SoapVersion11.instance;
+    public static final SoapVersion12 Soap12 = SoapVersion12.instance;
 
-	public QName getEnvelopeQName();
+    public QName getEnvelopeQName();
 
-	public QName getBodyQName();
+    public QName getBodyQName();
 
-	public QName getHeaderQName();
+    public QName getHeaderQName();
 
-	public void validateSoapEnvelope( String soapMessage, List<XmlError> errors );
+    public void validateSoapEnvelope(String soapMessage, List<XmlError> errors);
 
-	public String getContentTypeHttpHeader( String encoding, String soapAction );
+    public String getContentTypeHttpHeader(String encoding, String soapAction);
 
-	public String getEnvelopeNamespace();
+    public String getEnvelopeNamespace();
 
-	public String getFaultDetailNamespace();
+    public String getFaultDetailNamespace();
 
-	public String getEncodingNamespace();
+    public String getEncodingNamespace();
 
-	public XmlObject getSoapEncodingSchema() throws XmlException, IOException;
+    public XmlObject getSoapEncodingSchema() throws XmlException, IOException;
 
-	public XmlObject getSoapEnvelopeSchema() throws XmlException, IOException;
+    public XmlObject getSoapEnvelopeSchema() throws XmlException, IOException;
 
-	/**
-	 * Checks if the specified validation error should be ignored for a message
-	 * with this SOAP version. (The SOAP-spec may allow some constructions not
-	 * allowed by the corresponding XML-Schema)
-	 */
+    /**
+     * Checks if the specified validation error should be ignored for a message
+     * with this SOAP version. (The SOAP-spec may allow some constructions not
+     * allowed by the corresponding XML-Schema)
+     */
 
-	public boolean shouldIgnore( XmlValidationError xmlError );
+    public boolean shouldIgnore(XmlValidationError xmlError);
 
-	public String getContentType();
+    public String getContentType();
 
-	public SchemaType getEnvelopeType();
+    public SchemaType getEnvelopeType();
 
-	public SchemaType getFaultType();
+    public SchemaType getFaultType();
 
-	public String getName();
+    public String getName();
 
-	/**
-	 * Utilities
-	 * 
-	 * @author ole.matzura
-	 */
+    /**
+     * Utilities
+     *
+     * @author ole.matzura
+     */
 
-	public static class Utils
-	{
-		public static SoapVersion getSoapVersionForContentType( String contentType, SoapVersion def )
-		{
-			if( StringUtils.isNullOrEmpty( contentType ) )
-				return def;
+    public static class Utils {
+        public static SoapVersion getSoapVersionForContentType(String contentType, SoapVersion def) {
+            if (StringUtils.isNullOrEmpty(contentType)) {
+                return def;
+            }
 
-			SoapVersion soapVersion = contentType.startsWith( SoapVersion.Soap11.getContentType() ) ? SoapVersion.Soap11
-					: null;
-			soapVersion = soapVersion == null && contentType.startsWith( SoapVersion.Soap12.getContentType() ) ? SoapVersion.Soap12
-					: soapVersion;
+            SoapVersion soapVersion = contentType.startsWith(SoapVersion.Soap11.getContentType()) ? SoapVersion.Soap11
+                    : null;
+            soapVersion = soapVersion == null && contentType.startsWith(SoapVersion.Soap12.getContentType()) ? SoapVersion.Soap12
+                    : soapVersion;
 
-			return soapVersion == null ? def : soapVersion;
-		}
-	}
+            return soapVersion == null ? def : soapVersion;
+        }
+    }
 
-	public String getSoapActionHeader( String soapAction );
+    public String getSoapActionHeader(String soapAction);
 }

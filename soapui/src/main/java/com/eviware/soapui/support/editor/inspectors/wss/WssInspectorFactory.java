@@ -32,161 +32,131 @@ import com.eviware.soapui.support.editor.registry.RequestInspectorFactory;
 import com.eviware.soapui.support.editor.registry.ResponseInspectorFactory;
 import com.eviware.soapui.support.editor.xml.XmlInspector;
 
-public class WssInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory
-{
-	public static final String INSPECTOR_ID = "WSS";
+public class WssInspectorFactory implements RequestInspectorFactory, ResponseInspectorFactory {
+    public static final String INSPECTOR_ID = "WSS";
 
-	public String getInspectorId()
-	{
-		return INSPECTOR_ID;
-	}
+    public String getInspectorId() {
+        return INSPECTOR_ID;
+    }
 
-	public EditorInspector<?> createRequestInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof WsdlMockResponse )
-		{
-			return new WsdlMockRequestWssInspector( ( WsdlMockResponse )modelItem );
-		}
-		else if( modelItem instanceof MessageExchangeModelItem )
-		{
-			return new RequestMessageExchangeWssInspector( ( MessageExchangeModelItem )modelItem );
-		}
+    public EditorInspector<?> createRequestInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof WsdlMockResponse) {
+            return new WsdlMockRequestWssInspector((WsdlMockResponse) modelItem);
+        } else if (modelItem instanceof MessageExchangeModelItem) {
+            return new RequestMessageExchangeWssInspector((MessageExchangeModelItem) modelItem);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public EditorInspector<?> createResponseInspector( Editor<?> editor, ModelItem modelItem )
-	{
-		if( modelItem instanceof WsdlRequest )
-		{
-			return new WsdlResponseWssInspector( ( WsdlRequest )modelItem );
-		}
-		else if( modelItem instanceof MessageExchangeModelItem )
-		{
-			return new ResponseMessageExchangeWssInspector( ( MessageExchangeModelItem )modelItem );
-		}
+    public EditorInspector<?> createResponseInspector(Editor<?> editor, ModelItem modelItem) {
+        if (modelItem instanceof WsdlRequest) {
+            return new WsdlResponseWssInspector((WsdlRequest) modelItem);
+        } else if (modelItem instanceof MessageExchangeModelItem) {
+            return new ResponseMessageExchangeWssInspector((MessageExchangeModelItem) modelItem);
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	public class WsdlMockRequestWssInspector extends AbstractWssInspector implements XmlInspector,
-			PropertyChangeListener
-	{
-		private final WsdlMockResponse response;
+    public class WsdlMockRequestWssInspector extends AbstractWssInspector implements XmlInspector,
+            PropertyChangeListener {
+        private final WsdlMockResponse response;
 
-		public WsdlMockRequestWssInspector( WsdlMockResponse response )
-		{
-			this.response = response;
+        public WsdlMockRequestWssInspector(WsdlMockResponse response) {
+            this.response = response;
 
-			response.addPropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
-		}
+            response.addPropertyChangeListener(WsdlMockResponse.MOCKRESULT_PROPERTY, this);
+        }
 
-		@Override
-		public Vector<?> getWssResults()
-		{
-			return response.getMockResult() == null ? null : ((WsdlMockResult)response.getMockResult()).getRequestWssResult();
-		}
+        @Override
+        public Vector<?> getWssResults() {
+            return response.getMockResult() == null ? null : ((WsdlMockResult) response.getMockResult()).getRequestWssResult();
+        }
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			update();
-		}
+        public void propertyChange(PropertyChangeEvent evt) {
+            update();
+        }
 
-		@Override
-		public void release()
-		{
-			response.removePropertyChangeListener( WsdlMockResponse.MOCKRESULT_PROPERTY, this );
-		}
-	}
+        @Override
+        public void release() {
+            response.removePropertyChangeListener(WsdlMockResponse.MOCKRESULT_PROPERTY, this);
+        }
+    }
 
-	public class RequestMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector,
-			PropertyChangeListener
-	{
-		private final MessageExchangeModelItem item;
+    public class RequestMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector,
+            PropertyChangeListener {
+        private final MessageExchangeModelItem item;
 
-		public RequestMessageExchangeWssInspector( MessageExchangeModelItem item )
-		{
-			this.item = item;
+        public RequestMessageExchangeWssInspector(MessageExchangeModelItem item) {
+            this.item = item;
 
-			item.addPropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
-		}
+            item.addPropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this);
+        }
 
-		@Override
-		public Vector<?> getWssResults()
-		{
-			return item.getMessageExchange() instanceof WsdlMessageExchange ? ( ( WsdlMessageExchange )item
-					.getMessageExchange() ).getRequestWssResult() : null;
-		}
+        @Override
+        public Vector<?> getWssResults() {
+            return item.getMessageExchange() instanceof WsdlMessageExchange ? ((WsdlMessageExchange) item
+                    .getMessageExchange()).getRequestWssResult() : null;
+        }
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			update();
-		}
+        public void propertyChange(PropertyChangeEvent evt) {
+            update();
+        }
 
-		@Override
-		public void release()
-		{
-			item.removePropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
-		}
-	}
+        @Override
+        public void release() {
+            item.removePropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this);
+        }
+    }
 
-	public class WsdlResponseWssInspector extends AbstractWssInspector implements XmlInspector, PropertyChangeListener
-	{
-		private final WsdlRequest response;
+    public class WsdlResponseWssInspector extends AbstractWssInspector implements XmlInspector, PropertyChangeListener {
+        private final WsdlRequest response;
 
-		public WsdlResponseWssInspector( WsdlRequest response )
-		{
-			this.response = response;
+        public WsdlResponseWssInspector(WsdlRequest response) {
+            this.response = response;
 
-			response.addPropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
-		}
+            response.addPropertyChangeListener(WsdlRequest.RESPONSE_PROPERTY, this);
+        }
 
-		@Override
-		public Vector<?> getWssResults()
-		{
-			return response.getResponse() == null ? null : response.getResponse().getWssResult();
-		}
+        @Override
+        public Vector<?> getWssResults() {
+            return response.getResponse() == null ? null : response.getResponse().getWssResult();
+        }
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			update();
-		}
+        public void propertyChange(PropertyChangeEvent evt) {
+            update();
+        }
 
-		@Override
-		public void release()
-		{
-			response.removePropertyChangeListener( WsdlRequest.RESPONSE_PROPERTY, this );
-		}
-	}
+        @Override
+        public void release() {
+            response.removePropertyChangeListener(WsdlRequest.RESPONSE_PROPERTY, this);
+        }
+    }
 
-	public class ResponseMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector,
-			PropertyChangeListener
-	{
-		private final MessageExchangeModelItem item;
+    public class ResponseMessageExchangeWssInspector extends AbstractWssInspector implements XmlInspector,
+            PropertyChangeListener {
+        private final MessageExchangeModelItem item;
 
-		public ResponseMessageExchangeWssInspector( MessageExchangeModelItem item )
-		{
-			this.item = item;
+        public ResponseMessageExchangeWssInspector(MessageExchangeModelItem item) {
+            this.item = item;
 
-			item.addPropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
-		}
+            item.addPropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this);
+        }
 
-		@Override
-		public Vector<?> getWssResults()
-		{
-			return item.getMessageExchange() instanceof WsdlMessageExchange ? ( ( WsdlMessageExchange )item
-					.getMessageExchange() ).getResponseWssResult() : null;
-		}
+        @Override
+        public Vector<?> getWssResults() {
+            return item.getMessageExchange() instanceof WsdlMessageExchange ? ((WsdlMessageExchange) item
+                    .getMessageExchange()).getResponseWssResult() : null;
+        }
 
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			update();
-		}
+        public void propertyChange(PropertyChangeEvent evt) {
+            update();
+        }
 
-		@Override
-		public void release()
-		{
-			item.removePropertyChangeListener( MessageExchangeModelItem.MESSAGE_EXCHANGE, this );
-		}
-	}
+        @Override
+        public void release() {
+            item.removePropertyChangeListener(MessageExchangeModelItem.MESSAGE_EXCHANGE, this);
+        }
+    }
 }

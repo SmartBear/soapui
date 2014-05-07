@@ -20,93 +20,79 @@ import com.eviware.soapui.support.types.StringToStringMap;
 
 /**
  * Separates a path component into its parts.
- * 
+ *
  * @author lars
  */
-public class XPathComponent
-{
-	private String namespace;
-	private String prefix;
-	private String localNameWithoutBraces;
+public class XPathComponent {
+    private String namespace;
+    private String prefix;
+    private String localNameWithoutBraces;
 
-	// index and conditions, for example "[1]" or "[x > 3]"
-	private String braces;
+    // index and conditions, for example "[1]" or "[x > 3]"
+    private String braces;
 
-	public XPathComponent( String c, StringToStringMap prefixMap )
-	{
-		String localName;
-		int ix = c.indexOf( ':' );
-		if( ix >= 0 )
-		{
-			prefix = c.substring( 0, ix );
-			localName = c.substring( ix + 1 );
-			namespace = prefixMap.get( prefix );
-		}
-		else
-		{
-			prefix = null;
-			localName = c;
-			namespace = null;
-		}
-		ix = localName.indexOf( '[' );
-		if( ix >= 0 )
-		{
-			localNameWithoutBraces = localName.substring( 0, ix );
-			braces = localName.substring( ix );
-		}
-		else
-		{
-			localNameWithoutBraces = localName;
-			braces = "";
-		}
-		assert localName.equals( localNameWithoutBraces + braces ) : localName + " != " + localNameWithoutBraces + " + "
-				+ braces;
-	}
+    public XPathComponent(String c, StringToStringMap prefixMap) {
+        String localName;
+        int ix = c.indexOf(':');
+        if (ix >= 0) {
+            prefix = c.substring(0, ix);
+            localName = c.substring(ix + 1);
+            namespace = prefixMap.get(prefix);
+        } else {
+            prefix = null;
+            localName = c;
+            namespace = null;
+        }
+        ix = localName.indexOf('[');
+        if (ix >= 0) {
+            localNameWithoutBraces = localName.substring(0, ix);
+            braces = localName.substring(ix);
+        } else {
+            localNameWithoutBraces = localName;
+            braces = "";
+        }
+        assert localName.equals(localNameWithoutBraces + braces) : localName + " != " + localNameWithoutBraces + " + "
+                + braces;
+    }
 
-	@Override
-	public String toString()
-	{
-		if( prefix != null )
-			return prefix + ":" + localNameWithoutBraces + braces;
-		else
-			return localNameWithoutBraces + braces;
-	}
+    @Override
+    public String toString() {
+        if (prefix != null) {
+            return prefix + ":" + localNameWithoutBraces + braces;
+        } else {
+            return localNameWithoutBraces + braces;
+        }
+    }
 
-	public String getNamespace()
-	{
-		return namespace;
-	}
+    public String getNamespace() {
+        return namespace;
+    }
 
-	public boolean hasPrefix()
-	{
-		return prefix != null;
-	}
+    public boolean hasPrefix() {
+        return prefix != null;
+    }
 
-	public String getPrefix()
-	{
-		if( prefix == null )
-			return "";
-		else
-			return prefix;
-	}
+    public String getPrefix() {
+        if (prefix == null) {
+            return "";
+        } else {
+            return prefix;
+        }
+    }
 
-	public String getLocalName()
-	{
-		return localNameWithoutBraces;
-	}
+    public String getLocalName() {
+        return localNameWithoutBraces;
+    }
 
-	public String getBraces()
-	{
-		return braces;
-	}
+    public String getBraces() {
+        return braces;
+    }
 
-	public String getFullNameWithPrefix()
-	{
-		return getFullNameWithPrefix( localNameWithoutBraces );
-	}
+    public String getFullNameWithPrefix() {
+        return getFullNameWithPrefix(localNameWithoutBraces);
+    }
 
-	public String getFullNameWithPrefix( String aLocalName )
-	{
-		return ( hasPrefix() ? getPrefix() + ":" : "" ) + aLocalName + getBraces();
-	}
+    public String getFullNameWithPrefix(String aLocalName) {
+        return (hasPrefix() ? getPrefix() + ":" : "") + aLocalName + getBraces();
+    }
 }

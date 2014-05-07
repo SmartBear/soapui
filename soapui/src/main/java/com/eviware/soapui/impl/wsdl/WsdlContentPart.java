@@ -25,50 +25,43 @@ import com.eviware.soapui.model.iface.MessagePart;
 
 /**
  * Descriptor for Xml-Content
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlContentPart extends MessagePart.ContentPart
-{
-	private String name;
-	private SchemaType schemaType;
-	private QName partElementName;
-	private final SchemaGlobalElement partElement;
+public class WsdlContentPart extends MessagePart.ContentPart {
+    private String name;
+    private SchemaType schemaType;
+    private QName partElementName;
+    private final SchemaGlobalElement partElement;
 
-	public WsdlContentPart( String name, SchemaType schemaType, QName partElementName, SchemaGlobalElement partElement )
-	{
-		super();
+    public WsdlContentPart(String name, SchemaType schemaType, QName partElementName, SchemaGlobalElement partElement) {
+        super();
 
-		this.name = name;
-		this.schemaType = schemaType;
-		this.partElementName = partElementName;
-		this.partElement = partElement;
-	}
+        this.name = name;
+        this.schemaType = schemaType;
+        this.partElementName = partElementName;
+        this.partElement = partElement;
+    }
 
-	public SchemaType getSchemaType()
-	{
-		return schemaType;
-	}
+    public SchemaType getSchemaType() {
+        return schemaType;
+    }
 
-	public String getDescription()
-	{
-		return name + " of type [" + schemaType.getName() + "]";
-	}
+    public String getDescription() {
+        return name + " of type [" + schemaType.getName() + "]";
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public QName getPartElementName()
-	{
-		return partElementName;
-	}
+    public QName getPartElementName() {
+        return partElementName;
+    }
 
-	@Override
-	public SchemaGlobalElement getPartElement()
-	{
-		return partElement;
-	}
+    @Override
+    public SchemaGlobalElement getPartElement() {
+        return partElement;
+    }
 }

@@ -41,335 +41,294 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * TestStepResult for a WsdlTestRequestStep
- * 
+ *
  * @author ole.matzura
  */
 
 public class WsdlTestRequestStepResult extends WsdlTestStepResult implements ResponseAssertedMessageExchange,
-		AssertedXPathsContainer, MessageExchangeTestStepResult, WsdlMessageExchange
-{
-	private SoftReference<String> softRequestContent;
-	private SoftReference<WsdlResponse> softResponse;
-	private String domain;
-	private String username;
-	private String endpoint;
-	private String encoding;
-	private String password;
-	private StringToStringMap properties;
-	private boolean addedAction;
-	private List<AssertedXPath> assertedXPaths;
-	private WsdlResponse response;
-	private String requestContent;
-	private WsdlOperation operation;
+        AssertedXPathsContainer, MessageExchangeTestStepResult, WsdlMessageExchange {
+    private SoftReference<String> softRequestContent;
+    private SoftReference<WsdlResponse> softResponse;
+    private String domain;
+    private String username;
+    private String endpoint;
+    private String encoding;
+    private String password;
+    private StringToStringMap properties;
+    private boolean addedAction;
+    private List<AssertedXPath> assertedXPaths;
+    private WsdlResponse response;
+    private String requestContent;
+    private WsdlOperation operation;
 
-	public WsdlTestRequestStepResult( WsdlTestRequestStep step )
-	{
-		super( step );
+    public WsdlTestRequestStepResult(WsdlTestRequestStep step) {
+        super(step);
 
-		operation = step.getOperation();
-	}
+        operation = step.getOperation();
+    }
 
-	public WsdlOperation getOperation()
-	{
-		return operation;
-	}
+    public WsdlOperation getOperation() {
+        return operation;
+    }
 
-	public SoapVersion getSoapVersion()
-	{
-		return ( ( WsdlOperation )getOperation() ).getInterface().getSoapVersion();
-	}
+    public SoapVersion getSoapVersion() {
+        return ((WsdlOperation) getOperation()).getInterface().getSoapVersion();
+    }
 
-	public ModelItem getModelItem()
-	{
-		return getResponse() == null ? null : getResponse().getRequest();
-	}
+    public ModelItem getModelItem() {
+        return getResponse() == null ? null : getResponse().getRequest();
+    }
 
-	public String getRequestContent()
-	{
-		if( isDiscarded() )
-			return "<discarded>";
+    public String getRequestContent() {
+        if (isDiscarded()) {
+            return "<discarded>";
+        }
 
-		return requestContent != null ? requestContent : softRequestContent == null ? null : softRequestContent.get();
-	}
+        return requestContent != null ? requestContent : softRequestContent == null ? null : softRequestContent.get();
+    }
 
-	public void setRequestContent( String requestContent, boolean useSoftReference )
-	{
-		if( useSoftReference )
-			this.softRequestContent = new SoftReference<String>( requestContent );
-		else
-			this.requestContent = requestContent;
-	}
+    public void setRequestContent(String requestContent, boolean useSoftReference) {
+        if (useSoftReference) {
+            this.softRequestContent = new SoftReference<String>(requestContent);
+        } else {
+            this.requestContent = requestContent;
+        }
+    }
 
-	public WsdlResponse getResponse()
-	{
-		return response != null ? response : softResponse == null ? null : softResponse.get();
-	}
+    public WsdlResponse getResponse() {
+        return response != null ? response : softResponse == null ? null : softResponse.get();
+    }
 
-	@Override
-	public ActionList getActions()
-	{
-		if( !addedAction )
-		{
-			addAction( new ShowMessageExchangeAction( this, "TestStep" ), true );
-			addedAction = true;
-		}
+    @Override
+    public ActionList getActions() {
+        if (!addedAction) {
+            addAction(new ShowMessageExchangeAction(this, "TestStep"), true);
+            addedAction = true;
+        }
 
-		return super.getActions();
-	}
+        return super.getActions();
+    }
 
-	public void setResponse( WsdlResponse response, boolean useSoftReference )
-	{
-		if( useSoftReference )
-			this.softResponse = new SoftReference<WsdlResponse>( response );
-		else
-			this.response = response;
-	}
+    public void setResponse(WsdlResponse response, boolean useSoftReference) {
+        if (useSoftReference) {
+            this.softResponse = new SoftReference<WsdlResponse>(response);
+        } else {
+            this.response = response;
+        }
+    }
 
-	public String getDomain()
-	{
-		return domain;
-	}
+    public String getDomain() {
+        return domain;
+    }
 
-	public void setDomain( String domain )
-	{
-		this.domain = domain;
-		addProperty( "domain", domain );
-	}
+    public void setDomain(String domain) {
+        this.domain = domain;
+        addProperty("domain", domain);
+    }
 
-	private void addProperty( String key, String value )
-	{
-		if( properties == null )
-			properties = new StringToStringMap();
+    private void addProperty(String key, String value) {
+        if (properties == null) {
+            properties = new StringToStringMap();
+        }
 
-		properties.put( key, value );
-	}
+        properties.put(key, value);
+    }
 
-	public String getEncoding()
-	{
-		return encoding;
-	}
+    public String getEncoding() {
+        return encoding;
+    }
 
-	public void setEncoding( String encoding )
-	{
-		this.encoding = encoding;
-		addProperty( "Encoding", encoding );
-	}
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+        addProperty("Encoding", encoding);
+    }
 
-	public String getEndpoint()
-	{
-		return endpoint;
-	}
+    public String getEndpoint() {
+        return endpoint;
+    }
 
-	public void setEndpoint( String endpoint )
-	{
-		this.endpoint = endpoint;
-		addProperty( "Endpoint", endpoint );
-	}
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+        addProperty("Endpoint", endpoint);
+    }
 
-	public String getPassword()
-	{
-		return password;
-	}
+    public String getPassword() {
+        return password;
+    }
 
-	public void setPassword( String password )
-	{
-		this.password = password;
-		addProperty( "Password", password );
-	}
+    public void setPassword(String password) {
+        this.password = password;
+        addProperty("Password", password);
+    }
 
-	public String getUsername()
-	{
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername( String username )
-	{
-		this.username = username;
-		addProperty( "Username", username );
-	}
+    public void setUsername(String username) {
+        this.username = username;
+        addProperty("Username", username);
+    }
 
-	public void discard()
-	{
-		super.discard();
+    public void discard() {
+        super.discard();
 
-		softRequestContent = null;
-		softResponse = null;
-		properties = null;
-		assertedXPaths = null;
-		response = null;
-	}
+        softRequestContent = null;
+        softResponse = null;
+        properties = null;
+        assertedXPaths = null;
+        response = null;
+    }
 
-	public void writeTo( PrintWriter writer )
-	{
-		super.writeTo( writer );
-		writer.println( "\r\n----------------- Properties ------------------------------" );
-		if( properties != null )
-		{
-			for( String key : properties.keySet() )
-			{
-				if( properties.get( key ) != null )
-					writer.println( key + ": " + properties.get( key ) );
-			}
-		}
+    public void writeTo(PrintWriter writer) {
+        super.writeTo(writer);
+        writer.println("\r\n----------------- Properties ------------------------------");
+        if (properties != null) {
+            for (String key : properties.keySet()) {
+                if (properties.get(key) != null) {
+                    writer.println(key + ": " + properties.get(key));
+                }
+            }
+        }
 
-		writer.println( "\r\n---------------- Request ---------------------------" );
-		WsdlResponse resp = getResponse();
-		if( resp != null )
-		{
-			writer.println( "Request Headers: " + resp.getRequestHeaders().toString() + "\r\n" );
-		}
+        writer.println("\r\n---------------- Request ---------------------------");
+        WsdlResponse resp = getResponse();
+        if (resp != null) {
+            writer.println("Request Headers: " + resp.getRequestHeaders().toString() + "\r\n");
+        }
 
-		if( getRequestContent() != null )
-			writer.println( XmlUtils.prettyPrintXml( getRequestContent() ) );
-		else
-			writer.println( "- missing request / garbage collected -" );
+        if (getRequestContent() != null) {
+            writer.println(XmlUtils.prettyPrintXml(getRequestContent()));
+        } else {
+            writer.println("- missing request / garbage collected -");
+        }
 
-		writer.println( "\r\n---------------- Response --------------------------" );
-		if( resp != null )
-		{
-			writer.println( "Response Headers: " + resp.getResponseHeaders().toString() + "\r\n" );
+        writer.println("\r\n---------------- Response --------------------------");
+        if (resp != null) {
+            writer.println("Response Headers: " + resp.getResponseHeaders().toString() + "\r\n");
 
-			String respContent = resp.getContentAsString();
-			if( respContent != null )
-				writer.println( XmlUtils.prettyPrintXml( respContent ) );
-		}
-		else
-			writer.println( "- missing response / garbage collected -" );
-	}
+            String respContent = resp.getContentAsString();
+            if (respContent != null) {
+                writer.println(XmlUtils.prettyPrintXml(respContent));
+            }
+        } else {
+            writer.println("- missing response / garbage collected -");
+        }
+    }
 
-	public StringToStringMap getProperties()
-	{
-		return properties;
-	}
+    public StringToStringMap getProperties() {
+        return properties;
+    }
 
-	public String getProperty( String name )
-	{
-		return properties.get( name );
-	}
+    public String getProperty(String name) {
+        return properties.get(name);
+    }
 
-	public Attachment[] getRequestAttachments()
-	{
-		if( getResponse() == null || getResponse().getRequest() == null )
-			return new Attachment[0];
+    public Attachment[] getRequestAttachments() {
+        if (getResponse() == null || getResponse().getRequest() == null) {
+            return new Attachment[0];
+        }
 
-		return getResponse().getRequest().getAttachments();
-	}
+        return getResponse().getRequest().getAttachments();
+    }
 
-	public StringToStringsMap getRequestHeaders()
-	{
-		return getResponse() == null ? null : getResponse().getRequestHeaders();
-	}
+    public StringToStringsMap getRequestHeaders() {
+        return getResponse() == null ? null : getResponse().getRequestHeaders();
+    }
 
-	public Attachment[] getResponseAttachments()
-	{
-		return getResponse() == null ? null : getResponse().getAttachments();
-	}
+    public Attachment[] getResponseAttachments() {
+        return getResponse() == null ? null : getResponse().getAttachments();
+    }
 
-	public String getResponseContent()
-	{
-		if( isDiscarded() )
-			return "<discarded>";
+    public String getResponseContent() {
+        if (isDiscarded()) {
+            return "<discarded>";
+        }
 
-		if( getResponse() == null )
-			return "<missing response>";
+        if (getResponse() == null) {
+            return "<missing response>";
+        }
 
-		return getResponse().getContentAsString();
-	}
+        return getResponse().getContentAsString();
+    }
 
-	public String getRequestContentAsXml()
-	{
-		return XmlUtils.seemsToBeXml( getRequestContent() ) ? getRequestContent() : "<not-xml/>";
-	}
+    public String getRequestContentAsXml() {
+        return XmlUtils.seemsToBeXml(getRequestContent()) ? getRequestContent() : "<not-xml/>";
+    }
 
-	public String getResponseContentAsXml()
-	{
-		String responseContent = getResponseContent();
-		return XmlUtils.seemsToBeXml( responseContent ) ? responseContent : null;
-	}
+    public String getResponseContentAsXml() {
+        String responseContent = getResponseContent();
+        return XmlUtils.seemsToBeXml(responseContent) ? responseContent : null;
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		return getResponse() == null ? new StringToStringsMap() : getResponse().getResponseHeaders();
-	}
+    public StringToStringsMap getResponseHeaders() {
+        return getResponse() == null ? new StringToStringsMap() : getResponse().getResponseHeaders();
+    }
 
-	public long getTimestamp()
-	{
-		WsdlResponse resp = getResponse();
-		return resp == null ? 0 : resp.getTimestamp();
-	}
+    public long getTimestamp() {
+        WsdlResponse resp = getResponse();
+        return resp == null ? 0 : resp.getTimestamp();
+    }
 
-	public AssertedXPath[] getAssertedXPathsForResponse()
-	{
-		return assertedXPaths == null ? new AssertedXPath[0] : assertedXPaths.toArray( new AssertedXPath[assertedXPaths
-				.size()] );
-	}
+    public AssertedXPath[] getAssertedXPathsForResponse() {
+        return assertedXPaths == null ? new AssertedXPath[0] : assertedXPaths.toArray(new AssertedXPath[assertedXPaths
+                .size()]);
+    }
 
-	public void addAssertedXPath( AssertedXPath assertedXPath )
-	{
-		if( assertedXPaths == null )
-			assertedXPaths = new ArrayList<AssertedXPath>();
+    public void addAssertedXPath(AssertedXPath assertedXPath) {
+        if (assertedXPaths == null) {
+            assertedXPaths = new ArrayList<AssertedXPath>();
+        }
 
-		assertedXPaths.add( assertedXPath );
-	}
+        assertedXPaths.add(assertedXPath);
+    }
 
-	public MessageExchange[] getMessageExchanges()
-	{
-		return new MessageExchange[] { this };
-	}
+    public MessageExchange[] getMessageExchanges() {
+        return new MessageExchange[]{this};
+    }
 
-	public byte[] getRawRequestData()
-	{
-		return getResponse() == null ? null : getResponse().getRawRequestData();
-	}
+    public byte[] getRawRequestData() {
+        return getResponse() == null ? null : getResponse().getRawRequestData();
+    }
 
-	public byte[] getRawResponseData()
-	{
-		return getResponse() == null ? null : getResponse().getRawResponseData();
-	}
+    public byte[] getRawResponseData() {
+        return getResponse() == null ? null : getResponse().getRawResponseData();
+    }
 
-	public Attachment[] getRequestAttachmentsForPart( String partName )
-	{
-		return null;
-	}
+    public Attachment[] getRequestAttachmentsForPart(String partName) {
+        return null;
+    }
 
-	public Attachment[] getResponseAttachmentsForPart( String partName )
-	{
-		return null;
-	}
+    public Attachment[] getResponseAttachmentsForPart(String partName) {
+        return null;
+    }
 
-	public boolean hasRawData()
-	{
-		return false;
-	}
+    public boolean hasRawData() {
+        return false;
+    }
 
-	public boolean hasRequest( boolean b )
-	{
-		return true;
-	}
+    public boolean hasRequest(boolean b) {
+        return true;
+    }
 
-	public boolean hasResponse()
-	{
-		return getResponse() != null;
-	}
+    public boolean hasResponse() {
+        return getResponse() != null;
+    }
 
-	public Vector<?> getRequestWssResult()
-	{
-		return null;
-	}
+    public Vector<?> getRequestWssResult() {
+        return null;
+    }
 
-	public Vector<?> getResponseWssResult()
-	{
-		return getResponse() == null ? null : getResponse().getWssResult();
-	}
+    public Vector<?> getResponseWssResult() {
+        return getResponse() == null ? null : getResponse().getWssResult();
+    }
 
-	public int getResponseStatusCode()
-	{
-		WsdlResponse resp = getResponse();
-		return resp == null ? 0 : resp.getStatusCode();
-	}
+    public int getResponseStatusCode() {
+        WsdlResponse resp = getResponse();
+        return resp == null ? 0 : resp.getStatusCode();
+    }
 
-	public String getResponseContentType()
-	{
-		return getResponse() == null ? null : getResponse().getContentType();
-	}
+    public String getResponseContentType() {
+        return getResponse() == null ? null : getResponse().getContentType();
+    }
 }

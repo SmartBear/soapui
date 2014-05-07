@@ -40,115 +40,105 @@ import com.eviware.soapui.support.xml.XmlUtils;
 
 /**
  * Panel for displaying a WS-I Report
- * 
+ *
  * @author ole.matzura
  */
 
-public class WSIReportPanel extends JPanel
-{
-	private File reportFile;
-	private JEditorPane editorPane;
-	private final String configFile;
-	private final File logFile;
-	private SaveReportAction saveReportAction;
+public class WSIReportPanel extends JPanel {
+    private File reportFile;
+    private JEditorPane editorPane;
+    private final String configFile;
+    private final File logFile;
+    private SaveReportAction saveReportAction;
 
-	// private BrowserComponent browser;
+    // private BrowserComponent browser;
 
-	public WSIReportPanel( File reportFile, String configFile, File logFile, boolean addToolbar ) throws Exception
-	{
-		super( new BorderLayout() );
+    public WSIReportPanel(File reportFile, String configFile, File logFile, boolean addToolbar) throws Exception {
+        super(new BorderLayout());
 
-		this.reportFile = reportFile;
-		this.configFile = configFile;
-		this.logFile = logFile;
+        this.reportFile = reportFile;
+        this.configFile = configFile;
+        this.logFile = logFile;
 
-		saveReportAction = new SaveReportAction();
+        saveReportAction = new SaveReportAction();
 
-		if( addToolbar )
-			add( buildToolbar(), BorderLayout.NORTH );
+        if (addToolbar) {
+            add(buildToolbar(), BorderLayout.NORTH);
+        }
 
-		add( buildContent(), BorderLayout.CENTER );
-	}
+        add(buildContent(), BorderLayout.CENTER);
+    }
 
-	public SaveReportAction getSaveReportAction()
-	{
-		return saveReportAction;
-	}
+    public SaveReportAction getSaveReportAction() {
+        return saveReportAction;
+    }
 
-	private JComponent buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+    private JComponent buildToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		toolbar.addFixed( UISupport.createToolbarButton( saveReportAction ) );
-		toolbar.addGlue();
-		toolbar.setBorder( BorderFactory.createEmptyBorder( 3, 3, 3, 3 ) );
+        toolbar.addFixed(UISupport.createToolbarButton(saveReportAction));
+        toolbar.addGlue();
+        toolbar.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	private JComponent buildContent() throws Exception
-	{
-		JTabbedPane tabs = new JTabbedPane( JTabbedPane.BOTTOM );
+    private JComponent buildContent() throws Exception {
+        JTabbedPane tabs = new JTabbedPane(JTabbedPane.BOTTOM);
 
-		editorPane = new JEditorPane();
-		editorPane.setEditorKit( new HTMLEditorKit() );
-		editorPane.setEditable( false );
-		editorPane.setPage( reportFile.toURI().toURL() );
-		editorPane.addHyperlinkListener( new DefaultHyperlinkListener( editorPane ) );
+        editorPane = new JEditorPane();
+        editorPane.setEditorKit(new HTMLEditorKit());
+        editorPane.setEditable(false);
+        editorPane.setPage(reportFile.toURI().toURL());
+        editorPane.addHyperlinkListener(new DefaultHyperlinkListener(editorPane));
 
-		JTextArea configContent = new JTextArea();
-		configContent.setEditable( false );
-		configContent.setText( configFile );
+        JTextArea configContent = new JTextArea();
+        configContent.setEditable(false);
+        configContent.setText(configFile);
 
-		// browser = new BrowserComponent( false );
-		// browser.navigate( reportFile.toURI().toURL().toString(), null );
+        // browser = new BrowserComponent( false );
+        // browser.navigate( reportFile.toURI().toURL().toString(), null );
 
-		JScrollPane scrollPane = new JScrollPane( editorPane );
-		UISupport.addPreviewCorner( scrollPane, true );
-		tabs.addTab( "Report", scrollPane );
-		tabs.addTab( "Config", new JScrollPane( configContent ) );
+        JScrollPane scrollPane = new JScrollPane(editorPane);
+        UISupport.addPreviewCorner(scrollPane, true);
+        tabs.addTab("Report", scrollPane);
+        tabs.addTab("Config", new JScrollPane(configContent));
 
-		if( logFile != null )
-		{
-			// String logFileContent = XmlObject.Factory.parse( logFile
-			// ).toString();
-			String logFileContent = XmlUtils.createXmlObject( logFile ).toString();
-			JTextArea logContent = new JTextArea();
-			logContent.setEditable( false );
-			logContent.setText( logFileContent );
+        if (logFile != null) {
+            // String logFileContent = XmlObject.Factory.parse( logFile
+            // ).toString();
+            String logFileContent = XmlUtils.createXmlObject(logFile).toString();
+            JTextArea logContent = new JTextArea();
+            logContent.setEditable(false);
+            logContent.setText(logFileContent);
 
-			tabs.addTab( "Log", new JScrollPane( logContent ) );
-		}
+            tabs.addTab("Log", new JScrollPane(logContent));
+        }
 
-		return UISupport.createTabPanel( tabs, true );
-	}
+        return UISupport.createTabPanel(tabs, true);
+    }
 
-	public class SaveReportAction extends AbstractAction
-	{
-		public SaveReportAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/export.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Saves this report to a file" );
-		}
+    public class SaveReportAction extends AbstractAction {
+        public SaveReportAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Saves this report to a file");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			File file = UISupport.getFileDialogs().saveAs( this, "Save Report", "html", "HTML files", null );
-			if( file == null )
-				return;
+        public void actionPerformed(ActionEvent e) {
+            File file = UISupport.getFileDialogs().saveAs(this, "Save Report", "html", "HTML files", null);
+            if (file == null) {
+                return;
+            }
 
-			try
-			{
-				FileWriter writer = new FileWriter( file );
-				writer.write( editorPane.getText() );
-				writer.close();
+            try {
+                FileWriter writer = new FileWriter(file);
+                writer.write(editorPane.getText());
+                writer.close();
 
-				UISupport.showInfoMessage( "Report saved to [" + file.getAbsolutePath() + "]" );
-			}
-			catch( Exception e1 )
-			{
-				SoapUI.logError( e1 );
-			}
-		}
-	}
+                UISupport.showInfoMessage("Report saved to [" + file.getAbsolutePath() + "]");
+            } catch (Exception e1) {
+                SoapUI.logError(e1);
+            }
+        }
+    }
 }
