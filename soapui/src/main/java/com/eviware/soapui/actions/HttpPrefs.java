@@ -16,13 +16,13 @@
 
 package com.eviware.soapui.actions;
 
-import java.util.TreeMap;
-
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.TreeMap;
 
 /**
  * Preferences class for HttpSettings
@@ -87,7 +87,7 @@ public class HttpPrefs implements Prefs {
                     "Adds authentication information to outgoing request", true);
             httpForm.appendCheckBox(HttpPrefs.EXPECT_CONTINUE,
                     "Activates 'Expect: 100-Continue' handshake for the entity enclosing methods", true);
-            httpForm.appendCheckBox(HttpPrefs.ENCODED_URLS, "Do not URL-escape service endpoints", true);
+            httpForm.appendCheckBox(HttpPrefs.ENCODED_URLS, "URI contains encoded endpoints, don't try to re-encode", true);
             httpForm.appendCheckBox(HttpPrefs.FORWARD_SLASHES,
                     "Replaces duplicate forward slashes in HTTP request endpoints with a single slash", false);
 
