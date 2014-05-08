@@ -16,6 +16,21 @@
 
 package com.eviware.x.form.support;
 
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.x.form.XFormOptionsField;
+import com.eviware.x.impl.swing.AbstractSwingXFormField;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,22 +43,6 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-import javax.swing.ListSelectionModel;
-
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.x.form.XFormOptionsField;
-import com.eviware.x.impl.swing.AbstractSwingXFormField;
 
 /**
  * Swing-Specific multi-select list
@@ -89,7 +88,7 @@ public class XFormMultiSelectList extends AbstractSwingXFormField<JPanel> implem
         });
 
         getComponent().add(new JScrollPane(list), BorderLayout.CENTER);
-        getComponent().add(buildToolbar(), BorderLayout.SOUTH);
+        getComponent().add(buildToolbar(), BorderLayout.NORTH);
         getComponent().setSize(new Dimension(400, 120));
         getComponent().setMaximumSize(new Dimension(400, 120));
         getComponent().setPreferredSize(new Dimension(400, 120));
