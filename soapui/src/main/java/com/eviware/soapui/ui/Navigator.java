@@ -99,9 +99,6 @@ public class Navigator extends JPanel {
         mainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         mainTree.addKeyListener(new TreeKeyListener());
 
-        // SOAPUI-4149
-        // ToolTipManager.sharedInstance().registerComponent(mainTree);
-
         add(new JScrollPane(mainTree), BorderLayout.CENTER);
         add(buildToolbar(), BorderLayout.NORTH);
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
