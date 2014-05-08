@@ -37,6 +37,8 @@ import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.text.JTextComponent;
 
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockService;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -44,7 +46,6 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -90,12 +91,12 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         // create transfer menus
         targetMenu.removeAll();
 
-        WsdlTestStep testStep = null;
+        WsdlTestStep testStep;
         WsdlTestCase testCase = null;
         WsdlTestSuite testSuite = null;
         WsdlProject project = null;
-        WsdlMockService mockService = null;
-        WsdlMockResponse mockResponse = null;
+        MockService mockService = null;
+        MockResponse mockResponse = null;
         SecurityTest securityTest = null;
 
         if (modelItem instanceof WsdlTestStep) {
@@ -112,8 +113,8 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
             project = testSuite.getProject();
         } else if (modelItem instanceof WsdlMockService) {
             project = ((WsdlMockService) modelItem).getProject();
-        } else if (modelItem instanceof WsdlMockResponse) {
-            mockResponse = (WsdlMockResponse) modelItem;
+        } else if (modelItem instanceof MockResponse) {
+            mockResponse = (MockResponse) modelItem;
             mockService = (mockResponse).getMockOperation().getMockService();
             project = mockService.getProject();
         } else if (modelItem instanceof WsdlProject) {
@@ -283,7 +284,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
 
     private static final Pattern pattern = Pattern.compile("^\\$\\{(.*)\\}$");
 
-    private static final boolean userInputIsPropertyExpansion(String userSelectedValue) {
+    private static boolean userInputIsPropertyExpansion(String userSelectedValue) {
         if (userSelectedValue == null) {
             return false;
         }
@@ -372,9 +373,6 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         }
 
         enable(textField, modelItem, popupMenu);
-    }
-
-    public static void disable(GroovyEditor editor) {
     }
 
     public static void enable(GroovyEditorComponent gec, ModelItem modelItem) {
