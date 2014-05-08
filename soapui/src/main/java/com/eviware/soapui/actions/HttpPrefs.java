@@ -87,7 +87,7 @@ public class HttpPrefs implements Prefs {
                     "Adds authentication information to outgoing request", true);
             httpForm.appendCheckBox(HttpPrefs.EXPECT_CONTINUE,
                     "Activates 'Expect: 100-Continue' handshake for the entity enclosing methods", true);
-            httpForm.appendCheckBox(HttpPrefs.ENCODED_URLS, "Apply URL encoding and decoding", true);
+            httpForm.appendCheckBox(HttpPrefs.ENCODED_URLS, "URI contains encoded endpoints, don't try to re-encode", true);
             httpForm.appendCheckBox(HttpPrefs.FORWARD_SLASHES,
                     "Replaces duplicate forward slashes in HTTP request endpoints with a single slash", false);
 
