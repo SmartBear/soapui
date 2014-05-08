@@ -389,7 +389,7 @@ public class Navigator extends JPanel {
             }
         }
 
-        private void showTollTipLessPopupMenu(JPopupMenu pm, int x, int y){
+        private void showToolTipLessPopupMenu(JPopupMenu pm, int x, int y){
             pm.addPopupMenuListener(new PopupMenuListener() {
 
                 @Override
@@ -419,7 +419,7 @@ public class Navigator extends JPanel {
                         JPopupMenu collapsePopup = new JPopupMenu();
                         collapsePopup.add("Collapse").addActionListener(new CollapseRowAction(row));
                         collapsePopup.add("Expand").addActionListener(new ExpandRowAction(row));
-                        showTollTipLessPopupMenu(collapsePopup, e.getX(), e.getY());
+                        showToolTipLessPopupMenu(collapsePopup, e.getX(), e.getY());
                     }
 
                     return;
@@ -433,7 +433,7 @@ public class Navigator extends JPanel {
 
                 mainTree.setSelectionPath(path);
 
-                showTollTipLessPopupMenu(popupMenu, e.getX(), e.getY());
+                showToolTipLessPopupMenu(popupMenu, e.getX(), e.getY());
             } else {
                 TreePath[] selectionPaths = mainTree.getSelectionPaths();
                 List<ModelItem> targets = new ArrayList<ModelItem>();
@@ -448,7 +448,7 @@ public class Navigator extends JPanel {
                     if (actions.getActionCount() > 0) {
                         JPopupMenu popup = new JPopupMenu();
                         ActionSupport.addActions(actions, popup);
-                        showTollTipLessPopupMenu(popup, e.getX(), e.getY());
+                        showToolTipLessPopupMenu(popup, e.getX(), e.getY());
                     }
                 }
             }
