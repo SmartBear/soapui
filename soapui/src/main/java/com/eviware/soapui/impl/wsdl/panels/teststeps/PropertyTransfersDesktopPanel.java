@@ -1017,7 +1017,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
     private final class ClearLogAction extends AbstractAction {
         public ClearLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_properties.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears the property-transfer log");
         }
 

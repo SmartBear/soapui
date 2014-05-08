@@ -16,6 +16,38 @@
 
 package com.eviware.soapui.security.log;
 
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
+import com.eviware.soapui.model.security.SecurityScan;
+import com.eviware.soapui.model.settings.Settings;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.security.result.SecurityResult;
+import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
+import com.eviware.soapui.security.result.SecurityScanRequestResult;
+import com.eviware.soapui.security.result.SecurityScanResult;
+import com.eviware.soapui.security.result.SecurityTestStepResult;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.components.JHyperlinkLabel;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.x.form.XFormDialog;
+import com.eviware.x.form.support.ADialogBuilder;
+import com.eviware.x.form.support.AField;
+import com.eviware.x.form.support.AField.AFieldType;
+import com.eviware.x.form.support.AForm;
+import org.apache.log4j.Logger;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.ListCellRenderer;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -28,40 +60,6 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.ListCellRenderer;
-
-import org.apache.log4j.Logger;
-
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
-import com.eviware.soapui.impl.wsdl.testcase.TestCaseLogItem;
-import com.eviware.soapui.model.security.SecurityScan;
-import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.security.SecurityTest;
-import com.eviware.soapui.security.result.SecurityScanRequestResult;
-import com.eviware.soapui.security.result.SecurityScanResult;
-import com.eviware.soapui.security.result.SecurityResult;
-import com.eviware.soapui.security.result.SecurityTestStepResult;
-import com.eviware.soapui.security.result.SecurityResult.ResultStatus;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.components.JHyperlinkLabel;
-import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.x.form.XFormDialog;
-import com.eviware.x.form.support.ADialogBuilder;
-import com.eviware.x.form.support.AField;
-import com.eviware.x.form.support.AForm;
-import com.eviware.x.form.support.AField.AFieldType;
 
 /**
  * Panel for displaying SecurityScan Results
@@ -253,7 +251,7 @@ public class JSecurityTestRunLog extends JPanel {
 
     private class ClearLogAction extends AbstractAction {
         public ClearLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_loadtest.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears the log");
         }
 

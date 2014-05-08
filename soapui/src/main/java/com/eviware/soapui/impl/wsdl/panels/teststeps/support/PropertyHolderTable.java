@@ -306,7 +306,7 @@ public class PropertyHolderTable extends JPanel {
 
     protected class ClearPropertiesAction extends AbstractAction {
         public ClearPropertiesAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_properties.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears all current property values");
         }
 
