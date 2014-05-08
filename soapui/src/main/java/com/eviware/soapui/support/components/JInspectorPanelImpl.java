@@ -225,7 +225,7 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
                 deactivate();
                 // currentInspector = null;
                 // button.setBackground( inspectToolbar.getBackground() );
-                lastDividerLocation = mainSplit.getDividerLocation();
+                // lastDividerLocation = mainSplit.getDividerLocation();
                 // inspectorPanel.setVisible( false );
             } else {
                 activate(inspector);
