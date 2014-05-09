@@ -37,6 +37,11 @@ public class SensitiveInformationTableModel extends DefaultTableModel {
         this.holder = holder;
     }
 
+    public SensitiveInformationTableModel(MutableTestPropertyHolder holder, String tokenHeader) {
+        this(holder);
+        columnNames[0] = tokenHeader;
+    }
+
     @Override
     public int getColumnCount() {
         return 2;

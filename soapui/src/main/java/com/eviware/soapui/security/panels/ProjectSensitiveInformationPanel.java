@@ -31,6 +31,7 @@ import org.jdesktop.swingx.JXTable;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import java.awt.BorderLayout;
@@ -74,7 +75,7 @@ public class ProjectSensitiveInformationPanel {
                 siph.setPropertyValue(tokens[0], "");
             }
         }
-        sensitiveInformationTableModel = new SensitiveInformationTableModel(siph);
+        sensitiveInformationTableModel = new SensitiveInformationTableModel(siph, "Sensitive Information Token");
     }
 
     public Component getMainPanel() {
@@ -88,6 +89,7 @@ public class ProjectSensitiveInformationPanel {
 
             tokenTable = JTableFactory.getInstance().makeJXTable(sensitiveInformationTableModel);
 
+//            mainpanel.add(new JLabel("Sensitive Information Tokens:"), BorderLayout.WEST);
             mainpanel.add(toolbar, BorderLayout.NORTH);
             mainpanel.add(new JScrollPane(tokenTable), BorderLayout.CENTER);
         }
