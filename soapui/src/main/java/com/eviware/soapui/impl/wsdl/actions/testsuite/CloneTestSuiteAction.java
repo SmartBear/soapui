@@ -64,7 +64,7 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
         if (dialog == null) {
             ActionList actions = new DefaultActionList();
 
-            actions.addAction(new AbstractAction("Clone") {
+            final AbstractAction cloneAction = new AbstractAction("Clone") {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (dialog.validate()) {
@@ -96,7 +96,8 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
                         }
                     }
                 }
-            });
+            };
+            actions.addAction(cloneAction);
 
             actions.addAction(new AbstractAction("Cancel") {
                 @Override
@@ -104,6 +105,7 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
                     dialog.setVisible(false);
                 }
             });
+            actions.setDefaultAction(cloneAction);
 
 
             dialog = ADialogBuilder.buildDialog(Form.class, actions, false);
