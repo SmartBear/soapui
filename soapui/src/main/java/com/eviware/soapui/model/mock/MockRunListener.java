@@ -16,6 +16,8 @@
 
 package com.eviware.soapui.model.mock;
 
+import com.eviware.soapui.model.iface.SoapUIListener;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author ole.matzura
  */
 
-public interface MockRunListener {
+public interface MockRunListener extends SoapUIListener {
     public void onMockRunnerStart(MockRunner mockRunner);
 
     public void onMockResult(MockResult result);
