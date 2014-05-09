@@ -16,7 +16,9 @@
 
 package com.eviware.soapui.model.environment;
 
-public interface EnvironmentListener {
+import com.eviware.soapui.model.iface.SoapUIListener;
+
+public interface EnvironmentListener extends SoapUIListener {
 
     public void propertyValueChanged(Property property);
 
