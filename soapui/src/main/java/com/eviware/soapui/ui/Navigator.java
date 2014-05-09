@@ -33,6 +33,8 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.event.PopupMenuEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JToggleButton;
 import javax.swing.JTree;
@@ -96,8 +98,6 @@ public class Navigator extends JPanel {
         mainTree.setBorder(null);
         mainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         mainTree.addKeyListener(new TreeKeyListener());
-
-        ToolTipManager.sharedInstance().registerComponent(mainTree);
 
         add(new JScrollPane(mainTree), BorderLayout.CENTER);
         add(buildToolbar(), BorderLayout.NORTH);
@@ -386,6 +386,27 @@ public class Navigator extends JPanel {
             }
         }
 
+        private void showToolTipLessPopupMenu(JPopupMenu pm, int x, int y){
+            pm.addPopupMenuListener(new PopupMenuListener() {
+
+                @Override
+                public void popupMenuCanceled(PopupMenuEvent e) {
+                    ToolTipManager.sharedInstance().setEnabled(true);
+                }
+
+                @Override
+                public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                    ToolTipManager.sharedInstance().setEnabled(true);
+                }
+
+                @Override
+                public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+                    ToolTipManager.sharedInstance().setEnabled(false);
+                }
+            });
+            pm.show( mainTree, x, y );
+        }
+
         private void showPopup(MouseEvent e) {
             if (mainTree.getSelectionCount() < 2) {
                 TreePath path = mainTree.getPathForLocation((int) e.getPoint().getX(), (int) e.getPoint().getY());
@@ -395,7 +416,7 @@ public class Navigator extends JPanel {
                         JPopupMenu collapsePopup = new JPopupMenu();
                         collapsePopup.add("Collapse").addActionListener(new CollapseRowAction(row));
                         collapsePopup.add("Expand").addActionListener(new ExpandRowAction(row));
-                        collapsePopup.show(mainTree, e.getX(), e.getY());
+                        showToolTipLessPopupMenu(collapsePopup, e.getX(), e.getY());
                     }
 
                     return;
@@ -409,7 +430,7 @@ public class Navigator extends JPanel {
 
                 mainTree.setSelectionPath(path);
 
-                popupMenu.show(mainTree, e.getX(), e.getY());
+                showToolTipLessPopupMenu(popupMenu, e.getX(), e.getY());
             } else {
                 TreePath[] selectionPaths = mainTree.getSelectionPaths();
                 List<ModelItem> targets = new ArrayList<ModelItem>();
@@ -424,7 +445,7 @@ public class Navigator extends JPanel {
                     if (actions.getActionCount() > 0) {
                         JPopupMenu popup = new JPopupMenu();
                         ActionSupport.addActions(actions, popup);
-                        popup.show(mainTree, e.getX(), e.getY());
+                        showToolTipLessPopupMenu(popup, e.getX(), e.getY());
                     }
                 }
             }
