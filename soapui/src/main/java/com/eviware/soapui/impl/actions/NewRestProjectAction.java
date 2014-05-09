@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.ModelItemNamer;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.x.form.XFormDialog;
@@ -63,10 +64,14 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
             WsdlProject project = null;
             try {
                 String uri = dialogBuilder.getUri();
-                if (uri != null) {
-                    project = workspace.createProject(ModelItemNamer.createName(DEFAULT_PROJECT_NAME, workspace.getProjectList()), null);
-                    serviceBuilder.createRestService(project, uri);
+
+                if (StringUtils.isNullOrEmpty(uri)) {
+                    throw new Exception("URI can not be empty");
                 }
+
+                project = workspace.createProject(ModelItemNamer.createName(DEFAULT_PROJECT_NAME, workspace.getProjectList()), null);
+                serviceBuilder.createRestService(project, uri);
+
                 // If there is no exception or error we break out
                 break;
 
@@ -75,10 +80,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                 if (project != null) {
                     workspace.removeProject(project);
                 }
-                dialogBuilder.resetUriField();
             }
         }
     }
-
-
 }
