@@ -73,7 +73,7 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
                         String targetProjectName = dialog.getValue(Form.PROJECT);
                         String name = dialog.getValue(Form.NAME);
 
-                        WsdlProject project = (WsdlProject) testSuite.getProject();
+                        WsdlProject project = testSuite.getProject();
 
                         // within same project?
                         boolean move = dialog.getBooleanValue(Form.MOVE);
@@ -83,7 +83,7 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
                             description = dialog.getValue(Form.DESCRIPTION);
                         }
 
-                        TestSuite result = null;
+                        TestSuite result;
 
                         if (targetProjectName.equals(testSuite.getProject().getName())) {
                             result = cloneTestSuiteWithinProject(testSuite, name, project, description);
