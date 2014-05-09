@@ -22,7 +22,7 @@ package com.eviware.soapui.model.iface;
  * @author Ole.Matzura
  */
 
-public interface SubmitListener {
+public interface SubmitListener extends SoapUIListener {
     /**
      * Called before submittal of a request
      *
