@@ -1,19 +1,30 @@
-<?xml version="1.0" encoding="UTF-8"?><tns:soapui-actions xmlns:tns="http://eviware.com/soapui/config">
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:soapui-actions xmlns:tns="http://eviware.com/soapui/config">
     <!-- Global actions -->
-    <tns:action id="ShowDesktopPanelAction" actionClass="com.eviware.soapui.impl.wsdl.actions.support.ShowDesktopPanelAction"/>
+    <tns:action id="ShowDesktopPanelAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.support.ShowDesktopPanelAction"/>
 
-    <tns:action id="WSToolsWsdl2JavaAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction"/>
-    <tns:action id="JBossWSConsumeAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.JBossWSConsumeAction"/>
-    <tns:action id="WSCompileAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile.WSCompileAction"/>
-    <tns:action id="WSImportAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction"/>
-    <tns:action id="Axis1XWSDL2JavaAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction"/>
-    <tns:action id="Axis2WSDL2CodeAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction"/>
+    <tns:action id="WSToolsWsdl2JavaAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsWsdl2JavaAction"/>
+    <tns:action id="JBossWSConsumeAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.JBossWSConsumeAction"/>
+    <tns:action id="WSCompileAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wscompile.WSCompileAction"/>
+    <tns:action id="WSImportAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsimport.WSImportAction"/>
+    <tns:action id="Axis1XWSDL2JavaAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis1.Axis1XWSDL2JavaAction"/>
+    <tns:action id="Axis2WSDL2CodeAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.axis2.Axis2WSDL2CodeAction"/>
     <tns:action id="CXFAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.cxf.CXFAction"/>
     <tns:action id="XFireAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.xfire.XFireAction"/>
-    <tns:action id="OracleWsaGenProxyAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.oracle.OracleWsaGenProxyAction"/>
-    <tns:action id="XmlBeans2Action" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action"/>
+    <tns:action id="OracleWsaGenProxyAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.oracle.OracleWsaGenProxyAction"/>
+    <tns:action id="XmlBeans2Action"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.xmlbeans.XmlBeans2Action"/>
     <tns:action id="JaxbXjcAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jaxb.JaxbXjcAction"/>
-    <tns:action id="DotNetWsdlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.dotnet.DotNetWsdlAction"/>
+    <tns:action id="DotNetWsdlAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.dotnet.DotNetWsdlAction"/>
     <tns:action id="GSoapAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.gsoap.GSoapAction"/>
     <tns:action id="TcpMonAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.tcpmon.TcpMonAction"/>
 
@@ -23,7 +34,9 @@
     <tns:action id="NewWadlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWadlProjectAction"/>
     <tns:action id="NewGenericProjectAction" actionClass="com.eviware.soapui.impl.actions.NewGenericProjectAction"/>
     <tns:action id="ImportWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.ImportWsdlProjectAction"/>
-    <tns:action id="ImportRemoteWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.ImportRemoteWsdlProjectAction"/>
+    <tns:action id="InstallPluginAction" actionClass="com.eviware.soapui.impl.actions.InstallPluginAction"/>
+    <tns:action id="ImportRemoteWsdlProjectAction"
+                actionClass="com.eviware.soapui.impl.actions.ImportRemoteWsdlProjectAction"/>
     <tns:action id="SaveAllProjectsAction" actionClass="com.eviware.soapui.actions.SaveAllProjectsAction"/>
     <tns:action id="OpenClosedProjectsAction" actionClass="com.eviware.soapui.actions.OpenClosedProjectsAction"/>
     <tns:action id="CloseOpenProjectsAction" actionClass="com.eviware.soapui.actions.CloseOpenProjectsAction"/>
@@ -33,184 +46,310 @@
     <tns:action id="ClearWorkspaceAction" actionClass="com.eviware.soapui.impl.actions.ClearWorkspaceAction"/>
 
     <!-- Project Actions -->
-    <tns:action id="ReloadProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ReloadProjectAction"/>
-    <tns:action id="RemoveProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.RemoveProjectAction"/>
-    <tns:action id="RenameProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.RenameProjectAction"/>
+    <tns:action id="ReloadProjectAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.ReloadProjectAction"/>
+    <tns:action id="RemoveProjectAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.RemoveProjectAction"/>
+    <tns:action id="RenameProjectAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.RenameProjectAction"/>
     <tns:action id="OpenProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.OpenProjectAction"/>
-    <tns:action id="OpenAndDecryptProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.OpenAndDecryptProjectAction"/>
+    <tns:action id="OpenAndDecryptProjectAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.OpenAndDecryptProjectAction"/>
     <tns:action id="CloseProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.CloseProjectAction"/>
     <tns:action id="AddWsdlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddWsdlAction"/>
     <tns:action id="AddWadlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddWadlAction"/>
-    <tns:action id="NewRestServiceAction" actionClass="com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction"/>
-    <tns:action id="WSToolsJava2WsdlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsJava2WsdlAction"/>
-    <tns:action id="AddNewTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewTestSuiteAction"/>
-    <tns:action id="AddNewWSDLMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewMockServiceAction"/>
-    <tns:action id="AddNewRestMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewRestMockServiceAction"/>
+    <tns:action id="NewRestServiceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction"/>
+    <tns:action id="WSToolsJava2WsdlAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsJava2WsdlAction"/>
+    <tns:action id="AddNewTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewTestSuiteAction"/>
+    <tns:action id="AddNewWSDLMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewMockServiceAction"/>
+    <tns:action id="AddNewRestMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.AddNewRestMockServiceAction"/>
     <tns:action id="SaveProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.SaveProjectAction"/>
-    <tns:action id="SaveProjectAsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.SaveProjectAsAction"/>
-    <tns:action id="TestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction"/>
-    <tns:action id="SecurityTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SecurityTestRunnerAction"/>
-    <tns:action id="LoadTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.LoadTestRunnerAction"/>
+    <tns:action id="SaveProjectAsAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.SaveProjectAsAction"/>
+    <tns:action id="TestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestRunnerAction"/>
+    <tns:action id="SecurityTestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SecurityTestRunnerAction"/>
+    <tns:action id="LoadTestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.LoadTestRunnerAction"/>
     <tns:action id="SoapMonitorAction" actionClass="com.eviware.soapui.impl.wsdl.actions.monitor.SoapMonitorAction"/>
-    <tns:action id="ResolveProjectAction" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ResolveProjectAction"/>
+    <tns:action id="ResolveProjectAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.project.ResolveProjectAction"/>
     <tns:action id="ImportTestSuite" actionClass="com.eviware.soapui.impl.wsdl.actions.project.ImportTestSuiteAction"/>
     <tns:action id="StarHermesJMS" actionClass="com.eviware.soapui.impl.wsdl.actions.project.StartHermesJMS"/>
 
     <!-- WsdlInterface Actions -->
-    <tns:action id="WSToolsRegenerateJava2WsdlAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsRegenerateJava2WsdlAction"/>
-    <tns:action id="GenerateWsdlTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction"/>
-    <tns:action id="GenerateMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction"/>
-    <tns:action id="UpdateInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction"/>
-    <tns:action id="ExportDefinitionAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction"/>
-    <tns:action id="RemoveInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.RemoveInterfaceAction"/>
-    <tns:action id="WSIAnalyzeAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction"/>
-    <tns:action id="CloneInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CloneInterfaceAction"/>
-    <tns:action id="CreateWsdlDocumentationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CreateWsdlDocumentationAction"/>
-    <tns:action id="AddJMSEndpointAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction"/>
+    <tns:action id="WSToolsRegenerateJava2WsdlAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.jbossws.WSToolsRegenerateJava2WsdlAction"/>
+    <tns:action id="GenerateWsdlTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.GenerateWsdlTestSuiteAction"/>
+    <tns:action id="GenerateMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.GenerateMockServiceAction"/>
+    <tns:action id="UpdateInterfaceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.UpdateInterfaceAction"/>
+    <tns:action id="ExportDefinitionAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.ExportDefinitionAction"/>
+    <tns:action id="RemoveInterfaceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.RemoveInterfaceAction"/>
+    <tns:action id="WSIAnalyzeAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction"/>
+    <tns:action id="CloneInterfaceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CloneInterfaceAction"/>
+    <tns:action id="CreateWsdlDocumentationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.CreateWsdlDocumentationAction"/>
+    <tns:action id="AddJMSEndpointAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.AddJMSEndpointAction"/>
 
     <!-- RestService Actions -->
-    <tns:action id="NewRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction"/>
-    <tns:action id="CreateWadlDocumentationAction" actionClass="com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction"/>
-    <tns:action id="GenerateWadlTestSuiteAction" actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction"/>
-    <tns:action id="GenerateRestMockServiceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestMockServiceAction"/>
+    <tns:action id="NewRestResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.service.NewRestResourceAction"/>
+    <tns:action id="CreateWadlDocumentationAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.service.CreateWadlDocumentationAction"/>
+    <tns:action id="GenerateWadlTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction"/>
+    <tns:action id="GenerateRestMockServiceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.service.GenerateRestMockServiceAction"/>
     <tns:action id="Wadl2JavaAction" actionClass="com.eviware.soapui.impl.rest.actions.service.Wadl2JavaAction"/>
     <tns:action id="ExportWadlAction" actionClass="com.eviware.soapui.impl.rest.actions.service.ExportWadlAction"/>
-    <tns:action id="DeleteRestServiceAction" actionClass="com.eviware.soapui.impl.rest.actions.service.DeleteRestServiceAction"/>
+    <tns:action id="DeleteRestServiceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.service.DeleteRestServiceAction"/>
 
     <!-- Operation Actions -->
-    <tns:action id="AddOperationToMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationToMockServiceAction"/>
+    <tns:action id="AddOperationToMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationToMockServiceAction"/>
     <tns:action id="NewRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.NewRequestAction"/>
-    <tns:action id="RelabelOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.RelabelOperationAction"/>
+    <tns:action id="RelabelOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.operation.RelabelOperationAction"/>
 
     <!-- RestResource Actions -->
-    <tns:action id="NewRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction"/>
-    <tns:action id="RenameRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.RenameRestResourceAction"/>
-    <tns:action id="NewChildResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestChildResourceAction"/>
-    <tns:action id="CloneRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.CloneRestResourceAction"/>
-    <tns:action id="DeleteRestResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.resource.DeleteRestResourceAction"/>
+    <tns:action id="NewRestMethodAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestMethodAction"/>
+    <tns:action id="RenameRestResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.resource.RenameRestResourceAction"/>
+    <tns:action id="NewChildResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.resource.NewRestChildResourceAction"/>
+    <tns:action id="CloneRestResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.resource.CloneRestResourceAction"/>
+    <tns:action id="DeleteRestResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.resource.DeleteRestResourceAction"/>
 
     <!-- RestMethod Actions -->
-    <tns:action id="NewRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.method.NewRestRequestAction"/>
-    <tns:action id="RenameRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.method.RenameRestMethodAction"/>
-    <tns:action id="CloneRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.method.CloneRestMethodAction"/>
-    <tns:action id="DeleteRestMethodAction" actionClass="com.eviware.soapui.impl.rest.actions.method.DeleteRestMethodAction"/>
+    <tns:action id="NewRestRequestAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.method.NewRestRequestAction"/>
+    <tns:action id="RenameRestMethodAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.method.RenameRestMethodAction"/>
+    <tns:action id="CloneRestMethodAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.method.CloneRestMethodAction"/>
+    <tns:action id="DeleteRestMethodAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.method.DeleteRestMethodAction"/>
 
     <!-- RestRequest Actions -->
-    <tns:action id="AddRestRequestToTestCaseAction" actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
-    <tns:action id="AddRestRequestToMockServiceAction" actionClass="com.eviware.soapui.impl.rest.actions.mock.AddRestRequestToMockServiceAction"/>
-    <tns:action id="CloneRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.request.CloneRestRequestAction"/>
-    <tns:action id="RenameRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.request.RenameRestRequestAction"/>
-    <tns:action id="DeleteRestRequestAction" actionClass="com.eviware.soapui.impl.rest.actions.request.DeleteRestRequestAction"/>
+    <tns:action id="AddRestRequestToTestCaseAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.request.AddRestRequestToTestCaseAction"/>
+    <tns:action id="AddRestRequestToMockServiceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.mock.AddRestRequestToMockServiceAction"/>
+    <tns:action id="CloneRestRequestAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.request.CloneRestRequestAction"/>
+    <tns:action id="RenameRestRequestAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.request.RenameRestRequestAction"/>
+    <tns:action id="DeleteRestRequestAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.request.DeleteRestRequestAction"/>
 
     <!-- Request Actions -->
-    <tns:action id="AddRequestToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction"/>
-    <tns:action id="AddRequestToMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestToMockServiceAction"/>
+    <tns:action id="AddRequestToTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestToTestCaseAction"/>
+    <tns:action id="AddRequestToMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestToMockServiceAction"/>
     <tns:action id="CloneRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.CloneRequestAction"/>
-    <tns:action id="RenameRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.RenameRequestAction"/>
-    <tns:action id="DeleteRequestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.DeleteRequestAction"/>
-    <tns:action id="AddRequestAsMockResponseStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestAsMockResponseStepAction"/>
+    <tns:action id="RenameRequestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.request.RenameRequestAction"/>
+    <tns:action id="DeleteRequestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.request.DeleteRequestAction"/>
+    <tns:action id="AddRequestAsMockResponseStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.request.AddRequestAsMockResponseStepAction"/>
 
     <!-- TestSuite Actions -->
-    <tns:action id="AddNewTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction"/>
-    <tns:action id="CloneTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.CloneTestSuiteAction"/>
-    <tns:action id="RenameTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.RenameTestSuiteAction"/>
-    <tns:action id="DeleteTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.DeleteTestSuiteAction"/>
-    <tns:action id="TestSuiteTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestSuiteTestRunnerAction"/>
-    <tns:action id="ToggleDisableTestSuiteAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ToggleDisableTestSuiteAction"/>
-    <tns:action id="ExportTestSuite" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ExportTestSuiteAction"/>
+    <tns:action id="AddNewTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction"/>
+    <tns:action id="CloneTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.CloneTestSuiteAction"/>
+    <tns:action id="RenameTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.RenameTestSuiteAction"/>
+    <tns:action id="DeleteTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.DeleteTestSuiteAction"/>
+    <tns:action id="TestSuiteTestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestSuiteTestRunnerAction"/>
+    <tns:action id="ToggleDisableTestSuiteAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ToggleDisableTestSuiteAction"/>
+    <tns:action id="ExportTestSuite"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ExportTestSuiteAction"/>
     <tns:action id="ImportTestCase" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.ImportTestCaseAction"/>
-    <tns:action id="MoveTestSuiteDownAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteDownAction"/>
-    <tns:action id="MoveTestSuiteUpAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
+    <tns:action id="MoveTestSuiteDownAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteDownAction"/>
+    <tns:action id="MoveTestSuiteUpAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testsuite.MoveTestSuiteUpAction"/>
 
     <!-- TestCase Actions -->
-    <tns:action id="AddNewLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
-    <tns:action id="AddNewSecurityTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction"/>
-    <tns:action id="CloneTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.CloneTestCaseAction"/>
-    <tns:action id="ClearTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ClearTestCaseAction"/>
-    <tns:action id="TestCaseOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction"/>
-    <tns:action id="RenameTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.RenameTestCaseAction"/>
-    <tns:action id="DeleteTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.DeleteTestCaseAction"/>
-    <tns:action id="AddWsdlTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddWsdlTestStepAction"/>
-    <tns:action id="MoveTestCaseDownAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.MoveTestCaseDownAction"/>
-    <tns:action id="MoveTestCaseUpAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.MoveTestCaseUpAction"/>
-    <tns:action id="TestCaseTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestCaseTestRunnerAction"/>
-    <tns:action id="ToggleDisableTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ToggleDisableTestCaseAction"/>
+    <tns:action id="AddNewLoadTestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewLoadTestAction"/>
+    <tns:action id="AddNewSecurityTestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddNewSecurityTestAction"/>
+    <tns:action id="CloneTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.CloneTestCaseAction"/>
+    <tns:action id="ClearTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ClearTestCaseAction"/>
+    <tns:action id="TestCaseOptionsAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.TestCaseOptionsAction"/>
+    <tns:action id="RenameTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.RenameTestCaseAction"/>
+    <tns:action id="DeleteTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.DeleteTestCaseAction"/>
+    <tns:action id="AddWsdlTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.AddWsdlTestStepAction"/>
+    <tns:action id="MoveTestCaseDownAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.MoveTestCaseDownAction"/>
+    <tns:action id="MoveTestCaseUpAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.MoveTestCaseUpAction"/>
+    <tns:action id="TestCaseTestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.TestCaseTestRunnerAction"/>
+    <tns:action id="ToggleDisableTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ToggleDisableTestCaseAction"/>
     <tns:action id="ExportTestCase" actionClass="com.eviware.soapui.impl.wsdl.actions.testcase.ExportTestCaseAction"/>
 
 
     <!-- TestStep Actions -->
-    <tns:action id="RunFromTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RunFromTestStepAction"/>
-    <tns:action id="RenameTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RenameTestStepAction"/>
-    <tns:action id="DeleteTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.DeleteTestStepAction"/>
-    <tns:action id="CloneTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.CloneTestStepAction"/>
-    <tns:action id="InsertWsdlTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.InsertWsdlTestStepAction"/>
-    <tns:action id="MoveTestStepDownAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.MoveTestStepDownAction"/>
-    <tns:action id="MoveTestStepUpAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.MoveTestStepUpAction"/>
-    <tns:action id="ToggleDisableTestStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.ToggleDisableTestStepAction"/>
-    <tns:action id="SelectOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SelectOperationAction"/>
-    <tns:action id="ChangeOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction"/>
+    <tns:action id="RunFromTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RunFromTestStepAction"/>
+    <tns:action id="RenameTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.RenameTestStepAction"/>
+    <tns:action id="DeleteTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.DeleteTestStepAction"/>
+    <tns:action id="CloneTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.CloneTestStepAction"/>
+    <tns:action id="InsertWsdlTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.InsertWsdlTestStepAction"/>
+    <tns:action id="MoveTestStepDownAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.MoveTestStepDownAction"/>
+    <tns:action id="MoveTestStepUpAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.MoveTestStepUpAction"/>
+    <tns:action id="ToggleDisableTestStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.teststep.ToggleDisableTestStepAction"/>
+    <tns:action id="SelectOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SelectOperationAction"/>
+    <tns:action id="ChangeOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ChangeOperationAction"/>
     <tns:action id="SetWaitTimeAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.SetWaitTimeAction"/>
 
     <!-- WsdlMessageAssertion Actions -->
-    <tns:action id="RenameAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.RenameAssertionAction"/>
-    <tns:action id="DeleteAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.DeleteAssertionAction"/>
-    <tns:action id="ConfigureAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ConfigureAssertionAction"/>
-    <tns:action id="CloneAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.CloneAssertionAction"/>
-    <tns:action id="ToggleDisableAssertionAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ToggleDisableAssertionAction"/>
+    <tns:action id="RenameAssertionAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.RenameAssertionAction"/>
+    <tns:action id="DeleteAssertionAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.DeleteAssertionAction"/>
+    <tns:action id="ConfigureAssertionAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ConfigureAssertionAction"/>
+    <tns:action id="CloneAssertionAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.CloneAssertionAction"/>
+    <tns:action id="ToggleDisableAssertionAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.ToggleDisableAssertionAction"/>
 
     <!-- LoadTest Actions -->
-    <tns:action id="LoadTestOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction"/>
-    <tns:action id="LoadTestLoadTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.LoadTestLoadTestRunnerAction"/>
-    <tns:action id="RenameLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.RenameLoadTestAction"/>
-    <tns:action id="DeleteLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.DeleteLoadTestAction"/>
-    <tns:action id="CloneLoadTestAction" actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.CloneLoadTestAction"/>
+    <tns:action id="LoadTestOptionsAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction"/>
+    <tns:action id="LoadTestLoadTestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.LoadTestLoadTestRunnerAction"/>
+    <tns:action id="RenameLoadTestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.RenameLoadTestAction"/>
+    <tns:action id="DeleteLoadTestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.DeleteLoadTestAction"/>
+    <tns:action id="CloneLoadTestAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.loadtest.CloneLoadTestAction"/>
 
     <!-- SecurityTest Actions -->
-    <tns:action id="RenameSecurityTestAction" actionClass="com.eviware.soapui.security.actions.RenameSecurityTestAction"/>
-    <tns:action id="DeleteSecurityTestAction" actionClass="com.eviware.soapui.security.actions.DeleteSecurityTestAction"/>
+    <tns:action id="RenameSecurityTestAction"
+                actionClass="com.eviware.soapui.security.actions.RenameSecurityTestAction"/>
+    <tns:action id="DeleteSecurityTestAction"
+                actionClass="com.eviware.soapui.security.actions.DeleteSecurityTestAction"/>
     <tns:action id="CloneSecurityTestAction" actionClass="com.eviware.soapui.security.actions.CloneSecurityTestAction"/>
-    <tns:action id="SecurityTestOptionsAction" actionClass="com.eviware.soapui.security.actions.SecurityTestOptionsAction"/>
-    <tns:action id="SecurityTestSecurityTestRunnerAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.SecurityTestSecurityTestRunnerAction"/>
+    <tns:action id="SecurityTestOptionsAction"
+                actionClass="com.eviware.soapui.security.actions.SecurityTestOptionsAction"/>
+    <tns:action id="SecurityTestSecurityTestRunnerAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.SecurityTestSecurityTestRunnerAction"/>
 
     <!-- MockService Actions -->
-    <tns:action id="MockServiceOptionsAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction"/>
-    <tns:action id="AddNewMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.AddNewMockOperationAction"/>
-    <tns:action id="CloneMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.CloneMockServiceAction"/>
-    <tns:action id="RenameMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RenameMockServiceAction"/>
-    <tns:action id="DeleteMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.DeleteMockServiceAction"/>
-    <tns:action id="AddEndpointToInterfaceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.AddEndpointToInterfaceAction"/>
-    <tns:action id="StartMinimizedMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.StartMinimizedMockServiceAction"/>
-    <tns:action id="StopMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.StopMockServiceAction"/>
-    <tns:action id="RestartMockServiceAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RestartMockServiceAction"/>
-    <tns:action id="ExportMockService" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ExportMockService"/>
-    <tns:action id="ImportMockService" actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ImportMockService"/>
+    <tns:action id="MockServiceOptionsAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.MockServiceOptionsAction"/>
+    <tns:action id="AddNewMockOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.AddNewMockOperationAction"/>
+    <tns:action id="CloneMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.CloneMockServiceAction"/>
+    <tns:action id="RenameMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RenameMockServiceAction"/>
+    <tns:action id="DeleteMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.DeleteMockServiceAction"/>
+    <tns:action id="AddEndpointToInterfaceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.AddEndpointToInterfaceAction"/>
+    <tns:action id="StartMinimizedMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.StartMinimizedMockServiceAction"/>
+    <tns:action id="StopMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.StopMockServiceAction"/>
+    <tns:action id="RestartMockServiceAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.RestartMockServiceAction"/>
+    <tns:action id="ExportMockService"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ExportMockService"/>
+    <tns:action id="ImportMockService"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockservice.ImportMockService"/>
     <tns:action id="MockAsWar" actionClass="com.eviware.soapui.actions.MockAsWarAction"/>
-    <tns:action id="AddEmptyRestMockResourceAction" actionClass="com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction"/>
+    <tns:action id="AddEmptyRestMockResourceAction"
+                actionClass="com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction"/>
 
     <!-- MockOperation Actions -->
-    <tns:action id="OpenRequestForMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction"/>
-    <tns:action id="NewMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction"/>
-    <tns:action id="RenameMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.RenameMockOperationAction"/>
-    <tns:action id="ChangeMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ChangeMockOperationAction"/>
-    <tns:action id="DeleteMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.DeleteMockOperationAction"/>
-    <tns:action id="AddOperationAsMockResponseStepAction" actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationAsMockResponseStepAction"/>
-    <tns:action id="ExportMockOperation" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ExportMockOperation"/>
-    <tns:action id="ImportMockOperation" actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ImportMockOperation"/>
+    <tns:action id="OpenRequestForMockOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.OpenRequestForMockOperationAction"/>
+    <tns:action id="NewMockResponseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.NewMockResponseAction"/>
+    <tns:action id="RenameMockOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.RenameMockOperationAction"/>
+    <tns:action id="ChangeMockOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ChangeMockOperationAction"/>
+    <tns:action id="DeleteMockOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.DeleteMockOperationAction"/>
+    <tns:action id="AddOperationAsMockResponseStepAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.operation.AddOperationAsMockResponseStepAction"/>
+    <tns:action id="ExportMockOperation"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ExportMockOperation"/>
+    <tns:action id="ImportMockOperation"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockoperation.ImportMockOperation"/>
 
     <!-- MockResponse Actions -->
-    <tns:action id="OpenRequestForMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction"/>
-    <tns:action id="CreateTestRequestForMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CreateTestRequestForMockResponseAction"/>
-    <tns:action id="CloneMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CloneMockResponseAction"/>
-    <tns:action id="RenameMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.RenameMockResponseAction"/>
-    <tns:action id="DeleteMockResponseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.DeleteMockResponseAction"/>
-    <tns:action id="AddMockResponseToTestCaseAction" actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.AddMockResponseToTestCaseAction"/>
-    <tns:action id="SetMockOperationAction" actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetMockOperationAction"/>
+    <tns:action id="OpenRequestForMockResponseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.OpenRequestForMockResponseAction"/>
+    <tns:action id="CreateTestRequestForMockResponseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CreateTestRequestForMockResponseAction"/>
+    <tns:action id="CloneMockResponseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.CloneMockResponseAction"/>
+    <tns:action id="RenameMockResponseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.RenameMockResponseAction"/>
+    <tns:action id="DeleteMockResponseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.DeleteMockResponseAction"/>
+    <tns:action id="AddMockResponseToTestCaseAction"
+                actionClass="com.eviware.soapui.impl.wsdl.actions.mockresponse.AddMockResponseToTestCaseAction"/>
+    <tns:action id="SetMockOperationAction"
+                actionClass="com.eviware.soapui.impl.wsdl.teststeps.actions.SetMockOperationAction"/>
 
     <!-- MultiActions -->
-    <tns:action id="MultiTestStepDeleteAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDeleteAction"/>
-    <tns:action id="MultiTestStepEnableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepEnableAction"/>
-    <tns:action id="MultiTestStepDisableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDisableAction"/>
-    <tns:action id="MultiAssertionDeleteAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDeleteAction"/>
+    <tns:action id="MultiTestStepDeleteAction"
+                actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDeleteAction"/>
+    <tns:action id="MultiTestStepEnableAction"
+                actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepEnableAction"/>
+    <tns:action id="MultiTestStepDisableAction"
+                actionClass="com.eviware.soapui.impl.actions.multi.MultiTestStepDisableAction"/>
+    <tns:action id="MultiAssertionDeleteAction"
+                actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDeleteAction"/>
     <!-- <tns:action id="MultiAssertionEnableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionEnableAction"
         /> <tns:action id="MultiAssertionDisableAction" actionClass="com.eviware.soapui.impl.actions.multi.MultiAssertionDisableAction"
         /> -->
@@ -221,12 +360,14 @@
 
 
     <!-- Workspace Action Group -->
-    <tns:actionGroup name="Workspace Actions" id="WorkspaceImplActions" class="com.eviware.soapui.impl.actions.WorkspaceImplSoapUIActionGroup">
+    <tns:actionGroup name="Workspace Actions" id="WorkspaceImplActions"
+                     class="com.eviware.soapui.impl.actions.WorkspaceImplSoapUIActionGroup">
         <tns:actionMapping actionId="NewWsdlProjectAction" keyStroke="menu N"/>
         <tns:actionMapping actionId="NewRestProjectAction" keyStroke="menu alt N"/>
         <tns:actionMapping actionId="NewGenericProjectAction" keyStroke="menu alt shift N"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ImportWsdlProjectAction" keyStroke="menu I"/>
+        <tns:actionMapping actionId="InstallPluginAction"/>
         <tns:actionMapping actionId="ImportPackedProjectAction"/>
         <tns:actionMapping actionId="ImportRemoteWsdlProjectAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -243,7 +384,8 @@
     </tns:actionGroup>
 
     <!-- Project Action Groups -->
-    <tns:actionGroup name="Project Actions" id="WsdlProjectActions" class="com.eviware.soapui.impl.wsdl.actions.project.WsdlProjectSoapUIActionGroup"/>
+    <tns:actionGroup name="Project Actions" id="WsdlProjectActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.project.WsdlProjectSoapUIActionGroup"/>
 
     <tns:actionGroup name="Disabled Project Actions" id="DisabledWsdlProjectActions" default="ReloadProjectAction">
         <tns:actionMapping actionId="ReloadProjectAction" keyStroke="F5"/>
@@ -259,7 +401,8 @@
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="Encrypted Project Actions" id="EncryptedWsdlProjectActions" default="OpenAndDecryptProjectAction">
+    <tns:actionGroup name="Encrypted Project Actions" id="EncryptedWsdlProjectActions"
+                     default="OpenAndDecryptProjectAction">
         <tns:actionMapping actionId="OpenAndDecryptProjectAction"/>
         <tns:actionMapping actionId="RemoveProjectAction" keyStroke="DELETE"/>
 
@@ -267,7 +410,8 @@
     </tns:actionGroup>
 
     <tns:actionGroup name="Enabled Project Actions" id="EnabledWsdlProjectActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Project View" description="Shows the Project View for this Project" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Project View"
+                           description="Shows the Project View for this Project" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddWsdlAction" keyStroke="menu U"/>
         <tns:actionMapping actionId="AddWadlAction" keyStroke="menu F"/>
@@ -303,7 +447,6 @@
         <tns:actionMapping actionId="StarHermesJMS"/>
 
 
-
     </tns:actionGroup>
 
     <!-- Interface Action Groups -->
@@ -329,8 +472,10 @@
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="Interface Actions" id="WsdlInterfaceActions" default="ShowDesktopPanelAction" class="com.eviware.soapui.impl.wsdl.actions.iface.WsdlInterfaceSoapUIActionGroup">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Interface Viewer" description="Shows the Interface Viewer for this Interface" keyStroke="ENTER"/>
+    <tns:actionGroup name="Interface Actions" id="WsdlInterfaceActions" default="ShowDesktopPanelAction"
+                     class="com.eviware.soapui.impl.wsdl.actions.iface.WsdlInterfaceSoapUIActionGroup">
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Interface Viewer"
+                           description="Shows the Interface Viewer for this Interface" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddJMSEndpointAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -355,7 +500,8 @@
 
     <!-- RestService ActionGroup -->
     <tns:actionGroup name="REST Service Actions" id="RestServiceActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Service Viewer" description="Shows the Service Viewer for this REST Service" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Service Viewer"
+                           description="Shows the Service Viewer for this REST Service" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="GenerateWadlTestSuiteAction"/>
         <tns:actionMapping actionId="GenerateRestMockServiceAction"/>
@@ -385,7 +531,8 @@
 
     <!-- RestResource ActionGroup -->
     <tns:actionGroup name="REST Resource Actions" id="RestResourceActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Resource Viewer" description="Shows the Resource Viewer for this REST Resource" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Resource Viewer"
+                           description="Shows the Resource Viewer for this REST Resource" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="NewRestMethodAction"/>
         <tns:actionMapping actionId="NewChildResourceAction"/>
@@ -399,7 +546,8 @@
 
     <!-- RestMethod ActionGroup -->
     <tns:actionGroup name="REST Method Actions" id="RestMethodActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Method Viewer" description="Shows the Method Viewer for this REST Method" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Method Viewer"
+                           description="Shows the Method Viewer for this REST Method" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="NewRestRequestAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -412,7 +560,8 @@
 
     <!-- WsdlRequest ActionGroup -->
     <tns:actionGroup name="Request Actions" id="WsdlRequestActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Request Editor" description="Shows the Request Editor for this Request" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Request Editor"
+                           description="Shows the Request Editor for this Request" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddRequestToTestCaseAction" keyStroke="menu alt A" iconPath="/addToTestCase.gif"/>
         <tns:actionMapping actionId="AddRequestToMockServiceAction" iconPath="/addToMockService.gif"/>
@@ -427,10 +576,13 @@
 
     <!-- RestRequest ActionGroup -->
     <tns:actionGroup name="REST Request Actions" id="RestRequestActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Request Editor" description="Shows the Request Editor for this Request" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show Request Editor"
+                           description="Shows the Request Editor for this Request" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="AddRestRequestToTestCaseAction" keyStroke="menu alt A" iconPath="/addToTestCase.gif"/>
-        <tns:actionMapping actionId="AddRestRequestToMockServiceAction" keyStroke="menu alt M" iconPath="/rest_request.gif"/>
+        <tns:actionMapping actionId="AddRestRequestToTestCaseAction" keyStroke="menu alt A"
+                           iconPath="/addToTestCase.gif"/>
+        <tns:actionMapping actionId="AddRestRequestToMockServiceAction" keyStroke="menu alt M"
+                           iconPath="/rest_request.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="CloneRestRequestAction" keyStroke="F9" iconPath="/clone_request.gif"/>
         <tns:actionMapping actionId="RenameRestRequestAction" keyStroke="F2"/>
@@ -440,8 +592,10 @@
     </tns:actionGroup>
 
     <!-- WsdlTestSuite ActionGroup -->
-    <tns:actionGroup name="TestSuite Actions" id="WsdlTestSuiteActions" default="ShowDesktopPanelAction" class="com.eviware.soapui.impl.wsdl.actions.testsuite.WsdlTestSuiteSoapUIActionGroup">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show TestSuite Editor" description="Shows the TestSuite Editor for this TestSuite" keyStroke="ENTER"/>
+    <tns:actionGroup name="TestSuite Actions" id="WsdlTestSuiteActions" default="ShowDesktopPanelAction"
+                     class="com.eviware.soapui.impl.wsdl.actions.testsuite.WsdlTestSuiteSoapUIActionGroup">
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show TestSuite Editor"
+                           description="Shows the TestSuite Editor for this TestSuite" keyStroke="ENTER"/>
         <tns:actionMapping actionId="ToggleDisableTestSuiteAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="AddNewTestCaseAction" keyStroke="menu N" iconPath="/testCase.gif"/>
@@ -462,10 +616,13 @@
     </tns:actionGroup>
 
     <!-- WsdlTestCase ActionGroup -->
-    <tns:actionGroup name="Add Step" id="WsdlTestCaseAddStepActions" class="com.eviware.soapui.impl.wsdl.actions.testcase.WsdlTestCaseAddStepSoapUIActionGroup"/>
+    <tns:actionGroup name="Add Step" id="WsdlTestCaseAddStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.testcase.WsdlTestCaseAddStepSoapUIActionGroup"/>
 
-    <tns:actionGroup name="TestCase Actions" id="WsdlTestCaseActions" default="ShowDesktopPanelAction" class="com.eviware.soapui.impl.wsdl.actions.testcase.WsdlTestCaseSoapUIActionGroup">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show TestCase Editor" description="Shows the TestCase Editor for this TestCase" keyStroke="ENTER"/>
+    <tns:actionGroup name="TestCase Actions" id="WsdlTestCaseActions" default="ShowDesktopPanelAction"
+                     class="com.eviware.soapui.impl.wsdl.actions.testcase.WsdlTestCaseSoapUIActionGroup">
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show TestCase Editor"
+                           description="Shows the TestCase Editor for this TestCase" keyStroke="ENTER"/>
         <tns:actionMapping actionId="ToggleDisableTestCaseAction"/>
         <tns:actionMapping actionId="TestCaseOptionsAction" keyStroke="menu shift O" iconPath="/options.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -491,7 +648,8 @@
     </tns:actionGroup>
 
     <tns:actionGroup name="TestSteps Node Actions" id="TestStepsTreeNodeActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show TestCase Editor" description="Shows the TestCase Editor for this TestCase" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show TestCase Editor"
+                           description="Shows the TestCase Editor for this TestCase" keyStroke="ENTER"/>
         <tns:actionMapping groupId="WsdlTestCaseAddStepActions" name="Add Step"/>
 
 
@@ -510,7 +668,8 @@
     </tns:actionGroup>
 
     <!-- WsdlTestStep ActionGroup -->
-    <tns:actionGroup name="Insert Step" id="WsdlTestStepInsertStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepInsertStepSoapUIActionGroup"/>
+    <tns:actionGroup name="Insert Step" id="WsdlTestStepInsertStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepInsertStepSoapUIActionGroup"/>
 
     <tns:actionGroup name="Default TestStep Actions" id="WsdlTestStepActions">
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -524,7 +683,8 @@
         <tns:actionMapping actionId="MoveTestStepDownAction" keyStroke="menu DOWN"/>
     </tns:actionGroup>
 
-    <tns:actionGroup name="WSDL RequestStep Actions" id="WsdlTestRequestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="WSDL RequestStep Actions" id="WsdlTestRequestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ChangeOperationAction"/>
         <tns:actionMapping actionId="SelectOperationAction"/>
@@ -532,64 +692,77 @@
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="HTTP RequestStep Actions" id="HttpTestRequestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="HTTP RequestStep Actions" id="HttpTestRequestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="REST RequestStep Actions" id="RestTestRequestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="Manual TestStep Actions" id="ManualTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="Manual TestStep Actions" id="ManualTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="PropertyTransfer Actions" id="PropertyTransfersTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="PropertyTransfer Actions" id="PropertyTransfersTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="DelayStep Actions" id="WsdlDelayTestStepActions" default="SetWaitTimeAction" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="DelayStep Actions" id="WsdlDelayTestStepActions" default="SetWaitTimeAction"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="SetWaitTimeAction"/>
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="GroovyScript Actions" id="WsdlGroovyScriptTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="GroovyScript Actions" id="WsdlGroovyScriptTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="JdbcRequest Actions" id="JdbcRequestTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="JdbcRequest Actions" id="JdbcRequestTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="AMFRequest Actions" id="AMFRequestTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="AMFRequest Actions" id="AMFRequestTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="GotoStep Actions" id="WsdlGotoTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="GotoStep Actions" id="WsdlGotoTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="PropertiesStep Actions" id="WsdlPropertiesTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="PropertiesStep Actions" id="WsdlPropertiesTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="RunTestCaseStep Actions" id="WsdlRunTestCaseTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
+    <tns:actionGroup name="RunTestCaseStep Actions" id="WsdlRunTestCaseTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup">
 
 
     </tns:actionGroup>
 
-    <tns:actionGroup name="WsdlMockResponseTestStep Actions" id="WsdlMockResponseTestStepActions" class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup" default="ConfigureDataSourceLoopStepAction">
+    <tns:actionGroup name="WsdlMockResponseTestStep Actions" id="WsdlMockResponseTestStepActions"
+                     class="com.eviware.soapui.impl.wsdl.actions.teststep.WsdlTestStepSoapUIActionGroup"
+                     default="ConfigureDataSourceLoopStepAction">
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="SetMockOperationAction"/>
 
@@ -597,7 +770,8 @@
     </tns:actionGroup>
 
     <!-- WsdlMessageAssertions -->
-    <tns:actionGroup name="Assertion Action" id="WsdlMessageAssertionActions" class="com.eviware.soapui.impl.wsdl.teststeps.actions.WsdlMessageAssertionSoapUIActionGroup">
+    <tns:actionGroup name="Assertion Action" id="WsdlMessageAssertionActions"
+                     class="com.eviware.soapui.impl.wsdl.teststeps.actions.WsdlMessageAssertionSoapUIActionGroup">
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ToggleDisableAssertionAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -608,7 +782,8 @@
 
     <!-- WsdlLoadTest ActionGroup -->
     <tns:actionGroup name="LoadTest Actions" id="WsdlLoadTestActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show LoadTest Editor" description="Shows the LoadTest Editor for this LoadTest" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show LoadTest Editor"
+                           description="Shows the LoadTest Editor for this LoadTest" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="LoadTestOptionsAction" keyStroke="menu shift O" iconPath="/options.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -623,7 +798,8 @@
 
     <!-- SecurityTest ActionGroup -->
     <tns:actionGroup name="SecurityTest Actions" id="SecurityTestActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show SecurityTest Editor" description="Shows the SecurityTest Editor for this SecurityTest" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show SecurityTest Editor"
+                           description="Shows the SecurityTest Editor for this SecurityTest" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SecurityTestOptionsAction" keyStroke="menu shift O" iconPath="/options.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="SecurityTestSecurityTestRunnerAction"/>
@@ -637,7 +813,8 @@
 
     <!-- WsdlMockService ActionGroup -->
     <tns:actionGroup name="MockService Actions" id="WsdlMockServiceActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockService Editor" description="Shows the MockService Editor for this MockService" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockService Editor"
+                           description="Shows the MockService Editor for this MockService" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
         <tns:actionMapping actionId="StopMockServiceAction"/>
@@ -659,7 +836,8 @@
 
     <!-- WsdlMockOperation ActionGroup -->
     <tns:actionGroup name="MockOperation Actions" id="WsdlMockOperationActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockOperation Editor" description="Shows the MockOperation Editor for this MockOperation" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockOperation Editor"
+                           description="Shows the MockOperation Editor for this MockOperation" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="OpenRequestForMockOperationAction" iconPath="/open_request.gif"/>
         <tns:actionMapping actionId="NewMockResponseAction" keyStroke="menu N" iconPath="/addToMockService.gif"/>
@@ -676,7 +854,8 @@
 
     <!-- WsdlMockResponse ActionGroup -->
     <tns:actionGroup name="MockResponse Actions" id="WsdlMockResponseActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockResponse Editor" description="Shows the MockResponse Editor for this MockResponse" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockResponse Editor"
+                           description="Shows the MockResponse Editor for this MockResponse" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="OpenRequestForMockResponseAction" iconPath="/open_request.gif"/>
         <tns:actionMapping actionId="AddMockResponseToTestCaseAction"/>
@@ -691,7 +870,8 @@
 
     <!-- RestMockService ActionGroup -->
     <tns:actionGroup name="RestMockService Actions" id="RestMockServiceActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show REST MockService Editor" description="Shows the REST MockService Editor for this MockService" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show REST MockService Editor"
+                           description="Shows the REST MockService Editor for this MockService" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="StartMinimizedMockServiceAction"/>
         <tns:actionMapping actionId="StopMockServiceAction"/>
@@ -707,7 +887,8 @@
 
     <!-- RestMockAction ActionGroup -->
     <tns:actionGroup name="RestMockAction Actions" id="RestMockActionActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockAction Editor" description="Shows the MockAction Editor for this MockAction" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockAction Editor"
+                           description="Shows the MockAction Editor for this MockAction" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="NewMockResponseAction" keyStroke="menu N" iconPath="/addToRestMockAction.gif"/>
         <tns:actionMapping actionId="SeperatorAction"/>
@@ -719,7 +900,8 @@
 
     <!-- RestMockResponse ActionGroup -->
     <tns:actionGroup name="RestMockResponse Actions" id="RestMockResponseActions" default="ShowDesktopPanelAction">
-        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockResponse Editor" description="Shows the MockResponse Editor for this MockResponse" keyStroke="ENTER"/>
+        <tns:actionMapping actionId="ShowDesktopPanelAction" name="Show MockResponse Editor"
+                           description="Shows the MockResponse Editor for this MockResponse" keyStroke="ENTER"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="RenameMockResponseAction" keyStroke="F2"/>
         <tns:actionMapping actionId="DeleteMockResponseAction" keyStroke="DELETE"/>
