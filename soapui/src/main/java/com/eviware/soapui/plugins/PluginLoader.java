@@ -7,6 +7,7 @@ import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -15,9 +16,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -33,7 +35,8 @@ public class PluginLoader {
     private SoapUIFactoryRegistry factoryRegistry;
     private SoapUIActionRegistry actionRegistry;
     private SoapUIListenerRegistry listenerRegistry;
-    private List<Plugin> installedPlugins = new ArrayList<Plugin>();
+    private Map<File, Plugin> installedPlugins = new HashMap<File, Plugin>();
+    private File pluginDirectory;
 
     public PluginLoader(SoapUIExtensionClassLoader extensionClassLoader, SoapUIFactoryRegistry factoryRegistry,
                         SoapUIActionRegistry actionRegistry, SoapUIListenerRegistry listenerRegistry) {
@@ -41,16 +44,46 @@ public class PluginLoader {
         this.factoryRegistry = factoryRegistry;
         this.actionRegistry = actionRegistry;
         this.listenerRegistry = listenerRegistry;
+        pluginDirectory = new File(System.getProperty("soapui.home"), "plugins");
+    }
+
+    public boolean installPlugin(File pluginFile) throws IOException {
+        Plugin plugin = loadPluginFrom(pluginFile);
+        if (plugin != null) {
+            deleteOldVersionOf(plugin);
+            File destinationFile = new File(pluginDirectory, pluginFile.getName());
+            FileUtils.copyFile(pluginFile, destinationFile);
+            installedPlugins.put(destinationFile, plugin);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void deleteOldVersionOf(Plugin plugin) {
+        for (File installedPluginFile : installedPlugins.keySet()) {
+            if (installedPlugins.get(installedPluginFile).getId().equals(plugin.getId())) {
+                if (!installedPluginFile.delete()) {
+                    throw new RuntimeException("Couldn't delete old plugin file " + installedPluginFile);
+                }
+                installedPlugins.remove(installedPluginFile);
+                break;
+            }
+        }
     }
 
     public void loadPlugins() {
-        File[] pluginFiles = new File("plugins").listFiles();
+        File[] pluginFiles = pluginDirectory.listFiles();
         if (pluginFiles != null) {
             for (File pluginFile : pluginFiles) {
                 log.info("Adding plugin from [" + pluginFile.getAbsolutePath() + "]");
                 try {
-                    if (!loadPluginFrom(pluginFile)) {
+                    Plugin plugin = loadPluginFrom(pluginFile);
+                    if (plugin == null) {
                         loadOldStylePluginFrom(pluginFile);
+                    } else {
+                        //TODO: probably check if there is a duplicate in the list, here or elsewhere
+                        installedPlugins.put(pluginFile, plugin);
                     }
                 } catch (IOException e) {
                     log.warn("Could not load plugin from file [" + pluginFile + "]");
@@ -59,28 +92,30 @@ public class PluginLoader {
         }
     }
 
-    public boolean loadPluginFrom(File pluginFile) throws IOException {
-        JarClassLoader jarClassLoader = new JarClassLoader(pluginFile, extensionClassLoader);
-        Reflections jarFileScanner = new Reflections(new ConfigurationBuilder().setUrls(jarClassLoader.getURLs()));
-        Set<Class<? extends Plugin>> pluginClasses = jarFileScanner.getSubTypesOf(Plugin.class);
+    private Plugin loadPluginFrom(File pluginFile) throws IOException {
+        JarClassLoader jarClassLoader = new JarClassLoader(pluginFile, ClassLoader.getSystemClassLoader());
+        Reflections jarFileScanner = new Reflections(new ConfigurationBuilder().setUrls(jarClassLoader.getURLs()).addClassLoader(jarClassLoader));
+        Set<Class<?>> pluginClasses = jarFileScanner.getTypesAnnotatedWith(PluginConfiguration.class);
         if (pluginClasses.isEmpty()) {
             log.warn("No plugin classes found in JAR file " + pluginFile);
-        }
-        if (pluginClasses.size() == 1) {
-            installedPlugins.add(loadPlugin(pluginClasses.iterator().next()));
-            return true;
+            return null;
+        } else if (pluginClasses.size() == 1) {
+            return loadPlugin(pluginClasses.iterator().next());
         } else {
             throw new InvalidPluginException("Multiple plugin classes found in " + pluginFile + ": " + pluginClasses);
         }
     }
 
-    public List<Plugin> getInstalledPlugins() {
-        return Collections.unmodifiableList(installedPlugins);
+    public Collection<Plugin> getInstalledPlugins() {
+        return Collections.unmodifiableCollection(installedPlugins.values());
     }
 
-    private Plugin loadPlugin(Class<? extends Plugin> pluginClass) {
+    private Plugin loadPlugin(Class<?> pluginClass) {
         try {
-            Plugin plugin = pluginClass.newInstance();
+            if (!Plugin.class.isAssignableFrom(pluginClass)) {
+                throw new InvalidPluginException("Invalid plugin class: " + pluginClass + " does not implement Plugin");
+            }
+            Plugin plugin = (Plugin) pluginClass.newInstance();
             plugin.initialize();
             for (SoapUIFactory factory : plugin.getFactories()) {
                 factoryRegistry.addFactory(factory.getFactoryType(), factory);

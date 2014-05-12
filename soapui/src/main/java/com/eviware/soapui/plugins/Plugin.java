@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Defines the interface of a SoapUI plugin.
  * The easiest way to create such a class is to extend PluginAdapter. A class implementing this interface
- * will be automatically discovered when the plugin JAR is loaded.
+ * and annotated with {@link PluginConfiguration} will be automatically discovered when the plugin JAR is loaded.
  */
 public interface Plugin {
     /**
@@ -20,20 +20,7 @@ public interface Plugin {
      */
     boolean isActive();
 
-    /**
-     * Returns a String identifying the group to which this plugin belongs. Ideally the group ID should be
-     * in the same format as that of a Maven group ID.
-     *
-     * @return a dot-separated String identifier for the group
-     */
-    String getGroupId();
-
-    /**
-     * Returns the name of the plugin.
-     *
-     * @return a non-null name, which should be unique when combined with the group ID.
-     */
-    String getName();
+    PluginId getId();
 
     /**
      * The version of this plugin.

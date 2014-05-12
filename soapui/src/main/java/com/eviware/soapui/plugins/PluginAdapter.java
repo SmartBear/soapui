@@ -12,31 +12,28 @@ import java.util.List;
  */
 public class PluginAdapter implements Plugin {
 
-    public static final String DEFAULT_VERSION_STRING = "0.1";
-
     @Override
     public boolean isActive() {
         return true;
     }
 
     @Override
-    public String getGroupId() {
-        return getClass().getPackage().getName();
-    }
-
-    @Override
-    public String getName() {
-        return getClass().getSimpleName();
+    public PluginId getId() {
+        String groupId = getConfigurationAnnotation().groupId();
+        String name = getConfigurationAnnotation().name();
+        return new PluginId(groupId, name);
     }
 
     @Override
     public Version getVersion() {
-        return Version.fromString(DEFAULT_VERSION_STRING);
+        return Version.fromString(getConfigurationAnnotation().version());
     }
 
     @Override
     public void initialize() {
-
+        if (getConfigurationAnnotation() == null) {
+            throw new IllegalStateException("All plugin classes must be annotated with the @PluginConfigurationAnnotation");
+        }
     }
 
     @Override
@@ -52,5 +49,9 @@ public class PluginAdapter implements Plugin {
     @Override
     public Collection<? extends SoapUIFactory> getFactories() {
         return Collections.emptySet();
+    }
+
+    private PluginConfiguration getConfigurationAnnotation() {
+        return getClass().getAnnotation(PluginConfiguration.class);
     }
 }
