@@ -400,7 +400,7 @@ public class SoapMonitor extends JPanel {
         toolbar.addFixed(addToMockServiceButton = UISupport.createToolbarButton(UISupport
                 .createImageIcon("/mockService.gif")));
         toolbar
-                .addFixed(clearButton = UISupport.createToolbarButton(UISupport.createImageIcon("/clear_loadtest.gif")));
+                .addFixed(clearButton = UISupport.createToolbarButton(UISupport.createImageIcon("/clear.png")));
 
         startButton.setToolTipText("Starts the HTTP Monitor as configured");
         stopButton.setToolTipText("Stops the HTTP Monitor");
