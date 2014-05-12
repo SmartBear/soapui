@@ -94,7 +94,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
         super(assertionConfig, modelItem, true, true, true, false);
 
         XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
-        scriptText = reader.readString("scriptText", "");
+        scriptText = reader.readString("scriptText", "assert(false); // Please note that you need an assertion in the script");
 
         scriptEngine = SoapUIScriptEngineRegistry.create(this);
         scriptEngine.setScript(scriptText);
