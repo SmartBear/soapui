@@ -50,6 +50,7 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  */
 
 public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer {
+    public static final String TRANSFERS = PropertyTransfersTestStep.class.getName()+"@transfers";
     private PropertyTransfersStepConfig transferStepConfig;
     private boolean canceled;
     private List<PropertyTransfer> transfers = new ArrayList<PropertyTransfer>();
@@ -175,11 +176,14 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
         transfer.setName(name);
         transfer.setFailOnError(true);
         transfers.add(transfer);
+        fireIndexedPropertyChange(TRANSFERS, transfers.size() - 1, null, transfer);
         return transfer;
     }
 
     public void removeTransferAt(int index) {
-        transfers.remove(index).release();
+        final PropertyTransfer removed = transfers.remove(index);
+        fireIndexedPropertyChange(TRANSFERS, index, removed, null);
+        removed.release();
         transferStepConfig.removeTransfers(index);
     }
 
