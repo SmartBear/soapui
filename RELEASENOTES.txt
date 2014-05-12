@@ -1,3 +1,9 @@
+# SoapUI 5.0.1
+#### Released only JAR for LoadUI release, no installers: 2014-05-27 ####
+
+### Bugs fixed ###
+* Mock Response test step fails (SOAP-2207)
+
 # SoapUI 5.0.0
 #### Released 2014-04-09 ####
 
