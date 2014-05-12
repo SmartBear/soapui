@@ -136,7 +136,7 @@ public class DefaultSoapUICore implements SoapUICore {
         initSettings(settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile);
 
         initExtensions(getExtensionClassLoader());
-        pluginLoader = new PluginLoader( getExtensionClassLoader(), getFactoryRegistry(), getActionRegistry(),
+        pluginLoader = new PluginLoader(getExtensionClassLoader(), getFactoryRegistry(), getActionRegistry(),
                 getListenerRegistry());
         pluginLoader.loadPlugins();
         initCoreComponents();
@@ -612,6 +612,11 @@ public class DefaultSoapUICore implements SoapUICore {
             initSecurityScanRegistry();
         }
         return securityScanRegistry;
+    }
+
+    @Override
+    public PluginLoader getPluginLoader() {
+        return pluginLoader;
     }
 
 }

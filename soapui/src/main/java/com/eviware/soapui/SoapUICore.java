@@ -16,14 +16,15 @@
 
 package com.eviware.soapui;
 
-import java.io.File;
-
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
+import com.eviware.soapui.plugins.PluginLoader;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
+
+import java.io.File;
 
 public interface SoapUICore {
     public final static String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
@@ -45,4 +46,6 @@ public interface SoapUICore {
     public SoapUIExtensionClassLoader getExtensionClassLoader();
 
     public SecurityScanRegistry getSecurityScanRegistry();
+
+    public PluginLoader getPluginLoader();
 }
