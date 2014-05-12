@@ -11,7 +11,7 @@
  */
 package com.eviware.soapui.impl.rest.support.handlers;
 
-import net.sf.json.JSONSerializer;
+import com.eviware.soapui.support.JsonUtil;
 import org.junit.Before;
 import org.junit.Test;
 import net.sf.json.JSON;
@@ -30,7 +30,7 @@ public class JsonXmlSerializerTest {
 
     @Test
     public void serializesJsonWithVanillaNames() throws Exception {
-        JSON parse = JSONSerializer.toJSON("{ name: 'Barack', surname: 'Obama', profession: 'president'}");
+        JSON parse = new JsonUtil().parseTrimmedText("{ name: 'Barack', surname: 'Obama', profession: 'president'}");
 
         assertThat(serializer.write(parse), is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<o>" +
                 "<name type=\"string\">Barack</name>" +
@@ -41,7 +41,7 @@ public class JsonXmlSerializerTest {
 
     @Test
     public void serializesJsonWithDollarSign() throws Exception {
-        JSON parse = JSONSerializer.toJSON("{ $: 'value' }");
+        JSON parse = new JsonUtil().parseTrimmedText("{ $: 'value' }");
 
         assertThat(serializer.write(parse), is("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<o>" +
                 "<_ type=\"string\">value</_>" +

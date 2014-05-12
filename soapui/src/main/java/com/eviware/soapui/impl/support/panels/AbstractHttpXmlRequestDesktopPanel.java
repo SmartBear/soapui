@@ -26,17 +26,16 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
-import net.sf.json.groovy.JsonSlurper;
 
 import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.StringReader;
 
 import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
@@ -122,7 +121,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
                 return;
             }
             try {
-                JSON oldJson = new JsonSlurper().parse(new StringReader(requestContent));
+                JSON oldJson = new JsonUtil().parseTrimmedText(requestContent);
                 if (!(json instanceof JSONObject) || !(oldJson instanceof JSONObject)) {
                     return;
                 }

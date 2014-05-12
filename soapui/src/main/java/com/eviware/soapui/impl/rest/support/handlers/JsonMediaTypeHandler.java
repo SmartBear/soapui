@@ -24,11 +24,11 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.TypedContent;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
-import net.sf.json.JSONSerializer;
 
 import java.net.URL;
 
@@ -57,7 +57,7 @@ public class JsonMediaTypeHandler implements MediaTypeHandler {
             }
             // remove nulls - workaround for bug in xmlserializer!?
             content = content.replaceAll("\\\\u0000", "");
-            JSON json = JSONSerializer.toJSON(content);
+            JSON json = new JsonUtil().parseTrimmedText(content);
             JsonXmlSerializer serializer = new JsonXmlSerializer();
             serializer.setTypeHintsEnabled(false);
             serializer.setRootName(HttpUtils.isErrorStatus(response.getStatusCode()) ? "Fault" : "Response");
@@ -86,7 +86,7 @@ public class JsonMediaTypeHandler implements MediaTypeHandler {
             }
             // remove nulls - workaround for bug in xmlserializer!?
             content = content.replaceAll("\\\\u0000", "");
-            JSON json = JSONSerializer.toJSON(content);
+            JSON json = new JsonUtil().parseTrimmedText(content);
             JsonXmlSerializer serializer = new JsonXmlSerializer();
             serializer.setTypeHintsEnabled(false);
             serializer.setRootName("Response");

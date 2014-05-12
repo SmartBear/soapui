@@ -22,12 +22,12 @@ import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
-import net.sf.json.JSONSerializer;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
@@ -100,7 +100,7 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
 
             if (JsonMediaTypeHandler.seemsToBeJsonContentType(httpResponse.getContentType())) {
                 try {
-                    JSON json = JSONSerializer.toJSON(httpResponse.getContentAsString());
+                    JSON json = new JsonUtil().parseTrimmedText(httpResponse.getContentAsString());
                     if (json.isEmpty()) {
                         content = "<Empty JSON content>";
                     } else {
