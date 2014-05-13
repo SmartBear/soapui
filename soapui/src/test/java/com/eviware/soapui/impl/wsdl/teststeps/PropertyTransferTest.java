@@ -22,7 +22,9 @@ import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 public class PropertyTransferTest {
 
@@ -194,4 +196,15 @@ public class PropertyTransferTest {
         assertEquals("<bil xmlns:ns1=\"ns1\"><ns1:name>audi</ns1:name></bil>", targetProperty.getValue());
     }
 
+    @Test
+    public void supportsJsonPathInSource() throws Exception {
+        sourceProperty.setValue("{ persons: [" +
+                "{ firstName: 'Anders', lastName: 'And' }," +
+                "{ firstName: 'Anders', lastName: 'And' }" +
+                "] }");
+        transfer.setSourcePath("persons[0].firstName");
+        transfer.transferJsonPathToString(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+
+        assertThat(targetProperty.getValue(), is("Anders"));
+    }
 }
