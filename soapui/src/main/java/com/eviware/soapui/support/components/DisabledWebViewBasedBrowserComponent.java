@@ -66,4 +66,8 @@ class DisabledWebViewBasedBrowserComponent implements WebViewBasedBrowserCompone
     @Override
     public void executeJavaScript(String script) {
     }
+
+    @Override
+    public void addJavaScriptEventHandler(String memberName, Object eventHandler) {
+    }
 }
