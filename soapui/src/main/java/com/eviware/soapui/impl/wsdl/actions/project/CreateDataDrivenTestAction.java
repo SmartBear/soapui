@@ -37,8 +37,6 @@ public class CreateDataDrivenTestAction extends AbstractSoapUIAction<WorkspaceIm
 
     @Override
     public void perform(WorkspaceImpl workspace, Object param) {
-        System.out.println(workspace.getName() + " lol");
-
         InputStream projectPath = getClass().getResourceAsStream("/soapui-projects/trial/Data-driven-soapui-project.xml");
         Project project = workspace.importProject(projectPath);
         selectDataSourceTestStep(project);
@@ -50,15 +48,4 @@ public class CreateDataDrivenTestAction extends AbstractSoapUIAction<WorkspaceIm
         UISupport.select(dataSourceTestStep);
         UISupport.showDesktopPanel(dataSourceTestStep);
     }
-
-    /*
-    private void unhookProjectFromFile() {
-        try {
-            Field projectPath = WsdlProject.class.getDeclaredField("path");
-            projectPath.set
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-    */
 }

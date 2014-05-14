@@ -133,8 +133,6 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     private static final String XML_FILE_TYPE = "XML Files (*.xml)";
     private static final String XML_EXTENSION = ".xml";
     public static final String ICON_NAME = "/project.gif";
-    private static final String COULD_NOT_LOAD_PROJECT_ERROR_MESSAGE = "Could not load project document from the specified path. " +
-            "Make sure the file you selected is a SoapUI project.";
 
     private WorkspaceImpl workspace;
     protected String path;
@@ -165,7 +163,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     protected Set<EnvironmentListener> environmentListeners = new HashSet<EnvironmentListener>();
 
-    protected ProjectEncryptionStatus encryptionStatus;
+    protected ProjectEncryptionStatus encryptionStatus = ProjectEncryptionStatus.NOT_ENCRYPTED;
 
     public enum ProjectEncryptionStatus {
         NOT_ENCRYPTED, ENCRYPTED_BAD_OR_NO_PASSWORD, ENCRYPTED_GOOD_PASSWORD;
@@ -1637,10 +1635,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     public void propertyChange(PropertyChangeEvent evt) {
         if ("projectPassword".equals(evt.getPropertyName())) {
-            if (encryptionStatus == NOT_ENCRYPTED & (evt.getOldValue() == null || ((String) evt.getOldValue()).length() == 0)) {
+            if (encryptionStatus == NOT_ENCRYPTED && (evt.getOldValue() == null || ((String) evt.getOldValue()).length() == 0)) {
                 encryptionStatus = ENCRYPTED_GOOD_PASSWORD;
             }
-            if (encryptionStatus == ENCRYPTED_GOOD_PASSWORD & (evt.getNewValue() == null || ((String) evt.getNewValue()).length() == 0)) {
+            if (encryptionStatus == ENCRYPTED_GOOD_PASSWORD && (evt.getNewValue() == null || ((String) evt.getNewValue()).length() == 0)) {
                 encryptionStatus = NOT_ENCRYPTED;
             }
 
