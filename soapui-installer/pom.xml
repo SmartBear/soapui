@@ -90,10 +90,6 @@
                             <value>${maven.install4j.cert}</value>
                         </property>
                         <property>
-                            <name>CERT_PASS</name>
-                            <value>${maven.install4j.cert.pass}</value>
-                        </property>
-                        <property>
                             <name>WIN_DLLS_PATH</name>
                             <value>${maven.install4j.cert}</value>
                         </property>
