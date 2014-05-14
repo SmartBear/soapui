@@ -37,6 +37,9 @@ public class URLDesktopPanel extends DefaultDesktopPanel {
         JPanel panel = (JPanel) getComponent();
 
         browser = WebViewBasedBrowserComponentFactory.createBrowserComponent(false, WebViewBasedBrowserComponent.PopupStrategy.EXTERNAL_BROWSER);
+
+        //browser.addJavaScriptEventHandler("templateProjectCreator", new TemplateProjectCreator());
+
         panel.add(browser.getComponent(), BorderLayout.CENTER);
 
         if (StringUtils.hasContent(url)) {
@@ -62,6 +65,10 @@ public class URLDesktopPanel extends DefaultDesktopPanel {
         return closed;
     }
 
+    protected WebViewBasedBrowserComponent getBrowser() {
+        return browser;
+    }
+
     private class Navigator implements Runnable {
         private final String url;
         private final String errorUrl;
@@ -77,4 +84,5 @@ public class URLDesktopPanel extends DefaultDesktopPanel {
 
         }
     }
+
 }
