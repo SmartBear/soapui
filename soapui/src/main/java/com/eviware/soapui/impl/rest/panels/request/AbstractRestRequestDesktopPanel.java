@@ -225,9 +225,6 @@ public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 ex
             case RESOURCE:
                 paramsPropertyHolder = getRequest().getResource().getParams();
                 break;
-            //case REQUEST:     TODO: uncomment when we support request level parameters
-            //	paramsPropertyHolder = getRequest().getParams();
-            //	break;
         }
 
         if (paramsPropertyHolder != null) {
