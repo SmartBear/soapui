@@ -38,7 +38,6 @@
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
                     <finalName>${project.name.full}</finalName>
-                    <appendAssemblyId>true</appendAssemblyId>
                 </configuration>
             </plugin>
 
@@ -78,19 +77,11 @@
                             <value>${project.parent.basedir}/soapui/src</value>
                         </property>
                         <property>
-                            <name>SIGNTOOL_PATH</name>
-                            <value>${maven.install4j.signtool}</value>
-                        </property>
-                        <property>
                             <name>MAC_CERT_PATH</name>
                             <value>${maven.install4j.maccert}</value>
                         </property>
                         <property>
                             <name>CERT_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
-                            <name>WIN_DLLS_PATH</name>
                             <value>${maven.install4j.cert}</value>
                         </property>
                         <property>
