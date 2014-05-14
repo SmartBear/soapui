@@ -528,6 +528,11 @@
             <artifactId>proxy-vole</artifactId>
             <version>20131209</version>
         </dependency>
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.9.1</version>
+        </dependency>
 
 
         <!--  old http client needed by some 3rd party components -->
