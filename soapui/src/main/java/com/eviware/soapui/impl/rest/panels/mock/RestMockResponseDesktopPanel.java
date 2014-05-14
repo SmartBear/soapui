@@ -25,10 +25,9 @@ import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.HttpHeadersInspector;
 import com.eviware.soapui.support.editor.inspectors.httpheaders.MockResponseHeadersModel;
+import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.ui.support.AbstractMockResponseDesktopPanel;
 import org.apache.commons.httpclient.HttpStatus;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -84,28 +83,16 @@ public class RestMockResponseDesktopPanel extends
     protected MockResponseMessageEditor buildResponseEditor() {
         MockResponseXmlDocument documentContent = new MockResponseXmlDocument(getMockResponse());
         MockResponseMessageEditor mockResponseMessageEditor = new MockResponseMessageEditor(documentContent);
-        setMediaType(mockResponseMessageEditor.getInputArea(), getModelItem().getMediaType());
+        SyntaxEditorUtil.setMediaType(mockResponseMessageEditor.getInputArea(), getModelItem().getMediaType());
         return mockResponseMessageEditor;
     }
-
-    public void setMediaType(RSyntaxTextArea inputArea, String mediaType) {
-        if (mediaType.contains("json")) {
-            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVASCRIPT);
-        } else if (mediaType.contains("xml")) {
-            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_XML);
-        } else {
-            inputArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_NONE);
-        }
-
-    }
-
 
     private JComponent createMediaTypeCombo() {
         MediaTypeComboBox mediaTypeComboBox = new MediaTypeComboBox(this.getModelItem());
         mediaTypeComboBox.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                setMediaType(getResponseEditor().getInputArea(), e.getItem().toString());
+                SyntaxEditorUtil.setMediaType(getResponseEditor().getInputArea(), e.getItem().toString());
             }
         });
         JComponent innerPanel = createPanelWithLabel("Content | Media type: ", mediaTypeComboBox);

@@ -16,10 +16,15 @@
 
 package com.eviware.soapui.model.mock;
 
+import com.eviware.soapui.impl.support.HasHelpUrl;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.project.Project;
+import com.eviware.soapui.model.support.AnimatableItem;
 
 import java.util.List;
 
@@ -29,12 +34,12 @@ import java.util.List;
  * @author ole.matzura
  */
 
-// TODO: some things in AbstractMockRunner that is inherited from far above should probably makes its way in here
-public interface MockService extends TestModelItem, Releasable {
+public interface MockService extends TestModelItem, Releasable, AnimatableItem, HasHelpUrl, MockServer, MockServiceScripts
+{
     public final static String PATH_PROPERTY = MockService.class.getName() + "@path";
     public final static String PORT_PROPERTY = MockService.class.getName() + "@port";
 
-    public Project getProject();
+    public WsdlProject getProject();
 
     public List<MockOperation> getMockOperationList();
 
@@ -48,29 +53,6 @@ public interface MockService extends TestModelItem, Releasable {
 
     public void removeMockOperation(MockOperation mockOperation);
 
-    public String getPath();
-
-    public void setPath(String path);
-
-    public int getPort();
-
-    public void setPort(int i);
-
-    public MockRunner getMockRunner();
-
-    public MockRunner start() throws Exception;
-
-    /**
-     * Start this mock service if HttpSetting.START_MOCK_SERVICE is true.
-     *
-     * @throws Exception if the start fails for some reason. One case may be that the port is occupied already.
-     */
-    public void startIfConfigured() throws Exception;
-
-    public void addMockRunListener(MockRunListener listener);
-
-    public void removeMockRunListener(MockRunListener listener);
-
     public void addMockServiceListener(MockServiceListener listener);
 
     public void removeMockServiceListener(MockServiceListener listener);
@@ -83,7 +65,4 @@ public interface MockService extends TestModelItem, Releasable {
 
     public void fireMockResponseRemoved(MockResponse mockResponse);
 
-    public boolean getBindToHostOnly();
-
-    public String getLocalEndpoint();
 }

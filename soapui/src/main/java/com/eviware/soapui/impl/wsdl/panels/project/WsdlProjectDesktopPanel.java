@@ -34,24 +34,43 @@ import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ProjectMetrics;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.LoadTest;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.util.ModelItemIconFactory;
 import com.eviware.soapui.security.panels.ProjectSensitiveInformationPanel;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.GroovyEditorComponent;
+import com.eviware.soapui.support.components.GroovyEditorInspector;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JFocusableComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.JUndoableTextArea;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.MetricsPanel;
 import com.eviware.soapui.support.components.MetricsPanel.MetricType;
 import com.eviware.soapui.support.components.MetricsPanel.MetricsSection;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
-import com.eviware.x.impl.swing.JFormDialog;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.text.Document;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.Set;
@@ -107,8 +126,8 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
 
     private Component buildSecConfigTab() {
         sensitiveInfoPanel = new ProjectSensitiveInformationPanel(getModelItem().getConfig());
-        sensitiveInfoPanel.build();
-        return ((JFormDialog) sensitiveInfoPanel.getDialog()).getPanel();
+
+        return sensitiveInfoPanel.getMainPanel();
     }
 
     public WsdlProjectTestSuitesTabPanel getTestSuitesPanel() {

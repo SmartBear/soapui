@@ -41,7 +41,7 @@ public class RestMockResponsePersistencyTest {
     @Before
     public void setUp() throws XmlException, IOException, SoapUIException {
         RestMockAction restMockAction = ModelItemFactory.makeRestMockAction();
-        WsdlProject project = (WsdlProject) restMockAction.getMockService().getProject();
+        WsdlProject project = restMockAction.getMockService().getProject();
         restMockAction.getMockService().setName(restMockServiceName);
         restMockResponse = restMockAction.addNewMockResponse("REST Mock Response");
         restMockResponse.setResponseHttpStatus(httpStatusCode);

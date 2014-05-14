@@ -160,7 +160,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
     public void setMediaType(String mediaType) {
         String old = getMediaType();
         getConfig().setMediaType(mediaType);
-        notifyPropertyChanged("mediaType", old, mediaType);
+        notifyPropertyChanged(MEDIA_TYPE, old, mediaType);
     }
 
     public String getMediaType() {

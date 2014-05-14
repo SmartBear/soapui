@@ -24,16 +24,10 @@ import com.eviware.soapui.support.types.StringToStringsMap;
  * @author Ole.Matzura
  */
 
-public interface Response {
+public interface Response extends TypedContent {
     public Request getRequest();
 
-    public String getContentAsString();
-
-    public long getContentLength();
-
     public String getRequestContent();
-
-    public String getContentType();
 
     public long getTimeTaken();
 

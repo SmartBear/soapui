@@ -16,27 +16,14 @@
 
 package com.eviware.soapui.impl.wsdl.support.wss.entries;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.util.Collections;
-
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import junit.framework.JUnit4TestAdapter;
-
+import com.eviware.soapui.config.WSSEntryConfig;
+import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
+import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
+import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.utils.TestUtils;
 import org.apache.ws.commons.util.NamespaceContextImpl;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSConfig;
@@ -55,14 +42,23 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.w3c.dom.Document;
 
-import com.eviware.soapui.config.WSSEntryConfig;
-import com.eviware.soapui.impl.wsdl.support.wss.OutgoingWss;
-import com.eviware.soapui.impl.wsdl.support.wss.WssContainer;
-import com.eviware.soapui.impl.wsdl.support.wss.WssCrypto;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.utils.TestUtils;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Erik R. Yverling
@@ -71,10 +67,6 @@ import com.eviware.soapui.utils.TestUtils;
 //FIXME Use the *-test keys instead of the keystore.jks
 // TODO Add test for invalid SAML version
 public class AutomaticSAMLEntryTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(AutomaticSAMLEntryTest.class);
-    }
-
     private static final String ISSUER = "www.issuer.com";
     private static final String KEYSTORE_PATH = "keys/keystore.jks";
     private static final String KEYSTORE_PASSWORD = "foobar42";

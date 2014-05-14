@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseMessageEditor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
@@ -143,10 +144,6 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
                 setEditorContent(((HttpResponse) evt.getNewValue()));
             }
         }
-    }
-
-    @Override
-    public void setXml(String xml) {
     }
 
     public boolean saveDocument(boolean validate) {

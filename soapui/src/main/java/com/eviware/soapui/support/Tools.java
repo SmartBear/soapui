@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 public class Tools {
     public static final int COPY_BUFFER_SIZE = 1000;
@@ -74,7 +75,7 @@ public class Tools {
     }
 
     public static String convertToHtml(String str) {
-        StringBuffer result = new StringBuffer("<html><body>");
+        StringBuilder result = new StringBuilder("<html><body>");
 
         for (int c = 0; c < str.length(); c++) {
             char ch = str.charAt(c);
@@ -178,7 +179,7 @@ public class Tools {
             if (osName.startsWith("Mac OS")) {
                 Class<?> fileMgr = Class.forName("com.apple.eio.FileManager");
                 Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[]{String.class});
-                openURL.invoke(null, new Object[]{url});
+                openURL.invoke(null, url);
             } else if (osName.startsWith("Windows")) {
                 if (url.startsWith("file:")) {
                     url = URLDecoder.decode(url.substring(5), "utf-8");
@@ -338,7 +339,7 @@ public class Tools {
         }
 
         // remove "/./"
-        while (url.indexOf("/./") != -1 || url.indexOf("\\.\\") != -1) {
+        while (url.contains("/./") || url.contains("\\.\\")) {
             int ix2 = url.indexOf("/./");
             if (ix2 == -1) {
                 ix2 = url.indexOf("\\.\\");
@@ -348,7 +349,7 @@ public class Tools {
         }
 
         // remove "/../"
-        while (url.indexOf("/../") != -1 || url.indexOf("\\..\\") != -1) {
+        while (url.contains("/../") || url.contains("\\..\\")) {
             int ix2 = -1;
 
             int ix3 = url.indexOf("/../");
@@ -398,7 +399,7 @@ public class Tools {
             return content;
         }
 
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         int lastIx = 0;
         while (ix != -1) {
             buf.append(content.substring(lastIx, ix));
@@ -459,7 +460,7 @@ public class Tools {
     }
 
     public static String getEndpointFromUrl(URL baseUrl) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append(baseUrl.getProtocol()).append("://");
         result.append(baseUrl.getHost());
         if (baseUrl.getPort() > 0) {
@@ -523,44 +524,39 @@ public class Tools {
      * @throws ComparisonFailure
      */
     public static void assertSimilar(String expected, String real, char wildcard) throws ComparisonFailure {
+        if (!isSimilar(expected, real, wildcard)) {
+            throw new ComparisonFailure("Not matched", expected, real);
+        }
+    }
+
+    public static boolean isSimilar(String expected, String real, char wildcard) throws ComparisonFailure {
 
         // expected == wildcard matches all
         if (!expected.equals(String.valueOf(wildcard))) {
 
-            List<String> tokens = null;
-            if (wildcard == '*' || wildcard == '.') {
-                tokens = Arrays.asList(expected.split("\\" + wildcard));
-            } else {
-                tokens = Arrays.asList(expected.split(String.valueOf(wildcard)));
+            StringBuilder sb = new StringBuilder();
+            if (expected.startsWith(String.valueOf(wildcard))) {
+                sb.append(".*");
             }
-
-            if (tokens.isEmpty()) {
-                throw new ComparisonFailure("Not used wildcard in expected " + "[" + wildcard + "]", expected, real);
+            boolean first = true;
+            for (String token : expected.split(Pattern.quote(String.valueOf(wildcard)))) {
+                if (token.isEmpty()) {
+                    continue;
+                }
+                if (!first) {
+                    sb.append(".*");
+                }
+                first = false;
+                sb.append(Pattern.quote(token));
             }
-
-            for (int cnt = 0; cnt < tokens.size(); cnt++) {
-                if (cnt == 0) {
-                    if (real.startsWith(tokens.get(cnt))) {
-                        continue;
-                    } else {
-                        throw new ComparisonFailure("Not matched", expected, real);
-                    }
-                }
-
-                if (cnt == tokens.size() - 1) {
-                    if (real.endsWith(tokens.get(cnt))) {
-                        continue;
-                    } else {
-                        throw new ComparisonFailure("Not matched", expected, real);
-                    }
-                }
-
-                if (real.indexOf(tokens.get(cnt)) == -1) {
-                    throw new ComparisonFailure("Not matched", expected, real);
-                }
+            if (expected.endsWith(String.valueOf(wildcard))) {
+                sb.append(".*");
             }
-
+            if (!Pattern.compile(sb.toString(), Pattern.DOTALL).matcher(real).matches()) {
+                return false;
+            }
         }
+        return true;
     }
 
     public static void main(String[] args) {

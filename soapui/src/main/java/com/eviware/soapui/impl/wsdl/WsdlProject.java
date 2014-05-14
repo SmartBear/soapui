@@ -17,7 +17,18 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.InterfaceConfig;
+import com.eviware.soapui.config.MockServiceConfig;
+import com.eviware.soapui.config.MockServiceDocumentConfig;
+import com.eviware.soapui.config.ProjectConfig;
+import com.eviware.soapui.config.RESTMockServiceConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
+import com.eviware.soapui.config.SoapuiProjectDocumentConfig;
+import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.config.TestStepSecurityTestConfig;
+import com.eviware.soapui.config.TestSuiteConfig;
+import com.eviware.soapui.config.TestSuiteDocumentConfig;
+import com.eviware.soapui.config.TestSuiteRunTypesConfig;
 import com.eviware.soapui.config.TestSuiteRunTypesConfig.Enum;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
@@ -82,7 +93,14 @@ import javax.swing.ImageIcon;
 import javax.xml.namespace.QName;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.GeneralSecurityException;
@@ -1280,7 +1298,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         }
 
         if (createCopy) {
-            ModelSupport.unsetIds(imported);
+            ModelSupport.createNewIds(imported);
         }
 
         imported.afterLoad();
@@ -1318,7 +1336,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         }
 
         if (createCopy) {
-            ModelSupport.unsetIds(testSuite);
+            ModelSupport.createNewIds(testSuite);
         }
 
         testSuite.afterLoad();
@@ -1347,7 +1365,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         mockService.setDescription(description);
         addWsdlMockService(mockService);
         if (createCopy) {
-            ModelSupport.unsetIds(mockService);
+            ModelSupport.createNewIds(mockService);
         }
 
         mockService.afterLoad();
@@ -1605,11 +1623,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                     .set(newTestSuiteConfig.getTestSuite());
             WsdlTestSuite testSuite = buildTestSuite(config);
 
-            ModelSupport.unsetIds(testSuite);
+            ModelSupport.createNewIds(testSuite);
             testSuite.afterLoad();
 
 			/*
-			 * security test keeps reference to test step by id, which gets changed
+             * security test keeps reference to test step by id, which gets changed
 			 * during importing, so old values needs to be rewritten to new ones.
 			 * 
 			 * Create tarnsition table ( old id , new id ) and use it to replace
@@ -1885,7 +1903,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                     .set(newMockServiceConfig.getMockService());
             WsdlMockService mockService = new WsdlMockService(this, config);
 
-            ModelSupport.unsetIds(mockService);
+            ModelSupport.createNewIds(mockService);
             mockService.afterLoad();
 
             addWsdlMockService(mockService);

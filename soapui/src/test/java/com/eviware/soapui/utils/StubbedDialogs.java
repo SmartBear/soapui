@@ -60,7 +60,11 @@ public class StubbedDialogs implements XDialogs {
 
     @Override
     public void showExtendedInfo(String title, String description, String content, Dimension size) {
-
+        if ("Error".equals(title)) {
+            errorMessages.add(content);
+        } else {
+            infoMessages.add(content);
+        }
     }
 
     @Override

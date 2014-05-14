@@ -16,10 +16,6 @@
 
 package com.eviware.soapui.model.support;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.ModelItem;
@@ -29,6 +25,10 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringList;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Utility methods for soapui model-related interfaces
@@ -166,21 +166,21 @@ public class ModelSupport {
         return PropertyExpander.expandProperties(project, project.getResourceRoot());
     }
 
-    public static void unsetIds(AbstractWsdlModelItem<?> modelItem) {
+    public static void createNewIds(AbstractWsdlModelItem<?> modelItem) {
         if (modelItem.getConfig().isSetId()) {
-            modelItem.getConfig().unsetId();
+            modelItem.getConfig().setId(generateModelItemID());
         }
 
         for (ModelItem child : modelItem.getChildren()) {
             if (child instanceof AbstractWsdlModelItem<?>) {
-                unsetIds((AbstractWsdlModelItem<?>) child);
+                createNewIds((AbstractWsdlModelItem<?>) child);
             }
         }
     }
 
     public static void unsetIds(AbstractWsdlModelItem<?>[] modelItems) {
         for (AbstractWsdlModelItem<?> modelItem : modelItems) {
-            unsetIds(modelItem);
+            createNewIds(modelItem);
         }
     }
 

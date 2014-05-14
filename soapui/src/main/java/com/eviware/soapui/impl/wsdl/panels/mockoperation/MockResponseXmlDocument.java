@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.model.mock.MockResponse;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
@@ -29,6 +30,8 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+
+import javax.annotation.Nonnull;
 
 /**
  * XmlDocument for a WsdlMockResponse
@@ -62,21 +65,24 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
         return XmlBeans.getBuiltinTypeSystem();
     }
 
-    public String getXml() {
-        return mockResponse.getResponseContent();
-    }
-
-    public void setXml(String xml) {
-        mockResponse.setResponseContent(xml);
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        mockResponse.setResponseContent(documentContent.getContentAsString());
     }
 
     public void propertyChange(PropertyChangeEvent arg0) {
-        fireXmlChanged((String) arg0.getOldValue(), (String) arg0.getNewValue());
+        fireContentChanged();
     }
 
     @Override
     public void release() {
         mockResponse.removePropertyChangeListener(WsdlMockResponse.RESPONSE_CONTENT_PROPERTY, this);
         super.release();
+    }
+
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent(Format format) {
+        return new DocumentContent(mockResponse.getContentType(), mockResponse.getResponseContent());
     }
 }

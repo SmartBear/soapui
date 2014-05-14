@@ -27,6 +27,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequest;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
 import com.eviware.soapui.model.ModelItem;
@@ -91,7 +92,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
-                setXml("");
+                documentUpdated();
             }
         }
 
@@ -132,7 +133,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
-                setXml("");
+                documentUpdated();
             }
         }
 
@@ -173,7 +174,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlMockResponse.MOCKRESULT_PROPERTY)) {
-                setXml("");
+                documentUpdated();
             }
         }
 
@@ -207,7 +208,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(WsdlMockResponse.MOCKRESULT_PROPERTY)) {
-                setXml("");
+                documentUpdated();
             }
         }
 
@@ -299,7 +300,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            setXml("");
+            documentUpdated();
         }
 
         @Override
@@ -337,7 +338,7 @@ public class RawXmlEditorFactory implements ResponseEditorViewFactory, RequestEd
 
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            setXml("");
+            documentUpdated();
         }
 
         @Override

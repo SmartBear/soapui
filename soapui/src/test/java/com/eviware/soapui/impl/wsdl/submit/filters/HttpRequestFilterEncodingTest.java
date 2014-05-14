@@ -15,13 +15,10 @@
 */
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
-import java.io.UnsupportedEncodingException;
-
-import junit.framework.JUnit4TestAdapter;
-
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.UnsupportedEncodingException;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;

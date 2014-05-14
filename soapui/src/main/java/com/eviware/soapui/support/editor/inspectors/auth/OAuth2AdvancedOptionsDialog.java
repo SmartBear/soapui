@@ -25,21 +25,15 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.support.XFormRadioGroup;
-import org.apache.commons.lang.WordUtils;
 
 import javax.swing.*;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.AccessTokenPosition;
-import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.*;
 
-/**
- *
- */
 public class OAuth2AdvancedOptionsDialog {
     public static final MessageSupport messages = MessageSupport.getMessages(OAuth2AdvancedOptionsDialog.class);
     private ExpirationTimeChooser expirationTimeComponent;
     private JButton refreshAccessTokenButton;
-
 
     public OAuth2AdvancedOptionsDialog(OAuth2Profile profile, JButton refreshAccessTokenButton) {
         this.refreshAccessTokenButton = refreshAccessTokenButton;
@@ -47,7 +41,6 @@ public class OAuth2AdvancedOptionsDialog {
         XFormDialog dialog = ADialogBuilder.buildDialog(Form.class);
 
         dialog.getFormField(Form.ACCESS_TOKEN_EXPIRATION_TIME).setProperty("component", expirationTimeComponent);
-
 
         setAccessTokenOptions(profile, dialog);
 
@@ -76,7 +69,7 @@ public class OAuth2AdvancedOptionsDialog {
     }
 
     private void enableRefreshAccessTokenButton(OAuth2Profile profile) {
-        boolean enabled = profile.getRefreshAccessTokenMethod().equals(OAuth2Profile.RefreshAccessTokenMethods.MANUAL)
+        boolean enabled = profile.getRefreshAccessTokenMethod() == OAuth2Profile.RefreshAccessTokenMethods.MANUAL
                 && (!org.apache.commons.lang.StringUtils.isEmpty(profile.getRefreshToken()));
         refreshAccessTokenButton.setEnabled(enabled);
         refreshAccessTokenButton.setVisible(enabled);
@@ -85,17 +78,17 @@ public class OAuth2AdvancedOptionsDialog {
     private void setRefreshAccessTokenOptions(OAuth2Profile profile, XFormDialog dialog) {
         XFormRadioGroup refreshOptions = (XFormRadioGroup) dialog.getFormField(Form.AUTOMATIC_ACCESS_TOKEN_REFRESH);
         refreshOptions.setOptions(OAuth2Profile.RefreshAccessTokenMethods.values());
-        refreshOptions.setValue(profile.getRefreshAccessTokenMethod().toString());
+        refreshOptions.setValue(profile.getRefreshAccessTokenMethod().name());
     }
 
-    private void setAccessTokenOptions(OAuth2Profile target, XFormDialog dialog) {
+    private void setAccessTokenOptions(OAuth2Profile profile, XFormDialog dialog) {
         XFormRadioGroup accessTokenPositionField = (XFormRadioGroup) dialog.getFormField(Form.ACCESS_TOKEN_POSITION);
-        String[] accessTokenPositions = new String[]{AccessTokenPosition.HEADER.toString(),
-                AccessTokenPosition.QUERY.toString()};
 
+        // TODO We're explicity removing the BODY option. Why?
+        AccessTokenPosition[] accessTokenPositions = new AccessTokenPosition[]{AccessTokenPosition.HEADER, AccessTokenPosition.QUERY};
         accessTokenPositionField.setOptions(accessTokenPositions);
 
-        dialog.setValue(Form.ACCESS_TOKEN_POSITION, target.getAccessTokenPosition().toString());
+        dialog.setValue(Form.ACCESS_TOKEN_POSITION, profile.getAccessTokenPosition().name());
     }
 
     @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.OAUTH_ADVANCED_OPTIONS)

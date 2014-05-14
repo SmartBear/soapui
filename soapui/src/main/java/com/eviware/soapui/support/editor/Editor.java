@@ -17,12 +17,20 @@
 package com.eviware.soapui.support.editor;
 
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.Inspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
+import com.eviware.soapui.support.components.VTextIcon;
+import com.eviware.soapui.support.components.VerticalMetalTabbedPaneUI;
+import com.eviware.soapui.support.components.VerticalWindowsTabbedPaneUI;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -37,6 +45,7 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class Editor<T extends EditorDocument> extends JPanel implements PropertyChangeListener,
         EditorLocationListener<T> {
+    public final static String OUTLINE_TABLE_PROPERTY = Editor.class.getSimpleName() + "@outlineTable";
     private JTabbedPane inputTabs;
     private List<EditorView<T>> views = new ArrayList<EditorView<T>>();
     private EditorView<T> currentView;
@@ -47,6 +56,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
     public Editor(T document) {
         super(new BorderLayout());
         this.document = document;
+        document.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
 
         setBackground(Color.LIGHT_GRAY);
         inputTabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -83,7 +93,6 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
         editorView.addPropertyChangeListener(this);
         editorView.addLocationListener(this);
-
         editorView.setDocument(document);
     }
 
@@ -95,6 +104,9 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
             }
 
             inputTabs.setTitleAt(ix, (String) evt.getNewValue());
+        }
+        if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
+            inputTabsChangeListener.refreshVisibleInspectors();
         }
     }
 
@@ -137,13 +149,16 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
     public final void setDocument(T document) {
         if (this.document != null) {
             this.document.release();
+            this.document.removePropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
         }
 
         this.document = document;
+        this.document.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
 
         for (EditorView<T> view : views) {
             view.setDocument(document);
         }
+        inputTabsChangeListener.refreshVisibleInspectors();
     }
 
     public final EditorView<T> getCurrentView() {
@@ -180,6 +195,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
 
     public void addInspector(EditorInspector<T> inspector) {
         inspectorPanel.addInspector(inspector);
+        inspector.init(this);
         inspectorPanel
                 .setInspectorVisible(inspector, currentView == null ? true : inspector.isEnabledFor(currentView));
     }
@@ -219,6 +235,19 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
                 }
             }
 
+            refreshVisibleInspectors();
+
+            SwingUtilities.invokeLater(new Runnable() {
+
+                public void run() {
+                    if (currentView != null) {
+                        currentView.getComponent().requestFocus();
+                    }
+                }
+            });
+        }
+
+        private void refreshVisibleInspectors() {
             EditorInspector<T> currentInspector = (EditorInspector<T>) inspectorPanel.getCurrentInspector();
 
             if (currentInspector != null) {
@@ -239,15 +268,6 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
             } else {
                 currentInspector = null;
             }
-
-            SwingUtilities.invokeLater(new Runnable() {
-
-                public void run() {
-                    if (currentView != null) {
-                        currentView.getComponent().requestFocus();
-                    }
-                }
-            });
         }
     }
 

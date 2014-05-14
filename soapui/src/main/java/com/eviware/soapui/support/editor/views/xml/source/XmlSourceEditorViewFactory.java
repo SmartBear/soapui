@@ -301,7 +301,7 @@ public class XmlSourceEditorViewFactory implements ResponseEditorViewFactory, Re
 
                 public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
                     applyMenu.removeAll();
-                    WsdlProject project = (WsdlProject) getModelItem().getMockOperation().getMockService().getProject();
+                    WsdlProject project = getModelItem().getMockOperation().getMockService().getProject();
                     DefaultWssContainer wss = project.getWssContainer();
                     List<OutgoingWss> outgoingWssList = wss.getOutgoingWssList();
                     applyMenu.setEnabled(!outgoingWssList.isEmpty());

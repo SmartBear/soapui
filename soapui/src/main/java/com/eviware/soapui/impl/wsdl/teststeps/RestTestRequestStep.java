@@ -775,6 +775,11 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
         return testRequest.getDefaultAssertableContent();
     }
 
+    @Override
+    public String getDefaultSourcePropertyName() {
+        return WsdlTestStepWithProperties.RESPONSE_AS_XML;
+    }
+
     public TestStepResult run(TestCaseRunner runner, TestCaseRunContext runContext) {
         RestRequestStepResult testStepResult = new RestRequestStepResult(this);
 

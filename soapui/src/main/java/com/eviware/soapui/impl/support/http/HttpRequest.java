@@ -52,6 +52,7 @@ import java.util.Map;
 
 public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implements
         HttpRequestInterface<HttpRequestConfig> {
+
     private XmlBeansRestParamsTestPropertyHolder params;
 
     protected HttpRequest(HttpRequestConfig config, boolean forLoadTest) {
@@ -147,7 +148,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
     public void setMediaType(String mediaType) {
         String old = getMediaType();
         getConfig().setMediaType(mediaType);
-        notifyPropertyChanged("mediaType", old, mediaType);
+        notifyPropertyChanged(MEDIA_TYPE, old, mediaType);
     }
 
     public void setPostQueryString(boolean b) {

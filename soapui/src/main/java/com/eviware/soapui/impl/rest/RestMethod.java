@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestPropertyListener;
@@ -314,18 +315,11 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
         requests.add(request);
         request.resetPropertyValues();
 
-		/*
-         * for (RestParamProperty prop : getDefaultParams()) { if
-		 * (!request.hasProperty(prop.getName()))
-		 * request.addProperty(prop.getName()).setValue(prop.getDefaultValue()); }
-		 */
-
         String[] endpoints = getInterface().getEndpoints();
         if (endpoints.length > 0) {
             request.setEndpoint(endpoints[0]);
         }
 
-        // getInterface().fireRequestAdded(request);
         notifyPropertyChanged("childRequests", null, request);
         return request;
     }
@@ -373,7 +367,6 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
         ((AbstractSoapUIDesktop) SoapUI.getDesktop()).closeDependantPanels(this);
         super.release();
         for (int i = requests.size(); i > 0; i--) {
-            // removeRequest(requests.get(i-1));
             requests.get(i - 1).release();
         }
         getOperation().removePropertyChangeListener(this);
@@ -388,7 +381,7 @@ public class RestMethod extends AbstractWsdlModelItem<RestMethodConfig> implemen
 
     private class RepresentationPropertyChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals("mediaType")
+            if (evt.getPropertyName().equals(Request.MEDIA_TYPE)
                     && ((RestRepresentation) evt.getSource()).getType() == Type.RESPONSE) {
                 RestMethod.this.notifyPropertyChanged("responseMediaTypes", null, getResponseMediaTypes());
             }

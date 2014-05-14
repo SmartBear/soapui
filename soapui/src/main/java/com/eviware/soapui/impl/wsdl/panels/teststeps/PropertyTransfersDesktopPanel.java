@@ -98,6 +98,7 @@ import java.util.List;
 
 public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<PropertyTransfersTestStep> {
     private final PropertyTransfersTestStep transferStep;
+    private final PropertyChangeListener transferListListener;
     private DefaultListModel listModel;
     private JList transferList;
     private JTextArea sourceArea;
@@ -147,21 +148,14 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
         testRunListener = new InternalTestRunListener();
         transferStep.getTestCase().addTestRunListener(testRunListener);
+        transferListListener = new ListUpdater();
+        transferStep.addPropertyChangeListener(PropertyTransfersTestStep.TRANSFERS, transferListListener);
     }
 
     protected void buildUI() {
         JSplitPane splitPane = UISupport.createHorizontalSplit();
 
-        listModel = new DefaultListModel();
-
-        for (int c = 0; c < transferStep.getTransferCount(); c++) {
-            String name = transferStep.getTransferAt(c).getName();
-            if (transferStep.getTransferAt(c).isDisabled()) {
-                name += " (disabled)";
-            }
-
-            listModel.addElement(name);
-        }
+        listModel = createListModel();
 
         transferList = new JList(listModel);
         transferList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -250,6 +244,20 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         componentEnabler.add(entitizeCheckBox);
         componentEnabler.add(transferChildNodesCheckBox);
 
+    }
+
+    private DefaultListModel createListModel() {
+        DefaultListModel listModel = new DefaultListModel();
+
+        for (int c = 0; c < transferStep.getTransferCount(); c++) {
+            String name = transferStep.getTransferAt(c).getName();
+            if (transferStep.getTransferAt(c).isDisabled()) {
+                name += " (disabled)";
+            }
+
+            listModel.addElement(name);
+        }
+        return listModel;
     }
 
     private JComponent buildLog() {
@@ -1161,6 +1169,10 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             item.removeTestPropertyListener(targetStepPropertiesListener);
         }
 
+        if (transferListListener != null) {
+            transferStep.removePropertyChangeListener(transferListListener);
+        }
+
         componentEnabler.release();
         inspectorPanel.release();
 
@@ -1317,6 +1329,14 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             setToolTipText(getText());
 
             return result;
+        }
+    }
+
+    private class ListUpdater implements PropertyChangeListener {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            listModel = createListModel();
+            transferList.setModel(listModel);
         }
     }
 }

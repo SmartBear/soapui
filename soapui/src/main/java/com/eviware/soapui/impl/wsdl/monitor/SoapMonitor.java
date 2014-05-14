@@ -67,11 +67,22 @@ import org.jdesktop.swingx.decorator.Filter;
 import org.jdesktop.swingx.decorator.FilterPipeline;
 import org.jdesktop.swingx.decorator.PatternFilter;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -396,10 +407,10 @@ public class SoapMonitor extends JPanel {
         optionsButton.setToolTipText("Sets Monitor Options");
         clearButton.setToolTipText("Clear all/selected messages from the log");
         createRequestButton.setToolTipText("Creates requests from selected messages");
-        addToTestCaseButton.setToolTipText("Adds selected requests to a TestCase");
+        addToTestCaseButton.setToolTipText("Adds selected requests to a test case");
         // addToRestTestCaseButton.setToolTipText(
         // "Adds selected REST requests to a TestCase" );
-        addToMockServiceButton.setToolTipText("Adds selected reponses to a MockService");
+        addToMockServiceButton.setToolTipText("Adds selected responses to a mock service");
 
         createRequestButton.setEnabled(false);
         addToMockServiceButton.setEnabled(false);

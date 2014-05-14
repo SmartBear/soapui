@@ -53,7 +53,7 @@ public class WsdlMockResponsePanelBuilder extends EmptyPanelBuilder<WsdlMockResp
         table.addProperty("Message Size", "contentLength", false);
         table.addProperty("Encoding", "encoding", new String[]{null, "UTF-8", "iso-8859-1"});
 
-        WsdlProject project = (WsdlProject) mockResponse.getMockOperation().getMockService().getProject();
+        WsdlProject project = mockResponse.getMockOperation().getMockService().getProject();
         StringList outgoingNames = new StringList(project.getWssContainer().getOutgoingWssNames());
         outgoingNames.add("");
         table.addProperty("Outgoing WSS", "outgoingWss", outgoingNames.toStringArray());

@@ -16,10 +16,13 @@
 
 package com.eviware.soapui.support.editor.xml.support;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import javax.annotation.Nonnull;
 
 /**
  * Default XmlDocument that works on a standard xml string
@@ -48,8 +51,6 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
         }
 
         try {
-            // typeSystem = XmlObject.Factory.parse( xml
-            // ).schemaType().getTypeSystem();
             typeSystem = XmlUtils.createXmlObject(xml).schemaType().getTypeSystem();
             return typeSystem;
         } catch (Exception e) {
@@ -57,21 +58,23 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
         }
     }
 
-    public String getXml() {
-        return xml;
-    }
-
-    public void setXml(String xml) {
-        String oldXml = this.xml;
-        this.xml = xml;
-        if ("<not-xml/>".equals(xml)) {
-            fireXmlChanged("", xml);
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        this.xml = documentContent.getContentAsString();
+        if ("<not-xml/>".equals(documentContent.getContentAsString())) {
+            fireContentChanged();
         }
 
-        fireXmlChanged(oldXml, xml);
+        fireContentChanged();
     }
 
     public void release() {
         typeSystem = null;
+    }
+
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent(Format format) {
+        return new DocumentContent("text/xml", xml);
     }
 }

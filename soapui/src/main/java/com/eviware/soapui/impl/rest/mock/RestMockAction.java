@@ -90,6 +90,11 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
     }
 
     @Override
+    public String getScriptHelpUrl() {
+        return HelpUrls.REST_MOCK_SCRIPTDISPATCH;
+    }
+
+    @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
     }

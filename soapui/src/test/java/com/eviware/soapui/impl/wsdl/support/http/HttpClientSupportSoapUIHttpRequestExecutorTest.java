@@ -15,9 +15,10 @@
 */
 package com.eviware.soapui.impl.wsdl.support.http;
 
-import java.io.IOException;
-
-import org.apache.http.HttpException;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.Stopwatch;
+import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.SoapUIHttpRequestExecutor;
 import org.apache.http.HttpRequest;
 import org.apache.http.impl.client.RequestWrapper;
 import org.apache.http.protocol.HttpContext;
@@ -28,18 +29,8 @@ import org.mockito.Mock;
 
 import static org.mockito.Mockito.*;
 
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.Stopwatch;
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport.SoapUIHttpRequestExecutor;
-
-import junit.framework.JUnit4TestAdapter;
-
 @RunWith(org.mockito.runners.MockitoJUnitRunner.class)
 public class HttpClientSupportSoapUIHttpRequestExecutorTest {
-    public static junit.framework.Test suite() {
-        return new JUnit4TestAdapter(ProxyUtilsTestCase.class);
-    }
 
     @Mock
     HttpProcessor processor;

@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestDocument;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.MediaTypeComboBox;
 import com.eviware.soapui.support.UISupport;
@@ -142,6 +143,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
 
         // Add popup!
         contentEditor = SyntaxEditorUtil.createDefaultXmlSyntaxTextArea();
+        SyntaxEditorUtil.setMediaType(contentEditor, httpRequest.getMediaType());
         contentEditor.setText(httpRequest.getRequestContent());
 
         contentEditor.getDocument().addDocumentListener(new DocumentListenerAdapter() {
@@ -196,11 +198,17 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             }
         });
 
-        toolbar.addFixed(postQueryCheckBox);
+        toolbar.add(postQueryCheckBox);
     }
 
     protected void addMediaTypeCombo(JXToolBar toolbar) {
         mediaTypeCombo = new MediaTypeComboBox(httpRequest);
+        mediaTypeCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                SyntaxEditorUtil.setMediaType(contentEditor, e.getItem().toString());
+            }
+        });
         mediaTypeCombo.setEnabled(httpRequest.hasRequestBody());
         toolbar.addLabeledFixed("Media Type", mediaTypeCombo);
     }
@@ -224,7 +232,7 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             updatingRequest = false;
         } else if (evt.getPropertyName().equals("method")) {
             fixRequestPanel();
-        } else if (evt.getPropertyName().equals("mediaType")) {
+        } else if (evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
             mediaTypeCombo.setSelectedItem(evt.getNewValue());
         } else if (evt.getPropertyName().equals(AbstractHttpRequest.ATTACHMENTS_PROPERTY)) {
             mediaTypeCombo.setModel(new DefaultComboBoxModel(getRequestMediaTypes()));
@@ -257,10 +265,6 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
             panel.remove(split);
             panel.add(paramsTable);
         }
-    }
-
-    @Override
-    public void setXml(String xml) {
     }
 
     public boolean saveDocument(boolean validate) {

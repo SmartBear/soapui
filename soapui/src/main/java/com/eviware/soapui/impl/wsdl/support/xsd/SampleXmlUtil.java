@@ -768,7 +768,7 @@ public class SampleXmlUtil {
                 gdurb.setSecond(minExclusive.getSecond() + 1);
             }
             if (gdurb.getFraction().compareTo(minExclusive.getFraction()) <= 0) {
-                gdurb.setFraction(minExclusive.getFraction().add(new BigDecimal(0.001)));
+                gdurb.setFraction(minExclusive.getFraction().add(new BigDecimal("0.001")));
             }
         }
 

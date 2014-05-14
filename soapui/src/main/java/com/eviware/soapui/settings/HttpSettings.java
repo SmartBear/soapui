@@ -68,7 +68,7 @@ public interface HttpSettings {
     @Setting(name = "Expect-Continue", description = "Adds Expect-Continue header to outgoing request", type = SettingType.BOOLEAN)
     public final static String EXPECT_CONTINUE = HttpSettings.class.getSimpleName() + "@expect-continue";
 
-    @Setting(name = "Pre-encoded Endpoints", description = "Do not URL-escape service endpoints", type = SettingType.BOOLEAN)
+    @Setting(name = "Pre-encoded Endpoints", description = "URI contains encoded endpoints, don't try to re-encode", type = SettingType.BOOLEAN)
     public static final String ENCODED_URLS = HttpSettings.class.getSimpleName() + "@" + "encoded_urls";
 
     @Setting(name = "Normalize Forward Slashes", description = "Replaces duplicate forward slashes in HTTP request endpoints with a single slash", type = SettingType.BOOLEAN)

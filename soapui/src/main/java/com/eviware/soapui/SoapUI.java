@@ -145,10 +145,13 @@ import java.awt.Dimension;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DragSource;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
@@ -499,8 +502,6 @@ public class SoapUI {
         fileMenu.addSeparator();
         fileMenu.add(new ExitAction());
         fileMenu.add(new ExitWithoutSavingAction());
-        fileMenu.addSeparator();
-        fileMenu.add(new ShowOnlineHelpAction(HelpUrls.OVERVIEW_HELP_URL));
 
         return fileMenu;
     }
@@ -629,6 +630,7 @@ public class SoapUI {
 
     private static final class SoapUIRunner implements Runnable {
         public void run() {
+            addStandardPreferencesShortcutOnMac();
             boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
             Properties props = new Properties();
             try {
@@ -667,6 +669,21 @@ public class SoapUI {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
+            }
+        }
+
+        private void addStandardPreferencesShortcutOnMac() {
+            if (UISupport.isMac()) {
+                KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+                    @Override
+                    public boolean dispatchKeyEvent(KeyEvent e) {
+                        int modifiers = e.getModifiers();
+                        if (e.getKeyChar() == ',' && (modifiers == InputEvent.META_DOWN_MASK || modifiers == InputEvent.META_MASK)) {
+                            SoapUIPreferencesAction.getInstance().actionPerformed(new ActionEvent(frame, 1, "ShowPreferences"));
+                        }
+                        return false;
+                    }
+                });
             }
         }
 

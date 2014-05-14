@@ -16,10 +16,6 @@
 
 package com.eviware.soapui.actions;
 
-import java.io.IOException;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -36,6 +32,9 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
 
 public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
     private XFormDialog dialog;
@@ -47,29 +46,17 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
     public void perform(WsdlProject project, Object param) {
         // check for mockservices
-        if (project.getMockServiceCount() == 0) {
+        if ((project.getMockServiceCount() + project.getRestMockServiceCount()) == 0) {
             UISupport.showErrorMessage("Project does not have any MockServices to deploy");
             return;
         }
 
-        // create war file
         if (dialog == null) {
-            dialog = ADialogBuilder.buildDialog(MockAsWarDialog.class);
-            dialog.getFormField(MockAsWarDialog.GLOBAL_SETTINGS).addFormFieldListener(new XFormFieldListener() {
-                public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
-                    dialog.getFormField(MockAsWarDialog.SETTINGS_FILE).setEnabled(Boolean.valueOf(newValue));
-                }
-            });
-
-            dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY).addFormFieldValidator(
-                    new RequiredValidator("WAR Directory is required"));
+			  buildDialog();
         }
 
-        XFormField settingFile = dialog.getFormField(MockAsWarDialog.SETTINGS_FILE);
-        settingFile.setValue(((DefaultSoapUICore) SoapUI.getSoapUICore()).getSettingsFile());
-        settingFile.setEnabled(dialog.getBooleanValue(MockAsWarDialog.GLOBAL_SETTINGS));
+		  XFormField settingFile = getPreFilledSettings();
 
-        XFormField warDirectory = dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY);
         XFormField warFile = dialog.getFormField(MockAsWarDialog.WAR_FILE);
 
         String passwordForEncryption = project.getSettings().getString(ProjectSettings.SHADOW_PASSWORD, null);
@@ -87,7 +74,9 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
 
             MockAsWar mockAsWar = new MockAsWar(project.getPath(),
                     dialog.getBooleanValue(MockAsWarDialog.GLOBAL_SETTINGS) ? settingFile.getValue() : "",
-                    warDirectory.getValue(), warFile.getValue(), dialog.getBooleanValue(MockAsWarDialog.EXT_LIBS),
+						  dialog.getFormField(MockAsWarDialog.WAR_DIRECTORY).getValue(),
+						  dialog.getFormField(MockAsWarDialog.WAR_FILE).getValue(),
+						  dialog.getBooleanValue(MockAsWarDialog.EXT_LIBS),
                     dialog.getBooleanValue(MockAsWarDialog.ACTIONS), dialog.getBooleanValue(MockAsWarDialog.LISTENERS),
                     dialog.getValue(MockAsWarDialog.MOCKSERVICE_ENDPOINT),
                     dialog.getBooleanValue(MockAsWarDialog.ENABLE_WEBUI));
@@ -95,7 +84,34 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
         }
     }
 
-    @AForm(description = "Configure what to include in generated WAR", name = "Deploy Project as WAR", helpUrl = HelpUrls.MOCKASWAR_HELP_URL)
+    // Only to be called from test class
+    protected void setDialog(XFormDialog dialog){
+        this.dialog = dialog;
+    }
+
+	private XFormField getPreFilledSettings()
+	{
+		XFormField settingFile = dialog.getFormField( MockAsWarDialog.SETTINGS_FILE);
+        DefaultSoapUICore soapUICore = (DefaultSoapUICore) SoapUI.getSoapUICore();
+        settingFile.setValue(soapUICore.getSettingsFile());
+		settingFile.setEnabled(dialog.getBooleanValue( MockAsWarDialog.GLOBAL_SETTINGS));
+		return settingFile;
+	}
+
+	private void buildDialog()
+	{
+		dialog = ADialogBuilder.buildDialog( MockAsWarDialog.class );
+		dialog.getFormField( MockAsWarDialog.GLOBAL_SETTINGS).addFormFieldListener(new XFormFieldListener() {
+			 public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+				  dialog.getFormField( MockAsWarDialog.SETTINGS_FILE).setEnabled(Boolean.valueOf(newValue));
+			 }
+		});
+
+		dialog.getFormField( MockAsWarDialog.WAR_DIRECTORY).addFormFieldValidator(
+				  new RequiredValidator("WAR Directory is required"));
+	}
+
+	@AForm(description = "Configure what to include in generated WAR", name = "Deploy Project as WAR", helpUrl = HelpUrls.MOCKASWAR_HELP_URL)
     protected interface MockAsWarDialog {
         @AField(description = "Specify if global settings should be included", name = "Include Global Settings", type = AFieldType.BOOLEAN)
         public final static String GLOBAL_SETTINGS = "Include Global Settings";

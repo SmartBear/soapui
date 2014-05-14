@@ -55,7 +55,6 @@ public class SoapUIPreferencesAction extends AbstractAction {
     public static final String SSL_SETTINGS = "SSL Settings";
     public static final String INTEGRATED_TOOLS = "Tools";
     public static final String WSA_SETTINGS = "WS-A Settings";
-    public static final String WEBRECORDING_SETTINGS = "Web Recording Settings";
     public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
     public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
     private SwingConfigurationDialogImpl dialog;
@@ -70,7 +69,6 @@ public class SoapUIPreferencesAction extends AbstractAction {
         putValue(Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences");
         putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt P"));
 
-        // addPrefs( new HttpPrefs( HTTP_SETTINGS));
         addPrefs(new AnnotatedSettingsPrefs(HttpSettings.class, HTTP_SETTINGS));
         addPrefs(new ProxyPrefs(PROXY_SETTINGS));
         addPrefs(new AnnotatedSettingsPrefs(SSLSettings.class, SSL_SETTINGS));

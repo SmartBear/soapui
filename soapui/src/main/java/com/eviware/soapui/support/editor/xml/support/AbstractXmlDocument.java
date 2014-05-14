@@ -16,13 +16,13 @@
 
 package com.eviware.soapui.support.editor.xml.support;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
-import com.eviware.soapui.support.editor.xml.XmlDocument;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 /**
  * Abstract base-class for XmlDocument implementations
@@ -49,8 +49,8 @@ public abstract class AbstractXmlDocument implements XmlDocument {
         propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
     }
 
-    protected void fireXmlChanged(String oldValue, String newValue) {
-        propertyChangeSupport.firePropertyChange(XML_PROPERTY, oldValue, newValue);
+    protected void fireContentChanged() {
+        propertyChangeSupport.firePropertyChange(DOCUMENT_PROPERTY, null, this);
     }
 
     public void release() {

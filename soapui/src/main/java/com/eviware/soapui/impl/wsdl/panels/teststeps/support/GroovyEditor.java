@@ -128,13 +128,8 @@ public class GroovyEditor extends JPanel implements JEditorStatusBarTarget, Prop
         popup.add(goToLineAction);
         popup.add(enableLineNumbersAction);
 
-        if (UISupport.isMac()) {
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control meta L"), goToLineAction);
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
-        } else {
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control alt L"), goToLineAction);
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
-        }
+        editArea.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
+        editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
         editArea.setComponentPopupMenu(popup);
     }
 

@@ -7,7 +7,7 @@
     <parent>
         <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
-        <version>5.0.0</version>
+        <version>5.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>soapui-installer</artifactId>
@@ -37,8 +37,7 @@
                         <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
-                    <finalName>${project.name.visible}-${project.version}</finalName>
-                    <appendAssemblyId>true</appendAssemblyId>
+                    <finalName>${project.name.full}</finalName>
                 </configuration>
             </plugin>
 
@@ -78,23 +77,11 @@
                             <value>${project.parent.basedir}/soapui/src</value>
                         </property>
                         <property>
-                            <name>SIGNTOOL_PATH</name>
-                            <value>${maven.install4j.signtool}</value>
-                        </property>
-                        <property>
                             <name>MAC_CERT_PATH</name>
                             <value>${maven.install4j.maccert}</value>
                         </property>
                         <property>
                             <name>CERT_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
-                            <name>CERT_PASS</name>
-                            <value>${maven.install4j.cert.pass}</value>
-                        </property>
-                        <property>
-                            <name>WIN_DLLS_PATH</name>
                             <value>${maven.install4j.cert}</value>
                         </property>
                         <property>

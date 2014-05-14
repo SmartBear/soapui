@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.support.panels.AbstractHttpRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyHolderTableModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
@@ -56,15 +57,12 @@ import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import org.apache.log4j.Logger;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.text.Document;
 import java.awt.*;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -542,24 +540,26 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((JdbcResponse) evt.getOldValue()).getContentAsString(),
-                    getXml());
+            fireContentChanged();
         }
 
-        public String getXml() {
-            JdbcResponse response = jdbcRequestTestStep.getJdbcRequest().getResponse();
-            return response == null ? null : response.getContentAsString();
-        }
-
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             if (jdbcRequestTestStep.getJdbcRequest().getResponse() != null) {
-                jdbcRequestTestStep.getJdbcRequest().getResponse().setContentAsString(xml);
+                jdbcRequestTestStep.getJdbcRequest().getResponse().setContentAsString(documentContent.getContentAsString());
             }
         }
 
         public void release() {
             super.release();
             jdbcRequestTestStep.removePropertyChangeListener(JdbcRequestTestStep.RESPONSE_PROPERTY, this);
+        }
+
+        @Nonnull
+        @Override
+        public DocumentContent getDocumentContent(Format format) {
+            JdbcResponse response = jdbcRequestTestStep.getJdbcRequest().getResponse();
+            return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getContentAsString());
         }
     }
 

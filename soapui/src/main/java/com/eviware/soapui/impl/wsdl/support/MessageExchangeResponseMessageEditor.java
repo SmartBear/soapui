@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.wsdl.support;
 import java.beans.PropertyChangeEvent;
 
 import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
 
@@ -63,7 +64,7 @@ public class MessageExchangeResponseMessageEditor extends
                         .getInterfaceDefinition().getSchemaTypeSystem());
             }
 
-            defaultXmlDocument.setXml(messageExchange == null ? null : messageExchange.getResponseContentAsXml());
+            defaultXmlDocument.setDocumentContent(new DocumentContent(null, messageExchange == null ? null : messageExchange.getResponseContentAsXml()));
         } catch (Exception e) {
             e.printStackTrace();
         }

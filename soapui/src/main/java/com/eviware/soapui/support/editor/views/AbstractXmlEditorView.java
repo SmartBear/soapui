@@ -22,6 +22,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.eviware.soapui.support.editor.EditorDocument;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
@@ -39,7 +40,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     private boolean isActive;
     private PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(this);
     private T xmlDocument;
-    private boolean xmlChanged;
+    private boolean editorDocumentChanged;
     private Set<EditorLocationListener<T>> listeners = new HashSet<EditorLocationListener<T>>();
     private XmlEditor<T> editor;
     private final String viewId;
@@ -49,7 +50,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
         this.title = title;
         editor = xmlEditor;
         this.viewId = viewId;
-        xmlChanged = false;
+        editorDocumentChanged = false;
     }
 
     protected PropertyChangeSupport getPropertyChangeSupport() {
@@ -68,19 +69,15 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public void update() {
-        if (xmlChanged) {
-            setXml(xmlDocument == null ? null : xmlDocument.getXml());
-            xmlChanged = false;
+        if (editorDocumentChanged) {
+            documentUpdated();
+            editorDocumentChanged = false;
         }
-    }
-
-    public boolean isXmlChanged() {
-        return xmlChanged;
     }
 
     public boolean deactivate() {
         isActive = false;
-        xmlChanged = false;
+        editorDocumentChanged = false;
 
         return true;
     }
@@ -122,43 +119,47 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
 
     public void setDocument(T xmlDocument) {
         if (this.xmlDocument != null) {
-            this.xmlDocument.removePropertyChangeListener(XmlDocument.XML_PROPERTY, this);
+            this.xmlDocument.removePropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
         }
 
         this.xmlDocument = xmlDocument;
-        xmlChanged = false;
+        editorDocumentChanged = false;
 
         if (xmlDocument != null) {
-            this.xmlDocument.addPropertyChangeListener(XmlDocument.XML_PROPERTY, this);
+            this.xmlDocument.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
             if (isActive()) {
-                setXml(xmlDocument.getXml());
+                documentUpdated();
             } else {
-                xmlChanged = true;
+                editorDocumentChanged = true;
             }
         } else {
             if (isActive()) {
-                setXml(null);
+                documentUpdated();
             } else {
-                xmlChanged = true;
+                editorDocumentChanged = true;
             }
         }
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(XmlDocument.XML_PROPERTY)) {
+        if (evt.getSource() == this.xmlDocument && evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             if (isActive()) {
-                setXml((String) evt.getNewValue());
+                documentUpdated();
             } else {
-                xmlChanged = true;
+                editorDocumentChanged = true;
             }
         }
     }
 
-    public abstract void setXml(String xml);
+    /**
+     * Called when document content is updated. If not active at the moment the call will come once the editor becomes active.
+     */
+    public void documentUpdated(){
+    }
 
     public void release() {
         if (this.xmlDocument != null) {
-            this.xmlDocument.removePropertyChangeListener(XmlDocument.XML_PROPERTY, this);
+            this.xmlDocument.removePropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
             this.xmlDocument = null;
         }
     }
@@ -182,7 +183,7 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public String getXml() {
-        return xmlDocument == null ? null : xmlDocument.getXml();
+        return xmlDocument == null ? null : xmlDocument.getDocumentContent(EditorDocument.Format.XML).getContentAsString();
     }
 
     public void setLocation(EditorLocation<T> location) {
@@ -192,9 +193,9 @@ public abstract class AbstractXmlEditorView<T extends XmlDocument> implements Xm
     }
 
     public void syncUpdates() {
-        if (!isActive() && xmlChanged) {
-            setXml(xmlDocument == null ? null : xmlDocument.getXml());
-            xmlChanged = false;
+        if (!isActive() && editorDocumentChanged) {
+            documentUpdated();
+            editorDocumentChanged = false;
         }
     }
 

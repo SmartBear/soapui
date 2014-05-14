@@ -60,4 +60,5 @@ public interface MockOperation extends ModelItem, Releasable {
      */
     public void setScript(String script);
 
+    String getScriptHelpUrl();
 }

@@ -81,7 +81,7 @@ public class OAuth2ScriptsEditor extends JPanel {
         makeScriptsPanel(profile);
         add(new JScrollPane(scriptsPanel), BorderLayout.CENTER);
         JPanel linkPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        linkPanel.add(UISupport.createLabelLink(HelpUrls.OAUTH_AUTOMATING_ACCES_TOKEN_RETRIEVAL, HELP_LINK_TEXT));
+        linkPanel.add(UISupport.createLabelLink(HelpUrls.OAUTH_AUTOMATING_ACCESS_TOKEN_RETRIEVAL, HELP_LINK_TEXT));
         add(linkPanel, BorderLayout.SOUTH);
     }
 

@@ -62,4 +62,9 @@ public class ResponseMessageXmlEditor<T extends ModelItem, T2 extends XmlDocumen
             }
         }
     }
+
+    @Override
+    public void addEditorView(EditorView<T2> editorView) {
+        super.addEditorView(editorView);
+    }
 }

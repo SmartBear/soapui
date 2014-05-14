@@ -82,7 +82,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
 
     private void populateMockService(RestService restService, RestMockService mockService) {
         mockService.setPath("/");
-        mockService.setPort(8080);
+        mockService.setPort(8089);
         addMockOperations(restService, mockService);
     }
 
@@ -119,7 +119,7 @@ public class GenerateRestMockServiceAction extends AbstractSoapUIAction<RestServ
         this.dialog = dialog;
     }
 
-    @AForm(name = "Generate REST Mock Service", description = "Set name for the new REST Mock Service", helpUrl = HelpUrls.GENERATE_MOCKSERVICE_HELP_URL)
+    @AForm(name = "Generate REST Mock Service", description = "Set name for the new REST Mock Service", helpUrl = HelpUrls.GENERATE_REST_MOCKSERVICE)
     protected interface Form {
         @AField(name = "MockService Name", description = "The Mock Service name", type = AField.AFieldType.STRING)
         public final static String MOCKSERVICE_NAME = "MockService Name";

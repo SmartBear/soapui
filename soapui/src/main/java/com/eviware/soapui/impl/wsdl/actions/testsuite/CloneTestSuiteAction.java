@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.testsuite;
 
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -34,6 +35,8 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
@@ -41,6 +44,8 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+
+import javax.swing.AbstractAction;
 
 /**
  * Clones a WsdlTestSuite
@@ -55,9 +60,55 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
         super("Clone TestSuite", "Clones this TestSuite");
     }
 
-    public void perform(WsdlTestSuite testSuite, Object param) {
+    public void perform(final WsdlTestSuite testSuite, Object param) {
         if (dialog == null) {
-            dialog = ADialogBuilder.buildDialog(Form.class);
+            ActionList actions = new DefaultActionList();
+
+            final AbstractAction cloneAction = new AbstractAction("Clone") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (dialog.validate()) {
+                        dialog.setVisible(false);
+
+                        String targetProjectName = dialog.getValue(Form.PROJECT);
+                        String name = dialog.getValue(Form.NAME);
+
+                        WsdlProject project = testSuite.getProject();
+
+                        // within same project?
+                        boolean move = dialog.getBooleanValue(Form.MOVE);
+                        boolean cloneDescription = dialog.getBooleanValue(Form.CLONE_DESCRIPTION);
+                        String description = testSuite.getDescription();
+                        if (!cloneDescription) {
+                            description = dialog.getValue(Form.DESCRIPTION);
+                        }
+
+                        TestSuite result;
+
+                        if (targetProjectName.equals(testSuite.getProject().getName())) {
+                            result = cloneTestSuiteWithinProject(testSuite, name, project, description);
+                        } else {
+                            result = cloneToAnotherProject(testSuite, targetProjectName, name, move, description);
+                        }
+
+                        if (move && result != null) {
+                            testSuite.getProject().removeTestSuite(testSuite);
+                        }
+                    }
+                }
+            };
+            actions.addAction(cloneAction);
+
+            actions.addAction(new AbstractAction("Cancel") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    dialog.setVisible(false);
+                }
+            });
+            actions.setDefaultAction(cloneAction);
+
+
+            dialog = ADialogBuilder.buildDialog(Form.class, actions, false);
         }
 
         dialog.getFormField(Form.CLONE_DESCRIPTION).addFormFieldListener(new XFormFieldListener() {
@@ -76,38 +127,14 @@ public class CloneTestSuiteAction extends AbstractSoapUIAction<WsdlTestSuite> {
         dialog.setBooleanValue(Form.CLONE_DESCRIPTION, true);
         dialog.getFormField(Form.DESCRIPTION).setEnabled(false);
         dialog.setValue(Form.DESCRIPTION, testSuite.getDescription());
+
         WorkspaceImpl workspace = testSuite.getProject().getWorkspace();
         dialog.setOptions(Form.PROJECT,
                 ModelSupport.getNames(workspace.getOpenProjectList(), new String[]{"<Create New>"}));
 
         dialog.setValue(Form.PROJECT, testSuite.getProject().getName());
 
-        if (dialog.show()) {
-            String targetProjectName = dialog.getValue(Form.PROJECT);
-            String name = dialog.getValue(Form.NAME);
-
-            WsdlProject project = (WsdlProject) testSuite.getProject();
-
-            // within same project?
-            boolean move = dialog.getBooleanValue(Form.MOVE);
-            boolean cloneDescription = dialog.getBooleanValue(Form.CLONE_DESCRIPTION);
-            String description = testSuite.getDescription();
-            if (!cloneDescription) {
-                description = dialog.getValue(Form.DESCRIPTION);
-            }
-
-            TestSuite result = null;
-
-            if (targetProjectName.equals(testSuite.getProject().getName())) {
-                result = cloneTestSuiteWithinProject(testSuite, name, project, description);
-            } else {
-                result = cloneToAnotherProject(testSuite, targetProjectName, name, move, description);
-            }
-
-            if (move && result != null) {
-                testSuite.getProject().removeTestSuite(testSuite);
-            }
-        }
+        dialog.show();
     }
 
     public static WsdlTestSuite cloneToAnotherProject(WsdlTestSuite testSuite, String targetProjectName, String name,

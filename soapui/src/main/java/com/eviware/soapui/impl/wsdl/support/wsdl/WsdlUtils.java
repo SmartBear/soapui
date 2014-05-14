@@ -1025,10 +1025,9 @@ public class WsdlUtils {
             Node domNode = xmlObject.getDomNode();
 
             if (domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE) {
-                Node node = ((DocumentFragment) domNode).getFirstChild();
+                Node node = domNode.getFirstChild();
                 if (node.getNodeType() == Node.TEXT_NODE) {
                     domNode = XmlUtils.parseXml(node.getNodeValue());
-                    // xmlObject = XmlObject.Factory.parse( domNode );
                     xmlObject = XmlUtils.createXmlObject(domNode);
                 }
             }
@@ -1079,17 +1078,6 @@ public class WsdlUtils {
                 return null;
             }
 
-            // String[] attrs =
-            // WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(
-            // WsaUtils.WS_A_NAMESPACE_200408, "Action"));
-            // if (attrs == null || attrs.length == 0)
-            // attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible,
-            // new QName(WsaUtils.WS_A_NAMESPACE_200508,
-            // "Action"));
-            // if (attrs != null && attrs.length > 0)
-            // {
-            // return attrs[0];
-            // }
             String[] attrs;
             for (String namespace : WsaUtils.wsaNamespaces) {
                 attrs = WsdlUtils.getExentsibilityAttributes(attributeExtensible, new QName(namespace, "Action"));
@@ -1190,8 +1178,6 @@ public class WsdlUtils {
 
     public static NodeList getRequestFaultToRefProps(WsdlMessageExchange messageExchange, String wsaVersionNameSpace) {
         try {
-            // XmlObject xmlObject = XmlObject.Factory.parse(
-            // messageExchange.getRequestContent() );
             XmlObject xmlObject = XmlUtils.createXmlObject(messageExchange.getRequestContent());
             SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 
@@ -1211,8 +1197,6 @@ public class WsdlUtils {
 
     public static String getFaultCode(WsdlMessageExchange messageExchange) {
         try {
-            // XmlObject xmlObject = XmlObject.Factory.parse(
-            // messageExchange.getResponseContent() );
             XmlObject xmlObject = XmlUtils.createXmlObject(messageExchange.getResponseContent());
             SoapVersion soapVersion = messageExchange.getOperation().getInterface().getSoapVersion();
 

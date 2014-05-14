@@ -46,7 +46,7 @@ public class AddNewMockOperationAction extends AbstractSoapUIAction<WsdlMockServ
     public void perform(WsdlMockService mockService, Object param) {
         List<OperationWrapper> operations = new ArrayList<OperationWrapper>();
 
-        WsdlProject project = (WsdlProject) mockService.getProject();
+        WsdlProject project = mockService.getProject();
         List<AbstractInterface<?>> interfaces = project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE);
 
         for (Interface iface : interfaces) {

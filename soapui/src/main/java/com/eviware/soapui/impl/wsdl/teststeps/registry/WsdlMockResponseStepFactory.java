@@ -140,7 +140,7 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
         }
     }
 
-    @AForm(description = "Secify options for new MockResponse step", name = "New MockResponse Step", helpUrl = HelpUrls.CREATEMOCKRESPONSESTEP_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH)
+    @AForm(description = "Specify options for new MockResponse step", name = "New MockResponse Step", helpUrl = HelpUrls.CREATEMOCKRESPONSESTEP_HELP_URL, icon = UISupport.OPTIONS_ICON_PATH)
     private class CreateForm {
         @AField(description = "The name of the MockResponse step", name = "Name", type = AFieldType.STRING)
         public static final String NAME = "Name";

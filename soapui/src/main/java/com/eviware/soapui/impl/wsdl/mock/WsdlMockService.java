@@ -39,7 +39,11 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A MockService for simulation WsdlInterfaces and their operations
@@ -47,7 +51,7 @@ import java.util.*;
  * @author ole.matzura
  */
 
-public class WsdlMockService extends AbstractMockService<WsdlMockOperation, WsdlMockResponse, MockServiceConfig> {
+public class WsdlMockService extends AbstractMockService<WsdlMockOperation, MockServiceConfig> {
     private static final String REQUIRE_SOAP_VERSION = WsdlMockService.class.getName() + "@require-soap-version";
     private static final String REQUIRE_SOAP_ACTION = WsdlMockService.class.getName() + "@require-soap-action";
 
@@ -296,7 +300,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Wsdl
             MockOperationConfig newConfig = (MockOperationConfig) getConfig().addNewMockOperation()
                     .set(mockOperationNewConfig).changeType(TestCaseConfig.type);
             WsdlMockOperation newMockOperation = new WsdlMockOperation(this, newConfig);
-            ModelSupport.unsetIds(newMockOperation);
+            ModelSupport.createNewIds(newMockOperation);
             newMockOperation.afterLoad();
             mockOperations.add(newMockOperation);
             fireMockOperationAdded(newMockOperation);

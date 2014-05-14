@@ -16,9 +16,8 @@
 
 package com.eviware.soapui.impl.wsdl.actions.mockservice;
 
-import com.eviware.soapui.impl.support.AbstractMockService;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockService;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -28,7 +27,7 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
  * @author Ole.Matzura
  */
 
-public class StopMockServiceAction<MockServiceType extends AbstractMockService>
+public class StopMockServiceAction<MockServiceType extends MockService>
         extends AbstractSoapUIAction<MockServiceType> {
     public final static String SOAPUI_ACTION_ID = "StopMockServiceAction";
 
@@ -38,7 +37,7 @@ public class StopMockServiceAction<MockServiceType extends AbstractMockService>
 
     public void perform(MockServiceType mockService, Object param) {
         try {
-            WsdlMockRunner mockRunner = mockService.getMockRunner();
+            MockRunner mockRunner = mockService.getMockRunner();
             if (mockRunner != null) {
                 mockRunner.stop();
             }

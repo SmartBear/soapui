@@ -31,6 +31,7 @@ import javafx.scene.web.PopupFeatures;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.util.Callback;
+import netscape.javascript.*;
 
 import javax.swing.*;
 import javax.xml.transform.OutputKeys;
@@ -127,16 +128,16 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
     private void addKeyboardFocusManager(final JFXPanel browserPanel) {
         KeyboardFocusManager kfm = DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager();
         kfm.addKeyEventDispatcher(new KeyEventDispatcher() {
-            @Override
-            public boolean dispatchKeyEvent(KeyEvent e) {
-                if (DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == browserPanel) {
-                    if (e.getID() == KeyEvent.KEY_TYPED && e.getKeyChar() == 10) {
-                        e.setKeyChar((char) 13);
-                    }
-                }
-                return false;
-            }
-        }
+                                      @Override
+                                      public boolean dispatchKeyEvent(KeyEvent e) {
+                                          if (DefaultKeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner() == browserPanel) {
+                                              if (e.getID() == KeyEvent.KEY_TYPED && e.getKeyChar() == 10) {
+                                                  e.setKeyChar((char) 13);
+                                              }
+                                          }
+                                          return false;
+                                      }
+                                  }
         );
     }
 
@@ -155,6 +156,25 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
                         listener.javaScriptExecuted(script, lastLocation, e);
                     }
                 }
+            }
+        });
+    }
+
+    @Override
+    public void addJavaScriptEventHandler(final String memberName, final Object eventHandler) {
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                getWebEngine().getLoadWorker().stateProperty().addListener(
+                        new ChangeListener<Worker.State>() {
+                            public void changed(ObservableValue observableValue, Worker.State oldState, Worker.State newState) {
+                                if (newState == Worker.State.SUCCEEDED) {
+                                    JSObject window = (JSObject) getWebEngine().executeScript("window");
+                                    window.setMember(memberName, eventHandler);
+                                }
+                            }
+                        }
+                );
             }
         });
     }
@@ -269,7 +289,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
     }
 
 	/*
-    Class used to open a new browser window, used in the popup handler of the component.
+     Class used to open a new browser window, used in the popup handler of the component.
 	 */
 
     private class BrowserWindow extends JFrame {
@@ -300,7 +320,7 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
     }
 
 	/*
-	The task to initialize the Java FX WebView component. Will be run synchronously if we're already on the
+     The task to initialize the Java FX WebView component. Will be run synchronously if we're already on the
 	Java FX event thread, asynchronously if we aren't.
 	 */
 
@@ -421,7 +441,8 @@ class EnabledWebViewBasedBrowserComponent implements WebViewBasedBrowserComponen
                                 }
                             }
                         }
-                    });
+                    }
+            );
         }
 
     }

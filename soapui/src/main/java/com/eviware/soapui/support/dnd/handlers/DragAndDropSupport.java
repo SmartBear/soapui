@@ -16,17 +16,18 @@
 
 package com.eviware.soapui.support.dnd.handlers;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.UISupport;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class DragAndDropSupport {
 
@@ -52,7 +53,7 @@ public class DragAndDropSupport {
         return true;
     }
 
-    public static boolean importRequiredInterfaces(WsdlProject project, Set<Interface> requiredInterfaces, String title) {
+    public static boolean importRequiredInterfaces(Project project, Set<Interface> requiredInterfaces, String title) {
         if (requiredInterfaces.size() > 0 && project.getInterfaceCount() > 0) {
             Map<String, Interface> bindings = new HashMap<String, Interface>();
             for (Interface iface : requiredInterfaces) {
@@ -78,7 +79,7 @@ public class DragAndDropSupport {
             }
 
             for (Interface iface : requiredInterfaces) {
-                project.importInterface((AbstractInterface<?>) iface, true, true);
+                ((WsdlProject) project).importInterface((AbstractInterface<?>) iface, true, true);
             }
         }
 
@@ -114,7 +115,10 @@ public class DragAndDropSupport {
                 }
             }
 
-            target.importTestStep(source, name, defaultPosition, false);
+            final WsdlTestStep result = target.importTestStep(source, name, defaultPosition, false);
+            if (result == null) {
+                return false;
+            }
             source.getTestCase().removeTestStep(source);
         }
 

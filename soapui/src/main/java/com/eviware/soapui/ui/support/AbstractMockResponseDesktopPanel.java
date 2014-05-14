@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.support.components.ResponseMessageXmlEditor;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockRequestXmlDocument;
 import com.eviware.soapui.impl.wsdl.panels.mockoperation.MockResponseXmlDocument;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -269,7 +270,7 @@ public abstract class AbstractMockResponseDesktopPanel<ModelItemType extends Mod
                 MockResult mockResult = mockResponse.getMockResult();
                 MockRequest mockRequest = mockResult == null ? null : mockResult.getMockRequest();
                 if (hasRequestEditor()) {
-                    requestEditor.getDocument().setXml(mockRequest == null ? "" : mockRequest.getRequestContent());
+                    requestEditor.getDocument().setDocumentContent(new DocumentContent(mockRequest == null ? "" : mockRequest.getHttpRequest().getContentType(), mockRequest == null ? "" : mockRequest.getRequestContent()));
                 }
             }
         }

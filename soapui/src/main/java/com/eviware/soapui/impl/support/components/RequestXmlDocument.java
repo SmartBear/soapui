@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.support.components;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
@@ -27,6 +28,8 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+
+import javax.annotation.Nonnull;
 
 /**
  * XmlDocument for a WsdlRequest
@@ -43,16 +46,12 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
         request.addPropertyChangeListener(WsdlRequest.REQUEST_PROPERTY, this);
     }
 
-    public String getXml() {
-        return request.getRequestContent();
-    }
-
-    public void setXml(String xml) {
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
         if (!updating) {
             updating = true;
-            String old = request.getRequestContent();
-            request.setRequestContent(xml);
-            fireXmlChanged(old, xml);
+            request.setRequestContent(documentContent.getContentAsString());
+            fireContentChanged();
             updating = false;
         }
     }
@@ -60,13 +59,13 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
     public void propertyChange(PropertyChangeEvent evt) {
         if (!updating) {
             updating = true;
-            fireXmlChanged((String) evt.getOldValue(), (String) evt.getNewValue());
+            fireContentChanged();
             updating = false;
         }
     }
 
     public SchemaTypeSystem getTypeSystem() {
-        WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
+        WsdlInterface iface = request.getOperation().getInterface();
         WsdlContext wsdlContext = iface.getWsdlContext();
         try {
             return wsdlContext.getSchemaTypeSystem();
@@ -78,5 +77,11 @@ public class RequestXmlDocument extends AbstractXmlDocument implements PropertyC
 
     public void release() {
         request.removePropertyChangeListener(WsdlRequest.REQUEST_PROPERTY, this);
+    }
+
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent(Format format) {
+        return new DocumentContent(null, request.getRequestContent());
     }
 }

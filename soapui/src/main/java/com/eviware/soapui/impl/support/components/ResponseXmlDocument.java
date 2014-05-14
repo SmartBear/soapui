@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.support.components;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
@@ -29,6 +30,8 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
+
+import javax.annotation.Nonnull;
 
 /**
  * XmlDocument for the response to a WsdlRequest
@@ -45,19 +48,21 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
         request.addPropertyChangeListener(this);
     }
 
-    public String getXml() {
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent(Format format) {
         Response response = request.getResponse();
-        return response == null ? null : response.getContentAsString();
+        return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getContentAsString());
     }
 
-    public void setXml(String xml) {
-        HttpResponse response = (HttpResponse) request.getResponse();
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        HttpResponse response = request.getResponse();
         if (response != null) {
             try {
                 settingResponse = true;
-                String oldXml = response.getContentAsString();
-                response.setResponseContent(xml);
-                fireXmlChanged(oldXml, xml);
+                response.setResponseContent(documentContent.getContentAsString());
+                fireContentChanged();
             } finally {
                 settingResponse = false;
             }
@@ -69,24 +74,14 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
             return;
         }
 
-        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)) {
-            Response oldResponse = (Response) evt.getOldValue();
-            Response newResponse = (Response) evt.getNewValue();
-
-            fireXmlChanged(oldResponse == null ? null : oldResponse.getContentAsString(), newResponse == null ? null
-                    : newResponse.getContentAsString());
-        }
-
-        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_CONTENT_PROPERTY)) {
-            String oldResponse = (String) evt.getOldValue();
-            String newResponse = (String) evt.getNewValue();
-
-            fireXmlChanged(oldResponse, newResponse);
+        if (evt.getPropertyName().equals(WsdlRequest.RESPONSE_PROPERTY)
+                || evt.getPropertyName().equals(WsdlRequest.RESPONSE_CONTENT_PROPERTY)) {
+            fireContentChanged();
         }
     }
 
     public SchemaTypeSystem getTypeSystem() {
-        WsdlInterface iface = (WsdlInterface) request.getOperation().getInterface();
+        WsdlInterface iface = request.getOperation().getInterface();
         WsdlContext wsdlContext = iface.getWsdlContext();
         try {
             return wsdlContext.getSchemaTypeSystem();

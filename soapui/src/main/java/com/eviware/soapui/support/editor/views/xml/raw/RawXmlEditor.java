@@ -21,6 +21,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
@@ -42,8 +43,7 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
         UISupport.addPreviewCorner(scrollPane, true);
     }
 
-    @Override
-    public void setXml(String xml) {
+    public void documentUpdated(){
         textArea.setText(getContent());
         textArea.setLineWrap(SoapUI.getSettings().getBoolean(UISettings.WRAP_RAW_MESSAGES));
         textArea.setCaretPosition(0);

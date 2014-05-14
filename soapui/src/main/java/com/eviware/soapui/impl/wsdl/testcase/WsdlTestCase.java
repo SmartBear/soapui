@@ -16,21 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.testcase;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
-import javax.annotation.Nonnull;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
@@ -67,6 +52,19 @@ import com.eviware.soapui.support.resolver.ResolveDialog;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngineRegistry;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import org.apache.log4j.Logger;
+
+import javax.annotation.Nonnull;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * TestCase implementation for WSDL projects
@@ -441,7 +439,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         }
 
         if (createCopy) {
-            ModelSupport.unsetIds(result);
+            ModelSupport.createNewIds(result);
         }
 
         resolveTestCase();
@@ -484,7 +482,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         }
 
         if (clearIds) {
-            ModelSupport.unsetIds(testStep);
+            ModelSupport.createNewIds(testStep);
         }
 
         if (ix == -1) {
@@ -518,7 +516,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
             }
 
             if (clearIds) {
-                ModelSupport.unsetIds(testStep);
+                ModelSupport.createNewIds(testStep);
             }
 
             if (ix == -1) {
@@ -769,7 +767,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
         WsdlLoadTest newLoadTest = buildLoadTest(loadTestConfig);
         newLoadTest.setName(name);
-        ModelSupport.unsetIds(newLoadTest);
+        ModelSupport.createNewIds(newLoadTest);
         newLoadTest.afterLoad();
         loadTests.add(newLoadTest);
 
@@ -1117,7 +1115,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
         SecurityTest newSecurityTest = buildSecurityTest(securityTestConfig);
         newSecurityTest.setName(name);
-        ModelSupport.unsetIds(newSecurityTest);
+        ModelSupport.createNewIds(newSecurityTest);
         newSecurityTest.afterLoad();
         securityTests.add(newSecurityTest);
 

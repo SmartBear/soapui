@@ -18,21 +18,24 @@ package com.eviware.soapui.impl.support.panels;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.support.MediaTypeHandlerRegistry;
 import com.eviware.soapui.impl.rest.support.handlers.JsonXmlSerializer;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.xml.support.AbstractXmlDocument;
 import com.eviware.soapui.support.xml.XmlUtils;
 import net.sf.json.JSON;
 import net.sf.json.JSONObject;
-import net.sf.json.groovy.JsonSlurper;
 
+import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.StringReader;
 
 import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
@@ -81,8 +84,10 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             return request;
         }
 
-        public String getXml() {
-            return getRequest().getRequestContent();
+        @Nonnull
+        @Override
+        public DocumentContent getDocumentContent(Format format) {
+            return new DocumentContent(getRequest().getMediaType(), getRequest().getRequestContent());
         }
 
         @Override
@@ -91,16 +96,18 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             request.removePropertyChangeListener(this);
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             if (!updating) {
                 updating = true;
                 try {
-                    if (seemsToBeJsonContentType(getRequest().getMediaType()) && XmlUtils.seemsToBeXml(xml)) {
-                        JSON json = new JsonXmlSerializer().read(xml);
+                    String contentAsString = documentContent.getContentAsString();
+                    if (seemsToBeJsonContentType(getRequest().getMediaType()) && XmlUtils.seemsToBeXml(contentAsString)) {
+                        JSON json = new JsonXmlSerializer().read(contentAsString);
                         processNullsAndEmptyValuesIn(json);
                         request.setRequestContent(json.toString(3, 0));
                     } else {
-                        request.setRequestContent(xml);
+                        request.setRequestContent(contentAsString);
                     }
                 } finally {
                     updating = false;
@@ -114,7 +121,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
                 return;
             }
             try {
-                JSON oldJson = new JsonSlurper().parse(new StringReader(requestContent));
+                JSON oldJson = new JsonUtil().parseTrimmedText(requestContent);
                 if (!(json instanceof JSONObject) || !(oldJson instanceof JSONObject)) {
                     return;
                 }
@@ -135,7 +142,7 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
                 }
                 //TODO: do this recursively but make sure that cyclic dependencies are handled
                 /*else if ( value instanceof JSONObject && oldJson.get(key) instanceof JSONObject)
-				{
+                {
 					overwriteNullValues( (JSONObject) value, (JSONObject) oldJson.get(key) );
 				}*/
             }
@@ -151,10 +158,16 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
 
 
         public void propertyChange(PropertyChangeEvent evt) {
-            if (evt.getPropertyName().equals(RestRequestInterface.REQUEST_PROPERTY) && !updating) {
-                updating = true;
-                fireXmlChanged((String) evt.getOldValue(), (String) evt.getNewValue());
-                updating = false;
+            if (!updating) {
+                try {
+                    updating = true;
+                    if (evt.getPropertyName().equals(Request.REQUEST_PROPERTY)
+                            || evt.getPropertyName().equals(Request.MEDIA_TYPE)) {
+                        fireContentChanged();
+                    }
+                } finally {
+                    updating = false;
+                }
             }
         }
     }
@@ -172,20 +185,36 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             return modelItem;
         }
 
-        public String getXml() {
-            return modelItem.getResponseContentAsXml();
+        @Nonnull
+        @Override
+        public DocumentContent getDocumentContent(Format format) {
+            return extractContentFrom(modelItem.getResponse(), format);
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             HttpResponse response = getRequest().getResponse();
             if (response != null) {
-                response.setResponseContent(xml);
+                response.setResponseContent(documentContent.getContentAsString());
             }
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((HttpResponse) evt.getOldValue()).getContentAsString(),
-                    getXml());
+            fireContentChanged();
+        }
+
+        private DocumentContent extractContentFrom(HttpResponse response, Format format) {
+            if (response == null) {
+                return new DocumentContent(null, null);
+            } else {
+                String contentAsString;
+                if (format == Format.XML) {
+                    contentAsString = MediaTypeHandlerRegistry.getTypeHandler(response.getContentType()).createXmlRepresentation(response);
+                } else {
+                    contentAsString = response.getContentAsString();
+                }
+                return new DocumentContent(response.getContentType(), contentAsString);
+            }
         }
 
         public void release() {
@@ -193,4 +222,6 @@ public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2
             modelItem.removePropertyChangeListener(RestRequestInterface.RESPONSE_PROPERTY, this);
         }
     }
+
+
 }

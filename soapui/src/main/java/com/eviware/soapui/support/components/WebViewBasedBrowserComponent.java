@@ -42,4 +42,12 @@ public interface WebViewBasedBrowserComponent {
     void removeBrowserStateListener(BrowserListener listener);
 
     void executeJavaScript(String script);
+
+    /**
+     * Provides a JavaScript object <i>memberName</i> when the current page is successfully loaded which can be used to call
+     * the <i>eventHandler</i>.
+     *
+     * @see netscape.javascript.JSObject#setMember()
+     */
+    void addJavaScriptEventHandler(String memberName, Object eventHandler);
 }

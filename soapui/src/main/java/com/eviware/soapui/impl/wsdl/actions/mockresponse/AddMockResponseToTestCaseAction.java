@@ -46,7 +46,7 @@ public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction
 
     public void perform(WsdlMockResponse mockResponse, Object param) {
         WsdlMockService mockService = mockResponse.getMockOperation().getMockService();
-        WsdlTestCase testCase = getTargetTestCase((WsdlProject) mockService.getProject());
+        WsdlTestCase testCase = getTargetTestCase(mockService.getProject());
         if (testCase == null) {
             return;
         }

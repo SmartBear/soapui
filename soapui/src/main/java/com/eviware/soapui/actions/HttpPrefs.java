@@ -16,13 +16,13 @@
 
 package com.eviware.soapui.actions;
 
-import java.util.TreeMap;
-
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.eviware.soapui.support.types.StringToStringMap;
+
+import java.util.TreeMap;
 
 /**
  * Preferences class for HttpSettings
@@ -46,7 +46,6 @@ public class HttpPrefs implements Prefs {
     public static final String MAX_TOTAL_CONNECTIONS = "Max Total Connections";
     public static final String BIND_ADDRESS = "Bind Address";
     public static final String LEAVE_MOCKENGINE = "Leave MockEngine";
-    // public static final String DISABLE_CHUNKING = "Disable Chunking";
     public static final String CHUNKING_THRESHOLD = "Chunking Threshold";
     public static final String HTTP_VERSION = "HTTP Version";
     public static final String ENABLE_MOCK_WIRE_LOG = "Enable Mock HTTP Log";
@@ -82,15 +81,13 @@ public class HttpPrefs implements Prefs {
                     "Disable decompression of compressed responses", true);
             httpForm.appendCheckBox(HttpPrefs.CLOSE_CONNECTIONS_AFTER_REQUEST,
                     "Closes the HTTP connection after each HTTP request", true);
-            // httpForm.appendCheckBox( HttpPrefs.DISABLE_CHUNKING,
-            // "Disables content-chunking", true );
             httpForm.appendTextField(HttpPrefs.CHUNKING_THRESHOLD,
                     "Uses content-chunking for requests larger than threshold, blank to disable");
             httpForm.appendCheckBox(HttpPrefs.AUTHENTICATE_PREEMPTIVELY,
                     "Adds authentication information to outgoing request", true);
             httpForm.appendCheckBox(HttpPrefs.EXPECT_CONTINUE,
                     "Activates 'Expect: 100-Continue' handshake for the entity enclosing methods", true);
-            httpForm.appendCheckBox(HttpPrefs.ENCODED_URLS, "Do not URL-escape service endpoints", true);
+            httpForm.appendCheckBox(HttpPrefs.ENCODED_URLS, "URI contains encoded endpoints, don't try to re-encode", true);
             httpForm.appendCheckBox(HttpPrefs.FORWARD_SLASHES,
                     "Replaces duplicate forward slashes in HTTP request endpoints with a single slash", false);
 
@@ -122,8 +119,6 @@ public class HttpPrefs implements Prefs {
 
     public void storeValues(StringToStringMap httpValues, Settings settings) {
         settings.setString(HttpSettings.HTTP_VERSION, httpValues.get(HTTP_VERSION));
-        // settings.setString( HttpSettings.DISABLE_CHUNKING, httpValues.get(
-        // DISABLE_CHUNKING ) );
         settings.setString(HttpSettings.CHUNKING_THRESHOLD, httpValues.get(CHUNKING_THRESHOLD));
         settings.setString(HttpSettings.USER_AGENT, httpValues.get(USER_AGENT_HEADER));
         settings.setString(HttpSettings.REQUEST_COMPRESSION, httpValues.get(REQUEST_COMPRESSION));
@@ -154,8 +149,6 @@ public class HttpPrefs implements Prefs {
     public StringToStringMap getValues(Settings settings) {
         StringToStringMap httpValues = new StringToStringMap();
         httpValues.put(HTTP_VERSION, settings.getString(HttpSettings.HTTP_VERSION, HttpSettings.HTTP_VERSION_1_1));
-        // httpValues.put( DISABLE_CHUNKING, settings.getString(
-        // HttpSettings.DISABLE_CHUNKING, null ) );
         httpValues.put(CHUNKING_THRESHOLD, settings.getString(HttpSettings.CHUNKING_THRESHOLD, null));
         httpValues.put(USER_AGENT_HEADER, settings.getString(HttpSettings.USER_AGENT, null));
         httpValues.put(REQUEST_COMPRESSION,

@@ -16,19 +16,42 @@
 
 package com.eviware.soapui.support.editor.views.xml.source;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
-import java.awt.Window;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.settings.UISettings;
+import com.eviware.soapui.support.DocumentListenerAdapter;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
+import com.eviware.soapui.support.components.PreviewCorner;
+import com.eviware.soapui.support.editor.EditorDocument;
+import com.eviware.soapui.support.editor.EditorLocation;
+import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+import com.eviware.soapui.support.editor.xml.XmlDocument;
+import com.eviware.soapui.support.editor.xml.XmlEditor;
+import com.eviware.soapui.support.editor.xml.XmlLocation;
+import com.eviware.soapui.support.editor.xml.support.ValidationError;
+import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
+import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
+import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
+import com.eviware.soapui.support.xml.XmlUtils;
+import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
+import com.eviware.soapui.support.xml.actions.FormatXmlAction;
+import com.eviware.soapui.support.xml.actions.GoToLineAction;
+import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
+import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
+import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlOptions;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rtextarea.RTextScrollPane;
+import org.fife.ui.rtextarea.SearchContext;
+import org.fife.ui.rtextarea.SearchEngine;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -53,42 +76,21 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.CaretListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.xmlbeans.XmlError;
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlOptions;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
-import org.fife.ui.rsyntaxtextarea.Theme;
-import org.fife.ui.rtextarea.RTextScrollPane;
-import org.fife.ui.rtextarea.SearchContext;
-import org.fife.ui.rtextarea.SearchEngine;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.support.DocumentListenerAdapter;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JEditorStatusBar.JEditorStatusBarTarget;
-import com.eviware.soapui.support.components.PreviewCorner;
-import com.eviware.soapui.support.editor.EditorLocation;
-import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
-import com.eviware.soapui.support.editor.xml.XmlDocument;
-import com.eviware.soapui.support.editor.xml.XmlEditor;
-import com.eviware.soapui.support.editor.xml.XmlLocation;
-import com.eviware.soapui.support.editor.xml.support.ValidationError;
-import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
-import com.eviware.soapui.support.swing.JTextComponentPopupMenu;
-import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
-import com.eviware.soapui.support.xml.XmlUtils;
-import com.eviware.soapui.support.xml.actions.EnableLineNumbersAction;
-import com.eviware.soapui.support.xml.actions.FormatXmlAction;
-import com.eviware.soapui.support.xml.actions.GoToLineAction;
-import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
-import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
-import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
+import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
 
 /**
  * Default "XML" source editor view in SoapUI
@@ -182,7 +184,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             public void update(Document document) {
                 if (!updating && getDocument() != null) {
                     updating = true;
-                    getDocument().setXml(editArea.getText());
+                    getDocument().setDocumentContent(getDocument().getDocumentContent(EditorDocument.Format.XML).withContent(editArea.getText()));
                     updating = false;
                 }
             }
@@ -199,7 +201,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             editArea.getInputMap().put(KeyStroke.getKeyStroke("shift meta V"), validateXmlAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("meta S"), saveXmlTextAreaAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("control L"), enableLineNumbersAction);
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control meta L"), goToLineAction);
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("meta F"), findAndReplaceDialog);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("shift meta F"), formatXmlAction);
             if (!readOnly) {
@@ -209,7 +211,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             editArea.getInputMap().put(KeyStroke.getKeyStroke("alt V"), validateXmlAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl S"), saveXmlTextAreaAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("alt L"), enableLineNumbersAction);
-            editArea.getInputMap().put(KeyStroke.getKeyStroke("control alt L"), goToLineAction);
+            editArea.getInputMap().put(KeyStroke.getKeyStroke("control G"), goToLineAction);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F"), findAndReplaceDialog);
             editArea.getInputMap().put(KeyStroke.getKeyStroke("alt F"), formatXmlAction);
             if (!readOnly) {
@@ -542,29 +544,6 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
 
     }
 
-    //	private final class EnableLineNumbersAction extends AbstractAction
-    //	{
-    //		EnableLineNumbersAction( String title )
-    //		{
-    //			super( title );
-    //			if( UISupport.isMac() )
-    //			{
-    //				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl L" ) );
-    //			}
-    //			else
-    //			{
-    //				putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "ctrl alt L" ) );
-    //			}
-    //		}
-    //
-    //		@Override
-    //		public void actionPerformed( ActionEvent e )
-    //		{
-    //			editorScrollPane.setLineNumbersEnabled( !editorScrollPane.getLineNumbersEnabled() );
-    //		}
-    //
-    //	}
-
     private final static class ValidationListMouseAdapter extends MouseAdapter {
         private final JList list;
 
@@ -714,9 +693,10 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         return new XmlLocation(getCurrentLine() + 1, getCurrentColumn());
     }
 
-    public void setLocation(XmlLocation location) {
+    @Override
+    public void setLocation(EditorLocation<XmlDocument> location) {
         int line = location.getLine() - 1;
-        if (location != null && line >= 0) {
+        if (line >= 0) {
             try {
                 int caretLine = editArea.getCaretLineNumber();
                 int offset = editArea.getLineStartOffset(line);
@@ -729,7 +709,7 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
                 }
 
                 editArea.scrollRectToVisible(new Rectangle(scrollLine, location.getColumn()));
-            } catch (RuntimeException e) {
+            } catch (RuntimeException ignore) {
             } catch (BadLocationException e) {
                 SoapUI.logError(e, "Unable to set the location in the XML document.");
             }
@@ -777,8 +757,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
             return true;
         } else {
             Toolkit.getDefaultToolkit().beep();
-            for (int c = 0; c < errors.length; c++) {
-                errorListModel.addElement(errors[c]);
+            for (ValidationError error : errors) {
+                errorListModel.addElement(error);
             }
             errorScrollPane.setVisible(true);
             splitter.setDividerLocation(0.8);
@@ -787,20 +767,25 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
         }
     }
 
-    public void setXml(String xml) {
+    @Override
+    public void documentUpdated() {
         if (!updating) {
             updating = true;
 
-            if (xml == null) {
+            final DocumentContent rawDocumentContent = getDocument().getDocumentContent(EditorDocument.Format.RAW);
+            final String contentType = rawDocumentContent.getContentType();
+            if (rawDocumentContent.getContentAsString() == null) {
                 editArea.setText("");
+                editArea.setEnabled(false);
+            } else if (seemsToBeJsonContentType(contentType) && readOnly) {
+                editArea.setText("The content you are trying to view cannot be viewed as XML");
                 editArea.setEnabled(false);
             } else {
                 int caretPosition = editArea.getCaretPosition();
-
                 editArea.setEnabled(true);
-                editArea.setText(xml);
-
-                editArea.setCaretPosition(caretPosition < xml.length() ? caretPosition : 0);
+                final String contentAsString = getDocument().getDocumentContent(EditorDocument.Format.XML).getContentAsString();
+                editArea.setText(contentAsString);
+                editArea.setCaretPosition(caretPosition < contentAsString.length() ? caretPosition : 0);
             }
 
             updating = false;

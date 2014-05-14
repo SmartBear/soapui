@@ -29,6 +29,7 @@ import com.eviware.soapui.impl.wsdl.panels.teststeps.support.DefaultPropertyHold
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.PropertyHolderTable;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
@@ -62,6 +63,7 @@ import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import org.apache.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -574,18 +576,20 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((AMFResponse) evt.getOldValue()).getContentAsString(),
-                    getXml());
+            fireContentChanged();
         }
 
-        public String getXml() {
+        @Override
+        @Nonnull
+        public DocumentContent getDocumentContent(Format format) {
             AMFResponse response = amfRequestTestStep.getAMFRequest().getResponse();
-            return response == null ? null : response.getResponseContentXML();
+            return new DocumentContent(response == null ? null : response.getContentType(), response == null ? null : response.getResponseContentXML());
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
             if (amfRequestTestStep.getAMFRequest().getResponse() != null) {
-                amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(xml);
+                amfRequestTestStep.getAMFRequest().getResponse().setResponseContentXML(documentContent.getContentAsString());
             }
         }
 
@@ -601,16 +605,18 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireXmlChanged(evt.getOldValue() == null ? null : ((AMFRequest) evt.getOldValue()).requestAsXML(),
-                    getXml());
+            fireContentChanged();
         }
 
-        public String getXml() {
+        @Override
+        @Nonnull
+        public DocumentContent getDocumentContent(Format format) {
             AMFRequest request = amfRequestTestStep.getAMFRequest();
-            return request == null ? null : request.requestAsXML();
+            return new DocumentContent(null, request == null ? null : request.requestAsXML());
         }
 
-        public void setXml(String xml) {
+        @Override
+        public void setDocumentContent(DocumentContent documentContent) {
         }
 
         public void release() {
