@@ -24,7 +24,11 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.components.*;
+import com.eviware.soapui.support.components.ConfigurationDialog;
+import com.eviware.soapui.support.components.JButtonBar;
+import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.PreviewCorner;
+import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
 import com.eviware.soapui.support.swing.GradientPanel;
 import com.eviware.soapui.support.swing.SoapUISplitPaneUI;
 import com.eviware.soapui.support.swing.SwingUtils;
@@ -38,13 +42,53 @@ import com.jgoodies.looks.HeaderStyle;
 import com.jgoodies.looks.Options;
 import org.syntax.jedit.InputHandler;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicProgressBarUI;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableColumn;
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Event;
+import java.awt.Font;
+import java.awt.Frame;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
@@ -807,6 +851,10 @@ public class UISupport {
 
     public static String selectXPath(String title, String info, String xml, String xpath) {
         return dialogs.selectXPath(title, info, xml, xpath);
+    }
+
+    public static String selectJsonPath(String title, String info, String json, String jsonPath) {
+        return dialogs.selectJsonPath(title, info, json, jsonPath);
     }
 
     public static PreviewCorner addPreviewCorner(JScrollPane scrollPane, boolean forceScrollbars) {

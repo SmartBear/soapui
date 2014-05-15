@@ -16,31 +16,6 @@
 
 package com.eviware.soapui.support.propertyexpansion;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.awt.event.ActionEvent;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.text.JTextComponent;
-
-import com.eviware.soapui.model.mock.MockResponse;
-import com.eviware.soapui.model.mock.MockService;
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.MutableTestPropertyHolder;
@@ -54,6 +29,8 @@ import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Operation;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
@@ -65,6 +42,28 @@ import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
 import com.eviware.soapui.support.xml.XmlUtils;
+import net.sf.json.groovy.JsonSlurper;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JMenu;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.JTextField;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.text.JTextComponent;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.event.ActionEvent;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PropertyExpansionPopupListener implements PopupMenuListener {
     private final Container targetMenu;
@@ -204,7 +203,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         }
 
         public TransferFromPropertyActionInvoker(MutableTestPropertyHolder testStep) {
-            super("Create new..");
+            super("Create new...");
             this.sourceStep = testStep;
         }
 
@@ -250,12 +249,14 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
                 }
 
                 if (XmlUtils.seemsToBeXml(val)) {
-                    // XmlObject.Factory.parse( val );
                     XmlUtils.createXmlObject(val);
                     sourceXPath = UISupport.selectXPath("Select XPath", "Select source xpath for property transfer", val,
                             null);
+                } else if (seemsToBeJson(val)) {
+                    sourceXPath = UISupport.selectJsonPath("Select JSON", "Select JSON value to transfer", val, null);
                 }
-            } catch (Throwable e) {
+            } catch (Exception e) {
+                e.printStackTrace();
                 // just ignore.. this wasn't xml..
             }
 
@@ -279,6 +280,15 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
                     }
                 }
             }
+        }
+    }
+
+    private boolean seemsToBeJson(String value) {
+        try {
+            new JsonSlurper().parseText(value);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

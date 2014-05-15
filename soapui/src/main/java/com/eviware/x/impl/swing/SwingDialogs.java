@@ -85,15 +85,13 @@ public class SwingDialogs implements XDialogs {
     }
 
     public Object prompt(String question, String title, Object[] objects) {
-        Object result = JOptionPane.showInputDialog(parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
+        return JOptionPane.showInputDialog(parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
                 objects, null);
-        return result;
     }
 
     public Object prompt(String question, String title, Object[] objects, String value) {
-        Object result = JOptionPane.showInputDialog(parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
+        return JOptionPane.showInputDialog(parent, question, title, JOptionPane.OK_CANCEL_OPTION, null,
                 objects, value);
-        return result;
     }
 
     public Boolean confirmOrCancel(String question, String title) {
@@ -108,7 +106,7 @@ public class SwingDialogs implements XDialogs {
 
     public int yesYesToAllOrNo(String question, String title) {
         String[] buttons = {"Yes", "Yes to all", "No"};
-        return JOptionPane.showOptionDialog(parent, question, title, 0, JOptionPane.QUESTION_MESSAGE, null, buttons,
+        return JOptionPane.showOptionDialog(parent, question, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, buttons,
                 buttons[0]);
     }
 
@@ -210,6 +208,11 @@ public class SwingDialogs implements XDialogs {
         return prompt("Specify XPath expression", "Select XPath", xpath);
     }
 
+    @Override
+    public String selectJsonPath(String title, String info, String json, String jsonPath) {
+        return prompt("Specify JsonPath expression", "Select JsonPath", jsonPath);
+    }
+
     /*
      * (non-Javadoc)
      *
@@ -236,7 +239,7 @@ public class SwingDialogs implements XDialogs {
 
                 @Override
                 public void run() {
-                    JComponent component = (JComponent) e.getComponent();
+                    JComponent component = e.getComponent();
                     component.requestFocusInWindow();
                     component.removeAncestorListener(al);
                 }
