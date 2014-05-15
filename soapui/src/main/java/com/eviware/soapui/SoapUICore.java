@@ -18,7 +18,7 @@ package com.eviware.soapui;
 
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
-import com.eviware.soapui.plugins.PluginLoader;
+import com.eviware.soapui.plugins.PluginManager;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
@@ -47,5 +47,5 @@ public interface SoapUICore {
 
     public SecurityScanRegistry getSecurityScanRegistry();
 
-    public PluginLoader getPluginLoader();
+    public PluginManager getPluginManager();
 }

@@ -18,21 +18,17 @@ public class PluginAdapter implements Plugin {
     }
 
     @Override
-    public PluginId getId() {
-        String groupId = getConfigurationAnnotation().groupId();
-        String name = getConfigurationAnnotation().name();
-        return new PluginId(groupId, name);
-    }
-
-    @Override
-    public Version getVersion() {
-        return Version.fromString(getConfigurationAnnotation().version());
+    public PluginInfo getInfo() {
+        PluginConfiguration annotation = getConfigurationAnnotation();
+        PluginId id = new PluginId(annotation.groupId(), annotation.name());
+        Version version = Version.fromString(annotation.version());
+        return new PluginInfo(id, version, annotation.description());
     }
 
     @Override
     public void initialize() {
         if (getConfigurationAnnotation() == null) {
-            throw new IllegalStateException("All plugin classes must be annotated with the @PluginConfigurationAnnotation");
+            throw new IllegalStateException("Subclasses of PluginAdapter must be annotated with the @PluginConfigurationAnnotation");
         }
     }
 
@@ -49,6 +45,11 @@ public class PluginAdapter implements Plugin {
     @Override
     public Collection<? extends SoapUIFactory> getFactories() {
         return Collections.emptySet();
+    }
+
+    @Override
+    public boolean hasSameIdAs(Plugin otherPlugin) {
+        return otherPlugin.getInfo().getId().equals(this.getInfo().getId());
     }
 
     private PluginConfiguration getConfigurationAnnotation() {
