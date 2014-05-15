@@ -1,7 +1,9 @@
 package com.eviware.soapui.support.components;
 
+import com.smartbear.soapui.utils.IntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import javax.swing.*;
 import java.net.URISyntaxException;
@@ -11,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
+@Category(IntegrationTest.class)
 public class EnabledWebViewBasedBrowserComponentTest {
     private static final String MEMBER_NAME = "member";
     private static final int TIMEOUT = 10;
