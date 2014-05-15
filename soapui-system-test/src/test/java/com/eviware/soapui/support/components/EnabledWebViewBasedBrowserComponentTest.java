@@ -1,8 +1,10 @@
 package com.eviware.soapui.support.components;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import javax.swing.*;
+import java.net.URISyntaxException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -10,17 +12,16 @@ import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.is;
 
 public class EnabledWebViewBasedBrowserComponentTest {
-    private static final String SCHEME = "file://";
-    private static final String TEST_STARTER_PAGE_URL
-            = SCHEME + EnabledWebViewBasedBrowserComponentTest.class
-            .getResource("/starter-pages/starter-page-with-an-single-action-button.html").getPath();
     private static final String MEMBER_NAME = "member";
     private static final int TIMEOUT = 10;
 
     private final CountDownLatch latch = new CountDownLatch(1);
 
     @Test
-    public void sucessfullCallbackWhenClickingOnAnElement() throws InterruptedException {
+    public void sucessfullCallbackWhenClickingOnAnElement() throws InterruptedException, URISyntaxException {
+        final String TEST_STARTER_PAGE_URL = EnabledWebViewBasedBrowserComponentTest.class
+                .getResource("/starter-pages/starter-page-with-an-single-action-button.html").toURI().toString();
+
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
