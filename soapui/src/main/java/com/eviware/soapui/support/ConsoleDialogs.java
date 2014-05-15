@@ -84,6 +84,11 @@ public class ConsoleDialogs implements XDialogs {
         return null;
     }
 
+    @Override
+    public String selectJsonPath(String title, String info, String json, String jsonPath) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public char[] promptPassword(String question, String title) {
         // TODO Auto-generated method stub
         return null;
