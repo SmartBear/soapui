@@ -17,4 +17,6 @@ public @interface PluginConfiguration {
     String name();
 
     String version();
+
+    String description() default "";
 }
