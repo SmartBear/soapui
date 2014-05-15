@@ -81,16 +81,16 @@ public class ResolverUtils {
         return null;
     }
 
-    public static String extractXPathPropertyValue(Object property, String xpath) {
+    public static String extractXPathPropertyValue(Object property, String pathExpression) {
         try {
             String value = property instanceof TestProperty ? ((TestProperty) property).getValue() : property
                     .toString();
-            if (xpath.startsWith("$")) {
-                return JsonPath.read(value, xpath);
+            if (pathExpression.startsWith("$")) {
+                return String.valueOf(JsonPath.read(value, pathExpression));
             } else {
                 XmlObject xmlObject = XmlUtils.createXmlObject(value);
-                String ns = xpath.trim().startsWith("declare namespace") ? "" : XmlUtils.declareXPathNamespaces(xmlObject);
-                Node domNode = XmlUtils.selectFirstDomNode(xmlObject, ns + xpath);
+                String ns = pathExpression.trim().startsWith("declare namespace") ? "" : XmlUtils.declareXPathNamespaces(xmlObject);
+                Node domNode = XmlUtils.selectFirstDomNode(xmlObject, ns + pathExpression);
                 return domNode == null ? null : XmlUtils.getValueForMatch(domNode, false);
             }
         } catch (Exception e) {
