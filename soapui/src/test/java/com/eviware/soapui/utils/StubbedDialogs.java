@@ -156,6 +156,11 @@ public class StubbedDialogs implements XDialogs {
         return null;
     }
 
+    @Override
+    public String selectJsonPath(String title, String info, String json, String jsonPath) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
     public List<String> getErrorMessages() {
         return errorMessages;
     }
