@@ -12,6 +12,9 @@ import java.util.List;
  * and annotated with {@link PluginConfiguration} will be automatically discovered when the plugin JAR is loaded.
  */
 public interface Plugin {
+
+    PluginInfo getInfo();
+
     /**
      * Returns a boolean indicating whether this plugin should be activated when loaded. Implementations could
      * e.g. check whether a certain system property is set to a specific value.
@@ -19,15 +22,6 @@ public interface Plugin {
      * @return <code>true</code> if and only if this plugin should be enabled
      */
     boolean isActive();
-
-    PluginId getId();
-
-    /**
-     * The version of this plugin.
-     *
-     * @return a Version object encapsulating the full version(major, minor and patch level)
-     */
-    Version getVersion();
 
     /**
      * This method is invoked by SoapUI when the plugin is loaded and should ensure that the plugin is fully initialized.
@@ -60,4 +54,12 @@ public interface Plugin {
      */
     Collection<? extends SoapUIFactory> getFactories();
 
+    /**
+     * Returns {@code true} if and only if the plugin passed as a parameter is identified as the same plugin,
+     * i.e. if the ID of this plugin matches this.
+     *
+     * @param otherPlugin
+     * @return
+     */
+    boolean hasSameIdAs(Plugin otherPlugin);
 }

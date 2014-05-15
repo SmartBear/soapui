@@ -1,0 +1,16 @@
+[
+    {
+        "groupId" : "com.smartbear.plugins.test1",
+        "name" : "Plugin 1",
+        "version" : "0.9.1",
+        "description" : "Test plugin 1",
+        "url" : "http://smartbear.com/plugins/plugin1.jar"
+    },
+    {
+        "groupId" : "com.smartbear.plugins.test2",
+        "name" : "Plugin 2",
+        "version" : "0.9.2",
+        "description" : "Test plugin 2",
+        "url" : "http://smartbear.com/plugins/plugin2.jar"
+    }
+]

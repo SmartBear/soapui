@@ -24,7 +24,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
-import com.eviware.soapui.plugins.PluginLoader;
+import com.eviware.soapui.plugins.PluginManager;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.ProxySettings;
@@ -81,7 +81,7 @@ public class DefaultSoapUICore implements SoapUICore {
     private String password;
     protected boolean initialImport;
     private TimerTask settingsWatcher;
-    private PluginLoader pluginLoader;
+    private PluginManager pluginManager;
     private SoapUIExtensionClassLoader extClassLoader;
 
     public boolean isSavingSettings;
@@ -136,9 +136,9 @@ public class DefaultSoapUICore implements SoapUICore {
         initSettings(settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile);
 
         initExtensions(getExtensionClassLoader());
-        pluginLoader = new PluginLoader(getExtensionClassLoader(), getFactoryRegistry(), getActionRegistry(),
+        pluginManager = new PluginManager(getExtensionClassLoader(), getFactoryRegistry(), getActionRegistry(),
                 getListenerRegistry());
-        pluginLoader.loadPlugins();
+        pluginManager.loadPlugins();
         initCoreComponents();
 
         // this is to provoke initialization
@@ -615,8 +615,8 @@ public class DefaultSoapUICore implements SoapUICore {
     }
 
     @Override
-    public PluginLoader getPluginLoader() {
-        return pluginLoader;
+    public PluginManager getPluginManager() {
+        return pluginManager;
     }
 
 }

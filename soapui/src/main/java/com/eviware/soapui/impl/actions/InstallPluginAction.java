@@ -53,7 +53,7 @@ public class InstallPluginAction extends AbstractSoapUIAction<WorkspaceImpl> {
             return;
         }
         try {
-            SoapUI.getSoapUICore().getPluginLoader().installPlugin(file);
+            SoapUI.getSoapUICore().getPluginManager().installPlugin(file);
         } catch (IOException e) {
             UISupport.showErrorMessage(e);
         }
