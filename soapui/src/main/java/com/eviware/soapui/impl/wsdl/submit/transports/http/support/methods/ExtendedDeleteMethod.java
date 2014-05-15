@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods;
 
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedEntityEnclosingHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpMethodSupport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
@@ -39,7 +40,7 @@ import java.net.URL;
  * @author Ole.Matzura
  */
 
-public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHttpMethod {
+public final class ExtendedDeleteMethod extends HttpDeleteWithBody implements ExtendedHttpMethod {
     private HttpMethodSupport httpMethodSupport;
 
     public ExtendedDeleteMethod() {
