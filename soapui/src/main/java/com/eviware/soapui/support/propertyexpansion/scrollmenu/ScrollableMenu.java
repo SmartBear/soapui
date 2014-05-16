@@ -16,14 +16,7 @@
 
 package com.eviware.soapui.support.propertyexpansion.scrollmenu;
 
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Vector;
+import com.eviware.soapui.support.UISupport;
 
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -36,8 +29,14 @@ import javax.swing.MenuElement;
 import javax.swing.MenuSelectionManager;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
-
-import com.eviware.soapui.support.UISupport;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 
 /**
  * JMenu with the scrolling feature.
@@ -332,7 +331,7 @@ public class ScrollableMenu extends JMenu implements ScrollableMenuContainer {
     public JMenuItem addHeader(JMenuItem header) {
         add(header, headerCount);
 
-        if (++headerCount == 1) {
+        if (++headerCount == 1 && visibleItems > 0) {
             add(new JSeparator(), 1);
         }
 
