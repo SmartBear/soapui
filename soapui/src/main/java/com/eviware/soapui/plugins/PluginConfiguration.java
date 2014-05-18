@@ -19,4 +19,6 @@ public @interface PluginConfiguration {
     String version();
 
     String description() default "";
+
+    String infoUrl() default "";
 }

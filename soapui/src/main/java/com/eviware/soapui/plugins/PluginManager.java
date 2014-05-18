@@ -12,6 +12,7 @@
 package com.eviware.soapui.plugins;
 
 import com.eviware.soapui.SoapUIExtensionClassLoader;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
@@ -62,8 +63,13 @@ public class PluginManager {
                 }
             }
         }
-        // Uncomment this and edit URL to get available plugins!
-        // availablePlugins = pluginLoader.loadAvailablePluginsFrom(new URL("http://smartbear.com/availablePlugins.json"));
+        String availablePluginsUrl = System.getProperty( "soapui.plugins.url", "" );
+        try {
+            if(StringUtils.hasContent( availablePluginsUrl))
+                availablePlugins = pluginLoader.loadAvailablePluginsFrom(new URL(availablePluginsUrl));
+        } catch (IOException e) {
+            log.warn( "Could not load plugins from [" + availablePluginsUrl + "]" );
+        }
     }
 
     public void installPlugin(File pluginFile) throws IOException {
