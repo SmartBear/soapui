@@ -22,7 +22,8 @@ public class PluginAdapter implements Plugin {
         PluginConfiguration annotation = getConfigurationAnnotation();
         PluginId id = new PluginId(annotation.groupId(), annotation.name());
         Version version = Version.fromString(annotation.version());
-        return new PluginInfo(id, version, annotation.description());
+        String infoUrl = annotation.infoUrl();
+        return new PluginInfo(id, version, annotation.description(), infoUrl);
     }
 
     @Override

@@ -16,11 +16,13 @@ public class PluginInfo {
     private final PluginId id;
     private final Version version;
     private final String description;
+    private final String infoUrl;
 
-    public PluginInfo(PluginId id, Version version, String description) {
+    public PluginInfo(PluginId id, Version version, String description, String infoUrl) {
         this.id = id;
         this.version = version;
         this.description = description;
+        this.infoUrl = infoUrl;
     }
 
     public PluginId getId() {
@@ -33,5 +35,9 @@ public class PluginInfo {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getInfoUrl() {
+        return infoUrl;
     }
 }

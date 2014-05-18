@@ -34,7 +34,6 @@
     <tns:action id="NewWadlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWadlProjectAction"/>
     <tns:action id="NewGenericProjectAction" actionClass="com.eviware.soapui.impl.actions.NewGenericProjectAction"/>
     <tns:action id="ImportWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.ImportWsdlProjectAction"/>
-    <tns:action id="InstallPluginAction" actionClass="com.eviware.soapui.impl.actions.InstallPluginAction"/>
     <tns:action id="ImportRemoteWsdlProjectAction"
                 actionClass="com.eviware.soapui.impl.actions.ImportRemoteWsdlProjectAction"/>
     <tns:action id="SaveAllProjectsAction" actionClass="com.eviware.soapui.actions.SaveAllProjectsAction"/>
@@ -367,7 +366,6 @@
         <tns:actionMapping actionId="NewGenericProjectAction" keyStroke="menu alt shift N"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ImportWsdlProjectAction" keyStroke="menu I"/>
-        <tns:actionMapping actionId="InstallPluginAction"/>
         <tns:actionMapping actionId="ImportPackedProjectAction"/>
         <tns:actionMapping actionId="ImportRemoteWsdlProjectAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
