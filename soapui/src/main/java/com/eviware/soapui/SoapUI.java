@@ -16,12 +16,9 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.actions.SaveAllProjectsAction;
-import com.eviware.soapui.actions.ShowSystemPropertiesAction;
+import com.eviware.soapui.actions.*;
+import com.eviware.soapui.actions.plugin.PluginManagerAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
-import com.eviware.soapui.actions.StartHermesJMSButtonAction;
-import com.eviware.soapui.actions.SwitchDesktopPanelAction;
-import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -493,7 +490,9 @@ public class SoapUI {
 
         ActionSupport.addActions(actions, fileMenu);
 
+        fileMenu.addSeparator();
         fileMenu.add(SoapUIPreferencesAction.getInstance());
+        fileMenu.add( new PluginManagerAction());
         fileMenu.add(new SavePreferencesAction());
         fileMenu.add(new ImportPreferencesAction());
 

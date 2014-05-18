@@ -11,7 +11,6 @@ import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.groovy.JsonSlurper;
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
@@ -21,11 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -132,7 +127,8 @@ public class PluginLoader {
                     JSONObject jsonObject = (JSONObject)pluginElement;
                     PluginId id = new PluginId((String)jsonObject.get("groupId"), (String)jsonObject.get("name"));
                     Version version = Version.fromString((String)jsonObject.get("version"));
-                    PluginInfo pluginInfo = new PluginInfo(id, version, (String)jsonObject.get("description"));
+                    PluginInfo pluginInfo = new PluginInfo(id, version, jsonObject.getString("description"),
+                            jsonObject.optString("infoUrl", ""));
                     URL pluginUrl = new URL((String)jsonObject.get("url"));
                     plugins.add(new AvailablePlugin(pluginInfo, pluginUrl));
                 }

@@ -26,10 +26,9 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Actions for importing an existing SoapUI project file into the current
- * workspace
+ * Action for installing a plugin into the workspace
  *
- * @author Ole.Matzura
+ * @author Manne.Fagerlind
  */
 
 public class InstallPluginAction extends AbstractSoapUIAction<WorkspaceImpl> {
