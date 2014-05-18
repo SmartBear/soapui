@@ -17,7 +17,7 @@ class LoadPluginFromFileAction extends AbstractAction
 
     public LoadPluginFromFileAction(PluginManagerAction.PluginsTableModel pluginsTableModel)
     {
-        super( "Load Extension from file...");
+        super( "Load Plugin from file...");
         this.pluginsTableModel = pluginsTableModel;
     }
 
@@ -26,7 +26,7 @@ class LoadPluginFromFileAction extends AbstractAction
 
         boolean retry = true;
         while( retry ) {
-            File file = UISupport.getFileDialogs().open("ExtensionManager", "Select Extension", "jar", "Extension File", null);
+            File file = UISupport.getFileDialogs().open("PluginManager", "Select plugin", "jar", "Plugin File", null);
             if (file != null) {
                 try {
                     SoapUI.getSoapUICore().getPluginManager().installPlugin(file);
