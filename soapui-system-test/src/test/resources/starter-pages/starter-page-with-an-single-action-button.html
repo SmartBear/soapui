@@ -3,11 +3,10 @@
     <head lang="en">
         <meta charset="UTF-8">
         <title>Starter page with an single action button</title>
-        <script src="jquery.min.js"></script>
         <script type="text/javascript">
-            $(document).ready(
+            window.onload(
                 window.setTimeout(function() {
-                    $("p").click();
+                    member.call();
                 }
                 // We need to delay a bit to make sure the 'callback' object is initilizedS
                 , 100)
@@ -15,6 +14,5 @@
         </script>
     </head>
     <body>
-        <p onclick="member.call();">Click me</p>
     </body>
 </html>
