@@ -62,7 +62,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
 
         public PluginBrowserDialog()
         {
-            super( "Plugin Browser", "Browser Available SoapUI Plugins", null, false );
+            super( "Plugin Browser", "Browse Available SoapUI Plugins", null, false );
         }
 
         @Override
@@ -71,7 +71,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
             JPanel panel = UISupport.createEmptyPanel(5, 15, 15, 15);
             panel.add( BorderLayout.NORTH,
                     UISupport.wrapInEmptyPanel(
-                            new JLabel( "Installed Plugins"), BorderFactory.createEmptyBorder( 0, 0, 5, 0 )));
+                            new JLabel( "Available Plugins"), BorderFactory.createEmptyBorder( 0, 0, 5, 0 )));
             pluginsTableModel = new PluginsTableModel();
             table = new JTable(pluginsTableModel);
             table.setDefaultRenderer(
