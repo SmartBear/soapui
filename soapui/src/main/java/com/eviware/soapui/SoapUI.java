@@ -22,6 +22,7 @@ import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -1120,6 +1121,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction( "Exit" );
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1266,6 +1268,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = false;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction( "ExitWithoutSave" );
             frame.dispatchEvent(windowEvent);
         }
     }

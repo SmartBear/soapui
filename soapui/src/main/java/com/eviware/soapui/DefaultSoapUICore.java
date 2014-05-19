@@ -16,6 +16,7 @@
 
 package com.eviware.soapui;
 
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -654,5 +655,10 @@ public class DefaultSoapUICore implements SoapUICore {
             initSecurityScanRegistry();
         }
         return securityScanRegistry;
+    }
+
+    @Override
+    public AnalyticsManager getAnalyticsManager() {
+        return AnalyticsManager.getAnalytics();
     }
 }
