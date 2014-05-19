@@ -28,6 +28,7 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.JsonPathFacade;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ChooseAnotherPropertySourceResolver;
@@ -514,7 +515,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
     protected String transferJsonPathToString(TestProperty sourceProperty, TestProperty targetProperty,
                                               SubmitContext context) throws Exception {
         String sourceValue = sourceProperty.getValue();
-        String jsonValue = String.valueOf(JsonPath.read(sourceValue, getSourcePath()));
+        String jsonValue = new JsonPathFacade(sourceValue).readStringValue(getSourcePath());
         targetProperty.setValue(jsonValue);
         return jsonValue;
     }
@@ -609,8 +610,11 @@ public class PropertyTransfer implements PropertyChangeNotifier {
     }
 
     private boolean seemsToBeJsonPath(String sourcePath) {
+        if (sourcePath.trim().startsWith("/")) {
+            return false;
+        }
         try {
-            JsonPath.compile(sourcePath);
+            JsonPath jsonPath = JsonPath.compile(sourcePath);
             return true;
         } catch (Exception e) {
             return false;

@@ -37,7 +37,7 @@ import javax.annotation.Nonnull;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
+import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 public abstract class AbstractHttpXmlRequestDesktopPanel<T extends ModelItem, T2 extends HttpRequestInterface<?>>
         extends AbstractHttpRequestDesktopPanel<T, T2> {

@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +35,7 @@ public class PropertyTransferTest {
 
     @Before
     public void setUp() throws Exception {
+        PropertyExpander.getDefaultExpander();
         transfer = new PropertyTransfer(null, PropertyTransferConfig.Factory.newInstance());
         sourceProperty = new DefaultTestStepProperty("source", null);
         targetProperty = new DefaultTestStepProperty("target", null);

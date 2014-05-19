@@ -23,8 +23,8 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.JsonPathFacade;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.jayway.jsonpath.JsonPath;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Node;
 
@@ -86,7 +86,7 @@ public class ResolverUtils {
             String value = property instanceof TestProperty ? ((TestProperty) property).getValue() : property
                     .toString();
             if (pathExpression.startsWith("$")) {
-                return String.valueOf(JsonPath.read(value, pathExpression));
+                return new JsonPathFacade(value).readStringValue(pathExpression);
             } else {
                 XmlObject xmlObject = XmlUtils.createXmlObject(value);
                 String ns = pathExpression.trim().startsWith("declare namespace") ? "" : XmlUtils.declareXPathNamespaces(xmlObject);
