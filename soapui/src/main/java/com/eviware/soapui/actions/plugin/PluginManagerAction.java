@@ -24,10 +24,10 @@ public class PluginManagerAction extends AbstractAction {
 
     public PluginManagerAction()
     {
-        super("Plugin Manager");
+        super("Extension Manager");
 
-        putValue(Action.SHORT_DESCRIPTION, "Configures SoapUI Plugins");
-        putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt U"));
+        putValue(Action.SHORT_DESCRIPTION, "Configures SoapUI Extensions");
+        putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt X"));
     }
 
     @Override
@@ -47,7 +47,7 @@ public class PluginManagerAction extends AbstractAction {
 
         public PluginManagerDialog()
         {
-            super( "Plugin Manager", "Manage SoapUI Plugins", null, false );
+            super( "Extension Manager", "Manage SoapUI Extensions", null, false );
         }
 
         @Override
@@ -56,7 +56,7 @@ public class PluginManagerAction extends AbstractAction {
             JPanel panel = UISupport.createEmptyPanel( 5, 15, 15, 15 );
             panel.add( BorderLayout.NORTH,
                     UISupport.wrapInEmptyPanel(
-                    new JLabel( "Installed Plugins"), BorderFactory.createEmptyBorder( 0, 0, 5, 0 )));
+                    new JLabel( "Installed Extensions"), BorderFactory.createEmptyBorder( 0, 0, 5, 0 )));
             panel.add( BorderLayout.CENTER, new JScrollPane( new JTable(pluginsTableModel)));
             return panel;
         }
