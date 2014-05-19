@@ -53,7 +53,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
-import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
+import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 @SuppressWarnings("unchecked")
 public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDocument> implements

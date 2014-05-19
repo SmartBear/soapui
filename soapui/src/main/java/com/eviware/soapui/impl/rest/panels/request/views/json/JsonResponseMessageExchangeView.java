@@ -16,7 +16,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.json;
 
-import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -100,7 +99,7 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
         } else {
             String content = "<Not JSON content>";
 
-            if (JsonMediaTypeHandler.seemsToBeJsonContentType(me.getResponseHeaders().get("Content-Type", ""))) {
+            if (JsonUtil.seemsToBeJsonContentType(me.getResponseHeaders().get("Content-Type", ""))) {
                 try {
                     JSON json = new JsonUtil().parseTrimmedText(me.getResponseContent());
                     if (json.isEmpty()) {

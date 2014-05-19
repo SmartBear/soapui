@@ -33,19 +33,9 @@ import net.sf.json.JSONException;
 import java.net.URL;
 
 public class JsonMediaTypeHandler implements MediaTypeHandler {
-    public boolean canHandle(String contentType) {
-        return seemsToBeJsonContentType(contentType);
-    }
 
-    /**
-     * This method and its name are somewhat awkward, but both stem from the fact that there are so many commonly used
-     * content types for JSON.
-     *
-     * @param contentType the MIME type to examine
-     * @return <code>true</code> if content type is non-null and contains either "json" or "javascript"
-     */
-    public static boolean seemsToBeJsonContentType(String contentType) {
-        return contentType != null && (contentType.contains("javascript") || contentType.contains("json"));
+    public boolean canHandle(String contentType) {
+        return JsonUtil.seemsToBeJsonContentType(contentType);
     }
 
     @Override
