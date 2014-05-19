@@ -40,7 +40,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
 
     public LoadPluginFromRepositoryAction(PluginManagerAction.PluginsTableModel installedPluginsTableModel)
     {
-        super( "Browse Extension Repository...");
+        super( "Browse Plugin Repository...");
         this.installedPluginsTableModel = installedPluginsTableModel;
     }
 
@@ -62,7 +62,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
 
         public PluginBrowserDialog()
         {
-            super( "Extension Browser", "Browse Available SoapUI Extensions", null, false );
+            super( "Plugin Browser", "Browser Available SoapUI Plugins", null, false );
         }
 
         @Override
@@ -71,7 +71,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
             JPanel panel = UISupport.createEmptyPanel(5, 15, 15, 15);
             panel.add( BorderLayout.NORTH,
                     UISupport.wrapInEmptyPanel(
-                            new JLabel( "Available Extensions"), BorderFactory.createEmptyBorder( 0, 0, 5, 0 )));
+                            new JLabel( "Installed Plugins"), BorderFactory.createEmptyBorder( 0, 0, 5, 0 )));
             pluginsTableModel = new PluginsTableModel();
             table = new JTable(pluginsTableModel);
             table.setDefaultRenderer(
@@ -178,9 +178,9 @@ class LoadPluginFromRepositoryAction extends AbstractAction
                 boolean value = (Boolean)aValue;
                 final AvailablePlugin plugin = plugins.get(rowIndex);
 
-                if( value && UISupport.confirm( "Install [" + plugin.getPluginInfo().getId().getName() + "]?", "Install Extension"))
+                if( value && UISupport.confirm( "Install [" + plugin.getPluginInfo().getId().getName() + "]?", "Install Plugin"))
                 {
-                    ProgressDialog progressDialog = new ProgressDialog( "Install Extension", "Downloading Extension", 0, null, false );
+                    ProgressDialog progressDialog = new ProgressDialog( "Install Plugin", "Downloading plugin", 0, null, false );
                     progressDialog.setIndeterminate();
                     progressDialog.run( new Worker() {
                         @Override
@@ -194,8 +194,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
                                 monitor.setProgress(0, "Installing...");
                                 pluginManager.installPlugin( tempFile );
                                 installedPluginsTableModel.refresh();
-                                UISupport.showInfoMessage("Extension [" + plugin.getPluginInfo().getId().getName() +
-                                        "] installed successfully");
+                                UISupport.showInfoMessage("Plugin installed successfully");
                             } catch (IOException e) {
                                 UISupport.showErrorMessage( e );
                             }
@@ -215,7 +214,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
                     });
 
                 }
-                else if( !value && UISupport.confirm( "Uninstall [" + plugin.getPluginInfo().getId().getName() + "] Extension?", "Uninstall Extension"))
+                else if( !value && UISupport.confirm( "Uninstall [" + plugin.getPluginInfo().getId().getName() + "]?", "Uninstall Plugin"))
                 {
                     for(Plugin p : pluginManager.getInstalledPlugins())
                     {
