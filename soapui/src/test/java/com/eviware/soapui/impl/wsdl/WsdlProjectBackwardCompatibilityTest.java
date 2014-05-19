@@ -50,8 +50,5 @@ public class WsdlProjectBackwardCompatibilityTest {
         MockOperation mockOperation = mockService.getMockOperationByName("ConversionRate");
         MockResponse mockResponse = mockOperation.getMockResponseByName("Response 1");
         assertTrue(mockResponse.getResponseContent().contains("10"));
-
-
     }
-
 }
