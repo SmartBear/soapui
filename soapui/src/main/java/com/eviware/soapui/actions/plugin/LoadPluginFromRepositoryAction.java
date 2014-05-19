@@ -114,12 +114,7 @@ class LoadPluginFromRepositoryAction extends AbstractAction
                 if( value == null )
                     return new JPanel();
 
-                JButton button = new JButton( "...");
-                button.setSelected(false);
-                UISupport.setFixedSize(button, 30, 20 );
-                button.setFocusPainted( hasFocus );
-
-                return button;
+                return UISupport.createLabelLink( String.valueOf( value), "[Read more...]");
             }
         }
     }
