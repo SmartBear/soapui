@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
@@ -139,6 +140,9 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                             SoapUI.getActionRegistry().getAction(NewRestServiceAction.SOAPUI_ACTION_ID)
                                     .perform(project, project);
                         }
+
+                        Analytics.trackAction("CreateProject");
+
                         break;
                     }
                 }

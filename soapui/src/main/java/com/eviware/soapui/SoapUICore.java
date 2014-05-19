@@ -18,6 +18,7 @@ package com.eviware.soapui;
 
 import java.io.File;
 
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
@@ -45,4 +46,6 @@ public interface SoapUICore {
     public SoapUIExtensionClassLoader getExtensionClassLoader();
 
     public SecurityScanRegistry getSecurityScanRegistry();
+
+    public AnalyticsManager getAnalyticsManager();
 }
