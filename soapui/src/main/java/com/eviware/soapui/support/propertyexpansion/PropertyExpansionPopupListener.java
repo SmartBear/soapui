@@ -36,13 +36,13 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionImpl;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.security.SecurityTest;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
 import com.eviware.soapui.support.xml.XmlUtils;
-import net.sf.json.groovy.JsonSlurper;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
@@ -252,7 +252,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
                     XmlUtils.createXmlObject(val);
                     sourceXPath = UISupport.selectXPath("Select XPath", "Select source xpath for property transfer", val,
                             null);
-                } else if (seemsToBeJson(val)) {
+                } else if (JsonUtil.isValidJson(val)) {
                     sourceXPath = UISupport.selectJsonPath("Select JSON", "Select JSON value to transfer", val, null);
                 }
             } catch (Exception e) {
@@ -280,15 +280,6 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
                     }
                 }
             }
-        }
-    }
-
-    private boolean seemsToBeJson(String value) {
-        try {
-            new JsonSlurper().parseText(value);
-            return true;
-        } catch (Exception e) {
-            return false;
         }
     }
 
