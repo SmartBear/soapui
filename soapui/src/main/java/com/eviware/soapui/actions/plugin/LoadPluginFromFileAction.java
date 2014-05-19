@@ -26,7 +26,7 @@ class LoadPluginFromFileAction extends AbstractAction
 
         boolean retry = true;
         while( retry ) {
-            File file = UISupport.getFileDialogs().open("PluginManager", "Select plugin", "jar", "Plugin File", null);
+            File file = UISupport.getFileDialogs().open("PluginManager", "Select Plugin", "jar", "Plugin File", null);
             if (file != null) {
                 try {
                     SoapUI.getSoapUICore().getPluginManager().installPlugin(file);
