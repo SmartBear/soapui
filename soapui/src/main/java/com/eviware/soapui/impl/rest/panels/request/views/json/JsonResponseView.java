@@ -16,7 +16,6 @@
 
 package com.eviware.soapui.impl.rest.panels.request.views.json;
 
-import com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
@@ -98,7 +97,7 @@ public class JsonResponseView extends AbstractXmlEditorView<HttpResponseDocument
         } else {
             String content;
 
-            if (JsonMediaTypeHandler.seemsToBeJsonContentType(httpResponse.getContentType())) {
+            if (JsonUtil.seemsToBeJsonContentType(httpResponse.getContentType())) {
                 try {
                     JSON json = new JsonUtil().parseTrimmedText(httpResponse.getContentAsString());
                     if (json.isEmpty()) {

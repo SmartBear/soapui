@@ -22,6 +22,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.jayway.jsonpath.JsonPath;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlCursor.TokenType;
@@ -44,6 +45,7 @@ import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.JsonPathFacade;
 import com.eviware.soapui.support.PropertyChangeNotifier;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.resolver.ChooseAnotherPropertySourceResolver;
@@ -512,6 +514,14 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         return value;
     }
 
+    protected String transferJsonPathToString(TestProperty sourceProperty, TestProperty targetProperty,
+                                              SubmitContext context) throws Exception {
+        String sourceValue = sourceProperty.getValue();
+        String jsonValue = new JsonPathFacade(sourceValue).readStringValue(getSourcePath());
+        targetProperty.setValue(jsonValue);
+        return jsonValue;
+    }
+
     protected String transferXPathToString(TestProperty sourceProperty, TestProperty targetProperty,
                                            SubmitContext context) throws Exception {
         String sourceValue = sourceProperty.getValue();
@@ -597,6 +607,17 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         }
     }
 
+    private boolean seemsToBeJsonPath(String sourcePath) {
+        if (sourcePath.trim().startsWith("/")) {
+            return false;
+        }
+        try {
+            JsonPath jsonPath = JsonPath.compile(sourcePath);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     /**
      * Method called for transferring between 2 xml properties..
      */

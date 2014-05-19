@@ -84,7 +84,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
+import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 public class RestTestRequestStep extends WsdlTestStepWithProperties implements RestTestRequestStepInterface, Securable {
     private final static Logger log = Logger.getLogger(RestTestRequestStep.class);

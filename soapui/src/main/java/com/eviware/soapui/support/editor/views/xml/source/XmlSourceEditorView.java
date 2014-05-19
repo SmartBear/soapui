@@ -90,7 +90,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.eviware.soapui.impl.rest.support.handlers.JsonMediaTypeHandler.seemsToBeJsonContentType;
+import static com.eviware.soapui.support.JsonUtil.seemsToBeJsonContentType;
 
 /**
  * Default "XML" source editor view in SoapUI
