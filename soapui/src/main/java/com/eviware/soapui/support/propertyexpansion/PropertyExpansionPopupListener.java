@@ -43,7 +43,6 @@ import com.eviware.soapui.support.components.GroovyEditorComponent;
 import com.eviware.soapui.support.components.ShowPopupAction;
 import com.eviware.soapui.support.propertyexpansion.scrollmenu.ScrollableMenu;
 import com.eviware.soapui.support.xml.XmlUtils;
-import net.sf.json.groovy.JsonSlurper;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
 import javax.swing.AbstractAction;
