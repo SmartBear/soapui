@@ -1,7 +1,5 @@
 package com.eviware.soapui.analytics;
 
-import com.eviware.soapui.analytics.providers.NullAnalyticsProvider;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +31,6 @@ public class AnalyticsManager {
     public static AnalyticsManager initialize() {
         if (instance == null) {
             instance = new AnalyticsManager();
-            instance.registerAnalyticsProviderFactory(new NullAnalyticsProvider.NullAnalyticsProviderFactory());
         }
 
         return getAnalytics();
