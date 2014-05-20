@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.config.MockOperationConfig;
 import com.eviware.soapui.config.MockOperationDocumentConfig;
 import com.eviware.soapui.config.MockServiceConfig;
@@ -162,6 +163,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
 
     @Override
     public MockDispatcher createDispatcher(WsdlMockRunContext mockContext) {
+        AnalyticsManager.getAnalytics().trackAction("StartSOAPMock");
         return new WsdlMockDispatcher(this, mockContext);
     }
 

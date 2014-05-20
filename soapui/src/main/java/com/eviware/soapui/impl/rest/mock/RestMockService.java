@@ -15,6 +15,7 @@
 */
 package com.eviware.soapui.impl.rest.mock;
 
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -27,13 +28,12 @@ import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
-import com.eviware.soapui.model.mock.MockRunContext;
 import com.eviware.soapui.model.project.Project;
-
-import static com.eviware.soapui.impl.rest.RestRequestInterface.*;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RESTMockServiceConfig> {
 
@@ -63,6 +63,7 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
 
     @Override
     public MockDispatcher createDispatcher(WsdlMockRunContext mockContext) {
+        AnalyticsManager.getAnalytics().trackAction("StartRestMock");
         return new RestMockDispatcher(this, mockContext);
     }
 
