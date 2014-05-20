@@ -18,39 +18,48 @@ package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
+import com.eviware.soapui.model.testsuite.TestProperty;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class PropertyTransferTest {
 
     private PropertyTransfer transfer;
     private DefaultTestStepProperty sourceProperty;
     private DefaultTestStepProperty targetProperty;
+    private WsdlSubmitContext submitContext;
 
     @Before
     public void setUp() throws Exception {
-        PropertyExpander.getDefaultExpander();
-        transfer = new PropertyTransfer(null, PropertyTransferConfig.Factory.newInstance());
         sourceProperty = new DefaultTestStepProperty("source", null);
         targetProperty = new DefaultTestStepProperty("target", null);
+        transfer = new PropertyTransfer(null, PropertyTransferConfig.Factory.newInstance()) {
+            @Override
+            public TestProperty getSourceProperty() {
+                return sourceProperty;
+            }
+
+            @Override
+            public TestProperty getTargetProperty() {
+                return targetProperty;
+            }
+        };
+        submitContext = mock(WsdlSubmitContext.class);
     }
 
     @Test
     public void testStringToStringTransfer() throws Exception {
-        PropertyTransfer transfer = new PropertyTransfer(null, PropertyTransferConfig.Factory.newInstance());
-        DefaultTestStepProperty sourceProperty = new DefaultTestStepProperty("source", null);
         sourceProperty.setValue("Test");
 
-        DefaultTestStepProperty targetProperty = new DefaultTestStepProperty("target", null);
-        transfer.transferStringToString(sourceProperty, targetProperty);
+        transfer.transferProperties(submitContext);
 
-        assertEquals(sourceProperty.getValue(), targetProperty.getValue());
+        assertThat(targetProperty.getValue(), is("Test"));
     }
 
     @Test
@@ -59,30 +68,26 @@ public class PropertyTransferTest {
         targetProperty.setValue("<bil><name>bmw</name></bil>");
 
         transfer.setTargetPath("//name/text()");
-
-        transfer.transferStringToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals("<bil><name>audi</name></bil>", targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is("<bil><name>audi</name></bil>"));
 
         targetProperty.setValue("<bil><name test=\"test\">bmw</name></bil>");
-        transfer.transferStringToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-
-        assertEquals("<bil><name test=\"test\">audi</name></bil>", targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is("<bil><name test=\"test\">audi</name></bil>"));
 
         transfer.setTargetPath("//name/@test");
-
-        transfer.transferStringToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals("<bil><name test=\"audi\">audi</name></bil>", targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is("<bil><name test=\"audi\">audi</name></bil>"));
     }
 
     @Test
     public void testXmlToStringTransfer() throws Exception {
         sourceProperty.setValue("<bil><name>audi</name></bil>");
         targetProperty.setValue("");
-
         transfer.setSourcePath("//name/text()");
 
-        transfer.transferXPathToString(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals("audi", targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is("audi"));
     }
 
     @Test
@@ -92,8 +97,8 @@ public class PropertyTransferTest {
 
         transfer.setSourcePath("//name/text()");
 
-        transfer.transferXPathToString(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals(null, targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is(nullValue()));
     }
 
     @Test
@@ -104,13 +109,13 @@ public class PropertyTransferTest {
         transfer.setSourcePath("//name/text()");
         transfer.setTargetPath("//name/text()");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals(sourceProperty.getValue(), targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is(sourceProperty.getValue()));
 
         targetProperty.setValue("<bil><name test=\"test\">bmw</name></bil>");
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+        transfer.transferProperties(submitContext);
 
-        assertEquals("<bil><name test=\"test\">audi</name></bil>", targetProperty.getValue());
+        assertThat(targetProperty.getValue(), is("<bil><name test=\"test\">audi</name></bil>"));
     }
 
     @Test
@@ -122,9 +127,9 @@ public class PropertyTransferTest {
         transfer.setSourcePath("//name");
         transfer.setTargetPath("//name2");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+        transfer.transferProperties(submitContext);
 
-        assertEquals("<bil><name2>audi</name2></bil>", targetProperty.getValue());
+        assertThat(targetProperty.getValue(), is("<bil><name2>audi</name2></bil>"));
     }
 
     @Test
@@ -135,9 +140,9 @@ public class PropertyTransferTest {
         transfer.setSourcePath("//name/text()");
         transfer.setTargetPath("//name/text()");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+        transfer.transferProperties(submitContext);
 
-        assertEquals("<bil><name/></bil>", targetProperty.getValue());
+        assertThat(targetProperty.getValue(), is("<bil><name/></bil>"));
     }
 
     @Test
@@ -148,20 +153,20 @@ public class PropertyTransferTest {
         transfer.setSourcePath("//name/@value");
         transfer.setTargetPath("//name/text()");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+        transfer.transferProperties(submitContext);
 
-        assertEquals("<bil><name test=\"test\">fiat</name></bil>", targetProperty.getValue());
+        assertThat(targetProperty.getValue(), is("<bil><name test=\"test\">fiat</name></bil>"));
 
         transfer.setSourcePath("//name/text()");
         transfer.setTargetPath("//name/@test");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+        transfer.transferProperties(submitContext);
 
-        assertEquals("<bil><name test=\"alfa\">fiat</name></bil>", targetProperty.getValue());
+        assertThat(targetProperty.getValue(), is("<bil><name test=\"alfa\">fiat</name></bil>"));
 
         transfer.setSourcePath("//name/@value2");
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals("<bil><name test=\"volvo\">fiat</name></bil>", targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is("<bil><name test=\"volvo\">fiat</name></bil>"));
     }
 
     @Test
@@ -173,16 +178,16 @@ public class PropertyTransferTest {
         transfer.setTargetPath("//bil");
 
         transfer.setTransferTextContent(false);
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals(sourceProperty.getValue(), targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is(sourceProperty.getValue()));
 
         targetProperty.setValue("<bil><name></name></bil>");
 
         transfer.setSourcePath("//bil/name/text()");
         transfer.setTargetPath("//bil/name");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals(sourceProperty.getValue(), targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is(sourceProperty.getValue()));
     }
 
     @Test
@@ -194,8 +199,8 @@ public class PropertyTransferTest {
         transfer.setSourcePath("declare namespace ns='ns1';//ns:bil/ns:name");
         transfer.setTargetPath("//bil/name");
 
-        transfer.transferXPathToXml(sourceProperty, targetProperty, new WsdlSubmitContext(null));
-        assertEquals("<bil xmlns:ns1=\"ns1\"><ns1:name>audi</ns1:name></bil>", targetProperty.getValue());
+        transfer.transferProperties(submitContext);
+        assertThat(targetProperty.getValue(), is("<bil xmlns:ns1=\"ns1\"><ns1:name>audi</ns1:name></bil>"));
     }
 
     @Test
@@ -204,8 +209,8 @@ public class PropertyTransferTest {
                 "{ firstName: 'Anders', lastName: 'And' }," +
                 "{ firstName: 'Anders', lastName: 'And' }" +
                 "] }");
-        transfer.setSourcePath("persons[0].firstName");
-        transfer.transferJsonPathToString(sourceProperty, targetProperty, new WsdlSubmitContext(null));
+        transfer.setSourcePath("$.persons[0].firstName");
+        transfer.transferProperties(submitContext);
 
         assertThat(targetProperty.getValue(), is("Anders"));
     }

@@ -68,7 +68,7 @@ class MutableValue {
         @Nullable
         @Override
         public Object apply(@Nullable Object o) {
-            Object value = o instanceof MutableValue ? ((MutableValue) o).getValue() : o;
+            Object value = extractValueFromMutable(o);
             if (value instanceof List) {
                 return new ArrayList<Object>(Lists.transform((List) value, this));
             } else if (value instanceof Map) {
