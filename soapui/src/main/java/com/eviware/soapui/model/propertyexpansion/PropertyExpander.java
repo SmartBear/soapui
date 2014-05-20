@@ -16,14 +16,10 @@
 
 package com.eviware.soapui.model.propertyexpansion;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
+import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
 import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
@@ -41,6 +37,11 @@ import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Class that can expand properties using property resolvers
@@ -72,6 +73,8 @@ public class PropertyExpander {
         }
 
         defaultExpander = new PropertyExpander(true);
+        // WORKAROUND: eliminates a potential problem with a circular dependency between HttpClientSupport and this class
+        ProxyUtils.setGlobalProxy(SoapUI.getSettings());
         debuggingExpandedProperties = new HashMap<String, StringToStringMap>();
     }
 
