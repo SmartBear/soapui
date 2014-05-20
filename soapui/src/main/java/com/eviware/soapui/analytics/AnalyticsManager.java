@@ -3,6 +3,7 @@ package com.eviware.soapui.analytics;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +51,14 @@ public class AnalyticsManager {
 
     public boolean trackAction(String actionName) {
         return this.trackAction(Category.Action, actionName, null);
+    }
+    // Single param action
+    public boolean trackAction(String actionName, String paramName, String value) {
+
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(paramName, value);
+
+        return this.trackAction(Category.Action, actionName, params);
     }
 
     public boolean trackStartupAction(String actionName) {

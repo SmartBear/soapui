@@ -667,6 +667,9 @@ public class SoapUI {
                 if (isFirstLaunch) {
                     Tools.openURL(SOAPUI_WELCOME_PAGE);
                 }
+
+                if (isCommandLine())
+                    Analytics.trackAction( "CmdLine");
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
