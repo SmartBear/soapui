@@ -31,6 +31,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComponent;
 import javax.swing.JList;
 
+import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSEncryptionPart;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Merlin;
@@ -154,6 +155,17 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
         }
     }
 
+    protected int readKeyIdentifierType(XmlObjectConfigurationReader reader) {
+        int identifierType = reader.readInt("keyIdentifierType", WSConstants.ISSUER_SERIAL);
+
+        //For backward compatibility see SOAP-2347
+        if(identifierType == 0)
+        {
+            return WSConstants.ISSUER_SERIAL;
+        }
+        return identifierType;
+    }
+
     public void updateEntryConfig(WSSEntryConfig config) {
         this.config = config;
     }
@@ -212,10 +224,10 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
                                                       boolean cellHasFocus) {
             Component result = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            if (value.equals(0)) {
-                setText("Issuer Name and Serial Number");
-            } else if (value.equals(1)) {
+            if (value.equals(1)) {
                 setText("Binary Security Token");
+            } else if (value.equals(2)) {
+                setText("Issuer Name and Serial Number");
             } else if (value.equals(3)) {
                 setText("X509 Certificate");
             } else if (value.equals(4)) {
