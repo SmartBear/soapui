@@ -95,7 +95,7 @@ public class EncryptionEntry extends WssEntryBase {
         form.appendPasswordField("password", "Password",
                 "The password for the key to use for encryption (if it is private)");
 
-        form.appendComboBox("keyIdentifierType", "Key Identifier Type", new Integer[]{0, 1, 3, 4, 5, 6, 8},
+        form.appendComboBox("keyIdentifierType", "Key Identifier Type", new Integer[]{1, 2, 3, 4, 5, 6, 8},
                 "Sets which key identifier to use").setRenderer(new KeyIdentifierTypeRenderer());
 
         (embeddedKeyNameTextField = form.appendTextField("embeddedKeyName", "Embedded Key Name",
@@ -129,7 +129,7 @@ public class EncryptionEntry extends WssEntryBase {
     @Override
     protected void load(XmlObjectConfigurationReader reader) {
         crypto = reader.readString("crypto", null);
-        keyIdentifierType = reader.readInt("keyIdentifierType", 0);
+        keyIdentifierType = readKeyIdentifierType(reader);
         symmetricEncAlgorithm = reader.readString("symmetricEncAlgorithm", null);
         encKeyTransport = reader.readString("encKeyTransport", null);
         embeddedKeyName = reader.readString("embeddedKeyName", null);
