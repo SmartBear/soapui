@@ -58,6 +58,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
             public void actionPerformed(ActionEvent e) {
                 dialog.setVisible(false);
                 SoapUI.getActionRegistry().getAction(NewWadlProjectAction.SOAPUI_ACTION_ID).perform(SoapUI.getWorkspace(), null);
+                Analytics.trackAction( "ImportWADL");
             }
         });
         while (dialog.show()) {

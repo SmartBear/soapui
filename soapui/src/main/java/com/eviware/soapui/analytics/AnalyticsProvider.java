@@ -41,5 +41,10 @@ public interface AnalyticsProvider {
         public String getActionDescription() {
             return actionDescription;
         }
+
+        public String toString(String activity, String license, String actionDescription) {
+            return String.format("Category: %s, Activity: %s", getActionTypeDescription(), getActionDescription());
+        }
+
     }
 }

@@ -182,6 +182,8 @@ public class DefaultSoapUICore implements SoapUICore {
 
                     // add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
                     UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
+
+                    AnalyticsManager.getAnalytics().trackAction("InstallExtension", "Extension", pluginFile.getName());
                 } catch (Exception e) {
                     SoapUI.logError(e);
                 }
