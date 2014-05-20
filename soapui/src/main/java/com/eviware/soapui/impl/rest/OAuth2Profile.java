@@ -79,6 +79,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     }
 
     public enum AccessTokenStatus {
+        UNKNOWN("Unknown"),
         ENTERED_MANUALLY("Entered Manually"),
         WAITING_FOR_AUTHORIZATION("Waiting for Authorization"),
         RECEIVED_AUTHORIZATION_CODE("Received authorization code"),
@@ -159,6 +160,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
         setDefaultAccessTokenPosition();
         setDefaultRefreshMethod();
+        setDefaultAccessTokenStatus();
     }
 
     public String getName() {
@@ -340,10 +342,6 @@ public class OAuth2Profile implements PropertyExpansionContainer {
             setAccessTokenStartingStatus(newStatus);
         }
 
-        synchronized (this) {
-            notifyAll();
-        }
-
         pcs.firePropertyChange(ACCESS_TOKEN_STATUS_PROPERTY, oldStatus, newStatus);
     }
 
@@ -416,7 +414,7 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     public void setManualAccessTokenExpirationTime(String newExpirationTime) {
         String oldExpirationTime = configuration.getManualAccessTokenExpirationTime();
 
-        if (oldExpirationTime != newExpirationTime) {
+        if (!oldExpirationTime.equals(newExpirationTime)) {
             configuration.setManualAccessTokenExpirationTime(newExpirationTime);
             pcs.firePropertyChange(MANUAL_ACCESS_TOKEN_EXPIRATION_TIME, oldExpirationTime, newExpirationTime);
         }
@@ -533,13 +531,17 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         }
     }
 
+    private void setDefaultAccessTokenStatus() {
+        setAccessTokenStatus(AccessTokenStatus.UNKNOWN);
+    }
+
     private AccessTokenStatus getSavedAccessTokenStartingStatusEnum(AccessTokenStatusConfig.Enum persistedEnum) {
         return getSavedAccessTokenStatusEnum(persistedEnum);
     }
 
     private AccessTokenStatus getSavedAccessTokenStatusEnum(AccessTokenStatusConfig.Enum persistedEnum) {
         if (persistedEnum == null) {
-            return null;
+            return AccessTokenStatus.UNKNOWN;
         } else {
             return AccessTokenStatus.valueOf(persistedEnum.toString());
         }
@@ -576,4 +578,5 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     private void saveRefreshTokenMethodsEnum(RefreshAccessTokenMethods enumToBePersisted, OAuth2ProfileConfig configuration) {
         configuration.setRefreshAccessTokenMethod(RefreshAccessTokenMethodConfig.Enum.forString(enumToBePersisted.name()));
     }
+
 }

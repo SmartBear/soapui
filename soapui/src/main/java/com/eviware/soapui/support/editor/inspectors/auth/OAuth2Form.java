@@ -56,7 +56,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
 
     private static final int ACCESS_TOKEN_DIALOG_HORIZONTAL_OFFSET = 120;
 
-    private static final Dimension HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW = new Dimension(5, 0);
+    private static final Dimension HORIZONTAL_SPACING_IN_ACCESS_TOKEN_ROW = new Dimension(5, 0);
     private static final String ACCESS_TOKEN_LABEL = "Access Token";
     private static final Insets ACCESS_TOKEN_FIELD_INSETS = new Insets(5, 5, 5, 5);
     private static final float ACCESS_TOKEN_STATUS_TEXT_FONT_SCALE = 0.95f;
@@ -104,7 +104,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
     }
 
     @Override
-    public void onAccessTokenStatusChanged(OAuth2Profile.AccessTokenStatus status) {
+    public void onAccessTokenStatusChanged(@Nonnull OAuth2Profile.AccessTokenStatus status) {
         setAccessTokenStatusFeedback(status);
     }
 
@@ -228,11 +228,11 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setBackground(CARD_BACKGROUND_COLOR);
         panel.add(accessTokenField);
-        panel.add(Box.createRigidArea(HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW));
+        panel.add(Box.createRigidArea(HORIZONTAL_SPACING_IN_ACCESS_TOKEN_ROW));
         panel.add(accessTokenStatusIcon);
-        panel.add(Box.createRigidArea(HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW));
+        panel.add(Box.createRigidArea(HORIZONTAL_SPACING_IN_ACCESS_TOKEN_ROW));
         panel.add(accessTokenStatusText);
-        panel.add(Box.createRigidArea(HORIZONAL_SPACING_IN_ACCESS_TOKEN_ROW));
+        panel.add(Box.createRigidArea(HORIZONTAL_SPACING_IN_ACCESS_TOKEN_ROW));
         panel.add(refreshAccessTokenButton);
         return panel;
     }
@@ -257,24 +257,22 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
     }
 
     private void setAccessTokenStatusFeedback(OAuth2Profile.AccessTokenStatus status) {
-        // These is no auth profile selected
-        if (status == null) {
-            setDefaultFeedback();
-        } else {
-            switch (status) {
-                case ENTERED_MANUALLY:
-                    setEnteredManuallyFeedback(status);
-                    break;
-                case RETRIEVED_FROM_SERVER:
-                    setSucessfullFeedback(status);
-                    break;
-                case RETRIEVAL_CANCELED:
-                    setCanceledFeedback();
-                    break;
-                case EXPIRED:
-                    setFailedFeedback(status);
-                    break;
-            }
+        switch (status) {
+            case UNKNOWN:
+                setDefaultFeedback();
+                break;
+            case ENTERED_MANUALLY:
+                setEnteredManuallyFeedback(status);
+                break;
+            case RETRIEVED_FROM_SERVER:
+                setSucessfulFeedback(status);
+                break;
+            case RETRIEVAL_CANCELED:
+                setCanceledFeedback();
+                break;
+            case EXPIRED:
+                setFailedFeedback(status);
+                break;
         }
     }
 
@@ -292,7 +290,7 @@ public class OAuth2Form extends AbstractAuthenticationForm implements OAuth2Acce
         inspector.setIcon(ProfileSelectionForm.AUTH_ENABLED_ICON);
     }
 
-    private void setSucessfullFeedback(OAuth2Profile.AccessTokenStatus status) {
+    private void setSucessfulFeedback(OAuth2Profile.AccessTokenStatus status) {
         accessTokenField.setBackground(SUCCESS_COLOR);
 
         accessTokenStatusIcon.setIcon(SUCCESS_ICON);
