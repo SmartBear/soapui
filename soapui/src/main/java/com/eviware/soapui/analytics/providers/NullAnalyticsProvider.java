@@ -8,8 +8,7 @@ import com.eviware.soapui.analytics.AnalyticsProviderFactory;
  */
 public class NullAnalyticsProvider implements AnalyticsProvider {
     @Override
-    public final boolean trackAction(ActionDescription actionDescription) {
-        return true;
+    public final void trackAction(ActionDescription actionDescription) {
     }
 
     public static class NullAnalyticsProviderFactory implements AnalyticsProviderFactory {

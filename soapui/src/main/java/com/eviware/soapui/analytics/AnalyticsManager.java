@@ -95,12 +95,11 @@ public class AnalyticsManager {
 
         AnalyticsProvider.ActionDescription actionDescr = new AnalyticsProvider.ActionDescription(sessionId, category, action, params);
 
-        boolean success = true;
         for (int i = 0; i < providers.size(); i++) {
-            success = providers.get(i).trackAction(actionDescr) && success;
+            providers.get(i).trackAction(actionDescr);
         }
 
-        return success;
+        return providers.size() > 0;
     }
 
     public enum Category {Unassigned, Session, Action}
