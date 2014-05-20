@@ -21,12 +21,18 @@ import com.eviware.soapui.SoapUISystemProperties;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.metrics.SoapUIMetrics;
 import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.model.settings.SettingsListener;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
 import org.apache.commons.ssl.KeyMaterial;
-import org.apache.http.*;
+import org.apache.http.Header;
+import org.apache.http.HttpClientConnection;
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
 import org.apache.http.client.protocol.ClientContext;
@@ -47,7 +53,11 @@ import org.apache.log4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.net.ProxySelector;
-import java.security.*;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 /**
@@ -60,7 +70,11 @@ public class HttpClientSupport {
     private final static Helper helper = new Helper();
 
     static {
-        ProxyUtils.setGlobalProxy(SoapUI.getSettings());
+        if (PropertyExpander.getDefaultExpander() == null) {
+            SoapUI.log.warn("Default property expander was null - will set global proxy later");
+        } else {
+            ProxyUtils.setGlobalProxy(SoapUI.getSettings());
+        }
     }
 
     /**
