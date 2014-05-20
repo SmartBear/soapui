@@ -96,7 +96,7 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
     }
 
     @Override
-    public void onAccessTokenStatusChanged(OAuth2Profile.AccessTokenStatus status) {
+    public void onAccessTokenStatusChanged(@Nonnull OAuth2Profile.AccessTokenStatus status) {
         setOAuth2StatusFeedback(status);
     }
 
