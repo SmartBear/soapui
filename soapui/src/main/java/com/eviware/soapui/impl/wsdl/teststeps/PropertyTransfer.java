@@ -16,12 +16,29 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.eviware.soapui.config.PropertyTransferConfig;
+import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
+import com.eviware.soapui.model.TestPropertyHolder;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
+import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.JsonPathFacade;
+import com.eviware.soapui.support.PropertyChangeNotifier;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.resolver.ChooseAnotherPropertySourceResolver;
+import com.eviware.soapui.support.resolver.ChooseAnotherPropertyTargetResolver;
+import com.eviware.soapui.support.resolver.CreateMissingPropertyResolver;
+import com.eviware.soapui.support.resolver.DisablePropertyTransferResolver;
+import com.eviware.soapui.support.resolver.ResolveContext;
+import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlCursor.TokenType;
@@ -32,31 +49,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.eviware.soapui.config.PropertyTransferConfig;
-import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
-import com.eviware.soapui.model.TestPropertyHolder;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.TestPropertyListenerAdapter;
-import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestStep;
-import com.eviware.soapui.support.PropertyChangeNotifier;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.resolver.ChooseAnotherPropertySourceResolver;
-import com.eviware.soapui.support.resolver.ChooseAnotherPropertyTargetResolver;
-import com.eviware.soapui.support.resolver.CreateMissingPropertyResolver;
-import com.eviware.soapui.support.resolver.DisablePropertyTransferResolver;
-import com.eviware.soapui.support.resolver.ResolveContext;
-import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
-import com.eviware.soapui.support.xml.XmlUtils;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class for transferring a property value between 2 test steps. This class is
- * relatively complex due to backwards compatibility issues and to gracefull
+ * relatively complex due to backwards compatibility issues and to graceful
  * handling of references test steps and properties.
  *
  * @author Ole.Matzura
@@ -77,8 +78,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
 
     private TestStep testStep;
 
-    // create local copies since a deleted/changed valuetransfer can be referred
-    // to from a result
+    // create local copies since a deleted/changed property transfer can be referenced from a result
     private PropertyTransferConfig config;
     private String sourcePath;
     private String sourceType;
@@ -264,25 +264,141 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 throw new Exception("Source property is null");
             }
 
-            if (!hasSourcePath() && !hasTargetPath()) {
-                if (!getIgnoreEmpty() || (sourceProperty.getValue() != null && sourceProperty.getValue().length() > 0)) {
-                    return transferStringToString(sourceProperty, targetProperty);
-                }
-            } else if (hasSourcePath() && hasTargetPath()) {
-                return transferXPathToXml(sourceProperty, targetProperty, context);
-            } else if (hasSourcePath() && !hasTargetPath()) {
-                return new String[]{transferXPathToString(sourceProperty, targetProperty, context)};
-            } else if (!hasSourcePath() && hasTargetPath()) {
-                if (!getIgnoreEmpty() || (sourceProperty.getValue() != null && sourceProperty.getValue().length() > 0)) {
-                    return transferStringToXml(sourceProperty, targetProperty, context);
-                }
+            if (bothPathsAreXmlBased()) {
+                return transferXPathToXml(getSourceProperty(), getTargetProperty(), context);
+            } else {
+                Object sourceValue = readSourceValue(context);
+                sourceValue = entitizeIfApplicable(sourceValue);
+                return writeTargetValue(sourceValue, context);
             }
         } catch (Exception e) {
             throw new PropertyTransferException(e.getMessage(), getSourceStepName(), sourceProperty, getTargetStepName(),
                     targetProperty);
         }
+    }
 
-        return new String[0];
+    private Object entitizeIfApplicable(Object sourceValue) {
+        if (sourceValue instanceof String && StringUtils.hasContent((String) sourceValue) && getEntitize()) {
+            return XmlUtils.entitize((String) sourceValue);
+        }
+        return sourceValue;
+    }
+
+    private Object readSourceValue(PropertyExpansionContext context) throws Exception {
+        String sourceValue = getSourceProperty().getValue();
+        if (!hasSourcePath()) {
+            return sourceValue;
+        } else if (seemsToBeJsonPath(getSourcePath())) {
+            return new JsonPathFacade(sourceValue).readObjectValue(getSourcePath());
+        } else {
+            XmlObject sourceXml = XmlUtils.createXmlObject(sourceValue);
+            XmlCursor sourceCursor = sourceXml.newCursor();
+
+            try {
+                String value = null;
+
+                String pathExpression = PropertyExpander.expandProperties(context, getSourcePath());
+                if (getUseXQuery()) {
+                    XmlCursor resultCursor = sourceCursor.execQuery(pathExpression);
+                    sourceCursor.dispose();
+                    sourceCursor = resultCursor;
+                    if (sourceCursor.toNextToken() != TokenType.START && !getSetNullOnMissingSource() && !getIgnoreEmpty()) {
+                        throw new Exception("Missing match for Source XQuery [" + pathExpression + "]");
+                    }
+                } else {
+                    sourceCursor.selectPath(pathExpression);
+                }
+
+                if (!getUseXQuery() && !sourceCursor.toNextSelection()) {
+                    if (!getSetNullOnMissingSource() && !getIgnoreEmpty()) {
+                        throw new Exception("Missing match for Source XPath [" + pathExpression + "]");
+                    }
+                }
+
+                Node sourceNode = sourceCursor.getDomNode();
+                short sourceNodeType = sourceNode.getNodeType();
+
+                if (sourceNodeType == Node.DOCUMENT_FRAGMENT_NODE) {
+                    sourceNode = sourceNode.getFirstChild();
+                    if (sourceNode != null) {
+                        sourceNodeType = sourceNode.getNodeType();
+                    } else {
+                        throw new Exception("Missing source value for " + getSourcePropertyName());
+                    }
+                }
+
+                if (sourceNodeType == Node.TEXT_NODE || sourceNodeType == Node.ATTRIBUTE_NODE) {
+                    value = sourceNode.getNodeValue();
+                } else if (sourceNodeType == Node.ELEMENT_NODE) {
+                    if (getTransferTextContent()) {
+                        value = XmlUtils.getElementText((Element) sourceNode);
+                    }
+
+                    if (value == null || !getTransferTextContent()) {
+                        value = sourceCursor.getObject().xmlText(
+                                new XmlOptions().setSaveOuter().setSaveAggressiveNamespaces());
+                    }
+                }
+                return value;
+            } finally {
+                if (sourceCursor != null) {
+                    sourceCursor.dispose();
+                }
+            }
+        }
+    }
+
+    private String[] writeTargetValue(Object value, SubmitContext context) throws Exception {
+        String stringValue = value == null ? null : String.valueOf(value);
+        if (!hasTargetPath()) {
+            getTargetProperty().setValue(stringValue);
+        } else {
+            String targetPath = PropertyExpander.expandProperties(context, getTargetPath());
+            if (seemsToBeJsonPath(targetPath)) {
+                JsonPathFacade jsonPathFacade = new JsonPathFacade(getTargetProperty().getValue());
+                jsonPathFacade.writeValue(targetPath, value);
+                getTargetProperty().setValue(jsonPathFacade.getCurrentJson());
+            } else {
+                XmlObject targetXml = XmlObject.Factory.parse(getTargetProperty().getValue());
+                XmlCursor targetCursor = targetXml.newCursor();
+
+                try {
+                    List<String> result = new ArrayList<String>();
+
+                    targetCursor.selectPath(targetPath);
+
+                    if (!targetCursor.toNextSelection()) {
+                        throw new Exception("Missing match for Target XPath [" + targetPath + "]");
+                    }
+
+                    Node targetNode = targetCursor.getDomNode();
+                    setNodeValue(stringValue, targetNode);
+
+                    result.add(stringValue);
+
+                    if (getTransferToAll()) {
+                        while (targetCursor.toNextSelection()) {
+                            targetNode = targetCursor.getDomNode();
+                            setNodeValue(stringValue, targetNode);
+
+                            result.add(stringValue);
+                        }
+                    }
+
+                    getTargetProperty().setValue(targetXml.xmlText(new XmlOptions().setSaveAggressiveNamespaces()));
+
+                    return result.toArray(new String[result.size()]);
+                } finally {
+                    targetCursor.dispose();
+                }
+            }
+
+        }
+        return new String[]{stringValue};
+    }
+
+    private boolean bothPathsAreXmlBased() {
+        return hasSourcePath() && hasTargetPath() && !seemsToBeJsonPath(getSourcePath()) && !seemsToBeJsonPath(getTargetPath());
     }
 
     private boolean hasTargetPath() {
@@ -295,24 +411,11 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         return path != null && path.trim().length() > 0;
     }
 
-    protected String[] transferStringToString(TestProperty sourceProperty, TestProperty targetProperty) {
-        String value = sourceProperty.getValue();
-
-        if (StringUtils.hasContent(value) && getEntitize()) {
-            value = XmlUtils.entitize(value);
-        }
-
-        targetProperty.setValue(value);
-        return new String[]{value};
-    }
-
     protected String[] transferXPathToXml(TestProperty sourceProperty, TestProperty targetProperty,
                                           SubmitContext context) throws Exception {
         XmlCursor sourceXml;
         try {
             String sourcePropertyValue = sourceProperty.getValue();
-            // XmlObject sourceXmlObject = sourcePropertyValue == null ? null :
-            // XmlObject.Factory.parse( sourcePropertyValue );
             XmlObject sourceXmlObject = sourcePropertyValue == null ? null : XmlUtils
                     .createXmlObject(sourcePropertyValue);
             sourceXml = sourceXmlObject == null ? null : sourceXmlObject.newCursor();
@@ -324,7 +427,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         XmlCursor targetXml;
         try {
             String targetPropertyValue = targetProperty.getValue();
-            // targetXmlObject = XmlObject.Factory.parse( targetPropertyValue );
             targetXmlObject = XmlUtils.createXmlObject(targetPropertyValue);
             targetXml = targetXmlObject.newCursor();
         } catch (XmlException e) {
@@ -439,49 +541,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         }
     }
 
-    protected String[] transferStringToXml(TestProperty sourceProperty, TestProperty targetProperty,
-                                           SubmitContext context) throws XmlException, Exception {
-        if (!StringUtils.hasContent(targetProperty.getValue())) {
-            throw new Exception("Missing target property value");
-        }
-
-        XmlObject targetXml = XmlObject.Factory.parse(targetProperty.getValue());
-        XmlCursor targetCursor = targetXml.newCursor();
-
-        try {
-            List<String> result = new ArrayList<String>();
-
-            String tp = PropertyExpander.expandProperties(context, getTargetPath());
-            targetCursor.selectPath(tp);
-
-            if (!targetCursor.toNextSelection()) {
-                throw new Exception("Missing match for Target XPath [" + tp + "]");
-            }
-
-            String value = sourceProperty.getValue();
-
-            Node targetNode = targetCursor.getDomNode();
-            setNodeValue(value, targetNode);
-
-            result.add(value);
-
-            if (getTransferToAll()) {
-                while (targetCursor.toNextSelection()) {
-                    targetNode = targetCursor.getDomNode();
-                    setNodeValue(value, targetNode);
-
-                    result.add(value);
-                }
-            }
-
-            targetProperty.setValue(targetXml.xmlText(new XmlOptions().setSaveAggressiveNamespaces()));
-
-            return result.toArray(new String[result.size()]);
-        } finally {
-            targetCursor.dispose();
-        }
-    }
-
     private String setNodeValue(String value, Node node) throws Exception {
         short targetNodeType = node.getNodeType();
 
@@ -494,107 +553,16 @@ public class PropertyTransfer implements PropertyChangeNotifier {
             }
         }
 
-        if (!XmlUtils.setNodeValue(node, value))
-        // if( targetNodeType == Node.TEXT_NODE || targetNodeType ==
-        // Node.ATTRIBUTE_NODE )
-        // {
-        // node.setNodeValue( value );
-        // }
-        // else if( targetNodeType == Node.ELEMENT_NODE )
-        // {
-        // XmlUtils.setElementText( (Element) node, value );
-        // }
-        // else
-        {
+        if (!XmlUtils.setNodeValue(node, value)) {
             throw new Exception("Failed to set value to node [" + node.toString() + "] of type [" + targetNodeType + "]");
         }
 
         return value;
     }
 
-    protected String transferXPathToString(TestProperty sourceProperty, TestProperty targetProperty,
-                                           SubmitContext context) throws Exception {
-        String sourceValue = sourceProperty.getValue();
 
-        if (!StringUtils.hasContent(sourceValue)) {
-            if (!getIgnoreEmpty()) {
-                throw new Exception("Missing source value");
-            }
-
-            if (getSetNullOnMissingSource()) {
-                targetProperty.setValue(null);
-            }
-
-            return null;
-        }
-
-        XmlObject sourceXml = XmlUtils.createXmlObject(sourceValue);
-        XmlCursor sourceCursor = sourceXml.newCursor();
-
-        try {
-            String value = null;
-
-            String xquery = PropertyExpander.expandProperties(context, getSourcePath());
-            if (getUseXQuery()) {
-                XmlCursor resultCursor = sourceCursor.execQuery(xquery);
-                sourceCursor.dispose();
-                sourceCursor = resultCursor;
-            } else {
-                sourceCursor.selectPath(xquery);
-            }
-
-            if (!getUseXQuery() && !sourceCursor.toNextSelection()) {
-                if (!getSetNullOnMissingSource() && !getIgnoreEmpty()) {
-                    throw new Exception("Missing match for Source XPath [" + xquery + "]");
-                }
-            } else if (getUseXQuery() && sourceCursor.toNextToken() != TokenType.START) {
-                if (!getSetNullOnMissingSource() && !getIgnoreEmpty()) {
-                    throw new Exception("Missing match for Source XQuery [" + xquery + "]");
-                }
-            } else if (sourceCursor != null) {
-                Node sourceNode = sourceCursor.getDomNode();
-                short sourceNodeType = sourceNode.getNodeType();
-
-                if (sourceNodeType == Node.DOCUMENT_FRAGMENT_NODE) {
-                    sourceNode = sourceNode.getFirstChild();
-                    if (sourceNode != null) {
-                        sourceNodeType = sourceNode.getNodeType();
-                    } else {
-                        throw new Exception("Missing source value for " + getSourcePropertyName());
-                    }
-                }
-
-                if (sourceNodeType == Node.TEXT_NODE || sourceNodeType == Node.ATTRIBUTE_NODE) {
-                    value = sourceNode.getNodeValue();
-                } else if (sourceNodeType == Node.ELEMENT_NODE) {
-                    if (getTransferTextContent()) {
-                        value = XmlUtils.getElementText((Element) sourceNode);
-                    }
-
-                    if (value == null || !getTransferTextContent()) {
-                        value = sourceCursor.getObject().xmlText(
-                                new XmlOptions().setSaveOuter().setSaveAggressiveNamespaces());
-                    }
-                }
-            }
-
-            if (!getIgnoreEmpty() || (value != null && value.length() > 0)
-                    || (getSetNullOnMissingSource() && !StringUtils.hasContent(value))) {
-                if (StringUtils.hasContent(value) && getEntitize()) {
-                    value = XmlUtils.entitize(value);
-                }
-
-                targetProperty.setValue(value);
-            } else {
-                value = "";
-            }
-
-            return value;
-        } finally {
-            if (sourceCursor != null) {
-                sourceCursor.dispose();
-            }
-        }
+    private boolean seemsToBeJsonPath(String sourcePath) {
+        return sourcePath != null && sourcePath.trim().startsWith("$");
     }
 
     /**
@@ -661,7 +629,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                     XmlUtils.setElementText((Element) destNode, value);
                 }
             } else {
-                destNode = destNode.getParentNode().replaceChild(
+                destNode.getParentNode().replaceChild(
                         destNode.getOwnerDocument().importNode(sourceNode, true), destNode);
 
                 value = dest.xmlText();

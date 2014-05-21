@@ -20,9 +20,14 @@ import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.model.support.DefaultTestStepProperty;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.JsonPathFacade;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Map;
+
+import static com.eviware.soapui.utils.CommonMatchers.aNumber;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -214,4 +219,47 @@ public class PropertyTransferTest {
 
         assertThat(targetProperty.getValue(), is("Anders"));
     }
+
+    @Test
+    public void supportsJsonPathInTarget() throws Exception {
+        String newName = "New_Name";
+        sourceProperty.setValue(newName);
+        targetProperty.setValue("{ persons: [" +
+                "{ firstName: 'Anders', lastName: 'And' }," +
+                "{ firstName: 'Anders', lastName: 'And' }" +
+                "] }");
+        String path = "$.persons[0].firstName";
+        transfer.setTargetPath(path);
+        transfer.transferProperties(submitContext);
+
+        assertThat(new JsonPathFacade(targetProperty.getValue()).readStringValue(path), is(newName));
+    }
+
+    @Test
+    public void transfersJsonNumberAsNumber() throws Exception {
+        sourceProperty.setValue("{ numbers : [1, 2, 42]}");
+        targetProperty.setValue("{ numbers : [1, 2, 3]}");
+        String path = "$.numbers[2]";
+        transfer.setSourcePath(path);
+        transfer.setTargetPath(path);
+        transfer.transferProperties(submitContext);
+
+        Object insertedValue = new JsonPathFacade(targetProperty.getValue()).readObjectValue(path);
+        assertThat(insertedValue, is(aNumber()));
+    }
+
+    @Test
+    public void transfersJsonNodesAsNodes() throws Exception {
+        sourceProperty.setValue("{ numbers : { key1: 1, key2: 2} }");
+        targetProperty.setValue("{ numbers : [1, 2, 3] }");
+        String path = "$.numbers";
+        transfer.setSourcePath(path);
+        transfer.setTargetPath(path);
+        transfer.transferProperties(submitContext);
+
+        Object insertedValue = new JsonPathFacade(targetProperty.getValue()).readObjectValue(path);
+        assertTrue("Expected a map object but got " + insertedValue, insertedValue instanceof Map);
+    }
+
+
 }
