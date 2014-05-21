@@ -318,7 +318,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
             requestContent = CompressedStringSupport.getString(getConfig().getRequest());
         }
 
-        return requestContent;
+        return requestContent == null ? null : requestContent.replaceAll("\\\\r", "\r");
     }
 
     public void setRequestContent(String request) {
@@ -329,7 +329,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
             return;
         }
 
-        requestContent = request;
+        requestContent = request == null ? null : request.replaceAll("\r", "\\\\r");
         notifyPropertyChanged(REQUEST_PROPERTY, old, request);
     }
 
