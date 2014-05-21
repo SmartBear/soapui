@@ -267,10 +267,8 @@ public class PropertyTransfer implements PropertyChangeNotifier {
             if (bothPathsAreXmlBased()) {
                 return transferXPathToXml(getSourceProperty(), getTargetProperty(), context);
             } else {
-                String sourceValue = readSourceValue(context);
-                if (StringUtils.hasContent(sourceValue) && getEntitize()) {
-                    sourceValue = XmlUtils.entitize(sourceValue);
-                }
+                Object sourceValue = readSourceValue(context);
+                sourceValue = entitizeIfApplicable(sourceValue);
                 return writeTargetValue(sourceValue, context);
             }
         } catch (Exception e) {
@@ -279,12 +277,19 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         }
     }
 
-    private String readSourceValue(PropertyExpansionContext context) throws Exception {
+    private Object entitizeIfApplicable(Object sourceValue) {
+        if (sourceValue instanceof String && StringUtils.hasContent((String) sourceValue) && getEntitize()) {
+            return XmlUtils.entitize((String) sourceValue);
+        }
+        return sourceValue;
+    }
+
+    private Object readSourceValue(PropertyExpansionContext context) throws Exception {
         String sourceValue = getSourceProperty().getValue();
         if (!hasSourcePath()) {
             return sourceValue;
         } else if (seemsToBeJsonPath(getSourcePath())) {
-            return new JsonPathFacade(sourceValue).readStringValue(getSourcePath());
+            return new JsonPathFacade(sourceValue).readObjectValue(getSourcePath());
         } else {
             XmlObject sourceXml = XmlUtils.createXmlObject(sourceValue);
             XmlCursor sourceCursor = sourceXml.newCursor();
@@ -343,9 +348,10 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         }
     }
 
-    private String[] writeTargetValue(String value, SubmitContext context) throws Exception {
+    private String[] writeTargetValue(Object value, SubmitContext context) throws Exception {
+        String stringValue = value == null ? null : String.valueOf(value);
         if (!hasTargetPath()) {
-            getTargetProperty().setValue(value);
+            getTargetProperty().setValue(stringValue);
         } else {
             String targetPath = PropertyExpander.expandProperties(context, getTargetPath());
             if (seemsToBeJsonPath(targetPath)) {
@@ -366,16 +372,16 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                     }
 
                     Node targetNode = targetCursor.getDomNode();
-                    setNodeValue(value, targetNode);
+                    setNodeValue(stringValue, targetNode);
 
-                    result.add(value);
+                    result.add(stringValue);
 
                     if (getTransferToAll()) {
                         while (targetCursor.toNextSelection()) {
                             targetNode = targetCursor.getDomNode();
-                            setNodeValue(value, targetNode);
+                            setNodeValue(stringValue, targetNode);
 
-                            result.add(value);
+                            result.add(stringValue);
                         }
                     }
 
@@ -388,7 +394,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
             }
 
         }
-        return new String[]{value};
+        return new String[]{stringValue};
     }
 
     private boolean bothPathsAreXmlBased() {
