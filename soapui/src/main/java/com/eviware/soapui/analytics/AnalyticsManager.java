@@ -101,13 +101,8 @@ public class AnalyticsManager {
 
         AnalyticsProvider.ActionDescription actionDescr = new AnalyticsProvider.ActionDescription(sessionId, category, action, params);
 
-        for (int i = 0; i < providers.size(); i++) {
-            try {
-                providers.get(i).trackAction(actionDescr);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        for (int i = 0; i < providers.size(); i++)
+            providers.get(i).trackAction(actionDescr);
 
         return providers.size() > 0;
     }
