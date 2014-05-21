@@ -25,13 +25,13 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import java.io.InputStream;
 
 
-public class CreateDataDrivenTestAction extends AbstractSoapUIAction<WorkspaceImpl> {
+public class CreateDataDrivenTestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     private static final String DATA_SOURCE_TEST_STEP_ID = "f4f876f1-39ab-40f3-8a05-7a6bbef35849";
 
 
     public static final String SOAPUI_ACTION_ID = "CreateDataDrivenTestAction";
 
-    public CreateDataDrivenTestAction() {
+    public CreateDataDrivenTestProjectAction() {
         super("Create data-driven test", "Creates a new data-driven test");
     }
 
