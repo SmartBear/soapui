@@ -223,7 +223,7 @@ public class TestOnDemandPanel extends JPanel {
 
         public void actionPerformed(ActionEvent arg0) {
 
-            Analytics.trackAction("Use TestOnDemand");
+            Analytics.trackAction("TestOnDemand");
 
             if (validator != null && !validator.isValid(testCase)) {
                 UISupport.showErrorMessage("Your project contains external dependencies that "
