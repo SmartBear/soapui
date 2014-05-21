@@ -74,6 +74,7 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+import com.eviware.soapui.analytics.Analytics;
 
 /**
  * Desktop panel for LoadTests
@@ -375,6 +376,9 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
         }
 
         public void actionPerformed(ActionEvent e) {
+
+            Analytics.trackAction("RunLoadTest");
+
             WsdlLoadTest loadtest = getModelItem();
             if (loadtest.getTestCase().getTestStepCount() == 0) {
                 UISupport.showErrorMessage("Missing TestSteps for testing!");
