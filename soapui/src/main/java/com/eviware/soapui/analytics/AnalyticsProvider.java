@@ -7,7 +7,7 @@ import java.util.Map;
  */
 public interface AnalyticsProvider {
 
-    public void trackAction(ActionDescription actionDescription) throws Exception;
+    public void trackAction(ActionDescription actionDescription);
 
     public final static class ActionDescription {
         private final String sessionId;

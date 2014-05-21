@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.wsdl.testcase;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
@@ -582,7 +581,6 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         WsdlTestCaseRunner runner = new WsdlTestCaseRunner(this, properties);
         runner.start(async);
 
-        AnalyticsManager.getAnalytics().trackAction("RunTestCase", "Type", "WSDL");
         return runner;
     }
 

@@ -15,7 +15,7 @@
 */
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.analytics.AnalyticsManager;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -63,7 +63,6 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
 
     @Override
     public MockDispatcher createDispatcher(WsdlMockRunContext mockContext) {
-        AnalyticsManager.getAnalytics().trackAction("StartRestMock");
         return new RestMockDispatcher(this, mockContext);
     }
 
