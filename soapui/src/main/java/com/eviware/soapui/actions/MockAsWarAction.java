@@ -45,6 +45,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
     }
 
     public void perform(WsdlProject project, Object param) {
+
         // check for mockservices
         if ((project.getMockServiceCount() + project.getRestMockServiceCount()) == 0) {
             UISupport.showErrorMessage("Project does not have any MockServices to deploy");
