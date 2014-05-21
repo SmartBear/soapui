@@ -18,6 +18,7 @@ package com.eviware.soapui.actions;
 
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.settings.ProjectSettings;
@@ -45,6 +46,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
     }
 
     public void perform(WsdlProject project, Object param) {
+        Analytics.trackAction("DeployRestAsMock");
 
         // check for mockservices
         if ((project.getMockServiceCount() + project.getRestMockServiceCount()) == 0) {
