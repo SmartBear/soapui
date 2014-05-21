@@ -35,6 +35,7 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static com.eviware.soapui.impl.rest.OAuth2Profile.RefreshAccessTokenMethods.AUTOMATIC;
 
@@ -411,10 +412,9 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         return configuration.getManualAccessTokenExpirationTime();
     }
 
-    public void setManualAccessTokenExpirationTime(String newExpirationTime) {
+    public void setManualAccessTokenExpirationTime(@Nonnull String newExpirationTime) {
         String oldExpirationTime = configuration.getManualAccessTokenExpirationTime();
-
-        if (!oldExpirationTime.equals(newExpirationTime)) {
+        if (!Objects.equals(oldExpirationTime, newExpirationTime)) {
             configuration.setManualAccessTokenExpirationTime(newExpirationTime);
             pcs.firePropertyChange(MANUAL_ACCESS_TOKEN_EXPIRATION_TIME, oldExpirationTime, newExpirationTime);
         }
