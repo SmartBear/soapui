@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
@@ -1180,6 +1181,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
                 UISupport.showErrorMessage("No transfer selectd!");
                 return;
             }
+
+            Analytics.trackAction("RunTestStep", "RequestType", "PropertyTransfer");
 
             MockTestRunner mockRunner = new MockTestRunner(transferStep.getTestCase());
             MockTestRunContext context = new MockTestRunContext(mockRunner, transferStep);
