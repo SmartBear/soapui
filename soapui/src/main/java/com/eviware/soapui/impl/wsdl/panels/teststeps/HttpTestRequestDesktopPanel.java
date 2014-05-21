@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.support.HttpUtils;
@@ -322,6 +323,8 @@ public class HttpTestRequestDesktopPanel extends
 
     @Override
     protected Submit doSubmit() throws SubmitException {
+        Analytics.trackAction("RunTestStep", "StepType", "HTTP");
+
         return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
     }
 
