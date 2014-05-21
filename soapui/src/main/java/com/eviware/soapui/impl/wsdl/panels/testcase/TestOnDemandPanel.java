@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.testcase;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUISystemProperties;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -221,6 +222,8 @@ public class TestOnDemandPanel extends JPanel {
         }
 
         public void actionPerformed(ActionEvent arg0) {
+
+            Analytics.trackAction("Use TestOnDemand");
 
             if (validator != null && !validator.isValid(testCase)) {
                 UISupport.showErrorMessage("Your project contains external dependencies that "
