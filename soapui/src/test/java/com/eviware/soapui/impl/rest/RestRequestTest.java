@@ -150,7 +150,7 @@ public class RestRequestTest {
         RestResource restResource = restService.addNewResource("Root", "/resource");
         RestMethod restMethod = restResource.addNewMethod("POST");
         RestRequest restRequest = restMethod.addNewRequest("TestRequest");
-        String originalContent = "First line\r\nSecond line";
+        String originalContent = "First line\r\nSecond \\rline";
         restRequest.setRequestContent(originalContent);
         File saveFile = File.createTempFile("soapui", "xml");
         saveFile.deleteOnExit();
