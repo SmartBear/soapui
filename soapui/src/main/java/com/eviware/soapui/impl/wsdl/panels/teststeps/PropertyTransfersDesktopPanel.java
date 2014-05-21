@@ -992,6 +992,9 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         }
 
         public void actionPerformed(ActionEvent e) {
+
+            Analytics.trackAction("AddPointAndClickPropertyTransfer");
+
             String name = UISupport.prompt("Specify name for value transfer", "Add Transfer", "");
             if (name == null || name.trim().length() == 0) {
                 return;
