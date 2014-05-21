@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestListener;
@@ -266,6 +267,9 @@ public class JLoadTestAssertionsTable extends JPanel {
     public class AddLoadTestAssertionAction extends AbstractAction {
         public AddLoadTestAssertionAction() {
             super("Add Assertion");
+
+            Analytics.trackAction("AddPointAndClickAssertion");
+
             putValue(Action.SHORT_DESCRIPTION, "Adds an assertion to this LoadTest");
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/addAssertion.gif"));
         }

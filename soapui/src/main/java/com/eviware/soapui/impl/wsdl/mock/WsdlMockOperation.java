@@ -187,6 +187,7 @@ public class WsdlMockOperation extends AbstractMockOperation<MockOperationConfig
 
     public WsdlMockResult dispatchRequest(WsdlMockRequest request) throws DispatchException {
         try {
+
             request.setOperation(getOperation());
             WsdlMockResult result = new WsdlMockResult(request);
 
