@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.PropertyTransferConfig;
+import com.eviware.soapui.config.PropertyTransferTypesConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -293,27 +294,19 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 Object sourceValue = readSourceValue(context);
                 sourceValue = entitizeIfApplicable(sourceValue);
                 return writeTargetValue(sourceValue, context);
-            if (bothPathsAreXmlBased()) {
-                return transferXPathToXml(getSourceProperty(), getTargetProperty(), context);
-            } else {
-                Object sourceValue = readSourceValue(context);
-                sourceValue = entitizeIfApplicable(sourceValue);
-                return writeTargetValue(sourceValue, context);
+            }
         } catch (Exception e) {
             throw new PropertyTransferException(e.getMessage(), getSourceStepName(), sourceProperty, getTargetStepName(),
                     targetProperty);
         }
     }
-        
-        }
+
     private Object entitizeIfApplicable(Object sourceValue) {
         if (sourceValue instanceof String && StringUtils.hasContent((String) sourceValue) && getEntitize()) {
             return XmlUtils.entitize((String) sourceValue);
         }
         return sourceValue;
     }
-
-    
 
     private Object readSourceValue(PropertyExpansionContext context) throws Exception {
         String sourceValue = getSourceProperty().getValue();
