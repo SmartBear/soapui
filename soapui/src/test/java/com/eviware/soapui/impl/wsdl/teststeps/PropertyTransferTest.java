@@ -59,6 +59,14 @@ public class PropertyTransferTest {
     }
 
     @Test
+    public void translatesOldXQueryBooleanToXQueryPathLanguage() throws Exception {
+        transfer.setUseXQuery(true);
+
+        assertThat(transfer.getSourcePathLanguage(), is(PathLanguage.XQUERY));
+        assertThat(transfer.getTargetPathLanguage(), is(PathLanguage.XQUERY));
+    }
+
+    @Test
     public void testStringToStringTransfer() throws Exception {
         sourceProperty.setValue("Test");
 
@@ -215,6 +223,7 @@ public class PropertyTransferTest {
                 "{ firstName: 'Anders', lastName: 'And' }" +
                 "] }");
         transfer.setSourcePath("$.persons[0].firstName");
+        transfer.setSourcePathLanguage(PathLanguage.JSONPATH);
         transfer.transferProperties(submitContext);
 
         assertThat(targetProperty.getValue(), is("Anders"));
@@ -230,6 +239,7 @@ public class PropertyTransferTest {
                 "] }");
         String path = "$.persons[0].firstName";
         transfer.setTargetPath(path);
+        transfer.setTargetPathLanguage(PathLanguage.JSONPATH);
         transfer.transferProperties(submitContext);
 
         assertThat(new JsonPathFacade(targetProperty.getValue()).readStringValue(path), is(newName));
@@ -241,7 +251,9 @@ public class PropertyTransferTest {
         targetProperty.setValue("{ numbers : [1, 2, 3]}");
         String path = "$.numbers[2]";
         transfer.setSourcePath(path);
+        transfer.setSourcePathLanguage(PathLanguage.JSONPATH);
         transfer.setTargetPath(path);
+        transfer.setTargetPathLanguage(PathLanguage.JSONPATH);
         transfer.transferProperties(submitContext);
 
         Object insertedValue = new JsonPathFacade(targetProperty.getValue()).readObjectValue(path);
@@ -254,7 +266,9 @@ public class PropertyTransferTest {
         targetProperty.setValue("{ numbers : [1, 2, 3] }");
         String path = "$.numbers";
         transfer.setSourcePath(path);
+        transfer.setSourcePathLanguage(PathLanguage.JSONPATH);
         transfer.setTargetPath(path);
+        transfer.setTargetPathLanguage(PathLanguage.JSONPATH);
         transfer.transferProperties(submitContext);
 
         Object insertedValue = new JsonPathFacade(targetProperty.getValue()).readObjectValue(path);

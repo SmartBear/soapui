@@ -21,6 +21,7 @@ import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.support.TestRunComponentEnabler;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.teststeps.PathLanguage;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfer;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep.PropertyTransferResult;
@@ -107,7 +108,9 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
     private JButton deleteButton;
     private JButton declareButton;
     private JComboBox sourcePropertyCombo;
+    private JComboBox sourceTransferLanguageCombo;
     private JComboBox targetPropertyCombo;
+    private JComboBox targetTransferLanguageCombo;
     private JComboBox sourceStepCombo;
     private JComboBox targetStepCombo;
     private DefaultComboBoxModel sourceStepModel;
@@ -509,10 +512,29 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
                 }
             }
         });
+        String context = "Target";
+        targetTransferLanguageCombo = createTransferLanguageComboBox(context);
+        targetTransferLanguageCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    getCurrentTransfer().setTargetPathLanguage((PathLanguage) e.getItem());
+                }
+            }
+        });
+
 
         toolbar.add(UISupport.setFixedSize(targetPropertyCombo, 130, 21));
+        toolbar.addRelatedGap();
+        toolbar.addFixed(new JLabel("Path language: "));
+        toolbar.add(UISupport.setFixedSize(targetTransferLanguageCombo, 115, 21));
         customizeTargetToolbar(toolbar);
         return toolbar;
+    }
+
+    private JComboBox createTransferLanguageComboBox(String context) {
+        DefaultComboBoxModel transferLanguageModel = new DefaultComboBoxModel(PathLanguage.values());
+        return UISupport.addTooltipListener(new JComboBox(transferLanguageModel), context + " Transfer Path Language");
     }
 
     protected void customizeTargetToolbar(JXToolBar toolbar) {
@@ -531,9 +553,11 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
                 "Source Step or Property Container");
         sourceStepCombo.setRenderer(new StepComboRenderer());
         sourcePropertyCombo.setRenderer(new PropertyComboRenderer());
+        sourceTransferLanguageCombo = createTransferLanguageComboBox("Source");
 
         componentEnabler.add(sourcePropertyCombo);
         componentEnabler.add(sourceStepCombo);
+        componentEnabler.add(sourceTransferLanguageCombo);
 
         targetPropertyCombo = UISupport.addTooltipListener(new JComboBox(), "Target Property");
         targetStepModel = new DefaultComboBoxModel();
@@ -619,6 +643,18 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         });
 
         toolbar.add(UISupport.setFixedSize(sourcePropertyCombo, 130, 21));
+        toolbar.addRelatedGap();
+        toolbar.addFixed(new JLabel("Path language: "));
+        sourceTransferLanguageCombo.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    getCurrentTransfer().setSourcePathLanguage((PathLanguage) e.getItem());
+                }
+            }
+        });
+        toolbar.add(UISupport.setFixedSize(sourceTransferLanguageCombo, 115, 21));
+
         customizeSourceToolbar(toolbar);
         return toolbar;
     }
@@ -859,9 +895,11 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
             sourceStepCombo.setSelectedItem(transfer.getSourceStep());
             sourcePropertyCombo.setSelectedItem(transfer.getSourceProperty());
+            sourceTransferLanguageCombo.setSelectedItem(transfer.getSourcePathLanguage());
 
             targetStepCombo.setSelectedItem(transfer.getTargetStep());
             targetPropertyCombo.setSelectedItem(transfer.getTargetProperty());
+            targetTransferLanguageCombo.setSelectedItem(transfer.getTargetPathLanguage());
 
             failTransferCheckBox.setSelected(transfer.getFailOnError());
             setNullCheckBox.setSelected(transfer.getSetNullOnMissingSource());
