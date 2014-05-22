@@ -51,14 +51,26 @@ public class RestUriDialogHandler {
     private String exampleUri;
 
 
+    public XFormDialog buildDialog(MessageSupport messages) {
+        return buildDialog(messages, HelpUrls.NEWRESTPROJECT_HELP_URL, null);
+    }
+
     public XFormDialog buildDialog(MessageSupport messages, AbstractAction actionToBeAdded) {
+        return buildDialog(messages, HelpUrls.NEWRESTPROJECT_HELP_URL, actionToBeAdded);
+    }
+
+    public XFormDialog buildDialog(MessageSupport messages, String helpUrl) {
+        return buildDialog(messages, helpUrl, null);
+    }
+
+    public XFormDialog buildDialog(MessageSupport messages, String helpUrl, AbstractAction actionToBeAdded) {
         XFormDialogBuilder newDialogBuilder = XFormFactory.createDialogBuilder(messages.get("Title"));
         XForm form = newDialogBuilder.createForm("");
         uriLabelKey = messages.get("Form.URI.Label");
         exampleUri = messages.get("Form.Example.URI");
         form.addTextField(uriLabelKey, messages.get("Form.URI.Description"), XForm.FieldType.TEXT);
 
-        ActionList actions = newDialogBuilder.buildOkCancelHelpActions(HelpUrls.NEWRESTPROJECT_HELP_URL);
+        ActionList actions = newDialogBuilder.buildOkCancelHelpActions(helpUrl);
 
         if (actionToBeAdded != null) {
             actions.addAction(actionToBeAdded);

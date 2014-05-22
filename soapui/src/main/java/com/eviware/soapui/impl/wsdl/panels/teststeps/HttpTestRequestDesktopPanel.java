@@ -224,7 +224,7 @@ public class HttpTestRequestDesktopPanel extends
 
                 updating = true;
                 String text = pathTextField.getText();
-                getRequest().setEndpoint(HttpUtils.ensureEndpointStartsWithProtocol(text));
+                getRequest().setEndpoint(HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(text));
                 if (!text.equals(getRequest().getEndpoint())) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {

@@ -86,7 +86,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
         try {
             if (dialog.show()) {
                 HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
-                httpRequest.setEndpoint(HttpUtils.ensureEndpointStartsWithProtocol(dialog.getValue(Form.ENDPOINT)));
+                httpRequest.setEndpoint(HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(dialog.getValue(Form.ENDPOINT)));
                 httpRequest.setMethod(dialog.getValue(Form.HTTPMETHOD));
                 XmlBeansRestParamsTestPropertyHolder tempParams = new XmlBeansRestParamsTestPropertyHolder(testCase,
                         httpRequest.addNewParameters());
@@ -123,7 +123,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
                 httpRequest.addNewParameters());
         tempParams.addParameters(params);
 
-        httpRequest.setEndpoint(HttpUtils.ensureEndpointStartsWithProtocol(endpoint));
+        httpRequest.setEndpoint(HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(endpoint));
 
         TestStepConfig testStep = TestStepConfig.Factory.newInstance();
         testStep.setType(HTTPREQUEST_TYPE);

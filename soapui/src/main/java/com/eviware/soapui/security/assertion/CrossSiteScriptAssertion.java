@@ -209,7 +209,7 @@ public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements Re
 
     private HttpTestRequestStep createHttpRequest(WsdlTestStep testStep2, String url) {
         HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
-        httpRequest.setEndpoint(HttpUtils.ensureEndpointStartsWithProtocol(url));
+        httpRequest.setEndpoint(HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(url));
         httpRequest.setMethod("GET");
 
         TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();

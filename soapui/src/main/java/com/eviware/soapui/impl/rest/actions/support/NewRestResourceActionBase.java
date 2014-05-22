@@ -55,7 +55,7 @@ public abstract class NewRestResourceActionBase<T extends ModelItem> extends Abs
 
     public void perform(T parent, Object param) {
         RestUriDialogHandler dialogBuilder = new RestUriDialogHandler();
-        XFormDialog dialog = dialogBuilder.buildDialog(messages, null);
+        XFormDialog dialog = dialogBuilder.buildDialog(messages);
 
         if (param instanceof URL) {
             XmlBeansRestParamsTestPropertyHolder params = new XmlBeansRestParamsTestPropertyHolder(null, RestParametersConfig.Factory.newInstance());

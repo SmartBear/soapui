@@ -15,6 +15,7 @@
 */
 package com.eviware.soapui.support.components;
 
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -221,9 +222,7 @@ class WebViewNavigationBar {
         @Override
         public void actionPerformed(ActionEvent e) {
             String url = urlField.getText();
-            if (!urlField.getText().contains("://")) {
-                url = "http://" + url;
-            }
+            url = HttpUtils.completeUrlWithHttpIfProtocolIsMissing(url);
             webViewBasedBrowserComponent.navigate(url);
         }
     }
