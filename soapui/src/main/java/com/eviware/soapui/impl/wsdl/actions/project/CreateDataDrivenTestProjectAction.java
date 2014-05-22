@@ -47,5 +47,17 @@ public class CreateDataDrivenTestProjectAction extends AbstractSoapUIAction<Work
 
         UISupport.select(dataSourceTestStep);
         UISupport.showDesktopPanel(dataSourceTestStep);
+
+        showPostCreationInfoMessage();
+    }
+
+    private void showPostCreationInfoMessage() {
+        String message = String.format("A new TestCase has been created containing the following TestSteps:%n" +
+                "- DataSource (pre-filled with data)%n" +
+                "- REST request (using the DataSource)%n" +
+                "- DataSource Loop%n" +
+                "You can now run and/or modify the project.");
+
+        UISupport.showInfoMessage(message, "Data driven project created");
     }
 }
