@@ -763,6 +763,11 @@ public class SoapUI {
     }
 
     public static void main(String[] args) throws Exception {
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        if (isDebug)
+            Analytics.trackAction("DebuggingMode");
+
         WebstartUtilCore.init();
 
         mainArgs = args;
