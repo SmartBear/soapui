@@ -16,9 +16,11 @@
 package com.eviware.soapui.impl.wsdl.actions.project;
 
 import com.eviware.soapui.impl.WorkspaceImpl;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
@@ -28,9 +30,6 @@ import java.io.InputStream;
 public class CreateDataDrivenTestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     private static final String DATA_SOURCE_TEST_STEP_ID = "f4f876f1-39ab-40f3-8a05-7a6bbef35849";
 
-
-    public static final String SOAPUI_ACTION_ID = "CreateDataDrivenTestAction";
-
     public CreateDataDrivenTestProjectAction() {
         super("Create data-driven test", "Creates a new data-driven test");
     }
@@ -38,7 +37,8 @@ public class CreateDataDrivenTestProjectAction extends AbstractSoapUIAction<Work
     @Override
     public void perform(WorkspaceImpl workspace, Object param) {
         InputStream projectPath = getClass().getResourceAsStream("/soapui-projects/trial/Data-driven-soapui-project.xml");
-        Project project = workspace.importProject(projectPath);
+        WsdlProject project = (WsdlProject) workspace.importProject(projectPath);
+        project.setName(ModelItemNamer.createName(project.getName(), workspace.getProjectList()));
         selectDataSourceTestStep(project);
     }
 
