@@ -268,8 +268,6 @@ public class JLoadTestAssertionsTable extends JPanel {
         public AddLoadTestAssertionAction() {
             super("Add Assertion");
 
-            Analytics.trackAction("AddPointAndClickAssertion");
-
             putValue(Action.SHORT_DESCRIPTION, "Adds an assertion to this LoadTest");
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/addAssertion.gif"));
         }
@@ -279,6 +277,7 @@ public class JLoadTestAssertionsTable extends JPanel {
             String type = (String) UISupport.prompt("Select assertion type to add", "Add Assertion", types);
             if (type != null) {
                 loadTest.addAssertion(type, LoadTestAssertion.ANY_TEST_STEP, true);
+                Analytics.trackAction("AddLoadTestAssertion");
             }
         }
     }
