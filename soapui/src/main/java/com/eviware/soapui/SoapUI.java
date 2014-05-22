@@ -23,6 +23,7 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -980,6 +981,7 @@ public class SoapUI {
                 return false;
             }
 
+            AnalyticsManager.getAnalytics().trackStartupAction("Finished");
             try {
                 soapUICore.saveSettings();
                 SaveStatus saveStatus = workspace.onClose();

@@ -42,7 +42,14 @@ public interface AnalyticsProvider {
             return actionDescription;
         }
 
-        public String toString(String activity, String license, String actionDescription) {
+        public String getParamsAsString(){
+            if (params != null)
+                return params.toString();
+            else
+                return "";
+        }
+
+        public String toString() {
             return String.format("Category: %s, Activity: %s", getActionTypeDescription(), getActionDescription());
         }
 
