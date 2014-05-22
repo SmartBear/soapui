@@ -548,6 +548,9 @@
             <xsd:element name="type" maxOccurs="1" minOccurs="0"
                          type="tns:PropertyTransferTypes" default="XPATH">
             </xsd:element>
+            <xsd:element name="targetTransferType" maxOccurs="1" minOccurs="0"
+                         type="tns:PropertyTransferTypes" default="XPATH">
+            </xsd:element>
         </xsd:sequence>
         <xsd:attribute name="failOnError" type="xsd:boolean"></xsd:attribute>
         <xsd:attribute name="setNullOnMissingSource" type="xsd:boolean">
@@ -662,6 +665,7 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="XPATH"></xsd:enumeration>
             <xsd:enumeration value="XQUERY"></xsd:enumeration>
+            <xsd:enumeration value="JSONPATH"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
 
