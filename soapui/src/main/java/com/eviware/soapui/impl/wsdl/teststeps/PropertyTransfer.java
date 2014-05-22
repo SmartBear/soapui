@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.PropertyTransferConfig;
+import com.eviware.soapui.config.PropertyTransferTypesConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -64,6 +65,8 @@ import java.util.List;
  */
 
 public class PropertyTransfer implements PropertyChangeNotifier {
+
+
     private final static Logger log = Logger.getLogger(PropertyTransfer.class);
 
     public final static String SOURCE_PATH_PROPERTY = PropertyTransfer.class.getName() + "@sourcePath";
@@ -172,6 +175,29 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         initListeners();
 
         propertyChangeSupport.firePropertyChange(CONFIG_PROPERTY, null, null);
+    }
+
+    public void setSourcePathLanguage(PathLanguage language) {
+        getConfig().setType(PropertyTransferTypesConfig.Enum.forInt(language.ordinal() + 1));
+    }
+
+    public PathLanguage getSourcePathLanguage() {
+        return transferLanguageFromPropertyTransferType(getConfig().getType());
+    }
+
+    private PathLanguage transferLanguageFromPropertyTransferType(PropertyTransferTypesConfig.Enum savedLanguage) {
+        if (savedLanguage == null) {
+            return getUseXQuery() ? PathLanguage.XQUERY : PathLanguage.XPATH;
+        }
+        return PathLanguage.valueOf(savedLanguage.toString());
+    }
+
+    public void setTargetPathLanguage(PathLanguage language) {
+        getConfig().setTargetTransferType(PropertyTransferTypesConfig.Enum.forInt(language.ordinal() + 1));
+    }
+
+    public PathLanguage getTargetPathLanguage() {
+        return transferLanguageFromPropertyTransferType(getConfig().getTargetTransferType());
     }
 
     private void initListeners() {
@@ -288,7 +314,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         String sourceValue = getSourceProperty().getValue();
         if (!hasSourcePath()) {
             return sourceValue;
-        } else if (seemsToBeJsonPath(getSourcePath())) {
+        } else if (getSourcePathLanguage() == PathLanguage.JSONPATH) {
             return new JsonPathFacade(sourceValue).readObjectValue(getSourcePath());
         } else {
             XmlObject sourceXml = XmlUtils.createXmlObject(sourceValue);
@@ -298,7 +324,8 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 String value = null;
 
                 String pathExpression = PropertyExpander.expandProperties(context, getSourcePath());
-                if (getUseXQuery()) {
+                boolean usingXQuery = getSourcePathLanguage() == PathLanguage.XQUERY;
+                if (usingXQuery) {
                     XmlCursor resultCursor = sourceCursor.execQuery(pathExpression);
                     sourceCursor.dispose();
                     sourceCursor = resultCursor;
@@ -309,7 +336,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                     sourceCursor.selectPath(pathExpression);
                 }
 
-                if (!getUseXQuery() && !sourceCursor.toNextSelection()) {
+                if (!usingXQuery && !sourceCursor.toNextSelection()) {
                     if (!getSetNullOnMissingSource() && !getIgnoreEmpty()) {
                         throw new Exception("Missing match for Source XPath [" + pathExpression + "]");
                     }
@@ -354,7 +381,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
             getTargetProperty().setValue(stringValue);
         } else {
             String targetPath = PropertyExpander.expandProperties(context, getTargetPath());
-            if (seemsToBeJsonPath(targetPath)) {
+            if (getTargetPathLanguage() == PathLanguage.JSONPATH) {
                 JsonPathFacade jsonPathFacade = new JsonPathFacade(getTargetProperty().getValue());
                 jsonPathFacade.writeValue(targetPath, value);
                 getTargetProperty().setValue(jsonPathFacade.getCurrentJson());
@@ -398,7 +425,8 @@ public class PropertyTransfer implements PropertyChangeNotifier {
     }
 
     private boolean bothPathsAreXmlBased() {
-        return hasSourcePath() && hasTargetPath() && !seemsToBeJsonPath(getSourcePath()) && !seemsToBeJsonPath(getTargetPath());
+        return hasSourcePath() && hasTargetPath() && getSourcePathLanguage() != PathLanguage.JSONPATH &&
+                getTargetPathLanguage() != PathLanguage.JSONPATH;
     }
 
     private boolean hasTargetPath() {
@@ -454,7 +482,7 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                         }
                     }
                 }
-            } else if (getUseXQuery()) {
+            } else if (getSourcePathLanguage() == PathLanguage.XQUERY) {
                 String sp = PropertyExpander.expandProperties(context, getSourcePath());
                 XmlCursor resultCursor = sourceXml.execQuery(sp);
                 sourceXml.dispose();
@@ -560,10 +588,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         return value;
     }
 
-
-    private boolean seemsToBeJsonPath(String sourcePath) {
-        return sourcePath != null && sourcePath.trim().startsWith("$");
-    }
 
     /**
      * Method called for transferring between 2 xml properties..
