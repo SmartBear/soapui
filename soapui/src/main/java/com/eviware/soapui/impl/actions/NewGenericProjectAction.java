@@ -126,6 +126,8 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                             }
                         }
 
+                        String projectType = "";
+
                         if (url.length() > 0) {
                             if (new File(url).exists()) {
                                 url = new File(url).toURI().toURL().toString();
@@ -133,15 +135,20 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
 
                             if (url.toUpperCase().endsWith("WADL")) {
                                 importWadl(project, url);
+                                projectType = "Rest";
                             } else {
                                 importWsdl(project, url);
+                                projectType = "SOAP";
                             }
                         } else if (dialog.getBooleanValue(Form.ADDRESTSERVICE)) {
                             SoapUI.getActionRegistry().getAction(NewRestServiceAction.SOAPUI_ACTION_ID)
                                     .perform(project, project);
                         }
 
-                        Analytics.trackAction("CreateProject");
+                        if( projectType.length() == 0 )
+                            Analytics.trackAction("CreateProject");
+                        else
+                            Analytics.trackAction("CreateProject", "Type", projectType );
 
                         break;
                     }

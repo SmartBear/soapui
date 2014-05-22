@@ -218,13 +218,15 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
                 changeAuthorizationType(BASIC_FORM_LABEL, selectedOption);
             }
         } else if (isRestRequest(request) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(selectedOption)) {
-            Analytics.trackAction("AssignOAuth");
+
 
             setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
             request.setSelectedAuthProfileAndAuthType(selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0);
             oAuth2Form = new OAuth2Form(getOAuth2ProfileContainer().getProfileByName(selectedOption), this);
             cardPanel.add(oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL);
             changeAuthorizationType(OAUTH_2_FORM_LABEL, selectedOption);
+
+            Analytics.trackAction("AssignOAuth", "OAuth2Flow", oAuth2Form.getProfile().getOAuth2Flow().name());
         } else if (selectedOption.equals(OPTIONS_SEPARATOR)) {
             profileSelectionComboBox.setSelectedIndex(0);
         } else    //selectedItem : No Authorization

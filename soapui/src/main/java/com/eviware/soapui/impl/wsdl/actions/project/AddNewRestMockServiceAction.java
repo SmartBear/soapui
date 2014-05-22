@@ -29,8 +29,8 @@ public class AddNewRestMockServiceAction extends AbstractSoapUIAction<WsdlProjec
     }
 
     public void perform(WsdlProject target, Object param) {
-        Analytics.trackAction("CreateRestMock");
-        createRestMockService(target);
+        if( createRestMockService(target) != null )
+            Analytics.trackAction("CreateRestMock");
     }
 
     public MockService createRestMockService(WsdlProject project) {
