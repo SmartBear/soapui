@@ -17,7 +17,6 @@
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.config.PropertyTransferConfig;
-import com.eviware.soapui.config.PropertyTransferTypesConfig;
 import com.eviware.soapui.impl.support.http.HttpRequestTestStep;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.SubmitContext;
@@ -65,8 +64,6 @@ import java.util.List;
  */
 
 public class PropertyTransfer implements PropertyChangeNotifier {
-
-
     private final static Logger log = Logger.getLogger(PropertyTransfer.class);
 
     public final static String SOURCE_PATH_PROPERTY = PropertyTransfer.class.getName() + "@sourcePath";
@@ -296,19 +293,27 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 Object sourceValue = readSourceValue(context);
                 sourceValue = entitizeIfApplicable(sourceValue);
                 return writeTargetValue(sourceValue, context);
-            }
+            if (bothPathsAreXmlBased()) {
+                return transferXPathToXml(getSourceProperty(), getTargetProperty(), context);
+            } else {
+                Object sourceValue = readSourceValue(context);
+                sourceValue = entitizeIfApplicable(sourceValue);
+                return writeTargetValue(sourceValue, context);
         } catch (Exception e) {
             throw new PropertyTransferException(e.getMessage(), getSourceStepName(), sourceProperty, getTargetStepName(),
                     targetProperty);
         }
     }
-
+        
+        }
     private Object entitizeIfApplicable(Object sourceValue) {
         if (sourceValue instanceof String && StringUtils.hasContent((String) sourceValue) && getEntitize()) {
             return XmlUtils.entitize((String) sourceValue);
         }
         return sourceValue;
     }
+
+    
 
     private Object readSourceValue(PropertyExpansionContext context) throws Exception {
         String sourceValue = getSourceProperty().getValue();
@@ -588,6 +593,10 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         return value;
     }
 
+
+    private boolean seemsToBeJsonPath(String sourcePath) {
+        return sourcePath != null && sourcePath.trim().startsWith("$");
+    }
 
     /**
      * Method called for transferring between 2 xml properties..
