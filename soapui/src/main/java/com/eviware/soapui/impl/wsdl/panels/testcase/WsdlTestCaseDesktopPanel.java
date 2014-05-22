@@ -531,7 +531,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
         public void actionPerformed(ActionEvent e) {
             canceled = false;
             runTestCase();
-            Analytics.trackAction("RunTestCase", "Type", "WSDL");
+            Analytics.trackAction("RunTestCase");
         }
     }
 
