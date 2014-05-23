@@ -11,6 +11,8 @@ public interface AnalyticsProvider {
     public void trackActiveScreen(String screenName);
     public void trackError(String errorText);
 
+    public void trackError(Throwable error);
+
     public final static class ActionDescription {
         private final String sessionId;
         private final AnalyticsManager.Category category;
