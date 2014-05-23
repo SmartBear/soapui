@@ -37,8 +37,8 @@ public class AddNewMockServiceAction extends AbstractSoapUIAction<WsdlProject> {
     }
 
     public void perform(WsdlProject target, Object param) {
-        createMockService(target);
-        Analytics.trackAction("CreateSOAPMock");
+        if( createMockService(target) != null );
+            Analytics.trackAction("CreateSOAPMock");
     }
 
     public WsdlMockService createMockService(WsdlProject project) {

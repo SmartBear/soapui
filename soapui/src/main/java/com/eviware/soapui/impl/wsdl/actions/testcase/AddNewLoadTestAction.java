@@ -37,8 +37,6 @@ public class AddNewLoadTestAction extends AbstractSoapUIAction<WsdlTestCase> {
 
     public void perform(WsdlTestCase testCase, Object param) {
 
-        Analytics.trackAction("CreateLoadTest");
-
         String name = UISupport.prompt("Specify name of LoadTest", "New LoadTest",
                 "LoadTest " + (testCase.getLoadTestCount() + 1));
         if (name == null) {
@@ -47,5 +45,6 @@ public class AddNewLoadTestAction extends AbstractSoapUIAction<WsdlTestCase> {
 
         WsdlLoadTest loadTest = testCase.addNewLoadTest(name);
         UISupport.selectAndShow(loadTest);
+        Analytics.trackAction("CreateLoadTest");
     }
 }

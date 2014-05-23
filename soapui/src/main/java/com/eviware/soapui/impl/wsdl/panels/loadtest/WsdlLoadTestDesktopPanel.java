@@ -377,8 +377,6 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
         public void actionPerformed(ActionEvent e) {
 
-            Analytics.trackAction("RunLoadTest");
-
             WsdlLoadTest loadtest = getModelItem();
             if (loadtest.getTestCase().getTestStepCount() == 0) {
                 UISupport.showErrorMessage("Missing TestSteps for testing!");
@@ -395,6 +393,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
             runButton.setEnabled(false);
             runner = loadtest.run();
+            Analytics.trackAction("RunLoadTest");
         }
     }
 
