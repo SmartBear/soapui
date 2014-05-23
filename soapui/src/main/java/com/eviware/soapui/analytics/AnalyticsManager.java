@@ -49,6 +49,20 @@ public class AnalyticsManager {
         trackAction(Category.Action, action, params);
     }
 
+    public void trackActiveScreen(String screenName){
+
+        for (int i = 0; i < providers.size(); i++)
+            providers.get(i).trackActiveScreen(screenName);
+
+    }
+
+    public void trackError(String errorText){
+
+        for (int i = 0; i < providers.size(); i++)
+            providers.get(i).trackActiveScreen(errorText);
+
+    }
+
     public boolean trackAction(String actionName) {
         return this.trackAction(Category.Action, actionName, null);
     }

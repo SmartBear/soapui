@@ -8,6 +8,8 @@ import java.util.Map;
 public interface AnalyticsProvider {
 
     public void trackAction(ActionDescription actionDescription);
+    public void trackActiveScreen(String screenName);
+    public void trackError(String errorText);
 
     public final static class ActionDescription {
         private final String sessionId;
