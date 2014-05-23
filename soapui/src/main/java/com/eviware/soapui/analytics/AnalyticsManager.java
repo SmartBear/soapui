@@ -39,8 +39,9 @@ public class AnalyticsManager {
 
     public static AnalyticsManager getAnalytics() {
 
-        if (instance == null)
+        if (instance == null) {
             initialize();
+        }
 
         return instance;
     }
@@ -49,23 +50,34 @@ public class AnalyticsManager {
         trackAction(Category.Action, action, params);
     }
 
-    public void trackActiveScreen(String screenName){
+    public void trackActiveScreen(String screenName) {
 
-        for (int i = 0; i < providers.size(); i++)
+        for (int i = 0; i < providers.size(); i++) {
             providers.get(i).trackActiveScreen(screenName);
+        }
 
     }
 
-    public void trackError(String errorText){
+    public void trackError(String errorText) {
 
-        for (int i = 0; i < providers.size(); i++)
-            providers.get(i).trackActiveScreen(errorText);
+        for (int i = 0; i < providers.size(); i++) {
+            providers.get(i).trackError(errorText);
+        }
+
+    }
+
+    public void trackError(Throwable error) {
+
+        for (int i = 0; i < providers.size(); i++) {
+            providers.get(i).trackError(error);
+        }
 
     }
 
     public boolean trackAction(String actionName) {
         return this.trackAction(Category.Action, actionName, null);
     }
+
     // Single param action
     public boolean trackAction(String actionName, String paramName, String value) {
 
@@ -110,13 +122,15 @@ public class AnalyticsManager {
 
     private boolean trackAction(Category category, String action, Map<String, String> params) {
 
-        if (providers.isEmpty())
+        if (providers.isEmpty()) {
             return false;
+        }
 
         AnalyticsProvider.ActionDescription actionDescr = new AnalyticsProvider.ActionDescription(sessionId, category, action, params);
 
-        for (int i = 0; i < providers.size(); i++)
+        for (int i = 0; i < providers.size(); i++) {
             providers.get(i).trackAction(actionDescr);
+        }
 
         return providers.size() > 0;
     }
