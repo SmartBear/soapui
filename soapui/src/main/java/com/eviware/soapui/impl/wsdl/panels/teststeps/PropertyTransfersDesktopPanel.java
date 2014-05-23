@@ -1011,33 +1011,37 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
         public void actionPerformed(ActionEvent e) {
             int ix = transferList.getSelectedIndex();
-            PropertyTransfer config = transferStep.getTransferAt(ix);
+            PropertyTransfer originalTransfer = transferStep.getTransferAt(ix);
 
-            String name = UISupport.prompt("Specify name for value transfer", "Copy Transfer", config.getName());
+            String name = UISupport.prompt("Specify name for value transfer", "Copy Transfer", originalTransfer.getName());
             if (name == null || name.trim().length() == 0) {
                 return;
             }
 
             PropertyTransfer transfer = transferStep.addTransfer(name);
-            transfer.setSourceStepName(config.getSourceStepName());
-            transfer.setSourcePropertyName(config.getSourcePropertyName());
-            transfer.setSourcePath(config.getSourcePath());
-            transfer.setTargetStepName(config.getTargetStepName());
-            transfer.setTargetPropertyName(config.getTargetPropertyName());
-            transfer.setTargetPath(config.getTargetPath());
-            transfer.setDisabled(config.isDisabled());
-            transfer.setEntitize(config.getEntitize());
-            transfer.setFailOnError(config.getFailOnError());
-            transfer.setIgnoreEmpty(config.getIgnoreEmpty());
-            transfer.setSetNullOnMissingSource(config.getSetNullOnMissingSource());
-            transfer.setTransferChildNodes(config.getTransferChildNodes());
-            transfer.setTransferTextContent(config.getTransferTextContent());
-            transfer.setTransferToAll(config.getTransferToAll());
-            transfer.setUseXQuery(config.getUseXQuery());
+            transfer.setSourceStepName(originalTransfer.getSourceStepName());
+            transfer.setSourcePropertyName(originalTransfer.getSourcePropertyName());
+            transfer.setSourcePath(originalTransfer.getSourcePath());
+            transfer.setSourcePathLanguage(originalTransfer.getSourcePathLanguage());
+            transfer.setTargetStepName(originalTransfer.getTargetStepName());
+            transfer.setTargetPropertyName(originalTransfer.getTargetPropertyName());
+            transfer.setTargetPath(originalTransfer.getTargetPath());
+            transfer.setTargetPathLanguage(originalTransfer.getTargetPathLanguage());
+            transfer.setDisabled(originalTransfer.isDisabled());
+            transfer.setEntitize(originalTransfer.getEntitize());
+            transfer.setFailOnError(originalTransfer.getFailOnError());
+            transfer.setIgnoreEmpty(originalTransfer.getIgnoreEmpty());
+            transfer.setSetNullOnMissingSource(originalTransfer.getSetNullOnMissingSource());
+            transfer.setTransferChildNodes(originalTransfer.getTransferChildNodes());
+            transfer.setTransferTextContent(originalTransfer.getTransferTextContent());
+            transfer.setTransferToAll(originalTransfer.getTransferToAll());
+            transfer.setUseXQuery(originalTransfer.getUseXQuery());
 
             listModel.addElement(name);
             transferList.setSelectedIndex(listModel.getSize() - 1);
         }
+
+
     }
 
     private final class DeleteAction extends AbstractAction {
