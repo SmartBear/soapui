@@ -90,13 +90,6 @@ public class MockAsWar {
     }
 
     public void createMockAsWarArchive() {
-        if (project.getRestMockServiceCount() > 0) {
-            Analytics.trackAction("DeployRestAsMock");
-        }
-
-        if (project.getMockServiceCount() > 0) {
-            Analytics.trackAction("DeploySoapAsMock");
-        }
 
         XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog("Creating War File", 3,
                 "Building war file..", false);
