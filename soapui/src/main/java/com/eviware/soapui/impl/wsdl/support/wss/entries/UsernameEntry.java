@@ -73,7 +73,7 @@ public class UsernameEntry extends WssEntryBase {
 
         String password = context.expand(getPassword());
 
-        if (PASSWORD_DIGEST_EXT.equals(password)) {
+        if (PASSWORD_DIGEST_EXT.equals(passwordType)) {
             try {
                 MessageDigest sha = MessageDigest.getInstance("SHA-1");
                 sha.reset();
