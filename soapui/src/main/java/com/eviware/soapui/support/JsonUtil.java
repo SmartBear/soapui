@@ -47,6 +47,15 @@ public class JsonUtil {
         return contentType != null && (contentType.contains("javascript") || contentType.contains("json"));
     }
 
+    public static boolean seemsToBeJson(String content) {
+        try {
+            new JsonSlurper().parseText(content);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 
     public JSON parseTrimmedText(String text) {
         if (text == null) {

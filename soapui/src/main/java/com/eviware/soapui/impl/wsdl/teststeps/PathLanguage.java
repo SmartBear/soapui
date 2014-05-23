@@ -11,10 +11,24 @@
  */
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import static com.eviware.soapui.support.JsonUtil.seemsToBeJson;
+import static com.eviware.soapui.support.xml.XmlUtils.seemsToBeXml;
+
 public enum PathLanguage {
+
     XPATH("XPath"),
     XQUERY("XQuery"),
     JSONPATH("JSONPath");
+
+    public static PathLanguage forContent(String content) {
+        if (seemsToBeJson(content)) {
+            return PathLanguage.JSONPATH;
+        } else if (seemsToBeXml(content)) {
+            return PathLanguage.XPATH;
+        } else {
+            return null;
+        }
+    }
 
     private String displayName;
 
@@ -27,4 +41,6 @@ public enum PathLanguage {
     public String toString() {
         return displayName;
     }
+
+
 }
