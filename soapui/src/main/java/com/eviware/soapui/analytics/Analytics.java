@@ -19,6 +19,14 @@ public final class Analytics {
         SoapUI.getSoapUICore().getAnalyticsManager().trackAction( action );
     }
 
+    final public static void  tackActiveScreen(String screenName){
+        SoapUI.getSoapUICore().getAnalyticsManager().trackActiveScreen( screenName );
+    }
+
+    final public static void  tackError(String errorText){
+        SoapUI.getSoapUICore().getAnalyticsManager().trackError( errorText );
+    }
+
     final public static void trackAction( String action, String... args )
     {
         Map<String,String> params = new HashMap<String, String>();

@@ -18,6 +18,7 @@ package com.eviware.soapui.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SwingPluginSoapUICore;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
@@ -254,6 +255,7 @@ public class UISupport {
     }
 
     public static void showErrorMessage(String message) {
+        Analytics.tackError(message);
         if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
             dialogs.showExtendedInfo("Error", "An error occurred", message, null);
         } else {
@@ -389,6 +391,7 @@ public class UISupport {
 
     public static void showDialog(JDialog dialog) {
         centerDialog(dialog);
+        Analytics.tackActiveScreen(dialog.getName());
         dialog.setVisible(true);
     }
 
@@ -546,6 +549,7 @@ public class UISupport {
 
     public static DesktopPanel selectAndShow(ModelItem modelItem) {
         UISupport.select(modelItem);
+        Analytics.tackActiveScreen(modelItem.getName());
         return showDesktopPanel(modelItem);
     }
 
@@ -557,6 +561,7 @@ public class UISupport {
         try {
             UISupport.setHourglassCursor();
             SoapUIDesktop desktop = SoapUI.getDesktop();
+            Analytics.tackActiveScreen(modelItem.getName());
             return desktop == null ? null : desktop.showDesktopPanel(modelItem);
         } finally {
             UISupport.resetCursor();
@@ -567,6 +572,8 @@ public class UISupport {
         try {
             UISupport.setHourglassCursor();
             SoapUIDesktop desktop = SoapUI.getDesktop();
+            if (desktopPanel != null && desktopPanel.getModelItem() != null)
+                Analytics.tackActiveScreen(desktopPanel.getModelItem().getName());
             return desktop == null ? null : desktop.showDesktopPanel(desktopPanel);
         } finally {
             UISupport.resetCursor();
@@ -600,6 +607,7 @@ public class UISupport {
 
     public static void showErrorMessage(Throwable ex) {
         SoapUI.logError(ex);
+        Analytics.tackError(ex.toString());
 
         if (ex.toString().length() > 100) {
             dialogs.showExtendedInfo("Error", "An error of type " + ex.getClass().getSimpleName() + " occured.",
