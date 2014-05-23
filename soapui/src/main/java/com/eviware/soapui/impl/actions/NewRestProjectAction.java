@@ -71,7 +71,7 @@ public class NewRestProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                 }
                 // If there is no exception or error we break out
 
-                Analytics.trackAction( "CreateRestProject");
+                Analytics.trackAction( "CreateProject", "Type", "Rest");
                 break;
 
             } catch (Exception ex) {

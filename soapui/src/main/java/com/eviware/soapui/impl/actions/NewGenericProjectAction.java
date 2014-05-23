@@ -141,7 +141,7 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                                     .perform(project, project);
                         }
 
-                        Analytics.trackAction("CreateProject");
+                        Analytics.trackAction("CreateProject", "Type", "Generic");
 
                         break;
                     }
