@@ -40,7 +40,7 @@ import com.eviware.x.form.XFormFieldListener;
 public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase> {
     private static final String KEEP_SESSION = "Session";
     private static final String FAIL_ON_ERROR = "Abort on Error";
-    private static final String FAIL_TESTCASE_ON_ERROR = "Fail TestCase on Error";
+    private static final String FAIL_TESTCASE_ON_ERROR = "Fail TestCase on error";
     private static final String DISCARD_OK_RESULTS = "Discard OK Results";
     private static final String SOCKET_TIMEOUT = "Socket timeout";
     private static final String SEARCH_PROPERTIES = "Search Properties";
@@ -71,7 +71,7 @@ public class TestCaseOptionsAction extends AbstractSoapUIAction<WsdlTestCase> {
             form = builder.createForm("Basic");
             form.addCheckBox(SEARCH_PROPERTIES, "Search preceding TestSteps for property values");
             form.addCheckBox(KEEP_SESSION, "Maintain HTTP session");
-            form.addCheckBox(FAIL_ON_ERROR, "Fail on error").addFormFieldListener(new XFormFieldListener() {
+            form.addCheckBox(FAIL_ON_ERROR, "Abort test if an error occurs").addFormFieldListener(new XFormFieldListener() {
 
                 public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
                     form.getFormField(FAIL_TESTCASE_ON_ERROR).setEnabled(!Boolean.parseBoolean(newValue));
