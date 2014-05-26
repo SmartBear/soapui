@@ -123,7 +123,7 @@ public abstract class SimpleDialog extends JDialog {
 
         UISupport.centerDialog(this);
         super.setVisible(b);
-        Analytics.tackActiveScreen(this.title);
+        Analytics.trackActiveScreen(this.title);
 
 
         if (b) {

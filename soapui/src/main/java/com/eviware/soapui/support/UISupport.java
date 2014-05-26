@@ -255,7 +255,7 @@ public class UISupport {
     }
 
     public static void showErrorMessage(String message) {
-        Analytics.tackError(message);
+        Analytics.trackError(message);
         if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
             dialogs.showExtendedInfo("Error", "An error occurred", message, null);
         } else {
@@ -391,7 +391,7 @@ public class UISupport {
 
     public static void showDialog(JDialog dialog) {
         centerDialog(dialog);
-        Analytics.tackActiveScreen(dialog.getName());
+        Analytics.trackActiveScreen(dialog.getName());
         dialog.setVisible(true);
     }
 
@@ -549,7 +549,7 @@ public class UISupport {
 
     public static DesktopPanel selectAndShow(ModelItem modelItem) {
         UISupport.select(modelItem);
-        Analytics.tackActiveScreen(modelItem.getName());
+        Analytics.trackActiveScreen(modelItem.getName());
         return showDesktopPanel(modelItem);
     }
 
@@ -561,7 +561,7 @@ public class UISupport {
         try {
             UISupport.setHourglassCursor();
             SoapUIDesktop desktop = SoapUI.getDesktop();
-            Analytics.tackActiveScreen(modelItem.getName());
+            Analytics.trackActiveScreen(modelItem.getName());
             return desktop == null ? null : desktop.showDesktopPanel(modelItem);
         } finally {
             UISupport.resetCursor();
@@ -572,8 +572,9 @@ public class UISupport {
         try {
             UISupport.setHourglassCursor();
             SoapUIDesktop desktop = SoapUI.getDesktop();
-            if (desktopPanel != null && desktopPanel.getModelItem() != null)
-                Analytics.tackActiveScreen(desktopPanel.getModelItem().getName());
+            if (desktopPanel != null && desktopPanel.getModelItem() != null) {
+                Analytics.trackActiveScreen(desktopPanel.getModelItem().getName());
+            }
             return desktop == null ? null : desktop.showDesktopPanel(desktopPanel);
         } finally {
             UISupport.resetCursor();
@@ -607,7 +608,7 @@ public class UISupport {
 
     public static void showErrorMessage(Throwable ex) {
         SoapUI.logError(ex);
-        Analytics.tackError(ex.toString());
+        Analytics.trackError(ex.toString());
 
         if (ex.toString().length() > 100) {
             dialogs.showExtendedInfo("Error", "An error of type " + ex.getClass().getSimpleName() + " occured.",
