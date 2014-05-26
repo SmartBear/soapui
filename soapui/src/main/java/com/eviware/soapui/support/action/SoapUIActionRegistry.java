@@ -24,6 +24,8 @@ import com.eviware.soapui.config.SoapUIActionMappingConfig;
 import com.eviware.soapui.config.SoapUIActionsConfig;
 import com.eviware.soapui.config.SoapuiActionsDocumentConfig;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.plugins.ActionConfiguration;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.support.DefaultActionMapping;
 import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
@@ -50,11 +52,37 @@ public class SoapUIActionRegistry {
 
     public void addAction(String soapuiActionID, SoapUIAction action) {
         actions.put(soapuiActionID, action);
+        Class<? extends SoapUIAction> actionClass = action.getClass();
+        ActionConfiguration configuration = actionClass.getAnnotation(ActionConfiguration.class);
+        if (configuration != null) {
+            SoapUIActionGroup targetGroup = findGroupWithClass(configuration.actionGroup());
+            DefaultActionMapping mapping = new DefaultActionMapping(action.getId(), configuration.keyStroke(),
+                    configuration.iconPath(), configuration.defaultAction(), null);
+
+            mapping.setDescription(configuration.description());
+            int insertIndex = -1;
+            if (StringUtils.hasContent(configuration.beforeAction())) {
+                insertIndex = targetGroup.getMappingIndex(configuration.beforeAction());
+            } else if (StringUtils.hasContent(configuration.afterAction())) {
+                insertIndex = targetGroup.getMappingIndex(configuration.afterAction()) + 1;
+            }
+            targetGroup.addMapping(action.getId(), insertIndex, mapping);
+        }
+    }
+
+    private SoapUIActionGroup findGroupWithClass(Class<? extends SoapUIActionGroup> aClass) {
+        for (SoapUIActionGroup soapUIActionGroup : actionGroups.values()) {
+            if (soapUIActionGroup.getClass().equals(aClass)) {
+                return soapUIActionGroup;
+            }
+        }
+        throw new IllegalArgumentException("Action group not found for class " + aClass);
     }
 
     public void removeAction(String soapuiActionID) {
         actions.remove(soapuiActionID);
     }
+
 
     public static class SeperatorAction extends AbstractSoapUIAction {
         public static final String SOAPUI_ACTION_ID = "SeperatorAction";
@@ -136,15 +164,16 @@ public class SoapUIActionRegistry {
             }
 
             for (SoapUIActionGroupConfig group : soapuiActions.getActionGroupList()) {
-                SoapUIActionGroup actionGroup = null;
+                SoapUIActionGroup actionGroup;
 
                 // modify existing?
-                if (actionGroups.containsKey(group.getId())) {
-                    actionGroup = actionGroups.get(group.getId());
+                String groupId = group.getId();
+                if (actionGroups.containsKey(groupId)) {
+                    actionGroup = actionGroups.get(groupId);
 
                     if (group.isSetClass1()) {
                         actionGroup = createActionGroupClassFromConfig(group);
-                        actionGroups.put(group.getId(), actionGroup);
+                        addActionGroup(actionGroup, groupId);
                     }
 
                     addMappings(actionGroup, group);
@@ -152,11 +181,11 @@ public class SoapUIActionRegistry {
                     if (group.isSetClass1()) {
                         actionGroup = createActionGroupClassFromConfig(group);
                     } else {
-                        actionGroup = new DefaultSoapUIActionGroup(group.getId(), group.getName());
+                        actionGroup = new DefaultSoapUIActionGroup(groupId, group.getName());
                     }
 
                     addMappings(actionGroup, group);
-                    actionGroups.put(group.getId(), actionGroup);
+                    addActionGroup(actionGroup, groupId);
                 }
             }
         } catch (Exception e) {
@@ -170,6 +199,11 @@ public class SoapUIActionRegistry {
         }
     }
 
+    // package protected to facilitate unit testing
+    SoapUIActionGroup addActionGroup(SoapUIActionGroup actionGroup, String groupId) {
+        return actionGroups.put(groupId, actionGroup);
+    }
+
     private SoapUIActionGroup createActionGroupClassFromConfig(SoapUIActionGroupConfig group)
             throws ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException,
             InvocationTargetException {
@@ -179,7 +213,7 @@ public class SoapUIActionRegistry {
         Constructor<SoapUIActionGroup> constructor = actionGroupClass.getConstructor(new Class[]{String.class,
                 String.class});
         if (constructor != null) {
-            actionGroup = constructor.newInstance(new Object[]{group.getId(), group.getName()});
+            actionGroup = constructor.newInstance(group.getId(), group.getName());
         } else {
             actionGroup = actionGroupClass.newInstance();
         }
@@ -213,7 +247,7 @@ public class SoapUIActionRegistry {
                     }
                 } else if (mapping.getActionId().equals(SeperatorAction.SOAPUI_ACTION_ID)) {
                     actionGroup.addMapping(SeperatorAction.SOAPUI_ACTION_ID, insertIndex,
-                            (SoapUIActionMapping) SeperatorAction.getDefaultMapping());
+                            SeperatorAction.getDefaultMapping());
                 } else {
                     DefaultActionMapping actionMapping = new DefaultActionMapping(mapping.getActionId(),
                             mapping.getKeyStroke(), mapping.getIconPath(), mapping.getActionId().equals(
