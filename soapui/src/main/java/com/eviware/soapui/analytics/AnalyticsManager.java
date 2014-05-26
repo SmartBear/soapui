@@ -120,6 +120,16 @@ public class AnalyticsManager {
         return false;
     }
 
+    abstract class ActionDescrRunnable implements Runnable {
+
+        AnalyticsProvider.ActionDescription ad;
+
+        ActionDescrRunnable(AnalyticsProvider.ActionDescription ad) {
+            this.ad = ad;
+        }
+    }
+
+
     private boolean trackAction(Category category, String action, Map<String, String> params) {
 
         if (providers.isEmpty()) {
@@ -128,9 +138,13 @@ public class AnalyticsManager {
 
         AnalyticsProvider.ActionDescription actionDescr = new AnalyticsProvider.ActionDescription(sessionId, category, action, params);
 
-        for (int i = 0; i < providers.size(); i++) {
-            providers.get(i).trackAction(actionDescr);
-        }
+        new Thread(new ActionDescrRunnable(actionDescr) {
+            public void run() {
+                for (int i = 0; i < providers.size(); i++) {
+                    providers.get(i).trackAction(ad);
+                }
+            }
+        }).start();
 
         return providers.size() > 0;
     }
