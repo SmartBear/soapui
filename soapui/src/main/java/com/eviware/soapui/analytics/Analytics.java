@@ -1,6 +1,7 @@
 package com.eviware.soapui.analytics;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.SoapUICore;
 import com.eviware.soapui.support.StringUtils;
 
 import java.util.HashMap;
@@ -14,17 +15,25 @@ import java.util.Map;
 
 public final class Analytics {
 
+    final private static AnalyticsManager getAnalyticsManager(){
+        SoapUICore soapUICore =  SoapUI.getSoapUICore();
+        if (soapUICore != null)
+            return soapUICore.getAnalyticsManager();
+        else
+            return AnalyticsManager.getAnalytics();
+    }
+
     final public static void trackAction( String action )
     {
-        SoapUI.getSoapUICore().getAnalyticsManager().trackAction( action );
+        getAnalyticsManager().trackAction( action );
     }
 
     final public static void  tackActiveScreen(String screenName){
-        SoapUI.getSoapUICore().getAnalyticsManager().trackActiveScreen( screenName );
+        getAnalyticsManager().trackActiveScreen( screenName );
     }
 
     final public static void  tackError(String errorText){
-        SoapUI.getSoapUICore().getAnalyticsManager().trackError( errorText );
+        getAnalyticsManager().trackError( errorText );
     }
 
     final public static void trackAction( String action, String... args )
@@ -36,11 +45,11 @@ public final class Analytics {
                 params.put(args[c], args[c + 1]);
         }
 
-        SoapUI.getSoapUICore().getAnalyticsManager().trackAction( action, params );
+        getAnalyticsManager().trackAction( action, params );
     }
 
     final public static AnalyticsManager get()
     {
-        return SoapUI.getSoapUICore().getAnalyticsManager();
+        return getAnalyticsManager();
     }
 }
