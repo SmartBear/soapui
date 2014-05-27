@@ -981,7 +981,8 @@ public class SoapUI {
                 return false;
             }
 
-            AnalyticsManager.getAnalytics().trackStartupAction(AnalyticsManager.SESSION_FINISHED_ACTION);
+            AnalyticsManager.getAnalytics().trackSessionStop();
+
             try {
                 soapUICore.saveSettings();
                 SaveStatus saveStatus = workspace.onClose();
