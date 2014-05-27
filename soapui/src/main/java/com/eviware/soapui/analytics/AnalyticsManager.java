@@ -13,8 +13,6 @@ import java.util.Map;
 
 public class AnalyticsManager {
 
-    public static final String SESSION_STARTED_ACTION = "Started";
-    public static final String SESSION_FINISHED_ACTION = "Finished";
     private static AnalyticsManager instance = null;
     List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
     List<AnalyticsProvider.ActionDescription> actions = new ArrayList<AnalyticsProvider.ActionDescription>();
@@ -47,7 +45,7 @@ public class AnalyticsManager {
     }
 
     public void trackAction(String action, Map<String, String> params) {
-        trackAction(Category.Action, action, params);
+        trackAction(Category.ACTION, action, params);
     }
 
     public void trackActiveScreen(String screenName) {
@@ -75,7 +73,7 @@ public class AnalyticsManager {
     }
 
     public boolean trackAction(String actionName) {
-        return this.trackAction(Category.Action, actionName, null);
+        return this.trackAction(Category.ACTION, actionName, null);
     }
 
     // Single param action
@@ -84,11 +82,15 @@ public class AnalyticsManager {
         Map<String, String> params = new HashMap<String, String>();
         params.put(paramName, value);
 
-        return this.trackAction(Category.Action, actionName, params);
+        return trackAction(Category.ACTION, actionName, params);
     }
 
-    public boolean trackStartupAction(String actionName) {
-        return this.trackAction(Category.Session, actionName, null);
+    public boolean trackSessionStart() {
+        return trackAction(Category.SESSION_START, "", null);
+    }
+
+    public boolean trackSessionStop() {
+        return trackAction(Category.SESSION_STOP, "", null);
     }
 
     protected void registerActiveProvider(AnalyticsProvider provider, boolean keepTheOnlyOne) {
@@ -149,5 +151,5 @@ public class AnalyticsManager {
         return providers.size() > 0;
     }
 
-    public enum Category {Unassigned, Session, Action}
+    public enum Category {SESSION_START, SESSION_STOP, ACTION}
 }
