@@ -32,8 +32,8 @@ public final class Analytics {
         getAnalyticsManager().trackActiveScreen(screenName);
     }
 
-    public static void trackError(String errorText) {
-        getAnalyticsManager().trackError(errorText);
+    public static void trackError(Throwable error) {
+        getAnalyticsManager().trackError(error);
     }
 
     public static void trackAction(String action, String... args) {
