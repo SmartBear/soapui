@@ -255,7 +255,8 @@ public class UISupport {
     }
 
     public static void showErrorMessage(String message) {
-        Analytics.trackError(message);
+        Analytics.trackError(new Throwable(message));
+
         if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
             dialogs.showExtendedInfo("Error", "An error occurred", message, null);
         } else {
@@ -608,7 +609,7 @@ public class UISupport {
 
     public static void showErrorMessage(Throwable ex) {
         SoapUI.logError(ex);
-        Analytics.trackError(ex.toString());
+        Analytics.trackError(ex);
 
         if (ex.toString().length() > 100) {
             dialogs.showExtendedInfo("Error", "An error of type " + ex.getClass().getSimpleName() + " occured.",

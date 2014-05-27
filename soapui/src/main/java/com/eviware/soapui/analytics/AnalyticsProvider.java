@@ -8,8 +8,8 @@ import java.util.Map;
 public interface AnalyticsProvider {
 
     public void trackAction(ActionDescription actionDescription);
+
     public void trackActiveScreen(String screenName);
-    public void trackError(String errorText);
 
     public void trackError(Throwable error);
 
@@ -46,11 +46,12 @@ public interface AnalyticsProvider {
             return actionDescription;
         }
 
-        public String getParamsAsString(){
-            if (params != null)
+        public String getParamsAsString() {
+            if (params != null) {
                 return params.toString();
-            else
+            } else {
                 return "";
+            }
         }
 
         public String toString() {
