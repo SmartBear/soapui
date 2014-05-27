@@ -15,7 +15,6 @@ public class AnalyticsManager {
 
     private static AnalyticsManager instance = null;
     List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
-    List<AnalyticsProvider.ActionDescription> actions = new ArrayList<AnalyticsProvider.ActionDescription>();
 
     private String sessionId;
     private List<AnalyticsProviderFactory> factories = new ArrayList<AnalyticsProviderFactory>();
@@ -50,24 +49,24 @@ public class AnalyticsManager {
 
     public void trackActiveScreen(String screenName) {
 
-        for (int i = 0; i < providers.size(); i++) {
-            providers.get(i).trackActiveScreen(screenName);
+        for (AnalyticsProvider provider : providers) {
+            provider.trackActiveScreen(screenName);
         }
 
     }
 
     public void trackError(String errorText) {
 
-        for (int i = 0; i < providers.size(); i++) {
-            providers.get(i).trackError(errorText);
+        for (AnalyticsProvider provider : providers) {
+            provider.trackError(errorText);
         }
 
     }
 
     public void trackError(Throwable error) {
 
-        for (int i = 0; i < providers.size(); i++) {
-            providers.get(i).trackError(error);
+        for (AnalyticsProvider provider : providers) {
+            provider.trackError(error);
         }
 
     }
@@ -108,8 +107,7 @@ public class AnalyticsManager {
     }
 
     public boolean selectAnalyticsProvider(String name, boolean keepTheOnlyOne) {
-        for (int i = 0; i < factories.size(); i++) {
-            AnalyticsProviderFactory factory = factories.get(i);
+        for (AnalyticsProviderFactory factory : factories) {
             if (factory.getName().compareToIgnoreCase(name) == 0) {
                 registerActiveProvider(factory.allocateProvider(), keepTheOnlyOne);
                 return true;
@@ -142,8 +140,8 @@ public class AnalyticsManager {
 
         new Thread(new ActionDescrRunnable(actionDescr) {
             public void run() {
-                for (int i = 0; i < providers.size(); i++) {
-                    providers.get(i).trackAction(ad);
+                for (AnalyticsProvider provider : providers) {
+                    provider.trackAction(ad);
                 }
             }
         }).start();
