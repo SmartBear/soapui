@@ -17,7 +17,7 @@ public interface AnalyticsProvider {
         private final String actionDescription;
         private Map<String, String> params;
 
-        ActionDescription(String sessionId, AnalyticsManager.Category category, String actionDescription, Map<String, String> params) {
+        public ActionDescription(String sessionId, AnalyticsManager.Category category, String actionDescription, Map<String, String> params) {
             this.sessionId = sessionId;
             this.category = category;
             this.actionDescription = actionDescription;
