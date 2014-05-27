@@ -47,14 +47,6 @@ public class AnalyticsManager {
         trackAction(Category.ACTION, action, params);
     }
 
-    public void trackError(String errorText) {
-
-        for (AnalyticsProvider provider : providers) {
-            provider.trackError(errorText);
-        }
-
-    }
-
     public void trackError(Throwable error) {
 
         for (AnalyticsProvider provider : providers) {
