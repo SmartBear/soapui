@@ -15,36 +15,7 @@
 */
 package com.eviware.soapui.impl.wsdl.panels.assertions;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Set;
-import java.util.SortedSet;
-
-import javax.swing.AbstractAction;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
@@ -63,6 +34,33 @@ import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.components.SimpleForm;
 import com.l2fprod.common.swing.renderer.DefaultCellRenderer;
+
+import javax.swing.AbstractAction;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
 
 public class AddAssertionPanel extends SimpleDialog {
     /**
@@ -157,6 +155,8 @@ public class AddAssertionPanel extends SimpleDialog {
         hideDescCB.addItemListener(hideDescListener);
         hideDescCB
                 .setSelected(SoapUI.getSettings().getBoolean(AssertionDescriptionSettings.SHOW_ASSERTION_DESCRIPTION));
+        hideDescCB.setFocusable(false);
+
         toolbar.add(new JLabel("Assertions"));
         toolbar.addGlue();
         toolbar.add(hideDescCB);
