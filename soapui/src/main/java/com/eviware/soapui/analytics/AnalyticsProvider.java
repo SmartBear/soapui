@@ -9,8 +9,6 @@ public interface AnalyticsProvider {
 
     public void trackAction(ActionDescription actionDescription);
 
-    public void trackError(String errorText);
-
     public void trackError(Throwable error);
 
     public final static class ActionDescription {
