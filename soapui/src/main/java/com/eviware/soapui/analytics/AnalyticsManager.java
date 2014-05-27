@@ -47,10 +47,10 @@ public class AnalyticsManager {
         trackAction(Category.ACTION, action, params);
     }
 
-    public void trackActiveScreen(String screenName) {
+    public void trackError(String errorText) {
 
         for (AnalyticsProvider provider : providers) {
-            provider.trackActiveScreen(screenName);
+            provider.trackError(errorText);
         }
 
     }

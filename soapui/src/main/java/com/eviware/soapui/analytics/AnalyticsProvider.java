@@ -9,7 +9,7 @@ public interface AnalyticsProvider {
 
     public void trackAction(ActionDescription actionDescription);
 
-    public void trackActiveScreen(String screenName);
+    public void trackError(String errorText);
 
     public void trackError(Throwable error);
 

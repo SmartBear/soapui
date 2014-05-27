@@ -16,7 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -123,7 +122,6 @@ public abstract class SimpleDialog extends JDialog {
 
         UISupport.centerDialog(this);
         super.setVisible(b);
-        Analytics.trackActiveScreen(this.title);
 
 
         if (b) {
