@@ -16,17 +16,16 @@
 
 package com.eviware.x.impl.swing;
 
+import com.eviware.soapui.support.ExtensionFileFilter;
+import com.eviware.x.dialogs.XFileDialogs;
+import com.l2fprod.common.swing.JDirectoryChooser;
+
+import javax.swing.JFileChooser;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.JFileChooser;
-
-import com.eviware.soapui.support.ExtensionFileFilter;
-import com.eviware.x.dialogs.XFileDialogs;
-import com.l2fprod.common.swing.JDirectoryChooser;
 
 /**
  * @author Lars
@@ -82,7 +81,7 @@ public class SwingFileDialogs implements XFileDialogs {
             return null;
         }
 
-        return chooser.getSelectedFile();
+        return new File(chooser.getSelectedFile().getPath() + extension);
     }
 
     public File open(Object action, String title, String extension, String fileType, String current) {
