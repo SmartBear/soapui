@@ -16,10 +16,11 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.Color;
-
 import javax.swing.BorderFactory;
 import javax.swing.JProgressBar;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.Color;
 
 public class JEditorStatusBarWithProgress extends JEditorStatusBar {
     private JProgressBar progressBar;
@@ -36,6 +37,15 @@ public class JEditorStatusBarWithProgress extends JEditorStatusBar {
         progressBar.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEmptyBorder(2, 2, 2, 3),
                 BorderFactory.createMatteBorder(0, 0, 1, 1, Color.LIGHT_GRAY)));
 
+        progressBar.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                progressBar.setVisible((progressBar.getValue() > progressBar.getMinimum()));
+            }
+        });
+
+        progressBar.setVisible(false);
+
         setStatusComponent(progressBar);
     }
 
@@ -49,11 +59,11 @@ public class JEditorStatusBarWithProgress extends JEditorStatusBar {
         return progressBar;
     }
 
-    public void setIndeterminate(boolean newValue) {
-        progressBar.setIndeterminate(newValue);
-    }
-
     public void setValue(int n) {
         progressBar.setValue(n);
+    }
+
+    public void setIndeterminate(boolean newValue) {
+        progressBar.setIndeterminate(newValue);
     }
 }
