@@ -1,8 +1,5 @@
 package com.eviware.soapui.analytics;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.SoapUICore;
-import com.eviware.soapui.support.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +12,8 @@ import java.util.Map;
 
 public final class Analytics {
 
-    private static AnalyticsManager getAnalyticsManager() {
-        SoapUICore soapUICore = SoapUI.getSoapUICore();
-        if (soapUICore != null) {
-            return soapUICore.getAnalyticsManager();
-        } else {
-            return AnalyticsManager.getAnalytics();
-        }
+    public static AnalyticsManager getAnalyticsManager() {
+        return AnalyticsManager.getAnalytics();
     }
 
     public static void trackAction(String action) {
@@ -36,7 +28,7 @@ public final class Analytics {
         Map<String, String> params = new HashMap<String, String>();
 
         for (int c = 0; c < args.length; c += 2) {
-            if (StringUtils.hasContent(args[c]) && StringUtils.hasContent(args[c + 1])) {
+            if (hasContent(args[c]) && hasContent(args[c + 1])) {
                 params.put(args[c], args[c + 1]);
             }
         }
@@ -44,7 +36,8 @@ public final class Analytics {
         getAnalyticsManager().trackAction(action, params);
     }
 
-    public static AnalyticsManager get() {
-        return getAnalyticsManager();
+    private static boolean hasContent(String string) {
+        return string != null && string.trim().length() > 0;
     }
+
 }

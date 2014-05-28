@@ -659,8 +659,4 @@ public class DefaultSoapUICore implements SoapUICore {
         return securityScanRegistry;
     }
 
-    @Override
-    public AnalyticsManager getAnalyticsManager() {
-        return AnalyticsManager.getAnalytics();
-    }
 }
