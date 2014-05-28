@@ -90,6 +90,29 @@
                     </execution>
                 </executions>
             </plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>animal-sniffer-maven-plugin</artifactId>
+				<version>1.9</version>
+				<configuration>
+					<signature>
+						<groupId>org.codehaus.mojo.signature</groupId>
+						<!-- currently, we cannot use java16 1.1 because some classes depends on the sun specific
+						implementation (com.sun.java.swing.plaf.windows) -->
+						<artifactId>java16-sun</artifactId>
+						<version>1.10</version>
+					</signature>
+				</configuration>
+				<executions>
+					<execution>
+						<id>animal-sniffer-check</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
         </plugins>
     </build>
 
