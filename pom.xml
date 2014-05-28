@@ -41,6 +41,7 @@
         <module>soapui-installer</module>
         <module>soapui-maven-plugin-tester</module>
         <module>soapui-system-test</module>
+        <module>smartbear-analytics</module>
     </modules>
 
     <build>
