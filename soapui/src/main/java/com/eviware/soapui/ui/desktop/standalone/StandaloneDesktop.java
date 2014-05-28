@@ -82,7 +82,6 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private CloseOtherAction closeOtherAction = new CloseOtherAction();
     private CloseAllAction closeAllAction = new CloseAllAction();
 
-    private static int openFrameCount = 0;
     private static final int xOffset = 30, yOffset = 30;
     private JPanel desktopPanel = new JPanel(new BorderLayout());
 
@@ -209,6 +208,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
         desktopPanel.addPropertyChangeListener(desktopPanelPropertyChangeListener);
 
         JComponent panel = desktopPanel.getComponent();
+
         panel.setOpaque(true);
 
         String title = desktopPanel.getTitle();
@@ -216,7 +216,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
         JInternalFrame frame = new JInternalFrame(title, true, true, true, true);
         frame.addInternalFrameListener(internalFrameListener);
         frame.setContentPane(panel);
-        frame.setLocation(xOffset * (openFrameCount % 10), yOffset * (openFrameCount % 10));
+        frame.setLocation(xOffset * (desktop.getComponentCount() % 10), yOffset * (desktop.getComponentCount() % 10));
         Point location = frame.getLocation();
         Dimension frameSize = calculateDesktopPanelSize(panel, location);
         frame.setSize(frameSize);
@@ -229,7 +229,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)));
         }
-        openFrameCount++;
+
         return frame;
     }
 
