@@ -1,5 +1,10 @@
 package com.eviware.soapui.analytics;
 
+import com.eviware.soapui.SoapUI;
+
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.util.Map;
 
 /**
@@ -13,14 +18,14 @@ public interface AnalyticsProvider {
 
     public final static class ActionDescription {
         private final String sessionId;
-        private final AnalyticsManager.Category category;
-        private final String actionDescription;
+        private final AnalyticsManager.ActionId actionId;
+        private final String additionalData;
         private Map<String, String> params;
 
-        public ActionDescription(String sessionId, AnalyticsManager.Category category, String actionDescription, Map<String, String> params) {
+        public ActionDescription(String sessionId, AnalyticsManager.ActionId actionId, String additionalData, Map<String, String> params) {
             this.sessionId = sessionId;
-            this.category = category;
-            this.actionDescription = actionDescription;
+            this.actionId = actionId;
+            this.additionalData = additionalData;
             this.params = params;
         }
 
@@ -32,16 +37,16 @@ public interface AnalyticsProvider {
             return sessionId;
         }
 
-        public AnalyticsManager.Category getCategory() {
-            return this.category;
+        public AnalyticsManager.ActionId getActionId() {
+            return this.actionId;
         }
 
-        public String getActionTypeDescription() {
-            return category.toString();
+        public String getActionIdAsString() {
+            return actionId.toString();
         }
 
-        public String getActionDescription() {
-            return actionDescription;
+        public String getAdditionalData() {
+            return additionalData;
         }
 
         public String getParamsAsString() {
@@ -53,8 +58,24 @@ public interface AnalyticsProvider {
         }
 
         public String toString() {
-            return String.format("Category: %s, Activity: %s", getActionTypeDescription(), getActionDescription());
+            return String.format("Acton: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
         }
+
+        public static final String getUserId() {
+            try {
+                NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+                byte[] mac = network.getHardwareAddress();
+                StringBuilder sb = new StringBuilder();
+                for (byte aMac : mac) {
+                    sb.append(String.format("%d", aMac));
+                }
+                return sb.toString();
+            } catch (IOException e) {
+                SoapUI.log.warn("Couldn't determine MAC address - returning empty String");
+                return "";
+            }
+        }
+
 
     }
 }
