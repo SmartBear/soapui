@@ -356,7 +356,11 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
             {
                 // not optimal - it would be nicer if the filter could access command-line options via some
                 // generic mechanism.
-                GlobalHttpHeadersRequestFilter.addGlobalHeader(option.substring(0, ix), option.substring(ix + 1));
+                String name = option.substring(0, ix);
+                String value = option.substring(ix + 1);
+                log.info( "Adding global HTTP Header [" + name + "] = [" + value + "]");
+
+                GlobalHttpHeadersRequestFilter.addGlobalHeader(name, value);
             }
         }
     }
