@@ -115,13 +115,13 @@ public class AnalyticsManager {
     }
 
 
-    private boolean trackAction(ActionId category, String action, Map<String, String> params) {
+    private boolean trackAction(ActionId category, String actionName, Map<String, String> params) {
 
         if (providers.isEmpty()) {
             return false;
         }
 
-        ActionDescription actionDescr = new ActionDescription(sessionId, category, action, params);
+        ActionDescription actionDescr = new ActionDescription(sessionId, category, actionName, params);
 
         new Thread(new ActionDescrRunnable(actionDescr) {
             public void run() {
