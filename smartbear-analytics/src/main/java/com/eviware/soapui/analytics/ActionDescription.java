@@ -20,6 +20,7 @@ import org.apache.log4j.Logger;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.util.Iterator;
 import java.util.Map;
 
 public final class ActionDescription {
@@ -60,7 +61,15 @@ public final class ActionDescription {
 
     public String getParamsAsString() {
         if (params != null) {
-            return params.toString();
+            StringBuilder sb = new StringBuilder();
+
+            Iterator it = params.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry)it.next();
+                sb.append(String.format("%s%s: %s", (sb.toString().equals("") ? "" : ", "), pairs.getKey(), pairs.getValue()));
+            }
+
+            return sb.toString();
         } else {
             return "";
         }
