@@ -808,7 +808,6 @@ public class SoapUI {
         if (!processCommandLineArgs(cmd)) {
             System.exit(1);
         }
-        initializeAnalytics();
         if (workspaceName != null) {
             workspace = WorkspaceFactory.getInstance().openWorkspace(workspaceName, projectOptions);
             soapUICore.getSettings().setString(CURRENT_SOAPUI_WORKSPACE, workspaceName);
@@ -848,16 +847,6 @@ public class SoapUI {
             }
         }
         return soapUI;
-    }
-
-    private static void initializeAnalytics() {
-        if (!soapUICore.getSettings().getBoolean(UISettings.SHOULD_DISPLAY_ANALYTICS_DIALOG)) {
-            /*TODO: show dialog enabling user to opt in and start sending analytics data
-             DISABLE_ANALYTICS AND SHOULD_DISPLAY_ANALYTICS_DIALOG shall then be set according to user input.  */
-        }
-        if (soapUICore.getSettings().getBoolean(UISettings.DISABLE_ANALYTICS, false)) {
-            AnalyticsManager.getAnalytics().disable();
-        }
     }
 
     public static List<Image> getFrameIcons() {
@@ -1655,5 +1644,6 @@ public class SoapUI {
             return false;
         }
     }
+
 
 }
