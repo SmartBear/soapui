@@ -18,6 +18,7 @@ public class AnalyticsManager {
 
     private String sessionId;
     private List<AnalyticsProviderFactory> factories = new ArrayList<AnalyticsProviderFactory>();
+    private boolean disabled;
 
     AnalyticsManager() {
 
@@ -27,21 +28,15 @@ public class AnalyticsManager {
                 newString, ActionDescription.getUserId());
     }
 
-    public static AnalyticsManager initialize() {
+    public static AnalyticsManager getAnalytics() {
         if (instance == null) {
             instance = new AnalyticsManager();
         }
-
-        return getAnalytics();
+        return instance;
     }
 
-    public static AnalyticsManager getAnalytics() {
-
-        if (instance == null) {
-            initialize();
-        }
-
-        return instance;
+    public void disable() {
+        disabled = true;
     }
 
     public void trackAction(String action, Map<String, String> params) {
@@ -49,7 +44,9 @@ public class AnalyticsManager {
     }
 
     public void trackError(Throwable error) {
-
+        if (disabled) {
+            return;
+        }
         for (AnalyticsProvider provider : providers) {
             provider.trackError(error);
         }
@@ -57,15 +54,19 @@ public class AnalyticsManager {
     }
 
     public boolean trackAction(String actionName) {
+        if (disabled) {
+            return false;
+        }
         return this.trackAction(ActionId.ACTION, actionName, null);
     }
 
     // Single param action
     public boolean trackAction(String actionName, String paramName, String value) {
-
+        if (disabled) {
+            return false;
+        }
         Map<String, String> params = new HashMap<String, String>();
         params.put(paramName, value);
-
         return trackAction(ActionId.ACTION, actionName, params);
     }
 
@@ -105,15 +106,6 @@ public class AnalyticsManager {
         return false;
     }
 
-    abstract class ActionDescrRunnable implements Runnable {
-
-        ActionDescription ad;
-
-        ActionDescrRunnable(ActionDescription ad) {
-            this.ad = ad;
-        }
-    }
-
 
     private boolean trackAction(ActionId category, String actionName, Map<String, String> params) {
 
@@ -121,12 +113,12 @@ public class AnalyticsManager {
             return false;
         }
 
-        ActionDescription actionDescr = new ActionDescription(sessionId, category, actionName, params);
+        final ActionDescription description = new ActionDescription(sessionId, category, actionName, params);
 
-        new Thread(new ActionDescrRunnable(actionDescr) {
+        new Thread(new Runnable() {
             public void run() {
                 for (AnalyticsProvider provider : providers) {
-                    provider.trackAction(ad);
+                    provider.trackAction(description);
                 }
             }
         }).start();
