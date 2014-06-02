@@ -17,10 +17,10 @@ package com.eviware.soapui.analytics;
 
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
+import javax.xml.bind.DatatypeConverter;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.Iterator;
+import java.security.MessageDigest;
 import java.util.Map;
 
 public final class ActionDescription {
@@ -63,10 +63,11 @@ public final class ActionDescription {
         if (params != null) {
             StringBuilder sb = new StringBuilder();
 
-            Iterator it = params.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry)it.next();
-                sb.append(String.format("%s%s: %s", (sb.toString().equals("") ? "" : ", "), pairs.getKey(), pairs.getValue()));
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (sb.length() > 0) {
+                    sb.append(", ");
+                }
+                sb.append(entry.getKey()).append(": ").append(entry.getValue());
             }
 
             return sb.toString();
@@ -76,23 +77,19 @@ public final class ActionDescription {
     }
 
     public String toString() {
-        return String.format("Acton: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
+        return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
     }
 
-    public static final String getUserId() {
+    public static String getUserId() {
         try {
             NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
             byte[] mac = network.getHardwareAddress();
-            StringBuilder sb = new StringBuilder();
-            for (byte aMac : mac) {
-                sb.append(String.format("%d", aMac));
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            log.warn("Couldn't determine MAC address - returning empty String");
+            MessageDigest hasher = MessageDigest.getInstance("SHA-1");
+            return DatatypeConverter.printHexBinary(hasher.digest(mac));
+        } catch (Exception e) {
+            log.warn("Error generating Analytics session ID - returning empty String", e);
             return "";
         }
     }
-
 
 }
