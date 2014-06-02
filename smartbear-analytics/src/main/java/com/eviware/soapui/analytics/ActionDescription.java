@@ -15,17 +15,10 @@
 */
 package com.eviware.soapui.analytics;
 
-import org.apache.log4j.Logger;
-
-import javax.xml.bind.DatatypeConverter;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.security.MessageDigest;
 import java.util.Map;
 
 public final class ActionDescription {
 
-    private static final Logger log = Logger.getLogger(ActionDescription.class);
 
     private final String sessionId;
     private final AnalyticsManager.ActionId actionId;
@@ -78,18 +71,6 @@ public final class ActionDescription {
 
     public String toString() {
         return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
-    }
-
-    public static String getUserId() {
-        try {
-            NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
-            byte[] mac = network.getHardwareAddress();
-            MessageDigest hasher = MessageDigest.getInstance("SHA-1");
-            return DatatypeConverter.printHexBinary(hasher.digest(mac));
-        } catch (Exception e) {
-            log.warn("Error generating Analytics session ID - returning empty String", e);
-            return "";
-        }
     }
 
 }

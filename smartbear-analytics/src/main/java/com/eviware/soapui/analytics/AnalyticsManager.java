@@ -1,5 +1,11 @@
 package com.eviware.soapui.analytics;
 
+import org.apache.log4j.Logger;
+
+import javax.xml.bind.DatatypeConverter;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.security.MessageDigest;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +18,8 @@ import java.util.Map;
  */
 
 public class AnalyticsManager {
+    private static final Logger log = Logger.getLogger(AnalyticsManager.class);
+
 
     private static AnalyticsManager instance = null;
     List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
@@ -22,7 +30,7 @@ public class AnalyticsManager {
 
     AnalyticsManager() {
         String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-        sessionId = ActionDescription.getUserId() + ":" + startTime;
+        sessionId = makeUserId() + ":" + startTime;
     }
 
     public static AnalyticsManager getAnalytics() {
@@ -30,6 +38,18 @@ public class AnalyticsManager {
             instance = new AnalyticsManager();
         }
         return instance;
+    }
+
+    private static String makeUserId() {
+        try {
+            NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+            byte[] mac = network.getHardwareAddress();
+            MessageDigest hasher = MessageDigest.getInstance("SHA-1");
+            return DatatypeConverter.printHexBinary(hasher.digest(mac));
+        } catch (Exception e) {
+            log.warn("Error generating Analytics session ID - returning empty String", e);
+            return "";
+        }
     }
 
     public void disable() {
