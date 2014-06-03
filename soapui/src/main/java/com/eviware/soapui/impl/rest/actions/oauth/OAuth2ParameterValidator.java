@@ -42,7 +42,7 @@ public class OAuth2ParameterValidator {
 
     private static void validateUri(String uri, String uriName) {
         if (!StringUtils.hasContent(uri)) {
-            throw new InvalidOAuth2ParametersException(uri + " is not a valid " + uriName);
+            return;
         }
 
         try {
