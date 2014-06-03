@@ -91,6 +91,7 @@ public interface UISettings {
 
     public static final String SHOW_STARTUP_PAGE = UISettings.class.getSimpleName() + "@show_startup_page";
     public static final String DISABLE_TOOLTIPS = UISettings.class.getSimpleName() + "@disable_tooltips";
+    public static final String SHOULD_DISPLAY_ANALYTICS_DIALOG = UISettings.class.getSimpleName() + "@display_analytics_opt_dialog";
     public static final String DISABLE_ANALYTICS = UISettings.class.getSimpleName() + "@disable_analytics";
     public static final String ANALYTICS_OPT_OUT_VERSION = UISettings.class.getSimpleName() + "@analytics_opt_out_version";
 
