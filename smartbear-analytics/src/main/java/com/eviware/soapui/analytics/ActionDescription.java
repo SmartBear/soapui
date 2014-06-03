@@ -17,13 +17,7 @@ package com.eviware.soapui.analytics;
 
 import org.apache.log4j.Logger;
 
-import java.net.InetAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.Map;
-import java.util.zip.CRC32;
-import java.util.zip.Checksum;
 
 public final class ActionDescription {
 
@@ -81,20 +75,5 @@ public final class ActionDescription {
     public String toString() {
         return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
     }
-
-    public static final String getUserId() throws UnknownHostException, SocketException {
-        NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
-        byte[] mac = network.getHardwareAddress();
-        StringBuilder sb = new StringBuilder();
-        for (byte aMac : mac) {
-            sb.append(String.format("%x", aMac));
-        }
-        byte bytes[] = sb.toString().getBytes();
-        Checksum checksum = new CRC32();
-        checksum.update(bytes, 0, bytes.length);
-
-        return String.format("%d", checksum.getValue());
-    }
-
 
 }
