@@ -15,21 +15,22 @@ import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.support.action.SoapUIAction;
 
 public class WadlImportMethodFactory implements ImportMethodFactory {
+
     @Override
     public ImportMethod createNewImportMethod() {
-        return new WsdlImportMethodFactory.WsdlImportMethod();
+        return new WadlImportMethod();
     }
 
-    public static class WsdlImportMethod implements ImportMethod {
+    public static class WadlImportMethod implements ImportMethod {
 
         @Override
         public SoapUIAction<WorkspaceImpl> getImportAction() {
-            return new NewWsdlProjectAction();
+            return new NewWadlProjectAction();
         }
 
         @Override
-        public String toString() {
-            return "REST project from WADL definition";
+        public String getLabel() {
+            return "WADL definition (REST)";
         }
     }
 }
