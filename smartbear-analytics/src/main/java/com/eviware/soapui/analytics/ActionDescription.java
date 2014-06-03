@@ -17,9 +17,10 @@ package com.eviware.soapui.analytics;
 
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -79,19 +80,14 @@ public final class ActionDescription {
         return String.format("Acton: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
     }
 
-    public static final String getUserId() {
-        try {
-            NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
-            byte[] mac = network.getHardwareAddress();
-            StringBuilder sb = new StringBuilder();
-            for (byte aMac : mac) {
-                sb.append(String.format("%d", aMac));
-            }
-            return sb.toString();
-        } catch (IOException e) {
-            log.warn("Couldn't determine MAC address - returning empty String");
-            return "";
+    public static final String getUserId() throws UnknownHostException, SocketException {
+        NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+        byte[] mac = network.getHardwareAddress();
+        StringBuilder sb = new StringBuilder();
+        for (byte aMac : mac) {
+            sb.append(String.format("%d", aMac));
         }
+        return sb.toString();
     }
 
 
