@@ -169,6 +169,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
@@ -757,7 +758,15 @@ public class SoapUI {
         }
 
         @Override
-        public void windowClosed(WindowEvent e) {
+        public void windowClosed(WindowEvent event) {
+            threadPool.shutdown();
+            try {
+                threadPool.awaitTermination(1500, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                threadPool.shutdownNow();
+                // Preserve interrupt status
+                Thread.currentThread().interrupt();
+            }
             System.out.println("exiting..");
             SoapUI.getSoapUITimer().cancel();
             System.exit(0);
