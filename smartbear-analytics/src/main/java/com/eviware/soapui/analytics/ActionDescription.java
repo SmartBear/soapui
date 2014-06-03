@@ -15,10 +15,18 @@
 */
 package com.eviware.soapui.analytics;
 
+import org.apache.log4j.Logger;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.Map;
 
 public final class ActionDescription {
 
+    private static final Logger log = Logger.getLogger(ActionDescription.class);
 
     private final String sessionId;
     private final AnalyticsManager.ActionId actionId;
@@ -72,5 +80,16 @@ public final class ActionDescription {
     public String toString() {
         return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
     }
+
+    public static final String getUserId() throws UnknownHostException, SocketException {
+        NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+        byte[] mac = network.getHardwareAddress();
+        StringBuilder sb = new StringBuilder();
+        for (byte aMac : mac) {
+            sb.append(String.format("%d", aMac));
+        }
+        return sb.toString();
+    }
+
 
 }
