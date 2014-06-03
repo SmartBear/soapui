@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 
 /**
  * Created by Dmitry N. Aleshin on 5/15/2014.
@@ -19,14 +20,12 @@ import java.util.Map;
 
 public class AnalyticsManager {
     private static final Logger log = Logger.getLogger(AnalyticsManager.class);
-
-
     private static AnalyticsManager instance = null;
-    List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
 
+    private List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
     private String sessionId;
     private List<AnalyticsProviderFactory> factories = new ArrayList<AnalyticsProviderFactory>();
-    private boolean disabled;
+    private Executor executorService;
 
     AnalyticsManager() {
         String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -52,34 +51,35 @@ public class AnalyticsManager {
         }
     }
 
-    public void disable() {
-        disabled = true;
+    public void setExecutorService(Executor executorService) {
+        this.executorService = executorService;
     }
 
     public void trackAction(String action, Map<String, String> params) {
         trackAction(ActionId.ACTION, action, params);
     }
 
-    public void trackError(Throwable error) {
-        if (disabled) {
+    public void trackError(final Throwable error) {
+        if (providers.isEmpty()) {
             return;
         }
-        for (AnalyticsProvider provider : providers) {
-            provider.trackError(error);
-        }
+        runInBackground(new Runnable() {
+            public void run() {
+                for (AnalyticsProvider provider : providers) {
+                    provider.trackError(error);
+                }
+            }
+        });
 
     }
 
     public boolean trackAction(String actionName) {
-        if (disabled) {
-            return false;
-        }
         return this.trackAction(ActionId.ACTION, actionName, null);
     }
 
     // Single param action
     public boolean trackAction(String actionName, String paramName, String value) {
-        if (disabled) {
+        if (providers.isEmpty()) {
             return false;
         }
         Map<String, String> params = new HashMap<String, String>();
@@ -123,7 +123,6 @@ public class AnalyticsManager {
         return false;
     }
 
-
     private boolean trackAction(ActionId category, String actionName, Map<String, String> params) {
 
         if (providers.isEmpty()) {
@@ -132,15 +131,23 @@ public class AnalyticsManager {
 
         final ActionDescription description = new ActionDescription(sessionId, category, actionName, params);
 
-        new Thread(new Runnable() {
+        runInBackground(new Runnable() {
             public void run() {
                 for (AnalyticsProvider provider : providers) {
                     provider.trackAction(description);
                 }
             }
-        }).start();
+        });
 
         return providers.size() > 0;
+    }
+
+    private void runInBackground(Runnable runnable) {
+        if (executorService != null) {
+            executorService.execute(runnable);
+        } else {
+            new Thread(runnable).start();
+        }
     }
 
     public enum ActionId {SESSION_START, SESSION_STOP, ACTION}
