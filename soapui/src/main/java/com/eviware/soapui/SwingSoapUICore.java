@@ -17,6 +17,12 @@
 package com.eviware.soapui;
 
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
+import com.eviware.soapui.impl.actions.DiscoveryMethodFactory;
+import com.eviware.soapui.impl.actions.ImportMethodFactory;
+import com.eviware.soapui.impl.actions.InternalBrowserDiscoveryFactory;
+import com.eviware.soapui.impl.actions.SoapUIProxyDiscoveryFactory;
+import com.eviware.soapui.impl.actions.WadlImportMethodFactory;
+import com.eviware.soapui.impl.actions.WsdlImportMethodFactory;
 import com.eviware.soapui.impl.rest.panels.request.inspectors.representations.RestRepresentationsInspectorFactory;
 import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaInspectorFactory;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.SwingToolHost;
@@ -88,6 +94,10 @@ public class SwingSoapUICore extends DefaultSoapUICore {
         for (InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories(InspectorFactory.class)) {
             inspectorRegistry.addFactory(factory);
         }
+        getFactoryRegistry().addFactory(ImportMethodFactory.class, new WsdlImportMethodFactory());
+        getFactoryRegistry().addFactory(ImportMethodFactory.class, new WadlImportMethodFactory());
+        getFactoryRegistry().addFactory(DiscoveryMethodFactory.class, new InternalBrowserDiscoveryFactory());
+        getFactoryRegistry().addFactory(DiscoveryMethodFactory.class, new SoapUIProxyDiscoveryFactory());
 
         String actionsDir = System.getProperty("soapui.ext.actions");
         addExternalActions(actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar
