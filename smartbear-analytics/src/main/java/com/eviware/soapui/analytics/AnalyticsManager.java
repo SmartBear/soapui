@@ -21,6 +21,7 @@ import java.util.concurrent.Executor;
 public class AnalyticsManager {
     private static final Logger log = Logger.getLogger(AnalyticsManager.class);
 
+
     private static AnalyticsManager instance = null;
     
     List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
@@ -28,7 +29,6 @@ public class AnalyticsManager {
     private String sessionId;
     private List<AnalyticsProviderFactory> factories = new ArrayList<AnalyticsProviderFactory>();
     private Executor executorService;
-    private static boolean disabled;
 
     AnalyticsManager() {
         String startTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
@@ -55,34 +55,35 @@ public class AnalyticsManager {
     }
 
 
-    public static void disable() {
-        disabled = true;
+    public void setExecutorService(Executor executorService) {
+        this.executorService = executorService;
     }
 
     public void trackAction(String action, Map<String, String> params) {
         trackAction(ActionId.ACTION, action, params);
     }
 
-    public void trackError(Throwable error) {
-        if (disabled) {
+    public void trackError(final Throwable error) {
+        if (providers.isEmpty()) {
             return;
         }
-        for (AnalyticsProvider provider : providers) {
-            provider.trackError(error);
-        }
+        runInBackground(new Runnable() {
+            public void run() {
+                for (AnalyticsProvider provider : providers) {
+                    provider.trackError(error);
+                }
+            }
+        });
 
     }
 
     public boolean trackAction(String actionName) {
-        if (disabled) {
-            return false;
-        }
         return this.trackAction(ActionId.ACTION, actionName, null);
     }
 
     // Single param action
     public boolean trackAction(String actionName, String paramName, String value) {
-        if (disabled) {
+        if (providers.isEmpty()) {
             return false;
         }
         Map<String, String> params = new HashMap<String, String>();
@@ -126,13 +127,7 @@ public class AnalyticsManager {
         return false;
     }
 
-
     private boolean trackAction(ActionId actionId, String actionName, Map<String, String> params) {
-
-        if (disabled) {
-            return false;
-        }
-
         if (providers.isEmpty()) {
             return false;
         }
