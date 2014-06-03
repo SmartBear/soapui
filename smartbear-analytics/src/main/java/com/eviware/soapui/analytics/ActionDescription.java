@@ -15,10 +15,18 @@
 */
 package com.eviware.soapui.analytics;
 
+import org.apache.log4j.Logger;
+
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Iterator;
 import java.util.Map;
 
 public final class ActionDescription {
 
+    private static final Logger log = Logger.getLogger(ActionDescription.class);
 
     private final String sessionId;
     private final AnalyticsManager.ActionId actionId;
@@ -56,11 +64,10 @@ public final class ActionDescription {
         if (params != null) {
             StringBuilder sb = new StringBuilder();
 
-            for (Map.Entry<String, String> entry : params.entrySet()) {
-                if (sb.length() > 0) {
-                    sb.append(", ");
-                }
-                sb.append(entry.getKey()).append(": ").append(entry.getValue());
+            Iterator it = params.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pairs = (Map.Entry)it.next();
+                sb.append(String.format("%s%s: %s", (sb.toString().equals("") ? "" : ", "), pairs.getKey(), pairs.getValue()));
             }
 
             return sb.toString();
@@ -70,7 +77,18 @@ public final class ActionDescription {
     }
 
     public String toString() {
-        return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
+        return String.format("Acton: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
     }
+
+    public static final String getUserId() throws UnknownHostException, SocketException {
+        NetworkInterface network = NetworkInterface.getByInetAddress(InetAddress.getLocalHost());
+        byte[] mac = network.getHardwareAddress();
+        StringBuilder sb = new StringBuilder();
+        for (byte aMac : mac) {
+            sb.append(String.format("%d", aMac));
+        }
+        return sb.toString();
+    }
+
 
 }
