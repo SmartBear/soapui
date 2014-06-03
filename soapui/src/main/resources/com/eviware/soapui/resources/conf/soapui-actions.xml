@@ -29,7 +29,7 @@
     <tns:action id="TcpMonAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.tcpmon.TcpMonAction"/>
 
     <!-- Workspace Actions -->
-    <tns:action id="NewWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWsdlProjectAction"/>
+    <tns:action id="NewWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewProjectWizardAction"/>
     <tns:action id="NewRestProjectAction" actionClass="com.eviware.soapui.impl.actions.NewRestProjectAction"/>
     <tns:action id="NewWadlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWadlProjectAction"/>
     <tns:action id="NewGenericProjectAction" actionClass="com.eviware.soapui.impl.actions.NewGenericProjectAction"/>
