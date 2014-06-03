@@ -28,8 +28,8 @@ public class WsdlImportMethodFactory implements ImportMethodFactory {
         }
 
         @Override
-        public String toString() {
-            return "SOAP project from WSDL definition";
+        public String getLabel() {
+            return "WSDL definition (SOAP)";
         }
     }
 }

@@ -38,7 +38,7 @@ public class SoapUIProxyDiscoveryFactory implements DiscoveryMethodFactory {
         }
 
         @Override
-        public String toString() {
+        public String getLabel() {
             return "SoapUI internal proxy";
         }
     }

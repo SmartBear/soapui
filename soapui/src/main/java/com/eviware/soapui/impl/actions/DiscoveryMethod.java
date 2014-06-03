@@ -18,10 +18,8 @@ import java.util.List;
 /**
  * Represents a way of creating a SoapUI project from discovered resources, e.g. by recording traffic or
  * scanning through a log file.
- * <p/>
- * The {@code toString()} method should return a String suitable as a JComboBox option.
  */
-public interface DiscoveryMethod {
+public interface DiscoveryMethod extends Labeled {
 
     boolean isSynchronous();
 

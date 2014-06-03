@@ -16,10 +16,8 @@ import com.eviware.soapui.support.action.SoapUIAction;
 
 /**
  * Represents a way of creating a SoapUI project from a definition, such as WSDL, WADL or Swagger.
- * <p/>
- * The {@code toString()} method should return a String suitable as a JComboBox option.
  */
-public interface ImportMethod {
+public interface ImportMethod extends Labeled {
 
     SoapUIAction<WorkspaceImpl> getImportAction();
 }
