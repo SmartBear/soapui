@@ -64,10 +64,11 @@ public final class ActionDescription {
         if (params != null) {
             StringBuilder sb = new StringBuilder();
 
-            Iterator it = params.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry pairs = (Map.Entry)it.next();
-                sb.append(String.format("%s%s: %s", (sb.toString().equals("") ? "" : ", "), pairs.getKey(), pairs.getValue()));
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                if (sb.length() > 0) {
+                    sb.append(", ");
+                }
+                sb.append(entry.getKey()).append(": ").append(entry.getValue());
             }
 
             return sb.toString();
@@ -77,7 +78,7 @@ public final class ActionDescription {
     }
 
     public String toString() {
-        return String.format("Acton: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
+        return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
     }
 
     public static final String getUserId() throws UnknownHostException, SocketException {
