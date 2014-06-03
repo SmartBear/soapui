@@ -128,7 +128,7 @@ public class AnalyticsManager {
             return false;
         }
 
-        final ActionDescription description = new ActionDescription(sessionId, category, actionName, params);
+        final ActionDescription description = new ActionDescription(sessionId, actionId, actionName, params);
 
         runInBackground(new Runnable() {
             public void run() {
