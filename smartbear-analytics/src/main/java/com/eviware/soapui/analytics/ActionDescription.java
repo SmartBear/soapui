@@ -21,8 +21,9 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.zip.CRC32;
+import java.util.zip.Checksum;
 
 public final class ActionDescription {
 
@@ -85,9 +86,13 @@ public final class ActionDescription {
         byte[] mac = network.getHardwareAddress();
         StringBuilder sb = new StringBuilder();
         for (byte aMac : mac) {
-            sb.append(String.format("%d", aMac));
+            sb.append(String.format("%x", aMac));
         }
-        return sb.toString();
+        byte bytes[] = sb.toString().getBytes();
+        Checksum checksum = new CRC32();
+        checksum.update(bytes, 0, bytes.length);
+
+        return String.format("%d", checksum.getValue());
     }
 
 
