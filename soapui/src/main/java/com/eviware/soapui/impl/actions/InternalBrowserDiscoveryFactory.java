@@ -38,8 +38,8 @@ public class InternalBrowserDiscoveryFactory implements DiscoveryMethodFactory {
         }
 
         @Override
-        public String toString() {
-            return "Discover REST resources";
+        public String getLabel() {
+            return "Internal browser";
         }
     }
 }

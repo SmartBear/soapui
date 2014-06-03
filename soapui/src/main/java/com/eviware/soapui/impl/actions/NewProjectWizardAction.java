@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.actions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
@@ -86,15 +87,15 @@ public class NewProjectWizardAction extends AbstractSoapUIAction<WorkspaceImpl> 
         });
         buttonPanel.add(cancelButton);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
-        dialog.setBounds(500, 500, 400, 300);
+        dialog.setBounds(500, 500, 500, 300);
         dialog.setVisible(true);
     }
 
     private static class CreationTypeSelectionPanel extends JPanel {
 
         private ButtonGroup radioButtons = new ButtonGroup();
-        private JComboBox<ImportMethod> importMethodsComboBox;
-        private JComboBox<DiscoveryMethod> discoveryMethodsComboBox;
+        private JComboBox importMethodsComboBox;
+        private JComboBox discoveryMethodsComboBox;
         private JRadioButton emptyProjectRadio;
         private JRadioButton importProjectRadio;
         private JRadioButton discoverResourcesRadio;
@@ -105,14 +106,14 @@ public class NewProjectWizardAction extends AbstractSoapUIAction<WorkspaceImpl> 
             initializeRadioButtons();
             this.add(emptyProjectRadio);
             JPanel importPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-            ImportMethod[] importMethods = getAllImportMethods();
-            importMethodsComboBox = new JComboBox<ImportMethod>(importMethods);
+            LabeledItem[] importMethods = getAllImportMethods();
+            importMethodsComboBox = new JComboBox(importMethods);
             importPanel.add(importProjectRadio);
             importPanel.add(importMethodsComboBox);
             this.add(importPanel);
             JPanel discoveryPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-            DiscoveryMethod[] discoveryMethods = getAllDiscoveryMethods();
-            discoveryMethodsComboBox = new JComboBox<DiscoveryMethod>(discoveryMethods);
+            LabeledItem[] discoveryMethods = getAllDiscoveryMethods();
+            discoveryMethodsComboBox = new JComboBox(discoveryMethods);
             discoveryPanel.add(discoverResourcesRadio);
             discoveryPanel.add(discoveryMethodsComboBox);
             this.add(discoveryPanel);
@@ -123,26 +124,30 @@ public class NewProjectWizardAction extends AbstractSoapUIAction<WorkspaceImpl> 
             if (emptyProjectRadio.isSelected()) {
                 return new NewEmptyProjectAction();
             } else if (importProjectRadio.isSelected()) {
-                return new ImportAction((ImportMethod) importMethodsComboBox.getSelectedItem());
+                LabeledItem selectedItem = (LabeledItem) importMethodsComboBox.getSelectedItem();
+                ImportMethod selectedMethod = (ImportMethod) selectedItem.getValue();
+                return new ImportAction(selectedMethod);
             } else {
-                return new DiscoveryAction((DiscoveryMethod) discoveryMethodsComboBox.getSelectedItem());
+                LabeledItem selectedItem = (LabeledItem) discoveryMethodsComboBox.getSelectedItem();
+                DiscoveryMethod selectedMethod = (DiscoveryMethod) selectedItem.getValue();
+                return new DiscoveryAction(selectedMethod);
             }
         }
 
-        private DiscoveryMethod[] getAllDiscoveryMethods() {
+        private LabeledItem[] getAllDiscoveryMethods() {
             List<DiscoveryMethodFactory> factories = SoapUI.getSoapUICore().getFactoryRegistry().getFactories(DiscoveryMethodFactory.class);
-            DiscoveryMethod[] returnValue = new DiscoveryMethod[factories.size()];
+            LabeledItem[] returnValue = new LabeledItem[factories.size()];
             for (int i = 0; i < factories.size(); i++) {
-                returnValue[i] = factories.get(i).createNewDiscoveryMethod();
+                returnValue[i] = new LabeledItem(factories.get(i).createNewDiscoveryMethod());
             }
             return returnValue;
         }
 
-        private ImportMethod[] getAllImportMethods() {
+        private LabeledItem[] getAllImportMethods() {
             List<ImportMethodFactory> factories = SoapUI.getSoapUICore().getFactoryRegistry().getFactories(ImportMethodFactory.class);
-            ImportMethod[] returnValue = new ImportMethod[factories.size()];
+            LabeledItem[] returnValue = new LabeledItem[factories.size()];
             for (int i = 0; i < factories.size(); i++) {
-                returnValue[i] = factories.get(i).createNewImportMethod();
+                returnValue[i] = new LabeledItem(factories.get(i).createNewImportMethod());
             }
             return returnValue;
         }
@@ -155,8 +160,8 @@ public class NewProjectWizardAction extends AbstractSoapUIAction<WorkspaceImpl> 
                 }
             };
             emptyProjectRadio = makeRadioButton("Create empty project");
-            importProjectRadio = makeRadioButton("Import definition");
-            discoverResourcesRadio = makeRadioButton("Discover resources");
+            importProjectRadio = makeRadioButton("Create project from ");
+            discoverResourcesRadio = makeRadioButton("Discover resources using ");
             emptyProjectRadio.setSelected(true);
         }
 
@@ -180,7 +185,7 @@ public class NewProjectWizardAction extends AbstractSoapUIAction<WorkspaceImpl> 
             @Override
             public void perform(WorkspaceImpl target, Object param) {
                 try {
-                    ((WorkspaceImpl) target).createProject("Empty project");
+                    target.createProject(ModelItemNamer.createName("Project", target.getProjectList()), null);
                 } catch (SoapUIException e) {
                     UISupport.showErrorMessage(e);
                 }
@@ -212,7 +217,8 @@ public class NewProjectWizardAction extends AbstractSoapUIAction<WorkspaceImpl> 
             @Override
             public void perform(WorkspaceImpl target, Object param) {
                 if (discoveryMethod.isSynchronous()) {
-                    discoveryMethod.discoverResourcesSynchronously(target);
+                    List<Object> discoveredRequests = discoveryMethod.discoverResourcesSynchronously(target);
+                    // TODO: when this is moved to Pro, use the ModelBuilder class to build a new project in the workspace
                 } else {
                     discoveryMethod.discoverResources(target);
                 }
