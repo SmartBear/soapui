@@ -52,11 +52,10 @@ public class CreateDataDrivenTestProjectAction extends AbstractSoapUIAction<Work
     }
 
     private void showPostCreationInfoMessage() {
-        String message = String.format("A new TestCase has been created containing the following TestSteps:%n" +
-                "- DataSource (pre-filled with data)%n" +
-                "- REST request (using the DataSource)%n" +
-                "- DataSource Loop%n" +
-                "You can now run and/or modify the project.");
+        String message = String.format("A new TestCase with the following TestSteps has been created:%n" +
+                "- DataSource (contains the data)%n" +
+                "- REST request (uses the DataSource)%n" +
+                "- DataSource Loop (for iteration)");
 
         UISupport.showInfoMessage(message, "Data driven project created");
     }
