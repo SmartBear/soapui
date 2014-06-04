@@ -77,7 +77,7 @@ public final class ActionDescription {
     }
 
     public String toString() {
-        return String.format("Action: %s, Additional data: %s", getActionIdAsString(), getAdditionalData());
+        return String.format("Action: %s, Additional data: %s, params: [%s]", getActionIdAsString(), getAdditionalData(), getParamsAsString());
     }
 
     public static final String getUserId() throws UnknownHostException, SocketException {
