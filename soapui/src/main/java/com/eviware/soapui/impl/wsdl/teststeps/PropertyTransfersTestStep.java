@@ -16,13 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.ImageIcon;
-
 import com.eviware.soapui.config.PropertyTransferConfig;
 import com.eviware.soapui.config.PropertyTransfersStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -42,6 +35,12 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
+import javax.swing.ImageIcon;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * WsdlTestStep for transferring values from a WsdlTestRequest response to a
  * WsdlTestRequest request using XPath expressions
@@ -50,7 +49,7 @@ import com.eviware.soapui.support.resolver.ResolveContext;
  */
 
 public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implements XPathReferenceContainer {
-    public static final String TRANSFERS = PropertyTransfersTestStep.class.getName()+"@transfers";
+    public static final String TRANSFERS = PropertyTransfersTestStep.class.getName() + "@transfers";
     private PropertyTransfersStepConfig transferStepConfig;
     private boolean canceled;
     private List<PropertyTransfer> transfers = new ArrayList<PropertyTransfer>();
@@ -164,7 +163,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
     }
 
     public int getTransferCount() {
-        return transferStepConfig.sizeOfTransfersArray();
+        return transfers.size();
     }
 
     public PropertyTransfer getTransferAt(int index) {
