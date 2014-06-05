@@ -21,13 +21,16 @@ public enum PathLanguage {
     JSONPATH("JSONPath");
 
     public static PathLanguage forContent(String content) {
-        if (seemsToBeJson(content)) {
-            return PathLanguage.JSONPATH;
-        } else if (seemsToBeXml(content)) {
-            return PathLanguage.XPATH;
-        } else {
-            return null;
+
+        if (content != null) {
+            if (seemsToBeJson(content)) {
+                return PathLanguage.JSONPATH;
+            } else if (seemsToBeXml(content)) {
+                return PathLanguage.XPATH;
+            }
         }
+
+        return null;
     }
 
     private String displayName;

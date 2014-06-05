@@ -515,8 +515,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
                 return;
             }
 
-            // XmlObject xml = XmlObject.Factory.parse( assertableContent );
-            XmlObject xml = XmlUtils.createXmlObject(assertableContent);
+
 
             String txt = pathArea == null || !pathArea.isVisible() ? getPath() : pathArea.getSelectedText();
             if (txt == null) {
@@ -531,6 +530,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
                 contentArea.setText("");
             }
 
+            // XmlObject xml = XmlObject.Factory.parse( assertableContent );
+            XmlObject xml = XmlUtils.createXmlObject(assertableContent);
             cursor = xml.newCursor();
             cursor.selectPath(expandedPath);
             if (!cursor.toNextSelection()) {
@@ -556,7 +557,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         }
     }
 
-    private void setExpectedContent(String expectedContent, boolean save) {
+    protected void setExpectedContent(String expectedContent, boolean save) {
         this.expectedContent = expectedContent;
         if (save) {
             setConfiguration(createConfiguration());
@@ -639,7 +640,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
         public void actionPerformed(ActionEvent arg0) {
             try {
-                String content = getAssertable().getAssertableContent();
+                String content = getAssertable().getAssertableContentAsXml();
                 if (content != null && content.trim().length() > 0) {
                     pathArea.setText(XmlUtils.declareXPathNamespaces(content) + pathArea.getText());
                 } else if (UISupport.confirm("Declare namespaces from schema instead?", "Missing Response")) {
@@ -671,7 +672,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
             setIgnoreComments(ignoreCommentsCheckBox.isSelected());
 
             try {
-                String msg = assertContent(getAssertable().getAssertableContent(), new WsdlTestRunContext(getAssertable()
+                String msg = assertContent(getAssertable().getAssertableContentAsXml(), new WsdlTestRunContext(getAssertable()
                         .getTestStep()), "Response");
                 UISupport.showInfoMessage(msg, "Success");
             } catch (AssertionException e) {
