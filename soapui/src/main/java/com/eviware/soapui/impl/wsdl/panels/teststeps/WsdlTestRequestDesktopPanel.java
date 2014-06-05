@@ -183,7 +183,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
     }
 
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction("RunTestStep", "StepType", "WDSL");
+        Analytics.trackAction("RunTestStep", "StepType", "SOAP");
 
         return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
     }
