@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.MockServiceDocumentConfig;
@@ -423,7 +424,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
      *
      * @param soapuiProject
      * @return 0 - not encrypted, 1 - successfull decryption , -1 error while
-     *         decrypting, bad password, no password.
+     * decrypting, bad password, no password.
      * @throws IOException
      * @throws GeneralSecurityException
      * @author robert nemet
@@ -1140,9 +1141,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     public WsdlMockService addNewMockService(String name) {
         WsdlMockService mockService = new WsdlMockService(this, getConfig().addNewMockService());
+
         mockService.setName(name);
         addWsdlMockService(mockService);
         fireMockServiceAdded(mockService);
+
+        Analytics.trackAction("CreateSOAPService");
 
         return mockService;
     }
@@ -1156,6 +1160,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         mockService.setName(name);
         addRestMockService(mockService);
         fireMockServiceAdded(mockService);
+
+        Analytics.trackAction("CreateRESTService");
 
         return mockService;
     }
