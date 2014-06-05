@@ -17,10 +17,15 @@
 package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockDispatcher;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunListener;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -185,7 +190,6 @@ public class WsdlMockRunner implements MockRunner {
         return getMockService().getPath() + "?WSDL";
     }
 
-
     public void start() throws Exception {
         if (running) {
             return;
@@ -202,6 +206,8 @@ public class WsdlMockRunner implements MockRunner {
         for (MockRunListener listener : mockRunListeners) {
             listener.onMockRunnerStart(this);
         }
+
+        Analytics.trackAction("Start" + getMockService().getStringID() + "Service");
     }
 
     public void setLogEnabled(boolean logEnabled) {
