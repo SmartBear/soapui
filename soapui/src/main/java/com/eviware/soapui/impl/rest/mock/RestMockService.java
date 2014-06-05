@@ -15,7 +15,6 @@
 */
 package com.eviware.soapui.impl.rest.mock;
 
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.RESTMockActionConfig;
 import com.eviware.soapui.config.RESTMockServiceConfig;
 import com.eviware.soapui.impl.rest.RestMethod;
@@ -38,6 +37,11 @@ import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 public class RestMockService extends AbstractMockService<RestMockAction, RESTMockServiceConfig> {
 
     public final static String ICON_NAME = "/restMockService.gif";
+    public static final String STRING_ID = "REST";
+
+    public String getStringID() {
+        return STRING_ID;
+    }
 
     public RestMockService(Project project, RESTMockServiceConfig config) {
         super(config, project, ICON_NAME);

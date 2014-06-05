@@ -18,12 +18,9 @@ package com.eviware.soapui.model.mock;
 
 import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
-import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunner;
 import com.eviware.soapui.model.Releasable;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.support.AnimatableItem;
 
 import java.util.List;
@@ -65,4 +62,5 @@ public interface MockService extends TestModelItem, Releasable, AnimatableItem, 
 
     public void fireMockResponseRemoved(MockResponse mockResponse);
 
+    public String getStringID();
 }
