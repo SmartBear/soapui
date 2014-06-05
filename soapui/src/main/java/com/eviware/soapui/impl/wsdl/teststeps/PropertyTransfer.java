@@ -178,7 +178,8 @@ public class PropertyTransfer implements PropertyChangeNotifier {
     }
 
     public void setSourcePathLanguage(PathLanguage language) {
-        getConfig().setType(PropertyTransferTypesConfig.Enum.forInt(language.ordinal() + 1));
+        PropertyTransferTypesConfig.Enum languageEnum = language == null ? null : PropertyTransferTypesConfig.Enum.forInt(language.ordinal() + 1);
+        getConfig().setType(languageEnum);
     }
 
     public PathLanguage getSourcePathLanguage() {
