@@ -21,7 +21,6 @@ public enum PathLanguage {
     JSONPATH("JSONPath");
 
     public static PathLanguage forContent(String content) {
-
         if (content != null) {
             if (seemsToBeJson(content)) {
                 return PathLanguage.JSONPATH;

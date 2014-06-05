@@ -48,6 +48,9 @@ public class JsonUtil {
     }
 
     public static boolean seemsToBeJson(String content) {
+        if (!StringUtils.hasContent(content)) {
+            return false;
+        }
         try {
             new JsonSlurper().parseText(content);
             return true;

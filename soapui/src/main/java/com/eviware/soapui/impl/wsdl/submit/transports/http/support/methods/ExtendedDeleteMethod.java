@@ -25,7 +25,6 @@ import org.apache.commons.httpclient.util.EncodingUtil;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpDelete;
 
 import javax.net.ssl.SSLSession;
 import java.io.IOException;
@@ -39,10 +38,15 @@ import java.net.URL;
  * @author Ole.Matzura
  */
 
-public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHttpMethod {
+public final class ExtendedDeleteMethod extends HttpDeleteWithBody implements ExtendedHttpMethod {
     private HttpMethodSupport httpMethodSupport;
 
     public ExtendedDeleteMethod() {
+        httpMethodSupport = new HttpMethodSupport();
+    }
+
+    public ExtendedDeleteMethod(String url) {
+        super(url);
         httpMethodSupport = new HttpMethodSupport();
     }
 
@@ -64,7 +68,7 @@ public final class ExtendedDeleteMethod extends HttpDelete implements ExtendedHt
     }
 
     public HttpEntity getRequestEntity() {
-        return null;
+        return super.getEntity();
     }
 
     public long getMaxSize() {

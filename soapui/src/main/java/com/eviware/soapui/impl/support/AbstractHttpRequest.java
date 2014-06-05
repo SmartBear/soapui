@@ -68,6 +68,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
         Request, AbstractHttpRequestInterface<T>, JMSHeaderContainer, JMSPropertyContainer {
     public static final String BASIC_AUTH_PROFILE = "Basic";
     public static final String SELECTED_AUTH_PROFILE_PROPERTY_NAME = "selectedAuthProfile";
+    public static final String CR_ESCAPE_SEQUENCE = "\\\\_r";
 
     private Set<SubmitListener> submitListeners = new HashSet<SubmitListener>();
     private String requestContent;
@@ -318,7 +319,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
             requestContent = CompressedStringSupport.getString(getConfig().getRequest());
         }
 
-        return requestContent;
+        return requestContent = unescapeCarriageReturnsIn(requestContent);
     }
 
     public void setRequestContent(String request) {
@@ -329,8 +330,26 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
             return;
         }
 
-        requestContent = request;
+        requestContent = escapeCarriageReturnsIn(request);
         notifyPropertyChanged(REQUEST_PROPERTY, old, request);
+    }
+
+    private String unescapeCarriageReturnsIn(String request) {
+        if (request == null) {
+            return null;
+        }
+        String modifiedRequest = request.replaceAll("\\\\r", "\r");
+        modifiedRequest = modifiedRequest.replaceAll(CR_ESCAPE_SEQUENCE, "\\\\r");
+        return modifiedRequest;
+    }
+
+    private String escapeCarriageReturnsIn(String request) {
+        if (request == null) {
+            return null;
+        }
+        String modifiedRequest = request.replaceAll("\\\\r", CR_ESCAPE_SEQUENCE);
+        modifiedRequest = modifiedRequest.replaceAll("\r", "\\\\r");
+        return modifiedRequest;
     }
 
     public boolean isPrettyPrint() {

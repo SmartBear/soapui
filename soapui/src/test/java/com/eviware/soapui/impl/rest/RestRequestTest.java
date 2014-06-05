@@ -21,14 +21,15 @@ import com.eviware.soapui.config.StringListConfig;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamProperty;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.utils.ModelItemFactory;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+
 import static com.eviware.soapui.utils.ModelItemMatchers.hasARestParameterNamed;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 
@@ -142,8 +143,25 @@ public class RestRequestTest {
         assertThat(request.getSelectedAuthProfile(), is(CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString()));
     }
 
+    @Test
+    public void savesCarriageReturnInBodyCorrectly() throws Exception {
+        WsdlProject project = ModelItemFactory.makeWsdlProject();
+        RestService restService = (RestService) project.addNewInterface("RestService", RestServiceFactory.REST_TYPE);
+        RestResource restResource = restService.addNewResource("Root", "/resource");
+        RestMethod restMethod = restResource.addNewMethod("POST");
+        RestRequest restRequest = restMethod.addNewRequest("TestRequest");
+        String originalContent = "First line\r\nSecond \\rline";
+        restRequest.setRequestContent(originalContent);
+        File saveFile = File.createTempFile("soapui", "xml");
+        saveFile.deleteOnExit();
+        project.saveIn(saveFile);
+        WsdlProject loadedProject = new WsdlProject(saveFile.getAbsolutePath());
+        loadedProject.loadProject(saveFile.toURL());
+        RestRequest loadedRequest = (RestRequest) loadedProject.getInterfaceAt(0).getOperationAt(0).getRequestAt(0);
+        assertThat(loadedRequest.getRequestContent(), is(originalContent));
+    }
 
-	/* Backward compatibility tests end */
+    /* Backward compatibility tests end */
 
     private RestParamProperty addRequestParameter(String name, String value) {
         RestParamProperty parameter = request.getParams().addProperty(name);

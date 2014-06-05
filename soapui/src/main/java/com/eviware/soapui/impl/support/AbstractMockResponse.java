@@ -312,6 +312,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             responseContent = XmlUtils.stripWhitespaces(responseContent);
         }
 
+        MockRequest request = result.getMockRequest();
+        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
+
         ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
         // non-multipart request?
@@ -379,8 +382,6 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             result.writeRawResponseData(data);
         }
 
-        MockRequest request = result.getMockRequest();
-        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
 
         return responseContent;
     }

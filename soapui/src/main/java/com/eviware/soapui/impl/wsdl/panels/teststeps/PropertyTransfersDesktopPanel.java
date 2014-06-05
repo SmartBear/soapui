@@ -997,8 +997,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             }
 
             transferStep.addTransfer(name);
-
-            listModel.addElement(name);
             transferList.setSelectedIndex(listModel.getSize() - 1);
         }
     }

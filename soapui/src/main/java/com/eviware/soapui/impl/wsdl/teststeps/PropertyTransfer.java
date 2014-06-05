@@ -65,6 +65,8 @@ import java.util.List;
  */
 
 public class PropertyTransfer implements PropertyChangeNotifier {
+
+
     private final static Logger log = Logger.getLogger(PropertyTransfer.class);
 
     public final static String SOURCE_PATH_PROPERTY = PropertyTransfer.class.getName() + "@sourcePath";
@@ -176,7 +178,8 @@ public class PropertyTransfer implements PropertyChangeNotifier {
     }
 
     public void setSourcePathLanguage(PathLanguage language) {
-        getConfig().setType(PropertyTransferTypesConfig.Enum.forInt(language.ordinal() + 1));
+        PropertyTransferTypesConfig.Enum languageEnum = language == null ? null : PropertyTransferTypesConfig.Enum.forInt(language.ordinal() + 1);
+        getConfig().setType(languageEnum);
     }
 
     public PathLanguage getSourcePathLanguage() {
@@ -584,11 +587,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         }
 
         return value;
-    }
-
-
-    private boolean seemsToBeJsonPath(String sourcePath) {
-        return sourcePath != null && sourcePath.trim().startsWith("$");
     }
 
     /**
