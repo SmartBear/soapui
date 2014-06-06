@@ -38,8 +38,6 @@ public class NewRequestAction extends AbstractSoapUIAction<WsdlOperation> {
 
     public void perform(WsdlOperation operation, Object param) {
 
-        Analytics.trackAction("CreateRequest", "RequestType", operation.getType().toString());
-
         String name = UISupport.prompt("Specify name of request", "New request",
                 "Request " + (operation.getRequestCount() + 1));
         if (name == null) {
@@ -59,5 +57,7 @@ public class NewRequestAction extends AbstractSoapUIAction<WsdlOperation> {
         }
 
         UISupport.showDesktopPanel(newRequest);
+
+        Analytics.trackAction("CreateRequest", "RequestType", "SOAP");
     }
 }
