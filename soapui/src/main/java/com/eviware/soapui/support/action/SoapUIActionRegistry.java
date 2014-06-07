@@ -24,8 +24,6 @@ import com.eviware.soapui.config.SoapUIActionMappingConfig;
 import com.eviware.soapui.config.SoapUIActionsConfig;
 import com.eviware.soapui.config.SoapuiActionsDocumentConfig;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.plugins.ActionConfiguration;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 import com.eviware.soapui.support.action.support.DefaultActionMapping;
 import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
@@ -52,25 +50,9 @@ public class SoapUIActionRegistry {
 
     public void addAction(String soapuiActionID, SoapUIAction action) {
         actions.put(soapuiActionID, action);
-        Class<? extends SoapUIAction> actionClass = action.getClass();
-        ActionConfiguration configuration = actionClass.getAnnotation(ActionConfiguration.class);
-        if (configuration != null) {
-            SoapUIActionGroup targetGroup = findGroupWithClass(configuration.actionGroup());
-            DefaultActionMapping mapping = new DefaultActionMapping(action.getId(), configuration.keyStroke(),
-                    configuration.iconPath(), configuration.defaultAction(), null);
-
-            mapping.setDescription(configuration.description());
-            int insertIndex = -1;
-            if (StringUtils.hasContent(configuration.beforeAction())) {
-                insertIndex = targetGroup.getMappingIndex(configuration.beforeAction());
-            } else if (StringUtils.hasContent(configuration.afterAction())) {
-                insertIndex = targetGroup.getMappingIndex(configuration.afterAction()) + 1;
-            }
-            targetGroup.addMapping(action.getId(), insertIndex, mapping);
-        }
     }
 
-    private SoapUIActionGroup findGroupWithClass(Class<? extends SoapUIActionGroup> aClass) {
+    public SoapUIActionGroup findGroupWithClass(Class<? extends SoapUIActionGroup> aClass) {
         for (SoapUIActionGroup soapUIActionGroup : actionGroups.values()) {
             if (soapUIActionGroup.getClass().equals(aClass)) {
                 return soapUIActionGroup;
@@ -90,7 +72,7 @@ public class SoapUIActionRegistry {
         private static SoapUIActionMapping defaultMapping = new DefaultActionMapping(SeperatorAction.SOAPUI_ACTION_ID,
                 null, null, false, null);
 
-        private SeperatorAction() {
+        public SeperatorAction() {
             super(null, null);
         }
 
