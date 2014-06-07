@@ -24,7 +24,6 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
-import com.eviware.soapui.plugins.PluginManager;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.ProxySettings;
@@ -36,6 +35,7 @@ import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
@@ -55,8 +55,11 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
 import java.util.TimerTask;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Initializes core objects. Transform to a Spring "ApplicationContext"?
@@ -81,7 +84,6 @@ public class DefaultSoapUICore implements SoapUICore {
     private String password;
     protected boolean initialImport;
     private TimerTask settingsWatcher;
-    private PluginManager pluginManager;
     private SoapUIExtensionClassLoader extClassLoader;
 
     public boolean isSavingSettings;
@@ -105,7 +107,7 @@ public class DefaultSoapUICore implements SoapUICore {
 
     /*
      * this method is added for enabling settings password (like in core) all the
-     * way down in hierarchy boolean setingPassword is a dummy parameter, because
+     * way down in hierarchy boolean settingPassword is a dummy parameter, because
      * the constructor with only one string parameter already existed
      */
     public DefaultSoapUICore(boolean settingPassword, String soapUISettingsPassword) {
@@ -136,13 +138,27 @@ public class DefaultSoapUICore implements SoapUICore {
         initSettings(settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile);
 
         initExtensions(getExtensionClassLoader());
-        pluginManager = new PluginManager(getExtensionClassLoader(), getFactoryRegistry(), getActionRegistry(),
-                getListenerRegistry());
-        pluginManager.loadPlugins();
+        loadPlugins();
         initCoreComponents();
 
         // this is to provoke initialization
         SoapVersion.Soap11.equals(SoapVersion.Soap12);
+
+    }
+
+    protected void loadPlugins() {
+        File pluginDirectory = new File(System.getProperty("soapui.home"), "plugins");
+        File[] pluginFiles = pluginDirectory.listFiles();
+        if (pluginFiles != null) {
+            for (File pluginFile : pluginFiles) {
+                log.info("Adding plugin from [" + pluginFile.getAbsolutePath() + "]");
+                try {
+                    loadOldStylePluginFrom(pluginFile);
+                } catch (IOException e) {
+                    log.warn("Could not load plugin from file [" + pluginFile + "]");
+                }
+            }
+        }
 
     }
 
@@ -155,6 +171,35 @@ public class DefaultSoapUICore implements SoapUICore {
     }
 
     protected void initCoreComponents() {
+    }
+
+    public void loadOldStylePluginFrom(File pluginFile) throws IOException {
+        JarFile jarFile = new JarFile(pluginFile);
+        // add jar to our extension classLoader
+        SoapUIExtensionClassLoader extensionClassLoader = getExtensionClassLoader();
+        extensionClassLoader.addFile(pluginFile);
+
+        // look for factories
+        JarEntry entry = jarFile.getJarEntry("META-INF/factories.xml");
+        if (entry != null) {
+            factoryRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+        }
+
+        // look for listeners
+        entry = jarFile.getJarEntry("META-INF/listeners.xml");
+        if (entry != null) {
+            listenerRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+        }
+
+        // look for actions
+        entry = jarFile.getJarEntry("META-INF/actions.xml");
+        if (entry != null) {
+            actionRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+        }
+
+        // add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
+        UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
+
     }
 
     public String getRoot() {
@@ -614,9 +659,5 @@ public class DefaultSoapUICore implements SoapUICore {
         return securityScanRegistry;
     }
 
-    @Override
-    public PluginManager getPluginManager() {
-        return pluginManager;
-    }
 
 }
