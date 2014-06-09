@@ -88,6 +88,15 @@ public class AnalyticsManager {
         return trackAction(ActionId.ACTION, actionName, params);
     }
 
+    public boolean trackCustomPlugInAction(String actionName, String paramName, String value) {
+        if (providers.isEmpty()) {
+            return false;
+        }
+        Map<String, String> params = new HashMap<String, String>();
+        params.put(paramName, value);
+        return trackAction(ActionId.CUSTOM_PLUGIN_ACTION, actionName, params);
+    }
+
     public boolean trackSessionStart() {
         return trackAction(ActionId.SESSION_START, "", null);
     }
@@ -150,6 +159,6 @@ public class AnalyticsManager {
         }
     }
 
-    public enum ActionId {SESSION_START, SESSION_STOP, ACTION}
+    public enum ActionId {SESSION_START, SESSION_STOP, ACTION, CUSTOM_PLUGIN_ACTION}
 
 }
