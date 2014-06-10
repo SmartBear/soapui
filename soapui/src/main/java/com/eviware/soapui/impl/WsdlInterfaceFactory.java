@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
@@ -100,6 +101,8 @@ public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface> {
             log.error("Error creating requests: " + e.getMessage());
             throw new SoapUIException("Error creating requests", e);
         }
+
+        AnalyticsManager.getAnalytics().trackAction("ImportWSDL");
 
         return result;
     }

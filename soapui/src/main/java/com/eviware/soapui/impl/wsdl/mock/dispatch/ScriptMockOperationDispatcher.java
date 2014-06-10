@@ -17,15 +17,21 @@
 package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunContext;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -34,8 +40,12 @@ import com.eviware.soapui.support.scripting.ScriptEnginePool;
 import com.eviware.soapui.support.scripting.SoapUIScriptEngine;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -199,6 +209,8 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
         }
 
         public void actionPerformed(ActionEvent e) {
+            Analytics.trackAction("RunTestStep", "StepType", "GroovyScript");
+
             MockResult lastMockResult = getMockOperation().getLastMockResult();
             MockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();
 

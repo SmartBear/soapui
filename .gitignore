@@ -11,3 +11,6 @@
 
 # Build folders
 target/
+
+soapui/ext
+soapui/plugins

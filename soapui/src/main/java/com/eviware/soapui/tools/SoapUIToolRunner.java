@@ -18,6 +18,7 @@ package com.eviware.soapui.tools;
 
 import java.io.File;
 
+import com.eviware.soapui.analytics.Analytics;
 import org.apache.commons.cli.CommandLine;
 
 import com.eviware.soapui.SoapUI;
@@ -147,6 +148,8 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
     public void run(ToolRunner runner) throws Exception {
         status = RunnerStatus.RUNNING;
         runner.setContext(this);
+        Analytics.trackAction("RunCmdLineTool", "Tool", runner.getName());
+
         runner.run();
     }
 

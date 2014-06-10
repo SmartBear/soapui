@@ -22,6 +22,8 @@ import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -167,6 +169,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.BackingStoreException;
 
 import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
@@ -666,6 +669,10 @@ public class SoapUI {
                 if (isFirstLaunch) {
                     Tools.openURL(SOAPUI_WELCOME_PAGE);
                 }
+
+                if (isCommandLine()) {
+                    Analytics.trackAction("CmdLine");
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
@@ -751,7 +758,15 @@ public class SoapUI {
         }
 
         @Override
-        public void windowClosed(WindowEvent e) {
+        public void windowClosed(WindowEvent event) {
+            threadPool.shutdown();
+            try {
+                threadPool.awaitTermination(1500, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                threadPool.shutdownNow();
+                // Preserve interrupt status
+                Thread.currentThread().interrupt();
+            }
             System.out.println("exiting..");
             SoapUI.getSoapUITimer().cancel();
             System.exit(0);
@@ -759,6 +774,12 @@ public class SoapUI {
     }
 
     public static void main(String[] args) throws Exception {
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        if (isDebug) {
+            Analytics.trackAction("DebuggingMode");
+        }
+
         WebstartUtilCore.init();
 
         mainArgs = args;
@@ -796,7 +817,6 @@ public class SoapUI {
         if (!processCommandLineArgs(cmd)) {
             System.exit(1);
         }
-
         if (workspaceName != null) {
             workspace = WorkspaceFactory.getInstance().openWorkspace(workspaceName, projectOptions);
             soapUICore.getSettings().setString(CURRENT_SOAPUI_WORKSPACE, workspaceName);
@@ -971,6 +991,8 @@ public class SoapUI {
                 return false;
             }
 
+            AnalyticsManager.getAnalytics().trackSessionStop();
+
             try {
                 soapUICore.saveSettings();
                 SaveStatus saveStatus = workspace.onClose();
@@ -1120,6 +1142,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction("Exit");
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1266,6 +1289,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = false;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
+            Analytics.trackAction("ExitWithoutSave");
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1629,5 +1653,6 @@ public class SoapUI {
             return false;
         }
     }
+
 
 }
