@@ -126,14 +126,12 @@ import org.apache.log4j.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
@@ -819,7 +817,6 @@ public class SoapUI {
         if (!processCommandLineArgs(cmd)) {
             System.exit(1);
         }
-        initializeAnalytics();
         if (workspaceName != null) {
             workspace = WorkspaceFactory.getInstance().openWorkspace(workspaceName, projectOptions);
             soapUICore.getSettings().setString(CURRENT_SOAPUI_WORKSPACE, workspaceName);
@@ -859,20 +856,6 @@ public class SoapUI {
             }
         }
         return soapUI;
-    }
-
-    private static void initializeAnalytics() {
-        if (soapUICore.getSettings().getBoolean(UISettings.SHOULD_DISPLAY_ANALYTICS_DIALOG, true)) {
-            JCheckBox checkbox = new JCheckBox("Do this every time application starts.");
-            String message = "We always want to improve our product. That is why it's important for as to know how our users using the product. \nDo you wand to send anonimous usage data to the developers?";
-            Object[] params = {message, checkbox};
-            int response = JOptionPane.showConfirmDialog(null, params, "Usage Statistics", JOptionPane.YES_NO_OPTION);
-            soapUICore.getSettings().setBoolean(UISettings.SHOULD_DISPLAY_ANALYTICS_DIALOG, checkbox.isSelected());
-            soapUICore.getSettings().setBoolean(UISettings.DISABLE_ANALYTICS, response != JOptionPane.YES_OPTION);
-        }
-        if (soapUICore.getSettings().getBoolean(UISettings.DISABLE_ANALYTICS, false)) {
-            AnalyticsManager.getAnalytics().disable();
-        }
     }
 
     public static List<Image> getFrameIcons() {
