@@ -18,6 +18,7 @@ package com.eviware.soapui.support;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SwingPluginSoapUICore;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.settings.Settings;
@@ -254,6 +255,8 @@ public class UISupport {
     }
 
     public static void showErrorMessage(String message) {
+        Analytics.trackError(new Throwable(message));
+
         if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
             dialogs.showExtendedInfo("Error", "An error occurred", message, null);
         } else {
@@ -600,6 +603,7 @@ public class UISupport {
 
     public static void showErrorMessage(Throwable ex) {
         SoapUI.logError(ex);
+        Analytics.trackError(ex);
 
         if (ex.toString().length() > 100) {
             dialogs.showExtendedInfo("Error", "An error of type " + ex.getClass().getSimpleName() + " occured.",

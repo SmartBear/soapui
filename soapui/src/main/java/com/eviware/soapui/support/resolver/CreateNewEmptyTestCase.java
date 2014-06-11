@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.support.resolver;
 
+import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.support.resolver.ResolveContext.Resolver;
@@ -50,6 +51,9 @@ public class CreateNewEmptyTestCase implements Resolver {
         WsdlTestCase tCase = testStep.getTestCase().getTestSuite().addNewTestCase("New Test Case");
         testStep.setTargetTestCase(tCase);
         resolved = true;
+
+        AnalyticsManager.getAnalytics().trackAction("CreateTestCase", "Type", "WSDL");
+
         return resolved;
     }
 

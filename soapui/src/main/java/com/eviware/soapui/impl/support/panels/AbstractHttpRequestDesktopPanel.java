@@ -361,14 +361,14 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
         lockIcon.setVisible(isAuthActivated(getRequest().getAuthType()));
         lockIcon.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         lockIcon.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Inspector inspector = getRequestEditor().getInspector(AuthInspectorFactory.INSPECTOR_ID);
-                if (inspector != null) {
-                    ((AbstractXmlInspector) inspector).showInPanel();
-                }
-            }
-        }
+                                      @Override
+                                      public void mouseClicked(MouseEvent e) {
+                                          Inspector inspector = getRequestEditor().getInspector(AuthInspectorFactory.INSPECTOR_ID);
+                                          if (inspector != null) {
+                                              ((AbstractXmlInspector) inspector).showInPanel();
+                                          }
+                                      }
+                                  }
         );
         getRequest().addPropertyChangeListener(AbstractHttpRequest.SELECTED_AUTH_PROFILE_PROPERTY_NAME, new PropertyChangeListener() {
             @Override

@@ -16,23 +16,22 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JDialog;
-import javax.swing.KeyStroke;
-
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.KeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 
 public abstract class SimpleDialog extends JDialog {
     protected JButtonBar buttons = null;
@@ -123,6 +122,7 @@ public abstract class SimpleDialog extends JDialog {
 
         UISupport.centerDialog(this);
         super.setVisible(b);
+
 
         if (b) {
             afterShow();

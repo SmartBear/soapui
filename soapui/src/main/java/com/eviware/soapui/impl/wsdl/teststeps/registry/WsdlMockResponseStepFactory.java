@@ -16,9 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.config.MockResponseStepConfig;
 import com.eviware.soapui.config.TestStepConfig;
@@ -45,6 +42,9 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Factory for creation TransferValue steps
@@ -227,6 +227,7 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
     public boolean canAddTestStepToTestCase(WsdlTestCase testCase) {
         for (Interface iface : testCase.getTestSuite().getProject().getInterfaceList()) {
             if (iface instanceof WsdlInterface && iface.getOperationCount() > 0) {
+
                 return true;
             }
         }
