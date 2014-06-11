@@ -991,8 +991,6 @@ public class SoapUI {
                 return false;
             }
 
-            AnalyticsManager.getAnalytics().trackSessionStop();
-
             try {
                 soapUICore.saveSettings();
                 SaveStatus saveStatus = workspace.onClose();
@@ -1002,12 +1000,17 @@ public class SoapUI {
             } catch (Exception e1) {
                 SoapUI.logError(e1);
             }
+
+            Analytics.trackAction("Exit");
         } else {
             if (!UISupport.confirm("Exit SoapUI without saving?", "Question")) {
                 saveOnExit = true;
                 return false;
             }
+            Analytics.trackAction("ExitWithoutSave");
         }
+
+        AnalyticsManager.getAnalytics().trackSessionStop();
 
         shutdown();
 
@@ -1142,7 +1145,7 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
-            Analytics.trackAction("Exit");
+//            Analytics.trackAction("Exit");
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1289,7 +1292,6 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = false;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
-            Analytics.trackAction("ExitWithoutSave");
             frame.dispatchEvent(windowEvent);
         }
     }
