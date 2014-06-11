@@ -51,8 +51,7 @@ public class AddNewTestCaseAction extends AbstractSoapUIAction<WsdlTestSuite> {
         }
 
         WsdlTestCase testCase = testSuite.addNewTestCase(name);
-        UISupport.showDesktopPanel(testCase);
-
         Analytics.trackAction("CreateTestCase");
+        UISupport.showDesktopPanel(testCase);
     }
 }
