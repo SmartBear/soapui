@@ -16,6 +16,11 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,11 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-
 /**
  * Base class for WSDL TestCase test steps.
  *
@@ -36,6 +36,7 @@ import com.eviware.soapui.model.testsuite.TestPropertyListener;
  */
 
 abstract public class WsdlTestStepWithProperties extends WsdlTestStep {
+    public static String RESPONSE = "Response";
     public static String RESPONSE_AS_XML = "ResponseAsXml";
     private Map<String, TestProperty> properties;
     private List<TestProperty> propertyList = new ArrayList<TestProperty>();

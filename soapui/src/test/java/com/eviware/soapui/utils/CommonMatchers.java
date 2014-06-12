@@ -194,4 +194,18 @@ public class CommonMatchers {
         };
     }
 
+    public static Matcher<Object> aNumber() {
+        return new org.hamcrest.TypeSafeMatcher<Object>() {
+            @Override
+            protected boolean matchesSafely(Object o) {
+                return o instanceof Number;
+            }
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("a number");
+            }
+        };
+    }
+
 }

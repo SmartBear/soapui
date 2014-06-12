@@ -16,9 +16,6 @@
 
 package com.eviware.soapui.model.propertyexpansion.resolvers;
 
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Node;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -26,7 +23,10 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.JsonPathFacade;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Node;
 
 public class ResolverUtils {
     public static String checkForExplicitReference(String propertyName, String prefix, TestPropertyHolder holder,
@@ -81,15 +81,18 @@ public class ResolverUtils {
         return null;
     }
 
-    public static String extractXPathPropertyValue(Object property, String xpath) {
+    public static String extractXPathPropertyValue(Object property, String pathExpression) {
         try {
             String value = property instanceof TestProperty ? ((TestProperty) property).getValue() : property
                     .toString();
-            // XmlObject xmlObject = XmlObject.Factory.parse( value );
-            XmlObject xmlObject = XmlUtils.createXmlObject(value);
-            String ns = xpath.trim().startsWith("declare namespace") ? "" : XmlUtils.declareXPathNamespaces(xmlObject);
-            Node domNode = XmlUtils.selectFirstDomNode(xmlObject, ns + xpath);
-            return domNode == null ? null : XmlUtils.getValueForMatch(domNode, false);
+            if (pathExpression.startsWith("$")) {
+                return new JsonPathFacade(value).readStringValue(pathExpression);
+            } else {
+                XmlObject xmlObject = XmlUtils.createXmlObject(value);
+                String ns = pathExpression.trim().startsWith("declare namespace") ? "" : XmlUtils.declareXPathNamespaces(xmlObject);
+                Node domNode = XmlUtils.selectFirstDomNode(xmlObject, ns + pathExpression);
+                return domNode == null ? null : XmlUtils.getValueForMatch(domNode, false);
+            }
         } catch (Exception e) {
             SoapUI.logError(e);
         }

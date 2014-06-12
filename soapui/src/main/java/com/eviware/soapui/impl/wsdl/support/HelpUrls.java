@@ -14,6 +14,7 @@
  * under the Licence.
 */
 package com.eviware.soapui.impl.wsdl.support;
+
 /**
  * Help URLS in SoapUI documentation
  *
@@ -114,6 +115,7 @@ public interface HelpUrls {
     public static final String PREPAREDPROPERTIES_HELP_URL = "http://www.soapui.org/Functional-Testing/datasource-jdbc.html";
     public static final String PROJECT_OVERVIEW_HELP_URL = "http://www.soapui.org/Working-with-Projects/working-with-soapui-projects.html";
     public static final String PROPERTIESSTEPEDITOR_HELP_URL = "http://www.soapui.org/Functional-Testing/properties-teststep.html";
+    public static final String PROPERTY_TRANSFER_HELP_URL = "http://www.soapui.org/Functional-Testing/transferring-property-values.html";
 
     public static final String REQUESTEDITOR_HELP_URL = "http://www.soapui.org/Soap-and-WSDL/request-editor.html";
     public static final String RESPONSE_ASSERTIONS_HELP_URL = "http://www.soapui.org/Functional-Testing/getting-started-with-assertions.html";

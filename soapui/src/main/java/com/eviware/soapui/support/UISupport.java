@@ -857,6 +857,10 @@ public class UISupport {
         return dialogs.selectXPath(title, info, xml, xpath);
     }
 
+    public static String selectJsonPath(String title, String info, String json, String jsonPath) {
+        return dialogs.selectJsonPath(title, info, json, jsonPath);
+    }
+
     public static PreviewCorner addPreviewCorner(JScrollPane scrollPane, boolean forceScrollbars) {
         ImageIcon previewIcon = UISupport.createImageIcon("/previewscroller.gif");
         PreviewCorner previewCorner = new PreviewCorner(scrollPane, previewIcon, true, JScrollPane.LOWER_RIGHT_CORNER);
