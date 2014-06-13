@@ -20,12 +20,9 @@ import java.util.concurrent.Executor;
 
 public class AnalyticsManager {
     private static final Logger log = Logger.getLogger(AnalyticsManager.class);
-
-
     private static AnalyticsManager instance = null;
-    
-    List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
 
+    private List<AnalyticsProvider> providers = new ArrayList<AnalyticsProvider>();
     private String sessionId;
     private List<AnalyticsProviderFactory> factories = new ArrayList<AnalyticsProviderFactory>();
     private Executor executorService;
@@ -136,12 +133,12 @@ public class AnalyticsManager {
         return false;
     }
 
-    private boolean trackAction(ActionId actionId, String actionName, Map<String, String> params) {
+    private boolean trackAction(ActionId category, String actionName, Map<String, String> params) {
         if (providers.isEmpty()) {
             return false;
         }
 
-        final ActionDescription description = new ActionDescription(sessionId, actionId, actionName, params);
+        final ActionDescription description = new ActionDescription(sessionId, category, actionName, params);
 
         runInBackground(new Runnable() {
             public void run() {
