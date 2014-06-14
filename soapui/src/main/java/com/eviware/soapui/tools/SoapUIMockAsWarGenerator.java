@@ -16,15 +16,14 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-
-import org.apache.commons.cli.CommandLine;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.StringUtils;
+import org.apache.commons.cli.CommandLine;
+
+import java.io.File;
 
 public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
     public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " War Generator";
@@ -129,7 +128,7 @@ public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
         log.info("Creating WAR file with endpoint [" + endpoint + "]");
 
         MockAsWar mockAsWar = new MockAsWar(pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
-                includeActions, includeListeners, endpoint, enableWebUI);
+                includeActions, includeListeners, endpoint, enableWebUI, project);
 
         mockAsWar.createMockAsWarArchive();
         log.info("WAR Generation complete");

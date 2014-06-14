@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.operation;
 
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.settings.WsdlSettings;
@@ -36,6 +37,7 @@ public class NewRequestAction extends AbstractSoapUIAction<WsdlOperation> {
     }
 
     public void perform(WsdlOperation operation, Object param) {
+
         String name = UISupport.prompt("Specify name of request", "New request",
                 "Request " + (operation.getRequestCount() + 1));
         if (name == null) {
@@ -55,5 +57,7 @@ public class NewRequestAction extends AbstractSoapUIAction<WsdlOperation> {
         }
 
         UISupport.showDesktopPanel(newRequest);
+
+        Analytics.trackAction("CreateRequest", "RequestType", "SOAP");
     }
 }

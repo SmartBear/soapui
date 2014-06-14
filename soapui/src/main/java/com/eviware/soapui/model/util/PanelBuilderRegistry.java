@@ -16,9 +16,6 @@
 
 package com.eviware.soapui.model.util;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WorkspaceImplPanelBuilder;
@@ -84,9 +81,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
+import com.eviware.soapui.plugins.SoapUIFactory;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.security.panels.SecurityTestPanelBuilder;
-import com.eviware.soapui.support.SoapUIException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Registry of PanelBuilders
@@ -142,6 +142,15 @@ public class PanelBuilderRegistry {
 
         for (PanelBuilderFactory factory : SoapUI.getFactoryRegistry().getFactories(PanelBuilderFactory.class)) {
             register(factory.getTargetModelItem(), factory.createPanelBuilder());
+        }
+    }
+
+    public static void unregister(Class<SoapUIFactory> aClass) {
+        for (Map.Entry<Class<? extends ModelItem>, PanelBuilder<? extends ModelItem>> builderEntry : builders.entrySet()) {
+            if (builderEntry.getClass().equals(aClass)) {
+                builders.remove(builderEntry.getKey());
+                break;
+            }
         }
     }
 }

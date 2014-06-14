@@ -16,15 +16,15 @@
 
 package com.eviware.soapui.support.editor.registry;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.JsonResponseViewFactory;
 import com.eviware.soapui.impl.support.http.HttpRequestContentViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFactory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Registry of availabel XmlViews
@@ -79,5 +79,9 @@ public class EditorViewFactoryRegistry {
         }
 
         return result.toArray(new EditorViewFactory[result.size()]);
+    }
+
+    public void removeFactory(EditorViewFactory factory) {
+        factories.remove(factory);
     }
 }

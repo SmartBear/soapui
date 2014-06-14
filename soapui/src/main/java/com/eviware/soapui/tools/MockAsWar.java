@@ -17,6 +17,8 @@
 package com.eviware.soapui.tools;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -29,7 +31,15 @@ import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,8 +69,11 @@ public class MockAsWar {
     protected final String localEndpoint;
     protected boolean enableWebUI;
 
+    private WsdlProject project;
+
     public MockAsWar(String projectPath, String settingsPath, String warDir, String warFile, boolean includeExt,
-                     boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI) {
+                     boolean actions, boolean listeners, String localEndpoint, boolean enableWebUI, WsdlProject project) {
+        this.project = project;
         this.localEndpoint = localEndpoint;
         this.projectFile = new File(projectPath);
         this.settingsFile = StringUtils.hasContent(settingsPath) ? new File(settingsPath) : null;
@@ -77,6 +90,7 @@ public class MockAsWar {
     }
 
     public void createMockAsWarArchive() {
+
         XProgressDialog progressDialog = UISupport.getDialogs().createProgressDialog("Creating War File", 3,
                 "Building war file..", false);
         WorkerAdapter warWorker = new WorkerAdapter() {
