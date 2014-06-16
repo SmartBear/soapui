@@ -4,6 +4,13 @@
 ### Bugs fixed ###
 * REST Mock does not read the payload (SOAP-2173)
 
+### Updated libraries ###
+* Updated to JRE 7u55
+* Removed joda-time
+* Updated junit to 4.11
+* Introduced Jayway's json-path 0.9.1
+* (Pro only) Replaced jexcelapi with Apache POI
+
 -------------------------------------------------------------------------------
 
 # SoapUI 5.0.0
