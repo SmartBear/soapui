@@ -35,12 +35,18 @@ import java.awt.event.ActionEvent;
 
 public abstract class SimpleDialog extends JDialog {
     protected JButtonBar buttons = null;
+    private ActionList customactions = null;
     private final String title;
     private final String description;
     private final String helpUrl;
     private final boolean okAndCancel;
     private boolean initialized = false;
 
+    public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel, ActionList customactions) {
+        this(title, description, helpUrl, okAndCancel);
+
+        this.customactions = customactions;
+    }
     public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel) {
         super(UISupport.getMainFrame(), title, true);
         this.title = title;
@@ -54,7 +60,14 @@ public abstract class SimpleDialog extends JDialog {
             return;
         }
 
-        buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
+        if (customactions == null) {
+            customactions = buildActions(helpUrl, okAndCancel);
+        } else {
+            customactions.addSeparator();
+            customactions.addActions(buildActions(helpUrl, okAndCancel));
+        }
+
+        buttons = UISupport.initDialogActions(customactions, this);
         buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
         getContentPane().add(
