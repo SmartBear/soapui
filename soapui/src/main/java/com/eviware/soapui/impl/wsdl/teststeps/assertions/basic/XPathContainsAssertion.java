@@ -470,6 +470,10 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         return "Expected Result";
     }
 
+    public boolean canAssertXmlContent() {
+        return true;
+    }
+
     private final class InternalDifferenceListener implements DifferenceListener {
         private StringList nodesToRemove = new StringList();
 

@@ -5,6 +5,7 @@ import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.model.testsuite.AssertionException;
+import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
@@ -144,31 +145,35 @@ public class AssertionConfigurationDialog {
         toolbar.addFixed(new JButton(new SelectFromCurrentAction()));
         toolbar.addRelatedGap();
         toolbar.addFixed(new JButton(new TestPathAction()));
+
         allowWildcardsCheckBox = new JCheckBox("Allow Wildcards");
-
         Dimension dim = new Dimension(120, 20);
-
         allowWildcardsCheckBox.setSize(dim);
         allowWildcardsCheckBox.setPreferredSize(dim);
-
         allowWildcardsCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(allowWildcardsCheckBox);
 
         Dimension largerDim = new Dimension(170, 20);
         ignoreNamespaceDifferencesCheckBox = new JCheckBox("Ignore namespace prefixes");
         ignoreNamespaceDifferencesCheckBox.setSize(largerDim);
         ignoreNamespaceDifferencesCheckBox.setPreferredSize(largerDim);
         ignoreNamespaceDifferencesCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(ignoreNamespaceDifferencesCheckBox);
 
         ignoreCommentsCheckBox = new JCheckBox("Ignore XML Comments");
         ignoreCommentsCheckBox.setSize(largerDim);
         ignoreCommentsCheckBox.setPreferredSize(largerDim);
         ignoreCommentsCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(ignoreCommentsCheckBox);
+
+        if(assertion.canAssertXmlContent()){
+
+            toolbar.addRelatedGap();
+            toolbar.addFixed(allowWildcardsCheckBox);
+
+            toolbar.addRelatedGap();
+            toolbar.addFixed(ignoreNamespaceDifferencesCheckBox);
+
+            toolbar.addRelatedGap();
+            toolbar.addFixed(ignoreCommentsCheckBox);
+        }
     }
 
     public JTextArea getContentArea() {
@@ -243,7 +248,12 @@ public class AssertionConfigurationDialog {
             assertion.setIgnoreComments(ignoreCommentsCheckBox.isSelected());
 
             try {
-                String msg = assertion.assertContent(assertion.getAssertable().getAssertableContentAsXml(),
+                String assertableContent = assertion.getAssertable().getAssertableContent();
+                if (!JsonUtil.seemsToBeJson(assertableContent))
+                {
+                    assertableContent =  assertion.getAssertable().getAssertableContentAsXml();
+                }
+                String msg = assertion.assertContent(assertableContent,
                         new WsdlTestRunContext(assertion.getAssertable().getTestStep()), "Response");
                 UISupport.showInfoMessage(msg, "Success");
             } catch (AssertionException e) {
