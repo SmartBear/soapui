@@ -90,7 +90,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
     public static final String ID = "XPath Match";
     public static final String LABEL = "XPath Match";
     public static final String DESCRIPTION = "Uses an XPath expression to select content from the target property and compares the result to an expected value. Applicable to any property containing XML.";
-    private AssertionConfigurationDialog configurationDialog;
+    protected AssertionConfigurationDialog configurationDialog;
 
 
     public XPathContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
@@ -348,7 +348,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
     }
 
     protected void addPathEditorActions(JXToolBar toolbar) {
-        configurationDialog.addPathEditorActions(toolbar);
+        configurationDialog.addDeclareNamespaceButton(toolbar);
     }
 
     protected JTextArea getPathArea() {
@@ -378,12 +378,16 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
     public XmlObject createConfiguration() {
         XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
+        addConfigurationValues(builder);
+        return builder.finish();
+    }
+
+    protected void addConfigurationValues(XmlObjectConfigurationBuilder builder) {
         builder.add("path", path);
         builder.add("content", expectedContent);
         builder.add("allowWildcards", allowWildcards);
         builder.add("ignoreNamspaceDifferences", ignoreNamespaceDifferences);
         builder.add("ignoreComments", ignoreComments);
-        return builder.finish();
     }
 
     public void selectFromCurrent() {

@@ -36,18 +36,17 @@ import java.awt.event.WindowEvent;
 public class AssertionConfigurationDialog {
     private final static Logger log = Logger.getLogger(XPathContainsAssertion.class);
 
-    private JDialog configurationDialog;
+    protected JDialog configurationDialog;
     private JCheckBox allowWildcardsCheckBox;
     private JCheckBox ignoreNamespaceDifferencesCheckBox;
     private JCheckBox ignoreCommentsCheckBox;
-    private JTextArea pathArea;
-    private JTextArea contentArea;
-    private XPathContainsAssertion assertion;
-    private boolean configureResult;
+    protected JTextArea pathArea;
+    protected JTextArea contentArea;
+    protected XPathContainsAssertion assertion;
+    protected boolean configureResult;
 
     public AssertionConfigurationDialog(XPathContainsAssertion assertion) {
         this.assertion = assertion;
-        buildConfigurationDialog();
     }
 
     public boolean configure() {
@@ -55,13 +54,17 @@ public class AssertionConfigurationDialog {
             buildConfigurationDialog();
         }
 
+        initializeFieldsWithValuesFromAssertion();
+
+        UISupport.showDialog(configurationDialog);
+        return configureResult;
+    }
+
+    protected void initializeFieldsWithValuesFromAssertion() {
         pathArea.setText(this.assertion.getPath());
         contentArea.setText(this.assertion.getExpectedContent());
         allowWildcardsCheckBox.setSelected(this.assertion.isAllowWildcards());
         ignoreNamespaceDifferencesCheckBox.setSelected(this.assertion.isIgnoreNamespaceDifferences());
-
-        UISupport.showDialog(configurationDialog);
-        return configureResult;
     }
 
     protected void buildConfigurationDialog() {
@@ -84,15 +87,7 @@ public class AssertionConfigurationDialog {
 
         JSplitPane splitPane = UISupport.createVerticalSplit();
 
-        pathArea = new JUndoableTextArea();
-        pathArea.setToolTipText(assertion.getPathAreaToolTipText());
-
-        JPanel pathPanel = new JPanel(new BorderLayout());
-        JXToolBar pathToolbar = UISupport.createToolbar();
-        addPathEditorActions(pathToolbar);
-
-        pathPanel.add(pathToolbar, BorderLayout.NORTH);
-        pathPanel.add(new JScrollPane(pathArea), BorderLayout.CENTER);
+        JPanel pathPanel = getPathAreaPanel();
 
         splitPane.setTopComponent(UISupport.addTitledBorder(pathPanel, assertion.getPathAreaBorderTitle()));
 
@@ -101,13 +96,13 @@ public class AssertionConfigurationDialog {
 
         JPanel matchPanel = new JPanel(new BorderLayout());
         JXToolBar contentToolbar = UISupport.createToolbar();
-        addMatchEditorActions(contentToolbar);
+        assertion.addMatchEditorActions(contentToolbar);
 
         matchPanel.add(contentToolbar, BorderLayout.NORTH);
         matchPanel.add(new JScrollPane(contentArea), BorderLayout.CENTER);
 
         splitPane.setBottomComponent(UISupport.addTitledBorder(matchPanel, assertion.getContentAreaBorderTitle()));
-        splitPane.setDividerLocation(150);
+        splitPane.setDividerLocation(250);
         splitPane.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
         contentPanel.add(splitPane, BorderLayout.CENTER);
@@ -118,7 +113,7 @@ public class AssertionConfigurationDialog {
         builder.addFixed(UISupport.createToolbarButton(showOnlineHelpAction));
         builder.addGlue();
 
-        JButton okButton = new JButton(new OkAction());
+        JButton okButton = new JButton(createOkAction());
         builder.addFixed(okButton);
         builder.addRelatedGap();
         builder.addFixed(new JButton(new CancelAction()));
@@ -133,8 +128,27 @@ public class AssertionConfigurationDialog {
         UISupport.initDialogActions(configurationDialog, showOnlineHelpAction, okButton);
     }
 
-    void addPathEditorActions(JXToolBar toolbar) {
-        toolbar.addFixed(new JButton(new DeclareNamespacesFromCurrentAction()));
+    protected AbstractAction createOkAction() {
+        return new OkAction();
+    }
+
+    protected JPanel getPathAreaPanel() {
+        pathArea = new JUndoableTextArea();
+        pathArea.setToolTipText(assertion.getPathAreaToolTipText());
+
+        JPanel pathPanel = new JPanel(new BorderLayout());
+        JXToolBar pathToolbar = UISupport.createToolbar();
+        assertion.addPathEditorActions(pathToolbar);
+
+        pathPanel.add(pathToolbar, BorderLayout.NORTH);
+        pathPanel.add(new JScrollPane(pathArea), BorderLayout.CENTER);
+        return pathPanel;
+    }
+
+    void addDeclareNamespaceButton(JXToolBar toolbar) {
+        if(assertion.canAssertXmlContent()){
+            toolbar.addFixed(new JButton(new DeclareNamespacesFromCurrentAction()));
+        }
     }
 
     public JTextArea getPathArea() {
@@ -144,7 +158,7 @@ public class AssertionConfigurationDialog {
     protected void addMatchEditorActions(JXToolBar toolbar) {
         toolbar.addFixed(new JButton(new SelectFromCurrentAction()));
         toolbar.addRelatedGap();
-        toolbar.addFixed(new JButton(new TestPathAction()));
+        toolbar.addFixed(new JButton(createTestPathAction()));
 
         allowWildcardsCheckBox = new JCheckBox("Allow Wildcards");
         Dimension dim = new Dimension(120, 20);
@@ -174,6 +188,10 @@ public class AssertionConfigurationDialog {
             toolbar.addRelatedGap();
             toolbar.addFixed(ignoreCommentsCheckBox);
         }
+    }
+
+    protected TestPathAction createTestPathAction() {
+        return new TestPathAction();
     }
 
     public JTextArea getContentArea() {
