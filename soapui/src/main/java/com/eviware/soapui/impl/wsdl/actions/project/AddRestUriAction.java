@@ -42,7 +42,7 @@ public class AddRestUriAction extends AbstractSoapUIAction<WsdlProject> {
     }
 
     public void perform(WsdlProject project, Object param) {
-        XFormDialog dialog = dialogBuilder.buildDialog(messages, null);
+        XFormDialog dialog = dialogBuilder.buildDialog(messages);
         while (dialog.show()) {
             try {
                 String uri = dialogBuilder.getUri();

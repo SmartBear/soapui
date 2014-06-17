@@ -22,6 +22,7 @@ import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A TestCase holding a number of TestSteps
@@ -70,6 +71,8 @@ public interface TestCase extends TestModelItem, ResultContainer, TestRunnable {
     public void moveTestStep(int index, int offset);
 
     public TestStep getTestStepByName(String stepName);
+
+    public TestStep getTestStepById(UUID testStepId);
 
     public boolean isDisabled();
 

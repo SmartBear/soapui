@@ -171,7 +171,7 @@ public class TestOnDemandPanel extends JPanel {
 
         if (locationsCache.isEmpty()) {
             locationsComboBox.addItem(NO_LOCATIONS_FOUND_MESSAGE);
-            openInInternalBrowser(SoapUI.PUSH_PAGE_ERROR_URL);
+            openInInternalBrowser(SoapUI.STARTER_PAGE_ERROR_URL);
         } else {
             for (Location location : locationsCache) {
                 locationsComboBox.addItem(location);

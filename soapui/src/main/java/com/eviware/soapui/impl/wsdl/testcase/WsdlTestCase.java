@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * TestCase implementation for WSDL projects
@@ -761,6 +762,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     @Override
     public WsdlTestStep getTestStepByName(String stepName) {
         return (WsdlTestStep) getWsdlModelItemByName(testSteps, stepName);
+    }
+
+    @Override
+    public TestStep getTestStepById(UUID testStepId) {
+        return (WsdlTestStep) getWsdlModelItemById(testSteps, testStepId);
     }
 
     public WsdlLoadTest cloneLoadTest(WsdlLoadTest loadTest, String name) {

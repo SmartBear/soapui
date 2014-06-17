@@ -113,6 +113,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
+
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.ENCRYPTED_BAD_OR_NO_PASSWORD;
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.ENCRYPTED_GOOD_PASSWORD;
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
 
 /**
  * WSDL project implementation
@@ -158,13 +163,12 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     protected Set<EnvironmentListener> environmentListeners = new HashSet<EnvironmentListener>();
 
-	/*
-     * 3 state flag: 1. 0 - project not encrypted 2. 1 - encrypted , good
-	 * password, means that it could be successfully decrypted 3. -1 - encrypted,
-	 * but with bad password or no password.
-	 */
+    protected ProjectEncryptionStatus encryptionStatus = ProjectEncryptionStatus.NOT_ENCRYPTED;
 
-    protected int encrypted;
+    public enum ProjectEncryptionStatus {
+        NOT_ENCRYPTED, ENCRYPTED_BAD_OR_NO_PASSWORD, ENCRYPTED_GOOD_PASSWORD;
+    }
+
     private ImageIcon closedEncyptedIcon;
     private SoapUIScriptEngine afterRunScriptEngine;
     private SoapUIScriptEngine beforeRunScriptEngine;
@@ -184,22 +188,18 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     public WsdlProject(String projectFile, String projectPassword) {
-        this(projectFile, null, true, true, null, projectPassword);
+        this(projectFile, null, true, null, projectPassword);
     }
 
     public WsdlProject(WorkspaceImpl workspace) {
-        this(null, workspace, true);
+        this((String) null, workspace);
     }
 
     public WsdlProject(String path, WorkspaceImpl workspace) {
-        this(path, workspace, true);
+        this(path, workspace, true, null, null);
     }
 
-    public WsdlProject(String path, WorkspaceImpl workspace, boolean create) {
-        this(path, workspace, create, true, null, null);
-    }
-
-    public WsdlProject(String path, WorkspaceImpl workspace, boolean create, boolean open, String tempName,
+    public WsdlProject(String path, WorkspaceImpl workspace, boolean open, String tempName,
                        String projectPassword) {
         super(null, workspace, ICON_NAME);
 
@@ -208,13 +208,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         this.projectPassword = projectPassword;
         endpointSupport = new EndpointSupport();
 
-        for (ProjectListener listener : SoapUI.getListenerRegistry().getListeners(ProjectListener.class)) {
-            addProjectListener(listener);
-        }
-
-        for (ProjectRunListener listener : SoapUI.getListenerRegistry().getListeners(ProjectRunListener.class)) {
-            addProjectRunListener(listener);
-        }
+        addProjectListeners();
 
         try {
             if (path != null && open) {
@@ -227,6 +221,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                         SoapUI.logError(e);
                         disabled = true;
                     }
+
                 } else {
                     try {
                         if (!PathUtils.isHttpPath(path)) {
@@ -245,39 +240,45 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             SoapUI.logError(e);
             disabled = true;
         } finally {
-            closedIcon = UISupport.createImageIcon("/closedProject.gif");
-            remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
-            disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
-            openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
-            closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
+            initProjectIcons();
 
-            this.open = open && !disabled && (this.encrypted != -1);
 
             if (projectDocument == null) {
-                projectDocument = SoapuiProjectDocumentConfig.Factory.newInstance();
-                setConfig(projectDocument.addNewSoapuiProject());
-                if (tempName != null || path != null) {
-                    getConfig().setName(StringUtils.isNullOrEmpty(tempName) ? getNameFromPath() : tempName);
-                }
-
-                setPropertiesConfig(getConfig().addNewProperties());
-                wssContainer = new DefaultWssContainer(this, getConfig().addNewWssContainer());
-                oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().addNewOAuth2ProfileContainer());
-                // setResourceRoot("${projectDir}");
+                createEmptyProjectConfiguration(path, tempName);
             }
 
-            if (getConfig() != null) {
-                endpointStrategy.init(this);
-            }
             if (getSettings() != null) {
                 setProjectRoot(path);
             }
-            if (getConfig() != null && this.environment == null) {
-                setActiveEnvironment(DefaultEnvironment.getInstance());
-            }
 
-            addPropertyChangeListener(this);
+            finalizeProjectLoading(open);
         }
+    }
+
+    /*
+        This is used for loading a project without setting its path,
+        which will require the user to select where to save the file upon saving.
+    */
+    public WsdlProject(InputStream inputStream, WorkspaceImpl workspace) {
+        super(null, workspace, ICON_NAME);
+
+        this.workspace = workspace;
+        this.open = true;
+        this.endpointSupport = new EndpointSupport();
+        this.projectPassword = null;
+
+        addProjectListeners();
+
+        loadProject(inputStream);
+        if (projectDocument == null) {
+            createEmptyProjectConfiguration(null, null);
+        }
+
+        lastModified = System.currentTimeMillis();
+
+        initProjectIcons();
+
+        finalizeProjectLoading(open);
     }
 
     public boolean isRemote() {
@@ -295,85 +296,8 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             UrlWsdlLoader loader = new UrlWsdlLoader(file.toString(), this);
             loader.setUseWorker(false);
             InputStream inputStream = loader.load();
-            projectDocument = SoapuiProjectDocumentConfig.Factory.parse(inputStream);
-            inputStream.close();
-
-            // see if there is encoded data
-            this.encrypted = checkForEncodedData(projectDocument.getSoapuiProject());
-
-            setConfig(projectDocument.getSoapuiProject());
-
-            // removed cached definitions if caching is disabled
-            if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS)) {
-                removeDefinitionCaches(projectDocument);
-            }
-
+            loadProjectFromInputStream(inputStream);
             log.info("Loaded project from [" + file.toString() + "]");
-
-            try {
-                int majorVersion = Integer
-                        .parseInt(projectDocument.getSoapuiProject().getSoapuiVersion().split("\\.")[0]);
-                if (majorVersion > Integer.parseInt(SoapUI.SOAPUI_VERSION.split("\\.")[0])) {
-                    log.warn("Project '" + projectDocument.getSoapuiProject().getName() + "' is from a newer version ("
-                            + projectDocument.getSoapuiProject().getSoapuiVersion() + ") of SoapUI than this ("
-                            + SoapUI.SOAPUI_VERSION + ") and parts of it may be incompatible or incorrect. "
-                            + "Saving this project with this version of SoapUI may cause it to function differently.");
-                }
-            } catch (Exception e) {
-            }
-
-            if (!getConfig().isSetProperties()) {
-                getConfig().addNewProperties();
-            }
-
-            setPropertiesConfig(getConfig().getProperties());
-
-            List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
-            for (InterfaceConfig config : interfaceConfigs) {
-                AbstractInterface<?> iface = InterfaceFactoryRegistry.build(this, config);
-                interfaces.add(iface);
-            }
-
-            List<TestSuiteConfig> testSuiteConfigs = getConfig().getTestSuiteList();
-            for (TestSuiteConfig config : testSuiteConfigs) {
-                testSuites.add(buildTestSuite(config));
-            }
-
-            List<MockServiceConfig> mockServiceConfigs = getConfig().getMockServiceList();
-            for (MockServiceConfig config : mockServiceConfigs) {
-                addWsdlMockService(new WsdlMockService(this, config));
-            }
-
-            List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
-            for (RESTMockServiceConfig config : restMockServiceConfigs) {
-                addRestMockService(new RestMockService(this, config));
-            }
-
-            if (!getConfig().isSetWssContainer()) {
-                getConfig().addNewWssContainer();
-            }
-
-            wssContainer = new DefaultWssContainer(this, getConfig().getWssContainer());
-
-            if (!getConfig().isSetOAuth2ProfileContainer()) {
-                getConfig().addNewOAuth2ProfileContainer();
-            }
-            oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().getOAuth2ProfileContainer());
-
-
-            endpointStrategy.init(this);
-
-            setActiveEnvironment(DefaultEnvironment.getInstance());
-
-            if (!getConfig().isSetAbortOnError()) {
-                getConfig().setAbortOnError(false);
-            }
-
-            if (!getConfig().isSetRunType()) {
-                getConfig().setRunType(TestSuiteRunTypesConfig.SEQUENTIAL);
-            }
-
-            afterLoad();
         } catch (Exception e) {
             if (e instanceof XmlException) {
                 XmlException xe = (XmlException) e;
@@ -393,6 +317,103 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         } finally {
             UISupport.resetCursor();
         }
+    }
+
+    public void loadProject(InputStream inputStream) {
+        UISupport.setHourglassCursor();
+        try {
+            loadProjectFromInputStream(inputStream);
+        } catch (XmlException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } finally {
+            UISupport.resetCursor();
+        }
+    }
+
+    public SoapuiProjectDocumentConfig loadProjectFromInputStream(InputStream inputStream) throws XmlException, IOException, GeneralSecurityException {
+        projectDocument = SoapuiProjectDocumentConfig.Factory.parse(inputStream);
+        inputStream.close();
+
+        // see if there is encoded data
+        this.encryptionStatus = checkForEncodedData(projectDocument.getSoapuiProject());
+
+        setConfig(projectDocument.getSoapuiProject());
+
+        // removed cached definitions if caching is disabled
+        if (!getSettings().getBoolean(WsdlSettings.CACHE_WSDLS)) {
+            removeDefinitionCaches(projectDocument);
+        }
+
+        try {
+            int majorVersion = Integer
+                    .parseInt(projectDocument.getSoapuiProject().getSoapuiVersion().split("\\.")[0]);
+            if (majorVersion > Integer.parseInt(SoapUI.SOAPUI_VERSION.split("\\.")[0])) {
+                log.warn("Project '" + projectDocument.getSoapuiProject().getName() + "' is from a newer version ("
+                        + projectDocument.getSoapuiProject().getSoapuiVersion() + ") of SoapUI than this ("
+                        + SoapUI.SOAPUI_VERSION + ") and parts of it may be incompatible or incorrect. "
+                        + "Saving this project with this version of SoapUI may cause it to function differently.");
+            }
+        } catch (Exception e) {
+        }
+
+        if (!getConfig().isSetProperties()) {
+            getConfig().addNewProperties();
+        }
+
+        setPropertiesConfig(getConfig().getProperties());
+
+        List<InterfaceConfig> interfaceConfigs = getConfig().getInterfaceList();
+        for (InterfaceConfig config : interfaceConfigs) {
+            AbstractInterface<?> iface = InterfaceFactoryRegistry.build(this, config);
+            interfaces.add(iface);
+        }
+
+        List<TestSuiteConfig> testSuiteConfigs = getConfig().getTestSuiteList();
+        for (TestSuiteConfig config : testSuiteConfigs) {
+            testSuites.add(buildTestSuite(config));
+        }
+
+        List<MockServiceConfig> mockServiceConfigs = getConfig().getMockServiceList();
+        for (MockServiceConfig config : mockServiceConfigs) {
+            addWsdlMockService(new WsdlMockService(this, config));
+        }
+
+        List<RESTMockServiceConfig> restMockServiceConfigs = getConfig().getRestMockServiceList();
+        for (RESTMockServiceConfig config : restMockServiceConfigs) {
+            addRestMockService(new RestMockService(this, config));
+        }
+
+        if (!getConfig().isSetWssContainer()) {
+            getConfig().addNewWssContainer();
+        }
+
+        wssContainer = new DefaultWssContainer(this, getConfig().getWssContainer());
+
+        if (!getConfig().isSetOAuth2ProfileContainer()) {
+            getConfig().addNewOAuth2ProfileContainer();
+        }
+        oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().getOAuth2ProfileContainer());
+
+
+        endpointStrategy.init(this);
+
+        setActiveEnvironment(DefaultEnvironment.getInstance());
+
+        if (!getConfig().isSetAbortOnError()) {
+            getConfig().setAbortOnError(false);
+        }
+
+        if (!getConfig().isSetRunType()) {
+            getConfig().setRunType(TestSuiteRunTypesConfig.SEQUENTIAL);
+        }
+
+        afterLoad();
+
+        return projectDocument;
     }
 
     public Environment getActiveEnvironment() {
@@ -423,20 +444,19 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
      * Decode encrypted data and restore user/pass
      *
      * @param soapuiProject
-     * @return 0 - not encrypted, 1 - successfull decryption , -1 error while
-     * decrypting, bad password, no password.
+     * @return a ProjectEncryptionStatus enum
      * @throws IOException
      * @throws GeneralSecurityException
      * @author robert nemet
      */
-    protected int checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
+    protected ProjectEncryptionStatus checkForEncodedData(ProjectConfig soapuiProject) throws IOException, GeneralSecurityException {
 
         byte[] encryptedContent = soapuiProject.getEncryptedContent();
         char[] password;
 
         // no encrypted data then go back
         if (encryptedContent == null || encryptedContent.length == 0) {
-            return 0;
+            return NOT_ENCRYPTED;
         }
 
         String projectPassword;
@@ -455,7 +475,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         byte[] data;
         // no pass go back.
         if (password == null) {
-            return -1;
+            return ENCRYPTED_BAD_OR_NO_PASSWORD;
         }
 
         try {
@@ -463,7 +483,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
             data = OpenSSL.decrypt(StringUtils.isNullOrEmpty(encryptionAlgorithm) ? "des3" : encryptionAlgorithm, password, encryptedContent);
         } catch (Exception e) {
             SoapUI.logError(e);
-            return -1;
+            return ENCRYPTED_BAD_OR_NO_PASSWORD;
         }
 
         String decryptedData = new String(data, "UTF-8");
@@ -477,17 +497,17 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                     UISupport.showErrorMessage("Wrong password. Project needs to be reloaded.");
                     wrongPasswordSupplied = true;
                     getWorkspace().clearProjectPassword(soapuiProject.getName());
-                    return -1;
+                    return ENCRYPTED_BAD_OR_NO_PASSWORD;
                 }
             }
         } else {
             UISupport.showErrorMessage("Wrong project password");
             wrongPasswordSupplied = true;
             getWorkspace().clearProjectPassword(soapuiProject.getName());
-            return -1;
+            return ENCRYPTED_BAD_OR_NO_PASSWORD;
         }
         projectDocument.getSoapuiProject().setEncryptedContent(null);
-        return 1;
+        return ENCRYPTED_GOOD_PASSWORD;
     }
 
     @Override
@@ -531,11 +551,44 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         return getConfig().getResourceRoot();
     }
 
+    private void initProjectIcons() {
+        closedIcon = UISupport.createImageIcon("/closedProject.gif");
+        remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
+        disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
+        openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
+        closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
+    }
+
+    private void createEmptyProjectConfiguration(String path, String tempName) {
+        projectDocument = SoapuiProjectDocumentConfig.Factory.newInstance();
+        setConfig(projectDocument.addNewSoapuiProject());
+        if (tempName != null || path != null) {
+            getConfig().setName(StringUtils.isNullOrEmpty(tempName) ? getNameFromPath() : tempName);
+        }
+
+        setPropertiesConfig(getConfig().addNewProperties());
+        wssContainer = new DefaultWssContainer(this, getConfig().addNewWssContainer());
+        oAuth2ProfileContainer = new DefaultOAuth2ProfileContainer(this, getConfig().addNewOAuth2ProfileContainer());
+    }
+
+    private void finalizeProjectLoading(boolean open) {
+        if (getConfig() != null) {
+            endpointStrategy.init(this);
+        }
+        if (getConfig() != null && this.environment == null) {
+            setActiveEnvironment(DefaultEnvironment.getInstance());
+        }
+
+        this.open = open && !disabled && (this.encryptionStatus != ENCRYPTED_BAD_OR_NO_PASSWORD);
+
+        addPropertyChangeListener(this);
+    }
+
     @Override
     public ImageIcon getIcon() {
         if (isDisabled()) {
             return disabledIcon;
-        } else if (getEncrypted() != 0) {
+        } else if (getEncryptionStatus() != NOT_ENCRYPTED) {
             if (isOpen()) {
                 return openEncyptedIcon;
             } else {
@@ -553,6 +606,16 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     private String getNameFromPath() {
         int ix = path.lastIndexOf(isRemote() ? '/' : File.separatorChar);
         return ix == -1 ? path : path.substring(ix + 1);
+    }
+
+    private void addProjectListeners() {
+        for (ProjectListener listener : SoapUI.getListenerRegistry().getListeners(ProjectListener.class)) {
+            addProjectListener(listener);
+        }
+
+        for (ProjectRunListener listener : SoapUI.getListenerRegistry().getListeners(ProjectRunListener.class)) {
+            addProjectRunListener(listener);
+        }
     }
 
     @Override
@@ -1053,6 +1116,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
 
     public WsdlTestSuite getTestSuiteByName(String testSuiteName) {
         return (WsdlTestSuite) getWsdlModelItemByName(testSuites, testSuiteName);
+    }
+
+    @Override
+    public TestSuite getTestSuiteById(UUID testSuiteId) {
+        return null;
     }
 
     public WsdlTestSuite addNewTestSuite(String name) {
@@ -1557,21 +1625,21 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         }
     }
 
-    public int getEncrypted() {
-        return this.encrypted;
+    public ProjectEncryptionStatus getEncryptionStatus() {
+        return this.encryptionStatus;
     }
 
-    public int setEncrypted(int code) {
-        return this.encrypted = code;
+    public ProjectEncryptionStatus setEncryptionStatus(ProjectEncryptionStatus status) {
+        return this.encryptionStatus = status;
     }
 
     public void propertyChange(PropertyChangeEvent evt) {
         if ("projectPassword".equals(evt.getPropertyName())) {
-            if (encrypted == 0 & (evt.getOldValue() == null || ((String) evt.getOldValue()).length() == 0)) {
-                encrypted = 1;
+            if (encryptionStatus == NOT_ENCRYPTED && (evt.getOldValue() == null || ((String) evt.getOldValue()).length() == 0)) {
+                encryptionStatus = ENCRYPTED_GOOD_PASSWORD;
             }
-            if (encrypted == 1 & (evt.getNewValue() == null || ((String) evt.getNewValue()).length() == 0)) {
-                encrypted = 0;
+            if (encryptionStatus == ENCRYPTED_GOOD_PASSWORD && (evt.getNewValue() == null || ((String) evt.getNewValue()).length() == 0)) {
+                encryptionStatus = NOT_ENCRYPTED;
             }
 
             if (SoapUI.getNavigator() != null) {

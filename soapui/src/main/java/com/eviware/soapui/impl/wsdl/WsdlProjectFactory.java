@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -38,24 +39,29 @@ public class WsdlProjectFactory implements ProjectFactory<WsdlProject> {
     }
 
     public WsdlProject createNew(String projectFile, String projectPassword) {
-        return new WsdlProject(projectFile, (WorkspaceImpl) null, true, true, null, projectPassword);
+        return new WsdlProject(projectFile, (WorkspaceImpl) null, true, null, projectPassword);
     }
 
     public WsdlProject createNew(Workspace workspace) {
-        return new WsdlProject(null, (WorkspaceImpl) workspace, true);
+        return new WsdlProject((String)null, (WorkspaceImpl) workspace);
     }
 
     public WsdlProject createNew(String path, Workspace workspace) {
-        return new WsdlProject(path, (WorkspaceImpl) workspace, true);
+        return new WsdlProject(path, (WorkspaceImpl) workspace);
     }
 
     public WsdlProject createNew(String path, Workspace workspace, boolean create) {
-        return new WsdlProject(path, (WorkspaceImpl) workspace, create, true, null, null);
+        return new WsdlProject(path, (WorkspaceImpl) workspace, true, null, null);
     }
 
-    public WsdlProject createNew(String path, Workspace workspace, boolean create, boolean open, String tempName,
+    public WsdlProject createNew(String path, Workspace workspace, boolean open, String tempName,
                                  String projectPassword) {
-        return new WsdlProject(path, (WorkspaceImpl) workspace, create, open, tempName, projectPassword);
+        return new WsdlProject(path, (WorkspaceImpl) workspace, open, tempName, projectPassword);
+    }
+
+    @Override
+    public WsdlProject createNew(InputStream inputStream, WorkspaceImpl workspace) {
+        return new WsdlProject(inputStream, workspace);
     }
 
 }

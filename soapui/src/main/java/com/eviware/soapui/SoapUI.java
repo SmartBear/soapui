@@ -192,11 +192,13 @@ public class SoapUI {
     private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
     public static final String SOAPUI_WELCOME_PAGE = "http://www.soapui.org/Downloads/thank-you-for-downloading-soapui.html";
-    public static String PUSH_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
+    public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
+    public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
+    public static String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
             + urlEncodeWithUtf8(SOAPUI_VERSION);
     public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 
-    public static String PUSH_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".")
+    public static String STARTER_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".")
             + "/starter-page.html";
 
     private static final int DEFAULT_DESKTOP_ACTIONS_COUNT = 3;
@@ -235,7 +237,7 @@ public class SoapUI {
     private static AutoSaveTimerTask autoSaveTimerTask;
     private static String workspaceName;
     private static StringToStringMap projectOptions = new StringToStringMap();
-    private static URLDesktopPanel urlDesktopPanel;
+    private static URLDesktopPanel starterPageDesktopPanel;
     private static JXToolBar mainToolbar;
     private static String[] mainArgs;
     private static GCTimerTask gcTimerTask;
@@ -436,7 +438,7 @@ public class SoapUI {
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
 
-        helpMenu.add(new ShowPushPageAction());
+        helpMenu.add(new ShowStarterPageAction());
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("API Testing Dojo", HelpUrls.API_TESTING_DOJO_HELP_URL));
         helpMenu.add(new ShowOnlineHelpAction("Getting Started", HelpUrls.GETTINGSTARTED_HELP_URL));
@@ -651,7 +653,7 @@ public class SoapUI {
                 if (getSettings().getBoolean(UISettings.SHOW_STARTUP_PAGE) && !isBrowserDisabled()) {
                     SwingUtilities.invokeLater(new Runnable() {
                         public void run() {
-                            showPushPage();
+                            showStarterPage();
                         }
                     });
                 }
@@ -1189,14 +1191,14 @@ public class SoapUI {
         applyProxyButton.setSelected(ProxyUtils.isProxyEnabled());
     }
 
-    private static class ShowPushPageAction extends AbstractAction {
-        public ShowPushPageAction() {
+    private static class ShowStarterPageAction extends AbstractAction {
+        public ShowStarterPageAction() {
             super("Starter Page");
             putValue(Action.SHORT_DESCRIPTION, "Shows the starter page");
         }
 
         public void actionPerformed(ActionEvent e) {
-            showPushPage();
+            showStarterPage();
         }
     }
 
@@ -1227,18 +1229,18 @@ public class SoapUI {
         }
     }
 
-    public static void showPushPage() {
-        if (urlDesktopPanel == null || urlDesktopPanel.isClosed()) {
+    public static void showStarterPage() {
+        if (starterPageDesktopPanel == null || starterPageDesktopPanel.isClosed()) {
             try {
-                urlDesktopPanel = new URLDesktopPanel("SoapUI Starter Page", "Info on SoapUI", null);
-            } catch (Throwable t) {
-                t.printStackTrace();
+                starterPageDesktopPanel = new URLDesktopPanel(STARTER_PAGE_HEADER, STARTER_PAGE_TOOL_TIP, null);
+            } catch (Exception e) {
+                logError(e);
                 return;
             }
         }
 
-        UISupport.showDesktopPanel(urlDesktopPanel);
-        urlDesktopPanel.navigate(PUSH_PAGE_URL, PUSH_PAGE_ERROR_URL, true);
+        UISupport.showDesktopPanel(starterPageDesktopPanel);
+        starterPageDesktopPanel.navigate(STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
     }
 
     private static class AboutAction extends AbstractAction {

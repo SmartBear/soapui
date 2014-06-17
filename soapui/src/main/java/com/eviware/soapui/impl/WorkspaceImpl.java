@@ -47,7 +47,11 @@ import org.apache.xmlbeans.XmlOptions;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
+
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus;
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
 
 /**
  * Default Workspace implementation
@@ -143,7 +147,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
 
                 try {
                     WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(str,
-                            this, false, !closeOnStartup && wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE,
+                            this, !closeOnStartup && wsc.getStatus() != Status.CLOSED && wsc.getType() != Type.REMOTE,
                             wsc.getName(), null);
 
                     projectList.add(project);
@@ -282,7 +286,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
             }
 
             if (!project.isOpen()) {
-                if (project.getEncrypted() == 0) {
+                if (project.getEncryptionStatus() == NOT_ENCRYPTED) {
                     wpc.setStatus(Status.CLOSED);
                 } else {
                     wpc.setStatus(Status.CLOSED_AND_ENCRYPTED);
@@ -331,12 +335,16 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(
                 projectFile.getAbsolutePath(), this);
 
-        projectList.add(project);
-        fireProjectAdded(project);
+        afterProjectImport(project);
 
-        resolveProject(project);
+        return project;
+    }
 
-        save(true);
+    @Override
+    public Project importProject(InputStream inputStream) {
+        WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(inputStream, this);
+
+        afterProjectImport(project);
 
         return project;
     }
@@ -386,7 +394,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         }
 
         WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE)
-                .createNew(null, this);
+                .createNew((String)null, this);
 
         project.setName(name);
         projectList.add(project);
@@ -402,6 +410,15 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         }
 
         return project;
+    }
+
+    private void afterProjectImport(WsdlProject project) {
+        projectList.add(project);
+        fireProjectAdded(project);
+
+        resolveProject(project);
+
+        save(true);
     }
 
     private void fireProjectOpened(Project project) {
@@ -466,7 +483,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         String tempName = project.getName();
         project.release();
         project = ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(project.getPath(), this,
-                false, true, tempName, null);
+                true, tempName, null);
         projectList.add(ix, project);
 
         fireProjectAdded(project);
@@ -522,20 +539,14 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
     }
 
     public WsdlProject importRemoteProject(String url) throws SoapUIException {
-        WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(url, this,
-                false);
-        projectList.add(project);
-        fireProjectAdded(project);
-
-        resolveProject(project);
-
-        save(true);
+        WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(url, this);
+        afterProjectImport(project);
 
         return project;
     }
 
     public void closeProject(Project project) {
-        int oldProjectEncrypt = ((WsdlProject) project).getEncrypted();
+        ProjectEncryptionStatus oldProjectEncrypt = ((WsdlProject) project).getEncryptionStatus();
         int ix = projectList.indexOf(project);
         if (ix == -1) {
             throw new RuntimeException("Project [" + project.getName() + "] not available in workspace for close");
@@ -550,8 +561,8 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
 
         try {
             project = ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE).createNew(
-                    project.getPath(), this, false, false, name, null);
-            ((WsdlProject) project).setEncrypted(oldProjectEncrypt);
+                    project.getPath(), this, false, name, null);
+            ((WsdlProject) project).setEncryptionStatus(oldProjectEncrypt);
             projectList.add(ix, project);
             fireProjectAdded(project);
         } catch (Exception e) {

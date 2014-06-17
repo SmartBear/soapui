@@ -17,6 +17,7 @@
 package com.eviware.soapui.model.testsuite;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
@@ -40,6 +41,8 @@ public interface TestSuite extends TestModelItem, ResultContainer, TestRunnable 
     public TestCase getTestCaseAt(int index);
 
     public TestCase getTestCaseByName(String testCaseName);
+
+    public TestCase getTestCaseById(UUID id);
 
     public List<TestCase> getTestCaseList();
 

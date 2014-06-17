@@ -22,6 +22,7 @@ import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.SoapUIException;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -50,6 +51,8 @@ public interface Workspace extends ModelItem {
     public void removeProject(Project project);
 
     public Project importProject(String filename) throws SoapUIException;
+
+    public Project importProject(InputStream inputStream);
 
     public int getIndexOfProject(Project project);
 

@@ -41,7 +41,7 @@ public class WsdlProjectSoapUIActionGroup extends AbstractSoapUIActionGroup<Wsdl
                     "DisabledWsdlProjectActions");
             return actionGroup.getActionMappings(project);
         } else if (!project.isOpen()) {
-            if (project.getEncrypted() != 0) {
+            if (project.getEncryptionStatus() != WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED) {
                 SoapUIActionGroup<WsdlProject> actionGroup = SoapUI.getActionRegistry().getActionGroup(
                         "EncryptedWsdlProjectActions");
                 return actionGroup.getActionMappings(project);
