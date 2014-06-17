@@ -876,6 +876,7 @@
                                  maxOccurs="1" minOccurs="0">
                     </xsd:element>
                 </xsd:sequence>
+                <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="port" type="xsd:int"></xsd:attribute>
                 <xsd:attribute name="host" type="xsd:string"></xsd:attribute>
                 <xsd:attribute name="bindToHostOnly" type="xsd:boolean">
