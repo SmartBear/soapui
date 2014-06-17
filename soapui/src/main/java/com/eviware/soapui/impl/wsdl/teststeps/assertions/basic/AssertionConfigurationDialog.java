@@ -66,7 +66,7 @@ public class AssertionConfigurationDialog {
 
     protected void buildConfigurationDialog() {
         configurationDialog = new JDialog(UISupport.getMainFrame());
-        configurationDialog.setTitle("Assertion Configuration");
+        configurationDialog.setTitle(assertion.getConfigurationDialogTitle());
         configurationDialog.addWindowListener(new WindowAdapter() {
             @Override
             public void windowOpened(WindowEvent event) {

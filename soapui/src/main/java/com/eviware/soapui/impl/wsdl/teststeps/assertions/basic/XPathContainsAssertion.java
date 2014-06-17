@@ -474,6 +474,10 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         return true;
     }
 
+    public String getConfigurationDialogTitle() {
+        return "XPath Match Configuration";
+    }
+
     private final class InternalDifferenceListener implements DifferenceListener {
         private StringList nodesToRemove = new StringList();
 
