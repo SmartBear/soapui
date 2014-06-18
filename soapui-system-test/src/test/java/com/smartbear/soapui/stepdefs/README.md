@@ -17,15 +17,19 @@ then organize it according to the following example structure based on domain co
     ----------smartbear
     ------------soapui
     --------------stepdefs
-    ----------------soap
-    ------------------project
-    --------------------SoapProjectStepdefs.java
-    ------------------refactoring
-    --------------------DefinitionRefactoringStepdefs.java
-    ----------------rest
-    ------------------project
-    --------------------RestProjectStepdefs.java
-    ------------------authentication
-    --------------------OAuth2Stepdefs.java
+    ----------------fest
+    ------------------soap
+    --------------------project
+    ----------------------SoapProjectStepdefs.java
+    --------------------refactoring
+    ----------------------DefinitionRefactoringStepdefs.java
+    ------------------rest
+    --------------------project
+    ----------------------RestProjectStepdefs.java
+    --------------------authentication
+    ----------------------OAuth2Stepdefs.java
+    ----------------java
+    ------------------licensing
+    ----------------------LicensingStepdefs.java
 
 **That's is!**

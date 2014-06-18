@@ -13,11 +13,11 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-package com.smartbear.soapui.stepdefs.application;
+package com.smartbear.soapui.stepdefs.fest.application;
 
 import com.eviware.soapui.support.ConsoleDialogs;
 import com.eviware.soapui.support.UISupport;
-import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.ApplicationUtils;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;

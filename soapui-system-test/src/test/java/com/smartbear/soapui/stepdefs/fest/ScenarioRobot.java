@@ -13,7 +13,7 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-package com.smartbear.soapui.stepdefs;
+package com.smartbear.soapui.stepdefs.fest;
 
 import org.fest.swing.core.BasicRobot;
 import org.fest.swing.core.Robot;
