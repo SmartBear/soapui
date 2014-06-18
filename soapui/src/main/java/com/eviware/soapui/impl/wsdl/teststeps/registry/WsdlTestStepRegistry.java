@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.registry;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class WsdlTestStepRegistry {
+public class WsdlTestStepRegistry implements SoapUIFactoryRegistryListener {
     private static WsdlTestStepRegistry instance;
     private List<WsdlTestStepFactory> factories = new ArrayList<WsdlTestStepFactory>();
 
@@ -59,6 +60,8 @@ public class WsdlTestStepRegistry {
         for (WsdlTestStepFactory factory : SoapUI.getFactoryRegistry().getFactories(WsdlTestStepFactory.class)) {
             addFactory(factory);
         }
+
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
     }
 
     public WsdlTestStepFactory getFactory(String type) {
@@ -106,5 +109,17 @@ public class WsdlTestStepRegistry {
 
     public boolean hasFactory(TestStepConfig config) {
         return getFactory(config.getType()) != null;
+    }
+
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if( factory instanceof WsdlTestStepFactory )
+            addFactory((WsdlTestStepFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if( factory instanceof WsdlTestStepFactory )
+            removeFactory(((WsdlTestStepFactory) factory).getType());
     }
 }

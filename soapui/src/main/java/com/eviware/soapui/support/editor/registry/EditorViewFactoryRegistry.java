@@ -16,11 +16,13 @@
 
 package com.eviware.soapui.support.editor.registry;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.panels.request.views.html.HttpHtmlResponseViewFactory;
 import com.eviware.soapui.impl.rest.panels.request.views.json.JsonResponseViewFactory;
 import com.eviware.soapui.impl.support.http.HttpRequestContentViewFactory;
 import com.eviware.soapui.support.editor.views.xml.raw.RawXmlEditorFactory;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorViewFactory;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +34,7 @@ import java.util.List;
  * @author ole.matzura
  */
 
-public class EditorViewFactoryRegistry {
+public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener {
     private static EditorViewFactoryRegistry instance;
     private List<EditorViewFactory> factories = new ArrayList<EditorViewFactory>();
 
@@ -44,6 +46,13 @@ public class EditorViewFactoryRegistry {
         addFactory(new JsonResponseViewFactory());
         addFactory(new HttpHtmlResponseViewFactory());
         addFactory(new RawXmlEditorFactory());
+
+        for( EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories( EditorViewFactory.class ))
+        {
+            addFactory( factory );
+        }
+
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
     }
 
     public void addFactory(EditorViewFactory factory) {
@@ -83,5 +92,17 @@ public class EditorViewFactoryRegistry {
 
     public void removeFactory(EditorViewFactory factory) {
         factories.remove(factory);
+    }
+
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if( factoryType.isAssignableFrom( EditorViewFactory.class ))
+            addFactory((EditorViewFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if( factoryType.isAssignableFrom( EditorViewFactory.class ))
+            removeFactory((EditorViewFactory) factory);
     }
 }

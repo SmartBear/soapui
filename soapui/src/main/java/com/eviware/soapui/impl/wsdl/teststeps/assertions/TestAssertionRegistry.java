@@ -16,40 +16,18 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.GroovyScriptAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.ResponseSLAAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SimpleNotContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.*;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.http.HttpDownloadAllResourcesAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcStatusAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcTimeoutAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSStatusAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSTimeoutAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapRequestAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapResponseAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSARequestAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSAResponseAssertion;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.WSSStatusAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.*;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
@@ -57,7 +35,11 @@ import com.eviware.soapui.security.assertion.CrossSiteScriptAssertion;
 import com.eviware.soapui.security.assertion.InvalidHttpStatusCodesAssertion;
 import com.eviware.soapui.security.assertion.SensitiveInfoExposureAssertion;
 import com.eviware.soapui.security.assertion.ValidHttpStatusCodesAssertion;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 import com.eviware.soapui.support.types.StringToStringMap;
+import org.apache.log4j.Logger;
+
+import java.util.*;
 
 /**
  * Registry for WsdlAssertions
@@ -65,7 +47,7 @@ import com.eviware.soapui.support.types.StringToStringMap;
  * @author Ole.Matzura
  */
 
-public class TestAssertionRegistry {
+public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
     private static TestAssertionRegistry instance;
     private Map<String, TestAssertionFactory> availableAssertions = new HashMap<String, TestAssertionFactory>();
     private StringToStringMap assertionLabels = new StringToStringMap();
@@ -104,11 +86,19 @@ public class TestAssertionRegistry {
         for (TestAssertionFactory factory : SoapUI.getFactoryRegistry().getFactories(TestAssertionFactory.class)) {
             addAssertion(factory);
         }
+
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
     }
 
     public void addAssertion(TestAssertionFactory factory) {
         availableAssertions.put(factory.getAssertionId(), factory);
         assertionLabels.put(factory.getAssertionLabel(), factory.getAssertionId());
+    }
+
+    public void removeFactory( TestAssertionFactory factory )
+    {
+        availableAssertions.remove( factory.getAssertionId());
+        assertionLabels.remove( factory.getAssertionLabel());
     }
 
     public static synchronized TestAssertionRegistry getInstance() {
@@ -172,6 +162,18 @@ public class TestAssertionRegistry {
 
     public String getAssertionTypeForName(String name) {
         return assertionLabels.get(name);
+    }
+
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if( factory instanceof TestAssertionFactory )
+            addAssertion((TestAssertionFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if( factory instanceof TestAssertionFactory )
+            removeFactory((TestAssertionFactory) factory);
     }
 
     public enum AssertableType {

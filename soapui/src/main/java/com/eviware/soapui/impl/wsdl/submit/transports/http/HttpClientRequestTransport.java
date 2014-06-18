@@ -24,14 +24,7 @@ import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageResponse;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedDeleteMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.*;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HeaderRequestInterceptor;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -86,6 +79,15 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
                 }
             }
         }
+    }
+
+    @Override
+    public void insertRequestFilter(RequestFilter filter, RequestFilter refFilter) {
+        int ix = filters.indexOf( refFilter );
+        if( ix == -1 )
+            filters.add( filter );
+        else
+            filters.add( ix, filter );
     }
 
     public <T> void removeRequestFilter(Class<T> filterClass) {
