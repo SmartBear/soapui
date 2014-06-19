@@ -48,6 +48,9 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 public abstract class AbstractSoapUIRunner implements CmdLineRunner {
+    public static final int NORMAL_TERMINATION = 0;
+    public static final int ABNORMAL_TERMINATION = -1;
+
     private boolean groovyLogInitialized;
     private String projectFile;
     protected final Logger log = Logger.getLogger(getClass());
@@ -85,7 +88,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
         try {
             if (initFromCommandLine(args, true)) {
                 if (run()) {
-                    return 0;
+                    return NORMAL_TERMINATION;
                 }
             }
         } catch (Throwable e) {
@@ -93,7 +96,7 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
             SoapUI.logError(e);
         }
 
-        return -1;
+        return ABNORMAL_TERMINATION;
     }
 
     public boolean initFromCommandLine(String[] args, boolean printHelp) throws Exception {
