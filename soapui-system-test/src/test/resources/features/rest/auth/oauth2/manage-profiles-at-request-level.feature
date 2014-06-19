@@ -1,4 +1,4 @@
-@Automated @Acceptance
+@AutomatedByFest @Acceptance
 Feature: Managing auth profiles from the request/TestStep level
 
   Scenario: Add a new OAuth 2.0 profile

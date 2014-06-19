@@ -1,4 +1,4 @@
-@wip @Automated @Acceptance
+@AutomatedByFest @Acceptance
 Feature: OAuth2 Advanced options
 
   Scenario Outline: Changes selected in OAuth2 advanced options dialog are set to profile

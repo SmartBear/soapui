@@ -1,4 +1,4 @@
-@Automated @Regression
+@AutomatedByFest @Regression
 Feature: Add rest mock service
 
   Scenario: Add mock service option available in rest request context
