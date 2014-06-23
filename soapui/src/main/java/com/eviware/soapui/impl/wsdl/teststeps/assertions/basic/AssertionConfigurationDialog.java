@@ -156,7 +156,7 @@ public class AssertionConfigurationDialog {
     }
 
     protected void addMatchEditorActions(JXToolBar toolbar) {
-        toolbar.addFixed(new JButton(new SelectFromCurrentAction()));
+        toolbar.addFixed(new JButton(createSelectFromCurrentAction()));
         toolbar.addRelatedGap();
         toolbar.addFixed(new JButton(createTestPathAction()));
 
@@ -188,6 +188,10 @@ public class AssertionConfigurationDialog {
             toolbar.addRelatedGap();
             toolbar.addFixed(ignoreCommentsCheckBox);
         }
+    }
+
+    protected SelectFromCurrentAction createSelectFromCurrentAction() {
+        return new SelectFromCurrentAction();
     }
 
     protected TestPathAction createTestPathAction() {
