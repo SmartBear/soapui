@@ -13,9 +13,9 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-package com.smartbear.soapui.stepdefs.mock;
+package com.smartbear.soapui.stepdefs.fest.mock;
 
-import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.fest.swing.core.Robot;

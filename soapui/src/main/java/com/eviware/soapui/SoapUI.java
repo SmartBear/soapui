@@ -1012,7 +1012,7 @@ public class SoapUI {
             Analytics.trackAction("ExitWithoutSave");
         }
 
-        AnalyticsManager.getAnalytics().trackSessionStop();
+        Analytics.trackSessionStop();
 
         shutdown();
 

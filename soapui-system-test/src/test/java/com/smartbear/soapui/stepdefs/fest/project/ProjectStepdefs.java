@@ -13,7 +13,7 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-package com.smartbear.soapui.stepdefs.project;
+package com.smartbear.soapui.stepdefs.fest.project;
 
 import cucumber.api.java.en.And;
 
