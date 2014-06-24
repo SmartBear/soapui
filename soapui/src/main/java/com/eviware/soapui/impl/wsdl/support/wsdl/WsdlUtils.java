@@ -1361,7 +1361,8 @@ public class WsdlUtils
 
 	public static String getTargetNamespace( Definition definition )
 	{
-		return definition.getTargetNamespace() == null ? XMLConstants.NULL_NS_URI : definition.getTargetNamespace();
+		// NULL_NS_URI cannot be resolved or is not a field
+		return definition.getTargetNamespace() == null ? XMLConstants.DEFAULT_NS_PREFIX : definition.getTargetNamespace();
 	}
 
 	public static SchemaType generateRpcBodyType( WsdlOperation operation )
