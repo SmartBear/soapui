@@ -146,7 +146,7 @@ public class AssertionConfigurationDialog {
     }
 
     void addDeclareNamespaceButton(JXToolBar toolbar) {
-        if(assertion.canAssertXmlContent()){
+        if (assertion.canAssertXmlContent()) {
             toolbar.addFixed(new JButton(new DeclareNamespacesFromCurrentAction()));
         }
     }
@@ -177,7 +177,7 @@ public class AssertionConfigurationDialog {
         ignoreCommentsCheckBox.setPreferredSize(largerDim);
         ignoreCommentsCheckBox.setOpaque(false);
 
-        if(assertion.canAssertXmlContent()){
+        if (assertion.canAssertXmlContent()) {
 
             toolbar.addRelatedGap();
             toolbar.addFixed(allowWildcardsCheckBox);
@@ -263,17 +263,20 @@ public class AssertionConfigurationDialog {
             String oldContent = assertion.getExpectedContent();
             boolean oldAllowWildcards = assertion.isAllowWildcards();
 
-            assertion.setPath(pathArea.getText().trim());
-            assertion.setExpectedContent(contentArea.getText());
-            assertion.setAllowWildcards(allowWildcardsCheckBox.isSelected());
+            setAssertionParameters(pathArea.getText().trim(), contentArea.getText(), allowWildcardsCheckBox.isSelected());
             assertion.setIgnoreNamespaceDifferences(ignoreNamespaceDifferencesCheckBox.isSelected());
             assertion.setIgnoreComments(ignoreCommentsCheckBox.isSelected());
 
             try {
                 String assertableContent = assertion.getAssertable().getAssertableContent();
-                if (!JsonUtil.seemsToBeJson(assertableContent))
-                {
-                    assertableContent =  assertion.getAssertable().getAssertableContentAsXml();
+                if (XPathContainsAssertion.ID.equals(assertion.getConfig().getType()) //Backward compatibility
+                        || (!JsonUtil.seemsToBeJson(assertableContent))) {
+                    assertableContent = assertion.getAssertable().getAssertableContentAsXml();
+                }
+                if (assertableContent == null) {
+                    UISupport.showErrorMessage("Missing content!!");
+                    setAssertionParameters(oldPath, oldContent, oldAllowWildcards);
+                    return;
                 }
                 String msg = assertion.assertContent(assertableContent,
                         new WsdlTestRunContext(assertion.getAssertable().getTestStep()), "Response");
@@ -281,10 +284,13 @@ public class AssertionConfigurationDialog {
             } catch (AssertionException e) {
                 UISupport.showErrorMessage(e.getMessage());
             }
+            setAssertionParameters(oldPath, oldContent, oldAllowWildcards);
+        }
 
-            assertion.setPath(oldPath);
-            assertion.setExpectedContent(oldContent);
-            assertion.setAllowWildcards(oldAllowWildcards);
+        private void setAssertionParameters(String path, String content, boolean allowWildCards) {
+            assertion.setPath(path);
+            assertion.setExpectedContent(content);
+            assertion.setAllowWildcards(allowWildCards);
         }
     }
 

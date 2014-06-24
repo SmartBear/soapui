@@ -394,7 +394,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         XmlCursor cursor = null;
 
         try {
-            String assertableContent = getAssertable().getAssertableContent();
+            String assertableContent = getAssertable().getAssertableContentAsXml();
             if (assertableContent == null || assertableContent.trim().length() == 0) {
                 UISupport.showErrorMessage("Missing content to select from");
                 return;
