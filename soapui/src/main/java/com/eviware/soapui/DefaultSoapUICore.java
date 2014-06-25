@@ -138,8 +138,8 @@ public class DefaultSoapUICore implements SoapUICore {
         initSettings(settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile);
 
         initExtensions(getExtensionClassLoader());
-        loadPlugins();
         initCoreComponents();
+        loadPlugins();
 
         // this is to provoke initialization
         SoapVersion.Soap11.equals(SoapVersion.Soap12);
