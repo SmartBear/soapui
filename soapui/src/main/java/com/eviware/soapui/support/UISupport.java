@@ -63,7 +63,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.plaf.basic.BasicProgressBarUI;
@@ -257,16 +256,11 @@ public class UISupport {
 
     public static void showErrorMessage(final String message) {
         Analytics.trackError(new Throwable(message));
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
-                    dialogs.showExtendedInfo("Error", "An error occurred", message, null);
-                } else {
-                    dialogs.showErrorMessage(message);
-                }
-            }
-        });
+        if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
+            dialogs.showExtendedInfo("Error", "An error occurred", message, null);
+        } else {
+            dialogs.showErrorMessage(message);
+        }
     }
 
     public static boolean confirm(String question, String title) {
