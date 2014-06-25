@@ -17,7 +17,7 @@ package com.eviware.soapui.utils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
-import org.junit.internal.matchers.TypeSafeMatcher;
+import org.hamcrest.TypeSafeMatcher;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
