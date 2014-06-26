@@ -317,7 +317,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         textField.setComponentPopupMenu(popup);
 
         if (popup != null) {
-            PropertyExpansionPopupListener.addMenu(popup, "Get Data..", target.getContextModelItem(), target);
+            PropertyExpansionPopupListener.addMenu(popup, "Get Data...", target.getContextModelItem(), target);
         }
     }
 
