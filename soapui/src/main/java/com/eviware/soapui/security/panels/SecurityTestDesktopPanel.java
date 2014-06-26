@@ -44,6 +44,7 @@ import javax.swing.text.Document;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
@@ -417,7 +418,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
                 }
             }
             if (shouldRun) {
-                Analytics.trackAction("RunSecurityTest");
+                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST.getActionName());
                 runSecurityTest();
             } else {
                 UISupport.showInfoMessage("No Security Scans available to run.", "Security Test Warning");

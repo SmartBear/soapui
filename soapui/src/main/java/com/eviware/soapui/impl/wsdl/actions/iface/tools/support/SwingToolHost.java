@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.support;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.UISupport;
 
@@ -44,7 +45,7 @@ public class SwingToolHost implements ToolHost {
             UISupport.showErrorMessage(ex);
             throw ex;
         } finally {
-            Analytics.trackAction("RunTool", "Tool", runner.getName());
+            Analytics.trackAction(SoapUIActions.RUN_TOOL.getActionName(), "Tool", runner.getName());
             if (processDialog != null) {
                 processDialog.setVisible(false);
             }
