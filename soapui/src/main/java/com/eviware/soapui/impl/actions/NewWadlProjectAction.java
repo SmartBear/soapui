@@ -92,8 +92,6 @@ public class NewWadlProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
                         }
                         showDeepestEditor(project);
 
-                        Analytics.trackAction("CreateRestProject");
-
                         break;
                     }
                 }

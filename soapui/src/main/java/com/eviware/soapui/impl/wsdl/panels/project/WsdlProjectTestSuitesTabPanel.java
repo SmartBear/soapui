@@ -34,6 +34,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JToggleButton;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.AddNewTestSuiteAction;
@@ -278,7 +279,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
 
         public void actionPerformed(ActionEvent e) {
             runProject();
-            Analytics.trackAction( "RunProject");
+            Analytics.trackAction(SoapUIActions.RUN_PROJECT.getActionName());
         }
     }
 

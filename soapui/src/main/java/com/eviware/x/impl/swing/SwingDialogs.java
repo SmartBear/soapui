@@ -54,8 +54,12 @@ public class SwingDialogs implements XDialogs {
         this.parent = parent;
     }
 
-    public void showErrorMessage(String message) {
-        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+    public void showErrorMessage(final String message) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     public boolean confirm(String question, String title) {
@@ -80,8 +84,12 @@ public class SwingDialogs implements XDialogs {
         showInfoMessage(message, "Information");
     }
 
-    public void showInfoMessage(String message, String title) {
-        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+    public void showInfoMessage(final String message, final String title) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
     }
 
     public Object prompt(String question, String title, Object[] objects) {
@@ -114,10 +122,13 @@ public class SwingDialogs implements XDialogs {
         return new ProgressDialog("Progress", label, length, initialValue, canCancel);
     }
 
-    public void showExtendedInfo(String title, String description, String content, Dimension size) {
-        JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK")));
-
-        showExtendedInfo(title, description, content, buttonBar, size);
+    public void showExtendedInfo(final String title, final String description, final String content, final Dimension size) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK")));
+                showExtendedInfo(title, description, content, buttonBar, size);
+            }
+        });
     }
 
     private void showExtendedInfo(String title, String description, String content, JPanel buttonBar, Dimension size) {

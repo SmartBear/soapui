@@ -334,7 +334,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             String acceptEncoding = result.getMockRequest().getRequestHeaders().get("Accept-Encoding", "");
             if (AUTO_RESPONSE_COMPRESSION.equals(responseCompression) && acceptEncoding != null
                     && acceptEncoding.toUpperCase().contains("GZIP")) {
-                result.addHeader("Content-Encoding", "gzip");
+                if (!headerExists("Content-Encoding", "gzip", result)) {
+                    result.addHeader("Content-Encoding", "gzip");
+                }
                 outData.write(CompressionSupport.compress(CompressionSupport.ALG_GZIP, content));
             } else if (AUTO_RESPONSE_COMPRESSION.equals(responseCompression) && acceptEncoding != null
                     && acceptEncoding.toUpperCase().contains("DEFLATE")) {
@@ -384,6 +386,18 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
 
 
         return responseContent;
+    }
+
+    private boolean headerExists(String headerName, String headerValue, MockResult result) {
+        StringToStringsMap resultResponseHeaders = result.getResponseHeaders();
+
+        if (resultResponseHeaders.containsKeyIgnoreCase(headerName)) {
+            if (resultResponseHeaders.get(headerName).contains(headerValue)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean prepareMessagePart(MimeMultipart mp, StringToStringMap contentIds, MessageXmlPart requestPart) throws Exception {
