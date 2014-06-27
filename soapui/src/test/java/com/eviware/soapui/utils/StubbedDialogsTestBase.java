@@ -17,29 +17,65 @@ package com.eviware.soapui.utils;
 
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.dialogs.XDialogs;
+import com.eviware.x.dialogs.XFileDialogs;
 import org.junit.After;
 import org.junit.Before;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import java.io.File;
+import java.io.IOException;
+
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.when;
 
 /**
- * Created with IntelliJ IDEA.
- * User: manne
- * Date: 2/17/14
- * Time: 10:10 AM
- * To change this template use File | Settings | File Templates.
+ * This class provides a base for mocking out dialogs in SoapUI when doing unit testing.
+ * The dialogs will be replaced by <i>StubbedDialogs</i> and the file dialogs with a mock that
+ * returns a new <i>File</i> object when the <i>saveAs()</i> method is called
+ *
+ * @see StubbedDialogs
  */
-public class StubbedDialogsTestBase {
+public abstract class StubbedDialogsTestBase {
+    private static final String SAVED_PROJECT_FILE_NAME = "saved-project-file";
+    private static final String SAVED_PROJECT_FILE_EXTENSION = ".xml";
+
     protected StubbedDialogs stubbedDialogs;
+    @Mock
+    protected XFileDialogs mockedFileDialogs;
+
     private XDialogs originalDialogs;
+    private XFileDialogs originalFileDialogs;
 
     @Before
-    public void resetDialogs() {
-        originalDialogs = UISupport.getDialogs();
+    public void setupStubbedDialogs() throws IOException {
+        MockitoAnnotations.initMocks(this);
+        // These need to be reset each time to support the
         stubbedDialogs = new StubbedDialogs();
-        UISupport.setDialogs(stubbedDialogs);
+        addSaveAsBehaviour(mockedFileDialogs);
+        setMockedDialogsTemporary();
     }
 
     @After
-    public void restoreDialogs() {
+    public void teardownStubbedDialogs() {
+        restoreOriginalDialogs();
+    }
+
+
+    private void addSaveAsBehaviour(XFileDialogs mockedFileDialogs) throws IOException {
+        File savedFile = File.createTempFile(SAVED_PROJECT_FILE_NAME, SAVED_PROJECT_FILE_EXTENSION);
+        when(mockedFileDialogs.saveAs(anyObject(), anyString(), anyString(), anyString(), isA(File.class))).thenReturn(savedFile);
+    }
+
+    private void setMockedDialogsTemporary() {
+        originalDialogs = UISupport.getDialogs();
+        originalFileDialogs = UISupport.getFileDialogs();
+        UISupport.setDialogs(stubbedDialogs);
+        UISupport.setFileDialogs(mockedFileDialogs);
+    }
+
+    private void restoreOriginalDialogs() {
         UISupport.setDialogs(originalDialogs);
+        UISupport.setFileDialogs(originalFileDialogs);
     }
 }

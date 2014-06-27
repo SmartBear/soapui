@@ -30,12 +30,11 @@ import org.junit.Test;
 import java.io.File;
 
 import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod.GET;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
-public class WsdlProjectTest {
+public class WsdlProjectWithRestMockTest {
+    public static final String TEST_PROJECT_PATH = "/soapui-projects/BasicMock-soapui-4.6.3-Project.xml";
     private final String restMockResponseContent = "Some response";
     private WsdlProject project;
     private final String restMockServiceName = "Another Great Wow";
@@ -43,7 +42,7 @@ public class WsdlProjectTest {
 
     @Before
     public void setUp() throws Exception {
-        String fileName = SoapUI.class.getResource("/soapui-projects/BasicMock-soapui-4.6.3-Project.xml").toURI().toString();
+        String fileName = SoapUI.class.getResource(TEST_PROJECT_PATH).toURI().toString();
         project = new WsdlProject(fileName);
     }
 

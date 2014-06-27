@@ -13,14 +13,14 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-package com.smartbear.soapui.stepdefs.rest.auth;
+package com.smartbear.soapui.stepdefs.fest.rest.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.editor.inspectors.auth.OAuth2Form;
 import com.eviware.soapui.support.editor.inspectors.auth.OAuth2GetAccessTokenForm;
 import com.eviware.soapui.support.editor.inspectors.auth.ProfileSelectionForm;
-import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.FestMatchers;
 import com.smartbear.soapui.utils.fest.FestUtils;
 import cucumber.api.java.en.And;

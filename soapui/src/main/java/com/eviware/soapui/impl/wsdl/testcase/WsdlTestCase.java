@@ -18,7 +18,11 @@ package com.eviware.soapui.impl.wsdl.testcase;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.LoadTestConfig;
+import com.eviware.soapui.config.SecurityTestConfig;
+import com.eviware.soapui.config.TestCaseConfig;
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.config.WsrmVersionTypeConfig;
 import com.eviware.soapui.impl.wsdl.AbstractTestPropertyHolderWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.LoadTestAssertion;
@@ -34,7 +38,12 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepRegistry;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.support.ModelSupport;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.testsuite.LoadTest;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestRunListener;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -49,7 +58,15 @@ import org.apache.log4j.Logger;
 import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.UUID;
 
 /**
  * TestCase implementation for WSDL projects
@@ -385,8 +402,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     public WsdlTestStep addTestStep(String type, String name) {
         WsdlTestStepFactory testStepFactory = WsdlTestStepRegistry.getInstance().getFactory(type);
-        if( testStepFactory != null )
-        {
+        if (testStepFactory != null) {
             TestStepConfig newStepConfig = testStepFactory.createNewTestStep(this, name);
             if (newStepConfig != null) {
                 return addTestStep(newStepConfig);
@@ -397,10 +413,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public WsdlTestStep addTestStep(String type, String name, String endpoint, String method) {
-        WsdlTestStepFactory requestStepFactory =  WsdlTestStepRegistry.getInstance().getFactory(type);
-        if( requestStepFactory instanceof HttpRequestStepFactory )
-        {
-            TestStepConfig newStepConfig = ((HttpRequestStepFactory)requestStepFactory).createNewTestStep(this, name, endpoint, method);
+        WsdlTestStepFactory requestStepFactory = WsdlTestStepRegistry.getInstance().getFactory(type);
+        if (requestStepFactory instanceof HttpRequestStepFactory) {
+            TestStepConfig newStepConfig = ((HttpRequestStepFactory) requestStepFactory).createNewTestStep(this, name, endpoint, method);
             if (newStepConfig != null) {
                 return addTestStep(newStepConfig);
             }
@@ -411,8 +426,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
     public WsdlTestStep insertTestStep(String type, String name, int index) {
         WsdlTestStepFactory testStepFactory = WsdlTestStepRegistry.getInstance().getFactory(type);
-        if( testStepFactory != null )
-        {
+        if (testStepFactory != null) {
             TestStepConfig newStepConfig = testStepFactory.createNewTestStep(this, name);
             if (newStepConfig != null) {
                 return insertTestStep(newStepConfig, index, false);
@@ -754,6 +768,11 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     @Override
     public WsdlTestStep getTestStepByName(String stepName) {
         return (WsdlTestStep) getWsdlModelItemByName(testSteps, stepName);
+    }
+
+    @Override
+    public TestStep getTestStepById(UUID testStepId) {
+        return (WsdlTestStep) getWsdlModelItemById(testSteps, testStepId);
     }
 
     public WsdlLoadTest cloneLoadTest(WsdlLoadTest loadTest, String name) {

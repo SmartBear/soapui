@@ -179,4 +179,6 @@ public interface HelpUrls {
     public static final String XMLBEANS_HELP_URL = "http://xmlbeans.apache.org/docs/2.0.0/guide/tools.html#scomp";
     public static final String XPATHASSERTIONEDITOR_HELP_URL = "http://www.soapui.org/Assertions/xpath-match-assertion.html";
     public static final String XQUERYASSERTIONEDITOR_HELP_URL = "http://www.soapui.org/Assertions/xquery-match-assertion.html";
+
+    public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "http://www.soapui.org/REST-Discovery/api-with-internal-browser.html";
 }

@@ -521,11 +521,6 @@
             <version>1.142</version>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.ws.commons.util</groupId>
             <artifactId>ws-commons-util</artifactId>
             <version>1.0.2</version>

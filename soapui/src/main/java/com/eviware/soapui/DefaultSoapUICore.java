@@ -159,7 +159,6 @@ public class DefaultSoapUICore implements SoapUICore {
                 }
             }
         }
-
     }
 
     protected void initExtensions(ClassLoader extensionClassLoader) {
@@ -658,6 +657,5 @@ public class DefaultSoapUICore implements SoapUICore {
         }
         return securityScanRegistry;
     }
-
 
 }

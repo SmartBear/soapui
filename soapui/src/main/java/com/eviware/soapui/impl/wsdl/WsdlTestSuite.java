@@ -54,6 +54,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * TestSuite implementation for WSDL projects.
@@ -142,6 +143,11 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
     public WsdlTestCase getTestCaseByName(String testCaseName) {
         return (WsdlTestCase) getWsdlModelItemByName(testCases, testCaseName);
+    }
+
+    @Override
+    public TestCase getTestCaseById(UUID testCaseId) {
+        return (WsdlTestCase) getWsdlModelItemById(testCases, testCaseId);
     }
 
     public WsdlTestCase cloneTestCase(WsdlTestCase testCase, String name) {

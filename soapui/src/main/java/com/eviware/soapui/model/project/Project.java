@@ -27,6 +27,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A SoapUI project
@@ -62,6 +63,8 @@ public interface Project extends TestModelItem {
     public TestSuite getTestSuiteAt(int index);
 
     public TestSuite getTestSuiteByName(String testSuiteName);
+
+    public TestSuite getTestSuiteById(UUID testSuiteId);
 
     public TestSuite addNewTestSuite(String name);
 

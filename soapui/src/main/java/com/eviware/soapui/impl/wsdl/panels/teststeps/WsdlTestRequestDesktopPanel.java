@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.wsdl.panels.request.AbstractWsdlRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -183,7 +184,7 @@ public class WsdlTestRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel
     }
 
     protected Submit doSubmit() throws SubmitException {
-        Analytics.trackAction("RunTestStep", "StepType", "SOAP");
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "SOAP");
 
         return getRequest().submit(new WsdlTestRunContext(getModelItem()), true);
     }

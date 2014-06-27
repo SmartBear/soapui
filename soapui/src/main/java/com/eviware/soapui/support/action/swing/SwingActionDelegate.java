@@ -16,13 +16,6 @@
 
 package com.eviware.soapui.support.action.swing;
 
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
@@ -32,6 +25,12 @@ import com.eviware.soapui.support.WeakPropertyChangeListener;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionMapping;
 import com.eviware.soapui.support.action.support.StandaloneActionMapping;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Delegates a SwingAction to a SoapUIActionMapping
@@ -83,13 +82,13 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
         return mapping;
     }
 
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
         try {
             mapping.getAction().perform(target, param == null ? mapping.getParam() : param);
-        } catch (Throwable t) {
-            SoapUI.logError(t);
+        } catch (Exception exception) {
+            SoapUI.logError(exception);
         } finally {
             state.restore();
         }

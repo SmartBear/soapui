@@ -58,6 +58,7 @@ public class UIPrefs implements Prefs {
     public static final String RAW_REQUEST_MESSAGE_SIZE = "Size of Raw Request Message to Show";
     public static final String WRAP_RAW_MESSAGES = "Wrap content in Raw Message Viewers";
     public static final String DISABLE_TOOLTIPS = "Disable Tooltips";
+    public static final String DISABLE_ANALYTICS = "Disable Usage Statistics";
 
     private SimpleForm editorForm;
     private final String title;
@@ -123,9 +124,10 @@ public class UIPrefs implements Prefs {
             editorForm.appendTextField(GC_INTERVAL,
                     "Sets the Garbage Collector interval in seconds (0 means garbage collection is only performed by JRE)");
             editorForm.appendSeparator();
-            editorForm.appendTextField(RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response mesage to show.");
-            editorForm.appendTextField(RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request mesage to show.");
+            editorForm.appendTextField(RAW_RESPONSE_MESSAGE_SIZE, "Sets the size of raw response message to show.");
+            editorForm.appendTextField(RAW_REQUEST_MESSAGE_SIZE, "Sets the size of raw request message to show.");
             editorForm.appendCheckBox(WRAP_RAW_MESSAGES, "Wraps content in Raw Message Viewers", false);
+            editorForm.appendCheckBox(DISABLE_ANALYTICS, "Do not send usage statistics", false);
         }
 
         return editorForm;
@@ -169,6 +171,7 @@ public class UIPrefs implements Prefs {
         settings.setString(UISettings.RAW_RESPONSE_MESSAGE_SIZE, values.get(RAW_RESPONSE_MESSAGE_SIZE));
         settings.setString(UISettings.RAW_REQUEST_MESSAGE_SIZE, values.get(RAW_REQUEST_MESSAGE_SIZE));
         settings.setBoolean(UISettings.WRAP_RAW_MESSAGES, values.getBoolean(WRAP_RAW_MESSAGES));
+        settings.setBoolean(UISettings.DISABLE_ANALYTICS, values.getBoolean(DISABLE_ANALYTICS));
 
         SoapUI.initAutoSaveTimer();
         SoapUI.initGCTimer();
@@ -209,6 +212,7 @@ public class UIPrefs implements Prefs {
         values.put(RAW_RESPONSE_MESSAGE_SIZE, settings.getString(UISettings.RAW_RESPONSE_MESSAGE_SIZE, "10000"));
         values.put(RAW_REQUEST_MESSAGE_SIZE, settings.getString(UISettings.RAW_REQUEST_MESSAGE_SIZE, "10000"));
         values.put(WRAP_RAW_MESSAGES, settings.getBoolean(UISettings.WRAP_RAW_MESSAGES));
+        values.put(DISABLE_ANALYTICS, settings.getBoolean(UISettings.DISABLE_ANALYTICS));
 
         return values;
     }

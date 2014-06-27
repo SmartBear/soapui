@@ -33,6 +33,7 @@ import javax.swing.ImageIcon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Abstract base class for WSDL-implementation classes
@@ -161,6 +162,16 @@ public abstract class AbstractWsdlModelItem<T extends ModelItemConfig>
                                             String name) {
         for (ModelItem item : items) {
             if (item.getName() != null && item.getName().equals(name)) {
+                return item;
+            }
+        }
+
+        return null;
+    }
+
+    public ModelItem getWsdlModelItemById(Collection<? extends ModelItem> items, UUID modelItemId) {
+        for (ModelItem item : items) {
+            if (item.getId() != null && item.getId().equals(modelItemId.toString())) {
                 return item;
             }
         }
