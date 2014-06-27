@@ -17,6 +17,7 @@
 package com.eviware.soapui;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -183,7 +184,7 @@ public class DefaultSoapUICore implements SoapUICore {
                     // add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
                     UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
 
-                    Analytics.trackAction("InstallPlugin", "Extension", pluginFile.getName());
+                    Analytics.trackAction(SoapUIActions.INSTALL_PLUGIN.getActionName(), "Extension", pluginFile.getName());
                 } catch (Exception e) {
                     SoapUI.logError(e);
                 }

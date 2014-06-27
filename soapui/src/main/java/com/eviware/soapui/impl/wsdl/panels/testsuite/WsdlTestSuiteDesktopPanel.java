@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.testsuite;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
@@ -332,7 +333,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
 
         public void actionPerformed(ActionEvent e) {
             runTestSuite();
-            Analytics.trackAction("RunTestSuite", "RunType", getModelItem().getRunType().name());
+            Analytics.trackAction(SoapUIActions.RUN_TEST_SUITE.getActionName(), "RunType", getModelItem().getRunType().name());
         }
     }
 
