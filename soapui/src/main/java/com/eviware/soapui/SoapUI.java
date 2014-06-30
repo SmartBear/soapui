@@ -23,7 +23,7 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.AnalyticsManager;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewGenericProjectAction;
@@ -534,6 +534,21 @@ public class SoapUI {
         return recentMenu;
     }
 
+    static void addStandardPreferencesShortcutOnMac() {
+        if (UISupport.isMac()) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+                @Override
+                public boolean dispatchKeyEvent(KeyEvent e) {
+                    int modifiers = e.getModifiers();
+                    if (e.getKeyChar() == ',' && (modifiers == InputEvent.META_DOWN_MASK || modifiers == InputEvent.META_MASK)) {
+                        SoapUIPreferencesAction.getInstance().actionPerformed(new ActionEvent(frame, 1, "ShowPreferences"));
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+
     public static JFrame getFrame() {
         return frame;
     }
@@ -673,26 +688,11 @@ public class SoapUI {
                 }
 
                 if (isCommandLine()) {
-                    Analytics.trackAction("CmdLine");
+                    Analytics.trackAction(SoapUIActions.START_SOAPUI_FROM_COMAND_LINE.getActionName());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
-            }
-        }
-
-        private void addStandardPreferencesShortcutOnMac() {
-            if (UISupport.isMac()) {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-                    @Override
-                    public boolean dispatchKeyEvent(KeyEvent e) {
-                        int modifiers = e.getModifiers();
-                        if (e.getKeyChar() == ',' && (modifiers == InputEvent.META_DOWN_MASK || modifiers == InputEvent.META_MASK)) {
-                            SoapUIPreferencesAction.getInstance().actionPerformed(new ActionEvent(frame, 1, "ShowPreferences"));
-                        }
-                        return false;
-                    }
-                });
             }
         }
 
@@ -779,7 +779,7 @@ public class SoapUI {
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
         if (isDebug) {
-            Analytics.trackAction("DebuggingMode");
+            Analytics.trackAction(SoapUIActions.DEBUG_MODE.getActionName());
         }
 
         WebstartUtilCore.init();
@@ -1003,16 +1003,16 @@ public class SoapUI {
                 SoapUI.logError(e1);
             }
 
-            Analytics.trackAction("Exit");
+            Analytics.trackAction(SoapUIActions.EXIT.getActionName());
         } else {
             if (!UISupport.confirm("Exit SoapUI without saving?", "Question")) {
                 saveOnExit = true;
                 return false;
             }
-            Analytics.trackAction("ExitWithoutSave");
+            Analytics.trackAction(SoapUIActions.EXIT_WITHOUT_SAVE.getActionName());
         }
 
-        AnalyticsManager.getAnalytics().trackSessionStop();
+        Analytics.trackSessionStop();
 
         shutdown();
 
@@ -1147,7 +1147,6 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
-//            Analytics.trackAction("Exit");
             frame.dispatchEvent(windowEvent);
         }
     }

@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.AMFRequestTestStepConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
@@ -717,7 +718,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             throw new SubmitException("AMF request is not initialised properly !");
         }
 
-        Analytics.trackAction("RunTestStep", "StepType", "AMF");
+        Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "AMF");
 
         return amfRequestTestStep.getAMFRequest().submit(submitContext, true);
     }

@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.mock;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.rest.actions.mock.AddEmptyRestMockResourceAction;
 import com.eviware.soapui.impl.rest.actions.mock.RestMockServiceOptionsAction;
 import com.eviware.soapui.impl.rest.mock.RestMockService;
@@ -544,9 +545,9 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         public void actionPerformed(ActionEvent arg0) {
 
             if( getModelItem() instanceof WsdlMockService )
-                Analytics.trackAction("StartSOAPMock");
+                Analytics.trackAction(SoapUIActions.START_SOAP_MOCK.getActionName());
             else if( getModelItem() instanceof RestMockService )
-                Analytics.trackAction("StartRestMock");
+                Analytics.trackAction(SoapUIActions.START_REST_MOCK.getActionName());
 
             startMockService();
         }

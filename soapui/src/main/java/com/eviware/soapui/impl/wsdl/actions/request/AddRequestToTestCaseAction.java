@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.actions.request;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
@@ -70,7 +71,7 @@ public class AddRequestToTestCaseAction extends AbstractAddRequestToTestCaseActi
             addRequest(testCase, request, -1);
         }
 
-        Analytics.trackAction("AddRequestToTestCase");
+        Analytics.trackAction(SoapUIActions.CREATE_TEST_STEP.getActionName());
     }
 
     @Override

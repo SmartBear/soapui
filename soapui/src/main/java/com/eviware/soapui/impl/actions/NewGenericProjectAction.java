@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.rest.RestService;
@@ -126,7 +127,7 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                             }
                         }
 
-                        String projectType = "";
+                        String projectType = "GenericProject";
 
                         if (url.length() > 0) {
                             if (new File(url).exists()) {
@@ -144,13 +145,7 @@ public class NewGenericProjectAction extends AbstractSoapUIAction<WorkspaceImpl>
                             SoapUI.getActionRegistry().getAction(NewRestServiceAction.SOAPUI_ACTION_ID)
                                     .perform(project, project);
                         }
-
-
-                        if (projectType.length() == 0) {
-                            Analytics.trackAction("CreateProject");
-                        } else {
-                            Analytics.trackAction("CreateProject", "Type", projectType);
-                        }
+                        Analytics.trackAction(SoapUIActions.CREATE_GENERIC_PROJECT.getActionName(), "Type", projectType);
 
                         break;
                     }

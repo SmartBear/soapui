@@ -28,6 +28,7 @@ import java.util.Set;
 
 import javax.swing.JComponent;
 
+import com.eviware.soapui.impl.rest.RestRequestInterface;
 import org.apache.commons.httpclient.URI;
 import org.apache.http.client.methods.HttpRequestBase;
 
@@ -157,7 +158,7 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
                 for (String ep : defaults.keySet()) {
                     try {
                         URL tempUrl = new URL(PropertyExpander.expandProperties(context, ep));
-                        if (tempUrl.toString().equals(uri.toString())) {
+                        if (tempUrl.toString().equalsIgnoreCase(uri.toString())) {
                             def = defaults.get(ep);
                             break;
                         }
@@ -166,6 +167,23 @@ public class DefaultEndpointStrategy implements EndpointStrategy, PropertyExpans
                         // invalid property-expansions, etc
                         // if the endpoint really is wrong there will be other
                         // exception later on
+                    }
+                }
+
+                if (wsdlRequest instanceof RestRequestInterface) {
+                    for (String ep : defaults.keySet()) {
+                        try {
+                            URL tempUrl = new URL(PropertyExpander.expandProperties(context, ep));
+                            if (tempUrl.getHost().toString().equalsIgnoreCase(uri.getHost().toString())) {
+                                def = defaults.get(ep);
+                                break;
+                            }
+                        } catch (Exception e) {
+                            // we can hide this exception for now, it could happen for
+                            // invalid property-expansions, etc
+                            // if the endpoint really is wrong there will be other
+                            // exception later on
+                        }
                     }
                 }
             }

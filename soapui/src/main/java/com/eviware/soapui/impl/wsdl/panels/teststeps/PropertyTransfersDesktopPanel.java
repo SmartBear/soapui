@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunContext;
 import com.eviware.soapui.impl.wsdl.panels.support.MockTestRunner;
@@ -993,7 +994,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
         public void actionPerformed(ActionEvent e) {
 
-            Analytics.trackAction("AddPropertyTransfer");
+            Analytics.trackAction(SoapUIActions.ADD_PROPERTY_TRASNFER_IN_PROPERTY_TRANSFER_TEST_STEP.getActionName());
 
             String name = UISupport.prompt("Specify name for value transfer", "Add Transfer", "");
             if (name == null || name.trim().length() == 0) {
@@ -1185,7 +1186,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
                 return;
             }
 
-            Analytics.trackAction("RunTestStep", "RequestType", "PropertyTransfer");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "RequestType", "PropertyTransfer");
 
             MockTestRunner mockRunner = new MockTestRunner(transferStep.getTestCase());
             MockTestRunContext context = new MockTestRunContext(mockRunner, transferStep);
