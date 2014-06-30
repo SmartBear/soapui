@@ -8,7 +8,7 @@ public enum SoapUIActions {
     //Start SoapUI pro
     START_SOAPUI_FROM_COMAND_LINE("StartSoapUIFromCommandLine", SoapUIFeatures.AUTOMATE_SOAP_UI),
     START_SOAPUI_PRO("StartSoapUIPro", SoapUIFeatures.USE_SOAP_UI),
-    DEBUG_MODE("StartSoapUIPro", SoapUIFeatures.USE_SOAP_UI),
+    DEBUG_MODE("DebugMode", SoapUIFeatures.USE_SOAP_UI),
     EXIT("Exit", SoapUIFeatures.USE_SOAP_UI),
     EXIT_WITHOUT_SAVE("ExitWithoutSave", SoapUIFeatures.USE_SOAP_UI),
 
@@ -80,8 +80,8 @@ public enum SoapUIActions {
 
     //Licensing
     INSTALL_LICENSE("InstallLicense", SoapUIFeatures.LICENSE),
-    LICENSE_UPDATED("InstallLicense", SoapUIFeatures.LICENSE),
-    LICENSE_EXPIRED("InstallLicense", SoapUIFeatures.LICENSE),
+    LICENSE_UPDATED("LicenseUpdated", SoapUIFeatures.LICENSE),
+    LICENSE_EXPIRED("LicenseExpired", SoapUIFeatures.LICENSE),
     DEACTIVATE_LICENSE("DeactivateLicense", SoapUIFeatures.LICENSE),
     SHOW_RENEWAL_PAGE("ShowRenewalPage", SoapUIFeatures.LICENSE),
     SHOW_LICENSE_EXPIRED_PAGE("ShowLicenseExpiredPage", SoapUIFeatures.LICENSE),
