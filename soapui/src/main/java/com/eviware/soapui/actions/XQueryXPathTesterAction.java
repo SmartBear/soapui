@@ -164,7 +164,7 @@ public class XQueryXPathTesterAction extends AbstractAction {
     private class RunAction extends AbstractAction {
         public RunAction() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/submit_request.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Execute current query");
+            putValue(Action.SHORT_DESCRIPTION, "Execute current query (ALT-ENTER)");
             putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt ENTER"));
         }
 
