@@ -564,7 +564,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
     public class SubmitAction extends AbstractAction {
         public SubmitAction() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/submit_request.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL");
+            putValue(Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL (ALT-ENTER)");
             putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt ENTER"));
         }
 
