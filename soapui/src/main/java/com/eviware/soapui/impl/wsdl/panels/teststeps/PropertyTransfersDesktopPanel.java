@@ -877,7 +877,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         }
     }
 
-    private void setSelectedTransfer(PropertyTransfer transfer) {
+    protected void setSelectedTransfer(PropertyTransfer transfer) {
         if (transfer == null) {
             sourceArea.setText("");
             targetArea.setText("");
