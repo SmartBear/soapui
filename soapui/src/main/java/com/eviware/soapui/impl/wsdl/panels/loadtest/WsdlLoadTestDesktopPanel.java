@@ -42,6 +42,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction;
@@ -393,7 +394,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
             runButton.setEnabled(false);
             runner = loadtest.run();
-            Analytics.trackAction("RunLoadTest");
+            Analytics.trackAction(SoapUIActions.RUN_LOAD_TEST.getActionName());
         }
     }
 

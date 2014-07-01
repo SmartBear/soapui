@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.mock.dispatch;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
@@ -209,7 +210,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
         }
 
         public void actionPerformed(ActionEvent e) {
-            Analytics.trackAction("RunTestStep", "StepType", "GroovyScript");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "GroovyScript");
 
             MockResult lastMockResult = getMockOperation().getLastMockResult();
             MockRequest mockRequest = lastMockResult == null ? null : lastMockResult.getMockRequest();

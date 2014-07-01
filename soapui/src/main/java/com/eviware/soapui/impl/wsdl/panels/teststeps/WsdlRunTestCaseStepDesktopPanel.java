@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.RunTestCaseRunModeTypeConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -198,7 +199,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
         }
 
         public void actionPerformed(ActionEvent e) {
-            Analytics.trackAction("RunTestStep", "StepType", "RunTestCase");
+            Analytics.trackAction(SoapUIActions.RUN_TEST_STEP.getActionName(), "StepType", "RunTestCase");
 
             runAction.setEnabled(false);
             cancelAction.setEnabled(true);

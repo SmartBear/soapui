@@ -17,6 +17,7 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.CredentialsConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
@@ -226,7 +227,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
             cardPanel.add(oAuth2Form.getComponent(), OAUTH_2_FORM_LABEL);
             changeAuthorizationType(OAUTH_2_FORM_LABEL, selectedOption);
 
-            Analytics.trackAction("AssignOAuth", "OAuth2Flow", oAuth2Form.getProfile().getOAuth2Flow().name());
+            Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH.getActionName(), "OAuth2Flow",
+                    oAuth2Form.getProfile().getOAuth2Flow().name());
         } else if (selectedOption.equals(OPTIONS_SEPARATOR)) {
             profileSelectionComboBox.setSelectedIndex(0);
         } else    //selectedItem : No Authorization

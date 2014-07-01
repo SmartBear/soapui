@@ -12,17 +12,16 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.smartbear.soapui.stepdefs.rest.project;
+*/package com.smartbear.soapui.stepdefs.fest.rest.project;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestDesktopPanel;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.editor.inspectors.auth.AuthInspectorFactory;
-import com.smartbear.soapui.stepdefs.ScenarioRobot;
+import com.smartbear.soapui.stepdefs.fest.ScenarioRobot;
 import com.smartbear.soapui.utils.fest.RestProjectUtils;
 import com.smartbear.soapui.utils.fest.WorkspaceUtils;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;

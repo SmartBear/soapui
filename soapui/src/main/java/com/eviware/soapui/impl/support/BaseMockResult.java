@@ -111,8 +111,9 @@ public class BaseMockResult<MockRequestType extends MockRequest, MockOperationTy
     }
 
     public void addHeader(String name, String value) {
-        if (mockRequest.getHttpResponse() != null) {
-            mockRequest.getHttpResponse().addHeader(name, value);
+        HttpServletResponse httpResponse = mockRequest.getHttpResponse();
+        if (httpResponse != null) {
+            httpResponse.addHeader(name, value);
         }
 
         responseHeaders.add(name, value);
