@@ -537,7 +537,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
     public class RunMockServiceAction extends AbstractAction {
         public RunMockServiceAction() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/submit_request.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Starts this MockService on the specified port and endpoint (ALT-ENTER)");
+            putValue(Action.SHORT_DESCRIPTION, "Starts this MockService on the specified port and endpoint");
             putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt ENTER"));
         }
 

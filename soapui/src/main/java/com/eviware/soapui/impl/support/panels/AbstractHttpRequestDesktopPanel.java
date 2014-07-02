@@ -78,6 +78,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -427,6 +428,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
                 inputAreaFocusListener = new InputAreaFocusListener(editor);
                 inputArea.addFocusListener(inputAreaFocusListener);
             }
+
+            submitButton.setMnemonic(KeyEvent.VK_ENTER);
+
         }
 
         @Override
@@ -465,6 +469,9 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
                     inputArea.getInputMap().put(KeyStroke.getKeyStroke("ctrl F4"), closePanelAction);
                 }
             }
+
+            submitButton.setMnemonic(KeyEvent.VK_ENTER);
+
         }
 
         @Override
@@ -564,7 +571,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
     public class SubmitAction extends AbstractAction {
         public SubmitAction() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/submit_request.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL (ALT-ENTER)");
+            putValue(Action.SHORT_DESCRIPTION, "Submit request to specified endpoint URL (Alt-Enter)");
             putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt ENTER"));
         }
 
