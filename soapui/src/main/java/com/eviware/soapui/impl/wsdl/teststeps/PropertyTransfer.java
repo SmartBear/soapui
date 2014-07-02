@@ -602,7 +602,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         return value;
     }
 
-
     /**
      * Method called for transferring between 2 xml properties..
      */

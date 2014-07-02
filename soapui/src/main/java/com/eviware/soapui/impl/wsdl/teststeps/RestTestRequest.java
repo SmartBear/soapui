@@ -286,8 +286,12 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
         messageExchange = null;
     }
 
-    public String getAssertableContent() {
+    public String getAssertableContentAsXml() {
         return getResponseContentAsXml();
+    }
+
+    public String getAssertableContent() {
+        return getResponseContentAsString();
     }
 
     public RestTestRequestStep getTestStep() {

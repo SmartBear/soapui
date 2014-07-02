@@ -376,6 +376,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
         return assertionsSupport.cloneAssertion(source, name);
     }
 
+    public String getAssertableContentAsXml() {
+       return getAssertableContent();
+    }
+
     public String getAssertableContent() {
         TestProperty property = getProperty("ResponseAsXml");
         String value = property.getValue();

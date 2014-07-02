@@ -18,6 +18,7 @@ package com.eviware.soapui.tools;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -59,5 +60,11 @@ public class PropertyExpansionRemoverTest {
         String stringWithSpecialCharacters = "<xsd:attribute name=\"name\" type=\"xsd:string\" default=\"$ { #testxml#$ {testxpath} } ${\"/>";
         assertThat(PropertyExpansionRemover.removeExpansions(stringWithSpecialCharacters),
                 is(stringWithSpecialCharacters));
+    }
+
+    @Test
+    public void handlesNullValues() throws Exception {
+        assertThat(PropertyExpansionRemover.removeExpansions(null), is(nullValue()));
+
     }
 }

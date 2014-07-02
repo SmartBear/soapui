@@ -28,6 +28,9 @@ public class PropertyExpansionRemover {
     public static final String EXPANSION_START = "${";
 
     public static String removeExpansions(String input) {
+        if (input == null) {
+            return null;
+        }
         String output = input;
         while (containsPropertyExpansion(output)) {
             output = removeExpansionAt(output, output.indexOf(EXPANSION_START));

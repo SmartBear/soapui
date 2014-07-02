@@ -378,7 +378,7 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
                 return null;
             }
 
-            if (getAssertableContent() != null) {
+            if (getAssertableContentAsXml() != null) {
                 assertRequests(assertion);
                 assertResponses(assertion);
                 notifier.notifyChange();
@@ -488,6 +488,15 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
     }
 
     @Override
+    public String getAssertableContentAsXml() {
+        if (testStep instanceof Assertable) {
+            return ((Assertable) testStep).getAssertableContentAsXml();
+        }
+
+        return null;
+    }
+
+    @Override
     public String getAssertableContent() {
         if (testStep instanceof Assertable) {
             return ((Assertable) testStep).getAssertableContent();
@@ -593,7 +602,6 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
      * Sets SecurityScanStatus based on the status of all assertions added
      *
      * @param result
-     * @param assertion
      */
     private void setStatus(AssertionStatus result) {
         if (result == AssertionStatus.FAILED) {
@@ -661,7 +669,6 @@ public abstract class AbstractSecurityScan extends AbstractWsdlModelItem<Securit
 
     /**
      * @param message
-     * @param testStep
      */
     protected void reportSecurityScanException(String message) {
         getSecurityScanRequestResult().setMessageExchange(new FailedSecurityMessageExchange());
