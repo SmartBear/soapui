@@ -25,7 +25,6 @@ import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
-import com.eviware.soapui.impl.actions.NewGenericProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -1373,11 +1372,11 @@ public class SoapUI {
     private static class NewWsdlProjectActionDelegate extends AbstractAction {
         public NewWsdlProjectActionDelegate() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Creates a new generic project");
+            putValue(Action.SHORT_DESCRIPTION, "Creates a new SOAP project");
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(NewGenericProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
+            SoapUI.getActionRegistry().getAction(NewWsdlProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
         }
     }
 

@@ -32,7 +32,6 @@
     <tns:action id="NewWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWsdlProjectAction"/>
     <tns:action id="NewRestProjectAction" actionClass="com.eviware.soapui.impl.actions.NewRestProjectAction"/>
     <tns:action id="NewWadlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWadlProjectAction"/>
-    <tns:action id="NewGenericProjectAction" actionClass="com.eviware.soapui.impl.actions.NewGenericProjectAction"/>
     <tns:action id="ImportWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.ImportWsdlProjectAction"/>
     <tns:action id="ImportRemoteWsdlProjectAction"
                 actionClass="com.eviware.soapui.impl.actions.ImportRemoteWsdlProjectAction"/>
@@ -363,7 +362,6 @@
                      class="com.eviware.soapui.impl.actions.WorkspaceImplSoapUIActionGroup">
         <tns:actionMapping actionId="NewWsdlProjectAction" keyStroke="menu N"/>
         <tns:actionMapping actionId="NewRestProjectAction" keyStroke="menu alt N"/>
-        <tns:actionMapping actionId="NewGenericProjectAction" keyStroke="menu alt shift N"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="ImportWsdlProjectAction" keyStroke="menu I"/>
         <tns:actionMapping actionId="ImportPackedProjectAction"/>
