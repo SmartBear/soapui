@@ -344,6 +344,10 @@ public class AMFRequestTestStep extends WsdlTestStepWithProperties implements As
         return assertionsSupport.cloneAssertion(source, name);
     }
 
+    public String getAssertableContentAsXml() {
+        return getAssertableContent();
+    }
+
     public String getAssertableContent() {
         return getAMFRequest().getResponse() == null ? null : getAMFRequest().getResponse().getContentAsString();
     }

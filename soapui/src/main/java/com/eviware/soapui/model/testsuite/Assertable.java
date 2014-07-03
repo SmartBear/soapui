@@ -48,6 +48,8 @@ public interface Assertable {
         UNKNOWN, VALID, FAILED
     }
 
+    public String getAssertableContentAsXml();
+
     public String getAssertableContent();
 
     public String getDefaultAssertableContent();

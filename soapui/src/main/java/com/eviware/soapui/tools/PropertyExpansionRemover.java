@@ -15,17 +15,29 @@
 */
 package com.eviware.soapui.tools;
 
+import org.apache.log4j.Logger;
+
+
 /**
  * Removes property expansions from an input string.
  */
 public class PropertyExpansionRemover {
 
+    private static final Logger log = Logger.getLogger(PropertyExpansionRemover.class);
+
     public static final String EXPANSION_START = "${";
 
     public static String removeExpansions(String input) {
+        if (input == null) {
+            return null;
+        }
         String output = input;
         while (containsPropertyExpansion(output)) {
             output = removeExpansionAt(output, output.indexOf(EXPANSION_START));
+        }
+        if (!input.equals(output)) {
+            log.info("Removed expansions from value [" + input +
+                    "], result: [" + output + "]");
         }
         return output;
     }
