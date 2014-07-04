@@ -116,9 +116,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.ENCRYPTED_BAD_OR_NO_PASSWORD;
-import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.ENCRYPTED_GOOD_PASSWORD;
-import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.*;
 
 /**
  * WSDL project implementation

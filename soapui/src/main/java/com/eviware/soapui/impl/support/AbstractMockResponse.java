@@ -28,11 +28,21 @@ import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
-import com.eviware.soapui.impl.wsdl.support.*;
+import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
+import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunContext;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -378,7 +388,7 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                 result.addHeader("Content-Encoding", responseCompression);
                 data = CompressionSupport.compress(responseCompression, data);
             }
-            if(result.getResponseHeaders().get("Transfer-Encoding") == null) {
+            if (result.getResponseHeaders().get("Transfer-Encoding") == null) {
                 result.addHeader("Content-Length", "" + data.length);
             }
             result.writeRawResponseData(data);

@@ -44,11 +44,16 @@ import org.apache.log4j.Logger;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlOptions;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus;
 import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
@@ -394,7 +399,7 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         }
 
         WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory(WsdlProjectFactory.WSDL_TYPE)
-                .createNew((String)null, this);
+                .createNew((String) null, this);
 
         project.setName(name);
         projectList.add(project);

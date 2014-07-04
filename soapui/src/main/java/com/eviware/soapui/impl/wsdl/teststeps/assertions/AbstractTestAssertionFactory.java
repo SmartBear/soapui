@@ -16,21 +16,22 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
-import java.lang.reflect.Constructor;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry.AssertableType;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.plugins.SoapUIFactory;
 import com.eviware.soapui.support.ClassUtils;
 
-public abstract class AbstractTestAssertionFactory implements TestAssertionFactory {
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public abstract class AbstractTestAssertionFactory implements TestAssertionFactory, SoapUIFactory {
     private final String id;
     private final String label;
     private final Class<? extends TestAssertion> assertionClass;
@@ -107,5 +108,10 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public Class<?> getFactoryType() {
+        return TestAssertionFactory.class;
     }
 }

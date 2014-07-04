@@ -38,8 +38,10 @@ public class AddNewMockServiceAction extends AbstractSoapUIAction<WsdlProject> {
     }
 
     public void perform(WsdlProject target, Object param) {
-        if( createMockService(target) != null );
-            Analytics.trackAction(SoapUIActions.CREATE_SOAP_MOCK.getActionName());
+        if (createMockService(target) != null) {
+            ;
+        }
+        Analytics.trackAction(SoapUIActions.CREATE_SOAP_MOCK.getActionName());
     }
 
     public WsdlMockService createMockService(WsdlProject project) {

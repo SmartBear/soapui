@@ -23,10 +23,8 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
-import com.eviware.soapui.impl.actions.NewGenericProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -688,7 +686,7 @@ public class SoapUI {
                 }
 
                 if (isCommandLine()) {
-                    Analytics.trackAction(SoapUIActions.START_SOAPUI_FROM_COMAND_LINE.getActionName());
+                    Analytics.trackAction("CmdLine");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -779,7 +777,7 @@ public class SoapUI {
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
         if (isDebug) {
-            Analytics.trackAction(SoapUIActions.DEBUG_MODE.getActionName());
+            Analytics.trackAction("DebuggingMode");
         }
 
         WebstartUtilCore.init();
@@ -1003,13 +1001,13 @@ public class SoapUI {
                 SoapUI.logError(e1);
             }
 
-            Analytics.trackAction(SoapUIActions.EXIT.getActionName());
+            Analytics.trackAction("Exit");
         } else {
             if (!UISupport.confirm("Exit SoapUI without saving?", "Question")) {
                 saveOnExit = true;
                 return false;
             }
-            Analytics.trackAction(SoapUIActions.EXIT_WITHOUT_SAVE.getActionName());
+            Analytics.trackAction("ExitWithoutSave");
         }
 
         Analytics.trackSessionStop();
@@ -1374,11 +1372,11 @@ public class SoapUI {
     private static class NewWsdlProjectActionDelegate extends AbstractAction {
         public NewWsdlProjectActionDelegate() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Creates a new generic project");
+            putValue(Action.SHORT_DESCRIPTION, "Creates a new SOAP project");
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(NewGenericProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
+            SoapUI.getActionRegistry().getAction(NewWsdlProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
         }
     }
 

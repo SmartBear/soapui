@@ -13,22 +13,12 @@
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
 */
-package com.smartbear.soapui.stepdefs.fest;
-
-import org.fest.swing.core.BasicRobot;
-import org.fest.swing.core.Robot;
+package com.eviware.soapui.impl.actions;
 
 /**
- * A wapper for an AWT robot that's instantiated once per scenario and passed to  stepDefs using constructor injection
+ * Interface identifying what label should be used when an object is displayed in a GUI, e.g. as a JList option.
  */
-public final class ScenarioRobot {
-    private final Robot robot;
+public interface Labeled {
 
-    public ScenarioRobot() {
-        robot = BasicRobot.robotWithNewAwtHierarchy();
-    }
-
-    public Robot getRobot() {
-        return robot;
-    }
+    String getLabel();
 }

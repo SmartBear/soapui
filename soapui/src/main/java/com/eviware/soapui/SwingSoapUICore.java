@@ -88,7 +88,6 @@ public class SwingSoapUICore extends DefaultSoapUICore {
         for (InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories(InspectorFactory.class)) {
             inspectorRegistry.addFactory(factory);
         }
-
         String actionsDir = System.getProperty("soapui.ext.actions");
         addExternalActions(actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar
                 + "actions" : actionsDir, getExtensionClassLoader());

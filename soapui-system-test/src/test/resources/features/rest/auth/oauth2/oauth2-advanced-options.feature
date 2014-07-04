@@ -14,7 +14,7 @@ Feature: OAuth2 Advanced options
     And closes the advanced options dialog
 
   Examples:
-  |accessTokenPosition  | refreshMethod |
-  | Query               | Manual        |
-  | Header              | Automatic     |
+    | accessTokenPosition | refreshMethod |
+    | Query               | Manual        |
+    | Header              | Automatic     |
 

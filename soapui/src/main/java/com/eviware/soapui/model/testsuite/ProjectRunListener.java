@@ -16,7 +16,9 @@
 
 package com.eviware.soapui.model.testsuite;
 
-public interface ProjectRunListener {
+import com.eviware.soapui.model.iface.SoapUIListener;
+
+public interface ProjectRunListener extends SoapUIListener {
     void afterTestSuite(ProjectRunner projectRunner, ProjectRunContext runContext, TestSuiteRunner testRunner);
 
     void beforeTestSuite(ProjectRunner projectRunner, ProjectRunContext runContext, TestSuite testSuite);

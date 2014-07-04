@@ -16,13 +16,13 @@
 
 package com.eviware.soapui.model.testsuite;
 
-import java.util.List;
-import java.util.UUID;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.types.StringToObjectMap;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * A TestSuite holding a number of TestCases

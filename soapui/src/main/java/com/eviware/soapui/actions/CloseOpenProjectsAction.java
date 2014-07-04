@@ -16,15 +16,15 @@
 
 package com.eviware.soapui.actions;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action to save all projects
@@ -34,9 +34,10 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 
 public class CloseOpenProjectsAction extends AbstractSoapUIAction<WorkspaceImpl> {
     public static final String SOAPUI_ACTION_ID = "CloseOpenProjectsAction";
+    public static final String NAME = "Close All Open Projects";
 
     public CloseOpenProjectsAction() {
-        super("Close All Open Projects", "Closes all open projects in the current Workspace");
+        super(NAME, "Closes all open projects in the current Workspace");
     }
 
     public void perform(WorkspaceImpl workspace, Object param) {

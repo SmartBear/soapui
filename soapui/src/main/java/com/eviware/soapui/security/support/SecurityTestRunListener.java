@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.security.support;
 
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCaseRunner;
 import com.eviware.soapui.model.testsuite.TestStepResult;
@@ -30,7 +31,7 @@ import com.eviware.soapui.security.result.SecurityTestStepResult;
  * @author Dragica
  */
 
-public interface SecurityTestRunListener {
+public interface SecurityTestRunListener extends SoapUIListener {
     public void beforeRun(TestCaseRunner testRunner, SecurityTestRunContext runContext);
 
     public void afterRun(TestCaseRunner testRunner, SecurityTestRunContext runContext);

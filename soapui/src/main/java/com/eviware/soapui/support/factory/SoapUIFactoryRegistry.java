@@ -16,26 +16,22 @@
 
 package com.eviware.soapui.support.factory;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.SoapUIFactoriesConfig;
 import com.eviware.soapui.config.SoapUIFactoryConfig;
 import com.eviware.soapui.config.SoapuiFactoriesDocumentConfig;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 public class SoapUIFactoryRegistry {
     private Map<Class<?>, List<Object>> factories = new HashMap<Class<?>, List<Object>>();
     private Map<Class<?>, SoapUIFactoryConfig> factoryConfigs = new HashMap<Class<?>, SoapUIFactoryConfig>();
     private final static Logger log = Logger.getLogger(SoapUIFactoryRegistry.class);
+    private Set<SoapUIFactoryRegistryListener> listeners = new HashSet<SoapUIFactoryRegistryListener>();
 
     public SoapUIFactoryRegistry(InputStream config) {
         if (config != null) {
@@ -94,11 +90,17 @@ public class SoapUIFactoryRegistry {
         }
 
         factories.get(factoryType).add(factory);
+
+        for( SoapUIFactoryRegistryListener listener : listeners )
+            listener.factoryAdded( factoryType, factory );
     }
 
     public void removeFactory(Class<?> factoryType, Object factory) {
         if (factories.containsKey(factoryType)) {
             factories.get(factoryType).remove(factory);
+
+            for( SoapUIFactoryRegistryListener listener : listeners )
+               listener.factoryRemoved( factoryType, factory );
         }
     }
 
@@ -107,9 +109,20 @@ public class SoapUIFactoryRegistry {
         List<T> result = new ArrayList<T>();
 
         if (factories.containsKey(factoryType)) {
-            result.addAll((Collection<? extends T>) factories.get(factoryType));
+            for( Object obj : factories.get(factoryType))
+                result.add((T) obj);
         }
 
         return result;
+    }
+
+    public void addFactoryRegistryListener( SoapUIFactoryRegistryListener listener )
+    {
+        listeners.add( listener );
+    }
+
+    public void removeFactoryRegistryListener( SoapUIFactoryRegistryListener listener )
+    {
+        listeners.remove( listener );
     }
 }

@@ -16,6 +16,9 @@
 
 package com.eviware.soapui.support.editor.registry;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,11 +28,18 @@ import java.util.List;
  * @author ole.matzura
  */
 
-public class InspectorRegistry {
+public class InspectorRegistry implements SoapUIFactoryRegistryListener {
     private static InspectorRegistry instance;
     private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
 
     public InspectorRegistry() {
+
+        for( InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories( InspectorFactory.class ))
+        {
+            addFactory( factory );
+        }
+
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
     }
 
     public void addFactory(InspectorFactory factory) {
@@ -69,5 +79,17 @@ public class InspectorRegistry {
         }
 
         return result.toArray(new InspectorFactory[result.size()]);
+    }
+
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if( factoryType.isAssignableFrom(InspectorFactory.class))
+            addFactory((InspectorFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if( factoryType.isAssignableFrom(InspectorFactory.class))
+            removeFactory((InspectorFactory) factory);
     }
 }

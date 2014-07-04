@@ -103,6 +103,10 @@ public class ProgressDialog extends JDialog implements XProgressDialog, XProgres
         progressBar.setIndeterminate(false);
     }
 
+    public void setIndeterminate() {
+        progressBar.setIndeterminate(true);
+    }
+
     /*
      * (non-Javadoc)
      *
