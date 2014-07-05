@@ -34,9 +34,8 @@ import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
 import com.eviware.x.form.validators.RequiredValidator;
-import org.apache.log4j.Logger;
-
 import java.io.IOException;
+import org.apache.log4j.Logger;
 
 public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
     private XFormDialog dialog;
@@ -81,8 +80,7 @@ public class MockAsWarAction extends AbstractSoapUIAction<WsdlProject> {
                     dialog.getBooleanValue(MockAsWarDialog.EXT_LIBS),
                     dialog.getBooleanValue(MockAsWarDialog.ACTIONS), dialog.getBooleanValue(MockAsWarDialog.LISTENERS),
                     dialog.getValue(MockAsWarDialog.MOCKSERVICE_ENDPOINT),
-                    dialog.getBooleanValue(MockAsWarDialog.ENABLE_WEBUI),
-                    project);
+                    dialog.getBooleanValue(MockAsWarDialog.ENABLE_WEBUI));
             mockAsWar.createMockAsWarArchive();
 
             if (project.getRestMockServiceCount() > 0) {
