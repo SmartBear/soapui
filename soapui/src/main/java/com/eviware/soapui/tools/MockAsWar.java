@@ -17,7 +17,6 @@
 package com.eviware.soapui.tools;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
@@ -28,9 +27,6 @@ import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
-import org.apache.log4j.Logger;
-
-import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -43,6 +39,8 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.annotation.Nullable;
+import org.apache.log4j.Logger;
 
 public class MockAsWar {
     protected static final String SOAPUI_SETTINGS = "[SoapUISettings]";
@@ -80,7 +78,7 @@ public class MockAsWar {
         this.warDir = StringUtils.hasContent(warDir) ? new File(warDir) : new File(
                 System.getProperty("java.io.tmpdir"), "warasmock");
         if (!this.warDir.exists()) {
-            this.warDir.mkdir();
+            this.warDir.mkdirs();
         }
         this.warFile = !StringUtils.hasContent(warFile) ? null : new File(warFile);
         this.includeExt = includeExt;
@@ -100,6 +98,7 @@ public class MockAsWar {
                     createWebXml();
 
                     if (warFile != null) {
+                        warFile.getParentFile().mkdirs();
                         ArrayList<File> files = getAllFilesFrom(webInf);
                         files.add(new File(warDir, "stylesheet.css"));
                         files.add(new File(warDir, "header_logo.png"));
