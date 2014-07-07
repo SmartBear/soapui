@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="5.1.12" transformSequenceNumber="4">
+<install4j version="5.1.11" transformSequenceNumber="4">
   <directoryPresets config="./resources/images" />
   <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
