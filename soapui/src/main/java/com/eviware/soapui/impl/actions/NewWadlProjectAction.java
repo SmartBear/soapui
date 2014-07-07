@@ -16,7 +16,6 @@
 
 package com.eviware.soapui.impl.actions;
 
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;

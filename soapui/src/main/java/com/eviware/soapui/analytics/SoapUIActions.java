@@ -67,7 +67,7 @@ public enum SoapUIActions {
     //load testing actions
     CREATE_LOAD_TEST("CreateLoadTest", SoapUIFeatures.PERFORMANCE_TESTING),
     RUN_LOAD_TEST("RunLoadTest", SoapUIFeatures.PERFORMANCE_TESTING),
-    ADD_LOAD_TEST_ASSERTION( "AddLoadTestAssertion", SoapUIFeatures.PERFORMANCE_TESTING),
+    ADD_LOAD_TEST_ASSERTION("AddLoadTestAssertion", SoapUIFeatures.PERFORMANCE_TESTING),
 
     //Monitoring
     TEST_ON_DEMAND("TestOnDemand", SoapUIFeatures.MONITORING),
@@ -111,9 +111,8 @@ public enum SoapUIActions {
         return actionName;
     }
 
-    public static SoapUIActions getByActionName(String actionName){
-        for(SoapUIActions currentAction :SoapUIActions.values())
-        {
+    public static SoapUIActions getByActionName(String actionName) {
+        for (SoapUIActions currentAction : SoapUIActions.values()) {
             if (currentAction.getActionName().equals(actionName)) {
                 return currentAction;
             }

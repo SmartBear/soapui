@@ -21,20 +21,12 @@ import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.EvalPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.GlobalPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.MockRunPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.ModelItemPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolverFactory;
-import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
-import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.*;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.GlobalPropertySettings;
 import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 
@@ -49,7 +41,7 @@ import java.util.Map;
  * @author ole
  */
 
-public class PropertyExpander {
+public class PropertyExpander implements SoapUIFactoryRegistryListener {
     private List<PropertyResolver> propertyResolvers = new ArrayList<PropertyResolver>();
     private static List<PropertyResolver> defaultResolvers = new ArrayList<PropertyResolver>();
     private static PropertyExpander defaultExpander;
@@ -68,11 +60,13 @@ public class PropertyExpander {
         defaultResolvers.add(new GlobalPropertyResolver());
         defaultResolvers.add(new EvalPropertyResolver());
 
-        for (PropertyResolverFactory factory : SoapUI.getFactoryRegistry().getFactories(PropertyResolverFactory.class)) {
-            defaultResolvers.add(factory.createPropertyResolver());
-        }
 
         defaultExpander = new PropertyExpander(true);
+
+        for (PropertyResolverFactory factory : SoapUI.getFactoryRegistry().getFactories(PropertyResolverFactory.class)) {
+            defaultExpander.addResolverFactory(factory);
+        }
+
         // WORKAROUND: eliminates a potential problem with a circular dependency between HttpClientSupport and this class
         ProxyUtils.setGlobalProxy(SoapUI.getSettings());
         debuggingExpandedProperties = new HashMap<String, StringToStringMap>();
@@ -81,6 +75,8 @@ public class PropertyExpander {
     public PropertyExpander(boolean addDefaultResolvers) {
         if (addDefaultResolvers) {
             propertyResolvers.addAll(defaultResolvers);
+
+            SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
         }
     }
 
@@ -88,6 +84,7 @@ public class PropertyExpander {
         return defaultExpander;
     }
 
+    @Deprecated
     public static void addDefaultResolver(PropertyResolver resolver) {
         defaultResolvers.add(resolver);
         defaultExpander.addResolver(resolver);
@@ -95,6 +92,28 @@ public class PropertyExpander {
 
     public void addResolver(PropertyResolver propertyResolver) {
         propertyResolvers.add(propertyResolver);
+    }
+
+    public void addResolverFactory( PropertyResolverFactory factory )
+    {
+        PropertyResolver resolver = factory.createPropertyResolver();
+        addResolver( resolver );
+
+        resolverFactories.put( factory, resolver );
+    }
+
+    private Map<PropertyResolverFactory,PropertyResolver> resolverFactories = new HashMap<PropertyResolverFactory, PropertyResolver>();
+
+    public void removeResolverFactory( PropertyResolverFactory factory )
+    {
+        if( resolverFactories.containsKey( factory )) {
+            removeResolver( resolverFactories.get( factory ));
+            resolverFactories.remove(factory);
+        }
+    }
+
+    private void removeResolver(PropertyResolver propertyResolver) {
+        propertyResolvers.remove( propertyResolver );
     }
 
     public static String expandProperties(String content) {
@@ -245,4 +264,15 @@ public class PropertyExpander {
         debuggingExpandedProperties.remove(testCaseId);
     }
 
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if( factory instanceof PropertyResolverFactory )
+            addResolverFactory((PropertyResolverFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if( factory instanceof PropertyResolverFactory )
+            removeResolverFactory((PropertyResolverFactory) factory);
+    }
 }

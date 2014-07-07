@@ -347,6 +347,10 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
         assertionsSupport.release();
     }
 
+    public String getAssertableContentAsXml() {
+        return getAssertableContent();
+    }
+
     public String getAssertableContent() {
         return getResponse() == null ? null : getResponse().getContentAsString();
     }

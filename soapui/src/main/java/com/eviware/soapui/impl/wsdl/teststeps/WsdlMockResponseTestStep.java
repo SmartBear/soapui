@@ -837,6 +837,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         }
     }
 
+    public String getAssertableContentAsXml() {
+        return getAssertableContent();
+    }
     public String getAssertableContent() {
         MockResult mockResult = getMockResponse().getMockResult();
         return mockResult == null ? null : mockResult.getMockRequest().getRequestContent();

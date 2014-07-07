@@ -19,6 +19,8 @@ package com.eviware.soapui.support;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringMap;
 import junit.framework.ComparisonFailure;
+import org.apache.commons.io.FileUtils;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -39,10 +41,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public class Tools {
     public static final int COPY_BUFFER_SIZE = 1000;
+
+    private static final Logger log = Logger.getLogger(Tools.class);
+
 
     public static String[] tokenizeArgs(String args) {
         if (args == null || args.trim().length() == 0) {
@@ -561,5 +567,28 @@ public class Tools {
 
     public static void main(String[] args) {
         System.out.println(System.getProperty("os.name"));
+    }
+
+    public static File createTemporaryDirectory() throws IOException {
+        String libDirectoryName = UUID.randomUUID().toString();
+        final File libDirectory = new File(System.getProperty("java.io.tmpdir"), libDirectoryName);
+        if (!libDirectory.mkdir()) {
+            throw new IOException("Could not create directory for unpacked JAR libraries at " + libDirectory);
+        }
+        deleteDirectoryOnExit(libDirectory);
+        return libDirectory;
+    }
+
+    public static void deleteDirectoryOnExit(final File directory) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    FileUtils.deleteDirectory(directory);
+                } catch (IOException e) {
+                    log.warn("Could not delete temporary directory " + directory);
+                }
+            }
+        }));
     }
 }

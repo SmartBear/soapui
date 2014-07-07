@@ -16,12 +16,12 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface;
 
-import java.io.File;
-
 import com.eviware.soapui.impl.support.definition.export.WsdlDefinitionExporter;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import java.io.File;
 
 /**
  * Exports the definition (wsdls and xsds) of a WsdlInterface to the file system
@@ -40,7 +40,7 @@ public class ExportDefinitionAction extends AbstractSoapUIAction<WsdlInterface> 
     public void perform(WsdlInterface iface, Object param) {
         try {
             if (exportDefinition(null, iface) != null) {
-                UISupport.showInfoMessage("Definition exported succesfully");
+                UISupport.showInfoMessage("Definition exported successfully");
             }
         } catch (Exception e1) {
             UISupport.showErrorMessage(e1);

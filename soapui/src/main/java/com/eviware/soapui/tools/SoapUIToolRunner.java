@@ -16,13 +16,9 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
-import org.apache.commons.cli.CommandLine;
-
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlProjectFactory;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
@@ -32,6 +28,9 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolRunner;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.support.UISupport;
+import org.apache.commons.cli.CommandLine;
+
+import java.io.File;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from

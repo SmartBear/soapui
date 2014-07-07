@@ -269,8 +269,12 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
         return getResponse() == null ? null : getResponse().getContentAsString();
     }
 
-    public String getAssertableContent() {
+    public String getAssertableContentAsXml() {
         return getResponseContentAsXml();
+    }
+
+    public String getAssertableContent() {
+        return getResponseContentAsString();
     }
 
     public HttpTestRequestStep getTestStep() {

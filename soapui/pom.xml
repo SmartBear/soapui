@@ -536,7 +536,6 @@
             <version>0.9.1</version>
         </dependency>
 
-
         <!--  old http client needed by some 3rd party components -->
 
         <dependency>

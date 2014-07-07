@@ -18,6 +18,7 @@ package com.eviware.soapui.model.project;
 
 import com.eviware.soapui.model.environment.Environment;
 import com.eviware.soapui.model.iface.Interface;
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.testsuite.TestSuite;
 
@@ -27,7 +28,7 @@ import com.eviware.soapui.model.testsuite.TestSuite;
  * @author Ole.Matzura
  */
 
-public interface ProjectListener {
+public interface ProjectListener extends SoapUIListener {
     void interfaceAdded(Interface iface);
 
     void interfaceRemoved(Interface iface);

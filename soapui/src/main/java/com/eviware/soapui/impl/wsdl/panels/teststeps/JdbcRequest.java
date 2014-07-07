@@ -170,6 +170,10 @@ public class JdbcRequest extends AbstractModelItem implements Assertable, TestRe
         return testStep.cloneAssertion(source, name);
     }
 
+    public String getAssertableContentAsXml() {
+        return testStep.getAssertableContentAsXml();
+    }
+
     public String getAssertableContent() {
         return testStep.getAssertableContent();
     }

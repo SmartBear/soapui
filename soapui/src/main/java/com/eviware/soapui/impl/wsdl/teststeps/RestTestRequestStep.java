@@ -727,6 +727,10 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
         return testRequest.cloneAssertion(source, name);
     }
 
+    public String getAssertableContentAsXml() {
+        return testRequest.getAssertableContentAsXml();
+    }
+
     public String getAssertableContent() {
         return testRequest.getAssertableContent();
     }

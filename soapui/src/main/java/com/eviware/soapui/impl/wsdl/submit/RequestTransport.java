@@ -37,4 +37,6 @@ public interface RequestTransport {
     public void abortRequest(SubmitContext submitContext);
 
     public Response sendRequest(SubmitContext submitContext, Request request) throws Exception;
+
+    public void insertRequestFilter(RequestFilter filter, RequestFilter refFilter );
 }

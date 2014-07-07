@@ -415,7 +415,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
             options.setSavePrettyPrint();
             options.setSaveAggressiveNamespaces();
 
-            String assertableContent = getAssertable().getAssertableContent();
+            String assertableContent = getAssertable().getAssertableContentAsXml();
             if (assertableContent == null || assertableContent.trim().length() == 0) {
                 UISupport.showErrorMessage("Missing content to select from");
                 return;
@@ -510,7 +510,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
         public void actionPerformed(ActionEvent arg0) {
             try {
-                String content = getAssertable().getAssertableContent();
+                String content = getAssertable().getAssertableContentAsXml();
                 if (content != null && content.trim().length() > 0) {
                     pathArea.setText(XmlUtils.declareXPathNamespaces(content) + pathArea.getText());
                 } else if (UISupport.confirm("Declare namespaces from schema instead?", "Missing Response")) {
@@ -540,7 +540,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
             setAllowWildcards(allowWildcardsCheckBox.isSelected());
 
             try {
-                String msg = assertContent(getAssertable().getAssertableContent(), new WsdlTestRunContext(getAssertable()
+                String msg = assertContent(getAssertable().getAssertableContentAsXml(), new WsdlTestRunContext(getAssertable()
                         .getTestStep()), "Response");
                 UISupport.showInfoMessage(msg, "Success");
             } catch (AssertionException e) {

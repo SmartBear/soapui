@@ -18,7 +18,6 @@ package com.eviware.soapui.impl.wsdl.testcase;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.LoadTestConfig;
 import com.eviware.soapui.config.SecurityTestConfig;
 import com.eviware.soapui.config.TestCaseConfig;
@@ -402,33 +401,39 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public WsdlTestStep addTestStep(String type, String name) {
-        TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory(type)
-                .createNewTestStep(this, name);
-        if (newStepConfig != null) {
-            return addTestStep(newStepConfig);
-        } else {
-            return null;
+        WsdlTestStepFactory testStepFactory = WsdlTestStepRegistry.getInstance().getFactory(type);
+        if (testStepFactory != null) {
+            TestStepConfig newStepConfig = testStepFactory.createNewTestStep(this, name);
+            if (newStepConfig != null) {
+                return addTestStep(newStepConfig);
+            }
         }
+
+        return null;
     }
 
     public WsdlTestStep addTestStep(String type, String name, String endpoint, String method) {
-        TestStepConfig newStepConfig = ((HttpRequestStepFactory) WsdlTestStepRegistry.getInstance().getFactory(type))
-                .createNewTestStep(this, name, endpoint, method);
-        if (newStepConfig != null) {
-            return addTestStep(newStepConfig);
-        } else {
-            return null;
+        WsdlTestStepFactory requestStepFactory = WsdlTestStepRegistry.getInstance().getFactory(type);
+        if (requestStepFactory instanceof HttpRequestStepFactory) {
+            TestStepConfig newStepConfig = ((HttpRequestStepFactory) requestStepFactory).createNewTestStep(this, name, endpoint, method);
+            if (newStepConfig != null) {
+                return addTestStep(newStepConfig);
+            }
         }
+
+        return null;
     }
 
     public WsdlTestStep insertTestStep(String type, String name, int index) {
-        TestStepConfig newStepConfig = WsdlTestStepRegistry.getInstance().getFactory(type)
-                .createNewTestStep(this, name);
-        if (newStepConfig != null) {
-            return insertTestStep(newStepConfig, index, false);
-        } else {
-            return null;
+        WsdlTestStepFactory testStepFactory = WsdlTestStepRegistry.getInstance().getFactory(type);
+        if (testStepFactory != null) {
+            TestStepConfig newStepConfig = testStepFactory.createNewTestStep(this, name);
+            if (newStepConfig != null) {
+                return insertTestStep(newStepConfig, index, false);
+            }
         }
+
+        return null;
     }
 
     public WsdlTestStep importTestStep(WsdlTestStep testStep, String name, int index, boolean createCopy) {
@@ -502,7 +507,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
         notifyPropertyChanged("testSteps", null, testStep);
 
-        Analytics.trackAction(SoapUIActions.CREATE_TEST_STEP.getActionName(), "Type", testStep.getClass().getSimpleName());
+        Analytics.trackAction("AddRequestToTestCase", "Type", testStep.getClass().getSimpleName());
 
         return testStep;
     }

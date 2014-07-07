@@ -16,23 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ButtonGroup;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToggleButton;
-
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -59,6 +42,22 @@ import com.eviware.soapui.support.components.JInspectorPanel;
 import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringToObjectMap;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToggleButton;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class WsdlProjectTestSuitesTabPanel extends JPanel {
     private final WsdlProject project;
@@ -197,17 +196,15 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
                 "Script to run after running TestSuites"));
     }
 
-	protected GroovyEditorComponent buildTearDownScriptPanel()
-	{
-		tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), HelpUrls.FUNCTIONAL_TESTING_TEARDOWN_SCRIPT);
-		return tearDownGroovyEditor;
-	}
+    protected GroovyEditorComponent buildTearDownScriptPanel() {
+        tearDownGroovyEditor = new GroovyEditorComponent(new TearDownScriptGroovyEditorModel(), HelpUrls.FUNCTIONAL_TESTING_TEARDOWN_SCRIPT);
+        return tearDownGroovyEditor;
+    }
 
-	protected GroovyEditorComponent buildSetupScriptPanel()
-	{
-		setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), HelpUrls.FUNCTIONAL_TESTING_SETUP_SCRIPT);
-		return setupGroovyEditor;
-	}
+    protected GroovyEditorComponent buildSetupScriptPanel() {
+        setupGroovyEditor = new GroovyEditorComponent(new SetupScriptGroovyEditorModel(), HelpUrls.FUNCTIONAL_TESTING_SETUP_SCRIPT);
+        return setupGroovyEditor;
+    }
 
     protected JComponent buildTestSuiteList(WsdlProject testSuite) {
         testSuiteList = new JProjectTestSuiteList(testSuite);

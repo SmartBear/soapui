@@ -15,17 +15,6 @@
 */
 package com.eviware.soapui.security.assertion;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JScrollPane;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
@@ -71,6 +60,15 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import org.apache.xmlbeans.XmlObject;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JScrollPane;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements ResponseAssertion {
     public static final String ID = "CrosSiteScript";
