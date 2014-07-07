@@ -30,7 +30,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         glue = "com.smartbear.soapui.stepdefs.fest",
         features = "src/test/resources/features/",
-        tags = "@AutomatedByFest",
+        tags = "@AutomatedWithFest",
         format = "json:target/cucumber-fest-results.json")
 public class CucumberFestRunner {
     public static final int WAIT_FOR_LAST_TEST_TO_SHUTDOWN = 3000;
