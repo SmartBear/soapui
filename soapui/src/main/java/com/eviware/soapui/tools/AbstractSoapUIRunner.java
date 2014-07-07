@@ -48,6 +48,9 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
 public abstract class AbstractSoapUIRunner implements CmdLineRunner {
+    public static final int NORMAL_TERMINATION = 0;
+    public static final int ABNORMAL_TERMINATION = -1;
+
     private boolean groovyLogInitialized;
     private String projectFile;
     protected final Logger log = Logger.getLogger(getClass());
@@ -81,19 +84,49 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
         }
     }
 
+    /**
+     * Validates the command line arguments and runs the test runner if vaild
+     *
+     * @param args the commandline arguments to the runner
+     * @return status code to be used with System.exit()
+     * @see java.lang.System
+     */
     public int runFromCommandLine(String[] args) {
+        int results = ABNORMAL_TERMINATION;
+        if (validateCommandLineArgument(args)) {
+            results = run(args);
+        }
+        return results;
+    }
+
+    public boolean validateCommandLineArgument(String[] args) {
+        boolean commandLineArgumentsAreValid = false;
         try {
-            if (initFromCommandLine(args, true)) {
-                if (run()) {
-                    return 0;
-                }
-            }
-        } catch (Throwable e) {
+            commandLineArgumentsAreValid = initFromCommandLine(args, true);
+        } catch (Exception e) {
             log.error(e);
             SoapUI.logError(e);
         }
+        return commandLineArgumentsAreValid;
+    }
 
-        return -1;
+    /**
+     * Runs the testrunner
+     *
+     * @param args the command line arguments to be passed to the testrunner
+     * @return status code to be used with System.exit()
+     * @see java.lang.System
+     */
+    public int run(String[] args) {
+        try {
+            if (run()) {
+                return NORMAL_TERMINATION;
+            }
+        } catch (Exception e) {
+            log.error(e);
+            SoapUI.logError(e);
+        }
+        return ABNORMAL_TERMINATION;
     }
 
     public boolean initFromCommandLine(String[] args, boolean printHelp) throws Exception {
@@ -102,7 +135,8 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
         CommandLineParser parser = new PosixParser();
         CommandLine cmd = parser.parse(options, args);
 
-        if (options.requiresProject()) {
+
+        if (requiresProjectArgument(cmd)) {
             args = cmd.getArgs();
 
             if (args.length != 1) {
@@ -119,6 +153,15 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
         }
 
         return processCommandLine(cmd);
+    }
+
+    /**
+     * Checks if the command line arguments require a project file
+     * @param cmd The command line
+     * @return true as default
+     */
+    protected boolean requiresProjectArgument(CommandLine cmd) {
+        return true;
     }
 
     /**
@@ -283,10 +326,6 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
 
         public String getRunnerName() {
             return runnerName;
-        }
-
-        public boolean requiresProject() {
-            return true;
         }
     }
 
