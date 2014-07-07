@@ -44,6 +44,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -75,6 +76,25 @@ public class XmlBeansRestParamsTestPropertyHolder implements RestParamsPropertyH
 
         for (RestParameterConfig propertyConfig : config.getParameterList()) {
             addProperty(propertyConfig, false);
+        }
+
+        removeProeprtiesWithEmptyName(config); //Backward compatibility. Parameter with empty name was allowed in 4.6.2
+    }
+
+    private void removeProeprtiesWithEmptyName(RestParametersConfig config) {
+        Iterator<RestParamProperty> propertyIterator = properties.iterator();  //since we are deleting while iterating
+        while (propertyIterator.hasNext()) {
+            RestParamProperty property = propertyIterator.next();
+            String propertyName = property.getName();
+            if (!StringUtils.hasContent(propertyName)) {
+                int index = properties.indexOf(property);
+                propertyMap.remove(propertyName.toUpperCase());
+                propertyIterator.remove();
+
+                firePropertyRemoved(propertyName);
+
+                config.removeParameter(index);
+            }
         }
     }
 
