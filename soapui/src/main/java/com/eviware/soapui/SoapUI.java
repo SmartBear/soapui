@@ -1369,10 +1369,14 @@ public class SoapUI {
         SoapUI.isStandalone = standalone;
     }
 
-    private static class NewWsdlProjectActionDelegate extends AbstractAction {
+    static class NewWsdlProjectActionDelegate extends AbstractAction {
         public NewWsdlProjectActionDelegate() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Creates a new SOAP project");
+        }
+
+        public void setShortDescription(String description) {
+            putValue(Action.SHORT_DESCRIPTION, description);
         }
 
         public void actionPerformed(ActionEvent e) {
