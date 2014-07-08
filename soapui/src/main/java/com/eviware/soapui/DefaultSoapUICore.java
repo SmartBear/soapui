@@ -154,7 +154,7 @@ public class DefaultSoapUICore implements SoapUICore {
                 log.info("Adding plugin from [" + pluginFile.getAbsolutePath() + "]");
                 try {
                     loadOldStylePluginFrom(pluginFile);
-                } catch (IOException e) {
+                } catch (Throwable e) {
                     log.warn("Could not load plugin from file [" + pluginFile + "]");
                 }
             }
@@ -162,11 +162,22 @@ public class DefaultSoapUICore implements SoapUICore {
     }
 
     protected void initExtensions(ClassLoader extensionClassLoader) {
-        String extDir = System.getProperty("soapui.ext.listeners");
-        addExternalListeners(FilenameUtils.normalize(extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar + "listeners"), extensionClassLoader);
+        /* We break the general rule that you shouldn't catch Throwable, because we don't want extensions to crash SoapUI. */
+        try {
+            String extDir = System.getProperty("soapui.ext.listeners");
+            addExternalListeners(FilenameUtils.normalize(extDir != null ? extDir : root == null ? "listeners" :
+                    root + File.separatorChar + "listeners"), extensionClassLoader);
+        } catch (Throwable e) {
+            SoapUI.logError(e, "Couldn't load external listeners");
+        }
 
-        String factoriesDir = System.getProperty("soapui.ext.factories");
-        addExternalFactories(FilenameUtils.normalize(factoriesDir != null ? factoriesDir : root == null ? "factories" : root + File.separatorChar + "factories"), extensionClassLoader);
+        try {
+            String factoriesDir = System.getProperty("soapui.ext.factories");
+            addExternalFactories(FilenameUtils.normalize(factoriesDir != null ? factoriesDir : root == null ? "factories" :
+                    root + File.separatorChar + "factories"), extensionClassLoader);
+        } catch (Throwable e) {
+            SoapUI.logError(e, "Couldn't load external factories");
+        }
     }
 
     protected void initCoreComponents() {
@@ -579,10 +590,10 @@ public class DefaultSoapUICore implements SoapUICore {
 
                 try {
                     log.info("Adding listeners from [" + actionFile.getAbsolutePath() + "]");
-
                     SoapUI.getListenerRegistry().addConfig(new FileInputStream(actionFile), classLoader);
-                } catch (Exception e) {
-                    SoapUI.logError(e);
+                    // We break the general rule that you shouldn't catch Throwable, because we don't want extensions to crash SoapUI
+                } catch (Throwable e) {
+                    SoapUI.logError(e, "Couldn't load listeners in " + actionFile.getAbsolutePath());
                 }
             }
         }
@@ -605,8 +616,9 @@ public class DefaultSoapUICore implements SoapUICore {
                     log.info("Adding factories from [" + factoryFile.getAbsolutePath() + "]");
 
                     getFactoryRegistry().addConfig(new FileInputStream(factoryFile), classLoader);
-                } catch (Exception e) {
-                    SoapUI.logError(e);
+                    // We break the general rule that you shouldn't catch Throwable, because we don't want extensions to crash SoapUI
+                } catch (Throwable e) {
+                    SoapUI.logError(e, "Couldn't load factories in " + factoryFile.getAbsolutePath());
                 }
             }
         }
