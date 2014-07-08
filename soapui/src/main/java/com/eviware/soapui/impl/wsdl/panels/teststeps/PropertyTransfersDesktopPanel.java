@@ -1042,7 +1042,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
                 int ix = transferList.getSelectedIndex();
                 transferStep.removeTransferAt(ix);
-                listModel.remove(ix);
 
                 if (listModel.getSize() > 0) {
                     transferList.setSelectedIndex(ix > listModel.getSize() - 1 ? listModel.getSize() - 1 : ix);
