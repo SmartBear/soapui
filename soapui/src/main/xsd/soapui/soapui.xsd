@@ -551,6 +551,7 @@
             <xsd:element name="targetTransferType" maxOccurs="1" minOccurs="0"
                          type="tns:PropertyTransferTypes" default="XPATH">
             </xsd:element>
+            <xsd:element name="upgraded" type="xsd:boolean" />
         </xsd:sequence>
         <xsd:attribute name="failOnError" type="xsd:boolean"></xsd:attribute>
         <xsd:attribute name="setNullOnMissingSource" type="xsd:boolean">

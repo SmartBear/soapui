@@ -136,7 +136,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         if (!config.isSetTransferTextContent()) {
             config.setTransferTextContent(true);
         }
-
         sourceStep = config.getSourceStep();
         if (sourceStep == null) {
             sourceStep = getSourceStepName();
@@ -172,11 +171,28 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 .getProperty(targetType);
 
         targetPath = config.getTargetPath();
+        if (!config.getUpgraded()) {
+            if (shouldConvertSourceProperty()) {
+                setSourcePropertyName(WsdlTestStepWithProperties.RESPONSE_AS_XML);
+            }
+            config.setUpgraded(true);
+        }
 
         name = config.getName();
         initListeners();
 
         propertyChangeSupport.firePropertyChange(CONFIG_PROPERTY, null, null);
+    }
+
+    private boolean shouldConvertSourceProperty() {
+        return config.getSourcePath() != null && getSourcePathLanguage() != PathLanguage.JSONPATH &&
+                sourcePropertyIsResponse();
+    }
+
+    private boolean sourcePropertyIsResponse() {
+        TestProperty property = getSourceProperty();
+        return property != null && property.getName() != null &&
+                property.getName().equals(WsdlTestStepWithProperties.RESPONSE);
     }
 
     public void setSourcePathLanguage(PathLanguage language) {
