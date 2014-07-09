@@ -208,6 +208,12 @@
             <version>5.1.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.smartbear.utils.analytics</groupId>
+            <artifactId>out-app-analytics-provider</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+
         <!-- JGoodies -->
 
         <dependency>

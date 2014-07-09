@@ -19,13 +19,22 @@ package com.eviware.soapui.actions;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.settings.Settings;
-import com.eviware.soapui.settings.*;
+import com.eviware.soapui.settings.HttpSettings;
+import com.eviware.soapui.settings.SSLSettings;
+import com.eviware.soapui.settings.SecuritySettings;
+import com.eviware.soapui.settings.VersionUpdateSettings;
+import com.eviware.soapui.settings.WSISettings;
+import com.eviware.soapui.settings.WsaSettings;
+import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 import com.eviware.soapui.support.types.StringToStringMap;
 
-import javax.swing.*;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +72,7 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
 
         putValue(Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences");
         putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt P"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences-system-small.png"));
 
         addPrefs(new AnnotatedSettingsPrefs(HttpSettings.class, HTTP_SETTINGS));
         addPrefs(new ProxyPrefs(PROXY_SETTINGS));

@@ -135,7 +135,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
     private TransfersTableModel transferLogTableModel;
     private InternalTestRunListener testRunListener;
     private JComponentInspector<JComponent> logInspector;
-    private JCheckBox useXQueryCheckBox;
     private JButton runAllButton;
     private JInspectorPanel inspectorPanel;
     private JXTable logTable;
@@ -245,7 +244,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         componentEnabler.add(transferTextContentCheckBox);
         componentEnabler.add(ignoreEmptyCheckBox);
         componentEnabler.add(transferAllCheckBox);
-        componentEnabler.add(useXQueryCheckBox);
         componentEnabler.add(entitizeCheckBox);
         componentEnabler.add(transferChildNodesCheckBox);
 
@@ -406,18 +404,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             }
         });
 
-        useXQueryCheckBox = new JCheckBox("Use XQuery", false);
-        useXQueryCheckBox.setToolTipText("Interprets the source xpath as an XQuery expression");
-        useXQueryCheckBox.addChangeListener(new ChangeListener() {
-
-            public void stateChanged(ChangeEvent e) {
-                PropertyTransfer currentTransfer = getCurrentTransfer();
-                if (currentTransfer != null) {
-                    currentTransfer.setUseXQuery(useXQueryCheckBox.isSelected());
-                }
-            }
-        });
-
         entitizeCheckBox = new JCheckBox("Entitize transferred value(s)", false);
         entitizeCheckBox.setToolTipText("Entitize transferred values when possible");
         entitizeCheckBox.addChangeListener(new ChangeListener() {
@@ -448,9 +434,8 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         panel.add(transferTextContentCheckBox);
         panel.add(ignoreEmptyCheckBox);
         panel.add(transferAllCheckBox);
-        panel.add(useXQueryCheckBox);
-        panel.add(entitizeCheckBox);
         panel.add(transferChildNodesCheckBox);
+        panel.add(entitizeCheckBox);
         panel.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         return panel;
     }
@@ -908,7 +893,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             transferTextContentCheckBox.setSelected(transfer.getTransferTextContent());
             ignoreEmptyCheckBox.setSelected(transfer.getIgnoreEmpty());
             transferAllCheckBox.setSelected(transfer.getTransferToAll());
-            useXQueryCheckBox.setSelected(transfer.getUseXQuery());
             entitizeCheckBox.setSelected(transfer.getEntitize());
             transferChildNodesCheckBox.setSelected(transfer.getTransferChildNodes());
 
@@ -929,7 +913,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
         transferTextContentCheckBox.setEnabled(transfer != null);
         ignoreEmptyCheckBox.setEnabled(transfer != null);
         transferAllCheckBox.setEnabled(transfer != null);
-        useXQueryCheckBox.setEnabled(transfer != null);
         entitizeCheckBox.setEnabled(transfer != null);
         transferChildNodesCheckBox.setEnabled(transfer != null);
 
@@ -1059,7 +1042,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
                 int ix = transferList.getSelectedIndex();
                 transferStep.removeTransferAt(ix);
-                listModel.remove(ix);
 
                 if (listModel.getSize() > 0) {
                     transferList.setSelectedIndex(ix > listModel.getSize() - 1 ? listModel.getSize() - 1 : ix);
