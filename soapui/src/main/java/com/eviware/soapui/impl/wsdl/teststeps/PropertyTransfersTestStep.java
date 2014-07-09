@@ -174,6 +174,7 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
         PropertyTransfer transfer = new PropertyTransfer(this, transferStepConfig.addNewTransfers());
         transfer.setName(name);
         transfer.setFailOnError(true);
+        transfer.getConfig().setUpgraded(true);
         transfers.add(transfer);
         fireIndexedPropertyChange(TRANSFERS, transfers.size() - 1, null, transfer);
         return transfer;
