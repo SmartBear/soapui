@@ -38,6 +38,8 @@ import java.util.Set;
 abstract public class WsdlTestStepWithProperties extends WsdlTestStep {
     public static String RESPONSE = "Response";
     public static String RESPONSE_AS_XML = "ResponseAsXml";
+    public static String RAW_RESPONSE = "RawResponse";
+
     private Map<String, TestProperty> properties;
     private List<TestProperty> propertyList = new ArrayList<TestProperty>();
     private Map<String, Set<String>> normalizedPropertyNames = new HashMap<String, Set<String>>();

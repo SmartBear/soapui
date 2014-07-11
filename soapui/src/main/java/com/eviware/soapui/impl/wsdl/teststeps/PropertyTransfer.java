@@ -56,6 +56,8 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.eviware.soapui.tools.PropertyExpansionRemover.removeExpansions;
+
 /**
  * Class for transferring a property value between 2 test steps. This class is
  * relatively complex due to backwards compatibility issues and to graceful
@@ -134,7 +136,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         if (!config.isSetTransferTextContent()) {
             config.setTransferTextContent(true);
         }
-
         sourceStep = config.getSourceStep();
         if (sourceStep == null) {
             sourceStep = getSourceStepName();
@@ -170,11 +171,28 @@ public class PropertyTransfer implements PropertyChangeNotifier {
                 .getProperty(targetType);
 
         targetPath = config.getTargetPath();
+        if (!config.getUpgraded()) {
+            if (shouldConvertSourceProperty()) {
+                setSourcePropertyName(WsdlTestStepWithProperties.RESPONSE_AS_XML);
+            }
+            config.setUpgraded(true);
+        }
 
         name = config.getName();
         initListeners();
 
         propertyChangeSupport.firePropertyChange(CONFIG_PROPERTY, null, null);
+    }
+
+    private boolean shouldConvertSourceProperty() {
+        return config.getSourcePath() != null && getSourcePathLanguage() != PathLanguage.JSONPATH &&
+                sourcePropertyIsResponse();
+    }
+
+    private boolean sourcePropertyIsResponse() {
+        TestProperty property = getSourceProperty();
+        return property != null && property.getName() != null &&
+                property.getName().equals(WsdlTestStepWithProperties.RESPONSE);
     }
 
     public void setSourcePathLanguage(PathLanguage language) {
@@ -296,12 +314,20 @@ public class PropertyTransfer implements PropertyChangeNotifier {
             } else {
                 Object sourceValue = readSourceValue(context);
                 sourceValue = entitizeIfApplicable(sourceValue);
+                if (isResponseProperty(sourceProperty) && sourceValue instanceof String) {
+                    sourceValue = removeExpansions((String) sourceValue);
+                }
                 return writeTargetValue(sourceValue, context);
             }
         } catch (Exception e) {
             throw new PropertyTransferException(e.getMessage(), getSourceStepName(), sourceProperty, getTargetStepName(),
                     targetProperty);
         }
+    }
+
+    private boolean isResponseProperty(TestProperty sourceProperty) {
+        String propertyName = sourceProperty.getName();
+        return propertyName.equals("Response") || propertyName.equals("RawResponse") || propertyName.equals("ResponseAsXml");
     }
 
     private Object entitizeIfApplicable(Object sourceValue) {
@@ -445,6 +471,9 @@ public class PropertyTransfer implements PropertyChangeNotifier {
         XmlCursor sourceXml;
         try {
             String sourcePropertyValue = sourceProperty.getValue();
+            if (isResponseProperty(sourceProperty)) {
+                sourcePropertyValue = removeExpansions(sourceProperty.getValue());
+            }
             XmlObject sourceXmlObject = sourcePropertyValue == null ? null : XmlUtils
                     .createXmlObject(sourcePropertyValue);
             sourceXml = sourceXmlObject == null ? null : sourceXmlObject.newCursor();
@@ -588,7 +617,6 @@ public class PropertyTransfer implements PropertyChangeNotifier {
 
         return value;
     }
-
 
     /**
      * Method called for transferring between 2 xml properties..

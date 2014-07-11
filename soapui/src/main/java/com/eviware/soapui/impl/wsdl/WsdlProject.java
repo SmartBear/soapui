@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.MockServiceConfig;
 import com.eviware.soapui.config.MockServiceDocumentConfig;
@@ -115,9 +116,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.ENCRYPTED_BAD_OR_NO_PASSWORD;
-import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.ENCRYPTED_GOOD_PASSWORD;
-import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.NOT_ENCRYPTED;
+import static com.eviware.soapui.impl.wsdl.WsdlProject.ProjectEncryptionStatus.*;
 
 /**
  * WSDL project implementation
@@ -1214,7 +1213,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         addWsdlMockService(mockService);
         fireMockServiceAdded(mockService);
 
-        Analytics.trackAction("CreateSOAPService");
+        Analytics.trackAction(SoapUIActions.CREATE_SOAP_MOCK.getActionName());
 
         return mockService;
     }
@@ -1229,7 +1228,7 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         addRestMockService(mockService);
         fireMockServiceAdded(mockService);
 
-        Analytics.trackAction("CreateRESTService");
+        Analytics.trackAction(SoapUIActions.CREATE_REST_MOCK.getActionName());
 
         return mockService;
     }

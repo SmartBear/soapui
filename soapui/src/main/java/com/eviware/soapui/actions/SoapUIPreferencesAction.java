@@ -28,6 +28,7 @@ import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 import javax.swing.AbstractAction;
@@ -36,7 +37,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Action for managing SoapUI preferences
@@ -44,7 +47,7 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class SoapUIPreferencesAction extends AbstractAction {
+public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFactoryRegistryListener {
     public static final String GLOBAL_SECURITY_SETTINGS = "Global Security Settings";
     public static final String WS_I_SETTINGS = "WS-I Settings";
     public static final String WSDL_SETTINGS = "WSDL Settings";
@@ -60,6 +63,7 @@ public class SoapUIPreferencesAction extends AbstractAction {
     private SwingConfigurationDialogImpl dialog;
     private JTabbedPane tabs;
     private List<Prefs> prefs = new ArrayList<Prefs>();
+    private Map<PrefsFactory, Prefs> prefsFactories = new HashMap<PrefsFactory, Prefs>();
 
     private static SoapUIPreferencesAction instance;
 
@@ -68,6 +72,7 @@ public class SoapUIPreferencesAction extends AbstractAction {
 
         putValue(Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences");
         putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt P"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences-system-small.png"));
 
         addPrefs(new AnnotatedSettingsPrefs(HttpSettings.class, HTTP_SETTINGS));
         addPrefs(new ProxyPrefs(PROXY_SETTINGS));
@@ -84,10 +89,50 @@ public class SoapUIPreferencesAction extends AbstractAction {
         addPrefs(new AnnotatedSettingsPrefs(VersionUpdateSettings.class, VERSIONUPDATE_SETTINGS));
 
         for (PrefsFactory factory : SoapUI.getFactoryRegistry().getFactories(PrefsFactory.class)) {
-            addPrefs(factory.createPrefs());
+            addPrefsFactory(factory);
         }
 
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
+
         instance = this;
+    }
+
+    public void addPrefsFactory(PrefsFactory factory) {
+        Prefs pref = factory.createPrefs();
+        addPrefs( pref );
+
+        prefsFactories.put( factory, pref );
+        if( tabs != null )
+            addPrefToTabs( pref );
+    }
+
+    public void removePrefsFactory( PrefsFactory factory )
+    {
+        Prefs pref = prefsFactories.get( factory );
+        if( pref != null )
+        {
+            prefsFactories.remove( factory );
+            if( tabs != null )
+            {
+                int ix = tabs.indexOfTab( pref.getTitle() );
+                if( ix != -1 )
+                    tabs.removeTabAt( ix );
+            }
+
+            prefs.remove( pref );
+        }
+    }
+
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if(factoryType.equals( PrefsFactory.class ))
+            addPrefsFactory((PrefsFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if(factoryType.equals( PrefsFactory.class ))
+            removePrefsFactory((PrefsFactory) factory);
     }
 
     public void addPrefs(Prefs pref) {
@@ -100,6 +145,11 @@ public class SoapUIPreferencesAction extends AbstractAction {
         }
 
         return instance;
+    }
+
+    public Prefs [] getPrefs()
+    {
+        return prefs.toArray( new Prefs[prefs.size()]);
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -142,10 +192,14 @@ public class SoapUIPreferencesAction extends AbstractAction {
         tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
         tabs.setTabPlacement(JTabbedPane.LEFT);
         for (Prefs pref : prefs) {
-            tabs.addTab(pref.getTitle(), new JScrollPane(pref.getForm().getPanel()));
+            addPrefToTabs(pref);
         }
 
         dialog.setContent(UISupport.createTabPanel(tabs, false));
+    }
+
+    private void addPrefToTabs(Prefs pref) {
+        tabs.addTab(pref.getTitle(), new JScrollPane(pref.getForm().getPanel()));
     }
 
 }

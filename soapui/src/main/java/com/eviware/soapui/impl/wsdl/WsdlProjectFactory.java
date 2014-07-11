@@ -16,15 +16,14 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import org.apache.xmlbeans.XmlException;
-
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.model.project.ProjectFactory;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.SoapUIException;
+import org.apache.xmlbeans.XmlException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class WsdlProjectFactory implements ProjectFactory<WsdlProject> {
 
@@ -43,7 +42,7 @@ public class WsdlProjectFactory implements ProjectFactory<WsdlProject> {
     }
 
     public WsdlProject createNew(Workspace workspace) {
-        return new WsdlProject((String)null, (WorkspaceImpl) workspace);
+        return new WsdlProject((String) null, (WorkspaceImpl) workspace);
     }
 
     public WsdlProject createNew(String path, Workspace workspace) {

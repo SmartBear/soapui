@@ -16,32 +16,9 @@
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JSpinner;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.LoadTestLimitTypesConfig;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.actions.loadtest.LoadTestOptionsAction;
@@ -74,7 +51,30 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.support.DesktopListenerAdapter;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
-import com.eviware.soapui.analytics.Analytics;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JSpinner;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * Desktop panel for LoadTests
@@ -393,7 +393,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
             runButton.setEnabled(false);
             runner = loadtest.run();
-            Analytics.trackAction("RunLoadTest");
+            Analytics.trackAction(SoapUIActions.RUN_LOAD_TEST.getActionName());
         }
     }
 

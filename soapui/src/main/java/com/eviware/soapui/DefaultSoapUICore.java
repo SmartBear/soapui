@@ -16,7 +16,6 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.config.SoapuiSettingsDocumentConfig;
 import com.eviware.soapui.impl.settings.XmlBeansSettingsImpl;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -108,7 +107,7 @@ public class DefaultSoapUICore implements SoapUICore {
 
     /*
      * this method is added for enabling settings password (like in core) all the
-     * way down in hierarchy boolean setingPassword is a dummy parameter, because
+     * way down in hierarchy boolean settingPassword is a dummy parameter, because
      * the constructor with only one string parameter already existed
      */
     public DefaultSoapUICore(boolean settingPassword, String soapUISettingsPassword) {
@@ -139,67 +138,78 @@ public class DefaultSoapUICore implements SoapUICore {
         initSettings(settingsFile == null ? DEFAULT_SETTINGS_FILE : settingsFile);
 
         initExtensions(getExtensionClassLoader());
-        initPlugins();
         initCoreComponents();
+        loadPlugins();
 
         // this is to provoke initialization
         SoapVersion.Soap11.equals(SoapVersion.Soap12);
 
     }
 
-    protected void initPlugins() {
-        File[] pluginFiles = new File("plugins").listFiles();
+    protected void loadPlugins() {
+        File pluginDirectory = new File(System.getProperty("soapui.home"), "plugins");
+        File[] pluginFiles = pluginDirectory.listFiles();
         if (pluginFiles != null) {
             for (File pluginFile : pluginFiles) {
-                if (!pluginFile.getName().toLowerCase().endsWith("-plugin.jar")) {
-                    continue;
-                }
-
+                log.info("Adding plugin from [" + pluginFile.getAbsolutePath() + "]");
                 try {
-                    log.info("Adding plugin from [" + pluginFile.getAbsolutePath() + "]");
-
-                    // add jar to our extension classLoader
-                    getExtensionClassLoader().addFile(pluginFile);
-                    JarFile jarFile = new JarFile(pluginFile);
-
-                    // look for factories
-                    JarEntry entry = jarFile.getJarEntry("META-INF/factories.xml");
-                    if (entry != null) {
-                        getFactoryRegistry().addConfig(jarFile.getInputStream(entry), extClassLoader);
-                    }
-
-                    // look for listeners
-                    entry = jarFile.getJarEntry("META-INF/listeners.xml");
-                    if (entry != null) {
-                        getListenerRegistry().addConfig(jarFile.getInputStream(entry), extClassLoader);
-                    }
-
-                    // look for actions
-                    entry = jarFile.getJarEntry("META-INF/actions.xml");
-                    if (entry != null) {
-                        getActionRegistry().addConfig(jarFile.getInputStream(entry), extClassLoader);
-                    }
-
-                    // add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
-                    UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
-
-                    Analytics.trackAction("InstallPlugin", "Extension", pluginFile.getName());
-                } catch (Exception e) {
-                    SoapUI.logError(e);
+                    loadOldStylePluginFrom(pluginFile);
+                } catch (Throwable e) {
+                    log.warn("Could not load plugin from file [" + pluginFile + "]");
                 }
             }
         }
     }
 
     protected void initExtensions(ClassLoader extensionClassLoader) {
-        String extDir = System.getProperty("soapui.ext.listeners");
-        addExternalListeners(FilenameUtils.normalize(extDir != null ? extDir : root == null ? "listeners" : root + File.separatorChar + "listeners"), extensionClassLoader);
+        /* We break the general rule that you shouldn't catch Throwable, because we don't want extensions to crash SoapUI. */
+        try {
+            String extDir = System.getProperty("soapui.ext.listeners");
+            addExternalListeners(FilenameUtils.normalize(extDir != null ? extDir : root == null ? "listeners" :
+                    root + File.separatorChar + "listeners"), extensionClassLoader);
+        } catch (Throwable e) {
+            SoapUI.logError(e, "Couldn't load external listeners");
+        }
 
-        String factoriesDir = System.getProperty("soapui.ext.factories");
-        addExternalFactories(FilenameUtils.normalize(factoriesDir != null ? factoriesDir : root == null ? "factories" : root + File.separatorChar + "factories"), extensionClassLoader);
+        try {
+            String factoriesDir = System.getProperty("soapui.ext.factories");
+            addExternalFactories(FilenameUtils.normalize(factoriesDir != null ? factoriesDir : root == null ? "factories" :
+                    root + File.separatorChar + "factories"), extensionClassLoader);
+        } catch (Throwable e) {
+            SoapUI.logError(e, "Couldn't load external factories");
+        }
     }
 
     protected void initCoreComponents() {
+    }
+
+    public void loadOldStylePluginFrom(File pluginFile) throws IOException {
+        JarFile jarFile = new JarFile(pluginFile);
+        // add jar to our extension classLoader
+        SoapUIExtensionClassLoader extensionClassLoader = getExtensionClassLoader();
+        extensionClassLoader.addFile(pluginFile);
+
+        // look for factories
+        JarEntry entry = jarFile.getJarEntry("META-INF/factories.xml");
+        if (entry != null) {
+            factoryRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+        }
+
+        // look for listeners
+        entry = jarFile.getJarEntry("META-INF/listeners.xml");
+        if (entry != null) {
+            listenerRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+        }
+
+        // look for actions
+        entry = jarFile.getJarEntry("META-INF/actions.xml");
+        if (entry != null) {
+            actionRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+        }
+
+        // add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
+        UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
+
     }
 
     public String getRoot() {
@@ -580,10 +590,10 @@ public class DefaultSoapUICore implements SoapUICore {
 
                 try {
                     log.info("Adding listeners from [" + actionFile.getAbsolutePath() + "]");
-
                     SoapUI.getListenerRegistry().addConfig(new FileInputStream(actionFile), classLoader);
-                } catch (Exception e) {
-                    SoapUI.logError(e);
+                    // We break the general rule that you shouldn't catch Throwable, because we don't want extensions to crash SoapUI
+                } catch (Throwable e) {
+                    SoapUI.logError(e, "Couldn't load listeners in " + actionFile.getAbsolutePath());
                 }
             }
         }
@@ -606,8 +616,9 @@ public class DefaultSoapUICore implements SoapUICore {
                     log.info("Adding factories from [" + factoryFile.getAbsolutePath() + "]");
 
                     getFactoryRegistry().addConfig(new FileInputStream(factoryFile), classLoader);
-                } catch (Exception e) {
-                    SoapUI.logError(e);
+                    // We break the general rule that you shouldn't catch Throwable, because we don't want extensions to crash SoapUI
+                } catch (Throwable e) {
+                    SoapUI.logError(e, "Couldn't load factories in " + factoryFile.getAbsolutePath());
                 }
             }
         }

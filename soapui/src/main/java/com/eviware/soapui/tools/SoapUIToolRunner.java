@@ -16,12 +16,9 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-
-import com.eviware.soapui.analytics.Analytics;
-import org.apache.commons.cli.CommandLine;
-
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlProjectFactory;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
@@ -31,6 +28,9 @@ import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolRunner;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.support.UISupport;
+import org.apache.commons.cli.CommandLine;
+
+import java.io.File;
 
 /**
  * Standalone tool-runner used from maven-plugin, can also be used from
@@ -148,7 +148,7 @@ public class SoapUIToolRunner extends AbstractSoapUIRunner implements ToolHost, 
     public void run(ToolRunner runner) throws Exception {
         status = RunnerStatus.RUNNING;
         runner.setContext(this);
-        Analytics.trackAction("RunCmdLineTool", "Tool", runner.getName());
+        Analytics.trackAction(SoapUIActions.RUN_TOOL_FROM_COMMAND_LINE.getActionName(), "Tool", runner.getName());
 
         runner.run();
     }

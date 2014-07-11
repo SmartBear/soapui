@@ -16,37 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
 
-import hermes.Hermes;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
-import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.MessageProducer;
-import javax.jms.Queue;
-import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.Topic;
-import javax.jms.TopicSubscriber;
-import javax.naming.NamingException;
-
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.lang.NotImplementedException;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -71,6 +40,16 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
+import hermes.Hermes;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang.NotImplementedException;
+
+import javax.jms.*;
+import javax.naming.NamingException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 public class HermesJmsRequestTransport implements RequestTransport {
 
@@ -471,5 +450,14 @@ public class HermesJmsRequestTransport implements RequestTransport {
 
     public void removeRequestFilter(RequestFilter filter) {
         filters.remove(filter);
+    }
+
+    @Override
+    public void insertRequestFilter(RequestFilter filter, RequestFilter refFilter) {
+        int ix = filters.indexOf( refFilter );
+        if( ix == -1 )
+            filters.add( filter );
+        else
+            filters.add( ix, filter );
     }
 }

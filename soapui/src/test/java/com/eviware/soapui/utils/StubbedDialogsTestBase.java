@@ -26,9 +26,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.File;
 import java.io.IOException;
 
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 /**

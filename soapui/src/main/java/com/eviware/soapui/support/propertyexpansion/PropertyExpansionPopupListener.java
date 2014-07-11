@@ -250,10 +250,10 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
 
                 if (XmlUtils.seemsToBeXml(val)) {
                     XmlUtils.createXmlObject(val);
-                    sourceXPath = UISupport.selectXPath("Select XPath", "Select source xpath for property transfer", val,
+                    sourceXPath = UISupport.selectXPath("Select XPath", "Select source xpath", val,
                             null);
                 } else if (JsonUtil.isValidJson(val)) {
-                    sourceXPath = UISupport.selectJsonPath("Select JSON", "Select JSON value to transfer", val, null);
+                    sourceXPath = UISupport.selectJsonPath("Select JSON", "Select JSON value", val, null);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -317,7 +317,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         textField.setComponentPopupMenu(popup);
 
         if (popup != null) {
-            PropertyExpansionPopupListener.addMenu(popup, "Get Data..", target.getContextModelItem(), target);
+            PropertyExpansionPopupListener.addMenu(popup, "Get Data...", target.getContextModelItem(), target);
         }
     }
 

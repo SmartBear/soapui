@@ -468,6 +468,10 @@ public class AMFRequest extends AbstractModelItem implements Assertable, TestReq
         return testStep.cloneAssertion(source, name);
     }
 
+    public String getAssertableContentAsXml() {
+        return testStep.getAssertableContentAsXml();
+    }
+
     public String getAssertableContent() {
         return testStep.getAssertableContent();
     }

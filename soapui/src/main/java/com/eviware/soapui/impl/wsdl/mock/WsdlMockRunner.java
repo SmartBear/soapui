@@ -207,7 +207,7 @@ public class WsdlMockRunner implements MockRunner {
             listener.onMockRunnerStart(this);
         }
 
-        Analytics.trackAction("Start" + getMockService().getStringID() + "Service");
+        Analytics.trackAction("Start Mock Service, ID: " + getMockService().getStringID());
     }
 
     public void setLogEnabled(boolean logEnabled) {

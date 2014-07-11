@@ -16,14 +16,13 @@
 
 package com.eviware.soapui.model.project;
 
-import java.io.IOException;
-import java.io.InputStream;
-
 import com.eviware.soapui.impl.WorkspaceImpl;
-import org.apache.xmlbeans.XmlException;
-
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.support.SoapUIException;
+import org.apache.xmlbeans.XmlException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public interface ProjectFactory<T extends Project> {
     public T createNew() throws XmlException, IOException, SoapUIException;

@@ -16,51 +16,10 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
-
-import junit.framework.ComparisonFailure;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.XmlAnySimpleType;
-import org.apache.xmlbeans.XmlCursor;
-import org.apache.xmlbeans.XmlObject;
-import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlQName;
-import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.DifferenceEngine;
-import org.custommonkey.xmlunit.DifferenceListener;
-import org.custommonkey.xmlunit.XMLAssert;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
-import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
-import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
-import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathImpl;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -86,13 +45,30 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
+import junit.framework.ComparisonFailure;
+import org.apache.xmlbeans.XmlAnySimpleType;
+import org.apache.xmlbeans.XmlCursor;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+import org.apache.xmlbeans.XmlQName;
+import org.apache.xmlbeans.impl.values.XmlValueDisconnectedException;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.DifferenceEngine;
+import org.custommonkey.xmlunit.DifferenceListener;
+import org.custommonkey.xmlunit.XMLAssert;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
+import javax.swing.JTextArea;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Assertion that matches a specified XPath expression and its expected result
@@ -103,13 +79,10 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 public class XPathContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
         XPathReferenceContainer {
-    private final static Logger log = Logger.getLogger(XPathContainsAssertion.class);
     private String expectedContent;
     private String path;
-    private JDialog configurationDialog;
-    private JTextArea pathArea;
-    private JTextArea contentArea;
-    private boolean configureResult;
+
+
     private boolean allowWildcards;
     private boolean ignoreNamespaceDifferences;
     private boolean ignoreComments;
@@ -117,9 +90,8 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
     public static final String ID = "XPath Match";
     public static final String LABEL = "XPath Match";
     public static final String DESCRIPTION = "Uses an XPath expression to select content from the target property and compares the result to an expected value. Applicable to any property containing XML.";
-    private JCheckBox allowWildcardsCheckBox;
-    private JCheckBox ignoreNamespaceDifferencesCheckBox;
-    private JCheckBox ignoreCommentsCheckBox;
+    protected AssertionConfigurationDialog configurationDialog;
+
 
     public XPathContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
@@ -375,149 +347,61 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         }
     }
 
-    @Override
-    public boolean configure() {
-        if (configurationDialog == null) {
-            buildConfigurationDialog();
-        }
-
-        pathArea.setText(path);
-        contentArea.setText(expectedContent);
-        allowWildcardsCheckBox.setSelected(allowWildcards);
-        ignoreNamespaceDifferencesCheckBox.setSelected(ignoreNamespaceDifferences);
-
-        UISupport.showDialog(configurationDialog);
-        return configureResult;
-    }
-
-    protected void buildConfigurationDialog() {
-        configurationDialog = new JDialog(UISupport.getMainFrame());
-        configurationDialog.setTitle("XPath Match Configuration");
-        configurationDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent event) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        // pathArea.requestFocusInWindow();
-                    }
-                });
-            }
-        });
-
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.add(UISupport.buildDescription("Specify xpath expression and expected result",
-                "declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>", null),
-                BorderLayout.NORTH);
-
-        JSplitPane splitPane = UISupport.createVerticalSplit();
-
-        pathArea = new JUndoableTextArea();
-        pathArea.setToolTipText("Specifies the XPath expression to select from the message for validation");
-
-        JPanel pathPanel = new JPanel(new BorderLayout());
-        JXToolBar pathToolbar = UISupport.createToolbar();
-        addPathEditorActions(pathToolbar);
-
-        pathPanel.add(pathToolbar, BorderLayout.NORTH);
-        pathPanel.add(new JScrollPane(pathArea), BorderLayout.CENTER);
-
-        splitPane.setTopComponent(UISupport.addTitledBorder(pathPanel, "XPath Expression"));
-
-        contentArea = new JUndoableTextArea();
-        contentArea.setToolTipText("Specifies the expected result of the XPath expression");
-
-        JPanel matchPanel = new JPanel(new BorderLayout());
-        JXToolBar contentToolbar = UISupport.createToolbar();
-        addMatchEditorActions(contentToolbar);
-
-        matchPanel.add(contentToolbar, BorderLayout.NORTH);
-        matchPanel.add(new JScrollPane(contentArea), BorderLayout.CENTER);
-
-        splitPane.setBottomComponent(UISupport.addTitledBorder(matchPanel, "Expected Result"));
-        splitPane.setDividerLocation(150);
-        splitPane.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
-
-        contentPanel.add(splitPane, BorderLayout.CENTER);
-
-        ButtonBarBuilder builder = new ButtonBarBuilder();
-
-        ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(HelpUrls.XPATHASSERTIONEDITOR_HELP_URL);
-        builder.addFixed(UISupport.createToolbarButton(showOnlineHelpAction));
-        builder.addGlue();
-
-        JButton okButton = new JButton(new OkAction());
-        builder.addFixed(okButton);
-        builder.addRelatedGap();
-        builder.addFixed(new JButton(new CancelAction()));
-
-        builder.setBorder(BorderFactory.createEmptyBorder(1, 5, 5, 5));
-
-        contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
-
-        configurationDialog.setContentPane(contentPanel);
-        configurationDialog.setSize(800, 500);
-        configurationDialog.setModal(true);
-        UISupport.initDialogActions(configurationDialog, showOnlineHelpAction, okButton);
-    }
-
     protected void addPathEditorActions(JXToolBar toolbar) {
-        toolbar.addFixed(new JButton(new DeclareNamespacesFromCurrentAction()));
+        configurationDialog.addDeclareNamespaceButton(toolbar);
+    }
+
+    protected JTextArea getPathArea() {
+        return configurationDialog == null ? null : configurationDialog.getPathArea();
+    }
+
+    protected JTextArea getContentArea() {
+        return configurationDialog == null ? null : configurationDialog.getContentArea();
     }
 
     protected void addMatchEditorActions(JXToolBar toolbar) {
-        toolbar.addFixed(new JButton(new SelectFromCurrentAction()));
-        toolbar.addRelatedGap();
-        toolbar.addFixed(new JButton(new TestPathAction()));
-        allowWildcardsCheckBox = new JCheckBox("Allow Wildcards");
+        configurationDialog.addMatchEditorActions(toolbar);
+    }
 
-        Dimension dim = new Dimension(120, 20);
+    @Override
+    public boolean configure() {
+        if (configurationDialog == null) {
+            configurationDialog = new AssertionConfigurationDialog(getAssertion());
+        }
 
-        allowWildcardsCheckBox.setSize(dim);
-        allowWildcardsCheckBox.setPreferredSize(dim);
+        return configurationDialog.configure();
+    }
 
-        allowWildcardsCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(allowWildcardsCheckBox);
-
-        Dimension largerDim = new Dimension(170, 20);
-        ignoreNamespaceDifferencesCheckBox = new JCheckBox("Ignore namespace prefixes");
-        ignoreNamespaceDifferencesCheckBox.setSize(largerDim);
-        ignoreNamespaceDifferencesCheckBox.setPreferredSize(largerDim);
-        ignoreNamespaceDifferencesCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(ignoreNamespaceDifferencesCheckBox);
-
-        ignoreCommentsCheckBox = new JCheckBox("Ignore XML Comments");
-        ignoreCommentsCheckBox.setSize(largerDim);
-        ignoreCommentsCheckBox.setPreferredSize(largerDim);
-        ignoreCommentsCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(ignoreCommentsCheckBox);
+    protected XPathContainsAssertion getAssertion() {
+        return this;
     }
 
     public XmlObject createConfiguration() {
         XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
+        addConfigurationValues(builder);
+        return builder.finish();
+    }
+
+    protected void addConfigurationValues(XmlObjectConfigurationBuilder builder) {
         builder.add("path", path);
         builder.add("content", expectedContent);
         builder.add("allowWildcards", allowWildcards);
         builder.add("ignoreNamspaceDifferences", ignoreNamespaceDifferences);
         builder.add("ignoreComments", ignoreComments);
-        return builder.finish();
     }
 
     public void selectFromCurrent() {
         XmlCursor cursor = null;
 
         try {
-            String assertableContent = getAssertable().getAssertableContent();
+            String assertableContent = getAssertable().getAssertableContentAsXml();
             if (assertableContent == null || assertableContent.trim().length() == 0) {
                 UISupport.showErrorMessage("Missing content to select from");
                 return;
             }
 
-            // XmlObject xml = XmlObject.Factory.parse( assertableContent );
-            XmlObject xml = XmlUtils.createXmlObject(assertableContent);
 
+            JTextArea pathArea = getPathArea();
             String txt = pathArea == null || !pathArea.isVisible() ? getPath() : pathArea.getSelectedText();
             if (txt == null) {
                 txt = pathArea == null ? "" : pathArea.getText();
@@ -527,10 +411,13 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
 
             String expandedPath = PropertyExpander.expandProperties(context, txt.trim());
 
+            JTextArea contentArea = getContentArea();
             if (contentArea != null && contentArea.isVisible()) {
                 contentArea.setText("");
             }
 
+            // XmlObject xml = XmlObject.Factory.parse( assertableContent );
+            XmlObject xml = XmlUtils.createXmlObject(assertableContent);
             cursor = xml.newCursor();
             cursor.selectPath(expandedPath);
             if (!cursor.toNextSelection()) {
@@ -556,11 +443,43 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         }
     }
 
-    private void setExpectedContent(String expectedContent, boolean save) {
+    protected void setExpectedContent(String expectedContent, boolean save) {
         this.expectedContent = expectedContent;
         if (save) {
             setConfiguration(createConfiguration());
         }
+    }
+
+    public String getPathAreaTitle() {
+        return "Specify xpath expression and expected result";
+    }
+
+    public String getPathAreaDescription() {
+        return "declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>";
+    }
+
+    public String getPathAreaToolTipText() {
+        return "Specifies the XPath expression to select from the message for validation";
+    }
+
+    public String getPathAreaBorderTitle() {
+        return "XPath Expression";
+    }
+
+    public String getContentAreaToolTipText() {
+        return "Specifies the expected result of the XPath expression";
+    }
+
+    public String getContentAreaBorderTitle() {
+        return "Expected Result";
+    }
+
+    public boolean canAssertXmlContent() {
+        return true;
+    }
+
+    public String getConfigurationDialogTitle() {
+        return "XPath Match Configuration";
     }
 
     private final class InternalDifferenceListener implements DifferenceListener {
@@ -603,99 +522,6 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         }
     }
 
-    public class OkAction extends AbstractAction {
-        public OkAction() {
-            super("Save");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            setPath(pathArea.getText().trim());
-            setExpectedContent(contentArea.getText());
-            setAllowWildcards(allowWildcardsCheckBox.isSelected());
-            setIgnoreNamespaceDifferences(ignoreNamespaceDifferencesCheckBox.isSelected());
-            setIgnoreComments(ignoreCommentsCheckBox.isSelected());
-            setConfiguration(createConfiguration());
-            configureResult = true;
-            configurationDialog.setVisible(false);
-        }
-    }
-
-    public class CancelAction extends AbstractAction {
-        public CancelAction() {
-            super("Cancel");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            configureResult = false;
-            configurationDialog.setVisible(false);
-        }
-    }
-
-    public class DeclareNamespacesFromCurrentAction extends AbstractAction {
-        public DeclareNamespacesFromCurrentAction() {
-            super("Declare");
-            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to XPath expression");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            try {
-                String content = getAssertable().getAssertableContent();
-                if (content != null && content.trim().length() > 0) {
-                    pathArea.setText(XmlUtils.declareXPathNamespaces(content) + pathArea.getText());
-                } else if (UISupport.confirm("Declare namespaces from schema instead?", "Missing Response")) {
-                    pathArea.setText(XmlUtils.declareXPathNamespaces((WsdlInterface) getAssertable().getInterface())
-                            + pathArea.getText());
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
-    }
-
-    public class TestPathAction extends AbstractAction {
-        public TestPathAction() {
-            super("Test");
-            putValue(Action.SHORT_DESCRIPTION,
-                    "Tests the XPath expression for the current message against the Expected Content field");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            String oldPath = getPath();
-            String oldContent = getExpectedContent();
-            boolean oldAllowWildcards = isAllowWildcards();
-
-            setPath(pathArea.getText().trim());
-            setExpectedContent(contentArea.getText());
-            setAllowWildcards(allowWildcardsCheckBox.isSelected());
-            setIgnoreNamespaceDifferences(ignoreNamespaceDifferencesCheckBox.isSelected());
-            setIgnoreComments(ignoreCommentsCheckBox.isSelected());
-
-            try {
-                String msg = assertContent(getAssertable().getAssertableContent(), new WsdlTestRunContext(getAssertable()
-                        .getTestStep()), "Response");
-                UISupport.showInfoMessage(msg, "Success");
-            } catch (AssertionException e) {
-                UISupport.showErrorMessage(e.getMessage());
-            }
-
-            setPath(oldPath);
-            setExpectedContent(oldContent);
-            setAllowWildcards(oldAllowWildcards);
-        }
-    }
-
-    public class SelectFromCurrentAction extends AbstractAction {
-        public SelectFromCurrentAction() {
-            super("Select from current");
-            putValue(Action.SHORT_DESCRIPTION,
-                    "Selects the XPath expression from the current message into the Expected Content field");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            selectFromCurrent();
-        }
-    }
-
     @Override
     protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
             throws AssertionException {
@@ -704,14 +530,6 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         } else {
             return assertContent(messageExchange.getRequestContent(), context, "Request");
         }
-    }
-
-    public JTextArea getContentArea() {
-        return contentArea;
-    }
-
-    public JTextArea getPathArea() {
-        return pathArea;
     }
 
     @Override

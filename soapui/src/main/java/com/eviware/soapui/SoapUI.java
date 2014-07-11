@@ -23,10 +23,8 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
-import com.eviware.soapui.impl.actions.NewGenericProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -534,6 +532,21 @@ public class SoapUI {
         return recentMenu;
     }
 
+    static void addStandardPreferencesShortcutOnMac() {
+        if (UISupport.isMac()) {
+            KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+                @Override
+                public boolean dispatchKeyEvent(KeyEvent e) {
+                    int modifiers = e.getModifiers();
+                    if (e.getKeyChar() == ',' && (modifiers == InputEvent.META_DOWN_MASK || modifiers == InputEvent.META_MASK)) {
+                        SoapUIPreferencesAction.getInstance().actionPerformed(new ActionEvent(frame, 1, "ShowPreferences"));
+                    }
+                    return false;
+                }
+            });
+        }
+    }
+
     public static JFrame getFrame() {
         return frame;
     }
@@ -678,21 +691,6 @@ public class SoapUI {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
-            }
-        }
-
-        private void addStandardPreferencesShortcutOnMac() {
-            if (UISupport.isMac()) {
-                KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-                    @Override
-                    public boolean dispatchKeyEvent(KeyEvent e) {
-                        int modifiers = e.getModifiers();
-                        if (e.getKeyChar() == ',' && (modifiers == InputEvent.META_DOWN_MASK || modifiers == InputEvent.META_MASK)) {
-                            SoapUIPreferencesAction.getInstance().actionPerformed(new ActionEvent(frame, 1, "ShowPreferences"));
-                        }
-                        return false;
-                    }
-                });
             }
         }
 
@@ -1147,7 +1145,6 @@ public class SoapUI {
         public void actionPerformed(ActionEvent e) {
             saveOnExit = true;
             WindowEvent windowEvent = new WindowEvent(frame, WindowEvent.WINDOW_CLOSING);
-//            Analytics.trackAction("Exit");
             frame.dispatchEvent(windowEvent);
         }
     }
@@ -1372,14 +1369,18 @@ public class SoapUI {
         SoapUI.isStandalone = standalone;
     }
 
-    private static class NewWsdlProjectActionDelegate extends AbstractAction {
+    static class NewWsdlProjectActionDelegate extends AbstractAction {
         public NewWsdlProjectActionDelegate() {
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project.gif"));
-            putValue(Action.SHORT_DESCRIPTION, "Creates a new generic project");
+            putValue(Action.SHORT_DESCRIPTION, "Creates a new SOAP project");
+        }
+
+        public void setShortDescription(String description) {
+            putValue(Action.SHORT_DESCRIPTION, description);
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(NewGenericProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
+            SoapUI.getActionRegistry().getAction(NewWsdlProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
         }
     }
 

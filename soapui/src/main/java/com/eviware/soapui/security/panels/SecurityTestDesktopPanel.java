@@ -16,34 +16,9 @@
 
 package com.eviware.soapui.security.panels;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.Date;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
-import javax.swing.JToolBar;
-import javax.swing.ListModel;
-import javax.swing.SwingConstants;
-import javax.swing.text.Document;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.panels.support.MockSecurityTestRunner;
 import com.eviware.soapui.impl.wsdl.panels.testcase.actions.SetCredentialsAction;
@@ -90,6 +65,31 @@ import com.eviware.soapui.support.dnd.JListDragAndDropable;
 import com.eviware.soapui.support.swing.ComponentBag;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.ui.support.KeySensitiveModelItemDesktopPanel;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
+import javax.swing.JToolBar;
+import javax.swing.ListModel;
+import javax.swing.SwingConstants;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.Date;
+import java.util.List;
 
 /**
  * SecurityTest desktop panel
@@ -417,7 +417,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
                 }
             }
             if (shouldRun) {
-                Analytics.trackAction("RunSecurityTest");
+                Analytics.trackAction(SoapUIActions.RUN_SECURITY_TEST.getActionName());
                 runSecurityTest();
             } else {
                 UISupport.showInfoMessage("No Security Scans available to run.", "Security Test Warning");

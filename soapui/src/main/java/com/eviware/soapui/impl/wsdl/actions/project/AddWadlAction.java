@@ -17,6 +17,7 @@
 package com.eviware.soapui.impl.wsdl.actions.project;
 
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.rest.actions.service.GenerateRestTestSuiteAction;
@@ -107,7 +108,7 @@ public class AddWadlAction extends AbstractSoapUIAction<WsdlProject> {
             UISupport.showErrorMessage(e);
         }
 
-        Analytics.trackAction("ImportWADL");
+        Analytics.trackAction(SoapUIActions.IMPORT_WADL.getActionName());
 
         return restService;
     }

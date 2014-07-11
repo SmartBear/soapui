@@ -254,9 +254,8 @@ public class UISupport {
         return new SwingConfigurationDialogImpl(name, null, null, null);
     }
 
-    public static void showErrorMessage(String message) {
+    public static void showErrorMessage(final String message) {
         Analytics.trackError(new Throwable(message));
-
         if (message != null && message.length() > EXTENDED_ERROR_MESSAGE_THRESHOLD) {
             dialogs.showExtendedInfo("Error", "An error occurred", message, null);
         } else {

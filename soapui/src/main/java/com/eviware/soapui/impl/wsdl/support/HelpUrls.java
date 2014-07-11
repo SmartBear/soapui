@@ -97,7 +97,7 @@ public interface HelpUrls {
     public static final String MOCKSERVICEOPTIONS_HELP_URL = "http://www.soapui.org/Service-Mocking/mock-service-editor.html";
     public static final String MOCKSERVICE_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
 
-    public static final String NEWPROJECT_HELP_URL = "http://www.soapui.org/Working-with-Projects/creating-soap-project.html";
+    public static final String NEWPROJECT_HELP_URL = "http://www.soapui.org/Working-with-Projects/new-project.html";
     public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/getting-started.html";
     public static final String NEWRESTSERVICE_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
     public static final String NEW_WADL_PROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";

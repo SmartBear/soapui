@@ -16,36 +16,15 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.eviware.soapui.impl.support.HttpUtils;
-import org.apache.commons.httpclient.URI;
-import org.apache.http.*;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.conn.params.ConnRoutePNames;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.util.EntityUtils;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.support.HttpUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.RequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageResponse;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedDeleteMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedGetMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedHeadMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedOptionsMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPatchMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPutMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedTraceMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.*;
 import com.eviware.soapui.impl.wsdl.support.PathUtils;
 import com.eviware.soapui.impl.wsdl.support.http.HeaderRequestInterceptor;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
@@ -60,8 +39,20 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import org.apache.commons.httpclient.URI;
+import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import javax.annotation.CheckForNull;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * HTTP transport that uses HttpClient to send/receive SOAP messages
@@ -79,8 +70,24 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
         filters.add(filter);
     }
 
-    public void removeRequestFilter(RequestFilter filter) {
-        filters.remove(filter);
+    public void removeRequestFilter(RequestFilter filterToRemove) {
+        if (!filters.remove(filterToRemove)) {
+            for (RequestFilter requestFilter : filters) {
+                if (requestFilter.getClass().equals(filterToRemove.getClass())) {
+                    filters.remove(requestFilter);
+                    break;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void insertRequestFilter(RequestFilter filter, RequestFilter refFilter) {
+        int ix = filters.indexOf( refFilter );
+        if( ix == -1 )
+            filters.add( filter );
+        else
+            filters.add( ix, filter );
     }
 
     public <T> void removeRequestFilter(Class<T> filterClass) {
@@ -395,7 +402,7 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
         } catch (UnknownHostException uhe) {
             /* ignore */
         } catch (IllegalStateException ise) {
-			/* ignore */
+            /* ignore */
         }
     }
 

@@ -22,7 +22,7 @@ package com.eviware.soapui.model.iface;
  * @author Ole.Matzura
  */
 
-public interface InterfaceListener {
+public interface InterfaceListener extends SoapUIListener {
     void operationAdded(Operation operation);
 
     void operationRemoved(Operation operation);

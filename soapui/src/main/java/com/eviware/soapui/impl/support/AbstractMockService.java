@@ -28,7 +28,14 @@ import com.eviware.soapui.impl.wsdl.support.IconAnimator;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.BeanPathPropertySupport;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunListener;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
+import com.eviware.soapui.model.mock.MockServiceListener;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.settings.SSLSettings;
@@ -42,7 +49,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractMockService<MockOperationType extends MockOperation,
         MockServiceConfigType extends BaseMockServiceConfig>

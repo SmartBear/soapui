@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         glue = "com.smartbear.soapui.stepdefs.java",
         features = "src/test/resources/features/",
-        tags = "@AutomatedByJava",
+        tags = "@AutomatedWithJava",
         format = "json:target/cucumber-java-results.json")
 public class CucumberJavaRunner {
 }

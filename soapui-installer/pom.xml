@@ -88,14 +88,6 @@
                             <name>HERMES_INSTALLER</name>
                             <value>${maven.hermes.installer}</value>
                         </property>
-                        <property>
-                            <name>LOADUI_DOWNLOADER</name>
-                            <value>${maven.loadUI.downloader}</value>
-                        </property>
-                        <property>
-                            <name>LOADUI_INSTALLER_URL_BASE</name>
-                            <value>http://dl.eviware.com/loadui/os/version/LoadUI-version</value>
-                        </property>
                     </variables>
                 </configuration>
             </plugin>

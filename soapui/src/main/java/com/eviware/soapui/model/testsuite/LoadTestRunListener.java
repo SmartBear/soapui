@@ -16,13 +16,15 @@
 
 package com.eviware.soapui.model.testsuite;
 
+import com.eviware.soapui.model.iface.SoapUIListener;
+
 /**
  * Listener for LoadTest run events
  *
  * @author Ole.Matzura
  */
 
-public interface LoadTestRunListener {
+public interface LoadTestRunListener extends SoapUIListener {
     /**
      * Called before a load-test is about to be run
      *

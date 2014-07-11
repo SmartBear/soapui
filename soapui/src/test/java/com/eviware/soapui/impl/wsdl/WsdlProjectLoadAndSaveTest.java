@@ -1,6 +1,6 @@
 package com.eviware.soapui.impl.wsdl;
 
-import com.eviware.soapui.impl.*;
+import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.SoapUIException;
@@ -8,7 +8,9 @@ import com.eviware.soapui.utils.StubbedDialogsTestBase;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.XmlException;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +21,8 @@ import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class WsdlProjectLoadAndSaveTest extends StubbedDialogsTestBase {
     private static final String PROJECT_NAME = "Project";

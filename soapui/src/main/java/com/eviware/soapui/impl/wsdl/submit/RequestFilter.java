@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.submit;
 
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.model.iface.SubmitContext;
 
 /**
@@ -26,7 +27,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
  * @author Ole.Matzura
  */
 
-public interface RequestFilter {
+public interface RequestFilter extends SoapUIListener {
     public void filterRequest(SubmitContext context, Request request);
 
     public void afterRequest(SubmitContext context, Request request);

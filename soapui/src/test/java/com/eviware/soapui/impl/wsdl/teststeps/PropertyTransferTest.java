@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.util.Map;
 
 import static com.eviware.soapui.utils.CommonMatchers.aNumber;
+import static com.eviware.soapui.utils.CommonMatchers.anEmptyString;
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -273,6 +274,71 @@ public class PropertyTransferTest {
 
         Object insertedValue = new JsonPathFacade(targetProperty.getValue()).readObjectValue(path);
         assertTrue("Expected a map object but got " + insertedValue, insertedValue instanceof Map);
+    }
+
+    @Test
+    public void doesNotRemoveExpansionsFromInternalTextProperty() throws Exception {
+        String value = "${= someCode() }";
+        sourceProperty.setValue(value);
+        transfer.transferProperties(submitContext);
+
+        assertThat(targetProperty.getValue(), is(value));
+    }
+
+    @Test
+    public void removesExpansionsFromResponseProperty() throws Exception {
+        verifyPropertyIsSanitized(WsdlTestStepWithProperties.RESPONSE);
+    }
+
+    @Test
+    public void removesExpansionsFromRawResponseProperty() throws Exception {
+        verifyPropertyIsSanitized(WsdlTestStepWithProperties.RAW_RESPONSE);
+    }
+
+    @Test
+    public void removesExpansionsFromResponseAsXmlProperty() throws Exception {
+        verifyPropertyIsSanitized(WsdlTestStepWithProperties.RESPONSE_AS_XML);
+    }
+
+    @Test
+    public void doesNotRemoveExpansionsFromInternalTransferredXml() throws Exception {
+        String originalValue = "<a><b>Attack here:${= attack() }</b></a>";
+        sourceProperty.setValue(originalValue);
+        String path = "/a/b";
+        targetProperty.setValue("<a><b>some content</b></a>");
+        transfer.setSourcePath(path);
+        transfer.setSourcePathLanguage(PathLanguage.XPATH);
+        transfer.setTargetPath(path);
+        transfer.setTargetPathLanguage(PathLanguage.XPATH);
+        transfer.transferProperties(submitContext);
+
+        assertThat(targetProperty.getValue(), is(originalValue));
+    }
+
+    @Test
+    public void removesExpansionsWhenTransferringXmlFromResponse() throws Exception {
+        String originalValue = "<a><b>Attack here:${= attack() }</b></a>";
+        sourceProperty.setValue(originalValue);
+        sourceProperty.setName(WsdlTestStepWithProperties.RESPONSE);
+        String path = "/a/b";
+        targetProperty.setValue("<a><b>some content</b></a>");
+        transfer.setSourcePath(path);
+        transfer.setSourcePathLanguage(PathLanguage.XPATH);
+        transfer.setTargetPath(path);
+        transfer.setTargetPathLanguage(PathLanguage.XPATH);
+        transfer.transferProperties(submitContext);
+
+        assertThat(targetProperty.getValue(), is("<a><b>Attack here:</b></a>"));
+    }
+
+    /* Helper methods */
+
+    private void verifyPropertyIsSanitized(String propertyName) throws PropertyTransferException {
+        sourceProperty.setValue("${= attack() }");
+        sourceProperty.setName(propertyName);
+        transfer.transferProperties(submitContext);
+
+        assertThat(targetProperty.getValue(), is(anEmptyString()));
     }
 
 
