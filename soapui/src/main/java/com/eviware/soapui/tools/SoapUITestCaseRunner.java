@@ -264,7 +264,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
         options.addOption( "P", true, "Sets or overrides project property with name=value" );
         options.addOption( "I", false, "Do not stop if error occurs, ignore them" );
         options.addOption( "S", false , "Saves the project after running the tests" );
-        options.addOption( "H", false , "Adds a custom HTTP Header to all outgoing requests (name=value), can be specified multiple times" );
+        options.addOption( "H", true , "Adds a custom HTTP Header to all outgoing requests (name=value), can be specified multiple times" );
 
         return options;
     }
