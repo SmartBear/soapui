@@ -32,54 +32,49 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.nio.channels.SocketChannel;
 
-public class JettyServer extends org.mortbay.jetty.Server
-{
-	private Logger log = Logger.getLogger( JettyServer.class );
+public class JettyServer extends org.mortbay.jetty.Server {
+    private Logger log = Logger.getLogger(JettyServer.class);
 
-	public JettyServer()
-	{
-		super();
-		if( SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea( "jetty log" ) == null )
-			return;
-		SoapUI.getLogMonitor().getLogArea( "jetty log" ).addLogger( log.getName(), true );
-	}
+    public JettyServer() {
+        super();
+        if (SoapUI.getLogMonitor() == null || SoapUI.getLogMonitor().getLogArea("jetty log") == null) {
+            return;
+        }
+        SoapUI.getLogMonitor().getLogArea("jetty log").addLogger(log.getName(), true);
+    }
 
-	@Override
-	public void handle( final org.mortbay.jetty.HttpConnection connection ) throws IOException, ServletException
-	{
-		final Request request = connection.getRequest();
+    @Override
+    public void handle(final org.mortbay.jetty.HttpConnection connection) throws IOException, ServletException {
+        final Request request = connection.getRequest();
 
-		if( request.getMethod().equals( "CONNECT" ) )
-		{
-			final String uri = request.getUri().toString();
+        if (request.getMethod().equals("CONNECT")) {
+            final String uri = request.getUri().toString();
 
-			final int c = uri.indexOf( ':' );
-			final String port = uri.substring( c + 1 );
-			final String host = uri.substring( 0, c );
+            final int c = uri.indexOf(':');
+            final String port = uri.substring(c + 1);
+            final String host = uri.substring(0, c);
 
-			final InetSocketAddress inetAddress = new InetSocketAddress( host, Integer.parseInt( port ) );
+            final InetSocketAddress inetAddress = new InetSocketAddress(host, Integer.parseInt(port));
 
-			final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? ( Socket )connection
-					.getEndPoint().getTransport() : ( ( SocketChannel )connection.getEndPoint().getTransport() ).socket();
-			final InputStream in = clientSocket.getInputStream();
-			final OutputStream out = clientSocket.getOutputStream();
+            final Socket clientSocket = connection.getEndPoint().getTransport() instanceof Socket ? (Socket) connection
+                    .getEndPoint().getTransport() : ((SocketChannel) connection.getEndPoint().getTransport()).socket();
+            final InputStream in = clientSocket.getInputStream();
+            final OutputStream out = clientSocket.getOutputStream();
 
-			final SSLSocket socket = ( SSLSocket )SSLSocketFactory.getDefault().createSocket( inetAddress.getAddress(),
-					inetAddress.getPort() );
+            final SSLSocket socket = (SSLSocket) SSLSocketFactory.getDefault().createSocket(inetAddress.getAddress(),
+                    inetAddress.getPort());
 
-			final Response response = connection.getResponse();
-			response.setStatus( 200 );
-			// response.setHeader("Connection", "close");
-			response.flushBuffer();
+            final Response response = connection.getResponse();
+            response.setStatus(200);
+            // response.setHeader("Connection", "close");
+            response.flushBuffer();
 
-			IO.copyThread( socket.getInputStream(), out );
+            IO.copyThread(socket.getInputStream(), out);
 
-			IO.copyThread( in, socket.getOutputStream() );
-		}
-		else
-		{
-			super.handle( connection );
-		}
-	}
+            IO.copyThread(in, socket.getOutputStream());
+        } else {
+            super.handle(connection);
+        }
+    }
 
 }

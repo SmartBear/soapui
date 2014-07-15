@@ -7,7 +7,7 @@
     <parent>
         <artifactId>soapui-project</artifactId>
         <groupId>com.smartbear.soapui</groupId>
-        <version>5.0.1</version>
+        <version>5.1.0</version>
     </parent>
 
     <artifactId>soapui-installer</artifactId>
@@ -20,10 +20,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <!-- TODO Not sure if this is needed -->
-                    <exclude>src/main/resources/com/eviware/soapui/resources/conf/soapui-log4j.xml</exclude>
-                </excludes>
             </resource>
         </resources>
 
@@ -41,8 +37,7 @@
                         <descriptor>src/main/assembly/linux-bin.xml</descriptor>
                         <descriptor>src/main/assembly/mac-bin.xml</descriptor>
                     </descriptors>
-                    <finalName>${project.name.visible}-${project.version}</finalName>
-                    <appendAssemblyId>true</appendAssemblyId>
+                    <finalName>${project.name.full}</finalName>
                 </configuration>
             </plugin>
 
@@ -82,10 +77,6 @@
                             <value>${project.parent.basedir}/soapui/src</value>
                         </property>
                         <property>
-                            <name>SIGNTOOL_PATH</name>
-                            <value>${maven.install4j.signtool}</value>
-                        </property>
-                        <property>
                             <name>MAC_CERT_PATH</name>
                             <value>${maven.install4j.maccert}</value>
                         </property>
@@ -94,24 +85,8 @@
                             <value>${maven.install4j.cert}</value>
                         </property>
                         <property>
-                            <name>CERT_PASS</name>
-                            <value>${maven.install4j.cert.pass}</value>
-                        </property>
-                        <property>
-                            <name>WIN_DLLS_PATH</name>
-                            <value>${maven.install4j.cert}</value>
-                        </property>
-                        <property>
                             <name>HERMES_INSTALLER</name>
                             <value>${maven.hermes.installer}</value>
-                        </property>
-                        <property>
-                            <name>LOADUI_DOWNLOADER</name>
-                            <value>${maven.loadUI.downloader}</value>
-                        </property>
-                        <property>
-                            <name>LOADUI_INSTALLER_URL_BASE</name>
-                            <value>http://dl.eviware.com/loadui/os/version/LoadUI-version</value>
                         </property>
                     </variables>
                 </configuration>

@@ -23,21 +23,18 @@ import javax.swing.JComponent;
 
 import com.eviware.soapui.support.UISupport;
 
-public class ShowPopupAction extends AbstractAction
-{
-	private final JComponent popupContainer;
-	private final JComponent container;
+public class ShowPopupAction extends AbstractAction {
+    private final JComponent popupContainer;
+    private final JComponent container;
 
-	public ShowPopupAction( JComponent popupContainer, JComponent container )
-	{
-		this.popupContainer = popupContainer;
-		this.container = container;
+    public ShowPopupAction(JComponent popupContainer, JComponent container) {
+        this.popupContainer = popupContainer;
+        this.container = container;
 
-		putValue( SMALL_ICON, UISupport.createImageIcon( "/get_data_button.gif" ) );
-	}
+        putValue(SMALL_ICON, UISupport.createImageIcon("/get_data_button.gif"));
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		popupContainer.getComponentPopupMenu().show( container, container.getWidth() / 2, container.getHeight() / 2 );
-	}
+    public void actionPerformed(ActionEvent e) {
+        popupContainer.getComponentPopupMenu().show(container, container.getWidth() / 2, container.getHeight() / 2);
+    }
 }

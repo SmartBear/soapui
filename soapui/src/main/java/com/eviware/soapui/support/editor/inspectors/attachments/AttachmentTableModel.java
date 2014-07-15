@@ -23,11 +23,10 @@ import javax.swing.table.TableModel;
 
 /**
  * TableModel for Attachment tables
- * 
+ *
  * @author ole.matzura
  */
 
-public interface AttachmentTableModel extends TableModel
-{
-	public abstract void addFile( File file, boolean cacheInRequest ) throws IOException;
+public interface AttachmentTableModel extends TableModel {
+    public abstract void addFile(File file, boolean cacheInRequest) throws IOException;
 }

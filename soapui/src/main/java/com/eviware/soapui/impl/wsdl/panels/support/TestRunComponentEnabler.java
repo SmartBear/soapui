@@ -30,95 +30,81 @@ import com.eviware.soapui.security.SecurityTestRunner;
 
 /**
  * ComponentEnabler for disabling components during TestCase runs
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TestRunComponentEnabler extends TestMonitorListenerAdapter
-{
-	private final List<JComponent> components = new ArrayList<JComponent>();
-	private final List<Boolean> states = new ArrayList<Boolean>();
-	private final TestCase testCase;
+public class TestRunComponentEnabler extends TestMonitorListenerAdapter {
+    private final List<JComponent> components = new ArrayList<JComponent>();
+    private final List<Boolean> states = new ArrayList<Boolean>();
+    private final TestCase testCase;
 
-	public TestRunComponentEnabler( TestCase testCase )
-	{
-		this.testCase = testCase;
+    public TestRunComponentEnabler(TestCase testCase) {
+        this.testCase = testCase;
 
-		SoapUI.getTestMonitor().addTestMonitorListener( this );
-	}
+        SoapUI.getTestMonitor().addTestMonitorListener(this);
+    }
 
-	public void release()
-	{
-		SoapUI.getTestMonitor().removeTestMonitorListener( this );
-	}
+    public void release() {
+        SoapUI.getTestMonitor().removeTestMonitorListener(this);
+    }
 
-	public void loadTestStarted( LoadTestRunner runner )
-	{
-		disable();
-	}
+    public void loadTestStarted(LoadTestRunner runner) {
+        disable();
+    }
 
-	public void securityTestStarted( SecurityTestRunner runner )
-	{
-		disable();
-	}
+    public void securityTestStarted(SecurityTestRunner runner) {
+        disable();
+    }
 
-	private void disable()
-	{
-		if( states.isEmpty() )
-		{
-			for( JComponent component : components )
-			{
-				states.add( component.isEnabled() );
-				component.setEnabled( false );
-			}
-		}
-	}
+    private void disable() {
+        if (states.isEmpty()) {
+            for (JComponent component : components) {
+                states.add(component.isEnabled());
+                component.setEnabled(false);
+            }
+        }
+    }
 
-	private void enable()
-	{
-		if( !states.isEmpty() )
-		{
-			for( int c = 0; c < components.size(); c++ )
-			{
-				JComponent component = components.get( c );
-				component.setEnabled( states.get( c ) );
-			}
+    private void enable() {
+        if (!states.isEmpty()) {
+            for (int c = 0; c < components.size(); c++) {
+                JComponent component = components.get(c);
+                component.setEnabled(states.get(c));
+            }
 
-			states.clear();
-		}
-	}
+            states.clear();
+        }
+    }
 
-	public void loadTestFinished( LoadTestRunner runner )
-	{
-		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
-			enable();
-	}
+    public void loadTestFinished(LoadTestRunner runner) {
+        if (!SoapUI.getTestMonitor().hasRunningTest(testCase)) {
+            enable();
+        }
+    }
 
-	public void securityTestFinished( SecurityTestRunner runner )
-	{
-		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
-			enable();
-	}
+    public void securityTestFinished(SecurityTestRunner runner) {
+        if (!SoapUI.getTestMonitor().hasRunningTest(testCase)) {
+            enable();
+        }
+    }
 
-	public void testCaseStarted( TestCaseRunner runner )
-	{
-		disable();
-	}
+    public void testCaseStarted(TestCaseRunner runner) {
+        disable();
+    }
 
-	public void testCaseFinished( TestCaseRunner runner )
-	{
-		if( !SoapUI.getTestMonitor().hasRunningTest( testCase ) )
-			enable();
-	}
+    public void testCaseFinished(TestCaseRunner runner) {
+        if (!SoapUI.getTestMonitor().hasRunningTest(testCase)) {
+            enable();
+        }
+    }
 
-	public void add( JComponent component )
-	{
-		components.add( component );
+    public void add(JComponent component) {
+        components.add(component);
 
-		if( SoapUI.getTestMonitor().hasRunningTest( testCase ) )
-		{
-			states.add( component.isEnabled() );
-			component.setEnabled( false );
-		}
-	}
+        if (SoapUI.getTestMonitor().hasRunningTest(testCase)) {
+            states.add(component.isEnabled());
+            component.setEnabled(false);
+        }
+    }
 }

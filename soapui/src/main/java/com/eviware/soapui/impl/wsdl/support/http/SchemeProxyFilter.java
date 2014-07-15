@@ -24,25 +24,20 @@ import java.net.URI;
  *
  * @author Joel
  */
-class SchemeProxyFilter implements UriFilter
-{
-	private String[] unacceptedSchemes;
+class SchemeProxyFilter implements UriFilter {
+    private String[] unacceptedSchemes;
 
-	public SchemeProxyFilter( String... unacceptedSchemes )
-	{
-		this.unacceptedSchemes = unacceptedSchemes;
-	}
+    public SchemeProxyFilter(String... unacceptedSchemes) {
+        this.unacceptedSchemes = unacceptedSchemes;
+    }
 
-	@Override
-	public boolean accept( URI uri )
-	{
-		for( String unacceptedScheme : unacceptedSchemes )
-		{
-			if( unacceptedScheme.equalsIgnoreCase( uri.getScheme() ) )
-			{
-				return false;
-			}
-		}
-		return true;
-	}
+    @Override
+    public boolean accept(URI uri) {
+        for (String unacceptedScheme : unacceptedSchemes) {
+            if (unacceptedScheme.equalsIgnoreCase(uri.getScheme())) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

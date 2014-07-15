@@ -22,6 +22,7 @@ import com.eviware.soapui.model.project.SaveStatus;
 import com.eviware.soapui.support.SoapUIException;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -30,38 +31,39 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public interface Workspace extends ModelItem
-{
-	public Project getProjectAt( int index );
+public interface Workspace extends ModelItem {
+    public Project getProjectAt(int index);
 
-	public Project getProjectByName( String projectName );
+    public Project getProjectByName(String projectName);
 
-	public int getProjectCount();
+    public int getProjectCount();
 
-	public SaveStatus onClose();
+    public SaveStatus onClose();
 
-	public SaveStatus save( boolean workspaceOnly );
+    public SaveStatus save(boolean workspaceOnly);
 
-	public void addWorkspaceListener( WorkspaceListener listener );
+    public void addWorkspaceListener(WorkspaceListener listener);
 
-	public void removeWorkspaceListener( WorkspaceListener listener );
+    public void removeWorkspaceListener(WorkspaceListener listener);
 
-	public Project createProject( String name, File file ) throws SoapUIException;
+    public Project createProject(String name, File file) throws SoapUIException;
 
-	public void removeProject( Project project );
+    public void removeProject(Project project);
 
-	public Project importProject( String filename ) throws SoapUIException;
+    public Project importProject(String filename) throws SoapUIException;
 
-	public int getIndexOfProject( Project project );
+    public Project importProject(InputStream inputStream);
 
-	public String getPath();
+    public int getIndexOfProject(Project project);
 
-	public List<? extends Project> getProjectList();
+    public String getPath();
 
-	public void switchWorkspace( File newPath ) throws SoapUIException;
+    public List<? extends Project> getProjectList();
 
-	public Project openProject( Project modelItem ) throws SoapUIException;
+    public void switchWorkspace(File newPath) throws SoapUIException;
 
-	public void inspectProjects();
+    public Project openProject(Project modelItem) throws SoapUIException;
+
+    public void inspectProjects();
 
 }

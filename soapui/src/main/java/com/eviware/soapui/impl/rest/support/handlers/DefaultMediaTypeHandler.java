@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.support.handlers;
 
+import com.eviware.soapui.model.iface.TypedContent;
 import org.apache.commons.codec.binary.Base64;
 
 import com.eviware.soapui.impl.rest.support.MediaTypeHandler;
@@ -23,37 +24,39 @@ import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public class DefaultMediaTypeHandler implements MediaTypeHandler
-{
-	public boolean canHandle( String contentType )
-	{
-		return true;
-	}
+public class DefaultMediaTypeHandler implements MediaTypeHandler {
+    public boolean canHandle(String contentType) {
+        return true;
+    }
 
-	public String createXmlRepresentation( HttpResponse response )
-	{
-		String contentType = response.getContentType();
-		String content = response.getContentAsString();
+    @Override
+    public String createXmlRepresentation(HttpResponse response) {
+        return createXmlRepresentation((TypedContent)response);
+    }
 
-		if( StringUtils.hasContent( contentType ) && contentType.toUpperCase().endsWith( "XML" ) )
-			return content;
+    public String createXmlRepresentation(TypedContent typedContent) {
+        String contentType = typedContent.getContentType();
+        String content = typedContent.getContentAsString();
 
-		if( XmlUtils.seemsToBeXml( content ) )
-			return content;
-		else if( content == null )
-			content = "";
+        if (StringUtils.hasContent(contentType) && contentType.toUpperCase().endsWith("XML")) {
+            return content;
+        }
 
-		String result = "<data contentType=\"" + contentType + "\" contentLength=\"" + response.getContentLength()
-				+ "\">";
+        if (XmlUtils.seemsToBeXml(content)) {
+            return content;
+        } else if (content == null) {
+            content = "";
+        }
 
-		for( int c = 0; c < content.length(); c++ )
-		{
-			if( content.charAt( c ) < 8 )
-			{
-				return result + new String( Base64.encodeBase64( content.getBytes() ) ) + "</data>";
-			}
-		}
+        String result = "<data contentType=\"" + contentType + "\" contentLength=\"" + typedContent.getContentLength()
+                + "\">";
 
-		return result + "<![CDATA[" + content + "]]></data>";
-	}
+        for (int c = 0; c < content.length(); c++) {
+            if (content.charAt(c) < 8) {
+                return result + new String(Base64.encodeBase64(content.getBytes())) + "</data>";
+            }
+        }
+
+        return result + "<![CDATA[" + content + "]]></data>";
+    }
 }

@@ -33,124 +33,104 @@ import com.eviware.soapui.settings.HttpSettings;
 
 /**
  * WsdlMockResponse for a MimeResponse
- * 
+ *
  * @author ole.matzura
  */
 
-public class MimeMessageResponse extends BaseHttpResponse
-{
-	private long timeTaken;
-	private long responseContentLength;
-	private String requestContent;
-	private MultipartMessageSupport mmSupport;
-	private PostResponseDataSource postResponseDataSource;
+public class MimeMessageResponse extends BaseHttpResponse {
+    private long timeTaken;
+    private long responseContentLength;
+    private String requestContent;
+    private MultipartMessageSupport mmSupport;
+    private PostResponseDataSource postResponseDataSource;
 
-	public MimeMessageResponse( AbstractHttpRequestInterface<?> httpRequest, ExtendedHttpMethod httpMethod,
-			String requestContent, PropertyExpansionContext context )
-	{
-		super( httpMethod, httpRequest, context );
+    public MimeMessageResponse(AbstractHttpRequestInterface<?> httpRequest, ExtendedHttpMethod httpMethod,
+                               String requestContent, PropertyExpansionContext context) {
+        super(httpMethod, httpRequest, context);
 
-		if( getRequestContent() == null || !getRequestContent().equals( requestContent ) )
-			this.requestContent = requestContent;
+        if (getRequestContent() == null || !getRequestContent().equals(requestContent)) {
+            this.requestContent = requestContent;
+        }
 
-		try
-		{
-			postResponseDataSource = new PostResponseDataSource( httpMethod );
-			responseContentLength = postResponseDataSource.getDataSize();
+        try {
+            postResponseDataSource = new PostResponseDataSource(httpMethod);
+            responseContentLength = postResponseDataSource.getDataSize();
 
-			Header h = null;
-			if( httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null )
-			{
-				h = httpMethod.getHttpResponse().getEntity().getContentType();
-			}
+            Header h = null;
+            if (httpMethod.hasHttpResponse() && httpMethod.getHttpResponse().getEntity() != null) {
+                h = httpMethod.getHttpResponse().getEntity().getContentType();
+            }
 
-			if( h != null )
-			{
-				HeaderElement[] elements = h.getElements();
+            if (h != null) {
+                HeaderElement[] elements = h.getElements();
 
-				String rootPartId = null;
+                String rootPartId = null;
 
-				for( HeaderElement element : elements )
-				{
-					String name = element.getName().toUpperCase();
-					if( name.startsWith( "MULTIPART/" ) )
-					{
-						NameValuePair parameter = element.getParameterByName( "start" );
-						if( parameter != null )
-							rootPartId = parameter.getValue();
-					}
-				}
+                for (HeaderElement element : elements) {
+                    String name = element.getName().toUpperCase();
+                    if (name.startsWith("MULTIPART/")) {
+                        NameValuePair parameter = element.getParameterByName("start");
+                        if (parameter != null) {
+                            rootPartId = parameter.getValue();
+                        }
+                    }
+                }
 
-				mmSupport = new MultipartMessageSupport( postResponseDataSource, rootPartId,
-						( AbstractHttpOperation )httpRequest.getOperation(), false, httpRequest.isPrettyPrint() );
+                mmSupport = new MultipartMessageSupport(postResponseDataSource, rootPartId,
+                        (AbstractHttpOperation) httpRequest.getOperation(), false, httpRequest.isPrettyPrint());
 
-				if( httpRequest.getSettings().getBoolean( HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN ) )
-					this.timeTaken += httpMethod.getResponseReadTime();
-			}
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-		}
-	}
+                if (httpRequest.getSettings().getBoolean(HttpSettings.INCLUDE_RESPONSE_IN_TIME_TAKEN)) {
+                    this.timeTaken += httpMethod.getResponseReadTime();
+                }
+            }
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
+    }
 
-	protected MultipartMessageSupport getMmSupport()
-	{
-		return mmSupport;
-	}
+    protected MultipartMessageSupport getMmSupport() {
+        return mmSupport;
+    }
 
-	public long getContentLength()
-	{
-		return responseContentLength;
-	}
+    public long getContentLength() {
+        return responseContentLength;
+    }
 
-	public String getRequestContent()
-	{
-		return requestContent == null ? super.getRequestContent() : requestContent;
-	}
+    public String getRequestContent() {
+        return requestContent == null ? super.getRequestContent() : requestContent;
+    }
 
-	public void setResponseContent( String responseContent )
-	{
-		String oldContent = getContentAsString();
-		mmSupport.setResponseContent( responseContent );
+    public void setResponseContent(String responseContent) {
+        String oldContent = getContentAsString();
+        mmSupport.setResponseContent(responseContent);
 
-		( ( AbstractHttpRequest<?> )getRequest() ).notifyPropertyChanged( WsdlRequest.RESPONSE_CONTENT_PROPERTY,
-				oldContent, responseContent );
-	}
+        ((AbstractHttpRequest<?>) getRequest()).notifyPropertyChanged(WsdlRequest.RESPONSE_CONTENT_PROPERTY,
+                oldContent, responseContent);
+    }
 
-	public Attachment[] getAttachments()
-	{
-		int lengthA = super.getAttachments().length;
-		int lengthB = mmSupport.getAttachments().length;
-		if( lengthA > 0 )
-		{
-			Attachment[] all = new Attachment[lengthA + lengthB];
-			System.arraycopy( super.getAttachments(), 0, all, 0, lengthA );
-			System.arraycopy( mmSupport.getAttachments(), 0, all, lengthA, lengthB );
-			return all;
-		}
-		else
-			return mmSupport.getAttachments();
+    public Attachment[] getAttachments() {
+        if(mmSupport == null) {
+            return new Attachment[0];
+        }
+        int lengthA = super.getAttachments().length;
+        int lengthB = mmSupport.getAttachments().length;
+        if (lengthA > 0) {
+            Attachment[] all = new Attachment[lengthA + lengthB];
+            System.arraycopy(super.getAttachments(), 0, all, 0, lengthA);
+            System.arraycopy(mmSupport.getAttachments(), 0, all, lengthA, lengthB);
+            return all;
+        } else {
+            return mmSupport.getAttachments();
+        }
 
-	}
+    }
 
-	public Attachment[] getAttachmentsForPart( String partName )
-	{
-		return mmSupport.getAttachmentsForPart( partName );
-	}
+    public Attachment[] getAttachmentsForPart(String partName) {
+        return mmSupport.getAttachmentsForPart(partName);
+    }
 
-	public String getContentAsString()
-	{
-		return mmSupport.getContentAsString();
-	}
+    public String getContentAsString() {
+        return mmSupport == null ? null : mmSupport.getContentAsString();
+    }
 
-	// public byte[] getRawRequestData()
-	// {
-	// return requestData;
-	// }
-	//
-	// public byte[] getRawResponseData()
-	// {
-	// return postResponseDataSource.getData();
-	// }
 }

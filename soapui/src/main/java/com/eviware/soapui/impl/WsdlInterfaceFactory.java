@@ -17,6 +17,8 @@
 package com.eviware.soapui.impl;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.InterfaceConfig;
 import com.eviware.soapui.config.WsdlInterfaceConfig;
 import com.eviware.soapui.impl.support.definition.support.InvalidDefinitionException;
@@ -38,94 +40,75 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface>
-{
-	public final static String WSDL_TYPE = "wsdl";
-	private final static Logger log = Logger.getLogger( WsdlInterfaceFactory.class );
+public class WsdlInterfaceFactory implements InterfaceFactory<WsdlInterface> {
+    public final static String WSDL_TYPE = "wsdl";
+    private final static Logger log = Logger.getLogger(WsdlInterfaceFactory.class);
 
-	public WsdlInterface build( WsdlProject project, InterfaceConfig config )
-	{
-		return new WsdlInterface( project, ( WsdlInterfaceConfig )config.changeType( WsdlInterfaceConfig.type ) );
-	}
+    public WsdlInterface build(WsdlProject project, InterfaceConfig config) {
+        return new WsdlInterface(project, (WsdlInterfaceConfig) config.changeType(WsdlInterfaceConfig.type));
+    }
 
-	public WsdlInterface createNew( WsdlProject project, String name )
-	{
-		WsdlInterface iface = new WsdlInterface( project, ( WsdlInterfaceConfig )project.getConfig().addNewInterface()
-				.changeType( WsdlInterfaceConfig.type ) );
-		iface.setName( name );
+    public WsdlInterface createNew(WsdlProject project, String name) {
+        WsdlInterface iface = new WsdlInterface(project, (WsdlInterfaceConfig) project.getConfig().addNewInterface()
+                .changeType(WsdlInterfaceConfig.type));
+        iface.setName(name);
 
-		return iface;
-	}
+        return iface;
+    }
 
-	public static WsdlInterface[] importWsdl( WsdlProject project, String url, boolean createRequests )
-			throws SoapUIException
-	{
-		return importWsdl( project, url, createRequests, null, null );
-	}
+    public static WsdlInterface[] importWsdl(WsdlProject project, String url, boolean createRequests)
+            throws SoapUIException {
+        return importWsdl(project, url, createRequests, null, null);
+    }
 
-	public static WsdlInterface[] importWsdl( WsdlProject project, String url, boolean createRequests,
-			WsdlLoader wsdlLoader ) throws SoapUIException
-	{
-		return importWsdl( project, url, createRequests, null, wsdlLoader );
-	}
+    public static WsdlInterface[] importWsdl(WsdlProject project, String url, boolean createRequests,
+                                             WsdlLoader wsdlLoader) throws SoapUIException {
+        return importWsdl(project, url, createRequests, null, wsdlLoader);
+    }
 
-	public static WsdlInterface[] importWsdl( WsdlProject project, String url, boolean createRequests,
-			QName bindingName, WsdlLoader wsdlLoader ) throws SoapUIException
-	{
-		WsdlInterface[] result;
+    public static WsdlInterface[] importWsdl(WsdlProject project, String url, boolean createRequests,
+                                             QName bindingName, WsdlLoader wsdlLoader) throws SoapUIException {
+        WsdlInterface[] result;
 
-		PropertyExpansionContext context = new DefaultPropertyExpansionContext( project.getModelItem() );
-		url = PropertyExpander.expandProperties( context, url );
-		try
-		{
-			result = WsdlImporter.importWsdl( project, url, bindingName, wsdlLoader );
-		}
-		catch( InvalidDefinitionException e )
-		{
-			throw e;
-		}
-		catch( Exception e )
-		{
-			log.error( "Error importing wsdl: " + e );
-			SoapUI.logError( e );
-			throw new SoapUIException( "Error importing wsdl", e );
-		}
+        PropertyExpansionContext context = new DefaultPropertyExpansionContext(project.getModelItem());
+        url = PropertyExpander.expandProperties(context, url);
+        try {
+            result = WsdlImporter.importWsdl(project, url, bindingName, wsdlLoader);
+        } catch (InvalidDefinitionException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error("Error importing wsdl: " + e);
+            SoapUI.logError(e);
+            throw new SoapUIException("Error importing wsdl", e);
+        }
 
-		try
-		{
-			if( createRequests && result != null )
-			{
-				for( WsdlInterface iface : result )
-				{
-					for( int c = 0; c < iface.getOperationCount(); c++ )
-					{
-						WsdlOperation operation = iface.getOperationAt( c );
-						WsdlRequest request = operation.addNewRequest( "Request 1" );
-						try
-						{
-							String requestContent = operation.createRequest( project.getSettings().getBoolean(
-									WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS ) );
-							request.setRequestContent( requestContent );
-						}
-						catch( Exception e )
-						{
-							SoapUI.logError( e );
-						}
-					}
-				}
-			}
-		}
-		catch( Exception e )
-		{
-			log.error( "Error creating requests: " + e.getMessage() );
-			throw new SoapUIException( "Error creating requests", e );
-		}
+        try {
+            if (createRequests && result != null) {
+                for (WsdlInterface iface : result) {
+                    for (int c = 0; c < iface.getOperationCount(); c++) {
+                        WsdlOperation operation = iface.getOperationAt(c);
+                        WsdlRequest request = operation.addNewRequest("Request 1");
+                        try {
+                            String requestContent = operation.createRequest(project.getSettings().getBoolean(
+                                    WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS));
+                            request.setRequestContent(requestContent);
+                        } catch (Exception e) {
+                            SoapUI.logError(e);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error creating requests: " + e.getMessage());
+            throw new SoapUIException("Error creating requests", e);
+        }
 
-		return result;
-	}
+        Analytics.trackAction(SoapUIActions.IMPORT_WSDL.getActionName());
 
-	public static void main( String[] args ) throws URISyntaxException, IOException
-	{
-		java.awt.Desktop.getDesktop().browse(new URI("http://www.sunet.se"));
-	}
+        return result;
+    }
+
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        java.awt.Desktop.getDesktop().browse(new URI("http://www.sunet.se"));
+    }
 }

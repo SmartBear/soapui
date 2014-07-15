@@ -59,268 +59,244 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.jgoodies.binding.PresentationModel;
 
-public class SignatureEntry extends WssEntryBase
-{
-	private static final String DEFAULT_OPTION = "<default>";
-	public static final String TYPE = "Signature";
-	private String crypto;
-	private int keyIdentifierType = 0;
-	private String signatureAlgorithm;
-	private boolean useSingleCert;
-	private String signatureCanonicalization;
-	private String digestAlgorithm;
-	private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
-	private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
-	private com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry.InternalWssContainerListener wssContainerListener;
+public class SignatureEntry extends WssEntryBase {
+    private static final String DEFAULT_OPTION = "<default>";
+    public static final String TYPE = "Signature";
+    private String crypto;
+    private int keyIdentifierType = 0;
+    private String signatureAlgorithm;
+    private boolean useSingleCert;
+    private String signatureCanonicalization;
+    private String digestAlgorithm;
+    private List<StringToStringMap> parts = new ArrayList<StringToStringMap>();
+    private com.eviware.soapui.impl.wsdl.support.wss.entries.WssEntryBase.KeyAliasComboBoxModel keyAliasComboBoxModel;
+    private com.eviware.soapui.impl.wsdl.support.wss.entries.SignatureEntry.InternalWssContainerListener wssContainerListener;
 
-	public void init( WSSEntryConfig config, OutgoingWss container )
-	{
-		super.init( config, container, TYPE );
-	}
+    public void init(WSSEntryConfig config, OutgoingWss container) {
+        super.init(config, container, TYPE);
+    }
 
-	@Override
-	protected JComponent buildUI()
-	{
-		SimpleBindingForm form = new SimpleBindingForm( new PresentationModel<SignatureEntry>( this ) );
-		form.addSpace( 5 );
-		wssContainerListener = new InternalWssContainerListener();
-		getWssContainer().addWssContainerListener( wssContainerListener );
+    @Override
+    protected JComponent buildUI() {
+        SimpleBindingForm form = new SimpleBindingForm(new PresentationModel<SignatureEntry>(this));
+        form.addSpace(5);
+        wssContainerListener = new InternalWssContainerListener();
+        getWssContainer().addWssContainerListener(wssContainerListener);
 
-		form.appendComboBox( "crypto", "Keystore",
-				new KeystoresComboBoxModel( getWssContainer(), getWssContainer().getCryptoByName( crypto ), true ),
-				"Selects the Keystore containing the key to use for signing" ).addItemListener( new ItemListener()
-		{
+        form.appendComboBox("crypto", "Keystore",
+                new KeystoresComboBoxModel(getWssContainer(), getWssContainer().getCryptoByName(crypto), true),
+                "Selects the Keystore containing the key to use for signing").addItemListener(new ItemListener() {
 
-			public void itemStateChanged( ItemEvent e )
-			{
-				keyAliasComboBoxModel.update( getWssContainer().getCryptoByName( crypto ) );
-			}
-		} );
+            public void itemStateChanged(ItemEvent e) {
+                keyAliasComboBoxModel.update(getWssContainer().getCryptoByName(crypto));
+            }
+        });
 
-		keyAliasComboBoxModel = new KeyAliasComboBoxModel( getWssContainer().getCryptoByName( crypto ) );
-		form.appendComboBox( "username", "Alias", keyAliasComboBoxModel, "The alias for the key to use for encryption" );
+        keyAliasComboBoxModel = new KeyAliasComboBoxModel(getWssContainer().getCryptoByName(crypto));
+        form.appendComboBox("username", "Alias", keyAliasComboBoxModel, "The alias for the key to use for encryption");
 
-		form.appendPasswordField( "password", "Password", "The certificate password" );
+        form.appendPasswordField("password", "Password", "The certificate password");
 
-		form.appendComboBox( "keyIdentifierType", "Key Identifier Type", new Integer[] { 0, 1, 3, 4, 8 },
-				"Sets which key identifier to use" ).setRenderer( new KeyIdentifierTypeRenderer() );
-		form.appendComboBox( "signatureAlgorithm", "Signature Algorithm", new String[] { DEFAULT_OPTION, WSConstants.RSA,
-				WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
-				XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512,
-				XMLSignature.ALGO_ID_MAC_HMAC_RIPEMD160, XMLSignature.ALGO_ID_MAC_HMAC_NOT_RECOMMENDED_MD5,
-				XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_NOT_RECOMMENDED_RSA_MD5,
-				XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256,
-				XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512,
-				XMLSignature.ALGO_ID_SIGNATURE_RSA_RIPEMD160 }, "Set the name of the signature encryption algorithm to use" );
-		form.appendComboBox( "signatureCanonicalization", "Signature Canonicalization", new String[] { DEFAULT_OPTION,
-				WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
-				WSConstants.C14N_EXCL_WITH_COMMENTS }, "Set the canonicalization method to use." );
+        form.appendComboBox("keyIdentifierType", "Key Identifier Type", new Integer[]{1, 2, 3, 4, 8},
+                "Sets which key identifier to use").setRenderer(new KeyIdentifierTypeRenderer());
+        form.appendComboBox("signatureAlgorithm", "Signature Algorithm", new String[]{DEFAULT_OPTION, WSConstants.RSA,
+                WSConstants.DSA, XMLSignature.ALGO_ID_MAC_HMAC_SHA1, XMLSignature.ALGO_ID_MAC_HMAC_SHA256,
+                XMLSignature.ALGO_ID_MAC_HMAC_SHA384, XMLSignature.ALGO_ID_MAC_HMAC_SHA512,
+                XMLSignature.ALGO_ID_MAC_HMAC_RIPEMD160, XMLSignature.ALGO_ID_MAC_HMAC_NOT_RECOMMENDED_MD5,
+                XMLSignature.ALGO_ID_SIGNATURE_ECDSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_NOT_RECOMMENDED_RSA_MD5,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA1, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA256,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA384, XMLSignature.ALGO_ID_SIGNATURE_RSA_SHA512,
+                XMLSignature.ALGO_ID_SIGNATURE_RSA_RIPEMD160}, "Set the name of the signature encryption algorithm to use");
+        form.appendComboBox("signatureCanonicalization", "Signature Canonicalization", new String[]{DEFAULT_OPTION,
+                WSConstants.C14N_OMIT_COMMENTS, WSConstants.C14N_WITH_COMMENTS, WSConstants.C14N_EXCL_OMIT_COMMENTS,
+                WSConstants.C14N_EXCL_WITH_COMMENTS}, "Set the canonicalization method to use.");
 
-		form.appendComboBox( "digestAlgorithm", "Digest Algorithm", new String[] { DEFAULT_OPTION,
-				MessageDigestAlgorithm.ALGO_ID_DIGEST_NOT_RECOMMENDED_MD5, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1,
-				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384,
-				MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512, MessageDigestAlgorithm.ALGO_ID_DIGEST_RIPEMD160 },
-				"Set the digest algorithm to use" );
+        form.appendComboBox("digestAlgorithm", "Digest Algorithm", new String[]{DEFAULT_OPTION,
+                MessageDigestAlgorithm.ALGO_ID_DIGEST_NOT_RECOMMENDED_MD5, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA1,
+                MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA256, MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA384,
+                MessageDigestAlgorithm.ALGO_ID_DIGEST_SHA512, MessageDigestAlgorithm.ALGO_ID_DIGEST_RIPEMD160},
+                "Set the digest algorithm to use");
 
-		form.appendCheckBox( "useSingleCert", "Use Single Certificate", "Use single certificate for signing" );
+        form.appendCheckBox("useSingleCert", "Use Single Certificate", "Use single certificate for signing");
 
-		form.append( "Parts", new WSPartsTable( parts, this ) );
+        form.append("Parts", new WSPartsTable(parts, this));
 
-		return new JScrollPane( form.getPanel() );
-	}
+        return new JScrollPane(form.getPanel());
+    }
 
-	@Override
-	public void release()
-	{
-		if( wssContainerListener != null )
-			getWssContainer().removeWssContainerListener( wssContainerListener );
-	}
+    @Override
+    public void release() {
+        if (wssContainerListener != null) {
+            getWssContainer().removeWssContainerListener(wssContainerListener);
+        }
+    }
 
-	@Override
-	protected void load( XmlObjectConfigurationReader reader )
-	{
-		crypto = reader.readString( "crypto", null );
-		keyIdentifierType = reader.readInt( "keyIdentifierType", 0 );
-		signatureAlgorithm = reader.readString( "signatureAlgorithm", null );
-		signatureCanonicalization = reader.readString( "signatureCanonicalization", null );
-		useSingleCert = reader.readBoolean( "useSingleCert", false );
+    @Override
+    protected void load(XmlObjectConfigurationReader reader) {
+        crypto = reader.readString("crypto", null);
+        keyIdentifierType = readKeyIdentifierType(reader);
+        signatureAlgorithm = reader.readString("signatureAlgorithm", null);
+        signatureCanonicalization = reader.readString("signatureCanonicalization", null);
+        useSingleCert = reader.readBoolean("useSingleCert", false);
 
-		digestAlgorithm = reader.readString( "digestAlgorithm", null );
+        digestAlgorithm = reader.readString("digestAlgorithm", null);
 
-		parts = readTableValues( reader, "signaturePart" );
-	}
+        parts = readTableValues(reader, "signaturePart");
+    }
 
-	@Override
-	protected void save( XmlObjectConfigurationBuilder builder )
-	{
-		builder.add( "crypto", crypto );
-		builder.add( "keyIdentifierType", keyIdentifierType );
-		builder.add( "signatureAlgorithm", signatureAlgorithm );
-		builder.add( "signatureCanonicalization", signatureCanonicalization );
-		builder.add( "useSingleCert", useSingleCert );
+    @Override
+    protected void save(XmlObjectConfigurationBuilder builder) {
+        builder.add("crypto", crypto);
+        builder.add("keyIdentifierType", keyIdentifierType);
+        builder.add("signatureAlgorithm", signatureAlgorithm);
+        builder.add("signatureCanonicalization", signatureCanonicalization);
+        builder.add("useSingleCert", useSingleCert);
 
-		builder.add( "digestAlgorithm", digestAlgorithm );
+        builder.add("digestAlgorithm", digestAlgorithm);
 
-		saveTableValues( builder, parts, "signaturePart" );
-	}
+        saveTableValues(builder, parts, "signaturePart");
+    }
 
-	public void process( WSSecHeader secHeader, Document doc, PropertyExpansionContext context )
-	{
-		StringWriter writer = null;
+    public void process(WSSecHeader secHeader, Document doc, PropertyExpansionContext context) {
+        StringWriter writer = null;
 
-		try
-		{
-			WssCrypto wssCrypto = getWssContainer().getCryptoByName( crypto );
-			if( wssCrypto == null )
-			{
-				throw new Exception( "Missing crypto [" + crypto + "] for signature entry" );
-			}
+        try {
+            WssCrypto wssCrypto = getWssContainer().getCryptoByName(crypto);
+            if (wssCrypto == null) {
+                throw new Exception("Missing crypto [" + crypto + "] for signature entry");
+            }
 
-			WSSecSignature wssSign = new WSSecSignature();
-			wssSign.setUserInfo( context.expand( getUsername() ), context.expand( getPassword() ) );
+            WSSecSignature wssSign = new WSSecSignature();
+            wssSign.setUserInfo(context.expand(getUsername()), context.expand(getPassword()));
 
-			// default is
-			// http://ws.apache.org/wss4j/apidocs/org/apache/ws/security/WSConstants.html#ISSUER_SERIAL
-			if( keyIdentifierType != 0 )
-				wssSign.setKeyIdentifierType( keyIdentifierType );
+            // default is
+            // http://ws.apache.org/wss4j/apidocs/org/apache/ws/security/WSConstants.html#ISSUER_SERIAL
+            if (keyIdentifierType != 0) {
+                wssSign.setKeyIdentifierType(keyIdentifierType);
+            }
 
-			if( StringUtils.hasContent( signatureAlgorithm ) && !signatureAlgorithm.equals( DEFAULT_OPTION ) )
-				wssSign.setSignatureAlgorithm( signatureAlgorithm );
+            if (StringUtils.hasContent(signatureAlgorithm) && !signatureAlgorithm.equals(DEFAULT_OPTION)) {
+                wssSign.setSignatureAlgorithm(signatureAlgorithm);
+            }
 
-			if( StringUtils.hasContent( signatureCanonicalization ) && !signatureCanonicalization.equals( DEFAULT_OPTION ) )
-				wssSign.setSigCanonicalization( signatureCanonicalization );
+            if (StringUtils.hasContent(signatureCanonicalization) && !signatureCanonicalization.equals(DEFAULT_OPTION)) {
+                wssSign.setSigCanonicalization(signatureCanonicalization);
+            }
 
-			wssSign.setUseSingleCertificate( useSingleCert );
+            wssSign.setUseSingleCertificate(useSingleCert);
 
-			if( StringUtils.hasContent( digestAlgorithm ) )
-				wssSign.setDigestAlgo( digestAlgorithm );
+            if (StringUtils.hasContent(digestAlgorithm)) {
+                wssSign.setDigestAlgo(digestAlgorithm);
+            }
 
-			Vector<WSEncryptionPart> wsParts = createWSParts( parts );
-			if( !wsParts.isEmpty() )
-			{
-				wssSign.setParts( wsParts );
-			}
+            Vector<WSEncryptionPart> wsParts = createWSParts(parts);
+            if (!wsParts.isEmpty()) {
+                wssSign.setParts(wsParts);
+            }
 
-			writer = new StringWriter();
-			XmlUtils.serialize( doc, writer );
+            writer = new StringWriter();
+            XmlUtils.serialize(doc, writer);
 
             wssSign.setCallbackLookup(new BinarySecurityTokenDOMCallbackLookup(doc, wssSign));
-			wssSign.build(doc, wssCrypto.getCrypto(), secHeader);
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
+            wssSign.build(doc, wssCrypto.getCrypto(), secHeader);
+        } catch (Exception e) {
+            SoapUI.logError(e);
 
-			if( writer != null && writer.getBuffer().length() > 0 )
-			{
-				try
-				{
-					doc.replaceChild( doc.importNode( XmlUtils.parseXml( writer.toString() ).getDocumentElement(), true ),
-							doc.getDocumentElement() );
-				}
-				catch( Exception e1 )
-				{
-					SoapUI.logError( e1 );
-				}
-			}
-		}
-	}
+            if (writer != null && writer.getBuffer().length() > 0) {
+                try {
+                    doc.replaceChild(doc.importNode(XmlUtils.parseXml(writer.toString()).getDocumentElement(), true),
+                            doc.getDocumentElement());
+                } catch (Exception e1) {
+                    SoapUI.logError(e1);
+                }
+            }
+        }
+    }
 
-	@Override
-	protected void addPropertyExpansions( PropertyExpansionsResult result )
-	{
-		super.addPropertyExpansions( result );
-	}
+    @Override
+    protected void addPropertyExpansions(PropertyExpansionsResult result) {
+        super.addPropertyExpansions(result);
+    }
 
-	public String getCrypto()
-	{
-		return crypto;
-	}
+    public String getCrypto() {
+        return crypto;
+    }
 
-	public void setCrypto( String crypto )
-	{
-		this.crypto = crypto;
-		saveConfig();
-	}
+    public void setCrypto(String crypto) {
+        this.crypto = crypto;
+        saveConfig();
+    }
 
-	public int getKeyIdentifierType()
-	{
-		return keyIdentifierType;
-	}
+    public int getKeyIdentifierType() {
+        return keyIdentifierType;
+    }
 
-	public void setKeyIdentifierType( int keyIdentifierType )
-	{
-		this.keyIdentifierType = keyIdentifierType;
-		saveConfig();
-	}
+    public void setKeyIdentifierType(int keyIdentifierType) {
+        this.keyIdentifierType = keyIdentifierType;
+        saveConfig();
+    }
 
-	public String getSignatureAlgorithm()
-	{
-		return StringUtils.isNullOrEmpty( signatureAlgorithm ) ? DEFAULT_OPTION : signatureAlgorithm;
-	}
+    public String getSignatureAlgorithm() {
+        return StringUtils.isNullOrEmpty(signatureAlgorithm) ? DEFAULT_OPTION : signatureAlgorithm;
+    }
 
-	public void setSignatureAlgorithm( String signatureAlgorithm )
-	{
-		if( DEFAULT_OPTION.equals( signatureAlgorithm ) )
-			signatureAlgorithm = null;
+    public void setSignatureAlgorithm(String signatureAlgorithm) {
+        if (DEFAULT_OPTION.equals(signatureAlgorithm)) {
+            signatureAlgorithm = null;
+        }
 
-		this.signatureAlgorithm = signatureAlgorithm;
-		saveConfig();
-	}
+        this.signatureAlgorithm = signatureAlgorithm;
+        saveConfig();
+    }
 
-	public String getDigestAlgorithm()
-	{
-		return StringUtils.isNullOrEmpty( digestAlgorithm ) ? DEFAULT_OPTION : digestAlgorithm;
-	}
+    public String getDigestAlgorithm() {
+        return StringUtils.isNullOrEmpty(digestAlgorithm) ? DEFAULT_OPTION : digestAlgorithm;
+    }
 
-	public void setDigestAlgorithm( String digestAlgorithm )
-	{
-		if( DEFAULT_OPTION.equals( digestAlgorithm ) )
-			digestAlgorithm = null;
+    public void setDigestAlgorithm(String digestAlgorithm) {
+        if (DEFAULT_OPTION.equals(digestAlgorithm)) {
+            digestAlgorithm = null;
+        }
 
-		this.digestAlgorithm = digestAlgorithm;
-		saveConfig();
-	}
+        this.digestAlgorithm = digestAlgorithm;
+        saveConfig();
+    }
 
-	public String getSignatureCanonicalization()
-	{
-		return StringUtils.isNullOrEmpty( signatureCanonicalization ) ? DEFAULT_OPTION : signatureCanonicalization;
-	}
+    public String getSignatureCanonicalization() {
+        return StringUtils.isNullOrEmpty(signatureCanonicalization) ? DEFAULT_OPTION : signatureCanonicalization;
+    }
 
-	public void setSignatureCanonicalization( String signatureCanonicalization )
-	{
-		if( DEFAULT_OPTION.equals( signatureCanonicalization ) )
-			signatureCanonicalization = null;
+    public void setSignatureCanonicalization(String signatureCanonicalization) {
+        if (DEFAULT_OPTION.equals(signatureCanonicalization)) {
+            signatureCanonicalization = null;
+        }
 
-		this.signatureCanonicalization = signatureCanonicalization;
-		saveConfig();
-	}
+        this.signatureCanonicalization = signatureCanonicalization;
+        saveConfig();
+    }
 
-	public boolean isUseSingleCert()
-	{
-		return useSingleCert;
-	}
+    public boolean isUseSingleCert() {
+        return useSingleCert;
+    }
 
-	public void setUseSingleCert( boolean useSingleCert )
-	{
-		this.useSingleCert = useSingleCert;
-		saveConfig();
-	}
+    public void setUseSingleCert(boolean useSingleCert) {
+        this.useSingleCert = useSingleCert;
+        saveConfig();
+    }
 
     public void setParts(List<StringToStringMap> parts) {
         this.parts = parts;
         saveConfig();
     }
 
-    private final class InternalWssContainerListener extends WssContainerListenerAdapter
-	{
-		@Override
-		public void cryptoUpdated( WssCrypto crypto )
-		{
-			if( crypto.getLabel().equals( getCrypto() ) )
-				keyAliasComboBoxModel.update( crypto );
-		}
-	}
+    private final class InternalWssContainerListener extends WssContainerListenerAdapter {
+        @Override
+        public void cryptoUpdated(WssCrypto crypto) {
+            if (crypto.getLabel().equals(getCrypto())) {
+                keyAliasComboBoxModel.update(crypto);
+            }
+        }
+    }
 
     /**
      * This callback class extends the default DOMCallbackLookup class with a hook to return the prepared

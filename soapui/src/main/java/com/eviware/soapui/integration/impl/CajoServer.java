@@ -25,74 +25,60 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.integration.loadui.IntegrationUtils;
 import com.eviware.soapui.settings.LoadUISettings;
 
-public class CajoServer
-{
+public class CajoServer {
 
-	public static final String DEFAULT_SOAPUI_CAJO_PORT = "1198";
+    public static final String DEFAULT_SOAPUI_CAJO_PORT = "1198";
 
-	private String server = null;
-	private String port = DEFAULT_SOAPUI_CAJO_PORT;
-	private String itemName = "soapuiIntegration";
+    private String server = null;
+    private String port = DEFAULT_SOAPUI_CAJO_PORT;
+    private String itemName = "soapuiIntegration";
 
-	public static CajoServer getInstance()
-	{
-		return SingletonHolder.instance;
-	}
+    public static CajoServer getInstance() {
+        return SingletonHolder.instance;
+    }
 
-	static class SingletonHolder
-	{
-		static CajoServer instance = new CajoServer();
-	}
+    static class SingletonHolder {
+        static CajoServer instance = new CajoServer();
+    }
 
-	private CajoServer()
-	{
-	}
+    private CajoServer() {
+    }
 
-	public void start()
-	{
-		String cajoPort = IntegrationUtils.getIntegrationPort( "SoapUI", LoadUISettings.SOAPUI_CAJO_PORT,
-				DEFAULT_SOAPUI_CAJO_PORT );
-		Remote.config( server, Integer.valueOf( cajoPort ), null, 0 );
-		try
-		{
-			ItemServer.bind( new TestCaseEditIntegrationImpl(), itemName );
-			SoapUI.log( "The cajo server is running on localhost:" + cajoPort + "/" + itemName );
-		}
-		catch( IOException e )
-		{
-			SoapUI.log( e.getMessage() );
-		}
+    public void start() {
+        String cajoPort = IntegrationUtils.getIntegrationPort("SoapUI", LoadUISettings.SOAPUI_CAJO_PORT,
+                DEFAULT_SOAPUI_CAJO_PORT);
+        Remote.config(server, Integer.valueOf(cajoPort), null, 0);
+        try {
+            ItemServer.bind(new TestCaseEditIntegrationImpl(), itemName);
+            SoapUI.log("The cajo server is running on localhost:" + cajoPort + "/" + itemName);
+        } catch (IOException e) {
+            SoapUI.log(e.getMessage());
+        }
 
-		CajoClient.getInstance().testConnection();
-	}
+        CajoClient.getInstance().testConnection();
+    }
 
-	public String getServer()
-	{
-		return server;
-	}
+    public String getServer() {
+        return server;
+    }
 
-	public String getPort()
-	{
-		return port;
-	}
+    public String getPort() {
+        return port;
+    }
 
-	public String getItemName()
-	{
-		return itemName;
-	}
+    public String getItemName() {
+        return itemName;
+    }
 
-	public void setServer( String server )
-	{
-		this.server = server;
-	}
+    public void setServer(String server) {
+        this.server = server;
+    }
 
-	public void setPort( String port )
-	{
-		this.port = port;
-	}
+    public void setPort(String port) {
+        this.port = port;
+    }
 
-	public void setItemName( String itemName )
-	{
-		this.itemName = itemName;
-	}
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 }

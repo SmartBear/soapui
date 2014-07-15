@@ -20,43 +20,36 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 
 /**
  * Request Response behaviour
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface Response
-{
-	public Request getRequest();
+public interface Response extends TypedContent {
+    public Request getRequest();
 
-	public String getContentAsString();
+    public String getRequestContent();
 
-	public long getContentLength();
+    public long getTimeTaken();
 
-	public String getRequestContent();
+    public Attachment[] getAttachments();
 
-	public String getContentType();
+    public Attachment[] getAttachmentsForPart(String partName);
 
-	public long getTimeTaken();
+    public StringToStringsMap getRequestHeaders();
 
-	public Attachment[] getAttachments();
+    public StringToStringsMap getResponseHeaders();
 
-	public Attachment[] getAttachmentsForPart( String partName );
+    public long getTimestamp();
 
-	public StringToStringsMap getRequestHeaders();
+    public byte[] getRawRequestData();
 
-	public StringToStringsMap getResponseHeaders();
+    public byte[] getRawResponseData();
 
-	public long getTimestamp();
+    public String getContentAsXml();
 
-	public byte[] getRawRequestData();
+    public String getProperty(String name);
 
-	public byte[] getRawResponseData();
+    public void setProperty(String name, String value);
 
-	public String getContentAsXml();
-
-	public String getProperty( String name );
-
-	public void setProperty( String name, String value );
-
-	public String[] getPropertyNames();
+    public String[] getPropertyNames();
 }

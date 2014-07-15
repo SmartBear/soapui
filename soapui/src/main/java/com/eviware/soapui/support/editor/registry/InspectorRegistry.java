@@ -16,66 +16,80 @@
 
 package com.eviware.soapui.support.editor.registry;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Registry of registered XmlInspectorFactories
- * 
+ *
  * @author ole.matzura
  */
 
-public class InspectorRegistry
-{
-	private static InspectorRegistry instance;
-	private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
+public class InspectorRegistry implements SoapUIFactoryRegistryListener {
+    private static InspectorRegistry instance;
+    private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
 
-	public InspectorRegistry()
-	{
-	}
+    public InspectorRegistry() {
 
-	public void addFactory( InspectorFactory factory )
-	{
-		for( int c = 0; c < factories.size(); c++ )
-		{
-			InspectorFactory f = factories.get( c );
-			if( f.getInspectorId().equals( factory.getInspectorId() ) )
-			{
-				factories.set( c, factory );
-				return;
-			}
-		}
+        for( InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories( InspectorFactory.class ))
+        {
+            addFactory( factory );
+        }
 
-		factories.add( factory );
-	}
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
+    }
 
-	public static final InspectorRegistry getInstance()
-	{
-		if( instance == null )
-			instance = new InspectorRegistry();
+    public void addFactory(InspectorFactory factory) {
+        for (int c = 0; c < factories.size(); c++) {
+            InspectorFactory f = factories.get(c);
+            if (f.getInspectorId().equals(factory.getInspectorId())) {
+                factories.set(c, factory);
+                return;
+            }
+        }
 
-		return instance;
-	}
+        factories.add(factory);
+    }
 
-	public void removeFactory( InspectorFactory factory )
-	{
-		factories.remove( factory );
-	}
+    public static final InspectorRegistry getInstance() {
+        if (instance == null) {
+            instance = new InspectorRegistry();
+        }
 
-	public InspectorFactory[] getFactories()
-	{
-		return factories.toArray( new InspectorFactory[factories.size()] );
-	}
+        return instance;
+    }
 
-	public InspectorFactory[] getFactoriesOfType( Class<?> type )
-	{
-		List<InspectorFactory> result = new ArrayList<InspectorFactory>();
-		for( InspectorFactory factory : factories )
-		{
-			if( type.isAssignableFrom( factory.getClass() ) )
-				result.add( factory );
-		}
+    public void removeFactory(InspectorFactory factory) {
+        factories.remove(factory);
+    }
 
-		return result.toArray( new InspectorFactory[result.size()] );
-	}
+    public InspectorFactory[] getFactories() {
+        return factories.toArray(new InspectorFactory[factories.size()]);
+    }
+
+    public InspectorFactory[] getFactoriesOfType(Class<?> type) {
+        List<InspectorFactory> result = new ArrayList<InspectorFactory>();
+        for (InspectorFactory factory : factories) {
+            if (type.isAssignableFrom(factory.getClass())) {
+                result.add(factory);
+            }
+        }
+
+        return result.toArray(new InspectorFactory[result.size()]);
+    }
+
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if( factoryType.isAssignableFrom(InspectorFactory.class))
+            addFactory((InspectorFactory) factory);
+    }
+
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if( factoryType.isAssignableFrom(InspectorFactory.class))
+            removeFactory((InspectorFactory) factory);
+    }
 }

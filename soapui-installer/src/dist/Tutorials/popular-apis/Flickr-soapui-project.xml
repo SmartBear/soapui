@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="Sample Flickr Project" resourceRoot="" soapui-version="4.5.2"
+                    xmlns:con="http://eviware.com/soapui/config">
+    <con:settings/>
+    <con:interface xsi:type="con:RestService" wadlVersion="http://wadl.dev.java.net/2009/02" name="Flickr" type="rest"
+                   basePath="" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <con:settings/>
+        <con:definitionCache type="TEXT" rootPart=""/>
+        <con:endpoints>
+            <con:endpoint>http://api.flickr.com</con:endpoint>
+        </con:endpoints>
+        <con:resource name="services" path="services">
+            <con:settings/>
+            <con:parameters>
+                <con:parameter required="true">
+                    <con:name>method</con:name>
+                    <con:value/>
+                    <con:style>QUERY</con:style>
+                    <con:default/>
+                    <con:option>flickr.photos.search</con:option>
+                    <con:option>flickr.groups.search</con:option>
+                    <con:option>flickr.people.findByUsername</con:option>
+                    <con:option>flickr.places.find</con:option>
+                    <con:option>flickr.cameras.getBrands</con:option>
+                    <con:option>flickr.interestingness.getList</con:option>
+                </con:parameter>
+                <con:parameter required="true">
+                    <con:name>api_key</con:name>
+                    <con:value>${#Project#ApiKey}</con:value>
+                    <con:style>QUERY</con:style>
+                    <con:default>${#Project#ApiKey}</con:default>
+                </con:parameter>
+            </con:parameters>
+            <con:resource name="rest" path="rest">
+                <con:settings/>
+                <con:parameters>
+                    <con:parameter>
+                        <con:name>format</con:name>
+                        <con:value/>
+                        <con:style>QUERY</con:style>
+                        <con:default/>
+                        <con:option>json</con:option>
+                        <con:option>php_serial</con:option>
+                        <con:option>xmlrpc</con:option>
+                        <con:option>soap</con:option>
+                        <con:option>rest</con:option>
+                    </con:parameter>
+                    <con:parameter>
+                        <con:name>nojsoncallback</con:name>
+                        <con:value/>
+                        <con:style>QUERY</con:style>
+                        <con:default/>
+                        <con:option>1</con:option>
+                    </con:parameter>
+                </con:parameters>
+                <con:method name="Photo Search" method="GET">
+                    <con:settings/>
+                    <con:parameters>
+                        <con:parameter>
+                            <con:name>text</con:name>
+                            <con:value/>
+                            <con:style>QUERY</con:style>
+                            <con:default/>
+                        </con:parameter>
+                    </con:parameters>
+                    <con:representation type="FAULT">
+                        <con:mediaType>text/html; charset=UTF-8</con:mediaType>
+                        <con:status>404</con:status>
+                        <con:params/>
+                        <con:element>html</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>rsp</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/javascript; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>application/soap+xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element xmlns:soap="http://www.w3.org/2003/05/soap-envelope">soap:Envelope</con:element>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="text" value="soapui"/>
+                            <con:entry key="method" value="flickr.photos.search"/>
+                            <con:entry key="format" value="rest"/>
+                        </con:parameters>
+                    </con:request>
+                </con:method>
+                <con:method name="Group Search" method="GET">
+                    <con:settings/>
+                    <con:parameters>
+                        <con:parameter>
+                            <con:name>text</con:name>
+                            <con:value/>
+                            <con:style>QUERY</con:style>
+                            <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+                            <con:default/>
+                            <con:path xsi:nil="true"/>
+                            <con:description xsi:nil="true"/>
+                        </con:parameter>
+                    </con:parameters>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>rsp</con:element>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="text" value="leica"/>
+                            <con:entry key="method" value="flickr.groups.search"/>
+                        </con:parameters>
+                    </con:request>
+                </con:method>
+                <con:method name="Find User" method="GET">
+                    <con:settings/>
+                    <con:parameters>
+                        <con:parameter>
+                            <con:name>username</con:name>
+                            <con:value/>
+                            <con:style>QUERY</con:style>
+                            <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+                            <con:default/>
+                            <con:path xsi:nil="true"/>
+                            <con:description xsi:nil="true"/>
+                        </con:parameter>
+                    </con:parameters>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>rsp</con:element>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="username" value="olensmar"/>
+                            <con:entry key="method" value="flickr.people.findByUsername"/>
+                        </con:parameters>
+                    </con:request>
+                </con:method>
+                <con:method name="Find Places" method="GET">
+                    <con:settings/>
+                    <con:parameters>
+                        <con:parameter>
+                            <con:name>query</con:name>
+                            <con:value/>
+                            <con:style>QUERY</con:style>
+                            <con:type xmlns:xs="http://www.w3.org/2001/XMLSchema">xs:string</con:type>
+                            <con:default/>
+                            <con:path xsi:nil="true"/>
+                            <con:description xsi:nil="true"/>
+                        </con:parameter>
+                    </con:parameters>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>rsp</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element xmlns:rest="http://api.flickr.com/services/rest">rest:Response</con:element>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="query" value="stockholm"/>
+                            <con:entry key="method" value="flickr.places.find"/>
+                        </con:parameters>
+                    </con:request>
+                </con:method>
+                <con:method name="Get Cameras" method="GET">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>rsp</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/javascript; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/plain; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>data</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>application/soap+xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element xmlns:soap="http://www.w3.org/2003/05/soap-envelope">soap:Envelope</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element xmlns:rest="http://api.flickr.com/services/rest">rest:Response</con:element>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="nojsoncallback" value="1"/>
+                            <con:entry key="method" value="flickr.cameras.getBrands"/>
+                            <con:entry key="format" value="php_serial"/>
+                        </con:parameters>
+                    </con:request>
+                </con:method>
+                <con:method name="Interestingness" method="GET">
+                    <con:settings/>
+                    <con:parameters/>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>text/xml; charset=utf-8</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element>rsp</con:element>
+                    </con:representation>
+                    <con:representation type="RESPONSE">
+                        <con:mediaType>application/json</con:mediaType>
+                        <con:status>200</con:status>
+                        <con:params/>
+                        <con:element xmlns:rest="http://api.flickr.com/services/rest">rest:Response</con:element>
+                    </con:representation>
+                    <con:request name="Request 1" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="nojsoncallback" value="1"/>
+                            <con:entry key="method" value="flickr.interestingness.getList"/>
+                            <con:entry key="format" value="json"/>
+                        </con:parameters>
+                    </con:request>
+                </con:method>
+            </con:resource>
+        </con:resource>
+    </con:interface>
+    <con:testSuite name="TestSuite">
+        <con:settings/>
+        <con:runType>SEQUENTIAL</con:runType>
+        <con:testCase failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="TestCase"
+                      searchProperties="true" id="731ad4bf-e60d-450a-ac48-9ddacccfe4b7">
+            <con:description>Basic tests for Flickr API - including both authenticated and anonymous resources:
+                - First request makes sure the interestingness list always contains 100 entries (which it won't when a
+                new day starts)
+                - Send request makes sure the specified user can be found
+                - Third request checks that "Nikon" is in the list of cameras
+                - Fourth request checks that there are photos available for "Stockholm"
+
+                see http://www.flickr.com/services/api/
+            </con:description>
+            <con:settings>
+                <con:setting id="IncludeOverview">true</con:setting>
+                <con:setting id="IncludeResults">true</con:setting>
+                <con:setting id="FlowLayout">false</con:setting>
+                <con:setting id="ErrorDetails">true</con:setting>
+                <con:setting id="IncludeCoverage">true</con:setting>
+            </con:settings>
+            <con:testStep type="restrequest" name="Interestingness Request - JSON">
+                <con:settings/>
+                <con:config service="Flickr" resourcePath="/services/rest" methodName="Interestingness"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="Interestingness Request - JSON" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:assertion type="XPath Match" name="Check count of [e]">
+                            <con:configuration>
+                                <path>declare namespace ns1='http://api.flickr.com/services/rest';
+                                    count( //ns1:Response/ns1:photos/ns1:photo/ns1:e)
+                                </path>
+                                <content>100</content>
+                                <allowWildcards>false</allowWildcards>
+                                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                                <ignoreComments>false</ignoreComments>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="nojsoncallback" value="1"/>
+                            <con:entry key="method" value="flickr.interestingness.getList"/>
+                            <con:entry key="format" value="json"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="Find User Request - REST">
+                <con:settings/>
+                <con:config service="Flickr" resourcePath="/services/rest" methodName="Find User"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="Find User Request - REST" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:assertion type="XPath Match" name="Match content of [rsp]">
+                            <con:configuration>
+                                <path>//rsp[1]</path>
+                                <content><![CDATA[<rsp stat="ok">
+  <user id="42340368@N08" nsid="42340368@N08">
+    <username>olensmar</username>
+  </user>
+</rsp>]]></content>
+                                <allowWildcards>false</allowWildcards>
+                                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                                <ignoreComments>false</ignoreComments>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="username" value="olensmar"/>
+                            <con:entry key="method" value="flickr.people.findByUsername"/>
+                            <con:entry key="format" value="rest"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="Get Cameras - SOAP">
+                <con:settings/>
+                <con:config service="Flickr" resourcePath="/services/rest" methodName="Get Cameras"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="Get Cameras - SOAP" mediaType="application/xml">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:assertion type="Simple Contains" name="Contains">
+                            <con:configuration>
+                                <token>&lt;brand id="nikon" name="Nikon" /></token>
+                                <ignoreCase>false</ignoreCase>
+                                <useRegEx>false</useRegEx>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="nojsoncallback" value="1"/>
+                            <con:entry key="method" value="flickr.cameras.getBrands"/>
+                            <con:entry key="format" value="soap"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:testStep type="restrequest" name="Find Places - JSON">
+                <con:settings/>
+                <con:config service="Flickr" resourcePath="/services/rest" methodName="Find Places"
+                            xsi:type="con:RestRequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                    <con:restRequest name="Find Places - JSON" mediaType="application/xml" accept="">
+                        <con:settings>
+                            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+                        </con:settings>
+                        <con:endpoint>http://api.flickr.com</con:endpoint>
+                        <con:request/>
+                        <con:assertion type="XPath Match" name="Check for existance of [e]">
+                            <con:configuration>
+                                <path>declare namespace ns1='http://api.flickr.com/services/rest';
+                                    exists( //ns1:Response/ns1:places/ns1:place/ns1:e)
+                                </path>
+                                <content>true</content>
+                                <allowWildcards>false</allowWildcards>
+                                <ignoreNamspaceDifferences>false</ignoreNamspaceDifferences>
+                                <ignoreComments>false</ignoreComments>
+                            </con:configuration>
+                        </con:assertion>
+                        <con:credentials>
+                            <con:authType>Global HTTP Settings</con:authType>
+                        </con:credentials>
+                        <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+                        <con:jmsPropertyConfig/>
+                        <con:parameters>
+                            <con:entry key="query" value="stockholm"/>
+                            <con:entry key="nojsoncallback" value="1"/>
+                            <con:entry key="method" value="flickr.places.find"/>
+                            <con:entry key="format" value="json"/>
+                        </con:parameters>
+                    </con:restRequest>
+                </con:config>
+            </con:testStep>
+            <con:properties>
+                <con:property>
+                    <con:name>temp</con:name>
+                    <con:value/>
+                </con:property>
+            </con:properties>
+            <con:reportParameters/>
+        </con:testCase>
+        <con:properties/>
+        <con:reportParameters/>
+    </con:testSuite>
+    <con:requirements/>
+    <con:properties>
+        <con:property>
+            <con:name>ApiKey</con:name>
+            <con:value/>
+        </con:property>
+    </con:properties>
+    <con:wssContainer/>
+    <con:databaseConnectionContainer/>
+    <con:reporting>
+        <con:reportTemplates/>
+        <con:xmlTemplates/>
+        <con:parameters/>
+    </con:reporting>
+    <con:sensitiveInformation/>
+</con:soapui-project>

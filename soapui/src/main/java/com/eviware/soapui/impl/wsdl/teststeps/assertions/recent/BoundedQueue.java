@@ -21,47 +21,39 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-@SuppressWarnings( "serial" )
-public class BoundedQueue
-{
-	private final int MAX_SIZE = 5;
+@SuppressWarnings("serial")
+public class BoundedQueue {
+    private final int MAX_SIZE = 5;
 
-	private LinkedList<String> queue;
+    private LinkedList<String> queue;
 
-	public BoundedQueue()
-	{
-		this.queue = new LinkedList<String>();
-	}
+    public BoundedQueue() {
+        this.queue = new LinkedList<String>();
+    }
 
-	public void remove( String e )
-	{
-		this.queue.remove( e );
-	}
+    public void remove(String e) {
+        this.queue.remove(e);
+    }
 
-	public void add( String e )
-	{
-		if( this.queue.contains( e ) )
-		{
-			return;
-		}
+    public void add(String e) {
+        if (this.queue.contains(e)) {
+            return;
+        }
 
-		this.queue.addLast( e );
+        this.queue.addLast(e);
 
-		if( this.queue.size() > MAX_SIZE )
-		{
-			this.queue.removeFirst();
-		}
-	}
+        if (this.queue.size() > MAX_SIZE) {
+            this.queue.removeFirst();
+        }
+    }
 
-	public List<String> getByAlphabeticalOrder()
-	{
-		List<String> list = new ArrayList<String>( this.queue );
-		Collections.sort( list );
-		return list;
-	}
+    public List<String> getByAlphabeticalOrder() {
+        List<String> list = new ArrayList<String>(this.queue);
+        Collections.sort(list);
+        return list;
+    }
 
-	public List<String> getByInsertionOrder()
-	{
-		return new LinkedList<String>( this.queue );
-	}
+    public List<String> getByInsertionOrder() {
+        return new LinkedList<String>(this.queue);
+    }
 }

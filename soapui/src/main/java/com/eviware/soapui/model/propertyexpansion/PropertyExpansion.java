@@ -18,28 +18,27 @@ package com.eviware.soapui.model.propertyexpansion;
 
 import com.eviware.soapui.model.testsuite.TestProperty;
 
-public interface PropertyExpansion
-{
-	// scope specifiers
-	public static final String SYSTEM_REFERENCE = "#System#";
-	public static final String ENV_REFERENCE = "#Env#";
-	public static final String GLOBAL_REFERENCE = "#Global#";
-	public static final String PROJECT_REFERENCE = "#Project#";
-	public static final String TESTSUITE_REFERENCE = "#TestSuite#";
-	public static final String TESTCASE_REFERENCE = "#TestCase#";
-	public static final String MOCKSERVICE_REFERENCE = "#MockService#";
-	public static final String MOCKRESPONSE_REFERENCE = "#MockResponse#";
-	public static final String SECURITYTEST_REFERENCE = "#SecurityTest#";
+public interface PropertyExpansion {
+    // scope specifiers
+    public static final String SYSTEM_REFERENCE = "#System#";
+    public static final String ENV_REFERENCE = "#Env#";
+    public static final String GLOBAL_REFERENCE = "#Global#";
+    public static final String PROJECT_REFERENCE = "#Project#";
+    public static final String TESTSUITE_REFERENCE = "#TestSuite#";
+    public static final String TESTCASE_REFERENCE = "#TestCase#";
+    public static final String MOCKSERVICE_REFERENCE = "#MockService#";
+    public static final String MOCKRESPONSE_REFERENCE = "#MockResponse#";
+    public static final String SECURITYTEST_REFERENCE = "#SecurityTest#";
 
-	public static final char PROPERTY_SEPARATOR = '#';
-	public static final char XPATH_SEPARATOR = '#';
-	public static final char SCOPE_PREFIX = '#';
-	
-	public TestProperty getProperty();
+    public static final char PROPERTY_SEPARATOR = '#';
+    public static final char XPATH_SEPARATOR = '#';
+    public static final char SCOPE_PREFIX = '#';
 
-	public String toString();
+    public TestProperty getProperty();
 
-	public String getXPath();
+    public String toString();
 
-	public String getContainerInfo();
+    public String getXPath();
+
+    public String getContainerInfo();
 }

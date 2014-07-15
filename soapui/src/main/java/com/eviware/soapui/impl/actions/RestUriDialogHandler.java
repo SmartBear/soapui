@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.actions;
+*/
+package com.eviware.soapui.impl.actions;
 
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.support.MessageSupport;
@@ -39,104 +40,99 @@ import java.awt.event.MouseListener;
 /**
  * Constructs dialogs for inputting REST URIs and manages state in an open dialog.
  */
-public class RestUriDialogHandler
-{
-	private KeyListener initialKeyListener;
-	private MouseListener initialMouseListener;
-	private Font originalFont;
-	private boolean defaultURIReplaced;
-	private JUndoableTextField textField;
-	private XFormDialog dialog;
-	private String uriLabelKey;
-	private String exampleUri;
+public class RestUriDialogHandler {
+    private KeyListener initialKeyListener;
+    private MouseListener initialMouseListener;
+    private Font originalFont;
+    private boolean defaultURIReplaced;
+    private JUndoableTextField textField;
+    private XFormDialog dialog;
+    private String uriLabelKey;
+    private String exampleUri;
 
 
-	public XFormDialog buildDialog( MessageSupport messages, AbstractAction actionToBeAdded )
-	{
-		XFormDialogBuilder newDialogBuilder = XFormFactory.createDialogBuilder( messages.get( "Title" ) );
-		XForm form = newDialogBuilder.createForm( "" );
-		uriLabelKey = messages.get( "Form.URI.Label" );
-		exampleUri = messages.get( "Form.Example.URI" );
-		form.addTextField( uriLabelKey, messages.get( "Form.URI.Description" ), XForm.FieldType.TEXT );
+    public XFormDialog buildDialog(MessageSupport messages) {
+        return buildDialog(messages, HelpUrls.NEWRESTPROJECT_HELP_URL, null);
+    }
 
-		ActionList actions = newDialogBuilder.buildOkCancelHelpActions( HelpUrls.NEWRESTPROJECT_HELP_URL );
+    public XFormDialog buildDialog(MessageSupport messages, AbstractAction actionToBeAdded) {
+        return buildDialog(messages, HelpUrls.NEWRESTPROJECT_HELP_URL, actionToBeAdded);
+    }
 
-		if( actionToBeAdded != null )
-		{
-			actions.addAction( actionToBeAdded );
-		}
+    public XFormDialog buildDialog(MessageSupport messages, String helpUrl) {
+        return buildDialog(messages, helpUrl, null);
+    }
 
-		dialog = newDialogBuilder.buildDialog( actions, messages.get( "Description" ), UISupport.TOOL_ICON );
-		dialog.setValue( uriLabelKey, exampleUri );
-		XFormField uriField = dialog.getFormField( uriLabelKey );
+    public XFormDialog buildDialog(MessageSupport messages, String helpUrl, AbstractAction actionToBeAdded) {
+        XFormDialogBuilder newDialogBuilder = XFormFactory.createDialogBuilder(messages.get("Title"));
+        XForm form = newDialogBuilder.createForm("");
+        uriLabelKey = messages.get("Form.URI.Label");
+        exampleUri = messages.get("Form.Example.URI");
+        form.addTextField(uriLabelKey, messages.get("Form.URI.Description"), XForm.FieldType.TEXT);
 
-		if( uriField instanceof JTextFieldFormField )
-		{
-			defaultURIReplaced = false;
-			textField = ( ( JTextFieldFormField )uriField ).getComponent();
-			textField.requestFocus();
-			originalFont = textField.getFont();
-			textField.setFont( originalFont.deriveFont( Font.ITALIC ) );
-			textField.setForeground( new Color( 170, 170, 170 ) );
-			addListenersToTextField();
-		}
-		return dialog;
-	}
+        ActionList actions = newDialogBuilder.buildOkCancelHelpActions(helpUrl);
 
-	public void resetUriField()
-	{
-		if( !defaultURIReplaced && textField != null )
-		{
-			try
-			{
-				defaultURIReplaced = true;
-				textField.setText( "" );
-				textField.setFont( originalFont );
-				textField.setForeground( Color.BLACK );
-			} finally
-			{
-				if( initialKeyListener != null )
-				{
-					textField.removeKeyListener( initialKeyListener );
-				}
-				if( initialMouseListener != null )
-				{
-					textField.removeMouseListener( initialMouseListener );
-				}
-			}
-		}
+        if (actionToBeAdded != null) {
+            actions.addAction(actionToBeAdded);
+        }
 
-	}
+        dialog = newDialogBuilder.buildDialog(actions, messages.get("Description"), UISupport.TOOL_ICON);
+        dialog.setValue(uriLabelKey, exampleUri);
+        XFormField uriField = dialog.getFormField(uriLabelKey);
 
-	private void addListenersToTextField()
-	{
-		initialKeyListener = new KeyAdapter()
-		{
-			@Override
-			public void keyPressed( KeyEvent e )
-			{
-				resetUriField();
-			}
-		};
-		textField.addKeyListener( initialKeyListener );
-		initialMouseListener = new MouseAdapter()
-		{
-			@Override
-			public void mouseClicked( MouseEvent e )
-			{
-				resetUriField();
-			}
-		};
-		textField.addMouseListener( initialMouseListener );
-	}
+        if (uriField instanceof JTextFieldFormField) {
+            defaultURIReplaced = false;
+            textField = ((JTextFieldFormField) uriField).getComponent();
+            textField.requestFocus();
+            originalFont = textField.getFont();
+            textField.setFont(originalFont.deriveFont(Font.ITALIC));
+            textField.setForeground(new Color(170, 170, 170));
+            addListenersToTextField();
+        }
+        return dialog;
+    }
 
-	public String getUri()
-	{
-		if (dialog.getReturnValue() != XFormDialog.OK_OPTION)
-		{
-			return null;
-		}
-		String uri = dialog.getValue( uriLabelKey ).trim();
-		return uri.equals(exampleUri) ? "" : uri;
-	}
+    public void resetUriField() {
+        if (!defaultURIReplaced && textField != null) {
+            try {
+                defaultURIReplaced = true;
+                textField.setText("");
+                textField.setFont(originalFont);
+                textField.setForeground(Color.BLACK);
+            } finally {
+                if (initialKeyListener != null) {
+                    textField.removeKeyListener(initialKeyListener);
+                }
+                if (initialMouseListener != null) {
+                    textField.removeMouseListener(initialMouseListener);
+                }
+            }
+        }
+
+    }
+
+    private void addListenersToTextField() {
+        initialKeyListener = new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                resetUriField();
+            }
+        };
+        textField.addKeyListener(initialKeyListener);
+        initialMouseListener = new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                resetUriField();
+            }
+        };
+        textField.addMouseListener(initialMouseListener);
+    }
+
+    public String getUri() {
+        if (dialog.getReturnValue() != XFormDialog.OK_OPTION) {
+            return null;
+        }
+        String uri = dialog.getValue(uriLabelKey).trim();
+        return uri.equals(exampleUri) ? "" : uri;
+    }
 }

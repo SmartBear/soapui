@@ -30,175 +30,159 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 /**
  * ActionList-related utilities
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class ActionSupport
-{
-	public static JPopupMenu buildPopup( ActionList actions )
-	{
-		if( actions == null || actions.getActionCount() == 0 )
-			return null;
+public class ActionSupport {
+    public static JPopupMenu buildPopup(ActionList actions) {
+        if (actions == null || actions.getActionCount() == 0) {
+            return null;
+        }
 
-		JPopupMenu popup = new JPopupMenu( actions.getLabel() );
+        JPopupMenu popup = new JPopupMenu(actions.getLabel());
 
-		return ActionSupport.addActions( actions, popup );
-	}
+        return ActionSupport.addActions(actions, popup);
+    }
 
-	public static JMenu buildMenu( ActionList actions )
-	{
-		if( actions == null || actions.getActionCount() == 0 )
-			return null;
+    public static JMenu buildMenu(ActionList actions) {
+        if (actions == null || actions.getActionCount() == 0) {
+            return null;
+        }
 
-		JMenu menu = new JMenu( actions.getLabel() );
+        JMenu menu = new JMenu(actions.getLabel());
 
-		return ActionSupport.addActions( actions, menu );
-	}
+        return ActionSupport.addActions(actions, menu);
+    }
 
-	public static JPopupMenu addActions( ActionList actions, JPopupMenu popup )
-	{
-		if( actions == null || actions.getActionCount() == 0 )
-			return popup;
+    public static JPopupMenu addActions(ActionList actions, JPopupMenu popup) {
+        if (actions == null || actions.getActionCount() == 0) {
+            return popup;
+        }
 
-		for( int i = 0; i < actions.getActionCount(); i++ )
-		{
-			Action action = actions.getActionAt( i );
-			if( action instanceof MarkerAction )
-				continue;
+        for (int i = 0; i < actions.getActionCount(); i++) {
+            Action action = actions.getActionAt(i);
+            if (action instanceof MarkerAction) {
+                continue;
+            }
 
-			if( action == ActionSupport.SEPARATOR_ACTION )
-				popup.addSeparator();
-			else if( action instanceof ActionSupport.ActionListAction )
-			{
-				ActionList actionList = ( ( ActionListAction )action ).getActionList();
-				if( actionList == null || actionList.getActionCount() == 0 )
-					System.err.println( "null/empty ActionList in action " + action.getValue( Action.NAME ) );
-				else
-					popup.add( buildMenu( actionList ) );
-			}
-			else
-				popup.add( action );
-		}
+            if (action == ActionSupport.SEPARATOR_ACTION) {
+                popup.addSeparator();
+            } else if (action instanceof ActionSupport.ActionListAction) {
+                ActionList actionList = ((ActionListAction) action).getActionList();
+                if (actionList == null || actionList.getActionCount() == 0) {
+                    System.err.println("null/empty ActionList in action " + action.getValue(Action.NAME));
+                } else {
+                    popup.add(buildMenu(actionList));
+                }
+            } else {
+                popup.add(action);
+            }
+        }
 
-		return popup;
-	}
+        return popup;
+    }
 
-	public static JMenu addActions( ActionList actions, JMenu menu )
-	{
-		if( actions == null || menu == null )
-			return menu;
+    public static JMenu addActions(ActionList actions, JMenu menu) {
+        if (actions == null || menu == null) {
+            return menu;
+        }
 
-		for( int i = 0; i < actions.getActionCount(); i++ )
-		{
-			Action action = actions.getActionAt( i );
+        for (int i = 0; i < actions.getActionCount(); i++) {
+            Action action = actions.getActionAt(i);
 
-			if( action instanceof MarkerAction )
-				continue;
+            if (action instanceof MarkerAction) {
+                continue;
+            }
 
-			if( action == ActionSupport.SEPARATOR_ACTION )
-			{
-				menu.addSeparator();
-			}
-			else if( action instanceof ActionSupport.ActionListAction )
-			{
-				JMenu subMenu = buildMenu( ( ( ActionListAction )action ).getActionList() );
-				if( subMenu == null )
-					subMenu = new JMenu( ( ( ActionListAction )action ).getActionList().getLabel() );
-				menu.add( subMenu );
-			}
-			else if( action != null )
-			{
-				menu.add( action );
-			}
-		}
+            if (action == ActionSupport.SEPARATOR_ACTION) {
+                menu.addSeparator();
+            } else if (action instanceof ActionSupport.ActionListAction) {
+                JMenu subMenu = buildMenu(((ActionListAction) action).getActionList());
+                if (subMenu == null) {
+                    subMenu = new JMenu(((ActionListAction) action).getActionList().getLabel());
+                }
+                menu.add(subMenu);
+            } else if (action != null) {
+                menu.add(action);
+            }
+        }
 
-		return menu;
-	}
+        return menu;
+    }
 
-	public final static Action SEPARATOR_ACTION = new AbstractAction()
-	{
-		public void actionPerformed( ActionEvent e )
-		{
-		}
-	};
+    public final static Action SEPARATOR_ACTION = new AbstractAction() {
+        public void actionPerformed(ActionEvent e) {
+        }
+    };
 
-	public static class ActionListAction extends AbstractAction
-	{
-		private final ActionList actionList;
+    public static class ActionListAction extends AbstractAction {
+        private final ActionList actionList;
 
-		public ActionListAction( ActionList actionList )
-		{
-			this.actionList = actionList;
-		}
+        public ActionListAction(ActionList actionList) {
+            this.actionList = actionList;
+        }
 
-		public ActionList getActionList()
-		{
-			return actionList;
-		}
+        public ActionList getActionList() {
+            return actionList;
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			Action defaultAction = actionList.getDefaultAction();
-			if( defaultAction != null )
-				defaultAction.actionPerformed( e );
-		}
-	};
+        public void actionPerformed(ActionEvent e) {
+            Action defaultAction = actionList.getDefaultAction();
+            if (defaultAction != null) {
+                defaultAction.actionPerformed(e);
+            }
+        }
+    }
 
-	public static JPopupMenu insertActions( ActionList actions, JPopupMenu popup, int index )
-	{
-		for( int i = 0; i < actions.getActionCount(); i++ )
-		{
-			Action action = actions.getActionAt( i );
-			if( action instanceof MarkerAction )
-				continue;
+    ;
 
-			if( action == ActionSupport.SEPARATOR_ACTION )
-				popup.insert( new JPopupMenu.Separator(), index + i );
-			else if( action instanceof ActionSupport.ActionListAction )
-				popup.insert( buildMenu( ( ( ActionSupport.ActionListAction )action ).getActionList() ), index + i );
-			else
-				popup.insert( action, index + i );
-		}
+    public static JPopupMenu insertActions(ActionList actions, JPopupMenu popup, int index) {
+        for (int i = 0; i < actions.getActionCount(); i++) {
+            Action action = actions.getActionAt(i);
+            if (action instanceof MarkerAction) {
+                continue;
+            }
 
-		return popup;
-	}
+            if (action == ActionSupport.SEPARATOR_ACTION) {
+                popup.insert(new JPopupMenu.Separator(), index + i);
+            } else if (action instanceof ActionSupport.ActionListAction) {
+                popup.insert(buildMenu(((ActionSupport.ActionListAction) action).getActionList()), index + i);
+            } else {
+                popup.insert(action, index + i);
+            }
+        }
 
-	public static void addActions( ActionList actionList, ButtonBarBuilder builder )
-	{
-		for( int c = 0; c < actionList.getActionCount(); c++ )
-		{
-			Action action = actionList.getActionAt( c );
-			if( action == SEPARATOR_ACTION )
-			{
-				builder.addUnrelatedGap();
-			}
-			else
-			{
-				if( c > 0 )
-					builder.addRelatedGap();
+        return popup;
+    }
 
-				builder.addFixed( new JButton( action ) );
-			}
-		}
-	}
+    public static void addActions(ActionList actionList, ButtonBarBuilder builder) {
+        for (int c = 0; c < actionList.getActionCount(); c++) {
+            Action action = actionList.getActionAt(c);
+            if (action == SEPARATOR_ACTION) {
+                builder.addUnrelatedGap();
+            } else {
+                if (c > 0) {
+                    builder.addRelatedGap();
+                }
 
-	public static void addActions( ActionList actionList, JXToolBar toolbar )
-	{
-		for( int c = 0; c < actionList.getActionCount(); c++ )
-		{
-			Action action = actionList.getActionAt( c );
-			if( action == SEPARATOR_ACTION )
-			{
-				toolbar.addUnrelatedGap();
-			}
-			else
-			{
-				if( c > 0 )
-					toolbar.addRelatedGap();
+                builder.addFixed(new JButton(action));
+            }
+        }
+    }
 
-				toolbar.addFixed( new JButton( action ) );
-			}
-		}
-	}
+    public static void addActions(ActionList actionList, JXToolBar toolbar) {
+        for (int c = 0; c < actionList.getActionCount(); c++) {
+            Action action = actionList.getActionAt(c);
+            if (action == SEPARATOR_ACTION) {
+                toolbar.addUnrelatedGap();
+            } else {
+                if (c > 0) {
+                    toolbar.addRelatedGap();
+                }
+
+                toolbar.addFixed(new JButton(action));
+            }
+        }
+    }
 }

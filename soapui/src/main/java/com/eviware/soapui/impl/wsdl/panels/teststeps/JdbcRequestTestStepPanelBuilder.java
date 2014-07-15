@@ -25,34 +25,29 @@ import com.eviware.soapui.ui.desktop.DesktopPanel;
 
 /**
  * PanelBuilder for JdbcRequestTestStep
- * 
+ *
  * @author dragica.soldo
  */
 
-public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcRequestTestStep>
-{
-	public JdbcRequestTestStepPanelBuilder()
-	{
-	}
+public class JdbcRequestTestStepPanelBuilder extends EmptyPanelBuilder<JdbcRequestTestStep> {
+    public JdbcRequestTestStepPanelBuilder() {
+    }
 
-	public DesktopPanel buildDesktopPanel( JdbcRequestTestStep testStep )
-	{
-		return new JdbcRequestTestStepDesktopPanel( testStep );
-	}
+    public DesktopPanel buildDesktopPanel(JdbcRequestTestStep testStep) {
+        return new JdbcRequestTestStepDesktopPanel(testStep);
+    }
 
-	public boolean hasDesktopPanel()
-	{
-		return true;
-	}
+    public boolean hasDesktopPanel() {
+        return true;
+    }
 
-	@Override
-	public Component buildOverviewPanel( JdbcRequestTestStep modelItem )
-	{
-		JPropertiesTable<JdbcRequestTestStep> table = buildDefaultProperties( modelItem, "JdbcRequestTestStep Properties" );
-		table.addProperty( "Max Rows", "maxRows", true );
-		table.addProperty( "Query Timeout", "queryTimeout", true );
-		table.addProperty( "Fetch Size", "fetchSize", true );
-		table.addProperty( "Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS );
-		return table;
-	}
+    @Override
+    public Component buildOverviewPanel(JdbcRequestTestStep modelItem) {
+        JPropertiesTable<JdbcRequestTestStep> table = buildDefaultProperties(modelItem, "JdbcRequestTestStep Properties");
+        table.addProperty("Max Rows", "maxRows", true);
+        table.addProperty("Query Timeout", "queryTimeout", true);
+        table.addProperty("Fetch Size", "fetchSize", true);
+        table.addProperty("Discard Response", "discardResponse", JPropertiesTable.BOOLEAN_OPTIONS);
+        return table;
+    }
 }

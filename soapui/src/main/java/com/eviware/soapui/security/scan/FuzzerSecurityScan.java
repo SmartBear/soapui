@@ -36,161 +36,135 @@ import com.eviware.soapui.support.xml.XmlObjectTreeModel.XmlTreeNode;
 import com.eviware.x.impl.swing.JFormDialog;
 import org.apache.commons.lang.RandomStringUtils;
 
-public class FuzzerSecurityScan extends AbstractSecurityScanWithProperties
-{
+public class FuzzerSecurityScan extends AbstractSecurityScanWithProperties {
 
-	public static final String TYPE = "FuzzingScan";
-	public static final String NAME = "Fuzzing Scan";
-	public static final int DEFAULT_MINIMAL = 5;
-	public static final int DEFAULT_MAXIMAL = 15;
-	public static final int DEFAULT_NUMBER_OF_REQUESTS = 100;
-	private JFormDialog dialog;
-	private FuzzerScanConfig fuzzerScanConfig;
-	private Integer numberOfRequests;
-	private int minimal;
-	private int maximal;
+    public static final String TYPE = "FuzzingScan";
+    public static final String NAME = "Fuzzing Scan";
+    public static final int DEFAULT_MINIMAL = 5;
+    public static final int DEFAULT_MAXIMAL = 15;
+    public static final int DEFAULT_NUMBER_OF_REQUESTS = 100;
+    private JFormDialog dialog;
+    private FuzzerScanConfig fuzzerScanConfig;
+    private Integer numberOfRequests;
+    private int minimal;
+    private int maximal;
 
-	public FuzzerSecurityScan( TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon )
-	{
-		super( testStep, config, parent, icon );
-		if( config.getConfig() == null || !( config.getConfig() instanceof FuzzerScanConfig ) )
-		{
-			initConfig();
-		}
-		else
-		{
-			fuzzerScanConfig = ( FuzzerScanConfig )getConfig().getConfig();
-		}
+    public FuzzerSecurityScan(TestStep testStep, SecurityScanConfig config, ModelItem parent, String icon) {
+        super(testStep, config, parent, icon);
+        if (config.getConfig() == null || !(config.getConfig() instanceof FuzzerScanConfig)) {
+            initConfig();
+        } else {
+            fuzzerScanConfig = (FuzzerScanConfig) getConfig().getConfig();
+        }
 
-		getExecutionStrategy().setStrategy( StrategyTypeConfig.ALL_AT_ONCE );
-		getExecutionStrategy().setImmutable( true );
-	}
+        getExecutionStrategy().setStrategy(StrategyTypeConfig.ALL_AT_ONCE);
+        getExecutionStrategy().setImmutable(true);
+    }
 
-	private void initConfig()
-	{
-		getConfig().setConfig( FuzzerScanConfig.Factory.newInstance() );
-		fuzzerScanConfig = ( FuzzerScanConfig )getConfig().getConfig();
-		fuzzerScanConfig.setMinimal( DEFAULT_MINIMAL );
-		fuzzerScanConfig.setMaximal( DEFAULT_MAXIMAL );
-		fuzzerScanConfig.setNumberOfRequest( DEFAULT_NUMBER_OF_REQUESTS );
-	}
+    private void initConfig() {
+        getConfig().setConfig(FuzzerScanConfig.Factory.newInstance());
+        fuzzerScanConfig = (FuzzerScanConfig) getConfig().getConfig();
+        fuzzerScanConfig.setMinimal(DEFAULT_MINIMAL);
+        fuzzerScanConfig.setMaximal(DEFAULT_MAXIMAL);
+        fuzzerScanConfig.setNumberOfRequest(DEFAULT_NUMBER_OF_REQUESTS);
+    }
 
-	@Override
-	protected void execute( SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context )
-	{
-		StringToStringMap parameters = new StringToStringMap();
-		XmlObjectTreeModel model = null;
-		for( SecurityCheckedParameter scp : getParameterHolder().getParameterList() )
-		{
-			if( scp.isChecked() )
-			{
-				if( scp.getXpath().trim().length() > 0 )
-				{
-					model = SecurityScanUtil.getXmlObjectTreeModel( testStep, scp );
-					XmlTreeNode[] treeNodes = null;
-					treeNodes = model.selectTreeNodes( context.expand( scp.getXpath() ) );
-					if( treeNodes.length > 0 )
-					{
-						XmlTreeNode mynode = treeNodes[0];
-						String fuzzed = fuzzedValue();
-						mynode.setValue( 1, fuzzed );
-						parameters.put( scp.getLabel(), fuzzed );
-					}
-					updateRequestProperty( testStep, scp.getName(), model.getXmlObject().toString() );
+    @Override
+    protected void execute(SecurityTestRunner runner, TestStep testStep, SecurityTestRunContext context) {
+        StringToStringMap parameters = new StringToStringMap();
+        XmlObjectTreeModel model = null;
+        for (SecurityCheckedParameter scp : getParameterHolder().getParameterList()) {
+            if (scp.isChecked()) {
+                if (scp.getXpath().trim().length() > 0) {
+                    model = SecurityScanUtil.getXmlObjectTreeModel(testStep, scp);
+                    XmlTreeNode[] treeNodes = null;
+                    treeNodes = model.selectTreeNodes(context.expand(scp.getXpath()));
+                    if (treeNodes.length > 0) {
+                        XmlTreeNode mynode = treeNodes[0];
+                        String fuzzed = fuzzedValue();
+                        mynode.setValue(1, fuzzed);
+                        parameters.put(scp.getLabel(), fuzzed);
+                    }
+                    updateRequestProperty(testStep, scp.getName(), model.getXmlObject().toString());
 
-				}
-				else
-				{
-					String fuzzed = fuzzedValue();
-					parameters.put( scp.getLabel(), fuzzed );
-					updateRequestProperty( testStep, scp.getName(), fuzzed );
-				}
-			}
+                } else {
+                    String fuzzed = fuzzedValue();
+                    parameters.put(scp.getLabel(), fuzzed);
+                    updateRequestProperty(testStep, scp.getName(), fuzzed);
+                }
+            }
 
-			MessageExchange message = ( MessageExchange )testStep.run( ( TestCaseRunner )runner, context );
-			createMessageExchange( parameters, message, context );
-		}
-	}
+            MessageExchange message = (MessageExchange) testStep.run((TestCaseRunner) runner, context);
+            createMessageExchange(parameters, message, context);
+        }
+    }
 
-	private String fuzzedValue()
-	{
-		int count = ( int )( Math.random() * ( maximal + 1 - minimal ) ) + minimal;
-		return RandomStringUtils.randomAlphanumeric( count );
-	}
+    private String fuzzedValue() {
+        int count = (int) (Math.random() * (maximal + 1 - minimal)) + minimal;
+        return RandomStringUtils.randomAlphanumeric(count);
+    }
 
-	private void updateRequestProperty( TestStep testStep, String propertyName, String propertyValue )
-	{
-		testStep.getProperty( propertyName ).setValue( propertyValue );
+    private void updateRequestProperty(TestStep testStep, String propertyName, String propertyValue) {
+        testStep.getProperty(propertyName).setValue(propertyValue);
 
-	}
+    }
 
-	@Override
-	protected boolean hasNext( TestStep testStep2, SecurityTestRunContext context )
-	{
-		if( numberOfRequests == null )
-		{
-			numberOfRequests = fuzzerScanConfig.getNumberOfRequest();
-			minimal = fuzzerScanConfig.getMinimal();
-			maximal = fuzzerScanConfig.getMaximal();
-		}
+    @Override
+    protected boolean hasNext(TestStep testStep2, SecurityTestRunContext context) {
+        if (numberOfRequests == null) {
+            numberOfRequests = fuzzerScanConfig.getNumberOfRequest();
+            minimal = fuzzerScanConfig.getMinimal();
+            maximal = fuzzerScanConfig.getMaximal();
+        }
 
-		if( numberOfRequests > 0 )
-		{
-			numberOfRequests-- ;
-			return true;
-		}
-		else
-		{
-			numberOfRequests = null;
-			return false;
-		}
-	}
+        if (numberOfRequests > 0) {
+            numberOfRequests--;
+            return true;
+        } else {
+            numberOfRequests = null;
+            return false;
+        }
+    }
 
-	@Override
-	public JComponent getAdvancedSettingsPanel()
-	{
-		FuzzerScanAdvancedConfigPanel configPanel = new FuzzerScanAdvancedConfigPanel( fuzzerScanConfig );
-		dialog = configPanel.getDialog();
-		return dialog.getPanel();
-	}
+    @Override
+    public JComponent getAdvancedSettingsPanel() {
+        FuzzerScanAdvancedConfigPanel configPanel = new FuzzerScanAdvancedConfigPanel(fuzzerScanConfig);
+        dialog = configPanel.getDialog();
+        return dialog.getPanel();
+    }
 
-	@Override
-	public void release()
-	{
-		if( dialog != null )
-			dialog.release();
+    @Override
+    public void release() {
+        if (dialog != null) {
+            dialog.release();
+        }
 
-		super.release();
-	}
+        super.release();
+    }
 
-	@Override
-	public String getConfigDescription()
-	{
-		return "Configuration for Fuzzing Security Scan";
-	}
+    @Override
+    public String getConfigDescription() {
+        return "Configuration for Fuzzing Security Scan";
+    }
 
-	@Override
-	public String getConfigName()
-	{
-		return "Configuration for Fuzzing Security Scan";
-	}
+    @Override
+    public String getConfigName() {
+        return "Configuration for Fuzzing Security Scan";
+    }
 
-	@Override
-	public String getHelpURL()
-	{
-		// TODO: change to proper help url
-		return HelpUrls.SECURITY_SCANS_OVERVIEW;
-	}
+    @Override
+    public String getHelpURL() {
+        // TODO: change to proper help url
+        return HelpUrls.SECURITY_SCANS_OVERVIEW;
+    }
 
-	@Override
-	public String getType()
-	{
-		return TYPE;
-	}
-	
-	protected void clear()
-	{
-		numberOfRequests = null;
-	}
+    @Override
+    public String getType() {
+        return TYPE;
+    }
+
+    protected void clear() {
+        numberOfRequests = null;
+    }
 
 }

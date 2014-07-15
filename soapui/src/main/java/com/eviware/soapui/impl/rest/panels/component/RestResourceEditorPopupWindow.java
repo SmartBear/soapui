@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest.panels.component;
+*/
+package com.eviware.soapui.impl.rest.panels.component;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestResource;
@@ -45,238 +46,204 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
-* Popup window displayed by the RestResourceEditor class
-*/
-class RestResourceEditorPopupWindow extends JDialog
-{
+ * Popup window displayed by the RestResourceEditor class
+ */
+class RestResourceEditorPopupWindow extends JDialog {
 
-	private static final ImageIcon CONNECTOR_ICON = UISupport.createImageIcon( "/connector.png" );
+    private static final ImageIcon CONNECTOR_ICON = UISupport.createImageIcon("/connector.png");
 
-	// package protected fields to facilitate unit testing
-	JTextField basePathTextField;
+    // package protected fields to facilitate unit testing
+    JTextField basePathTextField;
 
-	List<RestSubResourceTextField> restSubResourceTextFields;
-	private RestResource targetResource;
-	private RestResource focusedResource;
-
-
-	RestResourceEditorPopupWindow( RestResource resource, RestResource focusedResource )
-	{
-		super( SoapUI.getFrame() );
-		this.targetResource = resource;
-		this.focusedResource = focusedResource;
-		setModal( true );
-		setResizable( false );
-		setMinimumSize( new Dimension( 230, 0 ) );
-
-		JPanel contentPane = new JPanel( new BorderLayout() );
-		setContentPane( contentPane );
+    List<RestSubResourceTextField> restSubResourceTextFields;
+    private RestResource targetResource;
+    private RestResource focusedResource;
 
 
-		JButton okButton = new JButton( new AbstractAction( "OK" )
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				if( basePathTextField != null )
-				{
-					targetResource.getInterface().setBasePath( basePathTextField.getText().trim() );
-				}
-				for( RestSubResourceTextField restSubResourceTextField : restSubResourceTextFields )
-				{
-					restSubResourceTextField.getRestResource().setPath( restSubResourceTextField.getTextField().getText().trim() );
-				}
-				RestResourceEditor.scanForTemplateParameters( targetResource );
-				dispose();
-			}
-		} );
+    RestResourceEditorPopupWindow(RestResource resource, RestResource focusedResource) {
+        super(SoapUI.getFrame());
+        this.targetResource = resource;
+        this.focusedResource = focusedResource;
+        setModal(true);
+        setResizable(false);
+        setMinimumSize(new Dimension(230, 0));
 
-		AbstractAction cancelAction = new AbstractAction( "Cancel" )
-		{
-			@Override
-			public void actionPerformed( ActionEvent e )
-			{
-				dispose();
-			}
-		};
-		JButton cancelButton = new JButton( cancelAction );
-		cancelButton.getInputMap( JComponent.WHEN_IN_FOCUSED_WINDOW ).put( KeyStroke.getKeyStroke( KeyEvent.VK_ESCAPE, 0 ), "cancel" );
-		cancelButton.getActionMap().put( "cancel", cancelAction );
+        JPanel contentPane = new JPanel(new BorderLayout());
+        setContentPane(contentPane);
 
-		JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar( okButton, cancelButton );
-		buttonBar.setLayout( new FlowLayout( FlowLayout.RIGHT ) );
-		contentPane.add( createResourceEditorPanel( focusedResource ), BorderLayout.CENTER );
-		contentPane.add( buttonBar, BorderLayout.SOUTH );
-		getRootPane().setDefaultButton( okButton );
 
-		pack();
-	}
+        JButton okButton = new JButton(new AbstractAction("OK") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (basePathTextField != null) {
+                    targetResource.getInterface().setBasePath(basePathTextField.getText().trim());
+                }
+                for (RestSubResourceTextField restSubResourceTextField : restSubResourceTextFields) {
+                    restSubResourceTextField.getRestResource().setPath(restSubResourceTextField.getTextField().getText().trim());
+                }
+                RestResourceEditor.scanForTemplateParameters(targetResource);
+                dispose();
+            }
+        });
 
-	private JPanel createResourceEditorPanel( RestResource focusedResource )
-	{
-		final JPanel panel = new JPanel( new BorderLayout() );
+        AbstractAction cancelAction = new AbstractAction("Cancel") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        };
+        JButton cancelButton = new JButton(cancelAction);
+        cancelButton.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "cancel");
+        cancelButton.getActionMap().put("cancel", cancelAction);
 
-		Box contentBox = Box.createVerticalBox();
+        JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(okButton, cancelButton);
+        buttonBar.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        contentPane.add(createResourceEditorPanel(focusedResource), BorderLayout.CENTER);
+        contentPane.add(buttonBar, BorderLayout.SOUTH);
+        getRootPane().setDefaultButton(okButton);
 
-		final JLabel changeWarningLabel = new JLabel( " " );
-		changeWarningLabel.setBorder( BorderFactory.createCompoundBorder(
-				contentBox.getBorder(),
-				BorderFactory.createEmptyBorder( 10, 0, 0, 0 ) ) );
-		addBasePathFieldIfApplicable( contentBox, changeWarningLabel );
-		addResourceFields( focusedResource, contentBox, changeWarningLabel );
+        pack();
+    }
 
-		panel.add( contentBox, BorderLayout.NORTH );
+    private JPanel createResourceEditorPanel(RestResource focusedResource) {
+        final JPanel panel = new JPanel(new BorderLayout());
 
-		panel.add( changeWarningLabel, BorderLayout.CENTER );
+        Box contentBox = Box.createVerticalBox();
 
-		panel.setBorder( BorderFactory.createCompoundBorder(
-				BorderFactory.createMatteBorder( 0, 0, 1, 0, Color.BLACK ),
-				BorderFactory.createEmptyBorder( 10, 10, 10, 10 ) ) );
+        final JLabel changeWarningLabel = new JLabel(" ");
+        changeWarningLabel.setBorder(BorderFactory.createCompoundBorder(
+                contentBox.getBorder(),
+                BorderFactory.createEmptyBorder(10, 0, 0, 0)));
+        addBasePathFieldIfApplicable(contentBox, changeWarningLabel);
+        addResourceFields(focusedResource, contentBox, changeWarningLabel);
 
-		return panel;
-	}
+        panel.add(contentBox, BorderLayout.NORTH);
 
-	private void addResourceFields( RestResource focusedResource, Box contentBox, JLabel changeWarningLabel )
-	{
-		restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
-		int rowIndex = contentBox.getComponents().length;
+        panel.add(changeWarningLabel, BorderLayout.CENTER);
 
-		for( RestResource restResource : RestUtils.extractAncestorsParentFirst( targetResource ) )
-		{
-			Box row = Box.createHorizontalBox();
-			row.setAlignmentX( 0 );
-			addConnectorIfApplicable( rowIndex, row );
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK),
+                BorderFactory.createEmptyBorder(10, 10, 10, 10)));
 
-			final RestSubResourceTextField restSubResourceTextField = new RestSubResourceTextField( restResource );
-			final JTextField innerTextField = restSubResourceTextField.getTextField();
+        return panel;
+    }
 
-			innerTextField.getDocument().addDocumentListener( new PathChangeListener( changeWarningLabel, restResource ) );
-			restSubResourceTextFields.add( restSubResourceTextField );
+    private void addResourceFields(RestResource focusedResource, Box contentBox, JLabel changeWarningLabel) {
+        restSubResourceTextFields = new ArrayList<RestSubResourceTextField>();
+        int rowIndex = contentBox.getComponents().length;
 
-			Box textFieldBox = createBoxWith( innerTextField );
-			row.add( textFieldBox );
+        for (RestResource restResource : RestUtils.extractAncestorsParentFirst(targetResource)) {
+            Box row = Box.createHorizontalBox();
+            row.setAlignmentX(0);
+            addConnectorIfApplicable(rowIndex, row);
 
-			contentBox.add( row );
-			if( restResource == focusedResource )
-			{
-				moveFocusToField( innerTextField );
-			}
+            final RestSubResourceTextField restSubResourceTextField = new RestSubResourceTextField(restResource);
+            final JTextField innerTextField = restSubResourceTextField.getTextField();
 
-			rowIndex++;
-		}
-	}
+            innerTextField.getDocument().addDocumentListener(new PathChangeListener(changeWarningLabel, restResource));
+            restSubResourceTextFields.add(restSubResourceTextField);
 
-	private void addConnectorIfApplicable( int rowIndex, Box row )
-	{
-		if( rowIndex > 1 )
-		{
-			row.add( Box.createHorizontalStrut( ( rowIndex - 1 ) * CONNECTOR_ICON.getIconWidth() ) );
-		}
-		if( rowIndex >= 1 )
-		{
-			row.add( new JLabel( CONNECTOR_ICON ) );
-		}
-	}
+            Box textFieldBox = createBoxWith(innerTextField);
+            row.add(textFieldBox);
 
-	private void moveFocusToField( final JTextField innerTextField )
-	{
-		SwingUtilities.invokeLater( new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				innerTextField.requestFocusInWindow();
-				innerTextField.selectAll();
-			}
-		} );
-	}
+            contentBox.add(row);
+            if (restResource == focusedResource) {
+                moveFocusToField(innerTextField);
+            }
 
-	private Box createBoxWith( JTextField innerTextField )
-	{
-		Box textFieldBox = Box.createVerticalBox();
-		textFieldBox.add( Box.createVerticalGlue() );
-		textFieldBox.add( innerTextField );
-		return textFieldBox;
-	}
+            rowIndex++;
+        }
+    }
 
-	class RestSubResourceTextField
-	{
-		private RestResource restResource;
-		private JTextField textField;
+    private void addConnectorIfApplicable(int rowIndex, Box row) {
+        if (rowIndex > 1) {
+            row.add(Box.createHorizontalStrut((rowIndex - 1) * CONNECTOR_ICON.getIconWidth()));
+        }
+        if (rowIndex >= 1) {
+            row.add(new JLabel(CONNECTOR_ICON));
+        }
+    }
 
-		private RestSubResourceTextField( RestResource restResource )
-		{
-			this.restResource = restResource;
-			textField = new JTextField( restResource.getPath() );
-			textField.setMaximumSize( new Dimension( 340, ( int )textField.getPreferredSize().getHeight() ) );
-			textField.setPreferredSize( new Dimension( 340, ( int )textField.getPreferredSize().getHeight() ) );
-		}
+    private void moveFocusToField(final JTextField innerTextField) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                innerTextField.requestFocusInWindow();
+                innerTextField.selectAll();
+            }
+        });
+    }
 
-		public JTextField getTextField()
-		{
-			return textField;
-		}
+    private Box createBoxWith(JTextField innerTextField) {
+        Box textFieldBox = Box.createVerticalBox();
+        textFieldBox.add(Box.createVerticalGlue());
+        textFieldBox.add(innerTextField);
+        return textFieldBox;
+    }
 
-		public RestResource getRestResource()
-		{
-			return restResource;
-		}
-	}
+    class RestSubResourceTextField {
+        private RestResource restResource;
+        private JTextField textField;
 
-	private void addBasePathFieldIfApplicable( Box contentBox, JLabel changeWarningLabel )
-	{
-		if( !StringUtils.isNullOrEmpty( targetResource.getInterface().getBasePath() ) )
-		{
-			basePathTextField = new JTextField( targetResource.getInterface().getBasePath() );
-			basePathTextField.getDocument().addDocumentListener( new PathChangeListener( changeWarningLabel,
-					targetResource.getTopLevelResource() ) );
-			basePathTextField.setMaximumSize( new Dimension( 340, ( int )basePathTextField.getPreferredSize().getHeight() ) );
-			Box row = Box.createHorizontalBox();
-			row.setAlignmentX( 0 );
-			row.add( createBoxWith( basePathTextField ) );
-			contentBox.add( row );
-			if (focusedResource == null)
-			{
-				moveFocusToField( basePathTextField );
-			}
-		}
-	}
+        private RestSubResourceTextField(RestResource restResource) {
+            this.restResource = restResource;
+            textField = new JTextField(restResource.getPath());
+            textField.setMaximumSize(new Dimension(340, (int) textField.getPreferredSize().getHeight()));
+            textField.setPreferredSize(new Dimension(340, (int) textField.getPreferredSize().getHeight()));
+        }
 
-	private class PathChangeListener extends DocumentListenerAdapter
-	{
-		private final JLabel changeWarningLabel;
-		private RestResource affectedRestResource;
+        public JTextField getTextField() {
+            return textField;
+        }
 
-		public PathChangeListener( JLabel changeWarningLabel, RestResource affectedRestResource )
-		{
-			this.changeWarningLabel = changeWarningLabel;
-			this.affectedRestResource = affectedRestResource;
-		}
+        public RestResource getRestResource() {
+            return restResource;
+        }
+    }
 
-		@Override
-		public void update( Document document )
-		{
-			int affectedRequestCount = getRequestCountForResource( affectedRestResource );
-			if( affectedRequestCount > 0 )
-			{
-				changeWarningLabel.setText( String.format( "<html>Changes will affect <b>%d</b> request%s</html>",
-						affectedRequestCount, affectedRequestCount > 1 ? "s" : "" ) );
-				changeWarningLabel.setVisible( true );
-			}
-			else
-			{
-				changeWarningLabel.setVisible( false );
-			}
-		}
+    private void addBasePathFieldIfApplicable(Box contentBox, JLabel changeWarningLabel) {
+        if (!StringUtils.isNullOrEmpty(targetResource.getInterface().getBasePath())) {
+            basePathTextField = new JTextField(targetResource.getInterface().getBasePath());
+            basePathTextField.getDocument().addDocumentListener(new PathChangeListener(changeWarningLabel,
+                    targetResource.getTopLevelResource()));
+            basePathTextField.setMaximumSize(new Dimension(340, (int) basePathTextField.getPreferredSize().getHeight()));
+            Box row = Box.createHorizontalBox();
+            row.setAlignmentX(0);
+            row.add(createBoxWith(basePathTextField));
+            contentBox.add(row);
+            if (focusedResource == null) {
+                moveFocusToField(basePathTextField);
+            }
+        }
+    }
 
-		private int getRequestCountForResource( RestResource affectedRestResource )
-		{
-			int affectedRequestCount = affectedRestResource.getRequestCount();
-			for( RestResource childResource : affectedRestResource.getAllChildResources() )
-			{
-				affectedRequestCount += childResource.getRequestCount();
-			}
-			return affectedRequestCount;
-		}
-	}
+    private class PathChangeListener extends DocumentListenerAdapter {
+        private final JLabel changeWarningLabel;
+        private RestResource affectedRestResource;
+
+        public PathChangeListener(JLabel changeWarningLabel, RestResource affectedRestResource) {
+            this.changeWarningLabel = changeWarningLabel;
+            this.affectedRestResource = affectedRestResource;
+        }
+
+        @Override
+        public void update(Document document) {
+            int affectedRequestCount = getRequestCountForResource(affectedRestResource);
+            if (affectedRequestCount > 0) {
+                changeWarningLabel.setText(String.format("<html>Changes will affect <b>%d</b> request%s</html>",
+                        affectedRequestCount, affectedRequestCount > 1 ? "s" : ""));
+                changeWarningLabel.setVisible(true);
+            } else {
+                changeWarningLabel.setVisible(false);
+            }
+        }
+
+        private int getRequestCountForResource(RestResource affectedRestResource) {
+            int affectedRequestCount = affectedRestResource.getRequestCount();
+            for (RestResource childResource : affectedRestResource.getAllChildResources()) {
+                affectedRequestCount += childResource.getRequestCount();
+            }
+            return affectedRequestCount;
+        }
+    }
 }

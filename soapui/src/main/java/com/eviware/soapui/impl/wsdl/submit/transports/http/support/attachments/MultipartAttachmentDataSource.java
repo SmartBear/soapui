@@ -29,46 +29,37 @@ import com.eviware.soapui.SoapUI;
 
 /**
  * DataSource for multipart attachments
- * 
+ *
  * @author ole.matzura
  */
 
-public class MultipartAttachmentDataSource implements DataSource
-{
-	private final MimeMultipart multipart;
+public class MultipartAttachmentDataSource implements DataSource {
+    private final MimeMultipart multipart;
 
-	public MultipartAttachmentDataSource( MimeMultipart multipart )
-	{
-		this.multipart = multipart;
-	}
+    public MultipartAttachmentDataSource(MimeMultipart multipart) {
+        this.multipart = multipart;
+    }
 
-	public String getContentType()
-	{
-		return multipart.getContentType();
-	}
+    public String getContentType() {
+        return multipart.getContentType();
+    }
 
-	public InputStream getInputStream() throws IOException
-	{
-		try
-		{
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			multipart.writeTo( out );
-			return new ByteArrayInputStream( out.toByteArray() );
-		}
-		catch( Exception e )
-		{
-			SoapUI.logError( e );
-			return null;
-		}
-	}
+    public InputStream getInputStream() throws IOException {
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            multipart.writeTo(out);
+            return new ByteArrayInputStream(out.toByteArray());
+        } catch (Exception e) {
+            SoapUI.logError(e);
+            return null;
+        }
+    }
 
-	public String getName()
-	{
-		return multipart.toString();
-	}
+    public String getName() {
+        return multipart.toString();
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return null;
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return null;
+    }
 }

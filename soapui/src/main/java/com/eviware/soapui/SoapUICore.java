@@ -16,8 +16,6 @@
 
 package com.eviware.soapui;
 
-import java.io.File;
-
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
@@ -25,25 +23,27 @@ import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.SoapUIListenerRegistry;
 
-public interface SoapUICore
-{
-	public final static String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
+import java.io.File;
 
-	public Settings getSettings();
+public interface SoapUICore {
+    public final static String DEFAULT_SETTINGS_FILE = "soapui-settings.xml";
 
-	public MockEngine getMockEngine();
+    public Settings getSettings();
 
-	public SoapUIListenerRegistry getListenerRegistry();
+    public MockEngine getMockEngine();
 
-	public SoapUIActionRegistry getActionRegistry();
+    public SoapUIListenerRegistry getListenerRegistry();
 
-	public SoapUIFactoryRegistry getFactoryRegistry();
+    public SoapUIActionRegistry getActionRegistry();
 
-	public String saveSettings() throws Exception;
+    public SoapUIFactoryRegistry getFactoryRegistry();
 
-	public Settings importSettings( File file ) throws Exception;
+    public String saveSettings() throws Exception;
 
-	public SoapUIExtensionClassLoader getExtensionClassLoader();
+    public Settings importSettings(File file) throws Exception;
 
-	public SecurityScanRegistry getSecurityScanRegistry();
+    public SoapUIExtensionClassLoader getExtensionClassLoader();
+
+    public SecurityScanRegistry getSecurityScanRegistry();
+
 }

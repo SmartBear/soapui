@@ -26,45 +26,38 @@ import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.StringUtils;
 
-public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTransport
-{
+public class HermesJmsRequestSubscribeTransport extends HermesJmsRequestTransport {
 
-	public Response execute( SubmitContext submitContext, Request request, long timeStarted ) throws Exception
-	{
-		Session topicSession = null;
-		TopicSubscriber topicDurableSubsriber = null;
-		JMSConnectionHolder jmsConnectionHolder = null;
-		try
-		{
-			init( submitContext, request );
-			String clientIDString = StringUtils.hasContent( clientID ) ? clientID : jmsEndpoint.getSessionName() + "-"
-					+ jmsEndpoint.getReceive();
-			jmsConnectionHolder = new JMSConnectionHolder( jmsEndpoint, hermes, true, clientIDString, username, password );
+    public Response execute(SubmitContext submitContext, Request request, long timeStarted) throws Exception {
+        Session topicSession = null;
+        TopicSubscriber topicDurableSubsriber = null;
+        JMSConnectionHolder jmsConnectionHolder = null;
+        try {
+            init(submitContext, request);
+            String clientIDString = StringUtils.hasContent(clientID) ? clientID : jmsEndpoint.getSessionName() + "-"
+                    + jmsEndpoint.getReceive();
+            jmsConnectionHolder = new JMSConnectionHolder(jmsEndpoint, hermes, true, clientIDString, username, password);
 
-			// session
-			topicSession = jmsConnectionHolder.getSession();
-			// destination
-			topicDurableSubsriber = createDurableSubscription( submitContext, topicSession, jmsConnectionHolder );
+            // session
+            topicSession = jmsConnectionHolder.getSession();
+            // destination
+            topicDurableSubsriber = createDurableSubscription(submitContext, topicSession, jmsConnectionHolder);
 
-			return makeResponse( submitContext, request, timeStarted, null, topicDurableSubsriber );
-		}
-		catch( JMSException jmse )
-		{
-			return errorResponse( submitContext, request, timeStarted, jmse );
-		}
-		catch( Throwable t )
-		{
-			SoapUI.logError( t );
-		}
-		finally
-		{
-			if( topicDurableSubsriber != null )
-				topicDurableSubsriber.close();
-			if( jmsConnectionHolder != null )
-				jmsConnectionHolder.closeAll();
-			closeSessionAndConnection( jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
-					topicSession );
-		}
-		return null;
-	}
+            return makeResponse(submitContext, request, timeStarted, null, topicDurableSubsriber);
+        } catch (JMSException jmse) {
+            return errorResponse(submitContext, request, timeStarted, jmse);
+        } catch (Throwable t) {
+            SoapUI.logError(t);
+        } finally {
+            if (topicDurableSubsriber != null) {
+                topicDurableSubsriber.close();
+            }
+            if (jmsConnectionHolder != null) {
+                jmsConnectionHolder.closeAll();
+            }
+            closeSessionAndConnection(jmsConnectionHolder != null ? jmsConnectionHolder.getConnection() : null,
+                    topicSession);
+        }
+        return null;
+    }
 }

@@ -49,261 +49,221 @@ import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceAction
 import static com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder.ParameterStyle;
 
 public abstract class AbstractRestRequestDesktopPanel<T extends ModelItem, T2 extends RestRequestInterface> extends
-		AbstractHttpXmlRequestDesktopPanel<T, T2>
-{
-	protected static final int STANDARD_TOOLBAR_HEIGHT = 45;
+        AbstractHttpXmlRequestDesktopPanel<T, T2> {
+    protected static final int STANDARD_TOOLBAR_HEIGHT = 45;
 
-	private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
-	private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
+    private InternalTestPropertyListener testPropertyListener = new InternalTestPropertyListener();
+    private RestParamPropertyChangeListener restParamPropertyChangeListener = new RestParamPropertyChangeListener();
 
-	public AbstractRestRequestDesktopPanel( T modelItem, T2 requestItem )
-	{
-		super( modelItem, requestItem );
+    public AbstractRestRequestDesktopPanel(T modelItem, T2 requestItem) {
+        super(modelItem, requestItem);
 
-		addPropertyChangeListenerToResource( requestItem );
+        addPropertyChangeListenerToResource(requestItem);
 
-		requestItem.addTestPropertyListener( testPropertyListener );
-		requestItem.getOperation().getInterface().addPropertyChangeListener( new EndpointChangeListener() );
+        requestItem.addTestPropertyListener(testPropertyListener);
+        requestItem.getOperation().getInterface().addPropertyChangeListener(new EndpointChangeListener());
 
-		for( TestProperty param : requestItem.getParams().getProperties().values() )
-		{
-			( ( RestParamProperty )param ).addPropertyChangeListener( restParamPropertyChangeListener );
-		}
+        for (TestProperty param : requestItem.getParams().getProperties().values()) {
+            ((RestParamProperty) param).addPropertyChangeListener(restParamPropertyChangeListener);
+        }
 
-	}
+    }
 
-	private void addPropertyChangeListenerToResource( T2 requestItem )
-	{
-		if( requestItem.getResource() != null )
-		{
-			requestItem.getResource().addPropertyChangeListener( this );
-			requestItem.getResource().addTestPropertyListener( testPropertyListener );
-		}
-	}
+    private void addPropertyChangeListenerToResource(T2 requestItem) {
+        if (requestItem.getResource() != null) {
+            requestItem.getResource().addPropertyChangeListener(this);
+            requestItem.getResource().addTestPropertyListener(testPropertyListener);
+        }
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		super.propertyChange( evt );
-		updateUiValues();
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        super.propertyChange(evt);
+        updateUiValues();
+    }
 
 
-	@Override
-	protected Submit doSubmit() throws SubmitException
-	{
-		return getRequest().submit( new WsdlSubmitContext( getModelItem() ), true );
-	}
+    @Override
+    protected Submit doSubmit() throws SubmitException {
+        return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
+    }
 
-	@Override
-	protected String getHelpUrl()
-	{
-		return null;
-	}
+    @Override
+    protected String getHelpUrl() {
+        return null;
+    }
 
-	@Override
-	protected JComponent buildToolbar()
-	{
-		if( getRequest().getResource() != null )
-		{
-			JPanel panel = new JPanel( new BorderLayout() );
+    @Override
+    protected JComponent buildToolbar() {
+        if (getRequest().getResource() != null) {
+            JPanel panel = new JPanel(new BorderLayout());
 
-			JXToolBar topToolBar = UISupport.createToolbar();
+            JXToolBar topToolBar = UISupport.createToolbar();
 
-			JComponent submitButton = super.getSubmitButton();
-			topToolBar.add( submitButton );
-			topToolBar.add( getCancelButton() );
+            JComponent submitButton = super.getSubmitButton();
+            topToolBar.add(submitButton);
+            topToolBar.add(getCancelButton());
 
-			// insertButtons injects different buttons for different editors. It is overridden in other subclasses
-			insertButtons( topToolBar );
+            // insertButtons injects different buttons for different editors. It is overridden in other subclasses
+            insertButtons(topToolBar);
 
-			JPanel endpointPanel = new JPanel( new BorderLayout() );
-			endpointPanel.setMinimumSize( new Dimension( 75, STANDARD_TOOLBAR_HEIGHT ) );
+            JPanel endpointPanel = new JPanel(new BorderLayout());
+            endpointPanel.setMinimumSize(new Dimension(75, STANDARD_TOOLBAR_HEIGHT));
 
-			JPanel comboBoxPanel = buildEndpointPanel();
+            JPanel comboBoxPanel = buildEndpointPanel();
 
-			JLabel endPointLabel = new JLabel( "Endpoint" );
+            JLabel endPointLabel = new JLabel("Endpoint");
 
-			endpointPanel.add( endPointLabel, BorderLayout.NORTH );
-			endpointPanel.add( comboBoxPanel, BorderLayout.SOUTH );
+            endpointPanel.add(endPointLabel, BorderLayout.NORTH);
+            endpointPanel.add(comboBoxPanel, BorderLayout.SOUTH);
 
-			topToolBar.add( Box.createHorizontalStrut( 4 ) );
-			topToolBar.addWithOnlyMinimumHeight( endpointPanel );
-			topToolBar.add( Box.createHorizontalStrut( 4 ) );
+            topToolBar.add(Box.createHorizontalStrut(4));
+            topToolBar.addWithOnlyMinimumHeight(endpointPanel);
+            topToolBar.add(Box.createHorizontalStrut(4));
 
-			//Hook for subclasses
-			addTopToolbarComponents( topToolBar );
+            //Hook for subclasses
+            addTopToolbarComponents(topToolBar);
 
-			topToolBar.add( Box.createHorizontalGlue() );
-			topToolBar.add( getTabsButton() );
-			topToolBar.add( getSplitButton() );
-			topToolBar.add( UISupport.createToolbarButton( new ShowOnlineHelpAction( getHelpUrl() ) ) );
-			int maximumPreferredHeight = findMaximumPreferredHeight( topToolBar ) + 6;
-			topToolBar.setPreferredSize( new Dimension( 600, Math.max( maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT ) ) );
+            topToolBar.add(Box.createHorizontalGlue());
+            topToolBar.add(getTabsButton());
+            topToolBar.add(getSplitButton());
+            topToolBar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(getHelpUrl())));
+            int maximumPreferredHeight = findMaximumPreferredHeight(topToolBar) + 6;
+            topToolBar.setPreferredSize(new Dimension(600, Math.max(maximumPreferredHeight, STANDARD_TOOLBAR_HEIGHT)));
 
-			panel.add( topToolBar, BorderLayout.NORTH );
+            panel.add(topToolBar, BorderLayout.NORTH);
 
-			//Hook for subclasses
-			addBottomToolbar( panel );
+            //Hook for subclasses
+            addBottomToolbar(panel);
 
-			return panel;
-		}
-		else
-		{
-			return super.buildToolbar();
-		}
-	}
+            return panel;
+        } else {
+            return super.buildToolbar();
+        }
+    }
 
-	protected int findMaximumPreferredHeight( Container parent )
-	{
-		int maximum = 0;
-		for( Component component : parent.getComponents() )
-		{
-			int componentPreferredHeight = component == null || component.getPreferredSize() == null ? 0 : component.getPreferredSize().height;
-			maximum = Math.max( maximum, componentPreferredHeight );
-		}
+    protected int findMaximumPreferredHeight(Container parent) {
+        int maximum = 0;
+        for (Component component : parent.getComponents()) {
+            int componentPreferredHeight = component == null || component.getPreferredSize() == null ? 0 : component.getPreferredSize().height;
+            maximum = Math.max(maximum, componentPreferredHeight);
+        }
 
-		return maximum;
-	}
+        return maximum;
+    }
 
 
-	//Hooks for subclasses
-	protected abstract void addTopToolbarComponents( JXToolBar toolBar );
+    //Hooks for subclasses
+    protected abstract void addTopToolbarComponents(JXToolBar toolBar);
 
-	protected abstract void addBottomToolbar( JPanel panel );
+    protected abstract void addBottomToolbar(JPanel panel);
 
-	protected abstract void updateUiValues();
+    protected abstract void updateUiValues();
 
-	protected boolean release()
-	{
-		if( getRequest().getResource() != null )
-		{
-			getRequest().getResource().removePropertyChangeListener( this );
-		}
+    protected boolean release() {
+        if (getRequest().getResource() != null) {
+            getRequest().getResource().removePropertyChangeListener(this);
+        }
 
-		getRequest().removeTestPropertyListener( testPropertyListener );
+        getRequest().removeTestPropertyListener(testPropertyListener);
 
-		for( TestProperty param : getRequest().getParams().getProperties().values() )
-		{
-			( ( RestParamProperty )param ).removePropertyChangeListener( restParamPropertyChangeListener );
-		}
+        for (TestProperty param : getRequest().getParams().getProperties().values()) {
+            ((RestParamProperty) param).removePropertyChangeListener(restParamPropertyChangeListener);
+        }
 
-		return super.release();
-	}
+        return super.release();
+    }
 
 
-	private class InternalTestPropertyListener extends TestPropertyListenerAdapter
-	{
-		@Override
-		public void propertyValueChanged( String name, String oldValue, String newValue )
-		{
-			updateUiValues();
-		}
+    private class InternalTestPropertyListener extends TestPropertyListenerAdapter {
+        @Override
+        public void propertyValueChanged(String name, String oldValue, String newValue) {
+            updateUiValues();
+        }
 
-		@Override
-		public void propertyAdded( String name )
-		{
-			updateUiValues();
-			RestParamProperty property = getRequest().getParams().getProperty( name );
-			property.addPropertyChangeListener( restParamPropertyChangeListener );
-		}
+        @Override
+        public void propertyAdded(String name) {
+            updateUiValues();
+            RestParamProperty property = getRequest().getParams().getProperty(name);
+            property.addPropertyChangeListener(restParamPropertyChangeListener);
+        }
 
-		@Override
-		public void propertyRemoved( String name )
-		{
-			updateUiValues();
-		}
+        @Override
+        public void propertyRemoved(String name) {
+            updateUiValues();
+        }
 
-		@Override
-		public void propertyRenamed( String oldName, String newName )
-		{
-			updateUiValues();
-		}
-	}
+        @Override
+        public void propertyRenamed(String oldName, String newName) {
+            updateUiValues();
+        }
+    }
 
 
-	private class RestParamPropertyChangeListener implements PropertyChangeListener
-	{
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			try
-			{
-				if( evt.getPropertyName().equals( XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE ) )
-				{
-					RestParamProperty source = ( RestParamProperty )evt.getSource();
-					( ( AbstractModelItem )source.getModelItem() ).notifyPropertyChanged( evt.getPropertyName(),
-							evt.getOldValue(), evt.getNewValue() );
-				}
-			}
-			catch( XmlValueDisconnectedException exception )
-			{
-				//Do nothing, it must have been removed by another request editor instance under the same resource/method
-			}
-			updateUiValues();
-		}
+    private class RestParamPropertyChangeListener implements PropertyChangeListener {
+        public void propertyChange(PropertyChangeEvent evt) {
+            try {
+                if (evt.getPropertyName().equals(XmlBeansRestParamsTestPropertyHolder.PROPERTY_STYLE)) {
+                    RestParamProperty source = (RestParamProperty) evt.getSource();
+                    ((AbstractModelItem) source.getModelItem()).notifyPropertyChanged(evt.getPropertyName(),
+                            evt.getOldValue(), evt.getNewValue());
+                }
+            } catch (XmlValueDisconnectedException exception) {
+                //Do nothing, it must have been removed by another request editor instance under the same resource/method
+            }
+            updateUiValues();
+        }
 
-	}
+    }
 
-	private void addPropertyToLevel( String name, String value, ParameterStyle style, ParamLocation location,
-												String requestLevelValue )
-	{
-		RestParamsPropertyHolder paramsPropertyHolder = null;
-		switch( location )
-		{
-			case METHOD:
-				paramsPropertyHolder = getRequest().getRestMethod().getParams();
-				break;
-			case RESOURCE:
-				paramsPropertyHolder = getRequest().getResource().getParams();
-				break;
-			//case REQUEST:     TODO: uncomment when we support request level parameters
-			//	paramsPropertyHolder = getRequest().getParams();
-			//	break;
-		}
+    private void addPropertyToLevel(String name, String value, ParameterStyle style, ParamLocation location,
+                                    String requestLevelValue) {
+        RestParamsPropertyHolder paramsPropertyHolder = null;
+        switch (location) {
+            case METHOD:
+                paramsPropertyHolder = getRequest().getRestMethod().getParams();
+                break;
+            case RESOURCE:
+                paramsPropertyHolder = getRequest().getResource().getParams();
+                break;
+        }
 
-		if( paramsPropertyHolder != null )
-		{
-			paramsPropertyHolder.addProperty( name );
-			RestParamProperty addedParameter = paramsPropertyHolder.getProperty( name );
-			addedParameter.addPropertyChangeListener( restParamPropertyChangeListener );
-			addedParameter.setValue( value );
-			addedParameter.setDefaultValue( value );
-			addedParameter.setStyle( style );
-			//Override the request level value as well
-			getRequest().getParams().getProperty( name ).setValue( requestLevelValue );
-		}
-		addPropertyChangeListenerToResource( getRequest() );
-	}
+        if (paramsPropertyHolder != null) {
+            paramsPropertyHolder.addProperty(name);
+            RestParamProperty addedParameter = paramsPropertyHolder.getProperty(name);
+            addedParameter.addPropertyChangeListener(restParamPropertyChangeListener);
+            addedParameter.setValue(value);
+            addedParameter.setDefaultValue(value);
+            addedParameter.setStyle(style);
+            //Override the request level value as well
+            getRequest().getParams().getProperty(name).setValue(requestLevelValue);
+        }
+        addPropertyChangeListenerToResource(getRequest());
+    }
 
-	private void removePropertyFromLevel( String propertytName, ParamLocation location )
-	{
-		switch( location )
-		{
-			case METHOD:
-				getRequest().getRestMethod().removeProperty( propertytName );
-				break;
-			case RESOURCE:
-				getRequest().getResource().removeProperty( propertytName );
-				break;
-		}
+    private void removePropertyFromLevel(String propertytName, ParamLocation location) {
+        switch (location) {
+            case METHOD:
+                getRequest().getRestMethod().removeProperty(propertytName);
+                break;
+            case RESOURCE:
+                getRequest().getResource().removeProperty(propertytName);
+                break;
+        }
 
-	}
+    }
 
 
-	private class EndpointChangeListener implements PropertyChangeListener
-	{
+    private class EndpointChangeListener implements PropertyChangeListener {
 
 
-		@Override
-		public void propertyChange( PropertyChangeEvent evt )
-		{
-			if( evt.getPropertyName().equals( Interface.ENDPOINT_PROPERTY ) )
-			{
-				Object currentEndpoint = getEndpointsModel().getSelectedItem();
-				if( currentEndpoint != null && currentEndpoint.equals( evt.getOldValue() ) )
-				{
-					getEndpointsModel().setSelectedItem( evt.getNewValue() );
-				}
-			}
-		}
-	}
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if (evt.getPropertyName().equals(Interface.ENDPOINT_PROPERTY)) {
+                Object currentEndpoint = getEndpointsModel().getSelectedItem();
+                if (currentEndpoint != null && currentEndpoint.equals(evt.getOldValue())) {
+                    getEndpointsModel().setSelectedItem(evt.getNewValue());
+                }
+            }
+        }
+    }
 }

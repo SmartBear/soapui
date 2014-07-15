@@ -23,49 +23,41 @@ import javax.swing.JTextArea;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.x.form.XFormTextField;
 
-public class JMultilineLabelTextField extends AbstractSwingXFormField<JComponent> implements XFormTextField
-{
-	private JScrollPane scrollPane;
+public class JMultilineLabelTextField extends AbstractSwingXFormField<JComponent> implements XFormTextField {
+    private JScrollPane scrollPane;
 
-	public JMultilineLabelTextField()
-	{
-		super( new JTextArea() );
+    public JMultilineLabelTextField() {
+        super(new JTextArea());
 
-		getTextArea().setEditable( false );
-		getTextArea().setEnabled( false );
+        getTextArea().setEditable(false);
+        getTextArea().setEnabled(false);
 
-		scrollPane = new JScrollPane( getTextArea() );
-		UISupport.setFixedSize( scrollPane, 300, 100 );
-	}
+        scrollPane = new JScrollPane(getTextArea());
+        UISupport.setFixedSize(scrollPane, 300, 100);
+    }
 
-	public JTextArea getTextArea()
-	{
-		return ( JTextArea )super.getComponent();
-	}
+    public JTextArea getTextArea() {
+        return (JTextArea) super.getComponent();
+    }
 
-	public JComponent getComponent()
-	{
-		return scrollPane;
-	}
+    public JComponent getComponent() {
+        return scrollPane;
+    }
 
-	public void setValue( String value )
-	{
-		getTextArea().setText( value );
-	}
+    public void setValue(String value) {
+        getTextArea().setText(value);
+    }
 
-	public String getValue()
-	{
-		return getTextArea().getText();
-	}
+    public String getValue() {
+        return getTextArea().getText();
+    }
 
-	public void setWidth( int columns )
-	{
-		getTextArea().setColumns( columns );
-	}
+    public void setWidth(int columns) {
+        getTextArea().setColumns(columns);
+    }
 
-	@Override
-	public boolean isMultiRow()
-	{
-		return true;
-	}
+    @Override
+    public boolean isMultiRow() {
+        return true;
+    }
 }

@@ -31,63 +31,53 @@ import com.eviware.soapui.support.Tools;
 
 /**
  * TreeCellRenderer for SoapUITreeNodes
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SoapUITreeNodeRenderer extends DefaultTreeCellRenderer
-{
-	public Component getTreeCellRendererComponent( JTree tree, Object value, boolean sel, boolean expanded,
-			boolean leaf, int row, boolean hasFocus )
-	{
-		ModelItem modelItem = ( ( SoapUITreeNode )value ).getModelItem();
-		if( modelItem instanceof Project )
-		{
-			Project project = ( Project )modelItem;
-			if( !project.isOpen() && !project.isDisabled() )
-			{
-				leaf = false;
-				expanded = false;
-			}
-		}
+public class SoapUITreeNodeRenderer extends DefaultTreeCellRenderer {
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+                                                  boolean leaf, int row, boolean hasFocus) {
+        ModelItem modelItem = ((SoapUITreeNode) value).getModelItem();
+        if (modelItem instanceof Project) {
+            Project project = (Project) modelItem;
+            if (!project.isOpen() && !project.isDisabled()) {
+                leaf = false;
+                expanded = false;
+            }
+        }
 
-		super.getTreeCellRendererComponent( tree, value, sel, expanded, leaf, row, hasFocus );
+        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
 
-		ImageIcon icon = modelItem.getIcon();
-		setIcon( icon );
+        ImageIcon icon = modelItem.getIcon();
+        setIcon(icon);
 
-		if( modelItem instanceof TestStep && ( ( TestStep )modelItem ).isDisabled() )
-		{
-			setEnabled( false );
-		}
-		else if( modelItem instanceof TestCase && ( ( TestCase )modelItem ).isDisabled() )
-		{
-			setEnabled( false );
-		}
-		else if( modelItem instanceof TestSuite && ( ( TestSuite )modelItem ).isDisabled() )
-		{
-			setEnabled( false );
-		}
-		else
-		{
-			setEnabled( true );
-		}
+        if (modelItem instanceof TestStep && ((TestStep) modelItem).isDisabled()) {
+            setEnabled(false);
+        } else if (modelItem instanceof TestCase && ((TestCase) modelItem).isDisabled()) {
+            setEnabled(false);
+        } else if (modelItem instanceof TestSuite && ((TestSuite) modelItem).isDisabled()) {
+            setEnabled(false);
+        } else {
+            setEnabled(true);
+        }
 
-		String toolTipText = tree.getToolTipText();
-		if( toolTipText == null )
-		{
-			String description = modelItem.getDescription();
-			if( description == null || description.trim().length() == 0 )
-				description = modelItem.getName();
+        String toolTipText = tree.getToolTipText();
+        if (toolTipText == null) {
+            String description = modelItem.getDescription();
+            if (description == null || description.trim().length() == 0) {
+                description = modelItem.getName();
+            }
 
-			if( description != null && description.trim().indexOf( '\n' ) > 0 )
-				description = Tools.convertToHtml( description );
+            if (description != null && description.trim().indexOf('\n') > 0) {
+                description = Tools.convertToHtml(description);
+            }
 
-			setToolTipText( description );
-		}
-		else
-			setToolTipText( toolTipText.length() > 0 ? toolTipText : null );
+            setToolTipText(description);
+        } else {
+            setToolTipText(toolTipText.length() > 0 ? toolTipText : null);
+        }
 
-		return this;
-	}
+        return this;
+    }
 }

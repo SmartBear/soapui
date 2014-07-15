@@ -19,46 +19,38 @@ package com.eviware.soapui.support.dnd.handlers;
 import com.eviware.soapui.model.ModelItem;
 
 public abstract class AbstractBeforeAfterModelItemDropHandler<T1 extends ModelItem, T2 extends ModelItem> extends
-		AbstractModelItemDropHandler<T1, T2>
-{
-	protected AbstractBeforeAfterModelItemDropHandler( Class<T1> sourceClass, Class<T2> targetClass )
-	{
-		super( sourceClass, targetClass );
-	}
+        AbstractModelItemDropHandler<T1, T2> {
+    protected AbstractBeforeAfterModelItemDropHandler(Class<T1> sourceClass, Class<T2> targetClass) {
+        super(sourceClass, targetClass);
+    }
 
-	@Override
-	boolean canCopyOn( T1 source, T2 target )
-	{
-		return false;
-	}
+    @Override
+    boolean canCopyOn(T1 source, T2 target) {
+        return false;
+    }
 
-	@Override
-	boolean canMoveOn( T1 source, T2 target )
-	{
-		return false;
-	}
+    @Override
+    boolean canMoveOn(T1 source, T2 target) {
+        return false;
+    }
 
-	@Override
-	boolean copyOn( T1 source, T2 target )
-	{
-		return false;
-	}
+    @Override
+    boolean copyOn(T1 source, T2 target) {
+        return false;
+    }
 
-	@Override
-	String getCopyOnInfo( T1 source, T2 target )
-	{
-		return null;
-	}
+    @Override
+    String getCopyOnInfo(T1 source, T2 target) {
+        return null;
+    }
 
-	@Override
-	String getMoveOnInfo( T1 source, T2 target )
-	{
-		return null;
-	}
+    @Override
+    String getMoveOnInfo(T1 source, T2 target) {
+        return null;
+    }
 
-	@Override
-	boolean moveOn( T1 source, T2 target )
-	{
-		return false;
-	}
+    @Override
+    boolean moveOn(T1 source, T2 target) {
+        return false;
+    }
 }

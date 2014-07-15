@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- TODO Go through the list of dependencies and remove unused -->
-<!-- TODO Check if there is some artifacts witht he wrong group and artifacts id that is in maven central and could be removed from eviware public repo -->
+<!-- TODO Check if there is some artifacts with the wrong group and artifacts id that is in maven central and could be removed from eviware public repo -->
 <!-- TODO Check the xorg.apache jar -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>5.0.1</version>
+        <version>5.1.0</version>
     </parent>
 
     <artifactId>soapui</artifactId>
@@ -25,10 +25,6 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
-                <excludes>
-                    <!-- TODO Not sure if this is needed -->
-                    <exclude>src/main/resources/com/eviware/soapui/resources/conf/soapui-log4j.xml</exclude>
-                </excludes>
             </resource>
         </resources>
 
@@ -114,7 +110,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
+            <version>4.11</version>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -203,6 +199,19 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
             <version>1.1.1</version>
+        </dependency>
+
+        <!-- In-app analytics -->
+        <dependency>
+            <groupId>com.smartbear.utils.analytics</groupId>
+            <artifactId>analytics-core</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.smartbear.utils.analytics</groupId>
+            <artifactId>out-app-analytics-provider</artifactId>
+            <version>5.1.0</version>
         </dependency>
 
         <!-- JGoodies -->
@@ -518,11 +527,6 @@
             <version>1.142</version>
         </dependency>
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-            <version>1.6.2</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.ws.commons.util</groupId>
             <artifactId>ws-commons-util</artifactId>
             <version>1.0.2</version>
@@ -532,7 +536,11 @@
             <artifactId>proxy-vole</artifactId>
             <version>20131209</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path</artifactId>
+            <version>0.9.1</version>
+        </dependency>
 
         <!--  old http client needed by some 3rd party components -->
 

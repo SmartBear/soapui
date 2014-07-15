@@ -23,39 +23,38 @@ import javax.swing.Action;
 
 /**
  * A simple list of actions
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface ActionList
-{
-	public int getActionCount();
+public interface ActionList {
+    public int getActionCount();
 
-	public Action getActionAt( int index );
+    public Action getActionAt(int index);
 
-	public Action getDefaultAction();
+    public Action getDefaultAction();
 
-	public boolean hasDefaultAction();
+    public boolean hasDefaultAction();
 
-	public void performDefaultAction( ActionEvent event );
+    public void performDefaultAction(ActionEvent event);
 
-	public void addAction( Action action );
+    public void addAction(Action action);
 
-	public void addSeparator();
+    public void addSeparator();
 
-	public void insertAction( Action action, int index );
+    public void insertAction(Action action, int index);
 
-	public void insertSeparator( int index );
+    public void insertSeparator(int index);
 
-	public String getLabel();
+    public String getLabel();
 
-	public void clear();
+    public void clear();
 
-	public void dispatchKeyEvent( KeyEvent e );
+    public void dispatchKeyEvent(KeyEvent e);
 
-	public void addActions( ActionList defaultActions );
+    public void addActions(ActionList defaultActions);
 
-	public void setDefaultAction( Action action );
+    public void setDefaultAction(Action action);
 
-	public void removeAction( int index );
+    public void removeAction(int index);
 }

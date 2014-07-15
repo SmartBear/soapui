@@ -23,28 +23,23 @@ import com.eviware.soapui.SoapUI;
 
 /**
  * Log4j appender thats appends to SoapUI log panel
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SoapUIAppender extends AppenderSkeleton
-{
-	public SoapUIAppender()
-	{
-	}
+public class SoapUIAppender extends AppenderSkeleton {
+    public SoapUIAppender() {
+    }
 
-	protected void append( LoggingEvent event )
-	{
-		SoapUI.log( event );
-	}
+    protected void append(LoggingEvent event) {
+        SoapUI.log(event);
+    }
 
-	public void close()
-	{
-	}
+    public void close() {
+    }
 
-	public boolean requiresLayout()
-	{
-		return false;
-	}
+    public boolean requiresLayout() {
+        return false;
+    }
 
 }

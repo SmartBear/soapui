@@ -16,154 +16,229 @@
 
 package com.eviware.soapui.impl.wsdl.submit;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.filters.*;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpClientRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.HermesJmsRequestTransport;
 import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Registry of available transports, currently hard-coded but should be
  * configurable in the future.
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class RequestTransportRegistry
-{
-	public static final String HTTP = "http";
-	public static final String HTTPS = "https";
-	public static final String JMS = "jms";
+public class RequestTransportRegistry {
+    public static final String HTTP = "http";
+    public static final String HTTPS = "https";
+    public static final String JMS = "jms";
 
-	private static Map<String, RequestTransport> transports = new HashMap<String, RequestTransport>();
+    private static Map<String, RequestTransport> transports = new HashMap<String, RequestTransport>();
+    private static Map<String, List<RequestFilter>> addedCustomRequestFilters = new HashMap<String, List<RequestFilter>>();
 
-	static
-	{
-		HttpClientRequestTransport httpTransport = new HttpClientRequestTransport();
-		HermesJmsRequestTransport jmsTransport = new HermesJmsRequestTransport();
+    private static WsdlPackagingRequestFilter wsdlPackagingRequestFilter;
 
-		List<RequestFilterFactory> filterFactories = SoapUI.getFactoryRegistry()
-				.getFactories( RequestFilterFactory.class );
+    static {
+        HttpClientRequestTransport httpTransport = new HttpClientRequestTransport();
+        HermesJmsRequestTransport jmsTransport = new HermesJmsRequestTransport();
 
-		httpTransport.addRequestFilter( new EndpointRequestFilter() );
-		httpTransport.addRequestFilter( new HttpSettingsRequestFilter() );
-		httpTransport.addRequestFilter( new RestRequestFilter() );
-		httpTransport.addRequestFilter( new SoapHeadersRequestFilter() );
-		httpTransport.addRequestFilter( new HttpAuthenticationRequestFilter() );
-		httpTransport.addRequestFilter( new WssAuthenticationRequestFilter() );
-		httpTransport.addRequestFilter( new PropertyExpansionRequestFilter() );
-		httpTransport.addRequestFilter( new RemoveEmptyContentRequestFilter() );
-		httpTransport.addRequestFilter( new StripWhitespacesRequestFilter() );
-		httpTransport.addRequestFilter( new EndpointStrategyRequestFilter() );
-		httpTransport.addRequestFilter( new WsaRequestFilter() );
-		httpTransport.addRequestFilter( new WsrmRequestFilter() );
-		httpTransport.addRequestFilter( new WssRequestFilter() );
-		httpTransport.addRequestFilter( new OAuth2RequestFilter() );
+        List<RequestFilterFactory> filterFactories = SoapUI.getFactoryRegistry()
+                .getFactories(RequestFilterFactory.class);
 
-		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )
-		{
-			httpTransport.addRequestFilter( filter );
-		}
+        httpTransport.addRequestFilter(new EndpointRequestFilter());
+        httpTransport.addRequestFilter(new HttpSettingsRequestFilter());
+        httpTransport.addRequestFilter(new RestRequestFilter());
+        httpTransport.addRequestFilter(new SoapHeadersRequestFilter());
+        httpTransport.addRequestFilter(new HttpAuthenticationRequestFilter());
+        httpTransport.addRequestFilter(new WssAuthenticationRequestFilter());
+        httpTransport.addRequestFilter(new PropertyExpansionRequestFilter());
+        httpTransport.addRequestFilter(new RemoveEmptyContentRequestFilter());
+        httpTransport.addRequestFilter(new StripWhitespacesRequestFilter());
+        httpTransport.addRequestFilter(new EndpointStrategyRequestFilter());
+        httpTransport.addRequestFilter(new WsaRequestFilter());
+        httpTransport.addRequestFilter(new WsrmRequestFilter());
+        httpTransport.addRequestFilter(new WssRequestFilter());
+        httpTransport.addRequestFilter(new OAuth2RequestFilter());
+        httpTransport.addRequestFilter( new GlobalHttpHeadersRequestFilter());
 
-		for( RequestFilterFactory factory : filterFactories )
-		{
-			if( factory.getProtocol().equals( HTTP ) || factory.getProtocol().equals( HTTPS ) )
-				httpTransport.addRequestFilter( factory.createRequestFilter() );
-		}
+        for (RequestFilterFactory factory : filterFactories) {
+            String protocol = factory.getProtocol();
+            if (protocol.equals(HTTP) || protocol.equals(HTTPS)) {
+                RequestFilter requestFilter = factory.createRequestFilter();
+                httpTransport.addRequestFilter(requestFilter);
 
-		httpTransport.addRequestFilter( new WsdlPackagingRequestFilter() );
-		httpTransport.addRequestFilter( new HttpCompressionRequestFilter() );
-		httpTransport.addRequestFilter( new HttpPackagingResponseFilter() );
-		httpTransport.addRequestFilter( new PostPackagingRequestFilter() );
+                addToCustomRequestFilters(protocol, requestFilter);
+            }
+        }
 
-		transports.put( HTTP, httpTransport );
-		transports.put( HTTPS, httpTransport );
+        wsdlPackagingRequestFilter = new WsdlPackagingRequestFilter();
+        httpTransport.addRequestFilter(wsdlPackagingRequestFilter);
+        httpTransport.addRequestFilter(new HttpCompressionRequestFilter());
+        httpTransport.addRequestFilter(new HttpPackagingResponseFilter());
+        httpTransport.addRequestFilter(new PostPackagingRequestFilter());
 
-		jmsTransport.addRequestFilter( new WssAuthenticationRequestFilter() );
-		jmsTransport.addRequestFilter( new PropertyExpansionRequestFilter() );
-		jmsTransport.addRequestFilter( new RemoveEmptyContentRequestFilter() );
-		jmsTransport.addRequestFilter( new StripWhitespacesRequestFilter() );
-		jmsTransport.addRequestFilter( new WsaRequestFilter() );
-		jmsTransport.addRequestFilter( new WssRequestFilter() );
+        transports.put(HTTP, httpTransport);
+        transports.put(HTTPS, httpTransport);
 
-		for( RequestFilter filter : SoapUI.getListenerRegistry().getListeners( RequestFilter.class ) )
-		{
-			jmsTransport.addRequestFilter( filter );
-		}
+        jmsTransport.addRequestFilter(new WssAuthenticationRequestFilter());
+        jmsTransport.addRequestFilter(new PropertyExpansionRequestFilter());
+        jmsTransport.addRequestFilter(new RemoveEmptyContentRequestFilter());
+        jmsTransport.addRequestFilter(new StripWhitespacesRequestFilter());
+        jmsTransport.addRequestFilter(new WsaRequestFilter());
+        jmsTransport.addRequestFilter(new WssRequestFilter());
 
-		for( RequestFilterFactory factory : filterFactories )
-		{
-			if( factory.getProtocol().equals( JMS ) )
-				jmsTransport.addRequestFilter( factory.createRequestFilter() );
-		}
+        for (RequestFilterFactory factory : filterFactories) {
+            if (factory.getProtocol().equals(JMS)) {
+                RequestFilter requestFilter = factory.createRequestFilter();
+                jmsTransport.addRequestFilter(requestFilter);
 
-		transports.put( JMS, jmsTransport );
+                addToCustomRequestFilters(JMS, requestFilter);
+            }
+        }
 
-		for( RequestTransportFactory factory : SoapUI.getFactoryRegistry().getFactories( RequestTransportFactory.class ) )
-		{
-			RequestTransport transport = factory.newRequestTransport();
-			String protocol = factory.getProtocol();
+        transports.put(JMS, jmsTransport);
+        initCustomTransports(filterFactories);
 
-			for( RequestFilterFactory filterFactory : filterFactories )
-			{
-				if( filterFactory.getProtocol().equals( protocol ) )
-					transport.addRequestFilter( filterFactory.createRequestFilter() );
-			}
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( new SoapUIFactoryRegistryListener() {
+            @Override
+            public void factoryAdded(Class<?> factoryType, Object factory) {
+                if( factory instanceof RequestTransportFactory ) {
+                    RequestTransportFactory transportFactory = (RequestTransportFactory) factory;
+                    addTransport(transportFactory.getProtocol(),transportFactory.newRequestTransport());
+                }
+                if( factory instanceof RequestFilterFactory ) {
+                    RequestFilterFactory requestFilterFactory = (RequestFilterFactory) factory;
 
-			transports.put( protocol, transport );
-		}
-	}
+                    RequestFilter filter = requestFilterFactory.createRequestFilter();
+                    String protocol = requestFilterFactory.getProtocol();
 
-	public static synchronized RequestTransport getTransport( String endpoint, SubmitContext submitContext )
-			throws MissingTransportException, CannotResolveJmsTypeException
-	{
-		int ix = endpoint.indexOf( "://" );
-		if( ix == -1 )
-			throw new MissingTransportException( "Missing protocol in endpoint [" + endpoint + "]" );
+                    if( protocol.startsWith(HTTP))
+                    {
+                        RequestTransport transport = transports.get( HTTP );
+                        transport.insertRequestFilter( filter, wsdlPackagingRequestFilter );
+                    }
+                    else
+                    {
+                        RequestTransport transport = transports.get(protocol);
+                        if( transport != null )
+                            transport.addRequestFilter( filter );
+                    }
 
-		String protocol = endpoint.substring( 0, ix ).toLowerCase();
+                    addToCustomRequestFilters(protocol, filter);
+                }
+            }
 
-		RequestTransport transport = transports.get( protocol );
+            @Override
+            public void factoryRemoved(Class<?> factoryType, Object factory) {
+               if( factory instanceof RequestTransportFactory )
+                   removeFactory((RequestTransportFactory) factory);
+               if( factory instanceof RequestFilterFactory )
+                   removeRequestFilterFactory((RequestFilterFactory) factory);
+            }
+        });
+    }
 
-		if( transport == null )
-			throw new MissingTransportException( "Missing transport for protocol [" + protocol + "]" );
+    private static void initCustomTransports(List<RequestFilterFactory> filterFactories) {
+        for (RequestTransportFactory factory : SoapUI.getFactoryRegistry().getFactories(RequestTransportFactory.class)) {
+            RequestTransport transport = factory.newRequestTransport();
+            String protocol = factory.getProtocol();
 
-		return transport;
-	}
+            for (RequestFilterFactory filterFactory : filterFactories) {
+                if (filterFactory.getProtocol().equals(protocol)) {
+                    RequestFilter requestFilter = filterFactory.createRequestFilter();
+                    transport.addRequestFilter(requestFilter);
 
-	public static synchronized RequestTransport getTransport( String protocol ) throws MissingTransportException
-	{
-		RequestTransport transport = transports.get( protocol );
+                    addToCustomRequestFilters(protocol, requestFilter);
+                }
+            }
 
-		if( transport == null )
-			throw new MissingTransportException( "Missing transport for protocol [" + protocol + "]" );
+            transports.put(protocol, transport);
+        }
+    }
 
-		return transport;
-	}
+    private static void addToCustomRequestFilters(String protocol, RequestFilter requestFilter) {
+        if( !addedCustomRequestFilters.containsKey(protocol))
+        {
+            addedCustomRequestFilters.put( protocol, new ArrayList<RequestFilter>());
+        }
 
-	public static void addTransport( String key, RequestTransport rt )
-	{
-		transports.put( key, rt );
-	}
+        addedCustomRequestFilters.get( protocol ).add( requestFilter );
+    }
 
-	public static class MissingTransportException extends Exception
-	{
-		public MissingTransportException( String msg )
-		{
-			super( msg );
-		}
-	}
+    public static void removeRequestFilterFactory( RequestFilterFactory factory )
+    {
+        String protocol = factory.getProtocol();
+        if( addedCustomRequestFilters.containsKey(protocol))
+        {
+            for( RequestFilter filter : addedCustomRequestFilters.get(protocol))
+            {
+                for( RequestTransport transport : transports.values())
+                    transport.removeRequestFilter( filter );
+            }
 
-	public static class CannotResolveJmsTypeException extends Exception
-	{
-		public CannotResolveJmsTypeException( String msg )
-		{
-			super( msg );
-		}
-	}
+            addedCustomRequestFilters.remove(protocol);
+        }
+    }
+
+    public static synchronized RequestTransport getTransport(String endpoint, SubmitContext submitContext)
+            throws MissingTransportException, CannotResolveJmsTypeException {
+        int ix = endpoint.indexOf("://");
+        if (ix == -1) {
+            throw new MissingTransportException("Missing protocol in endpoint [" + endpoint + "]");
+        }
+
+        String protocol = endpoint.substring(0, ix).toLowerCase();
+
+        RequestTransport transport = transports.get(protocol);
+
+        if (transport == null) {
+            throw new MissingTransportException("Missing transport for protocol [" + protocol + "]");
+        }
+
+        return transport;
+    }
+
+    public static synchronized RequestTransport getTransport(String protocol) throws MissingTransportException {
+        RequestTransport transport = transports.get(protocol);
+
+        if (transport == null) {
+            throw new MissingTransportException("Missing transport for protocol [" + protocol + "]");
+        }
+
+        return transport;
+    }
+
+    public static void addTransport(String key, RequestTransport rt) {
+        transports.put(key, rt);
+    }
+
+    public static void removeFactory(RequestTransportFactory factory) {
+        RequestTransport transport = factory.newRequestTransport();
+        for (Map.Entry<String, RequestTransport> transportEntry : transports.entrySet()) {
+            if (transportEntry.getValue().getClass().equals(transport.getClass())) {
+                transports.remove(transportEntry.getKey());
+                break;
+            }
+        }
+    }
+
+    public static class MissingTransportException extends Exception {
+        public MissingTransportException(String msg) {
+            super(msg);
+        }
+    }
+
+    public static class CannotResolveJmsTypeException extends Exception {
+        public CannotResolveJmsTypeException(String msg) {
+            super(msg);
+        }
+    }
 
 }

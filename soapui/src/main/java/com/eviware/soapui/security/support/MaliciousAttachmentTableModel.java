@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.support;
+*/
+package com.eviware.soapui.security.support;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -20,41 +21,35 @@ import com.eviware.soapui.config.MaliciousAttachmentConfig;
 import com.eviware.soapui.security.tools.AttachmentHolder;
 import com.eviware.soapui.support.UISupport;
 
-public abstract class MaliciousAttachmentTableModel extends AbstractTableModel 
-{
+public abstract class MaliciousAttachmentTableModel extends AbstractTableModel {
 
-	protected AttachmentHolder holder = new AttachmentHolder();
+    protected AttachmentHolder holder = new AttachmentHolder();
 
-	public int getRowCount()
-	{
-		return holder.size();
-	}
+    public int getRowCount() {
+        return holder.size();
+    }
 
-	public void removeResult( int i )
-	{
-		if( UISupport.confirm( "Remove selected attachments?", "Remove Attachments" ) )
-		{
-			holder.removeElement( i );
-			fireTableDataChanged();
-		}
-	}
+    public void removeResult(int i) {
+        if (UISupport.confirm("Remove selected attachments?", "Remove Attachments")) {
+            holder.removeElement(i);
+            fireTableDataChanged();
+        }
+    }
 
-	public void clear()
-	{
-		holder.clear();
-		fireTableDataChanged();
-	}
+    public void clear() {
+        holder.clear();
+        fireTableDataChanged();
+    }
 
-	public MaliciousAttachmentConfig getRowValue( int rowIndex )
-	{
-		return holder.getList().get( rowIndex );
-	}
+    public MaliciousAttachmentConfig getRowValue(int rowIndex) {
+        return holder.getList().get(rowIndex);
+    }
 
-	public abstract int getColumnCount();
+    public abstract int getColumnCount();
 
-	public abstract String getColumnName( int column );
+    public abstract String getColumnName(int column);
 
-	public abstract Object getValueAt( int rowIndex, int columnIndex );
+    public abstract Object getValueAt(int rowIndex, int columnIndex);
 
-	public abstract void addResult( MaliciousAttachmentConfig config );
+    public abstract void addResult(MaliciousAttachmentConfig config);
 }

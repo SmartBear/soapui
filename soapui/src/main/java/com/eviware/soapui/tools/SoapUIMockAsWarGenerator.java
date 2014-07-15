@@ -16,184 +16,170 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-
-import org.apache.commons.cli.CommandLine;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.model.project.ProjectFactoryRegistry;
 import com.eviware.soapui.settings.ProjectSettings;
 import com.eviware.soapui.support.StringUtils;
+import org.apache.commons.cli.CommandLine;
 
-public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner
-{
-	public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " War Generator";
+import java.io.File;
 
-	private boolean includeActions;
-	private boolean includeListeners;
-	private boolean includeLibraries;
-	private boolean enableWebUI;
-	private String localEndpoint;
-	private String warFile;
+public class SoapUIMockAsWarGenerator extends AbstractSoapUIRunner {
+    public static String TITLE = "SoapUI " + SoapUI.SOAPUI_VERSION + " War Generator";
 
-	public SoapUIMockAsWarGenerator()
-	{
-		super( TITLE );
-	}
+    private boolean includeActions;
+    private boolean includeListeners;
+    private boolean includeLibraries;
+    private boolean enableWebUI;
+    private String localEndpoint;
+    private String warFile;
 
-	public SoapUIMockAsWarGenerator( String title )
-	{
-		super( title );
-	}
+    public SoapUIMockAsWarGenerator() {
+        super(TITLE);
+    }
 
-	/**
-	 * Runs the specified tool in the specified soapUI project file, see SoapUI
-	 * xdocs for details.
-	 * 
-	 * @param args
-	 * @throws Exception
-	 */
+    public SoapUIMockAsWarGenerator(String title) {
+        super(title);
+    }
 
-	public static void main( String[] args ) throws Exception
-	{
-		System.exit( new SoapUIMockAsWarGenerator().runFromCommandLine( args ) );
-	}
+    /**
+     * Runs the specified tool in the specified soapUI project file, see SoapUI
+     * xdocs for details.
+     *
+     * @param args
+     * @throws Exception
+     */
 
-	@Override
-	protected boolean processCommandLine( CommandLine cmd )
-	{
-		setEnableWebUI( cmd.hasOption( 'w' ) );
-		setIncludeActions( cmd.hasOption( 'a' ) );
-		setIncludeLibraries( cmd.hasOption( 'x' ) );
-		setIncludeListeners( cmd.hasOption( 'l' ) );
+    public static void main(String[] args) throws Exception {
+        System.exit(new SoapUIMockAsWarGenerator().runFromCommandLine(args));
+    }
 
-		if( cmd.hasOption( "s" ) )
-			setSettingsFile( getCommandLineOptionSubstSpace( cmd, "s" ) );
+    @Override
+    protected boolean processCommandLine(CommandLine cmd) {
+        setEnableWebUI(cmd.hasOption('w'));
+        setIncludeActions(cmd.hasOption('a'));
+        setIncludeLibraries(cmd.hasOption('x'));
+        setIncludeListeners(cmd.hasOption('l'));
 
-		if( cmd.hasOption( "p" ) )
-			setProjectPassword( cmd.getOptionValue( "p" ) );
+        if (cmd.hasOption("s")) {
+            setSettingsFile(getCommandLineOptionSubstSpace(cmd, "s"));
+        }
 
-		if( cmd.hasOption( "v" ) )
-			setSoapUISettingsPassword( cmd.getOptionValue( "v" ) );
+        if (cmd.hasOption("p")) {
+            setProjectPassword(cmd.getOptionValue("p"));
+        }
 
-		if( cmd.hasOption( "d" ) )
-			setOutputFolder( cmd.getOptionValue( "d" ) );
+        if (cmd.hasOption("v")) {
+            setSoapUISettingsPassword(cmd.getOptionValue("v"));
+        }
 
-		if( cmd.hasOption( "f" ) )
-			setWarFile( cmd.getOptionValue( "f" ) );
+        if (cmd.hasOption("d")) {
+            setOutputFolder(cmd.getOptionValue("d"));
+        }
 
-		if( cmd.hasOption( "e" ) )
-			setLocalEndpoint( cmd.getOptionValue( "e" ) );
+        if (cmd.hasOption("f")) {
+            setWarFile(cmd.getOptionValue("f"));
+        }
 
-		return true;
-	}
+        if (cmd.hasOption("e")) {
+            setLocalEndpoint(cmd.getOptionValue("e"));
+        }
 
-	@Override
-	protected SoapUIOptions initCommandLineOptions()
-	{
-		SoapUIOptions options = new SoapUIOptions( "wargenerator" );
-		options.addOption( "x", true, "Specify if libraries in ext folder should be included" );
-		options.addOption( "a", true, "Specify if custom actions should be included" );
-		options.addOption( "l", true, "Specify if custom listeners should be included" );
-		options.addOption( "w", true, "Specify if web UI should be enabled" );
-		options.addOption( "e", true, "Set the local endpoint of the MockService" );
-		options.addOption( "f", true, "Specify the name of the generated WAR file" );
-		options.addOption( "d", true, "Sets the local folder to use for war generation" );
-		options.addOption( "s", true, "Sets the soapui-settings.xml file to use" );
-		options.addOption( "p", true, "Sets project password for decryption if project is encrypted" );
-		options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+        return true;
+    }
 
-		return options;
-	}
+    @Override
+    protected SoapUIOptions initCommandLineOptions() {
+        SoapUIOptions options = new SoapUIOptions("wargenerator");
+        options.addOption("x", true, "Specify if libraries in ext folder should be included");
+        options.addOption("a", true, "Specify if custom actions should be included");
+        options.addOption("l", true, "Specify if custom listeners should be included");
+        options.addOption("w", true, "Specify if web UI should be enabled");
+        options.addOption("e", true, "Set the local endpoint of the MockService");
+        options.addOption("f", true, "Specify the name of the generated WAR file");
+        options.addOption("d", true, "Sets the local folder to use for war generation");
+        options.addOption("s", true, "Sets the soapui-settings.xml file to use");
+        options.addOption("p", true, "Sets project password for decryption if project is encrypted");
+        options.addOption("v", true, "Sets password for soapui-settings.xml file");
 
-	@Override
-	protected boolean runRunner() throws Exception
-	{
-		WsdlProject project = ( WsdlProject )ProjectFactoryRegistry.getProjectFactory( "wsdl" ).createNew(
-				getProjectFile(), getProjectPassword() );
+        return options;
+    }
 
-		String pFile = getProjectFile();
+    @Override
+    protected boolean runRunner() throws Exception {
+        WsdlProject project = (WsdlProject) ProjectFactoryRegistry.getProjectFactory("wsdl").createNew(
+                getProjectFile(), getProjectPassword());
 
-		project.getSettings().setString( ProjectSettings.SHADOW_PASSWORD, null );
+        String pFile = getProjectFile();
 
-		File tmpProjectFile = new File( System.getProperty( "java.io.tmpdir" ) );
-		tmpProjectFile = new File( tmpProjectFile, project.getName() + "-project.xml" );
+        project.getSettings().setString(ProjectSettings.SHADOW_PASSWORD, null);
 
-		project.beforeSave();
-		project.saveIn( tmpProjectFile );
+        File tmpProjectFile = new File(System.getProperty("java.io.tmpdir"));
+        tmpProjectFile = new File(tmpProjectFile, project.getName() + "-project.xml");
 
-		pFile = tmpProjectFile.getAbsolutePath();
+        project.beforeSave();
+        project.saveIn(tmpProjectFile);
 
-		String endpoint = StringUtils.hasContent( localEndpoint ) ? localEndpoint : project.getName();
+        pFile = tmpProjectFile.getAbsolutePath();
 
-		log.info( "Creating WAR file with endpoint [" + endpoint + "]" );
+        String endpoint = StringUtils.hasContent(localEndpoint) ? localEndpoint : project.getName();
 
-		MockAsWar mockAsWar = new MockAsWar( pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
-				includeActions, includeListeners, endpoint, enableWebUI );
+        log.info("Creating WAR file with endpoint [" + endpoint + "]");
 
-		mockAsWar.createMockAsWarArchive();
-		log.info( "WAR Generation complete" );
-		return true;
-	}
+        MockAsWar mockAsWar = new MockAsWar(pFile, getSettingsFile(), getOutputFolder(), warFile, includeLibraries,
+                includeActions, includeListeners, endpoint, enableWebUI, project);
 
-	public boolean isIncludeActions()
-	{
-		return includeActions;
-	}
+        mockAsWar.createMockAsWarArchive();
+        log.info("WAR Generation complete");
+        return true;
+    }
 
-	public void setIncludeActions( boolean includeActions )
-	{
-		this.includeActions = includeActions;
-	}
+    public boolean isIncludeActions() {
+        return includeActions;
+    }
 
-	public boolean isIncludeListeners()
-	{
-		return includeListeners;
-	}
+    public void setIncludeActions(boolean includeActions) {
+        this.includeActions = includeActions;
+    }
 
-	public void setIncludeListeners( boolean includeListeners )
-	{
-		this.includeListeners = includeListeners;
-	}
+    public boolean isIncludeListeners() {
+        return includeListeners;
+    }
 
-	public boolean isIncludeLibraries()
-	{
-		return includeLibraries;
-	}
+    public void setIncludeListeners(boolean includeListeners) {
+        this.includeListeners = includeListeners;
+    }
 
-	public void setIncludeLibraries( boolean includeLibraries )
-	{
-		this.includeLibraries = includeLibraries;
-	}
+    public boolean isIncludeLibraries() {
+        return includeLibraries;
+    }
 
-	public boolean isEnableWebUI()
-	{
-		return enableWebUI;
-	}
+    public void setIncludeLibraries(boolean includeLibraries) {
+        this.includeLibraries = includeLibraries;
+    }
 
-	public void setEnableWebUI( boolean enableWebUI )
-	{
-		this.enableWebUI = enableWebUI;
-	}
+    public boolean isEnableWebUI() {
+        return enableWebUI;
+    }
 
-	public String getLocalEndpoint()
-	{
-		return localEndpoint;
-	}
+    public void setEnableWebUI(boolean enableWebUI) {
+        this.enableWebUI = enableWebUI;
+    }
 
-	public void setLocalEndpoint( String localEndpoint )
-	{
-		this.localEndpoint = localEndpoint;
-	}
+    public String getLocalEndpoint() {
+        return localEndpoint;
+    }
 
-	public String getWarFile()
-	{
-		return warFile;
-	}
+    public void setLocalEndpoint(String localEndpoint) {
+        this.localEndpoint = localEndpoint;
+    }
 
-	public void setWarFile( String warFile )
-	{
-		this.warFile = warFile;
-	}
+    public String getWarFile() {
+        return warFile;
+    }
+
+    public void setWarFile(String warFile) {
+        this.warFile = warFile;
+    }
 }

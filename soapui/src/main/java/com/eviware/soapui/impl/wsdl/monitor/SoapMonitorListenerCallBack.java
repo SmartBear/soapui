@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.monitor;
+*/
+package com.eviware.soapui.impl.wsdl.monitor;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -27,112 +28,83 @@ import java.util.Set;
 /**
  * @author Prakash
  */
-public class SoapMonitorListenerCallBack
-{
-	private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>(
-			MonitorListener.class );
+public class SoapMonitorListenerCallBack {
+    private SoapUIListenerSupport<MonitorListener> listeners = new SoapUIListenerSupport<MonitorListener>(
+            MonitorListener.class);
 
-	public void fireAddMessageExchange( WsdlMonitorMessageExchange messageExchange )
-	{
-		fireOnMessageExchange( messageExchange );
-	}
+    public void fireAddMessageExchange(WsdlMonitorMessageExchange messageExchange) {
+        fireOnMessageExchange(messageExchange);
+    }
 
-	public void fireOnMessageExchange( WsdlMonitorMessageExchange messageExchange )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.onMessageExchange( messageExchange );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
+    public void fireOnMessageExchange(WsdlMonitorMessageExchange messageExchange) {
+        for (MonitorListener listener : listeners.get()) {
+            try {
+                listener.onMessageExchange(messageExchange);
+            } catch (Throwable t) {
+                SoapUI.logError(t);
+            }
+        }
+    }
 
-	public void fireOnRequest( WsdlProject project, ServletRequest request, ServletResponse response )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.onRequest( project, request, response );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
+    public void fireOnRequest(WsdlProject project, ServletRequest request, ServletResponse response) {
+        for (MonitorListener listener : listeners.get()) {
+            try {
+                listener.onRequest(project, request, response);
+            } catch (Throwable t) {
+                SoapUI.logError(t);
+            }
+        }
+    }
 
-	public void fireBeforeProxy( WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.beforeProxy( project, request, response, httpRequest );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
+    public void fireBeforeProxy(WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest) {
+        for (MonitorListener listener : listeners.get()) {
+            try {
+                listener.beforeProxy(project, request, response, httpRequest);
+            } catch (Throwable t) {
+                SoapUI.logError(t);
+            }
+        }
+    }
 
-	public void fireAfterProxy( WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest,
-										 WsdlMonitorMessageExchange capturedData )
-	{
-		for( MonitorListener listener : listeners.get() )
-		{
-			try
-			{
-				listener.afterProxy( project, request, response, httpRequest, capturedData );
-			}
-			catch( Throwable t )
-			{
-				SoapUI.logError( t );
-			}
-		}
-	}
+    public void fireAfterProxy(WsdlProject project, ServletRequest request, ServletResponse response, HttpRequest httpRequest,
+                               WsdlMonitorMessageExchange capturedData) {
+        for (MonitorListener listener : listeners.get()) {
+            try {
+                listener.afterProxy(project, request, response, httpRequest, capturedData);
+            } catch (Throwable t) {
+                SoapUI.logError(t);
+            }
+        }
+    }
 
-	public void addSoapMonitorListener( MonitorListener listener )
-	{
-		listeners.add( listener );
-	}
+    public void addSoapMonitorListener(MonitorListener listener) {
+        listeners.add(listener);
+    }
 
-	public void removeSoapMonitorListener( MonitorListener listener )
-	{
-		listeners.remove( listener );
-	}
+    public void removeSoapMonitorListener(MonitorListener listener) {
+        listeners.remove(listener);
+    }
 
-	public static class SoapUIListenerSupport<T>
-	{
-		private Set<T> listeners = new HashSet<T>();
-		@SuppressWarnings( "unused" )
-		private final Class<T> listenerClass;
+    public static class SoapUIListenerSupport<T> {
+        private Set<T> listeners = new HashSet<T>();
+        @SuppressWarnings("unused")
+        private final Class<T> listenerClass;
 
-		public SoapUIListenerSupport( Class<T> listenerClass )
-		{
-			this.listenerClass = listenerClass;
-			listeners.addAll( SoapUI.getListenerRegistry().getListeners( listenerClass ) );
-		}
+        public SoapUIListenerSupport(Class<T> listenerClass) {
+            this.listenerClass = listenerClass;
+            listeners.addAll(SoapUI.getListenerRegistry().getListeners(listenerClass));
+        }
 
-		public void add( T listener )
-		{
-			listeners.add( listener );
-		}
+        public void add(T listener) {
+            listeners.add(listener);
+        }
 
-		public void remove( T listener )
-		{
-			listeners.remove( listener );
-		}
+        public void remove(T listener) {
+            listeners.remove(listener);
+        }
 
-		public Collection<T> get()
-		{
-			return listeners;
-		}
-	}
+        public Collection<T> get() {
+            return listeners;
+        }
+    }
 }

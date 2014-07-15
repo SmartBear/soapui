@@ -27,6 +27,7 @@ import com.eviware.soapui.model.workspace.Workspace;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * A SoapUI project
@@ -34,87 +35,88 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public interface Project extends TestModelItem
-{
-	/**
-	 * The id of the JBossWS project nature
-	 */
-	public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
+public interface Project extends TestModelItem {
+    /**
+     * The id of the JBossWS project nature
+     */
+    public static final String JBOSSWS_NATURE_ID = "com.eviware.soapui.jbosside.jbosswsNature";
 
-	/**
-	 * The id of the SoapUI project nature
-	 */
-	public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
+    /**
+     * The id of the SoapUI project nature
+     */
+    public static final String SOAPUI_NATURE_ID = "com.eviware.soapui.soapuiNature";
 
-	public Workspace getWorkspace();
+    public Workspace getWorkspace();
 
-	public Interface getInterfaceAt( int index );
+    public Interface getInterfaceAt(int index);
 
-	public Interface getInterfaceByName( String interfaceName );
+    public Interface getInterfaceByName(String interfaceName);
 
-	public int getInterfaceCount();
+    public int getInterfaceCount();
 
-	public void addProjectListener( ProjectListener listener );
+    public void addProjectListener(ProjectListener listener);
 
-	public void removeProjectListener( ProjectListener listener );
+    public void removeProjectListener(ProjectListener listener);
 
-	public int getTestSuiteCount();
+    public int getTestSuiteCount();
 
-	public TestSuite getTestSuiteAt( int index );
+    public TestSuite getTestSuiteAt(int index);
 
-	public TestSuite getTestSuiteByName( String testSuiteName );
+    public TestSuite getTestSuiteByName(String testSuiteName);
 
-	public TestSuite addNewTestSuite( String name );
+    public TestSuite getTestSuiteById(UUID testSuiteId);
 
-	public int getMockServiceCount();
+    public TestSuite addNewTestSuite(String name);
 
-	public int getRestMockServiceCount();
+    public int getMockServiceCount();
 
-	public MockService getMockServiceAt( int index );
+    public int getRestMockServiceCount();
 
-	public MockService getRestMockServiceAt( int index );
+    public MockService getMockServiceAt(int index);
 
-   public MockService getMockServiceByName( String mockServiceName );
+    public MockService getRestMockServiceAt(int index);
 
-   public RestMockService getRestMockServiceByName( String mockServiceName );
+    public MockService getMockServiceByName(String mockServiceName);
 
-   public MockService addNewMockService( String name );
+    public RestMockService getRestMockServiceByName(String mockServiceName);
 
-   public RestMockService addNewRestMockService( String name );
+    public MockService addNewMockService(String name);
 
-	public void removeMockService( MockService service);
+    public RestMockService addNewRestMockService(String name);
 
-   public SaveStatus save() throws IOException;
+    public void removeMockService(MockService service);
 
-	public List<TestSuite> getTestSuiteList();
+    public SaveStatus save() throws IOException;
 
-	public List<WsdlMockService> getMockServiceList();
+    public List<TestSuite> getTestSuiteList();
 
-	public List<RestMockService> getRestMockServiceList();
+    public List<WsdlMockService> getMockServiceList();
 
-	public List<Interface> getInterfaceList();
+    public List<RestMockService> getRestMockServiceList();
 
-	public boolean hasNature( String natureId );
+    public List<Interface> getInterfaceList();
 
-	public EndpointStrategy getEndpointStrategy();
+    public boolean hasNature(String natureId);
 
-	public void release();
+    public EndpointStrategy getEndpointStrategy();
 
-	public boolean isOpen();
+    public void release();
 
-	public boolean isDisabled();
+    public boolean isOpen();
 
-	public String getPath();
+    public boolean isDisabled();
 
-	public String getResourceRoot();
+    public String getPath();
 
-	public String getShadowPassword();
+    public String getResourceRoot();
 
-	public void setShadowPassword( String password );
+    public String getShadowPassword();
 
-	public void inspect();
+    public void setShadowPassword(String password);
 
-	public int getIndexOfTestSuite( TestSuite testSuite );
+    public void inspect();
 
-	OAuth2ProfileContainer getOAuth2ProfileContainer();
+    public int getIndexOfTestSuite(TestSuite testSuite);
+
+    OAuth2ProfileContainer getOAuth2ProfileContainer();
 }

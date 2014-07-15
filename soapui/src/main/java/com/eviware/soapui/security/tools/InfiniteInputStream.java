@@ -12,31 +12,30 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.security.tools;
+*/
+package com.eviware.soapui.security.tools;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Random;
 
-public class InfiniteInputStream extends InputStream
-{
-	private long bytesSent = 0;
-	private long byteLimit;
+public class InfiniteInputStream extends InputStream {
+    private long bytesSent = 0;
+    private long byteLimit;
 
-	public InfiniteInputStream( long maxSize )
-	{
-		super();
-		byteLimit = maxSize;
-	}
+    public InfiniteInputStream(long maxSize) {
+        super();
+        byteLimit = maxSize;
+    }
 
-	@Override
-	public int read() throws IOException
-	{
-		if( bytesSent >= byteLimit )
-			return -1;
-		Random rnd = new Random();
-		bytesSent++ ;
-		return rnd.nextInt();
-	}
+    @Override
+    public int read() throws IOException {
+        if (bytesSent >= byteLimit) {
+            return -1;
+        }
+        Random rnd = new Random();
+        bytesSent++;
+        return rnd.nextInt();
+    }
 
 }

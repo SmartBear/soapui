@@ -16,71 +16,65 @@
 
 package com.eviware.soapui.support.editor.xml.support;
 
+import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlBeans;
 
 import com.eviware.soapui.support.xml.XmlUtils;
 
+import javax.annotation.Nonnull;
+
 /**
  * Default XmlDocument that works on a standard xml string
- * 
+ *
  * @author ole.matzura
  */
 
-public class DefaultXmlDocument extends AbstractXmlDocument
-{
-	private String xml;
-	private SchemaTypeSystem typeSystem;
+public class DefaultXmlDocument extends AbstractXmlDocument {
+    private String xml;
+    private SchemaTypeSystem typeSystem;
 
-	public DefaultXmlDocument( String xml )
-	{
-		this.xml = xml;
-	}
+    public DefaultXmlDocument(String xml) {
+        this.xml = xml;
+    }
 
-	public DefaultXmlDocument()
-	{
-	}
+    public DefaultXmlDocument() {
+    }
 
-	public void setTypeSystem( SchemaTypeSystem typeSystem )
-	{
-		this.typeSystem = typeSystem;
-	}
+    public void setTypeSystem(SchemaTypeSystem typeSystem) {
+        this.typeSystem = typeSystem;
+    }
 
-	public SchemaTypeSystem getTypeSystem()
-	{
-		if( typeSystem != null )
-			return typeSystem;
+    public SchemaTypeSystem getTypeSystem() {
+        if (typeSystem != null) {
+            return typeSystem;
+        }
 
-		try
-		{
-			// typeSystem = XmlObject.Factory.parse( xml
-			// ).schemaType().getTypeSystem();
-			typeSystem = XmlUtils.createXmlObject( xml ).schemaType().getTypeSystem();
-			return typeSystem;
-		}
-		catch( Exception e )
-		{
-			return XmlBeans.getBuiltinTypeSystem();
-		}
-	}
+        try {
+            typeSystem = XmlUtils.createXmlObject(xml).schemaType().getTypeSystem();
+            return typeSystem;
+        } catch (Exception e) {
+            return XmlBeans.getBuiltinTypeSystem();
+        }
+    }
 
-	public String getXml()
-	{
-		return xml;
-	}
+    @Override
+    public void setDocumentContent(DocumentContent documentContent) {
+        this.xml = documentContent.getContentAsString();
+        if ("<not-xml/>".equals(documentContent.getContentAsString())) {
+            fireContentChanged();
+        }
 
-	public void setXml( String xml )
-	{
-		String oldXml = this.xml;
-		this.xml = xml;
-		if( "<not-xml/>".equals( xml ) )
-			fireXmlChanged( "", xml );
+        fireContentChanged();
+    }
 
-		fireXmlChanged( oldXml, xml );
-	}
+    public void release() {
+        typeSystem = null;
+    }
 
-	public void release()
-	{
-		typeSystem = null;
-	}
+    @Nonnull
+    @Override
+    public DocumentContent getDocumentContent(Format format) {
+        return new DocumentContent("text/xml", xml);
+    }
 }

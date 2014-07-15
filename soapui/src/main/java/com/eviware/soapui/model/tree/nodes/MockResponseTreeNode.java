@@ -22,14 +22,12 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
 
 /**
  * SoapUITreeNode for Request implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class MockResponseTreeNode extends AbstractModelItemTreeNode<MockResponse>
-{
-	public MockResponseTreeNode( MockResponse mockResponse, SoapUITreeModel treeModel )
-	{
-		super( mockResponse, mockResponse.getMockOperation(), treeModel );
-	}
+public class MockResponseTreeNode extends AbstractModelItemTreeNode<MockResponse> {
+    public MockResponseTreeNode(MockResponse mockResponse, SoapUITreeModel treeModel) {
+        super(mockResponse, mockResponse.getMockOperation(), treeModel);
+    }
 }

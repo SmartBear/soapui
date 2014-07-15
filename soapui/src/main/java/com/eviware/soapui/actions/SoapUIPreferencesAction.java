@@ -28,6 +28,7 @@ import com.eviware.soapui.settings.WsaSettings;
 import com.eviware.soapui.settings.WsdlSettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.SwingConfigurationDialogImpl;
+import com.eviware.soapui.support.factory.SoapUIFactoryRegistryListener;
 import com.eviware.soapui.support.types.StringToStringMap;
 
 import javax.swing.AbstractAction;
@@ -36,124 +37,169 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Action for managing SoapUI preferences
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class SoapUIPreferencesAction extends AbstractAction
-{
-	public static final String GLOBAL_SECURITY_SETTINGS = "Global Security Settings";
-	public static final String WS_I_SETTINGS = "WS-I Settings";
-	public static final String WSDL_SETTINGS = "WSDL Settings";
-	public static final String UI_SETTINGS = "UI Settings";
-	public static final String EDITOR_SETTINGS = "Editor Settings";
-	public static final String PROXY_SETTINGS = "Proxy Settings";
-	public static final String HTTP_SETTINGS = "HTTP Settings";
-	public static final String SSL_SETTINGS = "SSL Settings";
-	public static final String INTEGRATED_TOOLS = "Tools";
-	public static final String WSA_SETTINGS = "WS-A Settings";
-	public static final String WEBRECORDING_SETTINGS = "Web Recording Settings";
-	public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
-	public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
-	private SwingConfigurationDialogImpl dialog;
-	private JTabbedPane tabs;
-	private List<Prefs> prefs = new ArrayList<Prefs>();
+public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFactoryRegistryListener {
+    public static final String GLOBAL_SECURITY_SETTINGS = "Global Security Settings";
+    public static final String WS_I_SETTINGS = "WS-I Settings";
+    public static final String WSDL_SETTINGS = "WSDL Settings";
+    public static final String UI_SETTINGS = "UI Settings";
+    public static final String EDITOR_SETTINGS = "Editor Settings";
+    public static final String PROXY_SETTINGS = "Proxy Settings";
+    public static final String HTTP_SETTINGS = "HTTP Settings";
+    public static final String SSL_SETTINGS = "SSL Settings";
+    public static final String INTEGRATED_TOOLS = "Tools";
+    public static final String WSA_SETTINGS = "WS-A Settings";
+    public static final String GLOBAL_SENSITIVE_INFORMATION_TOKENS = "Global Sensitive Information Tokens";
+    public static final String VERSIONUPDATE_SETTINGS = "Version Update Settings";
+    private SwingConfigurationDialogImpl dialog;
+    private JTabbedPane tabs;
+    private List<Prefs> prefs = new ArrayList<Prefs>();
+    private Map<PrefsFactory, Prefs> prefsFactories = new HashMap<PrefsFactory, Prefs>();
 
-	private static SoapUIPreferencesAction instance;
+    private static SoapUIPreferencesAction instance;
 
-	public SoapUIPreferencesAction()
-	{
-		super( "Preferences" );
+    public SoapUIPreferencesAction() {
+        super("Preferences");
 
-		putValue( Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences" );
-		putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "menu alt P" ) );
+        putValue(Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences");
+        putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt P"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences-system-small.png"));
 
-		// addPrefs( new HttpPrefs( HTTP_SETTINGS));
-		addPrefs( new AnnotatedSettingsPrefs( HttpSettings.class, HTTP_SETTINGS ) );
-		addPrefs( new ProxyPrefs( PROXY_SETTINGS ) );
-		addPrefs( new AnnotatedSettingsPrefs( SSLSettings.class, SSL_SETTINGS ) );
-		addPrefs( new AnnotatedSettingsPrefs( WsdlSettings.class, WSDL_SETTINGS ) );
-		addPrefs( new UIPrefs( UI_SETTINGS ) );
-		addPrefs( new EditorPrefs( EDITOR_SETTINGS ) );
-		addPrefs( new ToolsPrefs( INTEGRATED_TOOLS ) );
-		addPrefs( new AnnotatedSettingsPrefs( WSISettings.class, WS_I_SETTINGS ) );
-		addPrefs( new GlobalPropertiesPrefs() );
-		addPrefs( new AnnotatedSettingsPrefs( SecuritySettings.class, GLOBAL_SECURITY_SETTINGS ) );
-		addPrefs( new AnnotatedSettingsPrefs( WsaSettings.class, WSA_SETTINGS ) );
-		addPrefs( new SecurityScansPrefs( GLOBAL_SENSITIVE_INFORMATION_TOKENS ) );
-		addPrefs( new AnnotatedSettingsPrefs( VersionUpdateSettings.class, VERSIONUPDATE_SETTINGS ) );
+        addPrefs(new AnnotatedSettingsPrefs(HttpSettings.class, HTTP_SETTINGS));
+        addPrefs(new ProxyPrefs(PROXY_SETTINGS));
+        addPrefs(new AnnotatedSettingsPrefs(SSLSettings.class, SSL_SETTINGS));
+        addPrefs(new AnnotatedSettingsPrefs(WsdlSettings.class, WSDL_SETTINGS));
+        addPrefs(new UIPrefs(UI_SETTINGS));
+        addPrefs(new EditorPrefs(EDITOR_SETTINGS));
+        addPrefs(new ToolsPrefs(INTEGRATED_TOOLS));
+        addPrefs(new AnnotatedSettingsPrefs(WSISettings.class, WS_I_SETTINGS));
+        addPrefs(new GlobalPropertiesPrefs());
+        addPrefs(new AnnotatedSettingsPrefs(SecuritySettings.class, GLOBAL_SECURITY_SETTINGS));
+        addPrefs(new AnnotatedSettingsPrefs(WsaSettings.class, WSA_SETTINGS));
+        addPrefs(new SecurityScansPrefs(GLOBAL_SENSITIVE_INFORMATION_TOKENS));
+        addPrefs(new AnnotatedSettingsPrefs(VersionUpdateSettings.class, VERSIONUPDATE_SETTINGS));
 
-		for( PrefsFactory factory : SoapUI.getFactoryRegistry().getFactories( PrefsFactory.class ) )
-		{
-			addPrefs( factory.createPrefs() );
-		}
+        for (PrefsFactory factory : SoapUI.getFactoryRegistry().getFactories(PrefsFactory.class)) {
+            addPrefsFactory(factory);
+        }
 
-		instance = this;
-	}
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
 
-	public void addPrefs( Prefs pref )
-	{
-		prefs.add( pref );
-	}
+        instance = this;
+    }
 
-	public static SoapUIPreferencesAction getInstance()
-	{
-		if( instance == null )
-			instance = new SoapUIPreferencesAction();
+    public void addPrefsFactory(PrefsFactory factory) {
+        Prefs pref = factory.createPrefs();
+        addPrefs( pref );
 
-		return instance;
-	}
+        prefsFactories.put( factory, pref );
+        if( tabs != null )
+            addPrefToTabs( pref );
+    }
 
-	public void actionPerformed( ActionEvent e )
-	{
-		show( HTTP_SETTINGS );
-	}
+    public void removePrefsFactory( PrefsFactory factory )
+    {
+        Prefs pref = prefsFactories.get( factory );
+        if( pref != null )
+        {
+            prefsFactories.remove( factory );
+            if( tabs != null )
+            {
+                int ix = tabs.indexOfTab( pref.getTitle() );
+                if( ix != -1 )
+                    tabs.removeTabAt( ix );
+            }
 
-	public boolean show( String initialTab )
-	{
-		if( dialog == null )
-			buildDialog();
+            prefs.remove( pref );
+        }
+    }
 
-		Settings settings = SoapUI.getSettings();
-		for( Prefs pref : prefs )
-			pref.setFormValues( settings );
+    @Override
+    public void factoryAdded(Class<?> factoryType, Object factory) {
+        if(factoryType.equals( PrefsFactory.class ))
+            addPrefsFactory((PrefsFactory) factory);
+    }
 
-		if( initialTab != null )
-		{
-			int ix = tabs.indexOfTab( initialTab );
-			if( ix != -1 )
-				tabs.setSelectedIndex( ix );
-		}
+    @Override
+    public void factoryRemoved(Class<?> factoryType, Object factory) {
+        if(factoryType.equals( PrefsFactory.class ))
+            removePrefsFactory((PrefsFactory) factory);
+    }
 
-		if( dialog.show( new StringToStringMap() ) )
-		{
-			for( Prefs pref : prefs )
-				pref.getFormValues( settings );
+    public void addPrefs(Prefs pref) {
+        prefs.add(pref);
+    }
 
-			return true;
-		}
+    public static SoapUIPreferencesAction getInstance() {
+        if (instance == null) {
+            instance = new SoapUIPreferencesAction();
+        }
 
-		return false;
-	}
+        return instance;
+    }
 
-	private void buildDialog()
-	{
-		dialog = new SwingConfigurationDialogImpl( "SoapUI Preferences", HelpUrls.PREFERENCES_HELP_URL,
-				"Set global SoapUI settings", UISupport.OPTIONS_ICON );
+    public Prefs [] getPrefs()
+    {
+        return prefs.toArray( new Prefs[prefs.size()]);
+    }
 
-		tabs = new JTabbedPane();
-		tabs.setTabLayoutPolicy( JTabbedPane.SCROLL_TAB_LAYOUT );
-		tabs.setTabPlacement( JTabbedPane.LEFT );
-		for( Prefs pref : prefs )
-		{
-			tabs.addTab( pref.getTitle(), new JScrollPane( pref.getForm().getPanel() ) );
-		}
+    public void actionPerformed(ActionEvent e) {
+        show(HTTP_SETTINGS);
+    }
 
-		dialog.setContent( UISupport.createTabPanel( tabs, false ) );
-	}
+    public boolean show(String initialTab) {
+        if (dialog == null) {
+            buildDialog();
+        }
+
+        Settings settings = SoapUI.getSettings();
+        for (Prefs pref : prefs) {
+            pref.setFormValues(settings);
+        }
+
+        if (initialTab != null) {
+            int ix = tabs.indexOfTab(initialTab);
+            if (ix != -1) {
+                tabs.setSelectedIndex(ix);
+            }
+        }
+
+        if (dialog.show(new StringToStringMap())) {
+            for (Prefs pref : prefs) {
+                pref.getFormValues(settings);
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void buildDialog() {
+        dialog = new SwingConfigurationDialogImpl("SoapUI Preferences", HelpUrls.PREFERENCES_HELP_URL,
+                "Set global SoapUI settings", UISupport.OPTIONS_ICON);
+
+        tabs = new JTabbedPane();
+        tabs.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+        tabs.setTabPlacement(JTabbedPane.LEFT);
+        for (Prefs pref : prefs) {
+            addPrefToTabs(pref);
+        }
+
+        dialog.setContent(UISupport.createTabPanel(tabs, false));
+    }
+
+    private void addPrefToTabs(Prefs pref) {
+        tabs.addTab(pref.getTitle(), new JScrollPane(pref.getForm().getPanel()));
+    }
 
 }

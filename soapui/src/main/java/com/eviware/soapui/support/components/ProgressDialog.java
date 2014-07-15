@@ -33,117 +33,106 @@ import java.awt.event.ActionEvent;
  * @author Ole.Matzura
  */
 
-public class ProgressDialog extends JDialog implements XProgressDialog, XProgressMonitor
-{
-	private JProgressBar progressBar;
-	private JButton cancelButton;
-	private Worker worker;
+public class ProgressDialog extends JDialog implements XProgressDialog, XProgressMonitor {
+    private JProgressBar progressBar;
+    private JButton cancelButton;
+    private Worker worker;
 
-	public ProgressDialog( String title, String label, int length, String initialValue, boolean allowCancel )
-			throws HeadlessException
-	{
-		super( UISupport.getMainFrame(), title, true );
+    public ProgressDialog(String title, String label, int length, String initialValue, boolean allowCancel)
+            throws HeadlessException {
+        super(UISupport.getMainFrame(), title, true);
 
-		setDefaultCloseOperation( JDialog.DO_NOTHING_ON_CLOSE );
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 
-		progressBar = new JProgressBar( 0, length );
-		JPanel panel = UISupport.createProgressBarPanel( progressBar, 10, true );
-		progressBar.setString( initialValue );
+        progressBar = new JProgressBar(0, length);
+        JPanel panel = UISupport.createProgressBarPanel(progressBar, 10, true);
+        progressBar.setString(initialValue);
 
-		getContentPane().setLayout( new BorderLayout() );
-		JLabel progressLabel = new JLabel( label );
-		progressLabel.setBorder( BorderFactory.createEmptyBorder( 10, 10, 0, 10 ) );
+        getContentPane().setLayout(new BorderLayout());
+        JLabel progressLabel = new JLabel(label);
+        progressLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
-		getContentPane().add( progressLabel, BorderLayout.NORTH );
-		getContentPane().add( panel, BorderLayout.CENTER );
+        getContentPane().add(progressLabel, BorderLayout.NORTH);
+        getContentPane().add(panel, BorderLayout.CENTER);
 
-		if( allowCancel )
-		{
-			ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
-			builder.addGlue();
-			cancelButton = new JButton( new CancelAction() );
-			builder.addFixed( cancelButton );
-			builder.addGlue();
-			builder.setBorder( BorderFactory.createEmptyBorder( 0, 10, 10, 10 ) );
-			getContentPane().add( builder.getPanel(), BorderLayout.SOUTH );
-		}
+        if (allowCancel) {
+            ButtonBarBuilder builder = ButtonBarBuilder.createLeftToRightBuilder();
+            builder.addGlue();
+            cancelButton = new JButton(new CancelAction());
+            builder.addFixed(cancelButton);
+            builder.addGlue();
+            builder.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+            getContentPane().add(builder.getPanel(), BorderLayout.SOUTH);
+        }
 
-		pack();
-	}
+        pack();
+    }
 
-	public void run( Worker worker )
-	{
-		this.worker = worker;
-		SwingWorkerDelegator swingWorker = new SwingWorkerDelegator( this, this, worker )
-		{
-			@Override
-			public void finished()
-			{
-				super.finished();
-				ProgressDialog.this.worker = null;
-			}
-		};
+    public void run(Worker worker) {
+        this.worker = worker;
+        SwingWorkerDelegator swingWorker = new SwingWorkerDelegator(this, this, worker) {
+            @Override
+            public void finished() {
+                super.finished();
+                ProgressDialog.this.worker = null;
+            }
+        };
 
-		swingWorker.start();
-		setVisible( true );
-	}
+        swingWorker.start();
+        setVisible(true);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.support.components.XProgressMonitor#setProgress(int,
-	 * java.lang.String)
-	 */
-	public void setProgress( final int value, final String string )
-	{
-		SwingUtilities.invokeLater( new Runnable()
-		{
-			public void run()
-			{
-				progressBar.setValue( value );
-				progressBar.setString( string );
-				pack();
-			}
-		} );
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.eviware.soapui.support.components.XProgressMonitor#setProgress(int,
+     * java.lang.String)
+     */
+    public void setProgress(final int value, final String string) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                progressBar.setValue(value);
+                progressBar.setString(string);
+                pack();
+            }
+        });
+    }
 
-	public void setDeterminate()
-	{
-		progressBar.setIndeterminate( false );
-	}
+    public void setDeterminate() {
+        progressBar.setIndeterminate(false);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.eviware.soapui.support.components.XProgressMonitor#setVisible(boolean)
-	 */
-	public void setVisible( boolean visible )
-	{
-		if( visible )
-		{
-			UISupport.centerDialog( this );
-		}
-		super.setVisible( visible );
-	}
+    public void setIndeterminate() {
+        progressBar.setIndeterminate(true);
+    }
 
-	private class CancelAction extends AbstractAction
-	{
-		public CancelAction()
-		{
-			super( "Cancel" );
-		}
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.eviware.soapui.support.components.XProgressMonitor#setVisible(boolean)
+     */
+    public void setVisible(boolean visible) {
+        if (visible) {
+            UISupport.centerDialog(this);
+        }
+        super.setVisible(visible);
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			worker.onCancel();
-		}
-	}
+    private class CancelAction extends AbstractAction {
+        public CancelAction() {
+            super("Cancel");
+        }
 
-	public void setCancelLabel( String label )
-	{
-		if( cancelButton != null )
-			cancelButton.setText( label );
-	}
+        public void actionPerformed(ActionEvent e) {
+            worker.onCancel();
+        }
+    }
+
+    public void setCancelLabel(String label) {
+        if (cancelButton != null) {
+            cancelButton.setText(label);
+        }
+    }
 }

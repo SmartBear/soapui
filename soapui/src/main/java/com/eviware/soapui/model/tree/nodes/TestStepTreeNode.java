@@ -22,14 +22,12 @@ import com.eviware.soapui.model.tree.SoapUITreeModel;
 
 /**
  * SoapUITreeNode for TestStep implementations
- * 
+ *
  * @author Ole.Matzura
  */
 
-public class TestStepTreeNode extends PropertiesTreeNode<TestStep>
-{
-	public TestStepTreeNode( TestStep testStep, ModelItem parent, SoapUITreeModel treeModel )
-	{
-		super( testStep, parent, testStep, treeModel );
-	}
+public class TestStepTreeNode extends PropertiesTreeNode<TestStep> {
+    public TestStepTreeNode(TestStep testStep, ModelItem parent, SoapUITreeModel treeModel) {
+        super(testStep, parent, testStep, treeModel);
+    }
 }

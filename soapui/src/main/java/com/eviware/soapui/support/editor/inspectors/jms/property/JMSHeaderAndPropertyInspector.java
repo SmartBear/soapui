@@ -34,81 +34,72 @@ import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implements PropertyChangeListener
-{
-	private StringToStringMapTableModel headersTableModel;
-	private final JMSHeaderAndPropertyInspectorModel model;
-	private JTable headersTable;
+public class JMSHeaderAndPropertyInspector extends AbstractXmlInspector implements PropertyChangeListener {
+    private StringToStringMapTableModel headersTableModel;
+    private final JMSHeaderAndPropertyInspectorModel model;
+    private JTable headersTable;
 
-	private JPanel panel;
-	public boolean changing;
+    private JPanel panel;
+    public boolean changing;
 
-	protected JMSHeaderAndPropertyInspector( JMSHeaderAndPropertyInspectorModel model )
-	{
-		super( "JMS (" + ( model.getJMSHeadersAndProperties() == null ? "0" : model.getJMSHeadersAndProperties().size() )
-				+ ")", "JMS Header and Property for this message", true, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID );
+    protected JMSHeaderAndPropertyInspector(JMSHeaderAndPropertyInspectorModel model) {
+        super("JMS (" + (model.getJMSHeadersAndProperties() == null ? "0" : model.getJMSHeadersAndProperties().size())
+                + ")", "JMS Header and Property for this message", true, JMSHeaderAndPropertyInspectorFactory.INSPECTOR_ID);
 
-		this.model = model;
+        this.model = model;
 
-		model.addPropertyChangeListener( this );
-		model.setInspector( this );
-	}
+        model.addPropertyChangeListener(this);
+        model.setInspector(this);
+    }
 
-	public JComponent getComponent()
-	{
-		if( panel != null )
-			return panel;
+    public JComponent getComponent() {
+        if (panel != null) {
+            return panel;
+        }
 
-		headersTableModel = new StringToStringMapTableModel( model.getJMSHeadersAndProperties(), "Key", "Value",
-				!model.isReadOnly() );
-		headersTableModel.addTableModelListener( new TableModelListener()
-		{
-			public void tableChanged( TableModelEvent arg0 )
-			{
-				StringToStringMap map = model.getJMSHeadersAndProperties();
-				setTitle( "JMS (" + ( map == null ? "0" : map.size() ) + ")" );
-			}
-		} );
-		headersTable = JTableFactory.getInstance().makeJTable( headersTableModel );
+        headersTableModel = new StringToStringMapTableModel(model.getJMSHeadersAndProperties(), "Key", "Value",
+                !model.isReadOnly());
+        headersTableModel.addTableModelListener(new TableModelListener() {
+            public void tableChanged(TableModelEvent arg0) {
+                StringToStringMap map = model.getJMSHeadersAndProperties();
+                setTitle("JMS (" + (map == null ? "0" : map.size()) + ")");
+            }
+        });
+        headersTable = JTableFactory.getInstance().makeJTable(headersTableModel);
 
-		panel = new JPanel( new BorderLayout() );
-		panel.add( new JScrollPane( headersTable ), BorderLayout.CENTER );
+        panel = new JPanel(new BorderLayout());
+        panel.add(new JScrollPane(headersTable), BorderLayout.CENTER);
 
-		return panel;
-	}
+        return panel;
+    }
 
-	public JTable getHeadersTable()
-	{
-		return headersTable;
-	}
+    public JTable getHeadersTable() {
+        return headersTable;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		model.release();
-		model.removePropertyChangeListener( this );
-	}
+    @Override
+    public void release() {
+        super.release();
+        model.release();
+        model.removePropertyChangeListener(this);
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( !changing )
-			headersTableModel.setData( model.getJMSHeadersAndProperties() );
-	}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (!changing) {
+            headersTableModel.setData(model.getJMSHeadersAndProperties());
+        }
+    }
 
-	public JMSHeaderAndPropertyInspectorModel getModel()
-	{
-		return model;
-	}
+    public JMSHeaderAndPropertyInspectorModel getModel() {
+        return model;
+    }
 
-	public StringToStringMapTableModel getHeadersTableModel()
-	{
-		return headersTableModel;
-	}
+    public StringToStringMapTableModel getHeadersTableModel() {
+        return headersTableModel;
+    }
 
-	@Override
-	public boolean isEnabledFor( EditorView<XmlDocument> view )
-	{
-		return !view.getViewId().equals( RawXmlEditorFactory.VIEW_ID );
-	}
+    @Override
+    public boolean isEnabledFor(EditorView<XmlDocument> view) {
+        return !view.getViewId().equals(RawXmlEditorFactory.VIEW_ID);
+    }
 }

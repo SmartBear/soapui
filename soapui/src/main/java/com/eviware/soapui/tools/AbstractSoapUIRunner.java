@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.eviware.soapui.impl.wsdl.submit.filters.GlobalHttpHeadersRequestFilter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -47,389 +48,383 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 
-public abstract class AbstractSoapUIRunner implements CmdLineRunner
-{
-	private boolean groovyLogInitialized;
-	private String projectFile;
-	protected final Logger log = Logger.getLogger( getClass() );
-	private String settingsFile;
-	private String soapUISettingsPassword;
-	private String projectPassword;
+public abstract class AbstractSoapUIRunner implements CmdLineRunner {
+    public static final int NORMAL_TERMINATION = 0;
+    public static final int ABNORMAL_TERMINATION = -1;
 
-	private boolean enableUI;
-	private String outputFolder;
-	private String[] projectProperties;
-	private Map<String, String> runnerGlobalProperties = new HashMap<String, String>();
+    private boolean groovyLogInitialized;
+    private String projectFile;
+    protected final Logger log = Logger.getLogger(getClass());
+    private String settingsFile;
+    private String soapUISettingsPassword;
+    private String projectPassword;
 
-	public AbstractSoapUIRunner( String title )
-	{
-		if( title != null )
-			System.out.println( title );
+    private boolean enableUI;
+    private String outputFolder;
+    private String[] projectProperties;
+    private Map<String, String> runnerGlobalProperties = new HashMap<String, String>();
 
-		SoapUI.setCmdLineRunner( this );
-	}
+    public AbstractSoapUIRunner(String title) {
+        if (title != null) {
+            System.out.println(title);
+        }
 
-	protected void initGroovyLog()
-	{
-		if( !groovyLogInitialized )
-		{
-			Logger logger = Logger.getLogger( "groovy.log" );
+        SoapUI.setCmdLineRunner(this);
+    }
 
-			ConsoleAppender appender = new ConsoleAppender();
-			appender.setWriter( new OutputStreamWriter( System.out ) );
-			appender.setLayout( new PatternLayout( "%d{ABSOLUTE} %-5p [%c{1}] %m%n" ) );
-			logger.addAppender( appender );
+    protected void initGroovyLog() {
+        if (!groovyLogInitialized) {
+            Logger logger = Logger.getLogger("groovy.log");
 
-			groovyLogInitialized = true;
-		}
-	}
+            ConsoleAppender appender = new ConsoleAppender();
+            appender.setWriter(new OutputStreamWriter(System.out));
+            appender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
+            logger.addAppender(appender);
 
-	public int runFromCommandLine( String[] args )
-	{
-		try
-		{
-			if( initFromCommandLine( args, true ) )
-			{
-				if( run() )
-				{
-					return 0;
-				}
-			}
-		}
-		catch( Throwable e )
-		{
-			log.error( e );
-			SoapUI.logError( e );
-		}
+            groovyLogInitialized = true;
+        }
+    }
 
-		return -1;
-	}
+    /**
+     * Validates the command line arguments and runs the test runner if vaild
+     *
+     * @param args the commandline arguments to the runner
+     * @return status code to be used with System.exit()
+     * @see java.lang.System
+     */
+    public int runFromCommandLine(String[] args) {
+        int results = ABNORMAL_TERMINATION;
+        if (validateCommandLineArgument(args)) {
+            results = run(args);
+        }
+        return results;
+    }
 
-	public boolean initFromCommandLine( String[] args, boolean printHelp ) throws Exception
-	{
-		SoapUIOptions options = initCommandLineOptions();
+    public boolean validateCommandLineArgument(String[] args) {
+        boolean commandLineArgumentsAreValid = false;
+        try {
+            commandLineArgumentsAreValid = initFromCommandLine(args, true);
+        } catch (Exception e) {
+            log.error(e);
+            SoapUI.logError(e);
+        }
+        return commandLineArgumentsAreValid;
+    }
 
-		CommandLineParser parser = new PosixParser();
-		CommandLine cmd = parser.parse( options, args );
+    /**
+     * Runs the testrunner
+     *
+     * @param args the command line arguments to be passed to the testrunner
+     * @return status code to be used with System.exit()
+     * @see java.lang.System
+     */
+    public int run(String[] args) {
+        try {
+            if (run()) {
+                return NORMAL_TERMINATION;
+            }
+        } catch (Exception e) {
+            log.error(e);
+            SoapUI.logError(e);
+        }
+        return ABNORMAL_TERMINATION;
+    }
 
-		if( options.requiresProject() )
-		{
-			args = cmd.getArgs();
+    public boolean initFromCommandLine(String[] args, boolean printHelp) throws Exception {
+        SoapUIOptions options = initCommandLineOptions();
 
-			if( args.length != 1 )
-			{
-				if( printHelp )
-				{
-					HelpFormatter formatter = new HelpFormatter();
-					formatter.printHelp( options.getRunnerName() + " [options] <soapui-project-file>", options );
-				}
+        CommandLineParser parser = new PosixParser();
+        CommandLine cmd = parser.parse(options, args);
 
-				System.err.println( "Missing SoapUI project file.." );
-				return false;
-			}
 
-			setProjectFile( args[0] );
-		}
+        if (requiresProjectArgument(cmd)) {
+            args = cmd.getArgs();
 
-		return processCommandLine( cmd );
-	}
+            if (args.length != 1) {
+                if (printHelp) {
+                    HelpFormatter formatter = new HelpFormatter();
+                    formatter.printHelp(options.getRunnerName() + " [options] <soapui-project-file>", options);
+                }
 
-	/**
-	 * Main method to use for running the configured tests. Call after setting
-	 * properties, etc as desired.
-	 * 
-	 * @return true if execution should be blocked
-	 * @throws Exception
-	 *            if an error or failure occurs during test execution
-	 */
+                System.err.println("Missing SoapUI project file..");
+                return false;
+            }
 
-	public final boolean run() throws Exception
-	{
-		if( SoapUI.getSoapUICore() == null )
-		{
-			SoapUI.setSoapUICore( createSoapUICore(), true );
-			SoapUI.initGCTimer();
-		}
-		for( String name : runnerGlobalProperties.keySet() )
-		{
-			PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, runnerGlobalProperties.get( name ) );
-		}
+            setProjectFile(args[0]);
+        }
 
-		SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
+        return processCommandLine(cmd);
+    }
 
-		try
-		{
-			return runRunner();
-		}
-		finally
-		{
-			state.restore();
-		}
-	}
+    /**
+     * Checks if the command line arguments require a project file
+     * @param cmd The command line
+     * @return true as default
+     */
+    protected boolean requiresProjectArgument(CommandLine cmd) {
+        return true;
+    }
 
-	protected SoapUICore createSoapUICore()
-	{
-		if( enableUI )
-		{
-			StandaloneSoapUICore core = new StandaloneSoapUICore( settingsFile );
-			log.info( "Enabling UI Components" );
-			core.prepareUI();
-			UISupport.setMainFrame( null );
-			return core;
-		}
-		else
-		{
-			return new DefaultSoapUICore( null, settingsFile, soapUISettingsPassword );
-		}
-	}
+    /**
+     * Main method to use for running the configured tests. Call after setting
+     * properties, etc as desired.
+     *
+     * @return true if execution should be blocked
+     * @throws Exception if an error or failure occurs during test execution
+     */
 
-	protected abstract boolean processCommandLine( CommandLine cmd );
+    public final boolean run() throws Exception {
+        if (SoapUI.getSoapUICore() == null) {
+            SoapUI.setSoapUICore(createSoapUICore(), true);
+            SoapUI.initGCTimer();
+        }
+        for (String name : runnerGlobalProperties.keySet()) {
+            PropertyExpansionUtils.getGlobalProperties().setPropertyValue(name, runnerGlobalProperties.get(name));
+        }
 
-	protected abstract SoapUIOptions initCommandLineOptions();
+        SoapUIClassLoaderState state = SoapUIExtensionClassLoader.ensure();
 
-	protected abstract boolean runRunner() throws Exception;
+        try {
+            return runRunner();
+        } finally {
+            state.restore();
+        }
+    }
 
-	protected String getCommandLineOptionSubstSpace( CommandLine cmd, String key )
-	{
-		return cmd.getOptionValue( key ).replaceAll( "%20", " " );
-	}
+    protected SoapUICore createSoapUICore() {
+        if (enableUI) {
+            StandaloneSoapUICore core = new StandaloneSoapUICore(settingsFile);
+            log.info("Enabling UI Components");
+            core.prepareUI();
+            UISupport.setMainFrame(null);
+            return core;
+        } else {
+            return new DefaultSoapUICore(null, settingsFile, soapUISettingsPassword);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.tools.CmdLineRunner#getProjectFile()
-	 */
-	@Override
-	public String getProjectFile()
-	{
-		return projectFile;
-	}
+    protected abstract boolean processCommandLine(CommandLine cmd);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.tools.CmdLineRunner#getSettingsFile()
-	 */
-	@Override
-	public String getSettingsFile()
-	{
-		return settingsFile;
-	}
+    protected abstract SoapUIOptions initCommandLineOptions();
 
-	public void setOutputFolder( String outputFolder )
-	{
-		this.outputFolder = outputFolder;
-	}
+    protected abstract boolean runRunner() throws Exception;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.tools.CmdLineRunner#getOutputFolder()
-	 */
-	@Override
-	public String getOutputFolder()
-	{
-		return this.outputFolder;
-	}
+    protected String getCommandLineOptionSubstSpace(CommandLine cmd, String key) {
+        return cmd.getOptionValue(key).replaceAll("%20", " ");
+    }
 
-	public String getAbsoluteOutputFolder( ModelItem modelItem )
-	{
-		String folder = PropertyExpander.expandProperties( modelItem, outputFolder );
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.soapui.tools.CmdLineRunner#getProjectFile()
+     */
+    @Override
+    public String getProjectFile() {
+        return projectFile;
+    }
 
-		if( StringUtils.isNullOrEmpty( folder ) )
-		{
-			folder = PathUtils.getExpandedResourceRoot( modelItem );
-		}
-		else if( PathUtils.isRelativePath( folder ) )
-		{
-			folder = PathUtils.resolveResourcePath( folder, modelItem );
-		}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.soapui.tools.CmdLineRunner#getSettingsFile()
+     */
+    @Override
+    public String getSettingsFile() {
+        return settingsFile;
+    }
 
-		return folder;
-	}
+    public void setOutputFolder(String outputFolder) {
+        this.outputFolder = outputFolder;
+    }
 
-	public String getModelItemOutputFolder( ModelItem modelItem )
-	{
-		List<ModelItem> chain = new ArrayList<ModelItem>();
-		ModelItem p = modelItem;
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.soapui.tools.CmdLineRunner#getOutputFolder()
+     */
+    @Override
+    public String getOutputFolder() {
+        return this.outputFolder;
+    }
 
-		while( !( p instanceof Project ) )
-		{
-			chain.add( 0, p );
-			p = p.getParent();
-		}
+    public String getAbsoluteOutputFolder(ModelItem modelItem) {
+        String folder = PropertyExpander.expandProperties(modelItem, outputFolder);
 
-		File dir = new File( getAbsoluteOutputFolder( modelItem ) );
-		dir.mkdir();
+        if (StringUtils.isNullOrEmpty(folder)) {
+            folder = PathUtils.getExpandedResourceRoot(modelItem);
+        } else if (PathUtils.isRelativePath(folder)) {
+            folder = PathUtils.resolveResourcePath(folder, modelItem);
+        }
 
-		for( ModelItem item : chain )
-		{
-			dir = new File( dir, StringUtils.createFileName( item.getName(), '-' ) );
-			dir.mkdir();
-		}
+        return folder;
+    }
 
-		return dir.getAbsolutePath();
-	}
+    public String getModelItemOutputFolder(ModelItem modelItem) {
+        List<ModelItem> chain = new ArrayList<ModelItem>();
+        ModelItem p = modelItem;
 
-	protected void ensureOutputFolder( ModelItem modelItem )
-	{
-		ensureFolder( getAbsoluteOutputFolder( modelItem ) );
-	}
+        while (!(p instanceof Project)) {
+            chain.add(0, p);
+            p = p.getParent();
+        }
 
-	public void ensureFolder( String path )
-	{
-		if( path == null )
-			return;
+        File dir = new File(getAbsoluteOutputFolder(modelItem));
+        dir.mkdir();
 
-		File folder = new File( path );
-		if( !folder.exists() || !folder.isDirectory() )
-			folder.mkdirs();
-	}
+        for (ModelItem item : chain) {
+            dir = new File(dir, StringUtils.createFileName(item.getName(), '-'));
+            dir.mkdir();
+        }
 
-	/**
-	 * Sets the SoapUI project file containing the tests to run
-	 * 
-	 * @param projectFile
-	 *           the SoapUI project file containing the tests to run
-	 */
+        return dir.getAbsolutePath();
+    }
 
-	public void setProjectFile( String projectFile )
-	{
-		this.projectFile = projectFile;
-	}
+    protected void ensureOutputFolder(ModelItem modelItem) {
+        ensureFolder(getAbsoluteOutputFolder(modelItem));
+    }
 
-	/**
-	 * Sets the SoapUI settings file containing the tests to run
-	 * 
-	 * @param settingsFile
-	 *           the SoapUI settings file to use
-	 */
+    public void ensureFolder(String path) {
+        if (path == null) {
+            return;
+        }
 
-	public void setSettingsFile( String settingsFile )
-	{
-		this.settingsFile = settingsFile;
-	}
+        File folder = new File(path);
+        if (!folder.exists() || !folder.isDirectory()) {
+            folder.mkdirs();
+        }
+    }
 
-	public void setEnableUI( boolean enableUI )
-	{
-		this.enableUI = enableUI;
-	}
+    /**
+     * Sets the SoapUI project file containing the tests to run
+     *
+     * @param projectFile the SoapUI project file containing the tests to run
+     */
 
-	public static class SoapUIOptions extends Options
-	{
-		private final String runnerName;
+    public void setProjectFile(String projectFile) {
+        this.projectFile = projectFile;
+    }
 
-		public SoapUIOptions( String runnerName )
-		{
-			this.runnerName = runnerName;
-		}
+    /**
+     * Sets the SoapUI settings file containing the tests to run
+     *
+     * @param settingsFile the SoapUI settings file to use
+     */
 
-		public String getRunnerName()
-		{
-			return runnerName;
-		}
+    public void setSettingsFile(String settingsFile) {
+        this.settingsFile = settingsFile;
+    }
 
-		public boolean requiresProject()
-		{
-			return true;
-		}
-	}
+    public void setEnableUI(boolean enableUI) {
+        this.enableUI = enableUI;
+    }
 
-	public String getSoapUISettingsPassword()
-	{
-		return soapUISettingsPassword;
-	}
+    public static class SoapUIOptions extends Options {
+        private final String runnerName;
 
-	public void setSoapUISettingsPassword( String soapUISettingsPassword )
-	{
-		this.soapUISettingsPassword = soapUISettingsPassword;
-	}
+        public SoapUIOptions(String runnerName) {
+            this.runnerName = runnerName;
+        }
 
-	public void setSystemProperties( String[] optionValues )
-	{
-		for( String option : optionValues )
-		{
-			int ix = option.indexOf( '=' );
-			if( ix != -1 )
-			{
-				System.setProperty( option.substring( 0, ix ), option.substring( ix + 1 ) );
-			}
-		}
-	}
+        public String getRunnerName() {
+            return runnerName;
+        }
+    }
 
-	public void setGlobalProperties( String[] optionValues )
-	{
-		for( String option : optionValues )
-		{
-			int ix = option.indexOf( '=' );
-			if( ix != -1 )
-			{
-				String name = option.substring( 0, ix );
-				String value = option.substring( ix + 1 );
-				log.info( "Setting global property [" + name + "] to [" + value + "]" );
-				//				PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, value );
-				runnerGlobalProperties.put( name, value );
-			}
-		}
-	}
+    public String getSoapUISettingsPassword() {
+        return soapUISettingsPassword;
+    }
 
-	public void setProjectProperties( String[] projectProperties )
-	{
-		this.projectProperties = projectProperties;
-	}
+    public void setSoapUISettingsPassword(String soapUISettingsPassword) {
+        this.soapUISettingsPassword = soapUISettingsPassword;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.tools.CmdLineRunner#getLog()
-	 */
-	@Override
-	public Logger getLog()
-	{
-		return log;
-	}
+    public void setSystemProperties(String[] optionValues) {
+        for (String option : optionValues) {
+            int ix = option.indexOf('=');
+            if (ix != -1) {
+                System.setProperty(option.substring(0, ix), option.substring(ix + 1));
+            }
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.eviware.soapui.tools.CmdLineRunner#getProjectProperties()
-	 */
-	@Override
-	public String[] getProjectProperties()
-	{
-		return projectProperties;
-	}
+    public void setCustomHeaders( String[] optionValues )
+    {
+        for( String option : optionValues )
+        {
+            int ix = option.indexOf( '=' );
+            if( ix != -1 )
+            {
+                // not optimal - it would be nicer if the filter could access command-line options via some
+                // generic mechanism.
+                String name = option.substring(0, ix);
+                String value = option.substring(ix + 1);
+                log.info( "Adding global HTTP Header [" + name + "] = [" + value + "]");
 
-	protected void initProjectProperties( WsdlProject project )
-	{
-		if( projectProperties != null )
-		{
-			for( String option : projectProperties )
-			{
-				int ix = option.indexOf( '=' );
-				if( ix != -1 )
-				{
-					String name = option.substring( 0, ix );
-					String value = option.substring( ix + 1 );
-					log.info( "Setting project property [" + name + "] to [" + value + "]" );
-					project.setPropertyValue( name, value );
-				}
-			}
-		}
-	}
+                GlobalHttpHeadersRequestFilter.addGlobalHeader(name, value);
+            }
+        }
+    }
 
-	public boolean isEnableUI()
-	{
-		return enableUI;
-	}
+    public void setGlobalProperties(String[] optionValues) {
+        for (String option : optionValues) {
+            int ix = option.indexOf('=');
+            if (ix != -1) {
+                String name = option.substring(0, ix);
+                String value = option.substring(ix + 1);
+                log.info("Setting global property [" + name + "] to [" + value + "]");
+                //				PropertyExpansionUtils.getGlobalProperties().setPropertyValue( name, value );
+                runnerGlobalProperties.put(name, value);
+            }
+        }
+    }
 
-	public String getProjectPassword()
-	{
-		return projectPassword;
-	}
+    public void setProjectProperties(String[] projectProperties) {
+        this.projectProperties = projectProperties;
+    }
 
-	public void setProjectPassword( String projectPassword )
-	{
-		this.projectPassword = projectPassword;
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.soapui.tools.CmdLineRunner#getLog()
+     */
+    @Override
+    public Logger getLog() {
+        return log;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.eviware.soapui.tools.CmdLineRunner#getProjectProperties()
+     */
+    @Override
+    public String[] getProjectProperties() {
+        return projectProperties;
+    }
+
+    protected void initProjectProperties(WsdlProject project) {
+        if (projectProperties != null) {
+            for (String option : projectProperties) {
+                int ix = option.indexOf('=');
+                if (ix != -1) {
+                    String name = option.substring(0, ix);
+                    String value = option.substring(ix + 1);
+                    log.info("Setting project property [" + name + "] to [" + value + "]");
+                    project.setPropertyValue(name, value);
+                }
+            }
+        }
+    }
+
+    public boolean isEnableUI() {
+        return enableUI;
+    }
+
+    public String getProjectPassword() {
+        return projectPassword;
+    }
+
+    public void setProjectPassword(String projectPassword) {
+        this.projectPassword = projectPassword;
+    }
 }

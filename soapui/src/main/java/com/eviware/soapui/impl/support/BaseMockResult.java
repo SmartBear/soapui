@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.support;
+*/
+package com.eviware.soapui.impl.support;
 
 import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockRequest;
@@ -30,188 +31,156 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.Enumeration;
 
-public class BaseMockResult<MockRequestType extends MockRequest, MockOperationType extends MockOperation> implements MockResult
-{
-	private MockResponse mockResponse;
-	private String responseContent;
-	private long timeTaken;
-	private long timestamp;
-	private DefaultActionList actions;
-	private StringToStringsMap responseHeaders = new StringToStringsMap();
-	private MockRequestType mockRequest;
-	private byte[] rawResponseData;
-	private MockOperationType mockOperation;
-	private String responseContentType;
+public class BaseMockResult<MockRequestType extends MockRequest, MockOperationType extends MockOperation> implements MockResult {
+    private MockResponse mockResponse;
+    private String responseContent;
+    private long timeTaken;
+    private long timestamp;
+    private DefaultActionList actions;
+    private StringToStringsMap responseHeaders = new StringToStringsMap();
+    private MockRequestType mockRequest;
+    private byte[] rawResponseData;
+    private MockOperationType mockOperation;
+    private String responseContentType;
 
-	public BaseMockResult( MockRequestType request )
-	{
-		timestamp = System.currentTimeMillis();
-		mockRequest = request;
-	}
+    public BaseMockResult(MockRequestType request) {
+        timestamp = System.currentTimeMillis();
+        mockRequest = request;
+    }
 
-	public MockRequestType getMockRequest()
-	{
-		return mockRequest;
-	}
+    public MockRequestType getMockRequest() {
+        return mockRequest;
+    }
 
-	public ActionList getActions()
-	{
-		if( actions == null )
-		{
-			actions = new DefaultActionList( "MockResult" );
-		}
+    public ActionList getActions() {
+        if (actions == null) {
+            actions = new DefaultActionList("MockResult");
+        }
 
-		return actions;
-	}
+        return actions;
+    }
 
-	public MockResponse getMockResponse()
-	{
-		return mockResponse;
-	}
+    public MockResponse getMockResponse() {
+        return mockResponse;
+    }
 
-	public String getResponseContent()
-	{
-		return responseContent;
-	}
+    public String getResponseContent() {
+        return responseContent;
+    }
 
-	public long getTimeTaken()
-	{
-		return timeTaken;
-	}
+    public long getTimeTaken() {
+        return timeTaken;
+    }
 
-	public long getTimestamp()
-	{
-		return timestamp;
-	}
+    public long getTimestamp() {
+        return timestamp;
+    }
 
-	public void setTimestamp( long timestamp )
-	{
-		this.timestamp = timestamp;
-	}
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
+    }
 
-	public void setTimeTaken( long timeTaken )
-	{
-		this.timeTaken = timeTaken;
-	}
+    public void setTimeTaken(long timeTaken) {
+        this.timeTaken = timeTaken;
+    }
 
-	public StringToStringsMap getResponseHeaders()
-	{
-		return responseHeaders;
-	}
+    public StringToStringsMap getResponseHeaders() {
+        return responseHeaders;
+    }
 
-	public void setMockResponse( MockResponse mockResponse )
-	{
-		this.mockResponse = mockResponse;
-		mockRequest.getRequestContext().setMockResponse( mockResponse );
-	}
+    public void setMockResponse(MockResponse mockResponse) {
+        this.mockResponse = mockResponse;
+        mockRequest.getRequestContext().setMockResponse(mockResponse);
+    }
 
-	public void setResponseContent( String responseContent )
-	{
-		this.responseContent = responseContent;
-	}
+    public void setResponseContent(String responseContent) {
+        this.responseContent = responseContent;
+    }
 
-	@SuppressWarnings("unchecked")
-	public void finish()
-	{
-		if( mockRequest.getHttpResponse() instanceof org.mortbay.jetty.Response )
-		{
-			HttpFields httpFields = ( ( org.mortbay.jetty.Response )mockRequest.getHttpResponse() ).getHttpFields();
+    @SuppressWarnings("unchecked")
+    public void finish() {
+        if (mockRequest.getHttpResponse() instanceof org.mortbay.jetty.Response) {
+            HttpFields httpFields = ((org.mortbay.jetty.Response) mockRequest.getHttpResponse()).getHttpFields();
 
-			Enumeration<String> e = httpFields.getFieldNames();
-			while( e.hasMoreElements() )
-			{
-				String nextElement = e.nextElement();
-				responseHeaders.add( nextElement, httpFields.getStringField( nextElement ) );
-			}
-		}
-	}
+            Enumeration<String> e = httpFields.getFieldNames();
+            while (e.hasMoreElements()) {
+                String nextElement = e.nextElement();
+                responseHeaders.add(nextElement, httpFields.getStringField(nextElement));
+            }
+        }
+    }
 
-	public void addHeader( String name, String value )
-	{
-		if( mockRequest.getHttpResponse() != null )
-			mockRequest.getHttpResponse().addHeader( name, value );
+    public void addHeader(String name, String value) {
+        HttpServletResponse httpResponse = mockRequest.getHttpResponse();
+        if (httpResponse != null) {
+            httpResponse.addHeader(name, value);
+        }
 
-		responseHeaders.add( name, value );
-	}
+        responseHeaders.add(name, value);
+    }
 
-	public boolean isCommitted()
-	{
-		return mockRequest.getHttpResponse().isCommitted();
-	}
+    public boolean isCommitted() {
+        return mockRequest.getHttpResponse().isCommitted();
+    }
 
-	public void setContentType( String contentType )
-	{
-		mockRequest.getHttpResponse().setContentType( contentType );
-		responseContentType = contentType;
-	}
+    public void setContentType(String contentType) {
+        mockRequest.getHttpResponse().setContentType(contentType);
+        responseContentType = contentType;
+    }
 
-	public OutputStream getOutputStream() throws IOException
-	{
-		return mockRequest.getHttpResponse().getOutputStream();
-	}
+    public OutputStream getOutputStream() throws IOException {
+        return mockRequest.getHttpResponse().getOutputStream();
+    }
 
-	public boolean isDiscarded()
-	{
-		return false;
-	}
+    public boolean isDiscarded() {
+        return false;
+    }
 
-	public byte[] getRawResponseData()
-	{
-		return rawResponseData;
-	}
+    public byte[] getRawResponseData() {
+        return rawResponseData;
+    }
 
-	public void setRawResponseData( byte[] rawResponseData )
-	{
-		this.rawResponseData = rawResponseData;
-	}
+    public void setRawResponseData(byte[] rawResponseData) {
+        this.rawResponseData = rawResponseData;
+    }
 
-	public void writeRawResponseData( byte[] bs ) throws IOException
-	{
-		getOutputStream().write( bs );
-		setRawResponseData( bs );
-	}
+    public void writeRawResponseData(byte[] bs) throws IOException {
+        getOutputStream().write(bs);
+        setRawResponseData(bs);
+    }
 
-	public void setMockOperation( MockOperationType mockOperation )
-	{
-		this.mockOperation = mockOperation;
-	}
+    public void setMockOperation(MockOperationType mockOperation) {
+        this.mockOperation = mockOperation;
+    }
 
-	public MockOperation getMockOperation()
-	{
-		if( mockOperation != null )
-			return mockOperation;
+    public MockOperation getMockOperation() {
+        if (mockOperation != null) {
+            return mockOperation;
+        }
 
-		return mockResponse == null ? null : mockResponse.getMockOperation();
-	}
+        return mockResponse == null ? null : mockResponse.getMockOperation();
+    }
 
-	public String getResponseContentType()
-	{
-		return responseContentType;
-	}
+    public String getResponseContentType() {
+        return responseContentType;
+    }
 
-	public String toString()
-	{
-		StringBuilder msg = new StringBuilder( DateUtil.formatExtraFull( new Date( getTimestamp() ) ) );
+    public String toString() {
+        StringBuilder msg = new StringBuilder(DateUtil.formatExtraFull(new Date(getTimestamp())));
 
-		MockResponse mockResponse = getMockResponse();
+        MockResponse mockResponse = getMockResponse();
 
-		if( mockResponse == null )
-		{
-			msg.append( ": [dispatch error; missing response]" );
-		}
-		else
-		{
-			try
-			{
-				msg.append( ": [" + mockResponse.getMockOperation().getName() );
-			}
-			catch( Throwable e )
-			{
-				msg.append( ": [removed operation?]" );
-			}
+        if (mockResponse == null) {
+            msg.append(": [dispatch error; missing response]");
+        } else {
+            try {
+                msg.append(": [" + mockResponse.getMockOperation().getName());
+            } catch (Throwable e) {
+                msg.append(": [removed operation?]");
+            }
 
-			msg.append( "] " + getTimeTaken() + "ms" );
-		}
-		return msg.toString();
-	}
+            msg.append("] " + getTimeTaken() + "ms");
+        }
+        return msg.toString();
+    }
 }

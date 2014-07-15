@@ -1,4 +1,4 @@
-@Automated @Regression
+@AutomatedWithFest @Regression
 Feature: REST request parameter synchronization across REST request, method and resource
 
   Scenario: By default a parameter is added to RESOURCE level and it is synchronized between request and resource editors

@@ -15,17 +15,6 @@
 */
 package com.eviware.soapui.security.assertion;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JScrollPane;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.CrossSiteScriptingScanConfig;
 import com.eviware.soapui.config.HttpRequestConfig;
@@ -71,363 +60,322 @@ import com.eviware.x.form.support.ADialogBuilder;
 import com.eviware.x.form.support.AField;
 import com.eviware.x.form.support.AField.AFieldType;
 import com.eviware.x.form.support.AForm;
+import org.apache.xmlbeans.XmlObject;
 
-public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements ResponseAssertion
-{
-	public static final String ID = "CrosSiteScript";
-	public static final String LABEL = "Cross Site Scripting Detection";
-	public static final String DESCRIPTION = "Cross Site Scripting....assertion for...";
-	public static final String GROOVY_SCRIPT = "groovyScript";
-	public static final String CHECK_RESPONSE = "checkResponse";
-	public static final String CHECK_SEPARATE_HTML = "checkSeparateHTML";
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JScrollPane;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 
-	private XFormDialog dialog;
-	private String script;
-	private GroovyEditorModel groovyEditorModel;
-	private SoapUIScriptEngine scriptEngine;
+public class CrossSiteScriptAssertion extends WsdlMessageAssertion implements ResponseAssertion {
+    public static final String ID = "CrosSiteScript";
+    public static final String LABEL = "Cross Site Scripting Detection";
+    public static final String DESCRIPTION = "Cross Site Scripting....assertion for...";
+    public static final String GROOVY_SCRIPT = "groovyScript";
+    public static final String CHECK_RESPONSE = "checkResponse";
+    public static final String CHECK_SEPARATE_HTML = "checkSeparateHTML";
 
-	MessageExchange messageExchange;
-	SubmitContext context;
+    private XFormDialog dialog;
+    private String script;
+    private GroovyEditorModel groovyEditorModel;
+    private SoapUIScriptEngine scriptEngine;
 
-	private boolean checkResponse;
-	private boolean checkSeparateHTML;
+    MessageExchange messageExchange;
+    SubmitContext context;
 
-	public CrossSiteScriptAssertion( TestAssertionConfig assertionConfig, Assertable assertable )
-	{
-		super( assertionConfig, assertable, false, true, false, true );
-		groovyEditorModel = new GroovyEditorModel( this );
-		init();
-		scriptEngine = SoapUIScriptEngineRegistry.create( this );
-	}
+    private boolean checkResponse;
+    private boolean checkSeparateHTML;
 
-	private void init()
-	{
-		XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader( getConfiguration() );
-		script = reader.readString( GROOVY_SCRIPT, "" );
-		checkResponse = reader.readBoolean( CHECK_RESPONSE, true );
-		checkSeparateHTML = reader.readBoolean( CHECK_SEPARATE_HTML, false );
-		groovyEditorModel.setScript( script );
-	}
+    public CrossSiteScriptAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
+        super(assertionConfig, assertable, false, true, false, true);
+        groovyEditorModel = new GroovyEditorModel(this);
+        init();
+        scriptEngine = SoapUIScriptEngineRegistry.create(this);
+    }
 
-	@Override
-	protected String internalAssertResponse( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		TestStep testStep = ( TestStep )context.getProperty( CrossSiteScriptingScan.TEST_STEP );
-		testStep = SecurityTestRunnerImpl.cloneTestStepForSecurityScan( ( WsdlTestStep )testStep );
-		SecurityTestRunner securityTestRunner = ( SecurityTestRunner )context
-				.getProperty( CrossSiteScriptingScan.TEST_CASE_RUNNER );
+    private void init() {
+        XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
+        script = reader.readString(GROOVY_SCRIPT, "");
+        checkResponse = reader.readBoolean(CHECK_RESPONSE, true);
+        checkSeparateHTML = reader.readBoolean(CHECK_SEPARATE_HTML, false);
+        groovyEditorModel.setScript(script);
+    }
 
-		List<String> urls = submitScript( messageExchange, context );
+    @Override
+    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        TestStep testStep = (TestStep) context.getProperty(CrossSiteScriptingScan.TEST_STEP);
+        testStep = SecurityTestRunnerImpl.cloneTestStepForSecurityScan((WsdlTestStep) testStep);
+        SecurityTestRunner securityTestRunner = (SecurityTestRunner) context
+                .getProperty(CrossSiteScriptingScan.TEST_CASE_RUNNER);
 
-		CrossSiteScriptingScanConfig parameterExposureCheckConfig = ( CrossSiteScriptingScanConfig )context
-				.getProperty( CrossSiteScriptingScan.PARAMETER_EXPOSURE_SCAN_CONFIG );
+        List<String> urls = submitScript(messageExchange, context);
 
-		List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
-		boolean throwExceptionCheckResponse = false;
+        CrossSiteScriptingScanConfig parameterExposureCheckConfig = (CrossSiteScriptingScanConfig) context
+                .getProperty(CrossSiteScriptingScan.PARAMETER_EXPOSURE_SCAN_CONFIG);
 
-		if( checkResponse )
-		{
-			throwExceptionCheckResponse = checkResponse( messageExchange, context, parameterExposureCheckConfig,
-					assertionErrorList );
-		}
+        List<AssertionError> assertionErrorList = new ArrayList<AssertionError>();
+        boolean throwExceptionCheckResponse = false;
 
-		boolean throwExceptionCheckSeparateHTML = false;
-		if( checkSeparateHTML )
-		{
-			throwExceptionCheckSeparateHTML = checkSeparateHTML( messageExchange, context, testStep, securityTestRunner,
-					urls, parameterExposureCheckConfig, assertionErrorList );
-		}
+        if (checkResponse) {
+            throwExceptionCheckResponse = checkResponse(messageExchange, context, parameterExposureCheckConfig,
+                    assertionErrorList);
+        }
 
-		if( throwExceptionCheckResponse || throwExceptionCheckSeparateHTML )
-		{
-			throw new AssertionException( assertionErrorList.toArray( new AssertionError[assertionErrorList.size()] ) );
-		}
+        boolean throwExceptionCheckSeparateHTML = false;
+        if (checkSeparateHTML) {
+            throwExceptionCheckSeparateHTML = checkSeparateHTML(messageExchange, context, testStep, securityTestRunner,
+                    urls, parameterExposureCheckConfig, assertionErrorList);
+        }
 
-		return "OK";
-	}
+        if (throwExceptionCheckResponse || throwExceptionCheckSeparateHTML) {
+            throw new AssertionException(assertionErrorList.toArray(new AssertionError[assertionErrorList.size()]));
+        }
 
-	private boolean checkSeparateHTML( MessageExchange messageExchange, SubmitContext context, TestStep testStep,
-			SecurityTestRunner securityTestRunner, List<String> urls,
-			CrossSiteScriptingScanConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
-	{
-		boolean throwException = false;
-		for( String url : urls )
-		{
-			HttpTestRequestStep httpRequest = createHttpRequest( ( WsdlTestStep )testStep, url );
-			MessageExchange messageExchange2 = ( MessageExchange )httpRequest.run( ( TestCaseRunner )securityTestRunner,
-					( SecurityTestRunContext )context );
+        return "OK";
+    }
 
-			for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
-			{
-				value = context.expand( value );// property expansion support
-				String match = SecurityScanUtil.contains( context, new String( messageExchange2.getRawResponseData() ),
-						value, false );
-				if( match != null )
-				{
-					String shortValue = value.length() > 25 ? value.substring( 0, 22 ) + "... " : value;
-					String message = "XSS content sent in request '" + shortValue + "' is exposed in response on link "
-							+ url + " . Possibility for XSS script attack in: " + messageExchange.getModelItem().getName();
-					assertionErrorList.add( new AssertionError( message ) );
-					throwException = true;
-				}
-			}
-		}
-		return throwException;
-	}
+    private boolean checkSeparateHTML(MessageExchange messageExchange, SubmitContext context, TestStep testStep,
+                                      SecurityTestRunner securityTestRunner, List<String> urls,
+                                      CrossSiteScriptingScanConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList) {
+        boolean throwException = false;
+        for (String url : urls) {
+            HttpTestRequestStep httpRequest = createHttpRequest((WsdlTestStep) testStep, url);
+            MessageExchange messageExchange2 = (MessageExchange) httpRequest.run((TestCaseRunner) securityTestRunner,
+                    (SecurityTestRunContext) context);
 
-	private boolean checkResponse( MessageExchange messageExchange, SubmitContext context,
-			CrossSiteScriptingScanConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList )
-	{
-		boolean throwException = false;
-		for( String value : parameterExposureCheckConfig.getParameterExposureStringsList() )
-		{
-			value = context.expand( value );// property expansion support
-			String match = SecurityScanUtil.contains( context, new String( messageExchange.getRawResponseData() ), value,
-					false );
-			if( match != null )
-			{
-				String shortValue = value.length() > 25 ? value.substring( 0, 22 ) + "... " : value;
-				String message = "Content that is sent in request '" + shortValue
-						+ "' is exposed in response. Possibility for XSS script attack in: "
-						+ messageExchange.getModelItem().getName();
-				assertionErrorList.add( new AssertionError( message ) );
-				throwException = true;
-			}
-		}
-		return throwException;
-	}
+            for (String value : parameterExposureCheckConfig.getParameterExposureStringsList()) {
+                value = context.expand(value);// property expansion support
+                String match = SecurityScanUtil.contains(context, new String(messageExchange2.getRawResponseData()),
+                        value, false);
+                if (match != null) {
+                    String shortValue = value.length() > 25 ? value.substring(0, 22) + "... " : value;
+                    String message = "XSS content sent in request '" + shortValue + "' is exposed in response on link "
+                            + url + " . Possibility for XSS script attack in: " + messageExchange.getModelItem().getName();
+                    assertionErrorList.add(new AssertionError(message));
+                    throwException = true;
+                }
+            }
+        }
+        return throwException;
+    }
 
-	private List<String> submitScript( MessageExchange messageExchange, SubmitContext context )
-	{
-		List<String> urls = new ArrayList<String>();
-		scriptEngine.setScript( script );
-		scriptEngine.setVariable( "urls", urls );
-		scriptEngine.setVariable( "messageExchange", messageExchange );
-		this.messageExchange = messageExchange;
-		scriptEngine.setVariable( "context", context );
-		this.context = context;
-		scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+    private boolean checkResponse(MessageExchange messageExchange, SubmitContext context,
+                                  CrossSiteScriptingScanConfig parameterExposureCheckConfig, List<AssertionError> assertionErrorList) {
+        boolean throwException = false;
+        for (String value : parameterExposureCheckConfig.getParameterExposureStringsList()) {
+            value = context.expand(value);// property expansion support
+            String match = SecurityScanUtil.contains(context, new String(messageExchange.getRawResponseData()), value,
+                    false);
+            if (match != null) {
+                String shortValue = value.length() > 25 ? value.substring(0, 22) + "... " : value;
+                String message = "Content that is sent in request '" + shortValue
+                        + "' is exposed in response. Possibility for XSS script attack in: "
+                        + messageExchange.getModelItem().getName();
+                assertionErrorList.add(new AssertionError(message));
+                throwException = true;
+            }
+        }
+        return throwException;
+    }
 
-		try
-		{
-			Object result = scriptEngine.run();
-			if( result instanceof List )
-			{
-				urls = ( List<String> )result;
-			}
-		}
-		catch( Exception ex )
-		{
-			SoapUI.logError( ex );
-		}
-		finally
-		{
-			scriptEngine.clearVariables();
-		}
-		return urls;
-	}
+    private List<String> submitScript(MessageExchange messageExchange, SubmitContext context) {
+        List<String> urls = new ArrayList<String>();
+        scriptEngine.setScript(script);
+        scriptEngine.setVariable("urls", urls);
+        scriptEngine.setVariable("messageExchange", messageExchange);
+        this.messageExchange = messageExchange;
+        scriptEngine.setVariable("context", context);
+        this.context = context;
+        scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
 
-	private HttpTestRequestStep createHttpRequest( WsdlTestStep testStep2, String url )
-	{
-		HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
-		httpRequest.setEndpoint( HttpUtils.ensureEndpointStartsWithProtocol( url ) );
-		httpRequest.setMethod( "GET" );
+        try {
+            Object result = scriptEngine.run();
+            if (result instanceof List) {
+                urls = (List<String>) result;
+            }
+        } catch (Exception ex) {
+            SoapUI.logError(ex);
+        } finally {
+            scriptEngine.clearVariables();
+        }
+        return urls;
+    }
 
-		TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
-		testStepConfig.setType( HttpRequestStepFactory.HTTPREQUEST_TYPE );
-		testStepConfig.setConfig( httpRequest );
-		testStepConfig.setName( "Separate Request" );
+    private HttpTestRequestStep createHttpRequest(WsdlTestStep testStep2, String url) {
+        HttpRequestConfig httpRequest = HttpRequestConfig.Factory.newInstance();
+        httpRequest.setEndpoint(HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(url));
+        httpRequest.setMethod("GET");
 
-		WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory(
-				( HttpRequestStepFactory.HTTPREQUEST_TYPE ) );
-		return ( HttpTestRequestStep )factory.buildTestStep( ( WsdlTestCase )testStep2.getTestCase(), testStepConfig,
-				false );
+        TestStepConfig testStepConfig = TestStepConfig.Factory.newInstance();
+        testStepConfig.setType(HttpRequestStepFactory.HTTPREQUEST_TYPE);
+        testStepConfig.setConfig(httpRequest);
+        testStepConfig.setName("Separate Request");
 
-	}
+        WsdlTestStepFactory factory = WsdlTestStepRegistry.getInstance().getFactory(
+                (HttpRequestStepFactory.HTTPREQUEST_TYPE));
+        return (HttpTestRequestStep) factory.buildTestStep((WsdlTestCase) testStep2.getTestCase(), testStepConfig,
+                false);
 
-	protected String internalAssertProperty( TestPropertyHolder source, String propertyName,
-			MessageExchange messageExchange, SubmitContext context ) throws AssertionException
-	{
-		//		return internalAssertResponse( messageExchange, context );
-		return null;
-	}
+    }
 
-	public static class Factory extends AbstractTestAssertionFactory
-	{
-		public Factory()
-		{
-			super( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL, CrossSiteScriptAssertion.class,
-					CrossSiteScriptingScan.class );
+    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
+                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
+        //		return internalAssertResponse( messageExchange, context );
+        return null;
+    }
 
-		}
+    public static class Factory extends AbstractTestAssertionFactory {
+        public Factory() {
+            super(CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL, CrossSiteScriptAssertion.class,
+                    CrossSiteScriptingScan.class);
 
-		@Override
-		public String getCategory()
-		{
-			return "";
-		}
+        }
 
-		@Override
-		public Class<? extends WsdlMessageAssertion> getAssertionClassType()
-		{
-			return CrossSiteScriptAssertion.class;
-		}
+        @Override
+        public String getCategory() {
+            return "";
+        }
 
-		@Override
-		public AssertionListEntry getAssertionListEntry()
-		{
-			return new AssertionListEntry( CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
-					CrossSiteScriptAssertion.DESCRIPTION );
-		}
-	}
+        @Override
+        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
+            return CrossSiteScriptAssertion.class;
+        }
 
-	@Override
-	protected String internalAssertRequest( MessageExchange messageExchange, SubmitContext context )
-			throws AssertionException
-	{
-		return null;
-	}
+        @Override
+        public AssertionListEntry getAssertionListEntry() {
+            return new AssertionListEntry(CrossSiteScriptAssertion.ID, CrossSiteScriptAssertion.LABEL,
+                    CrossSiteScriptAssertion.DESCRIPTION);
+        }
+    }
 
-	protected XmlObject createConfiguration()
-	{
-		XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-		builder.add( GROOVY_SCRIPT, script );
-		builder.add( CHECK_RESPONSE, checkResponse );
-		builder.add( CHECK_SEPARATE_HTML, checkSeparateHTML );
-		return builder.finish();
-	}
+    @Override
+    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
+            throws AssertionException {
+        return null;
+    }
 
-	public boolean configure()
-	{
-		if( dialog == null )
-			buildDialog();
+    protected XmlObject createConfiguration() {
+        XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
+        builder.add(GROOVY_SCRIPT, script);
+        builder.add(CHECK_RESPONSE, checkResponse);
+        builder.add(CHECK_SEPARATE_HTML, checkSeparateHTML);
+        return builder.finish();
+    }
 
-		dialog.show();
-		if( dialog.getReturnValue() == XFormDialog.OK_OPTION )
-		{
-			checkResponse = Boolean.valueOf( dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE )
-					.getValue() );
-			checkSeparateHTML = Boolean.valueOf( dialog.getFormField(
-					CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML ).getValue() );
-			setConfiguration( createConfiguration() );
-		}
-		return true;
-	}
+    public boolean configure() {
+        if (dialog == null) {
+            buildDialog();
+        }
 
-	private class GroovyEditorModel extends AbstractGroovyEditorModel
-	{
-		@Override
-		public Action createRunAction()
-		{
-			return new AbstractAction()
-			{
-				public void actionPerformed( ActionEvent e )
-				{
-					Object result = null;
-					List<String> urls = new ArrayList<String>();
-					scriptEngine.setScript( script );
-					scriptEngine.setVariable( "urls", urls );
-					scriptEngine.setVariable( "messageExchange", messageExchange );
-					scriptEngine.setVariable( "context", context );
-					scriptEngine.setVariable( "log", SoapUI.ensureGroovyLog() );
+        dialog.show();
+        if (dialog.getReturnValue() == XFormDialog.OK_OPTION) {
+            checkResponse = Boolean.valueOf(dialog.getFormField(CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE)
+                    .getValue());
+            checkSeparateHTML = Boolean.valueOf(dialog.getFormField(
+                    CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML).getValue());
+            setConfiguration(createConfiguration());
+        }
+        return true;
+    }
 
-					try
-					{
-						result = scriptEngine.run();
-						if( result instanceof List )
-						{
-							urls = ( List<String> )result;
-						}
-						String generatedUrls = "";
-						for( String url : urls )
-						{
-							generatedUrls += "\n" + url;
-						}
-						UISupport.showInfoMessage( "Generated urls :" + generatedUrls + " \n\nScript result"
-								+ ( ( result == null ) ? "" : ": " + result + "" ) );
-					}
-					catch( Exception ex )
-					{
-						SoapUI.logError( ex );
-					}
-					finally
-					{
-						scriptEngine.clearVariables();
-					}
-				}
-			};
-		}
+    private class GroovyEditorModel extends AbstractGroovyEditorModel {
+        @Override
+        public Action createRunAction() {
+            return new AbstractAction() {
+                public void actionPerformed(ActionEvent e) {
+                    Object result = null;
+                    List<String> urls = new ArrayList<String>();
+                    scriptEngine.setScript(script);
+                    scriptEngine.setVariable("urls", urls);
+                    scriptEngine.setVariable("messageExchange", messageExchange);
+                    scriptEngine.setVariable("context", context);
+                    scriptEngine.setVariable("log", SoapUI.ensureGroovyLog());
 
-		public GroovyEditorModel( ModelItem modelItem )
-		{
-			super( new String[] { "urls", "log", "context", "messageExchange" }, modelItem, "" );
-		}
+                    try {
+                        result = scriptEngine.run();
+                        if (result instanceof List) {
+                            urls = (List<String>) result;
+                        }
+                        String generatedUrls = "";
+                        for (String url : urls) {
+                            generatedUrls += "\n" + url;
+                        }
+                        UISupport.showInfoMessage("Generated urls :" + generatedUrls + " \n\nScript result"
+                                + ((result == null) ? "" : ": " + result + ""));
+                    } catch (Exception ex) {
+                        SoapUI.logError(ex);
+                    } finally {
+                        scriptEngine.clearVariables();
+                    }
+                }
+            };
+        }
 
-		public String getScript()
-		{
-			return script;
-		}
+        public GroovyEditorModel(ModelItem modelItem) {
+            super(new String[]{"urls", "log", "context", "messageExchange"}, modelItem, "");
+        }
 
-		public void setScript( String text )
-		{
-			script = text;
-		}
-	}
+        public String getScript() {
+            return script;
+        }
 
-	protected GroovyEditorComponent buildGroovyPanel()
-	{
-		return new GroovyEditorComponent( groovyEditorModel, null );
-	}
+        public void setScript(String text) {
+            script = text;
+        }
+    }
 
-	protected void buildDialog()
-	{
-		dialog = ADialogBuilder.buildDialog( CrossSiteScripSeparateHTMLConfigDialog.class );
-		dialog.setSize( 600, 600 );
-		dialog.setBooleanValue( CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE, checkResponse );
-		dialog.setBooleanValue( CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML, checkSeparateHTML );
-		final GroovyEditorComponent groovyEditorComponent = buildGroovyPanel();
-		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY ).setProperty( "component",
-				new JScrollPane( groovyEditorComponent ) );
-		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.GROOVY ).setProperty( "dimension",
-				new Dimension( 450, 400 ) );
-		dialog.getFormField( CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML ).addFormFieldListener(
-				new XFormFieldListener()
-				{
+    protected GroovyEditorComponent buildGroovyPanel() {
+        return new GroovyEditorComponent(groovyEditorModel, null);
+    }
 
-					@Override
-					public void valueChanged( XFormField sourceField, String newValue, String oldValue )
-					{
-						groovyEditorComponent.setEnabled( new Boolean( newValue ) );
-					}
+    protected void buildDialog() {
+        dialog = ADialogBuilder.buildDialog(CrossSiteScripSeparateHTMLConfigDialog.class);
+        dialog.setSize(600, 600);
+        dialog.setBooleanValue(CrossSiteScripSeparateHTMLConfigDialog.CHECK_RESPONSE, checkResponse);
+        dialog.setBooleanValue(CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML, checkSeparateHTML);
+        final GroovyEditorComponent groovyEditorComponent = buildGroovyPanel();
+        dialog.getFormField(CrossSiteScripSeparateHTMLConfigDialog.GROOVY).setProperty("component",
+                new JScrollPane(groovyEditorComponent));
+        dialog.getFormField(CrossSiteScripSeparateHTMLConfigDialog.GROOVY).setProperty("dimension",
+                new Dimension(450, 400));
+        dialog.getFormField(CrossSiteScripSeparateHTMLConfigDialog.CHECK_SEPARATE_HTML).addFormFieldListener(
+                new XFormFieldListener() {
 
-				} );
+                    @Override
+                    public void valueChanged(XFormField sourceField, String newValue, String oldValue) {
+                        groovyEditorComponent.setEnabled(new Boolean(newValue));
+                    }
 
-		groovyEditorComponent.setEnabled( checkSeparateHTML );
-	}
+                });
 
-	@Override
-	public void release()
-	{
-		if( dialog != null )
-			dialog.release();
+        groovyEditorComponent.setEnabled(checkSeparateHTML);
+    }
 
-		super.release();
-	}
+    @Override
+    public void release() {
+        if (dialog != null) {
+            dialog.release();
+        }
 
-	@AForm( description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.SECURITY_XSS_ASSERTION_HELP )
-	protected interface CrossSiteScripSeparateHTMLConfigDialog
-	{
-		@AField( description = "Check Imediate Response", name = "###Check Response", type = AFieldType.BOOLEAN )
-		public final static String CHECK_RESPONSE = "###Check Response";
+        super.release();
+    }
 
-		@AField( description = "Check Response from URLs specified in Custom Script", name = "###Check Separate HTML", type = AFieldType.BOOLEAN )
-		public final static String CHECK_SEPARATE_HTML = "###Check Separate HTML";
+    @AForm(description = "", name = "Cross Site Scripting on Separate HTML", helpUrl = HelpUrls.SECURITY_XSS_ASSERTION_HELP)
+    protected interface CrossSiteScripSeparateHTMLConfigDialog {
+        @AField(description = "Check Imediate Response", name = "###Check Response", type = AFieldType.BOOLEAN)
+        public final static String CHECK_RESPONSE = "###Check Response";
 
-		@AField( description = "", name = "Enter Custom Script that returns a list of URLs to check for Cross Site Scripts ", type = AFieldType.LABEL )
-		public final static String LABEL = "Enter Custom Script that returns a list of URLs to check for Cross Site Scripts ";
+        @AField(description = "Check Response from URLs specified in Custom Script", name = "###Check Separate HTML", type = AFieldType.BOOLEAN)
+        public final static String CHECK_SEPARATE_HTML = "###Check Separate HTML";
 
-		@AField( description = "Groovy script", name = "###Groovy url list", type = AFieldType.COMPONENT )
-		public final static String GROOVY = "###Groovy url list";
-	}
+        @AField(description = "", name = "Enter Custom Script that returns a list of URLs to check for Cross Site Scripts ", type = AFieldType.LABEL)
+        public final static String LABEL = "Enter Custom Script that returns a list of URLs to check for Cross Site Scripts ";
+
+        @AField(description = "Groovy script", name = "###Groovy url list", type = AFieldType.COMPONENT)
+        public final static String GROOVY = "###Groovy url list";
+    }
 }

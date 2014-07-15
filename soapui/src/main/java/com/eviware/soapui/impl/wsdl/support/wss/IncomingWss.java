@@ -42,139 +42,120 @@ import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
 
-public class IncomingWss
-{
-	private IncomingWssConfig wssConfig;
-	private final WssContainer container;
+public class IncomingWss {
+    private IncomingWssConfig wssConfig;
+    private final WssContainer container;
 
-	public IncomingWss( IncomingWssConfig wssConfig, WssContainer container )
-	{
-		this.wssConfig = wssConfig;
-		this.container = container;
-	}
+    public IncomingWss(IncomingWssConfig wssConfig, WssContainer container) {
+        this.wssConfig = wssConfig;
+        this.container = container;
+    }
 
-	public WssContainer getWssContainer()
-	{
-		return container;
-	}
+    public WssContainer getWssContainer() {
+        return container;
+    }
 
-	public String getDecryptCrypto()
-	{
-		return wssConfig.getDecryptCrypto();
-	}
+    public String getDecryptCrypto() {
+        return wssConfig.getDecryptCrypto();
+    }
 
-	public String getDecryptPassword()
-	{
-		return wssConfig.getDecryptPassword();
-	}
+    public String getDecryptPassword() {
+        return wssConfig.getDecryptPassword();
+    }
 
-	public String getName()
-	{
-		return wssConfig.getName();
-	}
+    public String getName() {
+        return wssConfig.getName();
+    }
 
-	public String getSignatureCrypto()
-	{
-		return wssConfig.getSignatureCrypto();
-	}
+    public String getSignatureCrypto() {
+        return wssConfig.getSignatureCrypto();
+    }
 
-	public void setDecryptCrypto( String arg0 )
-	{
-		wssConfig.setDecryptCrypto( arg0 );
-	}
+    public void setDecryptCrypto(String arg0) {
+        wssConfig.setDecryptCrypto(arg0);
+    }
 
-	public void setDecryptPassword( String arg0 )
-	{
-		wssConfig.setDecryptPassword( arg0 );
-	}
+    public void setDecryptPassword(String arg0) {
+        wssConfig.setDecryptPassword(arg0);
+    }
 
-	public void setName( String arg0 )
-	{
-		wssConfig.setName( arg0 );
-	}
+    public void setName(String arg0) {
+        wssConfig.setName(arg0);
+    }
 
-	public void setSignatureCrypto( String arg0 )
-	{
-		wssConfig.setSignatureCrypto( arg0 );
-	}
+    public void setSignatureCrypto(String arg0) {
+        wssConfig.setSignatureCrypto(arg0);
+    }
 
-	public Vector<Object> processIncoming( Document soapDocument, PropertyExpansionContext context )
-			throws WSSecurityException
-	{
-		Element header = WSSecurityUtil.findWsseSecurityHeaderBlock( soapDocument, soapDocument.getDocumentElement(),
-				false );
-		if( header == null )
-			return null;
+    public Vector<Object> processIncoming(Document soapDocument, PropertyExpansionContext context)
+            throws WSSecurityException {
+        Element header = WSSecurityUtil.findWsseSecurityHeaderBlock(soapDocument, soapDocument.getDocumentElement(),
+                false);
+        if (header == null) {
+            return null;
+        }
 
-		try
-		{
-			WSSecurityEngine wssecurityEngine = new WSSecurityEngine();
-			WssCrypto signatureCrypto = getWssContainer().getCryptoByName( getSignatureCrypto() );
-			WssCrypto decryptCrypto = getWssContainer().getCryptoByName( getDecryptCrypto() );
-			Crypto sig = signatureCrypto == null ? null : signatureCrypto.getCrypto();
-			Crypto dec = decryptCrypto == null ? null : decryptCrypto.getCrypto();
+        try {
+            WSSecurityEngine wssecurityEngine = new WSSecurityEngine();
+            WssCrypto signatureCrypto = getWssContainer().getCryptoByName(getSignatureCrypto());
+            WssCrypto decryptCrypto = getWssContainer().getCryptoByName(getDecryptCrypto());
+            Crypto sig = signatureCrypto == null ? null : signatureCrypto.getCrypto();
+            Crypto dec = decryptCrypto == null ? null : decryptCrypto.getCrypto();
 
-			if( sig == null && dec == null )
-				throw new WSSecurityException( "Missing cryptos" );
+            if (sig == null && dec == null) {
+                throw new WSSecurityException("Missing cryptos");
+            }
 
-			if( sig == null )
-				sig = dec;
-			else if( dec == null )
-				dec = sig;
+            if (sig == null) {
+                sig = dec;
+            } else if (dec == null) {
+                dec = sig;
+            }
 
-			List<WSSecurityEngineResult> incomingResult = wssecurityEngine.processSecurityHeader( soapDocument,
-					( String )null, new WSSCallbackHandler( dec ), sig, dec );
+            List<WSSecurityEngineResult> incomingResult = wssecurityEngine.processSecurityHeader(soapDocument,
+                    (String) null, new WSSCallbackHandler(dec), sig, dec);
 
-			Vector<Object> wssResult = new Vector<Object>();
-			wssResult.setSize( incomingResult.size() );
-			Collections.copy( wssResult, incomingResult );
-			return wssResult;
+            Vector<Object> wssResult = new Vector<Object>();
+            wssResult.setSize(incomingResult.size());
+            Collections.copy(wssResult, incomingResult);
+            return wssResult;
 
-		}
-		catch( WSSecurityException e )
-		{
-			SoapUI.logError( e );
-			throw e;
-		}
-	}
+        } catch (WSSecurityException e) {
+            SoapUI.logError(e);
+            throw e;
+        }
+    }
 
-	public class WSSCallbackHandler implements CallbackHandler
-	{
-		private final Crypto dec;
+    public class WSSCallbackHandler implements CallbackHandler {
+        private final Crypto dec;
 
-		public WSSCallbackHandler( Crypto dec )
-		{
-			this.dec = dec;
-		}
+        public WSSCallbackHandler(Crypto dec) {
+            this.dec = dec;
+        }
 
-		public void handle( Callback[] callbacks ) throws IOException, UnsupportedCallbackException
-		{
-			for( Callback callback : callbacks )
-			{
-				if( callback instanceof WSPasswordCallback )
-				{
-					WSPasswordCallback cb = ( WSPasswordCallback )callback;
-					if( StringUtils.hasContent( getDecryptPassword() ) )
-						cb.setPassword( getDecryptPassword() );
-					else
-						cb.setPassword( new String( UISupport.promptPassword( "Password required for WSS processing",
-								"Specify Password" ) ) );
+        public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+            for (Callback callback : callbacks) {
+                if (callback instanceof WSPasswordCallback) {
+                    WSPasswordCallback cb = (WSPasswordCallback) callback;
+                    if (StringUtils.hasContent(getDecryptPassword())) {
+                        cb.setPassword(getDecryptPassword());
+                    } else {
+                        cb.setPassword(new String(UISupport.promptPassword("Password required for WSS processing",
+                                "Specify Password")));
+                    }
 
-					if( cb.getUsage() == WSPasswordCallback.ENCRYPTED_KEY_TOKEN )
-					{
-						byte[] str = Base64.decodeBase64( cb.getIdentifier().getBytes() );
-					}
-				}
-			}
-		}
-	}
+                    if (cb.getUsage() == WSPasswordCallback.ENCRYPTED_KEY_TOKEN) {
+                        byte[] str = Base64.decodeBase64(cb.getIdentifier().getBytes());
+                    }
+                }
+            }
+        }
+    }
 
-	public void updateConfig( IncomingWssConfig config )
-	{
-		this.wssConfig = config;
-	}
+    public void updateConfig(IncomingWssConfig config) {
+        this.wssConfig = config;
+    }
 
-	public void resolve( ResolveContext<?> context )
-	{
-	}
+    public void resolve(ResolveContext<?> context) {
+    }
 }

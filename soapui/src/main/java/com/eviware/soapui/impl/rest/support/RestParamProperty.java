@@ -20,17 +20,16 @@ import java.beans.PropertyChangeListener;
 
 import com.eviware.soapui.model.testsuite.RenameableTestProperty;
 
-public interface RestParamProperty extends RenameableTestProperty, RestParameter
-{
-	public abstract void addPropertyChangeListener( PropertyChangeListener listener );
+public interface RestParamProperty extends RenameableTestProperty, RestParameter {
+    public abstract void addPropertyChangeListener(PropertyChangeListener listener);
 
-	public abstract void addPropertyChangeListener( String propertyName, PropertyChangeListener listener );
+    public abstract void addPropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
-	public abstract void removePropertyChangeListener( PropertyChangeListener listener );
+    public abstract void removePropertyChangeListener(PropertyChangeListener listener);
 
-	public abstract void removePropertyChangeListener( String propertyName, PropertyChangeListener listener );
+    public abstract void removePropertyChangeListener(String propertyName, PropertyChangeListener listener);
 
-	public abstract boolean isDisableUrlEncoding();
+    public abstract boolean isDisableUrlEncoding();
 
-	public abstract void setDisableUrlEncoding( boolean encode );
+    public abstract void setDisableUrlEncoding(boolean encode);
 }

@@ -16,70 +16,59 @@
 
 package com.eviware.soapui.impl.wsdl;
 
-import static org.junit.Assert.assertTrue;
+import com.eviware.soapui.impl.wsdl.support.PathUtils;
+import com.eviware.soapui.support.Tools;
+import org.junit.Test;
 
 import java.io.File;
 
-import junit.framework.JUnit4TestAdapter;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
+public class ResolveContextTest {
 
-import com.eviware.soapui.impl.wsdl.support.PathUtils;
-import com.eviware.soapui.support.Tools;
+    @Test
+    public void shouldRelativizePath() {
+        assertTrue(testFilePath("test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "dir"));
+        assertTrue(testFilePath("dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir"));
+        assertTrue(testFilePath(".." + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "dir3"));
+        assertTrue(testFilePath("dir" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + ""));
+        assertTrue(testFilePath(".." + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "anotherDir"));
+        assertTrue(testFilePath(".." + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "anotherDir"));
 
-public class ResolveContextTest
-{
-	public static junit.framework.Test suite()
-	{
-		return new JUnit4TestAdapter( ResolveContextTest.class );
-	}
+        testUrl("test.txt", "http://www.test.com/dir/test.txt", "http://www.test.com/dir");
+        testUrl("dir2/test.txt", "http://www.test.com/dir/dir2/test.txt", "http://www.test.com/dir");
+        testUrl("../test.txt?test", "http://www.test.com/dir/dir2/test.txt?test", "http://www.test.com/dir/dir2/dir3");
+    }
 
-	@Test
-	public void shouldRelativizePath()
-	{
-		assertTrue( testFilePath( "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" ) );
-		assertTrue( testFilePath( "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" ) );
-		assertTrue( testFilePath( ".." + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "dir3" ) );
-		assertTrue( testFilePath( "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "" ) );
-		assertTrue( testFilePath( ".." + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "anotherDir" ) );
-		assertTrue( testFilePath( ".." + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "dir2" + File.separator + "test.txt", "c:" + File.separator + "dir" + File.separator + "anotherDir" ) );
+    private boolean testFilePath(String relativePath, String absolutePath, String rootPath) {
+        Boolean rValue = relativePath.equals(PathUtils.relativize(absolutePath, rootPath));
 
-		testUrl( "test.txt", "http://www.test.com/dir/test.txt", "http://www.test.com/dir" );
-		testUrl( "dir2/test.txt", "http://www.test.com/dir/dir2/test.txt", "http://www.test.com/dir" );
-		testUrl( "../test.txt?test", "http://www.test.com/dir/dir2/test.txt?test", "http://www.test.com/dir/dir2/dir3" );
-	}
+        if (!rValue) {
+            return rValue;
+        }
 
-	private boolean testFilePath( String relativePath, String absolutePath, String rootPath )
-	{
-		Boolean rValue = relativePath.equals( PathUtils.relativize( absolutePath, rootPath ) );
+        if (!rootPath.endsWith(File.separator)) {
+            rootPath += File.separator;
+        }
 
-		if( !rValue )
-		{
-			return rValue;
-		}
+        rValue = absolutePath.equals(Tools.joinRelativeUrl(rootPath, relativePath));
 
-		if( !rootPath.endsWith(File.separator))
-			rootPath += File.separator;
+        return rValue;
+    }
 
-		rValue = absolutePath.equals( Tools.joinRelativeUrl( rootPath, relativePath ) );
+    private boolean testUrl(String relativePath, String absolutePath, String rootPath) {
+        Boolean rValue = relativePath.equals(PathUtils.relativize(absolutePath, rootPath));
 
-		return rValue;
-	}
+        if (!rValue) {
+            return rValue;
+        }
 
-	private boolean testUrl( String relativePath, String absolutePath, String rootPath )
-	{
-		Boolean rValue = relativePath.equals( PathUtils.relativize( absolutePath, rootPath ) );
+        if (!rootPath.endsWith("/")) {
+            rootPath += "/";
+        }
 
-		if( !rValue )
-		{
-			return rValue;
-		}
+        rValue = absolutePath.equals(Tools.joinRelativeUrl(rootPath, relativePath));
 
-		if( !rootPath.endsWith( "/" ) )
-			rootPath += "/";
-
-		rValue = absolutePath.equals( Tools.joinRelativeUrl( rootPath, relativePath ) );
-
-		return rValue;
-	}
+        return rValue;
+    }
 }

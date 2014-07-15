@@ -27,70 +27,63 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.model.iface.SubmitContext;
 
-public abstract class AbstractRequestFilter implements RequestFilter
-{
-	public void filterRequest( SubmitContext context, Request request )
-	{
-		if( request instanceof AbstractHttpRequestInterface<?> )
-			filterAbstractHttpRequest( context, ( AbstractHttpRequest<?> )request );
-	}
+public abstract class AbstractRequestFilter implements RequestFilter {
+    public void filterRequest(SubmitContext context, Request request) {
+        if (request instanceof AbstractHttpRequestInterface<?>) {
+            filterAbstractHttpRequest(context, (AbstractHttpRequest<?>) request);
+        }
+    }
 
-	public void filterAbstractHttpRequest( SubmitContext context, AbstractHttpRequest<?> request )
-	{
-		if( request instanceof WsdlRequest )
-			filterWsdlRequest( context, ( WsdlRequest )request );
-		else if( request instanceof RestRequestInterface )
-			filterRestRequest( context, ( RestRequestInterface )request );
-		else if( request instanceof HttpRequestInterface<?> )
-			filterHttpRequest( context, ( HttpRequestInterface<?> )request );
-	}
+    public void filterAbstractHttpRequest(SubmitContext context, AbstractHttpRequest<?> request) {
+        if (request instanceof WsdlRequest) {
+            filterWsdlRequest(context, (WsdlRequest) request);
+        } else if (request instanceof RestRequestInterface) {
+            filterRestRequest(context, (RestRequestInterface) request);
+        } else if (request instanceof HttpRequestInterface<?>) {
+            filterHttpRequest(context, (HttpRequestInterface<?>) request);
+        }
+    }
 
-	public void filterWsdlRequest( SubmitContext context, WsdlRequest request )
-	{
-	}
+    public void filterWsdlRequest(SubmitContext context, WsdlRequest request) {
+    }
 
-	public void filterRestRequest( SubmitContext context, RestRequestInterface request )
-	{
-	}
+    public void filterRestRequest(SubmitContext context, RestRequestInterface request) {
+    }
 
-	public void filterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
-	{
-	}
+    public void filterHttpRequest(SubmitContext context, HttpRequestInterface<?> request) {
+    }
 
-	public void afterRequest( SubmitContext context, Request request )
-	{
-		// do this for backwards compatibility
-		Response response = ( Response )context.getProperty( BaseHttpRequestTransport.RESPONSE );
-		if( response != null )
-			afterRequest( context, response );
+    public void afterRequest(SubmitContext context, Request request) {
+        // do this for backwards compatibility
+        Response response = (Response) context.getProperty(BaseHttpRequestTransport.RESPONSE);
+        if (response != null) {
+            afterRequest(context, response);
+        }
 
-		if( request instanceof AbstractHttpRequestInterface<?> )
-			afterAbstractHttpResponse( context, ( AbstractHttpRequestInterface<?> )request );
-	}
+        if (request instanceof AbstractHttpRequestInterface<?>) {
+            afterAbstractHttpResponse(context, (AbstractHttpRequestInterface<?>) request);
+        }
+    }
 
-	public void afterAbstractHttpResponse( SubmitContext context, AbstractHttpRequestInterface<?> request )
-	{
-		if( request instanceof WsdlRequest )
-			afterWsdlRequest( context, ( WsdlRequest )request );
-		else if( request instanceof RestRequestInterface )
-			afterRestRequest( context, ( RestRequestInterface )request );
-		else if( request instanceof HttpRequestInterface<?> )
-			afterHttpRequest( context, ( HttpRequestInterface<?> )request );
-	}
+    public void afterAbstractHttpResponse(SubmitContext context, AbstractHttpRequestInterface<?> request) {
+        if (request instanceof WsdlRequest) {
+            afterWsdlRequest(context, (WsdlRequest) request);
+        } else if (request instanceof RestRequestInterface) {
+            afterRestRequest(context, (RestRequestInterface) request);
+        } else if (request instanceof HttpRequestInterface<?>) {
+            afterHttpRequest(context, (HttpRequestInterface<?>) request);
+        }
+    }
 
-	public void afterWsdlRequest( SubmitContext context, WsdlRequest request )
-	{
-	}
+    public void afterWsdlRequest(SubmitContext context, WsdlRequest request) {
+    }
 
-	public void afterRestRequest( SubmitContext context, RestRequestInterface request )
-	{
-	}
+    public void afterRestRequest(SubmitContext context, RestRequestInterface request) {
+    }
 
-	public void afterHttpRequest( SubmitContext context, HttpRequestInterface<?> request )
-	{
-	}
+    public void afterHttpRequest(SubmitContext context, HttpRequestInterface<?> request) {
+    }
 
-	public void afterRequest( SubmitContext context, Response response )
-	{
-	}
+    public void afterRequest(SubmitContext context, Response response) {
+    }
 }

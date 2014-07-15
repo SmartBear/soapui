@@ -20,71 +20,60 @@ import com.eviware.soapui.model.testsuite.TestProperty;
 
 /**
  * Exception than can occur during property-transfers
- * 
+ *
  * @author ole.matzura
  */
 
-public class PropertyTransferException extends Exception
-{
-	private String message;
-	private final String sourceStepName;
-	private final String targetStepName;
-	private String sourcePropertyName;
-	private String sourcePropertyValue;
-	private String targetPropertyName;
-	private String targetPropertyValue;
+public class PropertyTransferException extends Exception {
+    private String message;
+    private final String sourceStepName;
+    private final String targetStepName;
+    private String sourcePropertyName;
+    private String sourcePropertyValue;
+    private String targetPropertyName;
+    private String targetPropertyValue;
 
-	public PropertyTransferException( String message, String sourceStepName, TestProperty source, String targetStepName,
-			TestProperty target )
-	{
-		this.message = message;
-		this.sourceStepName = sourceStepName;
-		this.targetStepName = targetStepName;
+    public PropertyTransferException(String message, String sourceStepName, TestProperty source, String targetStepName,
+                                     TestProperty target) {
+        this.message = message;
+        this.sourceStepName = sourceStepName;
+        this.targetStepName = targetStepName;
 
-		if( source != null )
-		{
-			sourcePropertyName = source.getName();
-			sourcePropertyValue = source.getValue();
-		}
-		if( target != null )
-		{
-			targetPropertyName = target.getName();
-			targetPropertyValue = target.getValue();
-		}
-	}
+        if (source != null) {
+            sourcePropertyName = source.getName();
+            sourcePropertyValue = source.getValue();
+        }
+        if (target != null) {
+            targetPropertyName = target.getName();
+            targetPropertyValue = target.getValue();
+        }
+    }
 
-	public String getMessage()
-	{
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public String getSourcePropertyName()
-	{
-		return sourcePropertyName;
-	}
+    public String getSourcePropertyName() {
+        return sourcePropertyName;
+    }
 
-	public String getSourcePropertyValue()
-	{
-		return sourcePropertyValue;
-	}
+    public String getSourcePropertyValue() {
+        return sourcePropertyValue;
+    }
 
-	public String getSourceStepName()
-	{
-		return sourceStepName;
-	}
+    public String getSourceStepName() {
+        return sourceStepName;
+    }
 
-	public String getTargetPropertyName()
-	{
-		return targetPropertyName;
-	}
+    public String getTargetPropertyName() {
+        return targetPropertyName;
+    }
 
-	public String getTargetPropertyValue()
-	{
-		return targetPropertyValue;
-	}
+    public String getTargetPropertyValue() {
+        return targetPropertyValue;
+    }
 
-	public String getTargetStepName()
-	{
-		return targetStepName;
-	}
+    public String getTargetStepName() {
+        return targetStepName;
+    }
 }

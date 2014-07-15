@@ -22,15 +22,27 @@ import com.eviware.soapui.config.HeaderConfig;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.MutableWsdlAttachmentContainer;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.mock.*;
+import com.eviware.soapui.impl.wsdl.mock.DispatchException;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
+import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MimeMessageMockResponseEntity;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.MockResponseDataSource;
-import com.eviware.soapui.impl.wsdl.support.*;
+import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.CompressionSupport;
+import com.eviware.soapui.impl.wsdl.support.MapTestPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.MessageXmlObject;
+import com.eviware.soapui.impl.wsdl.support.MessageXmlPart;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.Operation;
-import com.eviware.soapui.model.mock.*;
+import com.eviware.soapui.model.mock.MockOperation;
+import com.eviware.soapui.model.mock.MockRequest;
+import com.eviware.soapui.model.mock.MockResponse;
+import com.eviware.soapui.model.mock.MockResult;
+import com.eviware.soapui.model.mock.MockRunContext;
+import com.eviware.soapui.model.mock.MockRunner;
+import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.testsuite.TestProperty;
@@ -43,7 +55,6 @@ import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.ws.security.WSSecurityException;
-import org.apache.xmlbeans.XmlException;
 
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
@@ -51,7 +62,6 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.internet.PreencodedMimeBodyPart;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -312,6 +322,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             responseContent = XmlUtils.stripWhitespaces(responseContent);
         }
 
+        MockRequest request = result.getMockRequest();
+        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
+
         ByteArrayOutputStream outData = new ByteArrayOutputStream();
 
         // non-multipart request?
@@ -331,7 +344,9 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
             String acceptEncoding = result.getMockRequest().getRequestHeaders().get("Accept-Encoding", "");
             if (AUTO_RESPONSE_COMPRESSION.equals(responseCompression) && acceptEncoding != null
                     && acceptEncoding.toUpperCase().contains("GZIP")) {
-                result.addHeader("Content-Encoding", "gzip");
+                if (!headerExists("Content-Encoding", "gzip", result)) {
+                    result.addHeader("Content-Encoding", "gzip");
+                }
                 outData.write(CompressionSupport.compress(CompressionSupport.ALG_GZIP, content));
             } else if (AUTO_RESPONSE_COMPRESSION.equals(responseCompression) && acceptEncoding != null
                     && acceptEncoding.toUpperCase().contains("DEFLATE")) {
@@ -373,16 +388,26 @@ public abstract class AbstractMockResponse<MockResponseConfigType extends BaseMo
                 result.addHeader("Content-Encoding", responseCompression);
                 data = CompressionSupport.compress(responseCompression, data);
             }
-            if(result.getResponseHeaders().get("Transfer-Encoding") == null) {
+            if (result.getResponseHeaders().get("Transfer-Encoding") == null) {
                 result.addHeader("Content-Length", "" + data.length);
             }
             result.writeRawResponseData(data);
         }
 
-        MockRequest request = result.getMockRequest();
-        request.getHttpResponse().setStatus(this.getResponseHttpStatus());
 
         return responseContent;
+    }
+
+    private boolean headerExists(String headerName, String headerValue, MockResult result) {
+        StringToStringsMap resultResponseHeaders = result.getResponseHeaders();
+
+        if (resultResponseHeaders.containsKeyIgnoreCase(headerName)) {
+            if (resultResponseHeaders.get(headerName).contains(headerValue)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean prepareMessagePart(MimeMultipart mp, StringToStringMap contentIds, MessageXmlPart requestPart) throws Exception {

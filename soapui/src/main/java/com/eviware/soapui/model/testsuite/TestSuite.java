@@ -16,54 +16,57 @@
 
 package com.eviware.soapui.model.testsuite;
 
-import java.util.List;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.project.Project;
 import com.eviware.soapui.support.types.StringToObjectMap;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * A TestSuite holding a number of TestCases
- * 
+ *
  * @author Ole.Matzura
  */
 
-public interface TestSuite extends TestModelItem, ResultContainer, TestRunnable
-{
-	public final static String RUNTYPE_PROPERTY = ModelItem.class.getName() + "@runtype";
-	public final static String DISABLED_PROPERTY = TestSuite.class.getName() + "@disabled";
+public interface TestSuite extends TestModelItem, ResultContainer, TestRunnable {
+    public final static String RUNTYPE_PROPERTY = ModelItem.class.getName() + "@runtype";
+    public final static String DISABLED_PROPERTY = TestSuite.class.getName() + "@disabled";
 
-	public Project getProject();
+    public Project getProject();
 
-	public int getTestCaseCount();
+    public int getTestCaseCount();
 
-	public TestCase getTestCaseAt( int index );
+    public TestCase getTestCaseAt(int index);
 
-	public TestCase getTestCaseByName( String testCaseName );
+    public TestCase getTestCaseByName(String testCaseName);
 
-	public List<TestCase> getTestCaseList();
+    public TestCase getTestCaseById(UUID id);
 
-	public void addTestSuiteListener( TestSuiteListener listener );
+    public List<TestCase> getTestCaseList();
 
-	public void removeTestSuiteListener( TestSuiteListener listener );
+    public void addTestSuiteListener(TestSuiteListener listener);
 
-	public enum TestSuiteRunType
-	{
-		PARALLEL, SEQUENTIAL
-	};
+    public void removeTestSuiteListener(TestSuiteListener listener);
 
-	public TestSuiteRunType getRunType();
+    public enum TestSuiteRunType {
+        PARALLEL, SEQUENTIAL
+    }
 
-	public int getIndexOfTestCase( TestCase testCase );
+    ;
 
-	public boolean isDisabled();
+    public TestSuiteRunType getRunType();
 
-	public String getLabel();
+    public int getIndexOfTestCase(TestCase testCase);
 
-	public TestSuiteRunner run( StringToObjectMap context, boolean async );
+    public boolean isDisabled();
 
-	public void addTestSuiteRunListener( TestSuiteRunListener listener );
+    public String getLabel();
 
-	public void removeTestSuiteRunListener( TestSuiteRunListener listener );
+    public TestSuiteRunner run(StringToObjectMap context, boolean async);
+
+    public void addTestSuiteRunListener(TestSuiteRunListener listener);
+
+    public void removeTestSuiteRunListener(TestSuiteRunListener listener);
 }

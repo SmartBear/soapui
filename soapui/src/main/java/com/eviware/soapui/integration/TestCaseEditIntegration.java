@@ -16,9 +16,8 @@
 
 package com.eviware.soapui.integration;
 
-public interface TestCaseEditIntegration
-{
-	public void editTestCase( String project, String testSuite, String testCase );
+public interface TestCaseEditIntegration {
+    public void editTestCase(String project, String testSuite, String testCase);
 
-	public void openTestCase( String[] parameters );
+    public void openTestCase(String[] parameters);
 }

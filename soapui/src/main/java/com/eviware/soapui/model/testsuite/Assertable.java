@@ -25,50 +25,50 @@ import com.eviware.soapui.model.iface.Interface;
 
 /**
  * Behaviour for an object that can be asserted
- * 
+ *
  * @author ole.matzura
  */
 
-public interface Assertable
-{
-	public TestAssertion addAssertion( String selection );
+public interface Assertable {
+    public TestAssertion addAssertion(String selection);
 
-	public void addAssertionsListener( AssertionsListener listener );
+    public void addAssertionsListener(AssertionsListener listener);
 
-	public int getAssertionCount();
+    public int getAssertionCount();
 
-	public TestAssertion getAssertionAt( int c );
+    public TestAssertion getAssertionAt(int c);
 
-	public void removeAssertionsListener( AssertionsListener listener );
+    public void removeAssertionsListener(AssertionsListener listener);
 
-	public void removeAssertion( TestAssertion assertion );
+    public void removeAssertion(TestAssertion assertion);
 
-	public AssertionStatus getAssertionStatus();
+    public AssertionStatus getAssertionStatus();
 
-	public enum AssertionStatus
-	{
-		UNKNOWN, VALID, FAILED
-	}
+    public enum AssertionStatus {
+        UNKNOWN, VALID, FAILED
+    }
 
-	public String getAssertableContent();
+    public String getAssertableContentAsXml();
 
-	public String getDefaultAssertableContent();
+    public String getAssertableContent();
 
-	public AssertableType getAssertableType();
+    public String getDefaultAssertableContent();
 
-	public List<TestAssertion> getAssertionList();
+    public AssertableType getAssertableType();
 
-	public TestAssertion getAssertionByName( String name );
+    public List<TestAssertion> getAssertionList();
 
-	public ModelItem getModelItem();
+    public TestAssertion getAssertionByName(String name);
 
-	public TestStep getTestStep();
+    public ModelItem getModelItem();
 
-	public Interface getInterface();
+    public TestStep getTestStep();
 
-	public TestAssertion cloneAssertion( TestAssertion source, String name );
+    public Interface getInterface();
 
-	public Map<String, TestAssertion> getAssertions();
+    public TestAssertion cloneAssertion(TestAssertion source, String name);
 
-	public TestAssertion moveAssertion( int ix, int offset );
+    public Map<String, TestAssertion> getAssertions();
+
+    public TestAssertion moveAssertion(int ix, int offset);
 }

@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.http.HttpRequestContentView;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpRequestMessageEditor;
 import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.types.StringList;
@@ -38,170 +39,142 @@ import java.beans.PropertyChangeEvent;
 
 import static com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase.ParamLocation;
 
-public class RestRequestContentView extends HttpRequestContentView
-{
-	private RestRequestInterface restRequest;
-	private JButton recreateButton;
+public class RestRequestContentView extends HttpRequestContentView {
+    private RestRequestInterface restRequest;
+    private JButton recreateButton;
 
-	@SuppressWarnings( "unchecked" )
-	public RestRequestContentView( HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest )
-	{
-		super( restRequestMessageEditor, restRequest );
-		this.restRequest = restRequest;
-	}
+    @SuppressWarnings("unchecked")
+    public RestRequestContentView(HttpRequestMessageEditor restRequestMessageEditor, RestRequestInterface restRequest) {
+        super(restRequestMessageEditor, restRequest);
+        this.restRequest = restRequest;
+    }
 
 
-	protected RestParamsTable buildParamsTable()
-	{
-		RestParamsTableModel model = new RestParamsTableModel( restRequest.getParams() )
-		{
-			@Override
-			public String getColumnName( int columnIndex )
-			{
-				if( columnIndex == 1 )
-				{
-					return "Value";
-				}
+    protected RestParamsTable buildParamsTable() {
+        RestParamsTableModel model = new RestParamsTableModel(restRequest.getParams()) {
+            @Override
+            public String getColumnName(int columnIndex) {
+                if (columnIndex == 1) {
+                    return "Value";
+                }
 
-				return super.getColumnName( columnIndex );
-			}
-		};
-		return new RestParamsTable( restRequest.getParams(), true, model, ParamLocation.RESOURCE, true, true );
-	}
+                return super.getColumnName(columnIndex);
+            }
+        };
+        return new RestParamsTable(restRequest.getParams(), true, model, ParamLocation.RESOURCE, true, true);
+    }
 
-	public RestParamsTable getParamsTable()
-	{
-		return paramsTable;
-	}
+    public RestParamsTable getParamsTable() {
+        return paramsTable;
+    }
 
-	protected Component buildToolbar()
-	{
-		JXToolBar toolbar = UISupport.createToolbar();
+    protected Component buildToolbar() {
+        JXToolBar toolbar = UISupport.createToolbar();
 
-		addMediaTypeCombo( toolbar );
-		toolbar.addSeparator();
+        addMediaTypeCombo(toolbar);
+        toolbar.addSeparator();
 
-		recreateButton = UISupport.createActionButton( new CreateDefaultRepresentationAction(), true );
-		recreateButton.setEnabled( canRecreate() );
-		toolbar.addFixed( recreateButton );
+        recreateButton = UISupport.createActionButton(new CreateDefaultRepresentationAction(), true);
+        recreateButton.setEnabled(canRecreate());
+        toolbar.addFixed(recreateButton);
 
-		toolbar.addSeparator();
+        toolbar.addSeparator();
 
-		addPostQueryCheckBox( toolbar );
+        addPostQueryCheckBox(toolbar);
 
-		toolbar.setMinimumSize( new Dimension( 50, 20 ) );
+        toolbar.setMinimumSize(new Dimension(50, 20));
 
-		return toolbar;
-	}
+        return toolbar;
+    }
 
-	public void propertyChange( PropertyChangeEvent evt )
-	{
-		if( evt.getPropertyName().equals( "mediaType" ) && recreateButton != null )
-		{
-			recreateButton.setEnabled( canRecreate() );
-		}
-		else if( evt.getPropertyName().equals( "restMethod" ) )
-		{
-			paramsTable.setParams( restRequest.getParams() );
-		}
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(Request.MEDIA_TYPE) && recreateButton != null) {
+            recreateButton.setEnabled(canRecreate());
+        } else if (evt.getPropertyName().equals("restMethod")) {
+            paramsTable.setParams(restRequest.getParams());
+        }
 
-		super.propertyChange( evt );
-	}
+        super.propertyChange(evt);
+    }
 
-	protected Object[] getRequestMediaTypes()
-	{
-		StringList result = new StringList( super.getRequestMediaTypes() );
+    protected Object[] getRequestMediaTypes() {
+        StringList result = new StringList(super.getRequestMediaTypes());
 
-		for( RestRepresentation representation : restRequest.getRepresentations( RestRepresentation.Type.REQUEST, null ) )
-		{
-			if( !result.contains( representation.getMediaType() ) )
-				result.add( representation.getMediaType() );
-		}
+        for (RestRepresentation representation : restRequest.getRepresentations(RestRepresentation.Type.REQUEST, null)) {
+            if (!result.contains(representation.getMediaType())) {
+                result.add(representation.getMediaType());
+            }
+        }
 
-		return result.toStringArray();
-	}
+        return result.toStringArray();
+    }
 
-	private boolean canRecreate()
-	{
-		for( RestRepresentation representation : restRequest.getRepresentations( RestRepresentation.Type.REQUEST,
-				restRequest.getMediaType() ) )
-		{
-			if( representation.getSchemaType() != null )
-				return true;
-		}
-		return false;
-	}
+    private boolean canRecreate() {
+        for (RestRepresentation representation : restRequest.getRepresentations(RestRepresentation.Type.REQUEST,
+                restRequest.getMediaType())) {
+            if (representation.getSchemaType() != null) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	private class UpdateRestParamsAction extends AbstractAction
-	{
-		private UpdateRestParamsAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/update-request-parameters-from-url.png" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Updates this Requests params from a specified URL" );
-		}
+    private class UpdateRestParamsAction extends AbstractAction {
+        private UpdateRestParamsAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/update-request-parameters-from-url.png"));
+            putValue(Action.SHORT_DESCRIPTION, "Updates this Requests params from a specified URL");
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			String str = UISupport.prompt( "Enter new url below", "Extract Params", "" );
-			if( str == null )
-				return;
+        public void actionPerformed(ActionEvent e) {
+            String str = UISupport.prompt("Enter new url below", "Extract Params", "");
+            if (str == null) {
+                return;
+            }
 
-			try
-			{
-				restRequest.getParams().resetValues();
-				RestUtils.extractParams( str, restRequest.getParams(), false );
-				paramsTable.refresh();
-			}
-			catch( Exception e1 )
-			{
-				UISupport.showErrorMessage( e1 );
-			}
-		}
-	}
+            try {
+                restRequest.getParams().resetValues();
+                RestUtils.extractParams(str, restRequest.getParams(), false);
+                paramsTable.refresh();
+            } catch (Exception e1) {
+                UISupport.showErrorMessage(e1);
+            }
+        }
+    }
 
-	private class CreateDefaultRepresentationAction extends AbstractAction
-	{
-		private CreateDefaultRepresentationAction()
-		{
-			putValue( Action.SMALL_ICON, UISupport.createImageIcon( "/recreate_request.gif" ) );
-			putValue( Action.SHORT_DESCRIPTION, "Recreates a default representation from the schema" );
-		}
+    private class CreateDefaultRepresentationAction extends AbstractAction {
+        private CreateDefaultRepresentationAction() {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/recreate_request.gif"));
+            putValue(Action.SHORT_DESCRIPTION, "Recreates a default representation from the schema");
+        }
 
-		@SuppressWarnings( "unchecked" )
-		public void actionPerformed( ActionEvent e )
-		{
-			TupleList<RestRepresentation, SchemaType> list = new TupleList<RestRepresentation, SchemaType>()
-			{
-				protected String toStringHandler( Tuple tuple )
-				{
-					return tuple.getValue2().getDocumentElementName().toString();
-				}
-			};
+        @SuppressWarnings("unchecked")
+        public void actionPerformed(ActionEvent e) {
+            TupleList<RestRepresentation, SchemaType> list = new TupleList<RestRepresentation, SchemaType>() {
+                protected String toStringHandler(Tuple tuple) {
+                    return tuple.getValue2().getDocumentElementName().toString();
+                }
+            };
 
-			for( RestRepresentation representation : ( ( RestRequestInterface )restRequest ).getRepresentations(
-					RestRepresentation.Type.REQUEST, restRequest.getMediaType() ) )
-			{
-				SchemaType schemaType = representation.getSchemaType();
-				if( schemaType != null )
-				{
-					list.add( representation, schemaType );
-				}
-			}
+            for (RestRepresentation representation : ((RestRequestInterface) restRequest).getRepresentations(
+                    RestRepresentation.Type.REQUEST, restRequest.getMediaType())) {
+                SchemaType schemaType = representation.getSchemaType();
+                if (schemaType != null) {
+                    list.add(representation, schemaType);
+                }
+            }
 
-			if( list.isEmpty() )
-			{
-				UISupport.showErrorMessage( "Missing recreatable representations for this method" );
-				return;
-			}
+            if (list.isEmpty()) {
+                UISupport.showErrorMessage("Missing recreatable representations for this method");
+                return;
+            }
 
-			TupleList<RestRepresentation, SchemaType>.Tuple result = ( TupleList.Tuple )UISupport.prompt(
-					"Select element to create", "Create default content", list.toArray() );
-			if( result == null )
-			{
-				return;
-			}
+            TupleList<RestRepresentation, SchemaType>.Tuple result = (TupleList.Tuple) UISupport.prompt(
+                    "Select element to create", "Create default content", list.toArray());
+            if (result == null) {
+                return;
+            }
 
-			restRequest.setRequestContent( SampleXmlUtil.createSampleForType( result.getValue2() ) );
-		}
-	}
+            restRequest.setRequestContent(SampleXmlUtil.createSampleForType(result.getValue2()));
+        }
+    }
 }

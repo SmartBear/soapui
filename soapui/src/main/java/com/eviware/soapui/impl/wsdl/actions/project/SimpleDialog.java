@@ -16,17 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JDialog;
-import javax.swing.KeyStroke;
-
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -34,186 +23,178 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
 
-public abstract class SimpleDialog extends JDialog
-{
-	protected JButtonBar buttons = null;
-	private final String title;
-	private final String description;
-	private final String helpUrl;
-	private final boolean okAndCancel;
-	private boolean initialized = false;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.JDialog;
+import javax.swing.KeyStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
 
-	public SimpleDialog( String title, String description, String helpUrl, boolean okAndCancel )
-	{
-		super( UISupport.getMainFrame(), title, true );
-		this.title = title;
-		this.description = description;
-		this.helpUrl = helpUrl;
-		this.okAndCancel = okAndCancel;
-	}
+public abstract class SimpleDialog extends JDialog {
+    protected JButtonBar buttons = null;
+    private final String title;
+    private final String description;
+    private final String helpUrl;
+    private final boolean okAndCancel;
+    private boolean initialized = false;
 
-	private synchronized void init()
-	{
-		if( initialized )
-			return;
+    public SimpleDialog(String title, String description, String helpUrl, boolean okAndCancel) {
+        super(UISupport.getMainFrame(), title, true);
+        this.title = title;
+        this.description = description;
+        this.helpUrl = helpUrl;
+        this.okAndCancel = okAndCancel;
+    }
 
-		buttons = UISupport.initDialogActions( buildActions( helpUrl, okAndCancel ), this );
-		buttons.setBorder( BorderFactory.createEmptyBorder( 5, 0, 0, 0 ) );
+    private synchronized void init() {
+        if (initialized) {
+            return;
+        }
 
-		getContentPane().add(
-				UISupport.buildDescription( title, description, UISupport.createImageIcon( UISupport.TOOL_ICON_PATH ) ),
-				BorderLayout.NORTH );
+        buttons = UISupport.initDialogActions(buildActions(helpUrl, okAndCancel), this);
+        buttons.setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
 
-		getContentPane().add( buildContent(), BorderLayout.CENTER );
+        getContentPane().add(
+                UISupport.buildDescription(title, description, UISupport.createImageIcon(UISupport.TOOL_ICON_PATH)),
+                BorderLayout.NORTH);
 
-		buttons
-				.setBorder( BorderFactory.createCompoundBorder( BorderFactory.createCompoundBorder(
-						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.GRAY ),
-						BorderFactory.createMatteBorder( 1, 0, 0, 0, Color.WHITE ) ), BorderFactory.createEmptyBorder( 3, 5,
-						3, 5 ) ) );
+        getContentPane().add(buildContent(), BorderLayout.CENTER);
 
-		getContentPane().add( buttons, BorderLayout.SOUTH );
-		modifyButtons();
+        buttons
+                .setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY),
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, Color.WHITE)), BorderFactory.createEmptyBorder(3, 5,
+                        3, 5)));
 
-		pack();
+        getContentPane().add(buttons, BorderLayout.SOUTH);
+        modifyButtons();
 
-		initialized = true;
-	}
+        pack();
 
-	/*
-	 * overide this to change buttons at bottom of dialog. I did not make it
-	 * abstrac because it would require refactoring when SimpleDialog is used.
-	 * Robert.
-	 */
-	protected void modifyButtons()
-	{
-	};
+        initialized = true;
+    }
 
-	public SimpleDialog( String title, String description, String helpUrl )
-	{
-		this( title, description, helpUrl, true );
-	}
+    /*
+     * overide this to change buttons at bottom of dialog. I did not make it
+     * abstrac because it would require refactoring when SimpleDialog is used.
+     * Robert.
+     */
+    protected void modifyButtons() {
+    }
 
-	protected abstract Component buildContent();
+    ;
 
-	public ActionList buildActions( String url, boolean okAndCancel )
-	{
-		DefaultActionList actions = new DefaultActionList( "Actions" );
-		if( url != null )
-			actions.addAction( new HelpAction( url ) );
+    public SimpleDialog(String title, String description, String helpUrl) {
+        this(title, description, helpUrl, true);
+    }
 
-		OKAction okAction = new OKAction();
-		actions.addAction( okAction );
-		if( okAndCancel )
-		{
-			actions.addAction( new CancelAction() );
-			actions.setDefaultAction( okAction );
-		}
-		return actions;
-	}
+    protected abstract Component buildContent();
 
-	protected abstract boolean handleOk();
+    public ActionList buildActions(String url, boolean okAndCancel) {
+        DefaultActionList actions = new DefaultActionList("Actions");
+        if (url != null) {
+            actions.addAction(new HelpAction(url));
+        }
 
-	@Override
-	public void setVisible( boolean b )
-	{
-		init();
+        OKAction okAction = new OKAction();
+        actions.addAction(okAction);
+        if (okAndCancel) {
+            actions.addAction(new CancelAction());
+            actions.setDefaultAction(okAction);
+        }
+        return actions;
+    }
 
-		if( b )
-			beforeShow();
-		else
-			beforeHide();
+    protected abstract boolean handleOk();
 
-		UISupport.centerDialog( this );
-		super.setVisible( b );
+    @Override
+    public void setVisible(boolean b) {
+        init();
 
-		if( b )
-			afterShow();
-		else
-			afterHide();
-	}
+        if (b) {
+            beforeShow();
+        } else {
+            beforeHide();
+        }
 
-	protected void afterHide()
-	{
-	}
+        UISupport.centerDialog(this);
+        super.setVisible(b);
 
-	protected void afterShow()
-	{
-	}
 
-	protected void beforeHide()
-	{
-	}
+        if (b) {
+            afterShow();
+        } else {
+            afterHide();
+        }
+    }
 
-	protected void beforeShow()
-	{
-	}
+    protected void afterHide() {
+    }
 
-	protected boolean handleCancel()
-	{
-		return true;
-	}
+    protected void afterShow() {
+    }
 
-	protected final class OKAction extends AbstractAction
-	{
-		public OKAction()
-		{
-			super( "OK" );
-		}
+    protected void beforeHide() {
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( handleOk() )
-			{
-				setVisible( false );
-			}
-		}
-	}
+    protected void beforeShow() {
+    }
 
-	protected final class CancelAction extends AbstractAction
-	{
-		public CancelAction()
-		{
-			super( "Cancel" );
-		}
+    protected boolean handleCancel() {
+        return true;
+    }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			if( handleCancel() )
-			{
-				setVisible( false );
-			}
-		}
-	}
+    protected final class OKAction extends AbstractAction {
+        public OKAction() {
+            super("OK");
+        }
 
-	public final class HelpAction extends AbstractAction implements HelpActionMarker
-	{
-		private final String url;
+        public void actionPerformed(ActionEvent e) {
+            if (handleOk()) {
+                setVisible(false);
+            }
+        }
+    }
 
-		public HelpAction( String url )
-		{
-			this( "Online Help", url, UISupport.getKeyStroke( "F1" ) );
-		}
+    protected final class CancelAction extends AbstractAction {
+        public CancelAction() {
+            super("Cancel");
+        }
 
-		public HelpAction( String title, String url )
-		{
-			this( title, url, null );
-		}
+        public void actionPerformed(ActionEvent e) {
+            if (handleCancel()) {
+                setVisible(false);
+            }
+        }
+    }
 
-		public HelpAction( String title, String url, KeyStroke accelerator )
-		{
-			super( title );
-			this.url = url;
-			putValue( Action.SHORT_DESCRIPTION, "Show online help" );
-			if( accelerator != null )
-				putValue( Action.ACCELERATOR_KEY, accelerator );
+    public final class HelpAction extends AbstractAction implements HelpActionMarker {
+        private final String url;
 
-			putValue( Action.SMALL_ICON, UISupport.HELP_ICON );
-		}
+        public HelpAction(String url) {
+            this("Online Help", url, UISupport.getKeyStroke("F1"));
+        }
 
-		public void actionPerformed( ActionEvent e )
-		{
-			Tools.openURL( url );
-		}
-	}
+        public HelpAction(String title, String url) {
+            this(title, url, null);
+        }
+
+        public HelpAction(String title, String url, KeyStroke accelerator) {
+            super(title);
+            this.url = url;
+            putValue(Action.SHORT_DESCRIPTION, "Show online help");
+            if (accelerator != null) {
+                putValue(Action.ACCELERATOR_KEY, accelerator);
+            }
+
+            putValue(Action.SMALL_ICON, UISupport.HELP_ICON);
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            Tools.openURL(url);
+        }
+    }
 }

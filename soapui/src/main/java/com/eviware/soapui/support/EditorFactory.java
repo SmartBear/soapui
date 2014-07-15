@@ -20,11 +20,10 @@ import javax.swing.JComponent;
 
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditorModel;
 
-public interface EditorFactory
-{
-	public JComponent buildXPathEditor( EditorModel editorModel );
+public interface EditorFactory {
+    public JComponent buildXPathEditor(EditorModel editorModel);
 
-	public JComponent buildXmlEditor( EditorModel editorModel );
+    public JComponent buildXmlEditor(EditorModel editorModel);
 
-	public JComponent buildGroovyEditor( GroovyEditorModel editorModel );
+    public JComponent buildGroovyEditor(GroovyEditorModel editorModel);
 }

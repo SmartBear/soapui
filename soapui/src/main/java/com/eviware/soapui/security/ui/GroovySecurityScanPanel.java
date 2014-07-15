@@ -29,64 +29,53 @@ import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.security.scan.GroovySecurityScan;
 import com.eviware.soapui.support.components.GroovyEditorComponent;
 
-public class GroovySecurityScanPanel extends SecurityScanConfigPanel
-{
-	protected static final String SCRIPT_FIELD = "Script";
+public class GroovySecurityScanPanel extends SecurityScanConfigPanel {
+    protected static final String SCRIPT_FIELD = "Script";
 
-	private GroovySecurityScan groovyCheck;
-	private GroovyEditorComponent groovyEditor;
+    private GroovySecurityScan groovyCheck;
+    private GroovyEditorComponent groovyEditor;
 
-	public GroovySecurityScanPanel( GroovySecurityScan securityCheck )
-	{
-		super( new BorderLayout() );
+    public GroovySecurityScanPanel(GroovySecurityScan securityCheck) {
+        super(new BorderLayout());
 
-		groovyCheck = securityCheck;
+        groovyCheck = securityCheck;
 
-		add( buildSetupScriptPanel( securityCheck ) );
-	}
+        add(buildSetupScriptPanel(securityCheck));
+    }
 
-	@Override
-	public void save()
-	{
+    @Override
+    public void save() {
 
-	}
+    }
 
-	private class ScriptGroovyEditorModel extends AbstractGroovyEditorModel
-	{
-		@Override
-		public Action createRunAction()
-		{
-			return new AbstractAction()
-			{
+    private class ScriptGroovyEditorModel extends AbstractGroovyEditorModel {
+        @Override
+        public Action createRunAction() {
+            return new AbstractAction() {
 
-				public void actionPerformed( ActionEvent e )
-				{
-					// nothing happens!
-				}
-			};
-		}
+                public void actionPerformed(ActionEvent e) {
+                    // nothing happens!
+                }
+            };
+        }
 
-		public ScriptGroovyEditorModel( ModelItem modelItem )
-		{
-			super( new String[] { "parameters", "log", "context", "securityScan", "testStep" }, modelItem, "" );
-		}
+        public ScriptGroovyEditorModel(ModelItem modelItem) {
+            super(new String[]{"parameters", "log", "context", "securityScan", "testStep"}, modelItem, "");
+        }
 
-		public String getScript()
-		{
-			return ( ( GroovySecurityScan )getModelItem() ).getExecuteScript();
-		}
+        public String getScript() {
+            return ((GroovySecurityScan) getModelItem()).getExecuteScript();
+        }
 
-		public void setScript( String text )
-		{
-			( ( GroovySecurityScan )getModelItem() ).setExecuteScript( text );
-		}
-	}
+        public void setScript(String text) {
+            ((GroovySecurityScan) getModelItem()).setExecuteScript(text);
+        }
+    }
 
-	protected GroovyEditorComponent buildSetupScriptPanel( SecurityScan securityCheck )
-	{
-		groovyEditor = new GroovyEditorComponent( new ScriptGroovyEditorModel( securityCheck.getModelItem() ), null );
-		groovyEditor.setPreferredSize( new Dimension( 385, 150 ) );
-		return groovyEditor;
-	}
+    protected GroovyEditorComponent buildSetupScriptPanel(SecurityScan securityCheck) {
+        groovyEditor = new GroovyEditorComponent(new ScriptGroovyEditorModel(securityCheck.getModelItem()), null);
+        groovyEditor.setPreferredSize(new Dimension(385, 150));
+        return groovyEditor;
+    }
 
 }

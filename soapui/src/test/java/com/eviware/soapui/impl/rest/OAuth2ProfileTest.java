@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.rest;
+*/
+package com.eviware.soapui.impl.rest;
 
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2TestUtils;
 import org.junit.Before;
@@ -25,100 +26,104 @@ import static org.junit.Assert.assertThat;
 /**
  * Unit test for the OAuth2Profile class.
  */
-public class OAuth2ProfileTest
-{
+public class OAuth2ProfileTest {
 
-	private OAuth2Profile profile;
+    private OAuth2Profile profile;
 
-	@Before
-	public void setUp() throws Exception
-	{
-		profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
+    @Before
+    public void setUp() throws Exception {
+        profile = OAuth2TestUtils.getOAuthProfileWithDefaultValues();
 
-	}
+    }
 
-	@Test
-	public void waitsForAccessTokenStatusChange() throws Exception
-	{
-		final String accessToken = "mock token";
-		profile.waitingForAuthorization();
+    @Test
+    public void trimsAccessTokenWhenSettingIt() throws Exception {
+        String accessTokenWithoutWhitespace = "wuryew2347234987";
+        profile.setAccessToken("\t" + accessTokenWithoutWhitespace + " \n");
 
-		Runnable simulatedAccessTokenRetrieval = new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					Thread.sleep(50);
-				}
-				catch( InterruptedException ignore )
-				{
+        assertThat(profile.getAccessToken(), is(accessTokenWithoutWhitespace));
+    }
 
-				}
-				profile.applyRetrievedAccessToken( accessToken );
-			}
-		};
-		new Thread(simulatedAccessTokenRetrieval).start();
-		profile.waitForAccessTokenStatus( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER, 1000);
+    @Test
+    public void trimsAccessTokenUriWhenSettingIt() throws Exception {
+        String accessTokenUriWithoutWhitespace = "wuryew2347234987";
+        profile.setAccessTokenURI("\t" + accessTokenUriWithoutWhitespace + " \n");
 
-		assertThat(profile.getAccessToken(), is(accessToken));
-	}
+        assertThat(profile.getAccessTokenURI(), is(accessTokenUriWithoutWhitespace));
+    }
 
-	@Test
-	public void ignoresIntermediateAccessTokenStatusChanges() throws Exception
-	{
-		final String accessToken = "mock token";
-		profile.waitingForAuthorization();
+    @Test
+    public void trimsAuthorizationUriWhenSettingIt() throws Exception {
+        String authorizationUriWithoutWhitespace = "wuryew2347234987";
+        profile.setAuthorizationURI("\t" + authorizationUriWithoutWhitespace + " \n");
 
-		Runnable simulatedAccessTokenRetrieval = new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					Thread.sleep(50);
-					profile.waitingForAuthorization();
-					Thread.sleep(10);
-				}
-				catch( InterruptedException ignore )
-				{
+        assertThat(profile.getAuthorizationURI(), is(authorizationUriWithoutWhitespace));
+    }
 
-				}
-				profile.applyRetrievedAccessToken( accessToken );
-			}
-		};
-		new Thread(simulatedAccessTokenRetrieval).start();
-		profile.waitForAccessTokenStatus( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER, 1000);
+    @Test
+    public void waitsForAccessTokenStatusChange() throws Exception {
+        final String accessToken = "mock token";
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
 
-		assertThat(profile.getAccessToken(), is(accessToken));
-	}
+        Runnable simulatedAccessTokenRetrieval = new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException ignore) {
 
-	@Test
-	public void appliesTimeOutCorrectlyEvenOnMultipleStatusChanges() throws Exception
-	{
-		final String accessToken = "mock token";
-		profile.waitingForAuthorization();
+                }
+                profile.applyRetrievedAccessToken(accessToken);
+            }
+        };
+        new Thread(simulatedAccessTokenRetrieval).start();
+        profile.waitForAccessTokenStatus(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER, 1000);
 
-		Runnable simulatedAccessTokenRetrieval = new Runnable()
-		{
-			public void run()
-			{
-				try
-				{
-					Thread.sleep(100);
-					profile.waitingForAuthorization();
-					Thread.sleep(100);
-				}
-				catch( InterruptedException ignore )
-				{
+        assertThat(profile.getAccessToken(), is(accessToken));
+    }
 
-				}
-				profile.applyRetrievedAccessToken( accessToken );
-			}
-		};
-		new Thread(simulatedAccessTokenRetrieval).start();
-		profile.waitForAccessTokenStatus( OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER, 150);
+    @Test
+    public void ignoresIntermediateAccessTokenStatusChanges() throws Exception {
+        final String accessToken = "mock token";
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
 
-		assertThat(profile.getAccessToken(), is(not((accessToken ))));
-	}
+        Runnable simulatedAccessTokenRetrieval = new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(50);
+                    profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
+                    Thread.sleep(10);
+                } catch (InterruptedException ignore) {
+
+                }
+                profile.applyRetrievedAccessToken(accessToken);
+            }
+        };
+        new Thread(simulatedAccessTokenRetrieval).start();
+        profile.waitForAccessTokenStatus(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER, 1000);
+
+        assertThat(profile.getAccessToken(), is(accessToken));
+    }
+
+    @Test
+    public void appliesTimeOutCorrectlyEvenOnMultipleStatusChanges() throws Exception {
+        final String accessToken = "mock token";
+        profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
+
+        Runnable simulatedAccessTokenRetrieval = new Runnable() {
+            public void run() {
+                try {
+                    Thread.sleep(100);
+                    profile.setAccessTokenStatus(OAuth2Profile.AccessTokenStatus.WAITING_FOR_AUTHORIZATION);
+                    Thread.sleep(100);
+                } catch (InterruptedException ignore) {
+
+                }
+                profile.applyRetrievedAccessToken(accessToken);
+            }
+        };
+        new Thread(simulatedAccessTokenRetrieval).start();
+        profile.waitForAccessTokenStatus(OAuth2Profile.AccessTokenStatus.RETRIEVED_FROM_SERVER, 150);
+
+        assertThat(profile.getAccessToken(), is(not((accessToken))));
+    }
 }

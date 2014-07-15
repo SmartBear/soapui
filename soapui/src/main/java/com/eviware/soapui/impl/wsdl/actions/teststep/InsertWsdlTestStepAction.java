@@ -26,38 +26,35 @@ import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
 /**
  * Inserts a WsdlTestStep specified by the supplied WsdlTestStepFactory at the
  * position to the specified WsdlTestStep
- * 
+ *
  * @author ole.matzura
  */
 
-public class InsertWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestStep>
-{
-	public static final String SOAPUI_ACTION_ID = "InsertWsdlTestStepAction";
+public class InsertWsdlTestStepAction extends AbstractSoapUIAction<WsdlTestStep> {
+    public static final String SOAPUI_ACTION_ID = "InsertWsdlTestStepAction";
 
-	public InsertWsdlTestStepAction()
-	{
-		super( "Insert Step", "Inserts a TestStep at the position of this TestStep" );
-	}
+    public InsertWsdlTestStepAction() {
+        super("Insert Step", "Inserts a TestStep at the position of this TestStep");
+    }
 
-	public void perform( WsdlTestStep testStep, Object param )
-	{
-		WsdlTestStepFactory factory = ( WsdlTestStepFactory )param;
-		WsdlTestCase testCase = testStep.getTestCase();
+    public void perform(WsdlTestStep testStep, Object param) {
+        WsdlTestStepFactory factory = (WsdlTestStepFactory) param;
+        WsdlTestCase testCase = testStep.getTestCase();
 
-		if( !factory.canAddTestStepToTestCase( testCase ) )
-			return;
+        if (!factory.canAddTestStepToTestCase(testCase)) {
+            return;
+        }
 
-		String name = UISupport.prompt( "Specify name for new step", "Insert Step", factory.getTestStepName() );
-		if( name != null )
-		{
-			TestStepConfig newTestStepConfig = factory.createNewTestStep( testCase, name );
-			if( newTestStepConfig != null )
-			{
-				int ix = testCase.getIndexOfTestStep( testStep );
-				testStep = testCase.insertTestStep( newTestStepConfig, ix + 1);
-				if( testStep != null )
-					UISupport.selectAndShow( testStep );
-			}
-		}
-	}
+        String name = UISupport.prompt("Specify name for new step", "Insert Step", factory.getTestStepName());
+        if (name != null) {
+            TestStepConfig newTestStepConfig = factory.createNewTestStep(testCase, name);
+            if (newTestStepConfig != null) {
+                int ix = testCase.getIndexOfTestStep(testStep);
+                testStep = testCase.insertTestStep(newTestStepConfig, ix + 1);
+                if (testStep != null) {
+                    UISupport.selectAndShow(testStep);
+                }
+            }
+        }
+    }
 }

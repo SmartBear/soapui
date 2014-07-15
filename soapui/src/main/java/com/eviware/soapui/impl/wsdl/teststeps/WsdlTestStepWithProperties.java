@@ -16,6 +16,11 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.model.testsuite.TestPropertyListener;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,292 +29,273 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.eviware.soapui.config.TestStepConfig;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.testsuite.TestProperty;
-import com.eviware.soapui.model.testsuite.TestPropertyListener;
-
 /**
  * Base class for WSDL TestCase test steps.
- * 
+ *
  * @author Ole.Matzura
  */
 
-abstract public class WsdlTestStepWithProperties extends WsdlTestStep
-{
-	public static String RESPONSE_AS_XML = "ResponseAsXml";
-	private Map<String, TestProperty> properties;
-	private List<TestProperty> propertyList = new ArrayList<TestProperty>();
-	private Map<String, Set<String>> normalizedPropertyNames = new HashMap<String, Set<String>>();
-	private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
+abstract public class WsdlTestStepWithProperties extends WsdlTestStep {
+    public static String RESPONSE = "Response";
+    public static String RESPONSE_AS_XML = "ResponseAsXml";
+    public static String RAW_RESPONSE = "RawResponse";
 
-	protected WsdlTestStepWithProperties( WsdlTestCase testCase, TestStepConfig config, boolean hasEditor,
-			boolean forLoadTest )
-	{
-		super( testCase, config, hasEditor, forLoadTest );
-	}
+    private Map<String, TestProperty> properties;
+    private List<TestProperty> propertyList = new ArrayList<TestProperty>();
+    private Map<String, Set<String>> normalizedPropertyNames = new HashMap<String, Set<String>>();
+    private Set<TestPropertyListener> listeners = new HashSet<TestPropertyListener>();
 
-	@Override
-	public String[] getPropertyNames()
-	{
-		if( properties == null )
-			return new String[0];
+    protected WsdlTestStepWithProperties(WsdlTestCase testCase, TestStepConfig config, boolean hasEditor,
+                                         boolean forLoadTest) {
+        super(testCase, config, hasEditor, forLoadTest);
+    }
 
-		String[] result = new String[properties.size()];
-		int ix = 0;
-		for( TestProperty property : properties.values() )
-			result[ix++ ] = property.getName();
+    @Override
+    public String[] getPropertyNames() {
+        if (properties == null) {
+            return new String[0];
+        }
 
-		return result;
-	}
+        String[] result = new String[properties.size()];
+        int ix = 0;
+        for (TestProperty property : properties.values()) {
+            result[ix++] = property.getName();
+        }
 
-	@Override
-	public TestProperty getProperty( String name )
-	{
-		return properties == null || name == null ? null : properties.get( getPropertyKeyName( name ) );
-	}
+        return result;
+    }
 
-	@Override
-	public String getPropertyValue( String name )
-	{
-		if( properties == null )
-			return null;
+    @Override
+    public TestProperty getProperty(String name) {
+        return properties == null || name == null ? null : properties.get(getPropertyKeyName(name));
+    }
 
-		TestProperty testStepProperty = properties.get( getPropertyKeyName( name ) );
-		return testStepProperty == null ? null : testStepProperty.getValue();
-	}
+    @Override
+    public String getPropertyValue(String name) {
+        if (properties == null) {
+            return null;
+        }
 
-	@Override
-	public void setPropertyValue( String name, String value )
-	{
-		if( properties == null )
-			return;
+        TestProperty testStepProperty = properties.get(getPropertyKeyName(name));
+        return testStepProperty == null ? null : testStepProperty.getValue();
+    }
 
-		TestProperty testStepProperty = properties.get( getPropertyKeyName( name ) );
-		if( testStepProperty != null )
-		{
-			testStepProperty.setValue( value );
-		}
-	}
+    @Override
+    public void setPropertyValue(String name, String value) {
+        if (properties == null) {
+            return;
+        }
 
-	protected void addProperty( TestProperty property )
-	{
-		addProperty( property, false );
-	}
+        TestProperty testStepProperty = properties.get(getPropertyKeyName(name));
+        if (testStepProperty != null) {
+            testStepProperty.setValue(value);
+        }
+    }
 
-	protected void addProperty( TestProperty property, boolean notify )
-	{
-		if( properties == null )
-			properties = new HashMap<String, TestProperty>();
+    protected void addProperty(TestProperty property) {
+        addProperty(property, false);
+    }
 
-		String name = property.getName();
-		String upper = name.toUpperCase();
+    protected void addProperty(TestProperty property, boolean notify) {
+        if (properties == null) {
+            properties = new HashMap<String, TestProperty>();
+        }
 
-		if( !normalizedPropertyNames.containsKey( upper ) )
-			normalizedPropertyNames.put( upper, new HashSet<String>() );
+        String name = property.getName();
+        String upper = name.toUpperCase();
 
-		normalizedPropertyNames.get( upper ).add( name );
+        if (!normalizedPropertyNames.containsKey(upper)) {
+            normalizedPropertyNames.put(upper, new HashSet<String>());
+        }
 
-		properties.put( name, property );
-		propertyList.add( property );
+        normalizedPropertyNames.get(upper).add(name);
 
-		if( notify )
-		{
-			firePropertyAdded( name );
-		}
-	}
+        properties.put(name, property);
+        propertyList.add(property);
 
-	private String getPropertyKeyName( String name )
-	{
-		if( properties.containsKey( name ) )
-			return name;
+        if (notify) {
+            firePropertyAdded(name);
+        }
+    }
 
-		Set<String> props = normalizedPropertyNames.get( name.toUpperCase() );
-		if( props != null && !props.isEmpty() )
-		{
-			return props.iterator().next();
-		}
-		return name;
-	}
+    private String getPropertyKeyName(String name) {
+        if (properties.containsKey(name)) {
+            return name;
+        }
 
-	protected TestProperty deleteProperty( String name, boolean notify )
-	{
-		if( properties != null )
-		{
-			name = getPropertyKeyName( name );
-			TestProperty result = properties.remove( name );
+        Set<String> props = normalizedPropertyNames.get(name.toUpperCase());
+        if (props != null && !props.isEmpty()) {
+            return props.iterator().next();
+        }
+        return name;
+    }
 
-			if( result != null )
-			{
-				normalizedPropertyNames.get( name.toUpperCase() ).remove( name );
-				propertyList.remove( result );
+    protected TestProperty deleteProperty(String name, boolean notify) {
+        if (properties != null) {
+            name = getPropertyKeyName(name);
+            TestProperty result = properties.remove(name);
 
-				if( notify )
-					firePropertyRemoved( name );
+            if (result != null) {
+                normalizedPropertyNames.get(name.toUpperCase()).remove(name);
+                propertyList.remove(result);
 
-				return result;
-			}
-		}
+                if (notify) {
+                    firePropertyRemoved(name);
+                }
 
-		return null;
-	}
+                return result;
+            }
+        }
 
-	public void propertyRenamed( String oldName )
-	{
-		if( properties == null )
-			return;
+        return null;
+    }
 
-		oldName = getPropertyKeyName( oldName );
-		String upper = oldName.toUpperCase();
+    public void propertyRenamed(String oldName) {
+        if (properties == null) {
+            return;
+        }
 
-		TestProperty testStepProperty = properties.get( oldName );
-		if( testStepProperty == null )
-			return;
+        oldName = getPropertyKeyName(oldName);
+        String upper = oldName.toUpperCase();
 
-		Set<String> props = normalizedPropertyNames.get( upper );
-		properties.remove( oldName );
-		props.remove( oldName );
-		String newName = testStepProperty.getName();
-		properties.put( newName, testStepProperty );
+        TestProperty testStepProperty = properties.get(oldName);
+        if (testStepProperty == null) {
+            return;
+        }
 
-		upper = newName.toUpperCase();
-		if( !normalizedPropertyNames.containsKey( upper ) )
-			normalizedPropertyNames.put( upper, new HashSet<String>() );
-		normalizedPropertyNames.get( upper ).add( newName );
+        Set<String> props = normalizedPropertyNames.get(upper);
+        properties.remove(oldName);
+        props.remove(oldName);
+        String newName = testStepProperty.getName();
+        properties.put(newName, testStepProperty);
 
-		firePropertyRenamed( oldName, newName );
-	}
+        upper = newName.toUpperCase();
+        if (!normalizedPropertyNames.containsKey(upper)) {
+            normalizedPropertyNames.put(upper, new HashSet<String>());
+        }
+        normalizedPropertyNames.get(upper).add(newName);
 
-	@Override
-	public void addTestPropertyListener( TestPropertyListener listener )
-	{
-		listeners.add( listener );
-	}
+        firePropertyRenamed(oldName, newName);
+    }
 
-	@Override
-	public void removeTestPropertyListener( TestPropertyListener listener )
-	{
-		listeners.remove( listener );
-	}
+    @Override
+    public void addTestPropertyListener(TestPropertyListener listener) {
+        listeners.add(listener);
+    }
 
-	protected void firePropertyAdded( String name )
-	{
-		TestPropertyListener[] array = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : array )
-		{
-			listener.propertyAdded( name );
-		}
-	}
+    @Override
+    public void removeTestPropertyListener(TestPropertyListener listener) {
+        listeners.remove(listener);
+    }
 
-	protected void firePropertyRemoved( String name )
-	{
-		TestPropertyListener[] array = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : array )
-		{
-			listener.propertyRemoved( name );
-		}
-	}
+    protected void firePropertyAdded(String name) {
+        TestPropertyListener[] array = listeners.toArray(new TestPropertyListener[listeners.size()]);
+        for (TestPropertyListener listener : array) {
+            listener.propertyAdded(name);
+        }
+    }
 
-	protected void firePropertyRenamed( String oldName, String newName )
-	{
-		TestPropertyListener[] array = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : array )
-		{
-			listener.propertyRenamed( oldName, newName );
-		}
-	}
+    protected void firePropertyRemoved(String name) {
+        TestPropertyListener[] array = listeners.toArray(new TestPropertyListener[listeners.size()]);
+        for (TestPropertyListener listener : array) {
+            listener.propertyRemoved(name);
+        }
+    }
 
-	public void firePropertyValueChanged( String name, String oldValue, String newValue )
-	{
-		if( oldValue == null && newValue == null )
-			return;
+    protected void firePropertyRenamed(String oldName, String newName) {
+        TestPropertyListener[] array = listeners.toArray(new TestPropertyListener[listeners.size()]);
+        for (TestPropertyListener listener : array) {
+            listener.propertyRenamed(oldName, newName);
+        }
+    }
 
-		if( oldValue != null && oldValue.equals( newValue ) )
-			return;
+    public void firePropertyValueChanged(String name, String oldValue, String newValue) {
+        if (oldValue == null && newValue == null) {
+            return;
+        }
 
-		if( newValue != null && newValue.equals( oldValue ) )
-			return;
+        if (oldValue != null && oldValue.equals(newValue)) {
+            return;
+        }
 
-		TestPropertyListener[] array = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : array )
-		{
-			listener.propertyValueChanged( name, oldValue, newValue );
-		}
-	}
+        if (newValue != null && newValue.equals(oldValue)) {
+            return;
+        }
 
-	@Override
-	public Map<String, TestProperty> getProperties()
-	{
-		Map<String, TestProperty> result = new HashMap<String, TestProperty>();
+        TestPropertyListener[] array = listeners.toArray(new TestPropertyListener[listeners.size()]);
+        for (TestPropertyListener listener : array) {
+            listener.propertyValueChanged(name, oldValue, newValue);
+        }
+    }
 
-		if( properties != null )
-		{
-			for( String name : properties.keySet() )
-				result.put( properties.get( name ).getName(), properties.get( name ) );
-		}
+    @Override
+    public Map<String, TestProperty> getProperties() {
+        Map<String, TestProperty> result = new HashMap<String, TestProperty>();
 
-		return result;
-	}
+        if (properties != null) {
+            for (String name : properties.keySet()) {
+                result.put(properties.get(name).getName(), properties.get(name));
+            }
+        }
 
-	@Override
-	public boolean hasProperty( String name )
-	{
-		return properties != null && properties.containsKey( getPropertyKeyName( name ) );
-	}
+        return result;
+    }
 
-	public boolean hasProperties()
-	{
-		return true;
-	}
+    @Override
+    public boolean hasProperty(String name) {
+        return properties != null && properties.containsKey(getPropertyKeyName(name));
+    }
 
-	@Override
-	public TestProperty getPropertyAt( int index )
-	{
-		return propertyList.get( index );
-	}
+    public boolean hasProperties() {
+        return true;
+    }
 
-	@Override
-	public int getPropertyCount()
-	{
-		return propertyList.size();
-	}
+    @Override
+    public TestProperty getPropertyAt(int index) {
+        return propertyList.get(index);
+    }
 
-	@Override
-	public List<TestProperty> getPropertyList()
-	{
-		return Collections.unmodifiableList( propertyList );
-	}
+    @Override
+    public int getPropertyCount() {
+        return propertyList.size();
+    }
 
-	protected void firePropertyMoved( String name, int oldIndex, int newIndex )
-	{
-		TestPropertyListener[] listenersArray = listeners.toArray( new TestPropertyListener[listeners.size()] );
-		for( TestPropertyListener listener : listenersArray )
-		{
-			listener.propertyMoved( name, oldIndex, newIndex );
-		}
-	}
+    @Override
+    public List<TestProperty> getPropertyList() {
+        return Collections.unmodifiableList(propertyList);
+    }
 
-	public void moveProperty( String propertyName, int targetIndex )
-	{
-		TestProperty property = getProperty( propertyName );
-		int ix = propertyList.indexOf( property );
+    protected void firePropertyMoved(String name, int oldIndex, int newIndex) {
+        TestPropertyListener[] listenersArray = listeners.toArray(new TestPropertyListener[listeners.size()]);
+        for (TestPropertyListener listener : listenersArray) {
+            listener.propertyMoved(name, oldIndex, newIndex);
+        }
+    }
 
-		if( ix == targetIndex )
-			return;
+    public void moveProperty(String propertyName, int targetIndex) {
+        TestProperty property = getProperty(propertyName);
+        int ix = propertyList.indexOf(property);
 
-		if( targetIndex < 0 )
-			targetIndex = 0;
+        if (ix == targetIndex) {
+            return;
+        }
 
-		if( targetIndex < properties.size() )
-			propertyList.add( targetIndex, propertyList.remove( ix ) );
-		else
-			propertyList.add( propertyList.remove( ix ) );
+        if (targetIndex < 0) {
+            targetIndex = 0;
+        }
 
-		if( targetIndex > properties.size() )
-			targetIndex = properties.size();
+        if (targetIndex < properties.size()) {
+            propertyList.add(targetIndex, propertyList.remove(ix));
+        } else {
+            propertyList.add(propertyList.remove(ix));
+        }
 
-		firePropertyMoved( propertyName, ix, targetIndex );
+        if (targetIndex > properties.size()) {
+            targetIndex = properties.size();
+        }
 
-	}
+        firePropertyMoved(propertyName, ix, targetIndex);
+
+    }
 
 }

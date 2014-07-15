@@ -26,30 +26,28 @@ import com.eviware.soapui.impl.rest.RestServiceFactory;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.support.StringUtils;
 
-public class InterfaceFactoryRegistry
-{
-	private static Map<String, InterfaceFactory<?>> factories = new HashMap<String, InterfaceFactory<?>>();
+public class InterfaceFactoryRegistry {
+    private static Map<String, InterfaceFactory<?>> factories = new HashMap<String, InterfaceFactory<?>>();
 
-	static
-	{
-		factories.put( WsdlInterfaceFactory.WSDL_TYPE, new WsdlInterfaceFactory() );
-		factories.put( RestServiceFactory.REST_TYPE, new RestServiceFactory() );
-	}
+    static {
+        factories.put(WsdlInterfaceFactory.WSDL_TYPE, new WsdlInterfaceFactory());
+        factories.put(RestServiceFactory.REST_TYPE, new RestServiceFactory());
+    }
 
-	public static AbstractInterface<?> createNew( WsdlProject project, String type, String name )
-	{
-		if( !factories.containsKey( type ) )
-			throw new RuntimeException( "Unknown interface type [" + type + "]" );
+    public static AbstractInterface<?> createNew(WsdlProject project, String type, String name) {
+        if (!factories.containsKey(type)) {
+            throw new RuntimeException("Unknown interface type [" + type + "]");
+        }
 
-		return factories.get( type ).createNew( project, name );
-	}
+        return factories.get(type).createNew(project, name);
+    }
 
-	public static AbstractInterface<?> build( WsdlProject project, InterfaceConfig config )
-	{
-		String type = config.getType();
-		if( StringUtils.isNullOrEmpty( type ) )
-			type = WsdlInterfaceFactory.WSDL_TYPE;
+    public static AbstractInterface<?> build(WsdlProject project, InterfaceConfig config) {
+        String type = config.getType();
+        if (StringUtils.isNullOrEmpty(type)) {
+            type = WsdlInterfaceFactory.WSDL_TYPE;
+        }
 
-		return factories.get( type ).build( project, config );
-	}
+        return factories.get(type).build(project, config);
+    }
 }

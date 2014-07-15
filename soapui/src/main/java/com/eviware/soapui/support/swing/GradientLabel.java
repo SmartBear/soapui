@@ -24,55 +24,51 @@ import java.awt.Paint;
 
 import javax.swing.JLabel;
 
-public class GradientLabel extends JLabel
-{
-	// ------------------------------ FIELDS ------------------------------
+public class GradientLabel extends JLabel {
+    // ------------------------------ FIELDS ------------------------------
 
-	private Color start;
-	private Color end;
+    private Color start;
+    private Color end;
 
-	// --------------------------- CONSTRUCTORS ---------------------------
+    // --------------------------- CONSTRUCTORS ---------------------------
 
-	public GradientLabel( String text )
-	{
-		super( text );
+    public GradientLabel(String text) {
+        super(text);
 
-		start = Color.LIGHT_GRAY;
-		end = getBackground();
-	}
+        start = Color.LIGHT_GRAY;
+        end = getBackground();
+    }
 
-	public GradientLabel( String text, Color start, Color end )
-	{
-		super( text );
-		this.start = start;
-		this.end = end;
-	}
+    public GradientLabel(String text, Color start, Color end) {
+        super(text);
+        this.start = start;
+        this.end = end;
+    }
 
-	// -------------------------- OTHER METHODS --------------------------
+    // -------------------------- OTHER METHODS --------------------------
 
-	public void paint( Graphics g )
-	{
-		int width = getWidth();
-		int height = getHeight();
+    public void paint(Graphics g) {
+        int width = getWidth();
+        int height = getHeight();
 
-		// Create the gradient paint
-		GradientPaint paint = new GradientPaint( 0, 0, start, width, height, end, true );
+        // Create the gradient paint
+        GradientPaint paint = new GradientPaint(0, 0, start, width, height, end, true);
 
-		// we need to cast to Graphics2D for this operation
-		Graphics2D g2d = ( Graphics2D )g;
+        // we need to cast to Graphics2D for this operation
+        Graphics2D g2d = (Graphics2D) g;
 
-		// save the old paint
-		Paint oldPaint = g2d.getPaint();
+        // save the old paint
+        Paint oldPaint = g2d.getPaint();
 
-		// set the paint to use for this operation
-		g2d.setPaint( paint );
+        // set the paint to use for this operation
+        g2d.setPaint(paint);
 
-		// fill the background using the paint
-		g2d.fillRect( 0, 0, width, height );
+        // fill the background using the paint
+        g2d.fillRect(0, 0, width, height);
 
-		// restore the original paint
-		g2d.setPaint( oldPaint );
+        // restore the original paint
+        g2d.setPaint(oldPaint);
 
-		super.paint( g );
-	}
+        super.paint(g);
+    }
 }

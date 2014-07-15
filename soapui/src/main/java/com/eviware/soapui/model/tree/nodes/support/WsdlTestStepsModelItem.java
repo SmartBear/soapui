@@ -26,80 +26,69 @@ import com.eviware.soapui.support.UISupport;
 
 /**
  * ModelItem for TestSteps node
- * 
+ *
  * @author ole.matzura
  */
 
-public class WsdlTestStepsModelItem extends EmptyModelItem
-{
-	private TestCase testCase;
-	private TestSuiteListener listener = new InternalTestSuiteListener();
+public class WsdlTestStepsModelItem extends EmptyModelItem {
+    private TestCase testCase;
+    private TestSuiteListener listener = new InternalTestSuiteListener();
 
-	public WsdlTestStepsModelItem( TestCase testCase )
-	{
-		super( createLabel( testCase ), UISupport.createImageIcon( "/teststeps.gif" ) );
-		this.testCase = testCase;
+    public WsdlTestStepsModelItem(TestCase testCase) {
+        super(createLabel(testCase), UISupport.createImageIcon("/teststeps.gif"));
+        this.testCase = testCase;
 
-		testCase.getTestSuite().addTestSuiteListener( listener );
-	}
+        testCase.getTestSuite().addTestSuiteListener(listener);
+    }
 
-	private static String createLabel( TestCase testCase )
-	{
-		return "Test Steps (" + testCase.getTestStepCount() + ")";
-	}
+    private static String createLabel(TestCase testCase) {
+        return "Test Steps (" + testCase.getTestStepCount() + ")";
+    }
 
-	public Settings getSettings()
-	{
-		return testCase.getSettings();
-	}
+    public Settings getSettings() {
+        return testCase.getSettings();
+    }
 
-	@Override
-	public String getName()
-	{
-		return createLabel( testCase );
-	}
+    @Override
+    public String getName() {
+        return createLabel(testCase);
+    }
 
-	public WsdlTestCase getTestCase()
-	{
-		return ( WsdlTestCase )testCase;
-	}
+    public WsdlTestCase getTestCase() {
+        return (WsdlTestCase) testCase;
+    }
 
-	@Override
-	public void release()
-	{
-		super.release();
-		testCase.getTestSuite().removeTestSuiteListener( listener );
-	}
+    @Override
+    public void release() {
+        super.release();
+        testCase.getTestSuite().removeTestSuiteListener(listener);
+    }
 
-	public void updateLabel()
-	{
-		setName( createLabel( testCase ) );
-	}
+    public void updateLabel() {
+        setName(createLabel(testCase));
+    }
 
-	public class InternalTestSuiteListener extends TestSuiteListenerAdapter implements TestSuiteListener
-	{
-		@Override
-		public void testStepAdded( TestStep testStep, int index )
-		{
-			if( testStep.getTestCase() == testCase )
-				updateLabel();
-		}
+    public class InternalTestSuiteListener extends TestSuiteListenerAdapter implements TestSuiteListener {
+        @Override
+        public void testStepAdded(TestStep testStep, int index) {
+            if (testStep.getTestCase() == testCase) {
+                updateLabel();
+            }
+        }
 
-		@Override
-		public void testStepRemoved( TestStep testStep, int index )
-		{
-			if( testStep.getTestCase() == testCase )
-				updateLabel();
-		}
+        @Override
+        public void testStepRemoved(TestStep testStep, int index) {
+            if (testStep.getTestCase() == testCase) {
+                updateLabel();
+            }
+        }
 
-		@Override
-		public void testCaseRemoved( TestCase testCase )
-		{
-			if( testCase == WsdlTestStepsModelItem.this.testCase )
-			{
-				testCase.getTestSuite().removeTestSuiteListener( listener );
-			}
-		}
-	}
+        @Override
+        public void testCaseRemoved(TestCase testCase) {
+            if (testCase == WsdlTestStepsModelItem.this.testCase) {
+                testCase.getTestSuite().removeTestSuiteListener(listener);
+            }
+        }
+    }
 
 }

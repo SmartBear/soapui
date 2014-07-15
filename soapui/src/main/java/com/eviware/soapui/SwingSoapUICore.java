@@ -45,148 +45,121 @@ import com.eviware.x.impl.swing.SwingFormFactory;
 import java.io.File;
 import java.io.FileInputStream;
 
-public class SwingSoapUICore extends DefaultSoapUICore
-{
-	public SwingSoapUICore()
-	{
-		super();
-	}
+public class SwingSoapUICore extends DefaultSoapUICore {
+    public SwingSoapUICore() {
+        super();
+    }
 
-	public SwingSoapUICore( String root, String settingsFile )
-	{
-		super( root, settingsFile );
-	}
+    public SwingSoapUICore(String root, String settingsFile) {
+        super(root, settingsFile);
+    }
 
-	public SwingSoapUICore( boolean settingPassword, String soapUISettingsPassword )
-	{
-		super( settingPassword, soapUISettingsPassword );
-	}
+    public SwingSoapUICore(boolean settingPassword, String soapUISettingsPassword) {
+        super(settingPassword, soapUISettingsPassword);
+    }
 
-	public void prepareUI()
-	{
-		UISupport.setToolHost( new SwingToolHost() );
-		XFormFactory.Factory.instance = new SwingFormFactory();
-	}
+    public void prepareUI() {
+        UISupport.setToolHost(new SwingToolHost());
+        XFormFactory.Factory.instance = new SwingFormFactory();
+    }
 
-	public void afterStartup( Workspace workspace )
-	{
-		for( EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories( EditorViewFactory.class ) )
-		{
-			EditorViewFactoryRegistry.getInstance().addFactory( factory );
-		}
+    public void afterStartup(Workspace workspace) {
+        for (EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories(EditorViewFactory.class)) {
+            EditorViewFactoryRegistry.getInstance().addFactory(factory);
+        }
 
-		InspectorRegistry inspectorRegistry = InspectorRegistry.getInstance();
-		inspectorRegistry.addFactory( new ScriptInspectorFactory() );
-		inspectorRegistry.addFactory( new AuthInspectorFactory() );
-		inspectorRegistry.addFactory( new HttpHeadersInspectorFactory() );
-		inspectorRegistry.addFactory( new AttachmentsInspectorFactory() );
-		inspectorRegistry.addFactory( new SSLInspectorFactory() );
-		inspectorRegistry.addFactory( new WssInspectorFactory() );
-		inspectorRegistry.addFactory( new WsaInspectorFactory() );
-		inspectorRegistry.addFactory( new WsrmInspectorFactory() );
-		// inspectorRegistry.addFactory( new WsrmPiggybackInspectorFactory());
-		inspectorRegistry.addFactory( new RestRepresentationsInspectorFactory() );
-		inspectorRegistry.addFactory( new InferredSchemaInspectorFactory() );
-		inspectorRegistry.addFactory( new JMSHeaderInspectorFactory() );
-		inspectorRegistry.addFactory( new JMSPropertyInspectorFactory() );
-		inspectorRegistry.addFactory( new JMSHeaderAndPropertyInspectorFactory() );
-		inspectorRegistry.addFactory( new AMFHeadersInspectorFactory() );
+        InspectorRegistry inspectorRegistry = InspectorRegistry.getInstance();
+        inspectorRegistry.addFactory(new ScriptInspectorFactory());
+        inspectorRegistry.addFactory(new AuthInspectorFactory());
+        inspectorRegistry.addFactory(new HttpHeadersInspectorFactory());
+        inspectorRegistry.addFactory(new AttachmentsInspectorFactory());
+        inspectorRegistry.addFactory(new SSLInspectorFactory());
+        inspectorRegistry.addFactory(new WssInspectorFactory());
+        inspectorRegistry.addFactory(new WsaInspectorFactory());
+        inspectorRegistry.addFactory(new WsrmInspectorFactory());
+        // inspectorRegistry.addFactory( new WsrmPiggybackInspectorFactory());
+        inspectorRegistry.addFactory(new RestRepresentationsInspectorFactory());
+        inspectorRegistry.addFactory(new InferredSchemaInspectorFactory());
+        inspectorRegistry.addFactory(new JMSHeaderInspectorFactory());
+        inspectorRegistry.addFactory(new JMSPropertyInspectorFactory());
+        inspectorRegistry.addFactory(new JMSHeaderAndPropertyInspectorFactory());
+        inspectorRegistry.addFactory(new AMFHeadersInspectorFactory());
 
-		for( InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories( InspectorFactory.class ) )
-		{
-			inspectorRegistry.addFactory( factory );
-		}
+        for (InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories(InspectorFactory.class)) {
+            inspectorRegistry.addFactory(factory);
+        }
+        String actionsDir = System.getProperty("soapui.ext.actions");
+        addExternalActions(actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar
+                + "actions" : actionsDir, getExtensionClassLoader());
+    }
 
-		String actionsDir = System.getProperty( "soapui.ext.actions" );
-		addExternalActions( actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar
-				+ "actions" : actionsDir, getExtensionClassLoader() );
-	}
+    @Override
+    protected Settings initSettings(String fileName) {
+        String fn = fileName;
 
-	@Override
-	protected Settings initSettings( String fileName )
-	{
-		String fn = fileName;
+        if (!new File(fileName).exists()) {
+            try {
+                fileName = importSettingsOnStartup(fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
-		if( !new File( fileName ).exists() )
-		{
-			try
-			{
-				fileName = importSettingsOnStartup( fileName );
-			}
-			catch( Exception e )
-			{
-				e.printStackTrace();
-			}
-		}
+        Settings result = super.initSettings(fileName);
 
-		Settings result = super.initSettings( fileName );
+        if (!fileName.equals(fn)) {
+            setSettingsFile(fn);
+        }
 
-		if( !fileName.equals( fn ) )
-			setSettingsFile( fn );
+        return result;
+    }
 
-		return result;
-	}
+    protected String importSettingsOnStartup(String fileName) throws Exception {
+        if (UISupport.getDialogs().confirm("Missing SoapUI Settings, import from existing installation?",
+                "Import Preferences")) {
+            while (true) {
+                File settingsFile = UISupport.getFileDialogs().open(null, "Import Preferences", ".xml",
+                        "SoapUI settings XML", fileName);
+                if (settingsFile != null) {
+                    try {
+                        SoapuiSettingsDocumentConfig.Factory.parse(settingsFile);
+                        log.info("imported soapui-settings from [" + settingsFile.getAbsolutePath() + "]");
+                        return settingsFile.getAbsolutePath();
+                    } catch (Exception e) {
+                        if (!UISupport.getDialogs().confirm(
+                                "Error loading settings from [" + settingsFile.getAbsolutePath() + "]\r\nspecify another?",
+                                "Error Importing")) {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
-	protected String importSettingsOnStartup( String fileName ) throws Exception
-	{
-		if( UISupport.getDialogs().confirm( "Missing SoapUI Settings, import from existing installation?",
-				"Import Preferences" ) )
-		{
-			while( true )
-			{
-				File settingsFile = UISupport.getFileDialogs().open( null, "Import Preferences", ".xml",
-						"SoapUI settings XML", fileName );
-				if( settingsFile != null )
-				{
-					try
-					{
-						SoapuiSettingsDocumentConfig.Factory.parse( settingsFile );
-						log.info( "imported soapui-settings from [" + settingsFile.getAbsolutePath() + "]" );
-						return settingsFile.getAbsolutePath();
-					}
-					catch( Exception e )
-					{
-						if( !UISupport.getDialogs().confirm(
-								"Error loading settings from [" + settingsFile.getAbsolutePath() + "]\r\nspecify another?",
-								"Error Importing" ) )
-						{
-							break;
-						}
-					}
-				}
-			}
-		}
+        return fileName;
+    }
 
-		return fileName;
-	}
+    protected void addExternalActions(String folder, ClassLoader classLoader) {
+        File[] actionFiles = new File(folder).listFiles();
+        if (actionFiles != null) {
+            for (File actionFile : actionFiles) {
+                if (actionFile.isDirectory()) {
+                    addExternalActions(actionFile.getAbsolutePath(), classLoader);
+                    continue;
+                }
 
-	protected void addExternalActions( String folder, ClassLoader classLoader )
-	{
-		File[] actionFiles = new File( folder ).listFiles();
-		if( actionFiles != null )
-		{
-			for( File actionFile : actionFiles )
-			{
-				if( actionFile.isDirectory() )
-				{
-					addExternalActions( actionFile.getAbsolutePath(), classLoader );
-					continue;
-				}
+                if (!actionFile.getName().toLowerCase().endsWith("-actions.xml")) {
+                    continue;
+                }
 
-				if( !actionFile.getName().toLowerCase().endsWith( "-actions.xml" ) )
-					continue;
+                try {
+                    log.info("Adding actions from [" + actionFile.getAbsolutePath() + "]");
 
-				try
-				{
-					log.info( "Adding actions from [" + actionFile.getAbsolutePath() + "]" );
-
-					SoapUI.getActionRegistry().addConfig( new FileInputStream( actionFile ), classLoader );
-				}
-				catch( Exception e )
-				{
-					SoapUI.logError( e );
-				}
-			}
-		}
-	}
+                    SoapUI.getActionRegistry().addConfig(new FileInputStream(actionFile), classLoader);
+                } catch (Exception e) {
+                    SoapUI.logError(e);
+                }
+            }
+        }
+    }
 }

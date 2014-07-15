@@ -23,89 +23,77 @@ import com.eviware.soapui.model.ModelItem;
 
 /**
  * A pool of script engines
- * 
+ *
  * @author ole.matzura
  */
 
-public class ScriptEnginePool
-{
-	private Stack<SoapUIScriptEngine> scriptEngines = new Stack<SoapUIScriptEngine>();
-	private String script;
-	private ModelItem modelItem;
-	private int borrowed;
-	private String id;
+public class ScriptEnginePool {
+    private Stack<SoapUIScriptEngine> scriptEngines = new Stack<SoapUIScriptEngine>();
+    private String script;
+    private ModelItem modelItem;
+    private int borrowed;
+    private String id;
 
-	public ScriptEnginePool( ModelItem modelItem )
-	{
-		this.modelItem = modelItem;
-	}
+    public ScriptEnginePool(ModelItem modelItem) {
+        this.modelItem = modelItem;
+    }
 
-	public ScriptEnginePool( String id )
-	{
-		this.id = id;
-	}
+    public ScriptEnginePool(String id) {
+        this.id = id;
+    }
 
-	public void setScript( String script )
-	{
-		this.script = script;
-	}
+    public void setScript(String script) {
+        this.script = script;
+    }
 
-	public void returnScriptEngine( SoapUIScriptEngine scriptEngine )
-	{
-		synchronized( this )
-		{
-			scriptEngines.push( scriptEngine );
-			borrowed-- ;
-		}
-	}
+    public void returnScriptEngine(SoapUIScriptEngine scriptEngine) {
+        synchronized (this) {
+            scriptEngines.push(scriptEngine);
+            borrowed--;
+        }
+    }
 
-	public SoapUIScriptEngine getScriptEngine()
-	{
-		synchronized( this )
-		{
-			if( scriptEngines.isEmpty() )
-			{
-				if( modelItem != null )
-					scriptEngines.push( SoapUIScriptEngineRegistry.create( modelItem ) );
-				else
-					scriptEngines.push( SoapUIScriptEngineRegistry.getFactory( id ).createScriptEngine( null ) );
-			}
+    public SoapUIScriptEngine getScriptEngine() {
+        synchronized (this) {
+            if (scriptEngines.isEmpty()) {
+                if (modelItem != null) {
+                    scriptEngines.push(SoapUIScriptEngineRegistry.create(modelItem));
+                } else {
+                    scriptEngines.push(SoapUIScriptEngineRegistry.getFactory(id).createScriptEngine(null));
+                }
+            }
 
-			SoapUIScriptEngine result = scriptEngines.pop();
-			if( script != null )
-				result.setScript( script );
+            SoapUIScriptEngine result = scriptEngines.pop();
+            if (script != null) {
+                result.setScript(script);
+            }
 
-			borrowed++ ;
+            borrowed++;
 
-			return result;
-		}
-	}
+            return result;
+        }
+    }
 
-	public void release()
-	{
-		int waitcount = 10;
+    public void release() {
+        int waitcount = 10;
 
-		while( borrowed > 0 && waitcount-- > 0 )
-		{
-			try
-			{
-				System.out.println( "Waiting for " + borrowed + " script engines" );
-				Thread.sleep( 1000 );
-			}
-			catch( InterruptedException e )
-			{
-				SoapUI.logError( e );
-			}
-		}
+        while (borrowed > 0 && waitcount-- > 0) {
+            try {
+                System.out.println("Waiting for " + borrowed + " script engines");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                SoapUI.logError(e);
+            }
+        }
 
-		for( SoapUIScriptEngine scriptEngine : scriptEngines )
-		{
-			scriptEngine.release();
-		}
+        for (SoapUIScriptEngine scriptEngine : scriptEngines) {
+            scriptEngine.release();
+        }
 
-		scriptEngines.clear();
+        scriptEngines.clear();
 
-		if( borrowed > 0 )
-			System.out.println( "Failed to release " + borrowed + " script engines" );
-	}
+        if (borrowed > 0) {
+            System.out.println("Failed to release " + borrowed + " script engines");
+        }
+    }
 }

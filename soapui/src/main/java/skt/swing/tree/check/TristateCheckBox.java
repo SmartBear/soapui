@@ -38,7 +38,7 @@ import java.awt.event.*;
 /**
  * Maintenance tip - There were some tricks to getting this code
  * working:
- *
+ * <p/>
  * 1. You have to overwite addMouseListener() to do nothing
  * 2. You have to add a mouse event on mousePressed by calling
  * super.addMouseListener()
@@ -50,31 +50,31 @@ import java.awt.event.*;
  * otherwise clicking on the component won't get the focus.
  * 6. You have to make a TristateDecorator as a button model that
  * wraps the original button model and does state management.
- *
+ * <p/>
  * modifed version of :
- *   http://www.javaspecialists.co.za/archive/Issue082.html
+ * http://www.javaspecialists.co.za/archive/Issue082.html
  *
  * @author Dr. Heinz M. Kabutz
  * @author Santhosh Kumar T
- * @email  santhosh@in.fiorano.com
+ * @email santhosh@in.fiorano.com
  */
 
-public class TristateCheckBox extends JCheckBox{
+public class TristateCheckBox extends JCheckBox {
     private final TristateDecorator model;
 
-    public TristateCheckBox(String text, Icon icon, Boolean initial){
+    public TristateCheckBox(String text, Icon icon, Boolean initial) {
         super(text, icon);
         // Add a listener for when the mouse is pressed
-        super.addMouseListener(new MouseAdapter(){
-            public void mousePressed(MouseEvent e){
+        super.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
                 grabFocus();
                 model.nextState();
             }
         });
         // Reset the keyboard action map
         ActionMap map = new ActionMapUIResource();
-        map.put("pressed", new AbstractAction(){      //NOI18N
-            public void actionPerformed(ActionEvent e){
+        map.put("pressed", new AbstractAction() {      //NOI18N
+            public void actionPerformed(ActionEvent e) {
                 grabFocus();
                 model.nextState();
             }
@@ -87,32 +87,37 @@ public class TristateCheckBox extends JCheckBox{
         setState(initial);
     }
 
-    public TristateCheckBox(String text, Boolean initial){
+    public TristateCheckBox(String text, Boolean initial) {
         this(text, null, initial);
     }
 
-    public TristateCheckBox(String text){
+    public TristateCheckBox(String text) {
         this(text, null);
     }
 
-    public TristateCheckBox(){
+    public TristateCheckBox() {
         this(null);
     }
 
-    /** No one may add mouse listeners, not even Swing! */
-    public void addMouseListener(MouseListener l){}
+    /**
+     * No one may add mouse listeners, not even Swing!
+     */
+    public void addMouseListener(MouseListener l) {
+    }
 
     /**
      * Set the new state to either SELECTED, NOT_SELECTED or
      * DONT_CARE.  If state == null, it is treated as DONT_CARE.
      */
-    public void setState(Boolean state){
+    public void setState(Boolean state) {
         model.setState(state);
     }
 
-    /** Return the current state, which is determined by the
-     * selection status of the model. */
-    public Boolean getState(){
+    /**
+     * Return the current state, which is determined by the
+     * selection status of the model.
+     */
+    public Boolean getState() {
         return model.getState();
     }
 
@@ -122,22 +127,23 @@ public class TristateCheckBox extends JCheckBox{
      * Decorator, because we are extending functionality and
      * "decorating" the original model with a more powerful model.
      */
-    private class TristateDecorator implements ButtonModel{
+    private class TristateDecorator implements ButtonModel {
         private final ButtonModel other;
-        private TristateDecorator(ButtonModel other){
+
+        private TristateDecorator(ButtonModel other) {
             this.other = other;
         }
 
-        private void setState(Boolean state){
-            if(state==Boolean.FALSE){
+        private void setState(Boolean state) {
+            if (state == Boolean.FALSE) {
                 other.setArmed(false);
                 setPressed(false);
                 setSelected(false);
-            } else if(state==Boolean.TRUE){
+            } else if (state == Boolean.TRUE) {
                 other.setArmed(false);
                 setPressed(false);
                 setSelected(true);
-            } else{
+            } else {
                 other.setArmed(true);
                 setPressed(true);
                 setSelected(true);
@@ -147,130 +153,148 @@ public class TristateCheckBox extends JCheckBox{
         /**
          * The current state is embedded in the selection / armed
          * state of the model.
-         *
+         * <p/>
          * We return the SELECTED state when the checkbox is selected
          * but not armed, DONT_CARE state when the checkbox is
          * selected and armed (grey) and NOT_SELECTED when the
          * checkbox is deselected.
          */
-        private Boolean getState(){
-            if(isSelected() && !isArmed()){
+        private Boolean getState() {
+            if (isSelected() && !isArmed()) {
                 // normal black tick
                 return Boolean.TRUE;
-            } else if(isSelected() && isArmed()){
+            } else if (isSelected() && isArmed()) {
                 // don't care grey tick
                 return null;
-            } else{
+            } else {
                 // normal deselected
                 return Boolean.FALSE;
             }
         }
 
 
-        /** We rotate between NOT_SELECTED, SELECTED and DONT_CARE.*/
-        private void nextState(){
+        /**
+         * We rotate between NOT_SELECTED, SELECTED and DONT_CARE.
+         */
+        private void nextState() {
             Boolean current = getState();
-            if(current == Boolean.FALSE){
+            if (current == Boolean.FALSE) {
                 setState(Boolean.TRUE);
-            } else if(current == Boolean.TRUE){
+            } else if (current == Boolean.TRUE) {
                 setState(null);
-            } else if(current == null){
+            } else if (current == null) {
                 setState(Boolean.FALSE);
             }
         }
 
 
-        /** Filter: No one may change the armed status except us. */
-        public void setArmed(boolean b){
+        /**
+         * Filter: No one may change the armed status except us.
+         */
+        public void setArmed(boolean b) {
         }
 
         public boolean isFocusTraversable() {
             return isEnabled();
         }
 
-        /** We disable focusing on the component when it is not
-         * enabled. */
-        public void setEnabled(boolean b){
+        /**
+         * We disable focusing on the component when it is not
+         * enabled.
+         */
+        public void setEnabled(boolean b) {
 //            setFocusable(b);
             other.setEnabled(b);
         }
 
 
-        /** All these methods simply delegate to the "other" model
-         * that is being decorated. */
-        public boolean isArmed(){return other.isArmed();
+        /**
+         * All these methods simply delegate to the "other" model
+         * that is being decorated.
+         */
+        public boolean isArmed() {
+            return other.isArmed();
         }
 
-        public boolean isSelected(){return other.isSelected();
+        public boolean isSelected() {
+            return other.isSelected();
         }
 
-        public boolean isEnabled(){return other.isEnabled();
+        public boolean isEnabled() {
+            return other.isEnabled();
         }
 
-        public boolean isPressed(){return other.isPressed();
+        public boolean isPressed() {
+            return other.isPressed();
         }
 
-        public boolean isRollover(){return other.isRollover();
+        public boolean isRollover() {
+            return other.isRollover();
         }
 
-        public void setSelected(boolean b){other.setSelected(b);
+        public void setSelected(boolean b) {
+            other.setSelected(b);
         }
 
-        public void setPressed(boolean b){other.setPressed(b);
+        public void setPressed(boolean b) {
+            other.setPressed(b);
         }
 
-        public void setRollover(boolean b){other.setRollover(b);
+        public void setRollover(boolean b) {
+            other.setRollover(b);
         }
 
-        public void setMnemonic(int key){other.setMnemonic(key);
+        public void setMnemonic(int key) {
+            other.setMnemonic(key);
         }
 
-        public int getMnemonic(){return other.getMnemonic();
+        public int getMnemonic() {
+            return other.getMnemonic();
         }
 
-        public void setActionCommand(String s){
+        public void setActionCommand(String s) {
             other.setActionCommand(s);
         }
 
-        public String getActionCommand(){
+        public String getActionCommand() {
             return other.getActionCommand();
         }
 
-        public void setGroup(ButtonGroup group){
+        public void setGroup(ButtonGroup group) {
             other.setGroup(group);
         }
 
-        public void addActionListener(ActionListener l){
+        public void addActionListener(ActionListener l) {
             other.addActionListener(l);
         }
 
-        public void removeActionListener(ActionListener l){
+        public void removeActionListener(ActionListener l) {
             other.removeActionListener(l);
         }
 
-        public void addItemListener(ItemListener l){
+        public void addItemListener(ItemListener l) {
             other.addItemListener(l);
         }
 
-        public void removeItemListener(ItemListener l){
+        public void removeItemListener(ItemListener l) {
             other.removeItemListener(l);
         }
 
-        public void addChangeListener(ChangeListener l){
+        public void addChangeListener(ChangeListener l) {
             other.addChangeListener(l);
         }
 
-        public void removeChangeListener(ChangeListener l){
+        public void removeChangeListener(ChangeListener l) {
             other.removeChangeListener(l);
         }
 
-        public Object[] getSelectedObjects(){
+        public Object[] getSelectedObjects() {
             return other.getSelectedObjects();
         }
     }
 
 
-    public static void main(String args[]) throws Exception{
+    public static void main(String args[]) throws Exception {
         UIManager.setLookAndFeel(
                 UIManager.getSystemLookAndFeelClassName());
         JFrame frame = new JFrame("TristateCheckBoxTest");     //NOI18N

@@ -31,37 +31,40 @@ import com.eviware.soapui.support.editor.xml.XmlInspector;
 
 /**
  * XmlEditor for a response-message to a WsdlRequest
- * 
+ *
  * @author ole.matzura
  */
 
-public class ResponseMessageXmlEditor<T extends ModelItem, T2 extends XmlDocument> extends ModelItemXmlEditor<T, T2>
-{
-	@SuppressWarnings( "unchecked" )
-	public ResponseMessageXmlEditor( T2 xmlDocument, T modelItem )
-	{
-		super( xmlDocument, modelItem );
+public class ResponseMessageXmlEditor<T extends ModelItem, T2 extends XmlDocument> extends ModelItemXmlEditor<T, T2> {
+    @SuppressWarnings("unchecked")
+    public ResponseMessageXmlEditor(T2 xmlDocument, T modelItem) {
+        super(xmlDocument, modelItem);
 
-		EditorViewFactory[] editorFactories = EditorViewFactoryRegistry.getInstance().getFactoriesOfType(
-				ResponseEditorViewFactory.class );
+        EditorViewFactory[] editorFactories = EditorViewFactoryRegistry.getInstance().getFactoriesOfType(
+                ResponseEditorViewFactory.class);
 
-		for( EditorViewFactory factory : editorFactories )
-		{
-			ResponseEditorViewFactory f = ( ResponseEditorViewFactory )factory;
-			XmlEditorView editorView = ( XmlEditorView )f.createResponseEditorView( this, modelItem );
-			if( editorView != null )
-				addEditorView( ( EditorView<T2> )editorView );
-		}
+        for (EditorViewFactory factory : editorFactories) {
+            ResponseEditorViewFactory f = (ResponseEditorViewFactory) factory;
+            XmlEditorView editorView = (XmlEditorView) f.createResponseEditorView(this, modelItem);
+            if (editorView != null) {
+                addEditorView((EditorView<T2>) editorView);
+            }
+        }
 
-		InspectorFactory[] inspectorFactories = InspectorRegistry.getInstance().getFactoriesOfType(
-				ResponseInspectorFactory.class );
+        InspectorFactory[] inspectorFactories = InspectorRegistry.getInstance().getFactoriesOfType(
+                ResponseInspectorFactory.class);
 
-		for( InspectorFactory factory : inspectorFactories )
-		{
-			ResponseInspectorFactory f = ( ResponseInspectorFactory )factory;
-			XmlInspector inspector = ( XmlInspector )f.createResponseInspector( this, modelItem );
-			if( inspector != null )
-				addInspector( ( EditorInspector<T2> )inspector );
-		}
-	}
+        for (InspectorFactory factory : inspectorFactories) {
+            ResponseInspectorFactory f = (ResponseInspectorFactory) factory;
+            XmlInspector inspector = (XmlInspector) f.createResponseInspector(this, modelItem);
+            if (inspector != null) {
+                addInspector((EditorInspector<T2>) inspector);
+            }
+        }
+    }
+
+    @Override
+    public void addEditorView(EditorView<T2> editorView) {
+        super.addEditorView(editorView);
+    }
 }

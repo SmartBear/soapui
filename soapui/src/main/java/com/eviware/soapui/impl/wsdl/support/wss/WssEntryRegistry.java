@@ -25,31 +25,28 @@ import com.eviware.soapui.impl.wsdl.support.wss.entries.TimestampEntry;
 import com.eviware.soapui.impl.wsdl.support.wss.entries.UsernameEntry;
 import com.eviware.soapui.support.registry.AbstractRegistry;
 
-public class WssEntryRegistry extends AbstractRegistry<WssEntry, WSSEntryConfig, OutgoingWss>
-{
-	private static WssEntryRegistry instance;
+public class WssEntryRegistry extends AbstractRegistry<WssEntry, WSSEntryConfig, OutgoingWss> {
+    private static WssEntryRegistry instance;
 
-	public WssEntryRegistry()
-	{
-		mapType( UsernameEntry.TYPE, UsernameEntry.class );
-		mapType( TimestampEntry.TYPE, TimestampEntry.class );
-		mapType( ManualSAMLEntry.TYPE, ManualSAMLEntry.class );
-		mapType( AutomaticSAMLEntry.TYPE, AutomaticSAMLEntry.class );
-		mapType( SignatureEntry.TYPE, SignatureEntry.class );
-		mapType( EncryptionEntry.TYPE, EncryptionEntry.class );
-	}
+    public WssEntryRegistry() {
+        mapType(UsernameEntry.TYPE, UsernameEntry.class);
+        mapType(TimestampEntry.TYPE, TimestampEntry.class);
+        mapType(ManualSAMLEntry.TYPE, ManualSAMLEntry.class);
+        mapType(AutomaticSAMLEntry.TYPE, AutomaticSAMLEntry.class);
+        mapType(SignatureEntry.TYPE, SignatureEntry.class);
+        mapType(EncryptionEntry.TYPE, EncryptionEntry.class);
+    }
 
-	public static synchronized WssEntryRegistry get()
-	{
-		if( instance == null )
-			instance = new WssEntryRegistry();
+    public static synchronized WssEntryRegistry get() {
+        if (instance == null) {
+            instance = new WssEntryRegistry();
+        }
 
-		return instance;
-	}
+        return instance;
+    }
 
-	@Override
-	protected WSSEntryConfig addNewConfig( OutgoingWss container )
-	{
-		return container.getConfig().addNewEntry();
-	}
+    @Override
+    protected WSSEntryConfig addNewConfig(OutgoingWss container) {
+        return container.getConfig().addNewEntry();
+    }
 }

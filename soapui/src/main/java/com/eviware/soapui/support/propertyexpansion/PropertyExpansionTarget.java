@@ -21,13 +21,12 @@ import java.awt.Point;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 
-public interface PropertyExpansionTarget
-{
-	public void insertPropertyExpansion( PropertyExpansion expansion, Point point );
+public interface PropertyExpansionTarget {
+    public void insertPropertyExpansion(PropertyExpansion expansion, Point point);
 
-	public ModelItem getContextModelItem();
+    public ModelItem getContextModelItem();
 
-	public String getValueForCreation();
+    public String getValueForCreation();
 
-	public String getNameForCreation();
+    public String getNameForCreation();
 }

@@ -12,7 +12,8 @@
  * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
  * express or implied. See the Licence for the specific language governing permissions and limitations
  * under the Licence.
-*/package com.eviware.soapui.impl.wsdl.mock;
+*/
+package com.eviware.soapui.impl.wsdl.mock;
 
 import com.eviware.soapui.config.CompressedStringConfig;
 import com.eviware.soapui.config.MockResponseConfig;
@@ -29,47 +30,43 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class WsdlMockResponseTest
-{
+public class WsdlMockResponseTest {
 
-	MockResponse mockResponse;
-	private CompressedStringConfig compressedStringConfig;
+    MockResponse mockResponse;
+    private CompressedStringConfig compressedStringConfig;
 
-	@Before
-	public void setUp()
-	{
-		WsdlMockOperation mockOperation = mock( WsdlMockOperation.class );
-		XmlBeansSettingsImpl mockedSettings = mock( XmlBeansSettingsImpl.class );
-		when( mockOperation.getSettings() ).thenReturn( mockedSettings );
+    @Before
+    public void setUp() {
+        WsdlMockOperation mockOperation = mock(WsdlMockOperation.class);
+        XmlBeansSettingsImpl mockedSettings = mock(XmlBeansSettingsImpl.class);
+        when(mockOperation.getSettings()).thenReturn(mockedSettings);
 
-		compressedStringConfig = mock(CompressedStringConfig.class);
+        compressedStringConfig = mock(CompressedStringConfig.class);
 
-		MockResponseConfig mockResponseConfig = mock( MockResponseConfig.class );
-		SettingsConfig mockedResponseSettings = mock( SettingsConfig.class );
-		when(mockResponseConfig.getSettings()).thenReturn( mockedResponseSettings );
-		when( mockResponseConfig.getResponseContent()).thenReturn( compressedStringConfig );
+        MockResponseConfig mockResponseConfig = mock(MockResponseConfig.class);
+        SettingsConfig mockedResponseSettings = mock(SettingsConfig.class);
+        when(mockResponseConfig.getSettings()).thenReturn(mockedResponseSettings);
+        when(mockResponseConfig.getResponseContent()).thenReturn(compressedStringConfig);
 
-		mockResponse = new WsdlMockResponse( mockOperation, mockResponseConfig );
-	}
+        mockResponse = new WsdlMockResponse(mockOperation, mockResponseConfig);
+    }
 
-	@Test
-	public void testGetResponseContentWithGZIPCompression() throws Exception
-	{
-		when(compressedStringConfig.getCompression()).thenReturn( "gzip" );
+    @Test
+    public void testGetResponseContentWithGZIPCompression() throws Exception {
+        when(compressedStringConfig.getCompression()).thenReturn("gzip");
 
-		byte[] gZippedBytes =  CompressionSupport.compress("gzip", "Awesomeness".getBytes());
-		gZippedBytes = Base64.encodeBase64( gZippedBytes );
-		when( compressedStringConfig.getStringValue() ).thenReturn( new String(gZippedBytes) );
+        byte[] gZippedBytes = CompressionSupport.compress("gzip", "Awesomeness".getBytes());
+        gZippedBytes = Base64.encodeBase64(gZippedBytes);
+        when(compressedStringConfig.getStringValue()).thenReturn(new String(gZippedBytes));
 
-		assertThat( mockResponse.getResponseContent(), is( "Awesomeness" ) );
-	}
+        assertThat(mockResponse.getResponseContent(), is("Awesomeness"));
+    }
 
-	@Test
-	public void testGetResponseContentWithNoCompression() throws Exception
-	{
-		when(compressedStringConfig.getCompression()).thenReturn( "none" );
-		when(compressedStringConfig.getStringValue()).thenReturn( "Awesomeness" );
+    @Test
+    public void testGetResponseContentWithNoCompression() throws Exception {
+        when(compressedStringConfig.getCompression()).thenReturn("none");
+        when(compressedStringConfig.getStringValue()).thenReturn("Awesomeness");
 
-		assertThat(mockResponse.getResponseContent(), is("Awesomeness"));
-	}
+        assertThat(mockResponse.getResponseContent(), is("Awesomeness"));
+    }
 }

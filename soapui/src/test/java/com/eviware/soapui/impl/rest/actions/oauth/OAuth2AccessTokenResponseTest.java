@@ -26,62 +26,55 @@ import static org.junit.Assert.assertThat;
 /**
  *
  */
-public class OAuth2AccessTokenResponseTest
-{
+public class OAuth2AccessTokenResponseTest {
 
-	public static final String DUMMY_ACCESS_TOKEN = "dummy_access_token";
-	public static final String DUMMY_REFRESH_TOKEN = "dummy_refresh_token";
-	public static final long EXPIRES_IN = 3600L;
-	private OAuth2AccessTokenResponse tokenResponse;
+    public static final String DUMMY_ACCESS_TOKEN = "dummy_access_token";
+    public static final String DUMMY_REFRESH_TOKEN = "dummy_refresh_token";
+    public static final long EXPIRES_IN = 3600L;
+    private OAuth2AccessTokenResponse tokenResponse;
 
-	@Before
-	public void setUp()
-	{
-		tokenResponse = new OAuth2AccessTokenResponse();
-	}
+    @Before
+    public void setUp() {
+        tokenResponse = new OAuth2AccessTokenResponse();
+    }
 
-	@Test
-	public void readsTokenFromJSONBody() throws OAuthProblemException
-	{
-		String jsonBody = "{\n" +
-				"  \"access_token\" : \"" + DUMMY_ACCESS_TOKEN + "\",\n" +
-				"  \"token_type\" : \"Bearer\",\n" +
-				"  \"expires_in\" : " + EXPIRES_IN + ",\n" +
-				"  \"refresh_token\" : \"" + DUMMY_REFRESH_TOKEN + "\"\n" +
-				"}";
+    @Test
+    public void readsTokenFromJSONBody() throws OAuthProblemException {
+        String jsonBody = "{\n" +
+                "  \"access_token\" : \"" + DUMMY_ACCESS_TOKEN + "\",\n" +
+                "  \"token_type\" : \"Bearer\",\n" +
+                "  \"expires_in\" : " + EXPIRES_IN + ",\n" +
+                "  \"refresh_token\" : \"" + DUMMY_REFRESH_TOKEN + "\"\n" +
+                "}";
 
-		tokenResponse.setBody( jsonBody );
+        tokenResponse.setBody(jsonBody);
 
-		assertTokenResponseParameters( tokenResponse );
-	}
+        assertTokenResponseParameters(tokenResponse);
+    }
 
-	@Test
-	public void readsTokenFromFormURLEncodedBody() throws OAuthProblemException
-	{
-		tokenResponse.setBody( getFormUrlEncodedresponseBody() );
+    @Test
+    public void readsTokenFromFormURLEncodedBody() throws OAuthProblemException {
+        tokenResponse.setBody(getFormUrlEncodedresponseBody());
 
-		assertTokenResponseParameters( tokenResponse );
-	}
+        assertTokenResponseParameters(tokenResponse);
+    }
 
-	@Test
-	public void readsTokenFromFormURLEncodedBodyWithHash() throws OAuthProblemException
-	{
-		tokenResponse.setBody( "#" + getFormUrlEncodedresponseBody() );
+    @Test
+    public void readsTokenFromFormURLEncodedBodyWithHash() throws OAuthProblemException {
+        tokenResponse.setBody("#" + getFormUrlEncodedresponseBody());
 
-		assertTokenResponseParameters( tokenResponse );
-	}
+        assertTokenResponseParameters(tokenResponse);
+    }
 
-	private void assertTokenResponseParameters( OAuth2AccessTokenResponse tokenResponse )
-	{
-		assertThat( tokenResponse.getAccessToken(), is( DUMMY_ACCESS_TOKEN ) );
-		assertThat( tokenResponse.getExpiresIn(), is( EXPIRES_IN ) );
-		assertThat( tokenResponse.getRefreshToken(), is( DUMMY_REFRESH_TOKEN ) );
-	}
+    private void assertTokenResponseParameters(OAuth2AccessTokenResponse tokenResponse) {
+        assertThat(tokenResponse.getAccessToken(), is(DUMMY_ACCESS_TOKEN));
+        assertThat(tokenResponse.getExpiresIn(), is(EXPIRES_IN));
+        assertThat(tokenResponse.getRefreshToken(), is(DUMMY_REFRESH_TOKEN));
+    }
 
-	private String getFormUrlEncodedresponseBody()
-	{
-		return "access_token=" + DUMMY_ACCESS_TOKEN + "&expires_in=" + EXPIRES_IN + "&refresh_token=" +
-				DUMMY_REFRESH_TOKEN + "&token_type=Bearer";
-	}
+    private String getFormUrlEncodedresponseBody() {
+        return "access_token=" + DUMMY_ACCESS_TOKEN + "&expires_in=" + EXPIRES_IN + "&refresh_token=" +
+                DUMMY_REFRESH_TOKEN + "&token_type=Bearer";
+    }
 
 }

@@ -39,150 +39,134 @@ import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
 import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> implements DefinitionCache
-{
-	protected DefinitionCacheConfig definitionCache;
-	private T container;
-	private InterfaceDefinitionPart rootPart;
-	private List<InterfaceDefinitionPart> parts;
+public abstract class AbstractDefinitionCache<T extends AbstractInterface<?>> implements DefinitionCache {
+    protected DefinitionCacheConfig definitionCache;
+    private T container;
+    private InterfaceDefinitionPart rootPart;
+    private List<InterfaceDefinitionPart> parts;
 
-	public AbstractDefinitionCache( DefinitionCacheConfig definitionCache, T container )
-	{
-		this.definitionCache = definitionCache;
-		this.container = container;
+    public AbstractDefinitionCache(DefinitionCacheConfig definitionCache, T container) {
+        this.definitionCache = definitionCache;
+        this.container = container;
 
-		if( this.definitionCache == null )
-			this.definitionCache = reinit( container );
-	}
+        if (this.definitionCache == null) {
+            this.definitionCache = reinit(container);
+        }
+    }
 
-	protected abstract DefinitionCacheConfig reinit( T owner );
+    protected abstract DefinitionCacheConfig reinit(T owner);
 
-	public T getContainer()
-	{
-		return container;
-	}
+    public T getContainer() {
+        return container;
+    }
 
-	public boolean validate()
-	{
-		if( definitionCache.getRootPart() == null )
-			return false;
+    public boolean validate() {
+        if (definitionCache.getRootPart() == null) {
+            return false;
+        }
 
-		if( definitionCache.sizeOfPartArray() == 0 )
-			return false;
+        if (definitionCache.sizeOfPartArray() == 0) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	public void importCache( DefinitionCache cache ) throws Exception
-	{
-		if( cache instanceof AbstractDefinitionCache<?> )
-		{
-			definitionCache = reinit( container );
-			definitionCache.set( ( ( AbstractDefinitionCache<?> )cache ).getConfig() );
-			initParts();
-		}
-		else
-		{
-			update( new InterfaceCacheDefinitionLoader( cache ) );
-		}
-	}
+    public void importCache(DefinitionCache cache) throws Exception {
+        if (cache instanceof AbstractDefinitionCache<?>) {
+            definitionCache = reinit(container);
+            definitionCache.set(((AbstractDefinitionCache<?>) cache).getConfig());
+            initParts();
+        } else {
+            update(new InterfaceCacheDefinitionLoader(cache));
+        }
+    }
 
-	protected DefinitionCacheConfig getConfig()
-	{
-		return definitionCache;
-	}
+    protected DefinitionCacheConfig getConfig() {
+        return definitionCache;
+    }
 
-	public void update( DefinitionLoader loader ) throws Exception
-	{
-		definitionCache = reinit( container );
+    public void update(DefinitionLoader loader) throws Exception {
+        definitionCache = reinit(container);
 
-		String baseUri = loader.getBaseURI();
-		definitionCache.setType( DefinitionCacheTypeConfig.TEXT );
-		Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts( loader );
-		definitionCache.setRootPart( baseUri );
+        String baseUri = loader.getBaseURI();
+        definitionCache.setType(DefinitionCacheTypeConfig.TEXT);
+        Map<String, XmlObject> urls = SchemaUtils.getDefinitionParts(loader);
+        definitionCache.setRootPart(baseUri);
 
-		for( Map.Entry<String, XmlObject> entry : urls.entrySet() )
-		{
-			DefintionPartConfig definitionPart = definitionCache.addNewPart();
-			String url = entry.getKey();
-			definitionPart.setUrl( url );
-			XmlObject xmlObject = entry.getValue();
-			Node domNode = xmlObject.getDomNode();
+        for (Map.Entry<String, XmlObject> entry : urls.entrySet()) {
+            DefintionPartConfig definitionPart = definitionCache.addNewPart();
+            String url = entry.getKey();
+            definitionPart.setUrl(url);
+            XmlObject xmlObject = entry.getValue();
+            Node domNode = xmlObject.getDomNode();
 
-			if( domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE )
-			{
-				Node node = ( ( DocumentFragment )domNode ).getFirstChild();
-				if( node.getNodeType() == Node.TEXT_NODE )
-				{
-					domNode = XmlUtils.parseXml( node.getNodeValue() );
-					// xmlObject = XmlObject.Factory.parse( domNode );
-					xmlObject = XmlUtils.createXmlObject( domNode );
-				}
-			}
+            if (domNode.getNodeType() == Node.DOCUMENT_FRAGMENT_NODE) {
+                Node node = ((DocumentFragment) domNode).getFirstChild();
+                if (node.getNodeType() == Node.TEXT_NODE) {
+                    domNode = XmlUtils.parseXml(node.getNodeValue());
+                    // xmlObject = XmlObject.Factory.parse( domNode );
+                    xmlObject = XmlUtils.createXmlObject(domNode);
+                }
+            }
 
-			Element contentElement = ( ( Document )domNode ).getDocumentElement();
+            Element contentElement = ((Document) domNode).getDocumentElement();
 
-			Node newDomNode = definitionPart.addNewContent().getDomNode();
-			newDomNode.appendChild( newDomNode.getOwnerDocument().createTextNode( xmlObject.toString() ) );
-			definitionPart.setType( contentElement.getNamespaceURI() );
-		}
+            Node newDomNode = definitionPart.addNewContent().getDomNode();
+            newDomNode.appendChild(newDomNode.getOwnerDocument().createTextNode(xmlObject.toString()));
+            definitionPart.setType(contentElement.getNamespaceURI());
+        }
 
-		initParts();
-	}
+        initParts();
+    }
 
-	public List<InterfaceDefinitionPart> getDefinitionParts() throws Exception
-	{
-		if( parts == null )
-		{
-			initParts();
-		}
+    public List<InterfaceDefinitionPart> getDefinitionParts() throws Exception {
+        if (parts == null) {
+            initParts();
+        }
 
-		return parts;
-	}
+        return parts;
+    }
 
-	private void initParts()
-	{
-		parts = new ArrayList<InterfaceDefinitionPart>();
+    private void initParts() {
+        parts = new ArrayList<InterfaceDefinitionPart>();
 
-		List<DefintionPartConfig> partList = definitionCache.getPartList();
-		for( DefintionPartConfig part : partList )
-		{
-			try
-			{
-				boolean rootElement = URLDecoder.decode( part.getUrl(), "UTF-8" ).equals(
-						URLDecoder.decode( definitionCache.getRootPart(), "UTF-8" ) );
-				ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart( part,
-						rootElement, definitionCache.getType() );
-				parts.add( configInterfaceDefinitionPart );
+        List<DefintionPartConfig> partList = definitionCache.getPartList();
+        for (DefintionPartConfig part : partList) {
+            try {
+                boolean rootElement = URLDecoder.decode(part.getUrl(), "UTF-8").equals(
+                        URLDecoder.decode(definitionCache.getRootPart(), "UTF-8"));
+                ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new ConfigInterfaceDefinitionPart(part,
+                        rootElement, definitionCache.getType());
+                parts.add(configInterfaceDefinitionPart);
 
-				if( configInterfaceDefinitionPart.isRootPart() )
-					rootPart = configInterfaceDefinitionPart;
-			}
-			catch( UnsupportedEncodingException e )
-			{
-				e.printStackTrace();
-			}
-			// ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new
-			// ConfigInterfaceDefinitionPart( part, part
-			// .getUrl().equals( definitionCache.getRootPart() ),
-			// definitionCache.getType() );
+                if (configInterfaceDefinitionPart.isRootPart()) {
+                    rootPart = configInterfaceDefinitionPart;
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            // ConfigInterfaceDefinitionPart configInterfaceDefinitionPart = new
+            // ConfigInterfaceDefinitionPart( part, part
+            // .getUrl().equals( definitionCache.getRootPart() ),
+            // definitionCache.getType() );
 
-		}
-	}
+        }
+    }
 
-	public InterfaceDefinitionPart getRootPart()
-	{
-		if( parts == null )
-			initParts();
+    public InterfaceDefinitionPart getRootPart() {
+        if (parts == null) {
+            initParts();
+        }
 
-		return rootPart;
-	}
+        return rootPart;
+    }
 
-	public void clear()
-	{
-		definitionCache.setRootPart( null );
+    public void clear() {
+        definitionCache.setRootPart(null);
 
-		while( definitionCache.sizeOfPartArray() > 0 )
-			definitionCache.removePart( 0 );
-	}
+        while (definitionCache.sizeOfPartArray() > 0) {
+            definitionCache.removePart(0);
+        }
+    }
 }

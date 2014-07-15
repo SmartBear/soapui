@@ -21,16 +21,15 @@ import java.net.URL;
 /**
  * Defines interactions with a web browser in the context of an OAuth2
  */
-interface UserBrowserFacade
-{
-	
-	void open(URL url);
+interface UserBrowserFacade {
 
-	void addBrowserListener( BrowserListener listener );
+    void open(URL url);
 
-	void removeBrowserStateListener(BrowserListener listener);
+    void addBrowserListener(BrowserListener listener);
 
-	void close();
+    void removeBrowserStateListener(BrowserListener listener);
 
-	void executeJavaScript( String script );
+    void close();
+
+    void executeJavaScript(String script);
 }
