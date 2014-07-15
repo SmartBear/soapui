@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.eviware.soapui.impl.wsdl.submit.filters.GlobalHttpHeadersRequestFilter;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -342,6 +343,20 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
             int ix = option.indexOf('=');
             if (ix != -1) {
                 System.setProperty(option.substring(0, ix), option.substring(ix + 1));
+            }
+        }
+    }
+
+    public void setCustomHeaders( String[] optionValues )
+    {
+        for( String option : optionValues )
+        {
+            int ix = option.indexOf( '=' );
+            if( ix != -1 )
+            {
+                // not optimal - it would be nicer if the filter could access command-line options via some
+                // generic mechanism.
+                GlobalHttpHeadersRequestFilter.addGlobalHeader(option.substring(0, ix), option.substring(ix + 1));
             }
         }
     }
