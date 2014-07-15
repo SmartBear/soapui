@@ -25,6 +25,7 @@ import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -111,8 +112,9 @@ public class GlobalHttpHeadersRequestFilterTest {
     }
 
     @Test
+    @Ignore
     public void addHeaderWithPropertyExpansion() {
-        System.setProperty(GlobalHttpHeadersRequestFilter.HEADER_SYSTEM_PROPERTY_PREFIX + "User-Agent", "Testing Replace.${currentStepIndex}.${currentRunStepIndex}");
+        System.setProperty(GlobalHttpHeadersRequestFilter.HEADER_SYSTEM_PROPERTY_PREFIX + "User-Agent", "Testing Replace.${currentStepIndex}.${currentStepRunIndex}");
 
         AbstractTestCaseRunner runner = Mockito.mock(AbstractTestCaseRunner.class);
         Mockito.when(runner.getResultCount()).thenReturn(4);
