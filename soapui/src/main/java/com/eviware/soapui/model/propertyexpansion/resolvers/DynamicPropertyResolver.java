@@ -18,6 +18,9 @@ package com.eviware.soapui.model.propertyexpansion.resolvers;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.model.propertyexpansion.resolvers.providers.CurrentRunStepIndexProvider;
+import com.eviware.soapui.model.propertyexpansion.resolvers.providers.CurrentStepIndexProvider;
+import com.eviware.soapui.model.propertyexpansion.resolvers.providers.CurrentStepRunIndexProvider;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.ProjectDirProvider;
 import com.eviware.soapui.model.propertyexpansion.resolvers.providers.WorkspaceDirProvider;
 import com.eviware.soapui.plugins.SoapUIFactory;
@@ -32,6 +35,8 @@ public class DynamicPropertyResolver implements PropertyResolver, SoapUIFactoryR
     static {
         addProvider("projectDir", new ProjectDirProvider());
         addProvider("workspaceDir", new WorkspaceDirProvider());
+        addProvider( "currentStepIndex", new CurrentStepIndexProvider() );
+        addProvider( "currentStepRunIndex", new CurrentStepRunIndexProvider() );
     }
 
     public DynamicPropertyResolver() {

@@ -1,14 +1,55 @@
 # SoapUI 5.1.0
-#### Released 2014-xx-xx ####
+#### Released 2014-07-15 ####
+
+### Major new features ###
+* (Pro only) New plugin manager to easily find and install/update SoapUI Pro plugins from a central repository
+* REST Mock as WAR - Easily deploy REST MockServices as WAR on any application container.
+* Native support for JSON response
+* JSONPath assertions when response is JSON
+* Easy to find Pro features and sample projects through starter page
+* Outline editor available on form view (when request has a payload)
 
 ### Bugs fixed ###
+* Mock Response test step fails (SOAP-2207)
+* (Pro only) REST discovery/ New REST mock service missing in composite project menu (SOAP-2266)
+* Code Execution Vulnerability with Property Transfers (SOAP-2355)
+* WS-security config ignores signature key identifier type "Issuer Name and Serial Number" (SOAP-2347)
+* Mock response step fails in 5.0 (SOAP-2207)
+* Mock response test step is not editable (SOAP-2202)
+* No sub menus in REST Mock Response Get Data (SOAP-2186)
+* The http status code in response doesn't work in REST mock service (SOAP-2356)
+* (Pro only) SoapUI still ask for a license after you have successfully entered a license and restarted (SOAP-2185)
+* (Pro only) Editor windows open in random places and random sizes when desktop type equals default (SOAP-2178)
 * REST Mock does not read the payload (SOAP-2173)
+* Script assertion play button does not work (SOAP-2161)
+* Content-Length header is missing in response from REST mock service (SOAP-2015)
+* log.info no longer go to the global-groovy.log (SOAP-1938)
+* Drag and drop to a test case not working (SOAP-1936)
+* OAuth 2 advance configurations dialog shows all options in CAPS (SOAP-1845)
+* Wildcard in XPath match assertion only works with * and no additional characters. (SOAP-1299)
+* JDBC configuration requires a DB password (SOAP-493)
+* (Pro only) Changing environments does not change the associated JDBC connection string in various JDBC test steps (SOAP-268)
+* (Pro only) Composite project duplicate test cases (SOAP-685)
+* (Pro only) Project changes are not being saved, because of "Failed to delete temporary project file" in error log. (SOAP-995)
+* (Pro only) Order of Test-Suites in element.order file is not followed when composite project is opened in SoapUI Pro (SOAP-1762)
+* (Pro only) Composite projects containing multiple REST resources with the same name breaks when saving. (SOAP-1874)
+* (Pro only) Item ID's in composite project files are being changed. (SOAP-1381)
+* Stubbed dialogs show extended info (SOAP-2256)
 
 ### Updated libraries ###
 * Updated to JRE 7u55
 * Removed joda-time
 * Updated junit to 4.11
 * Introduced Jayway's json-path 0.9.1
+* Introduced  jackson-databind, jackson-annotations and jackson-core  2.1.0
+* Introduced  org.reflections:reflections 0.9.9-RC1
+* Introduced gson 1.4
+* Introduced commons-vfs2 2.0
+* Introduced jsch 0.1.42
+* Introduced jzlib 1.0.7
+* Introduced commons-net 2.2
+* Introduced jackrabbit-jcr-commons 1.5.2
+* Introduced jcr 1.0
 * (Pro only) Replaced jexcelapi with Apache POI
 
 -------------------------------------------------------------------------------

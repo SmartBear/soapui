@@ -174,6 +174,11 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
             setSystemProperties(cmd.getOptionValues("D"));
         }
 
+        if( cmd.hasOption( "H" ) )
+        {
+            setCustomHeaders( cmd.getOptionValues( "H" ) );
+        }
+
         if (cmd.hasOption("G")) {
             setGlobalProperties(cmd.getOptionValues("G"));
         }
@@ -232,32 +237,34 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
     }
 
     @Override
-    protected SoapUIOptions initCommandLineOptions() {
-        SoapUIOptions options = new SoapUIOptions("testrunner");
-        options.addOption("e", true, "Sets the endpoint");
-        options.addOption("s", true, "Sets the testsuite");
-        options.addOption("c", true, "Sets the testcase");
-        options.addOption("u", true, "Sets the username");
-        options.addOption("p", true, "Sets the password");
-        options.addOption("w", true, "Sets the WSS password type, either 'Text' or 'Digest'");
-        options.addOption("i", false, "Enables Swing UI for scripts");
-        options.addOption("d", true, "Sets the domain");
-        options.addOption("h", true, "Sets the host");
-        options.addOption("r", false, "Prints a small summary report");
-        options.addOption("M", false, "Creates a Test Run Log Report in XML format");
-        options.addOption("f", true, "Sets the output folder to export results to");
-        options.addOption("j", false, "Sets the output to include JUnit XML reports");
-        options.addOption("m", false, "Sets the maximum number of TestStep errors to save for each testcase");
-        options.addOption("a", false, "Turns on exporting of all results");
-        options.addOption("A", false, "Turns on exporting of all results using folders instead of long filenames");
-        options.addOption("t", true, "Sets the soapui-settings.xml file to use");
-        options.addOption("x", true, "Sets project password for decryption if project is encrypted");
-        options.addOption("v", true, "Sets password for soapui-settings.xml file");
-        options.addOption("D", true, "Sets system property with name=value");
-        options.addOption("G", true, "Sets global property with name=value");
-        options.addOption("P", true, "Sets or overrides project property with name=value");
-        options.addOption("I", false, "Do not stop if error occurs, ignore them");
-        options.addOption("S", false, "Saves the project after running the tests");
+    protected SoapUIOptions initCommandLineOptions()
+    {
+        SoapUIOptions options = new SoapUIOptions( "testrunner" );
+        options.addOption( "e", true, "Sets the endpoint" );
+        options.addOption( "s", true, "Sets the testsuite" );
+        options.addOption( "c", true, "Sets the testcase" );
+        options.addOption( "u", true, "Sets the username" );
+        options.addOption( "p", true, "Sets the password" );
+        options.addOption( "w", true, "Sets the WSS password type, either 'Text' or 'Digest'" );
+        options.addOption( "i", false, "Enables Swing UI for scripts" );
+        options.addOption( "d", true, "Sets the domain" );
+        options.addOption( "h", true, "Sets the host" );
+        options.addOption( "r", false, "Prints a small summary report" );
+        options.addOption( "M", false, "Creates a Test Run Log Report in XML format" );
+        options.addOption( "f", true, "Sets the output folder to export results to" );
+        options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
+        options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
+        options.addOption( "a", false, "Turns on exporting of all results" );
+        options.addOption( "A", false, "Turns on exporting of all results using folders instead of long filenames" );
+        options.addOption( "t", true, "Sets the soapui-settings.xml file to use" );
+        options.addOption( "x", true, "Sets project password for decryption if project is encrypted" );
+        options.addOption( "v", true, "Sets password for soapui-settings.xml file" );
+        options.addOption( "D", true, "Sets system property with name=value" );
+        options.addOption( "G", true, "Sets global property with name=value" );
+        options.addOption( "P", true, "Sets or overrides project property with name=value" );
+        options.addOption( "I", false, "Do not stop if error occurs, ignore them" );
+        options.addOption( "S", false , "Saves the project after running the tests" );
+        options.addOption( "H", true , "Adds a custom HTTP Header to all outgoing requests (name=value), can be specified multiple times" );
 
         return options;
     }
