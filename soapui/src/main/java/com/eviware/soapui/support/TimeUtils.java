@@ -16,11 +16,42 @@
 
 package com.eviware.soapui.support;
 
+import org.joda.time.Period;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
+
 public final class TimeUtils {
+
+    private static final PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
+            .printZeroNever()
+            .appendMonths().appendSuffix(" month", " months").appendSeparator(", ")
+            .appendWeeks().appendSuffix(" week", " weeks").appendSeparator(", ")
+            .appendDays().appendSuffix(" day", " days").appendSeparator(", ")
+            .printZeroAlways()
+            .minimumPrintedDigits(2)
+            .appendHours().appendSeparator(":")
+            .appendMinutes().appendSeparator(":")
+            .appendSeconds()
+            .toFormatter();
+
     private TimeUtils() {
+        // only for static use
     }
 
     public static long getCurrentTimeInSeconds() {
         return System.currentTimeMillis() / 1000;
     }
+
+    /**
+     * Formats a time duration given by the start and end instants in milliseconds.
+     *
+     * @param start
+     * @param end
+     * @return formatted String duration
+     */
+    public static String formatTimeDuration(long start, long end) {
+        final Period period = new Period(start, end);
+        return periodFormatter.print(period);
+    }
+
 }
