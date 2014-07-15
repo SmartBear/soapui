@@ -134,6 +134,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         mockService.addMockRunListener(mockRunListener);
     }
 
+    @Override
     public boolean onClose(boolean canCancel) {
         if (mockRunner != null && mockRunner.isRunning() && canCancel) {
             if (!UISupport.confirm("Close and stop MockService", "Close MockService")) {
@@ -165,6 +166,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         return release();
     }
 
+    @Override
     public boolean dependsOn(ModelItem modelItem) {
         return modelItem == getModelItem() || modelItem == getModelItem().getProject();
     }
