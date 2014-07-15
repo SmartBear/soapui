@@ -26,7 +26,7 @@
         <installer.build.directory>${project.build.directory}/install4j</installer.build.directory>
         <build.date>${maven.build.timestamp}</build.date>
 
-        <project.name.full>soapui-${project.version}</project.name.full>
+        <project.name.full>SoapUI-${project.version}</project.name.full>
         <project.name.visible>SoapUI</project.name.visible>
         <project.src.artifactId>soapui</project.src.artifactId>
 
