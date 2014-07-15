@@ -16,10 +16,10 @@
 
 package com.eviware.soapui.ui.desktop;
 
-import javax.swing.JComponent;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.swing.ActionList;
+
+import javax.swing.*;
 
 /**
  * null-desktop used when running from command-line, etc
@@ -67,6 +67,11 @@ public class NullDesktop implements SoapUIDesktop {
     }
 
     public void maximize(DesktopPanel dp) {
+    }
+
+    @Override
+    public void showInspector(JComponent component) {
+
     }
 
     public void minimize(DesktopPanel desktopPanel) {

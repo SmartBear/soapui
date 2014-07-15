@@ -16,9 +16,6 @@
 
 package com.eviware.soapui.ui.desktop;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Interface;
 import com.eviware.soapui.model.iface.Operation;
@@ -27,11 +24,7 @@ import com.eviware.soapui.model.mock.MockOperation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.model.mock.MockService;
 import com.eviware.soapui.model.project.Project;
-import com.eviware.soapui.model.support.InterfaceListenerAdapter;
-import com.eviware.soapui.model.support.MockServiceListenerAdapter;
-import com.eviware.soapui.model.support.ProjectListenerAdapter;
-import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.support.WorkspaceListenerAdapter;
+import com.eviware.soapui.model.support.*;
 import com.eviware.soapui.model.testsuite.LoadTest;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestStep;
@@ -39,6 +32,10 @@ import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.workspace.Workspace;
 import com.eviware.soapui.security.SecurityTest;
 import com.eviware.soapui.support.action.swing.ActionList;
+
+import javax.swing.*;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Abstract SoapUIDesktop implementation for extension
@@ -234,5 +231,9 @@ public abstract class AbstractSoapUIDesktop implements SoapUIDesktop {
     }
 
     public void init() {
+    }
+
+    @Override
+    public void showInspector(JComponent component) {
     }
 }
