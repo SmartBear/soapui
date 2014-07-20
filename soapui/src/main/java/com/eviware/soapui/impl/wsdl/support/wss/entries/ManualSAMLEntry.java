@@ -21,6 +21,7 @@ import java.awt.BorderLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.message.WSSecHeader;
 import org.apache.ws.security.message.WSSecSAMLToken;
 import org.apache.ws.security.saml.ext.AssertionWrapper;
@@ -103,7 +104,12 @@ public class ManualSAMLEntry extends WssEntryBase {
         }
 
         try {
-            Document samlAssertionDOM = XmlUtils.parseXml(XmlUtils.stripWhitespaces(context.expand(samlAssertion)));
+            String samlAssertionValue = context.expand(samlAssertion);
+            // don't strip white space if the SAML assertion is signed because it will break the signature
+            if (!(samlAssertionValue != null && samlAssertionValue.contains(WSConstants.SIG_NS) && samlAssertionValue.contains("SignatureValue"))) {
+                samlAssertionValue = XmlUtils.stripWhitespaces(samlAssertionValue);
+            }
+            Document samlAssertionDOM = XmlUtils.parseXml(samlAssertionValue);
             Element samlAssertionRootElement = samlAssertionDOM.getDocumentElement();
             AssertionWrapper assertion = new AssertionWrapper(samlAssertionRootElement);
             WSSecSAMLToken wsSign = new WSSecSAMLToken();

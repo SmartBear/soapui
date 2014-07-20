@@ -242,6 +242,8 @@ public abstract class WssEntryBase implements WssEntry, PropertyExpansionContain
                 setText("Thumbprint SHA1 Identifier");
             } else if (value.equals(9)) {
                 setText("Custom Reference");
+            } else if( value.equals(12) ) {
+                setText("Custom Key Identifier");
             }
 
             return result;
