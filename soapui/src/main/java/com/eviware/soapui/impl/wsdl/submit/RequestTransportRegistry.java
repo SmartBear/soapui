@@ -68,7 +68,7 @@ public class RequestTransportRegistry {
         httpTransport.addRequestFilter(new OAuth2RequestFilter());
         httpTransport.addRequestFilter(new GlobalHttpHeadersRequestFilter());
 
-        addListenerRequestFilters(jmsTransport);
+        addListenerRequestFilters(httpTransport);
 
         for (RequestFilterFactory factory : filterFactories) {
             String protocol = factory.getProtocol();
