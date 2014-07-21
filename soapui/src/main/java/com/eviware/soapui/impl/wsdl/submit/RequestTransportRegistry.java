@@ -66,7 +66,9 @@ public class RequestTransportRegistry {
         httpTransport.addRequestFilter(new WsrmRequestFilter());
         httpTransport.addRequestFilter(new WssRequestFilter());
         httpTransport.addRequestFilter(new OAuth2RequestFilter());
-        httpTransport.addRequestFilter( new GlobalHttpHeadersRequestFilter());
+        httpTransport.addRequestFilter(new GlobalHttpHeadersRequestFilter());
+
+        addListenerRequestFilters(jmsTransport);
 
         for (RequestFilterFactory factory : filterFactories) {
             String protocol = factory.getProtocol();
@@ -94,6 +96,8 @@ public class RequestTransportRegistry {
         jmsTransport.addRequestFilter(new WsaRequestFilter());
         jmsTransport.addRequestFilter(new WssRequestFilter());
 
+        addListenerRequestFilters(jmsTransport);
+
         for (RequestFilterFactory factory : filterFactories) {
             if (factory.getProtocol().equals(JMS)) {
                 RequestFilter requestFilter = factory.createRequestFilter();
@@ -106,29 +110,27 @@ public class RequestTransportRegistry {
         transports.put(JMS, jmsTransport);
         initCustomTransports(filterFactories);
 
-        SoapUI.getFactoryRegistry().addFactoryRegistryListener( new SoapUIFactoryRegistryListener() {
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener(new SoapUIFactoryRegistryListener() {
             @Override
             public void factoryAdded(Class<?> factoryType, Object factory) {
-                if( factory instanceof RequestTransportFactory ) {
+                if (factory instanceof RequestTransportFactory) {
                     RequestTransportFactory transportFactory = (RequestTransportFactory) factory;
-                    addTransport(transportFactory.getProtocol(),transportFactory.newRequestTransport());
+                    addTransport(transportFactory.getProtocol(), transportFactory.newRequestTransport());
                 }
-                if( factory instanceof RequestFilterFactory ) {
+                if (factory instanceof RequestFilterFactory) {
                     RequestFilterFactory requestFilterFactory = (RequestFilterFactory) factory;
 
                     RequestFilter filter = requestFilterFactory.createRequestFilter();
                     String protocol = requestFilterFactory.getProtocol();
 
-                    if( protocol.startsWith(HTTP))
-                    {
-                        RequestTransport transport = transports.get( HTTP );
-                        transport.insertRequestFilter( filter, wsdlPackagingRequestFilter );
-                    }
-                    else
-                    {
+                    if (protocol.startsWith(HTTP)) {
+                        RequestTransport transport = transports.get(HTTP);
+                        transport.insertRequestFilter(filter, wsdlPackagingRequestFilter);
+                    } else {
                         RequestTransport transport = transports.get(protocol);
-                        if( transport != null )
-                            transport.addRequestFilter( filter );
+                        if (transport != null) {
+                            transport.addRequestFilter(filter);
+                        }
                     }
 
                     addToCustomRequestFilters(protocol, filter);
@@ -137,12 +139,20 @@ public class RequestTransportRegistry {
 
             @Override
             public void factoryRemoved(Class<?> factoryType, Object factory) {
-               if( factory instanceof RequestTransportFactory )
-                   removeFactory((RequestTransportFactory) factory);
-               if( factory instanceof RequestFilterFactory )
-                   removeRequestFilterFactory((RequestFilterFactory) factory);
+                if (factory instanceof RequestTransportFactory) {
+                    removeFactory((RequestTransportFactory) factory);
+                }
+                if (factory instanceof RequestFilterFactory) {
+                    removeRequestFilterFactory((RequestFilterFactory) factory);
+                }
             }
         });
+    }
+
+    private static void addListenerRequestFilters(RequestTransport transport) {
+        for (RequestFilter filter : SoapUI.getListenerRegistry().getListeners(RequestFilter.class)) {
+            transport.addRequestFilter(filter);
+        }
     }
 
     private static void initCustomTransports(List<RequestFilterFactory> filterFactories) {
@@ -164,23 +174,20 @@ public class RequestTransportRegistry {
     }
 
     private static void addToCustomRequestFilters(String protocol, RequestFilter requestFilter) {
-        if( !addedCustomRequestFilters.containsKey(protocol))
-        {
-            addedCustomRequestFilters.put( protocol, new ArrayList<RequestFilter>());
+        if (!addedCustomRequestFilters.containsKey(protocol)) {
+            addedCustomRequestFilters.put(protocol, new ArrayList<RequestFilter>());
         }
 
-        addedCustomRequestFilters.get( protocol ).add( requestFilter );
+        addedCustomRequestFilters.get(protocol).add(requestFilter);
     }
 
-    public static void removeRequestFilterFactory( RequestFilterFactory factory )
-    {
+    public static void removeRequestFilterFactory(RequestFilterFactory factory) {
         String protocol = factory.getProtocol();
-        if( addedCustomRequestFilters.containsKey(protocol))
-        {
-            for( RequestFilter filter : addedCustomRequestFilters.get(protocol))
-            {
-                for( RequestTransport transport : transports.values())
-                    transport.removeRequestFilter( filter );
+        if (addedCustomRequestFilters.containsKey(protocol)) {
+            for (RequestFilter filter : addedCustomRequestFilters.get(protocol)) {
+                for (RequestTransport transport : transports.values()) {
+                    transport.removeRequestFilter(filter);
+                }
             }
 
             addedCustomRequestFilters.remove(protocol);
