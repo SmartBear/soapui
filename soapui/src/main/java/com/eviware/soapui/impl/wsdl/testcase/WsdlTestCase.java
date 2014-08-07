@@ -397,7 +397,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     }
 
     public WsdlTestStep addTestStep(TestStepConfig stepConfig) {
-        return insertTestStep(stepConfig, -1, true);
+        return insertTestStep(null, stepConfig, -1, true);
     }
 
     public WsdlTestStep addTestStep(String type, String name) {
@@ -429,7 +429,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         if (testStepFactory != null) {
             TestStepConfig newStepConfig = testStepFactory.createNewTestStep(this, name);
             if (newStepConfig != null) {
-                return insertTestStep(newStepConfig, index, false);
+                return insertTestStep(null, newStepConfig, index, false);
             }
         }
 
@@ -441,7 +441,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         TestStepConfig newStepConfig = (TestStepConfig) testStep.getConfig().copy();
         newStepConfig.setName(name);
 
-        WsdlTestStep result = insertTestStep(newStepConfig, index, createCopy);
+        WsdlTestStep result = insertTestStep(testStep.getTestCase(), newStepConfig, index, createCopy);
         if (result == null) {
             return null;
         }
@@ -460,7 +460,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         resolver.resolve(this);
     }
 
-    public WsdlTestStep[] importTestSteps(WsdlTestStep[] testSteps, int index, boolean createCopies) {
+    public WsdlTestStep[] importTestSteps(WsdlTestCase oldTestCase, WsdlTestStep[] testSteps, int index, boolean createCopies) {
         TestStepConfig[] newStepConfigs = new TestStepConfig[testSteps.length];
 
         for (int c = 0; c < testSteps.length; c++) {
@@ -468,17 +468,17 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
             newStepConfigs[c] = (TestStepConfig) testSteps[c].getConfig().copy();
         }
 
-        WsdlTestStep[] result = insertTestSteps(newStepConfigs, index, createCopies);
+        WsdlTestStep[] result = insertTestSteps(oldTestCase, newStepConfigs, index, createCopies);
 
         resolveTestCase();
         return result;
     }
 
     public WsdlTestStep insertTestStep(TestStepConfig stepConfig, int ix) {
-        return insertTestStep(stepConfig, ix, true);
+        return insertTestStep(null, stepConfig, ix, true);
     }
 
-    public WsdlTestStep insertTestStep(TestStepConfig stepConfig, int ix, boolean clearIds) {
+    public WsdlTestStep insertTestStep(WsdlTestCase oldTestCase, TestStepConfig stepConfig, int ix, boolean clearIds) {
         TestStepConfig newStepConfig = ix == -1 ? getConfig().addNewTestStep() : getConfig().insertNewTestStep(ix);
         newStepConfig.set(stepConfig);
         WsdlTestStep testStep = createTestStepFromConfig(newStepConfig);
@@ -501,6 +501,9 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
         testStep.afterLoad();
 
+        WsdlTestSuite oldTestSuite = oldTestCase == null ? null : oldTestCase.getTestSuite();
+        testStep.afterCopy(oldTestSuite, oldTestCase);
+
         if (getTestSuite() != null) {
             (getTestSuite()).fireTestStepAdded(testStep, ix == -1 ? testSteps.size() - 1 : ix);
         }
@@ -512,7 +515,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
         return testStep;
     }
 
-    public WsdlTestStep[] insertTestSteps(TestStepConfig[] stepConfig, int ix, boolean clearIds) {
+    public WsdlTestStep[] insertTestSteps(WsdlTestCase oldTestCase, TestStepConfig[] stepConfig, int ix, boolean clearIds) {
         WsdlTestStep[] result = new WsdlTestStep[stepConfig.length];
 
         for (int c = 0; c < stepConfig.length; c++) {
@@ -540,7 +543,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
 
         for (int c = 0; c < result.length; c++) {
             result[c].afterLoad();
-
+            result[c].afterCopy(oldTestCase.getTestSuite(), oldTestCase);
             if (getTestSuite() != null) {
                 (getTestSuite()).fireTestStepAdded(result[c], getIndexOfTestStep(result[c]));
             }
