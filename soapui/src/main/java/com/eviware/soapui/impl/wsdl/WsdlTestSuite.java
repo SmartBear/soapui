@@ -213,7 +213,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
         testCase.afterLoad();
 
         if (createCopy) {
-            testCase.afterCopy(null, oldTestCase);
+            testCase.afterCopy(oldTestCase.getTestSuite(), oldTestCase);
 
             if (includeSecurityTests) {
                 testCase.importSecurityTests(null, oldTestCase);
