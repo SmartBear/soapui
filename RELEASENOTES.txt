@@ -1,3 +1,17 @@
+# SoapUI 5.1.2
+#### Released 2014-08-29 ####
+
+### Bugs fixed ###
+* (Pro only) SoapUI pro 5.1.1 excel files dates stamp cannot be read (SOAP-2754)
+* (Pro only) SoapUI displays an error and closes on leaving SoapUI idle for sometime (SOAP-2759)
+* (Pro only) empty rows in excel stop a data driven test (SOAP-2741)
+* (Pro only) Cloned assertion test step breaks in testcase export/import (SOAP-2715)
+* (Pro only) Composite projects containing multiple REST resources with the same name breaks when saving (SOAP-1874)
+* (Pro only) Folder names get random characters (SOAP-2686)
+* (Pro only) 5.1 regression: Excel spreadsheets that use forumulas fail in datasource test step (SOAP-2717)
+* (Pro only) Assertions (SOAP-709)
+* (Pro only) Trial license activated on 5.0.0 throws already activated message for 5.1.0 (SOAP-2700)
+
 # SoapUI 5.1.0
 #### Released 2014-07-15 ####
 
