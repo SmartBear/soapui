@@ -1,3 +1,20 @@
+# SoapUI Pro 5.1.2
+#### Released 2014-08-29 ####
+
+### Bugs fixed ###
+* 'Apply For Trial' link is broken (SOAP-2762)
+* SoapUI displays an error and closes on leaving SoapUI idle for sometime (SOAP-2759)
+* SoapUI pro 5.1.1 excel files dates stamp cannot be read (SOAP-2754)
+* empty rows in excel stop a data driven test (SOAP-2741)
+* REST Discovery of soapui.org hangs SoapUI (SOAP-2722)
+* Cloned assertion test step breaks in testcase export/import (SOAP-2715)
+* (support case escalation) New composite project format - different hashtags generated for each person causes Source Control issues (SOAP-2703)
+* Folder names get random characters (SOAP-2686)
+* Composite projects containing multiple REST resources with the same name breaks when saving (SOAP-1874)
+* Assertions (SOAP-709)
+
+-------------------------------------------------------------------------------
+
 # SoapUI Pro 5.1.1
 #### Released 2014-07-30 ####
 #### Please note that version 5.1.1 is a Pro only release. This means the features and improvements below are currently available only in SoapUI Pro. ####
