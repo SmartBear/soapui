@@ -2,6 +2,7 @@
 #### Released 2014-08-29 ####
 
 ### Bugs fixed ###
+* SoapUI Pro Trial can be activated multiple times on v5.1.x (SOAP-2784)
 * 'Apply For Trial' link is broken (SOAP-2762)
 * SoapUI displays an error and closes on leaving SoapUI idle for sometime (SOAP-2759)
 * SoapUI pro 5.1.1 excel files dates stamp cannot be read (SOAP-2754)
