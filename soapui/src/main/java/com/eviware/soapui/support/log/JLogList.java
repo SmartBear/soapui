@@ -401,7 +401,7 @@ public class JLogList extends JPanel {
             lines.clear();
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
-                    fireIntervalRemoved(this, 0, size - 1);
+                    fireIntervalRemoved(LogListModel.this, 0, size - 1);
                 }
             });
         }
