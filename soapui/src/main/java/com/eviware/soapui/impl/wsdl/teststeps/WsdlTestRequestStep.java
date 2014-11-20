@@ -26,6 +26,7 @@ import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.WsdlSinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -449,6 +450,7 @@ public class WsdlTestRequestStep extends WsdlTestStepWithProperties implements O
 
         if (testRequest.isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel(this)) {
             testRequest.setResponse(null, runContext);
+            runContext.removeProperty(BaseHttpRequestTransport.RESPONSE);
         }
 
         return testStepResult;

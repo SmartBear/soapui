@@ -30,6 +30,7 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlSubmit;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SinglePartHttpResponse;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
@@ -877,6 +878,7 @@ public class RestTestRequestStep extends WsdlTestStepWithProperties implements R
 
         if (testRequest.isDiscardResponse() && !SoapUI.getDesktop().hasDesktopPanel(this)) {
             testRequest.setResponse(null, runContext);
+            runContext.removeProperty(BaseHttpRequestTransport.RESPONSE);
         }
 
         return testStepResult;
