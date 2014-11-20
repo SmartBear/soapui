@@ -78,7 +78,7 @@ public class MockAsWar {
         this.warDir = StringUtils.hasContent(warDir) ? new File(warDir) : new File(
                 System.getProperty("java.io.tmpdir"), "warasmock");
         if (!this.warDir.exists()) {
-            this.warDir.mkdir();
+            this.warDir.mkdirs();
         }
         this.warFile = !StringUtils.hasContent(warFile) ? null : new File(warFile);
         this.includeExt = includeExt;
@@ -98,6 +98,7 @@ public class MockAsWar {
                     createWebXml();
 
                     if (warFile != null) {
+                        warFile.getParentFile().mkdirs();
                         ArrayList<File> files = getAllFilesFrom(webInf);
                         files.add(new File(warDir, "stylesheet.css"));
                         files.add(new File(warDir, "header_logo.png"));
