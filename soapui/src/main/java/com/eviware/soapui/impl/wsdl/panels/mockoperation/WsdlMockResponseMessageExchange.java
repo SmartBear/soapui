@@ -16,8 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.panels.mockoperation;
 
-import java.util.Vector;
-
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRequest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -26,6 +24,8 @@ import com.eviware.soapui.impl.wsdl.submit.AbstractWsdlMessageExchange;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Response;
 import com.eviware.soapui.support.types.StringToStringsMap;
+
+import java.util.Vector;
 
 /**
  * WsdlMessageExchange for a WsdlMockResponse, required for validations

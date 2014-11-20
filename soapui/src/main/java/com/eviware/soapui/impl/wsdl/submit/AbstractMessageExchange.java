@@ -25,10 +25,12 @@ public abstract class AbstractMessageExchange<T extends ModelItem> implements Me
     protected StringToStringMap properties;
     private String[] messages;
     private T modelItem;
+    protected boolean discardResponse;
 
     public AbstractMessageExchange(T modelItem) {
         super();
         this.modelItem = modelItem;
+        discardResponse = modelItem.getSettings().getBoolean("discardResponse");
     }
 
     public T getModelItem() {
