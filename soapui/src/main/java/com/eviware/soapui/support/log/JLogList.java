@@ -164,7 +164,7 @@ public class JLogList extends JPanel {
             if (value instanceof LoggingEventWrapper) {
                 LoggingEventWrapper eventWrapper = (LoggingEventWrapper) value;
 
-                if (levelColors.containsKey(eventWrapper.getLevel())) {
+                if (!isSelected && levelColors.containsKey(eventWrapper.getLevel())) {
                     component.setForeground(levelColors.get(eventWrapper.getLevel()));
                 }
             }
