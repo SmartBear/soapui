@@ -25,14 +25,7 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
-import com.eviware.soapui.settings.HttpSettings;
-import com.eviware.soapui.settings.ProxySettings;
-import com.eviware.soapui.settings.SecuritySettings;
-import com.eviware.soapui.settings.UISettings;
-import com.eviware.soapui.settings.VersionUpdateSettings;
-import com.eviware.soapui.settings.WSISettings;
-import com.eviware.soapui.settings.WsaSettings;
-import com.eviware.soapui.settings.WsdlSettings;
+import com.eviware.soapui.settings.*;
 import com.eviware.soapui.support.SecurityScanUtil;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -45,14 +38,8 @@ import org.apache.commons.ssl.OpenSSL;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import javax.swing.*;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -192,19 +179,19 @@ public class DefaultSoapUICore implements SoapUICore {
         // look for factories
         JarEntry entry = jarFile.getJarEntry("META-INF/factories.xml");
         if (entry != null) {
-            factoryRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+            getFactoryRegistry().addConfig(jarFile.getInputStream(entry), extensionClassLoader);
         }
 
         // look for listeners
         entry = jarFile.getJarEntry("META-INF/listeners.xml");
         if (entry != null) {
-            listenerRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+            getListenerRegistry().addConfig(jarFile.getInputStream(entry), extensionClassLoader);
         }
 
         // look for actions
         entry = jarFile.getJarEntry("META-INF/actions.xml");
         if (entry != null) {
-            actionRegistry.addConfig(jarFile.getInputStream(entry), extensionClassLoader);
+            getActionRegistry().addConfig(jarFile.getInputStream(entry), extensionClassLoader);
         }
 
         // add jar to resource classloader so embedded images can be found with UISupport.loadImageIcon(..)
