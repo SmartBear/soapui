@@ -137,7 +137,6 @@
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
@@ -297,7 +296,6 @@
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
@@ -412,7 +410,6 @@
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>
@@ -582,7 +579,6 @@
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:jetty-util')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('jetty:servlet-api')}"/>
-	       		<ant:pathelement location="${plugin.getDependencyPath('net-components:net-components')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xbean_xpath')}"/>
 	       		<ant:pathelement location="${plugin.getDependencyPath('xmlbeans:xmlpublic')}"/>

@@ -23,7 +23,6 @@
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty-6.1.26.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/jetty-util-6.1.26.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/jetty/jars/servlet-api-2.5-20081211.jar"/>
-	<classpathentry kind="var" path="MAVEN_REPO/net-components/jars/netcomponents-1.3.8a.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xmlbeans/jars/xbean-fixed-2.4.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xmlbeans/jars/xbean_xpath-2.4.0.jar"/>
 	<classpathentry kind="var" path="MAVEN_REPO/xmlbeans/jars/xmlpublic-2.4.0.jar"/>
