@@ -88,6 +88,8 @@
                         <!-- Only log errors and only log to the console to decrease the log verbosity -->
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
                         </soapui.log4j.config>
+                        <!-- run tests with home set to folder test-classes inside target to isolate tests from whatever user is executing the build. -->
+                        <user.home>target/test-classes</user.home>
                     </systemProperties>
                 </configuration>
             </plugin>
