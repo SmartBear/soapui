@@ -16,15 +16,15 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.eviware.soapui.impl.support.http.HttpRequestInterface;
 import com.eviware.soapui.impl.wsdl.submit.AbstractMessageExchange;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.HttpResponse;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.support.types.StringToStringsMap;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpRequestInterface<?>> {
     private HttpResponse response;
@@ -33,7 +33,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
     public HttpResponseMessageExchange(HttpRequestInterface<?> request) {
         super(request);
 
-        response = request.getResponse();
+        response = (isDiscarded() == true) ? null : request.getResponse();
         if (response != null) {
             for (String key : response.getPropertyNames()) {
                 addProperty(key, response.getProperty(key));
@@ -123,7 +123,7 @@ public class HttpResponseMessageExchange extends AbstractMessageExchange<HttpReq
     }
 
     public boolean isDiscarded() {
-        return false;
+        return discardResponse;
     }
 
     public Operation getOperation() {

@@ -32,7 +32,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
     public RestResponseMessageExchange(RestRequestInterface request) {
         super(request);
 
-        response = request.getResponse();
+        response = (discardResponse == true) ? null : request.getResponse();
         if (response != null) {
             for (String key : response.getPropertyNames()) {
                 addProperty(key, response.getProperty(key));
@@ -142,7 +142,7 @@ public class RestResponseMessageExchange extends AbstractRestMessageExchange<Res
     }
 
     public boolean isDiscarded() {
-        return false;
+        return discardResponse;
     }
 
     public RestResource getResource() {

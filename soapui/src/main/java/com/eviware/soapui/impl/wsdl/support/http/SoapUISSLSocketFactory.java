@@ -202,7 +202,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory {
         if (sock instanceof SSLSocket) {
             sslsock = (SSLSocket) sock;
         } else {
-            sslsock = (SSLSocket) getSocketFactory().createSocket(sock, remoteAddress.getHostName(),
+            sslsock = (SSLSocket)sslContext.getSocketFactory().createSocket(sock, remoteAddress.getHostName(),
                     remoteAddress.getPort(), true);
             sslsock = enableSocket(sslsock);
         }
@@ -236,7 +236,7 @@ public class SoapUISSLSocketFactory extends SSLSocketFactory {
     @Override
     public Socket createLayeredSocket(final Socket socket, final String host, final int port, final boolean autoClose)
             throws IOException, UnknownHostException {
-        SSLSocket sslSocket = (SSLSocket) getSocketFactory().createSocket(socket, host, port, autoClose);
+        SSLSocket sslSocket = (SSLSocket)sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
         sslSocket = enableSocket(sslSocket);
 //		if( getHostnameVerifier() != null )
 //		{

@@ -151,14 +151,6 @@
 			<version>2.5-20081211</version>
 		</dependency>
 		<dependency>
-			<groupId>net-components</groupId>
-			<artifactId>netcomponents</artifactId>
-			<version>1.3.8a</version>
-			<properties>
-				<classloader>root</classloader>
-			</properties>
-		</dependency>
-		<dependency>
 			<groupId>xmlbeans</groupId>
 			<artifactId>xbean</artifactId>
 			<version>fixed-2.4.0</version>

@@ -29,7 +29,12 @@ if [ -f "$SOAPUI_HOME/jre/bin/java" ]
 then
   JAVA=$SOAPUI_HOME/jre/bin/java
 else
-  JAVA=java
+    if [ -f "$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java" ]
+    then
+        JAVA=$SOAPUI_HOME/../../PlugIns/jre.bundle/Contents/Home/jre/bin/java
+    else
+        JAVA=java
+    fi
 fi
 
 SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.jar:$SOAPUI_HOME/lib/*
