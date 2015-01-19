@@ -1,3 +1,16 @@
+# SoapUI Pro 5.1.2-OS
+#### Released 2015-01-26 ####
+
+### Bugs fixed ###
+* mockaswar-use-ext-lib-system-property
+* loglist-selection-visibility-on-mac
+* fix-LogListModel-cast-exception-on-clear
+* mockaswar-create-subdirectories
+* memory fix issues for requests returning large file content SOAP-2130
+* SOAP-1951 Use bundled JRE when running sh files from installed SoapUI on mac.
+* Fixed NPE when loading old style plugins
+* wss-sign-custom-token
+
 # SoapUI Pro 5.1.2
 #### Released 2014-08-29 ####
 
