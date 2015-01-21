@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>OS-5.1.2</version>
+        <version>5.1.2</version>
     </parent>
 
     <artifactId>soapui-system-test</artifactId>
