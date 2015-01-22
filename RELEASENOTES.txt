@@ -1,5 +1,54 @@
-# SoapUI 5.1.0
+# SoapUI Pro 5.1.2-OS
+#### Released 2015-01-26 ####
+
+### Bugs fixed ###
+* mockaswar-use-ext-lib-system-property
+* loglist-selection-visibility-on-mac
+* fix-LogListModel-cast-exception-on-clear
+* mockaswar-create-subdirectories
+* memory fix issues for requests returning large file content SOAP-2130
+* SOAP-1951 Use bundled JRE when running sh files from installed SoapUI on mac.
+* Fixed NPE when loading old style plugins
+* wss-sign-custom-token
+
+# SoapUI Pro 5.1.2
+#### Released 2014-08-29 ####
+
+### Bugs fixed ###
+* (Pro only) SoapUI pro 5.1.1 excel files dates stamp cannot be read (SOAP-2754)
+* (Pro only) SoapUI displays an error and closes on leaving SoapUI idle for sometime (SOAP-2759)
+* (Pro only) empty rows in excel stop a data driven test (SOAP-2741)
+* (Pro only) Cloned assertion test step breaks in testcase export/import (SOAP-2715)
+* (Pro only) Composite projects containing multiple REST resources with the same name breaks when saving (SOAP-1874)
+* (Pro only) Folder names get random characters (SOAP-2686)
+* (Pro only) 5.1 regression: Excel spreadsheets that use forumulas fail in datasource test step (SOAP-2717)
+* (Pro only) Trial license activated on 5.0.0 throws already activated message for 5.1.0 (SOAP-2700)
+* (support case escalation) New composite project format - different hashtags generated for each person causes Source Control issues (SOAP-2703)
+* REST Discovery of soapui.org hangs SoapUI (SOAP-2722)
+* 'Apply For Trial' link is broken (SOAP-2762)
+* Trial activation issues solved (SOAP-2784)
+
+-------------------------------------------------------------------------------
+
+# SoapUI Pro 5.1.1
+#### Released 2014-07-30 ####
+#### Please note that version 5.1.1 is a Pro only release. This means the features and improvements below are currently available only in SoapUI Pro. ####
+
+### Bugs fixed ###
+* Fixed not being able to reconfigure cloned Assertion TestSteps (SOAP-709)
+* The RequestFilter.filterRequest event handler now works correctly again (SOAP-2708)
+* Fixed an issue where JSON Payloud escaped input incorrectly (SOAP-2710)
+* Fixed an issue with property transfer test steps created with older versions (SOAP-2713)
+* Fixed an issue where the "Get Data..." menu option showed up incorrectly in some places (SOAP-2714)
+
+### Improvements ###
+* Trying to apply a renewal license to a fresh installation of SoapUI now results in an explanation dialog (SOAP-2704)
+
+-------------------------------------------------------------------------------
+
+# SoapUI Pro 5.1.0
 #### Released 2014-07-15 ####
+#### Please note that version 5.1.0 is a Pro only release. This means the features and improvements below are currently available only in SoapUI Pro.
 
 ### Major new features ###
 * (Pro only) New plugin manager to easily find and install/update SoapUI Pro plugins from a central repository
@@ -52,6 +101,13 @@
 * Introduced jcr 1.0
 * (Pro only) Replaced jexcelapi with Apache POI
 
+-------------------------------------------------------------------------------
+
+# SoapUI 5.0.1
+#### Released only JAR for LoadUI release, no installers: 2014-05-27 ####
+
+### Bugs fixed ###
+* Mock Response test step fails (SOAP-2207)
 -------------------------------------------------------------------------------
 
 # SoapUI 5.0.0
