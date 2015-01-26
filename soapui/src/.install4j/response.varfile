@@ -1,0 +1,19 @@
+#install4j response file for Ready API 1.0.0-SNAPSHOT
+#Wed Aug 06 15:44:20 MSK 2014
+sys.adminRights$Boolean=true
+sys.programGroupDisabled$Boolean=false
+createDesktopLinkAction$Boolean=true
+sys.programGroupAllUsers$Boolean=true
+sys.component.132$Boolean=true
+tutorialsLocation=C\:\\Users\\avdeev.AQA\\SoapUI-Tutorials
+sys.component.2572$Boolean=true
+sys.languageId=en
+sys.component.1151$Boolean=false
+showFileAction$Boolean=false
+sys.installationDir=C\:\\Program Files\\SmartBear\\Ready-API-1.0.0-SNAPSHOT
+sys.component.1154$Boolean=false
+jxBrowserInstallLocation=${installer\:sys.installationDir}\\.JxBrowser
+sys.programGroupName=SmartBear\\Ready API 1.0.0-SNAPSHOT
+executeLauncherAction$Boolean=true
+sys.component.1150$Boolean=false
+sys.component.1429$Boolean=true

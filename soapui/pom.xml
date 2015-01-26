@@ -556,6 +556,14 @@
             <version>1.0.2</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <artifactId>..</artifactId>
+            <groupId>..</groupId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/.install4j/i4jruntime.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <profiles>

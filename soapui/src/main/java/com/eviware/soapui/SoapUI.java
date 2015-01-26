@@ -827,6 +827,14 @@ public class SoapUI {
 
         mainArgs = args;
 
+        /*
+        SoapUIUpdateProvider updateProvider = new Install4jSoapUIUpdateProvider();
+        if (!(java.lang.management.ManagementFactory.getRuntimeMXBean().getInputArguments().toString().contains("jdwp")) &&
+                SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
+            updateProvider.start();
+        }
+        */
+
         SoapUIRunner soapuiRunner = new SoapUIRunner();
         SwingUtilities.invokeLater(soapuiRunner);
     }
