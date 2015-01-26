@@ -656,6 +656,8 @@ public class SoapUI {
         public void run() {
             initializeAnalytics();
 
+            Analytics.trackOSUser("Ilya", "Avdeev", "Ilya.Avdeev@smartbear.com");
+
             boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                     getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
             if (isDebug) {
