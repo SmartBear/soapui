@@ -1,5 +1,6 @@
 package com.eviware.soapui.actions;
 
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -102,7 +103,7 @@ public class CollectInfoAboutUserForSupportAction {
             if (!verifyFormValues()) {
                 return false;
             }
-            // TODO: here we'll send the data.
+            Analytics.trackOSUser(form.getComponentValue(FIRST_NAME), form.getComponentValue(LAST_NAME), form.getComponentValue(WORK_EMAIL));
             return true;
         }
 
