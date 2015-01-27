@@ -24,8 +24,8 @@ import java.net.URL;
 import java.util.Date;
 
 public class Install4jSoapUIUpdateProvider extends Thread implements SoapUIUpdateProvider {
-    private final static String APPLICATION_SILENT_VERSION_CHECK_ID = SoapUISystemProperties.READY_API_UPDATER_APP_ID;
-    private final static String APPLICATION_UPDATES_XML_URL = SoapUISystemProperties.READY_API_UPDATE_URL;
+    private final static String APPLICATION_SILENT_VERSION_CHECK_ID = SoapUISystemProperties.SOAP_UI_UPDATER_APP_ID;
+    private final static String APPLICATION_UPDATES_XML_URL = SoapUISystemProperties.SOAP_UI_UPDATE_URL;
     private final String TERMINATED = "Terminated {EE9BF704-944A-43ae-8B53-7C9AE5SOAPUI}";
     private static final Logger logger = LoggerFactory.getLogger(SoapUIUpdateProvider.class);
     private final static String NEXT_AUTO_UPDATE_CHECK = "NextAU";//TODO: move to SoapUI settings
@@ -62,9 +62,9 @@ public class Install4jSoapUIUpdateProvider extends Thread implements SoapUIUpdat
 
     }
 
-    public Install4jSoapUIUpdateProvider(String readyApiVersion, TestMonitor testMonitor) {
+    public Install4jSoapUIUpdateProvider(String soapuiVersion, TestMonitor testMonitor) {
         this.testMonitor = testMonitor;
-        this.currentVersion = readyApiVersion;
+        this.currentVersion = soapuiVersion;
     }
 
     public void showUpdateStatus() {
