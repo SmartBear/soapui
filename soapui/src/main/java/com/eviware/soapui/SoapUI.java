@@ -27,7 +27,7 @@ import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
 import com.eviware.soapui.analytics.providers.KeenIOProviderFactory;
 import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
-import com.eviware.soapui.autoupdate.Install4jSoapUIUpdateProvider;
+import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
@@ -662,7 +662,7 @@ public class SoapUI {
                 Analytics.trackAction("DebuggingMode");
             }
 
-            SoapUIUpdateProvider updateProvider = new Install4jSoapUIUpdateProvider(SoapUI.SOAPUI_VERSION, SoapUI.getTestMonitor());
+            SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
             if (!isDebug && SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
                 updateProvider.start();
             }

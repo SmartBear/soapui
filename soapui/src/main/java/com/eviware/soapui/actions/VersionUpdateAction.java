@@ -15,8 +15,7 @@
 */
 package com.eviware.soapui.actions;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.autoupdate.Install4jSoapUIUpdateProvider;
+import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 
 import javax.swing.AbstractAction;
@@ -25,7 +24,7 @@ import java.awt.event.ActionEvent;
 
 public class VersionUpdateAction extends AbstractAction {
 
-    SoapUIUpdateProvider updateProvider = new Install4jSoapUIUpdateProvider(SoapUI.SOAPUI_VERSION, SoapUI.getTestMonitor());
+    SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
 
     public VersionUpdateAction() {
         super("Check for updates");
