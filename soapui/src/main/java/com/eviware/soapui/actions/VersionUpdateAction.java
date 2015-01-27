@@ -15,14 +15,16 @@
 */
 package com.eviware.soapui.actions;
 
-import java.awt.event.ActionEvent;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.autoupdate.Install4jSoapUIUpdateProvider;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-
-import com.eviware.soapui.support.SoapUIVersionUpdate;
+import java.awt.event.ActionEvent;
 
 public class VersionUpdateAction extends AbstractAction {
+
+    Install4jSoapUIUpdateProvider updateProvider = new Install4jSoapUIUpdateProvider(SoapUI.SOAPUI_VERSION, SoapUI.getTestMonitor());
 
     public VersionUpdateAction() {
         super("Check for updates");
@@ -31,7 +33,7 @@ public class VersionUpdateAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        new SoapUIVersionUpdate().checkForNewVersion(true);
+        updateProvider.showUpdateStatus();
     }
 
 }
