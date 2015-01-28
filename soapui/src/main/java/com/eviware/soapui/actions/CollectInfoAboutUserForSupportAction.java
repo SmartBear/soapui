@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,7 @@ public class CollectInfoAboutUserForSupportAction {
 
     public void show() {
         CollectUserInfoDialog cui = new CollectUserInfoDialog();
+        cui.setPreferredSize(new Dimension(440,230));
         cui.setVisible(true);
     }
 
@@ -43,7 +45,7 @@ public class CollectInfoAboutUserForSupportAction {
         private Pattern validEmailRegex;
 
         CollectUserInfoDialog() {
-            super("Collect user info for Support", "If you fill in this form you'll have ability to use support portal.", /*ReadyHelpUrls.TRIAL_URL*/ "www.smartbear.com");
+            super("Stay Tuned!", "Please provide your name and e-mail to receive updates and additional materials for SoapUI", "www.smartbear.com");
             this.setModal(true);
             validEmailRegex = Pattern.compile(VALID_EMAIL_PATTERN);
         }
