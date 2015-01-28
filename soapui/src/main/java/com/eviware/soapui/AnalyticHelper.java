@@ -14,8 +14,6 @@ import javax.swing.JOptionPane;
  * Created by SmartBear company.
  */
 public class AnalyticHelper {
-    public static String START_TESTCASE_RUNNER = "startTestCaseRunner";
-    public static String STOP_TESTCASE_RUNNER = "startTestCaseRunner";
     private static boolean isInitialize = false;
 
     private static boolean analyticsDisabled() {

@@ -19,6 +19,7 @@ package com.eviware.soapui.tools;
 import com.eviware.soapui.AnalyticHelper;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
@@ -114,16 +115,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
      */
 
     public static void main(String[] args) throws Exception {
-        System.exit(new SoapUITestCaseRunner().runFromCommandLine(args));
-    }
-
-    @Override
-    public int runFromCommandLine(String[] args) {
         AnalyticHelper.InitializeAnalytic();
-        Analytics.trackAction(AnalyticHelper.START_TESTCASE_RUNNER);
-        int i = super.runFromCommandLine(args);
-        Analytics.trackAction(AnalyticHelper.STOP_TESTCASE_RUNNER);
-        return i;
+        Analytics.trackSessionStart();
+        System.exit(new SoapUITestCaseRunner().runFromCommandLine(args));
     }
 
     @Override
