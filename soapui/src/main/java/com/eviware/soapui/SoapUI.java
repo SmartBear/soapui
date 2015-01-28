@@ -452,8 +452,8 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/favicon.png"));
+        helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
+                "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
         helpMenu.add(new OpenUrlAction("smartbear.com", "http://smartbear.com"));
