@@ -16,6 +16,7 @@
 
 package com.eviware.soapui;
 
+import com.eviware.soapui.actions.CollectInfoAboutUserForSupportAction;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
@@ -897,6 +898,12 @@ public class SoapUI {
                 } catch (Exception ignore) {
                 }
             }
+        }
+
+        if(workspace.isSupportInformationDialog()) {
+            CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+            collector.show();
+            workspace.setSupportInformationDialog(false);
         }
         return soapUI;
     }
