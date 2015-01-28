@@ -66,4 +66,7 @@ public interface Workspace extends ModelItem {
 
     public void inspectProjects();
 
+    public boolean isSupportInformationDialog();
+
+    public void setSupportInformationDialog(boolean value);
 }

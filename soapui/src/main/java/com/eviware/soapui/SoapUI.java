@@ -16,6 +16,7 @@
 
 package com.eviware.soapui;
 
+import com.eviware.soapui.actions.CollectInfoAboutUserForSupportAction;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
@@ -446,8 +447,8 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/favicon.png"));
+        helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
+                "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
         helpMenu.add(new OpenUrlAction("smartbear.com", "http://smartbear.com"));
@@ -856,6 +857,12 @@ public class SoapUI {
                 } catch (Exception ignore) {
                 }
             }
+        }
+
+        if(workspace.isSupportInformationDialog()) {
+            CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+            collector.show();
+            workspace.setSupportInformationDialog(false);
         }
         return soapUI;
     }
