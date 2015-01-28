@@ -1,2 +1,2 @@
 set CLASSPATH=..\lib\*
-..\jre\bin\java -cp "%CLASSPATH%" TrackOutAppAction UninstallSoftware success true
+..\jre\bin\java -cp "%CLASSPATH%" TrackOutAppAction UninstallSoftwareOS success true
