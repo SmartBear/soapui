@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -63,7 +64,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
         setTitle("New Version Check");
         getContentPane().add(mainPanel);
         setSize(new Dimension(500, 440));
-        UISupport.centerDialog(this);
+        setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
     }
 
     public ReadyApiUpdateDialogResult showDialog() {
