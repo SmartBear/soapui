@@ -16,17 +16,16 @@
 
 package com.eviware.x.impl.swing;
 
+import com.eviware.soapui.support.ExtensionFileFilter;
+import com.eviware.x.dialogs.XFileDialogs;
+import com.l2fprod.common.swing.JDirectoryChooser;
+
+import javax.swing.JFileChooser;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.JFileChooser;
-
-import com.eviware.soapui.support.ExtensionFileFilter;
-import com.eviware.x.dialogs.XFileDialogs;
-import com.l2fprod.common.swing.JDirectoryChooser;
 
 /**
  * @author Lars
@@ -123,9 +122,9 @@ public class SwingFileDialogs implements XFileDialogs {
     }
 
     public File openDirectory(Object action, String title, File defaultDirectory) {
-        JDirectoryChooser chooser = new JDirectoryChooser(defaultDirectory);
+        JFileChooser chooser = new JFileChooser(defaultDirectory);
         chooser.setDialogTitle(title);
-        chooser.setShowingCreateDirectory(true);
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setPreferredSize(new Dimension(400, 400));
         if (chooser.showSaveDialog(getParent()) != JFileChooser.APPROVE_OPTION) {
             return null;
