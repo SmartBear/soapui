@@ -115,7 +115,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
      */
 
     public static void main(String[] args) throws Exception {
-        AnalyticHelper.InitializeAnalytic();
+        AnalyticHelper.InitializeAnalytics();
         Analytics.trackSessionStart();
         System.exit(new SoapUITestCaseRunner().runFromCommandLine(args));
     }
