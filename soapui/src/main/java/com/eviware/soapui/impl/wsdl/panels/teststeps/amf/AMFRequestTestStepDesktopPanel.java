@@ -371,7 +371,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         toolbar.add(splitButton);
 
         toolbar.addFixed(UISupport
-                .createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TRANSFERSTEPEDITOR_HELP_URL)));
+                .createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TEST_AMF_REQUEST_EDITOR_HELP_URL)));
 
         return toolbar;
 

@@ -156,6 +156,7 @@ public interface HelpUrls {
     public static final String TESTCASEEDITOR_HELP_URL = "http://www.soapui.org/Functional-Testing/testcase-editor.html";
     public static final String TESTCASEOPTIONS_HELP_URL = "http://www.soapui.org/Functional-Testing/testcase-options.html";
     public static final String TESTREQUESTEDITOR_HELP_URL = "http://www.soapui.org/Functional-Testing/testrequest-editor.html";
+    public static final String TEST_AMF_REQUEST_EDITOR_HELP_URL = "http://www.soapui.org/amf/getting-started.html";
     public static final String TESTRUNNER_HELP_URL = "http://www.soapui.org/Test-Automation/launch-testrunner.html";
     public static final String TESTSUITEEDITOR_HELP_URL = "http://www.soapui.org/Functional-Testing/testsuite-editor.html";
     public static final String TESTSUITELIST_HELP_URL = "http://www.soapui.org/Functional-Testing/project-testsuites-tab.html";
