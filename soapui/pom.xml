@@ -205,13 +205,13 @@
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>analytics-core</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.2-os</version>
         </dependency>
 
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>out-app-analytics-provider</artifactId>
-            <version>5.1.0</version>
+            <version>5.1.2-os</version>
         </dependency>
 
         <!-- JGoodies -->
@@ -261,7 +261,7 @@
         <dependency>
             <groupId>org.apache.ws.security</groupId>
             <artifactId>wss4j</artifactId>
-            <version>1.6.14</version>
+            <version>1.6.16</version>
         </dependency>
 
         <!-- HtmlUnit dependencies -->
@@ -548,6 +548,13 @@
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.keen</groupId>
+            <artifactId>keen-client-api-java</artifactId>
+            <version>1.0.2</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

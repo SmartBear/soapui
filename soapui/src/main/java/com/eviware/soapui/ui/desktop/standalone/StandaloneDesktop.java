@@ -25,29 +25,17 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
+import com.eviware.soapui.support.components.JComponentInspector;
+import com.eviware.soapui.support.components.JInspectorPanel;
+import com.eviware.soapui.support.components.JInspectorPanelFactory;
 import com.eviware.soapui.ui.desktop.AbstractSoapUIDesktop;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.desktop.SoapUIDesktop;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.DesktopManager;
-import javax.swing.JComponent;
-import javax.swing.JDesktopPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.event.InternalFrameAdapter;
 import javax.swing.event.InternalFrameEvent;
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -55,12 +43,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The default standalone SoapUI desktop using a JDesktopPane
@@ -83,11 +67,13 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private CloseAllAction closeAllAction = new CloseAllAction();
 
     private static final int xOffset = 30, yOffset = 30;
-    private JPanel desktopPanel = new JPanel(new BorderLayout());
+    //private JPanel desktopPanel = new JPanel(new BorderLayout());
 
     private boolean transferring;
 
     private List<DesktopPanel> deferredDesktopPanels = new LinkedList<DesktopPanel>();
+    private JInspectorPanel inspector;
+    private JPanel inspectorPanel;
 
     public StandaloneDesktop(Workspace workspace) {
         super(workspace);
@@ -121,11 +107,25 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private void buildUI() {
         desktop = new SoapUIDesktopPane();
         JScrollPane scrollPane = new JScrollPane(desktop);
-        desktopPanel.add(scrollPane, BorderLayout.CENTER);
+
+        inspector = JInspectorPanelFactory.build(scrollPane, SwingConstants.RIGHT);
+        inspectorPanel = new JPanel( new BorderLayout());
+        inspector.addInspector(new JComponentInspector<JComponent>(inspectorPanel, "Inspector",
+                "Object Inspector", true));
+        inspector.setDefaultDividerLocation(0.75f);
     }
 
     public JComponent getDesktopComponent() {
-        return desktopPanel;
+        return inspector.getComponent();
+    }
+
+    @Override
+    public void showInspector(JComponent component) {
+        inspectorPanel.removeAll();
+        inspectorPanel.add( component, BorderLayout.CENTER );
+        inspectorPanel.repaint();
+
+        inspector.setCurrentInspector( "Inspector" );
     }
 
     public boolean closeDesktopPanel(DesktopPanel desktopPanel) {

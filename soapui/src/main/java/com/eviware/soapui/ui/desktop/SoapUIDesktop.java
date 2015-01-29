@@ -16,10 +16,10 @@
 
 package com.eviware.soapui.ui.desktop;
 
-import javax.swing.JComponent;
-
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.support.action.swing.ActionList;
+
+import javax.swing.*;
 
 /**
  * Behaviour for a SoapUI Desktop implementation
@@ -61,4 +61,6 @@ public interface SoapUIDesktop {
     public void minimize(DesktopPanel desktopPanel);
 
     public void maximize(DesktopPanel dp);
+
+    public void showInspector( JComponent component );
 }
