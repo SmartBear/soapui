@@ -859,10 +859,12 @@ public class SoapUI {
             }
         }
 
-        if(workspace.isSupportInformationDialog()) {
-            CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
-            collector.show();
-            workspace.setSupportInformationDialog(false);
+        if (SoapUI.usingGraphicalEnvironment()) {
+            if (workspace.isSupportInformationDialog()) {
+                CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+                collector.show();
+                workspace.setSupportInformationDialog(false);
+            }
         }
         return soapUI;
     }
