@@ -100,6 +100,26 @@
                     <mainClass>com.eviware.soapui.SoapUI</mainClass>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <!-- This appears here for debug purposes.-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.1</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <tasks>
+                                <echo>[!!!Root pom dir] ${project.directory.root}</echo>
+                            </tasks>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -558,11 +578,9 @@
         </dependency>
 
         <dependency>
-            <artifactId>..</artifactId>
-            <groupId>..</groupId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/src/.install4j/i4jruntime.jar</systemPath>
+            <groupId>org.sonatype.install4j</groupId>
+            <artifactId>i4jruntime</artifactId>
+            <version>5.1.14</version>
         </dependency>
     </dependencies>
 
