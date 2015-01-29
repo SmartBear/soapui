@@ -649,14 +649,6 @@ public class SoapUI {
 
     private static final class SoapUIRunner implements Runnable {
         public void run() {
-            AnalyticHelper.InitializeAnalytic();
-            Analytics.trackSessionStart();
-            boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
-                    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-            if (isDebug) {
-                Analytics.trackAction("DebuggingMode");
-            }
-
             addStandardPreferencesShortcutOnMac();
             boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
             Properties props = new Properties();
@@ -809,6 +801,14 @@ public class SoapUI {
 
         isStandalone = true;
         soapUICore = core;
+
+        AnalyticHelper.InitializeAnalytics();
+        Analytics.trackSessionStart();
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        if (isDebug) {
+            Analytics.trackAction("DebuggingMode");
+        }
 
         SoapUI soapUI = new SoapUI();
         Workspace workspace = null;

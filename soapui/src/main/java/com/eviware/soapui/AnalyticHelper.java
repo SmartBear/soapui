@@ -18,13 +18,13 @@ public class AnalyticHelper {
 
     private static boolean analyticsDisabled() {
         Settings settings = SoapUI.getSettings();
-        boolean disableAnalytics = settings.getBoolean(UISettings.DISABLE_ANALYTICS, true);
+        boolean disableAnalytics = settings.getBoolean(UISettings.DISABLE_ANALYTICS, SoapUI.usingGraphicalEnvironment());
         if (!disableAnalytics) {
             return false;
         }
         Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
         Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
-        if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion())) {
+        if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
             disableAnalytics = JOptionPane.showConfirmDialog(null, "Do you want to help us improve SoapUI by sending anonymous usage statistics?",
                     "Usage statistics", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION;
             settings.setBoolean(UISettings.DISABLE_ANALYTICS, disableAnalytics);
@@ -35,7 +35,7 @@ public class AnalyticHelper {
         return disableAnalytics;
     }
 
-    public static void InitializeAnalytic() {
+    public static void InitializeAnalytics() {
         if(isInitialize)
             return;
         isInitialize = true;
