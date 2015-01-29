@@ -66,7 +66,7 @@ public interface HelpUrls {
     public static final String GENERATE_REST_MOCKSERVICE = "http://www.soapui.org/REST-Service-Mocking/generate-rest-mock.html";
     public static final String GENERATE_TESTSUITE_HELP_URL = "http://www.soapui.org/Functional-Testing/structuring-and-running-tests.html";
     public static final String GETTINGSTARTED_HELP_URL = "http://www.soapui.org/Getting-Started/your-first-soapui-project.html";
-    public static final String GOTOSTEPEDITOR_HELP_URL = "http://www.soapui.org/Functional-Testing/conditional-goto-teststep.html";
+    public static final String GOTOSTEPEDITOR_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/conditional-goto/conditional-goto.html";
     public static final String GROOVYASSERTION_HELP_URL = "http://www.soapui.org/Assertions/script-assertion.html";
     public static final String GROOVYSTEPEDITOR_HELP_URL = "http://www.soapui.org/Functional-Testing/groovy-teststep.html";
     public static final String GSOAP_HELP_URL = "http://www.cs.fsu.edu/~engelen/soap.html";
