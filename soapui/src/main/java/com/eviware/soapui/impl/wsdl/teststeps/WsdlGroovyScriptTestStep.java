@@ -37,10 +37,9 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import org.apache.log4j.Logger;
 
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
-import static com.eviware.soapui.impl.wsdl.teststeps.Script.RESULT_PROPERTY;
-import static com.eviware.soapui.impl.wsdl.teststeps.Script.SCRIPT_PROPERTY;
+import static com.eviware.soapui.impl.wsdl.teststeps.Script.*;
 
 /**
  * TestStep that executes an arbitrary Groovy script
@@ -122,12 +121,17 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
         SoapUI.ensureGroovyLog();
 
         WsdlTestStepResult result = new WsdlTestStepResult(this);
+        Logger log = (Logger) context.getProperty("log");
+        if (log == null) {
+            log = logger;
+        }
+
         try {
             if (scriptText.trim().length() > 0) {
                 synchronized (this) {
                     scriptEngine.setVariable("context", context);
                     scriptEngine.setVariable("testRunner", testRunner);
-                    scriptEngine.setVariable("log", logger);
+                    scriptEngine.setVariable("log", log);
 
                     result.setTimeStamp(System.currentTimeMillis());
                     result.startTimer();
