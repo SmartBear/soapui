@@ -24,6 +24,7 @@
                     <xsd:element name="project" type="tns:WorkspaceProject"
                                  minOccurs="0" maxOccurs="unbounded">
                     </xsd:element>
+                    <xsd:element name="collectInfoForSupport" type="xsd:boolean" minOccurs="0" maxOccurs="1"></xsd:element>
                 </xsd:sequence>
                 <xsd:attribute name="soapui-version" type="xsd:string">
                 </xsd:attribute>

@@ -16,14 +16,8 @@
 
 package com.eviware.soapui.impl.wsdl.panels.request;
 
-import javax.swing.AbstractAction;
-import javax.swing.JButton;
-import javax.swing.JPopupMenu;
-import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
-
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
-
+import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.impl.support.components.ModelItemXmlEditor;
 import com.eviware.soapui.impl.support.components.RequestXmlDocument;
 import com.eviware.soapui.impl.support.components.ResponseXmlDocument;
@@ -45,6 +39,13 @@ import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.editor.views.xml.source.XmlSourceEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.support.DefaultXmlDocument;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JPopupMenu;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
 
 /**
  * Abstract DesktopPanel for WsdlRequests
@@ -136,6 +137,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
     }
 
     protected Submit doSubmit() throws SubmitException {
+        Analytics.trackAction(SoapUIActions.RUN_REQUEST_FROM_REQUEST_EDITOR.getActionName(), "Type", "SOAP");
         return getRequest().submit(new WsdlSubmitContext(getModelItem()), true);
     }
 
