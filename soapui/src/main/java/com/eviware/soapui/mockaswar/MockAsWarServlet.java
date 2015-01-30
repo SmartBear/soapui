@@ -105,58 +105,68 @@ public class MockAsWarServlet extends HttpServlet {
     }
 
     protected String initMockServiceParameters() {
-        if (StringUtils.hasContent(getInitParameter("listeners"))) {
-            logger.info("Init listeners");
-            String listeners = getInitParameter("listeners");
-            if (listeners != null) {
-                ServletContext sc = getServletContext();
-                if (sc != null) {
-                    String realPath = sc.getRealPath(listeners);
-                    if (realPath != null) {
-                        System.setProperty("soapui.ext.listeners", realPath);
+        try {
+            if (StringUtils.hasContent(getInitParameter("listeners"))) {
+                log("!!Init listeners!!");
+                logger.info("Init listeners");
+                String listeners = getInitParameter("listeners");
+                if (listeners != null) {
+                    ServletContext sc = getServletContext();
+                    if (sc != null) {
+                        log("Listeners is :" + listeners);
+                        String realPath = sc.getRealPath(listeners);
+                        if (realPath != null) {
+                            System.setProperty("soapui.ext.listeners", realPath);
+                        } else {
+                            logger.info("Listeners not set! Real path not found");
+                        }
                     } else {
-                        logger.info("Listeners not set! Real path not found");
+                        logger.info("Listeners not set! ServletContext not found");
                     }
                 } else {
-                    logger.info("Listeners not set! ServletContext not found");
+                    logger.info("Listeners not set! Listeners params not found");
                 }
             } else {
-                logger.info("Listeners not set! Listeners params not found");
+                logger.info("Listeners not set!");
             }
-        } else {
-            logger.info("Listeners not set!");
-        }
 
-        if (StringUtils.hasContent(getInitParameter("actions"))) {
-            logger.info("Init actions");
-            System.setProperty("soapui.ext.actions", getServletContext().getRealPath(getInitParameter("actions")));
-        } else {
-            logger.info("Actions not set!");
-        }
-
-        if (SoapUI.getSoapUICore() == null) {
-            if (StringUtils.hasContent(getInitParameter("soapUISettings"))) {
-                logger.info("Init settings");
-                SoapUI.setSoapUICore(
-                        new MockServletSoapUICore(getServletContext(), getInitParameter("soapUISettings")), true);
+            if (StringUtils.hasContent(getInitParameter("actions"))) {
+                logger.info("Init actions");
+                try {
+                    System.setProperty("soapui.ext.actions", getServletContext().getRealPath(getInitParameter("actions")));
+                } catch (Exception e) {
+                    logger.info("Actions not set! Reason : " + e.getMessage());
+                }
             } else {
-                logger.info("Settings not set!");
-                SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+                logger.info("Actions not set!");
             }
-        } else {
-            logger.info("SoapUI core already exists, reusing existing one");
-        }
 
-        if (StringUtils.hasContent(getInitParameter("enableWebUI"))) {
-            if ("true".equals(getInitParameter("enableWebUI"))) {
-                logger.info("WebUI ENABLED");
-                enableWebUI = true;
+            if (SoapUI.getSoapUICore() == null) {
+                if (StringUtils.hasContent(getInitParameter("soapUISettings"))) {
+                    logger.info("Init settings");
+                    SoapUI.setSoapUICore(
+                            new MockServletSoapUICore(getServletContext(), getInitParameter("soapUISettings")), true);
+                } else {
+                    logger.info("Settings not set!");
+                    SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+                }
             } else {
-                logger.info("WebUI DISABLED");
-                enableWebUI = false;
+                logger.info("SoapUI core already exists, reusing existing one");
             }
-        }
 
+            if (StringUtils.hasContent(getInitParameter("enableWebUI"))) {
+                if ("true".equals(getInitParameter("enableWebUI"))) {
+                    logger.info("WebUI ENABLED");
+                    enableWebUI = true;
+                } else {
+                    logger.info("WebUI DISABLED");
+                    enableWebUI = false;
+                }
+            }
+
+        }catch (Exception e){
+            logger.info("Property set with error!"+e.getMessage());
+        }
         try {
             maxResults = Integer.parseInt(getInitParameter("maxResults"));
         } catch (NumberFormatException ex) {
