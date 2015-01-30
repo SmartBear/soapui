@@ -16,25 +16,6 @@
 
 package com.eviware.soapui.mockaswar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.xmlbeans.XmlException;
-
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -52,6 +33,23 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.collections.list.TreeList;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.xmlbeans.XmlException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servlet implementation class SoapUIMockServlet
@@ -109,7 +107,22 @@ public class MockAsWarServlet extends HttpServlet {
     protected String initMockServiceParameters() {
         if (StringUtils.hasContent(getInitParameter("listeners"))) {
             logger.info("Init listeners");
-            System.setProperty("soapui.ext.listeners", getServletContext().getRealPath(getInitParameter("listeners")));
+            String listeners = getInitParameter("listeners");
+            if (listeners != null) {
+                ServletContext sc = getServletContext();
+                if (sc != null) {
+                    String realPath = sc.getRealPath(listeners);
+                    if (realPath != null) {
+                        System.setProperty("soapui.ext.listeners", realPath);
+                    } else {
+                        logger.info("Listeners not set! Real path not found");
+                    }
+                } else {
+                    logger.info("Listeners not set! ServletContext not found");
+                }
+            } else {
+                logger.info("Listeners not set! Listeners params not found");
+            }
         } else {
             logger.info("Listeners not set!");
         }
@@ -286,7 +299,7 @@ public class MockAsWarServlet extends HttpServlet {
             }
 
             return mockRunner;
-            
+
         }
 
         /*

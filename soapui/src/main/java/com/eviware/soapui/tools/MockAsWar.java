@@ -27,6 +27,9 @@ import com.eviware.x.dialogs.XProgressMonitor;
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Lists;
+import org.apache.log4j.Logger;
+
+import javax.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -39,8 +42,6 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.annotation.Nullable;
-import org.apache.log4j.Logger;
 
 public class MockAsWar {
     protected static final String SOAPUI_SETTINGS = "[SoapUISettings]";
@@ -196,9 +197,21 @@ public class MockAsWar {
             JarPackager.copyAllFromTo(fromDir, lib, new CaseInsensitiveFileFilter());
 
             if (includeExt) {
-                // copy all from bin/ext to soapui.home/war/WEB-INF/lib/
                 String extDirPath = System.getProperty("soapui.ext.libraries");
-                fromDir = extDirPath != null ? new File(extDirPath) : new File(new File(System.getProperty(SOAPUI_HOME)), "ext");                
+                File tempF1 = null;
+                File tempF2 = null;
+                File tempF3 = null;
+
+                if (extDirPath != null) {
+                    tempF1 = new File(extDirPath);
+                }
+                if (System.getProperty(SOAPUI_HOME) != null) {
+                    tempF2 = new File(System.getProperty(SOAPUI_HOME));
+                }
+                tempF3 = new File(tempF2, "ext");
+
+                // copy all from bin/ext to soapui.home/war/WEB-INF/lib/
+                fromDir = extDirPath != null ? new File(extDirPath) : new File(new File(System.getProperty(SOAPUI_HOME)), "ext");
                 JarPackager.copyAllFromTo(fromDir, lib, null);
             }
 
@@ -244,13 +257,13 @@ public class MockAsWar {
     private void copyWarResource(String resource) {
         FileOutputStream out = null;
         try {
-            out  = new FileOutputStream(new File(warDir, resource));
+            out = new FileOutputStream(new File(warDir, resource));
             Tools.writeAll(out,
                     SoapUI.class.getResourceAsStream("/com/eviware/soapui/resources/mockaswar/" + resource));
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if(out != null){
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException ignore) {
