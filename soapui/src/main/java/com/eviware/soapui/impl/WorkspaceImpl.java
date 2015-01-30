@@ -620,4 +620,19 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         projectOptions.remove(name);
     }
 
+    public boolean isSupportInformationDialog() {
+        boolean isCollect = false;
+        if(workspaceConfig != null) {
+            if(!workspaceConfig.getSoapuiWorkspace().isSetCollectInfoForSupport()) {
+                return true;
+            }
+            isCollect = workspaceConfig.getSoapuiWorkspace().getCollectInfoForSupport();
+        }
+        return isCollect;
+    }
+
+    public void setSupportInformationDialog(boolean value) {
+        if(workspaceConfig != null)
+            workspaceConfig.getSoapuiWorkspace().setCollectInfoForSupport(value);
+    }
 }
