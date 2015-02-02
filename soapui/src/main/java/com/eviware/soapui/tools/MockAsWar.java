@@ -83,7 +83,9 @@ public class MockAsWar {
         if (!this.warDir.exists()) {
             this.warDir.mkdirs();
         }
-        this.warFile = !StringUtils.hasContent(warFile) ? null : new File(warFile);
+        this.warFile = !StringUtils.hasContent(warFile)? null : new File(warFile);
+        if(!warFile.contains(File.separator))
+            this.warFile = new File(this.warDir, warFile);
         this.includeExt = includeExt;
         this.includeActions = actions;
         this.includeListeners = listeners;
@@ -195,8 +197,8 @@ public class MockAsWar {
             String homePath = System.getProperty(SOAPUI_HOME) == null ? SOAPUI_BIN_FOLDER : System.getProperty(SOAPUI_HOME);
 
             // copy all from bin/../lib to soapui.home/war/WEB-INF/lib/
-            File fromDir = new File(System.getProperty(SOAPUI_HOME), SOAPUI_LIB_FOLDER);
 
+            File fromDir = new File(homePath, SOAPUI_LIB_FOLDER);
 
             JarPackager.copyAllFromTo(fromDir, warLibDir, new CaseInsensitiveFileFilter());
 
