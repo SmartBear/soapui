@@ -4,25 +4,22 @@ import com.eviware.soapui.analytics.AnalyticsProvider;
 import com.eviware.soapui.analytics.AnalyticsProviderFactory;
 
 /**
- * Created by aleshin on 5/16/2014.
+ * Created by avdeev on 02.02.2015.
  */
-public class KeenIOProviderFactory implements AnalyticsProviderFactory {
-
-    public KeenIOProviderFactory() {
-    }
-
+public class OSUserProviderFactory implements AnalyticsProviderFactory {
     @Override
     public String getName() {
-        return "KeenIO Provider";
+        return "OS User Contact Info Provider";
     }
 
     @Override
     public String getDescription() {
-        return "Allow to track actions with KeenIO";
+        return "Allow to track OS user contact information";
     }
 
     @Override
     public AnalyticsProvider allocateProvider() {
-        return new KeenIOProvider();
+        return new OSUserProvider();
     }
+
 }
