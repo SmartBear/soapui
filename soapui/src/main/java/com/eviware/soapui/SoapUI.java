@@ -16,6 +16,7 @@
 
 package com.eviware.soapui;
 
+import com.eviware.soapui.actions.CollectInfoAboutUserForSupportAction;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
@@ -27,6 +28,8 @@ import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
 import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
 import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
+import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
+import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
@@ -73,7 +76,6 @@ import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -134,7 +136,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTabbedPane;
@@ -451,8 +452,8 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/favicon.png"));
+        helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
+                "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
         helpMenu.add(new OpenUrlAction("smartbear.com", "http://smartbear.com"));
@@ -653,14 +654,11 @@ public class SoapUI {
 
     private static final class SoapUIRunner implements Runnable {
         public void run() {
-            initializeAnalytics();
-
-            Analytics.trackOSUser("Ilya", "Avdeev", "Ilya.Avdeev@smartbear.com");
-
             boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                     getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-            if (isDebug) {
-                Analytics.trackAction("DebuggingMode");
+            SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
+            if (!isDebug && SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
+                updateProvider.start();
             }
 
             addStandardPreferencesShortcutOnMac();
@@ -686,15 +684,6 @@ public class SoapUI {
                     });
                 }
 
-                if (isAutoUpdateVersion()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SoapUIVersionUpdate().checkForNewVersion(false);
-                        }
-                    }).start();
-                }
-
                 startCajoServerIfNotOverriddenBySetting();
                 if (isFirstLaunch) {
                     Tools.openURL(SOAPUI_WELCOME_PAGE);
@@ -706,42 +695,6 @@ public class SoapUI {
             } catch (Exception e) {
                 e.printStackTrace();
                 System.exit(1);
-            }
-        }
-
-        private static boolean analyticsDisabled() {
-            Settings settings = SoapUI.getSettings();
-            boolean disableAnalytics = settings.getBoolean(UISettings.DISABLE_ANALYTICS, true);
-            if (!disableAnalytics) {
-                return false;
-            }
-            Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
-            Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
-            if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion())) {
-                disableAnalytics = JOptionPane.showConfirmDialog(null, "Do you want to help us improve SoapUI by sending anonymous usage statistics?",
-                        "Usage statistics", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION;
-                settings.setBoolean(UISettings.DISABLE_ANALYTICS, disableAnalytics);
-            }
-            if (disableAnalytics) {
-                settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
-            }
-            return disableAnalytics;
-        }
-
-
-        private void initializeAnalytics() {
-
-            AnalyticsManager manager = Analytics.getAnalyticsManager();
-            manager.setExecutorService(SoapUI.getThreadPool());
-            //We send non-anonymous (license) data to Keen IO anyway, even if user has opted out
-            manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
-            if (analyticsDisabled()) {
-                return;
-            }
-
-            manager.registerAnalyticsProviderFactory(new GoogleAnalyticsProviderFactory());
-            if (System.getProperty("soapui.analytics.logtab", "false").equals("true")) {
-                manager.registerAnalyticsProviderFactory(new LogTabAnalyticsProvider.LogTabAnalyticsProviderFactory());
             }
         }
 
@@ -852,6 +805,14 @@ public class SoapUI {
         isStandalone = true;
         soapUICore = core;
 
+        AnalyticHelper.InitializeAnalytics();
+        Analytics.trackSessionStart();
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        if (isDebug) {
+            Analytics.trackAction("DebuggingMode");
+        }
+
         SoapUI soapUI = new SoapUI();
         Workspace workspace = null;
 
@@ -898,6 +859,14 @@ public class SoapUI {
                     SwingUtilities.invokeLater(new RestProjectCreator(url));
                 } catch (Exception ignore) {
                 }
+            }
+        }
+
+        if (SoapUI.usingGraphicalEnvironment()) {
+            if (workspace.isSupportInformationDialog()) {
+                CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+                collector.show();
+                workspace.setSupportInformationDialog(false);
             }
         }
         return soapUI;
