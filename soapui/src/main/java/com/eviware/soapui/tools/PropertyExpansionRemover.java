@@ -35,10 +35,6 @@ public class PropertyExpansionRemover {
         while (containsPropertyExpansion(output)) {
             output = removeExpansionAt(output, output.indexOf(EXPANSION_START));
         }
-        if (!input.equals(output)) {
-            log.info("Removed expansions from value [" + input +
-                    "], result: [" + output + "]");
-        }
         return output;
     }
 

@@ -24,6 +24,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.support.AbstractMockService;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockRunContext;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockDispatcher;
 import com.eviware.soapui.model.mock.MockOperation;
@@ -68,6 +69,11 @@ public class RestMockService extends AbstractMockService<RestMockAction, RESTMoc
     @Override
     public MockDispatcher createDispatcher(WsdlMockRunContext mockContext) {
         return new RestMockDispatcher(this, mockContext);
+    }
+
+    @Override
+    public List<? extends ModelItem> getChildren() {
+        return getMockOperationList();
     }
 
     public RestMockAction addNewMockAction(RestRequest restRequest) {
