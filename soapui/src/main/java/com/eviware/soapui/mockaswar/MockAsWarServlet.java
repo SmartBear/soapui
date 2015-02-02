@@ -68,15 +68,11 @@ public class MockAsWarServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            logger.info("!Start!");
-
             SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
-
-            logger.info("!Get Context!");
 
             String mockServiceEndpoint = initMockServiceParameters();
 
-            logger.info("!Loading project!");
+            logger.info("Loading project");
 
             initProject(getServletContext().getRealPath(getInitParameter("projectFile")));
 
