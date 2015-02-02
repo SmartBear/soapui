@@ -198,18 +198,6 @@ public class MockAsWar {
 
             if (includeExt) {
                 String extDirPath = System.getProperty("soapui.ext.libraries");
-                File tempF1 = null;
-                File tempF2 = null;
-                File tempF3 = null;
-
-                if (extDirPath != null) {
-                    tempF1 = new File(extDirPath);
-                }
-                if (System.getProperty(SOAPUI_HOME) != null) {
-                    tempF2 = new File(System.getProperty(SOAPUI_HOME));
-                }
-                tempF3 = new File(tempF2, "ext");
-
                 // copy all from bin/ext to soapui.home/war/WEB-INF/lib/
                 fromDir = extDirPath != null ? new File(extDirPath) : new File(new File(System.getProperty(SOAPUI_HOME)), "ext");
                 JarPackager.copyAllFromTo(fromDir, lib, null);
