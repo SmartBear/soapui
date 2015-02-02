@@ -83,9 +83,10 @@ public class MockAsWar {
         if (!this.warDir.exists()) {
             this.warDir.mkdirs();
         }
-        this.warFile = !StringUtils.hasContent(warFile)? null : new File(warFile);
-        if(!warFile.contains(File.separator))
+        this.warFile = !StringUtils.hasContent(warFile) ? null : new File(warFile);
+        if (!warFile.contains(File.separator)) {
             this.warFile = new File(this.warDir, warFile);
+        }
         this.includeExt = includeExt;
         this.includeActions = actions;
         this.includeListeners = listeners;
