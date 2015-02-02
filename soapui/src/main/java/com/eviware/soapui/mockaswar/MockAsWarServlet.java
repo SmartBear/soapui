@@ -68,9 +68,15 @@ public class MockAsWarServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
+            logger.info("!Start!");
+
+            SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+
+            logger.info("!Get Context!");
+
             String mockServiceEndpoint = initMockServiceParameters();
 
-            logger.info("Loading project");
+            logger.info("!Loading project!");
 
             initProject(getServletContext().getRealPath(getInitParameter("projectFile")));
 
@@ -107,24 +113,11 @@ public class MockAsWarServlet extends HttpServlet {
     protected String initMockServiceParameters() {
         try {
             if (StringUtils.hasContent(getInitParameter("listeners"))) {
-                log("!!Init listeners!!");
                 logger.info("Init listeners");
-                String listeners = getInitParameter("listeners");
-                if (listeners != null) {
-                    ServletContext sc = getServletContext();
-                    if (sc != null) {
-                        log("Listeners is :" + listeners);
-                        String realPath = sc.getRealPath(listeners);
-                        if (realPath != null) {
-                            System.setProperty("soapui.ext.listeners", realPath);
-                        } else {
-                            logger.info("Listeners not set! Real path not found");
-                        }
-                    } else {
-                        logger.info("Listeners not set! ServletContext not found");
-                    }
-                } else {
-                    logger.info("Listeners not set! Listeners params not found");
+                try {
+                    System.setProperty("soapui.ext.listeners", getServletContext().getRealPath(getInitParameter("listeners")));
+                } catch (Exception e) {
+                    logger.info("Listeners not set! Reason : " + e.getMessage());
                 }
             } else {
                 logger.info("Listeners not set!");
