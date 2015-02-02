@@ -213,7 +213,7 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
         testCase.afterLoad();
 
         if (createCopy) {
-            testCase.afterCopy(null, oldTestCase);
+            testCase.afterCopy(oldTestCase.getTestSuite(), oldTestCase);
 
             if (includeSecurityTests) {
                 testCase.importSecurityTests(null, oldTestCase);
@@ -596,8 +596,10 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
             return;
         }
 
+        WsdlTestCase oldTestCase = null;
         try {
             importTestCaseConfig = TestCaseDocumentConfig.Factory.parse(file).getTestCase();
+            oldTestCase =   buildTestCase(TestCaseDocumentConfig.Factory.parse(file).getTestCase(), false);
         } catch (Exception e) {
             SoapUI.logError(e);
         }
@@ -631,6 +633,8 @@ public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestS
 
             newTestCase.afterLoad();
 
+            WsdlTestSuite oldTestSuite = oldTestCase==null ? null : oldTestCase.getTestSuite();
+            newTestCase.afterCopy(oldTestSuite, oldTestCase);
             testCases.add(newTestCase);
             fireTestCaseAdded(newTestCase);
 

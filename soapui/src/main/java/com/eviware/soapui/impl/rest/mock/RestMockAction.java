@@ -25,6 +25,7 @@ import com.eviware.soapui.impl.support.AbstractMockOperation;
 import com.eviware.soapui.impl.support.HasHelpUrl;
 import com.eviware.soapui.impl.wsdl.mock.DispatchException;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.iface.Operation;
 import com.eviware.soapui.model.mock.MockResponse;
 import com.eviware.soapui.support.UISupport;
@@ -97,6 +98,11 @@ public class RestMockAction extends AbstractMockOperation<RESTMockActionConfig, 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
 
+    }
+
+    @Override
+    public List<? extends ModelItem> getChildren() {
+        return getMockResponses();
     }
 
     public RestMockResponse addNewMockResponse(String name) {

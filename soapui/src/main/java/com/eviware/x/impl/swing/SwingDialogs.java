@@ -16,6 +16,7 @@
 
 package com.eviware.x.impl.swing;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.DefaultHyperlinkListener;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.ProgressDialog;
@@ -55,11 +56,19 @@ public class SwingDialogs implements XDialogs {
     }
 
     public void showErrorMessage(final String message) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+        try {
+            if (SwingUtilities.isEventDispatchThread()) {
                 JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                });
             }
-        });
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
     }
 
     public boolean confirm(String question, String title) {
@@ -85,11 +94,19 @@ public class SwingDialogs implements XDialogs {
     }
 
     public void showInfoMessage(final String message, final String title) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+        try {
+            if (SwingUtilities.isEventDispatchThread()) {
                 JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        JOptionPane.showMessageDialog(parent, message, title, JOptionPane.INFORMATION_MESSAGE);
+                    }
+                });
             }
-        });
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
     }
 
     public Object prompt(String question, String title, Object[] objects) {
@@ -123,12 +140,20 @@ public class SwingDialogs implements XDialogs {
     }
 
     public void showExtendedInfo(final String title, final String description, final String content, final Dimension size) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK")));
+        try {
+            final JPanel buttonBar = ButtonBarFactory.buildRightAlignedBar(new JButton(new OkAction("OK")));
+            if (SwingUtilities.isEventDispatchThread()) {
                 showExtendedInfo(title, description, content, buttonBar, size);
+            } else {
+                SwingUtilities.invokeAndWait(new Runnable() {
+                    public void run() {
+                        showExtendedInfo(title, description, content, buttonBar, size);
+                    }
+                });
             }
-        });
+        } catch (Exception e) {
+            SoapUI.logError(e);
+        }
     }
 
     private void showExtendedInfo(String title, String description, String content, JPanel buttonBar, Dimension size) {
