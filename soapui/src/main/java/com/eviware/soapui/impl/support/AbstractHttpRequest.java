@@ -316,10 +316,10 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
         }
 
         if (requestContent == null) {
-            requestContent = CompressedStringSupport.getString(getConfig().getRequest());
+            requestContent = unescapeCarriageReturnsIn(CompressedStringSupport.getString(getConfig().getRequest()));
         }
 
-        return requestContent = unescapeCarriageReturnsIn(requestContent);
+        return requestContent;
     }
 
     public void setRequestContent(String request) {
@@ -330,7 +330,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
             return;
         }
 
-        requestContent = escapeCarriageReturnsIn(request);
+        requestContent = request;
         notifyPropertyChanged(REQUEST_PROPERTY, old, request);
     }
 
@@ -737,7 +737,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
                 getConfig().addNewRequest();
             }
 
-            CompressedStringSupport.setString(getConfig().getRequest(), requestContent);
+            CompressedStringSupport.setString(getConfig().getRequest(),  escapeCarriageReturnsIn(requestContent) );
             // requestContent = null;
         }
     }

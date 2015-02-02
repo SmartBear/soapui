@@ -185,8 +185,10 @@ public class PropertyTransfer implements PropertyChangeNotifier {
     }
 
     private boolean shouldConvertSourceProperty() {
-        return config.getSourcePath() != null && getSourcePathLanguage() != PathLanguage.JSONPATH &&
-                sourcePropertyIsResponse();
+        return testStep!=null && testStep.getProperties().containsKey(WsdlTestStepWithProperties.RESPONSE_AS_XML)
+                && config.getSourcePath() != null
+                && getSourcePathLanguage() != PathLanguage.JSONPATH
+                && sourcePropertyIsResponse();
     }
 
     private boolean sourcePropertyIsResponse() {
