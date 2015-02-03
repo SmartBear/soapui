@@ -14,8 +14,8 @@
 ### Updated libraries ###
 * Introduced analytics-core-5.1.2-os
 * Updated hamcrest-core-1.3
+* Introduced i4jruntime-5.1.14
 * Introduced json-smart-1.2
-* Introduced keen-client-api-java-1.0.2
 * Introduced out-app-analytics-provider-5.1.2-os
 * Updated wss4j-1.6.16
 
