@@ -551,10 +551,9 @@
         </dependency>
 
         <dependency>
-            <groupId>io.keen</groupId>
-            <artifactId>keen-client-api-java</artifactId>
-            <version>1.0.2</version>
-            <scope>compile</scope>
+            <groupId>org.sonatype.install4j</groupId>
+            <artifactId>i4jruntime</artifactId>
+            <version>5.1.14</version>
         </dependency>
 
         <dependency>

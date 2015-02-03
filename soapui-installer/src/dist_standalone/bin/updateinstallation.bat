@@ -1,1 +1,2 @@
-..\jre\bin\java -jar ..\lib\out-app-analytics-provider-1.0.0-SNAPSHOT.jar UpdateSoftwareOS success true
+set CLASSPATH=..\lib\*
+..\jre\bin\java -cp "%CLASSPATH%" TrackOutAppAction UpdateSoftwareOS success true

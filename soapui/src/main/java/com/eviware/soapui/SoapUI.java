@@ -24,10 +24,6 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.AnalyticsManager;
-import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
-import com.eviware.soapui.analytics.providers.KeenIOProviderFactory;
-import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -805,7 +801,7 @@ public class SoapUI {
         isStandalone = true;
         soapUICore = core;
 
-        AnalyticHelper.InitializeAnalytics();
+        AnalyticsHelper.InitializeAnalytics();
         Analytics.trackSessionStart();
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
