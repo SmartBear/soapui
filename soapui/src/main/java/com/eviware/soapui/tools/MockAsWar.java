@@ -49,7 +49,7 @@ public class MockAsWar {
     protected static final String MOCKSERVICE_ENDPOINT = "[mockServiceEndpoint]";
 
     private static final String SOAPUI_HOME = "soapui.home";
-    private static final String SOAPUI_BIN_FOLDER = ".bin";
+    private static final String SOAPUI_BIN_FOLDER = "." + File.separator + "bin";
     private static final String SOAPUI_LIB_FOLDER = ".." + File.separator + "lib";
 
     protected File projectFile;
