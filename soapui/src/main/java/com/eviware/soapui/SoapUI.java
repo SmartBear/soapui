@@ -24,10 +24,6 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.AnalyticsManager;
-import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
-import com.eviware.soapui.analytics.providers.KeenIOProviderFactory;
-import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -454,9 +450,10 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
                 "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
+        helpMenu.add(new OpenUrlAction("Privacy Policy", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
-        helpMenu.add(new OpenUrlAction("smartbear.com", "http://smartbear.com"));
+        helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new AboutAction());
         return helpMenu;
