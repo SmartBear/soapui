@@ -48,7 +48,7 @@ public class ImportPackedProject extends AbstractSoapUIAction<WorkspaceImpl> {
             File dest = UISupport.getFileDialogs().saveAsDirectory(this, "Select where to unpack it",
                     new File(System.getProperty("user.home")));
 
-            if (dest == null) {
+            if (dest == null || dest.getAbsoluteFile() == null) {
                 return;
             }
             ProjectExporter.unpackageAll(fileName, dest.getAbsolutePath());

@@ -3,8 +3,8 @@ package com.eviware.soapui;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.AnalyticsManager;
 import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
-import com.eviware.soapui.analytics.providers.KeenIOProviderFactory;
 import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
+import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
 
@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
 /**
  * Created by SmartBear company.
  */
-public class AnalyticHelper {
+public class AnalyticsHelper {
     private static boolean isInitialize = false;
 
     private static boolean analyticsDisabled() {
@@ -42,7 +42,7 @@ public class AnalyticHelper {
         AnalyticsManager manager = Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         //We send non-anonymous (license) data to Keen IO anyway, even if user has opted out
-        manager.registerAnalyticsProviderFactory(new KeenIOProviderFactory());
+        manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
         if (analyticsDisabled()) {
             return;
         }

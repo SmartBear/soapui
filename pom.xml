@@ -97,7 +97,7 @@
                             <rules>
                                 <!-- http://mojo.codehaus.org/extra-enforcer-rules/enforceBytecodeVersion.html -->
                                 <enforceBytecodeVersion>
-                                    <maxJdkVersion>1.6</maxJdkVersion>
+                                    <maxJdkVersion>1.7</maxJdkVersion>
                                 </enforceBytecodeVersion>
                             </rules>
                             <fail>true</fail>
