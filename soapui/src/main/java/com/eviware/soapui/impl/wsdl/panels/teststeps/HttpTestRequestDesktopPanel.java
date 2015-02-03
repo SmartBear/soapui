@@ -434,6 +434,9 @@ public class HttpTestRequestDesktopPanel extends
         } else if (evt.getPropertyName().equals("path")) {
             getSubmitButton().setEnabled(getSubmit() == null && StringUtils.hasContent(getRequest().getEndpoint()));
         } else if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
+            // fix SOAP-3369
+            getSubmitButton().setEnabled(getSubmit() == null && StringUtils.hasContent(getRequest().getEndpoint()));
+            // end of SOAP-3369
             if (updating) {
                 return;
             }

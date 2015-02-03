@@ -204,8 +204,8 @@ public class MockAsWar {
             JarPackager.copyAllFromTo(fromDir, warLibDir, new CaseInsensitiveFileFilter());
 
             if (includeExt) {
-                // copy all from bin/ext to soapui.home/war/WEB-INF/lib/
                 String extDirPath = System.getProperty("soapui.ext.libraries");
+
                 fromDir = extDirPath != null ? new File(extDirPath) : new File(new File(homePath), "ext");
                 JarPackager.copyAllFromTo(fromDir, warLibDir, null);
             }

@@ -176,6 +176,38 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
         setConfiguration(createConfiguration());
     }
 
+    @Override
+    public void release() {
+        super.release();
+        scriptEngine.release();
+
+        if (groovyScriptAssertionPanel != null) {
+            groovyScriptAssertionPanel.release();
+        }
+    }
+
+    public static class Factory extends AbstractTestAssertionFactory {
+        public Factory() {
+            super(GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL, GroovyScriptAssertion.class);
+        }
+
+        @Override
+        public String getCategory() {
+            return AssertionCategoryMapping.SCRIPT_CATEGORY;
+        }
+
+        @Override
+        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
+            return GroovyScriptAssertion.class;
+        }
+
+        @Override
+        public AssertionListEntry getAssertionListEntry() {
+            return new AssertionListEntry(GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL,
+                    GroovyScriptAssertion.DESCRIPTION);
+        }
+    }
+
     protected class GroovyScriptAssertionPanel extends JPanel {
         private GroovyEditor editor;
         private JSplitPane mainSplit;
@@ -336,10 +368,15 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
                 }
 
                 try {
-                    setScriptText(editor.getEditArea().getText());
-                    String result = assertScript(exchange, new WsdlTestRunContext(testStep), logger);
-                    UISupport
-                            .showInfoMessage("Script Assertion Passed" + ((result == null) ? "" : ": [" + result + "]"));
+                    Logger groovyLog = SoapUI.ensureGroovyLog();
+                    logger.addAppender(groovyLog.getAppender("GLOBAL_GROOVY_LOG"));
+                    try {
+                        setScriptText(editor.getEditArea().getText());
+                        String result = assertScript(exchange, new WsdlTestRunContext(testStep), logger);
+                        UISupport.showInfoMessage("Script Assertion Passed" + ((result == null) ? "" : ": [" + result + "]"));
+                    } finally {
+                        logger.removeAppender("GLOBAL_GROOVY_LOG");
+                    }
                 } catch (AssertionException e) {
                     UISupport.showErrorMessage(e.getMessage());
                 } catch (Exception e) {
@@ -349,38 +386,6 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
                 editor.requestFocusInWindow();
             }
-        }
-    }
-
-    @Override
-    public void release() {
-        super.release();
-        scriptEngine.release();
-
-        if (groovyScriptAssertionPanel != null) {
-            groovyScriptAssertionPanel.release();
-        }
-    }
-
-    public static class Factory extends AbstractTestAssertionFactory {
-        public Factory() {
-            super(GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL, GroovyScriptAssertion.class);
-        }
-
-        @Override
-        public String getCategory() {
-            return AssertionCategoryMapping.SCRIPT_CATEGORY;
-        }
-
-        @Override
-        public Class<? extends WsdlMessageAssertion> getAssertionClassType() {
-            return GroovyScriptAssertion.class;
-        }
-
-        @Override
-        public AssertionListEntry getAssertionListEntry() {
-            return new AssertionListEntry(GroovyScriptAssertion.ID, GroovyScriptAssertion.LABEL,
-                    GroovyScriptAssertion.DESCRIPTION);
         }
     }
 }

@@ -16,25 +16,6 @@
 
 package com.eviware.soapui.mockaswar;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.collections.list.TreeList;
-import org.apache.log4j.spi.LoggingEvent;
-import org.apache.xmlbeans.XmlException;
-
 import com.eviware.soapui.DefaultSoapUICore;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
@@ -52,6 +33,23 @@ import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.commons.collections.list.TreeList;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.xmlbeans.XmlException;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servlet implementation class SoapUIMockServlet
@@ -70,6 +68,8 @@ public class MockAsWarServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
+            SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+
             String mockServiceEndpoint = initMockServiceParameters();
 
             logger.info("Loading project");
@@ -107,43 +107,55 @@ public class MockAsWarServlet extends HttpServlet {
     }
 
     protected String initMockServiceParameters() {
-        if (StringUtils.hasContent(getInitParameter("listeners"))) {
-            logger.info("Init listeners");
-            System.setProperty("soapui.ext.listeners", getServletContext().getRealPath(getInitParameter("listeners")));
-        } else {
-            logger.info("Listeners not set!");
-        }
-
-        if (StringUtils.hasContent(getInitParameter("actions"))) {
-            logger.info("Init actions");
-            System.setProperty("soapui.ext.actions", getServletContext().getRealPath(getInitParameter("actions")));
-        } else {
-            logger.info("Actions not set!");
-        }
-
-        if (SoapUI.getSoapUICore() == null) {
-            if (StringUtils.hasContent(getInitParameter("soapUISettings"))) {
-                logger.info("Init settings");
-                SoapUI.setSoapUICore(
-                        new MockServletSoapUICore(getServletContext(), getInitParameter("soapUISettings")), true);
+        try {
+            if (StringUtils.hasContent(getInitParameter("listeners"))) {
+                logger.info("Init listeners");
+                try {
+                    System.setProperty("soapui.ext.listeners", getServletContext().getRealPath(getInitParameter("listeners")));
+                } catch (Exception e) {
+                    logger.info("Listeners not set! Reason : " + e.getMessage());
+                }
             } else {
-                logger.info("Settings not set!");
-                SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+                logger.info("Listeners not set!");
             }
-        } else {
-            logger.info("SoapUI core already exists, reusing existing one");
-        }
 
-        if (StringUtils.hasContent(getInitParameter("enableWebUI"))) {
-            if ("true".equals(getInitParameter("enableWebUI"))) {
-                logger.info("WebUI ENABLED");
-                enableWebUI = true;
+            if (StringUtils.hasContent(getInitParameter("actions"))) {
+                logger.info("Init actions");
+                try {
+                    System.setProperty("soapui.ext.actions", getServletContext().getRealPath(getInitParameter("actions")));
+                } catch (Exception e) {
+                    logger.info("Actions not set! Reason : " + e.getMessage());
+                }
             } else {
-                logger.info("WebUI DISABLED");
-                enableWebUI = false;
+                logger.info("Actions not set!");
             }
-        }
 
+            if (SoapUI.getSoapUICore() == null) {
+                if (StringUtils.hasContent(getInitParameter("soapUISettings"))) {
+                    logger.info("Init settings");
+                    SoapUI.setSoapUICore(
+                            new MockServletSoapUICore(getServletContext(), getInitParameter("soapUISettings")), true);
+                } else {
+                    logger.info("Settings not set!");
+                    SoapUI.setSoapUICore(new MockServletSoapUICore(getServletContext()), true);
+                }
+            } else {
+                logger.info("SoapUI core already exists, reusing existing one");
+            }
+
+            if (StringUtils.hasContent(getInitParameter("enableWebUI"))) {
+                if ("true".equals(getInitParameter("enableWebUI"))) {
+                    logger.info("WebUI ENABLED");
+                    enableWebUI = true;
+                } else {
+                    logger.info("WebUI DISABLED");
+                    enableWebUI = false;
+                }
+            }
+
+        }catch (Exception e){
+            logger.info("Property set with error!"+e.getMessage());
+        }
         try {
             maxResults = Integer.parseInt(getInitParameter("maxResults"));
         } catch (NumberFormatException ex) {
@@ -286,7 +298,7 @@ public class MockAsWarServlet extends HttpServlet {
             }
 
             return mockRunner;
-            
+
         }
 
         /*
