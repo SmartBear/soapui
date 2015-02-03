@@ -36,13 +36,16 @@ public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
     private static final String EVENT_CUSTOM = "Custom";
     private static final String EVENT_INVALID = "[Unknown]";
 
+    private static final String GA_URL = "http://www.google-analytics.com/collect";
+    private static final String SoapUI_REVISION = "SoapUI-OS";
+
     @Override
     public void trackAction(ActionDescription actionDescription) {
         try {
             if (AnalyticsManager.Category.LICENSE_UPDATE == actionDescription.getCategory()) {
                 return;
             }
-            sendRecord(buildParametersString(actionDescription));
+            sendRecord(GA_URL, buildParametersString(actionDescription));
             trackActiveScreen(actionDescription.getActionName());
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,12 +57,12 @@ public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
 
         try {
             String errorParametersString = String.format("v=1&an=%s&av=%s&cd=%s&tid=%s&cid=%s&t=exception&exd=%s&exf=%s&aip=1",
-                    urlEncodeWithUtf8("SoapUI-pro"), urlEncodeWithUtf8(getSoapUIVersion()), "undefined",
+                    urlEncodeWithUtf8(SoapUI_REVISION), urlEncodeWithUtf8(getSoapUIVersion()), "undefined",
                     GA_ID, getMacAddressString(),
                     urlEncodeWithUtf8(error.getLocalizedMessage()),
                     "0" // Unable to determine if an exception was handled correctly or not
             );
-            sendRecord(errorParametersString);
+            sendRecord(GA_URL, errorParametersString);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,7 +71,7 @@ public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
 
     String buildParametersString(ActionDescription actionDescription) throws SocketException, UnknownHostException {
         String gaParametersString = String.format("v=1&an=%s&av=%s&cd=%s&tid=%s&cid=%s&t=event&ec=%s&ea=%s&el=%s&ev=1&sr=%s&cm1=%s&aip=1",
-                urlEncodeWithUtf8("SoapUI-pro"), urlEncodeWithUtf8(getSoapUIVersion()), "undefined",
+                urlEncodeWithUtf8(SoapUI_REVISION), urlEncodeWithUtf8(getSoapUIVersion()), "undefined",
                 GA_ID, getMacAddressString(),
                 urlEncodeWithUtf8(getEventCategory(actionDescription)),
                 urlEncodeWithUtf8(getEventAction(actionDescription)),
@@ -80,7 +83,7 @@ public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
         switch (actionDescription.getCategory()) {
             case SESSION_START:
                 gaParametersString += "&sc=start&ua=" +
-                        urlEncodeWithUtf8("SoapUI-pro/" + getSoapUIVersion() + " (" + getOsName() + " " + getOsVersion() + ")");
+                        urlEncodeWithUtf8(SoapUI_REVISION + "/" + getSoapUIVersion() + " (" + getOsName() + " " + getOsVersion() + ")");
                 break;
 
             case SESSION_STOP:
@@ -105,39 +108,6 @@ public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
         }
     }
 
-    private HttpURLConnection initializeConnection() {
-
-        HttpURLConnection connection;
-
-        try {
-            URL url = new URL("http://www.google-analytics.com/collect");
-            String host = SoapUI.getSettings().getString(ProxySettings.HOST, "");
-            int port = 0;
-
-            try {
-                port = Integer.parseInt(SoapUI.getSettings().getString(ProxySettings.PORT, "0"));
-            } catch (NumberFormatException ex) {
-            }
-
-            if (SoapUI.getSettings().getBoolean(ProxySettings.ENABLE_PROXY, false) && host.compareTo("") != 0 && port != 0) {
-                SocketAddress sa = new InetSocketAddress(host, port);
-                Proxy proxy = new Proxy(Proxy.Type.HTTP, sa);
-                connection = (HttpURLConnection) url.openConnection(proxy);
-            } else {
-                connection = (HttpURLConnection) url.openConnection();
-            }
-
-            connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-
-            return connection;
-        } catch (Exception e) {
-            e.printStackTrace();
-
-            return null;
-        }
-    }
-
     public void trackActiveScreen(String screenName) {
         String gaParametersString;
         try {
@@ -148,53 +118,15 @@ public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
                 sb.append(String.format("%d", mac[i]));
             }
             gaParametersString = String.format("v=1&an=%s&av=%s&cd=%s&tid=%s&cid=%s&t=screenview&cd=%s&sr=%s",
-                    urlEncodeWithUtf8("SoapUI-pro"), urlEncodeWithUtf8(getSoapUIVersion()), "undefined",
+                    urlEncodeWithUtf8(SoapUI_REVISION), urlEncodeWithUtf8(getSoapUIVersion()), "undefined",
                     GA_ID, sb.toString(), urlEncodeWithUtf8(screenName),
                     getStrScreenSize()
             );
 
-            sendRecord(gaParametersString);
+            sendRecord(GA_URL, gaParametersString);
         } catch (Exception e) {
             e.printStackTrace();
             return;
-        }
-    }
-
-    private boolean sendRecord(String parameters) {
-
-        if (parameters == null) {
-            return false;
-        }
-
-        HttpURLConnection connection = initializeConnection();
-        if (connection == null) {
-            return false;
-        }
-
-        try {
-            DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
-            wr.writeBytes(parameters);
-            wr.flush();
-            wr.close();
-
-            int responseCode = connection.getResponseCode();
-            return responseCode == 200;
-            /* This code usefull for debugging. Do not delete
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(connection.getInputStream()));
-            String inputLine;
-            StringBuffer response = new StringBuffer();
-
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-
-            return true;
-            //*/
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
     }
 

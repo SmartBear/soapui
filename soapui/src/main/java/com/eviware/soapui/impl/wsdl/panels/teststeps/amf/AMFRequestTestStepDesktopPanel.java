@@ -432,6 +432,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
                 if (!updating) {
                     amfRequestTestStep.setAmfCall(amfCallField.getText());
                 }
+                submitButton.setEnabled(enableSubmit());
             }
         });
     }
@@ -443,6 +444,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
                 if (!updating) {
                     amfRequestTestStep.setEndpoint(endpointField.getText());
                 }
+                submitButton.setEnabled(enableSubmit());
             }
         });
     }
@@ -888,7 +890,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             responseEditor.setEnabled(enabled);
         }
 
-        submitButton.setEnabled(enabled);
+        submitButton.setEnabled(enabled && enableSubmit());
         addAssertionButton.setEnabled(enabled);
         propertiesTableComponent.setEnabled(enabled);
         groovyEditor.setEnabled(enabled);

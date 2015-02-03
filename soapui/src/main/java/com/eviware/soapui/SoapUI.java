@@ -24,6 +24,8 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
+import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
@@ -70,7 +72,6 @@ import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -649,6 +650,13 @@ public class SoapUI {
 
     private static final class SoapUIRunner implements Runnable {
         public void run() {
+            boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+            SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
+            if (!isDebug && SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
+                updateProvider.start();
+            }
+
             addStandardPreferencesShortcutOnMac();
             boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
             Properties props = new Properties();
@@ -670,15 +678,6 @@ public class SoapUI {
                             showStarterPage();
                         }
                     });
-                }
-
-                if (isAutoUpdateVersion()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SoapUIVersionUpdate().checkForNewVersion(false);
-                        }
-                    }).start();
                 }
 
                 startCajoServerIfNotOverriddenBySetting();
@@ -802,7 +801,7 @@ public class SoapUI {
         isStandalone = true;
         soapUICore = core;
 
-        AnalyticHelper.InitializeAnalytics();
+        AnalyticsHelper.InitializeAnalytics();
         Analytics.trackSessionStart();
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
@@ -859,10 +858,12 @@ public class SoapUI {
             }
         }
 
-        if(workspace.isSupportInformationDialog()) {
-            CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
-            collector.show();
-            workspace.setSupportInformationDialog(false);
+        if (SoapUI.usingGraphicalEnvironment()) {
+            if (workspace.isSupportInformationDialog()) {
+                CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+                collector.show();
+                workspace.setSupportInformationDialog(false);
+            }
         }
         return soapUI;
     }
