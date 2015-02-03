@@ -50,7 +50,7 @@ public class MockAsWar {
 
     private static final String SOAPUI_HOME = "soapui.home";
     private static final String SOAPUI_BIN_FOLDER = ".bin";
-    private static final String SOAPUI_LIB_FOLDER = "..lib";
+    private static final String SOAPUI_LIB_FOLDER = ".." + File.separator + "lib";
 
     protected File projectFile;
     protected File settingsFile;
