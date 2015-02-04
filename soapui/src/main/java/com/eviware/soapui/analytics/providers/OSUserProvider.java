@@ -17,7 +17,7 @@ import java.net.URL;
  * Created by avdeev on 02.02.2015.
  */
 public class OSUserProvider extends BaseAnalyticsProvider implements UserInfoProvider{
-    final private static String ANALYTICS_SERVER_URL = "http://www.analytics.smartbear.com";//TODO: ввести корректные данные
+    final private static String ANALYTICS_SERVER_URL = "http://23.23.201.141";
 
     @Override
     public void trackUserInfo(OSUserDescription osUserDescription) {
