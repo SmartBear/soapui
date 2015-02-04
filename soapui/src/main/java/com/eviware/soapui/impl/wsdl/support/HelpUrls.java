@@ -25,6 +25,7 @@ public interface HelpUrls {
     // buildInterfaceOverviewTab() section operations
 
     public static final String SMARTBEAR_WEB_SITE_START_PAGE = "http://www.smartbear.com";
+    public static final String SMARTBEAR_PRIVACY_POLICY_URL = "http://www.soapui.org/Store-Info/privacy-policy.html";
 
     public static final String ADDMOCKOPERATIONASMOCKRESPONSESTEP_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
     public static final String ADDMOCKRESPONSETOTESTCASE_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
