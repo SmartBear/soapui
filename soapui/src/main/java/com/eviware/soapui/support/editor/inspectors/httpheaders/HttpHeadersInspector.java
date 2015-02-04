@@ -82,7 +82,7 @@ public class HttpHeadersInspector extends AbstractXmlInspector implements Proper
             removeButton = UISupport.createToolbarButton(new RemoveAction());
             builder.addFixed(removeButton);
             builder.addGlue();
-            String helpUrl = model instanceof HasHelpUrl ? ((HasHelpUrl) model).getHelpUrl() : HelpUrls.HEADERS_HELP_URL;
+            String helpUrl = model instanceof HasHelpUrl ? ((HasHelpUrl) model).getHelpUrl() : HelpUrls.HTTP_REQUEST_HEADERS_HELP_URL;
             builder.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(helpUrl)));
 
             panel.add(builder, BorderLayout.NORTH);
