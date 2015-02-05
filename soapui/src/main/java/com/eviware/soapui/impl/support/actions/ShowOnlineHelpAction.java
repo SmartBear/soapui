@@ -25,6 +25,7 @@ import javax.swing.KeyStroke;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 
 /**
  * Shows an online help page
@@ -34,6 +35,7 @@ import com.eviware.soapui.support.UISupport;
 
 public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMarker {
     private final String url;
+    private String helpurl;
 
     public ShowOnlineHelpAction(String url) {
         this("Online Help", url, UISupport.getKeyStroke("F1"));
@@ -74,7 +76,20 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
         if (url == null) {
             UISupport.showErrorMessage("Missing help URL");
         } else {
-            Tools.openURL(url);
+            // External Help Site
+            if (url.substring(0, 4).equals("http") ) {
+                // External Link - don't modify
+                helpurl = url;
+            } else {
+                if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) {
+                    // Dev Help Site
+                    helpurl = HelpUrls.BASE_URL_DEV + url;
+                } else {
+                    // Production Help Site
+                    helpurl = HelpUrls.BASE_URL_PROD + url;
+                }
+            }
+            Tools.openURL(helpurl);
         }
     }
 }
