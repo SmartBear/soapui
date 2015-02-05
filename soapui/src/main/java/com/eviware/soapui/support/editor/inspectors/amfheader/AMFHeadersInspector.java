@@ -87,7 +87,7 @@ public class AMFHeadersInspector extends AbstractXmlInspector implements Propert
             removeButton = UISupport.createToolbarButton(new RemoveAction());
             builder.addFixed(removeButton);
             builder.addGlue();
-            builder.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.HEADERS_HELP_URL)));
+            builder.addFixed(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.AMF_REQUEST_HEADERS_HELP_URL)));
 
             panel.add(builder, BorderLayout.NORTH);
 

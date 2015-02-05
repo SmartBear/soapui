@@ -30,6 +30,7 @@ public interface HelpUrls {
     public static final String ADD_ASSERTION_PANEL = "http://www.soapui.org/Assertions/assertion-editor.html";
     public static final String ADD_AUTHORIZATION = "http://www.soapui.org/OAuth/add-authorization.html";
     public static final String ALERT_SITE_HELP_URL = "http://help.alertsite.com/WebHome";
+    public static final String AMF_REQUEST_HEADERS_HELP_URL = "http://www.soapui.org/amf/reference/the-amf-request-window.html";
     public static final String API_TESTING_DOJO_HELP_URL = "http://www.soapui.org/dojo/overview.html";
     public static final String ATTACHMENTS_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/adding-headers-and-attachments.html";
     public static final String AUTHORIZATION = "http://www.soapui.org/OAuth/authorization.html";
@@ -47,7 +48,6 @@ public interface HelpUrls {
     public static final String CLONETESTSTEP_HELP_URL = "http://www.soapui.org/Functional-Testing/testcase-editor.html";
     public static final String CLONETESTSUITE_HELP_URL = "http://www.soapui.org/Functional-Testing/structuring-and-running-tests.html";
     public static final String CREATEMOCKRESPONSESTEP_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
-    public static final String CREATEWADLDOC_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
     public static final String CRYPTOSWSS_HELP_URL = "http://www.soapui.org/Working-with-Projects/ws-security.html";
     public static final String CXFWSDL2JAVA_HELP_URL = "http://cwiki.apache.org/CXF20DOC/wsdl-to-java.html";
 
@@ -71,7 +71,9 @@ public interface HelpUrls {
     public static final String GROOVYSTEPEDITOR_HELP_URL = "http://www.soapui.org/functional-testing/working-with-scripts.html";
     public static final String GSOAP_HELP_URL = "http://www.cs.fsu.edu/~engelen/soap.html";
 
-    public static final String HEADERS_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/custom-http-headers.html";
+    public static final String HTTP_REQUEST_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/http-request/http-request.html";
+    public static final String HTTP_REQUEST_PARAMS_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/http-request/parameters.html";
+    public static final String HTTP_REQUEST_HEADERS_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/http-request/headers.html";
 
     public static final String INCOMINGWSS_HELP_URL = "http://www.soapui.org/Working-with-Projects/ws-security.html";
     public static final String INTERFACE_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/working-with-wsdls.html";
@@ -101,6 +103,7 @@ public interface HelpUrls {
     public static final String NEWRESTPROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/getting-started.html";
     public static final String NEWRESTSERVICE_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
     public static final String NEW_WADL_PROJECT_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
+    public static final String CREATEWADLDOC_HELP_URL = "http://www.soapui.org/REST-Testing/working-with-rest-services.html";
 
     public static final String OAUTH_ACCESS_TOKEN_FROM_SERVER = "http://www.soapui.org/OAuth/access-token-from-server.html";
     public static final String OAUTH_ACCESS_TOKEN_RETRIEVAL = "http://www.soapui.org/OAuth/access-token-retrieval.html";
@@ -167,7 +170,7 @@ public interface HelpUrls {
     public static final String USERGUIDE_HELP_URL = "http://www.soapui.org/getting-started/help-in-soapui/help-in-soapui.html";
 
     public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
-    public static final String WADL_PARAMS_HELP_URL = "http://www.soapui.org/REST-Testing/understanding-rest-parameters.html";
+    public static final String WADL_PARAMS_HELP_URL = "http://www.soapui.org/rest-testing/rest-resources-and-methods.html";
     public static final String WSCOMPILE_HELP_URL = "http://java.sun.com/webservices/docs/2.0/jaxrpc/jaxrpc-tools.html#wp80809";
     public static final String WSDL_CONTENT_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/working-with-wsdls.html";
     public static final String WSIMPORT_HELP_URL = "http://java.sun.com/webservices/docs/2.0/jaxws/wsimport.html";
