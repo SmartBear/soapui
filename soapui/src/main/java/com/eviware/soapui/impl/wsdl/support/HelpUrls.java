@@ -71,9 +71,9 @@ public interface HelpUrls {
     public static final String GROOVYSTEPEDITOR_HELP_URL = "http://www.soapui.org/functional-testing/working-with-scripts.html";
     public static final String GSOAP_HELP_URL = "http://www.cs.fsu.edu/~engelen/soap.html";
 
-    public static final String HTTP_REQUEST_HELP_URL = "http://www.soapui.org/rest-testing/working-with-rest-requests.html";
-    public static final String HTTP_REQUEST_PARAMS_HELP_URL = "http://www.soapui.org/rest-testing/working-with-rest-requests.html";
-    public static final String HTTP_REQUEST_HEADERS_HELP_URL = "http://www.soapui.org/soap-and-wsdl/headers-and-attachments.html";
+    public static final String HTTP_REQUEST_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/http-request/http-request.html";
+    public static final String HTTP_REQUEST_PARAMS_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/http-request/parameters.html";
+    public static final String HTTP_REQUEST_HEADERS_HELP_URL = "http://www.soapui.org/functional-testing/teststep-reference/http-request/headers.html";
 
     public static final String INCOMINGWSS_HELP_URL = "http://www.soapui.org/Working-with-Projects/ws-security.html";
     public static final String INTERFACE_HELP_URL = "http://www.soapui.org/SOAP-and-WSDL/working-with-wsdls.html";
