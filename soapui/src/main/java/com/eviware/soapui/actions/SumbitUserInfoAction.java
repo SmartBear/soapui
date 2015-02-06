@@ -19,15 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Created by SmartBear company.
- */
-public class CollectInfoAboutUserForSupportAction {
+public class SumbitUserInfoAction {
     private static final String FIRST_NAME = "First name";
     private static final String LAST_NAME = "Last name";
     private static final String WORK_EMAIL = "Work email";
 
-    public CollectInfoAboutUserForSupportAction() {
+    public SumbitUserInfoAction() {
 
     }
 
@@ -102,7 +99,7 @@ public class CollectInfoAboutUserForSupportAction {
 
         @Override
         protected boolean handleOk() {
-            if (!verifyFormValues()) {
+            if (!validateFormValues()) {
                 return false;
             }
             Analytics.trackOSUser(form.getComponentValue(FIRST_NAME), form.getComponentValue(LAST_NAME), form.getComponentValue(WORK_EMAIL));
@@ -110,7 +107,7 @@ public class CollectInfoAboutUserForSupportAction {
         }
 
 
-        private boolean verifyFormValues() {
+        private boolean validateFormValues() {
             List<String> fieldErrors = new ArrayList<String>();
             if (StringUtils.isNullOrEmpty(form.getComponentValue(FIRST_NAME)) ||
                     StringUtils.isNullOrEmpty(form.getComponentValue(LAST_NAME))) {

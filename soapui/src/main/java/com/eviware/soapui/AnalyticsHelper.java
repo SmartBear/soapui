@@ -41,7 +41,6 @@ public class AnalyticsHelper {
         isInitialize = true;
         AnalyticsManager manager = Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
-        //We send non-anonymous (license) data to Keen IO anyway, even if user has opted out
         manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
         if (analyticsDisabled()) {
             return;
