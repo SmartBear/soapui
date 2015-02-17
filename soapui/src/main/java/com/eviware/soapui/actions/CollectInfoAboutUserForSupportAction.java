@@ -59,15 +59,30 @@ public class CollectInfoAboutUserForSupportAction {
         public CollectUserInfoDialog() {
             super(UISupport.getMainFrame(), DIALOG_CAPTION, true);
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            setResizable(false);
+            setUndecorated(true);
             setModal(true);
             setSize(430, 265);
             setBackground(Color.WHITE);
+
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
+            jBasePanel.setBorder(new LineBorder(new Color(170,170, 170), 2));
             setBackgroundColor(jBasePanel);
             this.add(jBasePanel);
 
-            jBasePanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, DIALOG_DESCRIPTION), BorderLayout.NORTH);
-            jBasePanel.add(buildControlsPanel());
+            JPanel jBaseUserPanel = new JPanel(new BorderLayout(5, 5));
+            setBackgroundColor(jBaseUserPanel);
+
+            JLabel jCaption = new JLabel("  Stay Tuned!");
+            jCaption.setOpaque(true);
+            jCaption.setPreferredSize(new Dimension(1000, 25));
+            jCaption.setBackground(new Color(166, 192, 229));
+
+            jBaseUserPanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, DIALOG_DESCRIPTION), BorderLayout.NORTH);
+            jBaseUserPanel.add(buildControlsPanel());
+
+            jBasePanel.add(jCaption, BorderLayout.NORTH);
+            jBasePanel.add(jBaseUserPanel);
 
             validEmailRegex = Pattern.compile(VALID_EMAIL_PATTERN);
         }
