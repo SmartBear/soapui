@@ -211,7 +211,7 @@ public class CollectInfoAboutUserForSupportAction {
             if (!verifyFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(getUserName(), "", getUserEMail());
+            Analytics.trackOSUser(getUserName(), getUserName(), getUserEMail());
             return true;
         }
 
