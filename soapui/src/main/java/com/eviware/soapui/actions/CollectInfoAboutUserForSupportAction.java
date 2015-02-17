@@ -58,6 +58,7 @@ public class CollectInfoAboutUserForSupportAction {
 
         public CollectUserInfoDialog() {
             super(UISupport.getMainFrame(), DIALOG_CAPTION, true);
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
             setModal(true);
             setSize(430, 265);
             setBackground(Color.WHITE);
@@ -73,7 +74,7 @@ public class CollectInfoAboutUserForSupportAction {
 
         private JPanel buildCaptionPanel(String titleStr, String descriptionStr) {
             JPanel jRoot = new JPanel(new BorderLayout());
-            jRoot.setBorder(new EmptyBorder(10, 25, 0, 25));
+            jRoot.setBorder(new EmptyBorder(10, 30, 0, 25));
             setBackgroundColor(jRoot);
             title = new JLabel();
             setBackgroundColor(title);
@@ -92,12 +93,25 @@ public class CollectInfoAboutUserForSupportAction {
         }
 
         private JPanel buildControlsPanel() {
+            JPanel jbase = new JPanel(new BorderLayout());
+
+            JPanel jLeftPanel = new JPanel();
+            jLeftPanel.setLayout(new BorderLayout());
+            jLeftPanel.setBorder(new EmptyBorder(0, 0, 25, 0));
+            JLabel arrowIcon = new JLabel(UISupport.createImageIcon("/big_arrow.png"));
+            jLeftPanel.add(arrowIcon, BorderLayout.SOUTH);
+            setBackgroundColor(jLeftPanel);
+
             JPanel jControlsPanel = new JPanel(new BorderLayout());
-            jControlsPanel.setBorder(new EmptyBorder(5, 35, 10, 35));
+            jControlsPanel.setBorder(new EmptyBorder(5, 2, 10, 35));
             setBackgroundColor(jControlsPanel);
             jControlsPanel.add(buildButtonsPanel(), BorderLayout.SOUTH);
             jControlsPanel.add(buildUserInfoPanel());
-            return jControlsPanel;
+
+            jbase.add(jLeftPanel, BorderLayout.WEST);
+            jbase.add(jControlsPanel);
+
+            return jbase;
         }
 
         private JPanel buildUserInfoPanel() {
@@ -128,8 +142,9 @@ public class CollectInfoAboutUserForSupportAction {
             jOkBtn.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (handleOk())
+                    if (handleOk()) {
                         setVisible(false);
+                    }
                 }
             });
 
