@@ -152,6 +152,7 @@ public class CollectInfoAboutUserForSupportAction {
             JButton jOkBtn = new JButton(OK_BTN_CAPTION);
             jOkBtn.setBorder(new LineBorder(new Color(200, 200, 200), 1));
             jOkBtn.setBackground(new Color(157, 200, 130));
+            jOkBtn.setOpaque(true);
             jOkBtn.setForeground(Color.WHITE);
             jOkBtn.setPreferredSize(new Dimension(300, 24));
             jOkBtn.addActionListener(new ActionListener() {
@@ -171,6 +172,10 @@ public class CollectInfoAboutUserForSupportAction {
             JButton jSkip = new JButton(SKIP_BTN_CAPTION);
             jSkip.setBorder(new LineBorder(new Color(170, 170, 170), 1));
             jSkip.setForeground(new Color(170, 170, 170));
+            if (UISupport.isMac()) {
+                jSkip.setBackground(new Color(236, 236, 236));
+            }
+            jSkip.setOpaque(true);
             jSkip.setPreferredSize(new Dimension(60, 20));
             jSkip.addActionListener(new ActionListener() {
                 @Override
