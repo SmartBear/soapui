@@ -23,6 +23,8 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
 
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -32,6 +34,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+
 
 public abstract class SimpleDialog extends JDialog {
     protected JButtonBar buttons = null;
@@ -45,7 +48,7 @@ public abstract class SimpleDialog extends JDialog {
         super(UISupport.getMainFrame(), title, true);
         this.title = title;
         this.description = description;
-        this.helpUrl = helpUrl;
+        this.helpUrl = HelpUrls.STAY_TUNED;
         this.okAndCancel = okAndCancel;
     }
 
