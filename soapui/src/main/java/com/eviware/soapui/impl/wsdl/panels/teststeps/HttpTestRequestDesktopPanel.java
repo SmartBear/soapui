@@ -139,7 +139,7 @@ public class HttpTestRequestDesktopPanel extends
 
     @Override
     protected String getHelpUrl() {
-        return HelpUrls.TESTREQUESTEDITOR_HELP_URL;
+        return HelpUrls.HTTP_REQUEST_HELP_URL;
     }
 
     @Override
