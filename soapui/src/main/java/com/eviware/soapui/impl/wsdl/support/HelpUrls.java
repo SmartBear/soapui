@@ -40,7 +40,6 @@ public interface HelpUrls {
 
     public static final String THIRD_PARTY_LICENSE_INFO = "/developers-corner/3rd.html";
 
-
     public static final String SMARTBEAR_WEB_SITE_START_PAGE = "http://www.smartbear.com";
     public static final String SMARTBEAR_PRIVACY_POLICY_URL = "/Store-Info/privacy-policy.html";
 
@@ -78,7 +77,7 @@ public interface HelpUrls {
 
     public static final String ENDPOINTSEDITOR_HELP_URL = "/SOAP-and-WSDL/working-with-wsdls.html";
 
-    public static final String FORUMS_HELP_URL = "http://forum.soapui.org/";
+    public static final String FORUMS_HELP_URL = "http://community.smartbear.com/";
     public static final String FUNCTIONAL_TESTING_SETUP_SCRIPT = "/functional-testing/working-with-scripts.html";
     public static final String FUNCTIONAL_TESTING_TEARDOWN_SCRIPT = "/functional-testing/working-with-scripts.html";
 
