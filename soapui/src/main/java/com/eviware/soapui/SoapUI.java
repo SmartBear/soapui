@@ -16,6 +16,7 @@
 
 package com.eviware.soapui;
 
+import com.eviware.soapui.actions.CollectInfoAboutUserForSupportAction;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
@@ -23,6 +24,8 @@ import com.eviware.soapui.actions.StartHermesJMSButtonAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
+import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
@@ -69,7 +72,6 @@ import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -446,11 +448,12 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/favicon.png"));
+        helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
+                "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
+        helpMenu.add(new OpenUrlAction("Privacy Policy", HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
-        helpMenu.add(new OpenUrlAction("smartbear.com", "http://smartbear.com"));
+        helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new AboutAction());
         return helpMenu;
@@ -648,6 +651,13 @@ public class SoapUI {
 
     private static final class SoapUIRunner implements Runnable {
         public void run() {
+            boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+            SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
+            if (!isDebug && SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
+                updateProvider.start();
+            }
+
             addStandardPreferencesShortcutOnMac();
             boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
             Properties props = new Properties();
@@ -669,15 +679,6 @@ public class SoapUI {
                             showStarterPage();
                         }
                     });
-                }
-
-                if (isAutoUpdateVersion()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SoapUIVersionUpdate().checkForNewVersion(false);
-                        }
-                    }).start();
                 }
 
                 startCajoServerIfNotOverriddenBySetting();
@@ -774,12 +775,6 @@ public class SoapUI {
     }
 
     public static void main(String[] args) throws Exception {
-        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
-                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-        if (isDebug) {
-            Analytics.trackAction("DebuggingMode");
-        }
-
         WebstartUtilCore.init();
 
         mainArgs = args;
@@ -806,6 +801,14 @@ public class SoapUI {
 
         isStandalone = true;
         soapUICore = core;
+
+        AnalyticsHelper.InitializeAnalytics();
+        Analytics.trackSessionStart();
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        if (isDebug) {
+            Analytics.trackAction("DebuggingMode");
+        }
 
         SoapUI soapUI = new SoapUI();
         Workspace workspace = null;
@@ -853,6 +856,14 @@ public class SoapUI {
                     SwingUtilities.invokeLater(new RestProjectCreator(url));
                 } catch (Exception ignore) {
                 }
+            }
+        }
+
+        if (SoapUI.usingGraphicalEnvironment()) {
+            if (workspace.isSupportInformationDialog()) {
+                CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+                collector.show();
+                workspace.setSupportInformationDialog(false);
             }
         }
         return soapUI;
@@ -1241,7 +1252,7 @@ public class SoapUI {
     }
 
     private static class AboutAction extends AbstractAction {
-        private static final String COPYRIGHT = "2004-2014 smartbear.com";
+        private static final String COPYRIGHT = "2004-2015 smartbear.com";
         private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
         private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
 

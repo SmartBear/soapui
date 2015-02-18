@@ -347,7 +347,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         JPopupMenu popup = textField.getPopupMenu();
 
         if (popup != null) {
-            PropertyExpansionPopupListener.addMenu(popup, "Get Data..", target.getContextModelItem(), target);
+            PropertyExpansionPopupListener.addMenu(popup, "Get Data...", target.getContextModelItem(), target);
         }
     }
 
@@ -359,7 +359,7 @@ public class PropertyExpansionPopupListener implements PopupMenuListener {
         JPopupMenu popup = groovyEditor.getEditArea().getComponentPopupMenu();
 
         if (popup != null) {
-            ScrollableMenu menu = new ScrollableMenu("Get Data..");
+            ScrollableMenu menu = new ScrollableMenu("Get Data...");
             popup.insert(menu, 0);
             popup.addPopupMenuListener(new PropertyExpansionPopupListener(menu, target.getContextModelItem(), target));
             popup.insert(new JSeparator(), 1);

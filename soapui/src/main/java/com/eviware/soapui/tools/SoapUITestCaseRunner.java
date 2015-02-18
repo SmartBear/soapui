@@ -16,19 +16,9 @@
 
 package com.eviware.soapui.tools;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.cli.CommandLine;
-
+import com.eviware.soapui.AnalyticsHelper;
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
@@ -57,7 +47,6 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.model.testsuite.TestSuite;
-import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.model.testsuite.TestSuiteRunner;
 import com.eviware.soapui.report.JUnitReportCollector;
 import com.eviware.soapui.report.JUnitSecurityReportCollector;
@@ -65,6 +54,17 @@ import com.eviware.soapui.report.TestCaseRunLogReport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.types.StringToObjectMap;
+import org.apache.commons.cli.CommandLine;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Standalone test-runner used from maven-plugin, can also be used from
@@ -114,6 +114,8 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
      */
 
     public static void main(String[] args) throws Exception {
+        AnalyticsHelper.InitializeAnalytics();
+        Analytics.trackSessionStart();
         System.exit(new SoapUITestCaseRunner().runFromCommandLine(args));
     }
 

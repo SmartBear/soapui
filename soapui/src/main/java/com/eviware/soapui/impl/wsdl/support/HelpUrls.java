@@ -21,8 +21,9 @@ package com.eviware.soapui.impl.wsdl.support;
  * @author ole.matzura
  */
 public interface HelpUrls {
-    // TODO option for adding help URl to page section, see
-    // buildInterfaceOverviewTab() section operations
+
+    public static final String SMARTBEAR_WEB_SITE_START_PAGE = "http://www.smartbear.com";
+    public static final String SMARTBEAR_PRIVACY_POLICY_URL = "http://www.soapui.org/Store-Info/privacy-policy.html";
 
     public static final String ADDMOCKOPERATIONASMOCKRESPONSESTEP_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
     public static final String ADDMOCKRESPONSETOTESTCASE_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
@@ -153,6 +154,7 @@ public interface HelpUrls {
     public static final String STEP_TPS_LOAD_TEST_ASSERTION_HELP_URL = "http://www.soapui.org/load-testing/reference/assertion.html";
 
     public static final String TCPMON_HELP_URL = "http://ws.apache.org/commons/tcpmon/";
+    public static final String TEST_AMF_REQUEST_EDITOR_HELP_URL = "http://www.soapui.org/amf/getting-started.html";
     public static final String TESTCASEEDITOR_HELP_URL = "http://www.soapui.org/functional-testing/structuring-and-running-tests.html";
     public static final String TESTCASEOPTIONS_HELP_URL = "http://www.soapui.org/functional-testing/reference/testcase-window.html";
     public static final String TESTREQUESTEDITOR_HELP_URL = "http://www.soapui.org/soap-and-wsdl/reference/request-interface.html";
