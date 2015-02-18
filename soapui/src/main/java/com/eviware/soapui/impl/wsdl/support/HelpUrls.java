@@ -15,12 +15,31 @@
 */
 package com.eviware.soapui.impl.wsdl.support;
 
+import com.eviware.soapui.SoapUI;
+
+import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
+
 /**
  * Help URLS in SoapUI documentation
  *
  * @author ole.matzura
  */
 public interface HelpUrls {
+
+
+    /*
+    Help Sites
+    */
+    public static final String BASE_URL_PROD = "http://www.soapui.org/";
+
+    public static final String BASE_URL_DEV = "http://dev.soapuidocs.sthlm.smartbear.local/";
+
+    public static final String BASE_URL_NEXT = "http://next.soapuidocs.sthlm.smartbear.local/";
+
+    public static final String MISSING_URL = "http://www.soapui.org/missing-url.html";
+
+    public static final String THIRD_PARTY_LICENSE_INFO = "http://www.soapui.org/developers-corner/3rd.html";
+
 
     public static final String SMARTBEAR_WEB_SITE_START_PAGE = "http://www.smartbear.com";
     public static final String SMARTBEAR_PRIVACY_POLICY_URL = "http://www.soapui.org/Store-Info/privacy-policy.html";
@@ -187,4 +206,7 @@ public interface HelpUrls {
     public static final String XQUERYASSERTIONEDITOR_HELP_URL = "http://www.soapui.org/functional-testing/validating-messages/validating-xml-messages.html";
 
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "http://www.soapui.org/REST-Discovery/api-with-internal-browser.html";
+    String SOAPUI_WELCOME_PAGE = "http://www.soapui.org/Downloads/thank-you-for-downloading-soapui.html";
+    String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
+            + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
 }

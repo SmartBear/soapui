@@ -191,11 +191,8 @@ public class SoapUI {
     private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
     private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-    public static final String SOAPUI_WELCOME_PAGE = "http://www.soapui.org/Downloads/thank-you-for-downloading-soapui.html";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
-    public static String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
-            + urlEncodeWithUtf8(SOAPUI_VERSION);
     public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 
     public static String STARTER_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".")
@@ -683,7 +680,7 @@ public class SoapUI {
 
                 startCajoServerIfNotOverriddenBySetting();
                 if (isFirstLaunch) {
-                    Tools.openURL(SOAPUI_WELCOME_PAGE);
+                    Tools.openURL(HelpUrls.SOAPUI_WELCOME_PAGE);
                 }
 
                 if (isCommandLine()) {
@@ -1248,7 +1245,7 @@ public class SoapUI {
         }
 
         UISupport.showDesktopPanel(starterPageDesktopPanel);
-        starterPageDesktopPanel.navigate(STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
+        starterPageDesktopPanel.navigate(HelpUrls.STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
     }
 
     private static class AboutAction extends AbstractAction {

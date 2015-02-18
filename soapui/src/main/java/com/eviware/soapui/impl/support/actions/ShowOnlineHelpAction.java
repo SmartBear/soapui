@@ -73,23 +73,9 @@ public class ShowOnlineHelpAction extends AbstractAction implements HelpActionMa
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (url == null) {
-            UISupport.showErrorMessage("Missing help URL");
-        } else {
-            // External Help Site
-            if (url.substring(0, 4).equals("http") ) {
-                // External Link - don't modify
-                helpurl = url;
-            } else {
-                if ((e.getModifiers() & ActionEvent.SHIFT_MASK) == ActionEvent.SHIFT_MASK) {
-                    // Dev Help Site
-                    helpurl = HelpUrls.BASE_URL_DEV + url;
-                } else {
-                    // Production Help Site
-                    helpurl = HelpUrls.BASE_URL_PROD + url;
-                }
-            }
-            Tools.openURL(helpurl);
-        }
+
+        Integer mods = e.getModifiers();
+        String helpUrl = Tools.modifyUrl (url, mods);
+        Tools.openURL(helpUrl);
     }
 }
