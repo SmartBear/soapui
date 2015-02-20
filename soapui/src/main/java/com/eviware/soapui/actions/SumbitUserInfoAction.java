@@ -20,8 +20,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class SumbitUserInfoAction {
-    private static final String FIRST_NAME = "First name";
-    private static final String LAST_NAME = "Last name";
+    private static final String NAME = "Name";
     private static final String WORK_EMAIL = "Work email";
 
     public SumbitUserInfoAction() {
@@ -87,8 +86,7 @@ public class SumbitUserInfoAction {
         @Override
         protected Component buildContent() {
             form = new SimpleForm();
-            form.appendTextField(FIRST_NAME, "Your first name");
-            form.appendTextField(LAST_NAME, "Your last name");
+            form.appendTextField(NAME, "Name");
             form.appendTextField(WORK_EMAIL, "Your email at work. We will send you an email and ask you to verify it.");
 
             JPanel wrapperPanel = new JPanel(new BorderLayout());
@@ -102,15 +100,14 @@ public class SumbitUserInfoAction {
             if (!validateFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(form.getComponentValue(FIRST_NAME), form.getComponentValue(LAST_NAME), form.getComponentValue(WORK_EMAIL));
+            Analytics.trackOSUser(form.getComponentValue(NAME), form.getComponentValue(WORK_EMAIL));
             return true;
         }
 
 
         private boolean validateFormValues() {
             List<String> fieldErrors = new ArrayList<String>();
-            if (StringUtils.isNullOrEmpty(form.getComponentValue(FIRST_NAME)) ||
-                    StringUtils.isNullOrEmpty(form.getComponentValue(LAST_NAME))) {
+            if (StringUtils.isNullOrEmpty(form.getComponentValue(NAME))) {
                 fieldErrors.add("your name");
             }
             if (!isValidEmailAddress(form.getComponentValue(WORK_EMAIL))) {
