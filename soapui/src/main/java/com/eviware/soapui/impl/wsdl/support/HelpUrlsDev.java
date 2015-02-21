@@ -68,7 +68,7 @@ public interface HelpUrlsDev {
     public static final String CLONETESTSUITE_HELP_URL = "/functional_testing/structuring_and_running_tests";
     public static final String CREATEMOCKRESPONSESTEP_HELP_URL = "/service_mocking/mocking_soap_services";
     public static final String CRYPTOSWSS_HELP_URL = "/working_with_projects/ws_security";
-    public static final String CXFWSDL2JAVA_HELP_URL = "http://cwiki.apache.org/cxf20doc/wsdl_to_java.html";
+    public static final String CXFWSDL2JAVA_HELP_URL = "http://cxf.apache.org/docs/wsdl-to-java.html";
 
     public static final String DEBUGGING_ASSERTION_TEST_STEP = "/functional_testing/assertion_test_step";
     public static final String DEBUGGING_ENVIRONMENT_HANDLING = "/environments/environment_handling_in_soapui";
@@ -190,7 +190,7 @@ public interface HelpUrlsDev {
     public static final String UPDATE_INTERFACE_HELP_URL = "/soap_and_wsdl/wsdl_refactoring";
     public static final String USERGUIDE_HELP_URL = "/getting_started/help_in_soapui/help_in_soapui";
 
-    public static final String WADL2JAVA_HELP_URL = "https://wadl.dev.java.net/wadl2java.html";
+    public static final String WADL2JAVA_HELP_URL = "https://wadl.java.net/wadl2java.html";
     public static final String WADL_PARAMS_HELP_URL = "/rest_testing/rest_resources_and_methods";
     public static final String WSCOMPILE_HELP_URL = "http://java.sun.com/webservices/docs/2.0/jaxrpc/jaxrpc_tools.html#wp80809";
     public static final String WSDL_CONTENT_HELP_URL = "/soap_and_wsdl/working_with_wsdls";

@@ -38,6 +38,7 @@ public class HelpUrlChecker {
                 }
 
 
+
             }
 //            Thread.sleep(2000);
         }
