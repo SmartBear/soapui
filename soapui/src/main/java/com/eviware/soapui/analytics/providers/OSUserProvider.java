@@ -1,17 +1,9 @@
 package com.eviware.soapui.analytics.providers;
 
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.ActionDescription;
 import com.eviware.soapui.analytics.OSUserDescription;
 import com.eviware.soapui.analytics.UserInfoProvider;
-import com.eviware.soapui.settings.ProxySettings;
-
-import java.io.DataOutputStream;
-import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.net.SocketAddress;
-import java.net.URL;
+import com.eviware.soapui.impl.support.HttpUtils;
 
 /**
  * Created by avdeev on 02.02.2015.
@@ -35,6 +27,6 @@ public class OSUserProvider extends BaseAnalyticsProvider implements UserInfoPro
         sb.append(osUserDescription.getName());
         sb.append("&email=");
         sb.append(osUserDescription.getEmail());
-        return sb.toString();
+        return HttpUtils.urlEncodeWithUtf8(sb.toString());
     }
 }
