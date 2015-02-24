@@ -24,9 +24,9 @@ public class CollectInfoAboutUserForSupportAction {
     private static final String NAME_HINT = "Enter your name *";
     private static final String EMAIL_HINT = "Enter e-mail *";
     private static final String DIALOG_CAPTION = "Stay Tuned!";
-    private static final String DIALOG_MAIN_TEXT = "??? What should be here ???";
-    private static final String DIALOG_DESCRIPTION = "Provide your e-mail address to stay up-to-date on product updates, exclusive offers and materials to get the most out of your SoapUI download.";
-    private static final String OK_BTN_CAPTION = "Yes, I want to get additional materials";
+    private static final String DIALOG_MAIN_TEXT = "Want to stay in the loop?";
+    private static final String DIALOG_DESCRIPTION = "Provide your email to stay current on SoapUI updates, no advertisements or promotions!";
+    private static final String OK_BTN_CAPTION = "Yes, I want to know";
     private static final String SKIP_BTN_CAPTION = "Skip";
 
     public CollectInfoAboutUserForSupportAction() {
@@ -59,15 +59,30 @@ public class CollectInfoAboutUserForSupportAction {
         public CollectUserInfoDialog() {
             super(UISupport.getMainFrame(), DIALOG_CAPTION, true);
             setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            setResizable(false);
+            setUndecorated(true);
             setModal(true);
-            setSize(430, 265);
+            setSize(430, 250);
             setBackground(Color.WHITE);
+
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
+            jBasePanel.setBorder(new LineBorder(new Color(170,170, 170), 2));
             setBackgroundColor(jBasePanel);
             this.add(jBasePanel);
 
-            jBasePanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, DIALOG_DESCRIPTION), BorderLayout.NORTH);
-            jBasePanel.add(buildControlsPanel());
+            JPanel jBaseUserPanel = new JPanel(new BorderLayout(5, 5));
+            setBackgroundColor(jBaseUserPanel);
+
+            JLabel jCaption = new JLabel("  " + DIALOG_CAPTION);
+            jCaption.setOpaque(true);
+            jCaption.setPreferredSize(new Dimension(1000, 25));
+            jCaption.setBackground(new Color(166, 192, 229));
+
+            jBaseUserPanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, DIALOG_DESCRIPTION), BorderLayout.NORTH);
+            jBaseUserPanel.add(buildControlsPanel());
+
+            jBasePanel.add(jCaption, BorderLayout.NORTH);
+            jBasePanel.add(jBaseUserPanel);
 
             validEmailRegex = Pattern.compile(VALID_EMAIL_PATTERN);
         }
@@ -137,6 +152,7 @@ public class CollectInfoAboutUserForSupportAction {
             JButton jOkBtn = new JButton(OK_BTN_CAPTION);
             jOkBtn.setBorder(new LineBorder(new Color(200, 200, 200), 1));
             jOkBtn.setBackground(new Color(157, 200, 130));
+            jOkBtn.setOpaque(true);
             jOkBtn.setForeground(Color.WHITE);
             jOkBtn.setPreferredSize(new Dimension(300, 24));
             jOkBtn.addActionListener(new ActionListener() {
@@ -156,6 +172,10 @@ public class CollectInfoAboutUserForSupportAction {
             JButton jSkip = new JButton(SKIP_BTN_CAPTION);
             jSkip.setBorder(new LineBorder(new Color(170, 170, 170), 1));
             jSkip.setForeground(new Color(170, 170, 170));
+            if (UISupport.isMac()) {
+                jSkip.setBackground(new Color(236, 236, 236));
+            }
+            jSkip.setOpaque(true);
             jSkip.setPreferredSize(new Dimension(60, 20));
             jSkip.addActionListener(new ActionListener() {
                 @Override
@@ -196,7 +216,7 @@ public class CollectInfoAboutUserForSupportAction {
             if (!verifyFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(getUserName(), "", getUserEMail());
+            Analytics.trackOSUser(getUserName(), getUserName(), getUserEMail());
             return true;
         }
 
