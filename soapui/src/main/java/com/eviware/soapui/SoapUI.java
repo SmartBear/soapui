@@ -16,14 +16,15 @@
 
 package com.eviware.soapui;
 
-import com.eviware.soapui.actions.CollectInfoAboutUserForSupportAction;
 import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.actions.StartHermesJMSButtonAction;
+import com.eviware.soapui.actions.SumbitUserInfoAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
@@ -861,7 +862,7 @@ public class SoapUI {
 
         if (SoapUI.usingGraphicalEnvironment()) {
             if (workspace.isSupportInformationDialog()) {
-                CollectInfoAboutUserForSupportAction collector = new CollectInfoAboutUserForSupportAction();
+                SumbitUserInfoAction collector = new SumbitUserInfoAction();
                 collector.show();
                 workspace.setSupportInformationDialog(false);
             }

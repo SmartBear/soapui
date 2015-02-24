@@ -62,7 +62,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
     private RestParamsTable paramsTable;
 
     public HttpRequestStepFactory() {
-        super(HTTPREQUEST_TYPE, "HTTP Test Request", "Submits a HTTP Request and validates its response",
+        super(HTTPREQUEST_TYPE, "HTTP Request", "Submits a HTTP Request and validates its response",
                 "/http_request.gif");
     }
 

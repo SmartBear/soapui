@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class CollectInfoAboutUserForSupportAction {
+public class SumbitUserInfoAction {
     private static final String NAME_HINT = "Enter your name *";
     private static final String EMAIL_HINT = "Enter e-mail *";
     private static final String DIALOG_CAPTION = "Stay Tuned!";
@@ -29,7 +29,7 @@ public class CollectInfoAboutUserForSupportAction {
     private static final String OK_BTN_CAPTION = "Yes, I want to know";
     private static final String SKIP_BTN_CAPTION = "Skip";
 
-    public CollectInfoAboutUserForSupportAction() {
+    public SumbitUserInfoAction() {
     }
 
     public void show() {
@@ -213,14 +213,14 @@ public class CollectInfoAboutUserForSupportAction {
         }
 
         protected boolean handleOk() {
-            if (!verifyFormValues()) {
+            if (!validateFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(getUserName(), getUserName(), getUserEMail());
+            Analytics.trackOSUser(getUserName(), getUserEMail());
             return true;
         }
 
-        private boolean verifyFormValues() {
+        private boolean validateFormValues() {
             List<String> fieldErrors = new ArrayList<String>();
             if (StringUtils.isNullOrEmpty(getUserName())) {
                 fieldErrors.add("your name");

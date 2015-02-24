@@ -53,7 +53,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory {
     // private StringToStringMap dialogValues = new StringToStringMap();
 
     public RestRequestStepFactory() {
-        super(RESTREQUEST_TYPE, "REST Test Request", "Submits a REST-style Request and validates its response",
+        super(RESTREQUEST_TYPE, "REST Request", "Submits a REST-style Request and validates its response",
                 "/rest_request.gif");
     }
 

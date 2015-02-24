@@ -15,11 +15,11 @@
 */
 package com.eviware.soapui;
 
-class Version {
+public class Version {
 
     String[] versionComponents;
 
-    Version(String versionString) {
+    public Version(String versionString) {
         if (versionString == null || !versionString.contains(".")) {
             versionComponents = new String[]{"0", "0"};
         } else {
@@ -27,7 +27,7 @@ class Version {
         }
     }
 
-    String getMajorVersion() {
+    public String getMajorVersion() {
         return versionComponents[0] + "." + versionComponents[1];
     }
 

@@ -16,7 +16,7 @@
 
 package com.eviware.soapui.tools;
 
-import com.eviware.soapui.AnalyticsHelper;
+import com.eviware.soapui.analytics.AnalyticsHelper;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
