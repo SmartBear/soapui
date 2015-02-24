@@ -24,9 +24,9 @@ public class CollectInfoAboutUserForSupportAction {
     private static final String NAME_HINT = "Enter your name *";
     private static final String EMAIL_HINT = "Enter e-mail *";
     private static final String DIALOG_CAPTION = "Stay Tuned!";
-    private static final String DIALOG_MAIN_TEXT = "??? What should be here ???";
-    private static final String DIALOG_DESCRIPTION = "Provide your e-mail address to stay up-to-date on product updates, exclusive offers and materials to get the most out of your SoapUI download.";
-    private static final String OK_BTN_CAPTION = "Yes, I want to get additional materials";
+    private static final String DIALOG_MAIN_TEXT = "Want to stay in the loop?";
+    private static final String DIALOG_DESCRIPTION = "Provide your email to stay current on SoapUI updates, no advertisements or promotions!";
+    private static final String OK_BTN_CAPTION = "Yes, I want to know";
     private static final String SKIP_BTN_CAPTION = "Skip";
 
     public CollectInfoAboutUserForSupportAction() {
@@ -62,7 +62,7 @@ public class CollectInfoAboutUserForSupportAction {
             setResizable(false);
             setUndecorated(true);
             setModal(true);
-            setSize(430, 265);
+            setSize(430, 250);
             setBackground(Color.WHITE);
 
             JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
@@ -73,7 +73,7 @@ public class CollectInfoAboutUserForSupportAction {
             JPanel jBaseUserPanel = new JPanel(new BorderLayout(5, 5));
             setBackgroundColor(jBaseUserPanel);
 
-            JLabel jCaption = new JLabel("  Stay Tuned!");
+            JLabel jCaption = new JLabel("  " + DIALOG_CAPTION);
             jCaption.setOpaque(true);
             jCaption.setPreferredSize(new Dimension(1000, 25));
             jCaption.setBackground(new Color(166, 192, 229));
