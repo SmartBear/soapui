@@ -1,7 +1,7 @@
-package com.eviware.soapui;
+package com.eviware.soapui.analytics;
 
-import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.analytics.AnalyticsManager;
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.Version;
 import com.eviware.soapui.analytics.providers.GoogleAnalyticsProviderFactory;
 import com.eviware.soapui.analytics.providers.LogTabAnalyticsProvider;
 import com.eviware.soapui.analytics.providers.OSUserProviderFactory;
@@ -10,9 +10,6 @@ import com.eviware.soapui.settings.UISettings;
 
 import javax.swing.JOptionPane;
 
-/**
- * Created by SmartBear company.
- */
 public class AnalyticsHelper {
     private static boolean isInitialize = false;
 
@@ -25,7 +22,8 @@ public class AnalyticsHelper {
         Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
         Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
         if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
-            disableAnalytics = JOptionPane.showConfirmDialog(null, "Do you want to help us improve SoapUI by sending anonymous usage statistics?",
+            disableAnalytics = JOptionPane.showConfirmDialog(null, "Do you want to help us improve SoapUI by sending anonymous usage statistics?\n" +
+                    "This can be turned off any time in UI settings.",
                     "Usage statistics", JOptionPane.YES_NO_OPTION) == JOptionPane.NO_OPTION;
             settings.setBoolean(UISettings.DISABLE_ANALYTICS, disableAnalytics);
         }
