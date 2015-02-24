@@ -9,9 +9,17 @@ import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.UISettings;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import java.net.URI;
 
 public class AnalyticsHelper {
     private static boolean isInitialize = false;
+
+    private JPanel getPanel () {
+        JPanel panel = new JPanel();
+        final URI uri = new URI("http://www.soapui.org/Store-Info/privacy-policy.html");
+        return panel;
+    }
 
     private static boolean analyticsDisabled() {
         Settings settings = SoapUI.getSettings();
@@ -21,6 +29,7 @@ public class AnalyticsHelper {
         }
         Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
         Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
+        JOptionPane.
         if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
             disableAnalytics = JOptionPane.showConfirmDialog(null, "Do you want to help us improve SoapUI by sending anonymous usage statistics?\n" +
                     "This can be turned off any time in UI settings.",
