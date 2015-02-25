@@ -63,7 +63,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
 
         setTitle("New Version Check");
         getContentPane().add(mainPanel);
-        setSize(new Dimension(500, 440));
+        setSize(new Dimension(550, 440));
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
     }
 
