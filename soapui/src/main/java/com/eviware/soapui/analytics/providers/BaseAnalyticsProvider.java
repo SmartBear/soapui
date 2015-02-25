@@ -100,6 +100,7 @@ public abstract class BaseAnalyticsProvider implements AnalyticsProvider {
 
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "text/plain; charset=utf-8");
 
             return connection;
         } catch (Exception e) {
