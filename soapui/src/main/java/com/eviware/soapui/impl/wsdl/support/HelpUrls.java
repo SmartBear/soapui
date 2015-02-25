@@ -49,6 +49,8 @@ public interface HelpUrls {
     public static final String CLONETESTCASE_HELP_URL = "http://www.soapui.org/functional-testing/reference/testsuite-reference.html";
     public static final String CLONETESTSTEP_HELP_URL = "http://www.soapui.org/functional-testing/structuring-and-running-tests.html";
     public static final String CLONETESTSUITE_HELP_URL = "http://www.soapui.org/Functional-Testing/structuring-and-running-tests.html";
+    public static final String COMMUNITY_HELP_URL = "http://community.smartbear.com";
+    public static final String COMMUNITY_SEARCH_URL = "http://community.smartbear.com";
     public static final String CREATEMOCKRESPONSESTEP_HELP_URL = "http://www.soapui.org/Service-Mocking/mocking-soap-services.html";
     public static final String CREATEWADLDOC_HELP_URL = "http://www.soapui.org/rest-testing/working-with-rest-services.html";
     public static final String CRYPTOSWSS_HELP_URL = "http://www.soapui.org/soapui-projects/ws-security.html";
