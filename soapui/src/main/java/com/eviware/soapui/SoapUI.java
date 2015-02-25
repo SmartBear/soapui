@@ -363,12 +363,12 @@ public class SoapUI {
             @Override
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == '\n') {
-                    doForumSearch(searchField.getText());
+                    doCommunitySearch(searchField.getText());
                 }
             }
         });
 
-        JLabel searchLabel = new JLabel("Search Forum");
+        JLabel searchLabel = new JLabel("Search Community");
         // Extra width to avoid label to be truncated
         searchLabel.setPreferredSize(new Dimension(
                 (int) (searchLabel.getPreferredSize().getWidth() * 1.1),
@@ -390,18 +390,26 @@ public class SoapUI {
         return mainToolbar;
     }
 
-    @SuppressWarnings("deprecation")
-    public void doForumSearch(String text) {
-        if (!searchField.getText().equals(text)) {
-            searchField.setText(text);
-        }
+        //TODO Replace with the community API-based search
 
-        if (StringUtils.hasContent(text)) {
-            Tools.openURL(HelpUrls.FORUMS_HELP_URL + "search.php?keywords=" + urlEncodeWithUtf8(text.trim()));
-        } else {
-            Tools.openURL(HelpUrls.FORUMS_HELP_URL);
+        public static void doCommunitySearch(String text) {
+
+            String prefix = "/t5/forums/searchpage/tab/message?include_forums=true";
+            String forum = "location=board%3ASoapUI_OS";
+            String suffix = "&search_type=thread&filter=labels%2Clocation";
+
+            String searchText = "&q=" + urlEncodeWithUtf8(text.trim());
+
+            String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + prefix + forum + searchText + suffix;
+
+            if (StringUtils.hasContent(text)) {
+                Tools.openURL(searchUrl);
+            } else {
+                Tools.openURL(HelpUrls.COMMUNITY_SEARCH_URL);
+            }
         }
-    }
+    
+    
 
     private JMenuBar buildMainMenu() {
         menuBar = new JMenuBar();
@@ -1213,28 +1221,28 @@ public class SoapUI {
 
     private class ToolbarForumSearchAction extends AbstractAction {
         public ToolbarForumSearchAction() {
-            putValue(Action.SHORT_DESCRIPTION, "Searches the SoapUI Support Forum");
+            putValue(Action.SHORT_DESCRIPTION, "Searches the Smartbear Community Forum");
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/find.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
-            doForumSearch(searchField.getText());
+            doCommunitySearch(searchField.getText());
         }
     }
 
     private class SearchForumAction extends AbstractAction {
         public SearchForumAction() {
-            super("Search Forum");
-            putValue(Action.SHORT_DESCRIPTION, "Searches the SoapUI Support Forum");
+            super("Search Community");
+            putValue(Action.SHORT_DESCRIPTION, "Searches the Smartbear Community Forum");
         }
 
         public void actionPerformed(ActionEvent e) {
-            String text = UISupport.prompt("Search Text", "Search Online Forum", "");
+            String text = UISupport.prompt("Search Text", "Search Community Forum", "");
             if (text == null) {
                 return;
             }
 
-            doForumSearch(text);
+            doCommunitySearch(text);
         }
     }
 
