@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -99,7 +100,7 @@ public abstract class SimpleDialog extends JDialog {
     public ActionList buildActions(String url, boolean okAndCancel) {
         DefaultActionList actions = new DefaultActionList("Actions");
         if (url != null) {
-            actions.addAction(new HelpAction(url));
+            actions.addAction(new ShowOnlineHelpAction(url));
         }
 
         OKAction okAction = new OKAction();
