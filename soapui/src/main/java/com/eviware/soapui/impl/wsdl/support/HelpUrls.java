@@ -66,6 +66,10 @@ public interface HelpUrls {
     public static final String CLONETESTCASE_HELP_URL = "/functional-testing/reference/testsuite-reference.html";
     public static final String CLONETESTSTEP_HELP_URL = "/functional-testing/structuring-and-running-tests.html";
     public static final String CLONETESTSUITE_HELP_URL = "/Functional-Testing/structuring-and-running-tests.html";
+
+    public static final String COMMUNITY_HELP_URL = "http://community.smartbear.com";
+    public static final String COMMUNITY_SEARCH_URL = "http://community.smartbear.com";
+
     public static final String CREATEMOCKRESPONSESTEP_HELP_URL = "/Service-Mocking/mocking-soap-services.html";
     public static final String CRYPTOSWSS_HELP_URL = "/soapui-projects/ws-security.html";
     public static final String CXFWSDL2JAVA_HELP_URL = "http://cxf.apache.org/docs/wsdl-to-java.html";
@@ -77,7 +81,6 @@ public interface HelpUrls {
 
     public static final String ENDPOINTSEDITOR_HELP_URL = "/SOAP-and-WSDL/working-with-wsdls.html";
 
-    public static final String FORUMS_HELP_URL = "http://community.smartbear.com/";
     public static final String FUNCTIONAL_TESTING_SETUP_SCRIPT = "/functional-testing/working-with-scripts.html";
     public static final String FUNCTIONAL_TESTING_TEARDOWN_SCRIPT = "/functional-testing/working-with-scripts.html";
 

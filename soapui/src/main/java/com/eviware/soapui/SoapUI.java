@@ -343,7 +343,7 @@ public class SoapUI {
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.FORUMS_HELP_URL,
+        mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
                 "Opens the SoapUI Forum in a browser", "/group_go.png"));
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
@@ -388,7 +388,6 @@ public class SoapUI {
     }
 
         //TODO Replace with the community API-based search
-
         public static void doCommunitySearch(String text) {
 
             String prefix = "/t5/forums/searchpage/tab/message?include_forums=true";
@@ -405,8 +404,7 @@ public class SoapUI {
                 Tools.openURL(HelpUrls.COMMUNITY_SEARCH_URL);
             }
         }
-    
-    
+
 
     private JMenuBar buildMainMenu() {
         menuBar = new JMenuBar();
