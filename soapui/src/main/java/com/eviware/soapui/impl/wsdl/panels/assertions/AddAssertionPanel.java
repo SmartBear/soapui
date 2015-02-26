@@ -45,6 +45,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.rest.RestService;
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
@@ -326,7 +327,7 @@ public class AddAssertionPanel extends SimpleDialog {
     public ActionList buildActions(String url, boolean okAndCancel) {
         DefaultActionList actions = new DefaultActionList("Actions");
         if (url != null) {
-            actions.addAction(new HelpAction(url));
+            actions.addAction(new ShowOnlineHelpAction(url));
         }
 
         addAssertionAction = new AddAssertionAction();

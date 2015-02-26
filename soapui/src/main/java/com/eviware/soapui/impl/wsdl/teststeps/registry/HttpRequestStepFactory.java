@@ -150,7 +150,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
                 .getMethods());
     }
 
-    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.HTTP_REQUEST_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
     public interface Form {
         @AField(description = "Form.TestStepName.Description", type = AField.AFieldType.STRING)
         public final static String STEPNAME = messages.get("Form.TestStepName.Label");
