@@ -305,7 +305,9 @@ public class RestParamsTable extends JPanel {
 
         toolbar.addGlue();
 
-        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.WADL_PARAMS_HELP_URL)));
+
+        toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.HTTP_REQUEST_PARAMS_HELP_URL)));
+
 
         return toolbar;
     }

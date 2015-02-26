@@ -16,12 +16,15 @@
 
 package com.eviware.soapui.impl.wsdl.actions.project;
 
+import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.support.HelpActionMarker;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.DefaultActionList;
 import com.eviware.soapui.support.components.JButtonBar;
+
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -32,6 +35,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+
 
 public abstract class SimpleDialog extends JDialog {
     protected JButtonBar buttons = null;
@@ -45,7 +49,7 @@ public abstract class SimpleDialog extends JDialog {
         super(UISupport.getMainFrame(), title, true);
         this.title = title;
         this.description = description;
-        this.helpUrl = helpUrl;
+        this.helpUrl = HelpUrls.STAY_TUNED;
         this.okAndCancel = okAndCancel;
     }
 
@@ -96,7 +100,7 @@ public abstract class SimpleDialog extends JDialog {
     public ActionList buildActions(String url, boolean okAndCancel) {
         DefaultActionList actions = new DefaultActionList("Actions");
         if (url != null) {
-            actions.addAction(new HelpAction(url));
+            actions.addAction(new ShowOnlineHelpAction(url));
         }
 
         OKAction okAction = new OKAction();
