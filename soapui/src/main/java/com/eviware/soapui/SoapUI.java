@@ -387,22 +387,21 @@ public class SoapUI {
         return mainToolbar;
     }
 
-        //TODO Replace with the community API-based search
-        public static void doCommunitySearch(String text) {
+    //TODO Replace with the community API-based search
+    public static void doCommunitySearch(String text) {
 
-            String prefix = "/t5/forums/searchpage/tab/message?include_forums=true";
-            String forum = "location=board%3ASoapUI_OS";
-            String suffix = "&search_type=thread&filter=labels%2Clocation";
+        String prefix = "/t5/forums/searchpage/tab/message?include_forums=true";
+        String forum = "location=board%3ASoapUI_OS";
+        String suffix = "&search_type=thread&filter=labels%2Clocation";
 
-            String searchText = "&q=" + urlEncodeWithUtf8(text.trim());
+        String searchText = "&q=" + urlEncodeWithUtf8(text.trim());
 
-            String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + prefix + forum + searchText + suffix;
+        String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + prefix + forum + searchText + suffix;
 
-            if (StringUtils.hasContent(text)) {
-                Tools.openURL(searchUrl);
-            } else {
-                Tools.openURL(HelpUrls.COMMUNITY_SEARCH_URL);
-            }
+        if (StringUtils.hasContent(text)) {
+            Tools.openURL(searchUrl);
+        } else {
+            Tools.openURL(HelpUrls.COMMUNITY_SEARCH_URL);
         }
     }
 

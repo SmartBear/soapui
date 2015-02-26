@@ -205,6 +205,5 @@ public interface HelpUrls {
 
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
     String SOAPUI_WELCOME_PAGE = "/Downloads/thank-you-for-downloading-soapui.html";
-    String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
-            + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);
+    String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version=";
 }
