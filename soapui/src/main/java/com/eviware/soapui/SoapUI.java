@@ -404,6 +404,7 @@ public class SoapUI {
                 Tools.openURL(HelpUrls.COMMUNITY_SEARCH_URL);
             }
         }
+    }
 
 
     private JMenuBar buildMainMenu() {

@@ -15,10 +15,6 @@
 */
 package com.eviware.soapui.impl.wsdl.support;
 
-import com.eviware.soapui.SoapUI;
-
-import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
-
 /**
  * Help URLS in SoapUI documentation
  *
