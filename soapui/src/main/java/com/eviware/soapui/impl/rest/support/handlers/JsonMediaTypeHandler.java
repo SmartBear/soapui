@@ -41,6 +41,9 @@ public class JsonMediaTypeHandler implements MediaTypeHandler {
     @Override
     public String createXmlRepresentation(HttpResponse response) {
         try {
+            if (response == null || response.getContentAsString() == null) {
+                return null;
+            }
             String content = response.getContentAsString().trim();
             if (!StringUtils.hasContent(content)) {
                 return null;

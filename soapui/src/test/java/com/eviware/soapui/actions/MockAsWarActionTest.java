@@ -49,8 +49,8 @@ public class MockAsWarActionTest {
     private XFormDialog mockedDialog;
     private String soapuiOriginalHome;
     private final File warTestDir = new File("wartestdir");
-    private final String warDirectoryPath = warTestDir.getPath() + "/wardirectory";
-    private final String warFileName = warTestDir.getPath() + "/mock.war";
+    private final String warDirectoryPath = warTestDir.getPath() + File.separator + "wardirectory";
+    private final String warFileName = warTestDir.getPath() + File.separator + "mock.war";
 
     @Before
     public void setUp() throws SoapUIException, URISyntaxException, IOException, XmlException {

@@ -383,6 +383,7 @@ public class PropertyHolderTable extends JPanel {
 
                                 if (holder.hasProperty(name)) {
                                     count++;
+                                    holder.getProperty(name).setValue(value);
                                     holder.setPropertyValue(name, value);
                                 } else if (dialog.getBooleanValue(LoadOptionsForm.CREATEMISSING)
                                         && holder instanceof MutableTestPropertyHolder) {

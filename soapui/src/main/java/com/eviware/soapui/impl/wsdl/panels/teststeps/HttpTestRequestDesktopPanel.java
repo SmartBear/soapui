@@ -139,7 +139,7 @@ public class HttpTestRequestDesktopPanel extends
 
     @Override
     protected String getHelpUrl() {
-        return HelpUrls.TESTREQUESTEDITOR_HELP_URL;
+        return HelpUrls.HTTP_REQUEST_HELP_URL;
     }
 
     @Override
@@ -150,7 +150,7 @@ public class HttpTestRequestDesktopPanel extends
         assertionsPanel = buildAssertionsPanel();
 
         assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
-                + getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true);
+                + getModelItem().getAssertionCount() + ")", "Assertions for this Request", true);
 
         inspectorPanel.addInspector(assertionInspector);
 
@@ -434,6 +434,9 @@ public class HttpTestRequestDesktopPanel extends
         } else if (evt.getPropertyName().equals("path")) {
             getSubmitButton().setEnabled(getSubmit() == null && StringUtils.hasContent(getRequest().getEndpoint()));
         } else if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
+            // fix SOAP-3369
+            getSubmitButton().setEnabled(getSubmit() == null && StringUtils.hasContent(getRequest().getEndpoint()));
+            // end of SOAP-3369
             if (updating) {
                 return;
             }

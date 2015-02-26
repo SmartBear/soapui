@@ -46,7 +46,7 @@ public class ChangeOperationAction extends AbstractSoapUIAction<WsdlTestRequestS
     private WsdlTestRequestStep testStep;
 
     public ChangeOperationAction() {
-        super("Change Operation", "Changes the Interface Operation for this Test Request");
+        super("Change Operation", "Changes the Interface Operation for this Request");
     }
 
     public void perform(WsdlTestRequestStep target, Object param) {

@@ -15,14 +15,14 @@
 */
 package com.eviware.soapui.actions;
 
-import java.io.File;
-import java.util.List;
-
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.integration.exporter.ProjectExporter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.support.AbstractSoapUIAction;
+
+import java.io.File;
+import java.util.List;
 
 public class ImportPackedProject extends AbstractSoapUIAction<WorkspaceImpl> {
     public ImportPackedProject() {
@@ -48,7 +48,7 @@ public class ImportPackedProject extends AbstractSoapUIAction<WorkspaceImpl> {
             File dest = UISupport.getFileDialogs().saveAsDirectory(this, "Select where to unpack it",
                     new File(System.getProperty("user.home")));
 
-            if (dest.getAbsoluteFile() == null) {
+            if (dest == null || dest.getAbsoluteFile() == null) {
                 return;
             }
             ProjectExporter.unpackageAll(fileName, dest.getAbsolutePath());
