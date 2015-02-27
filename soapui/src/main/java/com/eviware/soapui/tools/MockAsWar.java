@@ -49,14 +49,16 @@ public class MockAsWar {
     protected static final String MOCKSERVICE_ENDPOINT = "[mockServiceEndpoint]";
 
     private static final String SOAPUI_HOME = "soapui.home";
+    private static final String SOAPUI_BIN_FOLDER = "." + File.separator + "bin";
+    private static final String SOAPUI_LIB_FOLDER = ".." + File.separator + "lib";
 
     protected File projectFile;
     protected File settingsFile;
     protected File warDir;
     private File warFile;
     protected File webInf;
-    private File lib;
-    protected File soapuiDir;
+    private File warLibDir;
+    protected File soapUIDir;
 
     protected Logger log = Logger.getLogger(MockAsWar.class);
 
@@ -82,6 +84,9 @@ public class MockAsWar {
             this.warDir.mkdirs();
         }
         this.warFile = !StringUtils.hasContent(warFile) ? null : new File(warFile);
+        if (!warFile.contains(File.separator)) {
+            this.warFile = new File(this.warDir, warFile);
+        }
         this.includeExt = includeExt;
         this.includeActions = actions;
         this.includeListeners = listeners;
@@ -190,33 +195,34 @@ public class MockAsWar {
     protected boolean prepareWarFile() {
         // create file system first
         if (createWarFileSystem()) {
+            String homePath = System.getProperty(SOAPUI_HOME) == null ? SOAPUI_BIN_FOLDER : System.getProperty(SOAPUI_HOME);
+
             // copy all from bin/../lib to soapui.home/war/WEB-INF/lib/
-            File fromDir = new File(System.getProperty(SOAPUI_HOME), ".." + File.separator + "lib");
 
+            File fromDir = new File(homePath, SOAPUI_LIB_FOLDER);
 
-            JarPackager.copyAllFromTo(fromDir, lib, new CaseInsensitiveFileFilter());
+            JarPackager.copyAllFromTo(fromDir, warLibDir, new CaseInsensitiveFileFilter());
 
             if (includeExt) {
                 String extDirPath = System.getProperty("soapui.ext.libraries");
-                // copy all from bin/ext to soapui.home/war/WEB-INF/lib/
-                fromDir = extDirPath != null ? new File(extDirPath) : new File(new File(System.getProperty(SOAPUI_HOME)), "ext");
-                JarPackager.copyAllFromTo(fromDir, lib, null);
+
+                fromDir = extDirPath != null ? new File(extDirPath) : new File(new File(homePath), "ext");
+                JarPackager.copyAllFromTo(fromDir, warLibDir, null);
             }
 
             // copy soapui jar to soapui.home/war/WEB-INF/lib/
-            File soapUIHome = new File(System.getProperty(SOAPUI_HOME));
-            String[] mainJar = soapUIHome.list(new FilenameFilter() {
+            String[] mainJar = new File(homePath).list(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return name.toLowerCase().startsWith("soapui") && name.toLowerCase().endsWith(".jar");
                 }
             });
 
-            fromDir = new File(System.getProperty(SOAPUI_HOME), mainJar[0]);
-            JarPackager.copyFileToDir(fromDir, lib);
+            fromDir = new File(homePath, mainJar[0]);
+            JarPackager.copyFileToDir(fromDir, warLibDir);
             // copy project and settings file to bin/war/WEB-INF/soapui/
             copyProjectFile();
             if (settingsFile != null && settingsFile.exists() && settingsFile.isFile()) {
-                JarPackager.copyFileToDir(settingsFile, soapuiDir);
+                JarPackager.copyFileToDir(settingsFile, soapUIDir);
             }
 
             // actions
@@ -239,7 +245,7 @@ public class MockAsWar {
     }
 
     protected void copyProjectFile() {
-        JarPackager.copyFileToDir(projectFile, soapuiDir);
+        JarPackager.copyFileToDir(projectFile, soapUIDir);
     }
 
     private void copyWarResource(String resource) {
@@ -268,17 +274,17 @@ public class MockAsWar {
                 return false;
             } else {
                 clearDir(webInf);
-                lib = new File(webInf, "lib");
+                warLibDir = new File(webInf, "lib");
 
-                if (!directoryIsUsable(lib)) {
+                if (!directoryIsUsable(warLibDir)) {
                     return false;
                 }
 
-                soapuiDir = new File(webInf, "soapui");
-                if (!directoryIsUsable(soapuiDir)) {
+                soapUIDir = new File(webInf, "soapui");
+                if (!directoryIsUsable(soapUIDir)) {
                     return false;
                 }
-                clearDir(soapuiDir);
+                clearDir(soapUIDir);
 
                 if (includeActions) {
                     actionsDir = new File(webInf, "actions");

@@ -1,116 +1,231 @@
 package com.eviware.soapui.actions;
 
 import com.eviware.soapui.analytics.Analytics;
-import com.eviware.soapui.impl.wsdl.actions.project.SimpleDialog;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.DefaultActionList;
-import com.eviware.soapui.support.components.SimpleForm;
+import com.eviware.soapui.support.components.JFriendlyTextField;
 
-import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class SumbitUserInfoAction {
-    private static final String NAME = "Name";
-    private static final String WORK_EMAIL = "Work email";
+    private static final String NAME_HINT = "Enter your name *";
+    private static final String EMAIL_HINT = "Enter e-mail *";
+    private static final String DIALOG_CAPTION = "Stay Tuned!";
+    private static final String DIALOG_MAIN_TEXT = "Want to stay in the loop?";
+    private static final String DIALOG_DESCRIPTION = "Provide your email to stay current on SoapUI updates, no advertisements or promotions!";
+    private static final String OK_BTN_CAPTION = "Yes, I want to know";
+    private static final String SKIP_BTN_CAPTION = "Skip";
 
     public SumbitUserInfoAction() {
-
     }
 
     public void show() {
         CollectUserInfoDialog cui = new CollectUserInfoDialog();
-        cui.setPreferredSize(new Dimension(440,230));
         cui.setVisible(true);
     }
 
-    private class CollectUserInfoDialog extends SimpleDialog {
-
+    private class CollectUserInfoDialog extends JDialog {
+        private JLabel title;
+        private JLabel description;
+        private JFriendlyTextField textFieldName;
+        private JFriendlyTextField textFieldEmail;
         private static final String VALID_EMAIL_PATTERN =
                 "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        private SimpleForm form;
         private Pattern validEmailRegex;
 
-        CollectUserInfoDialog() {
-            super("Stay Tuned!", "Please provide your name and e-mail to receive updates and additional materials for SoapUI", "www.smartbear.com");
-            this.setModal(true);
+        private void setBackgroundColor(JPanel curPanel) {
+            curPanel.setOpaque(true);
+            curPanel.setBackground(Color.WHITE);
+        }
+
+        private void setBackgroundColor(JLabel curLabel) {
+            curLabel.setOpaque(true);
+            curLabel.setBackground(Color.WHITE);
+        }
+
+        public CollectUserInfoDialog() {
+            super(UISupport.getMainFrame(), DIALOG_CAPTION, true);
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+            setResizable(false);
+            setUndecorated(true);
+            setModal(true);
+            setSize(430, 250);
+            setBackground(Color.WHITE);
+
+            JPanel jBasePanel = new JPanel(new BorderLayout(5, 5));
+            jBasePanel.setBorder(new LineBorder(new Color(170,170, 170), 2));
+            setBackgroundColor(jBasePanel);
+            this.add(jBasePanel);
+
+            JPanel jBaseUserPanel = new JPanel(new BorderLayout(5, 5));
+            setBackgroundColor(jBaseUserPanel);
+
+            JLabel jCaption = new JLabel("  " + DIALOG_CAPTION);
+            jCaption.setOpaque(true);
+            jCaption.setPreferredSize(new Dimension(1000, 25));
+            jCaption.setBackground(new Color(166, 192, 229));
+
+            jBaseUserPanel.add(buildCaptionPanel(DIALOG_MAIN_TEXT, DIALOG_DESCRIPTION), BorderLayout.NORTH);
+            jBaseUserPanel.add(buildControlsPanel());
+
+            jBasePanel.add(jCaption, BorderLayout.NORTH);
+            jBasePanel.add(jBaseUserPanel);
+
             validEmailRegex = Pattern.compile(VALID_EMAIL_PATTERN);
         }
 
-        protected final class SkipAction extends AbstractAction {
-            public SkipAction() {
-                super("Skip");
-            }
+        private JPanel buildCaptionPanel(String titleStr, String descriptionStr) {
+            JPanel jRoot = new JPanel(new BorderLayout());
+            jRoot.setBorder(new EmptyBorder(10, 30, 0, 25));
+            setBackgroundColor(jRoot);
+            title = new JLabel();
+            setBackgroundColor(title);
+            title.setText("<html><div style=\"font-size: 11px\"><b>" + titleStr + "</b></div></html>");
+            title.setOpaque(true);
+            title.setBackground(Color.WHITE);
+            description = new JLabel();
+            setBackgroundColor(description);
+            description.setText("<html><div style=\"font-size: 9px\">" + descriptionStr + "</div></html>");
+            description.setBorder(new EmptyBorder(5, 0, 0, 0));
 
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-            }
+            jRoot.add(title, BorderLayout.NORTH);
+            jRoot.add(description);
+
+            return jRoot;
         }
 
-        protected final class SubmitAction extends AbstractAction {
-            public SubmitAction() {
-                super("Submit");
-            }
+        private JPanel buildControlsPanel() {
+            JPanel jbase = new JPanel(new BorderLayout());
 
-            public void actionPerformed(ActionEvent e) {
-                if (handleOk()) {
+            JPanel jLeftPanel = new JPanel();
+            jLeftPanel.setLayout(new BorderLayout());
+            jLeftPanel.setBorder(new EmptyBorder(0, 0, 25, 0));
+            JLabel arrowIcon = new JLabel(UISupport.createImageIcon("/big_arrow.png"));
+            jLeftPanel.add(arrowIcon, BorderLayout.SOUTH);
+            setBackgroundColor(jLeftPanel);
+
+            JPanel jControlsPanel = new JPanel(new BorderLayout());
+            jControlsPanel.setBorder(new EmptyBorder(5, 2, 10, 35));
+            setBackgroundColor(jControlsPanel);
+            jControlsPanel.add(buildButtonsPanel(), BorderLayout.SOUTH);
+            jControlsPanel.add(buildUserInfoPanel());
+
+            jbase.add(jLeftPanel, BorderLayout.WEST);
+            jbase.add(jControlsPanel);
+
+            return jbase;
+        }
+
+        private JPanel buildUserInfoPanel() {
+            textFieldName = new JFriendlyTextField(NAME_HINT);
+            textFieldName.setPreferredSize(new Dimension(300, 24));
+
+            textFieldEmail = new JFriendlyTextField(EMAIL_HINT);
+            textFieldEmail.setPreferredSize(new Dimension(300, 24));
+            JPanel jHelpEmail = new JPanel(new BorderLayout());
+            setBackgroundColor(jHelpEmail);
+            jHelpEmail.setBorder(new EmptyBorder(8, 0, 0, 0));
+            jHelpEmail.add(textFieldEmail, BorderLayout.NORTH);
+
+            JPanel userInfoContent = new JPanel(new BorderLayout());
+            setBackgroundColor(userInfoContent);
+            userInfoContent.add(textFieldName, BorderLayout.NORTH);
+            userInfoContent.add(jHelpEmail);
+
+            return userInfoContent;
+        }
+
+        private JPanel buildButtonsPanel() {
+            JButton jOkBtn = new JButton(OK_BTN_CAPTION);
+            jOkBtn.setBorder(new LineBorder(new Color(200, 200, 200), 1));
+            jOkBtn.setBackground(new Color(157, 200, 130));
+            jOkBtn.setOpaque(true);
+            jOkBtn.setForeground(Color.WHITE);
+            jOkBtn.setPreferredSize(new Dimension(300, 24));
+            jOkBtn.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (handleOk()) {
+                        setVisible(false);
+                    }
+                }
+            });
+
+            JPanel jOkPanel = new JPanel(new BorderLayout());
+            jOkPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
+            setBackgroundColor(jOkPanel);
+            jOkPanel.add(jOkBtn);
+
+            JButton jSkip = new JButton(SKIP_BTN_CAPTION);
+            jSkip.setBorder(new LineBorder(new Color(170, 170, 170), 1));
+            jSkip.setForeground(new Color(170, 170, 170));
+            if (UISupport.isMac()) {
+                jSkip.setBackground(new Color(236, 236, 236));
+            }
+            jSkip.setOpaque(true);
+            jSkip.setPreferredSize(new Dimension(60, 20));
+            jSkip.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
                     setVisible(false);
                 }
-            }
-        }
+            });
 
-        public ActionList buildActions(String url, boolean okAndCancel) {
-            DefaultActionList actions = new DefaultActionList("Actions");
-            if (url != null) {
-                actions.addAction(new HelpAction(url));
-            }
+            JPanel buttonsContent = new JPanel(new BorderLayout());
+            buttonsContent.setBorder(new EmptyBorder(20, 0, 20, 0));
+            setBackgroundColor(buttonsContent);
 
-            SkipAction okAction = new SkipAction();
-            actions.addAction(okAction);
-            SubmitAction submitAction = new SubmitAction();
-            actions.addAction(submitAction);
-            actions.setDefaultAction(submitAction);
-            return actions;
-        }
+            buttonsContent.add(jSkip, BorderLayout.EAST);
+            buttonsContent.add(jOkPanel);
 
-        @SuppressWarnings("unchecked")
-        @Override
-        protected Component buildContent() {
-            form = new SimpleForm();
-            form.appendTextField(NAME, "Name");
-            form.appendTextField(WORK_EMAIL, "Your email at work. We will send you an email and ask you to verify it.");
-
-            JPanel wrapperPanel = new JPanel(new BorderLayout());
-            wrapperPanel.setBorder(new EmptyBorder(3, 0, 3, 0));
-            wrapperPanel.add(form.getPanel(), BorderLayout.CENTER);
-            return wrapperPanel;
+            return buttonsContent;
         }
 
         @Override
+        public void setVisible(boolean b) {
+            UISupport.centerDialog(this);
+            super.setVisible(b);
+        }
+
+        private String getUserName() {
+            String name = textFieldName.getText();
+            name = name.replace(NAME_HINT, "");
+            return name;
+        }
+
+        private String getUserEMail() {
+            String email = textFieldEmail.getText();
+            email = email.replace(EMAIL_HINT, "");
+            return email;
+        }
+
         protected boolean handleOk() {
             if (!validateFormValues()) {
                 return false;
             }
-            Analytics.trackOSUser(form.getComponentValue(NAME), form.getComponentValue(WORK_EMAIL));
+            Analytics.trackOSUser(getUserName(), getUserEMail());
             return true;
         }
 
-
         private boolean validateFormValues() {
             List<String> fieldErrors = new ArrayList<String>();
-            if (StringUtils.isNullOrEmpty(form.getComponentValue(NAME))) {
+            if (StringUtils.isNullOrEmpty(getUserName())) {
                 fieldErrors.add("your name");
             }
-            if (!isValidEmailAddress(form.getComponentValue(WORK_EMAIL))) {
+            if (!isValidEmailAddress(getUserEMail())) {
                 fieldErrors.add("a valid email address");
             }
             if (fieldErrors.isEmpty()) {
@@ -133,6 +248,5 @@ public class SumbitUserInfoAction {
         private boolean isValidEmailAddress(String email) {
             return StringUtils.hasContent(email) && validEmailRegex.matcher(email).matches();
         }
-
     }
 }

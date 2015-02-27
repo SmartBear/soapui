@@ -26,12 +26,12 @@ import java.io.IOException;
  * Created by avdeev on 27.08.2014.
  */
 public class NewSoapUIVersionAvailableDialog extends JDialog {
-    enum ReadyApiUpdateDialogResult {Update, Delay_1Day, Delay_3Days, Delay_7Days, DontUpdate}
+    enum ReadyApiUpdateDialogResult {Update, Delay_1Day, Delay_3Days, Delay_7Days, DoNotUpdate, SkipThisVersion}
 
     private ReadyApiUpdateDialogResult dialogResult;
     private final static String NEW_VERSION_AVAILABLE_MESSAGE = "New Version Available";
     private final static String NEW_VERSION_AVAILABLE_MESSAGE_EX = "A new version of SoapUI is available, please check the details below.";
-    private final static String VERSION_TO_SKIP = "SkippedVersion";
+    public final static String SKIPPED_VERSION_SETTING = "SkippedVersion";
     private SoapUIVersionInfo newProductVersion, curVersion;
     private String releaseNotes;
 
@@ -63,7 +63,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
 
         setTitle("New Version Check");
         getContentPane().add(mainPanel);
-        setSize(new Dimension(500, 440));
+        setSize(new Dimension(550, 440));
         setLocation((Toolkit.getDefaultToolkit().getScreenSize().width)/2 - getWidth()/2, (Toolkit.getDefaultToolkit().getScreenSize().height)/2 - getHeight()/2);
     }
 
@@ -91,7 +91,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
         choice.addItem("3 days");
         choice.addItem("7 days");
         choice.setSelectedIndex(0);
-        dialogResult = ReadyApiUpdateDialogResult.DontUpdate;
+        dialogResult = ReadyApiUpdateDialogResult.DoNotUpdate;
 
         JButton remindMeLaterButton = new JButton("Remind me later");
         remindMeLaterButton.addActionListener(new ActionListener() {
@@ -114,7 +114,7 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
             }
         });
 
-        JButton downloadButton = new JButton("Download");
+        JButton downloadButton = new JButton("Download and install");
         downloadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -123,11 +123,14 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
             }
         });
 
+        JButton ignoreUpdate = new JButton(new IgnoreUpdateAction(this));
+
         JPanel toolbarPanel = new JPanel(new GridBagLayout());
         toolbarPanel.add(choice, new GridBagConstraints(0, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(4, 4, 4, 4), 0, 0));
         toolbarPanel.add(remindMeLaterButton, new GridBagConstraints(1, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(4, 4, 4, 4), 0, 0));
         toolbarPanel.add(new JPanel(), new GridBagConstraints(2, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
-        toolbarPanel.add(downloadButton, new GridBagConstraints(3, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(4, 4, 4, 4), 0, 0));
+        toolbarPanel.add(ignoreUpdate, new GridBagConstraints(3, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(4, 4, 4, 4), 0, 0));
+        toolbarPanel.add(downloadButton, new GridBagConstraints(4, 0, 1, 1, 0, 0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(4, 4, 4, 4), 0, 0));
         return toolbarPanel;
     }
 
@@ -135,12 +138,12 @@ public class NewSoapUIVersionAvailableDialog extends JDialog {
         private JDialog dialog;
 
         public IgnoreUpdateAction(JDialog dialog) {
-            super("Ignore This Update");
+            super("Ignore this update");
             this.dialog = dialog;
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getSettings().setString(VERSION_TO_SKIP, "2.0.0");
+            SoapUI.getSettings().setString(SKIPPED_VERSION_SETTING, newProductVersion.toString());
             dialog.setVisible(false);
         }
     }

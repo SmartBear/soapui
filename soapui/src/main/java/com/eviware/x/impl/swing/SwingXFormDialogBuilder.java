@@ -154,7 +154,9 @@ public class SwingXFormDialogBuilder extends XFormDialogBuilder {
         }
 
         public void actionPerformed(ActionEvent e) {
-            Tools.openURL(url);
+            Integer mods = e.getModifiers();
+            String helpUrl = Tools.modifyUrl (url, mods);
+            Tools.openURL(helpUrl);
         }
     }
 }

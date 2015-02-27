@@ -239,7 +239,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         assertionsPanel = buildAssertionsPanel();
 
         assertionInspector = new JComponentInspector<JComponent>(assertionsPanel, "Assertions ("
-                + getModelItem().getAssertionCount() + ")", "Assertions for this Test Request", true);
+                + getModelItem().getAssertionCount() + ")", "Assertions for this Request", true);
 
         inspectorPanel.addInspector(assertionInspector);
         // setPreferredSize(new Dimension(600, 450));
@@ -371,7 +371,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
         toolbar.add(splitButton);
 
         toolbar.addFixed(UISupport
-                .createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TRANSFERSTEPEDITOR_HELP_URL)));
+                .createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TEST_AMF_REQUEST_EDITOR_HELP_URL)));
 
         return toolbar;
 
@@ -432,6 +432,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
                 if (!updating) {
                     amfRequestTestStep.setAmfCall(amfCallField.getText());
                 }
+                submitButton.setEnabled(enableSubmit());
             }
         });
     }
@@ -443,6 +444,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
                 if (!updating) {
                     amfRequestTestStep.setEndpoint(endpointField.getText());
                 }
+                submitButton.setEnabled(enableSubmit());
             }
         });
     }
@@ -888,7 +890,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
             responseEditor.setEnabled(enabled);
         }
 
-        submitButton.setEnabled(enabled);
+        submitButton.setEnabled(enabled && enableSubmit());
         addAssertionButton.setEnabled(enabled);
         propertiesTableComponent.setEnabled(enabled);
         groovyEditor.setEnabled(enabled);

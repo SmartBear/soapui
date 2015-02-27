@@ -26,8 +26,9 @@ import java.util.Date;
 public class Install4jSoapUIUpdateProvider extends Thread implements SoapUIUpdateProvider {
     private final static String APPLICATION_SILENT_VERSION_CHECK_ID = SoapUISystemProperties.SOAP_UI_UPDATER_APP_ID;
     private final static String APPLICATION_UPDATES_XML_URL = SoapUISystemProperties.SOAP_UI_UPDATE_URL;
+    private final static String DEFAULT_UNREACHABLE_VALUE_FOR_SKIPPED_VERSION = "-1";
     private final String TERMINATED = "Terminated {EE9BF704-944A-43ae-8B53-7C9AE5SOAPUI}";
-    private static final Logger logger = LoggerFactory.getLogger(SoapUIUpdateProvider.class);
+    private final static Logger logger = LoggerFactory.getLogger(SoapUIUpdateProvider.class);
     private final static String NEXT_AUTO_UPDATE_CHECK = "NextAU";//TODO: move to SoapUI settings
 
     private final TestMonitor testMonitor;
@@ -170,6 +171,15 @@ public class Install4jSoapUIUpdateProvider extends Thread implements SoapUIUpdat
                     logger.info(checkResult.errorText);
                     return;
                 }
+                if (checkResult.version != null){
+                    String skippedVersion = SoapUI.getSettings().getString(NewSoapUIVersionAvailableDialog.SKIPPED_VERSION_SETTING, DEFAULT_UNREACHABLE_VALUE_FOR_SKIPPED_VERSION);
+                    if (skippedVersion != null){
+                        if (skippedVersion.equals(checkResult.version.toString())){
+                            logger.info("Found new version (" + skippedVersion + ") but it was skipped according to previous user's choice.");
+                            return;
+                        }
+                    }
+                }
                 if (checkResult.version != null && !autoCheckCancelled) {
                     if (!updatePostponedByUser(checkResult.version, new SoapUIVersionInfo(this.currentVersion), checkResult.comments)) {
                         update(true);
@@ -205,7 +215,9 @@ public class Install4jSoapUIUpdateProvider extends Thread implements SoapUIUpdat
             case Delay_7Days:
                 nextCheck = new Date(new Date().getTime() + 7 * A_DAY);
                 break;
-            case DontUpdate:
+            case DoNotUpdate:
+                break;
+            case SkipThisVersion:
                 break;
         }
         if (nextCheck != null) {
