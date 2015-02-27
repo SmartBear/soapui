@@ -20,9 +20,13 @@ import com.eviware.soapui.actions.SaveAllProjectsAction;
 import com.eviware.soapui.actions.ShowSystemPropertiesAction;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.actions.StartHermesJMSButtonAction;
+import com.eviware.soapui.actions.SumbitUserInfoAction;
 import com.eviware.soapui.actions.SwitchDesktopPanelAction;
 import com.eviware.soapui.actions.VersionUpdateAction;
 import com.eviware.soapui.analytics.Analytics;
+import com.eviware.soapui.analytics.AnalyticsHelper;
+import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
+import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
@@ -69,7 +73,6 @@ import com.eviware.soapui.settings.ProxySettings;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.settings.VersionUpdateSettings;
 import com.eviware.soapui.support.SoapUIException;
-import com.eviware.soapui.support.SoapUIVersionUpdate;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.UISupport;
@@ -189,11 +192,8 @@ public class SoapUI {
     private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
     private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
-    public static final String SOAPUI_WELCOME_PAGE = "http://www.soapui.org/Downloads/thank-you-for-downloading-soapui.html";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
-    public static String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version="
-            + urlEncodeWithUtf8(SOAPUI_VERSION);
     public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
 
     public static String STARTER_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".")
@@ -343,7 +343,7 @@ public class SoapUI {
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.FORUMS_HELP_URL,
+        mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
                 "Opens the SoapUI Forum in a browser", "/group_go.png"));
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
@@ -360,12 +360,12 @@ public class SoapUI {
             @Override
             public void keyTyped(KeyEvent e) {
                 if (e.getKeyChar() == '\n') {
-                    doForumSearch(searchField.getText());
+                    doCommunitySearch(searchField.getText());
                 }
             }
         });
 
-        JLabel searchLabel = new JLabel("Search Forum");
+        JLabel searchLabel = new JLabel("Search Community");
         // Extra width to avoid label to be truncated
         searchLabel.setPreferredSize(new Dimension(
                 (int) (searchLabel.getPreferredSize().getWidth() * 1.1),
@@ -387,18 +387,24 @@ public class SoapUI {
         return mainToolbar;
     }
 
-    @SuppressWarnings("deprecation")
-    public void doForumSearch(String text) {
-        if (!searchField.getText().equals(text)) {
-            searchField.setText(text);
-        }
+    //TODO Replace with the community API-based search
+    public static void doCommunitySearch(String text) {
+
+        String prefix = "/t5/forums/searchpage/tab/message?include_forums=true";
+        String forum = "location=board%3ASoapUI_OS";
+        String suffix = "&search_type=thread&filter=labels%2Clocation";
+
+        String searchText = "&q=" + urlEncodeWithUtf8(text.trim());
+
+        String searchUrl = HelpUrls.COMMUNITY_SEARCH_URL + prefix + forum + searchText + suffix;
 
         if (StringUtils.hasContent(text)) {
-            Tools.openURL(HelpUrls.FORUMS_HELP_URL + "search.php?keywords=" + urlEncodeWithUtf8(text.trim()));
+            Tools.openURL(searchUrl);
         } else {
-            Tools.openURL(HelpUrls.FORUMS_HELP_URL);
+            Tools.openURL(HelpUrls.COMMUNITY_SEARCH_URL);
         }
     }
+
 
     private JMenuBar buildMainMenu() {
         menuBar = new JMenuBar();
@@ -446,11 +452,12 @@ public class SoapUI {
         helpMenu.addSeparator();
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
-        helpMenu.add(new ShowOnlineHelpAction("SoapUI Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI Pro Trial License", "/favicon.png"));
+        helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
+                "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
+        helpMenu.add(new OpenUrlAction("Privacy Policy", HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
-        helpMenu.add(new OpenUrlAction("smartbear.com", "http://smartbear.com"));
+        helpMenu.add(new OpenUrlAction("smartbear.com", HelpUrls.SMARTBEAR_WEB_SITE_START_PAGE));
         helpMenu.addSeparator();
         helpMenu.add(new AboutAction());
         return helpMenu;
@@ -648,6 +655,13 @@ public class SoapUI {
 
     private static final class SoapUIRunner implements Runnable {
         public void run() {
+            boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                    getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+            SoapUIUpdateProvider updateProvider = SoapUIAutoUpdaterUtils.getProvider();
+            if (!isDebug && SoapUI.getSettings().getBoolean(VersionUpdateSettings.AUTO_CHECK_VERSION_UPDATE)) {
+                updateProvider.start();
+            }
+
             addStandardPreferencesShortcutOnMac();
             boolean isFirstLaunch = !DefaultSoapUICore.settingsFileExists();
             Properties props = new Properties();
@@ -671,18 +685,9 @@ public class SoapUI {
                     });
                 }
 
-                if (isAutoUpdateVersion()) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            new SoapUIVersionUpdate().checkForNewVersion(false);
-                        }
-                    }).start();
-                }
-
                 startCajoServerIfNotOverriddenBySetting();
                 if (isFirstLaunch) {
-                    Tools.openURL(SOAPUI_WELCOME_PAGE);
+                    Tools.openURL(HelpUrls.SOAPUI_WELCOME_PAGE);
                 }
 
                 if (isCommandLine()) {
@@ -774,12 +779,6 @@ public class SoapUI {
     }
 
     public static void main(String[] args) throws Exception {
-        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
-                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
-        if (isDebug) {
-            Analytics.trackAction("DebuggingMode");
-        }
-
         WebstartUtilCore.init();
 
         mainArgs = args;
@@ -806,6 +805,14 @@ public class SoapUI {
 
         isStandalone = true;
         soapUICore = core;
+
+        AnalyticsHelper.InitializeAnalytics();
+        Analytics.trackSessionStart();
+        boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
+                getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;
+        if (isDebug) {
+            Analytics.trackAction("DebuggingMode");
+        }
 
         SoapUI soapUI = new SoapUI();
         Workspace workspace = null;
@@ -853,6 +860,14 @@ public class SoapUI {
                     SwingUtilities.invokeLater(new RestProjectCreator(url));
                 } catch (Exception ignore) {
                 }
+            }
+        }
+
+        if (SoapUI.usingGraphicalEnvironment()) {
+            if (workspace.isSupportInformationDialog()) {
+                SumbitUserInfoAction collector = new SumbitUserInfoAction();
+                collector.show();
+                workspace.setSupportInformationDialog(false);
             }
         }
         return soapUI;
@@ -1201,28 +1216,28 @@ public class SoapUI {
 
     private class ToolbarForumSearchAction extends AbstractAction {
         public ToolbarForumSearchAction() {
-            putValue(Action.SHORT_DESCRIPTION, "Searches the SoapUI Support Forum");
+            putValue(Action.SHORT_DESCRIPTION, "Searches the Smartbear Community Forum");
             putValue(Action.SMALL_ICON, UISupport.createImageIcon("/find.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
-            doForumSearch(searchField.getText());
+            doCommunitySearch(searchField.getText());
         }
     }
 
     private class SearchForumAction extends AbstractAction {
         public SearchForumAction() {
-            super("Search Forum");
-            putValue(Action.SHORT_DESCRIPTION, "Searches the SoapUI Support Forum");
+            super("Search Community");
+            putValue(Action.SHORT_DESCRIPTION, "Searches the Smartbear Community Forum");
         }
 
         public void actionPerformed(ActionEvent e) {
-            String text = UISupport.prompt("Search Text", "Search Online Forum", "");
+            String text = UISupport.prompt("Search Text", "Search Community Forum", "");
             if (text == null) {
                 return;
             }
 
-            doForumSearch(text);
+            doCommunitySearch(text);
         }
     }
 
@@ -1237,11 +1252,11 @@ public class SoapUI {
         }
 
         UISupport.showDesktopPanel(starterPageDesktopPanel);
-        starterPageDesktopPanel.navigate(STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
+        starterPageDesktopPanel.navigate(HelpUrls.STARTER_PAGE_URL, STARTER_PAGE_ERROR_URL, true);
     }
 
     private static class AboutAction extends AbstractAction {
-        private static final String COPYRIGHT = "2004-2014 smartbear.com";
+        private static final String COPYRIGHT = "2004-2015 smartbear.com";
         private static final String SOAPUI_WEBSITE = "http://www.soapui.org";
         private static final String SMARTBEAR_WEBSITE = "http://www.smartbear.com";
 

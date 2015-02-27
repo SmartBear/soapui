@@ -62,7 +62,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
     private RestParamsTable paramsTable;
 
     public HttpRequestStepFactory() {
-        super(HTTPREQUEST_TYPE, "HTTP Test Request", "Submits a HTTP Request and validates its response",
+        super(HTTPREQUEST_TYPE, "HTTP Request", "Submits a HTTP Request and validates its response",
                 "/http_request.gif");
     }
 
@@ -150,7 +150,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
                 .getMethods());
     }
 
-    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.NEWRESTSERVICE_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
+    @AForm(name = "Form.Title", description = "Form.Description", helpUrl = HelpUrls.HTTP_REQUEST_HELP_URL, icon = UISupport.TOOL_ICON_PATH)
     public interface Form {
         @AField(description = "Form.TestStepName.Description", type = AField.AFieldType.STRING)
         public final static String STEPNAME = messages.get("Form.TestStepName.Label");

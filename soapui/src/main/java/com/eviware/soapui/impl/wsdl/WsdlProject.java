@@ -49,6 +49,7 @@ import com.eviware.soapui.impl.wsdl.support.wsdl.UrlWsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlLoader;
 import com.eviware.soapui.impl.wsdl.support.wss.DefaultWssContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlProjectRunner;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.environment.DefaultEnvironment;
 import com.eviware.soapui.model.environment.Environment;
@@ -69,7 +70,9 @@ import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.ProjectRunContext;
 import com.eviware.soapui.model.testsuite.ProjectRunListener;
 import com.eviware.soapui.model.testsuite.ProjectRunner;
+import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.model.testsuite.TestRunnable;
+import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestSuite;
 import com.eviware.soapui.model.testsuite.TestSuite.TestSuiteRunType;
 import com.eviware.soapui.settings.ProjectSettings;
@@ -1682,9 +1685,10 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
         }
 
         TestSuiteDocumentConfig newTestSuiteConfig = null;
-
+        WsdlTestSuite oldTestSuite = null;
         try {
             newTestSuiteConfig = TestSuiteDocumentConfig.Factory.parse(file);
+            oldTestSuite = buildTestSuite(TestSuiteDocumentConfig.Factory.parse(file).getTestSuite());
         } catch (Exception e) {
             SoapUI.logError(e);
         }
@@ -1722,6 +1726,18 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
                         if (oldNewIds.containsKey(secStepConfig.getTestStepId())) {
                             secStepConfig.setTestStepId(oldNewIds.get(secStepConfig.getTestStepId()));
                         }
+                    }
+                }
+
+            }
+
+            List<TestCase> testCaseList = testSuite.getTestCaseList();
+            for (int i = 0; i < testCaseList.size(); i++) {
+                TestCase testCase = testCaseList.get(i);
+                for (int j = 0; j < testCase.getTestStepList().size(); j++) {
+                    TestStep testStep = testCase.getTestStepAt(j);
+                    if (testStep instanceof  WsdlTestStep) {
+                        ((WsdlTestStep) testStep).afterCopy(oldTestSuite, oldTestSuite.getTestCaseAt(i));
                     }
                 }
 
