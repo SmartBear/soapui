@@ -447,7 +447,7 @@ public class SoapUI {
         helpMenu.add(new VersionUpdateAction());
         helpMenu.addSeparator();
         helpMenu.add(new ShowOnlineHelpAction("SoapUI NG Pro Trial", HelpUrls.TRIAL_URL,
-                "Apply for SoapUI NG Pro Trial License", "/favicon.png"));
+                "Apply for SoapUI NG Pro Trial License", "/SoapUI-NG-Pro-icon_16-16-px.png"));
         helpMenu.add(new OpenUrlAction("Privacy Policy", HelpUrls.SMARTBEAR_PRIVACY_POLICY_URL));
         helpMenu.addSeparator();
         helpMenu.add(new OpenUrlAction("soapui.org", "http://www.soapui.org"));
