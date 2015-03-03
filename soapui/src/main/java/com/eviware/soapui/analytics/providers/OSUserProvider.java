@@ -24,9 +24,9 @@ public class OSUserProvider extends BaseAnalyticsProvider implements UserInfoPro
     private String prepareRequestParams (OSUserDescription osUserDescription){
         StringBuilder sb = new StringBuilder();
         sb.append("name=");
-        sb.append(osUserDescription.getName());
+        sb.append(HttpUtils.urlEncodeWithUtf8(osUserDescription.getName()));
         sb.append("&email=");
-        sb.append(osUserDescription.getEmail());
-        return HttpUtils.urlEncodeWithUtf8(sb.toString());
+        sb.append(HttpUtils.urlEncodeWithUtf8(osUserDescription.getEmail()));
+        return sb.toString();
     }
 }
