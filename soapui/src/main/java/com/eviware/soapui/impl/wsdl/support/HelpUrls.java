@@ -173,7 +173,7 @@ public interface HelpUrls {
     public static final String STEP_MAXIMUM_LOAD_TEST_ASSERTION_HELP_URL = "/load-testing/reference/assertion.html";
     public static final String STEP_STATUS_LOAD_TEST_ASSERTION_HELP_URL = "/load-testing/reference/assertion.html";
     public static final String STEP_TPS_LOAD_TEST_ASSERTION_HELP_URL = "/load-testing/reference/assertion.html";
-    public static final String STAY_TUNED = "/getting-started/help-in-soapui/stay-tuned.html";
+    public static final String STAY_TUNED = "getting-started/help-in-soapui/help-in-soapui.html";
 
     public static final String TCPMON_HELP_URL = "http://ws.apache.org/commons/tcpmon/";
     public static final String TEST_AMF_REQUEST_EDITOR_HELP_URL = "/amf/getting-started.html";
