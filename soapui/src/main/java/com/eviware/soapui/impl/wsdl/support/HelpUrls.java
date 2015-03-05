@@ -181,6 +181,7 @@ public interface HelpUrls {
     public static final String TESTCASEOPTIONS_HELP_URL = "/functional-testing/reference/testcase-window.html";
     public static final String TESTREQUESTEDITOR_HELP_URL = "/soap-and-wsdl/reference/request-interface.html";
     public static final String TESTRUNNER_HELP_URL = "/Test-Automation/launch-testrunner.html";
+    public static final String TESTRUNNER_SECURITY_HELP_URL = "/test-automation/running-from-soapui/security-tests.html";
     public static final String TESTSUITEEDITOR_HELP_URL = "/functional-testing/reference/testsuite-reference.html";
     public static final String TESTSUITELIST_HELP_URL = "/Functional-Testing/project-testsuites-tab.html";
     public static final String TESTSUITE_HELP_URL = "/Functional-Testing/structuring-and-running-tests.html";
