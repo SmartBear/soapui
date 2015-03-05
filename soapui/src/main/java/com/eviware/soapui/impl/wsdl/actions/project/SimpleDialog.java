@@ -49,7 +49,7 @@ public abstract class SimpleDialog extends JDialog {
         super(UISupport.getMainFrame(), title, true);
         this.title = title;
         this.description = description;
-        this.helpUrl = HelpUrls.STAY_TUNED;
+        this.helpUrl = helpUrl;
         this.okAndCancel = okAndCancel;
     }
 

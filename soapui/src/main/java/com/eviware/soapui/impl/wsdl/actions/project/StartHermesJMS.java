@@ -25,6 +25,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.actions.SoapUIPreferencesAction;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.HermesUtils;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.settings.ToolsSettings;
 import com.eviware.soapui.support.UISupport;
@@ -79,7 +80,7 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject> {
         try {
             File file = new File(hermesConfigPath + File.separator + HermesUtils.HERMES_CONFIG_XML);
             if (!file.exists()) {
-                UISupport.showErrorMessage("No hermes-config.xml on this path!");
+                UISupport.showErrorMessage("No hermes-config.xml in this path!");
                 return;
             }
             ProcessBuilder pb = new ProcessBuilder(hermesBatPath);
@@ -106,7 +107,7 @@ public class StartHermesJMS extends AbstractSoapUIAction<WsdlProject> {
         DirectoryFormComponent folderComponent;
 
         public HermesConfigDialog(String initialPath) {
-            super("Start  HermesJMS", "Hermes configuration", null, true);
+            super("Start  HermesJMS", "Hermes configuration", HelpUrls.START_HERMES_HELP_URL, true);
             setVisible(false);
             folderComponent.setValue(initialPath);
             folderComponent.setInitialFolder(initialPath);
