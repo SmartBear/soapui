@@ -26,7 +26,7 @@ import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 public class GoogleAnalyticsProvider extends BaseAnalyticsProvider {
     private static final Logger log = Logger.getLogger(GoogleAnalyticsProvider.class);
 
-    private static final String GA_ID = "UA-92447-17";
+    private static final String GA_ID = "UA-92447-22";
     private static final String CATEGORY_SESSION = "Session";
     private static final String CATEGORY_ACTION = "Action";
     private static final String CATEGORY_PGU_IN = "Plug-in";

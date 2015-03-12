@@ -163,7 +163,7 @@ public class SecurityTestRunnerAction extends AbstractToolsAction<WsdlProject> {
         setToolsSettingsAction(null);
         buildArgsForm(builder, false, "TestRunner");
 
-        return builder.buildDialog(buildDefaultActions(HelpUrls.TESTRUNNER_HELP_URL, modelItem),
+        return builder.buildDialog(buildDefaultActions(HelpUrls.TESTRUNNER_SECURITY_HELP_URL, modelItem),
                 "Specify arguments for launching SoapUI Security TestRunner", UISupport.TOOL_ICON);
     }
 

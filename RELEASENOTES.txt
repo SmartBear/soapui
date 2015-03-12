@@ -1,15 +1,34 @@
-# SoapUI Pro 5.1.2-OS
-#### Released 2015-01-26 ####
+# SoapUI OS 5.1.2
+#### Released 2015-03-11 ####
+
+### Major new features ###
+* In-app analytics as in SoapUI Pro
+* Contact information for users
+* JSON enhancements
+* Auto update of SoapUI
+
+### Improvements ###
+* JSON Property Transfer (SOAP-2279)
+* Get Data support in JSON tree (SOAP-2280)
 
 ### Bugs fixed ###
-* mockaswar-use-ext-lib-system-property
-* loglist-selection-visibility-on-mac
-* fix-LogListModel-cast-exception-on-clear
-* mockaswar-create-subdirectories
-* memory fix issues for requests returning large file content SOAP-2130
-* SOAP-1951 Use bundled JRE when running sh files from installed SoapUI on mac.
-* Fixed NPE when loading old style plugins
-* wss-sign-custom-token
+* Select directory window hangs on Preference->Tools page (SOAP-3318)
+* Mock as war uses external library system property
+* Loglist selection visibility on mac
+* LogListModel cast exception on clear
+* Mock as war doesn't create dir structure
+* NPE when loading old style plugins
+* Memory fix issues for requests returning large file content (SOAP-2130)
+* Use bundled JRE when running .sh files from installed SoapUI on mac (SOAP-1951)
+* Content of properties value are not update after load them (SOAP-3306)
+* Incorrect or broken help links (SOAP-3381)
+* "Play" button in "HTTP Request" editor window is not enabled (SOAP-3369)
+* AMF Request allows you to run test without endpoint (SOAP-3368)
+* Wrong help link in "AMF Request" test step window (SOAP-3367)
+* NullPointerException when cancel import packed project (SOAP-3364)
+* Wrong assertion content in sample project (SOAP-3312)
+* The "NullPointerException" error occurs when running servlet "MockAsWarServlet" (SOAP-3315)
+* Soap UI OS hangs when trying to deploy mock service as WAR (SOAP-3310)
 
 ### Updated libraries ###
 * Introduced analytics-core-5.1.2-os
