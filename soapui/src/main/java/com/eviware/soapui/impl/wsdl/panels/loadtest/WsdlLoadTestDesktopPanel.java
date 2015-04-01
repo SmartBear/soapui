@@ -371,7 +371,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class RunLoadTestAction extends AbstractAction {
         public RunLoadTestAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
             putValue(Action.SHORT_DESCRIPTION, "Runs this LoadTest");
         }
 
@@ -441,7 +441,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
     public class CancelRunTestCaseAction extends AbstractAction {
 
         public CancelRunTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this LoadTest");
         }
 

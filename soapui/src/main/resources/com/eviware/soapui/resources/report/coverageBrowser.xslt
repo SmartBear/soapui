@@ -44,7 +44,7 @@
         <tr>
             <td/>
             <td width="16px">
-                <img src="interface2.gif"/>
+                <img src="interface.png"/>
             </td>
             <td colspan="2" align="left">
                 <a href="{cov:ref}" target="operationFrame">
@@ -59,7 +59,7 @@
         <tr>
             <td colspan="2"/>
             <td width="16px">
-                <img src="operation.gif"/>
+                <img src="operation.png"/>
             </td>
             <td>
                 <a href="{cov:ref}" target="operationFrame">

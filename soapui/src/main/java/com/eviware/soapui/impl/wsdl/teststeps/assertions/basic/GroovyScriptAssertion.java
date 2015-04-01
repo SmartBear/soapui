@@ -348,7 +348,7 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
 
         private class RunAction extends AbstractAction {
             public RunAction() {
-                putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_groovy_script.gif"));
+                putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
                 putValue(Action.SHORT_DESCRIPTION,
                         "Runs this assertion script against the last messageExchange with a mock testContext");
             }
