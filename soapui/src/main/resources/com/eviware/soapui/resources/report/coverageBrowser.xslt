@@ -25,7 +25,7 @@
                     <table>
                         <tr>
                             <td width="16px">
-                                <img src="project.gif"/>
+                                <img src="project.png"/>
                             </td>
                             <td colspan="3" align="left">
                                 <a href="project.html" target="operationFrame">

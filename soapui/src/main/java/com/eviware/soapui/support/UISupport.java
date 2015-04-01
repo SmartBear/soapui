@@ -128,7 +128,7 @@ public class UISupport {
 
     public static final String DEFAULT_EDITOR_FONT = "Courier plain";
     public static final int DEFAULT_EDITOR_FONT_SIZE = 11;
-    public static final Color MAC_BACKGROUND_COLOR = new Color(229, 229, 229);
+    public static final Color MAC_BACKGROUND_COLOR = new Color(255, 255, 255);
     public static final Color MAC_PROGRESSBAR_BACKGROUND_COLOR = new Color(196, 196, 196);
     public static final Color MAC_PROGRESSBAR_MATTE_BORDER_COLOR = new Color(238, 238, 238);
     public static final Color MAC_PROGRESSBAR_LINE_BORDER_COLOR = new Color(166, 166, 166);
@@ -680,6 +680,7 @@ public class UISupport {
         toolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE);
         toolbar.setBorder(BorderFactory.createEmptyBorder(3, 0, 3, 0));
         toolbar.setMinimumSize(new Dimension(20, 20));
+        toolbar.setBackground(Color.WHITE);
         return toolbar;
     }
 
@@ -691,6 +692,7 @@ public class UISupport {
         toolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.SINGLE);
         toolbar.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
         toolbar.setMinimumSize(new Dimension(20, 20));
+        toolbar.setBackground(Color.WHITE);
         return toolbar;
     }
 

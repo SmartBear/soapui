@@ -86,8 +86,6 @@ public class WorkspaceImpl extends AbstractModelItem implements Workspace {
         File file = new File(path);
         this.path = file.getAbsolutePath();
         loadWorkspace(file);
-        workspaceIcon = UISupport.createImageIcon("/workspace.gif");
-
         for (WorkspaceListener listener : SoapUI.getListenerRegistry().getListeners(WorkspaceListener.class)) {
             addWorkspaceListener(listener);
         }

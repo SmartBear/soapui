@@ -229,7 +229,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)));
         }
-
+        frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         return frame;
     }
 
@@ -421,7 +421,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
                 if (!file.exists())
                     file = new File("soapui-background.jpg");
                 if (!file.exists())
-                    file = new File("soapui-background.png");
+                    file = new File("/soapui-background.png");
 
                 if (file.exists()) {
                     img = javax.imageio.ImageIO.read(file);
@@ -435,7 +435,6 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
 
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             if (img == null)
                 return;
 
