@@ -302,7 +302,6 @@ public class SoapUI {
         log.info("Used java version: " + System.getProperty("java.version"));
         frame.addWindowListener(new MainFrameWindowListener());
         UISupport.setMainFrame(frame);
-
         navigator = new Navigator(workspace);
         navigator.addNavigatorListener(new InternalNavigatorListener());
 
@@ -569,14 +568,12 @@ public class SoapUI {
         inspectorPanel.setDividerLocation(500);
         inspectorPanel.setResizeWeight(0.6);
         inspectorPanel.setCurrentInspector("Properties");
-
         return inspectorPanel.getComponent();
     }
 
     private JComponent buildOverviewPanel() {
         overviewPanel = new JPanel(new BorderLayout());
-        overviewPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 2));
-
+        overviewPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         return overviewPanel;
     }
 
