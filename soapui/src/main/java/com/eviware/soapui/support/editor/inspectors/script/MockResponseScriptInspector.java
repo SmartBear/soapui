@@ -96,7 +96,7 @@ public class MockResponseScriptInspector extends AbstractXmlInspector {
 
     private class RunScriptAction extends AbstractAction {
         public RunScriptAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_groovy_script.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
             putValue(Action.SHORT_DESCRIPTION, "Runs this script using mock httpRequest/httpResponse objects");
         }
 

@@ -235,11 +235,11 @@ public class AMFRequest extends AbstractModelItem implements Assertable, TestReq
             disabledRequestIcon = UISupport.createImageIcon("/disabled_amf_request.gif");
         }
 
-        setIconAnimator(new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request.gif", 3));
+        setIconAnimator(new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request.png", 3));
     }
 
     protected RequestIconAnimator<?> initIconAnimator() {
-        return new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request.gif", 3);
+        return new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request.png", 3);
     }
 
     public static class RequestIconAnimator<T extends AMFRequest> extends IconAnimator<T> implements

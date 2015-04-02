@@ -16,17 +16,8 @@
 
 package com.eviware.soapui.support.components;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.jgoodies.looks.HeaderStyle;
+import com.jgoodies.looks.Options;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -36,9 +27,21 @@ import javax.swing.JSplitPane;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
-
-import com.jgoodies.looks.HeaderStyle;
-import com.jgoodies.looks.Options;
+import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class JInspectorPanelImpl extends JPanel implements PropertyChangeListener, JInspectorPanel {
     private float defaultDividerLocation = 0.65F;
@@ -67,10 +70,18 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
         mainSplit = new JSplitPane(
                 orientation == SwingConstants.LEFT || orientation == SwingConstants.RIGHT ? JSplitPane.HORIZONTAL_SPLIT
                         : JSplitPane.VERTICAL_SPLIT);
+        BasicSplitPaneUI basic = (BasicSplitPaneUI) mainSplit.getUI();
+        basic.getDivider().setBorder(new LineBorder(Color.WHITE, 1) {
+            @Override
+            public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+                g.setColor(Color.LIGHT_GRAY);
+                g.drawLine(c.getWidth() - 1, 0, c.getWidth() - 1, c.getHeight());
+            }
+
+        });
         mainSplit.setDividerSize(5);
         mainSplit.setBorder(null);
         mainSplit.setOneTouchExpandable(false);
-
         JXToolBar toolbar = createInspectButtons();
         if (orientation == SwingConstants.BOTTOM) {
             mainSplit.setTopComponent(contentComponent);
@@ -80,15 +91,19 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
             add(toolbar, BorderLayout.SOUTH);
         } else if (orientation == SwingConstants.LEFT) {
             mainSplit.setRightComponent(contentComponent);
-
             JPanel p = new JPanel(new BorderLayout());
             p.add(toolbar);
+            p.setBorder(new LineBorder(Color.WHITE, 1) {
+                @Override
+                public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+                    g.setColor(Color.LIGHT_GRAY);
+                    g.drawLine(c.getWidth() - 1, 0, c.getWidth() - 1, c.getHeight());
+                }
+            });
             toolbar.setBorder(BorderFactory.createEmptyBorder(2, 3, 0, 4));
             mainSplit.setLeftComponent(inspectorPanel);
             mainSplit.setResizeWeight(0.2);
-
             toolbar.setOrientation(JToolBar.VERTICAL);
-
             add(p, BorderLayout.WEST);
         } else if (orientation == SwingConstants.RIGHT) {
             mainSplit.setLeftComponent(contentComponent);
@@ -142,7 +157,6 @@ public class JInspectorPanelImpl extends JPanel implements PropertyChangeListene
 
         inspectors.add(inspector);
         inspector.addPropertyChangeListener(JInspectorPanelImpl.this);
-
         inspectorPanel.add(inspector.getComponent(), inspector.getInspectorId());
         JToggleButton button = new JToggleButton(new SelectInspectorAction(inspector));
         button.setName(inspector.getInspectorId());

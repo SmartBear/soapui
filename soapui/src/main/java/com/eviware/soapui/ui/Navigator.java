@@ -27,27 +27,26 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.components.JXToolBar;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.event.PopupMenuListener;
-import javax.swing.event.PopupMenuEvent;
 import javax.swing.JScrollPane;
-import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -86,7 +85,6 @@ public class Navigator extends JPanel {
 
     private void buildUI() {
         treeModel = new SoapUITreeModel(workspace);
-
         mainTree = new NavigatorTree(treeModel);
         mainTree.setRootVisible(true);
         mainTree.setExpandsSelectedPaths(true);
@@ -98,22 +96,10 @@ public class Navigator extends JPanel {
         mainTree.setBorder(null);
         mainTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         mainTree.addKeyListener(new TreeKeyListener());
-
-        add(new JScrollPane(mainTree), BorderLayout.CENTER);
-        add(buildToolbar(), BorderLayout.NORTH);
+        JScrollPane sp = new JScrollPane(mainTree);
+        sp.setBorder(BorderFactory.createEmptyBorder());
+        add(sp, BorderLayout.CENTER);
         setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-    }
-
-    private Component buildToolbar() {
-        JXToolBar toolbar = UISupport.createSmallToolbar();
-
-        JToggleButton toggleButton = new JToggleButton(new TogglePropertiesAction());
-        toggleButton.setToolTipText("Toggles displaying of Test Properties in tree");
-        toggleButton.setSize(10, 12);
-        toolbar.addFixed(toggleButton);
-        toolbar.addGlue();
-
-        return toolbar;
     }
 
     private static class NavigatorTree extends JTree implements Autoscroll {
@@ -386,7 +372,7 @@ public class Navigator extends JPanel {
             }
         }
 
-        private void showToolTipLessPopupMenu(JPopupMenu pm, int x, int y){
+        private void showToolTipLessPopupMenu(JPopupMenu pm, int x, int y) {
             pm.addPopupMenuListener(new PopupMenuListener() {
 
                 @Override
@@ -404,7 +390,7 @@ public class Navigator extends JPanel {
                     ToolTipManager.sharedInstance().setEnabled(false);
                 }
             });
-            pm.show( mainTree, x, y );
+            pm.show(mainTree, x, y);
         }
 
         private void showPopup(MouseEvent e) {

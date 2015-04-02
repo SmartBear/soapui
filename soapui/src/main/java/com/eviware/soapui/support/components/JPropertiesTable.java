@@ -30,6 +30,7 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
@@ -82,20 +83,21 @@ public class JPropertiesTable<T> extends JPanel {
     public JPropertiesTable(String title, T propertyObject) {
         super(new BorderLayout());
         this.title = title;
-
+        setBackground(Color.WHITE);
         tableModel = new PropertiesTableModel<T>(propertyObject);
         table = new PTable(tableModel);
-
+        table.setBackground(Color.WHITE);
         table.getColumnModel().getColumn(0).setHeaderValue("Property");
         table.getColumnModel().getColumn(1).setHeaderValue("Value");
         table.getColumnModel().getColumn(0).setCellRenderer(new PropertiesTableCellRenderer());
         table.getColumnModel().getColumn(1).setCellRenderer(new PropertiesTableCellRenderer());
 
+
         add(new JScrollPane(table), BorderLayout.CENTER);
         titledBorder = BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), title);
         /*
 		 * Java 7 issue
-		 * 
+		 *
 		 * old: titledBorder.setTitleFont( titledBorder.getTitleFont().deriveFont(
 		 * Font.PLAIN, 11 ) ); titledBorder.getTitleFont() return null in Java 7
 		 */

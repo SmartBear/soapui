@@ -73,7 +73,7 @@ public class WsdlOperation extends AbstractWsdlModelItem<OperationConfig> implem
     public static final String SOLICIT_RESPONSE = "Solicit-Response";
 
     public final static Logger log = Logger.getLogger(WsdlOperation.class);
-    public static final String ICON_NAME = "/operation.gif";
+    public static final String ICON_NAME = "/operation.png";
     private List<WsdlRequest> requests = new ArrayList<WsdlRequest>();
     private WsdlInterface iface;
     private ImageIcon oneWayIcon;
