@@ -304,7 +304,6 @@ public class SoapUI {
         UISupport.setMainFrame(frame);
         navigator = new Navigator(workspace);
         navigator.addNavigatorListener(new InternalNavigatorListener());
-
         desktopPanelsList = new JDesktopPanelsList(desktop);
 
         mainInspector = JInspectorPanelFactory.build(buildContentPanel(), SwingConstants.LEFT);
@@ -573,7 +572,6 @@ public class SoapUI {
 
     private JComponent buildOverviewPanel() {
         overviewPanel = new JPanel(new BorderLayout());
-        overviewPanel.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         return overviewPanel;
     }
 
