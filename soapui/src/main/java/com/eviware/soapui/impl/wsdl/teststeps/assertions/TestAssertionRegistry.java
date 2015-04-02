@@ -27,6 +27,10 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcStatusAssertio
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jdbc.JdbcTimeoutAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSStatusAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.jms.JMSTimeoutAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathContentAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathCountAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathExistenceAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.json.JsonPathRegExAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.*;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -73,6 +77,10 @@ public class TestAssertionRegistry implements SoapUIFactoryRegistryListener {
         addAssertion(new JdbcStatusAssertion.Factory());
         addAssertion(new JdbcTimeoutAssertion.Factory());
         addAssertion(new HttpDownloadAllResourcesAssertion.Factory());
+        addAssertion(new JsonPathContentAssertion.Factory());
+        addAssertion(new JsonPathCountAssertion.Factory());
+        addAssertion(new JsonPathExistenceAssertion.Factory());
+        addAssertion(new JsonPathRegExAssertion.Factory());
 
         // security
         addAssertion(new ValidHttpStatusCodesAssertion.Factory());
