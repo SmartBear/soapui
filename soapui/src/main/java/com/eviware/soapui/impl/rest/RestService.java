@@ -43,7 +43,7 @@ public class RestService extends AbstractInterface<RestServiceConfig> implements
     private boolean exportChanges = false;
 
     public RestService(WsdlProject project, RestServiceConfig serviceConfig) {
-        super(serviceConfig, project, "/rest_service.png");
+        super(serviceConfig, project, "/rest_service.gif");
 
         for (RestResourceConfig resourceConfig : serviceConfig.getResourceList()) {
             resources.add(new RestResource(this, resourceConfig));

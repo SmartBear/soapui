@@ -127,7 +127,6 @@ import org.apache.log4j.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -144,10 +143,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -302,8 +299,10 @@ public class SoapUI {
         log.info("Used java version: " + System.getProperty("java.version"));
         frame.addWindowListener(new MainFrameWindowListener());
         UISupport.setMainFrame(frame);
+
         navigator = new Navigator(workspace);
         navigator.addNavigatorListener(new InternalNavigatorListener());
+
         desktopPanelsList = new JDesktopPanelsList(desktop);
 
         mainInspector = JInspectorPanelFactory.build(buildContentPanel(), SwingConstants.LEFT);
@@ -337,31 +336,26 @@ public class SoapUI {
 
     private JComponent buildToolbar() {
         mainToolbar = new JXToolBar();
-        UISupport.setPreferredHeight(mainToolbar, JXToolBar.MAIN_COMPONENT_HEIGHT);
         mainToolbar.setFloatable(false);
         mainToolbar.setRollover(true);
         mainToolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
-        mainToolbar.addSpace(20);
         mainToolbar.add(new NewWsdlProjectActionDelegate());
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
+        mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.FORUMS_HELP_URL,
-                "Opens the SoapUI Forum in a browser", "/group_go_toolbar.png"));
+                "Opens the SoapUI Forum in a browser", "/group_go.png"));
+        mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
-                "/favicon_toolbar.png"));
+                "/favicon.png"));
+        mainToolbar.addSpace(2);
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
 
         mainToolbar.addGlue();
-        searchField = new JTextField(20) {
-            @Override
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(Color.LIGHT_GRAY);
-                g.drawRect(0,0, getWidth() - 1, getHeight() - 1);
-            }
-        };
+
+        searchField = new JTextField(20);
         searchField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -381,12 +375,15 @@ public class SoapUI {
         mainToolbar.addFixed(searchField);
         mainToolbar.add(new ToolbarForumSearchAction());
         mainToolbar.add(new ShowOnlineHelpAction(HelpUrls.USERGUIDE_HELP_URL));
+
         for (int i = 0; i < mainToolbar.getComponentCount(); i++) {
             if (mainToolbar.getComponent(i) instanceof JComponent) {
                 ((JComponent) mainToolbar.getComponent(i)).setBorder(BorderFactory.createEmptyBorder(4, 2, 4, 2));
             }
         }
-        mainToolbar.setBorder(BorderFactory.createEmptyBorder());
+
+        mainToolbar.setBorder(BorderFactory.createEmptyBorder(3, 1, 3, 1));
+
         return mainToolbar;
     }
 
@@ -404,21 +401,14 @@ public class SoapUI {
     }
 
     private JMenuBar buildMainMenu() {
-        menuBar = new JMenuBar() {
-            @Override
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(Color.LIGHT_GRAY);
-                g.drawLine(0, getHeight() - 1, getWidth(), getHeight() - 1);
-            }
-        };
-        menuBar.setBorder(BorderFactory.createEmptyBorder());
+        menuBar = new JMenuBar();
+        menuBar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
+
         menuBar.add(buildFileMenu());
         menuBar.add(buildToolsMenu());
         menuBar.add(buildDesktopMenu());
         menuBar.add(buildHelpMenu());
+
         return menuBar;
     }
 
@@ -436,7 +426,9 @@ public class SoapUI {
         desktopMenu.add(new SwitchDesktopPanelAction(desktopPanelsList));
         desktopMenu.add(new MaximizeDesktopAction((InspectorLog4JMonitor) logMonitor));
         desktopMenu.addSeparator();
+
         ActionSupport.addActions(desktop.getActions(), desktopMenu);
+
         return desktopMenu;
     }
 
@@ -567,11 +559,14 @@ public class SoapUI {
         inspectorPanel.setDividerLocation(500);
         inspectorPanel.setResizeWeight(0.6);
         inspectorPanel.setCurrentInspector("Properties");
+
         return inspectorPanel.getComponent();
     }
 
     private JComponent buildOverviewPanel() {
         overviewPanel = new JPanel(new BorderLayout());
+        overviewPanel.setBorder(BorderFactory.createEmptyBorder(3, 0, 0, 2));
+
         return overviewPanel;
     }
 
@@ -1164,11 +1159,6 @@ public class SoapUI {
     }
 
     private class ApplyProxyButtonAction extends AbstractAction {
-
-        public ApplyProxyButtonAction() {
-            putValue(Action.NAME, "Proxy");
-        }
-
         public void actionPerformed(ActionEvent e) {
             if (ProxyUtils.isProxyEnabled()) {
                 SoapUI.getSettings().setBoolean(ProxySettings.ENABLE_PROXY, false);
@@ -1390,17 +1380,12 @@ public class SoapUI {
 
     static class NewWsdlProjectActionDelegate extends AbstractAction {
         public NewWsdlProjectActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project_toolbar_icon.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Creates a new SOAP project");
-            putValue(Action.NAME, "New");
         }
 
         public void setShortDescription(String description) {
             putValue(Action.SHORT_DESCRIPTION, description);
-        }
-
-        public void setName(String name) {
-            putValue(Action.NAME, name);
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -1410,9 +1395,8 @@ public class SoapUI {
 
     private static class ImportWsdlProjectActionDelegate extends AbstractAction {
         public ImportWsdlProjectActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/import_toolbar_icon.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/import_project.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Imports an existing SoapUI Project into the current workspace");
-            putValue(Action.NAME, "Import");
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -1422,9 +1406,8 @@ public class SoapUI {
 
     private static class SaveAllActionDelegate extends AbstractAction {
         public SaveAllActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/disk_multiple_toolbar.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/disk_multiple.png"));
             putValue(Action.SHORT_DESCRIPTION, "Saves all projects in the current workspace");
-            putValue(Action.NAME, "Save All");
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -1434,9 +1417,8 @@ public class SoapUI {
 
     private class PreferencesActionDelegate extends AbstractAction {
         public PreferencesActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options_toolbar.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Sets Global SoapUI Preferences");
-            putValue(Action.NAME, "Preferences");
         }
 
         public void actionPerformed(ActionEvent e) {

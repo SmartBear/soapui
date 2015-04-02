@@ -138,6 +138,5 @@ public class GradientPanel extends JPanel {
         g2d.setPaint(oldPaint);
 
         super.paintComponent(g);
-
     }
 }

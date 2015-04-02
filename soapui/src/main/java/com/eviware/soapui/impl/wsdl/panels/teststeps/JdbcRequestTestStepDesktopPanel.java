@@ -603,7 +603,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
     protected class TestConnectionAction extends AbstractAction {
         public TestConnectionAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Test the current Connection");
 
             setEnabled(false);
@@ -749,7 +749,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
     private class CancelAction extends AbstractAction {
         public CancelAction() {
             super();
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Aborts ongoing request");
             putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt X"));
         }

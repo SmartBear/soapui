@@ -58,7 +58,7 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         this.document = document;
         document.addPropertyChangeListener(EditorDocument.DOCUMENT_PROPERTY, this);
 
-        setBackground(Color.WHITE);
+        setBackground(Color.LIGHT_GRAY);
         inputTabs = new JTabbedPane(JTabbedPane.LEFT, JTabbedPane.SCROLL_TAB_LAYOUT);
 
         prettifyTabbedPaneUI();

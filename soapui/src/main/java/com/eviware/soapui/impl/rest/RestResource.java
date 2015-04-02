@@ -65,7 +65,7 @@ public class RestResource extends AbstractWsdlModelItem<RestResourceConfig> impl
     }
 
     private RestResource(RestService service, RestResource parent, RestResourceConfig resourceConfig) {
-        super(resourceConfig, service, "/rest_resource.png");
+        super(resourceConfig, service, "/rest_resource.gif");
 
         parentResource = parent;
 

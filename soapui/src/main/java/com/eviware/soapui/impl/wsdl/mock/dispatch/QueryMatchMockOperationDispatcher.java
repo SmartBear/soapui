@@ -561,7 +561,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
     private final class RunAction extends AbstractAction {
         public RunAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Runs Queries on last request");
         }
 

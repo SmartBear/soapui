@@ -66,7 +66,7 @@ public class WsdlTestRequestStepFactory extends WsdlTestStepFactory {
     private StringToStringMap dialogValues = new StringToStringMap();
 
     public WsdlTestRequestStepFactory() {
-        super(REQUEST_TYPE, "SOAP Request", "Submits a SOAP request and validates its response", "/request.png");
+        super(REQUEST_TYPE, "SOAP Request", "Submits a SOAP request and validates its response", "/request.gif");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

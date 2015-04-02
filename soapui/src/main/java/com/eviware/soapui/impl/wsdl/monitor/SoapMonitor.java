@@ -385,13 +385,13 @@ public class SoapMonitor extends JPanel {
     private JComponent buildToolbars(JXToolBar mainToolbar) {
         toolbar = UISupport.createSmallToolbar();
         mainToolbar.addFixed(startButton = UISupport.createToolbarButton(UISupport
-                .createImageIcon("/run.png")));
+                .createImageIcon("/run_testcase.gif")));
         mainToolbar.addFixed(stopButton = UISupport.createToolbarButton(UISupport
-                .createImageIcon("/stop_testcase.png")));
+                .createImageIcon("/stop_testcase.gif")));
         mainToolbar.addFixed(optionsButton = UISupport.createToolbarButton(new SoapMonitorOptionsAction()));
 
         toolbar
-                .addFixed(createRequestButton = UISupport.createToolbarButton(UISupport.createImageIcon("/request.png")));
+                .addFixed(createRequestButton = UISupport.createToolbarButton(UISupport.createImageIcon("/request.gif")));
         toolbar.addFixed(addToTestCaseButton = UISupport.createToolbarButton(UISupport
                 .createImageIcon("/testCase.gif")));
         // toolbar.addFixed( addToRestTestCaseButton =

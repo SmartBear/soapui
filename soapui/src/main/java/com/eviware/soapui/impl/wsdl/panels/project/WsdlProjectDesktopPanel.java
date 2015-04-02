@@ -374,7 +374,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
 
         private final class AfterLoadScriptRunAction extends AbstractAction {
             public AfterLoadScriptRunAction() {
-                putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+                putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_groovy_script.gif"));
                 putValue(SHORT_DESCRIPTION, "Runs this script");
             }
 
@@ -410,7 +410,7 @@ public class WsdlProjectDesktopPanel extends ModelItemDesktopPanel<WsdlProject> 
 
         private final class BeforeSaveScriptRunAction extends AbstractAction {
             public BeforeSaveScriptRunAction() {
-                putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+                putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_groovy_script.gif"));
                 putValue(SHORT_DESCRIPTION, "Runs this script");
             }
 

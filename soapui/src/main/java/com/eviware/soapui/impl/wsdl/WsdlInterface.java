@@ -97,7 +97,7 @@ public class WsdlInterface extends AbstractInterface<WsdlInterfaceConfig> {
     boolean policyFlag = false;
 
     public WsdlInterface(WsdlProject project, WsdlInterfaceConfig interfaceConfig) {
-        super(interfaceConfig, project, "/interface.png");
+        super(interfaceConfig, project, "/interface2.gif");
 
         if (!interfaceConfig.isSetWsaVersion()) {
             interfaceConfig.setWsaVersion(WsaVersionTypeConfig.NONE);

@@ -413,7 +413,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 
     private final class RunAction extends AbstractAction {
         public RunAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_all.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_all.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Runs the current conditions against the previous response");
         }
 
@@ -449,7 +449,7 @@ public class GotoStepDesktopPanel extends ModelItemDesktopPanel<WsdlGotoTestStep
 
     private final class TestConditionAction extends AbstractAction {
         public TestConditionAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.gif"));
             putValue(Action.SHORT_DESCRIPTION,
                     "Runs the current condition against the previous response and shows the result");
         }

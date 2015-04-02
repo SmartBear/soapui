@@ -87,7 +87,7 @@ public class GroovyEditorComponent extends JPanel implements PropertyChangeListe
         if (runAction != null) {
             JButton runButton = UISupport.createToolbarButton(runAction);
             if (runButton.getIcon() == null) {
-                runButton.setIcon(UISupport.createImageIcon("/run.png"));
+                runButton.setIcon(UISupport.createImageIcon("/run_testcase.gif"));
             }
 
             if (runButton.getToolTipText() == null) {

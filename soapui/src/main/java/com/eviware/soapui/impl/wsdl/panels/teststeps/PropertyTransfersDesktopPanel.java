@@ -1134,7 +1134,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
     private final class RunAllAction extends AbstractAction {
         public RunAllAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_all.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_all.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Runs all Property Transfers");
         }
 
@@ -1158,7 +1158,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
 
     private final class RunAction extends AbstractAction {
         public RunAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Runs selected PropertyTransfer");
         }
 

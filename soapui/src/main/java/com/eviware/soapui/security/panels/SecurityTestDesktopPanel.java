@@ -399,7 +399,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class RunSecurityTestAction extends AbstractAction {
         public RunSecurityTestAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Runs this securitytest");
         }
 
@@ -427,7 +427,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class CancelRunSecuritytestAction extends AbstractAction {
         public CancelRunSecuritytestAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this securitytest");
         }
 

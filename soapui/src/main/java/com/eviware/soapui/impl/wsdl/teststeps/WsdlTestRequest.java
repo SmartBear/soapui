@@ -365,7 +365,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
     protected static class TestRequestIconAnimator extends RequestIconAnimator<WsdlTestRequest> {
         public TestRequestIconAnimator(WsdlTestRequest modelItem) {
-            super(modelItem, "/request.png", "/exec_request.png", 4);
+            super(modelItem, "/request.gif", "/exec_request.gif", 4);
         }
 
         @Override

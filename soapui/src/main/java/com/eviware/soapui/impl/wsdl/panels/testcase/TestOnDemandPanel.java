@@ -218,7 +218,7 @@ public class TestOnDemandPanel extends JPanel {
 
     private class SendTestCaseAction extends AbstractAction {
         public SendTestCaseAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/run.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Run Test On Demand report");
         }
 

@@ -25,7 +25,7 @@
                     <table>
                         <tr>
                             <td width="16px">
-                                <img src="project.png"/>
+                                <img src="project.gif"/>
                             </td>
                             <td colspan="3" align="left">
                                 <a href="project.html" target="operationFrame">
@@ -44,7 +44,7 @@
         <tr>
             <td/>
             <td width="16px">
-                <img src="interface.png"/>
+                <img src="interface2.gif"/>
             </td>
             <td colspan="2" align="left">
                 <a href="{cov:ref}" target="operationFrame">
@@ -59,7 +59,7 @@
         <tr>
             <td colspan="2"/>
             <td width="16px">
-                <img src="operation.png"/>
+                <img src="operation.gif"/>
             </td>
             <td>
                 <a href="{cov:ref}" target="operationFrame">

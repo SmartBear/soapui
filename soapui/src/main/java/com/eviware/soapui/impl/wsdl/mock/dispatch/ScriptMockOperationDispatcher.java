@@ -205,7 +205,7 @@ public class ScriptMockOperationDispatcher extends AbstractMockOperationDispatch
 
     private class RunScriptAction extends AbstractAction {
         public RunScriptAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_groovy_script.gif"));
             putValue(Action.SHORT_DESCRIPTION, "Runs this script using a mockRequest and context");
         }
 
