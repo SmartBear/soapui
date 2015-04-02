@@ -265,7 +265,7 @@ public class WsdlTestSuiteDesktopPanel extends KeySensitiveModelItemDesktopPanel
     private Component buildTestCaseListToolbar() {
         JXToolBar toolbar = UISupport.createToolbar();
         toolbar.add(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testCase.gif")));
+                AddNewTestCaseAction.SOAPUI_ACTION_ID, getModelItem(), null, "/testcase.png")));
         toolbar.addGlue();
         toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITEEDITOR_HELP_URL)));
         return toolbar;

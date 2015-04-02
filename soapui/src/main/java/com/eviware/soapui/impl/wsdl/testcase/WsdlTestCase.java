@@ -84,7 +84,7 @@ public class WsdlTestCase extends AbstractTestPropertyHolderWsdlModelItem<TestCa
     public final static String TEARDOWN_SCRIPT_PROPERTY = WsdlTestCase.class.getName() + "@tearDownScript";
     public static final String TIMEOUT_PROPERTY = WsdlTestCase.class.getName() + "@timeout";
     public static final String SEARCH_PROPERTIES_PROPERTY = WsdlTestCase.class.getName() + "@searchProperties";
-    public static final String ICON_NAME = "/testCase.gif";
+    public static final String ICON_NAME = "/testcase.png";
 
     private final WsdlTestSuite testSuite;
     private final List<WsdlTestStep> testSteps = new ArrayList<WsdlTestStep>();

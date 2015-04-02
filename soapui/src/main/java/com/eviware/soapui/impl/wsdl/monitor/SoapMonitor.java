@@ -393,10 +393,10 @@ public class SoapMonitor extends JPanel {
         toolbar
                 .addFixed(createRequestButton = UISupport.createToolbarButton(UISupport.createImageIcon("/request.png")));
         toolbar.addFixed(addToTestCaseButton = UISupport.createToolbarButton(UISupport
-                .createImageIcon("/testCase.gif")));
+                .createImageIcon("/testcase.png")));
         // toolbar.addFixed( addToRestTestCaseButton =
         // UISupport.createToolbarButton( UISupport
-        // .createImageIcon( "/testCase.gif" ) ) );
+        // .createImageIcon( "/testcase.png" ) ) );
         toolbar.addFixed(addToMockServiceButton = UISupport.createToolbarButton(UISupport
                 .createImageIcon("/mockService.gif")));
         toolbar

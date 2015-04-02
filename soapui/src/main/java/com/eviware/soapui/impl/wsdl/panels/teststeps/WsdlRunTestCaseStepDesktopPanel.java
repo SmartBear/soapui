@@ -235,7 +235,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
     private class OpenTestCaseAction extends AbstractAction {
         public OpenTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/testCase.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/testcase.png"));
             putValue(Action.SHORT_DESCRIPTION, "Opens the target TestCases editor");
         }
 
