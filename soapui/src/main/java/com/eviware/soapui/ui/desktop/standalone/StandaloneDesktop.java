@@ -67,8 +67,6 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private CloseAllAction closeAllAction = new CloseAllAction();
 
     private static final int xOffset = 30, yOffset = 30;
-    //private JPanel desktopPanel = new JPanel(new BorderLayout());
-
     private boolean transferring;
 
     private List<DesktopPanel> deferredDesktopPanels = new LinkedList<DesktopPanel>();
@@ -87,7 +85,6 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
 
         // Setting Mac-like color for all platforms pending
         desktop.setBackground(UISupport.MAC_BACKGROUND_COLOR);
-
         enableWindowActions();
         desktop.addComponentListener(new DesktopResizeListener());
 
@@ -107,7 +104,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
     private void buildUI() {
         desktop = new SoapUIDesktopPane();
         JScrollPane scrollPane = new JScrollPane(desktop);
-
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         inspector = JInspectorPanelFactory.build(scrollPane, SwingConstants.RIGHT);
         inspectorPanel = new JPanel( new BorderLayout());
         inspector.addInspector(new JComponentInspector<JComponent>(inspectorPanel, "Inspector",
@@ -229,7 +226,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
             frame.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
                     BorderFactory.createEmptyBorder(2, 2, 2, 2)));
         }
-
+        frame.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
         return frame;
     }
 
@@ -421,7 +418,7 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
                 if (!file.exists())
                     file = new File("soapui-background.jpg");
                 if (!file.exists())
-                    file = new File("soapui-background.png");
+                    file = new File("/soapui-background.png");
 
                 if (file.exists()) {
                     img = javax.imageio.ImageIO.read(file);
@@ -435,7 +432,6 @@ public class StandaloneDesktop extends AbstractSoapUIDesktop {
 
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             if (img == null)
                 return;
 

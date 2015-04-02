@@ -332,7 +332,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
         stateDependantComponents.add(setEndpointButton);
 
         createLoadTestButton = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.gif"));
+                AddNewLoadTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/loadTest.png"));
 
         createSecurityTestButton = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
                 AddNewSecurityTestAction.SOAPUI_ACTION_ID, getModelItem(), null, "/security_test.gif"));
@@ -525,7 +525,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class RunTestCaseAction extends AbstractAction {
         public RunTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_testcase.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
             putValue(Action.SHORT_DESCRIPTION, "Runs this testcase");
         }
 
@@ -538,7 +538,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class CancelRunTestCaseAction extends AbstractAction {
         public CancelRunTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this testcase");
         }
 

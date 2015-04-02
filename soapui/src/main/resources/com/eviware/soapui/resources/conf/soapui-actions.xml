@@ -594,7 +594,7 @@
                            description="Shows the TestSuite Editor for this TestSuite" keyStroke="ENTER"/>
         <tns:actionMapping actionId="ToggleDisableTestSuiteAction"/>
         <tns:actionMapping actionId="SeperatorAction"/>
-        <tns:actionMapping actionId="AddNewTestCaseAction" keyStroke="menu N" iconPath="/testCase.gif"/>
+        <tns:actionMapping actionId="AddNewTestCaseAction" keyStroke="menu N" iconPath="/testcase.png"/>
         <tns:actionMapping actionId="CloneTestSuiteAction" keyStroke="F9"/>
         <tns:actionMapping actionId="SeperatorAction"/>
         <tns:actionMapping actionId="TestSuiteTestRunnerAction"/>

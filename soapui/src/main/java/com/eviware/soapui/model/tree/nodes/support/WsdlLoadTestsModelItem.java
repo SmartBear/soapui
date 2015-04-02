@@ -34,7 +34,7 @@ public class WsdlLoadTestsModelItem extends EmptyModelItem {
     private TestSuiteListener listener = new InternalTestSuiteListener();
 
     public WsdlLoadTestsModelItem(TestCase testCase) {
-        super(createLabel(testCase), UISupport.createImageIcon("/loadtests.gif"));
+        super(createLabel(testCase), UISupport.createImageIcon("/loadtests.png"));
         this.testCase = testCase;
 
         testCase.getTestSuite().addTestSuiteListener(listener);

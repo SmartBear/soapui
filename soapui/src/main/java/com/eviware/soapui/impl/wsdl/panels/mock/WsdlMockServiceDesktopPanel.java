@@ -556,7 +556,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
 
     public class ShowWsdlAction extends AbstractAction {
         public ShowWsdlAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/interface.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/interface.png"));
             putValue(Action.SHORT_DESCRIPTION, "Opens the root WSDL page in a browser");
         }
 
@@ -568,7 +568,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
 
     public class StopMockServiceAction extends AbstractAction {
         public StopMockServiceAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops this MockService on the specified port and endpoint");
         }
 

@@ -585,7 +585,7 @@ public abstract class AbstractHttpRequestDesktopPanel<T extends ModelItem, T2 ex
     private class CancelAction extends AbstractAction {
         public CancelAction() {
             super();
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/cancel_request.png"));
             putValue(Action.SHORT_DESCRIPTION, "Aborts ongoing request");
             putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("alt X"));
         }

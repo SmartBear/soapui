@@ -853,7 +853,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
     private class RunWSIAction extends AbstractAction {
         public RunWSIAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/run.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/run.png"));
             putValue(Action.SHORT_DESCRIPTION, "Creates a WS-I report for this interface");
         }
 

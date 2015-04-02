@@ -169,7 +169,7 @@ public class XPathMockOperationDispatcher extends AbstractMockOperationDispatche
 
     private class RunXPathAction extends AbstractAction {
         public RunXPathAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run_groovy_script.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/run.png"));
             putValue(Action.SHORT_DESCRIPTION, "Evaluates this xpath expression against the latest request");
         }
 

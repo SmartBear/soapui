@@ -65,8 +65,8 @@ public class ModelItemIconFactory {
         // the following use different icon files for the overview and in the tree
         modelItemIcons.put(TestStep.class, "/teststeps.gif");
         modelItemIcons.put(TestAssertion.class, "/assertion.gif");
-        modelItemIcons.put(Request.class, "/request.gif");
-        modelItemIcons.put(Interface.class, "/interface.gif");
+        modelItemIcons.put(Request.class, "/request.png");
+        modelItemIcons.put(Interface.class, "/interface.png");
     }
 
     public static ImageIcon getIcon(Class<? extends ModelItem> clazz) {
