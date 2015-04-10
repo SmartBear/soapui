@@ -206,13 +206,13 @@
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>analytics-core</artifactId>
-            <version>os-${project.version}</version>
+            <version>5.2.0-os</version>
         </dependency>
 
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>out-app-analytics-provider</artifactId>
-            <version>os-${project.version}</version>
+            <version>5.2.0-os</version>
         </dependency>
 
         <!-- JGoodies -->
