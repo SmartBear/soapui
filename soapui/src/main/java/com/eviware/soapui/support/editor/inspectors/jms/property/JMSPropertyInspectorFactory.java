@@ -66,7 +66,7 @@ public class JMSPropertyInspectorFactory implements RequestInspectorFactory, Res
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
-                inspector.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+                inspector.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPOINT_PREFIX));
             }
             super.propertyChange(evt);
         }

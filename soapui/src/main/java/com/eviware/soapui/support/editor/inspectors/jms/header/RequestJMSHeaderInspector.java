@@ -39,7 +39,7 @@ public class RequestJMSHeaderInspector extends AbstractJMSHeaderInspector implem
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
-            this.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+            this.setEnabled(request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPOINT_PREFIX));
         }
     }
 
