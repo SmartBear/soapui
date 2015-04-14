@@ -37,7 +37,7 @@ public class JMSUtils {
     private static boolean checkIfJMS(Request request) {
         try {
             String endpoint = request.getEndpoint();
-            return StringUtils.hasContent(endpoint) && endpoint.startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX);
+            return StringUtils.hasContent(endpoint) && endpoint.startsWith(JMSEndpoint.JMS_ENDPOINT_PREFIX);
         } catch (NullPointerException e) {
             SoapUI.logError(e);
         }
@@ -51,7 +51,7 @@ public class JMSUtils {
                 StringToStringMap strmap = me.getProperties();
                 if (strmap != null && strmap.containsKey("Endpoint")) {
                     String r = me.getProperty("Endpoint");
-                    return r != null && r.startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX);
+                    return r != null && r.startsWith(JMSEndpoint.JMS_ENDPOINT_PREFIX);
                 } else {
                     return false;
                 }

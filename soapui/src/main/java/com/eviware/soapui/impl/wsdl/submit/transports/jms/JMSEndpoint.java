@@ -22,13 +22,15 @@ import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 
+import java.util.Arrays;
+
 public class JMSEndpoint {
     public static final String JMS_OLD_ENDPOINT_SEPARATOR = "/";
     public static final String JMS_ENDPOINT_SEPARATOR = "::";
     public static final String QUEUE_ENDPOINT_PREFIX = "queue_";
     public static final String TOPIC_ENDPOINT_PREFIX = "topic_";
     public static final String JMS_EMPTY_DESTIONATION = "-";
-    public static final String JMS_ENDPIONT_PREFIX = "jms://";
+    public static final String JMS_ENDPOINT_PREFIX = "jms://";
     Request request;
     SubmitContext submitContext;
     String[] parameters;
@@ -52,7 +54,7 @@ public class JMSEndpoint {
     }
 
     public JMSEndpoint(String jmsEndpointString) {
-        parameters = jmsEndpointString.replaceFirst(JMS_ENDPIONT_PREFIX, "").split(JMS_ENDPOINT_SEPARATOR);
+        parameters = jmsEndpointString.replaceFirst(JMS_ENDPOINT_PREFIX, "").split(JMS_ENDPOINT_SEPARATOR);
         sessionName = getEndpointParameter(0);
         send = getEndpointParameter(1);
         receive = getEndpointParameter(2);
@@ -62,7 +64,7 @@ public class JMSEndpoint {
         resolveOldEndpointPattern(request);
 
         String endpoint = PropertyExpander.expandProperties(context, request.getEndpoint());
-        String[] parameters = endpoint.replaceFirst(JMS_ENDPIONT_PREFIX, "").split(JMS_ENDPOINT_SEPARATOR);
+        String[] parameters = endpoint.replaceFirst(JMS_ENDPOINT_PREFIX, "").split(JMS_ENDPOINT_SEPARATOR);
         return parameters;
     }
 
@@ -91,10 +93,33 @@ public class JMSEndpoint {
         }
     }
 
-    private String getEndpointParameter(int i) {
-        if (i > parameters.length - 1) {
-            return null;
+    private boolean checkParameterIndex(int parameterIndex, String[] parameters) throws IllegalArgumentException {
+        if (parameterIndex < 0 || parameterIndex > 2) {
+            throw new IllegalArgumentException(
+                    "\n" +
+                            "Illegal JMS endpoint parameter index: \" + parameterIndex \n" +
+                            "For JMS please use this endpoint pattern: \n" +
+                            "for sending 'jms://sessionName::queue_myqueuename' \n" +
+                            "for receive 'jms://sessionName::-::queue_myqueuename' \n" +
+                            "for send-receive 'jms://sessionName::queue_myqueuename1::queue_myqueuename2'"
+            );
         }
+
+        if (parameterIndex > parameters.length - 1) {
+            SoapUI.log("JMS Endpoint String does not contain a parameter at index " +
+                            parameterIndex + ", parameters: " + Arrays.toString(parameters)
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+    private String getEndpointParameter(int i) {
+        if (!checkParameterIndex(i, parameters)) {
+            return "";
+        }
+
         String stripParameter = PropertyExpander.expandProperties(submitContext, parameters[i])
                 .replaceFirst(QUEUE_ENDPOINT_PREFIX, "").replaceFirst(TOPIC_ENDPOINT_PREFIX, "");
         return stripParameter;

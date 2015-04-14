@@ -193,7 +193,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
         public void propertyChange(PropertyChangeEvent evt) {
             if (evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
                 if (inspector != null && request.getEndpoint() != null) {
-                    inspector.setEnabled(!request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+                    inspector.setEnabled(!request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPOINT_PREFIX));
                 }
             }
             super.propertyChange(evt);
@@ -282,7 +282,7 @@ public class HttpHeadersInspectorFactory implements RequestInspectorFactory, Res
 
         public void propertyChange(PropertyChangeEvent evt) {
             if (request.getEndpoint() != null && evt.getPropertyName().equals(AbstractHttpRequest.ENDPOINT_PROPERTY)) {
-                inspector.setEnabled(!request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPIONT_PREFIX));
+                inspector.setEnabled(!request.getEndpoint().startsWith(JMSEndpoint.JMS_ENDPOINT_PREFIX));
             }
             super.propertyChange(evt);
         }

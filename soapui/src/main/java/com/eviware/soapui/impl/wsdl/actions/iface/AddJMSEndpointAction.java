@@ -89,7 +89,7 @@ public class AddJMSEndpointAction extends AbstractSoapUIAction<AbstractInterface
     }
 
     private String createEndpointString(String session, String send, String receive) {
-        StringBuilder sb = new StringBuilder(JMSEndpoint.JMS_ENDPIONT_PREFIX);
+        StringBuilder sb = new StringBuilder(JMSEndpoint.JMS_ENDPOINT_PREFIX);
         sb.append(session + JMSEndpoint.JMS_ENDPOINT_SEPARATOR);
         sb.append(send);
         if (!JMSEndpoint.JMS_EMPTY_DESTIONATION.equals(receive)) {
