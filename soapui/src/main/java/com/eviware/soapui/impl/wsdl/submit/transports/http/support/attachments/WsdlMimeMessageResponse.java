@@ -16,12 +16,18 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 
-import java.io.ByteArrayOutputStream;
-import java.io.StringWriter;
-import java.util.Vector;
-
-import javax.xml.namespace.QName;
-
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
+import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
+import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
+import com.eviware.soapui.model.iface.Attachment;
+import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
+import com.eviware.soapui.support.Tools;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.http.Header;
@@ -37,18 +43,11 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.AbstractHttpRequestInterface;
-import com.eviware.soapui.impl.wsdl.WsdlRequest;
-import com.eviware.soapui.impl.wsdl.submit.filters.WssRequestFilter;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.ExtendedHttpMethod;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
-import com.eviware.soapui.impl.wsdl.support.wss.IncomingWss;
-import com.eviware.soapui.impl.wsdl.support.xsd.SchemaUtils;
-import com.eviware.soapui.model.iface.Attachment;
-import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-import com.eviware.soapui.support.Tools;
-import com.eviware.soapui.support.xml.XmlUtils;
+import javax.xml.namespace.QName;
+import java.io.ByteArrayOutputStream;
+import java.io.StringWriter;
+import java.net.URLDecoder;
+import java.util.Vector;
 
 public class WsdlMimeMessageResponse extends MimeMessageResponse implements WsdlResponse {
     private Vector<Object> wssResult;
@@ -117,7 +116,9 @@ public class WsdlMimeMessageResponse extends MimeMessageResponse implements Wsdl
             for (XmlObject include : includes) {
                 Element elm = (Element) include.getDomNode();
                 String href = elm.getAttribute("href");
-                Attachment attachment = getMmSupport().getAttachmentWithContentId("<" + href.substring(4) + ">");
+                // substing(4) - removing the "cid:" prefix
+                Attachment attachment = getMmSupport().getAttachmentWithContentId("<" + URLDecoder.decode(href.substring(4), "UTF-8") + ">");
+                
                 if (attachment != null) {
                     ByteArrayOutputStream data = Tools.readAll(attachment.getInputStream(), 0);
                     byte[] byteArray = data.toByteArray();
