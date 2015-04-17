@@ -1200,6 +1200,8 @@ public class SoapUI {
         if (applyProxyButton == null) {
             return;
         }
+        applyProxyButton.setVerticalTextPosition(SwingConstants.BOTTOM);
+        applyProxyButton.setHorizontalTextPosition(SwingConstants.CENTER);
         if (ProxyUtils.isProxyEnabled()) {
             applyProxyButton.setIcon(UISupport.createImageIcon(PROXY_ENABLED_ICON));
             if (ProxyUtils.isAutoProxy()) {
