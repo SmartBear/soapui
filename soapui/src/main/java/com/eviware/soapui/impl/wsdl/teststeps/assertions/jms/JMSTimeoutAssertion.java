@@ -53,6 +53,7 @@ import org.apache.xmlbeans.XmlObject;
 public class JMSTimeoutAssertion extends WsdlMessageAssertion implements ResponseAssertion, RequestAssertion {
     public static final String JMS_TIMEOUT_DURATION = "JMS timeout duration";
     private static final String JMS_TIMEOUT_SETTING = "timeout";
+    public static final String JMS_TIMEOUT_OK = "JMS Timeout OK";
     private XFormDialog dialog;
     public static final String ID = "JMS Timeout";
     public static final String LABEL = "JMS Timeout";
@@ -67,8 +68,8 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
         public boolean isRecieved;
 
         public LastJmsResponseResult (){
-            timeTaken = 0;
-            isRecieved = true;
+            timeTaken = magicUnreachableNumber;
+            isRecieved = false;
         }
     }
 
@@ -108,13 +109,13 @@ public class JMSTimeoutAssertion extends WsdlMessageAssertion implements Respons
                 throw new AssertionException(new AssertionError(jmsTimeoutError));
             }
         }
-        return "JMS Timeout OK";
+        return JMS_TIMEOUT_OK;
     }
 
     @Override
     protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
             throws AssertionException {
-        return "JMS Timeout OK";
+        return JMS_TIMEOUT_OK;
     }
 
     @Override
