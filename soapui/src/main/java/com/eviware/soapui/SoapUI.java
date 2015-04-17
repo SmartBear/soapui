@@ -127,7 +127,6 @@ import org.apache.log4j.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -143,6 +142,7 @@ import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -1215,6 +1215,8 @@ public class SoapUI {
             applyProxyButton.getAction().putValue(Action.SHORT_DESCRIPTION, "Proxy Setting: None");
         }
         applyProxyButton.setSelected(ProxyUtils.isProxyEnabled());
+        UIManager.put("ToggleButton.select", Color.WHITE);
+        SwingUtilities.updateComponentTreeUI(applyProxyButton);
     }
 
     private static class ShowStarterPageAction extends AbstractAction {
