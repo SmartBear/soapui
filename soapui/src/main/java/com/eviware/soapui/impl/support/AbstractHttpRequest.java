@@ -224,7 +224,7 @@ public abstract class AbstractHttpRequest<T extends AbstractRequestConfig> exten
     }
 
     protected RequestIconAnimator<?> initIconAnimator() {
-        return new RequestIconAnimator<AbstractHttpRequest<?>>(this, "/request.png", "/exec_request.png", 4);
+        return new RequestIconAnimator<AbstractHttpRequest<?>>(this, "/soap_request.png", "/soap_request.png", 4);
     }
 
     public void addSubmitListener(SubmitListener listener) {

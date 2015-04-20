@@ -385,22 +385,22 @@ public class SoapMonitor extends JPanel {
     private JComponent buildToolbars(JXToolBar mainToolbar) {
         toolbar = UISupport.createSmallToolbar();
         mainToolbar.addFixed(startButton = UISupport.createToolbarButton(UISupport
-                .createImageIcon("/run.png")));
+                .createImageIcon("/start.png")));
         mainToolbar.addFixed(stopButton = UISupport.createToolbarButton(UISupport
-                .createImageIcon("/stop_testcase.png")));
+                .createImageIcon("/stop.png")));
         mainToolbar.addFixed(optionsButton = UISupport.createToolbarButton(new SoapMonitorOptionsAction()));
 
         toolbar
-                .addFixed(createRequestButton = UISupport.createToolbarButton(UISupport.createImageIcon("/request.png")));
+                .addFixed(createRequestButton = UISupport.createToolbarButton(UISupport.createImageIcon("/soap_request.png")));
         toolbar.addFixed(addToTestCaseButton = UISupport.createToolbarButton(UISupport
                 .createImageIcon("/testcase.png")));
         // toolbar.addFixed( addToRestTestCaseButton =
         // UISupport.createToolbarButton( UISupport
         // .createImageIcon( "/testcase.png" ) ) );
         toolbar.addFixed(addToMockServiceButton = UISupport.createToolbarButton(UISupport
-                .createImageIcon("/mockService.gif")));
+                .createImageIcon("/soap_virt.png")));
         toolbar
-                .addFixed(clearButton = UISupport.createToolbarButton(UISupport.createImageIcon("/clear_loadtest.gif")));
+                .addFixed(clearButton = UISupport.createToolbarButton(UISupport.createImageIcon("/clear.png")));
 
         startButton.setToolTipText("Starts the HTTP Monitor as configured");
         stopButton.setToolTipText("Stops the HTTP Monitor");
