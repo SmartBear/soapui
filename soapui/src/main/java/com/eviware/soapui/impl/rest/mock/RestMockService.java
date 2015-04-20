@@ -37,7 +37,7 @@ import static com.eviware.soapui.impl.rest.RestRequestInterface.HttpMethod;
 
 public class RestMockService extends AbstractMockService<RestMockAction, RESTMockServiceConfig> {
 
-    public final static String ICON_NAME = "/restMockService.gif";
+    public final static String ICON_NAME = "/rest_virt.png";
     public static final String STRING_ID = "REST";
 
     public String getStringID() {
