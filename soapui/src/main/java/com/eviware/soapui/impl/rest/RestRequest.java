@@ -78,7 +78,7 @@ public class RestRequest extends AbstractHttpRequest<RestRequestConfig> implemen
     private JMSPropertiesConfig jmsPropertyConfig;
 
     public RestRequest(RestMethod method, RestRequestConfig requestConfig, boolean forLoadTest) {
-        super(requestConfig, method.getOperation(), "/rest_request.gif", forLoadTest);
+        super(requestConfig, method.getOperation(), "/rest_request_step.png", forLoadTest);
         this.method = method;
 
         if (requestConfig.getParameters() == null) {

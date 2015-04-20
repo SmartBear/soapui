@@ -54,7 +54,7 @@ public class RestRequestStepFactory extends WsdlTestStepFactory {
 
     public RestRequestStepFactory() {
         super(RESTREQUEST_TYPE, "REST Request", "Submits a REST-style Request and validates its response",
-                "/rest_request.gif");
+                "/rest_request_step.png");
     }
 
     public static class ItemDeletedException extends Exception {

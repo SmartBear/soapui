@@ -82,10 +82,10 @@ public class RestTestRequest extends RestRequest implements RestTestRequestInter
     }
 
     protected void initIcons() {
-        validRequestIcon = UISupport.createImageIcon("/valid_rest_request.gif");
-        failedRequestIcon = UISupport.createImageIcon("/invalid_rest_request.gif");
-        unknownRequestIcon = UISupport.createImageIcon("/unknown_rest_request.gif");
-        disabledRequestIcon = UISupport.createImageIcon("/disabled_rest_request.gif");
+        validRequestIcon = UISupport.createImageIcon("/valid_rest_request_step.png");
+        failedRequestIcon = UISupport.createImageIcon("/invalid_rest_request_step.png");
+        unknownRequestIcon = UISupport.createImageIcon("/rest_request_step.png");
+        disabledRequestIcon = UISupport.createImageIcon("/disabled_rest_request_step.png");
 
         // setIconAnimator(new RequestIconAnimator<RestTestRequest>(this,
         // "/rest_request.gif", "/exec_rest_request", 4, "gif"));
