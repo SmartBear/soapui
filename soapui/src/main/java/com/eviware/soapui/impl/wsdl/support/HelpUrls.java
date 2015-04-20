@@ -90,6 +90,7 @@ public interface HelpUrls {
     public static final String GOTOSTEPEDITOR_HELP_URL = "/functional-testing/teststep-reference/conditional-goto/conditional-goto.html";
     public static final String GROOVYASSERTION_HELP_URL = "/functional-testing/validating-messages/using-script-assertions.html";
     public static final String GROOVYSTEPEDITOR_HELP_URL = "/functional-testing/working-with-scripts.html";
+    public static final String ASSERTION_JMS_TIMEOUT_EDITOR_HELP_URL = "/jms/validating-jms-responses.html";
     public static final String GSOAP_HELP_URL = "http://www.cs.fsu.edu/~engelen/soap.html";
 
     public static final String HTTP_REQUEST_HELP_URL = "/functional-testing/teststep-reference/http-request/http-request.html";
