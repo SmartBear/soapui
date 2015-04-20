@@ -60,9 +60,9 @@ public class WsdlGroovyScriptTestStep extends WsdlTestStepWithProperties impleme
         super(testCase, config, true, forLoadTest);
 
         if (!forLoadTest) {
-            okIcon = UISupport.createImageIcon("/groovy_script.gif");
+            okIcon = UISupport.createImageIcon("/groovy_script_step.png");
             setIcon(okIcon);
-            failedIcon = UISupport.createImageIcon("/groovy_script_failed.gif");
+            failedIcon = UISupport.createImageIcon("/failed_groovy_step.png");
         }
 
         if (config.getConfig() == null) {
