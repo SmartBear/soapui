@@ -88,7 +88,7 @@ public class WsdlRunTestCaseTestStep extends WsdlTestStep {
             stepConfig.setRunMode(RunTestCaseRunModeTypeConfig.PARALLELL);
         }
 
-        setIcon(UISupport.createImageIcon("/run_testcase_step.gif"));
+        setIcon(UISupport.createImageIcon("/run_test_case_step.png"));
 
         propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder(this, stepConfig.getProperties());
     }
