@@ -56,7 +56,7 @@ public class HttpRequest extends AbstractHttpRequest<HttpRequestConfig> implemen
     private XmlBeansRestParamsTestPropertyHolder params;
 
     protected HttpRequest(HttpRequestConfig config, boolean forLoadTest) {
-        super(config, null, "/http_request.gif", forLoadTest);
+        super(config, null, "/http_request_step.png", forLoadTest);
 
         if (config.getParameters() == null) {
             config.addNewParameters();

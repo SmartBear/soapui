@@ -63,7 +63,7 @@ public class HttpRequestStepFactory extends WsdlTestStepFactory {
 
     public HttpRequestStepFactory() {
         super(HTTPREQUEST_TYPE, "HTTP Request", "Submits a HTTP Request and validates its response",
-                "/http_request.gif");
+                "/http_request_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

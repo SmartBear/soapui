@@ -69,12 +69,12 @@ public class HttpTestRequest extends HttpRequest implements HttpTestRequestInter
     }
 
     protected void initIcons() {
-        validRequestIcon = UISupport.createImageIcon("/valid_http_request.gif");
-        failedRequestIcon = UISupport.createImageIcon("/invalid_http_request.gif");
-        unknownRequestIcon = UISupport.createImageIcon("/unknown_http_request.gif");
-        disabledRequestIcon = UISupport.createImageIcon("/disabled_http_request.gif");
+        validRequestIcon = UISupport.createImageIcon("/valid_http_request_step.png");
+        failedRequestIcon = UISupport.createImageIcon("/invalid_http_request_step.png");
+        unknownRequestIcon = UISupport.createImageIcon("/http_request_step.png");
+        disabledRequestIcon = UISupport.createImageIcon("/disabled_http_request_step.png");
 
-        setIconAnimator(new RequestIconAnimator<HttpTestRequest>(this, "/http_request.gif", "/exec_http_request.gif", 4));
+        setIconAnimator(new RequestIconAnimator<HttpTestRequest>(this, "/http_request_step.png", "/http_request.png", 4));
     }
 
     private void initAssertions() {
