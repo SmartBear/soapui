@@ -69,7 +69,7 @@ public class WsdlGotoTestStep extends WsdlTestStepWithProperties implements XPat
         super(testCase, config, true, forLoadTest);
 
         if (!forLoadTest) {
-            setIcon(UISupport.createImageIcon("/goto.gif"));
+            setIcon(UISupport.createImageIcon("/conditional_goto_step.png"));
         }
     }
 
