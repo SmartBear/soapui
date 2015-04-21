@@ -220,7 +220,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
     private Component buildTestCaseListToolbar() {
         JXToolBar toolbar = UISupport.createToolbar();
         toolbar.add(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, "/testSuite.png")));
+                AddNewTestSuiteAction.SOAPUI_ACTION_ID, project, null, "/testSuite.gif")));
         toolbar.addGlue();
         toolbar.add(UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.TESTSUITELIST_HELP_URL)));
         return toolbar;

@@ -65,7 +65,7 @@ import java.util.UUID;
 public class WsdlTestSuite extends AbstractTestPropertyHolderWsdlModelItem<TestSuiteConfig> implements TestSuite {
     public final static String SETUP_SCRIPT_PROPERTY = WsdlTestSuite.class.getName() + "@setupScript";
     public final static String TEARDOWN_SCRIPT_PROPERTY = WsdlTestSuite.class.getName() + "@tearDownScript";
-    public static final String ICON_NAME = "/testSuite.png";
+    public static final String ICON_NAME = "/test_suite.png";
 
     private final WsdlProject project;
     private List<WsdlTestCase> testCases = new ArrayList<WsdlTestCase>();
