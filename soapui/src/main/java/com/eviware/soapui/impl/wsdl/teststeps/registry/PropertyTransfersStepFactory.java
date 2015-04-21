@@ -33,7 +33,7 @@ public class PropertyTransfersStepFactory extends WsdlTestStepFactory {
 
     public PropertyTransfersStepFactory() {
         super(TRANSFER_TYPE, "Property Transfer", "Transfers values from the previous response to the next request",
-                "/value_transfer.gif");
+                "/property_transfer_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

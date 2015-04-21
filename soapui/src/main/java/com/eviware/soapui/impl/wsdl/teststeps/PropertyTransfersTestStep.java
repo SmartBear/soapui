@@ -60,8 +60,8 @@ public class PropertyTransfersTestStep extends WsdlTestStepWithProperties implem
         super(testCase, config, true, forLoadTest);
 
         if (!forLoadTest) {
-            okIcon = UISupport.createImageIcon("/value_transfer.gif");
-            failedIcon = UISupport.createImageIcon("/value_transfer_failed.gif");
+            okIcon = UISupport.createImageIcon("/property_transfer_step.png");
+            failedIcon = UISupport.createImageIcon("/failed_property_transfer_step.png");
             setIcon(okIcon);
         }
     }
