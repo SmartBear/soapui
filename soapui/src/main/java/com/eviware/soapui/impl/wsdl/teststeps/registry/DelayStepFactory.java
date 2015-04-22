@@ -31,7 +31,7 @@ public class DelayStepFactory extends WsdlTestStepFactory {
     public static final String DELAY_TYPE = "delay";
 
     public DelayStepFactory() {
-        super(DELAY_TYPE, "Delay", "Delays TestCase execution for a specified number of milliseconds", "/wait.gif");
+        super(DELAY_TYPE, "Delay", "Delays TestCase execution for a specified number of milliseconds", "/delay_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
