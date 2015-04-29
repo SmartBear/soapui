@@ -992,7 +992,7 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
     private final class CopyAction extends AbstractAction {
         public CopyAction() {
             putValue(Action.SHORT_DESCRIPTION, "Copies the selected Property Transfer");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone_request.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone.png"));
         }
 
         public void actionPerformed(ActionEvent e) {

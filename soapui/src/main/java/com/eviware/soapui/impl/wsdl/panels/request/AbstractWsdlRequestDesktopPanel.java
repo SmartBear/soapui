@@ -72,7 +72,7 @@ public abstract class AbstractWsdlRequestDesktopPanel<T extends ModelItem, T2 ex
                 AddRequestToMockServiceAction.SOAPUI_ACTION_ID, request, null, "/addToMockService.gif"), true);
 
         cloneButton = createActionButton(SwingActionDelegate.createDelegate(CloneRequestAction.SOAPUI_ACTION_ID,
-                request, null, "/clone_request.gif"), true);
+                request, null, "/clone.png"), true);
 
         createEmptyButton = createActionButton(new CreateEmptyRequestAction(request), true);
 
