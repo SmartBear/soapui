@@ -34,7 +34,7 @@ public class SecurityTestsModelItem extends EmptyModelItem {
     private TestSuiteListener listener = new InternalTestSuiteListener();
 
     public SecurityTestsModelItem(TestCase testCase) {
-        super(createLabel(testCase), UISupport.createImageIcon("/security_tests.gif"));
+        super(createLabel(testCase), UISupport.createImageIcon("/security_tests_group.png"));
         this.testCase = testCase;
 
         testCase.getTestSuite().addTestSuiteListener(listener);

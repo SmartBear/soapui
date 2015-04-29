@@ -284,7 +284,7 @@ public class InferredSchemaInspector extends AbstractXmlInspector implements Sub
 
         private class RemoveNamespaceAction extends AbstractAction {
             private RemoveNamespaceAction() {
-                putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+                putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
                 putValue(SHORT_DESCRIPTION, "Removes selected inferred namespace definition");
             }
 

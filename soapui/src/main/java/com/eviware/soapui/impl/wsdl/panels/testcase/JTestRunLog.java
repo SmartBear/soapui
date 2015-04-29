@@ -169,7 +169,7 @@ public class JTestRunLog extends JPanel implements TestRunLog {
                 } else if (result.getStatus() == TestStepStatus.FAILED) {
                     hyperlinkLabel.setIcon(UISupport.createImageIcon("/failed_assertion.gif"));
                 } else {
-                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.png"));
                 }
 
                 return hyperlinkLabel;
@@ -301,7 +301,7 @@ public class JTestRunLog extends JPanel implements TestRunLog {
 
     private class SetLogOptionsAction extends AbstractAction {
         public SetLogOptionsAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets TestCase Log Options");
         }
 
@@ -342,7 +342,7 @@ public class JTestRunLog extends JPanel implements TestRunLog {
 
     private class ClearLogAction extends AbstractAction {
         public ClearLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_loadtest.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears the log");
         }
 
@@ -353,7 +353,7 @@ public class JTestRunLog extends JPanel implements TestRunLog {
 
     private class ExportLogAction extends AbstractAction {
         public ExportLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
             putValue(Action.SHORT_DESCRIPTION, "Exports this log to a file");
         }
 

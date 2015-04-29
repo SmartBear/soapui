@@ -314,11 +314,11 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
         runButton = UISupport.createToolbarButton(new RunTestCaseAction());
         optionsButton = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                TestCaseOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/options.gif"));
+                TestCaseOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/preferences.png"));
         optionsButton.setText(null);
         cancelButton = UISupport.createToolbarButton(new CancelRunTestCaseAction(), false);
 
-        loopButton = new JToggleButton(UISupport.createImageIcon("/loop.gif"));
+        loopButton = new JToggleButton(UISupport.createImageIcon("/loop.png"));
         loopButton.setPreferredSize(UISupport.getPreferredButtonSize());
         loopButton.setToolTipText("Loop TestCase continuously");
 
@@ -538,7 +538,7 @@ public class WsdlTestCaseDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class CancelRunTestCaseAction extends AbstractAction {
         public CancelRunTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this testcase");
         }
 

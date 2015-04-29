@@ -251,12 +251,11 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
         // button.setText( null );
         // toolbar.addFixed( button );
         JButton button = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                ExportWadlAction.SOAPUI_ACTION_ID, getModelItem(), null, "/exportDefinition.gif"));
+                ExportWadlAction.SOAPUI_ACTION_ID, getModelItem(), null, "/export.png"));
         button.setText(null);
         toolbar.addFixed(button);
         toolbar.addFixed(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                CreateWadlDocumentationAction.SOAPUI_ACTION_ID, restService, null, "/export.gif")));
-
+                CreateWadlDocumentationAction.SOAPUI_ACTION_ID, restService, null, "/report.png")));
         toolbar.addFixed(button);
 
         if (restService.isGenerated()) {

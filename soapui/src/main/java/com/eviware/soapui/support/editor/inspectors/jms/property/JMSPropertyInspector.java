@@ -130,7 +130,7 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
     private final class RemoveAction extends AbstractAction {
         private RemoveAction() {
             super();
-            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(AbstractAction.SHORT_DESCRIPTION, "Removes the selected custom JMS Property from this message");
         }
 
@@ -147,7 +147,7 @@ public class JMSPropertyInspector extends AbstractXmlInspector implements Proper
     private final class AddAction extends AbstractAction {
         private AddAction() {
             super();
-            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(AbstractAction.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(AbstractAction.SHORT_DESCRIPTION, "Adds a custom JMS Property to this message");
         }
 

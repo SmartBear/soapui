@@ -699,7 +699,7 @@ public class WSSTabPanel extends JPanel {
 
     private class AddOutgoingWssAction extends AbstractAction {
         public AddOutgoingWssAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Adds a new Outgoing WSS Configuration");
         }
 
@@ -715,7 +715,7 @@ public class WSSTabPanel extends JPanel {
 
     private class RemoveOutgoingWssAction extends AbstractAction {
         public RemoveOutgoingWssAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Removes the selected Outgoing WSS Configuration");
 
             setEnabled(false);
@@ -737,7 +737,7 @@ public class WSSTabPanel extends JPanel {
     public class AddOutgoingEntryAction extends AbstractAction {
         public AddOutgoingEntryAction() {
             putValue(SHORT_DESCRIPTION, "Adds a new WSS Entry");
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             setEnabled(false);
         }
 
@@ -758,7 +758,7 @@ public class WSSTabPanel extends JPanel {
     public class RemoveOutgoingEntryAction extends AbstractAction {
         public RemoveOutgoingEntryAction() {
             putValue(SHORT_DESCRIPTION, "Removes the selected WSS-Entry");
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -800,7 +800,7 @@ public class WSSTabPanel extends JPanel {
 
     private class AddIncomingWssAction extends AbstractAction {
         public AddIncomingWssAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Adds a new Incoming WSS Configuration");
         }
 
@@ -816,7 +816,7 @@ public class WSSTabPanel extends JPanel {
 
     private class RemoveIncomingWssAction extends AbstractAction {
         public RemoveIncomingWssAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Removes the selected Incoming WSS Configuration");
 
             setEnabled(false);
@@ -855,7 +855,7 @@ public class WSSTabPanel extends JPanel {
 
         public AddCryptoAction(CryptoType cryptoType) {
             this.cryptoType = cryptoType;
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Adds a new " + cryptoType.toString() + " to this configuration");
         }
 
@@ -877,7 +877,7 @@ public class WSSTabPanel extends JPanel {
 
         public RemoveCryptoAction(CryptoType cryptoType) {
             this.cryptoType = cryptoType;
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Removes the selected " + cryptoType + " from this configuration");
 
             setEnabled(false);

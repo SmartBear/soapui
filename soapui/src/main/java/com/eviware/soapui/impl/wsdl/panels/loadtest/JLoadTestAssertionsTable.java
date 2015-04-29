@@ -287,7 +287,7 @@ public class JLoadTestAssertionsTable extends JPanel {
         ConfigureAssertionAction() {
             super("Configure");
             putValue(Action.SHORT_DESCRIPTION, "Configures the selection assertion");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             setEnabled(false);
         }
 

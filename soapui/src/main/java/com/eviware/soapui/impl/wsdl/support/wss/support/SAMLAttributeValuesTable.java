@@ -137,7 +137,7 @@ public class SAMLAttributeValuesTable extends JPanel {
 
     private class AddAttributeValueAction extends AbstractAction {
         public AddAttributeValueAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Adds a new attribute value");
         }
 
@@ -149,7 +149,7 @@ public class SAMLAttributeValuesTable extends JPanel {
 
     private class RemoveAttributeValueAction extends AbstractAction {
         public RemoveAttributeValueAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Removes the attribute value");
             setEnabled(false);
         }

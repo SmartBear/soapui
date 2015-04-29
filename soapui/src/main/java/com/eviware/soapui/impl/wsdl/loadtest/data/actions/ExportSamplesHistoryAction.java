@@ -40,7 +40,7 @@ public class ExportSamplesHistoryAction extends AbstractAction {
     private final JStatisticsHistoryGraph graph;
 
     public ExportSamplesHistoryAction(JStatisticsHistoryGraph historyGraph) {
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
         putValue(Action.SHORT_DESCRIPTION, "Export samples history to a file");
 
         this.graph = historyGraph;

@@ -43,16 +43,16 @@ public class WsdlTestStepRegistry implements SoapUIFactoryRegistryListener {
         addFactory(new PropertiesStepFactory());
         addFactory(new PropertyTransfersStepFactory());
 
-        addFactory(new ProPlaceholderStepFactory("datasource", "SoapUI Pro DataSource", "/datasource.gif"));
-        addFactory(new ProPlaceholderStepFactory("datasink", "SoapUI Pro DataSink", "/datasink.gif"));
-        addFactory(new ProPlaceholderStepFactory("datagen", "SoapUI Pro DataGen", "/datagen.gif"));
-        addFactory(new ProPlaceholderStepFactory("datasourceloop", "SoapUI Pro DataSourceLoop", "/datasource_loop.gif"));
+        addFactory(new ProPlaceholderStepFactory("datasource", "SoapUI Pro DataSource", "/datasource_step.png"));
+        addFactory(new ProPlaceholderStepFactory("datasink", "SoapUI Pro DataSink", "/datasink_step.png"));
+        addFactory(new ProPlaceholderStepFactory("datagen", "SoapUI Pro DataGen", "/datagen_step.png"));
+        addFactory(new ProPlaceholderStepFactory("datasourceloop", "SoapUI Pro DataSourceLoop", "/datasource_loop_step.png"));
 
         addFactory(new GotoStepFactory());
         addFactory(new RunTestCaseStepFactory());
 
         addFactory(new GroovyScriptStepFactory());
-        addFactory(new ProPlaceholderStepFactory("assertionteststep", "SoapUI Pro Assertion TestStep", "/unknown_assertion_step.gif"));
+        addFactory(new ProPlaceholderStepFactory("assertionteststep", "SoapUI Pro Assertion TestStep", "/assertion_test_step.gif"));
         addFactory(new DelayStepFactory());
         addFactory(new WsdlMockResponseStepFactory());
         addFactory(new ManualTestStepFactory());

@@ -283,7 +283,7 @@ public class PropertyHolderTable extends JPanel {
 
     protected class RemovePropertyAction extends AbstractAction {
         public RemovePropertyAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Removes the selected property from the property list");
             setEnabled(false);
         }
@@ -306,7 +306,7 @@ public class PropertyHolderTable extends JPanel {
 
     protected class ClearPropertiesAction extends AbstractAction {
         public ClearPropertiesAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_properties.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears all current property values");
         }
 

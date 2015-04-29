@@ -192,8 +192,8 @@ public class SoapUI {
     public static final String SOAPUI_SPLASH = "soapui-splash.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
-    private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
-    private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+    private static final String PROXY_ENABLED_ICON = "/proxyEnabled_toolbar.png";
+    private static final String PROXY_DISABLED_ICON = "/proxyDisabled_toolbar.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
@@ -310,7 +310,6 @@ public class SoapUI {
         mainInspector.addInspector(new JComponentInspector<JComponent>(buildMainPanel(), "Navigator",
                 "The SoapUI Navigator", true));
         mainInspector.setCurrentInspector("Navigator");
-
         frame.setJMenuBar(buildMainMenu());
         frame.getContentPane().add(buildToolbar(), BorderLayout.NORTH);
         frame.getContentPane().add(mainInspector.getComponent(), BorderLayout.CENTER);
@@ -1446,7 +1445,7 @@ public class SoapUI {
 
     private class PreferencesActionDelegate extends AbstractAction {
         public PreferencesActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options_toolbar.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences_toolbar_icon.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets Global SoapUI Preferences");
             putValue(Action.NAME, "Preferences");
         }

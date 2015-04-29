@@ -177,7 +177,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 
     private class AddAction extends AbstractAction {
         public AddAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Adds a new endpoint to the list");
         }
 
@@ -284,7 +284,7 @@ public class DefaultEndpointStrategyConfigurationPanel extends JPanel implements
 
     private class DeleteAction extends AbstractAction {
         public DeleteAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Deletes the selected endpoint from the list");
         }
 

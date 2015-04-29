@@ -125,7 +125,7 @@ public class ProjectSensitiveInformationPanel {
     class AddTokenAction extends AbstractAction {
 
         public AddTokenAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Adds a token to assertion");
         }
 
@@ -145,7 +145,7 @@ public class ProjectSensitiveInformationPanel {
     class RemoveTokenAction extends AbstractAction {
 
         public RemoveTokenAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Removes token from assertion");
         }
 

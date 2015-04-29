@@ -282,7 +282,7 @@ public class WsdlProjectTestSuitesTabPanel extends JPanel {
 
     private class CancelAction extends AbstractAction {
         public CancelAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop.png"));
             putValue(Action.SHORT_DESCRIPTION, "Cancels ongoing TestSuite runs");
         }
 

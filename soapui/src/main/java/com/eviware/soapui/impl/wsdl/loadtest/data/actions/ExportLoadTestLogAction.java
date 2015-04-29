@@ -47,7 +47,7 @@ public class ExportLoadTestLogAction extends AbstractAction {
     public ExportLoadTestLogAction(LoadTestLog loadTestLog, JXTable logTable) {
         this.loadTestLog = loadTestLog;
         this.logTable = logTable;
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
         putValue(Action.SHORT_DESCRIPTION, "Export current loadtest log to a file");
     }
 

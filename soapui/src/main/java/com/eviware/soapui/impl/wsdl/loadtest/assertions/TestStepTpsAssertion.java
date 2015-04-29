@@ -66,7 +66,7 @@ public class TestStepTpsAssertion extends AbstractLoadTestAssertion implements C
         super(assertionConfig, loadTest);
 
         init(assertionConfig);
-        initIcon("/tps_loadtest_assertion.gif");
+        initIcon("/tps_loadtest_assertion.png");
     }
 
     private void init(LoadTestAssertionConfig assertionConfig) {

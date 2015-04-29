@@ -39,7 +39,7 @@ public class AddParamAction extends AbstractAction {
         super(ADD_PARAM_ACTION_NAME);
         this.parameterTable = parameterTable;
         this.propertyHolder = propertyHolder;
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
         putValue(Action.SHORT_DESCRIPTION, description);
     }
 

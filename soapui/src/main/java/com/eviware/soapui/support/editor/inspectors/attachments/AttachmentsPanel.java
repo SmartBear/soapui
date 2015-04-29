@@ -162,8 +162,8 @@ public class AttachmentsPanel extends javax.swing.JPanel {
         jPanel1 = UISupport.createSmallToolbar();
 
         if (container instanceof MutableAttachmentContainer) {
-            addFileBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/add_property.gif"));
-            removeBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/remove_property.gif"));
+            addFileBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/add.png"));
+            removeBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/delete.png"));
             reloadBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/reload_properties.gif"));
 
             addFileBtn.setToolTipText("Adds an attachment");
@@ -196,7 +196,7 @@ public class AttachmentsPanel extends javax.swing.JPanel {
             jPanel1.addFixed(reloadBtn);
         }
 
-        exportBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/export.gif"));
+        exportBtn = UISupport.createToolbarButton(UISupport.createImageIcon("/export.png"));
         exportBtn.setToolTipText("Exports the selected attachment to a file");
         exportBtn.setEnabled(false);
         exportBtn.addActionListener(new java.awt.event.ActionListener() {

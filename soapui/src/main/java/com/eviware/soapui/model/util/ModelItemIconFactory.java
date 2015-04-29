@@ -64,7 +64,7 @@ public class ModelItemIconFactory {
 
         // the following use different icon files for the overview and in the tree
         modelItemIcons.put(TestStep.class, "/teststeps.gif");
-        modelItemIcons.put(TestAssertion.class, "/assertion.gif");
+        modelItemIcons.put(TestAssertion.class, "/assertions.png");
         modelItemIcons.put(Request.class, "/soap_request.png");
         modelItemIcons.put(Interface.class, "/interface.png");
     }

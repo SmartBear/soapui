@@ -269,7 +269,7 @@ public class MaliciousAttachmentMutationsPanel {
         private JFileChooser fileChooser;
 
         public AddFileAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Add file");
         }
 
@@ -334,7 +334,7 @@ public class MaliciousAttachmentMutationsPanel {
         private XFormDialog dialog;
 
         public GenerateFileAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Generate file");
         }
 
@@ -403,7 +403,7 @@ public class MaliciousAttachmentMutationsPanel {
         private final JXTable table;
 
         public RemoveReplacementFileAction(MaliciousAttachmentTableModel tableModel, JXTable table) {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Remove file");
 
             this.tableModel = tableModel;
@@ -438,7 +438,7 @@ public class MaliciousAttachmentMutationsPanel {
         private final JXTable table;
 
         public RemoveGeneratedFileAction(MaliciousAttachmentTableModel tableModel, JXTable table) {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Remove file");
 
             this.tableModel = tableModel;

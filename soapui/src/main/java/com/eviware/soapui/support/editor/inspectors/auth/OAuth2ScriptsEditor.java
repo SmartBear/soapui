@@ -170,7 +170,7 @@ public class OAuth2ScriptsEditor extends JPanel {
 
     private class AddScriptAction extends AbstractAction {
         private AddScriptAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Add script field");
             putValue(LONG_DESCRIPTION, "Adds a new script input field");
         }
@@ -194,7 +194,7 @@ public class OAuth2ScriptsEditor extends JPanel {
 
     private class RemoveScriptAction extends AbstractAction {
         private RemoveScriptAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Remove script field");
             putValue(LONG_DESCRIPTION, "Removes the last script input field");
         }

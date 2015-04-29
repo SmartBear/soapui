@@ -373,7 +373,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
         }
 
         optionsButton = createActionButton(
-                SwingActionDelegate.createDelegate(action, modelItem, null, "/options.gif"),
+                SwingActionDelegate.createDelegate(action, modelItem, null, "/preferences.png"),
                 true);
         showWsdlButton = createActionButton(new ShowWsdlAction(), false);
 
@@ -694,7 +694,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
 
     private class SetLogOptionsAction extends AbstractAction {
         public SetLogOptionsAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets MockService Log Options");
         }
 
@@ -715,7 +715,7 @@ public class WsdlMockServiceDesktopPanel<MockServiceType extends MockService>
 
     private class ClearLogAction extends AbstractAction {
         public ClearLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_loadtest.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears the MockService Log");
         }
 

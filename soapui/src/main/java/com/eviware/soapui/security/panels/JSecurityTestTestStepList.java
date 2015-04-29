@@ -402,7 +402,7 @@ public class JSecurityTestTestStepList extends JPanel implements TreeSelectionLi
         ConfigureSecurityScanAction() {
             super("Configure");
             putValue(Action.SHORT_DESCRIPTION, "Configures selected security scan");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             setEnabled(false);
         }
 

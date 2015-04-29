@@ -66,7 +66,7 @@ public class TestStepStatusAssertion extends AbstractLoadTestAssertion implement
         super(assertionConfig, loadTest);
 
         init(assertionConfig);
-        initIcon("/status_loadtest_assertion.gif");
+        initIcon("/status_loadtest_assertion.png");
     }
 
     private void init(LoadTestAssertionConfig assertionConfig) {

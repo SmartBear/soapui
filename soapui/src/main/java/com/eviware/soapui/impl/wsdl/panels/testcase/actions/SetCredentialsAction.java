@@ -51,7 +51,7 @@ public class SetCredentialsAction extends AbstractAction {
 
     public SetCredentialsAction(WsdlTestCase testCase) {
         this.testCase = testCase;
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/set_credentials.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/set_credentials.png"));
         putValue(Action.SHORT_DESCRIPTION, "Sets the credentials for all requests in this testcase");
     }
 

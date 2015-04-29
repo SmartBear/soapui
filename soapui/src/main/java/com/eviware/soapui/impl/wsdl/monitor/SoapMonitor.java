@@ -1102,7 +1102,7 @@ public class SoapMonitor extends JPanel {
     public class SoapMonitorOptionsAction extends AbstractAction {
 
         public SoapMonitorOptionsAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
