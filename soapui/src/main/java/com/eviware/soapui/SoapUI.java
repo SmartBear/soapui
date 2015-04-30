@@ -784,9 +784,33 @@ public class SoapUI {
         }
     }
 
+    private static void setBackgroundsToWhite() {
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("MenuBar.background", Color.WHITE);
+        UIManager.put("ComboBox.background", Color.WHITE);
+        UIManager.put("TableHeader.background", Color.WHITE);
+        UIManager.put("ToolBar.background", Color.WHITE);
+        UIManager.put("TabbedPane.background", Color.LIGHT_GRAY);
+        UIManager.put("TabbedPane.selected", Color.WHITE);
+        UIManager.put("Label.background", Color.WHITE);
+        UIManager.put("CheckBox.background", Color.WHITE);
+        UIManager.put("Desktop.background", Color.WHITE);
+        UIManager.put("ProgressBar.background", Color.WHITE);
+        UIManager.put("InternalFrame.background", Color.WHITE);
+        UIManager.put("SplitPane.background", Color.WHITE);
+        UIManager.put("ScrollBar.background", Color.WHITE);
+        UIManager.put("Spinner.background", Color.WHITE);
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("ToggleButton.background", Color.WHITE);
+        UIManager.put("Slider.background", Color.WHITE);
+        UIManager.put("RadioButton.background", Color.WHITE);
+        UIManager.put("ScrollPane.background", Color.WHITE);
+    }
+
     public static void main(String[] args) throws Exception {
         WebstartUtilCore.init();
-
+        setBackgroundsToWhite();
         mainArgs = args;
 
         SoapUIRunner soapuiRunner = new SoapUIRunner();

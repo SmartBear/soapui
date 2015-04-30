@@ -270,7 +270,7 @@ public class JLoadTestAssertionsTable extends JPanel {
             super("Add Assertion");
 
             putValue(Action.SHORT_DESCRIPTION, "Adds an assertion to this LoadTest");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/addAssertion.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
