@@ -60,7 +60,7 @@ public class WsdlMockService extends AbstractMockService<WsdlMockOperation, Mock
 
     private WsdlMockOperation faultMockOperation;
     private String mockServiceEndpoint;
-    public static final String ICON_NAME = "/mockService.gif";
+    public static final String ICON_NAME = "/soap_virt.png";
     public static final String STRING_ID = "MOCK";
 
     public String getStringID() {

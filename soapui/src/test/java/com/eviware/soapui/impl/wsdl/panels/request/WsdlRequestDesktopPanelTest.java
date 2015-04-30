@@ -114,7 +114,7 @@ public class WsdlRequestDesktopPanelTest {
 
         assertThat(desktopPanel.getSubmitButton(), is(not(enabled())));
         assertThat(containerWalker.findButtonWithIcon("create_empty_request.gif"), is(not(enabled())));
-        assertThat(containerWalker.findButtonWithIcon("clone_request.gif"), is(not(enabled())));
+        assertThat(containerWalker.findButtonWithIcon("clone.png"), is(not(enabled())));
     }
 
     @Test
@@ -125,7 +125,7 @@ public class WsdlRequestDesktopPanelTest {
         desktopPanel.afterSubmit(submit, submitContext);
 
         assertThat(containerWalker.findButtonWithIcon("create_empty_request.gif"), is(enabled()));
-        assertThat(containerWalker.findButtonWithIcon("clone_request.gif"), is(enabled()));
+        assertThat(containerWalker.findButtonWithIcon("clone.png"), is(enabled()));
 
     }
 

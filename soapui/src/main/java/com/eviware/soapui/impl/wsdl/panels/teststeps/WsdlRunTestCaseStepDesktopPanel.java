@@ -251,7 +251,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
     private class OptionsAction extends AbstractAction {
         public OptionsAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets Options");
         }
 
@@ -436,7 +436,7 @@ public class WsdlRunTestCaseStepDesktopPanel extends ModelItemDesktopPanel<WsdlR
 
     public class CancelRunTestCaseAction extends AbstractAction {
         public CancelRunTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this testcase");
         }
 

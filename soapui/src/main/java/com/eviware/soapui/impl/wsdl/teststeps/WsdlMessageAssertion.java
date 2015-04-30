@@ -78,7 +78,7 @@ public abstract class WsdlMessageAssertion extends AbstractModelItem implements 
 
         validIcon = UISupport.createImageIcon("/valid_assertion.gif");
         failedIcon = UISupport.createImageIcon("/failed_assertion.gif");
-        unknownIcon = UISupport.createImageIcon("/unknown_assertion.gif");
+        unknownIcon = UISupport.createImageIcon("/unknown_assertion.png");
     }
 
     public XmlObject getConfiguration() {

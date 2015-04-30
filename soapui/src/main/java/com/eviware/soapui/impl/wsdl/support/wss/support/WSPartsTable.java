@@ -173,7 +173,7 @@ public class WSPartsTable extends JPanel {
 
     private class AddPartAction extends AbstractAction {
         public AddPartAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Adds a new part");
         }
 
@@ -185,7 +185,7 @@ public class WSPartsTable extends JPanel {
 
     private class RemovePartAction extends AbstractAction {
         public RemovePartAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Removes the selected part");
             setEnabled(false);
         }

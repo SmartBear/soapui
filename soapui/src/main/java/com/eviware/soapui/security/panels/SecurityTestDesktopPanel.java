@@ -326,7 +326,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
         runButton = UISupport.createToolbarButton(new RunSecurityTestAction());
         optionsButton = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                SecurityTestOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/options.gif"));
+                SecurityTestOptionsAction.SOAPUI_ACTION_ID, getModelItem(), null, "/preferences.png"));
         optionsButton.setText(null);
         cancelButton = UISupport.createToolbarButton(new CancelRunSecuritytestAction(), false);
 
@@ -427,7 +427,7 @@ public class SecurityTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
     public class CancelRunSecuritytestAction extends AbstractAction {
         public CancelRunSecuritytestAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this securitytest");
         }
 

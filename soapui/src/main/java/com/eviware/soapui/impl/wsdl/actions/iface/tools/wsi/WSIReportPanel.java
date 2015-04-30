@@ -120,7 +120,7 @@ public class WSIReportPanel extends JPanel {
 
     public class SaveReportAction extends AbstractAction {
         public SaveReportAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
             putValue(Action.SHORT_DESCRIPTION, "Saves this report to a file");
         }
 

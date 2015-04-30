@@ -220,22 +220,22 @@ public class AMFRequest extends AbstractModelItem implements Assertable, TestReq
 
     public void initIcons() {
         if (validRequestIcon == null) {
-            validRequestIcon = UISupport.createImageIcon("/valid_amf_request.gif");
+            validRequestIcon = UISupport.createImageIcon("/valid_amf_request_step.png");
         }
 
         if (failedRequestIcon == null) {
-            failedRequestIcon = UISupport.createImageIcon("/invalid_amf_request.gif");
+            failedRequestIcon = UISupport.createImageIcon("/invalid_amf_request_step.png");
         }
 
         if (unknownRequestIcon == null) {
-            unknownRequestIcon = UISupport.createImageIcon("/unknown_amf_request.gif");
+            unknownRequestIcon = UISupport.createImageIcon("/amf_request_step.png");
         }
 
         if (disabledRequestIcon == null) {
-            disabledRequestIcon = UISupport.createImageIcon("/disabled_amf_request.gif");
+            disabledRequestIcon = UISupport.createImageIcon("/disabled_amf_request_step.png");
         }
 
-        setIconAnimator(new RequestIconAnimator<AMFRequest>(this, "/amf_request.gif", "/exec_amf_request.png", 3));
+        setIconAnimator(new RequestIconAnimator<AMFRequest>(this, "/amf_request.png", "/amf_request.png", 3));
     }
 
     protected RequestIconAnimator<?> initIconAnimator() {

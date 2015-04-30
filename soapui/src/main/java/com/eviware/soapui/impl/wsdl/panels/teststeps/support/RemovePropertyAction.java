@@ -36,7 +36,7 @@ public class RemovePropertyAction extends AbstractAction {
         super(DELETE_PARAM_ACTON_NAME);
         this.propertyTable = propertyTable;
         this.propertyHolder = propertyHolder;
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
         putValue(Action.SHORT_DESCRIPTION, description);
         setEnabled(false);
     }

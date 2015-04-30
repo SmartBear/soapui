@@ -57,7 +57,7 @@ public class RestRequestDesktopPanel extends
     @Override
     protected void init(RestRequestInterface request) {
         addToTestCaseButton = createActionButton(SwingActionDelegate.createDelegate(
-                AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif"), true);
+                AddRestRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/add_to_test_case.png"), true);
 
         super.init(request);
     }

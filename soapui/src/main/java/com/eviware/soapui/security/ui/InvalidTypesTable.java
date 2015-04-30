@@ -117,7 +117,7 @@ public class InvalidTypesTable extends JPanel {
     private class RemoveTypeAction extends AbstractAction {
 
         public RemoveTypeAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Removes type from security scan");
         }
 
@@ -131,7 +131,7 @@ public class InvalidTypesTable extends JPanel {
     private class AddNewTypeAction extends AbstractAction {
 
         public AddNewTypeAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Adds new type to use in security scan");
         }
 

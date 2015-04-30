@@ -307,10 +307,10 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
         button.setText(null);
         toolbar.addFixed(button);
         button = UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                ExportDefinitionAction.SOAPUI_ACTION_ID, getModelItem(), null, "/exportDefinition.gif"));
+                ExportDefinitionAction.SOAPUI_ACTION_ID, getModelItem(), null, "/export.png"));
         button.setText(null);
         toolbar.addFixed(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                CreateWsdlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "/export.gif")));
+                CreateWsdlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "report.png")));
         toolbar.addFixed(button);
         toolbar.addGlue();
         button = UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.WSDL_CONTENT_HELP_URL));
@@ -879,7 +879,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
     private class WSIOptionsAction extends AbstractAction {
         public WSIOptionsAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets WS-I report creation options");
         }
 
@@ -890,7 +890,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
 
     private class SaveWsiReportAction extends AbstractAction {
         public SaveWsiReportAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/export.png"));
             putValue(Action.SHORT_DESCRIPTION, "Saved the current WS-I report to a file");
 
             setEnabled(false);

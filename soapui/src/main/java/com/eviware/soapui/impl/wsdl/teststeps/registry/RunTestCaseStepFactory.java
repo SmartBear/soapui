@@ -32,7 +32,7 @@ public class RunTestCaseStepFactory extends WsdlTestStepFactory {
 
     public RunTestCaseStepFactory() {
         super(RUNTESTCASE_TYPE, "Run TestCase", "Runs another TestCase with the specified properties",
-                "/run_testcase_step.gif");
+                "/run_test_case_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

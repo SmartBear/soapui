@@ -124,7 +124,7 @@ public class JFunctionalTestRunLog extends JPanel {
 
     private class ClearLogAction extends AbstractAction {
         public ClearLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_loadtest.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears the log");
         }
 
@@ -135,7 +135,7 @@ public class JFunctionalTestRunLog extends JPanel {
 
     private class ExportLogAction extends AbstractAction {
         public ExportLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
             putValue(Action.SHORT_DESCRIPTION, "Exports this log to a file");
         }
 
@@ -267,7 +267,7 @@ public class JFunctionalTestRunLog extends JPanel {
                 } else if (result.getStatus() == TestStepStatus.FAILED) {
                     hyperlinkLabel.setIcon(UISupport.createImageIcon("/failed_assertion.gif"));
                 } else {
-                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                    hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.png"));
                 }
 
                 return hyperlinkLabel;

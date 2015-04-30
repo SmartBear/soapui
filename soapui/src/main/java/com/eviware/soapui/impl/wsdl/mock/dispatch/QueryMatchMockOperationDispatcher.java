@@ -440,7 +440,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
     private final class AddAction extends AbstractAction {
         public AddAction() {
             putValue(Action.SHORT_DESCRIPTION, "Adds a new Match");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -456,7 +456,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
     private final class CopyAction extends AbstractAction {
         public CopyAction() {
             putValue(Action.SHORT_DESCRIPTION, "Copies the selected Match");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone_request.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone.png"));
         }
 
         public void actionPerformed(ActionEvent e) {
@@ -481,7 +481,7 @@ public class QueryMatchMockOperationDispatcher extends AbstractMockOperationDisp
 
     private final class DeleteAction extends AbstractAction {
         public DeleteAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Deletes the selected Property Transfer");
         }
 

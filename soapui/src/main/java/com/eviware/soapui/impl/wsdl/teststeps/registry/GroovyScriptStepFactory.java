@@ -31,7 +31,7 @@ public class GroovyScriptStepFactory extends WsdlTestStepFactory {
     public static final String GROOVY_TYPE = "groovy";
 
     public GroovyScriptStepFactory() {
-        super(GROOVY_TYPE, "Groovy Script", "Executes the specified groovy script", "/groovy_script.gif");
+        super(GROOVY_TYPE, "Groovy Script", "Executes the specified groovy script", "/groovy_script_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

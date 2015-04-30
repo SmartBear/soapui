@@ -152,7 +152,7 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
 
         public PropertiesModelItem(TestPropertyHolder holder) {
             super("Properties (" + holder.getPropertyNames().length + ")", UISupport
-                    .createImageIcon("/properties_step.gif"));
+                    .createImageIcon("/properties_step.png"));
             this.holder = holder;
         }
 
@@ -174,7 +174,7 @@ public class PropertiesTreeNode<T extends ModelItem> extends AbstractModelItemTr
     private class AddPropertyAction extends AbstractAction {
         public AddPropertyAction() {
             super("Add Property");
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Adds a property to the property list");
         }
 

@@ -68,8 +68,8 @@ public class WsdlPropertiesTestStep extends WsdlTestStep implements MutableTestP
         super(testCase, config, true, forLoadTest);
 
         if (!forLoadTest) {
-            okIcon = UISupport.createImageIcon("/properties_step.gif");
-            failedIcon = UISupport.createImageIcon("/properties_step_failed.gif");
+            okIcon = UISupport.createImageIcon("/properties_step.png");
+            failedIcon = UISupport.createImageIcon("/failed_properties_step.png");
 
             setIcon(okIcon);
         }

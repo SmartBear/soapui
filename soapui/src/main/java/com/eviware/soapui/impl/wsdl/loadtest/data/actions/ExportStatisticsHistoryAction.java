@@ -41,7 +41,7 @@ public class ExportStatisticsHistoryAction extends AbstractAction {
 
     public ExportStatisticsHistoryAction(JStatisticsGraph statisticsGraph) {
         this.graph = statisticsGraph;
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
         putValue(Action.SHORT_DESCRIPTION, "Export statistics history to a file");
     }
 

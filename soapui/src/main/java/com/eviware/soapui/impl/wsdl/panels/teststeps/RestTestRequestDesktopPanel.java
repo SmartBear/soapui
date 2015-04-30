@@ -154,7 +154,7 @@ public class RestTestRequestDesktopPanel extends AbstractRestRequestDesktopPanel
                 break;
             }
             case UNKNOWN: {
-                assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.png"));
                 break;
             }
             case VALID: {

@@ -212,7 +212,7 @@ public class JSecurityTestRunLog extends JPanel {
 
     private class SetLogOptionsAction extends AbstractAction {
         public SetLogOptionsAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets TestCase Log Options");
         }
 
@@ -253,7 +253,7 @@ public class JSecurityTestRunLog extends JPanel {
 
     private class ClearLogAction extends AbstractAction {
         public ClearLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear_loadtest.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clear.png"));
             putValue(Action.SHORT_DESCRIPTION, "Clears the log");
         }
 
@@ -264,7 +264,7 @@ public class JSecurityTestRunLog extends JPanel {
 
     private class ExportLogAction extends AbstractAction {
         public ExportLogAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
             putValue(Action.SHORT_DESCRIPTION, "Exports this log to a file");
         }
 
@@ -457,7 +457,7 @@ public class JSecurityTestRunLog extends JPanel {
                     || securityResult.getLogIconStatus() == ResultStatus.MISSING_PARAMETERS) {
                 hyperlinkLabel.setIcon(UISupport.createImageIcon("/missing_assertion.gif"));
             } else {
-                hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                hyperlinkLabel.setIcon(UISupport.createImageIcon("/unknown_assertion.png"));
             }
         }
     }

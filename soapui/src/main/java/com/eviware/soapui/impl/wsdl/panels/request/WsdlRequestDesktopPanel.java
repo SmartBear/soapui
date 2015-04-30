@@ -43,7 +43,7 @@ public class WsdlRequestDesktopPanel extends AbstractWsdlRequestDesktopPanel<Wsd
     @Override
     protected void init(WsdlRequest request) {
         addToTestCaseButton = createActionButton(SwingActionDelegate.createDelegate(
-                AddRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/addToTestCase.gif"), true);
+                AddRequestToTestCaseAction.SOAPUI_ACTION_ID, getRequest(), null, "/add_to_test_case.png"), true);
 
         super.init(request);
     }

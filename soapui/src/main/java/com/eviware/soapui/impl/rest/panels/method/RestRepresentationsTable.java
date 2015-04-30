@@ -212,7 +212,7 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
 
     private class AddRepresentationAction extends AbstractAction {
         private AddRepresentationAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(SHORT_DESCRIPTION, "Adds a new Response Representation to this Method");
         }
 
@@ -228,7 +228,7 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
 
     private class RemoveRepresentationAction extends AbstractAction {
         private RemoveRepresentationAction() {
-            putValue(SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(SHORT_DESCRIPTION, "Removes selected Representation from this Method");
         }
 

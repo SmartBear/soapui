@@ -188,15 +188,15 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
 
     public void initIcons() {
         if (validRequestIcon == null) {
-            validRequestIcon = UISupport.createImageIcon("/valid_request.gif");
+            validRequestIcon = UISupport.createImageIcon("/valid_soap_request_step.png");
         }
 
         if (failedRequestIcon == null) {
-            failedRequestIcon = UISupport.createImageIcon("/invalid_request.gif");
+            failedRequestIcon = UISupport.createImageIcon("/invalid_soap_request_step.png");
         }
 
         if (unknownRequestIcon == null) {
-            unknownRequestIcon = UISupport.createImageIcon("/unknown_request.gif");
+            unknownRequestIcon = UISupport.createImageIcon("/soap_request_step.png");
         }
 
         if (disabledRequestIcon == null) {

@@ -96,15 +96,15 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
     protected void initIcons() {
         if (validRequestIcon == null) {
-            validRequestIcon = UISupport.createImageIcon("/valid_request.gif");
+            validRequestIcon = UISupport.createImageIcon("/valid_soap_request_step.png");
         }
 
         if (failedRequestIcon == null) {
-            failedRequestIcon = UISupport.createImageIcon("/invalid_request.gif");
+            failedRequestIcon = UISupport.createImageIcon("/invalid_soap_request_step.png");
         }
 
         if (unknownRequestIcon == null) {
-            unknownRequestIcon = UISupport.createImageIcon("/unknown_request.gif");
+            unknownRequestIcon = UISupport.createImageIcon("/soap_request_step.png");
         }
 
         if (disabledRequestIcon == null) {
@@ -365,7 +365,7 @@ public class WsdlTestRequest extends WsdlRequest implements Assertable, TestRequ
 
     protected static class TestRequestIconAnimator extends RequestIconAnimator<WsdlTestRequest> {
         public TestRequestIconAnimator(WsdlTestRequest modelItem) {
-            super(modelItem, "/request.png", "/exec_request.png", 4);
+            super(modelItem, "/soap_request.png", "/soap_request.png", 4);
         }
 
         @Override

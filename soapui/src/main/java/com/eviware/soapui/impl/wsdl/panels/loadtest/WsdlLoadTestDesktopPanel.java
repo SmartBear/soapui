@@ -207,7 +207,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
 
         AbstractAction optionsDelegate = SwingActionDelegate.createDelegate(LoadTestOptionsAction.SOAPUI_ACTION_ID,
                 loadTest);
-        optionsDelegate.putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options.gif"));
+        optionsDelegate.putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
         optionsButton = UISupport.createToolbarButton(optionsDelegate);
 
         strategyCombo = new JComboBox(LoadStrategyRegistry.getInstance().getStrategies());
@@ -441,7 +441,7 @@ public class WsdlLoadTestDesktopPanel extends KeySensitiveModelItemDesktopPanel<
     public class CancelRunTestCaseAction extends AbstractAction {
 
         public CancelRunTestCaseAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop_testcase.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/stop.png"));
             putValue(Action.SHORT_DESCRIPTION, "Stops running this LoadTest");
         }
 

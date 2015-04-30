@@ -220,7 +220,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 
     class AddNewParameterAction extends AbstractAction {
         public AddNewParameterAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
             putValue(Action.SHORT_DESCRIPTION, "Adds a parameter to security scan");
         }
 
@@ -234,7 +234,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
 
     class RemoveParameterAction extends AbstractAction {
         public RemoveParameterAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/remove_property.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/delete.png"));
             putValue(Action.SHORT_DESCRIPTION, "Removes parameter from security scan");
         }
 
@@ -305,7 +305,7 @@ public class SecurityCheckedParametersTablePanel extends JPanel implements ListS
     class CopyParameterAction extends AbstractAction {
 
         public CopyParameterAction() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/copy_parameters.gif"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/copy.png"));
             putValue(Action.SHORT_DESCRIPTION, "Copies parameter");
         }
 

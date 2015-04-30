@@ -57,14 +57,14 @@ public class CloneParametersAction extends AbstractAction {
 
     public CloneParametersAction() {
         super("Clone SecurityScan Parameters");
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone_parameters.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone_parameters.png"));
         putValue(Action.SHORT_DESCRIPTION, "Clones parameter");
         setEnabled(false);
     }
 
     public CloneParametersAction(AbstractSecurityScanWithProperties securityScan) {
         super("Clone SecurityScan Parameters");
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone_parameters.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/clone_parameters.png"));
         putValue(Action.SHORT_DESCRIPTION, "Clones parameter");
         this.securityScan = securityScan;
     }

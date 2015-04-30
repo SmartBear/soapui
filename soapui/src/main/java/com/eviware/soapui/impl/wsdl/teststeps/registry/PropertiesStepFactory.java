@@ -32,7 +32,7 @@ public class PropertiesStepFactory extends WsdlTestStepFactory {
     public static final String PROPERTIES_TYPE = "properties";
 
     public PropertiesStepFactory() {
-        super(PROPERTIES_TYPE, "Properties", "Defines / Loads global TestCase properties", "/properties_step.gif");
+        super(PROPERTIES_TYPE, "Properties", "Defines / Loads global TestCase properties", "/properties_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {

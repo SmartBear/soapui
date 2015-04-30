@@ -56,7 +56,7 @@ public class WsdlDelayTestStep extends WsdlTestStepWithProperties implements Pro
         super(testCase, config, false, forLoadTest);
 
         if (!forLoadTest) {
-            setIcon(UISupport.createImageIcon("/wait.gif"));
+            setIcon(UISupport.createImageIcon("/delay_step.png"));
         }
 
         if (config.getConfig() == null) {

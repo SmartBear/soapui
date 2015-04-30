@@ -40,7 +40,7 @@ public class ExportStatisticsAction extends AbstractAction {
 
     public ExportStatisticsAction(TableModel model) {
         this.model = model;
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/export.png"));
         putValue(Action.SHORT_DESCRIPTION, "Export statistics to a file");
     }
 

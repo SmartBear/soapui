@@ -72,7 +72,7 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
 
         putValue(Action.SHORT_DESCRIPTION, "Sets global SoapUI preferences");
         putValue(Action.ACCELERATOR_KEY, UISupport.getKeyStroke("menu alt P"));
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences-system-small.png"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences.png"));
 
         addPrefs(new AnnotatedSettingsPrefs(HttpSettings.class, HTTP_SETTINGS));
         addPrefs(new ProxyPrefs(PROXY_SETTINGS));

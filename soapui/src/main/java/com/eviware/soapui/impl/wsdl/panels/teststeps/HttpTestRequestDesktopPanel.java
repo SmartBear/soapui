@@ -180,7 +180,7 @@ public class HttpTestRequestDesktopPanel extends
                 break;
             }
             case UNKNOWN: {
-                assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.png"));
                 break;
             }
             case VALID: {

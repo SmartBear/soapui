@@ -42,7 +42,7 @@ public class AddAssertionAction extends AbstractAction {
         this.assertable = assertable;
 
         putValue(Action.SHORT_DESCRIPTION, "Adds an assertion to this item");
-        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/addAssertion.gif"));
+        putValue(Action.SMALL_ICON, UISupport.createImageIcon("/add.png"));
     }
 
     public void actionPerformed(ActionEvent e) {

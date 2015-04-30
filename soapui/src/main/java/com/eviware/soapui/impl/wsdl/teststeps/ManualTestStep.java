@@ -66,7 +66,7 @@ public class ManualTestStep extends WsdlTestStepWithProperties implements Proper
         this.forLoadTest = forLoadTest;
 
         if (!forLoadTest) {
-            setIcon(UISupport.createImageIcon("/manualteststep.gif"));
+            setIcon(UISupport.createImageIcon("/manual_step.png"));
         }
 
         if (getConfig().getConfig() != null) {

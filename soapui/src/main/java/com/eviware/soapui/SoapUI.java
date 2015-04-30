@@ -192,8 +192,8 @@ public class SoapUI {
     public static final String SOAPUI_SPLASH = "soapui-splash.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
-    private static final String PROXY_ENABLED_ICON = "/proxyEnabled.png";
-    private static final String PROXY_DISABLED_ICON = "/proxyDisabled.png";
+    private static final String PROXY_ENABLED_ICON = "/proxyEnabled_toolbar.png";
+    private static final String PROXY_DISABLED_ICON = "/proxyDisabled_toolbar.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
@@ -310,7 +310,6 @@ public class SoapUI {
         mainInspector.addInspector(new JComponentInspector<JComponent>(buildMainPanel(), "Navigator",
                 "The SoapUI Navigator", true));
         mainInspector.setCurrentInspector("Navigator");
-
         frame.setJMenuBar(buildMainMenu());
         frame.getContentPane().add(buildToolbar(), BorderLayout.NORTH);
         frame.getContentPane().add(mainInspector.getComponent(), BorderLayout.CENTER);
@@ -347,7 +346,7 @@ public class SoapUI {
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
-                "Opens the SoapUI Forum in a browser", "/group_go.png"));
+                "Opens the SoapUI Forum in a browser", "/group_go_toolbar.png"));
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
                 "/favicon_toolbar.png"));
@@ -785,9 +784,33 @@ public class SoapUI {
         }
     }
 
+    private static void setBackgroundsToWhite() {
+        UIManager.put("Button.background", Color.WHITE);
+        UIManager.put("Panel.background", Color.WHITE);
+        UIManager.put("MenuBar.background", Color.WHITE);
+        UIManager.put("ComboBox.background", Color.WHITE);
+        UIManager.put("TableHeader.background", Color.WHITE);
+        UIManager.put("ToolBar.background", Color.WHITE);
+        UIManager.put("TabbedPane.background", Color.LIGHT_GRAY);
+        UIManager.put("TabbedPane.selected", Color.WHITE);
+        UIManager.put("Label.background", Color.WHITE);
+        UIManager.put("CheckBox.background", Color.WHITE);
+        UIManager.put("Desktop.background", Color.WHITE);
+        UIManager.put("ProgressBar.background", Color.WHITE);
+        UIManager.put("InternalFrame.background", Color.WHITE);
+        UIManager.put("SplitPane.background", Color.WHITE);
+        UIManager.put("ScrollBar.background", Color.WHITE);
+        UIManager.put("Spinner.background", Color.WHITE);
+        UIManager.put("OptionPane.background", Color.WHITE);
+        UIManager.put("ToggleButton.background", Color.WHITE);
+        UIManager.put("Slider.background", Color.WHITE);
+        UIManager.put("RadioButton.background", Color.WHITE);
+        UIManager.put("ScrollPane.background", Color.WHITE);
+    }
+
     public static void main(String[] args) throws Exception {
         WebstartUtilCore.init();
-
+        setBackgroundsToWhite();
         mainArgs = args;
 
         SoapUIRunner soapuiRunner = new SoapUIRunner();
@@ -1446,7 +1469,7 @@ public class SoapUI {
 
     private class PreferencesActionDelegate extends AbstractAction {
         public PreferencesActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/options_toolbar.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/preferences_toolbar_icon.png"));
             putValue(Action.SHORT_DESCRIPTION, "Sets Global SoapUI Preferences");
             putValue(Action.NAME, "Preferences");
         }

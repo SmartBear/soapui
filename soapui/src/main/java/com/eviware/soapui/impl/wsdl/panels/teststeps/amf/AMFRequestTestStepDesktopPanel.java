@@ -999,7 +999,7 @@ public class AMFRequestTestStepDesktopPanel extends ModelItemDesktopPanel<AMFReq
                 break;
             }
             case UNKNOWN: {
-                assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.gif"));
+                assertionInspector.setIcon(UISupport.createImageIcon("/unknown_assertion.png"));
                 break;
             }
             case VALID: {

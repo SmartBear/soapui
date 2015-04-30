@@ -268,26 +268,26 @@ public class JdbcRequest extends AbstractModelItem implements Assertable, TestRe
 
     public void initIcons() {
         if (validRequestIcon == null) {
-            validRequestIcon = UISupport.createImageIcon("/valid_jdbc_request.gif");
+            validRequestIcon = UISupport.createImageIcon("/valid_jdbc_request_step.png");
         }
 
         if (failedRequestIcon == null) {
-            failedRequestIcon = UISupport.createImageIcon("/invalid_jdbc_request.gif");
+            failedRequestIcon = UISupport.createImageIcon("/invalid_jdbc_request_step.png");
         }
 
         if (unknownRequestIcon == null) {
-            unknownRequestIcon = UISupport.createImageIcon("/unknown_jdbc_request.gif");
+            unknownRequestIcon = UISupport.createImageIcon("/jdbc_request_step.png");
         }
 
         if (disabledRequestIcon == null) {
-            disabledRequestIcon = UISupport.createImageIcon("/disabled_jdbc_request.gif");
+            disabledRequestIcon = UISupport.createImageIcon("/disabled_jdbc_request_step.png");
         }
 
-        setIconAnimator(new RequestIconAnimator<JdbcRequest>(this, "/jdbc_request.gif", "/exec_jdbc_request.gif", 4));
+        setIconAnimator(new RequestIconAnimator<JdbcRequest>(this, "/jdbc_request.png", "/jdbc_request.png", 4));
     }
 
     protected RequestIconAnimator<?> initIconAnimator() {
-        return new RequestIconAnimator<JdbcRequest>(this, "/jdbc_request.gif", "/exec_jdbc_request", 4);
+        return new RequestIconAnimator<JdbcRequest>(this, "/jdbc_request.png", "/exec_jdbc_request", 4);
     }
 
     public static class RequestIconAnimator<T extends JdbcRequest> extends IconAnimator<T> implements

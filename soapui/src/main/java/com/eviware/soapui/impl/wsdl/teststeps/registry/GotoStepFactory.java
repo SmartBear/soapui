@@ -33,7 +33,7 @@ public class GotoStepFactory extends WsdlTestStepFactory {
 
     public GotoStepFactory() {
         super(GOTO_TYPE, "Conditional Goto", "Transfers the execution to another TestStep based on xpath expressions",
-                "/goto.gif");
+                "/conditional_goto_step.png");
     }
 
     public WsdlTestStep buildTestStep(WsdlTestCase testCase, TestStepConfig config, boolean forLoadTest) {
