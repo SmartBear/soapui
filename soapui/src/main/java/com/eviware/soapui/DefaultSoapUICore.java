@@ -24,6 +24,7 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.monitor.JettyMockEngine;
 import com.eviware.soapui.monitor.MockEngine;
+import com.eviware.soapui.plugins.PluginManager;
 import com.eviware.soapui.security.registry.SecurityScanRegistry;
 import com.eviware.soapui.settings.*;
 import com.eviware.soapui.support.SecurityScanUtil;
@@ -45,6 +46,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.GeneralSecurityException;
 import java.util.TimerTask;
+import java.util.concurrent.ForkJoinPool;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -72,6 +74,8 @@ public class DefaultSoapUICore implements SoapUICore {
     protected boolean initialImport;
     private TimerTask settingsWatcher;
     private SoapUIExtensionClassLoader extClassLoader;
+
+    private PluginManager pluginManager;
 
     public boolean isSavingSettings;
 
@@ -146,6 +150,12 @@ public class DefaultSoapUICore implements SoapUICore {
                 }
             }
         }
+
+        pluginManager = new PluginManager(getFactoryRegistry(), getActionRegistry(),
+                getListenerRegistry()/*, toolbarComponentRegistry*/);
+        pluginManager.loadPlugins();
+        log.info("All plugins loaded");
+
     }
 
     protected void initExtensions(ClassLoader extensionClassLoader) {

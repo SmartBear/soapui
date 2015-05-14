@@ -32,7 +32,7 @@ import com.eviware.soapui.config.SoapUIListenerConfig;
 import com.eviware.soapui.config.SoapUIListenersConfig;
 import com.eviware.soapui.config.SoapuiListenersDocumentConfig;
 
-public class SoapUIListenerRegistry {
+public class SoapUIListenerRegistry implements ListenerRegistry {
     private Map<Class<?>, List<Class<?>>> listeners = new HashMap<Class<?>, List<Class<?>>>();
     private Map<Class<?>, List<Object>> singletonListeners = new HashMap<Class<?>, List<Object>>();
     private Map<Class<?>, SoapUIListenerConfig> listenerConfigs = new HashMap<Class<?>, SoapUIListenerConfig>();

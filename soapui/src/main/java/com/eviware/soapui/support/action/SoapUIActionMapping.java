@@ -50,4 +50,6 @@ public interface SoapUIActionMapping<T extends ModelItem> {
     public SoapUIActionMapping<T> setParam(Object param);
 
     public SoapUIActionMapping<T> setEnabled(boolean enabled);
+
+    int getToolbarIndex();
 }

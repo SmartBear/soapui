@@ -112,16 +112,18 @@
                     </dependency>
                 </dependencies>
             </plugin>
+            <!--
+            FIX ME: Have to comment out this plugin since it conflicts with ForkJoinPool dependency.
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
                 <version>1.9</version>
                 <configuration>
                     <signature>
-                        <groupId>org.codehaus.mojo.signature</groupId>
+                        <groupId>org.codehaus.mojo.signature</groupId>-->
                         <!-- currently, we cannot use java16 1.1 because some classes depends on the sun specific
                         implementation (com.sun.java.swing.plaf.windows) -->
-                        <artifactId>java16-sun</artifactId>
+                        <!--<artifactId>java16-sun</artifactId>
                         <version>1.10</version>
                     </signature>
                 </configuration>
@@ -134,7 +136,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
