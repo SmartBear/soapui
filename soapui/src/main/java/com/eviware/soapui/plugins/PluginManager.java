@@ -15,6 +15,7 @@ import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.SoapUITools;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
@@ -48,11 +49,11 @@ import java.util.concurrent.RecursiveTask;
 
 public class PluginManager {
 
-    public static final String PLUGINS_URL = "http://productextensions.s3.amazonaws.com/ReadyAPI-Plugins/availablePlugins.json";
+    //public static final String PLUGINS_URL = "http://productextensions.s3.amazonaws.com/ReadyAPI-Plugins/availablePlugins.json";
 
     FileOperations fileOperations = new DefaultFileOperations();
     PluginLoader pluginLoader;
-    AvailablePluginsLoader availablePluginsLoader;
+    //AvailablePluginsLoader availablePluginsLoader;
 
     private static Logger log = Logger.getLogger(PluginManager.class);
     private Map<File, InstalledPluginRecord> installedPlugins = new HashMap<File, InstalledPluginRecord>();
@@ -76,7 +77,7 @@ public class PluginManager {
                          ReadyApiToolbarComponentRegistry toolbarComponentRegistry*/) {
         pluginLoader = new PluginLoader(factoryRegistry, actionRegistry, listenerRegistry/*, toolbarComponentRegistry,
                 SimpleVcsIntegrationRegistry.instance()*/);
-        availablePluginsLoader = new AvailablePluginsLoader();
+        //availablePluginsLoader = new AvailablePluginsLoader();
         File soapUiDirectory = new File(System.getProperty("user.home"), ".soapui");
         pluginDirectory = new File(soapUiDirectory, "plugins");
         if (!pluginDirectory.exists() && !pluginDirectory.mkdirs()) {
@@ -143,6 +144,7 @@ public class PluginManager {
         UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
 
         InstalledPluginRecord context = pluginLoader.loadPlugin(pluginFile, classLoaders);
+        injectMembersIntoPlugin(context.plugin);
         /*
         if (readyApiInjector != null) {
             injectMembersIntoPlugin(context.plugin);
@@ -266,9 +268,9 @@ public class PluginManager {
         return Collections.unmodifiableCollection(plugins);
     }
 
-    public List<AvailablePlugin> getAvailablePlugins() {
+/*    public List<AvailablePlugin> getAvailablePlugins() {
         return availablePluginsLoader.readAvailablePlugins();
-    }
+    }*/
 
     public void addPluginListener(PluginListener listener) {
         listeners.add(listener);
@@ -316,7 +318,7 @@ public class PluginManager {
         }
     }
 
-    /*
+
     private void injectMembersIntoPlugin(Plugin plugin) {
         injectMembers(plugin, plugin);
         for (SoapUIAction action : plugin.getActions()) {
@@ -329,14 +331,13 @@ public class PluginManager {
 
     private void injectMembers(Object target, Plugin plugin) {
         try {
-            readyApiInjector.injectMembers(target);
+            //readyApiInjector.injectMembers(target);
         } catch (Throwable e) { // catching Throwable, because this could be plugin code
             log.error("Guice couldn't inject members into object " + target + " - the plugin [" + plugin +
                     "] may not be fully functional");
         }
     }
-    */
-
+/*
     public DependencyStatus checkDependencyStatus(File pluginFile) throws IOException {
         PluginInfo pluginInfo = pluginLoader.loadPluginInfoFrom(pluginFile, Collections.<JarClassLoader>emptySet());
         return checkDependencyStatus(pluginInfo);
@@ -359,6 +360,7 @@ public class PluginManager {
             return new DependencyStatus(true, unsatisfiedDependencies);
         }
     }
+    */
 
     private boolean pluginIsAvailableForDownload(List<AvailablePlugin> availablePlugins, PluginInfo requiredPlugin) {
         for (AvailablePlugin availablePlugin : availablePlugins) {
@@ -441,6 +443,7 @@ public class PluginManager {
         boolean deleteFile(File fileToDelete) throws IOException;
     }
 
+/*
     class AvailablePluginsLoader {
 
         public List<AvailablePlugin> readAvailablePlugins() {
@@ -521,6 +524,7 @@ public class PluginManager {
                     pluginElement.optString("infoUrl", ""));
         }
     }
+*/
 
     private class LoadPluginsTask extends RecursiveTask<List<Plugin>> {
 

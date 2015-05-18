@@ -87,7 +87,7 @@ public class PluginLoader extends LoaderBase {
             } else {
                 plugin = new EmptyPlugin(configurationAnnotation);
             }
-            /*
+
             boolean autoDetect = configurationAnnotation.autoDetect();
             if (plugin.isActive()) {
                 plugin.initialize();
@@ -97,7 +97,7 @@ public class PluginLoader extends LoaderBase {
                 Collection<? extends ApiImporter> apiImporters = loadApiImporters(plugin, autoDetect, jarFileScanner);
                 return createLoadedPluginInstance(plugin, factories, actions, listeners, apiImporters);
             }
-            */
+
             return plugin;
         } catch (InvalidPluginException e) {
             throw e;
@@ -125,7 +125,6 @@ public class PluginLoader extends LoaderBase {
         return importers;
     }
 
-    /*
     private LoadedPlugin createLoadedPluginInstance(Plugin plugin, Collection<SoapUIFactory> factories, List<SoapUIAction> actions,
                                                     List<Class<? extends SoapUIListenerEx>> listeners, Collection<? extends ApiImporter> apiImporters) {
         LoadedPlugin loadedPlugin = new LoadedPlugin(plugin, factories, actions, listeners, apiImporters);
@@ -140,7 +139,7 @@ public class PluginLoader extends LoaderBase {
             }
         }
         return loadedPlugin;
-    }*/
+    }
 
     private Collection<SoapUIFactory> loadPluginFactories(Plugin plugin, boolean autoDetect, Reflections jarFileScanner)
             throws IllegalAccessException, InstantiationException {
@@ -229,6 +228,69 @@ public class PluginLoader extends LoaderBase {
             } else {
                 return super.acceptsInput(file);
             }
+        }
+    }
+
+    private class LoadedPlugin implements Plugin{
+        private final Plugin plugin;
+        private final Collection<SoapUIFactory> factories;
+        private final List<SoapUIAction> actions;
+        private final List<Class<? extends SoapUIListenerEx>> listeners;
+        private Collection<? extends ApiImporter> apiImporters;
+
+        public LoadedPlugin(Plugin plugin, Collection<SoapUIFactory> factories, List<SoapUIAction> actions,
+                            List<Class<? extends SoapUIListenerEx>> listeners,
+                            Collection<? extends ApiImporter> apiImporters) {
+            this.plugin = plugin;
+            this.factories = factories;
+            this.actions = actions;
+            this.listeners = listeners;
+            this.apiImporters = apiImporters;
+        }
+
+        @Override
+        public PluginInfo getInfo() {
+            return plugin.getInfo();
+        }
+
+        @Override
+        public boolean isActive() {
+            return plugin.isActive();
+        }
+
+        @Override
+        public void initialize() {
+            throw new IllegalStateException("Plugin has already been initialized");
+        }
+
+        @Override
+        public List<Class<? extends SoapUIListenerEx>> getListeners() {
+            return listeners;
+        }
+
+        @Override
+        public List<? extends SoapUIAction> getActions() {
+            return actions;
+        }
+
+        @Override
+        public Collection<? extends ApiImporter> getApiImporters() {
+            return apiImporters;
+        }
+
+        @Override
+        public Collection<? extends SoapUIFactory> getFactories() {
+            return factories;
+        }
+
+        @Override
+        public boolean hasSameIdAs(Plugin otherPlugin) {
+            return plugin.hasSameIdAs(otherPlugin);
+        }
+
+        @Override
+        public String toString() {
+            return plugin.toString();
         }
     }
 
