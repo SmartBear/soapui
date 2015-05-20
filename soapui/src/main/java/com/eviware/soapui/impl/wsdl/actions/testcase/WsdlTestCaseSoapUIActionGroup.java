@@ -43,7 +43,7 @@ public class WsdlTestCaseSoapUIActionGroup extends DefaultSoapUIActionGroup<Wsdl
             }
         }
 
-        if (toggleDisabledActionMapping != null) {
+        if (toggleDisabledActionMapping != null && modelItem!=null) {
             if (modelItem.isDisabled()) {
                 toggleDisabledActionMapping.setName("Enable TestCase");
                 toggleDisabledActionMapping.setDescription("Enable this TestCase");

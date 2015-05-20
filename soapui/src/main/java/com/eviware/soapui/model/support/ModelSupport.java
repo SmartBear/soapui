@@ -217,4 +217,17 @@ public class ModelSupport {
         }
 
     }
+
+    public static boolean isOneOf(ModelItem modelItem, Object... classes) {
+        for (Object clazz : classes) {
+            if (clazz instanceof Class && ((Class) clazz).isAssignableFrom(modelItem.getClass())) {
+                return true;
+            } else if (clazz instanceof ModelItem &&
+                    clazz.getClass().isAssignableFrom(modelItem.getClass())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
