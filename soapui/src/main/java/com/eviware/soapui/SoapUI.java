@@ -167,8 +167,8 @@ public class SoapUI {
     public static final String SOAPUI_SPLASH = "soapui-splash.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
-    private static final String PROXY_ENABLED_ICON = "/proxyEnabled_toolbar.png";
-    private static final String PROXY_DISABLED_ICON = "/proxyDisabled_toolbar.png";
+    private static final String PROXY_ENABLED_ICON = "/Proxy_Turned-on.png";
+    private static final String PROXY_DISABLED_ICON = "/Proxy_Turned-off.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
@@ -329,10 +329,10 @@ public class SoapUI {
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
-                "Opens the SoapUI Forum in a browser", "/group_go_toolbar.png"));
+                "Opens the SoapUI Forum in a browser", "/forum.png"));
         mainToolbar.addSpace(2);
-        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI Pro Trial License",
-                "/favicon_toolbar.png"));
+        mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI NG Pro Trial License",
+                "/Trial.png"));
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
@@ -1463,7 +1463,7 @@ public class SoapUI {
 
     private static class SaveAllActionDelegate extends AbstractAction {
         public SaveAllActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/disk_multiple_toolbar.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/Save-all.png"));
             putValue(Action.SHORT_DESCRIPTION, "Saves all projects in the current workspace");
             putValue(Action.NAME, "Save All");
         }
