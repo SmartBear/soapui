@@ -21,11 +21,12 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class FunctionalMenu {
+public class MenuBuilderHelper {
     public static JMenu getMenu(String name){
-        for (int i = 0; i<SoapUI.getMenuBar().getMenuCount(); i++){
-            if (SoapUI.getMenuBar().getMenu(i).getText().equals(name)){
-                return SoapUI.getMenuBar().getMenu(i);
+        JMenuBar menuBar = SoapUI.getMenuBar();
+        for (int i = 0; i<menuBar.getMenuCount(); i++){
+            if (menuBar.getMenu(i).getText().equals(name)){
+                return menuBar.getMenu(i);
             }
         }
         return null;
@@ -36,7 +37,7 @@ public class FunctionalMenu {
         if(menu.getText().equals(SoapUI.STEP)){
             SoapUIActionMapping<WsdlTestStep> toggleDisabledActionMapping = null;
             DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
-                        ShowDesktopPanelAction.SOAPUI_ACTION_ID, "ENTER", null, true, null);
+                    ShowDesktopPanelAction.SOAPUI_ACTION_ID, "ENTER", null, true, null);
             actionMapping.setName("Open Editor");
             actionMapping.setDescription("Opens the editor for this TestStep");
             SwingActionDelegate actionDelegate = new SwingActionDelegate(actionMapping, null);
@@ -50,7 +51,7 @@ public class FunctionalMenu {
         }
         ActionSupport.addActions(actions, menu);
         for (Component component : menu.getMenuComponents()) {
-            disableEnableMenuSubItems(component, false);
+            activateMenuSubItems(component, false);
             component.setEnabled(false);
         }
         return menu;
@@ -60,23 +61,15 @@ public class FunctionalMenu {
         return ActionListBuilder.buildActions(actionGroup, null);
     }
 
-    private static void disableMenuItems(String groupId) {
-            JMenu menu = getMenu(groupId);
-            for (Component component : menu.getMenuComponents()) {
-                disableEnableMenuSubItems(component, false);
-                component.setEnabled(false);
-            }
-    }
-
-    private static void enableMenuItems(String groupId) {
+    private static void activateMenuItems(String groupId, boolean activate) {
         JMenu menu = getMenu(groupId);
         for (Component component : menu.getMenuComponents()) {
-            disableEnableMenuSubItems(component, true);
-            component.setEnabled(true);
+            activateMenuSubItems(component, activate);
+            component.setEnabled(activate);
         }
     }
 
-    private static void disableEnableMenuSubItems(Component component, boolean bEnable) {
+    private static void activateMenuSubItems(Component component, boolean bEnable) {
         if (component instanceof JMenu) {
             for (Component curComponent : ((JMenu) component).getMenuComponents()) {
                 curComponent.setEnabled(bEnable);
@@ -87,25 +80,28 @@ public class FunctionalMenu {
     public static void buildMenu(ModelItem curModelItem, String menuName, SoapUITreeNode path) {
         String[] groupsId = {SoapUI.STEP, SoapUI.CASE, SoapUI.SUITE, SoapUI.PROJECT};
         if(curModelItem instanceof Workspace){
-            for (int i = 0; i<groupsId.length; i++) {
-                disableMenuItems(groupsId[i]);
+            for(String groupId: groupsId) {
+                activateMenuItems(groupId, false);
             }
         }else if (ModelSupport.isOneOf(curModelItem, WsdlTestSuite.class, WsdlTestCase.class,
                 WsdlTestStep.class, WsdlProject.class)) {
             ActionList actionList = ActionListBuilder.buildActions(curModelItem);
-            JMenu curMenu = FunctionalMenu.getMenu(menuName);
+            JMenu curMenu = MenuBuilderHelper.getMenu(menuName);
             curMenu.removeAll();
             ActionSupport.addActions(actionList, curMenu);
-            for (int i = 0; !groupsId[i].equals(menuName); i++) {
-                disableMenuItems(groupsId[i]);
+            for(String groupId: groupsId){
+                if(groupId.equals(menuName)){
+                    break;
+                }
+                activateMenuItems(groupId, false);
             }
             while (!(curModelItem.getParent() instanceof Workspace)) {
                 curModelItem = curModelItem.getParent();
                 ActionList parentActionList = ActionListBuilder.buildActions(curModelItem);
-                JMenu parentMenu = FunctionalMenu.getMenu(selectMenuName(curModelItem));
+                JMenu parentMenu = MenuBuilderHelper.getMenu(getMenuNameForModelItem(curModelItem));
                 parentMenu.removeAll();
                 ActionSupport.addActions(parentActionList, parentMenu);
-                enableMenuItems(selectMenuName(curModelItem));
+                activateMenuItems(getMenuNameForModelItem(curModelItem), true);
             }
         } else {
             SoapUITreeNode node = path.getParentTreeNode();
@@ -125,7 +121,7 @@ public class FunctionalMenu {
         }
     }
 
-    public static String selectMenuName(ModelItem modelItem){
+    public static String getMenuNameForModelItem(ModelItem modelItem){
         if (modelItem instanceof WsdlTestSuite){
             return SoapUI.SUITE;
         }else if (modelItem instanceof WsdlTestStep){

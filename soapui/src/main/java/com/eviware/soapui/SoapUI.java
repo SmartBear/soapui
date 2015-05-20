@@ -96,7 +96,7 @@ import com.eviware.soapui.support.log.LogDisablingTestMonitorListener;
 import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
 import com.eviware.soapui.support.preferences.UserPreferences;
-import com.eviware.soapui.support.swing.FunctionalMenu;
+import com.eviware.soapui.support.swing.MenuBuilderHelper;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.tools.CmdLineRunner;
@@ -119,8 +119,6 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.event.MenuEvent;
-import javax.swing.event.MenuListener;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -434,22 +432,22 @@ public class SoapUI {
         return desktopMenu;
     }
     private JMenu buildProjectMenu() {
-        JMenu projectMenu = FunctionalMenu.buildMenuForWorkspace(new JMenu(PROJECT),ENABLED_PROJECT_ACTIONS);
+        JMenu projectMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(PROJECT), ENABLED_PROJECT_ACTIONS);
         return projectMenu;
     }
 
     private JMenu buildSuiteMenu() {
-        JMenu suiteMenu = FunctionalMenu.buildMenuForWorkspace(new JMenu(SUITE),TEST_SUITE_ACTIONS);
+        JMenu suiteMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(SUITE), TEST_SUITE_ACTIONS);
         return suiteMenu;
     }
 
     private JMenu buildCaseMenu() {
-        JMenu caseMenu = FunctionalMenu.buildMenuForWorkspace(new JMenu(CASE),TEST_CASE_ACTIONS);
+        JMenu caseMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(CASE), TEST_CASE_ACTIONS);
         return caseMenu;
     }
 
     private JMenu buildStepMenu() {
-        JMenu stepMenu = FunctionalMenu.buildMenuForWorkspace(new JMenu(STEP),TEST_STEP_ACTIONS);
+        JMenu stepMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(STEP), TEST_STEP_ACTIONS);
         return stepMenu;
     }
 

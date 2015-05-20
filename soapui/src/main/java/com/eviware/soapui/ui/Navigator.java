@@ -28,7 +28,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.components.JXToolBar;
-import com.eviware.soapui.support.swing.FunctionalMenu;
+import com.eviware.soapui.support.swing.MenuBuilderHelper;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -253,7 +253,7 @@ public class Navigator extends JPanel {
             Object obj = e.getPath().getLastPathComponent();
             if (obj instanceof SoapUITreeNode) {
                 SoapUITreeNode treeNode = (SoapUITreeNode) obj;
-                FunctionalMenu.buildMenu(treeNode.getModelItem(), FunctionalMenu.selectMenuName(treeNode.getModelItem()), treeNode);
+                MenuBuilderHelper.buildMenu(treeNode.getModelItem(), MenuBuilderHelper.getMenuNameForModelItem(treeNode.getModelItem()), treeNode);
                 if (!listeners.isEmpty()) {
                     TreePath newPath = e.getNewLeadSelectionPath();
                     NavigatorListener[] array = listeners.toArray(new NavigatorListener[listeners.size()]);
