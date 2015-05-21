@@ -17,15 +17,16 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+
 import javax.swing.*;
 import java.awt.*;
 
 
 public class MenuBuilderHelper {
-    public static JMenu getMenu(String name){
+    public static JMenu getMenu(String name) {
         JMenuBar menuBar = SoapUI.getMenuBar();
-        for (int i = 0; i<menuBar.getMenuCount(); i++){
-            if (menuBar.getMenu(i).getText().equals(name)){
+        for (int i = 0; i < menuBar.getMenuCount(); i++) {
+            if (menuBar.getMenu(i).getText().equals(name)) {
                 return menuBar.getMenu(i);
             }
         }
@@ -34,7 +35,7 @@ public class MenuBuilderHelper {
 
     public static JMenu buildMenuForWorkspace(JMenu menu, String actionGroup) {
         ActionList actions = buildActionsForActionGroup(actionGroup);
-        if(menu.getText().equals(SoapUI.STEP)){
+        if (menu.getText().equals(SoapUI.STEP)) {
             SoapUIActionMapping<WsdlTestStep> toggleDisabledActionMapping = null;
             DefaultActionMapping<WsdlTestStep> actionMapping = new DefaultActionMapping<WsdlTestStep>(
                     ShowDesktopPanelAction.SOAPUI_ACTION_ID, "ENTER", null, true, null);
@@ -79,18 +80,18 @@ public class MenuBuilderHelper {
 
     public static void buildMenu(ModelItem curModelItem, String menuName, SoapUITreeNode path) {
         String[] groupsId = {SoapUI.STEP, SoapUI.CASE, SoapUI.SUITE, SoapUI.PROJECT};
-        if(curModelItem instanceof Workspace){
-            for(String groupId: groupsId) {
+        if (curModelItem instanceof Workspace) {
+            for (String groupId : groupsId) {
                 activateMenuItems(groupId, false);
             }
-        }else if (ModelSupport.isOneOf(curModelItem, WsdlTestSuite.class, WsdlTestCase.class,
+        } else if (ModelSupport.isOneOf(curModelItem, WsdlTestSuite.class, WsdlTestCase.class,
                 WsdlTestStep.class, WsdlProject.class)) {
             ActionList actionList = ActionListBuilder.buildActions(curModelItem);
             JMenu curMenu = MenuBuilderHelper.getMenu(menuName);
             curMenu.removeAll();
             ActionSupport.addActions(actionList, curMenu);
-            for(String groupId: groupsId){
-                if(groupId.equals(menuName)){
+            for (String groupId : groupsId) {
+                if (groupId.equals(menuName)) {
                     break;
                 }
                 activateMenuItems(groupId, false);
@@ -121,14 +122,14 @@ public class MenuBuilderHelper {
         }
     }
 
-    public static String getMenuNameForModelItem(ModelItem modelItem){
-        if (modelItem instanceof WsdlTestSuite){
+    public static String getMenuNameForModelItem(ModelItem modelItem) {
+        if (modelItem instanceof WsdlTestSuite) {
             return SoapUI.SUITE;
-        }else if (modelItem instanceof WsdlTestStep){
+        } else if (modelItem instanceof WsdlTestStep) {
             return SoapUI.STEP;
-        }else if (modelItem instanceof WsdlProject) {
+        } else if (modelItem instanceof WsdlProject) {
             return SoapUI.PROJECT;
-        }else {
+        } else {
             return SoapUI.CASE;
         }
     }

@@ -265,6 +265,7 @@ public class Navigator extends JPanel {
             }
         }
     }
+
     public class TreeMouseListener extends MouseAdapter {
         private final class CollapseRowAction extends AbstractAction {
             private final int row;
@@ -436,6 +437,7 @@ public class Navigator extends JPanel {
             }
         }
     }
+
     public boolean isVisible(TreePath path) {
         return mainTree.isVisible(path);
     }

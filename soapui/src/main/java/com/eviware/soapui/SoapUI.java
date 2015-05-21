@@ -341,7 +341,7 @@ public class SoapUI {
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.setColor(Color.LIGHT_GRAY);
-                g.drawRect(0,0, getWidth() - 1, getHeight() - 1);
+                g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
             }
         };
         searchField.addKeyListener(new KeyAdapter() {
@@ -431,6 +431,7 @@ public class SoapUI {
         ActionSupport.addActions(desktop.getActions(), desktopMenu);
         return desktopMenu;
     }
+
     private JMenu buildProjectMenu() {
         JMenu projectMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(PROJECT), ENABLED_PROJECT_ACTIONS);
         return projectMenu;
