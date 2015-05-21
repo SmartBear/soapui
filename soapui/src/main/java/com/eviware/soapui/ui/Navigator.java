@@ -253,7 +253,7 @@ public class Navigator extends JPanel {
             Object obj = e.getPath().getLastPathComponent();
             if (obj instanceof SoapUITreeNode) {
                 SoapUITreeNode treeNode = (SoapUITreeNode) obj;
-                MenuBuilderHelper.buildMenu(treeNode.getModelItem(), MenuBuilderHelper.getMenuNameForModelItem(treeNode.getModelItem()), treeNode);
+                MenuBuilderHelper.buildTreeNodeMenu(treeNode);
                 if (!listeners.isEmpty()) {
                     TreePath newPath = e.getNewLeadSelectionPath();
                     NavigatorListener[] array = listeners.toArray(new NavigatorListener[listeners.size()]);

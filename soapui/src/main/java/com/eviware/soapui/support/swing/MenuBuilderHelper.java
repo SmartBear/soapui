@@ -78,7 +78,7 @@ public class MenuBuilderHelper {
         }
     }
 
-    public static void buildMenu(ModelItem curModelItem, String menuName, SoapUITreeNode path) {
+    private static void buildMenu(ModelItem curModelItem, String menuName, SoapUITreeNode path) {
         String[] groupsId = {SoapUI.STEP, SoapUI.CASE, SoapUI.SUITE, SoapUI.PROJECT};
         if (curModelItem instanceof Workspace) {
             for (String groupId : groupsId) {
@@ -122,7 +122,12 @@ public class MenuBuilderHelper {
         }
     }
 
-    public static String getMenuNameForModelItem(ModelItem modelItem) {
+    public static void buildTreeNodeMenu(SoapUITreeNode treeNode) {
+        ModelItem modelItem = treeNode.getModelItem();
+        buildMenu(modelItem, getMenuNameForModelItem(modelItem), treeNode);
+    }
+
+    private static String getMenuNameForModelItem(ModelItem modelItem) {
         if (modelItem instanceof WsdlTestSuite) {
             return SoapUI.SUITE;
         } else if (modelItem instanceof WsdlTestStep) {
