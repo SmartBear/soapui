@@ -111,8 +111,7 @@ public class MenuBuilderHelper {
                 if (curModelItem instanceof WsdlTestCase) {
                     buildMenu(curModelItem, SoapUI.CASE, null);
                     break;
-                }
-                if (curModelItem instanceof WsdlProject) {
+                } else if (curModelItem instanceof WsdlProject) {
                     buildMenu(curModelItem, SoapUI.PROJECT, null);
                     break;
                 }
