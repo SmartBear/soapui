@@ -49,7 +49,10 @@ public interface Plugin {
 
     /**
      * Gets all the API importers provided by this plugin. Classes can be annotated with PluginApiImporter to provide
-     * additional information. The order of the list controls the order in which actions are added to menus.
+     * additional information.
+     *
+     * NOTE: this is currently not used by SoapUI Open Source and is only present to ensure binary compatibility
+     * between SoapUI OS and Ready! API.
      *
      * @return a collection of API importer classes
      */

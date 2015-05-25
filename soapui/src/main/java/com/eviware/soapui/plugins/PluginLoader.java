@@ -10,7 +10,6 @@ import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
-//import com.smartbear.ready.ui.toolbar.ReadyApiToolbarComponentRegistry;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.reflections.Reflections;
@@ -24,6 +23,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+//import com.smartbear.ready.ui.toolbar.ReadyApiToolbarComponentRegistry;
 
 /**
  * Responsible for loading plugins into SoapUI.
@@ -94,8 +95,7 @@ public class PluginLoader extends LoaderBase {
                 Collection<SoapUIFactory> factories = loadPluginFactories(plugin, autoDetect, jarFileScanner);
                 List<SoapUIAction> actions = loadPluginActions(plugin, autoDetect, jarFileScanner);
                 List<Class<? extends SoapUIListenerEx>> listeners = loadPluginListeners(plugin, autoDetect, jarFileScanner);
-                Collection<? extends ApiImporter> apiImporters = loadApiImporters(plugin, autoDetect, jarFileScanner);
-                return createLoadedPluginInstance(plugin, factories, actions, listeners, apiImporters);
+                return createLoadedPluginInstance(plugin, factories, actions, listeners);
             }
 
             return plugin;
@@ -106,28 +106,9 @@ public class PluginLoader extends LoaderBase {
         }
     }
 
-    private Collection<? extends ApiImporter> loadApiImporters(Plugin plugin, boolean autoDetect, Reflections jarFileScanner) {
-        Set<ApiImporter> importers = new HashSet<ApiImporter>(PluginProxies.proxyInstancesWhereApplicable(plugin.getApiImporters()));
-        if (autoDetect) {
-            Set<Class<?>> apiImporterClasses = jarFileScanner.getTypesAnnotatedWith(PluginApiImporter.class);
-            for (Class<?> apiImporterClass : apiImporterClasses) {
-                if (ApiImporter.class.isAssignableFrom(apiImporterClass)) {
-                    try {
-                        importers.add((ApiImporter) createObject(apiImporterClass));
-                    } catch (Exception e) {
-                        throw new InvalidPluginException("Couldn't instantiate API Importer from class " + apiImporterClass, e);
-                    }
-                } else {
-                    throw new InvalidPluginException("API Importer class " + apiImporterClass + " doesn't implement ApiImporter");
-                }
-            }
-        }
-        return importers;
-    }
-
     private LoadedPlugin createLoadedPluginInstance(Plugin plugin, Collection<SoapUIFactory> factories, List<SoapUIAction> actions,
-                                                    List<Class<? extends SoapUIListenerEx>> listeners, Collection<? extends ApiImporter> apiImporters) {
-        LoadedPlugin loadedPlugin = new LoadedPlugin(plugin, factories, actions, listeners, apiImporters);
+                                                    List<Class<? extends SoapUIListenerEx>> listeners) {
+        LoadedPlugin loadedPlugin = new LoadedPlugin(plugin, factories, actions, listeners);
         for (SoapUIFactory factory : factories) {
             if (factory instanceof PluginAware) {
                 ((PluginAware)factory).setPlugin(loadedPlugin);
@@ -236,16 +217,13 @@ public class PluginLoader extends LoaderBase {
         private final Collection<SoapUIFactory> factories;
         private final List<SoapUIAction> actions;
         private final List<Class<? extends SoapUIListenerEx>> listeners;
-        private Collection<? extends ApiImporter> apiImporters;
 
         public LoadedPlugin(Plugin plugin, Collection<SoapUIFactory> factories, List<SoapUIAction> actions,
-                            List<Class<? extends SoapUIListenerEx>> listeners,
-                            Collection<? extends ApiImporter> apiImporters) {
+                            List<Class<? extends SoapUIListenerEx>> listeners) {
             this.plugin = plugin;
             this.factories = factories;
             this.actions = actions;
             this.listeners = listeners;
-            this.apiImporters = apiImporters;
         }
 
         @Override
@@ -275,7 +253,7 @@ public class PluginLoader extends LoaderBase {
 
         @Override
         public Collection<? extends ApiImporter> getApiImporters() {
-            return apiImporters;
+            return Collections.emptySet();
         }
 
         @Override
