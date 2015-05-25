@@ -24,8 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//import com.smartbear.ready.ui.toolbar.ReadyApiToolbarComponentRegistry;
-
 /**
  * Responsible for loading plugins into SoapUI.
  */
