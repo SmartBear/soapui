@@ -1,6 +1,6 @@
 package com.eviware.soapui.plugins;
 
-import com.eviware.soapui.model.iface.SoapUIListenerEx;
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.support.action.SoapUIAction;
 
 import java.util.Collection;
@@ -37,7 +37,7 @@ public interface Plugin {
      *
      * @return an ordered list of listener classes
      */
-    List<Class<? extends SoapUIListenerEx>> getListeners();
+    List<Class<? extends SoapUIListener>> getListeners();
 
     /**
      * Gets all the SoapUI actions provided by this plugin. Classes can be annotated with ActionConfiguration to provide

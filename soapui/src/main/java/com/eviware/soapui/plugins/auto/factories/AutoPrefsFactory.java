@@ -20,7 +20,7 @@ public class AutoPrefsFactory extends AbstractSoapUIFactory<Prefs> implements Pr
     @Override
     public Prefs createPrefs() {
         try {
-            Prefs prefsInstance = createWithInjector(prefsClass);
+            Prefs prefsInstance = createByReflection(prefsClass);
             return PluginProxies.proxyIfApplicable(prefsInstance);
         } catch (Exception e) {
             SoapUI.logError(e);

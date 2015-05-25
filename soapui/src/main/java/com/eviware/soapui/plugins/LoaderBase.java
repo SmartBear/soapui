@@ -2,7 +2,7 @@ package com.eviware.soapui.plugins;
 
 import com.eviware.soapui.PluginToolbarAction;
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.iface.SoapUIListenerEx;
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.plugins.auto.AutoFactory;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.action.SoapUIAction;
@@ -12,16 +12,8 @@ import com.eviware.soapui.support.action.support.DefaultActionMapping;
 import com.eviware.soapui.support.action.support.DefaultSoapUIActionGroup;
 import com.eviware.soapui.support.action.support.StandaloneActionMapping;
 import com.eviware.soapui.support.action.support.WrapperSoapUIAction;
-//import com.eviware.soapui.support.action.swing.SwingToolbarActionDelegate;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
-/*
-import com.smartbear.ready.ui.toolbar.DefaultToolbarComponentGroup;
-import com.smartbear.ready.ui.toolbar.ReadyApiToolbarComponentRegistry;
-import com.smartbear.ready.ui.toolbar.ToolbarComponentGroup;
-import com.smartbear.ready.ui.toolbar.ToolbarComponentGroupConfiguration;
-import com.smartbear.ready.ui.toolbar.ToolbarItem;
-*/
 import org.apache.commons.lang.ObjectUtils;
 import org.reflections.Reflections;
 import org.reflections.adapters.JavaReflectionAdapter;
@@ -49,14 +41,12 @@ public class LoaderBase {
     protected SoapUIFactoryRegistry factoryRegistry;
     protected SoapUIActionRegistry actionRegistry;
     protected ListenerRegistry listenerRegistry;
-    //protected ReadyApiToolbarComponentRegistry readyApiToolbarComponentRegistry;
 
     public LoaderBase(ListenerRegistry listenerRegistry, SoapUIActionRegistry actionRegistry,
-                      SoapUIFactoryRegistry factoryRegistry/*, ReadyApiToolbarComponentRegistry readyApiToolbarComponentRegistry*/) {
+                      SoapUIFactoryRegistry factoryRegistry) {
         this.listenerRegistry = listenerRegistry;
         this.actionRegistry = actionRegistry;
         this.factoryRegistry = factoryRegistry;
-        //this.readyApiToolbarComponentRegistry = readyApiToolbarComponentRegistry;
     }
 
     protected Collection<? extends SoapUIFactory> loadFactories(Reflections jarFileScanner)
@@ -138,13 +128,13 @@ public class LoaderBase {
         return factoryClass.getConstructor(annotationType, clazz.getClass()).newInstance(annotation, clazz);
     }
 
-    protected List<Class<? extends SoapUIListenerEx>> registerListeners(List<Class<? extends SoapUIListenerEx>> listeners) {
+    protected List<Class<? extends SoapUIListener>> registerListeners(List<Class<? extends SoapUIListener>> listeners) {
         for (Class<?> listenerClass : listeners) {
 
             Class currentListenerClass = listenerClass;
             while (currentListenerClass != null) {
                 for (Class<?> implementedInterface : currentListenerClass.getInterfaces()) {
-                    if (SoapUIListenerEx.class.isAssignableFrom(implementedInterface)) {
+                    if (SoapUIListener.class.isAssignableFrom(implementedInterface)) {
                         listenerRegistry.addListener(implementedInterface, listenerClass, null);
                     }
                 }
@@ -156,16 +146,16 @@ public class LoaderBase {
         return listeners;
     }
 
-    protected List<Class<? extends SoapUIListenerEx>> loadListeners(Reflections jarFileScanner) throws IllegalAccessException, InstantiationException {
-        List<Class<? extends SoapUIListenerEx>> listeners = new ArrayList<Class<? extends SoapUIListenerEx>>();
+    protected List<Class<? extends SoapUIListener>> loadListeners(Reflections jarFileScanner) throws IllegalAccessException, InstantiationException {
+        List<Class<? extends SoapUIListener>> listeners = new ArrayList<Class<? extends SoapUIListener>>();
 
         Set<Class<?>> listenerClasses = jarFileScanner.getTypesAnnotatedWith(ListenerConfiguration.class);
         for (Class<?> listenerClass : listenerClasses) {
-            if (!SoapUIListenerEx.class.isAssignableFrom(listenerClass)) {
+            if (!SoapUIListener.class.isAssignableFrom(listenerClass)) {
                 logger.warn("Class " + listenerClass + " is annotated with @ListenerConfiguration " +
                         "but does not implement SoapUIListener");
             } else {
-                listeners.add(((Class<SoapUIListenerEx>) listenerClass));
+                listeners.add(((Class<SoapUIListener>) listenerClass));
             }
         }
 
@@ -206,33 +196,6 @@ public class LoaderBase {
 
         return actionGroups;
     }
-
-    /*
-    protected List<? extends ToolbarComponentGroup> loadToolbarComponentGroups(Reflections jarFileScanner) throws InstantiationException, IllegalAccessException {
-        List<ToolbarComponentGroup> toolbarComponentGroups = new ArrayList<>();
-        Set<Class<?>> toolbarComponentGroupClasses = jarFileScanner.getTypesAnnotatedWith(ToolbarComponentGroupConfiguration.class);
-        for (Class<?> toolbarComponentGroupClass : toolbarComponentGroupClasses) {
-            ToolbarComponentGroupConfiguration annotation = toolbarComponentGroupClass.getAnnotation(ToolbarComponentGroupConfiguration.class);
-            ToolbarComponentGroup toolbarComponentGroup = getToolbarComponentGroupInstance(toolbarComponentGroupClass);
-            for (Class<? extends ToolbarItem> toolbarItemClass : annotation.components()) {
-                toolbarComponentGroup.addToolbarItem(createObject(toolbarItemClass));
-            }
-        }
-        return toolbarComponentGroups;
-    }
-
-    private ToolbarComponentGroup getToolbarComponentGroupInstance(Class<?> toolbarComponentGroupClass) throws IllegalAccessException, InstantiationException {
-
-        ToolbarComponentGroup group = (ToolbarComponentGroup) createObject(toolbarComponentGroupClass);
-        ToolbarComponentGroup existingGroup = readyApiToolbarComponentRegistry.getToolbarComponentGroup(group.getToolbarGroupId());
-        if (existingGroup != null) {
-            return existingGroup;
-        } else {
-            readyApiToolbarComponentRegistry.addToolbarComponentGroup(group);
-            return group;
-        }
-    }
-    */
 
     protected List<? extends SoapUIActionGroup> loadActionGroups(Reflections jarFileScanner) throws InstantiationException, IllegalAccessException {
         List<SoapUIActionGroup> actionGroups = new ArrayList<SoapUIActionGroup>();
@@ -287,9 +250,6 @@ public class LoaderBase {
                                 actionMapping.setDescription(mapping.description());
                             }
 
-/*                            if (mapping.isToolbarAction()) {
-                                registerToolbarAction(actionGroup.getId(), actionMapping);
-                            }*/
                             actionGroup.addMapping(actionId, actionMapping);
                         }
                     } catch (Throwable e) {
@@ -372,26 +332,11 @@ public class LoaderBase {
         if (configuration.toolbarPosition() == ToolbarPosition.FUNCTIONAL_TESTING) {
             SoapUI.addToolbarAction(new PluginToolbarAction(action, configuration.toolbarIcon(), configuration.description()));
         }
-
-/*        if (configuration.isToolbarAction()) {
-            registerToolbarAction(groupId, mapping);
-        }*/
     }
-
-/*    private void registerToolbarAction(String groupId, DefaultActionMapping mapping) {
-        ToolbarComponentGroup toolbarComponentGroup = readyApiToolbarComponentRegistry.getToolbarComponentGroup(groupId);
-        if (toolbarComponentGroup == null) {
-            toolbarComponentGroup = new DefaultToolbarComponentGroup(groupId);
-            readyApiToolbarComponentRegistry.addToolbarComponentGroup(toolbarComponentGroup);
-        }
-        SwingToolbarActionDelegate swingToolbarActionDelegate = new SwingToolbarActionDelegate(mapping);
-        toolbarComponentGroup.addToolbarItem(swingToolbarActionDelegate);
-    }*/
-
-    protected void unregisterListeners(List<Class<? extends SoapUIListenerEx>> listeners) {
-        for (Class<? extends SoapUIListenerEx> listenerClass : listeners) {
+    protected void unregisterListeners(List<Class<? extends SoapUIListener>> listeners) {
+        for (Class<? extends SoapUIListener> listenerClass : listeners) {
             for (Class<?> implementedInterface : listenerClass.getInterfaces()) {
-                if (SoapUIListenerEx.class.isAssignableFrom(implementedInterface)) {
+                if (SoapUIListener.class.isAssignableFrom(implementedInterface)) {
                     listenerRegistry.removeListener(implementedInterface, listenerClass);
                     listenerRegistry.removeSingletonListener(implementedInterface, listenerClass);
                 }

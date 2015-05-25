@@ -50,7 +50,6 @@ public class AutoRequestEditorViewFactory extends AbstractSoapUIFactory<EditorVi
 
                 Constructor<EditorView> constructor = editorViewClass.getConstructor(Editor.class, targetClass);
                 EditorView editorViewToReturn = constructor.newInstance(editor, modelItem);
-                //injectMembers(editorViewToReturn);
                 return PluginProxies.proxyIfApplicable(editorViewToReturn);
             }
         } catch (Exception e) {

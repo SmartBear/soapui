@@ -15,25 +15,16 @@ import com.google.inject.Injector;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-/**
- * Created by ole on 15/06/14.
- */
 public class AutoTestStepFactory extends WsdlTestStepFactory implements SoapUIFactory {
     private PluginTestStep annotation;
     private Class<TestStep> testStepClass;
-    //private Injector injector;
 
     public AutoTestStepFactory(PluginTestStep annotation, Class<TestStep> testStepClass) {
         super(annotation.typeName(), annotation.name(), annotation.description(), annotation.iconPath());
         this.annotation = annotation;
         this.testStepClass = testStepClass;
     }
-/*
-    @Inject
-    public void setInjector(Injector injector) {
-        this.injector = injector;
-    }
-*/
+
     @Override
     public Class<?> getFactoryType() {
         return WsdlTestStepFactory.class;
@@ -58,10 +49,6 @@ public class AutoTestStepFactory extends WsdlTestStepFactory implements SoapUIFa
         } catch (Exception e) {
             SoapUI.logError(e);
         }
-
-/*        if (result != null && injector != null)
-            injector.injectMembers(result);
-            */
 
         return result;
     }

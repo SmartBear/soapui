@@ -12,7 +12,7 @@ public class SimpleSoapUIFactory<T extends Object> extends AbstractSoapUIFactory
 
     public T create() {
         try {
-            T returnValue = createWithInjector(objectClass);
+            T returnValue = createByReflection(objectClass);
             return PluginProxies.proxyIfApplicable(returnValue);
         } catch (IllegalAccessException e) {
             e.printStackTrace();

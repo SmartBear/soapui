@@ -1,6 +1,6 @@
 package com.eviware.soapui.plugins;
 
-import com.eviware.soapui.model.iface.SoapUIListenerEx;
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.support.action.SoapUIAction;
 
 import java.util.Collection;
@@ -30,7 +30,7 @@ public class PluginAdapter implements Plugin {
     }
 
     @Override
-    public List<Class<? extends SoapUIListenerEx>> getListeners() {
+    public List<Class<? extends SoapUIListener>> getListeners() {
         return Collections.emptyList();
     }
 

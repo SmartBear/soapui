@@ -5,7 +5,7 @@
 package com.eviware.soapui.plugins;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.iface.SoapUIListenerEx;
+import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
@@ -32,9 +32,8 @@ public class PluginLoader extends LoaderBase {
     public static Logger log = Logger.getLogger(PluginLoader.class);
 
     public PluginLoader(SoapUIFactoryRegistry factoryRegistry,
-                        SoapUIActionRegistry actionRegistry, ListenerRegistry listenerRegistry/*,
-                        ReadyApiToolbarComponentRegistry toolbarComponentRegistry*/) {
-        super(listenerRegistry, actionRegistry, factoryRegistry/*, toolbarComponentRegistry*/);
+                        SoapUIActionRegistry actionRegistry, ListenerRegistry listenerRegistry) {
+        super(listenerRegistry, actionRegistry, factoryRegistry);
     }
 
     InstalledPluginRecord loadPlugin(File pluginFile, Collection<JarClassLoader> dependencyClassLoaders) throws IOException {
@@ -92,7 +91,7 @@ public class PluginLoader extends LoaderBase {
                 plugin.initialize();
                 Collection<SoapUIFactory> factories = loadPluginFactories(plugin, autoDetect, jarFileScanner);
                 List<SoapUIAction> actions = loadPluginActions(plugin, autoDetect, jarFileScanner);
-                List<Class<? extends SoapUIListenerEx>> listeners = loadPluginListeners(plugin, autoDetect, jarFileScanner);
+                List<Class<? extends SoapUIListener>> listeners = loadPluginListeners(plugin, autoDetect, jarFileScanner);
                 return createLoadedPluginInstance(plugin, factories, actions, listeners);
             }
 
@@ -105,7 +104,7 @@ public class PluginLoader extends LoaderBase {
     }
 
     private LoadedPlugin createLoadedPluginInstance(Plugin plugin, Collection<SoapUIFactory> factories, List<SoapUIAction> actions,
-                                                    List<Class<? extends SoapUIListenerEx>> listeners) {
+                                                    List<Class<? extends SoapUIListener>> listeners) {
         LoadedPlugin loadedPlugin = new LoadedPlugin(plugin, factories, actions, listeners);
         for (SoapUIFactory factory : factories) {
             if (factory instanceof PluginAware) {
@@ -134,8 +133,8 @@ public class PluginLoader extends LoaderBase {
     }
 
 
-    private List<Class<? extends SoapUIListenerEx>> loadPluginListeners(Plugin plugin, boolean autoDetect, Reflections jarFileScanner) throws IllegalAccessException, InstantiationException {
-        List<Class<? extends SoapUIListenerEx>> listeners = new ArrayList<Class<? extends SoapUIListenerEx>>(plugin.getListeners());
+    private List<Class<? extends SoapUIListener>> loadPluginListeners(Plugin plugin, boolean autoDetect, Reflections jarFileScanner) throws IllegalAccessException, InstantiationException {
+        List<Class<? extends SoapUIListener>> listeners = new ArrayList<Class<? extends SoapUIListener>>(plugin.getListeners());
         if (!listeners.isEmpty())
             registerListeners(listeners);
 
@@ -214,10 +213,10 @@ public class PluginLoader extends LoaderBase {
         private final Plugin plugin;
         private final Collection<SoapUIFactory> factories;
         private final List<SoapUIAction> actions;
-        private final List<Class<? extends SoapUIListenerEx>> listeners;
+        private final List<Class<? extends SoapUIListener>> listeners;
 
         public LoadedPlugin(Plugin plugin, Collection<SoapUIFactory> factories, List<SoapUIAction> actions,
-                            List<Class<? extends SoapUIListenerEx>> listeners) {
+                            List<Class<? extends SoapUIListener>> listeners) {
             this.plugin = plugin;
             this.factories = factories;
             this.actions = actions;
@@ -240,7 +239,7 @@ public class PluginLoader extends LoaderBase {
         }
 
         @Override
-        public List<Class<? extends SoapUIListenerEx>> getListeners() {
+        public List<Class<? extends SoapUIListener>> getListeners() {
             return listeners;
         }
 
@@ -294,7 +293,7 @@ public class PluginLoader extends LoaderBase {
         }
 
         @Override
-        public List<Class<? extends SoapUIListenerEx>> getListeners() {
+        public List<Class<? extends SoapUIListener>> getListeners() {
             return Collections.emptyList();
         }
 

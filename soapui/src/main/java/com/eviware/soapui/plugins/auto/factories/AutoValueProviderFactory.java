@@ -5,9 +5,6 @@ import com.eviware.soapui.plugins.auto.PluginValueProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by ole on 14/06/14.
- */
 public class AutoValueProviderFactory extends
         SimpleSoapUIFactory<DynamicPropertyResolver.ValueProvider> implements DynamicPropertyResolver.ValueProviderFactory {
     private String valueId;

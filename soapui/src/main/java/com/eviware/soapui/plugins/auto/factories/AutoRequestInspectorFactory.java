@@ -52,7 +52,6 @@ public class AutoRequestInspectorFactory extends AbstractSoapUIFactory<EditorIns
 
                 Constructor<Inspector> constructor = inspectorClass.getConstructor(Editor.class, targetClass);
                 EditorInspector<?> inspectorToReturn = (EditorInspector<?>) constructor.newInstance(editor, modelItem);
-                //injectMembers(inspectorToReturn);
                 return PluginProxies.proxyIfApplicable(inspectorToReturn);
             }
         } catch (Exception e) {
