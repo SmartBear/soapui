@@ -82,11 +82,7 @@ import com.eviware.soapui.support.action.swing.ActionList;
 import com.eviware.soapui.support.action.swing.ActionListBuilder;
 import com.eviware.soapui.support.action.swing.ActionSupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.components.JComponentInspector;
-import com.eviware.soapui.support.components.JInspectorPanel;
-import com.eviware.soapui.support.components.JInspectorPanelFactory;
-import com.eviware.soapui.support.components.JPropertiesTable;
-import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.components.*;
 import com.eviware.soapui.support.dnd.DropType;
 import com.eviware.soapui.support.dnd.NavigatorDragAndDropable;
 import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
@@ -100,13 +96,11 @@ import com.eviware.soapui.support.log.LogDisablingTestMonitorListener;
 import com.eviware.soapui.support.monitor.MonitorPanel;
 import com.eviware.soapui.support.monitor.RuntimeMemoryMonitorSource;
 import com.eviware.soapui.support.preferences.UserPreferences;
+import com.eviware.soapui.support.swing.MenuBuilderHelper;
 import com.eviware.soapui.support.swing.MenuScroller;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.tools.CmdLineRunner;
-import com.eviware.soapui.ui.JDesktopPanelsList;
-import com.eviware.soapui.ui.Navigator;
-import com.eviware.soapui.ui.NavigatorListener;
-import com.eviware.soapui.ui.URLDesktopPanel;
+import com.eviware.soapui.ui.*;
 import com.eviware.soapui.ui.desktop.DesktopPanel;
 import com.eviware.soapui.ui.desktop.DesktopRegistry;
 import com.eviware.soapui.ui.desktop.NullDesktop;
@@ -124,26 +118,7 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextField;
-import javax.swing.JToggleButton;
-import javax.swing.JTree;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
-import javax.swing.ToolTipManager;
-import javax.swing.UIManager;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -167,11 +142,8 @@ import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -193,8 +165,8 @@ public class SoapUI {
     public static final String SOAPUI_SPLASH = "soapui-splash.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
-    private static final String PROXY_ENABLED_ICON = "/proxyEnabled_toolbar.png";
-    private static final String PROXY_DISABLED_ICON = "/proxyDisabled_toolbar.png";
+    private static final String PROXY_ENABLED_ICON = "/Proxy_Turned-on.png";
+    private static final String PROXY_DISABLED_ICON = "/Proxy_Turned-off.png";
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
@@ -207,7 +179,15 @@ public class SoapUI {
     private static final int DEFAULT_MAX_THREADPOOL_SIZE = 200;
     private static final String BROWSER_DISABLED_SYSTEM_PROPERTY = "soapui.browser.disabled";
 
+    public static final String PROJECT = "Project";
+    public static final String SUITE = "Suite";
+    public static final String STEP = "Step";
+    public static final String CASE = "Case";
 
+    public static final String ENABLED_PROJECT_ACTIONS = "EnabledWsdlProjectActions";
+    public static final String TEST_SUITE_ACTIONS = "WsdlTestSuiteActions";
+    public static final String TEST_CASE_ACTIONS = "WsdlTestCaseActions";
+    public static final String TEST_STEP_ACTIONS = "WsdlTestStepActions";
     // ------------------------------ FIELDS ------------------------------
 
     private static List<Object> logCache = new ArrayList<Object>();
@@ -351,10 +331,10 @@ public class SoapUI {
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Forum", HelpUrls.COMMUNITY_HELP_URL,
-                "Opens the SoapUI Forum in a browser", "/group_go_toolbar.png"));
+                "Opens the SoapUI Forum in a browser", "/forum.png"));
         mainToolbar.addSpace(2);
         mainToolbar.add(new ShowOnlineHelpAction("Trial", HelpUrls.TRIAL_URL, "Apply for SoapUI NG Pro Trial License",
-                "/favicon_toolbar.png"));
+                "/Trial.png"));
         mainToolbar.add(new PreferencesActionDelegate());
         applyProxyButton = (JToggleButton) mainToolbar.add(new JToggleButton(new ApplyProxyButtonAction()));
         updateProxyButtonAndTooltip();
@@ -365,7 +345,7 @@ public class SoapUI {
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.setColor(Color.LIGHT_GRAY);
-                g.drawRect(0,0, getWidth() - 1, getHeight() - 1);
+                g.drawRect(0, 0, getWidth() - 1, getHeight() - 1);
             }
         };
         searchField.addKeyListener(new KeyAdapter() {
@@ -428,6 +408,10 @@ public class SoapUI {
         };
         menuBar.setBorder(BorderFactory.createEmptyBorder());
         menuBar.add(buildFileMenu());
+        menuBar.add(buildProjectMenu());
+        menuBar.add(buildSuiteMenu());
+        menuBar.add(buildCaseMenu());
+        menuBar.add(buildStepMenu());
         menuBar.add(buildToolsMenu());
         menuBar.add(buildDesktopMenu());
         menuBar.add(buildHelpMenu());
@@ -450,6 +434,26 @@ public class SoapUI {
         desktopMenu.addSeparator();
         ActionSupport.addActions(desktop.getActions(), desktopMenu);
         return desktopMenu;
+    }
+
+    private JMenu buildProjectMenu() {
+        JMenu projectMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(PROJECT), ENABLED_PROJECT_ACTIONS);
+        return projectMenu;
+    }
+
+    private JMenu buildSuiteMenu() {
+        JMenu suiteMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(SUITE), TEST_SUITE_ACTIONS);
+        return suiteMenu;
+    }
+
+    private JMenu buildCaseMenu() {
+        JMenu caseMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(CASE), TEST_CASE_ACTIONS);
+        return caseMenu;
+    }
+
+    private JMenu buildStepMenu() {
+        JMenu stepMenu = MenuBuilderHelper.buildMenuForWorkspace(new JMenu(STEP), TEST_STEP_ACTIONS);
+        return stepMenu;
     }
 
     private JMenu buildHelpMenu() {
@@ -1462,7 +1466,7 @@ public class SoapUI {
 
     private static class SaveAllActionDelegate extends AbstractAction {
         public SaveAllActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/disk_multiple_toolbar.png"));
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/Save-all.png"));
             putValue(Action.SHORT_DESCRIPTION, "Saves all projects in the current workspace");
             putValue(Action.NAME, "Save All");
         }
