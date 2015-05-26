@@ -1729,40 +1729,4 @@ public class SoapUI {
             return false;
         }
     }
-
-    public static void addToolbarAction(final Action action) {
-        JXToolBar toolbar = SoapUI.getToolBar();
-        if (toolbar != null) {
-            toolbar.add(makeToolbarButton(action), lastToolbarButtonIndex);
-            lastToolbarButtonIndex++;
-        } else {
-            extraToolbarActions.add(action);
-        }
-    }
-
-    public static void removeToolbarAction(SoapUIAction action) {
-        JXToolBar toolbar = SoapUI.getToolBar();
-        if (toolbar == null) {
-            return;
-        }
-
-        for (Component component : toolbar.getComponents()) {
-            if (component instanceof JButton) {
-                Action buttonAction = ((JButton) component).getAction();
-                if (buttonAction instanceof PluginToolbarAction && ((PluginToolbarAction) buttonAction).getAction() == action) {
-                    toolbar.remove(toolbar.getComponentIndex(component));
-                    toolbar.revalidate();
-                    toolbar.repaint();
-                    break;
-                }
-            }
-        }
-    }
-
-    private static JButton makeToolbarButton(Action extraToolbarAction) {
-        JButton button = new JButton(extraToolbarAction);
-        button.setBorderPainted(false);
-        button.setHideActionText(true);
-        return button;
-    }
 }

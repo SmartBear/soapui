@@ -11,26 +11,17 @@
  */
 package com.eviware.soapui.plugins;
 
-import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.support.SoapUITools;
-import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
-import net.sf.json.JSON;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.groovy.JsonSlurper;
 import org.apache.commons.io.FileUtils;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -45,22 +36,16 @@ import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
-//import com.smartbear.ready.ui.toolbar.ReadyApiToolbarComponentRegistry;
-
 public class PluginManager {
-
-    //public static final String PLUGINS_URL = "http://productextensions.s3.amazonaws.com/ReadyAPI-Plugins/availablePlugins.json";
 
     FileOperations fileOperations = new DefaultFileOperations();
     PluginLoader pluginLoader;
-    //AvailablePluginsLoader availablePluginsLoader;
 
     private static Logger log = Logger.getLogger(PluginManager.class);
     private Map<File, InstalledPluginRecord> installedPlugins = new HashMap<File, InstalledPluginRecord>();
     private File pluginDirectory;
     private List<PluginListener> listeners = new ArrayList<PluginListener>();
     private final File pluginDeleteListFile;
-    //private Injector readyApiInjector;
     private PluginDependencyResolver resolver;
 
     private static ForkJoinPool forkJoinPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors(),
@@ -73,11 +58,8 @@ public class PluginManager {
     }, false);
 
     public PluginManager(SoapUIFactoryRegistry factoryRegistry,
-                         SoapUIActionRegistry actionRegistry, ListenerRegistry listenerRegistry/*,
-                         ReadyApiToolbarComponentRegistry toolbarComponentRegistry*/) {
-        pluginLoader = new PluginLoader(factoryRegistry, actionRegistry, listenerRegistry/*, toolbarComponentRegistry,
-                SimpleVcsIntegrationRegistry.instance()*/);
-        //availablePluginsLoader = new AvailablePluginsLoader();
+                         SoapUIActionRegistry actionRegistry, ListenerRegistry listenerRegistry) {
+        pluginLoader = new PluginLoader(factoryRegistry, actionRegistry, listenerRegistry);
         File soapUiDirectory = new File(System.getProperty("user.home"), ".soapui");
         pluginDirectory = new File(soapUiDirectory, "plugins");
         if (!pluginDirectory.exists() && !pluginDirectory.mkdirs()) {
@@ -144,12 +126,6 @@ public class PluginManager {
         UISupport.addResourceClassLoader(new URLClassLoader(new URL[]{pluginFile.toURI().toURL()}));
 
         InstalledPluginRecord context = pluginLoader.loadPlugin(pluginFile, classLoaders);
-        injectMembersIntoPlugin(context.plugin);
-        /*
-        if (readyApiInjector != null) {
-            injectMembersIntoPlugin(context.plugin);
-        }
-        */
         installedPlugins.put(pluginFile, context);
         for (PluginListener listener : listeners) {
             listener.pluginLoaded(context.plugin);
@@ -268,10 +244,6 @@ public class PluginManager {
         return Collections.unmodifiableCollection(plugins);
     }
 
-/*    public List<AvailablePlugin> getAvailablePlugins() {
-        return availablePluginsLoader.readAvailablePlugins();
-    }*/
-
     public void addPluginListener(PluginListener listener) {
         listeners.add(listener);
     }
@@ -279,19 +251,6 @@ public class PluginManager {
     public void removePluginListener(PluginListener listener) {
         listeners.add(listener);
     }
-
-    /*
-    public void setGuiceInjectorInstance(Injector readyApiInjector) {
-        if (this.readyApiInjector != null) {
-            log.warn("Ignoring attempt to set Injector instance because it has already been set");
-            return;
-        }
-        this.readyApiInjector = readyApiInjector;
-        for (Plugin plugin : getInstalledPlugins()) {
-            injectMembersIntoPlugin(plugin);
-        }
-    }
-    */
 
     /* Helper methods */
 
@@ -318,49 +277,6 @@ public class PluginManager {
         }
     }
 
-
-    private void injectMembersIntoPlugin(Plugin plugin) {
-        injectMembers(plugin, plugin);
-        for (SoapUIAction action : plugin.getActions()) {
-            injectMembers(action, plugin);
-        }
-        for (SoapUIFactory factory : plugin.getFactories()) {
-            injectMembers(factory, plugin);
-        }
-    }
-
-    private void injectMembers(Object target, Plugin plugin) {
-        try {
-            //readyApiInjector.injectMembers(target);
-        } catch (Throwable e) { // catching Throwable, because this could be plugin code
-            log.error("Guice couldn't inject members into object " + target + " - the plugin [" + plugin +
-                    "] may not be fully functional");
-        }
-    }
-/*
-    public DependencyStatus checkDependencyStatus(File pluginFile) throws IOException {
-        PluginInfo pluginInfo = pluginLoader.loadPluginInfoFrom(pluginFile, Collections.<JarClassLoader>emptySet());
-        return checkDependencyStatus(pluginInfo);
-    }
-
-    public DependencyStatus checkDependencyStatus(PluginInfo pluginInfo) {
-        List<PluginInfo> unsatisfiedDependencies = findUnsatisfiedDependencies(pluginInfo);
-        if (unsatisfiedDependencies.isEmpty()) {
-            return new DependencyStatus(true, Arrays.<PluginInfo>asList());
-        } else {
-            List<AvailablePlugin> availablePlugins = availablePluginsLoader.readAvailablePlugins();
-            if (availablePlugins.isEmpty()) {
-                return new DependencyStatus(false, Arrays.<PluginInfo>asList());
-            }
-            for (PluginInfo dependency : unsatisfiedDependencies) {
-                if (!pluginIsAvailableForDownload(availablePlugins, dependency)) {
-                    new DependencyStatus(false, Arrays.<PluginInfo>asList());
-                }
-            }
-            return new DependencyStatus(true, unsatisfiedDependencies);
-        }
-    }
-    */
 
     private boolean pluginIsAvailableForDownload(List<AvailablePlugin> availablePlugins, PluginInfo requiredPlugin) {
         for (AvailablePlugin availablePlugin : availablePlugins) {
@@ -443,89 +359,6 @@ public class PluginManager {
         boolean deleteFile(File fileToDelete) throws IOException;
     }
 
-/*
-    class AvailablePluginsLoader {
-
-        public List<AvailablePlugin> readAvailablePlugins() {
-            String availablePluginsUrl = System.getProperty("soapui.plugins.url", PLUGINS_URL);
-            try {
-                if (StringUtils.hasContent(availablePluginsUrl)) {
-                    return loadAvailablePluginsFrom(new URL(availablePluginsUrl));
-                }
-            } catch (IOException e) {
-                log.warn("Could not load plugins from [" + availablePluginsUrl + "]");
-            }
-            return Collections.emptyList();
-        }
-
-        List<AvailablePlugin> loadAvailablePluginsFrom(URL jsonUrl) throws IOException {
-            List<AvailablePlugin> plugins = new ArrayList<AvailablePlugin>();
-
-            String urlString = jsonUrl.toString();
-            String json;
-
-            if (urlString.startsWith("file:")) {
-                json = SoapUITools.readAll(jsonUrl.openStream(), 0).toString();
-            } else {
-                HttpGet get = new HttpGet(urlString);
-                org.apache.http.HttpResponse response = HttpClientSupport.getHttpClient().execute(get);
-                json = SoapUITools.readAll(response.getEntity().getContent(), 0).toString();
-            }
-
-            JSON pluginsAsJson = new JsonSlurper().parseText(json);
-            if (pluginsAsJson instanceof JSONArray) {
-                JSONArray array = (JSONArray) pluginsAsJson;
-                for (Object pluginElement : array) {
-                    if (pluginElement instanceof JSONObject) {
-                        AvailablePlugin availablePlugin = makeAvailablePluginEntry((JSONObject) pluginElement);
-                        if (availablePlugin == null) {
-                            continue;
-                        }
-                        plugins.add(availablePlugin);
-                    }
-                }
-                return plugins;
-            } else {
-                throw new InvalidPluginException("Invalid JSON found at URL " + jsonUrl);
-            }
-        }
-
-        private AvailablePlugin makeAvailablePluginEntry(JSONObject pluginElement) {
-            PluginInfo pluginInfo = makePluginInfo(pluginElement);
-            URL pluginUrl;
-            String urlString = pluginElement.optString("url");
-            try {
-                pluginUrl = new URL(urlString);
-            } catch (MalformedURLException e) {
-                log.warn("Skipping plugin [" + pluginInfo.getId() + " due to malformed URL: " + urlString);
-                return null;
-            }
-            AvailablePlugin availablePlugin = new AvailablePlugin(pluginInfo, pluginUrl, PluginManager.this, pluginElement.optString("category"));
-            JSONArray dependencies = pluginElement.optJSONArray("dependencies");
-            if (dependencies != null) {
-                for (Object dependency : dependencies) {
-                    if (dependency instanceof JSONObject) {
-                        JSONObject dependencyObject = (JSONObject) dependency;
-                        try {
-                            availablePlugin.getPluginInfo().addDependency(makePluginInfo(dependencyObject));
-                        } catch (Exception ignore) {
-
-                        }
-                    }
-                }
-            }
-            return availablePlugin;
-        }
-
-        private PluginInfo makePluginInfo(JSONObject pluginElement) {
-            PluginId id = new PluginId((String) pluginElement.get("groupId"), (String) pluginElement.get("name"));
-            Version version = Version.fromString((String) pluginElement.get("version"));
-            return new PluginInfo(id, version, pluginElement.optString("description"),
-                    pluginElement.optString("infoUrl", ""));
-        }
-    }
-*/
-
     private class LoadPluginsTask extends RecursiveTask<List<Plugin>> {
 
         private List<File> files;
@@ -594,7 +427,5 @@ public class PluginManager {
             }
             return result;
         }
-
-
     }
 }

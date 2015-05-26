@@ -1,6 +1,5 @@
 package com.eviware.soapui.plugins;
 
-import com.eviware.soapui.PluginToolbarAction;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.model.iface.SoapUIListener;
 import com.eviware.soapui.plugins.auto.AutoFactory;
@@ -329,9 +328,6 @@ public class LoaderBase {
             targetGroup.addMapping(SoapUIActionRegistry.SeperatorAction.SOAPUI_ACTION_ID,
                     ++insertIndex, SoapUIActionRegistry.SeperatorAction.getDefaultMapping());
         }
-        if (configuration.toolbarPosition() == ToolbarPosition.FUNCTIONAL_TESTING) {
-            SoapUI.addToolbarAction(new PluginToolbarAction(action, configuration.toolbarIcon(), configuration.description()));
-        }
     }
     protected void unregisterListeners(List<Class<? extends SoapUIListener>> listeners) {
         for (Class<? extends SoapUIListener> listenerClass : listeners) {
@@ -353,9 +349,6 @@ public class LoaderBase {
     protected void unregisterActions(List<? extends SoapUIAction> actions) {
         for (SoapUIAction soapUIAction : actions) {
             actionRegistry.removeAction(soapUIAction.getId());
-            if (isToolbarAction(soapUIAction)) {
-                SoapUI.removeToolbarAction(soapUIAction);
-            }
         }
     }
 
