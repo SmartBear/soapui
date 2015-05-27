@@ -151,8 +151,7 @@ public class DefaultSoapUICore implements SoapUICore {
             }
         }
 
-        pluginManager = new PluginManager(getFactoryRegistry(), getActionRegistry(),
-                getListenerRegistry()/*, toolbarComponentRegistry*/);
+        pluginManager = new PluginManager(getFactoryRegistry(), getActionRegistry(), getListenerRegistry());
         pluginManager.loadPlugins();
         log.info("All plugins loaded");
 
