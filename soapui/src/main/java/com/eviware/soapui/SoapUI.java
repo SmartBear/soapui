@@ -230,10 +230,6 @@ public class SoapUI {
     private static JToggleButton applyProxyButton;
     private static Logger groovyLogger;
     private static CmdLineRunner soapUIRunner;
-    //Plugin framework required fields
-    private static int lastToolbarButtonIndex;
-    private static List<Action> extraToolbarActions = new ArrayList<Action>();
-    //End of Plugin framework required fields
 
     static {
         try {
