@@ -14,8 +14,7 @@ import java.util.HashSet;
 
 /**
  * Creates proxies for code loaded from a plugin, ensuring that the class loader of the proxied class will be used
- * as context class loader when methods from plugins are being invoked, and that the JIDE Charts license is cleared
- * before plugin code
+ * as context class loader when methods from plugins are being invoked, when this is requested by the user.
  */
 public class PluginProxies {
 
@@ -107,7 +106,6 @@ public class PluginProxies {
                 return innerObject.getClass().getAnnotation((Class<Annotation>) args[0]);
             }
             ClassLoader originalClassLoader = Thread.currentThread().getContextClassLoader();
-            PluginCallAspect.getOnPluginCall().run();
             if (shouldUsePluginClassloaderFor(method)) {
                 Thread.currentThread().setContextClassLoader(innerObject.getClass().getClassLoader());
             }
@@ -116,7 +114,6 @@ public class PluginProxies {
                 return proxyIfApplicable(returnValue);
             } finally {
                 Thread.currentThread().setContextClassLoader(originalClassLoader);
-                PluginCallAspect.getAfterPluginCall().run();
             }
         }
 
