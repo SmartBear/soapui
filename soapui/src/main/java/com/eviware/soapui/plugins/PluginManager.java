@@ -12,7 +12,6 @@
 package com.eviware.soapui.plugins;
 
 import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
 import com.eviware.soapui.support.listener.ListenerRegistry;
@@ -277,16 +276,6 @@ public class PluginManager {
         }
     }
 
-
-    private boolean pluginIsAvailableForDownload(List<AvailablePlugin> availablePlugins, PluginInfo requiredPlugin) {
-        for (AvailablePlugin availablePlugin : availablePlugins) {
-            PluginInfo pluginInfo = availablePlugin.getPluginInfo();
-            if (pluginInfo.getId().equals(requiredPlugin.getId()) && pluginInfo.getVersion().compareTo(requiredPlugin.getVersion()) != -1) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private List<PluginInfo> findUnsatisfiedDependencies(PluginInfo pluginInfo) {
         List<PluginInfo> unsatisfiedDependencies = new ArrayList<PluginInfo>();
