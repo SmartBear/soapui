@@ -66,8 +66,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.1</version>
                 <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -121,8 +121,8 @@
                         <groupId>org.codehaus.mojo.signature</groupId>
                         <!-- currently, we cannot use java16 1.1 because some classes depends on the sun specific
                         implementation (com.sun.java.swing.plaf.windows) -->
-                        <artifactId>java16-sun</artifactId>
-                        <version>1.10</version>
+                        <artifactId>java17</artifactId>
+                        <version>1.0</version>
                     </signature>
                 </configuration>
                 <executions>

@@ -562,6 +562,12 @@
             <artifactId>i4jruntime</artifactId>
             <version>5.1.14</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>animal-sniffer-annotations</artifactId>
+            <version>1.11</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
