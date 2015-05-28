@@ -11,7 +11,7 @@
  */
 package com.eviware.soapui.plugins;
 
-import com.eviware.soapui.support.SoapUITools;
+import com.eviware.soapui.support.Tools;
 import groovy.lang.GroovyClassLoader;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
@@ -77,7 +76,7 @@ public class JarClassLoader extends URLClassLoader implements PluginClassLoader 
 
     private void addLibrariesIn(JarFile jarFile) throws IOException {
         if (containsLibraries(jarFile)) {
-            File libDirectory = SoapUITools.createTemporaryDirectory();
+            File libDirectory = Tools.createTemporaryDirectory();
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
@@ -96,7 +95,7 @@ public class JarClassLoader extends URLClassLoader implements PluginClassLoader 
         boolean hasScripts = false;
 
         if (containsScripts(jarFile)) {
-            File scriptsDirectory = SoapUITools.createTemporaryDirectory();
+            File scriptsDirectory = Tools.createTemporaryDirectory();
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
