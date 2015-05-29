@@ -554,11 +554,11 @@ public class WsdlProject extends AbstractTestPropertyHolderWsdlModelItem<Project
     }
 
     private void initProjectIcons() {
-        closedIcon = UISupport.createImageIcon("/closedProject.gif");
-        remoteIcon = UISupport.createImageIcon("/remoteProject.gif");
-        disabledIcon = UISupport.createImageIcon("/disabledProject.gif");
-        openEncyptedIcon = UISupport.createImageIcon("/openEncryptedProject.gif");
-        closedEncyptedIcon = UISupport.createImageIcon("/closedEncryptedProject.gif");
+        closedIcon = UISupport.createImageIcon("/closed_project.png");
+        remoteIcon = UISupport.createImageIcon("/remote_project.png");
+        disabledIcon = UISupport.createImageIcon("/disabled_project.png");
+        openEncyptedIcon = UISupport.createImageIcon("/encrypted_project.png");
+        closedEncyptedIcon = UISupport.createImageIcon("/disabled_encrypted_project.png");
     }
 
     private void createEmptyProjectConfiguration(String path, String tempName) {
