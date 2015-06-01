@@ -78,6 +78,10 @@ public class SwingActionDelegate<T extends ModelItem> extends AbstractAction imp
         }
     }
 
+    public SwingActionDelegate(SoapUIActionMapping<T> mapping) {
+        this(mapping, null);
+    }
+
     public SoapUIActionMapping<T> getMapping() {
         return mapping;
     }
