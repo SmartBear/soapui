@@ -80,16 +80,6 @@ public class PluginLoaderTest {
         assertThat(loadedPlugin.getInfo().getId().getName(), is("NonAdapterPlugin"));
     }
 
-    /*
-    @Test
-    public void loadsVcsIntegrationsFromFile() throws IOException, VcsPluginNotFoundException {
-        File pluginFile = new File(PluginLoaderTest.class.getResource("vcs-plugin.jar").getPath());
-        pluginLoader.loadPlugin(pluginFile, java.util.Collections.<JarClassLoader>emptySet());
-
-        assertThat(SimpleVcsIntegrationRegistry.instance().getVcsIntegrationByName("Dummy VCS"), is(notNullValue()));
-    }
-    */
-
     @Test
     public void loadsPluginInfoFromFile() throws IOException {
         File pluginFile = new File(PluginLoaderTest.class.getResource("plugin-example-1.0.jar").getPath());
@@ -99,27 +89,6 @@ public class PluginLoaderTest {
         assertThat(pluginInfo.getId().getGroupId(), is("com.smartbear.soapui"));
         assertThat(pluginInfo.getVersion(), is(Version.fromString("0.1")));
     }
-
-    /*
-    @Test
-    public void addsSingleDependencyToPluginInfo() throws IOException {
-        PluginInfo pluginInfo = PluginLoader.readPluginInfoFrom(SingleDependencyPlugin.class);
-
-        List<PluginInfo> dependencies = pluginInfo.getDependencies();
-        assertThat(dependencies.size(), is(1));
-        assertThat(dependencies.get(0).getId().getName(), is ("Root plugin"));
-    }
-
-    @Test
-    public void addsMultipleDependenciesToPluginInfo() throws IOException {
-        PluginInfo pluginInfo = PluginLoader.readPluginInfoFrom(MultipleDependencyPlugin.class);
-
-        List<PluginInfo> dependencies = pluginInfo.getDependencies();
-        assertThat(dependencies.size(), is(2));
-        assertThat(dependencies.get(0).getId().getName(), is ("Root plugin"));
-        assertThat(dependencies.get(1).getId().getName(), is ("Single dependency plugin"));
-    }
-    */
 
     @Test
     public void removesPluginComponentsOnUnload() throws Exception {

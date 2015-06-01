@@ -74,7 +74,7 @@ public class PluginManagerTest extends StubbedDialogsTestBase {
         System.setProperty("user.home", fakeHomeDirectory.getAbsolutePath());
         pluginsDirectory = new File(fakeHomeDirectory, ".soapui/plugins");
         if (!pluginsDirectory.mkdirs()) {
-                throw new Error("Couldn't create directory " + pluginsDirectory);
+            throw new Error("Couldn't create directory " + pluginsDirectory);
         }
         pluginManager = makePluginManager();
         MockitoAnnotations.initMocks(this);
@@ -179,107 +179,12 @@ public class PluginManagerTest extends StubbedDialogsTestBase {
         assertThat(infoMessages.get(0), not(containsString("restart")));
     }
 
-    /*
-    @Test
-    public void loadsAvailablePluginsFromJson() throws Exception {
-        PluginManager pluginManagerWithoutMocks = makePluginManager();
-        PluginManager.AvailablePluginsLoader realAvailablePluginsLoader = pluginManagerWithoutMocks.availablePluginsLoader;
-        URL jsonUrl = PluginLoaderTest.class.getResource("availablePlugins.json");
-        List<AvailablePlugin> availablePlugins = realAvailablePluginsLoader.loadAvailablePluginsFrom(jsonUrl);
-
-        assertThat(availablePlugins, is(aCollectionWithSize(4)));
-        verifyCorrectContent(availablePlugins.get(0), "1");
-        verifyCorrectContent(availablePlugins.get(1), "2");
-    }
-
-    @Test
-    public void loadsDependenciesForAvailablePlugins() throws Exception {
-        PluginManager pluginManagerWithoutMocks = makePluginManager();
-        PluginManager.AvailablePluginsLoader realAvailablePluginsLoader = pluginManagerWithoutMocks.availablePluginsLoader;
-        URL jsonUrl = PluginLoaderTest.class.getResource("availablePlugins.json");
-        List<AvailablePlugin> availablePlugins = realAvailablePluginsLoader.loadAvailablePluginsFrom(jsonUrl);
-
-        AvailablePlugin dependentPlugin = availablePlugins.get(2);
-        List<PluginInfo> dependencies = dependentPlugin.getPluginInfo().getDependencies();
-        assertThat(dependencies, is(aCollectionWithSize(2)));
-        verifyDependency(dependencies.get(0), "com.smartbear.plugins.test1", "Plugin 1", "0.9.1");
-        verifyDependency(dependencies.get(1), "com.smartbear.plugins.test2", "Plugin 2", "0.0");
-    }
-    */
-
     private void verifyDependency(PluginInfo pluginInfo, String expectedGroupId, String expectedName, String expectedVersion) {
         PluginId id = pluginInfo.getId();
         assertThat(id.getGroupId(), is(expectedGroupId));
         assertThat(id.getName(), is(expectedName));
         assertThat(pluginInfo.getVersion(), is(Version.fromString(expectedVersion)));
     }
-
-    /*
-    @Test
-    public void injectsMembersInAllPluginClasses() throws Exception {
-        pluginManager.installPlugin(pluginFile);
-        Injector readyApiInjector = mock(Injector.class);
-
-        pluginManager.setGuiceInjectorInstance(readyApiInjector);
-        verify(readyApiInjector).injectMembers(plugin);
-        verify(readyApiInjector).injectMembers(plugin.getActions().get(0));
-        verify(readyApiInjector).injectMembers(plugin.getFactories().iterator().next());
-    }
-
-    @Test
-    public void injectsMembersInInPluginsLoadedAfterInitialization() throws Exception {
-        Injector readyApiInjector = mock(Injector.class);
-        pluginManager.setGuiceInjectorInstance(readyApiInjector);
-        pluginManager.installPlugin(pluginFile);
-
-        verify(readyApiInjector).injectMembers(plugin);
-        verify(readyApiInjector).injectMembers(plugin.getActions().get(0));
-        verify(readyApiInjector).injectMembers(plugin.getFactories().iterator().next());
-    }
-
-    @Test
-    public void onlyAllowsSettingInjectorOnce() throws Exception {
-        Injector firstInjector = mock(Injector.class);
-        pluginManager.setGuiceInjectorInstance(firstInjector);
-        pluginManager.setGuiceInjectorInstance(mock(Injector.class));
-        pluginManager.installPlugin(pluginFile);
-
-        verify(firstInjector).injectMembers(plugin);
-    }
-
-    @Test
-    public void detectsMissingDependencies() throws Exception {
-        when(pluginLoader.loadPluginInfoFrom(pluginFile, java.util.Collections.<JarClassLoader>emptySet())).thenReturn(PluginLoader.readPluginInfoFrom(SingleDependencyPlugin.class));
-
-        DependencyStatus status = pluginManager.checkDependencyStatus(pluginFile);
-        assertThat(status.isInstallable(), is(false));
-    }
-
-    @Test
-    public void detectsThatDependenciesAreInstalled() throws Exception {
-        when(pluginLoader.loadPlugin(pluginFile, java.util.Collections.<JarClassLoader>emptySet())).thenReturn(recordWith(new RootPlugin()));
-        when(pluginLoader.loadPluginInfoFrom(secondPluginFile, java.util.Collections.<JarClassLoader>emptySet())).thenReturn(PluginLoader.readPluginInfoFrom(SingleDependencyPlugin.class));
-
-        pluginManager.installPlugin(pluginFile);
-        DependencyStatus status = pluginManager.checkDependencyStatus(secondPluginFile);
-        assertThat(status.isInstallable(), is(true));
-        assertThat(status.getDependenciesToInstall(), is(anEmptyCollection()));
-    }
-
-    @Test
-    public void detectsThatDependenciesAreAvailable() throws Exception {
-        PluginInfo rootPluginInfo = PluginLoader.readPluginInfoFrom(RootPlugin.class);
-        URL fakeUrl = new URL("http://some.url.com");
-        when(availablePluginsLoader.readAvailablePlugins()).thenReturn(
-                Arrays.asList(new AvailablePlugin(rootPluginInfo, fakeUrl, pluginManager, "")));
-        when(pluginLoader.loadPluginInfoFrom(pluginFile, java.util.Collections.<JarClassLoader>emptySet())).thenReturn(PluginLoader.readPluginInfoFrom(SingleDependencyPlugin.class));
-
-        DependencyStatus status = pluginManager.checkDependencyStatus(pluginFile);
-        assertThat(status.isInstallable(), is(true));
-        assertThat(status.getDependenciesToInstall(), is(aCollectionWithSize(1)));
-        assertThat(status.getDependenciesToInstall().get(0).getId(), is(rootPluginInfo.getId()));
-    }
-    */
 
     @Test
     public void findsDependentPlugins() throws Exception {
@@ -314,7 +219,7 @@ public class PluginManagerTest extends StubbedDialogsTestBase {
         assertThat(nonMockingPluginManager.getInstalledPlugins(), is(aCollectionWithSize(3)));
     }
 
-/*
+    /*
     Helpers
      */
 
@@ -326,17 +231,6 @@ public class PluginManagerTest extends StubbedDialogsTestBase {
     private void copyResourceToDirectory(String resource, File fakeHomeDirectory) throws IOException {
         FileUtils.copyFileToDirectory(new File(PluginManagerTest.class.getResource(resource).getFile()), fakeHomeDirectory);
     }
-
-    /*
-    private void verifyCorrectContent(AvailablePlugin availablePlugin, String suffix) {
-        PluginInfo pluginInfo = availablePlugin.getPluginInfo();
-        assertThat(pluginInfo.getId().getGroupId(), endsWith(suffix));
-        assertThat(pluginInfo.getId().getName(), endsWith(suffix));
-        assertThat(pluginInfo.getVersion().toString(), endsWith(suffix));
-        assertThat(pluginInfo.getDescription(), endsWith(suffix));
-        assertThat(availablePlugin.getCategory(), endsWith(suffix));
-        assertThat(availablePlugin.getUrl().toString(), endsWith(suffix + ".jar"));
-    }*/
 
     private void setUpPluginsAndFiles() throws IOException {
         plugin = new OldPlugin();
