@@ -513,12 +513,7 @@ public class UISupport {
 
     public static JPanel createTabPanel(JTabbedPane tabs, boolean addBorder) {
         GradientPanel panel = new GradientPanel(new BorderLayout());
-
-        Color color = UIManager.getDefaults().getColor("Panel.background");
-        Color darker = color.darker();
-        panel.setForeground(new Color((color.getRed() + darker.getRed()) / 2,
-                (color.getGreen() + darker.getGreen()) / 2, (color.getBlue() + darker.getBlue()) / 2));
-
+        panel.setForeground(Color.WHITE);
         if (tabs.getTabPlacement() == JTabbedPane.LEFT || tabs.getTabPlacement() == JTabbedPane.RIGHT) {
             panel.setDirection(GradientPanel.VERTICAL);
         }

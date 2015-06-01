@@ -353,7 +353,7 @@ public class SoapUI {
             }
         });
 
-        JLabel searchLabel = new JLabel("Search Community");
+        JLabel searchLabel = new JLabel("Search Forum");
         // Extra width to avoid label to be truncated
         searchLabel.setPreferredSize(new Dimension(
                 (int) (searchLabel.getPreferredSize().getWidth() * 1.1),
@@ -1271,7 +1271,7 @@ public class SoapUI {
 
     private class SearchForumAction extends AbstractAction {
         public SearchForumAction() {
-            super("Search Community");
+            super("Search Forum");
             putValue(Action.SHORT_DESCRIPTION, "Searches the Smartbear Community Forum");
         }
 
