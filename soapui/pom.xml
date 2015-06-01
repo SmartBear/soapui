@@ -562,6 +562,14 @@
             <artifactId>i4jruntime</artifactId>
             <version>5.1.14</version>
         </dependency>
+
+        <!-- Plugin Framework-->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.9-RC1</version>
+        </dependency>
+
     </dependencies>
 
     <profiles>
