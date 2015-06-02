@@ -17,10 +17,15 @@
 package com.eviware.soapui.support.components;
 
 import com.sun.java.swing.plaf.windows.WindowsTabbedPaneUI;
+import org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.Icon;
+import java.awt.FontMetrics;
+import java.awt.Insets;
 
+// The annotation is necessary to stop animal-sniffer-plugin from complaining, because this class extends a class
+// that is not officially part of the Java API.
+@IgnoreJRERequirement
 public class VerticalWindowsTabbedPaneUI extends WindowsTabbedPaneUI {
     protected void installDefaults() {
         super.installDefaults();

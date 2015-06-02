@@ -21,7 +21,7 @@ import com.eviware.soapui.support.action.SoapUIAction;
 import com.eviware.soapui.support.action.SoapUIActionMapping;
 
 /**
- * A standalone SoapUIAcionMapping
+ * A standalone SoapUIActionMapping
  *
  * @author ole.matzura
  */
@@ -111,5 +111,10 @@ public class StandaloneActionMapping<T extends ModelItem> implements SoapUIActio
     public SoapUIActionMapping<T> setEnabled(boolean enabled) {
         this.enabled = enabled;
         return this;
+    }
+
+    @Override
+    public int getToolbarIndex() {
+        return 0;
     }
 }

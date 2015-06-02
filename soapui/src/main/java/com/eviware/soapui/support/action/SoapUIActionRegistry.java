@@ -87,6 +87,7 @@ public class SoapUIActionRegistry {
     public static class SoapUIActionGroupAction<T extends ModelItem> extends AbstractSoapUIAction<T> {
         private SoapUIActionGroup actionGroup;
         private final String actionGroupId;
+        private boolean insert;
 
         public SoapUIActionGroupAction(String name, String description, String actionGroupId) {
             super(name, description);
@@ -108,6 +109,14 @@ public class SoapUIActionRegistry {
                     mapping.getAction().perform(target, param);
                 }
             }
+        }
+
+        public void setInsert(boolean insert) {
+            this.insert = insert;
+        }
+
+        public boolean isInsert() {
+            return insert;
         }
     }
 
@@ -260,5 +269,9 @@ public class SoapUIActionRegistry {
         if (action != null) {
             action.perform(modelItem, param);
         }
+    }
+
+    public SoapUIActionGroup addActionGroup(SoapUIActionGroup actionGroup) {
+        return addActionGroup(actionGroup, actionGroup.getId());
     }
 }

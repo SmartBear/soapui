@@ -1725,5 +1725,4 @@ public class SoapUI {
             return false;
         }
     }
-
 }

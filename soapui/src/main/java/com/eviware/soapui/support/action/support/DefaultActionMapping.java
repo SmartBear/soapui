@@ -36,6 +36,8 @@ public class DefaultActionMapping<T extends ModelItem> implements SoapUIActionMa
     private String description;
     private String name;
     private boolean enabled = true;
+    //private boolean isToolbarAction;
+    //private int toolbarIndex = 100;
 
     public DefaultActionMapping(String actionId, String keyStroke, String iconPath, boolean isDefault, Object param) {
         super();
@@ -118,4 +120,15 @@ public class DefaultActionMapping<T extends ModelItem> implements SoapUIActionMa
         this.enabled = enabled;
         return this;
     }
+
+    public void setToolbarAction(boolean toolbarAction) {
+    }
+
+    public int getToolbarIndex() {
+        return -1;
+    }
+
+    public void setToolbarIndex(int toolbarIndex) {
+    }
+
 }
