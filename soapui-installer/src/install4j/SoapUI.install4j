@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="5.1.14" transformSequenceNumber="4">
   <directoryPresets config="${compiler:DIST_STANDALONE}/bin/installationcomplete.sh" />
-  <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.6" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
+  <application name="SoapUI ${compiler:VERSION_NUMBER}${compiler:BRANDED_TITLE}" distributionSourceDir="" applicationId="5517-2803-0637-4585" mediaDir="./media" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.platform}-${compiler:sys.version}" compression="6" lzmaCompression="false" pack200Compression="false" excludeSignedFromPacking="true" commonExternalFiles="false" createMd5Sums="true" shrinkRuntime="true" shortName="SoapUI" publisher="SmartBear Software" publisherWeb="http://www.smartbear.com" version="${compiler:VERSION_NUMBER}" allPathsRelative="true" backupOnSave="false" autoSave="true" convertDotsToUnderscores="false" macSignature="????" installerName="" javaMinVersion="1.7" javaMaxVersion="" allowBetaVM="true" jdkMode="runtimeJre" jdkName="">
     <languages skipLanguageSelection="false" languageSelectionInPrincipalLanguage="false">
       <principalLanguage id="en" customLocalizationFile="" />
       <additionalLanguages />
@@ -46,6 +46,7 @@
       <fileset name="logs" id="4415" customizedId="" />
     </filesets>
     <roots>
+      <root id="5280" fileset="" location="${installer:sys.userHome}" />
       <root id="1842" fileset="1841" location="" />
       <root id="1659" fileset="1658" location="" />
       <root id="1844" fileset="1843" location="" />
@@ -66,6 +67,8 @@
       <mountPoint id="399" root="" location="licences" mode="755" />
       <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
+      <mountPoint id="5281" root="5280" location=".soapui" mode="755" />
+      <mountPoint id="5282" root="5280" location=".soapui/plugins" mode="755" />
       <mountPoint id="1845" root="1842" location="bin" mode="777" />
       <mountPoint id="1660" root="1659" location="bin" mode="755" />
       <mountPoint id="1846" root="1844" location="bin" mode="755" />
@@ -108,6 +111,9 @@
           <entry location="Tutorials" fileType="regular" />
           <entry location="wsi-test-tools" fileType="regular" />
         </exclude>
+      </dirEntry>
+      <dirEntry mountPoint="5282" file="${compiler:SRC_ROOT}/BundlePlugins" overwriteMode="1" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+        <exclude />
       </dirEntry>
       <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/soapui.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
       <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/mockservicerunner.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />
