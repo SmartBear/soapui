@@ -48,7 +48,7 @@ SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin -splash:soapui-splash.png"
+JAVA_OPTS="-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties -Dgroovy.source.encoding=iso-8859-1 -Dsoapui.home=$SOAPUI_HOME/bin -splash:SoapUI-Spashscreen.png"
 
 if $darwin
 then

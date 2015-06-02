@@ -59,7 +59,7 @@ bundled or none -->
             <directory>${basedir}/target</directory>
             <outputDirectory>bin</outputDirectory>
             <includes>
-                <include>soapui-splash.png</include>
+                <include>SoapUI-Spashscreen.png</include>
             </includes>
         </fileSet>
         <fileSet>

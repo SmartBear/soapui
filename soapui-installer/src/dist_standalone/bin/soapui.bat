@@ -29,7 +29,7 @@ del %TEMP%\jfxrtpath
 set CLASSPATH=%CLASSPATH%;%JFXRTPATH%
 
 rem JVM parameters, modify as appropriate
-set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\" -splash:soapui-splash.png
+set JAVA_OPTS=-Xms128m -Xmx1024m -Dsoapui.properties=soapui.properties "-Dsoapui.home=%SOAPUI_HOME%\" -splash:SoapUI-Spashscreen.png
 
 if "%SOAPUI_HOME%" == "" goto START
     set JAVA_OPTS=%JAVA_OPTS% -Dsoapui.ext.libraries="%SOAPUI_HOME%ext"

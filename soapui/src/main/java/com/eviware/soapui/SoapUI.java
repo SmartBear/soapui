@@ -162,7 +162,7 @@ public class SoapUI {
     public final static Logger log = Logger.getLogger(SoapUI.class);
     public final static String SOAPUI_VERSION = getVersion(SoapUISystemProperties.VERSION);
     public static final String DEFAULT_WORKSPACE_FILE = "default-soapui-workspace.xml";
-    public static final String SOAPUI_SPLASH = "soapui-splash.png";
+    public static final String SOAPUI_SPLASH = "SoapUI-Spashscreen.png";
     public static final String SOAPUI_TITLE = "/branded/branded.properties";
     public static final String PROPERTIES_TAB_PANEL_NAME = "PropertiesTabPanel";
     private static final String PROXY_ENABLED_ICON = "/Proxy_Turned-on.png";
@@ -170,7 +170,7 @@ public class SoapUI {
     public static final String BUILDINFO_PROPERTIES = "/buildinfo.properties";
     public static final String STARTER_PAGE_HEADER = "SoapUI Starter Page";
     public static final String STARTER_PAGE_TOOL_TIP = "Info on SoapUI";
-    public static String FRAME_ICON = "/soapui-icon-16.png;/soapui-icon-24.png;/soapui-icon-32.png;/soapui-icon-48.png;/soapui-icon-256.png";
+    public static String FRAME_ICON = "/SoapUI-OS-5.2_16-16.png;/SoapUI-OS-5.2_24-24.png;/SoapUI-OS-5.2_32-32.png;/SoapUI-OS-5.2_48-48.png;/SoapUI-OS-5.2_256-256.png";
 
     public static String STARTER_PAGE_ERROR_URL = "file://" + System.getProperty("soapui.home", ".")
             + "/starter-page.html";

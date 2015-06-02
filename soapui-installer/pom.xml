@@ -161,8 +161,8 @@
                     <mainClass>com.eviware.soapui.tools.SplashScreenStomper</mainClass>
                     <arguments>
                         <argument>SoapUI ${project.version}</argument>
-                        <argument>${basedir}/src/main/resources/soapui-splash-blank.png</argument>
-                        <argument>${basedir}/target/soapui-splash.png</argument>
+                        <argument>${basedir}/src/main/resources/SoapUI-Spashscreen.png</argument>
+                        <argument>${basedir}/target/SoapUI-Spashscreen.png</argument>
                     </arguments>
                 </configuration>
             </plugin>
