@@ -576,6 +576,11 @@
             <artifactId>reflections</artifactId>
             <version>0.9.9-RC1</version>
         </dependency>
+        <dependency>
+            <groupId>com.smartbear</groupId>
+            <artifactId>swagger4j</artifactId>
+            <version>1.0-beta5</version>
+        </dependency>
     </dependencies>
 
     <profiles>
