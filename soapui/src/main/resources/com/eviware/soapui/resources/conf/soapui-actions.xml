@@ -29,6 +29,7 @@
     <tns:action id="TcpMonAction" actionClass="com.eviware.soapui.impl.wsdl.actions.iface.tools.tcpmon.TcpMonAction"/>
 
     <!-- Workspace Actions -->
+    <tns:action id="NewEmptyProjectAction" actionClass="com.eviware.soapui.impl.actions.NewEmptyProjectAction"/>
     <tns:action id="NewWsdlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWsdlProjectAction"/>
     <tns:action id="NewRestProjectAction" actionClass="com.eviware.soapui.impl.actions.NewRestProjectAction"/>
     <tns:action id="NewWadlProjectAction" actionClass="com.eviware.soapui.impl.actions.NewWadlProjectAction"/>
@@ -360,6 +361,7 @@
     <!-- Workspace Action Group -->
     <tns:actionGroup name="Workspace Actions" id="WorkspaceImplActions"
                      class="com.eviware.soapui.impl.actions.WorkspaceImplSoapUIActionGroup">
+        <tns:actionMapping actionId="NewEmptyProjectAction"/>
         <tns:actionMapping actionId="NewWsdlProjectAction" keyStroke="menu N"/>
         <tns:actionMapping actionId="NewRestProjectAction" keyStroke="menu alt N"/>
         <tns:actionMapping actionId="SeperatorAction"/>
