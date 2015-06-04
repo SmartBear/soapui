@@ -208,7 +208,6 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
         if (!runBeforeSteps(testStep)) {
             return null;
         }
-
         TestStepResult stepResult = testStep.run(this, getRunContext());
 
         testStepResults.add(stepResult);
@@ -305,14 +304,15 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
     public abstract WsdlTestCase getTestCase();
 
     public long getTimeTaken() {
+        if(isRunning()){
+            return System.currentTimeMillis() - getStartTime();
+        }
         long sum = 0;
-        for (int c = 0; c < testStepResults.size(); c++) {
-            TestStepResult testStepResult = testStepResults.get(c);
+        for (TestStepResult testStepResult : testStepResults) {
             if (testStepResult != null) {
                 sum += testStepResult.getTimeTaken();
             }
         }
-
         return sum;
     }
 
