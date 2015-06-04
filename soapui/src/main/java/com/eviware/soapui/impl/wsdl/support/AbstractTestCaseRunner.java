@@ -52,6 +52,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
     private int resultCount;
     private int initCount;
     private int startStep = 0;
+    private long currentStepStartTime;
 
     public AbstractTestCaseRunner(T modelItem, StringToObjectMap properties) {
         super(modelItem, properties);
@@ -208,7 +209,7 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
         if (!runBeforeSteps(testStep)) {
             return null;
         }
-
+        currentStepStartTime = System.currentTimeMillis();
         TestStepResult stepResult = testStep.run(this, getRunContext());
 
         testStepResults.add(stepResult);
@@ -306,13 +307,16 @@ public abstract class AbstractTestCaseRunner<T extends TestRunnable, T2 extends 
 
     public long getTimeTaken() {
         long sum = 0;
-        for (int c = 0; c < testStepResults.size(); c++) {
-            TestStepResult testStepResult = testStepResults.get(c);
-            if (testStepResult != null) {
-                sum += testStepResult.getTimeTaken();
+        if(((WsdlTestRunContext)this.getRunContext()).getCurrentStep()!=null &&
+                ((WsdlTestRunContext)this.getRunContext()).getCurrentStepIndex()!=testStepResults.toArray().length-1){
+            sum = System.currentTimeMillis() - currentStepStartTime;
+        }else{
+            for (TestStepResult testStepResult : testStepResults) {
+                if (testStepResult != null) {
+                    sum += testStepResult.getTimeTaken();
+                }
             }
         }
-
         return sum;
     }
 
