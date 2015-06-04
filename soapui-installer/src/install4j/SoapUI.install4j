@@ -67,8 +67,8 @@
       <mountPoint id="399" root="" location="licences" mode="755" />
       <mountPoint id="2704" root="" location=".JxBrowser" mode="755" />
       <mountPoint id="63" root="" location="" mode="755" />
-      <mountPoint id="5281" root="5280" location=".soapui" mode="755" />
-      <mountPoint id="5282" root="5280" location=".soapui/plugins" mode="755" />
+      <mountPoint id="5461" root="5280" location=".soapuios" mode="755" />
+      <mountPoint id="5462" root="5280" location=".soapuios/plugins" mode="755" />
       <mountPoint id="1845" root="1842" location="bin" mode="777" />
       <mountPoint id="1660" root="1659" location="bin" mode="755" />
       <mountPoint id="1846" root="1844" location="bin" mode="755" />
@@ -112,7 +112,7 @@
           <entry location="wsi-test-tools" fileType="regular" />
         </exclude>
       </dirEntry>
-      <dirEntry mountPoint="5282" file="${compiler:SRC_ROOT}/BundlePlugins" overwriteMode="1" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="false">
+      <dirEntry mountPoint="5462" file="${compiler:SRC_ROOT}/BundlePlugins" overwriteMode="1" shared="false" fileMode="644" uninstallMode="0" overrideFileMode="false" overrideOverwriteMode="true" overrideUninstallMode="true" entryMode="direct" subDirectory="" excludeSuffixes="" dirMode="755" overrideDirMode="false">
         <exclude />
       </dirEntry>
       <fileEntry mountPoint="1845" file="${compiler:DIST_STANDALONE}/bin/soapui.sh" overwriteMode="4" shared="false" fileMode="755" uninstallMode="0" overrideFileMode="true" overrideOverwriteMode="true" overrideUninstallMode="true" />

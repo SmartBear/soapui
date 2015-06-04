@@ -59,7 +59,7 @@ public class PluginManager {
     public PluginManager(SoapUIFactoryRegistry factoryRegistry,
                          SoapUIActionRegistry actionRegistry, ListenerRegistry listenerRegistry) {
         pluginLoader = new PluginLoader(factoryRegistry, actionRegistry, listenerRegistry);
-        File soapUiDirectory = new File(System.getProperty("user.home"), ".soapui");
+        File soapUiDirectory = new File(System.getProperty("user.home"), ".soapuios");
         pluginDirectory = new File(soapUiDirectory, "plugins");
         if (!pluginDirectory.exists() && !pluginDirectory.mkdirs()) {
             log.error("Couldn't create plugin directory in location " + pluginDirectory.getAbsolutePath());
