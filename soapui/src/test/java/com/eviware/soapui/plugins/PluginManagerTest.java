@@ -72,7 +72,7 @@ public class PluginManagerTest extends StubbedDialogsTestBase {
         originalUserHome = System.getProperty("user.home");
         File fakeHomeDirectory = SoapUITools.createTemporaryDirectory();
         System.setProperty("user.home", fakeHomeDirectory.getAbsolutePath());
-        pluginsDirectory = new File(fakeHomeDirectory, ".soapui/plugins");
+        pluginsDirectory = new File(fakeHomeDirectory, ".soapuios/plugins");
         if (!pluginsDirectory.mkdirs()) {
             throw new Error("Couldn't create directory " + pluginsDirectory);
         }
