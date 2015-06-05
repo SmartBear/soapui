@@ -139,7 +139,7 @@ public class RestServiceDesktopPanel extends ModelItemDesktopPanel<RestService> 
 
     private Component buildServiceOverviewTab() {
         metrics = new MetricsPanel();
-        MetricsSection section = metrics.addSection("WSDL Definition");
+        MetricsSection section = metrics.addSection("WADL Definition");
 
         try {
             section.addMetric("WADL URL", MetricType.URL).set(

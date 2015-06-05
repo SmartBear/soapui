@@ -25,7 +25,7 @@ import com.eviware.soapui.settings.Setting.SettingType;
  */
 
 public interface WsdlSettings {
-    @Setting(name = "Cache WSDLs", description = "caches and associated WSDLs locally for offline access and improved performance", type = SettingType.BOOLEAN)
+    @Setting(name = "Cache WSDLs", description = "caches and associates WSDLs locally for offline access and improved performance", type = SettingType.BOOLEAN)
     public final static String CACHE_WSDLS = WsdlSettings.class.getSimpleName() + "@" + "cache-wsdls";
 
     @Setting(name = "Sample Values", description = "generate example values in new requests", type = SettingType.BOOLEAN)
