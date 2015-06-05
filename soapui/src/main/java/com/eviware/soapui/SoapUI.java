@@ -29,6 +29,8 @@ import com.eviware.soapui.autoupdate.SoapUIAutoUpdaterUtils;
 import com.eviware.soapui.autoupdate.SoapUIUpdateProvider;
 import com.eviware.soapui.impl.WorkspaceImpl;
 import com.eviware.soapui.impl.actions.ImportWsdlProjectAction;
+import com.eviware.soapui.impl.actions.NewEmptyProjectAction;
+import com.eviware.soapui.impl.actions.NewRestProjectAction;
 import com.eviware.soapui.impl.actions.NewWsdlProjectAction;
 import com.eviware.soapui.impl.rest.actions.project.NewRestServiceAction;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -322,7 +324,9 @@ public class SoapUI {
         mainToolbar.setRollover(true);
         mainToolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
         mainToolbar.addSpace(20);
-        mainToolbar.add(new NewWsdlProjectActionDelegate());
+        mainToolbar.add(new NewProjectActionDelegate("/project_toolbar_icon.png","Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/project_toolbar_icon.png","SOAP", NewWsdlProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/project_toolbar_icon.png","REST", NewRestProjectAction.SOAPUI_ACTION_ID));
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
         mainToolbar.add(new SaveAllActionDelegate());
         mainToolbar.addSpace(2);
@@ -1428,11 +1432,17 @@ public class SoapUI {
         SoapUI.isStandalone = standalone;
     }
 
-    static class NewWsdlProjectActionDelegate extends AbstractAction {
-        public NewWsdlProjectActionDelegate() {
-            putValue(Action.SMALL_ICON, UISupport.createImageIcon("/project_toolbar_icon.png"));
-            putValue(Action.SHORT_DESCRIPTION, "Creates a new SOAP project");
-            putValue(Action.NAME, "New");
+    static class NewProjectActionDelegate extends AbstractAction {
+        String actionId;
+        public NewProjectActionDelegate(String icon, String name, String actionId) {
+            putValue(Action.SMALL_ICON, UISupport.createImageIcon(icon));
+            if(name.equals("Empty")){
+                putValue(Action.SHORT_DESCRIPTION, "Creates an empty project");
+            }else{
+               putValue(Action.SHORT_DESCRIPTION, "Creates a new "+name+" project");
+            }
+            putValue(Action.NAME, name);
+            this.actionId = actionId;
         }
 
         public void setShortDescription(String description) {
@@ -1444,7 +1454,7 @@ public class SoapUI {
         }
 
         public void actionPerformed(ActionEvent e) {
-            SoapUI.getActionRegistry().getAction(NewWsdlProjectAction.SOAPUI_ACTION_ID).perform(workspace, null);
+            SoapUI.getActionRegistry().getAction(actionId).perform(workspace, null);
         }
     }
 
