@@ -14,7 +14,7 @@ public class NewEmptyProjectAction extends AbstractSoapUIAction<WorkspaceImpl> {
     public static final MessageSupport messages = MessageSupport.getMessages(NewEmptyProjectAction.class);
 
     public NewEmptyProjectAction() {
-        super(messages.get("Title"), null);
+        super(messages.get("Title"),messages.get("Description"));
     }
 
     @Override

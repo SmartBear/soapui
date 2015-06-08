@@ -19,6 +19,10 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.eviware.x.impl.swing.SwingXFormImpl;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -48,6 +52,8 @@ import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
 
+import javax.swing.JPanel;
+
 /**
  * Assertion that checks for a specified text token in the associated
  * WsdlTestRequests response XML message
@@ -66,6 +72,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
     private static final String USE_REGEX = "Regular Expression";
     public static final String LABEL = "Contains";
     public static final String DESCRIPTION = "Searches for the existence of a string token in the property value, supports regular expressions. Applicable to any property. ";
+    private CellConstraints cc = new CellConstraints();
 
     public SimpleContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
@@ -189,9 +196,15 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
 
     private void buildDialog() {
         XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Contains Assertion");
-        XForm mainForm = builder.createForm("Basic");
+        XForm mainForm = builder.createForm("Basic", new FormLayout("5px,left:pref,5px,fill:default:grow(1.0),5px"));
+        JPanel mainFormPanel = ((SwingXFormImpl) mainForm).getPanel();
+        FormLayout mainFormLayout = (FormLayout) mainFormPanel.getLayout();
 
         mainForm.addTextField(CONTENT, "Content to check for", XForm.FieldType.TEXTAREA).setWidth(40);
+
+        mainFormLayout.setRowSpec(mainFormLayout.getRowCount(), new RowSpec("top:default:grow(1.0)"));
+        mainFormPanel.add(mainFormPanel.getComponent(mainFormPanel.getComponents().length-1),cc.xy(4,mainFormLayout.getRowCount(),"fill,fill"));
+
         mainForm.addCheckBox(IGNORE_CASE, "Ignore case in comparison");
         mainForm.addCheckBox(USE_REGEX, "Use token as Regular Expression");
 
