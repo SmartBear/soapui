@@ -324,7 +324,7 @@ public class SoapUI {
         mainToolbar.setRollover(true);
         mainToolbar.putClientProperty(Options.HEADER_STYLE_KEY, HeaderStyle.BOTH);
         mainToolbar.addSpace(20);
-        mainToolbar.add(new NewProjectActionDelegate("/project_toolbar_icon.png","Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID));
+        mainToolbar.add(new NewProjectActionDelegate("/new-empty-project-icon.png","Empty", NewEmptyProjectAction.SOAPUI_ACTION_ID));
         mainToolbar.add(new NewProjectActionDelegate("/new-soap-project-icon.png","SOAP", NewWsdlProjectAction.SOAPUI_ACTION_ID));
         mainToolbar.add(new NewProjectActionDelegate("/new-rest-project-icon.png","REST", NewRestProjectAction.SOAPUI_ACTION_ID));
         mainToolbar.add(new ImportWsdlProjectActionDelegate());
