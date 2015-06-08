@@ -72,7 +72,7 @@ public class SimpleContainsAssertion extends WsdlMessageAssertion implements Req
     private static final String USE_REGEX = "Regular Expression";
     public static final String LABEL = "Contains";
     public static final String DESCRIPTION = "Searches for the existence of a string token in the property value, supports regular expressions. Applicable to any property. ";
-    private CellConstraints cc = new CellConstraints();
+    private static CellConstraints cc = new CellConstraints();
 
     public SimpleContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);

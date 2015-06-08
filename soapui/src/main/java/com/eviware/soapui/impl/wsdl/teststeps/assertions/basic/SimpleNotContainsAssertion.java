@@ -72,7 +72,7 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
     private static final String USE_REGEX = "Regular Expression";
     public static final String LABEL = "Not Contains";
     public static final String DESCRIPTION = "Searches for the non-existence of a string token in the property value, supports regular expressions. Applicable to any property.";
-    private CellConstraints cc = new CellConstraints();
+    private static CellConstraints cc = new CellConstraints();
 
     public SimpleNotContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
