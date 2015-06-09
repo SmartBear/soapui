@@ -1,3 +1,38 @@
+# SoapUI OS 5.2 - BETA
+
+#### Released 2015-06-10 ####
+
+### Major new features ###
+
+* Add JSON Path based assertions to Open Source
+* New Plugin Framework
+* Create empty project
+* Additional OAuth 2 flows
+
+### Improvements ###
+
+* Old style icons replaced with new
+* Require Java 7 for SoapUI OS
+* SoapUI OS GUI more similar to ReadyAPI
+
+### Bugs fixed ###
+
+* All popup menu functions missing in JSON viewer in SoapUI
+* Caption bar missing in Editor windows (only on MacOS)
+* Contain assertion text window cannot resize
+* JMS timeout assertion is broken
+* REST Interface window reads `WADL Definition`
+* SoapUI can't find the attachment using the `xop:Include` href
+* SoapUI doesn't load plugins when running `testrunner.bat` from another directory
+* Typo on WSDL Settings screen
+* Can't turn off "Native Look and Feel" on OS X
+
+
+### Bugs fixed ###
+* Removed version conflict affecting Maven builds
+
+-------------------------------------------------------------------------------
+
 # SoapUI OS 5.1.3
 #### Released 2015-04-01 ####
 
