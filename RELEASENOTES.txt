@@ -1,6 +1,10 @@
-# SoapUI OS 5.2 - BETA
+# SoapUI OS 5.2
 
-#### Released 2015-06-10 ####
+#### Released 2015-06-16 ####
+
+### Framework change
+
+* SoapUI requires Java 7
 
 ### Major new features ###
 
