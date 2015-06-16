@@ -1023,7 +1023,6 @@ public class PropertyTransfersDesktopPanel extends ModelItemDesktopPanel<Propert
             transfer.setTransferToAll(originalTransfer.getTransferToAll());
             transfer.setUseXQuery(originalTransfer.getUseXQuery());
 
-            listModel.addElement(name);
             transferList.setSelectedIndex(listModel.getSize() - 1);
         }
 
