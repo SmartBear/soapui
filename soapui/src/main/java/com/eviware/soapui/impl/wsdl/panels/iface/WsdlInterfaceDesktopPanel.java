@@ -310,7 +310,7 @@ public class WsdlInterfaceDesktopPanel extends ModelItemDesktopPanel<WsdlInterfa
                 ExportDefinitionAction.SOAPUI_ACTION_ID, getModelItem(), null, "/export.png"));
         button.setText(null);
         toolbar.addFixed(UISupport.createToolbarButton(SwingActionDelegate.createDelegate(
-                CreateWsdlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "report.png")));
+                CreateWsdlDocumentationAction.SOAPUI_ACTION_ID, iface, null, "/report.png")));
         toolbar.addFixed(button);
         toolbar.addGlue();
         button = UISupport.createToolbarButton(new ShowOnlineHelpAction(HelpUrls.WSDL_CONTENT_HELP_URL));
