@@ -1,4 +1,4 @@
-﻿# SoapUI OS 5.2
+﻿# SoapUI Open Source 5.2
 
 #### Released 2015-07-02 ####
 
@@ -36,6 +36,32 @@
 * When you resized the "Contain" assertion edit window, the text in that window did not resize appropriately.
 * The Overview tab of the REST Interface editor displayed "WSDL Definition" instead of "WADL Definition".
 * There was a misprint in the SoapUI Preferences > WSDL Settings screen.
+
+
+-------------------------------------------------------------------------------
+
+# SoapUI OS 5.2 - BETA
+
+#### Released 2015-06-10 ####
+
+### Major new features ###
+
+* JSON Path based assertions
+* Create empty project
+
+### Improvements ###
+
+* Old style icons replaced with new
+* SoapUI OS GUI more similar to ReadyAPI
+
+### Bugs fixed ###
+
+* Contain assertion text window cannot resize
+* JMS timeout assertion is broken
+* REST Interface window reads "WSDL Definition" instead of "WADL Definition"
+* SoapUI can't find the attachment using the `xop:Include href`
+* SoapUI doesn't load plugins when running `testrunner.bat` from another directory
+* Typo to on WSDL Settings screen
 
 
 -------------------------------------------------------------------------------
