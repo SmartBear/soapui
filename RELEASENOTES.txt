@@ -1,3 +1,45 @@
+﻿# SoapUI Open Source 5.2
+
+#### Released 2015-07-02 ####
+
+### Major New Features ###
+
+* You can use 4 new JSONPath-based assertions:
+   - JsonPath Count           - Calculates the number of element occurrences in a JSON response.
+   - JsonPath Existence Match - Extracts data from a JSON response and compares it with an expected value.
+   - JsonPath Match           - Checks if a JSON response contains specific node.
+   - JsonPath RegEx Match     - Extracts data from a JSON response and verifies it with a regular expression.
+  You can find the new assertions in the Add Assertions dialog, in the Property Content assertion group.
+
+* You can create new empty projects (in earlier versions, projects had to be based on WSDL or WADL, or URI).
+
+
+### Improvements ###
+
+* The product has got an updated and improved GUI. Now it looks similar to Ready! API.
+
+* Support for Java 6 has been dropped. 
+  To run SoapUI, now you need to have Java 7 on your computer.
+  The SoapUI installation package includes Java 7 modules, 
+  so if you use the installer, you do not have to download and install additional files.
+
+* Old-style icons have been replaced with newer icons.
+
+
+### Bugs Fixed ###
+
+* The JMS Timeout assertion did not work.
+* SoapUI failed to find attachments specified by 'xop:Include href'.
+* SoapUI failed to load plugins when you run tests with testrunner.bat and the current directory differed from <SoapUI>\bin.
+* The "Help > Privacy Policy" menu item did not open any web page. Now it opens http://www.soapui.org/Store-Info/privacy-policy.html.
+* In the Property Transfer test step editor, it was possible to add two items with the same name to the Transfers list.
+* When you resized the "Contain" assertion edit window, the text in that window did not resize appropriately.
+* The Overview tab of the REST Interface editor displayed "WSDL Definition" instead of "WADL Definition".
+* There was a misprint in the SoapUI Preferences > WSDL Settings screen.
+
+
+-------------------------------------------------------------------------------
+
 # SoapUI OS 5.2 - BETA
 
 #### Released 2015-06-10 ####
