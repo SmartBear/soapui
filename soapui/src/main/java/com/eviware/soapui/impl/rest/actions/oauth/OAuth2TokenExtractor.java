@@ -16,6 +16,8 @@
 package com.eviware.soapui.impl.rest.actions.oauth;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.OAuth2FlowConfig;
+import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.TimeUtils;
@@ -47,15 +49,22 @@ public class OAuth2TokenExtractor {
 
     protected List<BrowserListener> browserListeners = new ArrayList<BrowserListener>();
 
-    public void extractAccessToken(final OAuth2Parameters parameters) throws OAuthSystemException, MalformedURLException, URISyntaxException {
-        switch (parameters.getOAuth2Flow()) {
-            case IMPLICIT_GRANT:
-                extractAccessTokenForImplicitGrantFlow(parameters);
-                break;
-            case AUTHORIZATION_CODE_GRANT:
-            default:
-                extractAccessTokenForAuthorizationCodeGrantFlow(parameters);
-                break;
+    public void extractAccessToken(final OAuth2Parameters parameters) throws OAuthSystemException, MalformedURLException, URISyntaxException, OAuthProblemException {
+        OAuth2Profile.OAuth2Flow i = parameters.getOAuth2Flow();
+        if (i.equals(OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT)) {
+            extractAccessTokenForImplicitGrantFlow(parameters);
+
+        } else if (i.equals(OAuth2Profile.OAuth2Flow.RESOURCE_OWNER_PASSWORD_CREDENTIALS)) {
+            extractAccessTokenForROPC(parameters);
+
+        } else if (i.equals(OAuth2Profile.OAuth2Flow.AUTHORIZATION_CODE_GRANT)) {
+            extractAccessTokenForAuthorizationCodeGrantFlow(parameters);
+
+        } else if (i.equals(OAuth2Profile.OAuth2Flow.CLIENT_CREDENTIALS_GRANT)) {
+            extractAccessTokenForClientCredentialsGrant(parameters);
+
+        } else {
+            throw OAuthProblemException.error("Unsupported OAuth 2.0 grant flow");
         }
     }
 
@@ -89,6 +98,54 @@ public class OAuth2TokenExtractor {
         });
         browserFacade.open(new URI(createAuthorizationURL(parameters, CODE)).toURL());
         parameters.waitingForAuthorization();
+    }
+
+    void extractAccessTokenForROPC(final OAuth2Parameters parameters) throws OAuthProblemException, OAuthSystemException {
+        OAuthClientRequest accessTokenRequest = getClientRequestForROPC(parameters);
+        OAuthClient oAuthClient = getOAuthClient();
+
+        OAuthToken oAuthToken = oAuthClient.accessToken(accessTokenRequest, OAuthJSONAccessTokenResponse.class).getOAuthToken();
+        parameters.applyRetrievedAccessToken(oAuthToken.getAccessToken());
+        parameters.setAccessTokenIssuedTimeInProfile(TimeUtils.getCurrentTimeInSeconds());
+        parameters.setAccessTokenExpirationTimeInProfile(oAuthToken.getExpiresIn());
+        parameters.setRefreshTokenInProfile(oAuthToken.getRefreshToken());
+    }
+
+    public OAuthClientRequest getClientRequestForROPC(final OAuth2Parameters parameters) throws OAuthSystemException {
+        OAuthClientRequest accessTokenRequest = OAuthClientRequest
+                .tokenLocation(parameters.accessTokenUri)
+                .setGrantType(GrantType.PASSWORD)
+                .setClientId(parameters.clientId)
+                .setClientSecret(parameters.clientSecret)
+                .setUsername(parameters.resourceOwnerName)
+                .setPassword(parameters.resourceOwnerPassword)
+                .setScope(parameters.scope)
+                .buildBodyMessage();
+
+        return accessTokenRequest;
+    }
+
+    public void extractAccessTokenForClientCredentialsGrant(final OAuth2Parameters parameters) throws OAuthProblemException, OAuthSystemException {
+        OAuthClientRequest accessTokenRequest = getClientRequestForClientCredentialsGrant(parameters);
+        OAuthClient oAuthClient = getOAuthClient();
+
+        OAuthToken oAuthToken = oAuthClient.accessToken(accessTokenRequest, OAuthJSONAccessTokenResponse.class).getOAuthToken();
+        parameters.applyRetrievedAccessToken(oAuthToken.getAccessToken());
+        parameters.setAccessTokenIssuedTimeInProfile(TimeUtils.getCurrentTimeInSeconds());
+        parameters.setAccessTokenExpirationTimeInProfile(oAuthToken.getExpiresIn());
+        parameters.setRefreshTokenInProfile(oAuthToken.getRefreshToken());
+    }
+
+    public OAuthClientRequest getClientRequestForClientCredentialsGrant(final OAuth2Parameters parameters) throws OAuthSystemException {
+        OAuthClientRequest accessTokenRequest = OAuthClientRequest
+                .tokenLocation(parameters.accessTokenUri)
+                .setGrantType(GrantType.CLIENT_CREDENTIALS)
+                .setClientId(parameters.clientId)
+                .setClientSecret(parameters.clientSecret)
+                .setScope(parameters.scope)
+                .buildBodyMessage();
+
+        return accessTokenRequest;
     }
 
     void extractAccessTokenForImplicitGrantFlow(final OAuth2Parameters parameters) throws OAuthSystemException,

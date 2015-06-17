@@ -2010,6 +2010,8 @@
             <xsd:element name="manualAccessTokenExpirationTime" type="xsd:string" minOccurs="0"/>
             <xsd:element name="useManualAccessTokenExpirationTime" type="xsd:boolean"/>
             <xsd:element name="manualAccessTokenExpirationTimeUnit" type="tns:TimeUnit"/>
+            <xsd:element name="resourceOwnerName" type="xsd:string"></xsd:element>
+            <xsd:element name="resourceOwnerPassword" type="xsd:string"></xsd:element>
         </xsd:sequence>
     </xsd:complexType>
 
@@ -2033,6 +2035,8 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="AUTHORIZATION_CODE_GRANT"></xsd:enumeration>
             <xsd:enumeration value="IMPLICIT_GRANT"></xsd:enumeration>
+            <xsd:enumeration value="RESOURCE_OWNER_PASSWORD_CREDENTIALS"></xsd:enumeration>
+            <xsd:enumeration value="CLIENT_CREDENTIALS_GRANT"></xsd:enumeration>
         </xsd:restriction>
     </xsd:simpleType>
 

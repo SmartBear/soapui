@@ -64,6 +64,9 @@ public class OAuth2Profile implements PropertyExpansionContainer {
     public static final String JAVA_SCRIPTS_PROPERTY = "javaScripts";
     public static final String MANUAL_ACCESS_TOKEN_EXPIRATION_TIME_UNIT_PROPERTY = "manualAccessTokenExpirationTimeUnit";
 
+    public static final String RESOURCE_OWNER_LOGIN_PROPERTY = "resourceOwnerName";
+    public static final String RESOURCE_OWNER_PASSWORD_PROPERTY = "resourceOwnerPassword";
+
     public void waitForAccessTokenStatus(AccessTokenStatus accessTokenStatus, int timeout) {
         int timeLeft = timeout;
         while ((getAccessTokenStatus() != accessTokenStatus) && timeLeft > 0) {
@@ -119,7 +122,9 @@ public class OAuth2Profile implements PropertyExpansionContainer {
 
     public enum OAuth2Flow {
         AUTHORIZATION_CODE_GRANT("Authorization Code Grant"),
-        IMPLICIT_GRANT("Implicit Grant");
+        IMPLICIT_GRANT("Implicit Grant"),
+        RESOURCE_OWNER_PASSWORD_CREDENTIALS("Resource Owner Password Credentials Grant"),
+        CLIENT_CREDENTIALS_GRANT("Client Credentials Grant");
 
         private String description;
 
@@ -282,6 +287,30 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         if (!StringUtils.equals(oldValue, clientSecret)) {
             configuration.setClientSecret(clientSecret);
             pcs.firePropertyChange(CLIENT_SECRET_PROPERTY, oldValue, clientSecret);
+        }
+    }
+
+    public String getResourceOwnerName() {
+        return configuration.getResourceOwnerName();
+    }
+
+    public void setResourceOwnerName(String resourceOwnerName) {
+        String oldValue = configuration.getResourceOwnerName();
+        if (!StringUtils.equals(oldValue, resourceOwnerName)) {
+            configuration.setResourceOwnerName(resourceOwnerName);
+            pcs.firePropertyChange(RESOURCE_OWNER_LOGIN_PROPERTY, oldValue, resourceOwnerName);
+        }
+    }
+
+    public String getResourceOwnerPassword() {
+        return configuration.getResourceOwnerPassword();
+    }
+
+    public void setResourceOwnerPassword(String resourceOwnerPassword) {
+        String oldValue = configuration.getResourceOwnerPassword();
+        if (!StringUtils.equals(oldValue, resourceOwnerPassword)) {
+            configuration.setResourceOwnerPassword(resourceOwnerPassword);
+            pcs.firePropertyChange(RESOURCE_OWNER_PASSWORD_PROPERTY, oldValue, resourceOwnerPassword);
         }
     }
 
@@ -470,6 +499,8 @@ public class OAuth2Profile implements PropertyExpansionContainer {
         result.extractAndAddAll(ACCESS_TOKEN_PROPERTY);
         result.extractAndAddAll(SCOPE_PROPERTY);
         result.extractAndAddAll(MANUAL_ACCESS_TOKEN_EXPIRATION_TIME);
+        result.extractAndAddAll(RESOURCE_OWNER_LOGIN_PROPERTY);
+        result.extractAndAddAll(RESOURCE_OWNER_PASSWORD_PROPERTY);
 
         return result.toArray();
     }

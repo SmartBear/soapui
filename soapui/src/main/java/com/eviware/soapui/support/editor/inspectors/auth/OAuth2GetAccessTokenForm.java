@@ -17,6 +17,7 @@
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.config.OAuth2FlowConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.actions.oauth.GetOAuthAccessTokenAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
@@ -49,6 +50,8 @@ import java.awt.event.ItemListener;
 public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeListener {
     public static final String CLIENT_ID_TITLE = "Client Identification";
     public static final String CLIENT_SECRET_TITLE = "Client Secret";
+    public static final String RESOURCE_OWNER_LOGIN = "Resource Owner Name";
+    public static final String RESOURCE_OWNER_PASSWORD = "Resource Owner Password";
     public static final String AUTHORIZATION_URI_TITLE = "Authorization URI";
     public static final String ACCESS_TOKEN_URI_TITLE = "Access Token URI";
     public static final String REDIRECT_URI_TITLE = "Redirect URI";
@@ -128,15 +131,25 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
 
         accessTokenForm.addSpace(GROUP_SPACING);
 
-        accessTokenForm.appendTextField(OAuth2Profile.CLIENT_ID_PROPERTY, CLIENT_ID_TITLE, "");
+        final JTextField resOwnerPassTextField = accessTokenForm.appendTextField(OAuth2Profile.RESOURCE_OWNER_LOGIN_PROPERTY, RESOURCE_OWNER_LOGIN, "");
+        resOwnerPassTextField.setVisible(oauth2FlowComboBox.getSelectedItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())));
 
+        final JTextField resOwnerNameTextField = accessTokenForm.appendTextField(OAuth2Profile.RESOURCE_OWNER_PASSWORD_PROPERTY, RESOURCE_OWNER_PASSWORD, "");
+        resOwnerNameTextField.setVisible(oauth2FlowComboBox.getSelectedItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())));
+
+        accessTokenForm.appendTextField(OAuth2Profile.CLIENT_ID_PROPERTY, CLIENT_ID_TITLE, "");
         final JTextField clientSecretField = appendClientSecretField(accessTokenForm, getOAuth2FlowValueModel(accessTokenForm));
 
         accessTokenForm.addSpace(GROUP_SPACING);
 
-        accessTokenForm.appendTextField(OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI_TITLE, "");
+        final JTextField authUriTextField = accessTokenForm.appendTextField(OAuth2Profile.AUTHORIZATION_URI_PROPERTY, AUTHORIZATION_URI_TITLE, "");
+        authUriTextField.setVisible(!oauth2FlowComboBox.getSelectedItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())) &&
+                !oauth2FlowComboBox.getSelectedItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.CLIENT_CREDENTIALS_GRANT.toString())));
         final JTextField accessTokenUriField = appendAccessTokenUriField(accessTokenForm, getOAuth2FlowValueModel(accessTokenForm));
-        accessTokenForm.appendTextField(OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI_TITLE, "");
+
+        final JTextField redirectUriTextField = accessTokenForm.appendTextField(OAuth2Profile.REDIRECT_URI_PROPERTY, REDIRECT_URI_TITLE, "");
+        redirectUriTextField.setVisible(!oauth2FlowComboBox.getSelectedItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())) &&
+                !oauth2FlowComboBox.getSelectedItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.CLIENT_CREDENTIALS_GRANT.toString())));
 
         accessTokenForm.addSpace(GROUP_SPACING);
 
@@ -157,8 +170,15 @@ public class OAuth2GetAccessTokenForm implements OAuth2AccessTokenStatusChangeLi
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    clientSecretField.setVisible(e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT);
-                    accessTokenUriField.setVisible(e.getItem() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT);
+                    clientSecretField.setVisible(!e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.IMPLICIT_GRANT.toString())));
+                    accessTokenUriField.setVisible(!e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.IMPLICIT_GRANT.toString())));
+                    authUriTextField.setVisible(!e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())) &&
+                            !e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.CLIENT_CREDENTIALS_GRANT.toString())));
+                    redirectUriTextField.setVisible(!e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())) &&
+                            !e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.CLIENT_CREDENTIALS_GRANT.toString())));
+                    resOwnerNameTextField.setVisible(e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())));
+                    resOwnerPassTextField.setVisible(e.getItem().equals(OAuth2Profile.OAuth2Flow.valueOf(OAuth2FlowConfig.RESOURCE_OWNER_PASSWORD_CREDENTIALS.toString())));
+
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {

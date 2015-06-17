@@ -15,6 +15,7 @@
 */
 package com.eviware.soapui.impl.rest.actions.oauth;
 
+import com.eviware.soapui.config.OAuth2FlowConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.editor.inspectors.auth.OAuth2GetAccessTokenForm;
@@ -30,14 +31,22 @@ import java.net.URL;
 public class OAuth2ParameterValidator {
 
     static void validate(OAuth2Parameters parameters) {
+        if (parameters.getOAuth2Flow() == OAuth2Profile.OAuth2Flow.RESOURCE_OWNER_PASSWORD_CREDENTIALS) {
+            validateRequiredStringValue(parameters.resourceOwnerName, OAuth2GetAccessTokenForm.RESOURCE_OWNER_LOGIN);
+            validateRequiredStringValue(parameters.resourceOwnerName, OAuth2GetAccessTokenForm.RESOURCE_OWNER_PASSWORD);
+        }
+
         validateRequiredStringValue(parameters.clientId, OAuth2GetAccessTokenForm.CLIENT_ID_TITLE);
         if (parameters.getOAuth2Flow() != OAuth2Profile.OAuth2Flow.IMPLICIT_GRANT) {
             validateRequiredStringValue(parameters.clientSecret, OAuth2GetAccessTokenForm.CLIENT_SECRET_TITLE);
             validateHttpUrl(parameters.accessTokenUri, OAuth2GetAccessTokenForm.ACCESS_TOKEN_URI_TITLE);
         }
-        validateHttpUrl(parameters.authorizationUri, OAuth2GetAccessTokenForm.AUTHORIZATION_URI_TITLE);
-        validateUri(parameters.redirectUri, OAuth2GetAccessTokenForm.REDIRECT_URI_TITLE);
 
+        if (parameters.getOAuth2Flow() != OAuth2Profile.OAuth2Flow.RESOURCE_OWNER_PASSWORD_CREDENTIALS &&
+                parameters.getOAuth2Flow() != OAuth2Profile.OAuth2Flow.CLIENT_CREDENTIALS_GRANT) {
+            validateHttpUrl(parameters.authorizationUri, OAuth2GetAccessTokenForm.AUTHORIZATION_URI_TITLE);
+            validateUri(parameters.redirectUri, OAuth2GetAccessTokenForm.REDIRECT_URI_TITLE);
+        }
     }
 
     private static void validateUri(String uri, String uriName) {

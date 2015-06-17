@@ -25,6 +25,7 @@ import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
 import org.apache.oltu.oauth2.common.OAuth;
+import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 
 import java.io.UnsupportedEncodingException;
@@ -51,6 +52,8 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade {
             logAndThrowOAuth2Exception(e);
         } catch (URISyntaxException e) {
             logAndThrowOAuth2Exception(e);
+        } catch (OAuthProblemException e) {
+            e.printStackTrace();
         }
 
     }
