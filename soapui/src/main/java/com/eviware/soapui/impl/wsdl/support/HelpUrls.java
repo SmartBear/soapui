@@ -209,6 +209,14 @@ public interface HelpUrls {
     public static final String XPATHASSERTIONEDITOR_HELP_URL = "/functional-testing/validating-messages/validating-xml-messages.html";
     public static final String XQUERYASSERTIONEDITOR_HELP_URL = "/functional-testing/validating-messages/validating-xml-messages.html";
 
+    public static final String ASSERTION_JSON_CONTENT = "/functional-testing/validating-messages/validating-xml-messages.html";
+    public static final String ASSERTION_JSON_COUNT = "/functional-testing/validating-messages/validating-xml-messages.html";
+    public static final String ASSERTION_JSON_EXIST = "/functional-testing/validating-messages/validating-xml-messages.html";
+    public static final String ASSERTION_JSON_REGEX = "/functional-testing/validating-messages/validating-xml-messages.html";
+    public static final String ASSERTION_JSON_REGEX_CONFIG = "/functional-testing/validating-messages/validating-xml-messages.html";
+
+
+
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
     public static final String SOAPUI_WELCOME_PAGE = "/Downloads/thank-you-for-downloading-soapui.html";
     public static final String STARTER_PAGE_URL = "http://soapui.org/Appindex/soapui-starterpage.html?version=" + urlEncodeWithUtf8(SoapUI.SOAPUI_VERSION);

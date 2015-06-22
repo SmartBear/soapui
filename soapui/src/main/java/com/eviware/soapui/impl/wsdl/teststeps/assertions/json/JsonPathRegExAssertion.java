@@ -67,7 +67,7 @@ public class JsonPathRegExAssertion extends JsonPathAssertionBase implements Req
     @Override
     public boolean configure() {
         if (configurationDialog == null) {
-            configurationDialog = new JsonPathRexExAssertionConfigurationDialog(getAssertion());
+            configurationDialog = new JsonPathRegExAssertionConfigurationDialog(getAssertion());
         }
 
         return configurationDialog.configure();

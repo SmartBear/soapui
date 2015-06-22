@@ -27,11 +27,11 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
-public class JsonPathRexExAssertionConfigurationDialog extends AssertionConfigurationDialog {
+public class JsonPathRegExAssertionConfigurationDialog extends AssertionConfigurationDialog {
     private JTextArea regExArea;
     private JsonPathRegExAssertion jsonPathRegExAssertion;
 
-    public JsonPathRexExAssertionConfigurationDialog(JsonPathRegExAssertion assertion) {
+    public JsonPathRegExAssertionConfigurationDialog(JsonPathRegExAssertion assertion) {
         super(assertion);
         this.jsonPathRegExAssertion = assertion;
     }
