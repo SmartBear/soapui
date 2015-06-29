@@ -20,6 +20,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathImpl;
 import com.eviware.soapui.impl.wsdl.support.assertions.AssertedXPathsContainer;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
@@ -345,6 +346,11 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
                 }
             }
         }
+    }
+
+
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_XPATH_CONTENT;
     }
 
     protected void addPathEditorActions(JXToolBar toolbar) {

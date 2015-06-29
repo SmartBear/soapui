@@ -310,6 +310,11 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
         return configureResult;
     }
 
+
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_XQUERY;
+    }
+
     protected void buildConfigurationDialog() {
         configurationDialog = new JDialog(UISupport.getMainFrame());
         configurationDialog.setTitle("XQuery Match configuration");
@@ -360,7 +365,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
         ButtonBarBuilder builder = new ButtonBarBuilder();
 
-        ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(HelpUrls.XQUERYASSERTIONEDITOR_HELP_URL);
+        ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(this.getHelpURL());
         builder.addFixed(UISupport.createToolbarButton(showOnlineHelpAction));
         builder.addGlue();
 

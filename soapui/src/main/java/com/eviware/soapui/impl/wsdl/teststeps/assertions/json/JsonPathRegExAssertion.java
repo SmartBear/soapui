@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.json;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -46,6 +47,11 @@ public class JsonPathRegExAssertion extends JsonPathAssertionBase implements Req
         super(assertionConfig, assertable);
         XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
         regularExpression = reader.readString(REG_EX_PROPERTY_NAME, null);
+    }
+
+    @Override
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_JSON_REGEX;
     }
 
     @Override

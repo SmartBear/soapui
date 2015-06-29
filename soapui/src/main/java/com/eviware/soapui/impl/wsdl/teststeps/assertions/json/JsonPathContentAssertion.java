@@ -105,6 +105,7 @@ public class JsonPathContentAssertion extends JsonPathAssertionBase implements R
         setConfiguration(createConfiguration());
     }
 
+    @Override
     public String getHelpURL() {
         return HelpUrls.ASSERTION_JSON_CONTENT;
     }

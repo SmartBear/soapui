@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.json;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -43,6 +44,11 @@ public class JsonPathCountAssertion extends JsonPathAssertionBase implements Req
 
     public JsonPathCountAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable);
+    }
+
+    @Override
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_JSON_COUNT;
     }
 
     @Override
