@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.json;
 
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.AssertionConfigurationDialog;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.JUndoableTextArea;
@@ -27,13 +28,17 @@ import javax.swing.JTextArea;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 
-public class JsonPathRexExAssertionConfigurationDialog extends AssertionConfigurationDialog {
+public class JsonPathRegExAssertionConfigurationDialog extends AssertionConfigurationDialog {
     private JTextArea regExArea;
     private JsonPathRegExAssertion jsonPathRegExAssertion;
 
-    public JsonPathRexExAssertionConfigurationDialog(JsonPathRegExAssertion assertion) {
+    public JsonPathRegExAssertionConfigurationDialog(JsonPathRegExAssertion assertion) {
         super(assertion);
         this.jsonPathRegExAssertion = assertion;
+    }
+
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_JSON_REGEX_CONFIG;
     }
 
     @Override

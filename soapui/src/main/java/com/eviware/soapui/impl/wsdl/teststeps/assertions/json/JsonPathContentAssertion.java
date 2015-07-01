@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.json;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XPathContainsAssertion;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -104,8 +105,9 @@ public class JsonPathContentAssertion extends JsonPathAssertionBase implements R
         setConfiguration(createConfiguration());
     }
 
+    @Override
     public String getHelpURL() {
-        return ""; // TODO: Add SoapUI OS Help Url : HelpUrls.JSONASSERTIONEDITOR_HELP_URL;
+        return HelpUrls.ASSERTION_JSON_CONTENT;
     }
 
     @Override

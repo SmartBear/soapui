@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.json;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
@@ -49,6 +50,11 @@ public class JsonPathRegExAssertion extends JsonPathAssertionBase implements Req
     }
 
     @Override
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_JSON_REGEX;
+    }
+
+    @Override
     protected JsonPathRegExAssertion getAssertion() {
         return this;
     }
@@ -67,7 +73,7 @@ public class JsonPathRegExAssertion extends JsonPathAssertionBase implements Req
     @Override
     public boolean configure() {
         if (configurationDialog == null) {
-            configurationDialog = new JsonPathRexExAssertionConfigurationDialog(getAssertion());
+            configurationDialog = new JsonPathRegExAssertionConfigurationDialog(getAssertion());
         }
 
         return configurationDialog.configure();

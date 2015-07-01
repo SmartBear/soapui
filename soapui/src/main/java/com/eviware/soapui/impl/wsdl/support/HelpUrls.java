@@ -206,8 +206,16 @@ public interface HelpUrls {
 
     public static final String XFIRE_HELP_URL = "http://xfire.codehaus.org/Client+and+Server+Stub+Generation+from+WSDL";
     public static final String XMLBEANS_HELP_URL = "http://xmlbeans.apache.org/docs/2.0.0/guide/tools.html#scomp";
-    public static final String XPATHASSERTIONEDITOR_HELP_URL = "/functional-testing/validating-messages/validating-xml-messages.html";
-    public static final String XQUERYASSERTIONEDITOR_HELP_URL = "/functional-testing/validating-messages/validating-xml-messages.html";
+    public static final String ASSERTION_XPATH_CONTENT = "/functional-testing/validating-messages/validating-xml-messages.html";
+    public static final String ASSERTION_XQUERY = "/functional-testing/validating-messages/validating-xml-messages.html";
+
+    public static final String ASSERTION_JSON_CONTENT = "/functional-testing/validating-messages/validating-json-messages.html";
+    public static final String ASSERTION_JSON_COUNT = "/functional-testing/validating-messages/validating-json-messages.html";
+    public static final String ASSERTION_JSON_EXIST = "/functional-testing/validating-messages/validating-json-messages.html";
+    public static final String ASSERTION_JSON_REGEX = "/functional-testing/validating-messages/validating-json-messages.html";
+    public static final String ASSERTION_JSON_REGEX_CONFIG = "/functional-testing/validating-messages/validating-json-messages.html";
+
+
 
     public static final String REST_DISCOVERY_WITH_INTERNAL_BROWSER = "/REST-Discovery/api-with-internal-browser.html";
     public static final String SOAPUI_WELCOME_PAGE = "/Downloads/thank-you-for-downloading-soapui.html";

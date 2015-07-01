@@ -67,6 +67,11 @@ public class AssertionConfigurationDialog {
         ignoreNamespaceDifferencesCheckBox.setSelected(this.assertion.isIgnoreNamespaceDifferences());
     }
 
+
+    public String getHelpURL() {
+        return HelpUrls.ASSERTION_JSON_CONTENT;
+    }
+
     protected void buildConfigurationDialog() {
         configurationDialog = new JDialog(UISupport.getMainFrame());
         configurationDialog.setTitle(assertion.getConfigurationDialogTitle());
@@ -109,7 +114,7 @@ public class AssertionConfigurationDialog {
 
         ButtonBarBuilder builder = new ButtonBarBuilder();
 
-        ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(HelpUrls.XPATHASSERTIONEDITOR_HELP_URL);
+        ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(this.getHelpURL());
         builder.addFixed(UISupport.createToolbarButton(showOnlineHelpAction));
         builder.addGlue();
 
