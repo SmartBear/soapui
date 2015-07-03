@@ -16,6 +16,7 @@
 
 package com.eviware.soapui.impl.rest.actions.oauth;
 
+import com.eviware.soapui.config.OAuth2FlowConfig;
 import com.eviware.soapui.config.OAuth2ProfileConfig;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.support.SoapUIException;
@@ -52,6 +53,16 @@ public class OAuth2TestUtils {
         profile.setClientID("ClientId");
         profile.setClientSecret("ClientSecret");
         profile.setScope("ReadOnly");
+        return profile;
+    }
+    public static OAuth2Profile getOAuthProfileForROPC() throws SoapUIException {
+        OAuth2Profile profile = ModelItemFactory.makeOAuth2Profile();
+        profile.setAccessTokenURI("http://localhost:8080/accesstoken");
+        profile.setResourceOwnerName("Name");
+        profile.setResourceOwnerPassword("Password");
+        profile.setClientID("ClientId");
+        profile.setClientSecret("ClientSecret");
+        profile.setOAuth2Flow(OAuth2Profile.OAuth2Flow.RESOURCE_OWNER_PASSWORD_CREDENTIALS);
         return profile;
     }
 

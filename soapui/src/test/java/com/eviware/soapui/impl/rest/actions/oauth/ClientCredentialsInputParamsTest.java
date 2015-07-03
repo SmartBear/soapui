@@ -1,0 +1,50 @@
+package com.eviware.soapui.impl.rest.actions.oauth;
+
+import com.eviware.soapui.support.SoapUIException;
+import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
+import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.util.HashMap;
+
+import static org.junit.Assert.assertTrue;
+
+public class ClientCredentialsInputParamsTest {
+    private OAuth2TokenExtractor oAuth2TokenExtractor;
+    private OAuth2Parameters parameters;
+    OAuthClientRequest clientRequest;
+
+    @Before
+    public void setUp() throws SoapUIException {
+        parameters = new OAuth2Parameters(OAuth2TestUtils.getOAuthProfileForROPC());
+        oAuth2TokenExtractor = new OAuth2TokenExtractor();
+    }
+
+    @Test
+    public void testParams (){
+        try {
+            clientRequest = oAuth2TokenExtractor.getClientRequestForClientCredentialsGrant(parameters);
+        } catch (OAuthSystemException e) {
+            Assert.assertTrue("Failed to extract client request for Client credentials grant flow", false);
+            e.printStackTrace();
+        }
+
+        HashMap<String, Integer> fields = new HashMap<>();
+        fields.put("client_secret", 0);
+        fields.put("client_id", 0);
+        fields.put("grant_type", 0);
+        fields.put("scope", 0);
+
+        String[] bodyContent = clientRequest.getBody().split("\\&");
+        assertTrue("Incorrect number of params in body message", (bodyContent.length == 3) || (bodyContent.length == 4)/*if Scope exists*/);
+        for (String mes: bodyContent){
+            String [] values = mes.split("=");
+            assertTrue("Unknown body param " + values[0], fields.containsKey(values[0]));
+            assertTrue("Too many the same params \"" + values[0] + "\"", fields.get(values[0]) < 1 && fields.get(values[0]) >= 0);
+            fields.put(values[0], fields.get(values[0]) + 1);
+            assertTrue("Client credentials grant flow incorrect param " + values[0] + " has value " + values[1], values[1].length() > 0);
+        }
+    }
+}

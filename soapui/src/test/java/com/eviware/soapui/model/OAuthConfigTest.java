@@ -102,6 +102,8 @@ public class OAuthConfigTest {
         assertThat(savedOAuth2Profile.getClientSecret(), is(oAuth2Profile.getClientSecret()));
         assertThat(savedOAuth2Profile.getAccessToken(), is(oAuth2Profile.getAccessToken()));
         assertThat(savedOAuth2Profile.getScope(), is(oAuth2Profile.getScope()));
+        assertThat(savedOAuth2Profile.getResourceOwnerName(), is(oAuth2Profile.getResourceOwnerName()));
+        assertThat(savedOAuth2Profile.getResourceOwnerPassword(), is(oAuth2Profile.getResourceOwnerPassword()));
     }
 
     private WsdlProject createNewProjectWithRESTInterface() throws XmlException, IOException, SoapUIException {
