@@ -282,6 +282,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
                     } catch (ComparisonFailure e) {
                         return Diff.RETURN_ACCEPT_DIFFERENCE;
                     }
+                    
+                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
                 }
 
                 return Diff.RETURN_ACCEPT_DIFFERENCE;
