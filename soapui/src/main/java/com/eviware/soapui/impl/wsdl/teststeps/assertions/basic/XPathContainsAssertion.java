@@ -78,103 +78,16 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class XPathContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
-        XPathReferenceContainer {
-    private String expectedContent;
-    private String path;
-
-
-    private boolean allowWildcards;
-    private boolean ignoreNamespaceDifferences;
-    private boolean ignoreComments;
+public class XPathContainsAssertion extends XBaseContainsAssertion {
 
     public static final String ID = "XPath Match";
     public static final String LABEL = "XPath Match";
     public static final String DESCRIPTION = "Uses an XPath expression to select content from the target property and compares the result to an expected value. Applicable to any property containing XML.";
+    
     protected AssertionConfigurationDialog configurationDialog;
-
 
     public XPathContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
-
-        XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
-        path = reader.readString("path", null);
-        expectedContent = reader.readString("content", null);
-        allowWildcards = reader.readBoolean("allowWildcards", false);
-        ignoreNamespaceDifferences = reader.readBoolean("ignoreNamspaceDifferences", false);
-        ignoreComments = reader.readBoolean("ignoreComments", false);
-    }
-
-    public String getExpectedContent() {
-        return expectedContent;
-    }
-
-    public void setExpectedContent(String expectedContent) {
-        setExpectedContent(expectedContent, true);
-    }
-
-    /**
-     * @deprecated
-     */
-
-    @Deprecated
-    public void setContent(String content) {
-        setExpectedContent(content);
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-        setConfiguration(createConfiguration());
-    }
-
-    public boolean isAllowWildcards() {
-        return allowWildcards;
-    }
-
-    public void setAllowWildcards(boolean allowWildcards) {
-        this.allowWildcards = allowWildcards;
-        setConfiguration(createConfiguration());
-    }
-
-    public boolean isIgnoreNamespaceDifferences() {
-        return ignoreNamespaceDifferences;
-    }
-
-    public void setIgnoreNamespaceDifferences(boolean ignoreNamespaceDifferences) {
-        this.ignoreNamespaceDifferences = ignoreNamespaceDifferences;
-        setConfiguration(createConfiguration());
-    }
-
-    public boolean isIgnoreComments() {
-        return ignoreComments;
-    }
-
-    public void setIgnoreComments(boolean ignoreComments) {
-        this.ignoreComments = ignoreComments;
-        setConfiguration(createConfiguration());
-    }
-
-    @Override
-    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
-            throws AssertionException {
-        if (!messageExchange.hasResponse()) {
-            return "Missing Response";
-        } else {
-            return assertContent(messageExchange.getResponseContentAsXml(), context, "Response");
-        }
-    }
-
-    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
-                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
-        if (!XmlUtils.seemsToBeXml(source.getPropertyValue(propertyName))) {
-            throw new AssertionException(new AssertionError("Property '" + propertyName
-                    + "' has value which is not xml!"));
-        }
-        return assertContent(source.getPropertyValue(propertyName), context, propertyName);
     }
 
     public String assertContent(String response, SubmitContext context, String type) throws AssertionException {
@@ -382,19 +295,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         return this;
     }
 
-    public XmlObject createConfiguration() {
-        XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-        addConfigurationValues(builder);
-        return builder.finish();
-    }
 
-    protected void addConfigurationValues(XmlObjectConfigurationBuilder builder) {
-        builder.add("path", path);
-        builder.add("content", expectedContent);
-        builder.add("allowWildcards", allowWildcards);
-        builder.add("ignoreNamspaceDifferences", ignoreNamespaceDifferences);
-        builder.add("ignoreComments", ignoreComments);
-    }
 
     public void selectFromCurrent() {
         XmlCursor cursor = null;
@@ -449,12 +350,7 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         }
     }
 
-    protected void setExpectedContent(String expectedContent, boolean save) {
-        this.expectedContent = expectedContent;
-        if (save) {
-            setConfiguration(createConfiguration());
-        }
-    }
+
 
     public String getPathAreaTitle() {
         return "Specify xpath expression and expected result";
@@ -528,26 +424,9 @@ public class XPathContainsAssertion extends WsdlMessageAssertion implements Requ
         }
     }
 
-    @Override
-    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
-            throws AssertionException {
-        if (!messageExchange.hasRequest(true)) {
-            return "Missing Request";
-        } else {
-            return assertContent(messageExchange.getRequestContent(), context, "Request");
-        }
-    }
 
-    @Override
-    public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
 
-        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getAssertable().getModelItem(), this,
-                "expectedContent"));
-        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getAssertable().getModelItem(), this, "path"));
 
-        return result.toArray(new PropertyExpansion[result.size()]);
-    }
 
     public XPathReference[] getXPathReferences() {
         List<XPathReference> result = new ArrayList<XPathReference>();

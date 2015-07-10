@@ -95,16 +95,13 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * @author Ole.Matzura
  */
 
-public class XQueryContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
-        XPathReferenceContainer {
+public class XQueryContainsAssertion extends XBaseContainsAssertion {
     private final static Logger log = Logger.getLogger(XQueryContainsAssertion.class);
-    private String expectedContent;
-    private String path;
+
     private JDialog configurationDialog;
     private JTextArea pathArea;
     private JTextArea contentArea;
-    private boolean configureResult;
-    private boolean allowWildcards;
+    private boolean configureResult; 
 
     public static final String ID = "XQuery Match";
     public static final String LABEL = "XQuery Match";
@@ -113,64 +110,8 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
 
     public XQueryContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
-
-        XmlObjectConfigurationReader reader = new XmlObjectConfigurationReader(getConfiguration());
-        path = reader.readString("path", null);
-        expectedContent = reader.readString("content", null);
-        allowWildcards = reader.readBoolean("allowWildcards", false);
     }
 
-    public String getExpectedContent() {
-        return expectedContent;
-    }
-
-    public void setExpectedContent(String expectedContent) {
-        this.expectedContent = expectedContent;
-        setConfiguration(createConfiguration());
-    }
-
-    /**
-     * @deprecated
-     */
-
-    public void setContent(String content) {
-        setExpectedContent(content);
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-        setConfiguration(createConfiguration());
-    }
-
-    public boolean isAllowWildcards() {
-        return allowWildcards;
-    }
-
-    public void setAllowWildcards(boolean allowWildcards) {
-        this.allowWildcards = allowWildcards;
-    }
-
-    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
-            throws AssertionException {
-        if (!messageExchange.hasResponse()) {
-            return "Missing Response";
-        } else {
-            return assertContent(messageExchange.getResponseContentAsXml(), context, "Response");
-        }
-    }
-
-    protected String internalAssertProperty(TestPropertyHolder source, String propertyName,
-                                            MessageExchange messageExchange, SubmitContext context) throws AssertionException {
-        if (!XmlUtils.seemsToBeXml(source.getPropertyValue(propertyName))) {
-            throw new AssertionException(new AssertionError("Property '" + propertyName
-                    + "' has value which is not xml!"));
-        }
-        return assertContent(source.getPropertyValue(propertyName), context, propertyName);
-    }
 
     public String assertContent(String response, SubmitContext context, String type) throws AssertionException {
         try {
@@ -404,13 +345,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
         toolbar.addFixed(allowWildcardsCheckBox);
     }
 
-    public XmlObject createConfiguration() {
-        XmlObjectConfigurationBuilder builder = new XmlObjectConfigurationBuilder();
-        builder.add("path", path);
-        builder.add("content", expectedContent);
-        builder.add("allowWildcards", allowWildcards);
-        return builder.finish();
-    }
+
 
     public void selectFromCurrent() {
         // XmlCursor cursor = null;
@@ -570,15 +505,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
         }
     }
 
-    @Override
-    protected String internalAssertRequest(MessageExchange messageExchange, SubmitContext context)
-            throws AssertionException {
-        if (!messageExchange.hasRequest(true)) {
-            return "Missing Request";
-        } else {
-            return assertContent(messageExchange.getRequestContent(), context, "Request");
-        }
-    }
+
 
     public JTextArea getContentArea() {
         return contentArea;
@@ -588,15 +515,7 @@ public class XQueryContainsAssertion extends WsdlMessageAssertion implements Req
         return pathArea;
     }
 
-    public PropertyExpansion[] getPropertyExpansions() {
-        List<PropertyExpansion> result = new ArrayList<PropertyExpansion>();
 
-        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getAssertable().getModelItem(), this,
-                "expectedContent"));
-        result.addAll(PropertyExpansionUtils.extractPropertyExpansions(getAssertable().getModelItem(), this, "path"));
-
-        return result.toArray(new PropertyExpansion[result.size()]);
-    }
 
     public XPathReference[] getXPathReferences() {
         List<XPathReference> result = new ArrayList<XPathReference>();
