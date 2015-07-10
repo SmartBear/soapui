@@ -31,10 +31,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- *
+ * TODO: remove some leftover xpath strings.
  */
 public class AssertionConfigurationDialog {
-    private final static Logger log = Logger.getLogger(XPathContainsAssertion.class);
+    private final static Logger log = Logger.getLogger(AssertionConfigurationDialog.class);
 
     protected JDialog configurationDialog;
     private JCheckBox allowWildcardsCheckBox;
@@ -42,10 +42,10 @@ public class AssertionConfigurationDialog {
     private JCheckBox ignoreCommentsCheckBox;
     protected JTextArea pathArea;
     protected JTextArea contentArea;
-    protected XPathContainsAssertion assertion;
+    protected XBaseContainsAssertion assertion;
     protected boolean configureResult;
 
-    public AssertionConfigurationDialog(XPathContainsAssertion assertion) {
+    public AssertionConfigurationDialog(XBaseContainsAssertion assertion) {
         this.assertion = assertion;
     }
 

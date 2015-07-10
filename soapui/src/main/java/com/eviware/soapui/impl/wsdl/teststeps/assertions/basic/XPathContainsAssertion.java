@@ -83,8 +83,6 @@ public class XPathContainsAssertion extends XBaseContainsAssertion {
     public static final String ID = "XPath Match";
     public static final String LABEL = "XPath Match";
     public static final String DESCRIPTION = "Uses an XPath expression to select content from the target property and compares the result to an expected value. Applicable to any property containing XML.";
-    
-    protected AssertionConfigurationDialog configurationDialog;
 
     public XPathContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
@@ -266,37 +264,6 @@ public class XPathContainsAssertion extends XBaseContainsAssertion {
         return HelpUrls.ASSERTION_XPATH_CONTENT;
     }
 
-    protected void addPathEditorActions(JXToolBar toolbar) {
-        configurationDialog.addDeclareNamespaceButton(toolbar);
-    }
-
-    protected JTextArea getPathArea() {
-        return configurationDialog == null ? null : configurationDialog.getPathArea();
-    }
-
-    protected JTextArea getContentArea() {
-        return configurationDialog == null ? null : configurationDialog.getContentArea();
-    }
-
-    protected void addMatchEditorActions(JXToolBar toolbar) {
-        configurationDialog.addMatchEditorActions(toolbar);
-    }
-
-    @Override
-    public boolean configure() {
-        if (configurationDialog == null) {
-            configurationDialog = new AssertionConfigurationDialog(getAssertion());
-        }
-
-        return configurationDialog.configure();
-    }
-
-    protected XPathContainsAssertion getAssertion() {
-        return this;
-    }
-
-
-
     public void selectFromCurrent() {
         XmlCursor cursor = null;
 
@@ -354,10 +321,6 @@ public class XPathContainsAssertion extends XBaseContainsAssertion {
 
     public String getPathAreaTitle() {
         return "Specify xpath expression and expected result";
-    }
-
-    public String getPathAreaDescription() {
-        return "declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>";
     }
 
     public String getPathAreaToolTipText() {

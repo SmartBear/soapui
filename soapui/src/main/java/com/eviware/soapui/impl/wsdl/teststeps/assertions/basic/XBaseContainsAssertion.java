@@ -3,6 +3,8 @@ package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JTextArea;
+
 import org.apache.xmlbeans.XmlObject;
 
 import com.eviware.soapui.config.TestAssertionConfig;
@@ -18,6 +20,7 @@ import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -31,7 +34,9 @@ XPathReferenceContainer{
     protected boolean allowWildcards;
     protected boolean ignoreNamespaceDifferences;
     protected boolean ignoreComments;
-	
+    
+    protected AssertionConfigurationDialog configurationDialog;
+    
 	protected XBaseContainsAssertion(TestAssertionConfig assertionConfig,
 			Assertable modelItem, boolean cloneable, boolean configurable,
 			boolean multiple, boolean requiresResponseContent) {
@@ -120,6 +125,27 @@ XPathReferenceContainer{
 	        builder.add("ignoreNamspaceDifferences", ignoreNamespaceDifferences);
 	        builder.add("ignoreComments", ignoreComments);
 	    }
+
+	    protected JTextArea getPathArea() {
+	        return configurationDialog == null ? null : configurationDialog.getPathArea();
+	    }
+
+	    protected JTextArea getContentArea() {
+	        return configurationDialog == null ? null : configurationDialog.getContentArea();
+	    }
+
+	    @Override
+	    public boolean configure() {
+	        if (configurationDialog == null) {
+	            configurationDialog = new AssertionConfigurationDialog(getAssertion());
+	        }
+
+	        return configurationDialog.configure();
+	    }
+	    
+	    protected XBaseContainsAssertion getAssertion() {
+	        return this;
+	    }
 	    
 	    @Override
 	    protected String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)
@@ -163,5 +189,35 @@ XPathReferenceContainer{
 	        return result.toArray(new PropertyExpansion[result.size()]);
 	    }
 	    
+	    public abstract String getPathAreaTitle();
+
+	    public String getPathAreaDescription() {
+	        return "declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>";
+	    }
+
+	    public abstract String getPathAreaToolTipText() ;
+
+	    public abstract String getPathAreaBorderTitle();
+
+	    public abstract String getContentAreaToolTipText();
+
+	    public String getContentAreaBorderTitle() {
+	        return "Expected Result";
+	    }
+
+	    public boolean canAssertXmlContent() {
+	        return true;
+	    }
+
+	    public abstract String getConfigurationDialogTitle();
 	    
+	    protected void addMatchEditorActions(JXToolBar toolbar) {
+	        configurationDialog.addMatchEditorActions(toolbar);
+	    }
+	    
+	    protected void addPathEditorActions(JXToolBar toolbar) {
+	        configurationDialog.addDeclareNamespaceButton(toolbar);
+	    }
+	    
+	    public abstract void selectFromCurrent();
 }

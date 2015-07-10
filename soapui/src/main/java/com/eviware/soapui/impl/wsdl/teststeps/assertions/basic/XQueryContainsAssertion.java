@@ -416,6 +416,30 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
         }
     }
 
+    public String getPathAreaTitle() {
+        return "Specify xquery expression and expected result";
+    }
+
+    public String getPathAreaToolTipText() {
+        return "Specifies the XQuery expression to select from the message for validation";
+    }
+
+    public String getPathAreaBorderTitle() {
+        return "XQuery Expression";
+    }
+
+    public String getContentAreaToolTipText() {
+        return "Specifies the expected result of the XQuery expression";
+    }
+
+    public boolean canAssertXmlContent() {
+        return true;
+    }
+
+    public String getConfigurationDialogTitle() {
+        return "XQuery Match Configuration";
+    }
+    
     public class OkAction extends AbstractAction {
         public OkAction() {
             super("Save");
