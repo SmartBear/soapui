@@ -98,7 +98,6 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
 public class XQueryContainsAssertion extends XBaseContainsAssertion {
     private final static Logger log = Logger.getLogger(XQueryContainsAssertion.class);
 
-    private JDialog configurationDialog;
     private JTextArea pathArea;
     private JTextArea contentArea;
     private boolean configureResult; 
@@ -106,7 +105,7 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
     public static final String ID = "XQuery Match";
     public static final String LABEL = "XQuery Match";
     public static final String DESCRIPTION = "Uses an XQuery expression to select content from the target property and compares the result to an expected value. Applicable to any property containing XML.";
-    private JCheckBox allowWildcardsCheckBox;
+
 
     public XQueryContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
@@ -238,114 +237,9 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
         }
     }
 
-    public boolean configure() {
-        if (configurationDialog == null) {
-            buildConfigurationDialog();
-        }
-
-        pathArea.setText(path);
-        contentArea.setText(expectedContent);
-        allowWildcardsCheckBox.setSelected(allowWildcards);
-
-        UISupport.showDialog(configurationDialog);
-        return configureResult;
-    }
-
-
     public String getHelpURL() {
         return HelpUrls.ASSERTION_XQUERY;
     }
-
-    protected void buildConfigurationDialog() {
-        configurationDialog = new JDialog(UISupport.getMainFrame());
-        configurationDialog.setTitle("XQuery Match configuration");
-        configurationDialog.addWindowListener(new WindowAdapter() {
-            public void windowOpened(WindowEvent event) {
-                SwingUtilities.invokeLater(new Runnable() {
-                    public void run() {
-                        pathArea.requestFocusInWindow();
-                    }
-                });
-            }
-        });
-
-        JPanel contentPanel = new JPanel(new BorderLayout());
-        contentPanel.add(UISupport.buildDescription("Specify XQuery expression and expected result",
-                "declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>", null),
-                BorderLayout.NORTH);
-
-        JSplitPane splitPane = UISupport.createVerticalSplit();
-
-        JPanel pathPanel = new JPanel(new BorderLayout());
-        JXToolBar pathToolbar = UISupport.createToolbar();
-        addPathEditorActions(pathToolbar);
-
-        pathArea = new JUndoableTextArea();
-        pathArea.setToolTipText("Specifies the XQuery expression to select from the message for validation");
-
-        pathPanel.add(pathToolbar, BorderLayout.NORTH);
-        pathPanel.add(new JScrollPane(pathArea), BorderLayout.CENTER);
-
-        splitPane.setTopComponent(UISupport.addTitledBorder(pathPanel, "XQuery Expression"));
-
-        JPanel matchPanel = new JPanel(new BorderLayout());
-        JXToolBar contentToolbar = UISupport.createToolbar();
-        addMatchEditorActions(contentToolbar);
-
-        contentArea = new JUndoableTextArea();
-        contentArea.setToolTipText("Specifies the expected result of the XQuery expression");
-
-        matchPanel.add(contentToolbar, BorderLayout.NORTH);
-        matchPanel.add(new JScrollPane(contentArea), BorderLayout.CENTER);
-
-        splitPane.setBottomComponent(UISupport.addTitledBorder(matchPanel, "Expected Result"));
-        splitPane.setDividerLocation(150);
-        splitPane.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
-
-        contentPanel.add(splitPane, BorderLayout.CENTER);
-
-        ButtonBarBuilder builder = new ButtonBarBuilder();
-
-        ShowOnlineHelpAction showOnlineHelpAction = new ShowOnlineHelpAction(this.getHelpURL());
-        builder.addFixed(UISupport.createToolbarButton(showOnlineHelpAction));
-        builder.addGlue();
-
-        JButton okButton = new JButton(new OkAction());
-        builder.addFixed(okButton);
-        builder.addRelatedGap();
-        builder.addFixed(new JButton(new CancelAction()));
-
-        builder.setBorder(BorderFactory.createEmptyBorder(1, 5, 5, 5));
-
-        contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
-
-        configurationDialog.setContentPane(contentPanel);
-        configurationDialog.setSize(600, 500);
-        configurationDialog.setModal(true);
-        UISupport.initDialogActions(configurationDialog, showOnlineHelpAction, okButton);
-    }
-
-    protected void addPathEditorActions(JXToolBar toolbar) {
-        toolbar.addFixed(new JButton(new DeclareNamespacesFromCurrentAction()));
-    }
-
-    protected void addMatchEditorActions(JXToolBar toolbar) {
-        toolbar.addFixed(new JButton(new SelectFromCurrentAction()));
-        toolbar.addRelatedGap();
-        toolbar.addFixed(new JButton(new TestPathAction()));
-        allowWildcardsCheckBox = new JCheckBox("Allow Wildcards");
-
-        Dimension dim = new Dimension(100, 20);
-
-        allowWildcardsCheckBox.setSize(dim);
-        allowWildcardsCheckBox.setPreferredSize(dim);
-
-        allowWildcardsCheckBox.setOpaque(false);
-        toolbar.addRelatedGap();
-        toolbar.addFixed(allowWildcardsCheckBox);
-    }
-
-
 
     public void selectFromCurrent() {
         // XmlCursor cursor = null;
@@ -439,107 +333,6 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
     public String getConfigurationDialogTitle() {
         return "XQuery Match Configuration";
     }
-    
-    public class OkAction extends AbstractAction {
-        public OkAction() {
-            super("Save");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            setPath(pathArea.getText().trim());
-            setContent(contentArea.getText());
-            setAllowWildcards(allowWildcardsCheckBox.isSelected());
-            setConfiguration(createConfiguration());
-            configureResult = true;
-            configurationDialog.setVisible(false);
-        }
-    }
-
-    public class CancelAction extends AbstractAction {
-        public CancelAction() {
-            super("Cancel");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            configureResult = false;
-            configurationDialog.setVisible(false);
-        }
-    }
-
-    public class DeclareNamespacesFromCurrentAction extends AbstractAction {
-        public DeclareNamespacesFromCurrentAction() {
-            super("Declare");
-            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to XQuery expression");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            try {
-                String content = getAssertable().getAssertableContentAsXml();
-                if (content != null && content.trim().length() > 0) {
-                    pathArea.setText(XmlUtils.declareXPathNamespaces(content) + pathArea.getText());
-                } else if (UISupport.confirm("Declare namespaces from schema instead?", "Missing Response")) {
-                    pathArea.setText(XmlUtils.declareXPathNamespaces((WsdlInterface) getAssertable().getInterface())
-                            + pathArea.getText());
-                }
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
-    }
-
-    public class TestPathAction extends AbstractAction {
-        public TestPathAction() {
-            super("Test");
-            putValue(Action.SHORT_DESCRIPTION,
-                    "Tests the XQuery expression for the current message against the Expected Content field");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            String oldPath = getPath();
-            String oldContent = getExpectedContent();
-            boolean oldAllowWildcards = isAllowWildcards();
-
-            setPath(pathArea.getText().trim());
-            setContent(contentArea.getText());
-            setAllowWildcards(allowWildcardsCheckBox.isSelected());
-
-            try {
-                String msg = assertContent(getAssertable().getAssertableContentAsXml(), new WsdlTestRunContext(getAssertable()
-                        .getTestStep()), "Response");
-                UISupport.showInfoMessage(msg, "Success");
-            } catch (AssertionException e) {
-                UISupport.showErrorMessage(e.getMessage());
-            }
-
-            setPath(oldPath);
-            setContent(oldContent);
-            setAllowWildcards(oldAllowWildcards);
-        }
-    }
-
-    public class SelectFromCurrentAction extends AbstractAction {
-        public SelectFromCurrentAction() {
-            super("Select from current");
-            putValue(Action.SHORT_DESCRIPTION,
-                    "Selects the XQuery expression from the current message into the Expected Content field");
-        }
-
-        public void actionPerformed(ActionEvent arg0) {
-            selectFromCurrent();
-        }
-    }
-
-
-
-    public JTextArea getContentArea() {
-        return contentArea;
-    }
-
-    public JTextArea getPathArea() {
-        return pathArea;
-    }
-
-
 
     public XPathReference[] getXPathReferences() {
         List<XPathReference> result = new ArrayList<XPathReference>();
