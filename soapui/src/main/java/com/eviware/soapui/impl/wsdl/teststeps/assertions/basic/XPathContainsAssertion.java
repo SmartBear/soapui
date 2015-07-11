@@ -51,7 +51,9 @@ import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
+
 import junit.framework.ComparisonFailure;
+
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlObject;
@@ -68,6 +70,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.swing.JTextArea;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -264,6 +267,7 @@ public class XPathContainsAssertion extends XBaseContainsAssertion {
         return HelpUrls.ASSERTION_XPATH_CONTENT;
     }
 
+
     public void selectFromCurrent() {
         XmlCursor cursor = null;
 
@@ -317,94 +321,6 @@ public class XPathContainsAssertion extends XBaseContainsAssertion {
         }
     }
 
-
-
-    public String getPathAreaTitle() {
-        return "Specify xpath expression and expected result";
-    }
-
-    public String getPathAreaToolTipText() {
-        return "Specifies the XPath expression to select from the message for validation";
-    }
-
-    public String getPathAreaBorderTitle() {
-        return "XPath Expression";
-    }
-
-    public String getContentAreaToolTipText() {
-        return "Specifies the expected result of the XPath expression";
-    }
-
-    public String getContentAreaBorderTitle() {
-        return "Expected Result";
-    }
-
-    public boolean canAssertXmlContent() {
-        return true;
-    }
-
-    public String getConfigurationDialogTitle() {
-        return "XPath Match Configuration";
-    }
-
-    private final class InternalDifferenceListener implements DifferenceListener {
-        private StringList nodesToRemove = new StringList();
-
-        public int differenceFound(Difference diff) {
-            if (allowWildcards
-                    && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId()
-                    || diff.getId() == DifferenceEngine.ATTR_VALUE.getId())) {
-                if (Tools.isSimilar(diff.getControlNodeDetail().getValue(), diff.getTestNodeDetail().getValue(), '*')) {
-                    addToNodesToRemove(diff);
-                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-                }
-            } else if (allowWildcards && diff.getId() == DifferenceEngine.NODE_TYPE.getId()) {
-                if (Tools.isSimilar(diff.getControlNodeDetail().getNode().getNodeValue(), diff.getTestNodeDetail().getNode().getNodeValue(), '*')) {
-                    addToNodesToRemove(diff);
-                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-                }
-            } else if (ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID) {
-                return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
-            }
-
-            return Diff.RETURN_ACCEPT_DIFFERENCE;
-        }
-
-        private void addToNodesToRemove(Difference diff) {
-            Node node = diff.getTestNodeDetail().getNode();
-            String xp = XmlUtils.createAbsoluteXPath(node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
-                    .getParentNode());
-            nodesToRemove.add(xp);
-
-        }
-
-        public void skippedComparison(Node arg0, Node arg1) {
-
-        }
-
-        public StringList getNodesToRemove() {
-            return nodesToRemove;
-        }
-    }
-
-
-
-
-
-    public XPathReference[] getXPathReferences() {
-        List<XPathReference> result = new ArrayList<XPathReference>();
-
-        if (StringUtils.hasContent(getPath())) {
-            TestModelItem testStep = getAssertable().getTestStep();
-            TestProperty property = testStep instanceof WsdlTestRequestStep ? testStep.getProperty("Response")
-                    : testStep.getProperty("Request");
-            result.add(new XPathReferenceImpl("XPath for " + getName() + " XPathContainsAssertion in "
-                    + testStep.getName(), property, this, "path"));
-        }
-
-        return result.toArray(new XPathReference[result.size()]);
-    }
-
     public static class Factory extends AbstractTestAssertionFactory {
         public Factory() {
             super(XPathContainsAssertion.ID, XPathContainsAssertion.LABEL, XPathContainsAssertion.class);
@@ -435,5 +351,9 @@ public class XPathContainsAssertion extends XBaseContainsAssertion {
             String content = modelItem.getPropertyValue(property);
             return XmlUtils.seemsToBeXml(content);
         }
+    }
+    
+    protected  String getQueryType() {
+    	return "XPath";
     }
 }

@@ -31,7 +31,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * TODO: remove some leftover xpath strings.
+ *
  */
 public class AssertionConfigurationDialog {
     private final static Logger log = Logger.getLogger(AssertionConfigurationDialog.class);
@@ -65,6 +65,7 @@ public class AssertionConfigurationDialog {
         contentArea.setText(this.assertion.getExpectedContent());
         allowWildcardsCheckBox.setSelected(this.assertion.isAllowWildcards());
         ignoreNamespaceDifferencesCheckBox.setSelected(this.assertion.isIgnoreNamespaceDifferences());
+        ignoreCommentsCheckBox.setSelected(this.assertion.isIgnoreComments());
     }
 
 
@@ -238,7 +239,7 @@ public class AssertionConfigurationDialog {
     public class DeclareNamespacesFromCurrentAction extends AbstractAction {
         public DeclareNamespacesFromCurrentAction() {
             super("Declare");
-            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to XPath expression");
+            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to " + assertion.getQueryType() + " expression");
         }
 
         public void actionPerformed(ActionEvent arg0) {
@@ -260,7 +261,7 @@ public class AssertionConfigurationDialog {
         public TestPathAction() {
             super("Test");
             putValue(Action.SHORT_DESCRIPTION,
-                    "Tests the XPath expression for the current message against the Expected Content field");
+                    "Tests the " + assertion.getQueryType() + " expression for the current message against the Expected Content field");
         }
 
         public void actionPerformed(ActionEvent arg0) {
@@ -303,7 +304,7 @@ public class AssertionConfigurationDialog {
         public SelectFromCurrentAction() {
             super("Select from current");
             putValue(Action.SHORT_DESCRIPTION,
-                    "Selects the XPath expression from the current message into the Expected Content field");
+                    "Selects the " + assertion.getQueryType() + " expression from the current message into the Expected Content field");
         }
 
         public void actionPerformed(ActionEvent arg0) {

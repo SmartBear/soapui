@@ -62,6 +62,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XBaseContainsAssertion.InternalDifferenceListener;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -96,21 +97,14 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  */
 
 public class XQueryContainsAssertion extends XBaseContainsAssertion {
-    private final static Logger log = Logger.getLogger(XQueryContainsAssertion.class);
-
-    private JTextArea pathArea;
-    private JTextArea contentArea;
-    private boolean configureResult; 
 
     public static final String ID = "XQuery Match";
     public static final String LABEL = "XQuery Match";
     public static final String DESCRIPTION = "Uses an XQuery expression to select content from the target property and compares the result to an expected value. Applicable to any property containing XML.";
 
-
     public XQueryContainsAssertion(TestAssertionConfig assertionConfig, Assertable assertable) {
         super(assertionConfig, assertable, true, true, true, true);
     }
-
 
     public String assertContent(String response, SubmitContext context, String type) throws AssertionException {
         try {
@@ -136,6 +130,7 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
                 // this is ok.. it just means that the content to match is not xml
                 // but
                 // (hopefully) just a string
+            	e.printStackTrace();
             }
 
             if (items.length == 0) {
@@ -211,26 +206,8 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
 
     private void compareValues(String expandedContent, String expandedValue) throws Exception {
         Diff diff = new Diff(expandedContent, expandedValue);
-        diff.overrideDifferenceListener(new DifferenceListener() {
-
-            public int differenceFound(Difference diff) {
-                if (allowWildcards
-                        && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId() || diff.getId() == DifferenceEngine.ATTR_VALUE
-                        .getId())) {
-                    try {
-                        Tools.assertSimilar(diff.getControlNodeDetail().getValue(), diff.getTestNodeDetail().getValue(), '*');
-                    } catch (ComparisonFailure e) {
-                        return Diff.RETURN_ACCEPT_DIFFERENCE;
-                    }
-                }
-
-                return Diff.RETURN_ACCEPT_DIFFERENCE;
-            }
-
-            public void skippedComparison(Node arg0, Node arg1) {
-
-            }
-        });
+        InternalDifferenceListener internalDifferenceListener = new InternalDifferenceListener();
+        diff.overrideDifferenceListener(internalDifferenceListener);
 
         if (!diff.identical()) {
             throw new Exception(diff.toString());
@@ -255,9 +232,7 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
                 return;
             }
 
-            // XmlObject xml = XmlObject.Factory.parse( assertableContent );
-            XmlObject xml = XmlUtils.createXmlObject(assertableContent);
-
+            JTextArea pathArea = getPathArea();
             String txt = pathArea == null || !pathArea.isVisible() ? getPath() : pathArea.getSelectedText();
             if (txt == null) {
                 txt = pathArea == null ? "" : pathArea.getText();
@@ -267,9 +242,13 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
 
             String expandedPath = PropertyExpander.expandProperties(context, txt.trim());
 
+            JTextArea contentArea = getContentArea();
             if (contentArea != null && contentArea.isVisible()) {
                 contentArea.setText("");
             }
+
+            // XmlObject xml = XmlObject.Factory.parse( assertableContent );
+            XmlObject xml = XmlUtils.createXmlObject(assertableContent);
 
             XmlObject[] paths = xml.execQuery(expandedPath);
             if (paths.length == 0) {
@@ -310,44 +289,6 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
         }
     }
 
-    public String getPathAreaTitle() {
-        return "Specify xquery expression and expected result";
-    }
-
-    public String getPathAreaToolTipText() {
-        return "Specifies the XQuery expression to select from the message for validation";
-    }
-
-    public String getPathAreaBorderTitle() {
-        return "XQuery Expression";
-    }
-
-    public String getContentAreaToolTipText() {
-        return "Specifies the expected result of the XQuery expression";
-    }
-
-    public boolean canAssertXmlContent() {
-        return true;
-    }
-
-    public String getConfigurationDialogTitle() {
-        return "XQuery Match Configuration";
-    }
-
-    public XPathReference[] getXPathReferences() {
-        List<XPathReference> result = new ArrayList<XPathReference>();
-
-        if (StringUtils.hasContent(getPath())) {
-            TestModelItem testStep = getAssertable().getTestStep();
-            TestProperty property = testStep instanceof WsdlTestRequestStep ? testStep.getProperty("Response")
-                    : testStep.getProperty("Request");
-            result.add(new XPathReferenceImpl("XQuery for " + getName() + " XQueryContainsAssertion in "
-                    + testStep.getName(), property, this, "path"));
-        }
-
-        return result.toArray(new XPathReference[result.size()]);
-    }
-
     public static class Factory extends AbstractTestAssertionFactory {
         public Factory() {
             super(XQueryContainsAssertion.ID, XQueryContainsAssertion.LABEL, XQueryContainsAssertion.class);
@@ -380,4 +321,8 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
         }
 
     }
+    
+    protected  String getQueryType() {
+    	return "XQuery";
+    }    
 }

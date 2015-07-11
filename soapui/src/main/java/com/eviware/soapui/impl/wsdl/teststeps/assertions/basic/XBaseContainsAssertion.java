@@ -6,21 +6,34 @@ import java.util.List;
 import javax.swing.JTextArea;
 
 import org.apache.xmlbeans.XmlObject;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.DifferenceEngine;
+import org.custommonkey.xmlunit.DifferenceListener;
+import org.w3c.dom.Node;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
+import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
+import com.eviware.soapui.model.support.XPathReference;
 import com.eviware.soapui.model.support.XPathReferenceContainer;
+import com.eviware.soapui.model.support.XPathReferenceImpl;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.RequestAssertion;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.model.testsuite.TestProperty;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.Tools;
 import com.eviware.soapui.support.components.JXToolBar;
+import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
@@ -189,17 +202,31 @@ XPathReferenceContainer{
 	        return result.toArray(new PropertyExpansion[result.size()]);
 	    }
 	    
-	    public abstract String getPathAreaTitle();
+	    public String getPathAreaTitle() {
+	        return "Specify " + getQueryType() + " expression and expected result";
+	    }
 
 	    public String getPathAreaDescription() {
 	        return "declare namespaces with <code>declare namespace &lt;prefix&gt;='&lt;namespace&gt;';</code>";
 	    }
 
-	    public abstract String getPathAreaToolTipText() ;
 
-	    public abstract String getPathAreaBorderTitle();
 
-	    public abstract String getContentAreaToolTipText();
+	    public String getPathAreaToolTipText() {
+	        return "Specifies the " + getQueryType() + " expression to select from the message for validation";
+	    }
+
+	    public String getPathAreaBorderTitle() {
+	        return getQueryType() + " Expression";
+	    }
+
+	    public String getContentAreaToolTipText() {
+	        return "Specifies the expected result of the " + getQueryType() + " expression";
+	    }
+
+	    public String getConfigurationDialogTitle() {
+	        return getQueryType() + " Match Configuration";
+	    }
 
 	    public String getContentAreaBorderTitle() {
 	        return "Expected Result";
@@ -208,8 +235,6 @@ XPathReferenceContainer{
 	    public boolean canAssertXmlContent() {
 	        return true;
 	    }
-
-	    public abstract String getConfigurationDialogTitle();
 	    
 	    protected void addMatchEditorActions(JXToolBar toolbar) {
 	        configurationDialog.addMatchEditorActions(toolbar);
@@ -220,4 +245,60 @@ XPathReferenceContainer{
 	    }
 	    
 	    public abstract void selectFromCurrent();
+	    
+	    protected abstract String getQueryType();
+	    
+	    public XPathReference[] getXPathReferences() {
+	        List<XPathReference> result = new ArrayList<XPathReference>();
+
+	        if (StringUtils.hasContent(getPath())) {
+	            TestModelItem testStep = getAssertable().getTestStep();
+	            TestProperty property = testStep instanceof WsdlTestRequestStep ? testStep.getProperty("Response")
+	                    : testStep.getProperty("Request");
+	            result.add(new XPathReferenceImpl(getQueryType() + " for " + getName() + " " + getQueryType() + "ContainsAssertion in "
+	                    + testStep.getName(), property, this, "path"));
+	        }
+
+	        return result.toArray(new XPathReference[result.size()]);
+	    }
+	    
+	    protected final class InternalDifferenceListener implements DifferenceListener {
+	        private StringList nodesToRemove = new StringList();
+	 
+	        public int differenceFound(Difference diff) {
+	            if (allowWildcards
+	                    && (diff.getId() == DifferenceEngine.TEXT_VALUE.getId()
+	                    || diff.getId() == DifferenceEngine.ATTR_VALUE.getId())) {
+	                if (Tools.isSimilar(diff.getControlNodeDetail().getValue(), diff.getTestNodeDetail().getValue(), '*')) {
+	                    addToNodesToRemove(diff);
+	                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+	                }
+	            } else if (allowWildcards && diff.getId() == DifferenceEngine.NODE_TYPE.getId()) {
+	                if (Tools.isSimilar(diff.getControlNodeDetail().getNode().getNodeValue(), diff.getTestNodeDetail().getNode().getNodeValue(), '*')) {
+	                    addToNodesToRemove(diff);
+	                    return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+	                }
+	            } else if (ignoreNamespaceDifferences && diff.getId() == DifferenceEngine.NAMESPACE_PREFIX_ID) {
+	                return Diff.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+	            }
+
+	            return Diff.RETURN_ACCEPT_DIFFERENCE;
+	        }
+
+	        private void addToNodesToRemove(Difference diff) {
+	            Node node = diff.getTestNodeDetail().getNode();
+	            String xp = XmlUtils.createAbsoluteXPath(node.getNodeType() == Node.ATTRIBUTE_NODE ? node : node
+	                    .getParentNode());
+	            nodesToRemove.add(xp);
+
+	        }
+
+	        public void skippedComparison(Node arg0, Node arg1) {
+
+	        }
+
+	        public StringList getNodesToRemove() {
+	            return nodesToRemove;
+	        }
+	    }
 }
