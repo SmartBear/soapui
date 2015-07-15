@@ -16,10 +16,12 @@
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -28,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /*
  * This test covers bug reported in SOAPUI-3935
@@ -38,13 +41,18 @@ public class XQueryContainsTest {
     @Mock
     private SubmitContext context;
 
-    private String response;
-    private XQueryContainsAssertion assertion;
+    private String response, testBodyWithDifferentNSPrefix, testBodyWithComments, testResponse;
+    private XQueryContainsAssertion assertion, assertionBody;
 
     @Before
     public void setUp() throws Exception {
         response = readResource("/xqueryassertion/response.xml");
         assertion = new XQueryContainsAssertion(TestAssertionConfig.Factory.newInstance(), assertable);
+        
+        testBodyWithDifferentNSPrefix = readResource ("/xqueryassertion/testBodyWithDifferentNSPrefix.xml");
+        testBodyWithComments = readResource ("/xqueryassertion/testBodyWithComments.xml");
+        testResponse = readResource("/testResponse.xml");
+        assertionBody = new XQueryContainsAssertion(TestAssertionConfig.Factory.newInstance(), assertable);
     }
 
     private String readResource(String string) throws Exception {
@@ -92,4 +100,41 @@ public class XQueryContainsTest {
                 result);
     }
 
+    @Test(expected = AssertionException.class)
+    public void negativeIgnorePrefixTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithDifferentNSPrefix);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
+  
+    @Test
+    public void positiveIgnorePrefixTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithDifferentNSPrefix);
+        assertionBody.setIgnoreNamespaceDifferences(true);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
+    
+    @Test(expected = AssertionException.class)
+    public void negativeIgnoreCommentsTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithComments);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
+    
+    @Test
+    public void positiveIgnoreCommentsTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithComments);
+        assertionBody.setIgnoreComments(true);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
 }

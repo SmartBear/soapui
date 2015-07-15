@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abc:searchResponse xmlns:abc="urn:schema:v1:companyservice:applications:bis.bonnier.se">
+    <abc1:searchResult hitCount="131" xmlns:abc1="urn:v1:companysearch:common:bis.bonnier.se">
+		<company>
+			<companyName>Bleu Sara Bonnier, Galerie</companyName>
+			<countryRegNumber>2609296906</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>559606293</dunsNumber>
+			<postalAddress>Kommendörsgatan 12 Ii</postalAddress>
+			<postCode>11448</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>6674058</telNumberNoAreaCode>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Otto Karl Adam</companyName>
+			<countryRegNumber>3409051012</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>558982240</dunsNumber>
+			<postalAddress>Strandvägen 55</postalAddress>
+			<postCode>11523</postCode>
+			<town>Stockholm</town>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Bo Thure</companyName>
+			<countryRegNumber>3605190051</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>558989229</dunsNumber>
+			<postalAddress>Överby 6056</postalAddress>
+			<postCode>76193</postCode>
+			<town>Norrtälje</town>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>
+				Bonnier Turesson, Gunilla Marianne
+			</companyName>
+			<countryRegNumber>4310250669</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>632791500</dunsNumber>
+			<postalAddress>Mörtviksvägen 128</postalAddress>
+			<postCode>13463</postCode>
+			<town>Ingarö</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>344491</telNumberNoAreaCode>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Media</companyName>
+			<countryRegNumber>4409304047</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>352386882</dunsNumber>
+			<postalAddress>Farinv 41</postalAddress>
+			<postCode>22224</postCode>
+			<town>Lund</town>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Jan David</companyName>
+			<countryRegNumber>4912180090</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353114226</dunsNumber>
+			<postalAddress>Århammar Herrgården</postalAddress>
+			<postCode>61055</postCode>
+			<town>Stigtomta</town>
+			<telNumberAreaCodeOnly>0155</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>56016</telNumberNoAreaCode>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Skrivbyrå, Eva</companyName>
+			<countryRegNumber>5306151084</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353626765</dunsNumber>
+			<postalAddress>Surbrunnsgatan 31 B</postalAddress>
+			<postCode>19171</postCode>
+			<town>Sollentuna</town>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Gaga Bonnier Inreder</companyName>
+			<countryRegNumber>5401240063</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353702400</dunsNumber>
+			<postalAddress>Svartmangatan 17</postalAddress>
+			<postCode>11460</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>335454</telNumberNoAreaCode>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Konsult, Pontus</companyName>
+			<countryRegNumber>5403040032</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353716095</dunsNumber>
+			<postalAddress>Karlavägen 83</postalAddress>
+			<postCode>11459</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>6601676</telNumberNoAreaCode>
+			<legalForm>453</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Tidskrifter AB</companyName>
+			<countryRegNumber>5560127713</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353952831</dunsNumber>
+			<postCode>11359</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>7365300</telNumberNoAreaCode>
+			<legalForm>451</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Tidskrifter AB</companyName>
+			<country>SWE</country>
+			<dunsNumber>632483868</dunsNumber>
+			<postCode>11135</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>7365200</telNumberNoAreaCode>
+			<legalForm>0</legalForm>
+			<companyType>1301</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Tidskrifter AB</companyName>
+			<country>SWE</country>
+			<dunsNumber>632323531</dunsNumber>
+			<postCode>11353</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>6746360</telNumberNoAreaCode>
+			<legalForm>0</legalForm>
+			<companyType>1301</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Carlsen Bokförlag</companyName>
+			<country>SWE</country>
+			<dunsNumber>632331526</dunsNumber>
+			<postCode>11136</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>59895500</telNumberNoAreaCode>
+			<legalForm>0</legalForm>
+			<companyType>1301</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Finans, AB</companyName>
+			<countryRegNumber>5560269549</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353976780</dunsNumber>
+			<postCode>11390</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>7364000</telNumberNoAreaCode>
+			<legalForm>451</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Västfastigheter AB</companyName>
+			<countryRegNumber>5560294372</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353982325</dunsNumber>
+			<postCode>11134</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>6968186</telNumberNoAreaCode>
+			<legalForm>451</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Multimedia AB</companyName>
+			<countryRegNumber>5560318775</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>353988447</dunsNumber>
+			<postCode>11321</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>7364750</telNumberNoAreaCode>
+			<legalForm>451</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Multimedia AB</companyName>
+			<country>SWE</country>
+			<dunsNumber>559470583</dunsNumber>
+			<postCode>50435</postCode>
+			<town>Borås</town>
+			<telNumberAreaCodeOnly>033</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>417525</telNumberNoAreaCode>
+			<legalForm>0</legalForm>
+			<companyType>1301</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Interaktiv AB</companyName>
+			<countryRegNumber>5560414657</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>354019895</dunsNumber>
+			<postCode>11321</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>7364000</telNumberNoAreaCode>
+			<legalForm>451</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+			<companyName>Bonnier Stockholm AB</companyName>
+			<countryRegNumber>5560425877</countryRegNumber>
+			<country>SWE</country>
+			<dunsNumber>354024176</dunsNumber>
+			<postCode>11359</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>7365300</telNumberNoAreaCode>
+			<legalForm>451</legalForm>
+			<companyType>118</companyType>
+		</company>
+		<company>
+            <companyName>Bonnier Zoo Förlag AB</companyName>
+			<country>SWE</country>
+			<dunsNumber>509115320</dunsNumber>
+			<postCode>11350</postCode>
+			<town>Stockholm</town>
+			<telNumberAreaCodeOnly>08</telNumberAreaCodeOnly>
+			<telNumberNoAreaCode>4580100</telNumberNoAreaCode>
+			<legalForm>0</legalForm>
+			<companyType>1301</companyType>
+		</company>
+	</abc1:searchResult>
+</abc:searchResponse>
+

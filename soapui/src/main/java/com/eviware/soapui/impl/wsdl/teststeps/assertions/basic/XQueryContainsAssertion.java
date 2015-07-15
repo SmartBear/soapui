@@ -114,9 +114,14 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
             if (expectedContent == null) {
                 return "Missing content for XQuery Assertion";
             }
+            
+            XmlOptions options = new XmlOptions();
+            if (ignoreComments) {
+                options.setLoadStripComments();
+            }
 
-            // XmlObject xml = XmlObject.Factory.parse( response );
-            XmlObject xml = XmlUtils.createXmlObject(response);
+            // XmlObject xml = XmlObject.Factory.parse( response, options );
+            XmlObject xml = XmlUtils.createXmlObject(response, options);
             String expandedPath = PropertyExpander.expandProperties(context, path);
             XmlObject[] items = xml.execQuery(expandedPath);
 
@@ -125,7 +130,7 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
 
             try {
                 // contentObj = XmlObject.Factory.parse( expandedContent );
-                contentObj = XmlUtils.createXmlObject(expandedContent);
+                contentObj = XmlUtils.createXmlObject(expandedContent, options);
             } catch (Exception e) {
                 // this is ok.. it just means that the content to match is not xml
                 // but
@@ -137,7 +142,6 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
                 throw new Exception("Missing content for xquery [" + path + "] in " + type);
             }
 
-            XmlOptions options = new XmlOptions();
             options.setSavePrettyPrint();
             options.setSaveOuter();
 
@@ -184,7 +188,7 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
                             }
                         }
                     } else {
-                        compareValues(contentObj.xmlText(options), items[c].xmlText(options));
+                    	compareValues(contentObj.xmlText(options), items[c].xmlText(options));
                     }
 
                     break;
@@ -203,6 +207,7 @@ public class XQueryContainsAssertion extends XBaseContainsAssertion {
 
         return type + " matches content for [" + path + "]";
     }
+   
 
     private void compareValues(String expandedContent, String expandedValue) throws Exception {
         Diff diff = new Diff(expandedContent, expandedValue);
