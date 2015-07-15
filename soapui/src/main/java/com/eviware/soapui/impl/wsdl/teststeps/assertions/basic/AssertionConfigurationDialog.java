@@ -108,7 +108,7 @@ public class AssertionConfigurationDialog {
         matchPanel.add(new JScrollPane(contentArea), BorderLayout.CENTER);
 
         splitPane.setBottomComponent(UISupport.addTitledBorder(matchPanel, assertion.getContentAreaBorderTitle()));
-        splitPane.setDividerLocation(250);
+        splitPane.setDividerLocation(200);
         splitPane.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
         contentPanel.add(splitPane, BorderLayout.CENTER);
@@ -129,7 +129,7 @@ public class AssertionConfigurationDialog {
         contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
 
         configurationDialog.setContentPane(contentPanel);
-        configurationDialog.setSize(800, 500);
+        configurationDialog.setSize(800, 600);
         configurationDialog.setModal(true);
         UISupport.initDialogActions(configurationDialog, showOnlineHelpAction, okButton);
     }
