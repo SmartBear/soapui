@@ -41,7 +41,7 @@ import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.impl.swing.JTextAreaFormField;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
+import javax.swing.Action;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
