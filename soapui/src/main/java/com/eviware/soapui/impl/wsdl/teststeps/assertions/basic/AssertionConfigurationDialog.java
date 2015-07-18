@@ -42,10 +42,10 @@ public class AssertionConfigurationDialog {
     private JCheckBox ignoreCommentsCheckBox;
     protected JTextArea pathArea;
     protected JTextArea contentArea;
-    protected XBaseContainsAssertion assertion;
+    protected AbstractXmlContainsAssertion assertion;
     protected boolean configureResult;
 
-    public AssertionConfigurationDialog(XBaseContainsAssertion assertion) {
+    public AssertionConfigurationDialog(AbstractXmlContainsAssertion assertion) {
         this.assertion = assertion;
     }
 

@@ -62,7 +62,7 @@ import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.AbstractTestAssertionFactory;
-import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XBaseContainsAssertion.InternalDifferenceListener;
+import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.AbstractXmlContainsAssertion.InternalDifferenceListener;
 import com.eviware.soapui.model.TestModelItem;
 import com.eviware.soapui.model.TestPropertyHolder;
 import com.eviware.soapui.model.iface.MessageExchange;
@@ -96,7 +96,7 @@ import com.jgoodies.forms.builder.ButtonBarBuilder;
  * @author Ole.Matzura
  */
 
-public class XQueryContainsAssertion extends XBaseContainsAssertion {
+public class XQueryContainsAssertion extends AbstractXmlContainsAssertion {
 
     public static final String ID = "XQuery Match";
     public static final String LABEL = "XQuery Match";

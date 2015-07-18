@@ -81,7 +81,7 @@ import java.util.List;
  * @author Ole.Matzura
  */
 
-public class XPathContainsAssertion extends XBaseContainsAssertion {
+public class XPathContainsAssertion extends AbstractXmlContainsAssertion {
 
     public static final String ID = "XPath Match";
     public static final String LABEL = "XPath Match";

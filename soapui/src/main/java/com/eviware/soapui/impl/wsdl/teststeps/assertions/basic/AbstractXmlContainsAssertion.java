@@ -38,7 +38,7 @@ import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
 
-public abstract class XBaseContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
+public abstract class AbstractXmlContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
 XPathReferenceContainer{
 
     protected String expectedContent;
@@ -50,7 +50,7 @@ XPathReferenceContainer{
     
     protected AssertionConfigurationDialog configurationDialog;
     
-	protected XBaseContainsAssertion(TestAssertionConfig assertionConfig,
+	protected AbstractXmlContainsAssertion(TestAssertionConfig assertionConfig,
 			Assertable modelItem, boolean cloneable, boolean configurable,
 			boolean multiple, boolean requiresResponseContent) {
 		super(assertionConfig, modelItem, cloneable, configurable, multiple,
@@ -156,7 +156,7 @@ XPathReferenceContainer{
 	        return configurationDialog.configure();
 	    }
 	    
-	    protected XBaseContainsAssertion getAssertion() {
+	    protected AbstractXmlContainsAssertion getAssertion() {
 	        return this;
 	    }
 	    
