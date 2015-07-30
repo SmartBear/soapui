@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Registry of availabel XmlViews
+ * Registry of avaliable XmlViews
  *
  * @author ole.matzura
  */
@@ -47,12 +47,11 @@ public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener 
         addFactory(new HttpHtmlResponseViewFactory());
         addFactory(new RawXmlEditorFactory());
 
-        for( EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories( EditorViewFactory.class ))
-        {
-            addFactory( factory );
+        for (EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories(EditorViewFactory.class)) {
+            addFactory(factory);
         }
 
-        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener(this);
     }
 
     public void addFactory(EditorViewFactory factory) {
@@ -96,13 +95,15 @@ public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener 
 
     @Override
     public void factoryAdded(Class<?> factoryType, Object factory) {
-        if( factoryType.isAssignableFrom( EditorViewFactory.class ))
+        if (factoryType.isAssignableFrom(EditorViewFactory.class)) {
             addFactory((EditorViewFactory) factory);
+        }
     }
 
     @Override
     public void factoryRemoved(Class<?> factoryType, Object factory) {
-        if( factoryType.isAssignableFrom( EditorViewFactory.class ))
+        if (factoryType.isAssignableFrom(EditorViewFactory.class)) {
             removeFactory((EditorViewFactory) factory);
+        }
     }
 }
