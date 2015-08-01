@@ -19,6 +19,7 @@ package com.eviware.soapui.tools;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.Appender;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
@@ -74,14 +76,28 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
 
     protected void initGroovyLog() {
         if (!groovyLogInitialized) {
-            Logger logger = Logger.getLogger("groovy.log");
-
-            ConsoleAppender appender = new ConsoleAppender();
-            appender.setWriter(new OutputStreamWriter(System.out));
-            appender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-            logger.addAppender(appender);
-
+            ensureConsoleAppenderIsDefined(Logger.getLogger("groovy.log"));
             groovyLogInitialized = true;
+        }
+    }
+
+    /**
+     * Ensure there is one (and only one) ConsoleAppender instance configured for <code>logger</code>.
+     *
+     * @param logger
+     */
+    protected void ensureConsoleAppenderIsDefined(Logger logger) {
+        if (logger != null) {
+            // ensure there is a ConsoleAppender defined, adding one if necessary
+            for (Object appender : Collections.list(logger.getAllAppenders())) {
+                if (appender instanceof ConsoleAppender) {
+                    return;
+                }
+            }
+            ConsoleAppender consoleAppender = new ConsoleAppender();
+            consoleAppender.setWriter(new OutputStreamWriter(System.out));
+            consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
+            logger.addAppender(consoleAppender);
         }
     }
 
