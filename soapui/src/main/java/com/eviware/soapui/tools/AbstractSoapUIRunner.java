@@ -76,22 +76,32 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
 
     protected void initGroovyLog() {
         if (!groovyLogInitialized) {
-            Logger logger = Logger.getLogger("groovy.log");
+            ensureConsoleAppenderIsDefined(Logger.getLogger("groovy.log"));
+            groovyLogInitialized = true;
+        }
+    }
 
+    /**
+     * Ensure there is one (and only one) ConsoleAppender instance configured for <code>logger</code>.
+     *
+     * @param logger
+     */
+    protected void ensureConsoleAppenderIsDefined(Logger logger) {
+        if (logger != null) {
             // ensure there is a ConsoleAppender defined, adding one if necessary
-            boolean addAConsoleAppender = true;
+            ConsoleAppender consoleAppender = null;
             for (Object appender : Collections.list(logger.getAllAppenders())) {
                 if (appender instanceof ConsoleAppender) {
-                    addAConsoleAppender = false;
+                    consoleAppender = (ConsoleAppender) appender;
+                    break;
                 }
             }
-            if (addAConsoleAppender) {
-                ConsoleAppender appender = new ConsoleAppender();
-                appender.setWriter(new OutputStreamWriter(System.out));
-                appender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-                logger.addAppender(appender);
+            if (consoleAppender == null) {
+                consoleAppender = new ConsoleAppender();
+                consoleAppender.setWriter(new OutputStreamWriter(System.out));
+                consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
+                logger.addAppender(consoleAppender);
             }
-            groovyLogInitialized = true;
         }
     }
 
