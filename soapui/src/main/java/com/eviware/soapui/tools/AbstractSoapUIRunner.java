@@ -89,19 +89,15 @@ public abstract class AbstractSoapUIRunner implements CmdLineRunner {
     protected void ensureConsoleAppenderIsDefined(Logger logger) {
         if (logger != null) {
             // ensure there is a ConsoleAppender defined, adding one if necessary
-            ConsoleAppender consoleAppender = null;
             for (Object appender : Collections.list(logger.getAllAppenders())) {
                 if (appender instanceof ConsoleAppender) {
-                    consoleAppender = (ConsoleAppender) appender;
-                    break;
+                    return;
                 }
             }
-            if (consoleAppender == null) {
-                consoleAppender = new ConsoleAppender();
-                consoleAppender.setWriter(new OutputStreamWriter(System.out));
-                consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
-                logger.addAppender(consoleAppender);
-            }
+            ConsoleAppender consoleAppender = new ConsoleAppender();
+            consoleAppender.setWriter(new OutputStreamWriter(System.out));
+            consoleAppender.setLayout(new PatternLayout("%d{ABSOLUTE} %-5p [%c{1}] %m%n"));
+            logger.addAppender(consoleAppender);
         }
     }
 
