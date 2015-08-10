@@ -36,7 +36,7 @@ import java.util.List;
 
 public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener {
     private static EditorViewFactoryRegistry instance;
-    private List<EditorViewFactory> factories = new ArrayList<EditorViewFactory>();
+    private List<EditorViewFactory> factories = new ArrayList<>();
 
     public EditorViewFactoryRegistry() {
         // this should obviously come from a configuration file..
@@ -79,7 +79,7 @@ public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener 
     }
 
     public EditorViewFactory[] getFactoriesOfType(Class<?> type) {
-        List<EditorViewFactory> result = new ArrayList<EditorViewFactory>();
+        List<EditorViewFactory> result = new ArrayList<>();
         for (EditorViewFactory factory : factories) {
             if (Arrays.asList(factory.getClass().getInterfaces()).contains(type)) {
                 result.add(factory);

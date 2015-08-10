@@ -30,7 +30,7 @@ import java.util.List;
 
 public class InspectorRegistry implements SoapUIFactoryRegistryListener {
     private static InspectorRegistry instance;
-    private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
+    private List<InspectorFactory> factories = new ArrayList<>();
 
     private InspectorRegistry() {
 
@@ -70,7 +70,7 @@ public class InspectorRegistry implements SoapUIFactoryRegistryListener {
     }
 
     public InspectorFactory[] getFactoriesOfType(Class<?> type) {
-        List<InspectorFactory> result = new ArrayList<InspectorFactory>();
+        List<InspectorFactory> result = new ArrayList<>();
         for (InspectorFactory factory : factories) {
             if (type.isAssignableFrom(factory.getClass())) {
                 result.add(factory);
