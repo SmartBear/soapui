@@ -29,14 +29,14 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Registry of availabel XmlViews
+ * Registry of available XmlViews
  *
  * @author ole.matzura
  */
 
 public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener {
     private static EditorViewFactoryRegistry instance;
-    private List<EditorViewFactory> factories = new ArrayList<EditorViewFactory>();
+    private List<EditorViewFactory> factories = new ArrayList<>();
 
     public EditorViewFactoryRegistry() {
         // this should obviously come from a configuration file..
@@ -47,12 +47,11 @@ public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener 
         addFactory(new HttpHtmlResponseViewFactory());
         addFactory(new RawXmlEditorFactory());
 
-        for( EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories( EditorViewFactory.class ))
-        {
-            addFactory( factory );
+        for (EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories(EditorViewFactory.class)) {
+            addFactory(factory);
         }
 
-        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener(this);
     }
 
     public void addFactory(EditorViewFactory factory) {
@@ -80,7 +79,7 @@ public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener 
     }
 
     public EditorViewFactory[] getFactoriesOfType(Class<?> type) {
-        List<EditorViewFactory> result = new ArrayList<EditorViewFactory>();
+        List<EditorViewFactory> result = new ArrayList<>();
         for (EditorViewFactory factory : factories) {
             if (Arrays.asList(factory.getClass().getInterfaces()).contains(type)) {
                 result.add(factory);
@@ -96,13 +95,15 @@ public class EditorViewFactoryRegistry implements SoapUIFactoryRegistryListener 
 
     @Override
     public void factoryAdded(Class<?> factoryType, Object factory) {
-        if( factoryType.isAssignableFrom( EditorViewFactory.class ))
+        if (factoryType.isAssignableFrom(EditorViewFactory.class)) {
             addFactory((EditorViewFactory) factory);
+        }
     }
 
     @Override
     public void factoryRemoved(Class<?> factoryType, Object factory) {
-        if( factoryType.isAssignableFrom( EditorViewFactory.class ))
+        if (factoryType.isAssignableFrom(EditorViewFactory.class)) {
             removeFactory((EditorViewFactory) factory);
+        }
     }
 }
