@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Registry of avaliable XmlViews
+ * Registry of available XmlViews
  *
  * @author ole.matzura
  */
