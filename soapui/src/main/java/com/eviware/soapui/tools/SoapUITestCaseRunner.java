@@ -98,6 +98,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
     private boolean exportAll;
     private boolean ignoreErrors;
     private boolean junitReport;
+    private boolean junitReportWithProperties;
     private int exportCount;
     private int maxErrors = 5;
     private JUnitReportCollector reportCollector;
@@ -201,6 +202,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
         }
 
         setJUnitReport(cmd.hasOption("j"));
+        setJUnitReportWithProperties(cmd.hasOption("J"));
 
         if (cmd.hasOption("m")) {
             setMaxErrors(Integer.parseInt(cmd.getOptionValue("m")));
@@ -255,6 +257,7 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
         options.addOption( "M", false, "Creates a Test Run Log Report in XML format" );
         options.addOption( "f", true, "Sets the output folder to export results to" );
         options.addOption( "j", false, "Sets the output to include JUnit XML reports" );
+        options.addOption( "J", false, "Sets the output to include JUnit XML reports adding test properties to the report" );
         options.addOption( "m", false, "Sets the maximum number of TestStep errors to save for each testcase" );
         options.addOption( "a", false, "Turns on exporting of all results" );
         options.addOption( "A", false, "Turns on exporting of all results using folders instead of long filenames" );
@@ -283,6 +286,13 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
         this.junitReport = junitReport;
         if (junitReport) {
             reportCollector = createJUnitSecurityReportCollector();
+        }
+    }
+
+    public void setJUnitReportWithProperties(boolean shouldIncludePropertiesInTheReport) {
+        this.junitReportWithProperties = shouldIncludePropertiesInTheReport;
+        if (this.junitReport && junitReportWithProperties) {
+            reportCollector.setIncludeTestPropertiesInReport(junitReportWithProperties);
         }
     }
 

@@ -16,8 +16,6 @@
 
 package com.eviware.soapui.report;
 
-import java.util.List;
-
 import com.eviware.soapui.junit.Testcase;
 import com.eviware.soapui.model.security.SecurityScan;
 import com.eviware.soapui.model.testsuite.TestCase;
@@ -33,6 +31,9 @@ import com.eviware.soapui.security.result.SecurityScanResult;
 import com.eviware.soapui.security.result.SecurityTestStepResult;
 import com.eviware.soapui.security.support.SecurityTestRunListener;
 import com.eviware.soapui.support.xml.XmlUtils;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Collects Security Test results and creates JUnitReports
@@ -53,6 +54,8 @@ public class JUnitSecurityReportCollector extends JUnitReportCollector implement
         SecurityTest securityTest = ((SecurityTestRunner) testRunner).getSecurityTest();
 
         JUnitReport report = new JUnitReport();
+        report.setIncludeTestProperties(includeTestPropertiesInReport);
+
         String reportName = securityTest.getName();
         report.setTestSuiteName(reportName);
         report.setPackage(testCase.getTestSuite().getProject().getName());
@@ -62,9 +65,12 @@ public class JUnitSecurityReportCollector extends JUnitReportCollector implement
             SecurityTestStepResult secuTestStepResult = securityTest.getSecurityTestStepResultMap().get(ts);
             if (secuTestStepResult != null) {
                 for (SecurityScanResult scanResult : secuTestStepResult.getSecurityScanResultList()) {
+
+                    HashMap<String, String> testProperties = getTestPropertiesAsHashMap(securityTest);
+
                     List<SecurityScanRequestResult> resultList = scanResult.getSecurityRequestResultList();
                     Testcase secTestCase = report.addTestCase(ts.getName() + " - " + scanResult.getSecurityScanName(),
-                            scanResult.getTimeTaken());
+                            scanResult.getTimeTaken(), testProperties);
 
                     secTestCase.setPackage(testCase.getTestSuite().getProject().getName());
 
