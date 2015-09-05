@@ -65,6 +65,30 @@
                             <!-- <goal>security-test</goal> -->
                         </goals>
                     </execution>
+                    <execution>
+                        <id>groovy log 1</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <projectFile>${project.basedir}/src/test/soapui/GroovyLog-soapui-project.xml</projectFile>
+                            <testSuite>Number of ConsoleAppender on groovy.log</testSuite>
+                            <testCase>Groovy log should have at most one ConsoleAppender</testCase>
+                        </configuration>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>groovy log 2</id>
+                        <phase>test</phase>
+                        <configuration>
+                            <projectFile>${project.basedir}/src/test/soapui/GroovyLog-soapui-project.xml</projectFile>
+                            <testSuite>Number of ConsoleAppender on groovy.log</testSuite>
+                            <testCase>Groovy log should have at most one ConsoleAppender</testCase>
+                        </configuration>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

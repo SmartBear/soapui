@@ -211,6 +211,7 @@ public class XQueryContainsAssertion extends AbstractXmlContainsAssertion {
 
     private void compareValues(String expandedContent, String expandedValue) throws Exception {
         Diff diff = new Diff(expandedContent, expandedValue);
+
         InternalDifferenceListener internalDifferenceListener = new InternalDifferenceListener();
         diff.overrideDifferenceListener(internalDifferenceListener);
 

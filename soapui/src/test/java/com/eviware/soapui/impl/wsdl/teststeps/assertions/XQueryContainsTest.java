@@ -99,7 +99,23 @@ public class XQueryContainsTest {
         assertEquals("Not matched expected!", "XQuery Match matches content for [/DirectionsResponse/route[1]/leg[1]/step[1]/start_location[1]/lat[1]]",
                 result);
     }
+    
+    @Test
+    public void positiveWildcardTest() throws AssertionException {
+        assertion.setPath("for $f in //step[1]/html_instructions return $f");
+        assertion.setExpectedContent("<html_instructions>Head *</html_instructions>");
+        assertion.setAllowWildcards(true);
+        assertion.assertContent(response, context, XQueryContainsAssertion.ID);
+    }
 
+    @Test(expected = AssertionException.class)
+    public void negativeWildcardTest() throws AssertionException {
+        assertion.setPath("for $f in //step[1]/html_instructions return $f");
+        assertion.setExpectedContent("<html_instructions>ABC *</html_instructions>");
+        assertion.setAllowWildcards(true);
+        assertion.assertContent(response, context, XQueryContainsAssertion.ID);
+    }
+    
     @Test(expected = AssertionException.class)
     public void negativeIgnorePrefixTest() throws AssertionException {
         assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"

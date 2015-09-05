@@ -16,17 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.StringTokenizer;
-
-import javax.swing.Action;
-
-import org.apache.log4j.Logger;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
@@ -50,6 +39,15 @@ import com.eviware.x.form.XFormFactory;
 import com.eviware.x.form.XFormField;
 import com.eviware.x.form.XFormFieldListener;
 import com.eviware.x.impl.swing.JTextAreaFormField;
+import org.apache.log4j.Logger;
+
+import javax.swing.Action;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Invokes SoapUI TestRunner tool
@@ -71,6 +69,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
     protected static final String PRINTREPORT = "Print Report";
     protected static final String ROOTFOLDER = "Root Folder";
     protected static final String EXPORTJUNITRESULTS = "Export JUnit Results";
+    protected static final String EXPORTJUNITRESULTSWITHPROPERTIES = "Export JUnit Results with test properties";
     protected static final String EXPORTALL = "Export All";
     protected static final String ENABLEUI = "Enable UI";
     protected static final String TESTRUNNERPATH = "TestRunner Path";
@@ -177,6 +176,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
         reportForm = builder.createForm("Reports");
         reportForm.addCheckBox(PRINTREPORT, "Prints a summary report to the console");
         reportForm.addCheckBox(EXPORTJUNITRESULTS, "Exports results to a JUnit-Style report");
+        reportForm.addCheckBox(EXPORTJUNITRESULTSWITHPROPERTIES, "Exports results to a JUnit-Style report with test properties");
         reportForm.addCheckBox(EXPORTALL, "Exports all results (not only errors)");
         reportForm.addTextField(ROOTFOLDER, "Folder to export to", XForm.FieldType.FOLDER);
         reportForm.addSeparator();
@@ -350,6 +350,7 @@ public class TestRunnerAction extends AbstractToolsAction<WsdlProject> {
         builder.addBoolean(PRINTREPORT, "-r");
         builder.addBoolean(EXPORTALL, "-a");
         builder.addBoolean(EXPORTJUNITRESULTS, "-j");
+        builder.addBoolean(EXPORTJUNITRESULTSWITHPROPERTIES, "-J");
         builder.addString(ROOTFOLDER, "-f", "");
 
         if (proVersion) {
