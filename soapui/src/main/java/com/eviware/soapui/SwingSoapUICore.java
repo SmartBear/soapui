@@ -64,9 +64,6 @@ public class SwingSoapUICore extends DefaultSoapUICore {
     }
 
     public void afterStartup(Workspace workspace) {
-        for (EditorViewFactory factory : SoapUI.getFactoryRegistry().getFactories(EditorViewFactory.class)) {
-            EditorViewFactoryRegistry.getInstance().addFactory(factory);
-        }
 
         InspectorRegistry inspectorRegistry = InspectorRegistry.getInstance();
         inspectorRegistry.addFactory(new ScriptInspectorFactory());
@@ -85,9 +82,6 @@ public class SwingSoapUICore extends DefaultSoapUICore {
         inspectorRegistry.addFactory(new JMSHeaderAndPropertyInspectorFactory());
         inspectorRegistry.addFactory(new AMFHeadersInspectorFactory());
 
-        for (InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories(InspectorFactory.class)) {
-            inspectorRegistry.addFactory(factory);
-        }
         String actionsDir = System.getProperty("soapui.ext.actions");
         addExternalActions(actionsDir == null ? getRoot() == null ? "actions" : getRoot() + File.separatorChar
                 + "actions" : actionsDir, getExtensionClassLoader());

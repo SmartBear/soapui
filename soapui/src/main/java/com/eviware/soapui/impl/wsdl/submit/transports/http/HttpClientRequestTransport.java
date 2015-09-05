@@ -323,6 +323,10 @@ public class HttpClientRequestTransport implements BaseHttpRequestTransport {
                 uri.getEscapedPath(), uri.getEscapedQuery(), uri.getEscapedFragment());
         getMethod.setURI(newUri);
 
+        // Thijs Brentjens: if the location contains a different Host, due to the redirect, then use that instead of the already existing Host-header. So just set the Host header to the new host of the URI
+        
+        getMethod.setHeader("Host",uri.getHost());
+
         org.apache.http.HttpResponse response = submitRequest(getMethod, httpContext);
 
         if (isRedirectResponse(response.getStatusLine().getStatusCode())) {

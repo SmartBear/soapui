@@ -30,16 +30,15 @@ import java.util.List;
 
 public class InspectorRegistry implements SoapUIFactoryRegistryListener {
     private static InspectorRegistry instance;
-    private List<InspectorFactory> factories = new ArrayList<InspectorFactory>();
+    private List<InspectorFactory> factories = new ArrayList<>();
 
-    public InspectorRegistry() {
+    private InspectorRegistry() {
 
-        for( InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories( InspectorFactory.class ))
-        {
-            addFactory( factory );
+        for (InspectorFactory factory : SoapUI.getFactoryRegistry().getFactories(InspectorFactory.class)) {
+            addFactory(factory);
         }
 
-        SoapUI.getFactoryRegistry().addFactoryRegistryListener( this );
+        SoapUI.getFactoryRegistry().addFactoryRegistryListener(this);
     }
 
     public void addFactory(InspectorFactory factory) {
@@ -71,7 +70,7 @@ public class InspectorRegistry implements SoapUIFactoryRegistryListener {
     }
 
     public InspectorFactory[] getFactoriesOfType(Class<?> type) {
-        List<InspectorFactory> result = new ArrayList<InspectorFactory>();
+        List<InspectorFactory> result = new ArrayList<>();
         for (InspectorFactory factory : factories) {
             if (type.isAssignableFrom(factory.getClass())) {
                 result.add(factory);
@@ -83,13 +82,15 @@ public class InspectorRegistry implements SoapUIFactoryRegistryListener {
 
     @Override
     public void factoryAdded(Class<?> factoryType, Object factory) {
-        if( factoryType.isAssignableFrom(InspectorFactory.class))
+        if (factoryType.isAssignableFrom(InspectorFactory.class)) {
             addFactory((InspectorFactory) factory);
+        }
     }
 
     @Override
     public void factoryRemoved(Class<?> factoryType, Object factory) {
-        if( factoryType.isAssignableFrom(InspectorFactory.class))
+        if (factoryType.isAssignableFrom(InspectorFactory.class)) {
             removeFactory((InspectorFactory) factory);
+        }
     }
 }
