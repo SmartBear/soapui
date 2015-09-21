@@ -31,6 +31,7 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.SSLInfo;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.WsdlResponse;
+import com.eviware.soapui.impl.wsdl.submit.transports.jms.util.JMSUtils;
 import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.types.StringToStringsMap;
@@ -118,7 +119,7 @@ public class JMSResponse implements WsdlResponse {
 
     public byte[] getRawRequestData() {
         if (messageSend != null) {
-            return messageSend.toString().getBytes();
+            return JMSUtils.extractBytesFromString(messageSend.toString(), request);
         } else {
             return "".getBytes();
         }
@@ -126,7 +127,7 @@ public class JMSResponse implements WsdlResponse {
 
     public byte[] getRawResponseData() {
         if (messageReceive != null) {
-            return messageReceive.toString().getBytes();
+            return JMSUtils.extractBytesFromString(messageReceive.toString(), request);
         } else {
             return "".getBytes();
         }
