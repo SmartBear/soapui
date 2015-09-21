@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.activation.DataSource;
 
@@ -45,7 +46,7 @@ public class RestRequestDataSource implements DataSource {
     }
 
     public InputStream getInputStream() throws IOException {
-        byte[] bytes = requestContent.getBytes("UTF-8");
+        byte[] bytes = requestContent.getBytes(StandardCharsets.UTF_8);
         return new ByteArrayInputStream(bytes);
     }
 

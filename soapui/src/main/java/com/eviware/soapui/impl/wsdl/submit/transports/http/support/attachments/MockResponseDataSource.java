@@ -25,6 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * DataSource for an existing WsdlMockResponse
@@ -59,7 +60,7 @@ public class MockResponseDataSource implements DataSource {
     }
 
     public InputStream getInputStream() throws IOException {
-        byte[] bytes = responseContent.getBytes("UTF-8");
+        byte[] bytes = responseContent.getBytes(StandardCharsets.UTF_8);
         return new ByteArrayInputStream(bytes);
     }
 

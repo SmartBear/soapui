@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.activation.DataSource;
 
@@ -72,9 +73,9 @@ public final class XOPPartDataSource implements DataSource {
             if (SchemaUtils.isInstanceOf(schemaType, XmlHexBinary.type)) {
                 return new ByteArrayInputStream(Hex.decodeHex(content.toCharArray()));
             } else if (SchemaUtils.isInstanceOf(schemaType, XmlBase64Binary.type)) {
-                return new ByteArrayInputStream(Base64.decodeBase64(content.getBytes()));
+                return new ByteArrayInputStream(Base64.decodeBase64(content.getBytes(StandardCharsets.UTF_8)));
             } else if (SchemaUtils.isAnyType(schemaType)) {
-                return new ByteArrayInputStream(content.getBytes());
+                return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
             } else {
                 throw new IOException("Invalid type for XOPPartDataSource; " + schemaType.getName());
             }

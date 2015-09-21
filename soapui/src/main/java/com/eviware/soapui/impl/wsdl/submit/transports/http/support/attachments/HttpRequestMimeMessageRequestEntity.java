@@ -19,6 +19,7 @@ package com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -77,7 +78,7 @@ public class HttpRequestMimeMessageRequestEntity extends AbstractHttpEntity {
 
     public void writeTo(OutputStream arg0) throws IOException {
         try {
-            arg0.write("\r\n".getBytes());
+            arg0.write("\r\n".getBytes(StandardCharsets.UTF_8));
             ((MimeMultipart) message.getContent()).writeTo(arg0);
         } catch (Exception e) {
             SoapUI.logError(e);
