@@ -11,6 +11,7 @@
  */
 package com.eviware.soapui.plugins;
 
+import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.SoapUIActionRegistry;
 import com.eviware.soapui.support.factory.SoapUIFactoryRegistry;
@@ -87,7 +88,16 @@ public class PluginManager {
             }
         });
         if (pluginFiles != null) {
-            List<File> pluginFileList = Arrays.asList(pluginFiles);
+            List<File> pluginFileList = new ArrayList<File>();
+            PluginSignChecker pluginSignChecker = new PluginSignChecker();
+            for (File f:pluginFiles) {
+                if (!pluginSignChecker.isSigned(f)) {
+                    SoapUI.log("Plugin is not loaded since it's not signed by SmartBear Software.");
+                } else {
+                    pluginFileList.add(f);
+                }
+            }
+
             resolver = null;
             try {
                 resolver = new PluginDependencyResolver(pluginLoader, pluginFileList);
