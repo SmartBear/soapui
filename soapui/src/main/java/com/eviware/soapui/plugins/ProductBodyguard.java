@@ -120,7 +120,7 @@ public final class ProductBodyguard extends Provider {
                     }
 
                     if (!signedAsExpected) {
-                        throw new SecurityException("The plugin '" + jarFile.getName() + "' is not signed by a trusted signer");
+                        throw new SecurityException("The plugin '" + jarFile.getName() + "' is not signed by a SmartBear Software");
                     }
                 }
             }
