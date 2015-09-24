@@ -1,5 +1,7 @@
 package com.eviware.soapui.plugins;
 
+import com.eviware.soapui.SoapUI;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,14 +16,20 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
-public final class PluginSignChecker extends Provider {
+public final class ProductBodyguard extends Provider {
     private X509Certificate providerCert = null;
 
-    public PluginSignChecker() {
-        super("SoapUIOSPluginSignChecker", 1.0, "New plugin framework restriction");
+    public ProductBodyguard() {
+        super("SoapUIOSPluginSignChecker", 1.0, "The new plugin framework restriction");
     }
 
-    public final synchronized boolean isSigned(File plugin) {
+    private static X509Certificate setupProviderCert()
+            throws IOException, CertificateException {
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        return (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.cer"));
+    }
+
+    public final synchronized boolean isKnown(File plugin) {
         JarVerifier jv = new JarVerifier(plugin);
 
         try {
@@ -30,17 +38,11 @@ public final class PluginSignChecker extends Provider {
             }
             jv.verify(providerCert);
         } catch (Exception e) {
-            e.printStackTrace();
+            SoapUI.logError(e);
             return false;
         }
 
         return true;
-    }
-
-    private static X509Certificate setupProviderCert()
-            throws IOException, CertificateException {
-        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        return (X509Certificate) cf.generateCertificate(PluginSignChecker.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.cer"));
     }
 
     private class JarVerifier {
@@ -50,7 +52,7 @@ public final class PluginSignChecker extends Provider {
             try {
                 jarFile = new JarFile(jarURL);
             } catch (IOException e) {
-                e.printStackTrace();
+                SoapUI.logError(e);
             }
         }
 
@@ -70,11 +72,11 @@ public final class PluginSignChecker extends Provider {
                 throw se;
             }
 
-            Vector<JarEntry> entriesVec = new Vector<JarEntry>();
+            Vector<JarEntry> entriesVec = new Vector<>();
 
             Manifest man = jarFile.getManifest();
             if (man == null) {
-                throw new SecurityException("The provider is not signed");
+                throw new SecurityException("The plugin '" + jarFile.getName() + "' is not signed");
             }
 
             byte[] buffer = new byte[8192];
@@ -82,65 +84,49 @@ public final class PluginSignChecker extends Provider {
 
             while (entries.hasMoreElements()) {
                 JarEntry je = (JarEntry) entries.nextElement();
-
                 if (je.isDirectory()) {
                     continue;
                 }
                 entriesVec.addElement(je);
-                InputStream is = jarFile.getInputStream(je);
 
-                // Read in each jar entry. A security exception will
-                // be thrown if a signature/digest check fails.
+                InputStream is = jarFile.getInputStream(je);
                 int n;
                 while ((n = is.read(buffer, 0, buffer.length)) != -1) {
-                    // Don't care
                 }
                 is.close();
             }
 
-            // Get the list of signer certificates
             Enumeration e = entriesVec.elements();
 
             while (e.hasMoreElements()) {
                 JarEntry je = (JarEntry) e.nextElement();
 
-                // Every file must be signed except files in META-INF.
                 Certificate[] certs = je.getCertificates();
                 if ((certs == null) || (certs.length == 0)) {
                     if (!je.getName().startsWith("META-INF")) {
-                        throw new SecurityException("The provider " +
-                                "has unsigned " +
-                                "class files.");
+                        throw new SecurityException("The plugin '" + jarFile.getName() + "' has unsigned class files.");
                     }
                 } else {
-                    // Check whether the file is signed by the expected
-                    // signer. The jar may be signed by multiple signers.
-                    // See if one of the signers is 'targetCert'.
                     int startIndex = 0;
                     X509Certificate[] certChain;
                     boolean signedAsExpected = false;
 
                     while ((certChain = getAChain(certs, startIndex)) != null) {
                         if (certChain[0].equals(targetCert)) {
-                            // Stop since one trusted signer is found.
                             signedAsExpected = true;
                             break;
                         }
-                        // Proceed to the next chain.
                         startIndex += certChain.length;
                     }
 
                     if (!signedAsExpected) {
-                        throw new SecurityException("The provider " +
-                                "is not signed by a " +
-                                "trusted signer");
+                        throw new SecurityException("The plugin '" + jarFile.getName() + "' is not signed by a trusted signer");
                     }
                 }
             }
         }
 
-        private X509Certificate[] getAChain(Certificate[] certs,
-                                                   int startIndex) {
+        private X509Certificate[] getAChain(Certificate[] certs, int startIndex) {
             if (startIndex > certs.length - 1) {
                 return null;
             }

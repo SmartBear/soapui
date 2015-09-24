@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -88,11 +87,11 @@ public class PluginManager {
             }
         });
         if (pluginFiles != null) {
-            List<File> pluginFileList = new ArrayList<File>();
-            PluginSignChecker pluginSignChecker = new PluginSignChecker();
+            List<File> pluginFileList = new ArrayList<>();
+            ProductBodyguard productBodyguard = new ProductBodyguard();
             for (File f:pluginFiles) {
-                if (!pluginSignChecker.isSigned(f)) {
-                    SoapUI.log("Plugin is not loaded since it's not signed by SmartBear Software.");
+                if (!productBodyguard.isKnown(f)) {
+                    SoapUI.log.warn("Plugin '" + f.getName() + "' is not loaded since it's not approved by SmartBear Software.");
                 } else {
                     pluginFileList.add(f);
                 }
