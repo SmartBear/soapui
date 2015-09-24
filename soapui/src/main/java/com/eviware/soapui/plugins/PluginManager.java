@@ -108,7 +108,7 @@ public class PluginManager {
 
             getForkJoinPool().invoke(new LoadPluginsTask(pluginFileList));
             long timeTaken = System.currentTimeMillis() - startTime;
-            log.info(pluginFiles.length + " plugins loaded in " + timeTaken + " ms");
+            log.info(pluginFileList.size() + " plugins loaded in " + timeTaken + " ms");
         }
     }
 
