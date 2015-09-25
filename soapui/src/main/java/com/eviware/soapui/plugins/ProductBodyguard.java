@@ -20,7 +20,7 @@ public final class ProductBodyguard extends Provider {
     private X509Certificate providerCert = null;
 
     public ProductBodyguard() {
-        super("SoapUIOSPluginSignChecker", 1.0, "The new plugin framework restriction");
+        super("SoapUIOSPluginSignChecker", 1.0, "Plugin signature validity checker");
     }
 
     private static X509Certificate setupProviderCert()

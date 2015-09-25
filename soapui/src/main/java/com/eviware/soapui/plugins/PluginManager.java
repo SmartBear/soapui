@@ -91,7 +91,7 @@ public class PluginManager {
             ProductBodyguard productBodyguard = new ProductBodyguard();
             for (File f:pluginFiles) {
                 if (!productBodyguard.isKnown(f)) {
-                    SoapUI.log.warn("Plugin '" + f.getName() + "' is not loaded since it's not approved by SmartBear Software.");
+                    SoapUI.log.warn("Plugin '" + f.getName() + "' is not loaded because it hasn't been signed by SmartBear Software.");
                 } else {
                     pluginFileList.add(f);
                 }
