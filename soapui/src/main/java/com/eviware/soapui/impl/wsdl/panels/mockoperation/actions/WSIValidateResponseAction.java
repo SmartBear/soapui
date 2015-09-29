@@ -17,7 +17,12 @@
 package com.eviware.soapui.impl.wsdl.panels.mockoperation.actions;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.*;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.AbstractToolsAction;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ArgumentBuilder;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ProcessToolRunner;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.RunnerContext;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.support.ToolHost;
+import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIAnalyzeAction;
 import com.eviware.soapui.impl.wsdl.actions.iface.tools.wsi.WSIReportPanel;
 import com.eviware.soapui.model.mock.MockRequest;
 import com.eviware.soapui.model.mock.MockResponse;
@@ -28,12 +33,25 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.types.StringToStringMap;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import com.eviware.soapui.ui.support.DefaultDesktopPanel;
+import org.apache.log4j.Logger;
 import org.wsI.testing.x2003.x03.common.AddStyleSheet;
-import org.wsI.testing.x2003.x03.log.*;
-import org.wsI.testing.x2004.x07.analyzerConfig.*;
-import org.wsI.testing.x2004.x07.analyzerConfig.LogFile.CorrelationType;
+import org.wsI.testing.x2003.x03.log.Environment;
+import org.wsI.testing.x2003.x03.log.HttpMessageEntry;
+import org.wsI.testing.x2003.x03.log.Implementation;
+import org.wsI.testing.x2003.x03.log.Log;
+import org.wsI.testing.x2003.x03.log.LogDocument;
+import org.wsI.testing.x2003.x03.log.MessageEntry;
+import org.wsI.testing.x2003.x03.log.Monitor;
+import org.wsI.testing.x2003.x03.log.NameVersionPair;
+import org.wsI.testing.x2003.x03.log.TcpMessageType;
+import org.wsI.testing.x2003.x03.analyzerConfig.AssertionResults;
+import org.wsI.testing.x2003.x03.analyzerConfig.Configuration;
+import org.wsI.testing.x2003.x03.analyzerConfig.ConfigurationDocument;
+import org.wsI.testing.x2003.x03.analyzerConfig.LogFile;
+import org.wsI.testing.x2003.x03.analyzerConfig.LogFile.CorrelationType;
+import org.wsI.testing.x2003.x03.analyzerConfig.ReportFile;
 
-import java.awt.*;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -50,15 +68,14 @@ import java.util.Map;
  */
 
 public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse> {
+    public final static Logger log = Logger.getLogger(WSIValidateResponseAction.class);
     private String configFile;
     private File logFile;
     private String wsiDir;
+    private String profile;
 
     public WSIValidateResponseAction() {
-        super("Check WS-I Compliance", "Validates the current request/response againt the WS-I Basic Profile");
-        // putValue( Action.ACCELERATOR_KEY, UISupport.getKeyStroke( "alt W" ));
-
-        // setEnabled( request != null && request.getMockResult() != null );
+        super("Check WS-I Compliance", "Validates the current request/response against the WS-I Basic Profile");
     }
 
     protected void generate(StringToStringMap values, ToolHost toolHost, MockResponse modelItem) throws Exception {
@@ -68,7 +85,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
         }
 
         wsiDir = SoapUI.getSettings().getString(WSISettings.WSI_LOCATION,
-                System.getProperty("wsi.dir", System.getenv("WSI_HOME")));
+                System.getProperty(WSIAnalyzeAction.WSI_DIR_PROP_NAME, System.getenv(WSIAnalyzeAction.WSI_HOME_ENV_VAR_NAME)));
         if (wsiDir == null) {
             UISupport.showErrorMessage("WSI Test Tools directory must be set in global preferences");
             return;
@@ -81,13 +98,15 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
             }
         }
 
+        profile = SoapUI.getSettings().getString(WSISettings.PROFILE_TYPE, WSISettings.BASIC_PROFILE_10_TAD);
+
         ProcessBuilder builder = new ProcessBuilder();
 
-        File reportFile = File.createTempFile("wsi-report", ".xml");
+        File reportFile = File.createTempFile(WSIAnalyzeAction.WSI_REPORT_NAME, WSIAnalyzeAction.XML_EXTENSION);
 
         ArgumentBuilder args = buildArgs(reportFile, modelItem);
         builder.command(args.getArgs());
-        builder.directory(new File(wsiDir + File.separatorChar + "java" + File.separatorChar + "bin"));
+        builder.directory(new File(wsiDir));
 
         toolHost.run(new WSIProcessToolRunner(builder, reportFile, modelItem));
     }
@@ -98,14 +117,10 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
         Settings settings = modelItem.getSettings();
 
         ArgumentBuilder builder = new ArgumentBuilder(new StringToStringMap());
-        builder.startScript("Analyzer", ".bat", ".sh");
-
+        builder.startScript(wsiDir + File.separator +
+                        (profile.equals(WSISettings.BASIC_PROFILE_10_TAD)?WSIAnalyzeAction.ANALYZER_V10_NAME:WSIAnalyzeAction.ANALYZER_V11_NAME),
+                WSIAnalyzeAction.WIN_BATCH_FILE_EXTENSION, WSIAnalyzeAction.UNIX_BATCH_FILE_EXTENSION);
         builder.addArgs("-config", file.getAbsolutePath());
-
-        // add this to command-line due to bug in wsi-tools (?)
-        if (settings.getBoolean(WSISettings.ASSERTION_DESCRIPTION)) {
-            builder.addArgs("-assertionDescription", "true");
-        }
 
         return builder;
     }
@@ -118,7 +133,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
         addMonitorConfig(log);
         addMessageConfig(log, modelItem);
 
-        logFile = File.createTempFile("wsi-analyzer-log", ".xml");
+        logFile = File.createTempFile("wsi-analyzer-log", WSIAnalyzeAction.XML_EXTENSION);
         logDoc.save(logFile);
         return logFile;
     }
@@ -131,8 +146,9 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
 
         config.setVerbose(settings.getBoolean(WSISettings.VERBOSE));
         AssertionResults results = config.addNewAssertionResults();
-        results.setType(AssertionResults.Type.Enum.forString(settings.getString(WSISettings.RESULTS_TYPE,
-                AssertionResults.Type.ONLY_FAILED.toString())));
+        /*results.setType(AssertionResults.Type.Enum.forString(settings.getString(WSISettings.RESULTS_TYPE,
+                AssertionResults.Type.ONLY_FAILED.toString())));*/
+        results.setType(AssertionResults.Type.Enum.forString(WSIAnalyzeAction.ALL_RESULT_TYPE));
 
         results.setMessageEntry(settings.getBoolean(WSISettings.MESSAGE_ENTRY));
         results.setFailureMessage(settings.getBoolean(WSISettings.FAILURE_MESSAGE));
@@ -143,32 +159,19 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
         report.setReplace(true);
 
         AddStyleSheet stylesheet = report.addNewAddStyleSheet();
-        stylesheet.setHref(".\\..\\common\\Profiles\\SSBP10_BP11_TAD.xml");
+        stylesheet.setHref(WSIAnalyzeAction.PROFILES_DIR_RELATED_PATH + profile);
         stylesheet.setType("text/xsl");
         stylesheet.setAlternate(false);
 
-        config.setTestAssertionsFile("../../common/profiles/SSBP10_BP11_TAD.xml");
+        config.setTestAssertionsFile(WSIAnalyzeAction.PROFILES_DIR_RELATED_PATH + profile);
 
         LogFile logFileConfig = config.addNewLogFile();
         logFileConfig.setStringValue(logFile.getAbsolutePath());
         logFileConfig.setCorrelationType(CorrelationType.ENDPOINT);
 
-		/*
-         * WsdlInterface iface = (WsdlInterface)
-		 * modelItem.getOperation().getInterface();
-		 * 
-		 * WsdlReferenceConfig wsdlRef = config.addNewWsdlReference();
-		 * wsdlRef.setWsdlURI( iface.getWsdlDefinition() );
-		 * WsdlElementReferenceConfig wsdlElement = wsdlRef.addNewWsdlElement();
-		 * wsdlElement.setType( WsdlElementTypeConfig.BINDING );
-		 * wsdlElement.setStringValue( iface.getBindingName().getLocalPart() );
-		 * wsdlElement.setNamespace( iface.getBindingName().getNamespaceURI() );
-		 * wsdlRef.setServiceLocation( modelItem.getEndpoint() );
-		 */
-
         configFile = configDoc.toString();
 
-        File file = File.createTempFile("wsi-analyzer-config", ".xml");
+        File file = File.createTempFile(WSIAnalyzeAction.WSI_ANALYZER_CONFIG, WSIAnalyzeAction.XML_EXTENSION);
 
         configDoc.save(file);
         return file;
@@ -226,18 +229,6 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
         logFileConf.setLocation("report.xml");
         logFileConf.setReplace(true);
 
-		/*
-		 * ArrayOfRedirectConfig mintConf = conf.addNewManInTheMiddle();
-		 * RedirectConfig redirect = mintConf.addNewRedirect();
-		 * redirect.setListenPort( 9999 ); redirect.setMaxConnections( 10 );
-		 * redirect.setReadTimeoutSeconds( 10 );
-		 * 
-		 * URL endpoint = new URL( modelItem.getEndpoint()); if(
-		 * endpoint.getPort() > 0 ) redirect.setSchemeAndHostPort(
-		 * endpoint.getHost() + ":" + endpoint.getPort()); else
-		 * redirect.setSchemeAndHostPort( endpoint.getHost() );
-		 */
-
         Environment env = monitor.addNewEnvironment();
         NameVersionPair osConf = env.addNewOperatingSystem();
         osConf.setName("Windows");
@@ -285,21 +276,34 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
         }
 
         public String getDescription() {
-            return "Running WSI Analysis tools..";
+            return "Running WSI Analysis tools...";
         }
 
         protected void afterRun(int exitCode, RunnerContext context) {
             try {
                 if (exitCode == 0 && context.getStatus() == RunnerContext.RunnerStatus.FINISHED) {
-                    WSIReportPanel panel = new WSIReportPanel(reportFile, configFile, logFile, true);
+                    WSIReportPanel panel = new WSIReportPanel(WSIAnalyzeAction.transformReport(reportFile), configFile, logFile, true);
                     panel.setPreferredSize(new Dimension(600, 400));
 
                     UISupport.showDesktopPanel(new DefaultDesktopPanel("WS-I Report",
-                            "WS-I Report for validation of messages in MockResponse [" + modelItem.getName() + "]", panel));
+                            "WS-I Report for validation of messages in VirtResponse [" + modelItem.getName() + "]", panel));
+                } else {
+                    ProcessBuilder processBuilder = getBuilders()[0];
+                    List<String> programAndArgs = processBuilder.command();
+                    log.error("WSI checking failed. Exit code " + new Integer(exitCode).toString() + ". Command line: " + getCommandDetails(programAndArgs));
                 }
             } catch (Exception e) {
                 UISupport.showErrorMessage(e);
             }
+        }
+
+        private String getCommandDetails (List<String> command){
+            String str = "";
+            for (String entity: command){
+                str += entity + " ";
+            }
+
+            return str;
         }
 
         public boolean showLog() {
@@ -308,7 +312,7 @@ public class WSIValidateResponseAction extends AbstractToolsAction<MockResponse>
 
         @Override
         protected void beforeProcess(ProcessBuilder processBuilder, RunnerContext context) {
-            processBuilder.environment().put("WSI_HOME", wsiDir);
+            processBuilder.environment().put(WSIAnalyzeAction.WSI_HOME_ENV_VAR_NAME, wsiDir);
         }
     }
 }
