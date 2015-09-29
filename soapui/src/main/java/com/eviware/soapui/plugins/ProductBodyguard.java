@@ -26,7 +26,7 @@ public final class ProductBodyguard extends Provider {
     private static X509Certificate setupProviderCert()
             throws IOException, CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        return (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/pubkey_smartbear_codesigning-fromjks.key"));
+        return (X509Certificate) cf.generateCertificate(ProductBodyguard.class.getResourceAsStream("/com/eviware/soapui/plugins/PublicKey.key"));
     }
 
     public final synchronized boolean isKnown(File plugin) {
