@@ -901,7 +901,7 @@ if (Util.isMacOS()) {
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDir}/wsi-test-tools/java/bin</string>
+                              <string>${installer:rootInstallDir}${installer:FILE_SEPARATOR}wsi-test-tools</string>
                             </object>
                           </void>
                         </array>
