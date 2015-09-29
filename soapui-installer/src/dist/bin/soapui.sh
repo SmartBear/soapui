@@ -33,7 +33,7 @@ SOAPUI_CLASSPATH=$SOAPUI_HOME/bin/${project.src.artifactId}-${project.version}.j
 
 export SOAPUI_CLASSPATH
 
-JAVA_OPTS="-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=40 -XX:MaxHeapFreeRatio=70 -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin -splash:SoapUI-Spashscreen.png"
+JAVA_OPTS="-Xms128m -Xmx1024m -XX:MinHeapFreeRatio=20 -XX:MaxHeapFreeRatio=40 -Dsoapui.properties=soapui.properties -Dsoapui.home=$SOAPUI_HOME/bin -splash:SoapUI-Spashscreen.png"
 JFXRTPATH=`java -cp $SOAPUI_CLASSPATH com.eviware.soapui.tools.JfxrtLocator`
 SOAPUI_CLASSPATH=$JFXRTPATH:$SOAPUI_CLASSPATH
 
