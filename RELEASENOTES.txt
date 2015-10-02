@@ -1,4 +1,27 @@
-﻿# SoapUI Open Source 5.2
+﻿# SoapUI Open Source 5.2.1
+
+#### Released 2015-10-02 ####
+
+* A new bundled SwaggerHub plugin that helps you easily import Swagger API definitions from SwaggerHub to your project and to export your APIs to SwaggerHub. (SOAPUIOS-152)
+  For information on SwaggerHub, see http://smartbear.com/product/swaggerhub/overview/.
+  More information on the plugin is available at https://github.com/SmartBear/readyapi-swaggerhub-plugin.
+
+* More efficient memory usage. (SOAPUIOS-154)
+
+* A new feature by Stanislaw Wozniak (a GitHub user with the nickname sponte): The test runner has a new setting that commands SoapUI to export test case properties to JUnit-style reports. You can find the new “Export JUnit Results with test properties” check box on the Reports tab of the dialog, in which you specify the test runner's properties before the run. To enable this functionality from the command line, use the new -J command-line argument. (SOAPUIOS-156)
+
+* A bug fix by Marc Paquette (marcpa00 in GitHub): Earlier versions of SoapUI doubled messages sent to the console log from Groovy code. Marc has fixed this. (SOAPUIOS-157)
+
+Many thanks to Stanislaw and Marc for their efforts!
+
+*  More bug fixes:
+    - The UXM AlertSite plugin did not add the "Monitor APIs" item to the product’s menu. (SOAPUIOS-166)
+    - An error ("Access mode for wsi-test-tools scripts couldn't be set") could occur when installing the product on Linux. (SOAPUIOS-161)
+    - Running WS-I Compliance for a SOAP service could cause an exception. (SOAPUIOS-158)
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.2
 
 #### Released 2015-07-02 ####
 
