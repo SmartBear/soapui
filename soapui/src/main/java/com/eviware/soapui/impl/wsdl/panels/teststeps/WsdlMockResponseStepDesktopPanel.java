@@ -139,7 +139,10 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
 
     @Override
     protected void createToolbar(JXToolBar toolbar) {
-        toolbar.addUnrelatedGap();
+        
+        super.createToolbar(toolbar);
+    	
+    	toolbar.addUnrelatedGap();
         toolbar.addFixed(new JLabel("Path"));
         toolbar.addRelatedGap();
         pathField = new JTextField(getModelItem().getPath(), 15);
