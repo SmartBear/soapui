@@ -190,7 +190,7 @@ public interface HelpUrls {
     public static final String TESTSUITELIST_HELP_URL = "/Functional-Testing/project-testsuites-tab.html";
     public static final String TESTSUITE_HELP_URL = "/Functional-Testing/structuring-and-running-tests.html";
     public static final String TRANSFERSTEPEDITOR_HELP_URL = "/Functional-Testing/transferring-property-values.html";
-    public static final String TRIAL_URL = "/Downloads/download-soapui-pro-trial.html";
+    public static final String TRIAL_URL = "/Downloads/download-soapui-pro-trial.html?utm_source=soapui&utm_medium=inproductupgrade&utm_campaign=protrial";
 
     public static final String UPDATE_INTERFACE_HELP_URL = "/soap-and-wsdl/wsdl-refactoring.html";
     public static final String USERGUIDE_HELP_URL = "/getting-started/help-in-soapui/help-in-soapui.html";

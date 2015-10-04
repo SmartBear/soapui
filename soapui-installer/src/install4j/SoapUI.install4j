@@ -901,7 +901,7 @@ if (Util.isMacOS()) {
                         <array class="java.io.File" length="1">
                           <void index="0">
                             <object class="java.io.File">
-                              <string>${installer:rootInstallDir}/wsi-test-tools/java/bin</string>
+                              <string>${installer:rootInstallDir}${installer:FILE_SEPARATOR}wsi-test-tools</string>
                             </object>
                           </void>
                         </array>
@@ -1039,38 +1039,44 @@ if (Util.isMacOS()) {
                         <string>64</string>
                       </void>
                       <void property="vmOptions">
-                        <array class="java.lang.String" length="11">
+                        <array class="java.lang.String" length="13">
                           <void index="0">
-                            <string>-Xms128m</string>
+                            <string>-XX:MinHeapFreeRatio=20</string>
                           </void>
                           <void index="1">
-                            <string>-Xmx${installer:xmx}m</string>
+                            <string>-XX:MaxHeapFreeRatio=40</string>
                           </void>
                           <void index="2">
-                            <string>-Dsoapui.properties=soapui.properties</string>
+                            <string>-Xms128m</string>
                           </void>
                           <void index="3">
-                            <string>-Dsoapui.home=${installer:rootInstallDir}/bin</string>
+                            <string>-Xmx${installer:xmx}m</string>
                           </void>
                           <void index="4">
-                            <string>-Dsoapui.ext.libraries=${installer:rootInstallDir}/bin/ext</string>
+                            <string>-Dsoapui.properties=soapui.properties</string>
                           </void>
                           <void index="5">
-                            <string>-Dsoapui.ext.listeners=${installer:rootInstallDir}/bin/listeners</string>
+                            <string>-Dsoapui.home=${installer:rootInstallDir}/bin</string>
                           </void>
                           <void index="6">
-                            <string>-Dsoapui.ext.actions=${installer:rootInstallDir}/bin/actions</string>
+                            <string>-Dsoapui.ext.libraries=${installer:rootInstallDir}/bin/ext</string>
                           </void>
                           <void index="7">
-                            <string>-Dwsi.dir=${installer:rootInstallDir}/wsi-test-tools</string>
+                            <string>-Dsoapui.ext.listeners=${installer:rootInstallDir}/bin/listeners</string>
                           </void>
                           <void index="8">
-                            <string>-Djava.library.path=${installer:rootInstallDir}/bin</string>
+                            <string>-Dsoapui.ext.actions=${installer:rootInstallDir}/bin/actions</string>
                           </void>
                           <void index="9">
-                            <string>-Djava.util.Arrays.useLegacyMergeSort=true</string>
+                            <string>-Dwsi.dir=${installer:rootInstallDir}/wsi-test-tools</string>
                           </void>
                           <void index="10">
+                            <string>-Djava.library.path=${installer:rootInstallDir}/bin</string>
+                          </void>
+                          <void index="11">
+                            <string>-Djava.util.Arrays.useLegacyMergeSort=true</string>
+                          </void>
+                          <void index="12">
                             <string>-splash:SoapUI-Spashscreen.png</string>
                           </void>
                         </array>
