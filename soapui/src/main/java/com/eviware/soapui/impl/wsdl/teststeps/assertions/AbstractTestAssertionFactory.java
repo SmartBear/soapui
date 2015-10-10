@@ -68,7 +68,7 @@ public abstract class AbstractTestAssertionFactory implements TestAssertionFacto
     }
 
     public boolean canAssert(Assertable assertable) {
-        List<?> classes = Arrays.asList(assertionClass.getInterfaces());
+    	List<?> classes = ClassUtils.getSuperInterfaces(assertionClass);
 
         List<Class<?>> classList = ClassUtils.getImplementedAndExtendedClasses(assertable);
         if (!targetClasses.isEmpty() && Collections.disjoint(classList, targetClasses)) {

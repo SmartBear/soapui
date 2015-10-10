@@ -27,7 +27,23 @@ public class ClassUtils {
         return result;
     }
 
-    private static void addImplementedAndExtendedClasses(Class<?> clazz, ArrayList<Class<?>> result) {
+    public static List<Class<?>> getSuperInterfaces(Class clazz) {
+        ArrayList<Class<?>> result = new ArrayList<Class<?>>();
+        addImplementedSuperInterfaces(clazz, result);
+        return result;
+    }
+    
+    private static void addImplementedSuperInterfaces(Class clazz, ArrayList<Class<?>> result) {
+		addImplementedInterfaces(clazz, result);
+		
+		Class<?> superclass = clazz.getSuperclass();
+		
+		if (superclass != null) {
+			addImplementedSuperInterfaces(superclass, result);
+		}		
+	}
+
+	private static void addImplementedAndExtendedClasses(Class<?> clazz, ArrayList<Class<?>> result) {
         result.add(clazz);
         // result.addAll( Arrays.asList( clazz.getInterfaces() ));
         addImplementedInterfaces(clazz, result);
