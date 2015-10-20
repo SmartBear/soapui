@@ -583,7 +583,7 @@
         <profile>
             <id>javafx.dependency</id>
             <activation>
-                <jdk>[1.6,1.8)</jdk>
+                <jdk>[1.6,1.8]</jdk>
             </activation>
             <dependencies>
                 <dependency>
