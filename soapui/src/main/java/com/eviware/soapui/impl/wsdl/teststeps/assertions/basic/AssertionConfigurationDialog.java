@@ -34,7 +34,7 @@ import java.awt.event.WindowEvent;
  *
  */
 public class AssertionConfigurationDialog {
-    private final static Logger log = Logger.getLogger(XPathContainsAssertion.class);
+    private final static Logger log = Logger.getLogger(AssertionConfigurationDialog.class);
 
     protected JDialog configurationDialog;
     private JCheckBox allowWildcardsCheckBox;
@@ -42,10 +42,10 @@ public class AssertionConfigurationDialog {
     private JCheckBox ignoreCommentsCheckBox;
     protected JTextArea pathArea;
     protected JTextArea contentArea;
-    protected XPathContainsAssertion assertion;
+    protected AbstractXmlContainsAssertion assertion;
     protected boolean configureResult;
 
-    public AssertionConfigurationDialog(XPathContainsAssertion assertion) {
+    public AssertionConfigurationDialog(AbstractXmlContainsAssertion assertion) {
         this.assertion = assertion;
     }
 
@@ -65,6 +65,7 @@ public class AssertionConfigurationDialog {
         contentArea.setText(this.assertion.getExpectedContent());
         allowWildcardsCheckBox.setSelected(this.assertion.isAllowWildcards());
         ignoreNamespaceDifferencesCheckBox.setSelected(this.assertion.isIgnoreNamespaceDifferences());
+        ignoreCommentsCheckBox.setSelected(this.assertion.isIgnoreComments());
     }
 
 
@@ -107,7 +108,7 @@ public class AssertionConfigurationDialog {
         matchPanel.add(new JScrollPane(contentArea), BorderLayout.CENTER);
 
         splitPane.setBottomComponent(UISupport.addTitledBorder(matchPanel, assertion.getContentAreaBorderTitle()));
-        splitPane.setDividerLocation(250);
+        splitPane.setDividerLocation(200);
         splitPane.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
         contentPanel.add(splitPane, BorderLayout.CENTER);
@@ -128,7 +129,7 @@ public class AssertionConfigurationDialog {
         contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
 
         configurationDialog.setContentPane(contentPanel);
-        configurationDialog.setSize(800, 500);
+        configurationDialog.setSize(800, 600);
         configurationDialog.setModal(true);
         UISupport.initDialogActions(configurationDialog, showOnlineHelpAction, okButton);
     }
@@ -238,7 +239,7 @@ public class AssertionConfigurationDialog {
     public class DeclareNamespacesFromCurrentAction extends AbstractAction {
         public DeclareNamespacesFromCurrentAction() {
             super("Declare");
-            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to XPath expression");
+            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to " + assertion.getQueryType() + " expression");
         }
 
         public void actionPerformed(ActionEvent arg0) {
@@ -260,7 +261,7 @@ public class AssertionConfigurationDialog {
         public TestPathAction() {
             super("Test");
             putValue(Action.SHORT_DESCRIPTION,
-                    "Tests the XPath expression for the current message against the Expected Content field");
+                    "Tests the " + assertion.getQueryType() + " expression for the current message against the Expected Content field");
         }
 
         public void actionPerformed(ActionEvent arg0) {
@@ -303,7 +304,7 @@ public class AssertionConfigurationDialog {
         public SelectFromCurrentAction() {
             super("Select from current");
             putValue(Action.SHORT_DESCRIPTION,
-                    "Selects the XPath expression from the current message into the Expected Content field");
+                    "Selects the " + assertion.getQueryType() + " expression from the current message into the Expected Content field");
         }
 
         public void actionPerformed(ActionEvent arg0) {
