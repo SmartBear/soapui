@@ -23,12 +23,12 @@ import java.util.List;
 public class ClassUtils {
     public static List<Class<?>> getImplementedAndExtendedClasses(Object obj) {
         ArrayList<Class<?>> result = new ArrayList<Class<?>>();
-        addImplementedAndExtendedClasses(obj.getClass(), result);
+        addImplementedInterfacesFromSuperClass(obj.getClass(), result);
         return result;
     }
 
     public static List<Class<?>> getSuperInterfaces(Class clazz) {
-        ArrayList<Class<?>> result = new ArrayList<Class<?>>();
+        ArrayList<Class<?>> result = new ArrayList<>();
         addImplementedSuperInterfaces(clazz, result);
         return result;
     }
@@ -43,12 +43,12 @@ public class ClassUtils {
 		}		
 	}
 
-	private static void addImplementedAndExtendedClasses(Class<?> clazz, ArrayList<Class<?>> result) {
+	private static void addImplementedInterfacesFromSuperClass(Class<?> clazz, ArrayList<Class<?>> result) {
         result.add(clazz);
         // result.addAll( Arrays.asList( clazz.getInterfaces() ));
         addImplementedInterfaces(clazz, result);
         if (clazz.getSuperclass() != null) {
-            addImplementedAndExtendedClasses(clazz.getSuperclass(), result);
+            addImplementedInterfacesFromSuperClass(clazz.getSuperclass(), result);
         }
     }
 
