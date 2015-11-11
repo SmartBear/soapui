@@ -8,9 +8,10 @@ import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestStepFactory;
 import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.plugins.SoapUIFactory;
 import com.eviware.soapui.plugins.auto.PluginTestStep;
-/*import com.google.inject.Inject;
-import com.google.inject.Injector;
-*/
+import com.eviware.soapui.support.StringUtils;
+/*
+ * import com.google.inject.Inject; import com.google.inject.Injector;
+ */
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -62,7 +63,7 @@ public class AutoTestStepFactory extends WsdlTestStepFactory implements SoapUIFa
         } catch (NoSuchMethodException e) {
             TestStepConfig config = TestStepConfig.Factory.newInstance();
             config.setType(annotation.typeName());
-            config.setName(annotation.name());
+            config.setName(StringUtils.hasContent(name) ? name : annotation.name());
             return config;
         } catch (Exception e) {
             SoapUI.logError(e);
