@@ -1,17 +1,33 @@
-# Project files
+# maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# intellij
 *.iml
 *.idea
-.settings/
+*-ide-plugin.xml
+
+# eclipse
 .classpath
 .project
-*-ide-plugin.xml
+.settings/
+test-output/
 
 # Logs
 *.log
 
-# Build folders
-target/
-
 # plugin / extension folders
 soapui/ext
 soapui/plugins
+
+# mac
+.DS_Store
+
+# windows
+Thumbs.db
