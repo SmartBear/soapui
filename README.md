@@ -13,7 +13,7 @@
 ### Prerequisite
 
 * [JDK (version 1.6 or higher)](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
-    * If you're using Java 1.6 you have download the [standalone Java FX runtime ](http://www.oracle.com/technetwork/java/javase/downloads/javafxjdk6-1728173.html) and set the `javafx.runtime.lib.jar` property in the root `pom.xml` file to the path of the `jfxrt.jar` file
+    * If you're using Java 1.6 you have download the [standalone Java FX runtime ](http://www.oracle.com/technetwork/java/javafx2-archive-download-1939373.html) and set the `javafx.runtime.lib.jar` property in the root `pom.xml` file to the path of the `jfxrt.jar` file
 * [Maven (version 3.0.0 or higher)](http://maven.apache.org/)
 * [Git (version 1.8 or higher)](http://git-scm.com)
 
