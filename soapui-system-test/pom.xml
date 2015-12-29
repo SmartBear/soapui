@@ -28,7 +28,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.16</version>
                 <configuration>
                     <systemProperties>
                         <soapui.log4j.config>${project.build.testOutputDirectory}/config/soapui-test-log4j.xml
