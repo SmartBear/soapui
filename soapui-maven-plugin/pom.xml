@@ -21,10 +21,10 @@
     </properties>
 
     <dependencies>
-		<dependency>
-			<groupId>com.smartbear.soapui</groupId>
-			<artifactId>soapui</artifactId>
-			<version>${project.version}</version>
+        <dependency>
+            <groupId>com.smartbear.soapui</groupId>
+            <artifactId>soapui</artifactId>
+            <version>${project.version}</version>
             <exclusions>
 
                 <!-- These are mainly GUI artifacts not needed in the headless test runner-->
@@ -46,41 +46,41 @@
                     <artifactId>binding</artifactId>
                 </exclusion>
             </exclusions>
-		</dependency>
-   	</dependencies>
+        </dependency>
+    </dependencies>
 
     <build>
-		<plugins>
+        <plugins>
 
             <!-- FIXME Why do we need this plugin ? -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<configuration>
-							<tasks>
-								<copy file="pom.xml"
-									tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="pom.xml"
+                                    tofile="${project.build.directory}/maven-soapui-plugin-${project.version}.pom" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<configuration>
-					<descriptors>
-						<descriptor>src/assembly/src.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptors>
+                        <descriptor>src/assembly/src.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
