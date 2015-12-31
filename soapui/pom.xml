@@ -602,7 +602,7 @@
         <profile>
             <id>javafx.dependency.jdk8</id>
             <activation>
-                <jdk>[1.8,)</jdk>
+                <jdk>1.8</jdk>
             </activation>
             <dependencies>
                 <dependency>
@@ -611,6 +611,21 @@
                     <version>${java.version}</version>
                     <scope>system</scope>
                     <systemPath>${java.home}/lib/ext/jfxrt.jar</systemPath>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>javafx.dependency.jdk9</id>
+            <activation>
+                <jdk>9</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javafx</groupId>
+                    <artifactId>jfxrt</artifactId>
+                    <version>${java.version}</version>
+                    <scope>system</scope>
+                    <systemPath>${java.home}/lib/jfxrt.jar</systemPath>
                 </dependency>
             </dependencies>
         </profile>
