@@ -17,6 +17,7 @@
 package com.eviware.soapui.support.editor.views.xml.source;
 
 import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.impl.support.http.MediaType;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -52,6 +53,7 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
+import org.mortbay.jetty.MimeTypes;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -624,6 +626,11 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
     public void setEditable(boolean enabled) {
         getComponent();
         editArea.setEditable(enabled);
+    }
+
+    @Override
+    public String getContentType() {
+        return "*/*";
     }
 
     protected ValidationError[] validateXml(String xml) {

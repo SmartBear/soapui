@@ -69,6 +69,12 @@ public class ResponseXmlDocument extends AbstractXmlDocument implements Property
         }
     }
 
+    @Override
+    public String getContentType() {
+        Response response = request.getResponse();
+        return response == null ? null : response.getContentType();
+    }
+
     public void propertyChange(PropertyChangeEvent evt) {
         if (settingResponse) {
             return;

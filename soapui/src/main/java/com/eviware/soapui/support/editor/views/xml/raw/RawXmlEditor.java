@@ -67,4 +67,8 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
 
     }
 
+    @Override
+    public String getContentType() {
+        return "application/xml";
+    }
 }

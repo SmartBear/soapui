@@ -153,6 +153,11 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
     public void setEditable(boolean enabled) {
     }
 
+    @Override
+    public String getContentType() {
+        return "text/html";
+    }
+
     public HttpRequestInterface<?> getHttpRequest() {
         return httpRequest;
     }

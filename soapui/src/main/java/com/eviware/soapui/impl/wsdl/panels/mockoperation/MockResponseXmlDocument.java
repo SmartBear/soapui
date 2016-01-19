@@ -70,6 +70,11 @@ public class MockResponseXmlDocument extends AbstractXmlDocument implements Prop
         mockResponse.setResponseContent(documentContent.getContentAsString());
     }
 
+    @Override
+    public String getContentType() {
+        return mockResponse.getContentType();
+    }
+
     public void propertyChange(PropertyChangeEvent arg0) {
         fireContentChanged();
     }

@@ -107,6 +107,17 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
         }
         if (evt.getPropertyName().equals(EditorDocument.DOCUMENT_PROPERTY)) {
             inputTabsChangeListener.refreshVisibleInspectors();
+
+            String contentType = document.getContentType();
+            if( contentType != null ) {
+                for (EditorView view : views) {
+                    if (contentType.equalsIgnoreCase(view.getContentType() )){
+                        selectView( view.getViewId() );
+                        break;
+                    }
+                }
+            }
+
         }
     }
 

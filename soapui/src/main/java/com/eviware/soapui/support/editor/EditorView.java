@@ -58,4 +58,6 @@ public interface EditorView<T extends EditorDocument> extends PropertyChangeNoti
     public String getViewId();
 
     public void requestFocus();
+
+    String getContentType();
 }

@@ -232,4 +232,9 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
     public void setEditable(boolean enabled) {
     }
 
+    @Override
+    public String getContentType() {
+        return "text/html";
+    }
+
 }

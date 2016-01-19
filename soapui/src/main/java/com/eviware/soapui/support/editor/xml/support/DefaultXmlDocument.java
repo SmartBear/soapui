@@ -68,6 +68,11 @@ public class DefaultXmlDocument extends AbstractXmlDocument {
         fireContentChanged();
     }
 
+    @Override
+    public String getContentType() {
+        return "application/xml";
+    }
+
     public void release() {
         typeSystem = null;
     }

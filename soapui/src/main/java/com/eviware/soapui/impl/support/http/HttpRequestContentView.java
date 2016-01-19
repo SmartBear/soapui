@@ -278,6 +278,11 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
         postQueryCheckBox.setEnabled(enabled);
     }
 
+    @Override
+    public String getContentType() {
+        return getRestRequest().getMediaType();
+    }
+
     public RestParamsTable getParamsTable() {
         return paramsTable;
     }

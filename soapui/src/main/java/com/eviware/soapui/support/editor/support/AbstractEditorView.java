@@ -161,4 +161,9 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
 
     public void setEditable(boolean enabled) {
     }
+
+    @Override
+    public String getContentType() {
+        return null;
+    }
 }

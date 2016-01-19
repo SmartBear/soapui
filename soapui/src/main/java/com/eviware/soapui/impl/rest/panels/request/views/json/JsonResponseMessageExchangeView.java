@@ -140,4 +140,9 @@ public class JsonResponseMessageExchangeView extends AbstractXmlEditorView<HttpR
 
     public void setEditable(boolean enabled) {
     }
+
+    @Override
+    public String getContentType() {
+        return "application/json";
+    }
 }

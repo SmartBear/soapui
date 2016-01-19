@@ -72,6 +72,12 @@ public class MockRequestXmlDocument extends AbstractXmlDocument {
         }
     }
 
+    @Override
+    public String getContentType() {
+        MockResult mockResult = mockResponse.getMockResult();
+        return String.valueOf(mockResult == null ? null : mockResult.getMockRequest().getRequestHeaders().get("Content-Type"));
+    }
+
     @Nonnull
     @Override
     public DocumentContent getDocumentContent(Format format) {
