@@ -19,7 +19,6 @@ package com.eviware.soapui.impl.rest.panels.request.views.html;
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.support.panels.AbstractHttpXmlRequestDesktopPanel.HttpResponseDocument;
 import com.eviware.soapui.impl.wsdl.monitor.JProxyServletWsdlMonitorMessageExchange;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.impl.wsdl.support.MessageExchangeModelItem;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
@@ -28,6 +27,7 @@ import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
+import com.google.common.net.MediaType;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -233,8 +233,8 @@ public class HttpHtmlMessageExchangeResponseView extends AbstractXmlEditorView<H
     }
 
     @Override
-    public String getContentType() {
-        return "text/html";
+    public boolean supportsContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("html");
     }
 
 }

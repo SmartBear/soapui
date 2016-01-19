@@ -28,6 +28,7 @@ import com.eviware.soapui.support.editor.EditorDocument;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.EditorView;
+import com.google.common.net.MediaType;
 
 /**
  * Abstract base-class to be extended by XmlViews
@@ -163,7 +164,7 @@ public abstract class AbstractEditorView<T extends EditorDocument> implements Ed
     }
 
     @Override
-    public String getContentType() {
-        return null;
+    public boolean supportsContentType(String contentType) {
+        return false;
     }
 }

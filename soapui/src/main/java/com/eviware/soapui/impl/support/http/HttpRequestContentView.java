@@ -32,6 +32,7 @@ import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.propertyexpansion.PropertyExpansionPopupListener;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
 import com.eviware.soapui.support.xml.XmlUtils;
+import com.google.common.net.MediaType;
 import net.sf.json.JSON;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 
@@ -279,8 +280,8 @@ public class HttpRequestContentView extends AbstractXmlEditorView<HttpRequestDoc
     }
 
     @Override
-    public String getContentType() {
-        return getRestRequest().getMediaType();
+    public boolean supportsContentType(String contentType ) {
+        return false;
     }
 
     public RestParamsTable getParamsTable() {

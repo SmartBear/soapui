@@ -27,6 +27,7 @@ import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
+import com.google.common.net.MediaType;
 
 public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEditorView<T> {
     private JTextArea textArea;
@@ -64,11 +65,10 @@ public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEdi
     }
 
     public void setEditable(boolean enabled) {
-
     }
 
     @Override
-    public String getContentType() {
-        return "application/xml";
+    public boolean supportsContentType(String contentType) {
+        return true;
     }
 }

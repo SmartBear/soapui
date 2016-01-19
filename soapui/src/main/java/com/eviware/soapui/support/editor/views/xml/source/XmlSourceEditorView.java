@@ -17,7 +17,6 @@
 package com.eviware.soapui.support.editor.views.xml.source;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.support.http.MediaType;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
@@ -43,6 +42,7 @@ import com.eviware.soapui.support.xml.actions.GoToLineAction;
 import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
+import com.google.common.net.MediaType;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
@@ -53,7 +53,6 @@ import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 import org.fife.ui.rtextarea.SearchContext;
 import org.fife.ui.rtextarea.SearchEngine;
-import org.mortbay.jetty.MimeTypes;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -629,8 +628,8 @@ public class XmlSourceEditorView<T extends ModelItem> extends AbstractXmlEditorV
     }
 
     @Override
-    public String getContentType() {
-        return "*/*";
+    public boolean supportsContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("xml");
     }
 
     protected ValidationError[] validateXml(String xml) {

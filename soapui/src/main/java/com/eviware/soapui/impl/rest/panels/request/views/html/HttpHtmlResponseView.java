@@ -28,6 +28,7 @@ import com.eviware.soapui.support.components.WebViewBasedBrowserComponent;
 import com.eviware.soapui.support.components.WebViewBasedBrowserComponentFactory;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
+import com.google.common.net.MediaType;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -154,8 +155,8 @@ public class HttpHtmlResponseView extends AbstractXmlEditorView<HttpResponseDocu
     }
 
     @Override
-    public String getContentType() {
-        return "text/html";
+    public boolean supportsContentType(String contentType ) {
+        return contentType.toLowerCase().endsWith("html");
     }
 
     public HttpRequestInterface<?> getHttpRequest() {

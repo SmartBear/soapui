@@ -109,15 +109,14 @@ public class Editor<T extends EditorDocument> extends JPanel implements Property
             inputTabsChangeListener.refreshVisibleInspectors();
 
             String contentType = document.getContentType();
-            if( contentType != null ) {
+            if( !getCurrentView().supportsContentType( contentType )){
                 for (EditorView view : views) {
-                    if (contentType.equalsIgnoreCase(view.getContentType() )){
-                        selectView( view.getViewId() );
+                    if (view.supportsContentType(contentType)) {
+                        selectView(view.getViewId());
                         break;
                     }
                 }
             }
-
         }
     }
 
