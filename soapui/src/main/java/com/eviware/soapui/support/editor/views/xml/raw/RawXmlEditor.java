@@ -21,13 +21,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.impl.wsdl.submit.transports.http.DocumentContent;
 import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlDocument;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
-import com.google.common.net.MediaType;
 
 public abstract class RawXmlEditor<T extends XmlDocument> extends AbstractXmlEditorView<T> {
     private JTextArea textArea;

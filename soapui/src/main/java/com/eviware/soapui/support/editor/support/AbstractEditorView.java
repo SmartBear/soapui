@@ -28,7 +28,6 @@ import com.eviware.soapui.support.editor.EditorDocument;
 import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.EditorLocationListener;
 import com.eviware.soapui.support.editor.EditorView;
-import com.google.common.net.MediaType;
 
 /**
  * Abstract base-class to be extended by XmlViews

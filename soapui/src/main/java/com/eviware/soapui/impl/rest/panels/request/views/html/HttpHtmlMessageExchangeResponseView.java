@@ -27,7 +27,6 @@ import com.eviware.soapui.support.editor.EditorLocation;
 import com.eviware.soapui.support.editor.inspectors.attachments.ContentTypeHandler;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.editor.xml.XmlEditor;
-import com.google.common.net.MediaType;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;

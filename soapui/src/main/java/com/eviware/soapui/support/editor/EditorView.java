@@ -19,7 +19,6 @@ package com.eviware.soapui.support.editor;
 import javax.swing.JComponent;
 
 import com.eviware.soapui.support.PropertyChangeNotifier;
-import com.google.common.net.MediaType;
 
 /**
  * Views available for the XmlDocument of a XmlEditor

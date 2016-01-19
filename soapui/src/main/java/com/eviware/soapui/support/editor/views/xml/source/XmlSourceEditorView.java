@@ -42,7 +42,6 @@ import com.eviware.soapui.support.xml.actions.GoToLineAction;
 import com.eviware.soapui.support.xml.actions.InsertBase64FileTextAreaAction;
 import com.eviware.soapui.support.xml.actions.LoadXmlTextAreaAction;
 import com.eviware.soapui.support.xml.actions.SaveXmlTextAreaAction;
-import com.google.common.net.MediaType;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;

@@ -25,7 +25,6 @@ import com.eviware.soapui.support.JsonUtil;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.editor.views.AbstractXmlEditorView;
 import com.eviware.soapui.support.xml.SyntaxEditorUtil;
-import com.google.common.net.MediaType;
 import net.sf.json.JSON;
 import net.sf.json.JSONException;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
