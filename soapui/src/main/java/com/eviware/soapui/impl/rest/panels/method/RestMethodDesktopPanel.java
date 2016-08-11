@@ -24,14 +24,26 @@ import com.eviware.soapui.impl.rest.panels.resource.RestParamsTable;
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
 import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JXToolBar;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.text.Document;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -45,6 +57,8 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod> {
     private boolean updatingRequest;
     private JComboBox methodCombo;
     private RestRepresentationsTable restRepresentationsTable;
+    private JUndoableTextArea sampleEditor;
+    private JSplitPane representationsSplit;
 
     public RestMethodDesktopPanel(RestMethod modelItem) {
         super(modelItem);
@@ -60,19 +74,67 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod> {
 
         tabs.addTab("Method Parameters", paramsTable);
 
+        representationsSplit = UISupport.createVerticalSplit(buildRepresentationsTable(), buildRepresentationSampleEditor());
+
+        tabs.addTab("Representations", representationsSplit);
+        representationsSplit.setDividerLocation(200);
+
+        return UISupport.createTabPanel(tabs, false);
+    }
+
+    protected RestRepresentationsTable buildRepresentationsTable() {
         restRepresentationsTable = new RestRepresentationsTable(getModelItem(), new RestRepresentation.Type[]{
                 RestRepresentation.Type.REQUEST, RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT}, false);
 
-        tabs.addTab("Representations", restRepresentationsTable);
+        restRepresentationsTable.getJTable().getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                int ix = restRepresentationsTable.getSelectedRow();
+                if (ix == -1) {
+                    sampleEditor.setText("");
+                    sampleEditor.setEnabled(false);
+                } else {
+                    RestRepresentation rep = restRepresentationsTable.getRepresentationAtRow(ix);
+                    sampleEditor.setText(rep.getSampleContent());
+                    sampleEditor.setCaretPosition(0);
+                    sampleEditor.setEnabled(true);
+                }
+            }
+        });
 
-		/*
-         * tabs.addTab("Response Representations", new RestRepresentationsTable(
-		 * getModelItem(), new RestRepresentation.Type[] {
-		 * RestRepresentation.Type.RESPONSE, RestRepresentation.Type.FAULT },
-		 * false));
-		 */
+        if (restRepresentationsTable.getJTable().getRowCount() > 0) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    restRepresentationsTable.getJTable().setRowSelectionInterval(0, 0);
+                }
+            });
+        }
 
-        return UISupport.createTabPanel(tabs, false);
+        return restRepresentationsTable;
+    }
+
+    protected JComponent buildRepresentationSampleEditor() {
+
+        sampleEditor = new JUndoableTextArea();
+        sampleEditor.getDocument().addDocumentListener(new DocumentListenerAdapter() {
+            @Override
+            public void update(Document document) {
+                int ix = restRepresentationsTable.getSelectedRow();
+                if (ix != -1) {
+                    RestRepresentation rep = restRepresentationsTable.getRepresentationAtRow(ix);
+                    rep.setSampleContent(sampleEditor.getText());
+                }
+            }
+        });
+
+        sampleEditor.setEnabled(false);
+        sampleEditor.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+
+        JScrollPane scrollPane = new JScrollPane(sampleEditor);
+        scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), "Sample Content"));
+
+        return scrollPane;
     }
 
     @Override
@@ -141,9 +203,14 @@ public class RestMethodDesktopPanel extends ModelItemDesktopPanel<RestMethod> {
             methodCombo.setSelectedItem(evt.getNewValue());
         }
 
-        if (paramsTable != null) {
-            paramsTable.refresh();
+        if (evt.getPropertyName().equals("representations")) {
+            restRepresentationsTable.refresh();
+
+            if (evt.getNewValue() != null && evt.getOldValue() == null) {
+                JTable table = restRepresentationsTable.getJTable();
+                int rowCount = table.getRowCount();
+                table.setRowSelectionInterval(rowCount - 1, rowCount - 1);
+            }
         }
     }
-
 }

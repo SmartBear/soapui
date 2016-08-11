@@ -28,10 +28,12 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -57,11 +59,19 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
         tableModel = new RepresentationsTableModel();
         representationsTable = JTableFactory.getInstance().makeJTable(tableModel);
         representationsTable.setRowHeight(18);
+        representationsTable.setRowSelectionAllowed(true);
+        representationsTable.setCellSelectionEnabled(false);
+        representationsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        representationsTable.setSelectionBackground(Color.DARK_GRAY);
 
         add(buildToolbar(), BorderLayout.NORTH);
         add(new JScrollPane(representationsTable), BorderLayout.CENTER);
 
         restMethod.addPropertyChangeListener("representations", this);
+    }
+
+    public JTable getJTable() {
+        return representationsTable;
     }
 
     protected JXToolBar buildToolbar() {
@@ -192,7 +202,10 @@ public class RestRepresentationsTable extends JPanel implements PropertyChangeLi
         }
 
         public void propertyChange(PropertyChangeEvent evt) {
-            fireTableDataChanged();
+            int row = Arrays.asList(restMethod.getRepresentations()).indexOf(evt.getSource());
+            if (row != -1) {
+                fireTableRowsUpdated(row, row);
+            }
         }
 
         public void release() {

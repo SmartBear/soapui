@@ -16,18 +16,6 @@
 
 package com.eviware.soapui.impl.rest;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.xml.namespace.QName;
-
-import com.eviware.soapui.model.iface.Request;
-import org.apache.xmlbeans.SchemaGlobalElement;
-import org.apache.xmlbeans.SchemaType;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.RestResourceRepresentationConfig;
 import com.eviware.soapui.config.RestResourceRepresentationTypeConfig;
@@ -35,8 +23,19 @@ import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSch
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
+import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
+import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.PropertyChangeNotifier;
+import org.apache.xmlbeans.SchemaGlobalElement;
+import org.apache.xmlbeans.SchemaType;
+
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RestRepresentation implements PropertyChangeNotifier, PropertyChangeListener {
     // private final RestRequest restRequest;
@@ -216,6 +215,25 @@ public class RestRepresentation implements PropertyChangeNotifier, PropertyChang
         } else {
             return "";
         }
+    }
+
+    public void setSampleContent(String sampleContent) {
+        String old = getDescription();
+
+        if (!config.isSetSampleContent()) {
+            config.addNewSampleContent();
+        }
+
+        CompressedStringSupport.setString(config.getSampleContent(), sampleContent);
+        propertyChangeSupport.firePropertyChange("sampleContent", old, sampleContent);
+    }
+
+    public String getSampleContent() {
+        if (!config.isSetSampleContent()) {
+            return null;
+        }
+
+        return CompressedStringSupport.getString(config.getSampleContent());
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

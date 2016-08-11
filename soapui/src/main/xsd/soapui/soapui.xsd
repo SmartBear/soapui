@@ -1602,6 +1602,7 @@
             <xsd:element name="params" type="tns:RestParameters"></xsd:element>
             <xsd:element name="element" type="xsd:QName"></xsd:element>
             <xsd:element name="description" type="xsd:string"></xsd:element>
+            <xsd:element name="sampleContent" type="tns:CompressedString" minOccurs="0"></xsd:element>
         </xsd:sequence>
         <xsd:attribute name="id" type="xsd:string"></xsd:attribute>
         <xsd:attribute name="type" type="tns:RestResourceRepresentationType"></xsd:attribute>

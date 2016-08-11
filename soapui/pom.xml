@@ -584,6 +584,9 @@
             <id>javafx.dependency</id>
             <activation>
                 <jdk>[1.6,1.8]</jdk>
+                <os>
+                    <family>Windows</family>
+                </os>
             </activation>
             <dependencies>
                 <dependency>
