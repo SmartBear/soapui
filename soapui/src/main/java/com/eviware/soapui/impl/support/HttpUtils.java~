@@ -54,8 +54,7 @@ public class HttpUtils {
             return endpoint;
         }
         endpoint = endpoint.trim();
-        String lowerCaseEndpoint = endpoint.toLowerCase();
-        if (!lowerCaseEndpoint.startsWith("http://") && !lowerCaseEndpoint.startsWith("https://") && !endpoint.startsWith("$")) {
+        if (!endpoint.startsWith("http://") && !endpoint.startsWith("https://") && !endpoint.startsWith("$")) {
             return "http://" + endpoint;
         }
 
@@ -108,4 +107,3 @@ public class HttpUtils {
                 escapedQuery, escapedFragment);
     }
 }
-

@@ -13,8 +13,6 @@ public class HttpUtilsTest {
     private static final String mixedCaseURLWithoutProtocol = "localhost:9001/Test/A001";
     private static final String trailingSpaceURL1 = "   http://localhost:9001/Test/A001   ";
     private static final String propertyExpansionExample = "${#Project#prop1}";
-    private static final String uppercaseURLHTTP = "HTTP://LOCALHOST:9001/TEST/A001";
-    private static final String uppercaseURLHTTPS = "HTTPS://LOCALHOST:9001/TEST/A001";
 
     @Test
     public void nullURLShouldBeReturnNull() throws Exception{
@@ -42,18 +40,7 @@ public class HttpUtilsTest {
     }
 
     @Test
-    public void entirelyUppercaseHTTPURLShouldRemainUnchanged() throws Exception {
-        assertEquals("HTTP://LOCALHOST:9001/TEST/A001", HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(uppercaseURLHTTP));
-    }
-
-    @Test
-    public void entirelyUppercaseHTTPSURLShouldRemainUnchanged() throws Exception {
-        assertEquals("HTTPS://LOCALHOST:9001/TEST/A001", HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(uppercaseURLHTTPS));
-    }
-
-    @Test
     public void propertyExpansionsShouldNotGoToLowerCaseEither() throws Exception {
         assertEquals(propertyExpansionExample, HttpUtils.completeUrlWithHttpIfProtocolIsNotHttpOrHttpsOrPropertyExpansion(propertyExpansionExample));
     }
 }
-
