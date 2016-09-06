@@ -22,7 +22,10 @@ import org.junit.Test;
 import java.io.File;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+
+import java.net.URL;
 
 public class UrlWsdlLoaderTest {
 
@@ -33,5 +36,32 @@ public class UrlWsdlLoaderTest {
 
         DefinitionCacheConfig cachedWsdl = WsdlUtils.cacheWsdl(loader);
         assertThat(cachedWsdl.sizeOfPartArray(), is(4));
+    }
+
+    @Test
+    public void urlWithoutBasicAuthentication() throws Exception {
+        URL url = new URL("http://test/test6/TestService.wsdl");
+        WsdlLoader loader = new UrlWsdlLoader(url.toString());
+
+        assertNull(loader.getUsername());
+        assertNull(loader.getPassword());
+    }
+    
+    @Test
+    public void urlWithBasicAuthentication() throws Exception {
+        URL url = new URL("http://username:password@test/test6/TestService.wsdl");
+        WsdlLoader loader = new UrlWsdlLoader(url.toString());
+        
+        assertThat(loader.getUsername(), is("username"));
+        assertThat(loader.getPassword(), is("password"));
+    }
+    
+    @Test
+    public void urlWithBasicAuthenticationAndAtSymbol() throws Exception {
+        URL url = new URL("http://username:passw@rd@test/test6/TestService.wsdl");
+        WsdlLoader loader = new UrlWsdlLoader(url.toString());
+        
+        assertThat(loader.getUsername(), is("username"));
+        assertThat(loader.getPassword(), is("passw@rd"));
     }
 }
