@@ -18,6 +18,7 @@ package com.eviware.soapui.impl.wsdl.panels.testcase.actions;
 
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
+import java.util.TreeSet;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
@@ -47,7 +48,7 @@ public class SetEndpointAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        Set<String> endpointSet = new HashSet<String>();
+        Set<String> endpointSet = new TreeSet<String>();
         Set<String> currentEndpointSet = new HashSet<String>();
 
         endpointSet.add(USE_CURRENT);
