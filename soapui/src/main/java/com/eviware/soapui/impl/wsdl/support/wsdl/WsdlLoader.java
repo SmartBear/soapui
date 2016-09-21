@@ -58,7 +58,7 @@ public abstract class WsdlLoader extends AbstractDefinitionLoader implements Wsd
                 URL u = new URL(url);
                 String authority = u.getAuthority();
                 if (authority != null) {
-                    int ix1 = authority.indexOf('@');
+                    int ix1 = authority.lastIndexOf('@');
                     int ix2 = authority.indexOf(':');
 
                     if (ix1 > ix2 && ix2 > 0) {
