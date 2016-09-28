@@ -16,6 +16,8 @@
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms.util;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 import javax.jms.BytesMessage;
@@ -107,5 +109,23 @@ public class JMSUtils {
         byte[] bytes = new byte[(int) message.getBodyLength()];
         message.readBytes(bytes);
         return bytes;
+    }
+
+    public static byte[] extractBytesFromString(String source, Request request) {
+        if (source == null || source.isEmpty()) {
+            return new byte[0];
+        }
+        final Charset charset = resolveCharset(request);
+        return source.getBytes(charset);
+    }
+
+    public static Charset resolveCharset(Request request) {
+        final Charset charset;
+        if (request == null || request.getEncoding() == null || !Charset.isSupported(request.getEncoding())) {
+            charset = StandardCharsets.UTF_8;
+        } else {
+            charset = Charset.forName(request.getEncoding());
+        }
+        return charset;
     }
 }

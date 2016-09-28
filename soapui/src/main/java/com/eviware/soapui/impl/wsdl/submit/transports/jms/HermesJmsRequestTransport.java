@@ -324,13 +324,14 @@ public class HermesJmsRequestTransport implements RequestTransport {
     private Message createBytesMessageFromText(SubmitContext submitContext, String requestContent, Session session)
             throws JMSException {
         BytesMessage bytesMessage = session.createBytesMessage();
-        bytesMessage.writeBytes(requestContent.getBytes());
+        final Request request = (Request) submitContext.getProperty(WSDL_REQUEST);
+        bytesMessage.writeBytes(JMSUtils.extractBytesFromString(requestContent, request));
         return bytesMessage;
     }
 
     private Message createTextMessageFromAttachment(SubmitContext submitContext, Request request, Session session) {
         try {
-            String content = convertStreamToString(request.getAttachments()[0].getInputStream());
+            String content = convertStreamToString(request.getAttachments()[0].getInputStream(), request);
             TextMessage textMessageSend = session.createTextMessage();
             String messageBody = PropertyExpander.expandProperties(submitContext, content);
             textMessageSend.setText(messageBody);
@@ -341,14 +342,14 @@ public class HermesJmsRequestTransport implements RequestTransport {
         return null;
     }
 
-    private String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    private String convertStreamToString(InputStream is, Request request) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is, JMSUtils.resolveCharset(request)));
         StringBuilder sb = new StringBuilder();
 
-        String line = null;
+        String line;
         try {
             while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
+                sb.append(line).append("\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -454,10 +455,10 @@ public class HermesJmsRequestTransport implements RequestTransport {
 
     @Override
     public void insertRequestFilter(RequestFilter filter, RequestFilter refFilter) {
-        int ix = filters.indexOf( refFilter );
-        if( ix == -1 )
-            filters.add( filter );
+        int ix = filters.indexOf(refFilter);
+        if (ix == -1)
+            filters.add(filter);
         else
-            filters.add( ix, filter );
+            filters.add(ix, filter);
     }
 }
