@@ -1,0 +1,122 @@
+{
+  "testSteps": [
+    {
+      "type": "DataSource",
+      "name": "The DataSource",
+      "dataSource": {
+        "dataGen": {
+          "numberOfRows": "5",
+          "dataGenerators": [
+            {
+              "type": "Date and Time",
+              "propertyName": "property1",
+              "duplicationFactor": 2,
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property2",
+              "dateTimeFormat": "HH:MM (24-hour)",
+              "generationMode": "Sequential",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z",
+              "incrementValueDay": 2,
+              "incrementValueHour": 3,
+              "incrementValueMinute": 4,
+              "incrementValueSecond": 5
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property3",
+              "dateTimeFormat": "HH:MM:SS AM/PM",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property4",
+              "dateTimeFormat": "HH:MM:SS (24-hour)",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property5",
+              "dateTimeFormat": "M/D/YYYY HH:MM:SS AM/PM",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property6",
+              "dateTimeFormat": "M/D/YYYY HH:MM:SS (24-hour)",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property7",
+              "dateTimeFormat": "M/D/YYYY",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property8",
+              "dateTimeFormat": "D Month YYYY",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property9",
+              "dateTimeFormat": "DayOfWeek D Month YYYY",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            },
+            {
+              "type": "Date and Time",
+              "propertyName": "property10",
+              "dateTimeFormat": "YYYY-MM-DDTHH:mm:ssZ (ISO-8601)",
+              "minimumValue": "2012-02-12T17:26:20Z",
+              "maximumValue": "2016-02-12T17:26:20Z"
+            }
+          ]
+        }
+      },
+      "testSteps": [
+        {
+          "type": "REST Request",
+          "method": "GET",
+          "URI": "http://google.com/",
+          "mediaType": "application/json",
+          "parameters": [
+            {
+              "name": "q",
+              "value": "${The DataSource#property1}"
+            },
+            {
+              "name": "r",
+              "value": "${The DataSource#property2}"
+            },
+            {
+              "name": "s",
+              "value": "${The DataSource#property3}"
+            }
+          ],
+          "assertions": [
+            {
+              "type": "Valid HTTP Status Codes",
+              "validStatusCodes": [
+                "200",
+                "201"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

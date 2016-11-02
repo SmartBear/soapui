@@ -1,0 +1,20 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://our.api.com/artistfacts",
+      "parameters": [
+        {"name" : "name", "value": "Madonna"}
+      ]
+    },
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://our.api.com/artistfacts",
+      "parameters": [
+        {"name" : "name", "value": "Avicii"}
+      ]
+    }
+  ]
+}

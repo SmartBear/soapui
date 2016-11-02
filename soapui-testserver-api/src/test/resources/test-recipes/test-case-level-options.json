@@ -1,0 +1,22 @@
+{
+  "searchProperties": true,
+  "maintainSession": true,
+  "abortOnError": true,
+  "failTestCaseOnError": true,
+  "discardOkResults": true,
+  "socketTimeout": "0",
+  "testCaseTimeout": 0,
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://our.api.com/artistfacts",
+      "parameters": [
+        {
+          "name": "name",
+          "value": "Madonna"
+        }
+      ]
+    }
+  ]
+}

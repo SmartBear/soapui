@@ -1,0 +1,14 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://some.domain.com/",
+      "authentication": {
+        "type": "SPNEGO/Kerberos",
+        "domain": "PhysicsDep",
+        "username": "Steve",
+        "password": "greyhole"}
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "https://api.swaggerhub.com/apis/swagger-hub/registry",
+      "assertions": [
+        {
+          "type": "Contains",
+          "token": "Foo"
+        },
+        {
+          "type": "Contains",
+          "token": "Bar"
+        }
+      ]
+    }
+  ]
+}

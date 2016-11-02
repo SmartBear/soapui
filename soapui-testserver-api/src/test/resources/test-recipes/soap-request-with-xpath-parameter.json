@@ -1,0 +1,20 @@
+{
+  "testSteps": [
+    {
+      "type": "SOAP Request",
+      "wsdl": "globalweather.wsdl",
+      "binding": "GlobalWeatherSoap12",
+      "operation": "GetWeather",
+      "parameters": [
+        {
+          "name": "CountryName",
+          "value": "Sweden"
+        },
+        {
+          "path": "//*:CityName",
+          "value": "Stockholm"
+        }
+      ]
+    }
+  ]
+}

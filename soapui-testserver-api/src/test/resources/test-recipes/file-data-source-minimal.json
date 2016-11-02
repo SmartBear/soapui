@@ -1,0 +1,17 @@
+{
+  "testSteps": [
+    {
+      "type": "DataSource",
+      "dataSource": {
+        "file": {
+          "file": "/tmp/foo.csv"
+        },
+        "properties": [
+          "prop1",
+          "prop2"
+        ]
+      },
+      "testSteps": []
+    }
+  ]
+}

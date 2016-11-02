@@ -16,15 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.eviware.x.impl.swing.SwingXFormImpl;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.RowSpec;
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionCategoryMapping;
 import com.eviware.soapui.impl.wsdl.panels.assertions.AssertionListEntry;
@@ -51,8 +42,15 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+import com.eviware.x.impl.swing.SwingXFormImpl;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
+import org.apache.xmlbeans.XmlObject;
 
 import javax.swing.JPanel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Assertion that checks for the non-existence of a specified text token in the
@@ -81,6 +79,15 @@ public class SimpleNotContainsAssertion extends WsdlMessageAssertion implements 
         token = reader.readString("token", null);
         ignoreCase = reader.readBoolean("ignoreCase", false);
         useRegEx = reader.readBoolean("useRegEx", false);
+    }
+
+    public void setUseRegEx(boolean useRegEx) {
+        this.useRegEx = useRegEx;
+        setConfiguration(createConfiguration());
+    }
+
+    public boolean isUseRegEx() {
+        return useRegEx;
     }
 
     public String internalAssertResponse(MessageExchange messageExchange, SubmitContext context)

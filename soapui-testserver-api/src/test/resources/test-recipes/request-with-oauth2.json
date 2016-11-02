@@ -1,0 +1,13 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "https://www.googleapis.com/tasks/v1/users/@me/lists",
+      "authentication": {
+        "type": "OAuth 2.0",
+        "accessToken": "ya29.8gGoTZvDr3fkRyg0rI8RcwWITJZnrbnjN_J9p39pmkUoq6rSuxnLFpRWhfrcSBO01kVv"
+      }
+    }
+  ]
+}

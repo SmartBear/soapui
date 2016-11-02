@@ -1,0 +1,10 @@
+{
+  "testSteps": [
+    {
+      "type": "SOAP Request",
+      "wsdl": "globalweather.wsdl",
+      "binding": "GlobalWeatherSoap12",
+      "operation": "GetWeather"
+    }
+  ]
+}

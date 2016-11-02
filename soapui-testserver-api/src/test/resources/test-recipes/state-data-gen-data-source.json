@@ -1,0 +1,53 @@
+{
+  "testSteps": [
+    {
+      "type": "DataSource",
+      "name": "The DataSource",
+      "dataSource": {
+        "dataGen": {
+          "numberOfRows": "5",
+          "dataGenerators": [
+            {
+              "type": "State",
+              "propertyName": "property1",
+              "duplicationFactor": 2
+            },
+            {
+              "type": "State",
+              "propertyName": "property2",
+              "nameFormat": "Abbreviated"
+            }
+          ]
+        }
+      },
+      "testSteps": [
+        {
+          "type": "REST Request",
+          "method": "GET",
+          "URI": "http://google.com/",
+          "mediaType": "application/json",
+          "parameters": [
+            {
+              "name": "q",
+              "value": "${The DataSource#property1}"
+            },
+            {
+              "name": "r",
+              "value": "${The DataSource#property2}"
+            }
+          ],
+          "assertions": [
+            {
+              "type": "Valid HTTP Status Codes",
+              "validStatusCodes": [
+                "200",
+                "201"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

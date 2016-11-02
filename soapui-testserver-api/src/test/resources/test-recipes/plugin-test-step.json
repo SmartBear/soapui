@@ -1,0 +1,15 @@
+{
+  "testSteps": [
+    {
+      "type": "MQTTPublishTestStep",
+      "name": "MQTT Test Step",
+      "configuration": {
+        "ServerURI": {
+          "property1": "1",
+          "property2": "2"
+        },
+        "CliendID" : "Client1"
+      }
+    }
+  ]
+}

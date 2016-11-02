@@ -41,6 +41,7 @@
         <module>soapui-installer</module>
         <module>soapui-maven-plugin-tester</module>
         <module>soapui-system-test</module>
+        <module>soapui-testserver-api</module>
     </modules>
 
     <build>
@@ -115,7 +116,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>1.9</version>
+                <version>1.15</version>
                 <configuration>
                     <signature>
                         <groupId>org.codehaus.mojo.signature</groupId>
@@ -124,6 +125,10 @@
                         <artifactId>java17</artifactId>
                         <version>1.0</version>
                     </signature>
+                    <ignores>
+                        <ignore>javafx.*</ignore>
+                        <ignore>netscape.javascript.*</ignore>
+                    </ignores>
                 </configuration>
                 <executions>
                     <execution>

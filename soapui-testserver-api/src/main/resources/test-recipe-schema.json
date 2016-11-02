@@ -1,0 +1,2035 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "definitions": {
+    "NonNegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "StringOrNonNegativeInteger": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "$ref": "#/definitions/NonNegativeInteger"
+        }
+      ]
+    },
+    "BooleanDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Boolean"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "format": {
+          "type": "string",
+          "enum": [
+            "True/False",
+            "Yes/No",
+            "1/0"
+          ],
+          "default": "True/False"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "StateDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "State"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "nameFormat": {
+          "type": "string",
+          "enum": [
+            "Full",
+            "Abbreviated"
+          ],
+          "default": "Full"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "IntegerDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Integer"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "generationMode": {
+          "type": "string",
+          "enum": [
+            "Random",
+            "Sequential"
+          ],
+          "default": "Random"
+        },
+        "minimumValue": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "maximumValue": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "100"
+        },
+        "incrementBy": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1",
+          "description": "Used if generationMode is Sequential, ignored if generationMode is Random."
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "RealNumberDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Real"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "generationMode": {
+          "type": "string",
+          "enum": [
+            "Random",
+            "Sequential"
+          ],
+          "default": "Random"
+        },
+        "minimumValue": {
+          "type": "number",
+          "default": "1"
+        },
+        "maximumValue": {
+          "type": "number",
+          "default": "100"
+        },
+        "decimalPlaces": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "2"
+        },
+        "incrementBy": {
+          "type": "number",
+          "default": "1",
+          "description": "Used if generationMode is Sequential, ignored if generationMode is Random."
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "DateAndTimeDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Date and Time"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "dateTimeFormat": {
+          "type": "string",
+          "enum": [
+            "HH:MM AM/PM",
+            "HH:MM (24-hour)",
+            "HH:MM:SS AM/PM",
+            "HH:MM:SS (24-hour)",
+            "M/D/YYYY HH:MM:SS AM/PM",
+            "M/D/YYYY HH:MM:SS (24-hour)",
+            "M/D/YYYY",
+            "D Month YYYY",
+            "DayOfWeek D Month YYYY",
+            "YYYY-MM-DDTHH:mm:ssZ (ISO-8601)"
+          ],
+          "default": "HH:MM AM/PM"
+        },
+        "generationMode": {
+          "type": "string",
+          "enum": [
+            "Random",
+            "Sequential"
+          ],
+          "default": "Random"
+        },
+        "minimumValue": {
+          "type": "string",
+          "default": "1984-02-12T17:26:20Z",
+          "description": "Date in ISO-8601 format."
+        },
+        "maximumValue": {
+          "type": "string",
+          "description": "Date in ISO-8601 format. Default value will be current instant."
+        },
+        "incrementValueDay": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "incrementValueHour": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "incrementValueMinute": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "incrementValueSecond": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "ValuesFromSetDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Value from Set"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "generationMode": {
+          "type": "string",
+          "enum": [
+            "Random",
+            "Sequential"
+          ],
+          "default": "Random"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "propertyName",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "UKPostCodeDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "United Kingdom Postcode"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "codeFormat": {
+          "type": "string",
+          "enum": [
+            "All",
+            "A9 9AA",
+            "A99 9AA",
+            "AA9 9AA",
+            "A9A 9AA",
+            "AA99 9AA",
+            "AA9A 9AA"
+          ],
+          "default": "All"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "USZipCodeDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "United States ZIP Code"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "codeFormat": {
+          "type": "string",
+          "enum": [
+            "All",
+            "XXXXX",
+            "XXXXX-XXXX"
+          ],
+          "default": "All"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "PhoneNumberDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Phone Number"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "numberFormat": {
+          "type": "string",
+          "enum": [
+            "XXX-XXX-XXXX",
+            "+1 XXX-XXX-XXXX",
+            "+1 (XXX)-XXX-XXXX",
+            "+X XXX-XXX-XXXX",
+            "+X (XXX)-XXX-XXXX"
+          ],
+          "default": "XXX-XXX-XXXX"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "ComputerAddressDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Computer Address"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "addressType": {
+          "type": "string",
+          "enum": [
+            "IPv4",
+            "Mac48"
+          ],
+          "default": "IPv4"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "NameDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Name"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "Any",
+            "Male",
+            "Female"
+          ],
+          "default": "Any"
+        },
+        "nameType": {
+          "type": "string",
+          "enum": [
+            "Full",
+            "FirstName",
+            "LastName"
+          ],
+          "default": "Full"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "CustomStringDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Custom String"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "value": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "StringDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "String"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        },
+        "minimumCharacters": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "5"
+        },
+        "maximumCharacters": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "10"
+        },
+        "useLetters": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "useDigits": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "useSpaces": {
+          "type": "boolean",
+          "default": "true"
+        },
+        "usePunctuationMarks": {
+          "type": "boolean",
+          "default": "true"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "CityDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "City"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "CountryDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Country"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "EmailDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "E-Mail"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "GuidDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Guid"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "SocialSecurityNumberDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Social Security Number"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "StreetAddressDataGenerator": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Street Address"
+          ]
+        },
+        "propertyName": {
+          "type": "string"
+        },
+        "duplicationFactor": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": "1"
+        }
+      },
+      "required": [
+        "type",
+        "propertyName"
+      ],
+      "additionalProperties": false
+    },
+    "OAuth2AccessTokenPosition": {
+      "type": "string",
+      "enum": [
+        "HEADER",
+        "QUERY"
+      ],
+      "default": "HEADER"
+    },
+    "ScriptAssertion": {
+      "type": "object",
+      "title": "Script Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Script Assertion"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "script": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "script"
+      ],
+      "additionalProperties": false
+    },
+    "JdbcStatusAssertion": {
+      "type": "object",
+      "title": "JDBC Status Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JDBC Status"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "JdbcTimeoutAssertion": {
+      "type": "object",
+      "title": "JDBC Timeout Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JDBC Timeout"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "timeout": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "timeout"
+      ],
+      "additionalProperties": false
+    },
+    "ValidHTTPStatusCodesAssertion": {
+      "type": "object",
+      "title": "Valid HTTP Status Codes Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Valid HTTP Status Codes"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "validStatusCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "validStatusCodes"
+      ],
+      "additionalProperties": false
+    },
+    "PluginProvidedAssertion": {
+      "type": "object",
+      "title": "Plugin Provided Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "not": {
+            "enum": [
+              "Valid HTTP Status Codes",
+              "Invalid HTTP Status Codes",
+              "Contains",
+              "Not Contains",
+              "XPath Match",
+              "XQuery Match",
+              "JsonPath Match",
+              "JsonPath Count",
+              "Script Assertion",
+              "Response SLA",
+              "JDBC Status",
+              "JDBC Timeout",
+              "Schema Compliance",
+              "SOAP Fault",
+              "Not SOAP Fault"
+            ]
+          }
+        },
+        "name": {
+          "type" : "string"
+        },
+        "configuration": {
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "InvalidHTTPStatusCodesAssertion": {
+      "type": "object",
+      "title": "Invalid HTTP Status Codes Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Invalid HTTP Status Codes"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "invalidStatusCodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "type",
+        "invalidStatusCodes"
+      ],
+      "additionalProperties": false
+    },
+    "ContainsAssertion": {
+      "type": "object",
+      "title": "Contains Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Contains"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "useRegexp": {
+          "type": "boolean"
+        },
+        "ignoreCase": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "token"
+      ],
+      "additionalProperties": false
+    },
+    "NotContainsAssertion": {
+      "type": "object",
+      "title": "Not Contains Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Not Contains"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "token": {
+          "type": "string"
+        },
+        "useRegexp": {
+          "type": "boolean"
+        },
+        "ignoreCase": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "token"
+      ],
+      "additionalProperties": false
+    },
+    "XPathMatchAssertion": {
+      "type": "object",
+      "title": "XPath Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "XPath Match"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "xpath": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        },
+        "ignoreNamespaces": {
+          "type": "boolean"
+        },
+        "ignoreComments": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "xpath",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "XQueryMatchAssertion": {
+      "type": "object",
+      "title": "XQuery Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "XQuery Match"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "xquery": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "xquery",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "JsonPathMatchAssertion": {
+      "type": "object",
+      "title": "JsonPath Match Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JsonPath Match"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "jsonPath": {
+          "type": "string"
+        },
+        "expectedContent": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "jsonPath",
+        "expectedContent"
+      ],
+      "additionalProperties": false
+    },
+    "JsonPathCountAssertion": {
+      "type": "object",
+      "title": "JsonPath Count Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JsonPath Count"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "jsonPath": {
+          "type": "string"
+        },
+        "expectedCount": {
+          "type": "string"
+        },
+        "allowWildcards": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "type",
+        "jsonPath",
+        "expectedCount"
+      ],
+      "additionalProperties": false
+    },
+    "DataSourceProperties": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ResponseSLAAssertion": {
+      "type": "object",
+      "title": "Response SLA Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Response SLA"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        },
+        "maxResponseTime": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "maxResponseTime"
+      ],
+      "additionalProperties": false
+    },
+    "SchemaComplianceAssertion": {
+      "type": "object",
+      "title": "Schema Compliance Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Schema Compliance"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SoapFaultAssertion": {
+      "type": "object",
+      "title": "SOAP Fault Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SOAP Fault"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "NotSoapFaultAssertion": {
+      "type": "object",
+      "title": "Not SOAP Fault Assertion",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Not SOAP Fault"
+          ]
+        },
+        "name": {
+          "type" : "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PropertyTransfer": {
+      "type": "object",
+      "properties": {
+        "transferName": {
+          "type": "string"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "sourceName": {
+              "type": "string"
+            },
+            "property": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pathLanguage": {
+              "type": "string",
+              "enum": [
+                "XPath",
+                "XQuery",
+                "JSONPath"
+              ],
+              "default": "XPath"
+            }
+          },
+          "required": [
+            "sourceName",
+            "property"
+          ],
+          "additionalProperties": false
+        },
+        "target": {
+          "type": "object",
+          "properties": {
+            "targetName": {
+              "type": "string"
+            },
+            "property": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "pathLanguage": {
+              "type": "string",
+              "enum": [
+                "XPath",
+                "XQuery",
+                "JSONPath"
+              ],
+              "default": "XPath"
+            }
+          },
+          "required": [
+            "targetName",
+            "property"
+          ],
+          "additionalProperties": false
+        },
+        "failTransferOnError": {
+          "type": "boolean"
+        },
+        "setNullOnMissingSource": {
+          "type": "boolean"
+        },
+        "transferTextContent": {
+          "type": "boolean"
+        },
+        "ignoreEmptyValue": {
+          "type": "boolean"
+        },
+        "transferToAll": {
+          "type": "boolean"
+        },
+        "transferChildNodes": {
+          "type": "boolean"
+        },
+        "entitizeTransferredValues": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "source",
+        "target"
+      ],
+      "additionalProperties": false
+    },
+    "GridDataSource": {
+      "type": "object",
+      "properties": {
+        "grid": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "FileDataSource": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "charset": {
+              "type": "string"
+            },
+            "separator": {
+              "type": "string",
+              "default": ","
+            },
+            "trim": {
+              "type": "boolean",
+              "default": "true"
+            },
+            "quotedValues": {
+              "type": "boolean",
+              "default": "false"
+            }
+          },
+          "required": [
+            "file"
+          ],
+          "additionalProperties": false
+        },
+        "properties": {
+          "$ref": "#/definitions/DataSourceProperties"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ExcelDataSource": {
+      "type": "object",
+      "properties": {
+        "excel": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "worksheet": {
+              "type": "string"
+            },
+            "startAtCell": {
+              "type": "string",
+              "default": "A1"
+            },
+            "ignoreEmpty": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "file"
+          ],
+          "additionalProperties": false
+        },
+        "properties": {
+          "$ref": "#/definitions/DataSourceProperties"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DataGeneratorDataSource": {
+      "type": "object",
+      "properties": {
+        "dataGen": {
+          "type": "object",
+          "properties": {
+            "numberOfRows": {
+              "type": "string",
+              "default": "10"
+            },
+            "dataGenerators": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "$ref": "#/definitions/BooleanDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/CityDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/CountryDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/EmailDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/GuidDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/SocialSecurityNumberDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/StreetAddressDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/ComputerAddressDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/NameDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/CustomStringDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/StringDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/PhoneNumberDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/StateDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/UKPostCodeDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/USZipCodeDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/IntegerDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/RealNumberDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/ValuesFromSetDataGenerator"
+                  },
+                  {
+                    "$ref": "#/definitions/DateAndTimeDataGenerator"
+                  }
+                ]
+              }
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "TestSteps": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "$ref": "#/definitions/RestRequestTestStep"
+          },
+          {
+            "$ref": "#/definitions/SoapRequestTestStep"
+          },
+          {
+            "$ref": "#/definitions/PropertyTransferTestStep"
+          },
+          {
+            "$ref": "#/definitions/GroovyScriptTestStep"
+          },
+          {
+            "$ref": "#/definitions/DataSourceTestStep"
+          },
+          {
+            "$ref": "#/definitions/JdbcRequestTestStep"
+          },
+          {
+            "$ref": "#/definitions/PluginTestStep"
+          }
+        ]
+      }
+    },
+    "SimpleAuthentication": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Basic",
+            "NTLM",
+            "SPNEGO/Kerberos"
+          ]
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "domain": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "OAuth2AccessTokenAuthentication": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "OAuth 2.0"
+          ]
+        },
+        "accessToken": {
+          "type": "string"
+        },
+        "accessTokenPosition": {
+          "$ref": "#/definitions/OAuth2AccessTokenPosition"
+        }
+      },
+      "required": [
+        "type",
+        "accessToken"
+      ],
+      "additionalProperties": false
+    },
+    "OAuth2RefreshTokenAuthentication": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "OAuth 2.0"
+          ]
+        },
+        "accessTokenUri": {
+          "type": "string"
+        },
+        "clientId": {
+          "type": "string"
+        },
+        "clientSecret": {
+          "type": "string"
+        },
+        "refreshToken": {
+          "type": "string"
+        },
+        "accessTokenPosition": {
+          "$ref": "#/definitions/OAuth2AccessTokenPosition"
+        }
+      },
+      "required": [
+        "type",
+        "accessTokenUri",
+        "clientId",
+        "clientSecret",
+        "refreshToken"
+      ],
+      "additionalProperties": false
+    },
+    "JdbcRequestTestStep": {
+      "type": "object",
+      "required": [
+        "type",
+        "driver",
+        "connectionString",
+        "sqlQuery"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "JDBC Request"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "driver": {
+          "type": "string"
+        },
+        "connectionString": {
+          "type": "string"
+        },
+        "sqlQuery": {
+          "type": "string"
+        },
+        "storedProcedure": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ScriptAssertion"
+              },
+              {
+                "$ref": "#/definitions/ContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/XPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/XQueryMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/ResponseSLAAssertion"
+              },
+              {
+                "$ref": "#/definitions/JdbcStatusAssertion"
+              },
+              {
+                "$ref": "#/definitions/JdbcTimeoutAssertion"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "PluginTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "not": {
+            "enum": [
+              "REST Request",
+              "SOAP Request",
+              "DataSource",
+              "Property Transfer",
+              "Groovy",
+              "JDBC Request"
+            ]
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "configuration": {
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type"
+      ]
+    },
+    "SoapRequestTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "SOAP Request"
+          ]
+        },
+        "wsdl": {
+          "type": "string"
+        },
+        "binding": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "URI": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "timeout": {
+          "$ref": "#/definitions/StringOrNonNegativeInteger"
+        },
+        "requestBody": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "followRedirects": {
+          "type": "boolean"
+        },
+        "entitizeParameters": {
+          "type": "boolean"
+        },
+        "authentication": {
+          "type": "object",
+          "title": "Authentication",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SimpleAuthentication"
+            }
+          ]
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ScriptAssertion"
+              },
+              {
+                "$ref": "#/definitions/ContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/ValidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/InvalidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/XPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/XQueryMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/ResponseSLAAssertion"
+              },
+              {
+                "$ref": "#/definitions/SchemaComplianceAssertion"
+              },
+              {
+                "$ref": "#/definitions/SoapFaultAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotSoapFaultAssertion"
+              },
+              {
+                "$ref": "#/definitions/PluginProvidedAssertion"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "wsdl",
+        "operation"
+      ],
+      "additionalProperties": false
+    },
+    "RestRequestTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "REST Request"
+          ]
+        },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE",
+            "HEAD",
+            "OPTIONS",
+            "TRACE",
+            "PATCH"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "URI": {
+          "type": "string"
+        },
+        "timeout": {
+          "$ref": "#/definitions/StringOrNonNegativeInteger"
+        },
+        "requestBody": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string"
+        },
+        "mediaType": {
+          "type": "string"
+        },
+        "followRedirects": {
+          "type": "boolean"
+        },
+        "entitizeParameters": {
+          "type": "boolean"
+        },
+        "postQueryString": {
+          "type": "boolean"
+        },
+        "authentication": {
+          "type": "object",
+          "title": "Authentication",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/SimpleAuthentication"
+            },
+            {
+              "$ref": "#/definitions/OAuth2AccessTokenAuthentication"
+            },
+            {
+              "$ref": "#/definitions/OAuth2RefreshTokenAuthentication"
+            }
+          ]
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "QUERY",
+                  "PATH",
+                  "MATRIX",
+                  "HEADER",
+                  "PLAIN"
+                ],
+                "default": "QUERY"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "headers": {
+          "type": "object",
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "assertions": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "$ref": "#/definitions/ScriptAssertion"
+              },
+              {
+                "$ref": "#/definitions/ContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/NotContainsAssertion"
+              },
+              {
+                "$ref": "#/definitions/ValidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/InvalidHTTPStatusCodesAssertion"
+              },
+              {
+                "$ref": "#/definitions/XPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/XQueryMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/JsonPathMatchAssertion"
+              },
+              {
+                "$ref": "#/definitions/JsonPathCountAssertion"
+              },
+              {
+                "$ref": "#/definitions/ResponseSLAAssertion"
+              },
+              {
+                "$ref": "#/definitions/PluginProvidedAssertion"
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "type",
+        "method",
+        "URI"
+      ],
+      "additionalProperties": false
+    },
+    "PropertyTransferTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Property Transfer"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "transfers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyTransfer"
+          }
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+    "GroovyScriptTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Groovy"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "script": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "script"
+      ],
+      "additionalProperties": false
+    },
+    "DataSourceTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "DataSource"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "dataSource": {
+          "type": "object",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/GridDataSource"
+            },
+            {
+              "$ref": "#/definitions/FileDataSource"
+            },
+            {
+              "$ref": "#/definitions/ExcelDataSource"
+            },
+            {
+              "$ref": "#/definitions/DataGeneratorDataSource"
+            }
+          ]
+        },
+        "entitizeValues": {
+          "type": "boolean"
+        },
+        "expandProperties": {
+          "type": "boolean"
+        },
+        "failOnEmpty": {
+          "type": "boolean"
+        },
+        "skipLoopOnEmpty": {
+          "type": "boolean"
+        },
+        "restartOnRun": {
+          "type": "boolean",
+          "default": true
+        },
+        "preload": {
+          "type": "boolean"
+        },
+        "restartShared": {
+          "type": "boolean"
+        },
+        "shared": {
+          "type": "boolean"
+        },
+        "trimValues": {
+          "type": "boolean"
+        },
+        "startRow": {
+          "$ref": "#/definitions/StringOrNonNegativeInteger"
+        },
+        "endRow": {
+          "$ref": "#/definitions/StringOrNonNegativeInteger"
+        },
+        "testSteps": {
+          "$ref": "#/definitions/TestSteps"
+        }
+      },
+      "required": [
+        "type",
+        "dataSource",
+        "testSteps"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "title": "SoapUI Test",
+  "type": "object",
+  "properties": {
+    "clientCertFileName": {
+      "type": "string",
+      "default": ""
+    },
+    "clientCertPassword": {
+      "type": "string",
+      "default": ""
+    },
+    "searchProperties": {
+      "type": "boolean",
+      "default": true
+    },
+    "maintainSession": {
+      "type": "boolean",
+      "default": false
+    },
+    "abortOnError": {
+      "type": "boolean",
+      "default": false
+    },
+    "failTestCaseOnError": {
+      "type": "boolean",
+      "default": true
+    },
+    "discardOkResults": {
+      "type": "boolean",
+      "default": true
+    },
+    "socketTimeout": {
+      "type": "string",
+      "default": ""
+    },
+    "testCaseTimeout": {
+      "$ref": "#/definitions/NonNegativeInteger",
+      "default": 0
+    },
+    "testSteps": {
+      "$ref": "#/definitions/TestSteps"
+    }
+  },
+  "required": [
+    "testSteps"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,17 @@
+{
+  "testSteps": [
+    {
+      "type": "SOAP Request",
+      "wsdl": "globalweather.wsdl",
+      "binding": "GlobalWeatherSoap",
+      "operation": "GetCitiesByCountry",
+      "URI": "http://some.endpoint.com",
+      "parameters": [
+        {
+          "name": "CountryName",
+          "value": "Sweden"
+        }
+      ]
+    }
+  ]
+}

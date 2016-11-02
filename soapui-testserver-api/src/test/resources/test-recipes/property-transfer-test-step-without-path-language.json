@@ -1,0 +1,21 @@
+{
+  "testSteps": [
+    {
+      "type": "Property Transfer",
+      "name" : "Property Transfers",
+      "transfers": [
+        {
+          "transferName": "TransferUserName",
+          "source": {
+            "sourceName": "REST Request Test Step",
+            "property": "User"
+          },
+          "target": {
+            "targetName": "REST Request Test Step 2",
+            "property": "Username"
+          }
+        }
+      ]
+    }
+  ]
+}

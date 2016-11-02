@@ -16,11 +16,6 @@
 
 package com.eviware.soapui.security.assertion;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -45,6 +40,10 @@ import com.eviware.x.form.XForm;
 import com.eviware.x.form.XFormDialog;
 import com.eviware.x.form.XFormDialogBuilder;
 import com.eviware.x.form.XFormFactory;
+import org.apache.xmlbeans.XmlObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Asserts Http status code in response
@@ -65,6 +64,15 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
         super(assertionConfig, assertable, false, true, false, false);
 
         init();
+    }
+
+    public void setCodes(String codes) {
+        this.codes = codes;
+        setConfiguration(createConfiguration());
+    }
+
+    public String getCodes() {
+        return codes;
     }
 
     private void init() {

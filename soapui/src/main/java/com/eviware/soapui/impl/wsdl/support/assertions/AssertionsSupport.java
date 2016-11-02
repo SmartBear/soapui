@@ -16,16 +16,6 @@
 
 package com.eviware.soapui.impl.wsdl.support.assertions;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.xmlbeans.XmlObject;
-
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -33,8 +23,18 @@ import com.eviware.soapui.impl.wsdl.teststeps.assertions.TestAssertionRegistry;
 import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionsListener;
 import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.resolver.ResolveContext;
+import org.apache.xmlbeans.XmlObject;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Utility for implementing the Assertable interface
@@ -282,7 +282,11 @@ public class AssertionsSupport implements PropertyChangeListener {
                                 + (getAssertionsOfType(TestAssertionRegistry.getInstance().getAssertionClassType(
                                 assertionConfig)).size()));
                 if (name == null) {
-                    return null;
+                    if (UISupport.isUsingConsoleDialogs()) {
+                        name = ModelItemNamer.createName(assertionLabel, assertions);
+                    } else {
+                        return null;
+                    }
                 }
             }
             WsdlMessageAssertion assertion = addWsdlAssertion(assertionConfig);
@@ -293,9 +297,7 @@ public class AssertionsSupport implements PropertyChangeListener {
             assertionConfig.setName(name);
             assertion.updateConfig(assertionConfig);
 
-            if (assertion != null) {
-                fireAssertionAdded(assertion);
-            }
+            fireAssertionAdded(assertion);
 
             return assertion;
         } catch (Exception e) {

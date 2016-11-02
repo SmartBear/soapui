@@ -1000,6 +1000,10 @@ public class UISupport {
         return bottomYCoordinate <= bottomUsableYCoordinateOnScreen;
     }
 
+    public static boolean isUsingConsoleDialogs() {
+        return dialogs instanceof ConsoleDialogs;
+    }
+
     private static GraphicsConfiguration getGraphicsConfigurationForPosition(Point point) {
         for (GraphicsDevice graphicsDevice : GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()) {
             if (graphicsDevice.getDefaultConfiguration().getBounds().contains(point)) {
