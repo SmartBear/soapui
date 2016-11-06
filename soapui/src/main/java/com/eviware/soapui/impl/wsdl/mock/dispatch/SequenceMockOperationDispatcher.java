@@ -31,13 +31,17 @@ public class SequenceMockOperationDispatcher extends AbstractMockOperationDispat
     }
 
     public MockResponse selectMockResponse(MockRequest request, MockResult result) {
-        if (currentDispatchIndex >= getMockOperation().getMockResponseCount()) {
-            currentDispatchIndex = 0;
-        }
+        MockResponse mockResponse = null;
+        MockOperation mockOperation = getMockOperation();
+        synchronized (mockOperation) {
+            if (currentDispatchIndex >= mockOperation.getMockResponseCount()) {
+                currentDispatchIndex = 0;
+            }
 
-        MockResponse mockResponse = getMockOperation().getMockResponseAt(currentDispatchIndex);
+            mockResponse = mockOperation.getMockResponseAt(currentDispatchIndex);
 
-        currentDispatchIndex++;
+            currentDispatchIndex++;
+    	}
         return mockResponse;
     }
 
