@@ -1,16 +1,20 @@
+/*
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
+
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JTextArea;
-
-import org.apache.xmlbeans.XmlObject;
-import org.custommonkey.xmlunit.Diff;
-import org.custommonkey.xmlunit.Difference;
-import org.custommonkey.xmlunit.DifferenceEngine;
-import org.custommonkey.xmlunit.DifferenceListener;
-import org.w3c.dom.Node;
 
 import com.eviware.soapui.config.TestAssertionConfig;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -37,6 +41,16 @@ import com.eviware.soapui.support.types.StringList;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
 import com.eviware.soapui.support.xml.XmlUtils;
+import org.apache.xmlbeans.XmlObject;
+import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.DifferenceEngine;
+import org.custommonkey.xmlunit.DifferenceListener;
+import org.w3c.dom.Node;
+
+import javax.swing.JTextArea;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractXmlContainsAssertion extends WsdlMessageAssertion implements RequestAssertion, ResponseAssertion,
 XPathReferenceContainer{

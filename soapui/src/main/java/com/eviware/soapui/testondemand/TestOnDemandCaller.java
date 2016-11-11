@@ -1,26 +1,38 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.testondemand;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.SoapUISystemProperties;
-import com.eviware.soapui.config.*;
+import com.eviware.soapui.config.TestOnDemandCommandConfig;
+import com.eviware.soapui.config.TestOnDemandContentConfig;
+import com.eviware.soapui.config.TestOnDemandFileConfig;
+import com.eviware.soapui.config.TestOnDemandHeaderConfig;
+import com.eviware.soapui.config.TestOnDemandKeystoreConfig;
+import com.eviware.soapui.config.TestOnDemandKeystorePasswordConfig;
+import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig;
 import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest;
 import com.eviware.soapui.config.TestOnDemandLocationsRequestDocumentConfig.TestOnDemandLocationsRequest.Request;
+import com.eviware.soapui.config.TestOnDemandProjectPasswordConfig;
+import com.eviware.soapui.config.TestOnDemandTestCaseConfig;
+import com.eviware.soapui.config.TestOnDemandTestSuiteConfig;
+import com.eviware.soapui.config.TestOnDemandTxnConfig;
+import com.eviware.soapui.config.TestOnDemandUploadBodyConfig;
+import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig;
 import com.eviware.soapui.config.TestOnDemandUploadRequestDocumentConfig.TestOnDemandUploadRequest;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
@@ -31,9 +43,6 @@ import com.eviware.soapui.settings.SSLSettings;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
-
-import javax.annotation.Nonnull;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.entity.ByteArrayEntity;
@@ -44,6 +53,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import javax.annotation.Nonnull;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;

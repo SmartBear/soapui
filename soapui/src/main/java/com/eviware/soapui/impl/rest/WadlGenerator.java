@@ -1,27 +1,29 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.rest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
+import com.eviware.soapui.impl.rest.support.RestParamProperty;
+import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
+import com.eviware.soapui.impl.wsdl.support.Constants;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.types.StringToStringMap;
+import com.eviware.soapui.support.xml.XmlUtils;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument;
 import net.java.dev.wadl.x2009.x02.ApplicationDocument.Application;
 import net.java.dev.wadl.x2009.x02.DocDocument.Doc;
@@ -34,7 +36,6 @@ import net.java.dev.wadl.x2009.x02.RequestDocument.Request;
 import net.java.dev.wadl.x2009.x02.ResourceDocument.Resource;
 import net.java.dev.wadl.x2009.x02.ResourcesDocument.Resources;
 import net.java.dev.wadl.x2009.x02.ResponseDocument.Response;
-
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
@@ -42,14 +43,11 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 
-import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSchemaManager;
-import com.eviware.soapui.impl.rest.support.RestParamProperty;
-import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
-import com.eviware.soapui.impl.wsdl.support.Constants;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.types.StringToStringMap;
-import com.eviware.soapui.support.xml.XmlUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WadlGenerator {
     private RestService restService;

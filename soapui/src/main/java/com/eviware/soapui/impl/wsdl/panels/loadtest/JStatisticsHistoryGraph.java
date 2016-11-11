@@ -1,30 +1,27 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.panels.loadtest;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-import java.awt.image.BufferedImage;
+import com.eviware.soapui.impl.wsdl.loadtest.ColorPalette;
+import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
+import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics;
+import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics.Statistic;
+import com.eviware.soapui.impl.wsdl.loadtest.data.StatisticsHistory.StatisticsHistoryModel;
+import com.jgoodies.forms.builder.ButtonBarBuilder;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -35,13 +32,15 @@ import javax.swing.Scrollable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-
-import com.eviware.soapui.impl.wsdl.loadtest.ColorPalette;
-import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
-import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics;
-import com.eviware.soapui.impl.wsdl.loadtest.data.LoadTestStatistics.Statistic;
-import com.eviware.soapui.impl.wsdl.loadtest.data.StatisticsHistory.StatisticsHistoryModel;
-import com.jgoodies.forms.builder.ButtonBarBuilder;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 
 /**
  * Graphical representation of testschedule statistics

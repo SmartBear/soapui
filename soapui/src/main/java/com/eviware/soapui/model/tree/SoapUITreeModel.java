@@ -1,21 +1,32 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.model.tree;
 
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.tree.nodes.PropertiesTreeNode;
+import com.eviware.soapui.model.tree.nodes.PropertyTreeNode;
+import com.eviware.soapui.model.tree.nodes.WorkspaceTreeNode;
+import com.eviware.soapui.model.workspace.Workspace;
+import org.apache.log4j.Logger;
+
+import javax.swing.event.TreeModelEvent;
+import javax.swing.event.TreeModelListener;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,19 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
-
-import org.apache.log4j.Logger;
-
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.tree.nodes.PropertiesTreeNode;
-import com.eviware.soapui.model.tree.nodes.PropertyTreeNode;
-import com.eviware.soapui.model.tree.nodes.WorkspaceTreeNode;
-import com.eviware.soapui.model.workspace.Workspace;
 
 /**
  * The Navigator TreeModel

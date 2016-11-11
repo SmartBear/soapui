@@ -1,20 +1,26 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.submit.transports.jms;
+
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.iface.Request;
+import com.eviware.soapui.model.iface.Response;
+import com.eviware.soapui.model.iface.SubmitContext;
+import com.eviware.soapui.support.StringUtils;
 
 import javax.jms.JMSException;
 import javax.jms.Message;
@@ -22,12 +28,6 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
 import javax.jms.TopicSubscriber;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.iface.Request;
-import com.eviware.soapui.model.iface.Response;
-import com.eviware.soapui.model.iface.SubmitContext;
-import com.eviware.soapui.support.StringUtils;
 
 public class HermesJmsRequestSendSubscribeTransport extends HermesJmsRequestTransport {
 
