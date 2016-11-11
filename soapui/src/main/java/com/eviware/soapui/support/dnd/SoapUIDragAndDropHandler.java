@@ -1,21 +1,44 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.support.dnd;
 
+import com.eviware.soapui.SoapUI;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.support.dnd.handlers.InterfaceToProjectDropHandler;
+import com.eviware.soapui.support.dnd.handlers.MockResponseToTestCaseDropHandler;
+import com.eviware.soapui.support.dnd.handlers.MockResponseToTestStepDropHandler;
+import com.eviware.soapui.support.dnd.handlers.MockResponseToTestStepsDropHandler;
+import com.eviware.soapui.support.dnd.handlers.MockServiceToProjectDropHandler;
+import com.eviware.soapui.support.dnd.handlers.OperationToMockServiceDropHandler;
+import com.eviware.soapui.support.dnd.handlers.RequestToMockOperationDropHandler;
+import com.eviware.soapui.support.dnd.handlers.RequestToTestCaseDropHandler;
+import com.eviware.soapui.support.dnd.handlers.RequestToTestStepDropHandler;
+import com.eviware.soapui.support.dnd.handlers.RequestToTestStepsDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestCaseToProjectDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestCaseToTestCaseDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestCaseToTestSuiteDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestStepToTestCaseDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepsDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestSuiteToProjectDropHandler;
+import com.eviware.soapui.support.dnd.handlers.TestSuiteToTestSuiteDropHandler;
+
+import javax.swing.Timer;
+import javax.swing.ToolTipManager;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
@@ -47,30 +70,6 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.Timer;
-import javax.swing.ToolTipManager;
-
-import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.support.dnd.handlers.InterfaceToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.MockResponseToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.MockResponseToTestStepDropHandler;
-import com.eviware.soapui.support.dnd.handlers.MockResponseToTestStepsDropHandler;
-import com.eviware.soapui.support.dnd.handlers.MockServiceToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.OperationToMockServiceDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToMockOperationDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToTestStepDropHandler;
-import com.eviware.soapui.support.dnd.handlers.RequestToTestStepsDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestCaseToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestCaseToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestCaseToTestSuiteDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestStepToTestCaseDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestStepToTestStepsDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestSuiteToProjectDropHandler;
-import com.eviware.soapui.support.dnd.handlers.TestSuiteToTestSuiteDropHandler;
 
 public class SoapUIDragAndDropHandler implements DragGestureListener, DragSourceListener {
     public static final int ON_RANGE = 3;

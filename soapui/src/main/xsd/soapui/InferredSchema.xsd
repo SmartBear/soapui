@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2004-2014 SmartBear Software
+  ~ Copyright (C) 2004-2016 SmartBear Software
   ~
   ~ Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
   ~ versions of the EUPL (the "Licence");
@@ -13,7 +13,8 @@
   ~ distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
   ~ express or implied. See the Licence for the specific language governing permissions and limitations
   ~ under the Licence.
--->
+ -->
+
 <schema targetNamespace="http://www.eviware.com/soapui/InferredSchema" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.eviware.com/soapui/InferredSchema">
 
     <element name="schemaSystem" type="tns:SchemaSet"></element>

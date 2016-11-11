@@ -1,29 +1,27 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.support.policy;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.wsdl.Definition;
-import javax.wsdl.extensions.ElementExtensible;
-import javax.xml.namespace.QName;
-
+import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
+import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
+import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
+import com.eviware.soapui.support.StringUtils;
+import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 import org.w3.x2007.x05.addressing.metadata.AddressingDocument.Addressing;
@@ -32,12 +30,12 @@ import org.xmlsoap.schemas.ws.x2004.x09.policy.OptionalType;
 import org.xmlsoap.schemas.ws.x2004.x09.policy.Policy;
 import org.xmlsoap.schemas.ws.x2004.x09.policy.PolicyDocument;
 
-import com.eviware.soapui.impl.support.definition.InterfaceDefinitionPart;
-import com.eviware.soapui.impl.wsdl.support.wsa.WsaUtils;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlContext;
-import com.eviware.soapui.impl.wsdl.support.wsdl.WsdlUtils;
-import com.eviware.soapui.support.StringUtils;
-import com.eviware.soapui.support.xml.XmlUtils;
+import javax.wsdl.Definition;
+import javax.wsdl.extensions.ElementExtensible;
+import javax.xml.namespace.QName;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class PolicyUtils {
     public final static String WS_XMLSOAP_POLICY_NAMESPACE = "http://schemas.xmlsoap.org/ws/2004/09/policy";
