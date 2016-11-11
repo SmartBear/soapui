@@ -9,16 +9,19 @@ System.exit(0)
 
 def currentYear = new Date().getYear()+1900
 def copyright = """/*\r
- *  SoapUI, copyright (C) 2004-${currentYear} eviware.com \r
+ *  SoapUI, copyright (C) 2004-${currentYear} SmartBear Software \r
  *\r
- *  SoapUI is free software; you can redistribute it and/or modify it under the \r
- *  terms of version 2.1 of the GNU Lesser General Public License as published by \r
- *  the Free Software Foundation.\r
- *\r
- *  SoapUI is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without \r
- *  even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. \r
- *  See the GNU Lesser General Public License for more details at gnu.org.\r
- */\r
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent \r
+ * versions of the EUPL (the "Licence"); \r
+ * You may not use this work except in compliance with the Licence. \r
+ * You may obtain a copy of the Licence at: \r
+ * \r
+ * http://ec.europa.eu/idabc/eupl \r
+ * \r
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is \r
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either \r
+ * express or implied. See the Licence for the specific language governing permissions and limitations \r
+ * under the Licence. \r
 \r
 """
 
