@@ -1404,6 +1404,7 @@ public final class XmlUtils {
 
     public static Document addResultSetXmlPart(Element resultsElement, ResultSet rs, Document xmlDocumentResult)
             throws SQLException {
+        final String TABLE_COLUMN_DELIMITER = ".";
         ResultSetMetaData rsmd = rs.getMetaData();
         Element resultSetElement = xmlDocumentResult.createElement("ResultSet");
 
@@ -1416,15 +1417,17 @@ public final class XmlUtils {
             rowElement.setAttribute("rowNumber", String.valueOf(rs.getRow()));
 
             resultsElement.appendChild(rowElement);
-            for (int ii = 1; ii <= colCount; ii++) {
-                String columnName = "";
-                if (!StringUtils.isNullOrEmpty(rsmd.getTableName(ii))) {
-                    columnName += (rsmd.getTableName(ii)).toUpperCase() + ".";
+            for (int i = 1; i <= colCount; i++) {
+                StringBuffer columnName = new StringBuffer();
+                if (StringUtils.hasContent(rsmd.getTableName(i))) {
+                    columnName.append(rsmd.getTableName(i));
+                    columnName.append(TABLE_COLUMN_DELIMITER);
                 }
-                columnName += (rsmd.getColumnName(ii)).toUpperCase();
-                String value = rs.getString(ii);
-                Element node = xmlDocumentResult.createElement(StringUtils.createXmlName(columnName));
-                if (!StringUtils.isNullOrEmpty(value)) {
+                columnName.append(rsmd.getColumnName(i));
+                String xmlName = StringUtils.createXmlName(columnName.toString());
+                Element node = xmlDocumentResult.createElement(xmlName);
+                String value = rs.getString(i);
+                if (StringUtils.hasContent(value)) {
                     Text textNode = xmlDocumentResult.createTextNode(value);
                     node.appendChild(textNode);
                 }
