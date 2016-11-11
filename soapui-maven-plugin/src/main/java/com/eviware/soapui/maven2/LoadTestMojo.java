@@ -1,5 +1,5 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * Copyright 2004-2016 SmartBear Software
  *
  * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
  * versions of the EUPL (the "Licence");
@@ -22,7 +22,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import java.io.File;
 import java.util.Properties;
 
 /**

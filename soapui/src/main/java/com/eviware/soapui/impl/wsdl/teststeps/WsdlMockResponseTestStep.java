@@ -1,24 +1,33 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.teststeps;
 
 import com.eviware.soapui.SoapUI;
-import com.eviware.soapui.config.*;
-import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.config.MockOperationDispatchStyleConfig;
+import com.eviware.soapui.config.MockResponseConfig;
+import com.eviware.soapui.config.MockResponseStepConfig;
+import com.eviware.soapui.config.MockServiceConfig;
+import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.config.TestStepConfig;
+import com.eviware.soapui.impl.wsdl.AbstractWsdlModelItem;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse.ResponseHeaderHolder;
@@ -44,9 +53,25 @@ import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansion;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContainer;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionUtils;
-import com.eviware.soapui.model.support.*;
-import com.eviware.soapui.model.testsuite.*;
+import com.eviware.soapui.model.support.DefaultTestStepProperty;
+import com.eviware.soapui.model.support.InterfaceListenerAdapter;
+import com.eviware.soapui.model.support.MockRunListenerAdapter;
+import com.eviware.soapui.model.support.ModelSupport;
+import com.eviware.soapui.model.support.ProjectListenerAdapter;
+import com.eviware.soapui.model.support.TestRunListenerAdapter;
+import com.eviware.soapui.model.support.TestStepBeanProperty;
+import com.eviware.soapui.model.testsuite.Assertable;
+import com.eviware.soapui.model.testsuite.AssertedXPath;
 import com.eviware.soapui.model.testsuite.AssertionError;
+import com.eviware.soapui.model.testsuite.AssertionsListener;
+import com.eviware.soapui.model.testsuite.LoadTestRunner;
+import com.eviware.soapui.model.testsuite.OperationTestStep;
+import com.eviware.soapui.model.testsuite.RequestAssertedMessageExchange;
+import com.eviware.soapui.model.testsuite.TestAssertion;
+import com.eviware.soapui.model.testsuite.TestCaseRunContext;
+import com.eviware.soapui.model.testsuite.TestCaseRunner;
+import com.eviware.soapui.model.testsuite.TestStep;
+import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.monitor.TestMonitor;
 import com.eviware.soapui.support.StringUtils;
@@ -59,10 +84,14 @@ import com.eviware.soapui.support.resolver.ResolveContext.PathToResolve;
 import com.eviware.soapui.support.types.StringToStringsMap;
 import org.apache.log4j.Logger;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties implements OperationTestStep,
         PropertyChangeListener, Assertable, PropertyExpansionContainer {

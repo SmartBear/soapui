@@ -1,21 +1,45 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.panels.testsuite;
 
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
+import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
+import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
+import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
+import com.eviware.soapui.model.ModelItem;
+import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
+import com.eviware.soapui.model.testsuite.TestCase;
+import com.eviware.soapui.support.UISupport;
+import com.eviware.soapui.support.action.swing.ActionList;
+import com.eviware.soapui.support.action.swing.ActionListBuilder;
+import com.eviware.soapui.support.action.swing.ActionSupport;
+import com.eviware.soapui.support.action.swing.SwingActionDelegate;
+import com.eviware.soapui.support.dnd.DropType;
+import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
+import com.eviware.soapui.support.dnd.SoapUIDragAndDropable;
+import com.eviware.soapui.support.swing.AutoscrollSupport;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -35,31 +59,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
-import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
-import com.eviware.soapui.impl.wsdl.actions.testsuite.AddNewTestCaseAction;
-import com.eviware.soapui.impl.wsdl.panels.support.ProgressBarTestCaseAdapter;
-import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.support.TestSuiteListenerAdapter;
-import com.eviware.soapui.model.testsuite.TestCase;
-import com.eviware.soapui.support.UISupport;
-import com.eviware.soapui.support.action.swing.ActionList;
-import com.eviware.soapui.support.action.swing.ActionListBuilder;
-import com.eviware.soapui.support.action.swing.ActionSupport;
-import com.eviware.soapui.support.action.swing.SwingActionDelegate;
-import com.eviware.soapui.support.dnd.DropType;
-import com.eviware.soapui.support.dnd.SoapUIDragAndDropHandler;
-import com.eviware.soapui.support.dnd.SoapUIDragAndDropable;
-import com.eviware.soapui.support.swing.AutoscrollSupport;
 
 /**
  * A panel showing a scrollable list of TestCases in a TestSuite.
