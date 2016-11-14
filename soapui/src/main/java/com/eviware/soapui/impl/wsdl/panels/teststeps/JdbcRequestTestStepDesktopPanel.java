@@ -140,7 +140,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
     protected Connection connection;
     protected RSyntaxTextArea queryArea;
     protected JCheckBox isStoredProcedureCheckBox;
-    protected JCheckBox ResultColumnsNamesToUpperCaseCheckBox;
+    protected JCheckBox resultColumnsNamesToUpperCaseCheckBox;
     protected JTextField driverTextField;
     protected JTextField connStrTextField;
     protected JButton testConnectionButton;
@@ -473,7 +473,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
         isStoredProcedureCheckBox = configForm.appendCheckBox(STOREDPROCEDURE_FIELD,
                 "Select if this is a stored procedure", jdbcRequestTestStep.isStoredProcedure());
-        ResultColumnsNamesToUpperCaseCheckBox = configForm.appendCheckBox(RESULT_COLUMNS_NAMES_TO_UPPER_CASE,
+        resultColumnsNamesToUpperCaseCheckBox = configForm.appendCheckBox(RESULT_COLUMNS_NAMES_TO_UPPER_CASE,
                 messages.get("JdbcRequestTestStepDesktopPanel.ResultColumnsToUpperCase.Description"), jdbcRequestTestStep.isConvertColumnNamesToUpperCase());
     }
 
@@ -530,7 +530,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
     }
 
     protected void addResultColumnsNamesToUpperCaseChangeListener() {
-        ResultColumnsNamesToUpperCaseCheckBox.addItemListener(new ItemListener() {
+        resultColumnsNamesToUpperCaseCheckBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent arg0) {
                 jdbcRequestTestStep.setConvertColumnNamesToUpperCase(((JCheckBox) arg0.getSource()).isSelected());
             }
