@@ -41,9 +41,10 @@ public class AnalyticsHelper {
         if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
             analyticsEnabled = StatisticsCollectionConfirmationDialog.showDialog() == JOptionPane.YES_OPTION;
             settings.setBoolean(UISettings.DISABLE_ANALYTICS, !analyticsEnabled);
-        }
-        if (!analyticsEnabled) {
-            settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
+
+            if (!analyticsEnabled) {
+                settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
+            }
         }
         return analyticsEnabled;
     }
