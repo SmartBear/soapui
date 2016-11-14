@@ -1358,6 +1358,10 @@ public final class XmlUtils {
     }
 
     public static String createJdbcXmlResult(Statement statement) throws SQLException, ParserConfigurationException {
+        return createJdbcXmlResultEx(statement, true);
+    }
+
+    public static String createJdbcXmlResultEx(Statement statement, boolean makeUpperCased) throws SQLException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         org.w3c.dom.Document xmlDocumentResult = builder.newDocument();
@@ -1365,17 +1369,20 @@ public final class XmlUtils {
         xmlDocumentResult.appendChild(resultsElement);
 
         if (statement != null) {
-            ResultSet resultSet = statement.getResultSet();
-            if (resultSet != null) {
-                resultSet.setFetchSize(statement.getFetchSize());
-                xmlDocumentResult = addResultSetXmlPart(resultsElement, resultSet, xmlDocumentResult);
-                while (statement.getMoreResults()) {
-                    xmlDocumentResult = addResultSetXmlPart(resultsElement, statement.getResultSet(), xmlDocumentResult);
+            try (ResultSet resultSet = statement.getResultSet()) {
+                if (resultSet != null) {
+                    resultSet.setFetchSize(statement.getFetchSize());
+                    xmlDocumentResult = addResultSetXmlPart(resultsElement, resultSet, xmlDocumentResult, makeUpperCased);
+                    while (statement.getMoreResults()) {
+                        try (ResultSet moreResults = statement.getResultSet()) {
+                            xmlDocumentResult = addResultSetXmlPart(resultsElement, moreResults, xmlDocumentResult, makeUpperCased);
+                        }
+                    }
+                } else {
+                    Element errorElement = xmlDocumentResult.createElement("UpdateCount");
+                    errorElement.appendChild(xmlDocumentResult.createTextNode(String.valueOf(statement.getUpdateCount())));
+                    resultsElement.appendChild(errorElement);
                 }
-            } else {
-                Element errorElement = xmlDocumentResult.createElement("UpdateCount");
-                errorElement.appendChild(xmlDocumentResult.createTextNode(String.valueOf(statement.getUpdateCount())));
-                resultsElement.appendChild(errorElement);
             }
         }
 
@@ -1402,7 +1409,7 @@ public final class XmlUtils {
         return out.toString();
     }
 
-    public static Document addResultSetXmlPart(Element resultsElement, ResultSet rs, Document xmlDocumentResult)
+    public static Document addResultSetXmlPart(Element resultsElement, ResultSet rs, Document xmlDocumentResult, boolean uppercase)
             throws SQLException {
         final String TABLE_COLUMN_DELIMITER = ".";
         ResultSetMetaData rsmd = rs.getMetaData();
@@ -1418,13 +1425,19 @@ public final class XmlUtils {
 
             resultsElement.appendChild(rowElement);
             for (int i = 1; i <= colCount; i++) {
-                StringBuffer columnName = new StringBuffer();
-                if (StringUtils.hasContent(rsmd.getTableName(i))) {
-                    columnName.append(rsmd.getTableName(i));
-                    columnName.append(TABLE_COLUMN_DELIMITER);
+                StringBuffer resultColumnName = new StringBuffer();
+                String tableName = rsmd.getTableName(i);
+                String columnName = rsmd.getColumnName(i);
+                if (uppercase) {
+                    tableName = tableName.toUpperCase();
+                    columnName = columnName.toUpperCase();
                 }
-                columnName.append(rsmd.getColumnName(i));
-                String xmlName = StringUtils.createXmlName(columnName.toString());
+                if (StringUtils.hasContent(tableName)) {
+                    resultColumnName.append(tableName);
+                    resultColumnName.append(TABLE_COLUMN_DELIMITER);
+                }
+                resultColumnName.append(columnName);
+                String xmlName = StringUtils.createXmlName(resultColumnName.toString());
                 Element node = xmlDocumentResult.createElement(xmlName);
                 String value = rs.getString(i);
                 if (StringUtils.hasContent(value)) {
