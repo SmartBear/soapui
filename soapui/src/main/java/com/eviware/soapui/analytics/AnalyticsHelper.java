@@ -32,7 +32,7 @@ public class AnalyticsHelper {
 
     private static boolean isAnalyticsEnabled() {
         Settings settings = SoapUI.getSettings();
-        boolean analyticsEnabled = !settings.getBoolean(UISettings.DISABLE_ANALYTICS, false);
+        boolean analyticsEnabled = settings.getBoolean(UISettings.DISABLE_ANALYTICS, false);
         if (analyticsEnabled) {
             return true;
         }
