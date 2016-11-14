@@ -28,34 +28,37 @@ import com.eviware.soapui.settings.UISettings;
 import javax.swing.JOptionPane;
 
 public class AnalyticsHelper {
-    private static boolean isInitialize = false;
+    private static boolean initialized = false;
 
-    private static boolean analyticsDisabled() {
+    private static boolean isAnalyticsEnabled() {
         Settings settings = SoapUI.getSettings();
-        boolean disableAnalytics = settings.getBoolean(UISettings.DISABLE_ANALYTICS, SoapUI.usingGraphicalEnvironment());
-        if (!disableAnalytics) {
-            return false;
+        boolean analyticsEnabled = settings.getBoolean(UISettings.DISABLE_ANALYTICS, false);
+        if (analyticsEnabled) {
+            return true;
         }
         Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
         Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
         if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
-            disableAnalytics = StatisticsCollectionConfirmationDialog.showDialog() == JOptionPane.NO_OPTION;
-            settings.setBoolean(UISettings.DISABLE_ANALYTICS, disableAnalytics);
+            analyticsEnabled = StatisticsCollectionConfirmationDialog.showDialog() == JOptionPane.YES_OPTION;
+            settings.setBoolean(UISettings.DISABLE_ANALYTICS, !analyticsEnabled);
+
+            if (!analyticsEnabled) {
+                settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
+            }
         }
-        if (disableAnalytics) {
-            settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
-        }
-        return disableAnalytics;
+        return analyticsEnabled;
     }
 
-    public static void InitializeAnalytics() {
-        if(isInitialize)
+    public static void initializeAnalytics() {
+        if (initialized) {
             return;
-        isInitialize = true;
+        }
+        initialized = true;
+
         AnalyticsManager manager = Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
-        if (analyticsDisabled()) {
+        if (!isAnalyticsEnabled()) {
             return;
         }
 

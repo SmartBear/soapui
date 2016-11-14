@@ -874,7 +874,7 @@ public class SoapUI {
         isStandalone = true;
         soapUICore = core;
 
-        AnalyticsHelper.InitializeAnalytics();
+        AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;

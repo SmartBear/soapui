@@ -115,8 +115,6 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
      */
 
     public static void main(String[] args) throws Exception {
-        AnalyticsHelper.InitializeAnalytics();
-        Analytics.trackSessionStart();
         System.exit(new SoapUITestCaseRunner().runFromCommandLine(args));
     }
 
@@ -332,6 +330,9 @@ public class SoapUITestCaseRunner extends AbstractSoapUITestRunner {
 
     @Override
     public boolean runRunner() throws Exception {
+        AnalyticsHelper.initializeAnalytics();
+        Analytics.trackSessionStart();
+
         initGroovyLog();
 
         assertions.clear();
