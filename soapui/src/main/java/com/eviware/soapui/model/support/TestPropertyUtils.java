@@ -44,7 +44,7 @@ public class TestPropertyUtils {
                 if (c > 0) {
                     writer.println("\\");
                 }
-                writer.print(lines[c]);
+                writer.print(addEndingSlashes(lines[c]));
             }
 
             writer.println();
@@ -52,6 +52,31 @@ public class TestPropertyUtils {
 
         writer.close();
         return propertyHolder.getPropertyCount();
+    }
+
+    private static String addEndingSlashes(String value) {
+        int endingSlashesCount = countEndingSlashes(value);
+        if (endingSlashesCount == 0) {
+            return value;
+        }
+
+        StringBuilder buf = new StringBuilder(value);
+        for (int i = 0; i < endingSlashesCount; i++) {
+            buf.append('\\');
+        }
+        return buf.toString();
+    }
+
+    public static int countEndingSlashes(String value) {
+        int count = 0;
+        for (int i = value.length() - 1; i >= 0; i--) {
+            if (value.charAt(i) == '\\') {
+                count++;
+            } else {
+                break;
+            }
+        }
+        return count;
     }
 
     public synchronized static void sortProperties(MutableTestPropertyHolder holder) {
