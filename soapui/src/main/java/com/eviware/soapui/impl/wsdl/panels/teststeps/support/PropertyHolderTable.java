@@ -365,19 +365,26 @@ public class PropertyHolderTable extends JPanel {
 
                                 // read multiline value
                                 if (value.endsWith("\\")) {
-                                    value = value.substring(0, value.length() - 1);
+                                    int slashCount = TestPropertyUtils.countEndingSlashes(value);
+                                    if (slashCount % 2 != 0) {
+                                        value = value.substring(0, value.length() - ((slashCount + 1) / 2));
 
-                                    String ln = reader.readLine();
-                                    while (ln != null && ln.endsWith("\\")) {
-                                        value += ln.substring(0, ln.length() - 1);
-                                        ln = reader.readLine();
-                                    }
-
-                                    if (ln != null) {
-                                        value += ln;
-                                    }
-                                    if (ln == null) {
-                                        break;
+                                        String ln = reader.readLine();
+                                        while (ln != null && ln.endsWith("\\")) {
+                                            int slashCountLn = TestPropertyUtils.countEndingSlashes(ln);
+                                            if (slashCountLn % 2 != 0) {
+                                                value += ln.substring(0, ln.length() - ((slashCountLn + 1) / 2));
+                                                ln = reader.readLine();
+                                            } else {
+                                                ln = ln.substring(0, ln.length() - (slashCountLn / 2));
+                                                break;
+                                            }
+                                        }
+                                        if (ln != null) {
+                                            value += ln;
+                                        }
+                                    } else {
+                                        value = value.substring(0, value.length() - (slashCount / 2));
                                     }
                                 }
 
