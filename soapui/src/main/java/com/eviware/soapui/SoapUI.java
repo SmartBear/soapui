@@ -185,7 +185,6 @@ import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 /**
  * Main SoapUI entry point.
  */
-
 public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
@@ -874,7 +873,7 @@ public class SoapUI {
         isStandalone = true;
         soapUICore = core;
 
-        AnalyticsHelper.InitializeAnalytics();
+        AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;

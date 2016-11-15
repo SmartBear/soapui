@@ -36,7 +36,7 @@ public class JdbcResponse extends AbstractResponse<JdbcRequest> {
         super(request);
         this.rawSql = rawSql;
 
-        responseContent = XmlUtils.createJdbcXmlResult(statement);
+        responseContent = XmlUtils.createJdbcXmlResultEx(statement, request.getTestStep().isConvertColumnNamesToUpperCase());
     }
 
     public String getContentAsString() {

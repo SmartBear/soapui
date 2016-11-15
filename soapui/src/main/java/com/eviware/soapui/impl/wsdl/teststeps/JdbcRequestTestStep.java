@@ -110,6 +110,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
             jdbcRequestTestStepConfig.addNewProperties();
         }
 
+        if (!jdbcRequestTestStepConfig.isSetConvertColumnNamesToUpperCase()) {
+            jdbcRequestTestStepConfig.setConvertColumnNamesToUpperCase(true);
+        }
+
         jdbcRequest = new JdbcRequest(this, forLoadTest);
 
         propertyHolderSupport = new XmlBeansPropertiesTestPropertyHolder(this, jdbcRequestTestStepConfig.getProperties());
@@ -375,13 +379,17 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
     }
 
     public String getAssertableContentAsXml() {
-       return getAssertableContent();
+        return getAssertableContent();
     }
 
     public String getAssertableContent() {
         TestProperty property = getProperty("ResponseAsXml");
         String value = property.getValue();
         return StringUtils.hasContent(value) ? value : property.getDefaultValue();
+    }
+
+    public boolean isConvertColumnNamesToUpperCase() {
+        return jdbcRequestTestStepConfig.getConvertColumnNamesToUpperCase();
     }
 
     public String getResponseContent() {
@@ -622,6 +630,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
         String old = getPassword();
         jdbcRequestTestStepConfig.setStoredProcedure(sp);
         notifyPropertyChanged("password", old, sp);
+    }
+
+    public void setConvertColumnNamesToUpperCase(boolean sp) {
+        jdbcRequestTestStepConfig.setConvertColumnNamesToUpperCase(sp);
     }
 
     public JdbcRequest getJdbcRequest() {
