@@ -22,17 +22,14 @@ import com.eviware.soapui.impl.support.AbstractHttpRequest;
 import com.eviware.soapui.impl.wsdl.WsdlRequest;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.BaseHttpRequestTransport;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
+import com.eviware.soapui.impl.wsdl.support.http.HttpCredentialsProvider;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpander;
 import com.eviware.soapui.model.settings.Settings;
 import com.eviware.soapui.settings.HttpSettings;
 import com.eviware.soapui.support.StringUtils;
 import org.apache.http.Header;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.params.AuthPolicy;
 import org.apache.http.client.protocol.ClientContext;
@@ -40,10 +37,6 @@ import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.auth.NTLMSchemeFactory;
 import org.apache.http.impl.auth.NegotiateSchemeFactory;
 import org.apache.http.protocol.HttpContext;
-import org.apache.log4j.Logger;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /**
  * RequestFilter for setting preemptive authentication and related credentials
@@ -105,60 +98,20 @@ public class HttpAuthenticationRequestFilter extends AbstractRequestFilter {
                 httpMethod.addHeader(header);
             }
         }
-
-        httpContext.setAttribute(ClientContext.CREDS_PROVIDER, new UPDCredentialsProvider(username, password, domain));
+        String requestAuthPolicy = getCorrespondingAuthPolicy(authType);
+        HttpCredentialsProvider credentialsProvider = new HttpCredentialsProvider();
+        credentialsProvider.loadProxyCredentialsFromSettings();
+        credentialsProvider.setRequestCredentials(username, password, domain, requestAuthPolicy);
+        httpContext.setAttribute(ClientContext.CREDS_PROVIDER, credentialsProvider);
     }
 
-    public static class UPDCredentialsProvider implements CredentialsProvider {
-        private boolean checkedCredentials;
-        private final static Logger logger = Logger.getLogger(UPDCredentialsProvider.class);
-        private final String username;
-        private final String password;
-        private final String domain;
-
-        public UPDCredentialsProvider(String username, String password, String domain) {
-            this.username = username;
-            this.password = password == null ? "" : password;
-            this.domain = domain;
+    private static String getCorrespondingAuthPolicy(Enum authType) {
+        String authPolicy = null;
+        if (authType == AuthType.NTLM) {
+            authPolicy = AuthPolicy.NTLM;
+        } else if (authType == AuthType.SPNEGO_KERBEROS) {
+            authPolicy = AuthPolicy.SPNEGO;
         }
-
-        public Credentials getCredentials(final AuthScope authScope) {
-            if (checkedCredentials) {
-                return null;
-            }
-
-            if (authScope == null) {
-                throw new IllegalArgumentException("Authentication scope may not be null");
-            }
-
-            try {
-                if (AuthPolicy.NTLM.equalsIgnoreCase(authScope.getScheme())) {
-                    logger.info(authScope.getHost() + ":" + authScope.getPort() + " requires Windows authentication");
-
-                    String workstation = "";
-                    try {
-                        workstation = InetAddress.getLocalHost().getHostName();
-                    } catch (UnknownHostException e) {
-                    }
-                    return new NTCredentials(username, password, workstation, domain);
-                } else if (AuthPolicy.BASIC.equalsIgnoreCase(authScope.getScheme())
-                        || AuthPolicy.DIGEST.equalsIgnoreCase(authScope.getScheme())
-                        || AuthPolicy.SPNEGO.equalsIgnoreCase(authScope.getScheme())) {
-                    logger.info(authScope.getHost() + ":" + authScope.getPort()
-                            + " requires authentication with the realm '" + authScope.getRealm() + "'");
-                    return new UsernamePasswordCredentials(username, password);
-                }
-            } finally {
-                checkedCredentials = true;
-            }
-            return null;
-        }
-
-        public void clear() {
-        }
-
-        public void setCredentials(final AuthScope authscope, final Credentials credentials) {
-        }
+        return authPolicy;
     }
-
 }

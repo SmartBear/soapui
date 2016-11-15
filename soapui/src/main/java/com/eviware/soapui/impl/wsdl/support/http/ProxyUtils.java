@@ -65,27 +65,34 @@ public class ProxyUtils {
         return context != null ? PropertyExpander.expandProperties(context, content) : PropertyExpander.expandProperties(content);
     }
 
-    private static CredentialsProvider getProxyCredentials(Settings settings) {
+    private static CredentialsProvider getProxyCredentialsProvider(Settings settings) {
         String proxyUsername = getExpandedProperty(null, settings, ProxySettings.USERNAME);
         String proxyPassword = getExpandedProperty(null, settings, ProxySettings.PASSWORD);
 
         if (!StringUtils.isNullOrEmpty(proxyUsername) && !StringUtils.isNullOrEmpty(proxyPassword)) {
-            Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+            Credentials proxyCreds = getProxyCredentials(proxyUsername, proxyPassword);
 
-            // check for nt-username
-            int ix = proxyUsername.indexOf('\\');
-            if (ix > 0) {
-                String domain = proxyUsername.substring(0, ix);
-                if (proxyUsername.length() > ix + 1) {
-                    String user = proxyUsername.substring(ix + 1);
-                    proxyCreds = new NTCredentials(user, proxyPassword, getWorkstationName(), domain);
-                }
-            }
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(AuthScope.ANY, proxyCreds);
             return credsProvider;
         }
         return null;
+    }
+
+    public static Credentials getProxyCredentials(String proxyUsername, String proxyPassword) {
+        Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+
+        // check for nt-username
+        int ix = proxyUsername.indexOf('\\');
+        if (ix > 0) {
+            String domain = proxyUsername.substring(0, ix);
+            if (proxyUsername.length() > ix + 1) {
+                String user = proxyUsername.substring(ix + 1);
+                proxyCreds = new NTCredentials(user, proxyPassword, getWorkstationName(), domain);
+            }
+        }
+
+        return proxyCreds;
     }
 
     private static String getWorkstationName() {
@@ -190,7 +197,7 @@ public class ProxyUtils {
         ProxySelector.setDefault(proxySelector);
         Authenticator.setDefault(authenticator);
         HttpClientSupport.setProxySelector(proxySelector);
-        HttpClientSupport.getHttpClient().setCredentialsProvider(getProxyCredentials(settings));
+        HttpClientSupport.getHttpClient().setCredentialsProvider(getProxyCredentialsProvider(settings));
     }
 
     public static ProxySelector filterHttpHttpsProxy(ProxySelector proxySelector) {
