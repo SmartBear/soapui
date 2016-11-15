@@ -185,7 +185,6 @@ import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 /**
  * Main SoapUI entry point.
  */
-
 public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
