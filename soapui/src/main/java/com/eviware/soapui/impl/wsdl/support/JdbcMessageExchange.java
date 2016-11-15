@@ -42,7 +42,7 @@ public class JdbcMessageExchange extends AbstractNonHttpMessageExchange<JdbcRequ
     }
 
     public String getResponseContent() {
-        return response.getContentAsString();
+        return response == null? null : response.getContentAsString();
     }
 
     public long getTimeTaken() {
