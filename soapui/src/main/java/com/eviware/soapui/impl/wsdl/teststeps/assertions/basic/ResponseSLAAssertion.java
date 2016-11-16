@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
@@ -30,6 +30,8 @@ import com.eviware.soapui.model.testsuite.Assertable;
 import com.eviware.soapui.model.testsuite.AssertionError;
 import com.eviware.soapui.model.testsuite.AssertionException;
 import com.eviware.soapui.model.testsuite.ResponseAssertion;
+import com.eviware.soapui.support.MessageSupport;
+import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationBuilder;
 import com.eviware.soapui.support.xml.XmlObjectConfigurationReader;
@@ -46,10 +48,17 @@ import org.apache.xmlbeans.XmlObject;
  */
 
 public class ResponseSLAAssertion extends WsdlMessageAssertion implements ResponseAssertion {
+    public static final MessageSupport messages = MessageSupport.getMessages(ResponseSLAAssertion.class);
+
     public static final String ID = "Response SLA Assertion";
     public static final String LABEL = "Response SLA";
     public static final String DESCRIPTION = "Validates that the last received response time was within the defined limit. Applicable to Script TestSteps and TestSteps that send requests and receive responses.";
     private String SLA;
+
+    private static final String SLA_VALUE_IS_NOT_NUMBER = messages.get("ResponseSLAAssertion.InfoNotNumber");
+    private static final String SLA_VALUE_IS_EMPTY = messages.get("ResponseSLAAssertion.InfoEmptyValue");
+    private static final String FORM_TITLE = messages.get("ResponseSLAAssertion.Form.Title");
+    private static final String FORM_DESCRIPTION = messages.get("ResponseSLAAssertion.Form.Description");
 
     /**
      * Constructor for our assertion.
@@ -74,8 +83,25 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
         long timeTaken = response == null ? messageExchange.getTimeTaken() : response.getTimeTaken();
 
         // assert!
-        if (timeTaken > Long.parseLong(PropertyExpander.expandProperties(context, SLA))) {
-            throw new AssertionException(new AssertionError("Response did not meet SLA " + timeTaken + "/" + SLA));
+        Long timeExecuted;
+        String propertyValue = null;
+        try {
+            propertyValue = PropertyExpander.expandProperties(context, SLA.trim());
+            timeExecuted = Long.parseLong(propertyValue);
+        } catch (NumberFormatException exp) {
+            if (!StringUtils.isNullOrEmpty(SLA)) {
+                if (!StringUtils.isNullOrEmpty(propertyValue)) {
+                    throw new AssertionException(new AssertionError(String.format(SLA_VALUE_IS_NOT_NUMBER, propertyValue)));
+                } else {
+                    throw new AssertionException(new AssertionError(String.format(SLA_VALUE_IS_NOT_NUMBER, SLA)));
+                }
+            } else {
+                throw new AssertionException(new AssertionError(SLA_VALUE_IS_EMPTY));
+            }
+        }
+
+        if (timeTaken > timeExecuted) {
+            throw new AssertionException(new AssertionError("Response did not meet SLA " + timeTaken + "/" + timeExecuted));
         }
 
         return "Response meets SLA";
@@ -96,17 +122,7 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
         if (value == null || value.trim().length() == 0) {
             value = "200";
         }
-
-        value = UISupport.prompt("Specify maximum response time (ms)", "Configure Response SLA Assertion", value);
-
-        try {
-            Long.parseLong(value);
-            SLA = value;
-
-        } catch (Exception e) {
-            return false;
-        }
-
+        SLA = UISupport.prompt(messages.get(FORM_DESCRIPTION), messages.get(FORM_TITLE), value);
         setConfiguration(createConfiguration());
         return true;
     }

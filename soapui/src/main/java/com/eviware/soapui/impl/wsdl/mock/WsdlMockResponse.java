@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.mock;
 
@@ -20,11 +20,19 @@ import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.AttachmentConfig;
 import com.eviware.soapui.config.MockResponseConfig;
 import com.eviware.soapui.impl.support.AbstractMockResponse;
-import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.impl.wsdl.HttpAttachmentPart;
+import com.eviware.soapui.impl.wsdl.WsdlContentPart;
+import com.eviware.soapui.impl.wsdl.WsdlHeaderPart;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.AttachmentUtils;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.attachments.BodyPartAttachment;
-import com.eviware.soapui.impl.wsdl.support.*;
+import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
+import com.eviware.soapui.impl.wsdl.support.FileAttachment;
+import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.IconAnimator;
+import com.eviware.soapui.impl.wsdl.support.MockFileAttachment;
+import com.eviware.soapui.impl.wsdl.support.WsdlAttachment;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapUtils;
 import com.eviware.soapui.impl.wsdl.support.soap.SoapVersion;
 import com.eviware.soapui.impl.wsdl.support.wsa.WsaConfig;
@@ -57,7 +65,7 @@ import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.w3c.dom.Document;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 import javax.wsdl.BindingOperation;
 import javax.wsdl.BindingOutput;
 import javax.wsdl.Message;

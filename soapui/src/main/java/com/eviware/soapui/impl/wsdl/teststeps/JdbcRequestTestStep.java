@@ -1,33 +1,20 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.teststeps;
-
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.ImageIcon;
-import javax.xml.namespace.QName;
-
-import org.apache.log4j.Logger;
-import org.apache.xmlbeans.SchemaType;
-import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
 
 import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.config.JdbcRequestTestStepConfig;
@@ -64,6 +51,17 @@ import com.eviware.soapui.model.testsuite.TestStep;
 import com.eviware.soapui.model.testsuite.TestStepResult;
 import com.eviware.soapui.model.testsuite.TestStepResult.TestStepStatus;
 import com.eviware.soapui.support.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.impl.values.XmlAnyTypeImpl;
+
+import javax.swing.ImageIcon;
+import javax.xml.namespace.QName;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * WsdlTestStep that executes a WsdlTestRequest
@@ -110,6 +108,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
 
         if (jdbcRequestTestStepConfig.getProperties() == null) {
             jdbcRequestTestStepConfig.addNewProperties();
+        }
+
+        if (!jdbcRequestTestStepConfig.isSetConvertColumnNamesToUpperCase()) {
+            jdbcRequestTestStepConfig.setConvertColumnNamesToUpperCase(true);
         }
 
         jdbcRequest = new JdbcRequest(this, forLoadTest);
@@ -377,13 +379,17 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
     }
 
     public String getAssertableContentAsXml() {
-       return getAssertableContent();
+        return getAssertableContent();
     }
 
     public String getAssertableContent() {
         TestProperty property = getProperty("ResponseAsXml");
         String value = property.getValue();
         return StringUtils.hasContent(value) ? value : property.getDefaultValue();
+    }
+
+    public boolean isConvertColumnNamesToUpperCase() {
+        return jdbcRequestTestStepConfig.getConvertColumnNamesToUpperCase();
     }
 
     public String getResponseContent() {
@@ -624,6 +630,10 @@ public class JdbcRequestTestStep extends WsdlTestStepWithProperties implements A
         String old = getPassword();
         jdbcRequestTestStepConfig.setStoredProcedure(sp);
         notifyPropertyChanged("password", old, sp);
+    }
+
+    public void setConvertColumnNamesToUpperCase(boolean sp) {
+        jdbcRequestTestStepConfig.setConvertColumnNamesToUpperCase(sp);
     }
 
     public JdbcRequest getJdbcRequest() {
