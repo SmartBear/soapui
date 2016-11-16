@@ -34,7 +34,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import static com.eviware.soapui.impl.rest.actions.oauth.OAuth2ParameterValidator.validateRequiredStringValue;
+import static com.eviware.soapui.impl.rest.actions.oauth.OAuthParameterValidator.validateRequiredStringValue;
 
 /**
  * This class implements an OAuth2 three-legged authorization using the third party library Oltu.
@@ -44,7 +44,7 @@ public class OltuOAuth2ClientFacade implements OAuth2ClientFacade {
     public void requestAccessToken(OAuth2Profile profile) throws OAuth2Exception {
         try {
             OAuth2Parameters parameters = buildParametersFrom(profile);
-            OAuth2ParameterValidator.validate(parameters);
+            OAuthParameterValidator.validate(parameters);
             getOAuth2TokenExtractor().extractAccessToken(parameters);
         } catch (OAuthSystemException e) {
             logAndThrowOAuth2Exception(e);

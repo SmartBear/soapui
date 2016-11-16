@@ -20,16 +20,12 @@ import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import org.apache.commons.io.IOUtils;
 import org.apache.oltu.oauth2.common.OAuth;
-import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
-import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -116,62 +112,62 @@ public class OltuOAuth2ClientFacadeTest {
 
 /* Validation tests */
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsUrnAsAuthorizationURI() throws Exception {
         profile.setAuthorizationURI(OAuth2TestUtils.OAUTH_2_OOB_URN);
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsNonHttpAuthorizationUrl() throws Exception {
         profile.setAuthorizationURI("ftp://ftp.sunet.se");
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsNonUriRedirectUri() throws Exception {
         profile.setRedirectURI("(/&#)!#%/(¤#!");
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsUrnAsAccessTokenURI() throws Exception {
         profile.setAccessTokenURI(OAuth2TestUtils.OAUTH_2_OOB_URN);
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsNonHttpAccessTokenURI() throws Exception {
         profile.setAccessTokenURI("ftp://ftp.sunet.se");
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsEmptyClientId() throws Exception {
         profile.setClientID("");
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsEmptyClientSecret() throws Exception {
         profile.setClientSecret("");
         oltuClientFacade.requestAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsEmptyRefreshTokenOnRefresh() throws Exception {
         profile.setRefreshToken("");
         oltuClientFacade.refreshAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsEmptyClientIdOnRefresh() throws Exception {
         profile.setRefreshToken("someRefreshToken");
         profile.setClientID("");
         oltuClientFacade.refreshAccessToken(profile);
     }
 
-    @Test(expected = InvalidOAuth2ParametersException.class)
+    @Test(expected = InvalidOAuthParametersException.class)
     public void rejectsEmptyClientSecretOnRefresh() throws Exception {
         profile.setRefreshToken("someRefreshToken");
         profile.setClientSecret("");

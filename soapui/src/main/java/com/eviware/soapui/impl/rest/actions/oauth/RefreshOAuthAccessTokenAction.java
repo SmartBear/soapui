@@ -39,7 +39,7 @@ public class RefreshOAuthAccessTokenAction extends AbstractAction {
     public void actionPerformed(ActionEvent event) {
         try {
             getOAuthClientFacade().refreshAccessToken(profile);
-        } catch (InvalidOAuth2ParametersException e) {
+        } catch (InvalidOAuthParametersException e) {
             UISupport.showErrorMessage("Invalid OAuth2 parameters: " + e.getMessage());
         } catch (Exception e) {
             SoapUI.logError(e, "Error refreshing OAuth 2 access token");

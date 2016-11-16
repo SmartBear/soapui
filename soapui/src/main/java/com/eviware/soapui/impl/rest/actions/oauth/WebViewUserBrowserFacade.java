@@ -33,6 +33,7 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade {
 
     private WebViewBasedBrowserComponent browserComponent;
     private JFrame popupWindow;
+    private boolean modal = false;
 
     public WebViewUserBrowserFacade() {
         this(false);
@@ -86,6 +87,10 @@ public class WebViewUserBrowserFacade implements UserBrowserFacade {
             SoapUI.log.debug("Could not close window due to unexpected error: " + e.getMessage() + "!");
         }
 
+    }
+
+    public void setModal(boolean value) {
+        this.modal = value;
     }
 
     @Override

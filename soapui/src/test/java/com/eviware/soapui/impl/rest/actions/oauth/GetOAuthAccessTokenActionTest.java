@@ -109,7 +109,7 @@ public class GetOAuthAccessTokenActionTest {
             }
         };
         String theMessage = "Access token URI blabla is not a valid HTTP URL";
-        Mockito.doThrow(new InvalidOAuth2ParametersException(theMessage)).when(clientFacade).requestAccessToken(profile);
+        Mockito.doThrow(new InvalidOAuthParametersException(theMessage)).when(clientFacade).requestAccessToken(profile);
 
         action.actionPerformed(DUMMY_ACTION_EVENT);
         assertThat(stubbedDialogs.getErrorMessages(), is(aCollectionWithSize(1)));

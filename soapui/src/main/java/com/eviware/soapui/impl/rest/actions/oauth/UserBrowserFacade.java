@@ -21,7 +21,7 @@ import java.net.URL;
 /**
  * Defines interactions with a web browser in the context of an OAuth2
  */
-interface UserBrowserFacade {
+public interface UserBrowserFacade {
 
     void open(URL url);
 

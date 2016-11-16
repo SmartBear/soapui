@@ -40,7 +40,7 @@ public class GetOAuthAccessTokenAction extends AbstractAction {
     public void actionPerformed(ActionEvent event) {
         try {
             getOAuthClientFacade().requestAccessToken(target);
-        } catch (InvalidOAuth2ParametersException e) {
+        } catch (InvalidOAuthParametersException e) {
             UISupport.showErrorMessage("Invalid OAuth 2 parameters: " + e.getMessage());
         } catch (Exception e) {
             SoapUI.logError(e, "Error retrieving OAuth 2 access token");
