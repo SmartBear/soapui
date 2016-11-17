@@ -39,10 +39,10 @@ public class ModelItemNamer {
     private ModelItemNamer() {
     }
 
-    public static String createName(String baseName, List<? extends ModelItem> modelItems) {
+    public static String createName(String baseName, Iterable nameHolders) {
         int maxExistingIndex = 0;
-        for (ModelItem modelItem : modelItems) {
-            String name = modelItem.getName();
+        for (Object nameHolder : nameHolders) {
+            String name = getName(nameHolder);
             if (name.contains(baseName)) {
                 try {
                     int beginIndex = name.indexOf(baseName) + baseName.length();
@@ -57,5 +57,9 @@ public class ModelItemNamer {
         }
 
         return baseName + " " + (++maxExistingIndex);
+    }
+
+    private static String getName(Object nameHolder) {
+        return nameHolder instanceof ModelItem ? ((ModelItem) nameHolder).getName() : nameHolder.toString();
     }
 }
