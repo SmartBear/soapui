@@ -45,6 +45,7 @@ import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HttpContext;
 import org.apache.log4j.Logger;
 
+import javax.net.ssl.SSLSocket;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.ConnectException;
@@ -252,8 +253,10 @@ public class SoapUIMultiThreadedHttpConnectionManager extends ThreadSafeClientCo
                 Socket sock = sf.createSocket(params);
                 try {
                     // hostname is required by web server with virtual hosts and one IP (TLS-SNI)
-                    PropertyUtils.setProperty(sock, "host", target.getHostName());
-                } catch (IllegalAccessException|InvocationTargetException|NoSuchMethodException e) {
+                    if (sock instanceof SSLSocket) {
+                        PropertyUtils.setProperty(sock, "host", target.getHostName());
+                    }
+                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                     SoapUI.logError(e);
                 }
                 conn.opening(sock, target);
