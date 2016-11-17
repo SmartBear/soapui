@@ -26,9 +26,11 @@ import com.eviware.soapui.impl.wsdl.panels.mockoperation.WsdlMockResponseMessage
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.AbstractGroovyEditorModel;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.support.GroovyEditor;
 import com.eviware.soapui.impl.wsdl.support.HelpUrls;
+import com.eviware.soapui.impl.wsdl.support.JdbcMessageExchange;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestRunContext;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStepInterface;
+import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.RestResponseMessageExchange;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStepInterface;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
@@ -365,6 +367,9 @@ public class GroovyScriptAssertion extends WsdlMessageAssertion implements Reque
                     exchange = new HttpResponseMessageExchange(((HttpTestRequestStepInterface) testStep).getTestRequest());
                 } else if (testStep instanceof WsdlMockResponseTestStep) {
                     exchange = new WsdlMockResponseMessageExchange(((WsdlMockResponseTestStep) testStep).getMockResponse());
+                } else if (testStep instanceof JdbcRequestTestStep) {
+                    JdbcRequestTestStep jdbcRequestTestStep = (JdbcRequestTestStep) testStep;
+                    exchange = new JdbcMessageExchange(jdbcRequestTestStep, jdbcRequestTestStep.getJdbcRequest().getResponse());
                 }
 
                 try {

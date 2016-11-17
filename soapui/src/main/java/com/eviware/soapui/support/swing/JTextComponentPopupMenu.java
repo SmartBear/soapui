@@ -62,7 +62,9 @@ public final class JTextComponentPopupMenu extends JPopupMenu implements PopupMe
                             || "Paste".equals(((AbstractButton) comp).getText())
                             || "Undo".equals(((AbstractButton) comp).getText())
                             || "Redo".equals(((AbstractButton) comp).getText())
-                            || "Can\'t Redo".equals(((AbstractButton) comp).getText())) {
+                            || "Can\'t Redo".equals(((AbstractButton) comp).getText())
+                            || "Can\'t Undo".equals(((AbstractButton) comp).getText())
+                            || "Select All".equals(((AbstractButton) comp).getText())) {
                         componentPopupMenu.remove(comp);
                         continue;
                     }
