@@ -437,15 +437,17 @@ public class RestRequestParamsPropertyHolder implements RestParamsPropertyHolder
         if (values.containsKey(oldName)) {
             values.put(newName, values.get(oldName));
             values.remove(oldName);
-        }
-        if (sortedPropertyNames.contains(oldName)) {
-            sortedPropertyNames.set(sortedPropertyNames.indexOf(oldName), newName);
+        } else {
+            if (sortedPropertyNames.contains(oldName)) {
+                sortedPropertyNames.set(sortedPropertyNames.indexOf(oldName), newName);
+            }
             firePropertyRenamed(oldName, newName);
         }
     }
 
     public void propertyValueChanged(String name, String oldValue, String newValue) {
         if (!values.containsKey(name)) {
+            values.put(name, newValue);
             firePropertyValueChanged(name, oldValue, newValue);
         }
     }
