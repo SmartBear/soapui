@@ -81,6 +81,9 @@
                     <xsd:element name="oAuth2ProfileContainer" type="tns:OAuth2ProfileContainer"
                                  maxOccurs="1" minOccurs="0">
                     </xsd:element>
+                    <xsd:element name="oAuth1ProfileContainer" type="tns:OAuth1ProfileContainer"
+                                 maxOccurs="1" minOccurs="0">
+                    </xsd:element>
                     <xsd:element name="reporting" type="tns:ReportingType"
                                  minOccurs="0" maxOccurs="1">
                     </xsd:element>
@@ -589,6 +592,7 @@
                         <xsd:enumeration value="NTLM"></xsd:enumeration>
                         <xsd:enumeration value="SPNEGO/Kerberos"></xsd:enumeration>
                         <xsd:enumeration value="OAuth 2.0"></xsd:enumeration>
+                        <xsd:enumeration value="OAuth 1.0"></xsd:enumeration>
                         <xsd:enumeration value="No Authorization"></xsd:enumeration>
                     </xsd:restriction>
                 </xsd:simpleType>
@@ -1970,6 +1974,13 @@
         </xsd:sequence>
     </xsd:complexType>
 
+    <xsd:complexType name="OAuth1ProfileContainer">
+        <xsd:sequence>
+            <xsd:element name="oAuth1Profile" type="tns:OAuth1Profile"
+                         maxOccurs="unbounded" minOccurs="0"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
     <xsd:simpleType name="RefreshAccessTokenMethod">
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="AUTOMATIC"></xsd:enumeration>
@@ -1979,6 +1990,7 @@
 
     <xsd:simpleType name="AccessTokenStatus">
         <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="UNKNOWN"></xsd:enumeration>
             <xsd:enumeration value="ENTERED_MANUALLY"></xsd:enumeration>
             <xsd:enumeration value="WAITING_FOR_AUTHORIZATION"></xsd:enumeration>
             <xsd:enumeration value="RECEIVED_AUTHORIZATION_CODE"></xsd:enumeration>
@@ -2013,6 +2025,29 @@
             <xsd:element name="manualAccessTokenExpirationTimeUnit" type="tns:TimeUnit"/>
             <xsd:element name="resourceOwnerName" type="xsd:string"></xsd:element>
             <xsd:element name="resourceOwnerPassword" type="xsd:string"></xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="OAuth1Profile">
+        <xsd:sequence>
+            <xsd:element name="name" type="xsd:string"></xsd:element>
+            <xsd:element name="authorizationURI" type="xsd:string"/>
+            <xsd:element name="accessTokenURI" type="xsd:string"/>
+            <xsd:element name="redirectURI" type="xsd:string"/>
+            <xsd:element name="accessToken" type="xsd:string"/>
+            <xsd:element name="accessTokenPosition" type="tns:AccessTokenPosition"/>
+            <xsd:element name="accessTokenStatus" type="tns:AccessTokenStatus" minOccurs="0"/>
+            <xsd:element name="accessTokenStartingStatus" type="tns:AccessTokenStatus"/>
+            <xsd:element name="accessTokenIssuedTime" type="xsd:long"/>
+            <xsd:element name="manualAccessTokenExpirationTime" type="xsd:string" minOccurs="0"/>
+            <xsd:element name="useManualAccessTokenExpirationTime" type="xsd:boolean"/>
+            <xsd:element name="manualAccessTokenExpirationTimeUnit" type="tns:TimeUnit"/>
+            <xsd:element name="temporaryTokenURI" type="xsd:string"/>
+            <xsd:element name="consumerKey" type="xsd:string"/>
+            <xsd:element name="consumerSecret" type="xsd:string"/>
+            <xsd:element name="tokenSecret" type="xsd:string"/>
+            <xsd:element name="tokenSecretStatus" type="tns:AccessTokenStatus" minOccurs="0"/>
+            <xsd:element name="tokenSecretStartingStatus" type="tns:AccessTokenStatus"/>
         </xsd:sequence>
     </xsd:complexType>
 

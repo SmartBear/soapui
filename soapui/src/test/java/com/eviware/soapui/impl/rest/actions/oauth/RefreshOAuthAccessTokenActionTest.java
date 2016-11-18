@@ -100,7 +100,7 @@ public class RefreshOAuthAccessTokenActionTest {
     @Test
     public void displaysValidationErrorWhenValidationFails() throws Exception {
         String theMessage = "Client ID is empty";
-        Mockito.doThrow(new InvalidOAuth2ParametersException(theMessage)).when(clientFacade).refreshAccessToken(profile);
+        Mockito.doThrow(new InvalidOAuthParametersException(theMessage)).when(clientFacade).refreshAccessToken(profile);
 
         action.actionPerformed(DUMMY_ACTION_EVENT);
         assertThat(stubbedDialogs.getErrorMessages(), is(aCollectionWithSize(1)));
