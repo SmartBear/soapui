@@ -17,7 +17,6 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import java.awt.Color;
 
@@ -93,7 +92,7 @@ public class OAuth1GetTokenForm implements OAuth1TokenStatusChangeListener {
         initStatusChangeManager();
         SimpleBindingForm accessTokenForm = createSimpleBindingForm(getProfile());
 
-        populateGetAccessTokenForm(accessTokenForm, false);
+        populateGetAccessTokenForm(accessTokenForm);
 
         initTokenStatus();
         setOAuth1StatusFeedback(getTokenStatus());
@@ -106,13 +105,11 @@ public class OAuth1GetTokenForm implements OAuth1TokenStatusChangeListener {
         return profile.getAccessTokenStatus();
     }
 
-    protected void populateGetAccessTokenForm(SimpleBindingForm accessTokenForm, boolean modalMode) {
+    protected void populateGetAccessTokenForm(SimpleBindingForm accessTokenForm) {
         accessTokenForm.addSpace(BOARDER_SPACING);
 
-        if (!modalMode) {
-            accessTokenForm.appendHeading(DIALOG_DESCRIPTION);
-            accessTokenForm.addSpace(NORMAL_SPACING);
-        }
+        accessTokenForm.appendHeading(DIALOG_DESCRIPTION);
+        accessTokenForm.addSpace(NORMAL_SPACING);
 
         accessTokenForm.appendTextField(OAuth1Profile.CONSUMER_KEY_PROPERTY, CONSUMER_KEY_TITLE, "");
 

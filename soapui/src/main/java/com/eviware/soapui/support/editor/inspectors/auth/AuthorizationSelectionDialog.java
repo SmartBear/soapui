@@ -47,6 +47,7 @@ import java.util.List;
  */
 public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
 
+    private static final MessageSupport messages = MessageSupport.getMessages(AuthorizationSelectionDialog.class);
     private T request;
     private List<String> basicAuthTypes;
     private JTextFieldFormField profileNameField;
@@ -62,7 +63,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
         FormLayout layout = new FormLayout("5px,100px,5px,left:default,5px:grow(1.0)");
         final XFormDialog dialog = ADialogBuilder.buildDialog(AuthorizationTypeForm.class, null, layout);
 
-        profileNameField = (JTextFieldFormField) dialog.getFormField(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD);
+        profileNameField = (JTextFieldFormField) dialog.getFormField(AuthorizationTypeForm.OAUTH_PROFILE_NAME_FIELD);
         profileNameField.addFormFieldListener(new ProfileNameFieldListener(dialog));
 
         hintTextLabel = (JLabelFormField) dialog.getFormField(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL);
@@ -94,26 +95,26 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
         String profileName;
 
         if (CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals(authType)) {
-            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD);
+            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH_PROFILE_NAME_FIELD);
             if (ProfileSelectionForm.isReservedProfileName(profileName)) {
-                UISupport.showErrorMessage("'" + profileName + "' is a reserved profile name.");
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ReservedProfileName", profileName));
                 return;
             }
             if (getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(profileName)) {
-                UISupport.showErrorMessage("There is already a profile named '" + profileName + "'");
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ProfileAlreadyExists", profileName));
                 return;
             }
 
             getOAuth2ProfileContainer().addNewOAuth2Profile(profileName);
             authTypeEnum = CredentialsConfig.AuthType.O_AUTH_2_0;
         } else if (CredentialsConfig.AuthType.O_AUTH_1_0.toString().equals(authType)) {
-            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD);
+            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH_PROFILE_NAME_FIELD);
             if (ProfileSelectionForm.isReservedProfileName(profileName)) {
-                UISupport.showErrorMessage("'" + profileName + "' is a reserved profile name.");
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ReservedProfileName", profileName));
                 return;
             }
             if (getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(profileName)) {
-                UISupport.showErrorMessage("There is already a profile named '" + profileName + "'");
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ProfileAlreadyExists", profileName));
                 return;
             }
 
@@ -174,7 +175,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
         public final static String AUTHORIZATION_TYPE = messages.get("AuthorizationTypeForm.AuthorizationType.Label");
 
         @AField(description = "AuthorizationTypeForm.OAuth2ProfileName.Description", type = AField.AFieldType.STRING)
-        public final static String OAUTH2_PROFILE_NAME_FIELD = messages.get("AuthorizationTypeForm.OAuth2ProfileName.Label");
+        public final static String OAUTH_PROFILE_NAME_FIELD = messages.get("AuthorizationTypeForm.OAuth2ProfileName.Label");
 
         @AField(description = "AuthorizationTypeForm.OAuth2ProfileNameHintText.Description", type = AField.AFieldType.LABEL)
         public final static String OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL = messages.get("AuthorizationTypeForm.OAuth2ProfileNameHintText.Label");

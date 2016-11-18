@@ -21,7 +21,7 @@ public class GetOAuth1TokenAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent event) {
         try {
-            getOAuthClientFacade().requestAccessToken(target, isModalMode());
+            getOAuthClientFacade().requestAccessToken(target);
         } catch (InvalidOAuthParametersException e) {
             UISupport.showErrorMessage(messages.get("GetOAuth1TokenAction.Error.InvalidParameters") + e.getMessage());
         } catch (Exception e) {
@@ -34,7 +34,4 @@ public class GetOAuth1TokenAction extends AbstractAction {
         return new GoogleOAuth1ClientFacade();
     }
 
-    protected boolean isModalMode() {
-        return true;
-    }
 }

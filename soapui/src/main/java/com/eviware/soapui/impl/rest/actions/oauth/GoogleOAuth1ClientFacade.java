@@ -32,21 +32,21 @@ public class GoogleOAuth1ClientFacade implements OAuth1ClientFacade {
     private String tokenSecret;
 
     @Override
-    public void requestAccessToken(OAuth1Profile profile, boolean modalMode) throws OAuth1Exception {
+    public void requestAccessToken(OAuth1Profile profile) throws OAuth1Exception {
         try {
             OAuth1Parameters parameters = new OAuth1Parameters(profile);
             OAuthParameterValidator.validate(parameters);
-            extractAccessToken(parameters, modalMode);
+            extractAccessToken(parameters);
         } catch (MalformedURLException | URISyntaxException e) {
             SoapUI.logError(e, messages.get("GoogleOAuth1ClientFacade.Error.WrongURL"));
             throw new OAuth1Exception(e);
         }
     }
 
-    private void extractAccessToken(final OAuth1Parameters parameters, boolean modalMode) throws URISyntaxException,
+    private void extractAccessToken(final OAuth1Parameters parameters) throws URISyntaxException,
             MalformedURLException, OAuth1Exception {
         tokenSecret = null;
-        final UserBrowserFacade browserFacade = getBrowserFacade(modalMode);
+        final UserBrowserFacade browserFacade = getBrowserFacade();
         browserFacade.addBrowserListener(new BrowserListenerAdapter() {
             @Override
             public void locationChanged(String newLocation) {
@@ -64,7 +64,6 @@ public class GoogleOAuth1ClientFacade implements OAuth1ClientFacade {
         });
         parameters.waitingForAuthorization();
 
-        // In modalMode we'll stop here until browser will be closed.
         browserFacade.open(new URI(createAuthorizationURL(parameters)).toURL());
     }
 
@@ -136,9 +135,8 @@ public class GoogleOAuth1ClientFacade implements OAuth1ClientFacade {
     }
 
 
-    protected UserBrowserFacade getBrowserFacade(boolean modalMode) {
+    protected UserBrowserFacade getBrowserFacade() {
         WebViewUserBrowserFacade result = new WebViewUserBrowserFacade();
-        result.setModal(modalMode);
         return result;
     }
 
