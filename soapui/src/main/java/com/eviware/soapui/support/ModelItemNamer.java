@@ -18,7 +18,7 @@ package com.eviware.soapui.support;
 
 import com.eviware.soapui.model.ModelItem;
 
-import java.util.List;
+import javax.annotation.Nonnull;
 
 /**
  * Utility class to create unique names for model items
@@ -39,10 +39,13 @@ public class ModelItemNamer {
     private ModelItemNamer() {
     }
 
-    public static String createName(String baseName, List<? extends ModelItem> modelItems) {
+    public static String createName(String baseName, Iterable nameHolders) {
         int maxExistingIndex = 0;
-        for (ModelItem modelItem : modelItems) {
-            String name = modelItem.getName();
+        for (Object nameHolder : nameHolders) {
+            if (nameHolder == null) {
+                continue;
+            }
+            String name = getName(nameHolder);
             if (name.contains(baseName)) {
                 try {
                     int beginIndex = name.indexOf(baseName) + baseName.length();
@@ -57,5 +60,9 @@ public class ModelItemNamer {
         }
 
         return baseName + " " + (++maxExistingIndex);
+    }
+
+    private static String getName(@Nonnull Object nameHolder) {
+        return nameHolder instanceof ModelItem ? ((ModelItem) nameHolder).getName() : nameHolder.toString();
     }
 }
