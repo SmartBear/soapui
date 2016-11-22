@@ -31,6 +31,7 @@ import com.eviware.soapui.impl.rest.support.RestUtils;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.support.AbstractInterface;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.support.ModelItemNamer;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
 import org.apache.commons.lang.ArrayUtils;
@@ -121,7 +122,8 @@ public class RestServiceBuilder {
                 }
             }
         }
-        RestMethod restMethod = restResource.addNewMethod(restResource.getName());
+        String methodName = ModelItemNamer.createName(restResource.getName(), restResource.getRestMethodList());
+        RestMethod restMethod = restResource.addNewMethod(methodName);
         restMethod.setMethod(requestMethod);
         return restMethod;
     }
