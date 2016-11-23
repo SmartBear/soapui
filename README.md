@@ -70,3 +70,4 @@ You can also get the latest JavaDoc for SoapUI [here](http://www.soapui.org/apid
 * [Extending SoapUI](http://www.soapui.org/Developers-Corner/extending-soapui.html)
 * [Custom factories](http://www.soapui.org/Developers-Corner/custom-factories.html)
 * [Integrating with SoapUI](http://www.soapui.org/Developers-Corner/integrating-with-soapui.html)
+* [Mastering SoapUI](https://www.packtpub.com/web-development/mastering-soapui) - Master the art of testing and automating your SOA using SoapUI
