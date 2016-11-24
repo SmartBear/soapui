@@ -201,7 +201,7 @@ public class SoapUIPreferencesAction extends AbstractAction implements SoapUIFac
         prefItems.addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                selectPrefs(prefsListModel.get(e.getFirstIndex()));
+                selectPrefs(prefsListModel.get(prefItems.getSelectedIndex()));
             }
         });
 
