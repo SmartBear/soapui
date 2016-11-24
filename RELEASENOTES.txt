@@ -4,13 +4,17 @@
 
 ### Improvements ###
 
-* Support for **OAuth 1** authentication.   (SOAPUIOS-194)
+* Support for OAuth 1 authentication.   (SOAPUIOS-194)
 
-* **Improved support for OAuth 2**. SoapUI now supports two additional grant types: Resource Owner Credentials Grant and Client Credentials Grant. (SOAPUIOS-60)
+* Improved support for OAuth 2. SoapUI now supports two additional grant types: Resource Owner Credentials Grant and Client Credentials Grant. (SOAPUIOS-60)
 
-* Support for **Server Name Indication (SNI)** in TLS/SSL requests. (SOAPUIOS-218)
+* A new feature by Krzysztof Baranski (krzysbaranski in GitHub): Support for Server Name Indication (SNI) in TLS/SSL requests. (SOAPUIOS-218)
 
-* The Set Endpoint dialog now displays endpoints in alphabetical order. (SOAPUIOS-212)
+* A new feature by Bouke Nijhuis (BoukeNijhuis in GitHub): The XQuery Match assertion now supports Ignore namespace prefix and Ignore XML Comments options. (SOAPUIOS-210)
+
+* A new feature by Kyle Smith (smithk86 in GitHub): The Set Endpoint dialog now displays endpoints in alphabetical order. (SOAPUIOS-212)
+
+Many thanks to Krzysztof, Bouke and Kyle for their efforts!
 
 * The design of some buttons has been updated. (SOAPUIOS-209)
 
@@ -40,12 +44,13 @@
 
 * A NoSuchMethodException exception could occur when creating a project from WSDL. (SOAPUIOS-204)
 
-* In certain cases, the Recently Used tab could disappear from the Assertions dialog. (SOAPUIOS-211). Many thanks to BoukeNijhuis for fixing this! 
+* A bug fix by Bouke Nijhuis (BoukeNijhuis in GitHub): In certain cases, the Recently Used tab could disappear from the Assertions dialog. (SOAPUIOS-211). 
 
-* The Request  URL property of the HTTP Request test step did not allow capital letters. (SOAPUIOS-213)
+* A bug fix by bearsoftware (GitHub nickname): The Request  URL property of the HTTP Request test step did not allow capital letters. (SOAPUIOS-213)
 
-* Multiple concurrent requests to a mock service could cause the HTTP 500 error. (SOAPUIOS-215)
+* A bug fix by kekemonster (GitHub nickname): Multiple concurrent requests to a mock service could cause the HTTP 500 error. (SOAPUIOS-215)
 
+Many thanks to Bouke Nijhuis, bearsoftware and kekemonster for contribution!
 
 -------------------------------------------------------------------------------
 
