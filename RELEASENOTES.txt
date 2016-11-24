@@ -10,7 +10,7 @@
 
 * A new feature by Krzysztof Baranski (krzysbaranski in GitHub): Support for Server Name Indication (SNI) in TLS/SSL requests. (SOAPUIOS-218)
 
-* A new feature by Bouke Nijhuis (BoukeNijhuis in GitHub): The XQuery Match assertion now supports Ignore namespace prefix and Ignore XML Comments options. (SOAPUIOS-210)
+* A new feature by Bouke Nijhuis (BoukeNijhuis in GitHub): The XQuery Match assertion now supports the "Ignore namespace prefix" and "Ignore XML Comments" options. (SOAPUIOS-210)
 
 * A new feature by Kyle Smith (smithk86 in GitHub): The Set Endpoint dialog now displays endpoints in alphabetical order. (SOAPUIOS-212)
 
