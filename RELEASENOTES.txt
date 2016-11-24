@@ -6,7 +6,7 @@
 
 * Support for OAuth 1 authentication.   (SOAPUIOS-194)
 
-* Improved support for OAuth 2. SoapUI now supports two additional grant types: Resource Owner Credentials Grant and Client Credentials Grant. (SOAPUIOS-60)
+* Improved support for OAuth 2. SoapUI now supports two additional grant types: Resource Owner Password Credentials and Client Credentials. (SOAPUIOS-60)
 
 * A new feature by Krzysztof Baranski (krzysbaranski in GitHub): Support for Server Name Indication (SNI) in TLS/SSL requests. (SOAPUIOS-218)
 
@@ -20,11 +20,9 @@ Many thanks to Krzysztof, Bouke and Kyle for their efforts!
 
 * The SoapUI icon on Mac OS X has been updated. (SOAPUIOS-90)
 
-### Bundled Plugins ###
+### Bundled Plugin ###
 
 * The Postman plugin is now included in the SoapUI installation package. You use this plugin to import Postman collections and tests to SoapUI.  (SOAPUIOS-208)
-
-* The SwaggerHub plugin has been updated. (SOAPUIOS-152)
 
 ### Bug Fixes ###
 
