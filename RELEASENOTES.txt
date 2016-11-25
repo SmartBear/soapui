@@ -1,6 +1,6 @@
 ﻿# SoapUI Open Source 5.3.0
 
-#### Released 2016-11-XX ####
+#### Released 2016-11-30 ####
 
 ### Improvements ###
 
