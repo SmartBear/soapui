@@ -30,23 +30,20 @@ import javax.swing.JOptionPane;
 public class AnalyticsHelper {
     private static boolean initialized = false;
 
-    private static boolean isAnalyticsEnabled() {
+    private static boolean isAnalyticsDisabled() {
         Settings settings = SoapUI.getSettings();
-        boolean analyticsEnabled = settings.getBoolean(UISettings.DISABLE_ANALYTICS, false);
-        if (analyticsEnabled) {
+        boolean analyticsDisabled = settings.getBoolean(UISettings.DISABLE_ANALYTICS, false);
+        if (analyticsDisabled) {
             return true;
         }
         Version optOutVersion = new Version(settings.getString(UISettings.ANALYTICS_OPT_OUT_VERSION, "0.0"));
         Version currentSoapUIVersion = new Version(SoapUI.SOAPUI_VERSION);
         if (!optOutVersion.getMajorVersion().equals(currentSoapUIVersion.getMajorVersion()) && SoapUI.usingGraphicalEnvironment()) {
-            analyticsEnabled = StatisticsCollectionConfirmationDialog.showDialog() == JOptionPane.YES_OPTION;
-            settings.setBoolean(UISettings.DISABLE_ANALYTICS, !analyticsEnabled);
-
-            if (!analyticsEnabled) {
-                settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
-            }
+            analyticsDisabled = StatisticsCollectionConfirmationDialog.showDialog() == JOptionPane.NO_OPTION;
+            settings.setBoolean(UISettings.DISABLE_ANALYTICS, analyticsDisabled);
+            settings.setString(UISettings.ANALYTICS_OPT_OUT_VERSION, currentSoapUIVersion.getMajorVersion());
         }
-        return analyticsEnabled;
+        return analyticsDisabled;
     }
 
     public static void initializeAnalytics() {
@@ -58,7 +55,7 @@ public class AnalyticsHelper {
         AnalyticsManager manager = Analytics.getAnalyticsManager();
         manager.setExecutorService(SoapUI.getThreadPool());
         manager.registerAnalyticsProviderFactory(new OSUserProviderFactory());
-        if (!isAnalyticsEnabled()) {
+        if (isAnalyticsDisabled()) {
             return;
         }
 
