@@ -165,6 +165,15 @@ public class InvalidHttpStatusCodesAssertion extends WsdlMessageAssertion implem
         return true;
     }
 
+    public void setCodes(String codes) {
+        this.codes = codes;
+        setConfiguration(createConfiguration());
+    }
+
+    public String getCodes() {
+        return codes;
+    }
+
     private void buildDialog() {
         XFormDialogBuilder builder = XFormFactory.createDialogBuilder("Invalid HTTP status codes Assertion");
         XForm mainForm = builder.createForm("Basic");

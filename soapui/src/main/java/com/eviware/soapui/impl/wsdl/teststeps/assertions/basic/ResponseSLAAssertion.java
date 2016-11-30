@@ -117,13 +117,16 @@ public class ResponseSLAAssertion extends WsdlMessageAssertion implements Respon
      * @see com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion#configure()
      */
     public boolean configure() {
-        String value = SLA;
+        String value = getSLA();
 
-        if (value == null || value.trim().length() == 0) {
+        if (StringUtils.isNullOrEmpty(value)) {
             value = "200";
         }
-        SLA = UISupport.prompt(messages.get(FORM_DESCRIPTION), messages.get(FORM_TITLE), value);
-        setConfiguration(createConfiguration());
+        String sla = UISupport.prompt(messages.get(FORM_DESCRIPTION), messages.get(FORM_TITLE), value);
+        if (sla == null) {
+            return false;
+        }
+        setSLA(sla);
         return true;
     }
 

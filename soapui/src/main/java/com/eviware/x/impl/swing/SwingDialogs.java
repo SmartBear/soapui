@@ -43,9 +43,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
-/**
- * @author Lars
- */
 public class SwingDialogs implements XDialogs {
     private Component parent;
     private JDialog extendedInfoDialog;
