@@ -55,7 +55,7 @@ public abstract class JTableFactory {
                 @Override
                 public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                     Component defaultRenderer = super.prepareRenderer(renderer, row, column);
-                    applyStripesToRenderer(row, defaultRenderer);
+                    applyStripesToRenderer(row, defaultRenderer, getSelectedRow() == row);
                     return defaultRenderer;
                 }
 
@@ -73,7 +73,7 @@ public abstract class JTableFactory {
                 @Override
                 public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                     Component defaultRenderer = super.prepareRenderer(renderer, row, column);
-                    applyStripesToRenderer(row, defaultRenderer);
+                    applyStripesToRenderer(row, defaultRenderer, getSelectedRow() == row);
                     return defaultRenderer;
                 }
 
@@ -93,12 +93,15 @@ public abstract class JTableFactory {
         stripedTable.setIntercellSpacing(new Dimension(0, 0));
     }
 
-    public static void applyStripesToRenderer(int row, Component defaultRenderer) {
-        if (row % 2 == 0) {
+    public static void applyStripesToRenderer(int row, Component defaultRenderer, boolean isSelected) {
+        if (isSelected) {
+            defaultRenderer.setBackground(UIConstants.TREE_AND_TABLE_SELECTION_COLOR);
+        } else if (row % 2 == 0) {
             defaultRenderer.setBackground(new Color(241, 244, 247));
         } else {
             defaultRenderer.setBackground(Color.WHITE);
         }
+
         defaultRenderer.setForeground(Color.BLACK);
     }
 }

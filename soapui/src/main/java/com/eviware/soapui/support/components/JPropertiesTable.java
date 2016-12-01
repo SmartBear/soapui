@@ -470,7 +470,7 @@ public class JPropertiesTable<T> extends JPanel {
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
             Component defaultRenderer = super.prepareRenderer(renderer, row, column);
             if (UISupport.isMac()) {
-                JTableFactory.applyStripesToRenderer(row, defaultRenderer);
+                JTableFactory.applyStripesToRenderer(row, defaultRenderer, getSelectedRow() == row);
             }
             return defaultRenderer;
         }

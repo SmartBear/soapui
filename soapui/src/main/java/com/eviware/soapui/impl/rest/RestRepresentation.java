@@ -23,6 +23,7 @@ import com.eviware.soapui.impl.rest.panels.request.inspectors.schema.InferredSch
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.rest.support.XmlBeansRestParamsTestPropertyHolder;
 import com.eviware.soapui.impl.wadl.WadlDefinitionContext;
+import com.eviware.soapui.impl.wsdl.support.CompressedStringSupport;
 import com.eviware.soapui.impl.wsdl.support.xsd.SampleXmlUtil;
 import com.eviware.soapui.model.iface.Request;
 import com.eviware.soapui.support.PropertyChangeNotifier;
@@ -214,6 +215,25 @@ public class RestRepresentation implements PropertyChangeNotifier, PropertyChang
         } else {
             return "";
         }
+    }
+
+    public void setSampleContent(String sampleContent) {
+        String old = getDescription();
+
+        if (!config.isSetSampleContent()) {
+            config.addNewSampleContent();
+        }
+
+        CompressedStringSupport.setString(config.getSampleContent(), sampleContent);
+        propertyChangeSupport.firePropertyChange("sampleContent", old, sampleContent);
+    }
+
+    public String getSampleContent() {
+        if (!config.isSetSampleContent()) {
+            return null;
+        }
+
+        return CompressedStringSupport.getString(config.getSampleContent());
     }
 
     public void propertyChange(PropertyChangeEvent evt) {

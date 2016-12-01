@@ -222,7 +222,7 @@ public class JDebugPropertiesTable<T> {
         @Override
         public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
             Component defaultRenderer = super.prepareRenderer(renderer, row, column);
-            JTableFactory.applyStripesToRenderer(row, defaultRenderer);
+            JTableFactory.applyStripesToRenderer(row, defaultRenderer, getSelectedRow() == row);
             return defaultRenderer;
         }
 
