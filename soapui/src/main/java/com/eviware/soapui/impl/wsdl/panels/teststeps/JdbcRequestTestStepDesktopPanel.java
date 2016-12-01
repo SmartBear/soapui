@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
 
@@ -53,6 +53,7 @@ import com.eviware.soapui.settings.UISettings;
 import com.eviware.soapui.support.DateUtil;
 import com.eviware.soapui.support.DocumentListenerAdapter;
 import com.eviware.soapui.support.ListDataChangeListener;
+import com.eviware.soapui.support.MessageSupport;
 import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.StringUtils;
 import com.eviware.soapui.support.UISupport;
@@ -113,6 +114,7 @@ import java.util.List;
 public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcRequestTestStep> implements
         SubmitListener {
     private final static Logger log = Logger.getLogger(AbstractHttpRequestDesktopPanel.class);
+    private final static MessageSupport messages = MessageSupport.getMessages(JdbcRequestTestStepDesktopPanel.class);
     protected JPanel configPanel;
     private JButton addAssertionButton;
     protected JInspectorPanel inspectorPanel;
@@ -130,6 +132,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
     protected static final String PASS_FIELD = "Password";
     public static final String QUERY_FIELD = "SQL Query";
     protected static final String STOREDPROCEDURE_FIELD = "Stored Procedure";
+    protected static final String RESULT_COLUMNS_NAMES_TO_UPPER_CASE = messages.get("JdbcRequestTestStepDesktopPanel.ResultColumnsToUpperCase.Name");
     protected static final String DATA_CONNECTION_FIELD = "Connection";
 
     protected static final String QUERY_ELEMENT = "query";
@@ -137,6 +140,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
     protected Connection connection;
     protected RSyntaxTextArea queryArea;
     protected JCheckBox isStoredProcedureCheckBox;
+    protected JCheckBox resultColumnsNamesToUpperCaseCheckBox;
     protected JTextField driverTextField;
     protected JTextField connStrTextField;
     protected JButton testConnectionButton;
@@ -272,6 +276,7 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
             configForm = new SimpleForm();
             createSimpleJdbcConfigForm();
             addStoreProcedureChangeListener();
+            addResultColumnsNamesToUpperCaseChangeListener();
 
             panel.add(new JScrollPane(configForm.getPanel()));
         }
@@ -468,6 +473,8 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
 
         isStoredProcedureCheckBox = configForm.appendCheckBox(STOREDPROCEDURE_FIELD,
                 "Select if this is a stored procedure", jdbcRequestTestStep.isStoredProcedure());
+        resultColumnsNamesToUpperCaseCheckBox = configForm.appendCheckBox(RESULT_COLUMNS_NAMES_TO_UPPER_CASE,
+                messages.get("JdbcRequestTestStepDesktopPanel.ResultColumnsToUpperCase.Description"), jdbcRequestTestStep.isConvertColumnNamesToUpperCase());
     }
 
     protected void addPasswordDocumentListener() {
@@ -518,6 +525,14 @@ public class JdbcRequestTestStepDesktopPanel extends ModelItemDesktopPanel<JdbcR
                         }
                     }
                 });
+            }
+        });
+    }
+
+    protected void addResultColumnsNamesToUpperCaseChangeListener() {
+        resultColumnsNamesToUpperCaseCheckBox.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent arg0) {
+                jdbcRequestTestStep.setConvertColumnNamesToUpperCase(((JCheckBox) arg0.getSource()).isSelected());
             }
         });
     }

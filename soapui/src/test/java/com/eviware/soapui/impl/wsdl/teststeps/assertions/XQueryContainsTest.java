@@ -1,21 +1,23 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
+
 package com.eviware.soapui.impl.wsdl.teststeps.assertions;
 
 import com.eviware.soapui.config.TestAssertionConfig;
+import com.eviware.soapui.impl.wsdl.WsdlSubmitContext;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.XQueryContainsAssertion;
 import com.eviware.soapui.model.iface.SubmitContext;
 import com.eviware.soapui.model.testsuite.Assertable;
@@ -28,6 +30,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /*
  * This test covers bug reported in SOAPUI-3935
@@ -38,13 +41,18 @@ public class XQueryContainsTest {
     @Mock
     private SubmitContext context;
 
-    private String response;
-    private XQueryContainsAssertion assertion;
+    private String response, testBodyWithDifferentNSPrefix, testBodyWithComments, testResponse;
+    private XQueryContainsAssertion assertion, assertionBody;
 
     @Before
     public void setUp() throws Exception {
         response = readResource("/xqueryassertion/response.xml");
         assertion = new XQueryContainsAssertion(TestAssertionConfig.Factory.newInstance(), assertable);
+        
+        testBodyWithDifferentNSPrefix = readResource ("/xqueryassertion/testBodyWithDifferentNSPrefix.xml");
+        testBodyWithComments = readResource ("/xqueryassertion/testBodyWithComments.xml");
+        testResponse = readResource("/testResponse.xml");
+        assertionBody = new XQueryContainsAssertion(TestAssertionConfig.Factory.newInstance(), assertable);
     }
 
     private String readResource(String string) throws Exception {
@@ -106,5 +114,43 @@ public class XQueryContainsTest {
         assertion.setExpectedContent("<html_instructions>ABC *</html_instructions>");
         assertion.setAllowWildcards(true);
         assertion.assertContent(response, context, XQueryContainsAssertion.ID);
+    }
+    
+    @Test(expected = AssertionException.class)
+    public void negativeIgnorePrefixTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithDifferentNSPrefix);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
+  
+    @Test
+    public void positiveIgnorePrefixTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithDifferentNSPrefix);
+        assertionBody.setIgnoreNamespaceDifferences(true);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
+    
+    @Test(expected = AssertionException.class)
+    public void negativeIgnoreCommentsTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithComments);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
+    }
+    
+    @Test
+    public void positiveIgnoreCommentsTest() throws AssertionException {
+        assertionBody.setPath("declare namespace urn='urn:schema:v1:companyservice:applications:bis.bonnier.se';"
+                + "//urn:searchResponse");
+
+        assertionBody.setExpectedContent(testBodyWithComments);
+        assertionBody.setIgnoreComments(true);
+        assertNotNull(assertionBody.assertContent(testResponse, new WsdlSubmitContext(null), ""));
     }
 }

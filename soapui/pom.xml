@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.smartbear.soapui</groupId>
         <artifactId>soapui-project</artifactId>
-        <version>5.2.1</version>
+        <version>5.3.0</version>
     </parent>
 
     <artifactId>soapui</artifactId>
@@ -207,13 +207,13 @@
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>analytics-core</artifactId>
-            <version>5.2.1</version>
+            <version>5.3.0</version>
         </dependency>
 
         <dependency>
             <groupId>com.smartbear.utils.analytics</groupId>
             <artifactId>out-app-analytics-provider</artifactId>
-            <version>5.2.1</version>
+            <version>5.3.0</version>
         </dependency>
 
         <!-- JGoodies -->
@@ -327,6 +327,11 @@
             <groupId>org.apache.oltu.oauth2</groupId>
             <artifactId>org.apache.oltu.oauth2.httpclient4</artifactId>
             <version>0.31</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client</artifactId>
+            <version>1.21.0</version>
         </dependency>
 
         <!--              -->
@@ -583,7 +588,7 @@
         <profile>
             <id>javafx.dependency</id>
             <activation>
-                <jdk>[1.6,1.8)</jdk>
+                <jdk>[1.6,1.8]</jdk>
             </activation>
             <dependencies>
                 <dependency>

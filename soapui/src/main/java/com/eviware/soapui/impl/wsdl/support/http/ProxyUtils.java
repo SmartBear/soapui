@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.support.http;
 
@@ -33,7 +33,11 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
 
-import java.net.*;
+import java.net.Authenticator;
+import java.net.InetAddress;
+import java.net.PasswordAuthentication;
+import java.net.ProxySelector;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,27 +65,34 @@ public class ProxyUtils {
         return context != null ? PropertyExpander.expandProperties(context, content) : PropertyExpander.expandProperties(content);
     }
 
-    private static CredentialsProvider getProxyCredentials(Settings settings) {
+    private static CredentialsProvider getProxyCredentialsProvider(Settings settings) {
         String proxyUsername = getExpandedProperty(null, settings, ProxySettings.USERNAME);
         String proxyPassword = getExpandedProperty(null, settings, ProxySettings.PASSWORD);
 
         if (!StringUtils.isNullOrEmpty(proxyUsername) && !StringUtils.isNullOrEmpty(proxyPassword)) {
-            Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+            Credentials proxyCreds = getProxyCredentials(proxyUsername, proxyPassword);
 
-            // check for nt-username
-            int ix = proxyUsername.indexOf('\\');
-            if (ix > 0) {
-                String domain = proxyUsername.substring(0, ix);
-                if (proxyUsername.length() > ix + 1) {
-                    String user = proxyUsername.substring(ix + 1);
-                    proxyCreds = new NTCredentials(user, proxyPassword, getWorkstationName(), domain);
-                }
-            }
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(AuthScope.ANY, proxyCreds);
             return credsProvider;
         }
         return null;
+    }
+
+    public static Credentials getProxyCredentials(String proxyUsername, String proxyPassword) {
+        Credentials proxyCreds = new UsernamePasswordCredentials(proxyUsername, proxyPassword);
+
+        // check for nt-username
+        int ix = proxyUsername.indexOf('\\');
+        if (ix > 0) {
+            String domain = proxyUsername.substring(0, ix);
+            if (proxyUsername.length() > ix + 1) {
+                String user = proxyUsername.substring(ix + 1);
+                proxyCreds = new NTCredentials(user, proxyPassword, getWorkstationName(), domain);
+            }
+        }
+
+        return proxyCreds;
     }
 
     private static String getWorkstationName() {
@@ -186,7 +197,7 @@ public class ProxyUtils {
         ProxySelector.setDefault(proxySelector);
         Authenticator.setDefault(authenticator);
         HttpClientSupport.setProxySelector(proxySelector);
-        HttpClientSupport.getHttpClient().setCredentialsProvider(getProxyCredentials(settings));
+        HttpClientSupport.getHttpClient().setCredentialsProvider(getProxyCredentialsProvider(settings));
     }
 
     public static ProxySelector filterHttpHttpsProxy(ProxySelector proxySelector) {

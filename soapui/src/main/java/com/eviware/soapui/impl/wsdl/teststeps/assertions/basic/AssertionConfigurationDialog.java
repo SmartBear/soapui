@@ -1,3 +1,19 @@
+/*
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
+ *
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
+
 package com.eviware.soapui.impl.wsdl.teststeps.assertions.basic;
 
 import com.eviware.soapui.impl.support.actions.ShowOnlineHelpAction;
@@ -34,7 +50,7 @@ import java.awt.event.WindowEvent;
  *
  */
 public class AssertionConfigurationDialog {
-    private final static Logger log = Logger.getLogger(XPathContainsAssertion.class);
+    private final static Logger log = Logger.getLogger(AssertionConfigurationDialog.class);
 
     protected JDialog configurationDialog;
     private JCheckBox allowWildcardsCheckBox;
@@ -42,10 +58,10 @@ public class AssertionConfigurationDialog {
     private JCheckBox ignoreCommentsCheckBox;
     protected JTextArea pathArea;
     protected JTextArea contentArea;
-    protected XPathContainsAssertion assertion;
+    protected AbstractXmlContainsAssertion assertion;
     protected boolean configureResult;
 
-    public AssertionConfigurationDialog(XPathContainsAssertion assertion) {
+    public AssertionConfigurationDialog(AbstractXmlContainsAssertion assertion) {
         this.assertion = assertion;
     }
 
@@ -65,6 +81,7 @@ public class AssertionConfigurationDialog {
         contentArea.setText(this.assertion.getExpectedContent());
         allowWildcardsCheckBox.setSelected(this.assertion.isAllowWildcards());
         ignoreNamespaceDifferencesCheckBox.setSelected(this.assertion.isIgnoreNamespaceDifferences());
+        ignoreCommentsCheckBox.setSelected(this.assertion.isIgnoreComments());
     }
 
 
@@ -107,7 +124,7 @@ public class AssertionConfigurationDialog {
         matchPanel.add(new JScrollPane(contentArea), BorderLayout.CENTER);
 
         splitPane.setBottomComponent(UISupport.addTitledBorder(matchPanel, assertion.getContentAreaBorderTitle()));
-        splitPane.setDividerLocation(250);
+        splitPane.setDividerLocation(200);
         splitPane.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1));
 
         contentPanel.add(splitPane, BorderLayout.CENTER);
@@ -128,7 +145,7 @@ public class AssertionConfigurationDialog {
         contentPanel.add(builder.getPanel(), BorderLayout.SOUTH);
 
         configurationDialog.setContentPane(contentPanel);
-        configurationDialog.setSize(800, 500);
+        configurationDialog.setSize(800, 600);
         configurationDialog.setModal(true);
         UISupport.initDialogActions(configurationDialog, showOnlineHelpAction, okButton);
     }
@@ -238,7 +255,7 @@ public class AssertionConfigurationDialog {
     public class DeclareNamespacesFromCurrentAction extends AbstractAction {
         public DeclareNamespacesFromCurrentAction() {
             super("Declare");
-            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to XPath expression");
+            putValue(Action.SHORT_DESCRIPTION, "Add namespace declaration from current message to " + assertion.getQueryType() + " expression");
         }
 
         public void actionPerformed(ActionEvent arg0) {
@@ -260,7 +277,7 @@ public class AssertionConfigurationDialog {
         public TestPathAction() {
             super("Test");
             putValue(Action.SHORT_DESCRIPTION,
-                    "Tests the XPath expression for the current message against the Expected Content field");
+                    "Tests the " + assertion.getQueryType() + " expression for the current message against the Expected Content field");
         }
 
         public void actionPerformed(ActionEvent arg0) {
@@ -303,7 +320,7 @@ public class AssertionConfigurationDialog {
         public SelectFromCurrentAction() {
             super("Select from current");
             putValue(Action.SHORT_DESCRIPTION,
-                    "Selects the XPath expression from the current message into the Expected Content field");
+                    "Selects the " + assertion.getQueryType() + " expression from the current message into the Expected Content field");
         }
 
         public void actionPerformed(ActionEvent arg0) {

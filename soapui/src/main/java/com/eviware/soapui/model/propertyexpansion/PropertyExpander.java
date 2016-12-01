@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.model.propertyexpansion;
 
@@ -21,7 +21,16 @@ import com.eviware.soapui.SoapUIExtensionClassLoader;
 import com.eviware.soapui.SoapUIExtensionClassLoader.SoapUIClassLoaderState;
 import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.ModelItem;
-import com.eviware.soapui.model.propertyexpansion.resolvers.*;
+import com.eviware.soapui.model.propertyexpansion.resolvers.ContextPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.DynamicPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.EvalPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.GlobalPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.MockRunPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.ModelItemPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.PropertyResolverFactory;
+import com.eviware.soapui.model.propertyexpansion.resolvers.SubmitPropertyResolver;
+import com.eviware.soapui.model.propertyexpansion.resolvers.TestRunPropertyResolver;
 import com.eviware.soapui.model.support.ModelSupport;
 import com.eviware.soapui.model.testsuite.TestCase;
 import com.eviware.soapui.settings.GlobalPropertySettings;

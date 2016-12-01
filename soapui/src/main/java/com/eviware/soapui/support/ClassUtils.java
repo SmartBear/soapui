@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.support;
 
@@ -23,16 +23,32 @@ import java.util.List;
 public class ClassUtils {
     public static List<Class<?>> getImplementedAndExtendedClasses(Object obj) {
         ArrayList<Class<?>> result = new ArrayList<Class<?>>();
-        addImplementedAndExtendedClasses(obj.getClass(), result);
+        addImplementedInterfacesFromSuperClass(obj.getClass(), result);
         return result;
     }
 
-    private static void addImplementedAndExtendedClasses(Class<?> clazz, ArrayList<Class<?>> result) {
+    public static List<Class<?>> getSuperInterfaces(Class clazz) {
+        ArrayList<Class<?>> result = new ArrayList<>();
+        addImplementedSuperInterfaces(clazz, result);
+        return result;
+    }
+    
+    private static void addImplementedSuperInterfaces(Class clazz, ArrayList<Class<?>> result) {
+		addImplementedInterfaces(clazz, result);
+		
+		Class<?> superclass = clazz.getSuperclass();
+		
+		if (superclass != null) {
+			addImplementedSuperInterfaces(superclass, result);
+		}		
+	}
+
+	private static void addImplementedInterfacesFromSuperClass(Class<?> clazz, ArrayList<Class<?>> result) {
         result.add(clazz);
         // result.addAll( Arrays.asList( clazz.getInterfaces() ));
         addImplementedInterfaces(clazz, result);
         if (clazz.getSuperclass() != null) {
-            addImplementedAndExtendedClasses(clazz.getSuperclass(), result);
+            addImplementedInterfacesFromSuperClass(clazz.getSuperclass(), result);
         }
     }
 

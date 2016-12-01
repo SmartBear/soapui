@@ -1,21 +1,23 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
+
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.impl.rest.OAuth1ProfileContainer;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequest;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -36,8 +38,8 @@ import com.eviware.x.impl.swing.JLabelFormField;
 import com.eviware.x.impl.swing.JTextFieldFormField;
 import com.jgoodies.forms.layout.FormLayout;
 
-import javax.swing.*;
-import java.util.ArrayList;
+import javax.swing.Action;
+import javax.swing.JLabel;
 import java.util.List;
 
 /**
@@ -45,6 +47,7 @@ import java.util.List;
  */
 public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
 
+    private static final MessageSupport messages = MessageSupport.getMessages(AuthorizationSelectionDialog.class);
     private T request;
     private List<String> basicAuthTypes;
     private JTextFieldFormField profileNameField;
@@ -60,7 +63,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
         FormLayout layout = new FormLayout("5px,100px,5px,left:default,5px:grow(1.0)");
         final XFormDialog dialog = ADialogBuilder.buildDialog(AuthorizationTypeForm.class, null, layout);
 
-        profileNameField = (JTextFieldFormField) dialog.getFormField(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD);
+        profileNameField = (JTextFieldFormField) dialog.getFormField(AuthorizationTypeForm.OAUTH_PROFILE_NAME_FIELD);
         profileNameField.addFormFieldListener(new ProfileNameFieldListener(dialog));
 
         hintTextLabel = (JLabelFormField) dialog.getFormField(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL);
@@ -72,6 +75,7 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
         authTypes.removeAll(request.getBasicAuthenticationProfiles());
         if (request instanceof RestRequest) {
             authTypes.add(CredentialsConfig.AuthType.O_AUTH_2_0.toString());
+            authTypes.add(CredentialsConfig.AuthType.O_AUTH_1_0.toString());
 
             int nextProfileIndex = getOAuth2ProfileContainer().getOAuth2ProfileList().size() + 1;
             profileNameField.setValue("Profile " + nextProfileIndex);
@@ -87,21 +91,37 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
 
     private void createProfileForSelectedAuthType(XFormDialog dialog) {
         String authType = dialog.getValue(AuthorizationTypeForm.AUTHORIZATION_TYPE);
-        String profileName = authType;
+        CredentialsConfig.AuthType.Enum authTypeEnum;
+        String profileName;
+
         if (CredentialsConfig.AuthType.O_AUTH_2_0.toString().equals(authType)) {
-            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH2_PROFILE_NAME_FIELD);
+            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH_PROFILE_NAME_FIELD);
             if (ProfileSelectionForm.isReservedProfileName(profileName)) {
-                UISupport.showErrorMessage("'" + profileName + "' is a reserved profile name.");
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ReservedProfileName", profileName));
                 return;
             }
             if (getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(profileName)) {
-                UISupport.showErrorMessage("There is already a profile named '" + profileName + "'");
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ProfileAlreadyExists", profileName));
                 return;
             }
+
             getOAuth2ProfileContainer().addNewOAuth2Profile(profileName);
-        }
-        CredentialsConfig.AuthType.Enum authTypeEnum = CredentialsConfig.AuthType.O_AUTH_2_0;
-        if (!CredentialsConfig.AuthType.O_AUTH_2_0.equals(authType)) {
+            authTypeEnum = CredentialsConfig.AuthType.O_AUTH_2_0;
+        } else if (CredentialsConfig.AuthType.O_AUTH_1_0.toString().equals(authType)) {
+            profileName = dialog.getValue(AuthorizationTypeForm.OAUTH_PROFILE_NAME_FIELD);
+            if (ProfileSelectionForm.isReservedProfileName(profileName)) {
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ReservedProfileName", profileName));
+                return;
+            }
+            if (getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(profileName)) {
+                UISupport.showErrorMessage(messages.get("AuthorizationSelectionDialog.Error.ProfileAlreadyExists", profileName));
+                return;
+            }
+
+            getOAuth1ProfileContainer().addNewOAuth1Profile(profileName);
+            authTypeEnum = CredentialsConfig.AuthType.O_AUTH_1_0;
+        } else {
+            profileName = authType;
             authTypeEnum = request.getBasicAuthType(authType);
         }
         request.setSelectedAuthProfileAndAuthType(profileName, authTypeEnum);
@@ -123,7 +143,8 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
     }
 
     private void setProfileNameAndHintTextVisibility(String authorizationType) {
-        if (authorizationType.equals(CredentialsConfig.AuthType.O_AUTH_2_0.toString())) {
+        if (authorizationType.equals(CredentialsConfig.AuthType.O_AUTH_2_0.toString())
+                || authorizationType.equals(CredentialsConfig.AuthType.O_AUTH_1_0.toString())) {
             ((JLabel) profileNameField.getComponent().getClientProperty("labeledBy")).setVisible(true);
             profileNameField.getComponent().setVisible(true);
             hintTextLabel.getComponent().setVisible(true);
@@ -138,8 +159,27 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
         return request.getOperation().getInterface().getProject().getOAuth2ProfileContainer();
     }
 
+    private OAuth1ProfileContainer getOAuth1ProfileContainer() {
+        return request.getOperation().getInterface().getProject().getOAuth1ProfileContainer();
+    }
+
     public List<String> getBasicAuthenticationTypes() {
         return basicAuthTypes;
+    }
+
+    @AForm(name = "AuthorizationTypeForm.Title", description = "AuthorizationTypeForm.Description", helpUrl = HelpUrls.ADD_AUTHORIZATION)
+    public interface AuthorizationTypeForm {
+        public static final MessageSupport messages = MessageSupport.getMessages(AuthorizationTypeForm.class);
+
+        @AField(description = "AuthorizationTypeForm.AuthorizationType.Description", type = AField.AFieldType.COMBOBOX)
+        public final static String AUTHORIZATION_TYPE = messages.get("AuthorizationTypeForm.AuthorizationType.Label");
+
+        @AField(description = "AuthorizationTypeForm.OAuth2ProfileName.Description", type = AField.AFieldType.STRING)
+        public final static String OAUTH_PROFILE_NAME_FIELD = messages.get("AuthorizationTypeForm.OAuth2ProfileName.Label");
+
+        @AField(description = "AuthorizationTypeForm.OAuth2ProfileNameHintText.Description", type = AField.AFieldType.LABEL)
+        public final static String OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL = messages.get("AuthorizationTypeForm.OAuth2ProfileNameHintText.Label");
+
     }
 
     private static class ProfileNameFieldListener implements XFormFieldListener {
@@ -163,20 +203,5 @@ public class AuthorizationSelectionDialog<T extends AbstractHttpRequest> {
                 }
             }
         }
-    }
-
-    @AForm(name = "AuthorizationTypeForm.Title", description = "AuthorizationTypeForm.Description", helpUrl = HelpUrls.ADD_AUTHORIZATION)
-    public interface AuthorizationTypeForm {
-        public static final MessageSupport messages = MessageSupport.getMessages(AuthorizationTypeForm.class);
-
-        @AField(description = "AuthorizationTypeForm.AuthorizationType.Description", type = AField.AFieldType.COMBOBOX)
-        public final static String AUTHORIZATION_TYPE = messages.get("AuthorizationTypeForm.AuthorizationType.Label");
-
-        @AField(description = "AuthorizationTypeForm.OAuth2ProfileName.Description", type = AField.AFieldType.STRING)
-        public final static String OAUTH2_PROFILE_NAME_FIELD = messages.get("AuthorizationTypeForm.OAuth2ProfileName.Label");
-
-        @AField(description = "AuthorizationTypeForm.OAuth2ProfileNameHintText.Description", type = AField.AFieldType.LABEL)
-        public final static String OAUTH2_PROFILE_NAME_HINT_TEXT_LABEL = messages.get("AuthorizationTypeForm.OAuth2ProfileNameHintText.Label");
-
     }
 }

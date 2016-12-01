@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.support;
 
@@ -365,19 +365,26 @@ public class PropertyHolderTable extends JPanel {
 
                                 // read multiline value
                                 if (value.endsWith("\\")) {
-                                    value = value.substring(0, value.length() - 1);
+                                    int slashCount = TestPropertyUtils.countEndingSlashes(value);
+                                    if (slashCount % 2 != 0) {
+                                        value = value.substring(0, value.length() - ((slashCount + 1) / 2));
 
-                                    String ln = reader.readLine();
-                                    while (ln != null && ln.endsWith("\\")) {
-                                        value += ln.substring(0, ln.length() - 1);
-                                        ln = reader.readLine();
-                                    }
-
-                                    if (ln != null) {
-                                        value += ln;
-                                    }
-                                    if (ln == null) {
-                                        break;
+                                        String ln = reader.readLine();
+                                        while (ln != null && ln.endsWith("\\")) {
+                                            int slashCountLn = TestPropertyUtils.countEndingSlashes(ln);
+                                            if (slashCountLn % 2 != 0) {
+                                                value += ln.substring(0, ln.length() - ((slashCountLn + 1) / 2));
+                                                ln = reader.readLine();
+                                            } else {
+                                                ln = ln.substring(0, ln.length() - (slashCountLn / 2));
+                                                break;
+                                            }
+                                        }
+                                        if (ln != null) {
+                                            value += ln;
+                                        }
+                                    } else {
+                                        value = value.substring(0, value.length() - (slashCount / 2));
                                     }
                                 }
 
