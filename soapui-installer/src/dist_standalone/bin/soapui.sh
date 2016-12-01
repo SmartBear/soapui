@@ -7,7 +7,10 @@
 
 ### $Id$ ###
 
-DIRNAME=`dirname $0`
+EXECUTABLE=`dirname $0`/`basename $0`
+EXECUTABLE=`ls -ld "${EXECUTABLE}" | sed -e 's|.*-> ||' -e 's|.* ${EXECUTABLE}|${EXECUTABLE}|'`
+
+DIRNAME=`dirname $EXECUTABLE`
 
 # OS specific support (must be 'true' or 'false').
 cygwin=false;
