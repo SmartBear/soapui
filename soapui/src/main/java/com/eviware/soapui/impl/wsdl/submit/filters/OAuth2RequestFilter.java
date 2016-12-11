@@ -1,24 +1,29 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
+
 package com.eviware.soapui.impl.wsdl.submit.filters;
 
 import com.eviware.soapui.config.TimeUnitConfig;
+import com.eviware.soapui.impl.rest.OAuth1Profile;
+import com.eviware.soapui.impl.rest.OAuth1ProfileContainer;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.RestRequestInterface;
+import com.eviware.soapui.impl.rest.actions.oauth.GoogleOAuth1ClientFacade;
+import com.eviware.soapui.impl.rest.actions.oauth.OAuth1ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OAuth2ClientFacade;
 import com.eviware.soapui.impl.rest.actions.oauth.OltuOAuth2ClientFacade;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
@@ -30,6 +35,7 @@ import com.eviware.soapui.support.TimeUtils;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.log4j.Logger;
 
+import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_1_0;
 import static com.eviware.soapui.config.CredentialsConfig.AuthType.O_AUTH_2_0;
 
 public class OAuth2RequestFilter extends AbstractRequestFilter {
@@ -40,12 +46,12 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
 
 	/* setLog() and getLog() should only be used for testing */
 
-    static void setLog(Logger newLog) {
-        log = newLog;
-    }
-
     static Logger getLog() {
         return log;
+    }
+
+    static void setLog(Logger newLog) {
+        log = newLog;
     }
 
     @Override
@@ -53,10 +59,9 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
 
         HttpRequestBase httpMethod = (HttpRequestBase) context.getProperty(BaseHttpRequestTransport.HTTP_METHOD);
 
-        OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
-                .getOAuth2ProfileContainer();
-
         if (O_AUTH_2_0.toString().equals(request.getAuthType())) {
+            OAuth2ProfileContainer profileContainer = request.getResource().getService().getProject()
+                    .getOAuth2ProfileContainer();
             OAuth2Profile profile = profileContainer.getProfileByName(((AbstractHttpRequest) request).getSelectedAuthProfile());
             if (profile == null || StringUtils.isNullOrEmpty(profile.getAccessToken())) {
                 return;
@@ -71,11 +76,27 @@ public class OAuth2RequestFilter extends AbstractRequestFilter {
                 }
             }
             oAuth2Client.applyAccessToken(profile, httpMethod, request.getRequestContent());
+        } else if (O_AUTH_1_0.toString().equals(request.getAuthType())) {
+            OAuth1ProfileContainer profileContainer = request.getResource().getService().getProject()
+                    .getOAuth1ProfileContainer();
+            OAuth1Profile profile = profileContainer.getProfileByName(
+                    ((AbstractHttpRequest) request).getSelectedAuthProfile());
+
+            if (profile == null || StringUtils.isNullOrEmpty(profile.getAccessToken())) {
+                return;
+            }
+            OAuth1ClientFacade oAuth1Client = getOAuth1ClientFacade();
+
+            oAuth1Client.applyAccessToken(profile, httpMethod, request.getRequestContent());
         }
     }
 
     protected OAuth2ClientFacade getOAuth2ClientFacade() {
         return new OltuOAuth2ClientFacade();
+    }
+
+    protected OAuth1ClientFacade getOAuth1ClientFacade() {
+        return new GoogleOAuth1ClientFacade();
     }
 
     private boolean accessTokenIsExpired(OAuth2Profile profile) {

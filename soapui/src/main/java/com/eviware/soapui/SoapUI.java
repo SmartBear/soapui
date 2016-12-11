@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui;
 
@@ -185,7 +185,6 @@ import static com.eviware.soapui.impl.support.HttpUtils.urlEncodeWithUtf8;
 /**
  * Main SoapUI entry point.
  */
-
 public class SoapUI {
     // ------------------------------ CONSTANTS ------------------------------
     public static final String DEFAULT_DESKTOP = "Default";
@@ -874,7 +873,7 @@ public class SoapUI {
         isStandalone = true;
         soapUICore = core;
 
-        AnalyticsHelper.InitializeAnalytics();
+        AnalyticsHelper.initializeAnalytics();
         Analytics.trackSessionStart();
         boolean isDebug = java.lang.management.ManagementFactory.getRuntimeMXBean().
                 getInputArguments().toString().indexOf("-agentlib:jdwp") > 0;

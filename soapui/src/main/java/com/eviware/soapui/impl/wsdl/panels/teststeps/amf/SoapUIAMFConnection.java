@@ -1,42 +1,24 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps.amf;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.HttpContext;
-
-import com.eviware.soapui.SoapUI;
 import com.eviware.soapui.impl.wsdl.submit.transports.http.support.methods.ExtendedPostMethod;
 import com.eviware.soapui.impl.wsdl.support.http.HttpClientSupport;
-import com.eviware.soapui.impl.wsdl.support.http.ProxyUtils;
 import com.eviware.soapui.model.propertyexpansion.PropertyExpansionContext;
-
 import flex.messaging.io.ClassAliasRegistry;
 import flex.messaging.io.MessageDeserializer;
 import flex.messaging.io.MessageIOConstants;
@@ -51,6 +33,20 @@ import flex.messaging.io.amf.client.AMFHeaderProcessor;
 import flex.messaging.io.amf.client.exceptions.ClientStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException;
 import flex.messaging.io.amf.client.exceptions.ServerStatusException.HttpResponseInfo;
+import org.apache.http.entity.ByteArrayEntity;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * AMFConnection derivate using HttpClient instead of UrlConnection

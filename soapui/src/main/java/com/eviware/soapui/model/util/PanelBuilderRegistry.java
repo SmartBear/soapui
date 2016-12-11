@@ -1,18 +1,18 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.model.util;
 
@@ -33,7 +33,11 @@ import com.eviware.soapui.impl.rest.panels.mock.RestMockServicePanelBuilder;
 import com.eviware.soapui.impl.rest.panels.request.RestRequestPanelBuilder;
 import com.eviware.soapui.impl.rest.panels.resource.RestResourcePanelBuilder;
 import com.eviware.soapui.impl.rest.panels.service.RestServicePanelBuilder;
-import com.eviware.soapui.impl.wsdl.*;
+import com.eviware.soapui.impl.wsdl.WsdlInterface;
+import com.eviware.soapui.impl.wsdl.WsdlOperation;
+import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.WsdlRequest;
+import com.eviware.soapui.impl.wsdl.WsdlTestSuite;
 import com.eviware.soapui.impl.wsdl.loadtest.WsdlLoadTest;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockOperation;
 import com.eviware.soapui.impl.wsdl.mock.WsdlMockResponse;
@@ -47,11 +51,34 @@ import com.eviware.soapui.impl.wsdl.panels.operation.WsdlOperationPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.project.WsdlProjectPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.request.WsdlRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.testcase.WsdlTestCasePanelBuilder;
-import com.eviware.soapui.impl.wsdl.panels.teststeps.*;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.DelayTestStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.GotoStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.GroovyScriptStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.HttpTestRequestPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.JdbcRequestTestStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.ManualTestStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.MockResponseStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.PropertiesStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.PropertyTransfersTestStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.RestTestRequestPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlRunTestCaseTestStepPanelBuilder;
+import com.eviware.soapui.impl.wsdl.panels.teststeps.WsdlTestRequestPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.teststeps.amf.AMFRequestTestStepPanelBuilder;
 import com.eviware.soapui.impl.wsdl.panels.testsuite.WsdlTestSuitePanelBuilder;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
-import com.eviware.soapui.impl.wsdl.teststeps.*;
+import com.eviware.soapui.impl.wsdl.teststeps.AMFRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.HttpTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.JdbcRequestTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.ManualTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.PropertyTransfersTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlDelayTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlGotoTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlGroovyScriptTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlMockResponseTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlPropertiesTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlRunTestCaseTestStep;
+import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.model.ModelItem;
 import com.eviware.soapui.model.PanelBuilder;
 import com.eviware.soapui.security.SecurityTest;

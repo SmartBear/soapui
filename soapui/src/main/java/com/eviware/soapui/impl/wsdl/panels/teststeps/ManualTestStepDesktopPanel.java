@@ -1,32 +1,20 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.impl.wsdl.panels.teststeps;
-
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.beans.PropertyChangeEvent;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.SwingUtilities;
-import javax.swing.text.Document;
 
 import com.eviware.soapui.impl.wsdl.teststeps.ManualTestStep;
 import com.eviware.soapui.support.DocumentListenerAdapter;
@@ -35,6 +23,17 @@ import com.eviware.soapui.support.components.JUndoableTextArea;
 import com.eviware.soapui.support.components.JUndoableTextField;
 import com.eviware.soapui.ui.support.ModelItemDesktopPanel;
 import com.jgoodies.forms.builder.ButtonBarBuilder;
+
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.SwingUtilities;
+import javax.swing.text.Document;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.beans.PropertyChangeEvent;
 
 public class ManualTestStepDesktopPanel extends ModelItemDesktopPanel<ManualTestStep> {
     private JSplitPane split;
