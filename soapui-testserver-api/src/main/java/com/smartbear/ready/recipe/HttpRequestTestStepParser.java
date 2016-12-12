@@ -17,8 +17,10 @@ public abstract class HttpRequestTestStepParser implements TestStepJsonParser {
     protected void addAssertions(HttpTestRequestStepStruct testStepStruct, TestRequest testRequest) {
         if (testStepStruct.assertions != null) {
             for (AssertionStruct assertion : testStepStruct.assertions) {
-                TestAssertion messageAssertion = testRequest.addAssertion(assertion.type);
-                assertion.setNameAndConfigureAssertion((WsdlMessageAssertion) messageAssertion);
+                if( assertion != null ) {
+                    TestAssertion messageAssertion = testRequest.addAssertion(assertion.type);
+                    assertion.setNameAndConfigureAssertion((WsdlMessageAssertion) messageAssertion);
+                }
             }
         }
     }
