@@ -24,7 +24,7 @@
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-jersey2-jaxrs</artifactId>
-            <version>1.5.4</version>
+            <version>1.5.10</version>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
