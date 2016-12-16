@@ -15,657 +15,6 @@
         }
       ]
     },
-    "BooleanDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Boolean"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "format": {
-          "type": "string",
-          "enum": [
-            "True/False",
-            "Yes/No",
-            "1/0"
-          ],
-          "default": "True/False"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "StateDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "State"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "nameFormat": {
-          "type": "string",
-          "enum": [
-            "Full",
-            "Abbreviated"
-          ],
-          "default": "Full"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "IntegerDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Integer"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "generationMode": {
-          "type": "string",
-          "enum": [
-            "Random",
-            "Sequential"
-          ],
-          "default": "Random"
-        },
-        "minimumValue": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "maximumValue": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "100"
-        },
-        "incrementBy": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1",
-          "description": "Used if generationMode is Sequential, ignored if generationMode is Random."
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "RealNumberDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Real"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "generationMode": {
-          "type": "string",
-          "enum": [
-            "Random",
-            "Sequential"
-          ],
-          "default": "Random"
-        },
-        "minimumValue": {
-          "type": "number",
-          "default": "1"
-        },
-        "maximumValue": {
-          "type": "number",
-          "default": "100"
-        },
-        "decimalPlaces": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "2"
-        },
-        "incrementBy": {
-          "type": "number",
-          "default": "1",
-          "description": "Used if generationMode is Sequential, ignored if generationMode is Random."
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "DateAndTimeDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Date and Time"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "dateTimeFormat": {
-          "type": "string",
-          "enum": [
-            "HH:MM AM/PM",
-            "HH:MM (24-hour)",
-            "HH:MM:SS AM/PM",
-            "HH:MM:SS (24-hour)",
-            "M/D/YYYY HH:MM:SS AM/PM",
-            "M/D/YYYY HH:MM:SS (24-hour)",
-            "M/D/YYYY",
-            "D Month YYYY",
-            "DayOfWeek D Month YYYY",
-            "YYYY-MM-DDTHH:mm:ssZ (ISO-8601)"
-          ],
-          "default": "HH:MM AM/PM"
-        },
-        "generationMode": {
-          "type": "string",
-          "enum": [
-            "Random",
-            "Sequential"
-          ],
-          "default": "Random"
-        },
-        "minimumValue": {
-          "type": "string",
-          "default": "1984-02-12T17:26:20Z",
-          "description": "Date in ISO-8601 format."
-        },
-        "maximumValue": {
-          "type": "string",
-          "description": "Date in ISO-8601 format. Default value will be current instant."
-        },
-        "incrementValueDay": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "incrementValueHour": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "incrementValueMinute": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "incrementValueSecond": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "ValuesFromSetDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Value from Set"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "generationMode": {
-          "type": "string",
-          "enum": [
-            "Random",
-            "Sequential"
-          ],
-          "default": "Random"
-        },
-        "values": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "type",
-        "propertyName",
-        "values"
-      ],
-      "additionalProperties": false
-    },
-    "UKPostCodeDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "United Kingdom Postcode"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "codeFormat": {
-          "type": "string",
-          "enum": [
-            "All",
-            "A9 9AA",
-            "A99 9AA",
-            "AA9 9AA",
-            "A9A 9AA",
-            "AA99 9AA",
-            "AA9A 9AA"
-          ],
-          "default": "All"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "USZipCodeDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "United States ZIP Code"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "codeFormat": {
-          "type": "string",
-          "enum": [
-            "All",
-            "XXXXX",
-            "XXXXX-XXXX"
-          ],
-          "default": "All"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "PhoneNumberDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Phone Number"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "numberFormat": {
-          "type": "string",
-          "enum": [
-            "XXX-XXX-XXXX",
-            "+1 XXX-XXX-XXXX",
-            "+1 (XXX)-XXX-XXXX",
-            "+X XXX-XXX-XXXX",
-            "+X (XXX)-XXX-XXXX"
-          ],
-          "default": "XXX-XXX-XXXX"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "ComputerAddressDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Computer Address"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "addressType": {
-          "type": "string",
-          "enum": [
-            "IPv4",
-            "Mac48"
-          ],
-          "default": "IPv4"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "NameDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Name"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "gender": {
-          "type": "string",
-          "enum": [
-            "Any",
-            "Male",
-            "Female"
-          ],
-          "default": "Any"
-        },
-        "nameType": {
-          "type": "string",
-          "enum": [
-            "Full",
-            "FirstName",
-            "LastName"
-          ],
-          "default": "Full"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "CustomStringDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Custom String"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "value": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName",
-        "value"
-      ],
-      "additionalProperties": false
-    },
-    "StringDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "String"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        },
-        "minimumCharacters": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "5"
-        },
-        "maximumCharacters": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "10"
-        },
-        "useLetters": {
-          "type": "boolean",
-          "default": "true"
-        },
-        "useDigits": {
-          "type": "boolean",
-          "default": "true"
-        },
-        "useSpaces": {
-          "type": "boolean",
-          "default": "true"
-        },
-        "usePunctuationMarks": {
-          "type": "boolean",
-          "default": "true"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "CityDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "City"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "CountryDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Country"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "EmailDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "E-Mail"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "GuidDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Guid"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "SocialSecurityNumberDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Social Security Number"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
-    "StreetAddressDataGenerator": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "Street Address"
-          ]
-        },
-        "propertyName": {
-          "type": "string"
-        },
-        "duplicationFactor": {
-          "$ref": "#/definitions/NonNegativeInteger",
-          "default": "1"
-        }
-      },
-      "required": [
-        "type",
-        "propertyName"
-      ],
-      "additionalProperties": false
-    },
     "OAuth2AccessTokenPosition": {
       "type": "string",
       "enum": [
@@ -685,7 +34,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "script": {
           "type": "string"
@@ -708,7 +57,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         }
       },
       "required": [
@@ -727,7 +76,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "timeout": {
           "type": "string"
@@ -750,7 +99,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "validStatusCodes": {
           "type": "array",
@@ -792,7 +141,7 @@
           }
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "configuration": {
           "additionalProperties": {
@@ -823,7 +172,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "invalidStatusCodes": {
           "type": "array",
@@ -849,7 +198,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "token": {
           "type": "string"
@@ -878,7 +227,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "token": {
           "type": "string"
@@ -907,7 +256,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "xpath": {
           "type": "string"
@@ -943,7 +292,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "xquery": {
           "type": "string"
@@ -973,7 +322,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "jsonPath": {
           "type": "string"
@@ -1003,7 +352,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "jsonPath": {
           "type": "string"
@@ -1022,12 +371,6 @@
       ],
       "additionalProperties": false
     },
-    "DataSourceProperties": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      }
-    },
     "ResponseSLAAssertion": {
       "type": "object",
       "title": "Response SLA Assertion",
@@ -1039,7 +382,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         },
         "maxResponseTime": {
           "type": "string"
@@ -1062,7 +405,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -1078,7 +421,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -1094,7 +437,7 @@
           ]
         },
         "name": {
-          "type" : "string"
+          "type": "string"
         }
       },
       "additionalProperties": false
@@ -1189,168 +532,6 @@
       ],
       "additionalProperties": false
     },
-    "GridDataSource": {
-      "type": "object",
-      "properties": {
-        "grid": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        }
-      },
-      "additionalProperties": false
-    },
-    "FileDataSource": {
-      "type": "object",
-      "properties": {
-        "file": {
-          "type": "object",
-          "properties": {
-            "file": {
-              "type": "string"
-            },
-            "charset": {
-              "type": "string"
-            },
-            "separator": {
-              "type": "string",
-              "default": ","
-            },
-            "trim": {
-              "type": "boolean",
-              "default": "true"
-            },
-            "quotedValues": {
-              "type": "boolean",
-              "default": "false"
-            }
-          },
-          "required": [
-            "file"
-          ],
-          "additionalProperties": false
-        },
-        "properties": {
-          "$ref": "#/definitions/DataSourceProperties"
-        }
-      },
-      "additionalProperties": false
-    },
-    "ExcelDataSource": {
-      "type": "object",
-      "properties": {
-        "excel": {
-          "type": "object",
-          "properties": {
-            "file": {
-              "type": "string"
-            },
-            "worksheet": {
-              "type": "string"
-            },
-            "startAtCell": {
-              "type": "string",
-              "default": "A1"
-            },
-            "ignoreEmpty": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "file"
-          ],
-          "additionalProperties": false
-        },
-        "properties": {
-          "$ref": "#/definitions/DataSourceProperties"
-        }
-      },
-      "additionalProperties": false
-    },
-    "DataGeneratorDataSource": {
-      "type": "object",
-      "properties": {
-        "dataGen": {
-          "type": "object",
-          "properties": {
-            "numberOfRows": {
-              "type": "string",
-              "default": "10"
-            },
-            "dataGenerators": {
-              "type": "array",
-              "items": {
-                "oneOf": [
-                  {
-                    "$ref": "#/definitions/BooleanDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/CityDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/CountryDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/EmailDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/GuidDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/SocialSecurityNumberDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/StreetAddressDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/ComputerAddressDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/NameDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/CustomStringDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/StringDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/PhoneNumberDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/StateDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/UKPostCodeDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/USZipCodeDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/IntegerDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/RealNumberDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/ValuesFromSetDataGenerator"
-                  },
-                  {
-                    "$ref": "#/definitions/DateAndTimeDataGenerator"
-                  }
-                ]
-              }
-            }
-          },
-          "additionalProperties": false
-        }
-      },
-      "additionalProperties": false
-    },
     "TestSteps": {
       "type": "array",
       "items": {
@@ -1366,9 +547,6 @@
           },
           {
             "$ref": "#/definitions/GroovyScriptTestStep"
-          },
-          {
-            "$ref": "#/definitions/DataSourceTestStep"
           },
           {
             "$ref": "#/definitions/JdbcRequestTestStep"
@@ -1547,7 +725,6 @@
             "enum": [
               "REST Request",
               "SOAP Request",
-              "DataSource",
               "Property Transfer",
               "Groovy",
               "JDBC Request"
@@ -1907,80 +1084,6 @@
       "required": [
         "type",
         "script"
-      ],
-      "additionalProperties": false
-    },
-    "DataSourceTestStep": {
-      "type": "object",
-      "properties": {
-        "type": {
-          "type": "string",
-          "enum": [
-            "DataSource"
-          ]
-        },
-        "name": {
-          "type": "string"
-        },
-        "dataSource": {
-          "type": "object",
-          "oneOf": [
-            {
-              "$ref": "#/definitions/GridDataSource"
-            },
-            {
-              "$ref": "#/definitions/FileDataSource"
-            },
-            {
-              "$ref": "#/definitions/ExcelDataSource"
-            },
-            {
-              "$ref": "#/definitions/DataGeneratorDataSource"
-            }
-          ]
-        },
-        "entitizeValues": {
-          "type": "boolean"
-        },
-        "expandProperties": {
-          "type": "boolean"
-        },
-        "failOnEmpty": {
-          "type": "boolean"
-        },
-        "skipLoopOnEmpty": {
-          "type": "boolean"
-        },
-        "restartOnRun": {
-          "type": "boolean",
-          "default": true
-        },
-        "preload": {
-          "type": "boolean"
-        },
-        "restartShared": {
-          "type": "boolean"
-        },
-        "shared": {
-          "type": "boolean"
-        },
-        "trimValues": {
-          "type": "boolean"
-        },
-        "startRow": {
-          "$ref": "#/definitions/StringOrNonNegativeInteger"
-        },
-        "endRow": {
-          "$ref": "#/definitions/StringOrNonNegativeInteger"
-        },
-        "testSteps": {
-          "$ref": "#/definitions/TestSteps"
-        }
-      },
-      "required": [
-        "type",
-        "dataSource",
-        "testSteps"
       ],
       "additionalProperties": false
     }

@@ -16,11 +16,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.smartbear.ready.recipe.assertions.AssertionStruct;
 import com.smartbear.ready.recipe.assertions.AssertionStructAdapter;
-import com.smartbear.ready.recipe.teststeps.DataGeneratorTypeStruct;
 import com.smartbear.ready.recipe.teststeps.TestCaseStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStruct;
 import com.smartbear.ready.recipe.teststeps.TestStepStructAdapter;
-import com.smartbear.ready.recipe.teststeps.datasource.DataGeneratorTypeStructAdapter;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,7 +50,6 @@ public class JsonRecipeParser implements ObjectRecipeParser {
     private Gson gson = new GsonBuilder().
             registerTypeAdapter(AssertionStruct.class, new AssertionStructAdapter()).
             registerTypeAdapter(TestStepStruct.class, new TestStepStructAdapter()).
-            registerTypeAdapter(DataGeneratorTypeStruct.class, new DataGeneratorTypeStructAdapter()).
             create();
 
     @Override
