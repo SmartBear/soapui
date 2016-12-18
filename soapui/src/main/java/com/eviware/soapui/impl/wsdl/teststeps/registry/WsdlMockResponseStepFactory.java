@@ -120,7 +120,13 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
             MockResponseStepConfig config = MockResponseStepConfig.Factory.newInstance();
             config.setInterface(dialog.getValue(CreateForm.INTERFACE));
             config.setOperation(dialog.getValue(CreateForm.OPERATION));
-            config.setPort(dialog.getIntValue(CreateForm.PORT, 8080));
+            String port = dialog.getValue(CreateForm.PORT);
+            if (port != null && !port.isEmpty()) {
+                config.setPort(port);
+            } else {
+                config.setPort("8080");
+            }
+
             config.setPath(dialog.getValue(CreateForm.PATH));
             config.addNewResponse();
             config.getResponse().addNewResponseContent();
@@ -154,7 +160,7 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
         @AField(description = "Specifies if a mock response is to be created from the schema", name = "Create Response", type = AFieldType.BOOLEAN)
         public final static String CREATE_RESPONSE = "Create Response";
 
-        @AField(description = "Specifies the port to listen on", name = "Port", type = AFieldType.INT)
+        @AField(description = "Specifies the port to listen on", name = "Port")
         public final static String PORT = "Port";
 
         @AField(description = "Specifies the path to listen on", name = "Path")
@@ -212,7 +218,7 @@ public class WsdlMockResponseStepFactory extends WsdlTestStepFactory {
         dialog.setValue(CreateForm.INTERFACE, operation.getInterface().getName());
         dialog.setValue(CreateForm.OPERATION, operation.getName());
         dialog.setBooleanValue(CreateForm.CREATE_RESPONSE, false);
-        dialog.setIntValue(CreateForm.PORT, mockResponse.getMockOperation().getMockService().getPort());
+        dialog.setValue(CreateForm.PORT, String.valueOf(mockResponse.getMockOperation().getMockService().getPort()));
         dialog.setValue(CreateForm.PATH, mockResponse.getMockOperation().getMockService().getPath());
 
         return createFromDialog(operation.getInterface().getProject(), mockResponse.getMockOperation().getName() + " - "

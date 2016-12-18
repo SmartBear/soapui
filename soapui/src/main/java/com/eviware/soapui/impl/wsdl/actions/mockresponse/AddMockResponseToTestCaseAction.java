@@ -84,7 +84,7 @@ public class AddMockResponseToTestCaseAction extends AbstractAddToTestCaseAction
 
         config.setName(dialog.getValue(Form.STEP_NAME));
         mockResponseStepConfig.setPath(dialog.getValue(Form.PATH));
-        mockResponseStepConfig.setPort(dialog.getIntValue(Form.PORT, mockService.getPort()));
+        mockResponseStepConfig.setPort(String.valueOf(dialog.getIntValue(Form.PORT, mockService.getPort())));
 
         mockResponse.beforeSave();
         mockResponseStepConfig.getResponse().set(mockResponse.getConfig());

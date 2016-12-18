@@ -179,7 +179,7 @@ public class WsdlMockResponseStepDesktopPanel extends AbstractWsdlMockResponseDe
             @Override
             public void update(Document document) {
                 try {
-                    getModelItem().setPort(Integer.parseInt(portField.getText()));
+                    getModelItem().setPort(portField.getText());
                 } catch (NumberFormatException e) {
                 }
             }

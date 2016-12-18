@@ -1118,7 +1118,7 @@
             <xsd:element name="interface" type="xsd:string"></xsd:element>
             <xsd:element name="operation" type="xsd:string"></xsd:element>
             <xsd:element name="path" type="xsd:string"></xsd:element>
-            <xsd:element name="port" type="xsd:int"></xsd:element>
+            <xsd:element name="port" type="xsd:string"></xsd:element>
             <xsd:element name="timeout" type="xsd:long"></xsd:element>
             <xsd:element name="response" type="tns:MockResponse"></xsd:element>
             <xsd:element name="assertion" type="tns:TestAssertion"

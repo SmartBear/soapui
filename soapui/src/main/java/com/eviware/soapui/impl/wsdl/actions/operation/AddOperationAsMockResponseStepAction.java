@@ -68,7 +68,7 @@ public class AddOperationAsMockResponseStepAction extends AbstractAddToTestCaseA
 
         config.setName(dialog.getValue(Form.STEP_NAME));
         mockResponseStepConfig.setPath(dialog.getValue(Form.PATH));
-        mockResponseStepConfig.setPort(dialog.getIntValue(Form.PORT, 8181));
+        mockResponseStepConfig.setPort(String.valueOf(dialog.getIntValue(Form.PORT, 8181)));
 
         String response = operation.createResponse(operation.getSettings().getBoolean(
                 WsdlSettings.XML_GENERATION_ALWAYS_INCLUDE_OPTIONAL_ELEMENTS));

@@ -80,7 +80,7 @@ public class AddRequestAsMockResponseStepAction extends AbstractAddToTestCaseAct
 
         config.setName(dialog.getValue(Form.STEP_NAME));
         mockResponseStepConfig.setPath(dialog.getValue(Form.PATH));
-        mockResponseStepConfig.setPort(dialog.getIntValue(Form.PORT, 8181));
+        mockResponseStepConfig.setPort(String.valueOf(dialog.getIntValue(Form.PORT, 8181)));
         CompressedStringConfig responseContent = mockResponseStepConfig.getResponse().getResponseContent();
 
         if (request.getResponse() == null && !request.getOperation().isOneWay()) {

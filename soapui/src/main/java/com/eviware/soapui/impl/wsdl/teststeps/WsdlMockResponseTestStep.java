@@ -260,7 +260,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
     private void initMockObjects(WsdlTestCase testCase) {
         MockServiceConfig mockServiceConfig = MockServiceConfig.Factory.newInstance();
         mockServiceConfig.setPath(mockResponseStepConfig.getPath());
-        mockServiceConfig.setPort(mockResponseStepConfig.getPort());
+        mockServiceConfig.setPort(Integer.parseInt(PropertyExpander.expandProperties(this, mockResponseStepConfig.getPort())));
         mockServiceConfig.setHost(mockResponseStepConfig.getHost());
 
         mockService = new WsdlTestMockService(this, mockServiceConfig);
@@ -327,6 +327,8 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         for (TestAssertion assertion : getAssertionList()) {
             assertion.prepare(testRunner, testRunContext);
         }
+
+        mockService.setPort(Integer.parseInt(PropertyExpander.expandProperties(this, mockResponseStepConfig.getPort())));
 
         if (loadTestRunner == null) {
             mockService.addMockRunListener(mockRunListener);
@@ -629,9 +631,9 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         return mockResponse;
     }
 
-    public void setPort(int port) {
-        int old = getPort();
-        mockService.setPort(port);
+    public void setPort(String port) {
+        String old = getPort();
+        mockService.setPort(Integer.valueOf(PropertyExpander.expandProperties(this, port)));
         mockResponseStepConfig.setPort(port);
         notifyPropertyChanged("port", old, port);
     }
@@ -648,7 +650,7 @@ public class WsdlMockResponseTestStep extends WsdlTestStepWithProperties impleme
         return mockResponse == null ? 0 : mockResponse.getContentLength();
     }
 
-    public int getPort() {
+    public String getPort() {
         return mockResponseStepConfig.getPort();
     }
 
