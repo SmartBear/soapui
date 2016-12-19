@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.jsontype.TypeIdResolver;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
-import static com.smartbear.ready.recipe.TestStepNames.DATA_SOURCE_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.GROOVY_SCRIPT_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.JDBC_REQUEST_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.PROPERTY_TRANSFER_TYPE;
@@ -43,8 +42,6 @@ class TestStepTypeResolver implements TypeIdResolver {
     @Override
     public JavaType typeFromId(String type) {
         switch (type) {
-            case DATA_SOURCE_TYPE:
-                return TypeFactory.defaultInstance().constructSpecializedType(baseType, DataSourceTestStepStruct.class);
             case REST_REQUEST_TYPE:
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, RestTestRequestStepStruct.class);
             case SOAP_REQUEST_TYPE:

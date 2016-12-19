@@ -22,8 +22,6 @@ public class TestStepStructAdapter implements JsonDeserializer<TestStepStruct> {
         switch (assertionType) {
             case TestStepNames.REST_REQUEST_TYPE:
                 return context.deserialize(testStepObject, RestTestRequestStepStruct.class);
-            case TestStepNames.DATA_SOURCE_TYPE:
-                return context.deserialize(testStepObject, DataSourceTestStepStruct.class);
             case TestStepNames.PROPERTY_TRANSFER_TYPE:
                 return context.deserialize(testStepObject, PropertyTransferTestStepStruct.class);
             case TestStepNames.GROOVY_SCRIPT_TYPE:
