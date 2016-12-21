@@ -9,4 +9,5 @@ public class TestStepNames {
     public static final String PROPERTY_TRANSFER_TYPE = "Property Transfer";
     public static final String GROOVY_SCRIPT_TYPE = "Groovy";
     public static final String JDBC_REQUEST_TYPE = "JDBC Request";
+    public static final String DELAY_TYPE = "Delay";
 }

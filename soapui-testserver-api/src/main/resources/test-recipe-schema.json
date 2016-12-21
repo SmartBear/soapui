@@ -552,6 +552,9 @@
             "$ref": "#/definitions/JdbcRequestTestStep"
           },
           {
+            "$ref": "#/definitions/DelayTestStep"
+          },
+          {
             "$ref": "#/definitions/PluginTestStep"
           }
         ]
@@ -727,7 +730,8 @@
               "SOAP Request",
               "Property Transfer",
               "Groovy",
-              "JDBC Request"
+              "JDBC Request",
+              "Delay"
             ]
           }
         },
@@ -1084,6 +1088,28 @@
       "required": [
         "type",
         "script"
+      ],
+      "additionalProperties": false
+    },
+    "DelayTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Delay"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "delay": {
+          "$ref": "#/definitions/NonNegativeInteger",
+          "default": 1000
+        }
+      },
+      "required": [
+        "type"
       ],
       "additionalProperties": false
     }
