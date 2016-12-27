@@ -1,24 +1,27 @@
 /*
- * Copyright 2004-2014 SmartBear Software
+ * SoapUI, Copyright (C) 2004-2016 SmartBear Software 
  *
- * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent
- * versions of the EUPL (the "Licence");
- * You may not use this work except in compliance with the Licence.
- * You may obtain a copy of the Licence at:
- *
- * http://ec.europa.eu/idabc/eupl
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the Licence is
- * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- * express or implied. See the Licence for the specific language governing permissions and limitations
- * under the Licence.
-*/
+ * Licensed under the EUPL, Version 1.1 or - as soon as they will be approved by the European Commission - subsequent 
+ * versions of the EUPL (the "Licence"); 
+ * You may not use this work except in compliance with the Licence. 
+ * You may obtain a copy of the Licence at: 
+ * 
+ * http://ec.europa.eu/idabc/eupl 
+ * 
+ * Unless required by applicable law or agreed to in writing, software distributed under the Licence is 
+ * distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+ * express or implied. See the Licence for the specific language governing permissions and limitations 
+ * under the Licence. 
+ */
 
 package com.eviware.soapui.support.editor.inspectors.auth;
 
 import com.eviware.soapui.analytics.Analytics;
 import com.eviware.soapui.analytics.SoapUIActions;
 import com.eviware.soapui.config.CredentialsConfig;
+import com.eviware.soapui.impl.rest.OAuth1Profile;
+import com.eviware.soapui.impl.rest.OAuth1ProfileContainer;
+import com.eviware.soapui.impl.rest.OAuth1ProfileListener;
 import com.eviware.soapui.impl.rest.OAuth2Profile;
 import com.eviware.soapui.impl.rest.OAuth2ProfileContainer;
 import com.eviware.soapui.impl.rest.OAuth2ProfileListener;
@@ -65,32 +68,23 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
     public static final String OPTIONS_SEPARATOR = "------------------";
     public static final String DELETE_PROFILE_DIALOG_TITLE = "Delete Profile";
     public static final String RENAME_PROFILE_DIALOG_TITLE = "Rename Profile";
-
-    private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
     public static final String EMPTY_PANEL = "EmptyPanel";
-
     static final ImageIcon AUTH_ENABLED_ICON = UISupport.createImageIcon("/lock.png");
+    private static final String OAUTH_2_FORM_LABEL = "OAuth 2 form";
+    private static final String OAUTH_1_FORM_LABEL = "OAuth 1 form";
     private static final ImageIcon AUTH_NOT_ENABLED_ICON = null;
 
     private static final Map<String, ShowOnlineHelpAction> helpActions = new HashMap<String, ShowOnlineHelpAction>();
-
-    static {
-        helpActions.put(EMPTY_PANEL, new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION));
-        helpActions.put(AbstractHttpRequest.BASIC_AUTH_PROFILE, new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_BASIC));
-        helpActions.put(CredentialsConfig.AuthType.NTLM.toString(), new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_NTLM));
-        helpActions.put(CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(), new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_SPNEGO_KERBEROS));
-        helpActions.put(OAUTH_2_FORM_LABEL, new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_OAUTH2));
-    }
-
-    private T request;
     private final JPanel outerPanel = new JPanel(new BorderLayout());
     private final JPanel cardPanel = new JPanel(new CardLayout());
+    private T request;
     private JComboBox profileSelectionComboBox;
     private CellConstraints cc = new CellConstraints();
     private BasicAuthenticationForm<T> authenticationForm;
     private OAuth2Form oAuth2Form;
+    private OAuth1Form oAuth1Form;
     private JButton helpButton;
-    private OAuth2ProfileListener profileListener;
+    private ProfileListener profileListener;
     private WSSAuthenticationForm wssAuthenticationForm;
 
     protected ProfileSelectionForm(T request) {
@@ -101,6 +95,19 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         buildUI();
         profileListener = new ProfileListener();
         getOAuth2ProfileContainer().addOAuth2ProfileListener(profileListener);
+        getOAuth1ProfileContainer().addOAuth1ProfileListener(profileListener);
+    }
+
+    protected static boolean isReservedProfileName(String newName) {
+        return getBasicAuthenticationTypes().contains(newName) || newName.equals(OPTIONS_SEPARATOR);
+    }
+
+    protected static ArrayList<String> getBasicAuthenticationTypes() {
+        ArrayList<String> options = new ArrayList<String>();
+        options.add(AbstractHttpRequest.BASIC_AUTH_PROFILE);
+        options.add(CredentialsConfig.AuthType.NTLM.toString());
+        options.add(CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString());
+        return options;
     }
 
     @Override
@@ -120,7 +127,11 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         if (oAuth2Form != null) {
             oAuth2Form.release();
         }
+        if (oAuth1Form != null) {
+            oAuth1Form.release();
+        }
         getOAuth2ProfileContainer().removeOAuth2ProfileListener(profileListener);
+        getOAuth1ProfileContainer().removeOAuth1ProfileListener(profileListener);
     }
 
     protected void buildUI() {
@@ -219,8 +230,6 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
                 changeAuthorizationType(BASIC_FORM_LABEL, selectedOption);
             }
         } else if (isRestRequest(request) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(selectedOption)) {
-
-
             setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
             request.setSelectedAuthProfileAndAuthType(selectedOption, CredentialsConfig.AuthType.O_AUTH_2_0);
             oAuth2Form = new OAuth2Form(getOAuth2ProfileContainer().getProfileByName(selectedOption), this);
@@ -229,6 +238,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
             Analytics.trackAction(SoapUIActions.ASSIGN_O_AUTH.getActionName(), "OAuth2Flow",
                     oAuth2Form.getProfile().getOAuth2Flow().name());
+        } else if (isRestRequest(request) && getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(selectedOption)) {
+            setTitle(AuthInspectorFactory.INSPECTOR_ID + " (" + selectedOption + ")");
+            request.setSelectedAuthProfileAndAuthType(selectedOption, CredentialsConfig.AuthType.O_AUTH_1_0);
+            oAuth1Form = new OAuth1Form(getOAuth1ProfileContainer().getProfileByName(selectedOption), this);
+            cardPanel.add(oAuth1Form.getComponent(), OAUTH_1_FORM_LABEL);
+            changeAuthorizationType(OAUTH_1_FORM_LABEL, selectedOption);
         } else if (selectedOption.equals(OPTIONS_SEPARATOR)) {
             profileSelectionComboBox.setSelectedIndex(0);
         } else    //selectedItem : No Authorization
@@ -296,12 +311,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
             profileSelectionComboBox.setSelectedItem(profileOldName);
             return;
         }
-
         getOAuth2ProfileContainer().renameProfile(profileOldName, newName);
-    }
-
-    protected static boolean isReservedProfileName(String newName) {
-        return getBasicAuthenticationTypes().contains(newName) || newName.equals(OPTIONS_SEPARATOR);
     }
 
     private void deleteCurrentProfile(String profileName) {
@@ -314,6 +324,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
 
         if (isRestRequest(request) && getOAuth2ProfileContainer().getOAuth2ProfileNameList().contains(profileName)) {
             getOAuth2ProfileContainer().removeProfile(profileName);
+        } else if (isRestRequest(request) && getOAuth1ProfileContainer().getOAuth1ProfileNameList().contains(profileName)) {
+            getOAuth1ProfileContainer().removeProfile(profileName);
         } else if (getBasicAuthenticationTypes().contains(profileName)) {
             request.removeBasicAuthenticationProfile(profileName);
         }
@@ -351,12 +363,8 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         return request.getProject().getOAuth2ProfileContainer();
     }
 
-    protected static ArrayList<String> getBasicAuthenticationTypes() {
-        ArrayList<String> options = new ArrayList<String>();
-        options.add(AbstractHttpRequest.BASIC_AUTH_PROFILE);
-        options.add(CredentialsConfig.AuthType.NTLM.toString());
-        options.add(CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString());
-        return options;
+    private OAuth1ProfileContainer getOAuth1ProfileContainer() {
+        return request.getProject().getOAuth1ProfileContainer();
     }
 
     private String[] createOptionsForAuthorizationCombo(String selectedAuthProfile) {
@@ -368,9 +376,12 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         ArrayList<String> addEditOptions = getAddEditOptions();
 
         ArrayList<String> oAuth2Profiles = null;
+        ArrayList<String> oAuth1Profiles = null;
         if (isRestRequest(request)) {
             oAuth2Profiles = getOAuth2ProfileContainer().getOAuth2ProfileNameList();
+            oAuth1Profiles = getOAuth1ProfileContainer().getOAuth1ProfileNameList();
             options.addAll(oAuth2Profiles);
+            options.addAll(oAuth1Profiles);
         }
         if (isSoapRequest(request)) {
             if (basicAuthenticationProfiles.size() >= getBasicAuthenticationTypes().size()) {
@@ -447,7 +458,7 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         }
     }
 
-    private class ProfileListener implements OAuth2ProfileListener {
+    private class ProfileListener implements OAuth2ProfileListener, OAuth1ProfileListener {
         @Override
         public void profileAdded(OAuth2Profile profile) {
             refreshProfileSelectionComboBox(request.getSelectedAuthProfile());
@@ -462,5 +473,18 @@ public class ProfileSelectionForm<T extends AbstractHttpRequest> extends Abstrac
         public void profileRenamed(String profileOldName, String newName) {
             refreshProfileSelectionComboBox(request.getSelectedAuthProfile());
         }
+
+        @Override
+        public void profileAdded(OAuth1Profile profile) {
+            refreshProfileSelectionComboBox(request.getSelectedAuthProfile());
+        }
+    }
+
+    static {
+        helpActions.put(EMPTY_PANEL, new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION));
+        helpActions.put(AbstractHttpRequest.BASIC_AUTH_PROFILE, new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_BASIC));
+        helpActions.put(CredentialsConfig.AuthType.NTLM.toString(), new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_NTLM));
+        helpActions.put(CredentialsConfig.AuthType.SPNEGO_KERBEROS.toString(), new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_SPNEGO_KERBEROS));
+        helpActions.put(OAUTH_2_FORM_LABEL, new ShowOnlineHelpAction(null, HelpUrls.AUTHORIZATION_OAUTH2));
     }
 }

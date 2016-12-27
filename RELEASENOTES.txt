@@ -1,4 +1,58 @@
-﻿# SoapUI Open Source 5.2.1
+﻿# SoapUI Open Source 5.3.0
+
+#### Released 2016-11-30 ####
+
+### Improvements ###
+
+* Support for OAuth 1 authentication.   (SOAPUIOS-194)
+
+* Improved support for OAuth 2. SoapUI now supports two additional grant types: Resource Owner Password Credentials and Client Credentials. (SOAPUIOS-60)
+
+* A new feature by Krzysztof Baranski (krzysbaranski in GitHub): Support for Server Name Indication (SNI) in TLS/SSL requests. (SOAPUIOS-218)
+
+* A new feature by Bouke Nijhuis (BoukeNijhuis in GitHub): The XQuery Match assertion now supports the "Ignore namespace prefix" and "Ignore XML Comments" options. (SOAPUIOS-210)
+
+* A new feature by Kyle Smith (smithk86 in GitHub): The Set Endpoint dialog now displays endpoints in alphabetical order. (SOAPUIOS-212)
+
+Many thanks to Krzysztof, Bouke and Kyle for their efforts!
+
+* The design of some buttons has been updated. (SOAPUIOS-209)
+
+* The SoapUI icon on Mac OS X has been updated. (SOAPUIOS-90)
+
+### Bundled Plugin ###
+
+* The Postman plugin is now included in the SoapUI installation package. You use this plugin to import Postman collections and tests to SoapUI.  (SOAPUIOS-208)
+
+### Bug Fixes ###
+
+* TestRunner displayed the "Usage statistics" dialog upon starting. To close this dialog, you had to click any button in it, which was inconvenient for automated test runs. (SOAPUIOS-188)
+
+* The JDBC Request test step converted all SQL column names in responses to upper case.  This could cause issues when comparing the response contents with baseline data. (SOAPUIOS-190)
+
+* The SLA assertion did not support property expansions. (SOAPUIOS-195)
+
+* It was impossible to send requests to a secured web service through a proxy server. The simulated requests did not contain the proxy user credentials. (SOAPUIOS-196, SOAPUIOS-199)
+
+* The Groovy Script assertion called by the JDBC Request test step always returned an error "null". (SOAPUIOS-200)
+
+* The context menu of the XML editor had duplicated "Select All" items. (SOAPUIOS-201)
+
+* The Properties test step failed to load the properties, whose names ended with a backslash (\), from a file. (SOAPUIOS-202)
+
+* A NoSuchMethodException exception could occur when creating a project from WSDL. (SOAPUIOS-204)
+
+* A bug fix by Bouke Nijhuis (BoukeNijhuis in GitHub): In certain cases, the Recently Used tab could disappear from the Assertions dialog. (SOAPUIOS-211). 
+
+* A bug fix by bearsoftware (GitHub nickname): The Request  URL property of the HTTP Request test step did not allow capital letters. (SOAPUIOS-213)
+
+* A bug fix by kekemonster (GitHub nickname): Multiple concurrent requests to a mock service could cause the HTTP 500 error. (SOAPUIOS-215)
+
+Many thanks to Bouke Nijhuis, bearsoftware and kekemonster for contribution!
+
+-------------------------------------------------------------------------------
+
+# SoapUI Open Source 5.2.1
 
 #### Released 2015-10-02 ####
 
