@@ -1,17 +1,6 @@
 {
   "testSteps": [
     {
-      "type": "REST Request",
-      "method": "GET",
-      "URI": "http://google.com/",
-      "parameters": [
-        {
-          "name": "q",
-          "value": "Madonna"
-        }
-      ]
-    },
-    {
       "type": "Delay",
       "delay": 3000
     }

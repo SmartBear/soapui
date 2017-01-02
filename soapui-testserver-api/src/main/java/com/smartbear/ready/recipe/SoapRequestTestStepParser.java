@@ -1,15 +1,12 @@
 package com.smartbear.ready.recipe;
 
 import com.eviware.soapui.config.CredentialsConfig;
-import com.eviware.soapui.impl.WsdlInterfaceFactory;
 import com.eviware.soapui.impl.wsdl.WsdlInterface;
 import com.eviware.soapui.impl.wsdl.WsdlOperation;
-import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.registry.WsdlTestRequestStepFactory;
-import com.eviware.soapui.support.SoapUIException;
 import com.eviware.soapui.support.types.StringToObjectMap;
 import com.eviware.soapui.support.xml.XmlUtils;
 import com.smartbear.ready.recipe.teststeps.AuthenticationStruct;
@@ -20,6 +17,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
+import static com.smartbear.ready.recipe.WsdlUtils.getWsdlInterface;
+
 /**
  * Parses a JSON Object describing a SOAP Request test step.
  */
@@ -28,7 +27,7 @@ class SoapRequestTestStepParser extends HttpRequestTestStepParser {
     public void createTestStep(WsdlTestCase testCase, TestStepStruct testStepStruct, StringToObjectMap context) throws ParseException {
         SoapTestRequestStepStruct requestTestStepElement = (SoapTestRequestStepStruct) testStepStruct;
 
-        WsdlInterface wsdlInterface = getWsdlInterface(testCase, requestTestStepElement);
+        WsdlInterface wsdlInterface = getWsdlInterface(testCase, requestTestStepElement.wsdl, requestTestStepElement.binding);
         if (wsdlInterface == null) {
             throw new ParseException("Failed to find specified binding [" + requestTestStepElement.binding + "] in WSDL");
         }
@@ -49,41 +48,6 @@ class SoapRequestTestStepParser extends HttpRequestTestStepParser {
         addHeaders(requestTestStepElement, testRequest);
         addAuthentication(requestTestStepElement, testRequest);
         addAssertions(requestTestStepElement, testRequest);
-    }
-
-    private WsdlInterface getWsdlInterface(WsdlTestCase testCase, SoapTestRequestStepStruct requestTestStepElement) throws ParseException {
-        WsdlProject project = testCase.getTestSuite().getProject();
-        WsdlInterface[] projectInterfaces = project.getInterfaces(WsdlInterfaceFactory.WSDL_TYPE).toArray(
-                new WsdlInterface[project.getInterfaceCount()]);
-
-        WsdlInterface wsdlInterface = findNamedInterface(projectInterfaces, requestTestStepElement);
-
-        if (wsdlInterface == null) {
-            try {
-                WsdlInterface[] importedInterfaces = WsdlInterfaceFactory.importWsdl(project, requestTestStepElement.wsdl, false);
-                wsdlInterface = findNamedInterface(importedInterfaces, requestTestStepElement);
-            } catch (SoapUIException e) {
-                throw new ParseException("Failed to import WSDL from [" + requestTestStepElement.wsdl + "]", e);
-            }
-        }
-
-        return wsdlInterface;
-    }
-
-    private WsdlInterface findNamedInterface(WsdlInterface[] interfaces, SoapTestRequestStepStruct requestTestStepElement) {
-        for (WsdlInterface iface : interfaces) {
-            if (interfaceMatchesConfig(requestTestStepElement, iface)) {
-                return iface;
-            }
-        }
-
-        return null;
-    }
-
-    private boolean interfaceMatchesConfig(SoapTestRequestStepStruct requestTestStepElement, WsdlInterface iface) {
-        return (requestTestStepElement.binding == null &&
-                iface.getWsdlContext().getUrl().equalsIgnoreCase(requestTestStepElement.wsdl)) ||
-                iface.getName().equalsIgnoreCase(requestTestStepElement.binding);
     }
 
     private void addProperties(SoapTestRequestStepStruct testStepStruct, WsdlTestRequest testRequest) {

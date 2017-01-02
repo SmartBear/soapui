@@ -543,6 +543,9 @@
             "$ref": "#/definitions/SoapRequestTestStep"
           },
           {
+            "$ref": "#/definitions/WsdlMockResponseTestStep"
+          },
+          {
             "$ref": "#/definitions/PropertyTransferTestStep"
           },
           {
@@ -731,6 +734,7 @@
             "enum": [
               "REST Request",
               "SOAP Request",
+              "Wsdl Mock Response",
               "Property Transfer",
               "Groovy",
               "JDBC Request",
@@ -778,6 +782,38 @@
         }
       },
       "additionalProperties": false
+    },
+    "WsdlMockResponseTestStep": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "Wsdl Mock Response"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "wsdl": {
+          "type": "string"
+        },
+        "binding": {
+          "type": "string"
+        },
+        "operation": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "port": {
+          "$ref": "#/definitions/NonNegativeInteger"
+        },
+        "createResponse": {
+          "type": "boolean"
+        }
+      }
     },
     "SoapRequestTestStep": {
       "type": "object",

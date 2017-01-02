@@ -1,0 +1,13 @@
+{
+  "testSteps": [
+    {
+      "type": "Wsdl Mock Response",
+      "wsdl": "http://www.webservicex.com/globalweather.asmx?WSDL",
+      "binding": "GlobalWeatherSoap12",
+      "operation": "GetCitiesByCountry",
+      "path": "/myweatherservice",
+      "port": 6091,
+      "createResponse": true
+    }
+  ]
+}

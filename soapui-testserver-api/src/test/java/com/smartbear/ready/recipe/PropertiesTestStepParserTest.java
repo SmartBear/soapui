@@ -11,8 +11,7 @@ public class PropertiesTestStepParserTest extends RecipeParserTestBase {
     @Test
     public void parsesPropertiesTestStepFromRecipe() throws Exception {
         WsdlProject wsdlProject = buildProjectFromRecipe("properties-test-step.json");
-        WsdlPropertiesTestStep propertiesTestStep = (WsdlPropertiesTestStep) wsdlProject.getTestSuiteAt(0)
-                .getTestCaseAt(0).getTestStepAt(0);
+        WsdlPropertiesTestStep propertiesTestStep = getSingleTestStepIn(wsdlProject, WsdlPropertiesTestStep.class);
         assertThat(propertiesTestStep.getPropertyCount(), is(2));
         assertThat(propertiesTestStep.getProperty("property1").getValue(), is("value1"));
         assertThat(propertiesTestStep.getProperty("property2").getValue(), is("value2"));
