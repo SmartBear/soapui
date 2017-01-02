@@ -46,6 +46,7 @@ public class JsonRecipeParser implements ObjectRecipeParser {
         testStepParsers.put(TestStepNames.GROOVY_SCRIPT_TYPE, new GroovyScriptTestStepParser());
         testStepParsers.put(TestStepNames.JDBC_REQUEST_TYPE, new JdbcRequestTestStepParser());
         testStepParsers.put(TestStepNames.DELAY_TYPE, new DelayTestStepParser());
+        testStepParsers.put(TestStepNames.PROPERTIES_TYPE, new PropertiesTestStepParser());
     }
 
     private Gson gson = new GsonBuilder().
