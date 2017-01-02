@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import static com.smartbear.ready.recipe.TestStepNames.DELAY_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.GROOVY_SCRIPT_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.JDBC_REQUEST_TYPE;
+import static com.smartbear.ready.recipe.TestStepNames.PROPERTIES_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.PROPERTY_TRANSFER_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.REST_REQUEST_TYPE;
 import static com.smartbear.ready.recipe.TestStepNames.SOAP_REQUEST_TYPE;
@@ -53,6 +54,8 @@ class TestStepTypeResolver implements TypeIdResolver {
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, GroovyScriptTestStepStruct.class);
             case DELAY_TYPE:
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, DelayTestStepStruct.class);
+            case PROPERTIES_TYPE:
+                return TypeFactory.defaultInstance().constructSpecializedType(baseType, PropertiesTestStepStruct.class);
             case JDBC_REQUEST_TYPE:
                 return TypeFactory.defaultInstance().constructSpecializedType(baseType, JdbcRequestTestStepStruct.class);
             default:

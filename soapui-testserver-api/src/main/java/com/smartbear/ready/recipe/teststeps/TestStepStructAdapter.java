@@ -28,6 +28,8 @@ public class TestStepStructAdapter implements JsonDeserializer<TestStepStruct> {
                 return context.deserialize(testStepObject, GroovyScriptTestStepStruct.class);
             case TestStepNames.DELAY_TYPE:
                 return context.deserialize(testStepObject, DelayTestStepStruct.class);
+            case TestStepNames.PROPERTIES_TYPE:
+                return context.deserialize(testStepObject, PropertiesTestStepStruct.class);
             case TestStepNames.JDBC_REQUEST_TYPE:
                 return context.deserialize(testStepObject, JdbcRequestTestStepStruct.class);
             case TestStepNames.SOAP_REQUEST_TYPE:

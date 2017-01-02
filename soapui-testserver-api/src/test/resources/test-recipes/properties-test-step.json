@@ -1,0 +1,12 @@
+{
+  "testSteps": [
+    {
+      "type": "Properties",
+      "name": "Properties TestStep",
+      "properties": {
+        "property1": "value1",
+        "property2": "value2"
+      }
+    }
+  ]
+}
