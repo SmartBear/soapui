@@ -2,12 +2,15 @@ package com.smartbear.ready.recipe;
 
 import com.eviware.soapui.config.AbstractRequestConfig;
 import com.eviware.soapui.impl.support.AbstractHttpRequest;
+import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.teststeps.TestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlMessageAssertion;
 import com.eviware.soapui.model.testsuite.TestAssertion;
 import com.eviware.soapui.support.types.StringToStringsMap;
+import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
 import com.smartbear.ready.recipe.assertions.AssertionStruct;
 import com.smartbear.ready.recipe.teststeps.HttpTestRequestStepStruct;
+import com.smartbear.ready.recipe.teststeps.RequestAttachmentStruct;
 
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,17 @@ public abstract class HttpRequestTestStepParser implements TestStepJsonParser {
                 }
             }
             testRequest.setRequestHeaders(requestHeaders);
+        }
+    }
+
+    void addAttachments(HttpTestRequestStepStruct testStepStruct, AbstractHttpRequest testRequest) {
+        RequestAttachmentStruct[] attachmentArray = testStepStruct.attachments;
+        if (attachmentArray != null) {
+            for (RequestAttachmentStruct attachment : attachmentArray) {
+                FileAttachment fileAtt = (FileAttachment) testRequest.attachBinaryData(Base64.decodeBase64(attachment.content), attachment.contentType);
+                fileAtt.setName(attachment.name);
+                fileAtt.setContentID(attachment.contentId);
+            }
         }
     }
 

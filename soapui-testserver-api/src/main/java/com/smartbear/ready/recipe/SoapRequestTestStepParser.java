@@ -48,6 +48,7 @@ class SoapRequestTestStepParser extends HttpRequestTestStepParser {
         addHeaders(requestTestStepElement, testRequest);
         addAuthentication(requestTestStepElement, testRequest);
         addAssertions(requestTestStepElement, testRequest);
+        addAttachments(requestTestStepElement, testRequest);
     }
 
     private void addProperties(SoapTestRequestStepStruct testStepStruct, WsdlTestRequest testRequest) {

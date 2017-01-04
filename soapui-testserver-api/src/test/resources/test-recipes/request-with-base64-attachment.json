@@ -1,0 +1,17 @@
+{
+  "testSteps": [
+    {
+      "type": "REST Request",
+      "method": "GET",
+      "URI": "http://google.com/",
+      "attachments" : [
+        {
+          "contentType" : "text/plain",
+          "name" : "A Name",
+          "contentId" : "An id",
+          "content": "Q29udGVudA=="
+        }
+      ]
+    }
+  ]
+}

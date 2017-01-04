@@ -59,6 +59,7 @@ class RestRequestTestStepParser extends HttpRequestTestStepParser {
         addAuthentication(requestTestStepElement, testRequest);
         addProperties(requestTestStepElement, testRequest);
         addAssertions(requestTestStepElement, testRequest);
+        addAttachments(requestTestStepElement, testRequest);
     }
 
     private String createRequestName(HttpMethod httpMethod, WsdlTestCase testCase) {

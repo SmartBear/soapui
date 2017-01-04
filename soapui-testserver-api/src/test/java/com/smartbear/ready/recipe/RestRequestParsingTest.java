@@ -5,8 +5,10 @@ import com.eviware.soapui.impl.rest.RestService;
 import com.eviware.soapui.impl.rest.actions.support.NewRestResourceActionBase;
 import com.eviware.soapui.impl.rest.support.RestParamsPropertyHolder;
 import com.eviware.soapui.impl.wsdl.WsdlProject;
+import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.RestTestRequestStep;
+import com.eviware.soapui.model.iface.Attachment;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -128,5 +130,20 @@ public class RestRequestParsingTest extends RecipeParserTestBase {
         assertThat(restRequestStep.getRestMethod().getProperty("mat2").getParamLocation(), is(NewRestResourceActionBase.ParamLocation.METHOD));
         assertThat(restRequestStep.getRestMethod().getProperty("mat1").getStyle(), is(RestParamsPropertyHolder.ParameterStyle.MATRIX));
         assertThat(restRequestStep.getRestMethod().getProperty("mat2").getStyle(), is(RestParamsPropertyHolder.ParameterStyle.MATRIX));
+    }
+
+    @Test
+    public void parsesRequestAttachment() throws Exception {
+        WsdlProject project = buildProjectFromRecipe("request-with-base64-attachment.json");
+
+        RestTestRequestStep restRequestStep = getSingleRestRequestStepIn(project);
+        RestTestRequest testRequest = restRequestStep.getTestRequest();
+        Attachment[] attachments = testRequest.getAttachments();
+        assertThat(attachments.length, is(1));
+        Attachment attachment = attachments[0];
+        assertThat(attachment.getName(), is("A Name"));
+        assertThat(attachment.getContentType(), is("text/plain"));
+        assertThat(attachment.getContentID(), is("An id"));
+        assertThat(((FileAttachment) attachment).getData(), is("Content".getBytes()));
     }
 }

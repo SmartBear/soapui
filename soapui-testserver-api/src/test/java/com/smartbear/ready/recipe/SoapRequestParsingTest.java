@@ -2,17 +2,21 @@ package com.smartbear.ready.recipe;
 
 import com.eviware.soapui.impl.wsdl.WsdlProject;
 import com.eviware.soapui.impl.wsdl.submit.filters.RemoveEmptyContentRequestFilter;
+import com.eviware.soapui.impl.wsdl.support.FileAttachment;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequest;
 import com.eviware.soapui.impl.wsdl.teststeps.WsdlTestRequestStep;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.basic.SchemaComplianceAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.NotSoapFaultAssertion;
 import com.eviware.soapui.impl.wsdl.teststeps.assertions.soap.SoapFaultAssertion;
+import com.eviware.soapui.model.iface.Attachment;
 import com.eviware.soapui.support.xml.XmlUtils;
 import org.apache.xmlbeans.XmlObject;
 import org.junit.Test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -90,6 +94,20 @@ public class SoapRequestParsingTest extends RecipeParserTestBase {
 
         assertFalse(content.contains("CityName"));
         assertFalse(content.contains("CountryName"));
+    }
+
+    @Test
+    public void parsesRequestAttachment() throws Exception {
+        WsdlProject project = buildProjectWithWsdlReference("simple-soap-request-with-base64-attachment.json");
+        WsdlTestRequestStep restRequestStep = getSingleTestStepIn(project, WsdlTestRequestStep.class);
+        WsdlTestRequest request = restRequestStep.getTestRequest();
+        Attachment[] attachments = request.getAttachments();
+        assertThat(attachments.length, is(1));
+        Attachment attachment = attachments[0];
+        assertThat(attachment.getName(), is("A Name"));
+        assertThat(attachment.getContentType(), is("text/plain"));
+        assertThat(attachment.getContentID(), is("An id"));
+        assertThat(((FileAttachment) attachment).getData(), is("Content".getBytes()));
     }
 
     private WsdlProject buildProjectWithWsdlReference(String jsonFile) throws Exception {
